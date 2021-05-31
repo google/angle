@@ -60,7 +60,59 @@ Context::PropArray ParseContextProperties(const cl_context_properties *propertie
 
 }  // namespace
 
-Platform::~Platform() = default;
+void Platform::Initialize(const cl_icd_dispatch &dispatch,
+                          rx::CLPlatformImpl::CreateFuncs &&createFuncs)
+{
+    PlatformPtrs &platforms = GetPointers();
+    ASSERT(_cl_platform_id::sDispatch == nullptr && platforms.empty());
+    if (_cl_platform_id::sDispatch != nullptr || !platforms.empty())
+    {
+        ERR() << "Already initialized";
+        return;
+    }
+
+    _cl_platform_id::sDispatch   = &dispatch;
+    _cl_device_id::sDispatch     = &dispatch;
+    _cl_context::sDispatch       = &dispatch;
+    _cl_command_queue::sDispatch = &dispatch;
+    _cl_mem::sDispatch           = &dispatch;
+    _cl_program::sDispatch       = &dispatch;
+    _cl_kernel::sDispatch        = &dispatch;
+    _cl_event::sDispatch         = &dispatch;
+    _cl_sampler::sDispatch       = &dispatch;
+
+    platforms.reserve(createFuncs.size());
+    while (!createFuncs.empty())
+    {
+        platforms.emplace_back(new Platform(createFuncs.front()));
+        if (!platforms.back()->mInfo.isValid() || platforms.back()->mDevices.empty())
+        {
+            platforms.pop_back();
+        }
+        createFuncs.pop_front();
+    }
+}
+
+cl_int Platform::GetPlatformIDs(cl_uint numEntries,
+                                cl_platform_id *platforms,
+                                cl_uint *numPlatforms)
+{
+    const PlatformPtrs &availPlatforms = GetPlatforms();
+    if (numPlatforms != nullptr)
+    {
+        *numPlatforms = static_cast<cl_uint>(availPlatforms.size());
+    }
+    if (platforms != nullptr)
+    {
+        cl_uint entry   = 0u;
+        auto platformIt = availPlatforms.cbegin();
+        while (entry < numEntries && platformIt != availPlatforms.cend())
+        {
+            platforms[entry++] = (*platformIt++).get();
+        }
+    }
+    return CL_SUCCESS;
+}
 
 cl_int Platform::getInfo(PlatformInfo name,
                          size_t valueSize,
@@ -165,51 +217,6 @@ cl_int Platform::getDeviceIDs(DeviceType deviceType,
     return CL_SUCCESS;
 }
 
-void Platform::Initialize(const cl_icd_dispatch &dispatch,
-                          rx::CLPlatformImpl::CreateFuncs &&createFuncs)
-{
-    PlatformPtrs &platforms = GetPointers();
-    ASSERT(Dispatch::sDispatch == nullptr && platforms.empty());
-    if (Dispatch::sDispatch != nullptr || !platforms.empty())
-    {
-        ERR() << "Already initialized";
-        return;
-    }
-    Dispatch::sDispatch = &dispatch;
-
-    platforms.reserve(createFuncs.size());
-    while (!createFuncs.empty())
-    {
-        platforms.emplace_back(new Platform(createFuncs.front()));
-        if (!platforms.back()->mInfo.isValid() || platforms.back()->mDevices.empty())
-        {
-            platforms.pop_back();
-        }
-        createFuncs.pop_front();
-    }
-}
-
-cl_int Platform::GetPlatformIDs(cl_uint numEntries,
-                                cl_platform_id *platforms,
-                                cl_uint *numPlatforms)
-{
-    const PlatformPtrs &availPlatforms = GetPlatforms();
-    if (numPlatforms != nullptr)
-    {
-        *numPlatforms = static_cast<cl_uint>(availPlatforms.size());
-    }
-    if (platforms != nullptr)
-    {
-        cl_uint entry   = 0u;
-        auto platformIt = availPlatforms.cbegin();
-        while (entry < numEntries && platformIt != availPlatforms.cend())
-        {
-            platforms[entry++] = (*platformIt++).get();
-        }
-    }
-    return CL_SUCCESS;
-}
-
 cl_context Platform::CreateContext(const cl_context_properties *properties,
                                    cl_uint numDevices,
                                    const cl_device_id *devices,
@@ -244,6 +251,8 @@ cl_context Platform::CreateContextFromType(const cl_context_properties *properti
     return Object::Create<Context>(errorCode, *platform, std::move(propArray), deviceType, notify,
                                    userData, userSync);
 }
+
+Platform::~Platform() = default;
 
 Platform::Platform(const rx::CLPlatformImpl::CreateFunc &createFunc)
     : mImpl(createFunc(*this)),

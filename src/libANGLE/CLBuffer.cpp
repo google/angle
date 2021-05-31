@@ -10,8 +10,6 @@
 namespace cl
 {
 
-Buffer::~Buffer() = default;
-
 cl_mem Buffer::createSubBuffer(MemFlags flags,
                                cl_buffer_create_type createType,
                                const void *createInfo,
@@ -20,6 +18,8 @@ cl_mem Buffer::createSubBuffer(MemFlags flags,
     const cl_buffer_region &region = *static_cast<const cl_buffer_region *>(createInfo);
     return Object::Create<Buffer>(errorCode, *this, flags, region.origin, region.size);
 }
+
+Buffer::~Buffer() = default;
 
 Buffer::Buffer(Context &context,
                PropArray &&properties,

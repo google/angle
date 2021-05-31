@@ -20,23 +20,7 @@ namespace cl
 class Device final : public _cl_device_id, public Object
 {
   public:
-    ~Device() override;
-
-    Platform &getPlatform() noexcept;
-    const Platform &getPlatform() const noexcept;
-    bool isRoot() const noexcept;
-
-    template <typename T = rx::CLDeviceImpl>
-    T &getImpl() const;
-
-    const rx::CLDeviceImpl::Info &getInfo() const;
-    cl_version getVersion() const;
-    bool isVersionOrNewer(cl_uint major, cl_uint minor) const;
-
-    bool supportsBuiltInKernel(const std::string &name) const;
-
-    cl_int getInfoUInt(DeviceInfo name, cl_uint *value) const;
-    cl_int getInfoULong(DeviceInfo name, cl_ulong *value) const;
+    // Front end entry functions, only called from OpenCL entry points
 
     cl_int getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
@@ -44,6 +28,21 @@ class Device final : public _cl_device_id, public Object
                             cl_uint numDevices,
                             cl_device_id *subDevices,
                             cl_uint *numDevicesRet);
+
+  public:
+    ~Device() override;
+
+    Platform &getPlatform() noexcept;
+    const Platform &getPlatform() const noexcept;
+    bool isRoot() const noexcept;
+    const rx::CLDeviceImpl::Info &getInfo() const;
+    cl_version getVersion() const;
+    bool isVersionOrNewer(cl_uint major, cl_uint minor) const;
+
+    template <typename T = rx::CLDeviceImpl>
+    T &getImpl() const;
+
+    bool supportsBuiltInKernel(const std::string &name) const;
 
     static bool IsValidType(DeviceType type);
 
@@ -79,12 +78,6 @@ inline bool Device::isRoot() const noexcept
     return mParent == nullptr;
 }
 
-template <typename T>
-inline T &Device::getImpl() const
-{
-    return static_cast<T &>(*mImpl);
-}
-
 inline const rx::CLDeviceImpl::Info &Device::getInfo() const
 {
     return mInfo;
@@ -100,14 +93,10 @@ inline bool Device::isVersionOrNewer(cl_uint major, cl_uint minor) const
     return mInfo.mVersion >= CL_MAKE_VERSION(major, minor, 0u);
 }
 
-inline cl_int Device::getInfoUInt(DeviceInfo name, cl_uint *value) const
+template <typename T>
+inline T &Device::getImpl() const
 {
-    return mImpl->getInfoUInt(name, value);
-}
-
-inline cl_int Device::getInfoULong(DeviceInfo name, cl_ulong *value) const
-{
-    return mImpl->getInfoULong(name, value);
+    return static_cast<T &>(*mImpl);
 }
 
 inline bool Device::IsValidType(DeviceType type)

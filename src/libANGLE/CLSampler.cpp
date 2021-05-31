@@ -14,8 +14,6 @@
 namespace cl
 {
 
-Sampler::~Sampler() = default;
-
 cl_int Sampler::getInfo(SamplerInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     static_assert(std::is_same<cl_uint, cl_addressing_mode>::value &&
@@ -80,6 +78,8 @@ cl_int Sampler::getInfo(SamplerInfo name, size_t valueSize, void *value, size_t 
     }
     return CL_SUCCESS;
 }
+
+Sampler::~Sampler() = default;
 
 Sampler::Sampler(Context &context,
                  PropArray &&properties,

@@ -20,8 +20,6 @@
 namespace cl
 {
 
-Context::~Context() = default;
-
 cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     std::vector<cl_device_id> devices;
@@ -79,13 +77,6 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
     return CL_SUCCESS;
 }
 
-cl_command_queue Context::createCommandQueue(cl_device_id device,
-                                             CommandQueueProperties properties,
-                                             cl_int &errorCode)
-{
-    return Object::Create<CommandQueue>(errorCode, *this, device->cast<Device>(), properties);
-}
-
 cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
                                                            const cl_queue_properties *properties,
                                                            cl_int &errorCode)
@@ -115,6 +106,13 @@ cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
     }
     return Object::Create<CommandQueue>(errorCode, *this, device->cast<Device>(),
                                         std::move(propArray), props, size);
+}
+
+cl_command_queue Context::createCommandQueue(cl_device_id device,
+                                             CommandQueueProperties properties,
+                                             cl_int &errorCode)
+{
+    return Object::Create<CommandQueue>(errorCode, *this, device->cast<Device>(), properties);
 }
 
 cl_mem Context::createBuffer(const cl_mem_properties *properties,
@@ -171,15 +169,6 @@ cl_mem Context::createImage3D(MemFlags flags,
                                  nullptr, hostPtr);
 }
 
-cl_sampler Context::createSampler(cl_bool normalizedCoords,
-                                  AddressingMode addressingMode,
-                                  FilterMode filterMode,
-                                  cl_int &errorCode)
-{
-    return Object::Create<Sampler>(errorCode, *this, Sampler::PropArray{}, normalizedCoords,
-                                   addressingMode, filterMode);
-}
-
 cl_sampler Context::createSamplerWithProperties(const cl_sampler_properties *properties,
                                                 cl_int &errorCode)
 {
@@ -213,6 +202,15 @@ cl_sampler Context::createSamplerWithProperties(const cl_sampler_properties *pro
     }
 
     return Object::Create<Sampler>(errorCode, *this, std::move(propArray), normalizedCoords,
+                                   addressingMode, filterMode);
+}
+
+cl_sampler Context::createSampler(cl_bool normalizedCoords,
+                                  AddressingMode addressingMode,
+                                  FilterMode filterMode,
+                                  cl_int &errorCode)
+{
+    return Object::Create<Sampler>(errorCode, *this, Sampler::PropArray{}, normalizedCoords,
                                    addressingMode, filterMode);
 }
 
@@ -302,6 +300,8 @@ cl_int Context::waitForEvents(cl_uint numEvents, const cl_event *eventList)
     }
     return mImpl->waitForEvents(events);
 }
+
+Context::~Context() = default;
 
 void Context::ErrorCallback(const char *errinfo, const void *privateInfo, size_t cb, void *userData)
 {

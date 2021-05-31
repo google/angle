@@ -15,8 +15,6 @@
 namespace cl
 {
 
-Memory::~Memory() = default;
-
 cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     static_assert(
@@ -102,6 +100,8 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
     }
     return CL_SUCCESS;
 }
+
+Memory::~Memory() = default;
 
 Memory::Memory(const Buffer &buffer,
                Context &context,

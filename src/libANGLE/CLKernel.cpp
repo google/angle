@@ -15,8 +15,6 @@
 namespace cl
 {
 
-Kernel::~Kernel() = default;
-
 cl_int Kernel::getInfo(KernelInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     cl_uint valUInt       = 0u;
@@ -206,6 +204,8 @@ cl_int Kernel::getArgInfo(cl_uint argIndex,
     }
     return CL_SUCCESS;
 }
+
+Kernel::~Kernel() = default;
 
 Kernel::Kernel(Program &program, const char *name, cl_int &errorCode)
     : mProgram(&program),

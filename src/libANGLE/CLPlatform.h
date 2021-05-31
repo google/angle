@@ -20,15 +20,18 @@ namespace cl
 class Platform final : public _cl_platform_id, public Object
 {
   public:
-    ~Platform() override;
+    // Front end entry functions, only called from OpenCL entry points
 
-    const rx::CLPlatformImpl::Info &getInfo() const;
-    cl_version getVersion() const;
-    bool isVersionOrNewer(cl_uint major, cl_uint minor) const;
-    const DevicePtrs &getDevices() const;
+    static void Initialize(const cl_icd_dispatch &dispatch,
+                           rx::CLPlatformImpl::CreateFuncs &&createFuncs);
 
-    template <typename T = rx::CLPlatformImpl>
-    T &getImpl() const;
+    static Platform *GetDefault();
+    static Platform *CastOrDefault(cl_platform_id platform);
+    static bool IsValidOrDefault(const _cl_platform_id *platform);
+
+    static cl_int GetPlatformIDs(cl_uint numEntries,
+                                 cl_platform_id *platforms,
+                                 cl_uint *numPlatforms);
 
     cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
@@ -36,13 +39,6 @@ class Platform final : public _cl_platform_id, public Object
                         cl_uint numEntries,
                         cl_device_id *devices,
                         cl_uint *numDevices) const;
-
-    static void Initialize(const cl_icd_dispatch &dispatch,
-                           rx::CLPlatformImpl::CreateFuncs &&createFuncs);
-
-    static cl_int GetPlatformIDs(cl_uint numEntries,
-                                 cl_platform_id *platforms,
-                                 cl_uint *numPlatforms);
 
     static cl_context CreateContext(const cl_context_properties *properties,
                                     cl_uint numDevices,
@@ -57,10 +53,18 @@ class Platform final : public _cl_platform_id, public Object
                                             void *userData,
                                             cl_int &errorCode);
 
+  public:
+    ~Platform() override;
+
+    const rx::CLPlatformImpl::Info &getInfo() const;
+    cl_version getVersion() const;
+    bool isVersionOrNewer(cl_uint major, cl_uint minor) const;
+    const DevicePtrs &getDevices() const;
+
+    template <typename T = rx::CLPlatformImpl>
+    T &getImpl() const;
+
     static const PlatformPtrs &GetPlatforms();
-    static Platform *GetDefault();
-    static Platform *CastOrDefault(cl_platform_id platform);
-    static bool IsValidOrDefault(const _cl_platform_id *platform);
 
     static constexpr const char *GetVendor();
 
@@ -78,6 +82,23 @@ class Platform final : public _cl_platform_id, public Object
     static constexpr char kVendor[]    = "ANGLE";
     static constexpr char kIcdSuffix[] = "ANGLE";
 };
+
+inline Platform *Platform::GetDefault()
+{
+    return GetPlatforms().empty() ? nullptr : GetPlatforms().front().get();
+}
+
+inline Platform *Platform::CastOrDefault(cl_platform_id platform)
+{
+    return platform != nullptr ? &platform->cast<Platform>() : GetDefault();
+}
+
+// Our CL implementation defines that a nullptr value chooses the platform that we provide as
+// default, so this function returns true for a nullptr value if a default platform exists.
+inline bool Platform::IsValidOrDefault(const _cl_platform_id *platform)
+{
+    return platform != nullptr ? platform->isValid() : GetDefault() != nullptr;
+}
 
 inline const rx::CLPlatformImpl::Info &Platform::getInfo() const
 {
@@ -105,37 +126,20 @@ inline T &Platform::getImpl() const
     return static_cast<T &>(*mImpl);
 }
 
-inline PlatformPtrs &Platform::GetPointers()
-{
-    static angle::base::NoDestructor<PlatformPtrs> sPointers;
-    return *sPointers;
-}
-
 inline const PlatformPtrs &Platform::GetPlatforms()
 {
     return GetPointers();
 }
 
-inline Platform *Platform::GetDefault()
-{
-    return GetPlatforms().empty() ? nullptr : GetPlatforms().front().get();
-}
-
-inline Platform *Platform::CastOrDefault(cl_platform_id platform)
-{
-    return platform != nullptr ? &platform->cast<Platform>() : GetDefault();
-}
-
-// Our CL implementation defines that a nullptr value chooses the platform that we provide as
-// default, so this function returns true for a nullptr value if a default platform exists.
-inline bool Platform::IsValidOrDefault(const _cl_platform_id *platform)
-{
-    return platform != nullptr ? platform->isValid() : GetDefault() != nullptr;
-}
-
 constexpr const char *Platform::GetVendor()
 {
     return kVendor;
+}
+
+inline PlatformPtrs &Platform::GetPointers()
+{
+    static angle::base::NoDestructor<PlatformPtrs> sPointers;
+    return *sPointers;
 }
 
 }  // namespace cl

@@ -17,6 +17,11 @@ namespace cl
 class Sampler final : public _cl_sampler, public Object
 {
   public:
+    // Front end entry functions, only called from OpenCL entry points
+
+    cl_int getInfo(SamplerInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+
+  public:
     using PropArray = std::vector<cl_sampler_properties>;
 
     ~Sampler() override;
@@ -27,7 +32,8 @@ class Sampler final : public _cl_sampler, public Object
     AddressingMode getAddressingMode() const;
     FilterMode getFilterMode() const;
 
-    cl_int getInfo(SamplerInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+    template <typename T = rx::CLSamplerImpl>
+    T &getImpl() const;
 
   private:
     Sampler(Context &context,
@@ -70,6 +76,12 @@ inline AddressingMode Sampler::getAddressingMode() const
 inline FilterMode Sampler::getFilterMode() const
 {
     return mFilterMode;
+}
+
+template <typename T>
+inline T &Sampler::getImpl() const
+{
+    return static_cast<T &>(*mImpl);
 }
 
 }  // namespace cl

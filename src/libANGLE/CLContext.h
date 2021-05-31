@@ -19,30 +19,17 @@ namespace cl
 class Context final : public _cl_context, public Object
 {
   public:
-    using PropArray = std::vector<cl_context_properties>;
-
-    ~Context() override;
-
-    const Platform &getPlatform() const noexcept;
-    const DevicePtrs &getDevices() const;
-    bool hasDevice(const _cl_device_id *device) const;
-
-    template <typename T = rx::CLContextImpl>
-    T &getImpl() const;
-
-    bool supportsImages() const;
-    bool supportsIL() const;
-    bool supportsBuiltInKernel(const std::string &name) const;
+    // Front end entry functions, only called from OpenCL entry points
 
     cl_int getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
-
-    cl_command_queue createCommandQueue(cl_device_id device,
-                                        CommandQueueProperties properties,
-                                        cl_int &errorCode);
 
     cl_command_queue createCommandQueueWithProperties(cl_device_id device,
                                                       const cl_queue_properties *properties,
                                                       cl_int &errorCode);
+
+    cl_command_queue createCommandQueue(cl_device_id device,
+                                        CommandQueueProperties properties,
+                                        cl_int &errorCode);
 
     cl_mem createBuffer(const cl_mem_properties *properties,
                         MemFlags flags,
@@ -75,13 +62,13 @@ class Context final : public _cl_context, public Object
                          void *hostPtr,
                          cl_int &errorCode);
 
+    cl_sampler createSamplerWithProperties(const cl_sampler_properties *properties,
+                                           cl_int &errorCode);
+
     cl_sampler createSampler(cl_bool normalizedCoords,
                              AddressingMode addressingMode,
                              FilterMode filterMode,
                              cl_int &errorCode);
-
-    cl_sampler createSamplerWithProperties(const cl_sampler_properties *properties,
-                                           cl_int &errorCode);
 
     cl_program createProgramWithSource(cl_uint count,
                                        const char **strings,
@@ -107,6 +94,22 @@ class Context final : public _cl_context, public Object
     cl_int waitForEvents(cl_uint numEvents, const cl_event *eventList);
 
     static bool IsValidAndVersionOrNewer(const _cl_context *context, cl_uint major, cl_uint minor);
+
+  public:
+    using PropArray = std::vector<cl_context_properties>;
+
+    ~Context() override;
+
+    const Platform &getPlatform() const noexcept;
+    const DevicePtrs &getDevices() const;
+    bool hasDevice(const _cl_device_id *device) const;
+
+    template <typename T = rx::CLContextImpl>
+    T &getImpl() const;
+
+    bool supportsImages() const;
+    bool supportsIL() const;
+    bool supportsBuiltInKernel(const std::string &name) const;
 
     static void CL_CALLBACK ErrorCallback(const char *errinfo,
                                           const void *privateInfo,
@@ -139,6 +142,14 @@ class Context final : public _cl_context, public Object
 
     friend class Object;
 };
+
+inline bool Context::IsValidAndVersionOrNewer(const _cl_context *context,
+                                              cl_uint major,
+                                              cl_uint minor)
+{
+    return IsValid(context) &&
+           context->cast<Context>().getPlatform().isVersionOrNewer(major, minor);
+}
 
 inline const Platform &Context::getPlatform() const noexcept
 {
@@ -182,14 +193,6 @@ inline bool Context::supportsBuiltInKernel(const std::string &name) const
     return (std::find_if(mDevices.cbegin(), mDevices.cend(), [&](const DevicePtr &ptr) {
                 return ptr->supportsBuiltInKernel(name);
             }) != mDevices.cend());
-}
-
-inline bool Context::IsValidAndVersionOrNewer(const _cl_context *context,
-                                              cl_uint major,
-                                              cl_uint minor)
-{
-    return IsValid(context) &&
-           context->cast<Context>().getPlatform().isVersionOrNewer(major, minor);
 }
 
 }  // namespace cl

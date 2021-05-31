@@ -17,13 +17,7 @@ namespace cl
 class Kernel final : public _cl_kernel, public Object
 {
   public:
-    ~Kernel() override;
-
-    const Program &getProgram() const;
-    const rx::CLKernelImpl::Info &getInfo() const;
-
-    template <typename T>
-    T &getImpl() const;
+    // Front end entry functions, only called from OpenCL entry points
 
     cl_int getInfo(KernelInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
@@ -38,6 +32,15 @@ class Kernel final : public _cl_kernel, public Object
                       size_t valueSize,
                       void *value,
                       size_t *valueSizeRet) const;
+
+  public:
+    ~Kernel() override;
+
+    const Program &getProgram() const;
+    const rx::CLKernelImpl::Info &getInfo() const;
+
+    template <typename T = rx::CLKernelImpl>
+    T &getImpl() const;
 
   private:
     Kernel(Program &program, const char *name, cl_int &errorCode);

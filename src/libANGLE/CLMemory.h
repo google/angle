@@ -18,6 +18,11 @@ namespace cl
 class Memory : public _cl_mem, public Object
 {
   public:
+    // Front end entry functions, only called from OpenCL entry points
+
+    cl_int getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+
+  public:
     using PropArray = std::vector<cl_mem_properties>;
 
     ~Memory() override;
@@ -31,7 +36,8 @@ class Memory : public _cl_mem, public Object
     const MemoryPtr &getParent() const;
     size_t getOffset() const;
 
-    cl_int getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+    template <typename T = rx::CLMemoryImpl>
+    T &getImpl() const;
 
   protected:
     Memory(const Buffer &buffer,
@@ -102,6 +108,12 @@ inline const MemoryPtr &Memory::getParent() const
 inline size_t Memory::getOffset() const
 {
     return mOffset;
+}
+
+template <typename T>
+inline T &Memory::getImpl() const
+{
+    return static_cast<T &>(*mImpl);
 }
 
 }  // namespace cl

@@ -15,14 +15,6 @@
 namespace cl
 {
 
-CommandQueue::~CommandQueue()
-{
-    if (mDevice->mDefaultCommandQueue == this)
-    {
-        mDevice->mDefaultCommandQueue = nullptr;
-    }
-}
-
 cl_int CommandQueue::getInfo(CommandQueueInfo name,
                              size_t valueSize,
                              void *value,
@@ -114,15 +106,13 @@ cl_int CommandQueue::setProperty(CommandQueueProperties properties,
     return result;
 }
 
-CommandQueue::CommandQueue(Context &context,
-                           Device &device,
-                           CommandQueueProperties properties,
-                           cl_int &errorCode)
-    : mContext(&context),
-      mDevice(&device),
-      mProperties(properties),
-      mImpl(context.getImpl().createCommandQueue(*this, errorCode))
-{}
+CommandQueue::~CommandQueue()
+{
+    if (mDevice->mDefaultCommandQueue == this)
+    {
+        mDevice->mDefaultCommandQueue = nullptr;
+    }
+}
 
 CommandQueue::CommandQueue(Context &context,
                            Device &device,
@@ -142,5 +132,15 @@ CommandQueue::CommandQueue(Context &context,
         mDevice->mDefaultCommandQueue = this;
     }
 }
+
+CommandQueue::CommandQueue(Context &context,
+                           Device &device,
+                           CommandQueueProperties properties,
+                           cl_int &errorCode)
+    : mContext(&context),
+      mDevice(&device),
+      mProperties(properties),
+      mImpl(context.getImpl().createCommandQueue(*this, errorCode))
+{}
 
 }  // namespace cl

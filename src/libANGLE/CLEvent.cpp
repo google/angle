@@ -15,22 +15,6 @@
 namespace cl
 {
 
-Event::~Event() = default;
-
-void Event::callback(cl_int commandStatus)
-{
-    ASSERT(commandStatus >= 0 && commandStatus < 3);
-    for (const CallbackData &data : mCallbacks[commandStatus])
-    {
-        data.first(this, commandStatus, data.second);
-    }
-    // This event can be released after the callback was called.
-    if (release())
-    {
-        delete this;
-    }
-}
-
 cl_int Event::setUserEventStatus(cl_int executionStatus)
 {
     const cl_int errorCode = mImpl->setUserEventStatus(executionStatus);
@@ -120,6 +104,22 @@ cl_int Event::setCallback(cl_int commandExecCallbackType, EventCB pfnNotify, voi
     }
     mCallbacks[commandExecCallbackType].emplace_back(pfnNotify, userData);
     return CL_SUCCESS;
+}
+
+Event::~Event() = default;
+
+void Event::callback(cl_int commandStatus)
+{
+    ASSERT(commandStatus >= 0 && commandStatus < 3);
+    for (const CallbackData &data : mCallbacks[commandStatus])
+    {
+        data.first(this, commandStatus, data.second);
+    }
+    // This event can be released after the callback was called.
+    if (release())
+    {
+        delete this;
+    }
 }
 
 Event::Event(Context &context, cl_int &errorCode)

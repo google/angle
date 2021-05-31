@@ -16,16 +16,19 @@ namespace cl
 class Image final : public Memory
 {
   public:
+    // Front end entry functions, only called from OpenCL entry points
+
+    cl_int getInfo(ImageInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+
+    static bool IsValid(const _cl_mem *image);
+
+  public:
     ~Image() override;
 
     cl_mem_object_type getType() const final;
 
     const cl_image_format &getFormat() const;
     const ImageDescriptor &getDescriptor() const;
-
-    cl_int getInfo(ImageInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
-
-    static bool IsValid(const _cl_mem *image);
 
   private:
     Image(Context &context,

@@ -14,8 +14,6 @@
 namespace cl
 {
 
-Image::~Image() = default;
-
 cl_int Image::getInfo(ImageInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     size_t valSizeT       = 0u;
@@ -115,6 +113,8 @@ bool Image::IsValid(const _cl_mem *image)
     }
     return true;
 }
+
+Image::~Image() = default;
 
 Image::Image(Context &context,
              PropArray &&properties,

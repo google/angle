@@ -17,6 +17,15 @@ namespace cl
 class Program final : public _cl_program, public Object
 {
   public:
+    // Front end entry functions, only called from OpenCL entry points
+
+    cl_int getInfo(ProgramInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+
+    cl_kernel createKernel(const char *kernel_name, cl_int &errorCode);
+
+    cl_int createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *numKernelsRet);
+
+  public:
     ~Program() override;
 
     Context &getContext();
@@ -25,12 +34,6 @@ class Program final : public _cl_program, public Object
 
     template <typename T = rx::CLProgramImpl>
     T &getImpl() const;
-
-    cl_int getInfo(ProgramInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
-
-    cl_kernel createKernel(const char *kernel_name, cl_int &errorCode);
-
-    cl_int createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *numKernelsRet);
 
   private:
     Program(Context &context, std::string &&source, cl_int &errorCode);

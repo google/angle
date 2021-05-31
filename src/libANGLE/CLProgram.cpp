@@ -15,8 +15,6 @@
 namespace cl
 {
 
-Program::~Program() = default;
-
 cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     static_assert(std::is_same<cl_uint, cl_bool>::value &&
@@ -161,6 +159,8 @@ cl_int Program::createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *n
     }
     return errorCode;
 }
+
+Program::~Program() = default;
 
 Program::Program(Context &context, std::string &&source, cl_int &errorCode)
     : mContext(&context),

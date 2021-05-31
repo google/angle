@@ -16,19 +16,23 @@ namespace cl
 class Buffer final : public Memory
 {
   public:
-    ~Buffer() override;
-
-    cl_mem_object_type getType() const final;
-
-    bool isSubBuffer() const;
-    bool isRegionValid(const cl_buffer_region &region) const;
+    // Front end entry functions, only called from OpenCL entry points
 
     cl_mem createSubBuffer(MemFlags flags,
                            cl_buffer_create_type createType,
                            const void *createInfo,
                            cl_int &errorCode);
 
+    bool isRegionValid(const cl_buffer_region &region) const;
+
     static bool IsValid(const _cl_mem *buffer);
+
+  public:
+    ~Buffer() override;
+
+    cl_mem_object_type getType() const final;
+
+    bool isSubBuffer() const;
 
   private:
     Buffer(Context &context,
@@ -43,16 +47,6 @@ class Buffer final : public Memory
     friend class Object;
 };
 
-inline cl_mem_object_type Buffer::getType() const
-{
-    return CL_MEM_OBJECT_BUFFER;
-}
-
-inline bool Buffer::isSubBuffer() const
-{
-    return mParent != nullptr;
-}
-
 inline bool Buffer::isRegionValid(const cl_buffer_region &region) const
 {
     return region.origin < mSize && region.origin + region.size <= mSize;
@@ -61,6 +55,16 @@ inline bool Buffer::isRegionValid(const cl_buffer_region &region) const
 inline bool Buffer::IsValid(const _cl_mem *buffer)
 {
     return Memory::IsValid(buffer) && buffer->cast<Memory>().getType() == CL_MEM_OBJECT_BUFFER;
+}
+
+inline cl_mem_object_type Buffer::getType() const
+{
+    return CL_MEM_OBJECT_BUFFER;
+}
+
+inline bool Buffer::isSubBuffer() const
+{
+    return mParent != nullptr;
 }
 
 }  // namespace cl
