@@ -554,6 +554,13 @@ struct FeaturesGL : FeatureSetBase
         "disable_mutlisampled_render_to_texture", FeatureCategory::OpenGLWorkarounds,
         "Many drivers have bugs when using GL_EXT_multisampled_render_to_texture", &members,
         "http://anglebug.com/2894"};
+
+    // Mac OpenGL drivers often hang when calling glTexSubImage with >120kb of data. Instead, upload
+    // the data in <120kb chunks.
+    Feature uploadTextureDataInChunks = {
+        "chunked_texture_upload", FeatureCategory::OpenGLWorkarounds,
+        "Upload texture data in <120kb chunks to work around Mac driver hangs and crashes.",
+        &members, "http://crbug.com/1181068"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
