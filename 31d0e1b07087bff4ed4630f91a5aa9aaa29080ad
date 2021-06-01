@@ -77,6 +77,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f88f0d18_8c8dcb2a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4893,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-01T22:17:07Z",
+      "side": 1,
+      "message": "\u003e which also makes sure func() is called either way\n\nnot relevant now but why not make use of that optimization when the operator is \"||\"?",
+      "parentUuid": "63ce2e41_17c93201",
+      "range": {
+        "startLine": 4893,
+        "startChar": 8,
+        "endLine": 4893,
+        "endChar": 85
+      },
+      "revId": "31d0e1b07087bff4ed4630f91a5aa9aaa29080ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dd41cf42_d6b6c5d8",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 6

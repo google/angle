@@ -244,6 +244,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3b3e1a7_959a2c54",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-01T22:17:07Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d03f5d9e_16ad4a08",
+      "range": {
+        "startLine": 1303,
+        "startChar": 0,
+        "endLine": 1308,
+        "endChar": 5
+      },
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84f6276a_45d87c15",
@@ -257,6 +281,30 @@
       "writtenOn": "2021-06-01T17:02:28Z",
       "side": 1,
       "message": "nit: ANGLE prefers to use explicit types.",
+      "range": {
+        "startLine": 2509,
+        "startChar": 9,
+        "endLine": 2509,
+        "endChar": 13
+      },
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48ebe9e5_50fb9227",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2509,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-01T22:17:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84f6276a_45d87c15",
       "range": {
         "startLine": 2509,
         "startChar": 9,
