@@ -111,6 +111,30 @@
       },
       "revId": "16c2e6a4a03c438a2c548f0de08078374ee18e58",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ffc758e_3b3e78a1",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-01T20:57:49Z",
+      "side": 1,
+      "message": "I know you already +2\u0027d the change, but take a look at the config changes since they are material.",
+      "parentUuid": "ce13d142_5f3102f9",
+      "range": {
+        "startLine": 386,
+        "startChar": 6,
+        "endLine": 386,
+        "endChar": 10
+      },
+      "revId": "16c2e6a4a03c438a2c548f0de08078374ee18e58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
