@@ -22,6 +22,30 @@
       },
       "revId": "6f0bc6ded70330e4aab51cb3b1ae34613404bff5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33021b7f_e9a512e0",
+        "filename": "src/compiler/translator/tree_ops/DeferGlobalInitializers.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-01T18:43:00Z",
+      "side": 1,
+      "message": "I\u0027ll just land this without this change and we can follow up if metal stuff is broken later.",
+      "parentUuid": "fc0c4463_01b0c3a8",
+      "range": {
+        "startLine": 56,
+        "startChar": 86,
+        "endLine": 57,
+        "endChar": 51
+      },
+      "revId": "6f0bc6ded70330e4aab51cb3b1ae34613404bff5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
