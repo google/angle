@@ -16,6 +16,24 @@
       "message": "Can there end up being a mismatch between the incoming \"unpack\" PixelUnpackState and that coming from the context? Wondering if the computation of the rows per chunk can end up being wrong because of for example an unpack alignment of 8.",
       "revId": "cff23371b2a02fcd3c9e6831bbb271c80ba7e275",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e386d42_1abb5aa7",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-01T20:34:08Z",
+      "side": 1,
+      "message": "Oh, whoops. I missed that there was the unpack parameter, good catch. Fixed. \n\nThe alignment is factored into the rowBytes so a higher alignment could only ever lead to more uploads which is not a problem.\n\nI think removing the \"directUnpack.alignment \u003d 1;\" is correct, the skipBytes computed later doesn\u0027t take alignment into account and (as far as I can tell) alignment is used on the first row so there was potentially a bug before.\n\nI ran a tryjob with this workaround enabled all the time and there were no failures so we have good coverage of this workaround now.",
+      "parentUuid": "bfe26761_2eb215ce",
+      "revId": "cff23371b2a02fcd3c9e6831bbb271c80ba7e275",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
