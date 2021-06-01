@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "973624dc_25b2c894",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-01T16:03:13Z",
+      "side": 1,
+      "message": "nit: could clarify what it means for a framebuffer attachment to collect a clear. is it to say that ANGLE defers clears of this attachment\u0027s attached image?",
+      "range": {
+        "startLine": 11,
+        "startChar": 12,
+        "endLine": 12,
+        "endChar": 23
+      },
+      "revId": "b9a16fab7e21d2fb7feec483e40ebaa43c8b051f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8373d51_f322f151",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-01T16:03:13Z",
+      "side": 1,
+      "message": "nit: GL spec uses layers I think to refer to this?",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 10
+      },
+      "revId": "b9a16fab7e21d2fb7feec483e40ebaa43c8b051f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e88c7b0_bb42d8ad",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2485,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-01T16:03:13Z",
+      "side": 1,
+      "message": "nit: comment",
+      "range": {
+        "startLine": 2485,
+        "startChar": 0,
+        "endLine": 2485,
+        "endChar": 6
+      },
+      "revId": "b9a16fab7e21d2fb7feec483e40ebaa43c8b051f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
