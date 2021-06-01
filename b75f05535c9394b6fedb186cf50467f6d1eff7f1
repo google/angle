@@ -33,6 +33,24 @@
       "message": "Can we change this to chunk to \u003c128k? I did bisect to 240k, but that may be specific to my GPU\u0027s driver, so I\u0027d prefer to start with a low threshold, and then increase to see if that fixes the issue.",
       "revId": "b75f05535c9394b6fedb186cf50467f6d1eff7f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91ad9b63_44e798a4",
+        "filename": "include/platform/FeaturesGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-01T18:21:03Z",
+      "side": 1,
+      "message": "Done, went with 120.",
+      "parentUuid": "edf1099e_bc89ab88",
+      "revId": "b75f05535c9394b6fedb186cf50467f6d1eff7f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
