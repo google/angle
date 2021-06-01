@@ -16,6 +16,24 @@
       "message": "Looking good, but some of our tests need to have their expectations corrected.  They should probably be moved to a WebGL-specific suite for one thing.",
       "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02c5caef_f9d03851",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-01T17:38:57Z",
+      "side": 1,
+      "message": "I don\u0027t think we should move these into a WebGL-specific suite, since I think we do want to test these cases to make sure they don\u0027t crash or incorrectly generate errors.   It would be nicer to conditionally do the EXPECT_GL_NO_ERROR() checks for the correct configs we expect, though I\u0027m not finding a good \"is WebGL\" function.   I\u0027m not entirely convinced these are failing due to WebGL being run either.\n\nThere are vulkan VVL errors that will need to be fixed:\n\nI  396.978s run_tests_on_device(9A241FFAZ002L1)  [ RUN      ] ValidationStateChangeTest.UniformBlockNegativeAPI/ES3_Vulkan\nI  396.978s run_tests_on_device(9A241FFAZ002L1)  ../../src/tests/gl_tests/StateChangeTest.cpp:5268: Failure\nI  396.978s run_tests_on_device(9A241FFAZ002L1)  Expected equality of these values:\nI  396.978s run_tests_on_device(9A241FFAZ002L1)    static_cast\u003cGLenum\u003e(0x0502)\nI  396.978s run_tests_on_device(9A241FFAZ002L1)      Which is: 1282\nI  396.978s run_tests_on_device(9A241FFAZ002L1)    l_glGetError()\nI  396.978s run_tests_on_device(9A241FFAZ002L1)      Which is: 0\nI  396.978s run_tests_on_device(9A241FFAZ002L1)  Invalid uniform block binding should fail\nI  396.978s run_tests_on_device(9A241FFAZ002L1)  ../../src/tests/test_utils/ANGLETest.cpp:64: Failure\nI  396.978s run_tests_on_device(9A241FFAZ002L1)  RendererVk.cpp:364 (DebugUtilsMessenger): [ VUID-vkCmdBindDescriptorSets-dynamicOffsetCount-00359 ] Validation Error: [ VUID-vkCmdBindDescriptorSets-dynamicOffsetCount-00359 ] Object 0: handle \u003d 0x5e000000005e, type \u003d VK_OBJECT_TYPE_DESCRIPTOR_SET; | MessageID \u003d 0x82756c54 | vkCmdBindDescriptorSets(): descriptorSet #0 (VkDescriptorSet 0x5e000000005e[]) requires 1 dynamicOffsets, but only 0 dynamicOffsets are left in pDynamicOffsets array. There must be one dynamic offset for each dynamic descriptor being bound. The Vulkan spec states: dynamicOffsetCount must be equal to the total number of dynamic descriptors in pDescriptorSets (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-vkCmdBindDescriptorSets-dynamicOffsetCount-00359)\nI  396.978s run_tests_on_device(9A241FFAZ002L1)                              Object: 0x5e000000005e (type \u003d Descriptor Set(23))\nI  396.978s run_tests_on_device(9A241FFAZ002L1)  \nI  396.978s run_tests_on_device(9A241FFAZ002L1)  ../../src/tests/test_utils/ANGLETest.cpp:64: Failure\nI  396.978s run_tests_on_device(9A241FFAZ002L1)  RendererVk.cpp:364 (DebugUtilsMessenger): [ VUID-vkDestroyBuffer-buffer-00922 ] Validation Error: [ VUID-vkDestroyBuffer-buffer-00922 ] Object 0: handle \u003d 0x2b000000002b, type \u003d VK_OBJECT_TYPE_BUFFER; | MessageID \u003d 0xe4549c11 | Cannot free VkBuffer 0x2b000000002b[] that is in use by a command buffer. The Vulkan spec states: All submitted commands that refer to buffer, either directly or via a VkBufferView, must have completed execution (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-vkDestroyBuffer-buffer-00922)\nI  396.978s run_tests_on_device(9A241FFAZ002L1)                              Object: 0x2b000000002b (type \u003d Buffer(9))\nI  396.978s run_tests_on_device(9A241FFAZ002L1)  \nI  396.978s run_tests_on_device(9A241FFAZ002L1)  [  FAILED  ] ValidationStateChangeTest.UniformBlockNegativeAPI/ES3_Vulkan, where GetParam() \u003d ES3_Vulkan (153 ms)",
+      "parentUuid": "c2e4da87_1ecc298a",
+      "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
