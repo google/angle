@@ -39,6 +39,30 @@
       },
       "revId": "16c2e6a4a03c438a2c548f0de08078374ee18e58",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76c59a8c_aaf0db56",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-01T16:57:06Z",
+      "side": 1,
+      "message": "True, it isn\u0027t a TODO, just reflexively added it.  Will strip it.\n\nAny thoughts on throwing an assert here or something?  Like:\n\n  assert(is_clang, \"build_angle_trace_perf_tests requires is_clang\")\n\nIs it difficult to update the MSVC builds to not specify build_angle_trace_perf_tests?",
+      "parentUuid": "f4dbcdcb_751fae59",
+      "range": {
+        "startLine": 386,
+        "startChar": 6,
+        "endLine": 386,
+        "endChar": 10
+      },
+      "revId": "16c2e6a4a03c438a2c548f0de08078374ee18e58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
