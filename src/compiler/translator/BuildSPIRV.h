@@ -233,6 +233,7 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::Blob *getSpirvDecorations() { return &mSpirvDecorations; }
     spirv::Blob *getSpirvTypeAndConstantDecls() { return &mSpirvTypeAndConstantDecls; }
     spirv::Blob *getSpirvTypePointerDecls() { return &mSpirvTypePointerDecls; }
+    spirv::Blob *getSpirvFunctionTypeDecls() { return &mSpirvFunctionTypeDecls; }
     spirv::Blob *getSpirvVariableDecls() { return &mSpirvVariableDecls; }
     spirv::Blob *getSpirvFunctions() { return &mSpirvFunctions; }
     spirv::Blob *getSpirvCurrentFunctionBlock()
@@ -272,7 +273,7 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getCompositeConstant(spirv::IdRef typeId, const spirv::IdRefList &values);
 
     // Helpers to start and end a function.
-    void startNewFunction();
+    void startNewFunction(spirv::IdRef functionId, const char *name);
     void assembleSpirvFunctionBlocks();
 
     // Helper to declare a variable.  Function-local variables must be placed in the first block of
@@ -352,6 +353,7 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::Blob mSpirvDecorations;
     spirv::Blob mSpirvTypeAndConstantDecls;
     spirv::Blob mSpirvTypePointerDecls;
+    spirv::Blob mSpirvFunctionTypeDecls;
     spirv::Blob mSpirvVariableDecls;
     spirv::Blob mSpirvFunctions;
     // A list of blocks created for the current function.  These are assembled by

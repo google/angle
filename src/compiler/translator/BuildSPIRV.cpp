@@ -78,11 +78,13 @@ SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage bloc
 
         // Calculate the block storage from the interface block automatically.  The fields inherit
         // from this.  Default to std140.
-        ASSERT(spirvType.blockStorage == EbsUnspecified);
-        spirvType.blockStorage = type.getLayoutQualifier().blockStorage;
-        if (!IsShaderIoBlock(type.getQualifier()) && spirvType.blockStorage != EbsStd430)
+        if (spirvType.blockStorage == EbsUnspecified)
         {
-            spirvType.blockStorage = EbsStd140;
+            spirvType.blockStorage = type.getLayoutQualifier().blockStorage;
+            if (!IsShaderIoBlock(type.getQualifier()) && spirvType.blockStorage != EbsStd430)
+            {
+                spirvType.blockStorage = EbsStd140;
+            }
         }
     }
     else if (spirvType.arraySizes.empty())
@@ -151,7 +153,7 @@ spirv::IdRef SPIRVBuilder::getFunctionTypeId(spirv::IdRef returnTypeId,
     {
         const spirv::IdRef functionTypeId = getNewId();
 
-        spirv::WriteTypeFunction(&mSpirvTypeAndConstantDecls, functionTypeId, returnTypeId,
+        spirv::WriteTypeFunction(&mSpirvFunctionTypeDecls, functionTypeId, returnTypeId,
                                  paramTypeIds);
 
         iter = mFunctionTypeIdMap.insert({key, functionTypeId}).first;
@@ -180,11 +182,20 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
 
         const spirv::IdRef subTypeId = getSpirvTypeData(subType, "").id;
 
-        const unsigned int length   = type.arraySizes.back();
-        const spirv::IdRef lengthId = getUintConstant(length);
+        const unsigned int length = type.arraySizes.back();
+        typeId                    = getNewId();
 
-        typeId = getNewId();
-        spirv::WriteTypeArray(&mSpirvTypeAndConstantDecls, typeId, subTypeId, lengthId);
+        if (length == 0)
+        {
+            // Storage buffers may include a dynamically-sized array, which is identified by it
+            // having a length of 0.
+            spirv::WriteTypeRuntimeArray(&mSpirvTypeAndConstantDecls, typeId, subTypeId);
+        }
+        else
+        {
+            const spirv::IdRef lengthId = getUintConstant(length);
+            spirv::WriteTypeArray(&mSpirvTypeAndConstantDecls, typeId, subTypeId, lengthId);
+        }
     }
     else if (type.block != nullptr)
     {
@@ -781,13 +792,19 @@ spirv::IdRef SPIRVBuilder::getCompositeConstant(spirv::IdRef typeId, const spirv
     return iter->second;
 }
 
-void SPIRVBuilder::startNewFunction()
+void SPIRVBuilder::startNewFunction(spirv::IdRef functionId, const char *name)
 {
     ASSERT(mSpirvCurrentFunctionBlocks.empty());
 
     // Add the first block of the function.
     mSpirvCurrentFunctionBlocks.emplace_back();
     mSpirvCurrentFunctionBlocks.back().labelId = getNewId();
+
+    // Output debug information.
+    if (name)
+    {
+        spirv::WriteName(&mSpirvDebug, functionId, name);
+    }
 }
 
 void SPIRVBuilder::assembleSpirvFunctionBlocks()
@@ -1060,7 +1077,8 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
         uint32_t arraySizeProduct = 1;
         for (uint32_t arraySize : type.arraySizes)
         {
-            arraySizeProduct *= arraySize;
+            // For runtime arrays, arraySize will be 0 and should be excluded.
+            arraySizeProduct *= arraySize > 0 ? arraySize : 1;
         }
         *sizeInStorageBlockOut = baseTypeData.sizeInStorageBlock * arraySizeProduct;
 
@@ -1281,8 +1299,8 @@ spirv::Blob SPIRVBuilder::getSpirv()
     // OpExtInstImport, OpEntryPoint etc.
     result.reserve(5 + mCapabilities.size() * 2 + mExecutionModes.size() * 3 + mSpirvDebug.size() +
                    mSpirvDecorations.size() + mSpirvTypeAndConstantDecls.size() +
-                   mSpirvTypePointerDecls.size() + mSpirvVariableDecls.size() +
-                   mSpirvFunctions.size());
+                   mSpirvTypePointerDecls.size() + mSpirvFunctionTypeDecls.size() +
+                   mSpirvVariableDecls.size() + mSpirvFunctions.size());
 
     // Generate any necessary id before writing the id bound in header.
     const spirv::IdRef extInstImportId = getNewId();
@@ -1338,6 +1356,7 @@ spirv::Blob SPIRVBuilder::getSpirv()
     result.insert(result.end(), mSpirvTypeAndConstantDecls.begin(),
                   mSpirvTypeAndConstantDecls.end());
     result.insert(result.end(), mSpirvTypePointerDecls.begin(), mSpirvTypePointerDecls.end());
+    result.insert(result.end(), mSpirvFunctionTypeDecls.begin(), mSpirvFunctionTypeDecls.end());
     result.insert(result.end(), mSpirvVariableDecls.begin(), mSpirvVariableDecls.end());
     result.insert(result.end(), mSpirvFunctions.begin(), mSpirvFunctions.end());
 

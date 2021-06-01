@@ -3052,9 +3052,12 @@ TEST_P(TransformFeedbackTestES32, PrimitivesWrittenAndGenerated)
     }
 }
 
+class TransformFeedbackTestIOBlocks : public TransformFeedbackTestES31
+{};
+
 // Verify that capture of I/O block fields works, both when the instance name is specified and when
 // not.  This test uses interleaved components.
-TEST_P(TransformFeedbackTestES31, IOBlocksInterleaved)
+TEST_P(TransformFeedbackTestIOBlocks, Interleaved)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
 
@@ -3161,7 +3164,7 @@ void main()
 }
 
 // Verify that capture of I/O block fields works.  This test uses separate components.
-TEST_P(TransformFeedbackTestES31, IOBlocksSeparate)
+TEST_P(TransformFeedbackTestIOBlocks, Separate)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
 
@@ -3305,7 +3308,11 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackLifetimeTest);
 ANGLE_INSTANTIATE_TEST_ES3(TransformFeedbackLifetimeTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTestES31);
-ANGLE_INSTANTIATE_TEST_ES31(TransformFeedbackTestES31);
+ANGLE_INSTANTIATE_TEST_ES31_AND(TransformFeedbackTestES31,
+                                WithDirectSPIRVGeneration(ES31_VULKAN()));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTestIOBlocks);
+ANGLE_INSTANTIATE_TEST_ES31(TransformFeedbackTestIOBlocks);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTestES32);
 ANGLE_INSTANTIATE_TEST_ES32(TransformFeedbackTestES32);

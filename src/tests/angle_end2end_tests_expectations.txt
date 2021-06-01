@@ -64,8 +64,8 @@
 5981 PIXEL4ORXL GLES : Texture3DTestES2.Luminance/* = SKIP
 5981 PIXEL4ORXL GLES : Texture3DTestES2.RGBA/* = SKIP
 5981 PIXEL4ORXL GLES : TextureBufferTestES31.UseAsUBOThenUpdateThenAsTextureBuffer/* = SKIP
-5981 PIXEL4ORXL GLES : TransformFeedbackTestES31.IOBlocksInterleaved/* = SKIP
-5981 PIXEL4ORXL GLES : TransformFeedbackTestES31.IOBlocksSeparate/* = SKIP
+5981 PIXEL4ORXL GLES : TransformFeedbackTestIOBlocks.Interleaved/* = SKIP
+5981 PIXEL4ORXL GLES : TransformFeedbackTestIOBlocks.Separate/* = SKIP
 5981 PIXEL4ORXL GLES : VulkanExternalImageTest.ShouldClearOpaqueFdRGBA8/* = SKIP
 5981 PIXEL4ORXL GLES : VulkanExternalImageTest.TextureFormatCompatChromiumFd/* = SKIP
 
@@ -98,4 +98,4 @@
 5981 PIXEL4ORXL VULKAN : Texture2DArrayCopy.UnsizedFormats/* = SKIP
 5981 PIXEL4ORXL VULKAN : Texture3DCopy.UnsignedByteFormats/* = SKIP
 5981 PIXEL4ORXL VULKAN : Texture3DCopy.UnsizedFormats/* = SKIP
-5981 PIXEL4ORXL VULKAN : TransformFeedbackTestES31.IOBlocksInterleaved/* = SKIP
+5981 PIXEL4ORXL VULKAN : TransformFeedbackTestIOBlocks.Interleaved/* = SKIP

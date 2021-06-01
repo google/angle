@@ -390,9 +390,11 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
     constexpr uint32_t kMaxXfbBuffers = 4;
 
     const TType *ivec4Type = StaticType::GetBasic<EbtInt, kMaxXfbBuffers>();
+    TType *stridesType     = new TType(*ivec4Type);
+    stridesType->setQualifier(EvqConst);
 
     // Create the parameter variable.
-    TVariable *stridesVar        = new TVariable(symbolTable, ImmutableString("strides"), ivec4Type,
+    TVariable *stridesVar = new TVariable(symbolTable, ImmutableString("strides"), stridesType,
                                           SymbolType::AngleInternal);
     TIntermSymbol *stridesSymbol = new TIntermSymbol(stridesVar);
 
@@ -479,10 +481,8 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
 
     // Create a call to ANGLEGetXfbOffsets too, for the sole purpose of preventing it from being
     // culled as unused by glslang.
-    TIntermSequence zero;
-    zero.push_back(CreateIndexNode(0));
     TIntermSequence ivec4Zero;
-    ivec4Zero.push_back(TIntermAggregate::CreateConstructor(*ivec4Type, &zero));
+    ivec4Zero.push_back(CreateZeroNode(*ivec4Type));
     TIntermAggregate *getOffsetsCall =
         TIntermAggregate::CreateFunctionCall(*getOffsetsFunction, &ivec4Zero);
     captureXfbBlock->appendStatement(getOffsetsCall);
@@ -1340,8 +1340,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
     }
 
 #if defined(ANGLE_ENABLE_DIRECT_SPIRV_GENERATION)
-    constexpr ShCompileOptions kUnsupportedTransformations =
-        SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE | SH_ADD_BRESENHAM_LINE_RASTER_EMULATION;
+    constexpr ShCompileOptions kUnsupportedTransformations = SH_ADD_BRESENHAM_LINE_RASTER_EMULATION;
     if ((compileOptions & SH_GENERATE_SPIRV_DIRECTLY) != 0 && getShaderType() == GL_VERTEX_SHADER &&
         (compileOptions & kUnsupportedTransformations) == 0)
     {
