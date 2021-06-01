@@ -63,6 +63,30 @@
       },
       "revId": "16c2e6a4a03c438a2c548f0de08078374ee18e58",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b48fadd_b8fb5024",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-01T17:01:28Z",
+      "side": 1,
+      "message": "Shouldn\u0027t be too hard. They\u0027re all set up in angle_mb_config.pyl . Take a look at that file, it\u0027s pretty straight-forward.\n\nSGTM on the assert.",
+      "parentUuid": "76c59a8c_aaf0db56",
+      "range": {
+        "startLine": 386,
+        "startChar": 6,
+        "endLine": 386,
+        "endChar": 10
+      },
+      "revId": "16c2e6a4a03c438a2c548f0de08078374ee18e58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
