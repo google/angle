@@ -181,6 +181,32 @@ struct SpirvBlock
     bool isTerminated = false;
 };
 
+// Conditional code, constituting ifs, switches and loops.
+struct SpirvConditional
+{
+    // The id of blocks that make up the conditional.
+    //
+    // - For if, there are three blocks: the then, else and merge blocks
+    // - For loops, there are four blocks: the condition, body, continue and merge blocks
+    // - For switch, there are a number of blocks based on the cases.
+    //
+    // In all cases, the merge block is the last block in this list.  When the conditional is done
+    // with, that's the block that will be made "current" and future instructions written to.  The
+    // merge block is also the branch target of "break" instructions.
+    //
+    // For loops, the continue target block is the one before last block in this list.
+    std::vector<spirv::IdRef> blockIds;
+
+    // Up to which block is already generated.  Used by nextConditionalBlock() to generate a block
+    // and give it an id pre-determined in blockIds.
+    size_t nextBlockToWrite = 0;
+
+    // Used to determine if continue will affect this (i.e. it's a loop).
+    bool isContinuable = false;
+    // Used to determine if break will affect this (i.e. it's a loop or switch).
+    bool isBreakable = false;
+};
+
 // Helper class to construct SPIR-V
 class SPIRVBuilder : angle::NonCopyable
 {
@@ -225,6 +251,7 @@ class SPIRVBuilder : angle::NonCopyable
         ASSERT(!mSpirvCurrentFunctionBlocks.empty());
         mSpirvCurrentFunctionBlocks.back().isTerminated = true;
     }
+    SpirvConditional *getCurrentConditional() { return &mConditionalStack.back(); }
 
     void addCapability(spv::Capability capability);
     void addExecutionMode(spv::ExecutionMode executionMode);
@@ -254,6 +281,11 @@ class SPIRVBuilder : angle::NonCopyable
                                  spv::StorageClass storageClass,
                                  spirv::IdRef *initializerId,
                                  const char *name);
+
+    // Helpers for conditionals.
+    void startConditional(size_t blockCount, bool isContinuable, bool isBreakable);
+    void nextConditionalBlock();
+    void endConditional();
 
     // TODO: remove name hashing once translation through glslang is removed.  That is necessary to
     // avoid name collision between ANGLE's internal symbols and user-defined ones when compiling
@@ -346,6 +378,13 @@ class SPIRVBuilder : angle::NonCopyable
 
     // List of function types that are already defined.
     angle::HashMap<SpirvIdAndIdList, spirv::IdRef, SpirvIdAndIdListHash> mFunctionTypeIdMap;
+
+    // Stack of conditionals.  When an if, loop or switch is visited, a new conditional scope is
+    // added.  When the conditional construct is entirely visited, it's popped.  As the blocks of
+    // the conditional constructs are visited, ids are consumed from the top of the stack.  When
+    // break or continue is visited, the stack is traversed backwards until a loop or switch is
+    // found.
+    std::vector<SpirvConditional> mConditionalStack;
 
     // name hashing.
     ShHashFunction64 mHashFunction;

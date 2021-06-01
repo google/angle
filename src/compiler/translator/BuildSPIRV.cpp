@@ -843,16 +843,63 @@ spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
     return variableId;
 }
 
+void SPIRVBuilder::startConditional(size_t blockCount, bool isContinuable, bool isBreakable)
+{
+    mConditionalStack.emplace_back();
+    SpirvConditional &conditional = mConditionalStack.back();
+
+    // Create the requested number of block ids.
+    conditional.blockIds.resize(blockCount);
+    for (spirv::IdRef &blockId : conditional.blockIds)
+    {
+        blockId = getNewId();
+    }
+
+    conditional.isContinuable = isContinuable;
+    conditional.isBreakable   = isBreakable;
+
+    // Don't automatically start the next block.  The caller needs to generate instructions based on
+    // the ids that were just generated above.
+}
+
+void SPIRVBuilder::nextConditionalBlock()
+{
+    ASSERT(!mConditionalStack.empty());
+    SpirvConditional &conditional = mConditionalStack.back();
+
+    ASSERT(conditional.nextBlockToWrite < conditional.blockIds.size());
+    spirv::IdRef blockId = conditional.blockIds[conditional.nextBlockToWrite++];
+
+    // The previous block must have properly terminated.
+    ASSERT(isCurrentFunctionBlockTerminated());
+
+    // Generate a new block.
+    mSpirvCurrentFunctionBlocks.emplace_back();
+    mSpirvCurrentFunctionBlocks.back().labelId = blockId;
+}
+
+void SPIRVBuilder::endConditional()
+{
+    ASSERT(!mConditionalStack.empty());
+
+    // No blocks should be left.
+    ASSERT(mConditionalStack.back().nextBlockToWrite == mConditionalStack.back().blockIds.size());
+
+    mConditionalStack.pop_back();
+}
+
 uint32_t SPIRVBuilder::nextUnusedBinding()
 {
     return mNextUnusedBinding++;
 }
+
 uint32_t SPIRVBuilder::nextUnusedInputLocation(uint32_t consumedCount)
 {
     uint32_t nextUnused = mNextUnusedInputLocation;
     mNextUnusedInputLocation += consumedCount;
     return nextUnused;
 }
+
 uint32_t SPIRVBuilder::nextUnusedOutputLocation(uint32_t consumedCount)
 {
     uint32_t nextUnused = mNextUnusedOutputLocation;

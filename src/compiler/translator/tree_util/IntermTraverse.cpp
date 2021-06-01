@@ -42,6 +42,8 @@ void TIntermTraverser::traverse(T *node)
         {
             mCurrentChildIndex = childIndex;
             node->getChildNode(childIndex)->traverse(this);
+            mCurrentChildIndex = childIndex;
+
             if (inVisit && childIndex != childCount - 1)
             {
                 visit = node->visit(InVisit, this);

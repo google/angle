@@ -1217,7 +1217,7 @@ void OutputSPIRVTraverser::visitConstantUnion(TIntermConstantUnion *node)
     // Find out the expected type for this constant, so it can be cast right away and not need an
     // instruction to do that.
     TIntermNode *parent     = getParentNode();
-    const size_t childIndex = getParentChildIndex();
+    const size_t childIndex = getParentChildIndex(PreVisit);
 
     TBasicType expectedBasicType = type.getBasicType();
     if (parent->getAsAggregate())
@@ -1347,13 +1347,23 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
     NodeData &left = mNodeData.back();
     spirv::IdRef typeId;
 
+    const TBasicType leftBasicType = node->getLeft()->getType().getBasicType();
+    const bool isFloat             = leftBasicType == EbtFloat || leftBasicType == EbtDouble;
+    const bool isUnsigned          = leftBasicType == EbtUInt;
+    const bool isBool              = leftBasicType == EbtBool;
+
+    using WriteBinaryOp =
+        void (*)(spirv::Blob * blob, spirv::IdResultType idResultType, spirv::IdResult idResult,
+                 spirv::IdRef operand1, spirv::IdRef operand2);
+    WriteBinaryOp writeBinaryOp = nullptr;
+
     switch (node->getOp())
     {
         case EOpIndexDirect:
         case EOpIndexDirectStruct:
         case EOpIndexDirectInterfaceBlock:
             UNREACHABLE();
-            break;
+            return true;
         case EOpIndexIndirect:
             typeId = mBuilder.getTypeData(node->getType(), left.accessChain.baseBlockStorage).id;
             if (!node->getLeft()->getType().isArray() && node->getLeft()->getType().isVector())
@@ -1364,16 +1374,89 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
             {
                 accessChainPush(&left, rightValue, typeId);
             }
-            break;
+            return true;
+
         case EOpAssign:
             // Store into the access chain.  Since the result of the (a = b) expression is b, change
             // the access chain to an unindexed rvalue which is |rightValue|.
             accessChainStore(&left, rightValue);
             nodeDataInitRValue(&left, rightValue, rightTypeId);
             break;
+
+        case EOpEqual:
+        case EOpEqualComponentWise:
+            if (isFloat)
+                writeBinaryOp = spirv::WriteFOrdEqual;
+            else if (isBool)
+                writeBinaryOp = spirv::WriteLogicalEqual;
+            else
+                writeBinaryOp = spirv::WriteIEqual;
+            break;
+        case EOpNotEqual:
+        case EOpNotEqualComponentWise:
+            if (isFloat)
+                writeBinaryOp = spirv::WriteFUnordNotEqual;
+            else if (isBool)
+                writeBinaryOp = spirv::WriteLogicalNotEqual;
+            else
+                writeBinaryOp = spirv::WriteINotEqual;
+            break;
+        case EOpLessThan:
+        case EOpLessThanComponentWise:
+            if (isFloat)
+                writeBinaryOp = spirv::WriteFOrdLessThan;
+            else if (isUnsigned)
+                writeBinaryOp = spirv::WriteULessThan;
+            else
+                writeBinaryOp = spirv::WriteSLessThan;
+            break;
+        case EOpGreaterThan:
+        case EOpGreaterThanComponentWise:
+            if (isFloat)
+                writeBinaryOp = spirv::WriteFOrdGreaterThan;
+            else if (isUnsigned)
+                writeBinaryOp = spirv::WriteUGreaterThan;
+            else
+                writeBinaryOp = spirv::WriteSGreaterThan;
+            break;
+        case EOpLessThanEqual:
+        case EOpLessThanEqualComponentWise:
+            if (isFloat)
+                writeBinaryOp = spirv::WriteFOrdLessThanEqual;
+            else if (isUnsigned)
+                writeBinaryOp = spirv::WriteULessThanEqual;
+            else
+                writeBinaryOp = spirv::WriteSLessThanEqual;
+            break;
+        case EOpGreaterThanEqual:
+        case EOpGreaterThanEqualComponentWise:
+            if (isFloat)
+                writeBinaryOp = spirv::WriteFOrdGreaterThanEqual;
+            else if (isUnsigned)
+                writeBinaryOp = spirv::WriteUGreaterThanEqual;
+            else
+                writeBinaryOp = spirv::WriteSGreaterThanEqual;
+            break;
         default:
             UNIMPLEMENTED();
             break;
+    }
+
+    if (writeBinaryOp)
+    {
+        // Load the left value.
+        const spirv::IdRef leftValue = accessChainLoad(&left);
+
+        ASSERT(!typeId.valid());
+        typeId = mBuilder.getTypeData(node->getType(), EbsUnspecified).id;
+
+        // Write the operation that combines the left and right values.
+        spirv::IdRef result = mBuilder.getNewId();
+        writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result, leftValue,
+                      rightValue);
+
+        // Replace the access chain with an rvalue that's the result.
+        nodeDataInitRValue(&left, result, typeId);
     }
 
     return true;
@@ -1397,8 +1480,73 @@ bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
 
 bool OutputSPIRVTraverser::visitIfElse(Visit visit, TIntermIfElse *node)
 {
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
+    if (visit == PreVisit)
+    {
+        // Don't add an entry to the stack.  The condition will create one, which we won't pop.
+        return true;
+    }
+
+    size_t lastChildIndex = getLastTraversedChildIndex(visit);
+
+    // If the condition was just visited, evaluate it and create the branch instructions.
+    if (lastChildIndex == 0)
+    {
+        const spirv::IdRef conditionValue = accessChainLoad(&mNodeData.back());
+
+        // Create a conditional with maximum 3 blocks, one for the true block (if any), one for the
+        // else block (if any), and one for the merge block.  getChildCount() works here as it
+        // produces an identical count.
+        mBuilder.startConditional(node->getChildCount(), false, false);
+
+        // Generate the branch instructions.
+        SpirvConditional *conditional = mBuilder.getCurrentConditional();
+
+        spirv::IdRef mergeBlock = conditional->blockIds.back();
+        spirv::IdRef trueBlock  = mergeBlock;
+        spirv::IdRef falseBlock = mergeBlock;
+
+        size_t nextBlockIndex = 0;
+        if (node->getTrueBlock())
+        {
+            trueBlock = conditional->blockIds[nextBlockIndex++];
+        }
+        if (node->getFalseBlock())
+        {
+            falseBlock = conditional->blockIds[nextBlockIndex++];
+        }
+
+        // Generate the following:
+        //
+        //     OpSelectionMerge %mergeBlock None
+        //     OpBranchConditional %conditionValue %trueBlock %falseBlock
+        //
+        spirv::WriteSelectionMerge(mBuilder.getSpirvCurrentFunctionBlock(), mergeBlock,
+                                   spv::SelectionControlMaskNone);
+        spirv::WriteBranchConditional(mBuilder.getSpirvCurrentFunctionBlock(), conditionValue,
+                                      trueBlock, falseBlock, {});
+        mBuilder.terminateCurrentFunctionBlock();
+
+        // Start the true or false block, whichever exists.
+        mBuilder.nextConditionalBlock();
+
+        return true;
+    }
+
+    // Otherwise move on to the next block, inserting a branch to the merge block at the end of each
+    // block.
+    spirv::IdRef mergeBlock = mBuilder.getCurrentConditional()->blockIds.back();
+
+    ASSERT(!mBuilder.isCurrentFunctionBlockTerminated());
+    spirv::WriteBranch(mBuilder.getSpirvCurrentFunctionBlock(), mergeBlock);
+    mBuilder.terminateCurrentFunctionBlock();
+
+    mBuilder.nextConditionalBlock();
+
+    // Pop from the conditional stack when done.
+    if (visit == PostVisit)
+    {
+        mBuilder.endConditional();
+    }
 
     return true;
 }
