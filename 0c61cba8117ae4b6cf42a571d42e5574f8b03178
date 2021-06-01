@@ -34,6 +34,24 @@
       "parentUuid": "c2e4da87_1ecc298a",
       "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d90cca5_48c6d19b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1452687
+      },
+      "writtenOn": "2021-06-01T18:23:59Z",
+      "side": 1,
+      "message": "\u003e though I\u0027m not finding a good \"is WebGL\" function\nis context-\u003egetState().isWebGL() insufficient?",
+      "parentUuid": "02c5caef_f9d03851",
+      "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
