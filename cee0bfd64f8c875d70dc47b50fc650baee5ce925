@@ -16,6 +16,24 @@
       "message": "Hello, clang-tidy complains about this line:\n\n  bugprone-unused-raii:\n  object destroyed immediately after creation; did you mean to name the object?\n\nThis indeed looks suspicious - can it be a potential bug?",
       "revId": "cee0bfd64f8c875d70dc47b50fc650baee5ce925",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5028cde_7cb5c6bb",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 985,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-01T01:49:13Z",
+      "side": 1,
+      "message": "Thanks for pointing this out. This is obviously missing a variable name (and right now is creating an immediately-destroyed temporary). Filed anglebug.com/6016\n\nWe should really implement crbug.com/1103817",
+      "parentUuid": "82587d0a_bd90a047",
+      "revId": "cee0bfd64f8c875d70dc47b50fc650baee5ce925",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
