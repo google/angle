@@ -145,6 +145,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "12b04249_1c1d67f4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-01T19:29:26Z",
+      "side": 1,
+      "message": "yup, a boolean. Then we need to find the right place to act on that boolean. It cant be immediate since we need to wait for textures to sync",
+      "parentUuid": "90775fa4_1093cd90",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf256b78_e1929359",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 7
