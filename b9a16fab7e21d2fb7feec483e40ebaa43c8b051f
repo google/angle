@@ -68,6 +68,29 @@
       },
       "revId": "b9a16fab7e21d2fb7feec483e40ebaa43c8b051f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f09a283e_75e6a874",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2523,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-01T17:31:11Z",
+      "side": 1,
+      "message": "Could you clear each slice with different color and verify the clear result as well?",
+      "range": {
+        "startLine": 2523,
+        "startChar": 12,
+        "endLine": 2523,
+        "endChar": 82
+      },
+      "revId": "b9a16fab7e21d2fb7feec483e40ebaa43c8b051f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
