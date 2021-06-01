@@ -73,6 +73,7 @@ enum class RestrictedTraceID
     cod_mobile,
     coin_master,
     command_and_conquer_rivals,
+    cookie_run_kingdom,
     disney_tsum_tsum,
     dr_driving,
     dragon_ball_legends,

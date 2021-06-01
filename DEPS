@@ -812,6 +812,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/cookie_run_kingdom': {
+      'packages': [
+        {
+            'package': 'angle/traces/cookie_run_kingdom',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/disney_tsum_tsum': {
       'packages': [
         {

@@ -31,6 +31,7 @@
 #include "cod_mobile/cod_mobile_capture_context1.h"
 #include "coin_master/coin_master_capture_context1.h"
 #include "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2.h"
+#include "cookie_run_kingdom/cookie_run_kingdom_capture_context2.h"
 #include "disney_tsum_tsum/disney_tsum_tsum_capture_context3.h"
 #include "dr_driving/dr_driving_capture_context3.h"
 #include "dragon_ball_legends/dragon_ball_legends_capture_context1.h"
@@ -196,6 +197,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       command_and_conquer_rivals::kReplayFrameStart, command_and_conquer_rivals::kReplayFrameEnd,
       command_and_conquer_rivals::kReplayDrawSurfaceWidth,
       command_and_conquer_rivals::kReplayDrawSurfaceHeight, "command_and_conquer_rivals"}},
+    {RestrictedTraceID::cookie_run_kingdom,
+     {cookie_run_kingdom::kReplayContextClientMajorVersion,
+      cookie_run_kingdom::kReplayContextClientMinorVersion, cookie_run_kingdom::kReplayFrameStart,
+      cookie_run_kingdom::kReplayFrameEnd, cookie_run_kingdom::kReplayDrawSurfaceWidth,
+      cookie_run_kingdom::kReplayDrawSurfaceHeight, "cookie_run_kingdom"}},
     {RestrictedTraceID::disney_tsum_tsum,
      {disney_tsum_tsum::kReplayContextClientMajorVersion,
       disney_tsum_tsum::kReplayContextClientMinorVersion, disney_tsum_tsum::kReplayFrameStart,
