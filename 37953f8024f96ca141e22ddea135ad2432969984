@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c12fbd3c_936b7a44",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-01T17:29:18Z",
+      "side": 1,
+      "message": "the trigger for this is from a dirty texture. Wanted to avoid any sort of dirty bit ordering issues in ContextVk::syncState.\n\nCan add a todo and be a follow up change",
+      "parentUuid": "20a8bc50_1afbeb5c",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf256b78_e1929359",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 7
@@ -48,6 +66,30 @@
       "writtenOn": "2021-06-01T17:02:28Z",
       "side": 1,
       "message": "Previously, we would only recreate the pipeline if there was an immutable sampler present, while this will recreate it for both transitions:\n1.) normal -\u003e immutable\n2.) immutable -\u003e normal (new)\n\nI\u0027m not familiar enough with the specifics: why wasn\u0027t it necessary to recreate the pipeline for the immutable -\u003e normal transition before (and why is it necessary now)?",
+      "range": {
+        "startLine": 1303,
+        "startChar": 0,
+        "endLine": 1308,
+        "endChar": 5
+      },
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d03f5d9e_16ad4a08",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-01T17:29:18Z",
+      "side": 1,
+      "message": "\u003e Previously, we would only recreate the pipeline if there was an immutable sampler present\n\nthis translated to ANGLE recreating the pipeline for every draw in which we had a texture with an immutable sampler, which was wasteful\n\n\u003e why wasn\u0027t it necessary to recreate the pipeline for the immutable -\u003e normal transition before (and why is it necessary now)?\n\nit was necessary then and is necessary now. If you run the test i added with ToT ANGLE, it will throw a few VVLs a.k.a the existing code is buggy/incomplete.",
+      "parentUuid": "cf256b78_e1929359",
       "range": {
         "startLine": 1303,
         "startChar": 0,
