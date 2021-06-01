@@ -130,6 +130,7 @@ enum class RestrictedTraceID
     slingshot_test2,
     sniper_3d,
     standoff_2,
+    subway_princess_runner,
     subway_surfers,
     summoners_war,
     talking_tom_hero_dash,

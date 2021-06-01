@@ -3781,6 +3781,22 @@ angle_restricted_traces = [
     ],
   ],
   [
+    "subway_princess_runner",
+    2,
+    [
+      "subway_princess_runner/subway_princess_runner_capture_context2_frame001.cpp",
+      "subway_princess_runner/subway_princess_runner_capture_context2_frame002.cpp",
+      "subway_princess_runner/subway_princess_runner_capture_context2_frame003.cpp",
+      "subway_princess_runner/subway_princess_runner_capture_context2_frame004.cpp",
+      "subway_princess_runner/subway_princess_runner_capture_context2_frame005.cpp",
+      "subway_princess_runner/subway_princess_runner_capture_context2_frame006.cpp",
+      "subway_princess_runner/subway_princess_runner_capture_context2_frame007.cpp",
+      "subway_princess_runner/subway_princess_runner_capture_context2_frame008.cpp",
+      "subway_princess_runner/subway_princess_runner_capture_context2_frame009.cpp",
+      "subway_princess_runner/subway_princess_runner_capture_context2_frame010.cpp",
+    ],
+  ],
+  [
     "subway_surfers",
     1,
     [
