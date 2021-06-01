@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ce772cda_3ef8425f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-01T18:39:52Z",
+      "side": 1,
+      "message": "Well, it doesn\u0027t really make sense to keep this as a dirty bit if you aren\u0027t processing them in the dirty bitset.",
+      "parentUuid": "3ce26b93_8b43bcb8",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf256b78_e1929359",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 7
