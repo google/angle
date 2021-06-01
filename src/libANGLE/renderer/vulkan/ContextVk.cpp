@@ -3020,15 +3020,24 @@ void ContextVk::logEvent(const char *eventString)
     mComputeDirtyBits.set(DIRTY_BIT_EVENT_LOG);
 }
 
-void ContextVk::endEventLog(angle::EntryPoint entryPoint)
+void ContextVk::endEventLog(angle::EntryPoint entryPoint, PipelineType pipelineType)
 {
     if (!mRenderer->angleDebuggerMode())
     {
         return;
     }
 
-    ASSERT(mRenderPassCommands);
-    mRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
+    if (pipelineType == PipelineType::Graphics)
+    {
+        ASSERT(mRenderPassCommands);
+        mRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
+    }
+    else
+    {
+        ASSERT(pipelineType == PipelineType::Compute);
+        ASSERT(mOutsideRenderPassCommands);
+        mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
+    }
 }
 
 angle::Result ContextVk::handleNoopDrawEvent()

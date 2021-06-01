@@ -37,10 +37,17 @@ void DebugAnnotatorVk::endEvent(gl::Context *context,
                                 angle::EntryPoint entryPoint)
 {
     angle::LoggingAnnotator::endEvent(context, eventName, entryPoint);
-    if (vkCmdBeginDebugUtilsLabelEXT && context && isDrawOrDispatchEntryPoint(entryPoint))
+    if (vkCmdBeginDebugUtilsLabelEXT && context)
     {
         ContextVk *contextVk = vk::GetImpl(static_cast<gl::Context *>(context));
-        contextVk->endEventLog(entryPoint);
+        if (isDrawEntryPoint(entryPoint))
+        {
+            contextVk->endEventLog(entryPoint, PipelineType::Graphics);
+        }
+        else if (isDispatchEntryPoint(entryPoint))
+        {
+            contextVk->endEventLog(entryPoint, PipelineType::Compute);
+        }
     }
 }
 
@@ -49,12 +56,10 @@ bool DebugAnnotatorVk::getStatus()
     return true;
 }
 
-bool DebugAnnotatorVk::isDrawOrDispatchEntryPoint(angle::EntryPoint entryPoint) const
+bool DebugAnnotatorVk::isDrawEntryPoint(angle::EntryPoint entryPoint) const
 {
     switch (entryPoint)
     {
-        case angle::EntryPoint::GLDispatchCompute:
-        case angle::EntryPoint::GLDispatchComputeIndirect:
         case angle::EntryPoint::GLDrawArrays:
         case angle::EntryPoint::GLDrawArraysIndirect:
         case angle::EntryPoint::GLDrawArraysInstanced:
@@ -93,6 +98,18 @@ bool DebugAnnotatorVk::isDrawOrDispatchEntryPoint(angle::EntryPoint entryPoint) 
         case angle::EntryPoint::GLDrawTransformFeedbackInstanced:
         case angle::EntryPoint::GLDrawTransformFeedbackStream:
         case angle::EntryPoint::GLDrawTransformFeedbackStreamInstanced:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool DebugAnnotatorVk::isDispatchEntryPoint(angle::EntryPoint entryPoint) const
+{
+    switch (entryPoint)
+    {
+        case angle::EntryPoint::GLDispatchCompute:
+        case angle::EntryPoint::GLDispatchComputeIndirect:
             return true;
         default:
             return false;
