@@ -96,6 +96,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fbdf29ac_2cd10694",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-06-01T22:09:04Z",
+      "side": 1,
+      "message": "Just to confirm, are you suggesting I also change the autogen to use angle::FixedVector as well? The symbol table autogen files are using std::array and the ParseContext.cpp file is using std::array for checking extensions.",
+      "parentUuid": "1d01ca75_b177d619",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 50
+      },
+      "revId": "0e3b44e60bc0324d55e7b37530f81ab75cad018b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7d983d10_03e436cd",
         "filename": "src/compiler/translator/Symbol.h",
         "patchSetId": 9
