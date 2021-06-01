@@ -968,6 +968,7 @@ TracePerfTest::TracePerfTest()
 
     if (param.testID == RestrictedTraceID::cookie_run_kingdom)
     {
+        addExtensionPrerequisite("GL_EXT_texture_cube_map_array");
         addExtensionPrerequisite("GL_OES_EGL_image_external");
 
         // TODO: http://anglebug.com/6017 ARM doesn't have enough VS storage blocks
