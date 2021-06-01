@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67a5dcbd_9fd24e5d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002358
+      },
+      "writtenOn": "2021-06-01T17:31:17Z",
+      "side": 1,
+      "message": "sgtm, I need to rebuild my tree to test this manually (I couldn\u0027t reproduce the crash last night, but I can today).\n\nI would suggest doing 120k or 128k instead of 240k, in case the threshold is different on other platforms",
+      "revId": "b75f05535c9394b6fedb186cf50467f6d1eff7f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edf1099e_bc89ab88",
+        "filename": "include/platform/FeaturesGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1002358
+      },
+      "writtenOn": "2021-06-01T17:31:17Z",
+      "side": 1,
+      "message": "Can we change this to chunk to \u003c128k? I did bisect to 240k, but that may be specific to my GPU\u0027s driver, so I\u0027d prefer to start with a low threshold, and then increase to see if that fixes the issue.",
+      "revId": "b75f05535c9394b6fedb186cf50467f6d1eff7f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
