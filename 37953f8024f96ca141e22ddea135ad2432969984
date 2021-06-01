@@ -127,6 +127,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "90775fa4_1093cd90",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-01T18:54:44Z",
+      "side": 1,
+      "message": "Couldn\u0027t it just be a boolean? Is that what you mean by cached member var?",
+      "parentUuid": "ded28d8f_4eb1c551",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf256b78_e1929359",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 7
