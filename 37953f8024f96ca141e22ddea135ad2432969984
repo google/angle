@@ -16,6 +16,69 @@
       "message": "shabi, i switched to using dirty bits in PS7, PTAL.",
       "revId": "37953f8024f96ca141e22ddea135ad2432969984",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20a8bc50_1afbeb5c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-01T17:02:28Z",
+      "side": 1,
+      "message": "Is handling this as part of normal mGraphicsDirtyBits dirty bit handling in ContextVk::setupDraw() too late?\n\nOtherwise, I think this block should be moved into a helper function that\u0027s called by ContextVk::invalidateCurrentTextures(), since it doesn\u0027t really have anything to do with updateActiveTextures() anymore.",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf256b78_e1929359",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-01T17:02:28Z",
+      "side": 1,
+      "message": "Previously, we would only recreate the pipeline if there was an immutable sampler present, while this will recreate it for both transitions:\n1.) normal -\u003e immutable\n2.) immutable -\u003e normal (new)\n\nI\u0027m not familiar enough with the specifics: why wasn\u0027t it necessary to recreate the pipeline for the immutable -\u003e normal transition before (and why is it necessary now)?",
+      "range": {
+        "startLine": 1303,
+        "startChar": 0,
+        "endLine": 1308,
+        "endChar": 5
+      },
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84f6276a_45d87c15",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2509,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-01T17:02:28Z",
+      "side": 1,
+      "message": "nit: ANGLE prefers to use explicit types.",
+      "range": {
+        "startLine": 2509,
+        "startChar": 9,
+        "endLine": 2509,
+        "endChar": 13
+      },
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
