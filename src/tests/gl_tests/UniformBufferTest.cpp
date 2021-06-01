@@ -192,18 +192,6 @@ TEST_P(UniformBufferTest, UniformBufferBindings)
     EXPECT_PIXEL_EQ(px, py, 10, 20, 30, 40);
 }
 
-// Test that ANGLE handles used but unbound UBO. Assumes we are running on ANGLE and produce
-// optional but not mandatory errors.
-TEST_P(UniformBufferTest, ANGLEUnboundUniformBuffer)
-{
-    glUniformBlockBinding(mProgram, mUniformBufferIndex, 0);
-    glBindBufferBase(GL_UNIFORM_BUFFER, 0, 0);
-    EXPECT_GL_NO_ERROR();
-
-    drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-}
-
 // Update a UBO many time and verify that ANGLE uses the latest version of the data.
 // https://code.google.com/p/angleproject/issues/detail?id=965
 TEST_P(UniformBufferTest, UniformBufferManyUpdates)
@@ -1676,45 +1664,6 @@ TEST_P(UniformBufferTest, SizeOverMaxBlockSize)
     EXPECT_PIXEL_COLOR_EQ(width / 2 - 5, height / 2 - 5, GLColor::red);
     // Top right should be green
     EXPECT_PIXEL_COLOR_EQ(width / 2 + 5, height / 2 + 5, GLColor::green);
-}
-
-// Compile uniform buffer with large array member.
-TEST_P(UniformBufferTest, LargeArrayOfStructs)
-{
-    constexpr char kVertexShader[] = R"(
-        struct InstancingData
-        {
-            mat4 transformation;
-        };
-
-        layout(std140) uniform InstanceBlock
-        {
-            InstancingData instances[MAX_INSTANCE_COUNT];
-        };
-
-        void main()
-        {
-            gl_Position = vec4(1.0) * instances[gl_InstanceID].transformation;
-        })";
-
-    constexpr char kFragmentShader[] = R"(#version 300 es
-        precision mediump float;
-        out vec4 outFragColor;
-        void main()
-        {
-            outFragColor = vec4(0.0);
-        })";
-
-    int maxUniformBlockSize;
-    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
-
-    std::string vs = "#version 300 es\n#define MAX_INSTANCE_COUNT " +
-                     std::to_string(std::min(800, maxUniformBlockSize / 64)) + kVertexShader;
-
-    ANGLE_GL_PROGRAM(program, vs.c_str(), kFragmentShader);
-    // Add a draw call for the sake of the Vulkan backend that currently really builds shaders at
-    // draw time.
-    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
 }
 
 // Test a uniform block where an array of row-major matrices is dynamically indexed.
@@ -3389,6 +3338,63 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+class WebGL2UniformBufferTest : public UniformBufferTest
+{
+  protected:
+    WebGL2UniformBufferTest() { setWebGLCompatibilityEnabled(true); }
+};
+
+// Test that ANGLE handles used but unbound UBO. Assumes we are running on ANGLE and produce
+// optional but not mandatory errors.
+TEST_P(WebGL2UniformBufferTest, ANGLEUnboundUniformBuffer)
+{
+    glUniformBlockBinding(mProgram, mUniformBufferIndex, 0);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, 0);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Compile uniform buffer with large array member.
+TEST_P(WebGL2UniformBufferTest, LargeArrayOfStructs)
+{
+    constexpr char kVertexShader[] = R"(
+        struct InstancingData
+        {
+            mat4 transformation;
+        };
+
+        layout(std140) uniform InstanceBlock
+        {
+            InstancingData instances[MAX_INSTANCE_COUNT];
+        };
+
+        void main()
+        {
+            gl_Position = vec4(1.0) * instances[gl_InstanceID].transformation;
+        })";
+
+    constexpr char kFragmentShader[] = R"(#version 300 es
+        precision mediump float;
+        out vec4 outFragColor;
+        void main()
+        {
+            outFragColor = vec4(0.0);
+        })";
+
+    int maxUniformBlockSize;
+    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
+
+    std::string vs = "#version 300 es\n#define MAX_INSTANCE_COUNT " +
+                     std::to_string(std::min(800, maxUniformBlockSize / 64)) + kVertexShader;
+
+    ANGLE_GL_PROGRAM(program, vs.c_str(), kFragmentShader);
+    // Add a draw call for the sake of the Vulkan backend that currently really builds shaders at
+    // draw time.
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(UniformBufferTest);
 ANGLE_INSTANTIATE_TEST_ES3(UniformBufferTest);
 
@@ -3397,5 +3403,8 @@ ANGLE_INSTANTIATE_TEST_ES3(UniformBlockWithOneLargeArrayMemberTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(UniformBufferTest31);
 ANGLE_INSTANTIATE_TEST_ES31(UniformBufferTest31);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2UniformBufferTest);
+ANGLE_INSTANTIATE_TEST_ES3(WebGL2UniformBufferTest);
 
 }  // namespace
