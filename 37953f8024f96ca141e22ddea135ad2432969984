@@ -181,6 +181,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "60f8e1f9_c1577191",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-01T22:04:07Z",
+      "side": 1,
+      "message": "\u003e Would that lead to a cleaner design?\n\nthat will need us to not reset TextureVk\u0027s dirtbit until ContextVk\u0027s setupDraw. The poll then becomes a non-const method, more like a getAndReset...()\n\n\u003e you wouldn\u0027t have to call into ContextVk from TextureVk\n\ni did not realize dirty bit design was strictly uni-directional\n\n\u003e LMKWYT\n\nif there are n active textures but only 1 among them has a state change it seems wasteful for ContextVk to call a method n times. With a push design, only the transitioned texture would invoke ContextVk\u0027s invalidate method. I will upload a patchset with the push mechanism (and ContextVk\u0027s dirty bit removed) and if needed can go to pull mechanism",
+      "parentUuid": "6db43945_79777830",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf256b78_e1929359",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 7
