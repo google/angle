@@ -40,7 +40,7 @@ void DebugAnnotatorVk::endEvent(gl::Context *context,
     if (vkCmdBeginDebugUtilsLabelEXT && context)
     {
         ContextVk *contextVk = vk::GetImpl(static_cast<gl::Context *>(context));
-        if (isDrawEntryPoint(entryPoint))
+        if (isDrawOrClearEntryPoint(entryPoint))
         {
             contextVk->endEventLog(entryPoint, PipelineType::Graphics);
         }
@@ -56,10 +56,15 @@ bool DebugAnnotatorVk::getStatus()
     return true;
 }
 
-bool DebugAnnotatorVk::isDrawEntryPoint(angle::EntryPoint entryPoint) const
+bool DebugAnnotatorVk::isDrawOrClearEntryPoint(angle::EntryPoint entryPoint) const
 {
     switch (entryPoint)
     {
+        case angle::EntryPoint::GLClear:
+        case angle::EntryPoint::GLClearBufferfi:
+        case angle::EntryPoint::GLClearBufferfv:
+        case angle::EntryPoint::GLClearBufferiv:
+        case angle::EntryPoint::GLClearBufferuiv:
         case angle::EntryPoint::GLDrawArrays:
         case angle::EntryPoint::GLDrawArraysIndirect:
         case angle::EntryPoint::GLDrawArraysInstanced:

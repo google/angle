@@ -3046,6 +3046,11 @@ angle::Result ContextVk::handleNoopDrawEvent()
     return handleDirtyEventLogImpl(mRenderPassCommandBuffer);
 }
 
+angle::Result ContextVk::handleMidRenderPassClearEvent()
+{
+    return handleDirtyEventLogImpl(mRenderPassCommandBuffer);
+}
+
 bool ContextVk::isViewportFlipEnabledForDrawFBO() const
 {
     return mFlipViewportForDrawFramebuffer && mFlipYForCurrentSurface;

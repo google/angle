@@ -2344,6 +2344,9 @@ angle::Result FramebufferVk::clearWithCommand(ContextVk *contextVk,
         updateRenderPassReadOnlyDepthMode(contextVk, renderpassCommands);
     }
 
+    // Emit debug-util markers for this mid-render-pass clear
+    ANGLE_TRY(contextVk->handleMidRenderPassClearEvent());
+
     VkClearRect rect                           = {};
     rect.rect.extent.width                     = scissoredRenderArea.width;
     rect.rect.extent.height                    = scissoredRenderArea.height;

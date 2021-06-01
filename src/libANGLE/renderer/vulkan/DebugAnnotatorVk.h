@@ -29,7 +29,7 @@ class DebugAnnotatorVk : public angle::LoggingAnnotator
     bool getStatus() override;
 
   private:
-    bool isDrawEntryPoint(angle::EntryPoint entryPoint) const;
+    bool isDrawOrClearEntryPoint(angle::EntryPoint entryPoint) const;
     bool isDispatchEntryPoint(angle::EntryPoint entryPoint) const;
 
     // Note: To avoid any race conditions between threads, this class has no private data; all
