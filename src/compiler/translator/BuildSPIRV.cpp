@@ -321,13 +321,14 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
 
     uint32_t baseAlignment      = 4;
     uint32_t sizeInStorageBlock = 0;
+    uint32_t matrixStride       = 0;
 
     // Calculate base alignment and sizes for types.  Size for blocks are not calculated, as they
     // are done later at the same time Offset decorations are written.
     const bool isOpaqueType = IsOpaqueType(type.type);
     if (!isOpaqueType)
     {
-        baseAlignment = calculateBaseAlignmentAndSize(type, &sizeInStorageBlock);
+        baseAlignment = calculateBaseAlignmentAndSize(type, &sizeInStorageBlock, &matrixStride);
     }
 
     // Write decorations for interface block fields.
@@ -344,14 +345,11 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
             // Write the Offset decoration for interface blocks and structs in them.
             sizeInStorageBlock = calculateSizeAndWriteOffsetDecorations(type, typeId);
         }
-
-        // TODO: write the MatrixStride decoration.  http://anglebug.com/4889.
     }
 
-    // TODO: handle row-major matrixes.  http://anglebug.com/4889.
     // TODO: handle RelaxedPrecision types.  http://anglebug.com/4889.
 
-    return {typeId, baseAlignment, sizeInStorageBlock};
+    return {typeId, baseAlignment, sizeInStorageBlock, matrixStride};
 }
 
 void SPIRVBuilder::getImageTypeParameters(TBasicType type,
@@ -972,7 +970,8 @@ void SPIRVBuilder::writeInterfaceVariableDecorations(const TType &type, spirv::I
 }
 
 uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
-                                                     uint32_t *sizeInStorageBlockOut)
+                                                     uint32_t *sizeInStorageBlockOut,
+                                                     uint32_t *matrixStrideOut)
 {
     // Calculate the base alignment of a type according to the rules of std140 and std430 packing.
     //
@@ -1017,6 +1016,9 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
             arraySizeProduct *= arraySize;
         }
         *sizeInStorageBlockOut = baseTypeData.sizeInStorageBlock * arraySizeProduct;
+
+        // Matrix is inherited from the non-array type.
+        *matrixStrideOut = baseTypeData.matrixStride;
 
         return baseAlignment;
     }
@@ -1087,6 +1089,9 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
         *sizeInStorageBlockOut = vectorTypeData.sizeInStorageBlock * type.primarySize *
                                  type.secondarySize / vectorType.primarySize;
 
+        // The matrix stride is simply the alignment of the vector constituting a column or row.
+        *matrixStrideOut = baseAlignment;
+
         return baseAlignment;
     }
 
@@ -1135,17 +1140,36 @@ uint32_t SPIRVBuilder::calculateSizeAndWriteOffsetDecorations(const SpirvType &t
 
     for (const TField *field : type.block->fields())
     {
+        const TType &fieldType = *field->type();
+
         // Round the offset up to the field's alignment.  The spec says:
         //
         // > A structure and each structure member have a base offset and a base alignment, from
         // > which an aligned offset is computed by rounding the base offset up to a multiple of the
         // > base alignment.
-        const SpirvTypeData &fieldTypeData = getTypeData(*field->type(), type.blockStorage);
+        const SpirvTypeData &fieldTypeData = getTypeData(fieldType, type.blockStorage);
         nextOffset                         = rx::roundUp(nextOffset, fieldTypeData.baseAlignment);
 
         // Write the Offset decoration.
-        spirv::WriteMemberDecorate(&mSpirvDecorations, typeId, spirv::LiteralInteger(fieldIndex++),
+        spirv::WriteMemberDecorate(&mSpirvDecorations, typeId, spirv::LiteralInteger(fieldIndex),
                                    spv::DecorationOffset, {spirv::LiteralInteger(nextOffset)});
+
+        // While here, add matrix decorations if any.
+        if (fieldType.isMatrix())
+        {
+            ASSERT(fieldTypeData.matrixStride != 0);
+
+            // MatrixStride
+            spirv::WriteMemberDecorate(
+                &mSpirvDecorations, typeId, spirv::LiteralInteger(fieldIndex),
+                spv::DecorationMatrixStride, {spirv::LiteralInteger(fieldTypeData.matrixStride)});
+
+            // ColMajor or RowMajor
+            const bool isRowMajor = fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor;
+            spirv::WriteMemberDecorate(
+                &mSpirvDecorations, typeId, spirv::LiteralInteger(fieldIndex),
+                isRowMajor ? spv::DecorationRowMajor : spv::DecorationColMajor, {});
+        }
 
         // Calculate the next offset.  The next offset is the current offset plus the size of the
         // field, aligned to its base alignment.
@@ -1157,6 +1181,8 @@ uint32_t SPIRVBuilder::calculateSizeAndWriteOffsetDecorations(const SpirvType &t
         // > the next multiple of the base alignment of the structure.
         nextOffset = nextOffset + fieldTypeData.sizeInStorageBlock;
         nextOffset = rx::roundUp(nextOffset, fieldTypeData.baseAlignment);
+
+        ++fieldIndex;
     }
 
     return nextOffset;

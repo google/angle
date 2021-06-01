@@ -149,9 +149,11 @@ struct SpirvTypeData
     // The SPIR-V id corresponding to the type.
     spirv::IdRef id;
     // The base alignment and size of the type based on the storage block it's used in (if
-    // applicable)
+    // applicable).
     uint32_t baseAlignment;
     uint32_t sizeInStorageBlock;
+    // The matrix stride, if matrix or array of matrix.
+    uint32_t matrixStride;
 };
 
 // A block of code.  SPIR-V produces forward references to blocks, such as OpBranchConditional
@@ -231,7 +233,9 @@ class SPIRVBuilder : angle::NonCopyable
     void writePerVertexBuiltIns(const TType &type, spirv::IdRef typeId);
     void writeInterfaceVariableDecorations(const TType &type, spirv::IdRef variableId);
 
-    uint32_t calculateBaseAlignmentAndSize(const SpirvType &type, uint32_t *sizeInStorageBlockOut);
+    uint32_t calculateBaseAlignmentAndSize(const SpirvType &type,
+                                           uint32_t *sizeInStorageBlockOut,
+                                           uint32_t *matrixStrideOut);
     uint32_t calculateSizeAndWriteOffsetDecorations(const SpirvType &type, spirv::IdRef typeId);
 
     spirv::IdRef getBoolConstant(bool value);
