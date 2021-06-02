@@ -328,6 +328,24 @@
       "parentUuid": "6b713e7a_4a92f159",
       "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfb9046b_cc7fd508",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1584,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-06-02T20:04:50Z",
+      "side": 1,
+      "message": "Updated. I think this is the right approach",
+      "parentUuid": "8fe1d8da_ba782d7c",
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
