@@ -21,7 +21,8 @@ void InitTestHarness(int *argc, char **argv);
 namespace
 {
 const char *kSlowTests[] = {
-    "dEQP.KHR_GLES31/core_arrays_of_arrays_ConstructorsAndUnsizedDeclConstructors1"};
+    "dEQP.KHR_GLES31/core_arrays_of_arrays_ConstructorsAndUnsizedDeclConstructors1",
+    "dEQP.GLES31/functional_ssbo_layout_random_all_shared_buffer_36"};
 }  // namespace
 
 int main(int argc, char **argv)
