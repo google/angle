@@ -2127,8 +2127,6 @@ void Renderer11::releaseDeviceResources()
 // set notify to true to broadcast a message to all contexts of the device loss
 bool Renderer11::testDeviceLost()
 {
-    bool isLost = false;
-
     if (!mDevice)
     {
         return true;
@@ -2136,7 +2134,7 @@ bool Renderer11::testDeviceLost()
 
     // GetRemovedReason is used to test if the device is removed
     HRESULT result = mDevice->GetDeviceRemovedReason();
-    isLost         = d3d11::isDeviceLostError(result);
+    bool isLost    = FAILED(result);
 
     if (isLost)
     {

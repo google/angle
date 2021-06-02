@@ -512,6 +512,9 @@ EGLint SwapChain11::resize(DisplayD3D *displayD3D, EGLint backbufferWidth, EGLin
 
         if (d3d11::isDeviceLostError(hr))
         {
+            HRESULT reason = device->GetDeviceRemovedReason();
+            ERR() << "Device lost in SwapChain11::resize " << gl::FmtHR(hr)
+                  << ", reason: " << gl::FmtHR(reason);
             return EGL_CONTEXT_LOST;
         }
         else
@@ -630,6 +633,9 @@ EGLint SwapChain11::reset(DisplayD3D *displayD3D,
 
             if (d3d11::isDeviceLostError(hr))
             {
+                HRESULT reason = device->GetDeviceRemovedReason();
+                ERR() << "Device lost in SwapChain11::reset " << gl::FmtHR(hr)
+                      << ", reason: " << gl::FmtHR(reason);
                 return EGL_CONTEXT_LOST;
             }
             else

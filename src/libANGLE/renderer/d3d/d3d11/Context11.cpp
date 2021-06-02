@@ -991,15 +991,19 @@ void Context11::handleResult(HRESULT hr,
 {
     ASSERT(FAILED(hr));
 
-    if (d3d11::isDeviceLostError(hr))
-    {
-        mRenderer->notifyDeviceLost();
-    }
-
     GLenum glErrorCode = DefaultGLErrorCode(hr);
 
     std::stringstream errorStream;
-    errorStream << "Internal D3D11 error: " << gl::FmtHR(hr) << ": " << message;
+    errorStream << "Internal D3D11 error: " << gl::FmtHR(hr);
+
+    if (d3d11::isDeviceLostError(hr))
+    {
+        HRESULT removalReason = mRenderer->getDevice()->GetDeviceRemovedReason();
+        errorStream << " (removal reason: " << gl::FmtHR(removalReason) << ")";
+        mRenderer->notifyDeviceLost();
+    }
+
+    errorStream << ": " << message;
 
     mErrors->handleError(glErrorCode, errorStream.str().c_str(), file, function, line);
 }
