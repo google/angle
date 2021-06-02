@@ -33,6 +33,23 @@
       "message": "Sorry for the slow review! LGTM.",
       "revId": "d0d63407ed61551f04d935a656319e35899178e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2991dc2_3e5df145",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-02T16:06:21Z",
+      "side": 1,
+      "message": "Thanks Shabi!",
+      "revId": "d0d63407ed61551f04d935a656319e35899178e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
