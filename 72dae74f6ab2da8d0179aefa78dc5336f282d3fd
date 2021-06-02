@@ -39,6 +39,30 @@
       },
       "revId": "72dae74f6ab2da8d0179aefa78dc5336f282d3fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ff8b021_3c826bdd",
+        "filename": "infra/specs/angle_mb_config.pyl",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T21:50:17Z",
+      "side": 1,
+      "message": "Looks like it is turned on for all but winuwp, so there\u0027s no clear way to refactor it.  Unless you\u0027re asking to add new opencl specific bot configs?  Let\u0027s follow up on that separately.",
+      "parentUuid": "38c8ebe0_759297d3",
+      "range": {
+        "startLine": 71,
+        "startChar": 5,
+        "endLine": 71,
+        "endChar": 11
+      },
+      "revId": "72dae74f6ab2da8d0179aefa78dc5336f282d3fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
