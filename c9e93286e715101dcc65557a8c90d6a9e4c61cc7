@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbf7ba3f_e5d62802",
+        "filename": "src/libANGLE/renderer/cl/CLKernelCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-02T12:02:01Z",
+      "side": 1,
+      "message": "Your version for sure is more readable, but then I would have to return on failure after each line, to avoid calling subsequent functions which would overwrite the errorCode of the failed function. I will merge it now as is, and think about a solution later. Open for suggestions.",
+      "parentUuid": "a570be92_defe5433",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 129,
+        "endChar": 5
+      },
+      "revId": "c9e93286e715101dcc65557a8c90d6a9e4c61cc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d118da7e_05cae268",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-06-02T04:15:35Z",
       "side": 1,
       "message": "Same comment as previous CL, version should be consumed here, otherwise it hangs up there unused (visually).",
+      "range": {
+        "startLine": 932,
+        "startChar": 12,
+        "endLine": 932,
+        "endChar": 34
+      },
+      "revId": "c9e93286e715101dcc65557a8c90d6a9e4c61cc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70eae2a6_0c387504",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-02T12:02:01Z",
+      "side": 1,
+      "message": "Fixed in the most recent CL.",
+      "parentUuid": "d118da7e_05cae268",
       "range": {
         "startLine": 932,
         "startChar": 12,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "60b579a3_d6282278",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 936,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-02T12:02:01Z",
+      "side": 1,
+      "message": "No, see the comment in the previous CL.",
+      "parentUuid": "4a0e2b73_eb91d5e5",
+      "range": {
+        "startLine": 936,
+        "startChar": 0,
+        "endLine": 936,
+        "endChar": 16
+      },
+      "revId": "c9e93286e715101dcc65557a8c90d6a9e4c61cc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "362ee225_c7d26b66",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-06-02T04:15:35Z",
       "side": 1,
       "message": "Same here, probably invalid if not one of the cases above?",
+      "range": {
+        "startLine": 998,
+        "startChar": 0,
+        "endLine": 999,
+        "endChar": 18
+      },
+      "revId": "c9e93286e715101dcc65557a8c90d6a9e4c61cc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59b87e2a_86861c83",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 999,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-02T12:02:01Z",
+      "side": 1,
+      "message": "No, see comment in previous CL.",
+      "parentUuid": "362ee225_c7d26b66",
       "range": {
         "startLine": 998,
         "startChar": 0,
