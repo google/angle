@@ -16,6 +16,138 @@
       "message": "Cody, this includes all requested readability improvements of the past four CLs.\nJamie, as requested from you some time ago, all validation functions now return the same type.",
       "revId": "4c119555c15ea865ed98a790b1b7a36ddb7b816e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9ed852b_7e5e0a56",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T03:25:32Z",
+      "side": 1,
+      "message": "John, nice work, some good readability improvements in here. A few comments on further cleanups.",
+      "revId": "4c119555c15ea865ed98a790b1b7a36ddb7b816e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "003cea6a_a693f50a",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T03:25:32Z",
+      "side": 1,
+      "message": "This is a bit confusing.  This macro should consume version.",
+      "range": {
+        "startLine": 258,
+        "startChar": 12,
+        "endLine": 258,
+        "endChar": 34
+      },
+      "revId": "4c119555c15ea865ed98a790b1b7a36ddb7b816e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d054f7f4_da8f3f97",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T03:25:32Z",
+      "side": 1,
+      "message": "Should the default also return CL_INVALID_VALUE?\n\nAlso looks like you lost the checks for `param_value_size \u003d\u003d 0u \u0026\u0026 param_value !\u003d nullptr)`.  Are those handled elsewhere now?\n\nSame comments for many of the checks below.",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 18
+      },
+      "revId": "4c119555c15ea865ed98a790b1b7a36ddb7b816e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9af2931_1a84b7b1",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1299,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T03:25:32Z",
+      "side": 1,
+      "message": "This is still hard to read, but is better than before, for sure.  I can see you\u0027ve based it on the spec wording.",
+      "range": {
+        "startLine": 1288,
+        "startChar": 0,
+        "endLine": 1299,
+        "endChar": 0
+      },
+      "revId": "4c119555c15ea865ed98a790b1b7a36ddb7b816e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4d3539b_8b07cbea",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1505,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T03:25:32Z",
+      "side": 1,
+      "message": "This is a nice improvement.",
+      "range": {
+        "startLine": 1505,
+        "startChar": 4,
+        "endLine": 1505,
+        "endChar": 35
+      },
+      "revId": "4c119555c15ea865ed98a790b1b7a36ddb7b816e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4e850cc_35d767fe",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1556,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T03:25:32Z",
+      "side": 1,
+      "message": "Not a big deal, but this would be clearer as:\n\n    if (image_desc-\u003eimage_row_pitch !\u003d 0u)\n    {\n        if (host_ptr \u003d\u003d nullptr)\n        {\n            return CL_INVALID_IMAGE_DESCRIPTOR;\n        }\n        if (image_desc-\u003eimage_row_pitch \u003c image_desc-\u003eimage_width * elemSize)\n        {\n            return CL_INVALID_IMAGE_DESCRIPTOR;\n        }\n        if ((image_desc-\u003eimage_row_pitch % elemSize) !\u003d 0u)\n        {\n            return CL_INVALID_IMAGE_DESCRIPTOR;\n        }\n    }\n    \nI realize it is more verbose, but it is easier to read.  Same for the checks below.",
+      "range": {
+        "startLine": 1551,
+        "startChar": 0,
+        "endLine": 1556,
+        "endChar": 5
+      },
+      "revId": "4c119555c15ea865ed98a790b1b7a36ddb7b816e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
