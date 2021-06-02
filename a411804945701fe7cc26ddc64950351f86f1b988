@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fade8ec_fe344f2e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-02T15:37:34Z",
+      "side": 1,
+      "message": "Preparatory CL. On pixel 2 the driver uniforms contain the spec constants as uniforms which includes a matrix.",
+      "revId": "a411804945701fe7cc26ddc64950351f86f1b988",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
