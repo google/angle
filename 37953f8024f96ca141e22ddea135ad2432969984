@@ -199,6 +199,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "31288b81_f8572321",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-02T15:35:19Z",
+      "side": 1,
+      "message": "It\u0027s not a stricty uni-directional thing. getAndReset is okay, we can use mutable if necessary. Anyway it\u0027s fine to use this \u0027push\u0027 approach, just would prefer to not use dirty bits except for bits that are processed in setupDraw. Note that updateActiveTextures is called from syncState not setupDraw. Will look for your next CL as described!",
+      "parentUuid": "60f8e1f9_c1577191",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf256b78_e1929359",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 7
