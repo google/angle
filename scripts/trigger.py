@@ -18,6 +18,9 @@ import sys
 
 # This is the same as the trybots.
 DEFAULT_TASK_PRIORITY = 30
+DEFAULT_POOL = 'chromium.tests.gpu'
+DEFAULT_LOG_LEVEL = 'info'
+GOLD_SERVICE_ACCOUNT = 'chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com'
 
 
 def parse_args():
@@ -26,11 +29,18 @@ def parse_args():
     parser.add_argument('test', help='test name. (e.g. angle_end2end_tests)')
     parser.add_argument('os_dim', help='OS dimension. (e.g. Windows-10)')
     parser.add_argument('-s', '--shards', default=1, help='number of shards', type=int)
-    parser.add_argument('-p', '--pool', default='Chrome-GPU', help='swarming pool')
+    parser.add_argument(
+        '-p', '--pool', default=DEFAULT_POOL, help='swarming pool, default is %s.' % DEFAULT_POOL)
     parser.add_argument('-g', '--gpu', help='GPU dimension. (e.g. intel-hd-630-win10-stable)')
     parser.add_argument('-t', '--device-type', help='Android device type (e.g. bullhead)')
     parser.add_argument('-o', '--device-os', help='Android OS.')
-    parser.add_argument('-v', '--verbose', action='store_true', help='Verbose logging.')
+    parser.add_argument(
+        '-l',
+        '--log',
+        default=DEFAULT_LOG_LEVEL,
+        help='Log level. Default is %s.' % DEFAULT_LOG_LEVEL)
+    parser.add_argument(
+        '--gold', action='store_true', help='Use swarming arguments for Gold tests.')
     parser.add_argument(
         '--priority',
         help='Task priority. Default is %s. Use judiciously.' % DEFAULT_TASK_PRIORITY,
@@ -57,8 +67,7 @@ def invoke_mb(args):
 def main():
     args, unknown = parse_args()
 
-    if args.verbose:
-        logging.basicConfig(level='INFO')
+    logging.basicConfig(level=args.log.upper())
 
     path = args.gn_path.replace('\\', '/')
     out_gn_path = '//' + path
@@ -112,7 +121,14 @@ def main():
     if args.device_os:
         swarming_args += ['-d', 'device_os=' + args.device_os]
 
-    cmd_args = ['-relative-cwd', args.gn_path, '--'] + swarming_cmd
+    cmd_args = ['-relative-cwd', args.gn_path, '--']
+
+    if args.gold:
+        swarming_args += ['-service-account', GOLD_SERVICE_ACCOUNT]
+        cmd_args += ['luci-auth', 'context', '--']
+
+    cmd_args += swarming_cmd
+
     if unknown:
         cmd_args += unknown
 
