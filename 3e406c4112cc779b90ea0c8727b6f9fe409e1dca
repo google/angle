@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "972730af_841c4f51",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T05:07:35Z",
+      "side": 1,
+      "message": "LGTM, nice work!  Just a couple of nits.",
+      "revId": "3e406c4112cc779b90ea0c8727b6f9fe409e1dca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68f9dd43_0b47346c",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T05:07:35Z",
+      "side": 1,
+      "message": "This is a big block of text.  If there\u0027s any way to break this apart, it would help readers.  Maybe just making a new line per parameter would be enough, of clang format will allow it.\n\nSame comment for each of the below.",
+      "range": {
+        "startLine": 172,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 55
+      },
+      "revId": "3e406c4112cc779b90ea0c8727b6f9fe409e1dca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c39f9b9_f7318bf9",
+        "filename": "src/libANGLE/renderer/cl/CLCommandQueueCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T05:07:35Z",
+      "side": 1,
+      "message": "Same here, quite difficult to see what\u0027s going on.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 61
+      },
+      "revId": "3e406c4112cc779b90ea0c8727b6f9fe409e1dca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
