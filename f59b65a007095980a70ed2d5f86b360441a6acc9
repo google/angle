@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e42abd9_eaaf5e40",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-02T15:36:18Z",
+      "side": 1,
+      "message": "It was hard to find a test suite I could enable with this change that does if else in a vertex shader with little else, but I can verify that this works fine with local testing of a few select tests.\n\nWith the next change that implements function calls, I enable a whole bunch of tests that exercise both conditionals and function calls.",
+      "revId": "f59b65a007095980a70ed2d5f86b360441a6acc9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
