@@ -1293,9 +1293,9 @@ angle::Result ContextVk::handleDirtyEventLogImpl(vk::CommandBuffer *commandBuffe
     // to call the vkCmd*DebugUtilsLabelEXT functions in order to communicate to debuggers
     // (e.g. AGI) the OpenGL ES commands that the application uses.
 
-    // Exit early if no OpenGL ES commands have been logged or if calling the
-    // vkCmd*DebugUtilsLabelEXT functions is not enabled.
-    if (mEventLog.empty() || !mRenderer->angleDebuggerMode())
+    // Exit early if no OpenGL ES commands have been logged, or if no command buffer (for a no-op
+    // draw), or if calling the vkCmd*DebugUtilsLabelEXT functions is not enabled.
+    if (mEventLog.empty() || commandBuffer == nullptr || !mRenderer->angleDebuggerMode())
     {
         return angle::Result::Continue;
     }
@@ -3033,12 +3033,6 @@ void ContextVk::endEventLog(angle::EntryPoint entryPoint)
 
 angle::Result ContextVk::handleNoopDrawEvent()
 {
-    if (!mRenderer->angleDebuggerMode())
-    {
-        return angle::Result::Continue;
-    }
-
-    ASSERT(mRenderPassCommandBuffer);
     // Even though this draw call is being no-op'd, we still must handle the dirty event log
     return handleDirtyEventLogImpl(mRenderPassCommandBuffer);
 }
