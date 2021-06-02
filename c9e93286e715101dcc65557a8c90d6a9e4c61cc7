@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea1a0dbf_b1dfc9d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T04:15:35Z",
+      "side": 1,
+      "message": "A few comments, still on readability.  Can\u0027t really judge the functionality without tests.",
+      "revId": "c9e93286e715101dcc65557a8c90d6a9e4c61cc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a570be92_defe5433",
+        "filename": "src/libANGLE/renderer/cl/CLKernelCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T04:15:35Z",
+      "side": 1,
+      "message": "It is difficult to tease these blocks apart.  For readability, you could try or\u0027ing the result together, then check the result at the end, like:\n\n  bool result \u003d false;\n  \n  result |\u003d GetKernelString(mNative, cl::KernelInfo::FunctionName,\n                            info.mFunctionName, errorCode);\n  result |\u003d GetKernelInfo(mNative, cl::KernelInfo::NumArgs, info.mNumArgs,\n                          errorCode);\n\n  if (ctx.getPlatform().isVersionOrNewer(1u, 2u))\n  {\n    result |\u003d GetKernelString(mNative, cl::KernelInfo::Attributes,\n                              info.mAttributes, errorCode);\n  }\n\n  if (!result)\n  {\n      return Info{};\n  }",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 129,
+        "endChar": 5
+      },
+      "revId": "c9e93286e715101dcc65557a8c90d6a9e4c61cc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d118da7e_05cae268",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T04:15:35Z",
+      "side": 1,
+      "message": "Same comment as previous CL, version should be consumed here, otherwise it hangs up there unused (visually).",
+      "range": {
+        "startLine": 932,
+        "startChar": 12,
+        "endLine": 932,
+        "endChar": 34
+      },
+      "revId": "c9e93286e715101dcc65557a8c90d6a9e4c61cc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a0e2b73_eb91d5e5",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 936,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T04:15:35Z",
+      "side": 1,
+      "message": "Shouldn\u0027t default also return CL_INVALID_VALUE?",
+      "range": {
+        "startLine": 936,
+        "startChar": 0,
+        "endLine": 936,
+        "endChar": 16
+      },
+      "revId": "c9e93286e715101dcc65557a8c90d6a9e4c61cc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "362ee225_c7d26b66",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 999,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T04:15:35Z",
+      "side": 1,
+      "message": "Same here, probably invalid if not one of the cases above?",
+      "range": {
+        "startLine": 998,
+        "startChar": 0,
+        "endLine": 999,
+        "endChar": 18
+      },
+      "revId": "c9e93286e715101dcc65557a8c90d6a9e4c61cc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
