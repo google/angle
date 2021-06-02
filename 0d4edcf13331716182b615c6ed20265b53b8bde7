@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db72d97e_993fd8a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T04:48:03Z",
+      "side": 1,
+      "message": "LGTM, although this is an enormous change.\nJohn, can you make sure your design doc is updated to reflect this change?",
+      "revId": "0d4edcf13331716182b615c6ed20265b53b8bde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
