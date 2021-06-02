@@ -270,6 +270,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "515b6f26_d576634f",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-02T15:01:00Z",
+      "side": 1,
+      "message": "Do the new changes resolve this?",
+      "parentUuid": "794ceaf6_902cda21",
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "35322b1d_0029dc8f",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
         "patchSetId": 8
@@ -352,6 +370,30 @@
       "side": 1,
       "message": "In CommandQueue::retireFinishedCommands() inFlightCommands are moved back to the CommandPool, but with protected and non-protected commands in the inFlightCommands, I think they are being moved into the wrong commandPool? I started seeing issue with mixed protected/nonprotected context/window surface. So I went back to 2 inflightCommands and issue resolved.",
       "parentUuid": "fba76009_3ee99594",
+      "range": {
+        "startLine": 961,
+        "startChar": 0,
+        "endLine": 975,
+        "endChar": 39
+      },
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "186a7cd6_dd404236",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-02T15:01:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "849c2a93_140c46d9",
       "range": {
         "startLine": 961,
         "startChar": 0,
@@ -447,6 +489,24 @@
       "side": 1,
       "message": "I\u0027ll look into that, command buffers identified by protected/un and batch can sort",
       "parentUuid": "dc17fe84_534372dc",
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dffbf631_cc240462",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 989,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-02T15:01:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f254cde7_7c7e1d7f",
       "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },

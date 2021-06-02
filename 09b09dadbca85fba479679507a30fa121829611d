@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7eef86a4_b303a2f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-02T15:01:00Z",
+      "side": 1,
+      "message": "PTAL, changes added\n\nThere is skia Gold bot differences. I don\u0027t know what to do about that. If it is a protected vs unprotected then we should see black vs image? But the differences show different pixels.\n\nThe android failure is all this (don\u0027t seem related to my changes):\nI   26.093s run_tests_on_device(9A241FFAZ001E6)  Failed\nI   26.093s run_tests_on_device(9A241FFAZ001E6)  RendererVk.cpp:364 (DebugUtilsMessenger): [ VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02769 ] Validation Error: [ VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02769 ] Object 0: handle \u003d 0xb400006f472b8130, type \u003d VK_OBJECT_TYPE_DEVICE; | MessageID \u003d 0xbf433601 | vkCreateGraphicsPipelines(): pCreateInfos[0] lineRasterizationMode \u003d VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT requires the bresenhamLines feature. The Vulkan spec states: If lineRasterizationMode is VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT, then the bresenhamLines feature must be enabled (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02769)\n\nThe clang failures are this (don\u0027t seem related to my changes):\n[ RUN      ] TracePerfTest.Run/vulkan_aliexpress\nWarning: setpriority failed in StabilizeCPUForBenchmarking. Process will retain default priority: Permission denied\nGL_RENDERER: ANGLE (Intel, Vulkan 1.1.96 (Intel(R) HD Graphics 630 (Kaby Lake GT2) (0x00005912)), Intel open-source Mesa driver-19.0.2)\n\n",
+      "revId": "09b09dadbca85fba479679507a30fa121829611d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

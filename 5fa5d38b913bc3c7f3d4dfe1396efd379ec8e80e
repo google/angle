@@ -140,6 +140,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fa57c81_6e16042c",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-02T15:01:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b01c610_46d7064b",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bdbbf5f9_81172d19",
@@ -171,6 +189,24 @@
       "side": 1,
       "message": "Whatever logic decides this when the texture\u0027s image itself is created should likely be used here for the staging buffers as well. There is no real \"protection\" if the contents are in a non-protected buffer anyway IMO!",
       "parentUuid": "bdbbf5f9_81172d19",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8109b8a_2633a114",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1007,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-02T15:01:00Z",
+      "side": 1,
+      "message": "Yeah, seems like, but I am concerned about scenarios that I didn\u0027t think of.",
+      "parentUuid": "0a16dc99_5ebcbbe1",
       "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
