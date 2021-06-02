@@ -54,7 +54,10 @@ void ParseEntryPoint(const uint32_t *_instruction,
                      IdRef *entryPoint,
                      LiteralString *name,
                      IdRefList *interfaceList);
-void ParseExecutionMode(const uint32_t *_instruction, IdRef *entryPoint, spv::ExecutionMode *mode);
+void ParseExecutionMode(const uint32_t *_instruction,
+                        IdRef *entryPoint,
+                        spv::ExecutionMode *mode,
+                        LiteralIntegerList *operandsList);
 void ParseCapability(const uint32_t *_instruction, spv::Capability *capability);
 void ParseTypeVoid(const uint32_t *_instruction, IdResult *idResult);
 void ParseTypeBool(const uint32_t *_instruction, IdResult *idResult);
@@ -197,12 +200,12 @@ void ParseInBoundsPtrAccessChain(const uint32_t *_instruction,
 void ParseDecorate(const uint32_t *_instruction,
                    IdRef *target,
                    spv::Decoration *decoration,
-                   LiteralIntegerList *valuesPairList);
+                   LiteralIntegerList *valuesList);
 void ParseMemberDecorate(const uint32_t *_instruction,
                          IdRef *structureType,
                          LiteralInteger *member,
                          spv::Decoration *decoration,
-                         LiteralIntegerList *valuesPairList);
+                         LiteralIntegerList *valuesList);
 void ParseDecorationGroup(const uint32_t *_instruction, IdResult *idResult);
 void ParseGroupDecorate(const uint32_t *_instruction,
                         IdRef *decorationGroup,
@@ -226,7 +229,7 @@ void ParseVectorShuffle(const uint32_t *_instruction,
                         IdResult *idResult,
                         IdRef *vector1,
                         IdRef *vector2,
-                        LiteralIntegerList *componentsPairList);
+                        LiteralIntegerList *componentsList);
 void ParseCompositeConstruct(const uint32_t *_instruction,
                              IdResultType *idResultType,
                              IdResult *idResult,
@@ -235,13 +238,13 @@ void ParseCompositeExtract(const uint32_t *_instruction,
                            IdResultType *idResultType,
                            IdResult *idResult,
                            IdRef *composite,
-                           LiteralIntegerList *indexesPairList);
+                           LiteralIntegerList *indexesList);
 void ParseCompositeInsert(const uint32_t *_instruction,
                           IdResultType *idResultType,
                           IdResult *idResult,
                           IdRef *object,
                           IdRef *composite,
-                          LiteralIntegerList *indexesPairList);
+                          LiteralIntegerList *indexesList);
 void ParseCopyObject(const uint32_t *_instruction,
                      IdResultType *idResultType,
                      IdResult *idResult,
@@ -918,7 +921,7 @@ void ParseBranchConditional(const uint32_t *_instruction,
                             IdRef *condition,
                             IdRef *trueLabel,
                             IdRef *falseLabel,
-                            LiteralIntegerList *branchweightsPairList);
+                            LiteralIntegerList *branchweightsList);
 void ParseSwitch(const uint32_t *_instruction,
                  IdRef *selector,
                  IdRef *default_,

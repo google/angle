@@ -2543,7 +2543,7 @@ void SpirvTransformFeedbackCodeGenerator::addExecutionMode(spirv::IdRef entryPoi
 
     if (mHasTransformFeedbackOutput)
     {
-        spirv::WriteExecutionMode(blobOut, entryPointId, spv::ExecutionModeXfb);
+        spirv::WriteExecutionMode(blobOut, entryPointId, spv::ExecutionModeXfb, {});
     }
 }
 
@@ -3596,7 +3596,7 @@ TransformationState SpirvTransformer::transformExecutionMode(const uint32_t *ins
 {
     spirv::IdRef entryPoint;
     spv::ExecutionMode mode;
-    spirv::ParseExecutionMode(instruction, &entryPoint, &mode);
+    spirv::ParseExecutionMode(instruction, &entryPoint, &mode, nullptr);
 
     if (mode == spv::ExecutionModeEarlyFragmentTests &&
         mOptions.removeEarlyFragmentTestsOptimization)

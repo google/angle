@@ -240,12 +240,19 @@ void WriteEntryPoint(Blob *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpEntryPoint);
 }
-void WriteExecutionMode(Blob *blob, IdRef entryPoint, spv::ExecutionMode mode)
+void WriteExecutionMode(Blob *blob,
+                        IdRef entryPoint,
+                        spv::ExecutionMode mode,
+                        const LiteralIntegerList &operandsList)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(entryPoint);
     blob->push_back(mode);
+    for (const auto &operand : operandsList)
+    {
+        blob->push_back(operand);
+    }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpExecutionMode);
 }
 void WriteCapability(Blob *blob, spv::Capability capability)
@@ -713,13 +720,13 @@ void WriteInBoundsPtrAccessChain(Blob *blob,
 void WriteDecorate(Blob *blob,
                    IdRef target,
                    spv::Decoration decoration,
-                   const LiteralIntegerList &valuesPairList)
+                   const LiteralIntegerList &valuesList)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(target);
     blob->push_back(decoration);
-    for (const auto &operand : valuesPairList)
+    for (const auto &operand : valuesList)
     {
         blob->push_back(operand);
     }
@@ -729,14 +736,14 @@ void WriteMemberDecorate(Blob *blob,
                          IdRef structureType,
                          LiteralInteger member,
                          spv::Decoration decoration,
-                         const LiteralIntegerList &valuesPairList)
+                         const LiteralIntegerList &valuesList)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(structureType);
     blob->push_back(member);
     blob->push_back(decoration);
-    for (const auto &operand : valuesPairList)
+    for (const auto &operand : valuesList)
     {
         blob->push_back(operand);
     }
@@ -809,7 +816,7 @@ void WriteVectorShuffle(Blob *blob,
                         IdResult idResult,
                         IdRef vector1,
                         IdRef vector2,
-                        const LiteralIntegerList &componentsPairList)
+                        const LiteralIntegerList &componentsList)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -817,7 +824,7 @@ void WriteVectorShuffle(Blob *blob,
     blob->push_back(idResult);
     blob->push_back(vector1);
     blob->push_back(vector2);
-    for (const auto &operand : componentsPairList)
+    for (const auto &operand : componentsList)
     {
         blob->push_back(operand);
     }
@@ -842,14 +849,14 @@ void WriteCompositeExtract(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef composite,
-                           const LiteralIntegerList &indexesPairList)
+                           const LiteralIntegerList &indexesList)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(idResultType);
     blob->push_back(idResult);
     blob->push_back(composite);
-    for (const auto &operand : indexesPairList)
+    for (const auto &operand : indexesList)
     {
         blob->push_back(operand);
     }
@@ -860,7 +867,7 @@ void WriteCompositeInsert(Blob *blob,
                           IdResult idResult,
                           IdRef object,
                           IdRef composite,
-                          const LiteralIntegerList &indexesPairList)
+                          const LiteralIntegerList &indexesList)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -868,7 +875,7 @@ void WriteCompositeInsert(Blob *blob,
     blob->push_back(idResult);
     blob->push_back(object);
     blob->push_back(composite);
-    for (const auto &operand : indexesPairList)
+    for (const auto &operand : indexesList)
     {
         blob->push_back(operand);
     }
@@ -2741,14 +2748,14 @@ void WriteBranchConditional(Blob *blob,
                             IdRef condition,
                             IdRef trueLabel,
                             IdRef falseLabel,
-                            const LiteralIntegerList &branchweightsPairList)
+                            const LiteralIntegerList &branchweightsList)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(condition);
     blob->push_back(trueLabel);
     blob->push_back(falseLabel);
-    for (const auto &operand : branchweightsPairList)
+    for (const auto &operand : branchweightsList)
     {
         blob->push_back(operand);
     }
