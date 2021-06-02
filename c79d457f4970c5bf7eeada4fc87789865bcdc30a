@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0951924b_f9ca40d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-02T22:37:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34b5577a_4542bb47",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 16
+      },
+      "revId": "c79d457f4970c5bf7eeada4fc87789865bcdc30a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c3f04aed_d3f6c699",
@@ -41,6 +65,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f30a9ac2_935feb9c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1298,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-02T22:37:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c3f04aed_d3f6c699",
+      "revId": "c79d457f4970c5bf7eeada4fc87789865bcdc30a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6782393e_e416f8eb",
@@ -54,6 +96,30 @@
       "writtenOn": "2021-06-02T22:08:14Z",
       "side": 1,
       "message": "Maybe better to handle this inside handleDirtyEventLogImpl?  i.e. just continue if commandBuffer is null.  It has an early exit at ref.",
+      "range": {
+        "startLine": 3022,
+        "startChar": 44,
+        "endLine": 3022,
+        "endChar": 68
+      },
+      "revId": "c79d457f4970c5bf7eeada4fc87789865bcdc30a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a627764_ce55e001",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3022,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-02T22:37:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6782393e_e416f8eb",
       "range": {
         "startLine": 3022,
         "startChar": 44,
