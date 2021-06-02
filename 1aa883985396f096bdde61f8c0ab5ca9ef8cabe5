@@ -22,6 +22,30 @@
       },
       "revId": "1aa883985396f096bdde61f8c0ab5ca9ef8cabe5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83dc8f66_f0a080b0",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-02T10:32:59Z",
+      "side": 0,
+      "message": "Redundant, see the other comment.",
+      "parentUuid": "9ec7e42a_5c63bdbe",
+      "range": {
+        "startLine": 285,
+        "startChar": 0,
+        "endLine": 288,
+        "endChar": 5
+      },
+      "revId": "1aa883985396f096bdde61f8c0ab5ca9ef8cabe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
