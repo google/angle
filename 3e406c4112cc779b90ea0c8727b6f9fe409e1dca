@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ac16bab_cb4e037a",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-02T15:35:06Z",
+      "side": 1,
+      "message": "Yes, thanks, I have created separate variables for all computed parameters to avoid the big blocks. Not possible to have one line per parameter with the current clang-format.",
+      "parentUuid": "68f9dd43_0b47346c",
+      "range": {
+        "startLine": 172,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 55
+      },
+      "revId": "3e406c4112cc779b90ea0c8727b6f9fe409e1dca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c39f9b9_f7318bf9",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-06-02T05:07:35Z",
       "side": 1,
       "message": "Same here, quite difficult to see what\u0027s going on.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 61
+      },
+      "revId": "3e406c4112cc779b90ea0c8727b6f9fe409e1dca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a537448b_e4b7e89c",
+        "filename": "src/libANGLE/renderer/cl/CLCommandQueueCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-02T15:35:06Z",
+      "side": 1,
+      "message": "Changed in the same way.",
+      "parentUuid": "7c39f9b9_f7318bf9",
       "range": {
         "startLine": 46,
         "startChar": 0,
