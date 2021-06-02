@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "fafafd1d_1978018c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-02T23:27:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6568a186_b8d1f9b9",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 25
+      },
+      "revId": "9687e78a98124ed52a9b908155fe6bb13c80b647",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "c655d1b6_83906c55",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -37,6 +61,24 @@
       "writtenOn": "2021-06-02T23:07:12Z",
       "side": 1,
       "message": "LGTM with a couple nits, curious if Mark has the ability to +2?",
+      "revId": "9687e78a98124ed52a9b908155fe6bb13c80b647",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2754d071_83c5356c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-02T23:27:34Z",
+      "side": 1,
+      "message": "I\u0027m not sure if Mark can vote yet.  Turns out, he\u0027s OOO the rest of the week.  I\u0027ll +2 this CL, and review this with Mark next week (the CL is pretty simple at this point).",
+      "parentUuid": "c655d1b6_83906c55",
       "revId": "9687e78a98124ed52a9b908155fe6bb13c80b647",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -54,6 +96,30 @@
       "writtenOn": "2021-06-02T23:07:12Z",
       "side": 1,
       "message": "Prefer `commandBuffer \u003d\u003d nullptr` since it isn\u0027t a bool, but not a big deal, I know ANGLE mixes these in for brevity sometimes.",
+      "range": {
+        "startLine": 1298,
+        "startChar": 30,
+        "endLine": 1298,
+        "endChar": 43
+      },
+      "revId": "9687e78a98124ed52a9b908155fe6bb13c80b647",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69656128_57422333",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1298,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-02T23:27:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4a5636b_cbbe5229",
       "range": {
         "startLine": 1298,
         "startChar": 30,
