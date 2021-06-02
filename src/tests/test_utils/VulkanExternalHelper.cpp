@@ -565,7 +565,7 @@ bool VulkanExternalHelper::canCreateImageZirconVmo(VkFormat format,
     }
 
     return canCreateImageExternal(format, type, tiling, createFlags, usageFlags,
-                                  VK_EXTERNAL_MEMORY_HANDLE_TYPE_TEMP_ZIRCON_VMO_BIT_FUCHSIA);
+                                  VK_EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA);
 }
 
 VkResult VulkanExternalHelper::createImage2DZirconVmo(VkFormat format,
@@ -577,17 +577,17 @@ VkResult VulkanExternalHelper::createImage2DZirconVmo(VkFormat format,
                                                       VkDeviceSize *deviceMemorySizeOut)
 {
     return createImage2DExternal(format, createFlags, usageFlags, extent,
-                                 VK_EXTERNAL_MEMORY_HANDLE_TYPE_TEMP_ZIRCON_VMO_BIT_FUCHSIA,
-                                 imageOut, deviceMemoryOut, deviceMemorySizeOut);
+                                 VK_EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA, imageOut,
+                                 deviceMemoryOut, deviceMemorySizeOut);
 }
 
 VkResult VulkanExternalHelper::exportMemoryZirconVmo(VkDeviceMemory deviceMemory, zx_handle_t *vmo)
 {
     VkMemoryGetZirconHandleInfoFUCHSIA memoryGetZirconHandleInfo = {
-        /* .sType = */ VK_STRUCTURE_TYPE_TEMP_MEMORY_GET_ZIRCON_HANDLE_INFO_FUCHSIA,
+        /* .sType = */ VK_STRUCTURE_TYPE_MEMORY_GET_ZIRCON_HANDLE_INFO_FUCHSIA,
         /* .pNext = */ nullptr,
         /* .memory = */ deviceMemory,
-        /* .handleType = */ VK_EXTERNAL_MEMORY_HANDLE_TYPE_TEMP_ZIRCON_VMO_BIT_FUCHSIA,
+        /* .handleType = */ VK_EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA,
     };
 
     return vkGetMemoryZirconHandleFUCHSIA(mDevice, &memoryGetZirconHandleInfo, vmo);
@@ -663,7 +663,7 @@ bool VulkanExternalHelper::canCreateSemaphoreZirconEvent() const
     VkPhysicalDeviceExternalSemaphoreInfo externalSemaphoreInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO,
         /* .pNext = */ nullptr,
-        /* .handleType = */ VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TEMP_ZIRCON_EVENT_BIT_FUCHSIA,
+        /* .handleType = */ VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA,
     };
 
     VkExternalSemaphoreProperties externalSemaphoreProperties = {
@@ -689,7 +689,7 @@ VkResult VulkanExternalHelper::createSemaphoreZirconEvent(VkSemaphore *semaphore
     VkExportSemaphoreCreateInfo exportSemaphoreCreateInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
         /* .pNext = */ nullptr,
-        /* .handleTypes = */ VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TEMP_ZIRCON_EVENT_BIT_FUCHSIA,
+        /* .handleTypes = */ VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA,
     };
 
     VkSemaphoreCreateInfo semaphoreCreateInfo = {
@@ -704,10 +704,10 @@ VkResult VulkanExternalHelper::createSemaphoreZirconEvent(VkSemaphore *semaphore
 VkResult VulkanExternalHelper::exportSemaphoreZirconEvent(VkSemaphore semaphore, zx_handle_t *event)
 {
     VkSemaphoreGetZirconHandleInfoFUCHSIA semaphoreGetZirconHandleInfo = {
-        /* .sType = */ VK_STRUCTURE_TYPE_TEMP_SEMAPHORE_GET_ZIRCON_HANDLE_INFO_FUCHSIA,
+        /* .sType = */ VK_STRUCTURE_TYPE_SEMAPHORE_GET_ZIRCON_HANDLE_INFO_FUCHSIA,
         /* .pNext = */ nullptr,
         /* .semaphore = */ semaphore,
-        /* .handleType = */ VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TEMP_ZIRCON_EVENT_BIT_FUCHSIA,
+        /* .handleType = */ VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA,
     };
 
     return vkGetSemaphoreZirconHandleFUCHSIA(mDevice, &semaphoreGetZirconHandleInfo, event);
