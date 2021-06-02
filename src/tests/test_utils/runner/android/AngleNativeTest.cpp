@@ -143,10 +143,28 @@ Java_com_android_angle_test_AngleNativeTest_nativeRunTests(JNIEnv *env,
 
     // A few options, such "--gtest_list_tests", will just use printf directly
     // Always redirect stdout to a known file.
-    if (freopen(stdoutFilePath.c_str(), "a+", stdout) == NULL)
+    FILE *stdoutFile = fopen(stdoutFilePath.c_str(), "a+");
+    if (stdoutFile == NULL)
     {
-        AndroidLog(ANDROID_LOG_ERROR, "Failed to redirect stream to file: %s: %s\n",
+        AndroidLog(ANDROID_LOG_ERROR, "Failed to open stdout file: %s: %s\n",
                    stdoutFilePath.c_str(), strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    int oldStdout = dup(STDOUT_FILENO);
+    if (oldStdout == -1)
+    {
+        AndroidLog(ANDROID_LOG_ERROR, "Failed to dup stdout: %d\n", errno);
+        fclose(stdoutFile);
+        exit(EXIT_FAILURE);
+    }
+
+    int retVal = dup2(fileno(stdoutFile), STDOUT_FILENO);
+    if (retVal == -1)
+    {
+        AndroidLog(ANDROID_LOG_ERROR, "Failed to dup2 stdout to file: %d\n", errno);
+        fclose(stdoutFile);
+        close(oldStdout);
         exit(EXIT_FAILURE);
     }
 
@@ -155,6 +173,12 @@ Java_com_android_angle_test_AngleNativeTest_nativeRunTests(JNIEnv *env,
     std::vector<char *> argv;
     size_t argc = ArgsToArgv(args, &argv);
 
-    ScopedMainEntryLogger scoped_main_entry_logger;
-    main(static_cast<int>(argc), &argv[0]);
+    {
+        ScopedMainEntryLogger scoped_main_entry_logger;
+        main(static_cast<int>(argc), &argv[0]);
+    }
+
+    fclose(stdoutFile);
+    dup2(oldStdout, STDOUT_FILENO);
+    close(oldStdout);
 }
