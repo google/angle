@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86546a96_6c462ec6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-02T15:32:03Z",
+      "side": 1,
+      "message": "re-lgtm. looks like I forgot to publish comments yesterday.",
+      "revId": "72dae74f6ab2da8d0179aefa78dc5336f282d3fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38c8ebe0_759297d3",
+        "filename": "infra/specs/angle_mb_config.pyl",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-02T15:32:03Z",
+      "side": 1,
+      "message": "nit: can you sort this odd man out?",
+      "range": {
+        "startLine": 71,
+        "startChar": 5,
+        "endLine": 71,
+        "endChar": 11
+      },
+      "revId": "72dae74f6ab2da8d0179aefa78dc5336f282d3fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
