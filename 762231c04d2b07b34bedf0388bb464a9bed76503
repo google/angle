@@ -16,6 +16,69 @@
       "message": "LGTM and it fixes the problem that\u0027s seen with AGI and Ragnarok.  Thanks!",
       "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd15bac2_f1271e0a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T23:26:07Z",
+      "side": 1,
+      "message": "Fix looks good to me, one request on code style.",
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf9f4907_680b75c4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3039,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T23:26:07Z",
+      "side": 1,
+      "message": "Dangling else ifs always make me nervous.  Though I see lots of places that assume there will never be another pipeline type.\n\nCan we instead only check for one type and then assert the other is true?  i.e.:\n\n    if (pipelineType \u003d\u003d PipelineType::Graphics)\n    {\n        ASSERT(mRenderPassCommands);\n        mRenderPassCommands-\u003egetCommandBuffer().endDebugUtilsLabelEXT();\n    }\n    else\n    {\n        ASSERT(pipelineType \u003d\u003d PipelineType::Compute);\n        ASSERT(mOutsideRenderPassCommands);\n        mOutsideRenderPassCommands-\u003egetCommandBuffer().endDebugUtilsLabelEXT();\n    }",
+      "range": {
+        "startLine": 3030,
+        "startChar": 0,
+        "endLine": 3039,
+        "endChar": 5
+      },
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac2ab3ba_6ec6b8e4",
+        "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T23:26:07Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 50
+      },
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
