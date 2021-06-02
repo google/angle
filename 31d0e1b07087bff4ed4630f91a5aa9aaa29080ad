@@ -99,6 +99,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f24aefd2_ff87477b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4893,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-02T01:50:38Z",
+      "side": 1,
+      "message": "Ack.\n\nnvm, i see what you mean",
+      "parentUuid": "f88f0d18_8c8dcb2a",
+      "range": {
+        "startLine": 4893,
+        "startChar": 8,
+        "endLine": 4893,
+        "endChar": 85
+      },
+      "revId": "31d0e1b07087bff4ed4630f91a5aa9aaa29080ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd41cf42_d6b6c5d8",
