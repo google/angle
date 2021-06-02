@@ -120,6 +120,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3acf4ee8_b82484fd",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-02T02:23:07Z",
+      "side": 1,
+      "message": "Yes I was, but Jamie is right, the additional size_t on every builtin symbol is not great. Could you do a quick comparison between using std::array and angle::FixedVector and see how much that affects the ANGLE libGLESv2.so binary size? If it\u0027s more than a KB or two, let\u0027s just keep this as is.",
+      "parentUuid": "fbdf29ac_2cd10694",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 50
+      },
+      "revId": "0e3b44e60bc0324d55e7b37530f81ab75cad018b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7d983d10_03e436cd",
         "filename": "src/compiler/translator/Symbol.h",
         "patchSetId": 9
