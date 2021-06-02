@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a272755a_4ec14d76",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-06-02T18:28:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a89b19e_78ffa358",
+      "range": {
+        "startLine": 9,
+        "startChar": 11,
+        "endLine": 9,
+        "endChar": 23
+      },
+      "revId": "0e3b44e60bc0324d55e7b37530f81ab75cad018b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30618d39_ad405be1",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-06-01T15:34:25Z",
       "side": 1,
       "message": "nit: angle naming scheme for static methods (see site for more details)",
+      "range": {
+        "startLine": 24,
+        "startChar": 43,
+        "endLine": 24,
+        "endChar": 62
+      },
+      "revId": "0e3b44e60bc0324d55e7b37530f81ab75cad018b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f88b2013_093d2b5c",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-06-02T18:28:46Z",
+      "side": 1,
+      "message": "I moved this into the class.",
+      "parentUuid": "30618d39_ad405be1",
       "range": {
         "startLine": 24,
         "startChar": 43,
@@ -165,6 +213,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "13fa447e_61f82196",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-06-02T18:28:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d983d10_03e436cd",
+      "range": {
+        "startLine": 201,
+        "startChar": 21,
+        "endLine": 201,
+        "endChar": 22
+      },
+      "revId": "0e3b44e60bc0324d55e7b37530f81ab75cad018b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "002a776a_c7fff6b4",
@@ -178,6 +250,30 @@
       "writtenOn": "2021-06-01T15:34:25Z",
       "side": 1,
       "message": "incorrect validation - OES is only for FramebufferTextureOES and EXT for this function.",
+      "range": {
+        "startLine": 2694,
+        "startChar": 34,
+        "endLine": 2694,
+        "endChar": 51
+      },
+      "revId": "0e3b44e60bc0324d55e7b37530f81ab75cad018b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d772d18_ba6a28f5",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2694,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-06-02T18:28:46Z",
+      "side": 1,
+      "message": "Good catch on this one!",
+      "parentUuid": "002a776a_c7fff6b4",
       "range": {
         "startLine": 2694,
         "startChar": 34,
