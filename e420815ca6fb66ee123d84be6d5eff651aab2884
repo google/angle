@@ -346,6 +346,24 @@
       "parentUuid": "8fe1d8da_ba782d7c",
       "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "019e7b60_9b40e17c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1584,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-02T22:07:34Z",
+      "side": 1,
+      "message": "shabi, if you are good with this i want to go ahead and land the change",
+      "parentUuid": "bfb9046b_cc7fd508",
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
