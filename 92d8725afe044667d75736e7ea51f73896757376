@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a3d3d6b_52b3054c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1605,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-02T22:10:44Z",
+      "side": 1,
+      "message": "you have already done these checks in the if condition, why cant these just be \" \u003d true\"?",
+      "range": {
+        "startLine": 1604,
+        "startChar": 40,
+        "endLine": 1605,
+        "endChar": 82
+      },
+      "revId": "92d8725afe044667d75736e7ea51f73896757376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13726494_6e910ce8",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1607,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-02T22:10:44Z",
+      "side": 1,
+      "message": "you have already done these checks in the if condition, why cant these just be \" \u003d true\"?",
+      "range": {
+        "startLine": 1606,
+        "startChar": 40,
+        "endLine": 1607,
+        "endChar": 82
+      },
+      "revId": "92d8725afe044667d75736e7ea51f73896757376",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
