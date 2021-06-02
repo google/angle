@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f45d5f5_2390f685",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T04:31:16Z",
+      "side": 1,
+      "message": "Good stuff",
+      "revId": "865fd1f4ff8446fb8f47ffe5f39a7948bcc407d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "852efd23_76bd66dc",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1060,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-02T04:31:16Z",
+      "side": 1,
+      "message": "Silent default again.",
+      "range": {
+        "startLine": 1059,
+        "startChar": 0,
+        "endLine": 1060,
+        "endChar": 18
+      },
+      "revId": "865fd1f4ff8446fb8f47ffe5f39a7948bcc407d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
