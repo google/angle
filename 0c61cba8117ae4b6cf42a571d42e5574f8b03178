@@ -70,6 +70,24 @@
       "parentUuid": "8d90cca5_48c6d19b",
       "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3909689e_65538403",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-02T02:15:04Z",
+      "side": 1,
+      "message": "Well it\u0027s not just robust access. Without WebGL, no robust access still doesn\u0027t generate an error. Given that the test suite is not WebGL, there should never be an error here. We could potentially duplicate the tests on a WebGL suite just to test both cases.\n\nI\u0027m not too worried about the VVL errors though, we know this is undefined behavior territory. Given that the VVL error is making the tests fail, I\u0027m not sure if we can at all keep the tests in their current suites.",
+      "parentUuid": "26d27ca5_a28b033b",
+      "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
