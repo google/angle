@@ -16,6 +16,40 @@
       "message": "PTAL, are there any other comments?",
       "revId": "8976534bde82373cea0455fe38c71101109181c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1bcdc41_de36065b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1795,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-06-02T22:57:33Z",
+      "side": 1,
+      "message": "Should this additional validation be restricted to ES 3.2 contexts?",
+      "revId": "8976534bde82373cea0455fe38c71101109181c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46e7dc62_4904de4c",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2721,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-06-02T22:57:33Z",
+      "side": 1,
+      "message": "This citation is from ES 3.2 but the code\u0027s being added to validationES31.cpp. Is this a behavioral difference from ES 3.1 and if so should context version checks be made here?",
+      "revId": "8976534bde82373cea0455fe38c71101109181c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
