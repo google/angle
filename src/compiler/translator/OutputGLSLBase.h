@@ -9,6 +9,7 @@
 
 #include <set>
 
+#include "compiler/translator/ExtensionBehavior.h"
 #include "compiler/translator/HashNames.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
@@ -131,6 +132,14 @@ void WriteTessEvaluationShaderLayoutQualifiers(TInfoSinkBase &out,
                                                sh::TLayoutTessEvaluationType inputPoint);
 
 bool NeedsToWriteLayoutQualifier(const TType &type);
+
+void EmitEarlyFragmentTestsGLSL(const TCompiler &, TInfoSinkBase &sink);
+void EmitWorkGroupSizeGLSL(const TCompiler &, TInfoSinkBase &sink);
+void EmitMultiviewGLSL(const TCompiler &,
+                       const ShCompileOptions &,
+                       const TExtension,
+                       const TBehavior,
+                       TInfoSinkBase &sink);
 
 }  // namespace sh
 

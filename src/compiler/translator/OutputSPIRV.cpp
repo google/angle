@@ -212,6 +212,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
                            spirv::IdRefList *extractedComponentsOut);
 
     spirv::IdRef createFunctionCall(TIntermAggregate *node, spirv::IdRef resultTypeId);
+    spirv::IdRef createAtomicBuiltIn(TIntermAggregate *node, spirv::IdRef resultTypeId);
 
     ANGLE_MAYBE_UNUSED TCompiler *mCompiler;
     ANGLE_MAYBE_UNUSED ShCompileOptions mCompileOptions;
@@ -281,6 +282,11 @@ spv::StorageClass GetStorageClass(const TType &type)
 
         case EvqVertexID:
         case EvqInstanceID:
+        case EvqNumWorkGroups:
+        case EvqWorkGroupID:
+        case EvqLocalInvocationID:
+        case EvqGlobalInvocationID:
+        case EvqLocalInvocationIndex:
             return spv::StorageClassInput;
 
         default:
@@ -296,9 +302,7 @@ OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler, ShCompileOptions
     : TIntermTraverser(true, true, true, &compiler->getSymbolTable()),
       mCompiler(compiler),
       mCompileOptions(compileOptions),
-      mBuilder(gl::FromGLenum<gl::ShaderType>(compiler->getShaderType()),
-               compiler->getHashFunction(),
-               compiler->getNameMap())
+      mBuilder(compiler, compileOptions, compiler->getHashFunction(), compiler->getNameMap())
 {}
 
 OutputSPIRVTraverser::~OutputSPIRVTraverser()
@@ -333,6 +337,35 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
             name              = "gl_InstanceIndex";
             builtInDecoration = spv::BuiltInInstanceIndex;
             spirvType.type    = EbtInt;
+            break;
+        case EvqNumWorkGroups:
+            name                  = "gl_NumWorkGroups";
+            builtInDecoration     = spv::BuiltInNumWorkgroups;
+            spirvType.type        = EbtUInt;
+            spirvType.primarySize = 3;
+            break;
+        case EvqWorkGroupID:
+            name                  = "gl_WorkGroupID";
+            builtInDecoration     = spv::BuiltInWorkgroupId;
+            spirvType.type        = EbtUInt;
+            spirvType.primarySize = 3;
+            break;
+        case EvqLocalInvocationID:
+            name                  = "gl_LocalInvocationID";
+            builtInDecoration     = spv::BuiltInLocalInvocationId;
+            spirvType.type        = EbtUInt;
+            spirvType.primarySize = 3;
+            break;
+        case EvqGlobalInvocationID:
+            name                  = "gl_GlobalInvocationID";
+            builtInDecoration     = spv::BuiltInGlobalInvocationId;
+            spirvType.type        = EbtUInt;
+            spirvType.primarySize = 3;
+            break;
+        case EvqLocalInvocationIndex:
+            name              = "gl_LocalInvocationIndex";
+            builtInDecoration = spv::BuiltInLocalInvocationIndex;
+            spirvType.type    = EbtUInt;
             break;
         default:
             // TODO: more built-ins.  http://anglebug.com/4889
@@ -1360,6 +1393,99 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
     return result;
 }
 
+spirv::IdRef OutputSPIRVTraverser::createAtomicBuiltIn(TIntermAggregate *node,
+                                                       spirv::IdRef resultTypeId)
+{
+    // Most atomic instructions are in the form of:
+    //
+    //     %result = OpAtomicX %pointer Scope MemorySemantics %value
+    //
+    // OpAtomicCompareSwap is exceptionally different (note that compare and value are in different
+    // order than in GLSL):
+    //
+    //     %result = OpAtomicCompareExchange %pointer
+    //                                       Scope MemorySemantics MemorySemantics
+    //                                       %value %comparator
+    //
+    // TODO: Turn image atomic functions into ops.  Saves generating many built-in variations, and
+    // lets this function handle both.  http://anglebug.com/4889
+
+    // In all cases, the first parameter is the pointer, and the rest are rvalues.
+    const size_t parameterCount = node->getChildCount();
+    spirv::IdRef pointerId;
+    spirv::IdRefList parameters;
+
+    ASSERT(parameterCount >= 2);
+
+    pointerId = accessChainCollapse(&mNodeData[mNodeData.size() - parameterCount]);
+    for (size_t paramIndex = 1; paramIndex < parameterCount; ++paramIndex)
+    {
+        NodeData &param = mNodeData[mNodeData.size() - parameterCount + paramIndex];
+        parameters.push_back(accessChainLoad(&param));
+    }
+
+    // The scope of the operation is always Device as we don't enable the Vulkan memory model
+    // extension.
+    const spirv::IdScope scopeId = mBuilder.getUintConstant(spv::ScopeDevice);
+
+    // The memory semantics is always relaxed as we don't enable the Vulkan memory model extension.
+    const spirv::IdMemorySemantics semanticsId =
+        mBuilder.getUintConstant(spv::MemorySemanticsMaskNone);
+
+    using WriteAtomicOp =
+        void (*)(spirv::Blob * blob, spirv::IdResultType idResultType, spirv::IdResult idResult,
+                 spirv::IdRef pointer, spirv::IdScope scope, spirv::IdMemorySemantics semantics,
+                 spirv::IdRef value);
+    WriteAtomicOp writeAtomicOp = nullptr;
+
+    const spirv::IdRef result = mBuilder.getNewId();
+    const bool isUnsigned =
+        node->getChildNode(0)->getAsTyped()->getType().getBasicType() == EbtUInt;
+
+    switch (node->getOp())
+    {
+        case EOpAtomicAdd:
+            writeAtomicOp = spirv::WriteAtomicIAdd;
+            break;
+        case EOpAtomicMin:
+            writeAtomicOp = isUnsigned ? spirv::WriteAtomicUMin : spirv::WriteAtomicSMin;
+            break;
+        case EOpAtomicMax:
+            writeAtomicOp = isUnsigned ? spirv::WriteAtomicUMax : spirv::WriteAtomicSMax;
+            break;
+        case EOpAtomicAnd:
+            writeAtomicOp = spirv::WriteAtomicAnd;
+            break;
+        case EOpAtomicOr:
+            writeAtomicOp = spirv::WriteAtomicOr;
+            break;
+        case EOpAtomicXor:
+            writeAtomicOp = spirv::WriteAtomicXor;
+            break;
+        case EOpAtomicExchange:
+            writeAtomicOp = spirv::WriteAtomicExchange;
+            break;
+        case EOpAtomicCompSwap:
+            // Generate this special instruction right here and early out.  Note again that the
+            // value and compare parameters of OpAtomicCompareExchange are in the opposite order
+            // from GLSL.
+            ASSERT(parameters.size() == 2);
+            spirv::WriteAtomicCompareExchange(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                              result, pointerId, scopeId, semanticsId, semanticsId,
+                                              parameters[1], parameters[0]);
+            return result;
+        default:
+            UNREACHABLE();
+    }
+
+    // Write the instruction.
+    ASSERT(parameters.size() == 1);
+    writeAtomicOp(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result, pointerId, scopeId,
+                  semanticsId, parameters[0]);
+
+    return result;
+}
+
 void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
 {
     // Constants are expected to be folded.
@@ -1717,6 +1843,31 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
             else
                 writeBinaryOp = spirv::WriteSGreaterThanEqual;
             break;
+
+        case EOpBitShiftLeft:
+        case EOpBitShiftLeftAssign:
+            writeBinaryOp = spirv::WriteShiftLeftLogical;
+            break;
+        case EOpBitShiftRight:
+        case EOpBitShiftRightAssign:
+            if (isUnsigned)
+                writeBinaryOp = spirv::WriteShiftRightLogical;
+            else
+                writeBinaryOp = spirv::WriteShiftRightArithmetic;
+            break;
+        case EOpBitwiseAnd:
+        case EOpBitwiseAndAssign:
+            writeBinaryOp = spirv::WriteBitwiseAnd;
+            break;
+        case EOpBitwiseXor:
+        case EOpBitwiseXorAssign:
+            writeBinaryOp = spirv::WriteBitwiseXor;
+            break;
+        case EOpBitwiseOr:
+        case EOpBitwiseOrAssign:
+            writeBinaryOp = spirv::WriteBitwiseOr;
+            break;
+
         default:
             UNIMPLEMENTED();
             break;
@@ -2030,8 +2181,18 @@ bool OutputSPIRVTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
             // Create a call to the function.
             result = createFunctionCall(node, typeId);
             break;
+        case EOpAtomicAdd:
+        case EOpAtomicMin:
+        case EOpAtomicMax:
+        case EOpAtomicAnd:
+        case EOpAtomicOr:
+        case EOpAtomicXor:
+        case EOpAtomicExchange:
+        case EOpAtomicCompSwap:
+            result = createAtomicBuiltIn(node, typeId);
+            break;
         default:
-            // TODO: Built-in functions.  http://anglebug.com/4889
+            // TODO: More built-in functions.  http://anglebug.com/4889
             UNIMPLEMENTED();
     }
 
@@ -2089,7 +2250,19 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
     const spirv::IdRef variableId =
         mBuilder.declareVariable(typeId, storageClass, nullptr, mBuilder.hashName(variable).data());
 
-    if (IsShaderIn(type.getQualifier()) || IsShaderOut(type.getQualifier()))
+    const bool isShaderInOut = IsShaderIn(type.getQualifier()) || IsShaderOut(type.getQualifier());
+    const bool isInterfaceBlock = type.getBasicType() == EbtInterfaceBlock;
+
+    // Add decorations, which apply to the element type of arrays, if array.
+    spirv::IdRef nonArrayTypeId = typeId;
+    if (type.isArray() && (isShaderInOut || isInterfaceBlock))
+    {
+        SpirvType elementType  = mBuilder.getSpirvType(type, EbsUnspecified);
+        elementType.arraySizes = {};
+        nonArrayTypeId         = mBuilder.getSpirvTypeData(elementType, "").id;
+    }
+
+    if (isShaderInOut)
     {
         // Add in and out variables to the list of interface variables.
         mBuilder.addEntryPointInterfaceVariableId(variableId);
@@ -2099,19 +2272,20 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
             // For gl_PerVertex in particular, write the necessary BuiltIn decorations
             if (type.getQualifier() == EvqPerVertexIn || type.getQualifier() == EvqPerVertexOut)
             {
-                mBuilder.writePerVertexBuiltIns(type, typeId);
+                mBuilder.writePerVertexBuiltIns(type, nonArrayTypeId);
             }
 
             // I/O blocks are decorated with Block
-            spirv::WriteDecorate(mBuilder.getSpirvDecorations(), typeId, spv::DecorationBlock, {});
+            spirv::WriteDecorate(mBuilder.getSpirvDecorations(), nonArrayTypeId,
+                                 spv::DecorationBlock, {});
         }
     }
-    else if (type.getBasicType() == EbtInterfaceBlock)
+    else if (isInterfaceBlock)
     {
         // For uniform and buffer variables, add Block and BufferBlock decorations respectively.
         const spv::Decoration decoration =
             type.getQualifier() == EvqUniform ? spv::DecorationBlock : spv::DecorationBufferBlock;
-        spirv::WriteDecorate(mBuilder.getSpirvDecorations(), typeId, decoration, {});
+        spirv::WriteDecorate(mBuilder.getSpirvDecorations(), nonArrayTypeId, decoration, {});
     }
 
     // Write DescriptorSet, Binding, Location etc decorations if necessary.

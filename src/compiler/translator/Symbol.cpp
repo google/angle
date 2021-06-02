@@ -224,34 +224,4 @@ bool TFunction::isAtomicCounterFunction() const
 {
     return SymbolType() == SymbolType::BuiltIn && name().beginsWith(kAtomicCounterName);
 }
-
-bool TFunction::hasSamplerInStructOrArrayParams() const
-{
-    for (size_t paramIndex = 0; paramIndex < mParamCount; ++paramIndex)
-    {
-        const TVariable *param = getParam(paramIndex);
-        if (param->getType().isStructureContainingSamplers() ||
-            (param->getType().isArray() && param->getType().isSampler()))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool TFunction::hasSamplerInStructOrArrayOfArrayParams() const
-{
-    for (size_t paramIndex = 0; paramIndex < mParamCount; ++paramIndex)
-    {
-        const TVariable *param = getParam(paramIndex);
-        if (param->getType().isStructureContainingSamplers() ||
-            (param->getType().isArrayOfArrays() && param->getType().isSampler()))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
 }  // namespace sh

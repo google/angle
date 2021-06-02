@@ -180,7 +180,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
             subType.blockStorage = EbsUnspecified;
         }
 
-        const spirv::IdRef subTypeId = getSpirvTypeData(subType, "").id;
+        const spirv::IdRef subTypeId = getSpirvTypeData(subType, blockName).id;
 
         const unsigned int length = type.arraySizes.back();
         typeId                    = getNewId();
@@ -929,11 +929,6 @@ void SPIRVBuilder::addCapability(spv::Capability capability)
     mCapabilities.insert(capability);
 }
 
-void SPIRVBuilder::addExecutionMode(spv::ExecutionMode executionMode)
-{
-    mExecutionModes.insert(executionMode);
-}
-
 void SPIRVBuilder::setEntryPointId(spirv::IdRef id)
 {
     ASSERT(!mEntryPointId.valid());
@@ -1292,15 +1287,14 @@ spirv::Blob SPIRVBuilder::getSpirv()
     //
     //   5 for header +
     //   a number of capabilities +
-    //   a number of execution modes +
     //   size of already generated instructions.
     //
     // The actual size is larger due to other metadata instructions such as extensions,
-    // OpExtInstImport, OpEntryPoint etc.
-    result.reserve(5 + mCapabilities.size() * 2 + mExecutionModes.size() * 3 + mSpirvDebug.size() +
-                   mSpirvDecorations.size() + mSpirvTypeAndConstantDecls.size() +
-                   mSpirvTypePointerDecls.size() + mSpirvFunctionTypeDecls.size() +
-                   mSpirvVariableDecls.size() + mSpirvFunctions.size());
+    // OpExtInstImport, OpEntryPoint, OpExecutionMode etc.
+    result.reserve(5 + mCapabilities.size() * 2 + mSpirvDebug.size() + mSpirvDecorations.size() +
+                   mSpirvTypeAndConstantDecls.size() + mSpirvTypePointerDecls.size() +
+                   mSpirvFunctionTypeDecls.size() + mSpirvVariableDecls.size() +
+                   mSpirvFunctions.size());
 
     // Generate any necessary id before writing the id bound in header.
     const spirv::IdRef extInstImportId = getNewId();
@@ -1338,11 +1332,7 @@ spirv::Blob SPIRVBuilder::getSpirv()
                            mEntryPointInterfaceList);
 
     // - OpExecutionMode instructions
-    for (spv::ExecutionMode executionMode : mExecutionModes)
-    {
-        spirv::WriteExecutionMode(&result, mEntryPointId, executionMode, {});
-    }
-    result.insert(result.end(), mSpirvExecutionModes.begin(), mSpirvExecutionModes.end());
+    generateExecutionModes(&result);
 
     // - OpSource instruction.
     //
@@ -1362,6 +1352,25 @@ spirv::Blob SPIRVBuilder::getSpirv()
 
     result.shrink_to_fit();
     return result;
+}
+
+void SPIRVBuilder::generateExecutionModes(spirv::Blob *blob)
+{
+    switch (mShaderType)
+    {
+        case gl::ShaderType::Compute:
+        {
+            const sh::WorkGroupSize &localSize = mCompiler->getComputeShaderLocalSize();
+            spirv::WriteExecutionMode(
+                blob, mEntryPointId, spv::ExecutionModeLocalSize,
+                {spirv::LiteralInteger(localSize[0]), spirv::LiteralInteger(localSize[1]),
+                 spirv::LiteralInteger(localSize[2])});
+            break;
+        }
+        default:
+            // TODO: other shader types.  http://anglebug.com/4889
+            break;
+    }
 }
 
 }  // namespace sh

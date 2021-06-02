@@ -300,7 +300,7 @@ inline PlatformParameters WithEmulatedVAOs(const PlatformParameters &params)
 inline PlatformParameters WithDirectSPIRVGeneration(const PlatformParameters &params)
 {
     PlatformParameters directSPIRVGeneration                  = params;
-    directSPIRVGeneration.eglParameters.directSPIRVGeneration = true;
+    directSPIRVGeneration.eglParameters.directSPIRVGeneration = EGL_TRUE;
     return directSPIRVGeneration;
 }
 }  // namespace angle

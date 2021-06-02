@@ -211,8 +211,13 @@ struct SpirvConditional
 class SPIRVBuilder : angle::NonCopyable
 {
   public:
-    SPIRVBuilder(gl::ShaderType shaderType, ShHashFunction64 hashFunction, NameMap &nameMap)
-        : mShaderType(shaderType),
+    SPIRVBuilder(TCompiler *compiler,
+                 ShCompileOptions compileOptions,
+                 ShHashFunction64 hashFunction,
+                 NameMap &nameMap)
+        : mCompiler(compiler),
+          mCompileOptions(compileOptions),
+          mShaderType(gl::FromGLenum<gl::ShaderType>(compiler->getShaderType())),
           mNextAvailableId(1),
           mHashFunction(hashFunction),
           mNameMap(nameMap),
@@ -228,7 +233,6 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getTypePointerId(spirv::IdRef typeId, spv::StorageClass storageClass);
     spirv::IdRef getFunctionTypeId(spirv::IdRef returnTypeId, const spirv::IdRefList &paramTypeIds);
 
-    spirv::Blob *getSpirvExecutionModes() { return &mSpirvExecutionModes; }
     spirv::Blob *getSpirvDebug() { return &mSpirvDebug; }
     spirv::Blob *getSpirvDecorations() { return &mSpirvDecorations; }
     spirv::Blob *getSpirvTypeAndConstantDecls() { return &mSpirvTypeAndConstantDecls; }
@@ -255,7 +259,6 @@ class SPIRVBuilder : angle::NonCopyable
     SpirvConditional *getCurrentConditional() { return &mConditionalStack.back(); }
 
     void addCapability(spv::Capability capability);
-    void addExecutionMode(spv::ExecutionMode executionMode);
     void setEntryPointId(spirv::IdRef id);
     void addEntryPointInterfaceVariableId(spirv::IdRef id);
     void writePerVertexBuiltIns(const TType &type, spirv::IdRef typeId);
@@ -321,16 +324,15 @@ class SPIRVBuilder : angle::NonCopyable
     uint32_t nextUnusedInputLocation(uint32_t consumedCount);
     uint32_t nextUnusedOutputLocation(uint32_t consumedCount);
 
+    void generateExecutionModes(spirv::Blob *blob);
+
+    ANGLE_MAYBE_UNUSED TCompiler *mCompiler;
+    ANGLE_MAYBE_UNUSED ShCompileOptions mCompileOptions;
     gl::ShaderType mShaderType;
 
     // Capabilities the shader is using.  Accumulated as the instructions are generated.  The Shader
     // capability is unconditionally generated, so it's not tracked.
     std::set<spv::Capability> mCapabilities;
-
-    // Execution modes the shader is enabling.  Accumulated as the instructions are generated.
-    // Execution mode instructions that require a parameter are written to mSpirvExecutionModes as
-    // instructions; they are always generated once so don't benefit from being in a std::set.
-    std::set<spv::ExecutionMode> mExecutionModes;
 
     // The list of interface variables and the id of main() populated as the instructions are
     // generated.  Used for the OpEntryPoint instruction.
@@ -348,7 +350,6 @@ class SPIRVBuilder : angle::NonCopyable
     // Various sections of SPIR-V.  Each section grows as SPIR-V is generated, and the final result
     // is obtained by stitching the sections together.  This puts the instructions in the order
     // required by the spec.
-    spirv::Blob mSpirvExecutionModes;
     spirv::Blob mSpirvDebug;
     spirv::Blob mSpirvDecorations;
     spirv::Blob mSpirvTypeAndConstantDecls;

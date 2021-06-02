@@ -4169,6 +4169,9 @@ TEST_P(ComputeShaderTest, DispatchBlitStencilDispatch)
     // http://anglebug.com/5533
     ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
 
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     constexpr GLsizei kSize = 1;
 
     constexpr char kCS[] = R"(#version 310 es
