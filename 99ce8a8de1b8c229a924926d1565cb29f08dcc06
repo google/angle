@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7bf907b_c607ebd4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-02T18:21:37Z",
+      "side": 1,
+      "message": "Peter/Haiyang, does this look somewhat right?",
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
