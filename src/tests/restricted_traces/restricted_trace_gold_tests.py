@@ -63,6 +63,7 @@ DEFAULT_TEST_SUITE = 'angle_perftests'
 DEFAULT_TEST_PREFIX = 'TracePerfTest.Run/vulkan_'
 DEFAULT_SCREENSHOT_PREFIX = 'angle_vulkan_'
 DEFAULT_BATCH_SIZE = 5
+DEFAULT_LOG = 'info'
 
 # Filters out stuff like: " I   72.572s run_tests_on_device(96071FFAZ00096) "
 ANDROID_LOGGING_PREFIX = r'I +\d+.\d+s \w+\(\w+\)  '
@@ -161,7 +162,7 @@ def get_binary_name(binary):
         return './%s' % binary
 
 
-def get_skia_gold_keys(args):
+def get_skia_gold_keys(args, env):
     """Get all the JSON metadata that will be passed to golctl."""
     # All values need to be strings, otherwise goldctl fails.
 
@@ -169,8 +170,6 @@ def get_skia_gold_keys(args):
     if hasattr(get_skia_gold_keys, 'called') and get_skia_gold_keys.called:
         logging.exception('get_skia_gold_keys may only be called once')
     get_skia_gold_keys.called = True
-
-    env = os.environ.copy()
 
     class Filter:
 
@@ -205,11 +204,8 @@ def get_skia_gold_keys(args):
             return self.lines
 
     with common.temporary_file() as tempfile_path:
-        sysinfo_env = env.copy()
-        sysinfo_env.pop('GTEST_TOTAL_SHARDS', None)
-        sysinfo_env.pop('GTEST_SHARD_INDEX', None)
         binary = get_binary_name('angle_system_info_test')
-        if run_wrapper(args, [binary, '--vulkan', '-v'], sysinfo_env, tempfile_path):
+        if run_wrapper(args, [binary, '--vulkan', '-v'], env, tempfile_path):
             raise Exception('Error getting system info.')
 
         filter = Filter()
@@ -337,7 +333,7 @@ def _get_gtest_filter_for_batch(batch):
 
 
 def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_results):
-    keys = get_skia_gold_keys(args)
+    keys = get_skia_gold_keys(args, env)
 
     with temporary_dir('angle_skia_gold_') as skia_gold_temp_dir:
         gold_properties = angle_skia_gold_properties.ANGLESkiaGoldProperties(args)
@@ -384,6 +380,7 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                     artifacts = {}
 
                     if batch_result == PASS:
+                        logging.debug('upload test result: %s' % trace)
                         result = upload_test_result_to_skia_gold(args, gold_session_manager,
                                                                  gold_session, gold_properties,
                                                                  screenshot_dir, trace, artifacts)
@@ -430,18 +427,22 @@ def main():
         help='Number of tests to run in a group. Default: %d' % DEFAULT_BATCH_SIZE,
         type=int,
         default=DEFAULT_BATCH_SIZE)
+    parser.add_argument(
+        '-l', '--log', help='Log output level. Default is %s.' % DEFAULT_LOG, default=DEFAULT_LOG)
 
     add_skia_gold_args(parser)
 
     args, extra_flags = parser.parse_known_args()
+    logging.basicConfig(level=args.log.upper())
+
     env = os.environ.copy()
 
     if 'GTEST_TOTAL_SHARDS' in env and int(env['GTEST_TOTAL_SHARDS']) != 1:
         if 'GTEST_SHARD_INDEX' not in env:
             logging.error('Sharding params must be specified together.')
             sys.exit(1)
-        args.shard_count = int(env['GTEST_TOTAL_SHARDS'])
-        args.shard_index = int(env['GTEST_SHARD_INDEX'])
+        args.shard_count = int(env.pop('GTEST_TOTAL_SHARDS'))
+        args.shard_index = int(env.pop('GTEST_SHARD_INDEX'))
 
     results = {
         'tests': {},
