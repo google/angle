@@ -129,6 +129,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5424c9e9_425d0a9f",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-02T12:19:37Z",
+      "side": 1,
+      "message": "I have added a comment for all silent defaults in the most recent CL.",
+      "parentUuid": "38743b19_521b4813",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 18
+      },
+      "revId": "4c119555c15ea865ed98a790b1b7a36ddb7b816e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f9af2931_1a84b7b1",
