@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fb0f674_1c219c2d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T14:27:34Z",
+      "side": 1,
+      "message": "nit: \"line\" or just \":\"",
+      "range": {
+        "startLine": 1003,
+        "startChar": 16,
+        "endLine": 1003,
+        "endChar": 18
+      },
+      "revId": "0ac9cd2bd1cade2567a58294b51cef7324ced6e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de7e7fe2_dcf95ba0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1004,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T14:27:34Z",
+      "side": 1,
+      "message": "you\u0027re calling handleError twice here which seems like it shouldn\u0027t be necessary.",
+      "range": {
+        "startLine": 1004,
+        "startChar": 7,
+        "endLine": 1004,
+        "endChar": 82
+      },
+      "revId": "0ac9cd2bd1cade2567a58294b51cef7324ced6e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1216b6ef_90c5e5ce",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T14:27:34Z",
+      "side": 1,
+      "message": "nit: \"Device lost in\"",
+      "range": {
+        "startLine": 516,
+        "startChar": 22,
+        "endLine": 516,
+        "endChar": 34
+      },
+      "revId": "0ac9cd2bd1cade2567a58294b51cef7324ced6e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6fb6a465_50379b1f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T14:27:34Z",
+      "side": 1,
+      "message": "nit: \"Device lost in\"",
+      "range": {
+        "startLine": 637,
+        "startChar": 26,
+        "endLine": 637,
+        "endChar": 50
+      },
+      "revId": "0ac9cd2bd1cade2567a58294b51cef7324ced6e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
