@@ -51,6 +51,24 @@
       "parentUuid": "cff6fb92_405ec96a",
       "revId": "567c4778d10cfa70fa1014c4b9159e0e1ac33ab6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd24b7a5_24560597",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-03T20:35:11Z",
+      "side": 1,
+      "message": "I think we needed to also revert a follow up CL.  I\u0027ve updated the series here and it passes locally.",
+      "parentUuid": "ab6da58a_e18cae33",
+      "revId": "567c4778d10cfa70fa1014c4b9159e0e1ac33ab6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
