@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddc19d96_d3da05ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-03T15:27:52Z",
+      "side": 1,
+      "message": "Thanks for adding me as a reviewer, I\u0027m beginning to understand the compiler a lot more after the metal work.\n\nDo you have tests, or how did you test this? Could we remove any dEQP expectations?",
+      "revId": "28ff7e0cf31ccea38f83af7efdbeb6dda9a7416f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5308e9de_2ffe9284",
+        "filename": "src/compiler/translator/tree_ops/ClampIndirectIndices.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-03T15:27:52Z",
+      "side": 1,
+      "message": "Maybe this is not how the TIntermTraverser works, but wouldn\u0027t this need to be after the next block where you apply this to the left and right nodes?\n\nI\u0027m imagining something like:\nvar \u003d 1 - array[otherVar];\nwouldn\u0027t that show up as a EOpSub where we need to do this transform to the right node?",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 38,
+        "endChar": 0
+      },
+      "revId": "28ff7e0cf31ccea38f83af7efdbeb6dda9a7416f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
