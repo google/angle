@@ -33,6 +33,23 @@
       "message": "This looks correct to me, but for some reason it doesn\u0027t seem to affect C++ stdout 😞",
       "revId": "eba1bf47dfcf051dffd57643c41195dd278a5c5b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b795512c_8e6897e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-03T23:16:37Z",
+      "side": 1,
+      "message": "After some digging, looks like using System.setOut() isn\u0027t supposed to affect C++ side.\nSorry for the false lead.\n\nThe only other idea that I have is to reproduce this locally and debug Bionic\u0027s libc to figure out why sometimes we own fd 1 and sometimes not.\nPerhaps, as Peter suggested, fd 1 is not being properly released by a previous invocation of the same Activity.\nI don\u0027t think we can close fd 1 in our code to fix that, though - it may be used by other parts of the system.\nMaybe we can force the activity to terminate in the catapult/devil code.",
+      "revId": "eba1bf47dfcf051dffd57643c41195dd278a5c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
