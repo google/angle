@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9ddfb56e_caeced8a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-06-03T15:10:49Z",
+      "side": 1,
+      "message": "nit: I\u0027ve seen a convention of:\n\nBug: internal b/188291915\n\nIs this the preferred way to reference internal bugs Geoff/Jamie?",
+      "revId": "0ac9cd2bd1cade2567a58294b51cef7324ced6e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2fb0f674_1c219c2d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
         "patchSetId": 1
