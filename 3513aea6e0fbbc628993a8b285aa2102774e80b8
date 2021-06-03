@@ -104,6 +104,30 @@
       },
       "revId": "3513aea6e0fbbc628993a8b285aa2102774e80b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e94520cc_5d3c573b",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-03T20:11:02Z",
+      "side": 1,
+      "message": "fdsan error is clearly about closing stdout:\nfdsan: failed to exchange ownership of file descriptor: fd 1 is owned by unique_fd 0x756e8a6b64, was expected to be unowned\nfd 1 is stdout and our code doesn\u0027t own it.",
+      "parentUuid": "dfc810e1_8755a3ee",
+      "range": {
+        "startLine": 164,
+        "startChar": 0,
+        "endLine": 164,
+        "endChar": 57
+      },
+      "revId": "3513aea6e0fbbc628993a8b285aa2102774e80b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
