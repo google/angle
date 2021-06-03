@@ -224,6 +224,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c592b0bc_58de2abc",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T19:41:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9219465b_2a5c5ad2",
+      "range": {
+        "startLine": 189,
+        "startChar": 0,
+        "endLine": 189,
+        "endChar": 49
+      },
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3b45d386_1972ebbb",
@@ -285,6 +309,30 @@
       "side": 1,
       "message": "Done on the ScopedMainEntryLogger.\n\nI changed this to a fopen-based solution, PTAL.",
       "parentUuid": "06427eb9_39438d77",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 19
+      },
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47cd13c3_2629ff07",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T19:41:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "257bf6f9_8091160b",
       "range": {
         "startLine": 209,
         "startChar": 0,
