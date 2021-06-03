@@ -4590,7 +4590,7 @@ void FrameCapture::onEndFrame(const gl::Context *context)
     }
 
     // Note that we currently capture before the start frame to collect shader and program sources.
-    if (isCaptureActive())
+    if (!mFrameCalls.empty() && isCaptureActive())
     {
         if (mIsFirstFrame)
         {
