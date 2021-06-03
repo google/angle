@@ -495,18 +495,12 @@ class TIntermBinary : public TIntermOperator
     TIntermTyped *getRight() const { return mRight; }
     TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
-    void setAddIndexClamp() { mAddIndexClamp = true; }
-    bool getAddIndexClamp() const { return mAddIndexClamp; }
-
     // This method is only valid for EOpIndexDirectStruct. It returns the name of the field.
     const ImmutableString &getIndexStructFieldName() const;
 
   protected:
     TIntermTyped *mLeft;
     TIntermTyped *mRight;
-
-    // If set to true, wrap any EOpIndexIndirect with a clamp to bounds.
-    bool mAddIndexClamp;
 
   private:
     void promote();

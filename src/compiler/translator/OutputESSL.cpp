@@ -10,7 +10,6 @@ namespace sh
 {
 
 TOutputESSL::TOutputESSL(TInfoSinkBase &objSink,
-                         ShArrayIndexClampingStrategy clampingStrategy,
                          ShHashFunction64 hashFunction,
                          NameMap &nameMap,
                          TSymbolTable *symbolTable,
@@ -19,7 +18,6 @@ TOutputESSL::TOutputESSL(TInfoSinkBase &objSink,
                          bool forceHighp,
                          ShCompileOptions compileOptions)
     : TOutputGLSLBase(objSink,
-                      clampingStrategy,
                       hashFunction,
                       nameMap,
                       symbolTable,
