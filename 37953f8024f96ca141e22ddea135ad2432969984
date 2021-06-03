@@ -287,6 +287,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "446cb089_09caf78d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-03T18:48:10Z",
+      "side": 1,
+      "message": "Done.\n\nI have made the change but the guidelines for what fits in dirty bits and what doesn\u0027t are quite hazy. Specifically, i felt the TextureVk change fit well into the dirty bit pattern. Is there some documentation that can be added to aid such design decisions?",
+      "parentUuid": "0a74fc6a_d3a63eb4",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf256b78_e1929359",
