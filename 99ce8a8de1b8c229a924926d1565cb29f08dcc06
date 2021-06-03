@@ -155,6 +155,30 @@
       },
       "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06427eb9_39438d77",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-06-03T13:29:09Z",
+      "side": 1,
+      "message": "- I wonder whether calling fclose() is sufficient for fixing this bug. (It is possible that the bug is caused by stdout not being closed by a previous shard)\n- fopen() is an alternative to freopen() if we do not want to close the file currently associated with the stream",
+      "parentUuid": "3b45d386_1972ebbb",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 19
+      },
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
