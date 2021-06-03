@@ -168,6 +168,30 @@
       },
       "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8917f3bc_4bf487d7",
+        "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-03T21:10:24Z",
+      "side": 1,
+      "message": "Sorry, I didn\u0027t explain well.  There are 3 choices, only 2 of which we want to do something special for.  If a 3rd pipeline were developed, we\u0027d need 4 choices.\n\nThat\u0027s different than the other case, where there are only 2 choices and a new pipeline would need a 3rd.",
+      "parentUuid": "1db3c596_27dc0d75",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 50
+      },
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
