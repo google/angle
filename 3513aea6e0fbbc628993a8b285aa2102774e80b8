@@ -16,6 +16,46 @@
       "message": "Yuly,.",
       "revId": "3513aea6e0fbbc628993a8b285aa2102774e80b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e8cbfd2_6ac90bec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-03T18:48:20Z",
+      "side": 1,
+      "message": "I don\u0027t think this is going to work, but I don\u0027t mind trying.",
+      "revId": "3513aea6e0fbbc628993a8b285aa2102774e80b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c1774f0_2bba5bb8",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-03T18:48:20Z",
+      "side": 1,
+      "message": "I expect the new approach to shift fdsan warning to here.\nI.e. we still don\u0027t own STDOUT_FILENO, so we are not allowed to close it here.\n\nI\u0027ve suggested to do the redirection Java-side, since I suspect that STDOUT_FILENO is owned by Dalvik.\nI think if we\u0027ve used unique_fd(STDOUT_FILENO) in our code, we might get a better message from fdsan to confirm who owns it.",
+      "range": {
+        "startLine": 164,
+        "startChar": 0,
+        "endLine": 164,
+        "endChar": 57
+      },
+      "revId": "3513aea6e0fbbc628993a8b285aa2102774e80b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
