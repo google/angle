@@ -16,6 +16,29 @@
       "message": "It was hard to find a test suite I could enable with this change that does if else in a vertex shader with little else, but I can verify that this works fine with local testing of a few select tests.\n\nWith the next change that implements function calls, I enable a whole bunch of tests that exercise both conditionals and function calls.",
       "revId": "f59b65a007095980a70ed2d5f86b360441a6acc9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a48545c_f012486e",
+        "filename": "src/compiler/translator/BuildSPIRV.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-03T01:15:04Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 379,
+        "startChar": 81,
+        "endLine": 379,
+        "endChar": 87
+      },
+      "revId": "f59b65a007095980a70ed2d5f86b360441a6acc9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
