@@ -271,6 +271,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0a74fc6a_d3a63eb4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T17:37:02Z",
+      "side": 1,
+      "message": "Yeah remove the bits from TextureVk as well. Just use a boolean. It\u0027s a bit weird to carry this kind of thing around through all these state variables, but it\u0027s ok I think.",
+      "parentUuid": "6a317486_9f896bf7",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf256b78_e1929359",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 7
