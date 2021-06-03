@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "85458057_7ead62ff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-03T17:14:31Z",
+      "side": 1,
+      "message": "I don\u0027t see how I (as a reviewer) can change this from WIP.  That means we get no email when something happens (e.g. I didn\u0027t see Cody\u0027s review comments until I went looking for them).",
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf9f4907_680b75c4",
@@ -60,6 +77,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d9139277_9d60a022",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3039,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-03T17:14:31Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "cf9f4907_680b75c4",
+      "range": {
+        "startLine": 3030,
+        "startChar": 0,
+        "endLine": 3039,
+        "endChar": 5
+      },
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ac2ab3ba_6ec6b8e4",
         "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
         "patchSetId": 1
@@ -71,6 +112,30 @@
       "writtenOn": "2021-06-02T23:26:07Z",
       "side": 1,
       "message": "Same here.",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 50
+      },
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1533cc0d_8c07d279",
+        "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-03T17:14:31Z",
+      "side": 1,
+      "message": "I think this case is okay.  Most calls through this method will go through the implicit \"else\" case; and will not call contextVk-\u003eendEventLog().",
+      "parentUuid": "ac2ab3ba_6ec6b8e4",
       "range": {
         "startLine": 47,
         "startChar": 0,
