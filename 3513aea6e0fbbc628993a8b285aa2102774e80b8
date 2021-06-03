@@ -80,6 +80,30 @@
       },
       "revId": "3513aea6e0fbbc628993a8b285aa2102774e80b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfc810e1_8755a3ee",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-06-03T19:50:18Z",
+      "side": 1,
+      "message": "What I would want to do is see if we can symbolize the stacktrace. I am interested in what line in freopen is throwing the error. My current suspicion is that the error is thrown by opening the file, not by closing the stdout stream.\n\nIf the error is caused by opening the file, our life is a lot easier than if it is caused by closing the stdout stream.\n\nI will try to symbolize the stacktrace once I get a new Chrome checkout (related to why I was contacting techstop)\n\nIt looks like System#setOut() is the way to do the stdout redirection in Java according to https://www.dev2qa.com/how-to-write-console-output-to-text-file-in-java/ I will test whether this redirection works for C++ called from Java",
+      "parentUuid": "60d8f82d_3d33a246",
+      "range": {
+        "startLine": 164,
+        "startChar": 0,
+        "endLine": 164,
+        "endChar": 57
+      },
+      "revId": "3513aea6e0fbbc628993a8b285aa2102774e80b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
