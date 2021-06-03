@@ -157,6 +157,24 @@
       "parentUuid": "e9b81ba5_65b923aa",
       "revId": "b70ec977cbe4c829b4485e665df09591617dc986",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5d828ef_11b5ddc9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116023
+      },
+      "writtenOn": "2021-06-03T23:50:25Z",
+      "side": 1,
+      "message": "vulkan.h includes vulkan_fuchsia.h only when VK_USE_PLATFORM_FUCHSIA is defined. When VK_USE_PLATFORM_FUCHSIA is defined it also include \u003czircon/types.h\u003e in that case. I think we could hack it to compile without ifdefs if we (1) include vulkan_fuchsia.h explicitly and (2) add typedef zx_handle_t for other platforms. Both would probably need to be done in common/vulkan/vk_headers.h . But this feels like a hack.\nWould we use the same approach for other platforms? E.g. for Windows we would need to define multiple types used in vulkan_win32.h (I see HANDLE, DWORD, SECURITY_ATTRIBUTES). It\u0027s likely it would be harder to maintain this solution compared to platform-specific ifdefs, because other type \u0026 header dependencies may be added in platform-specific vulkan headers in the future.\nWDYT?",
+      "parentUuid": "da22a0c3_de128489",
+      "revId": "b70ec977cbe4c829b4485e665df09591617dc986",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
