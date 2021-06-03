@@ -323,6 +323,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5e7165f_9833e211",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-03T19:43:11Z",
+      "side": 1,
+      "message": "\u003e it\u0027s an optimization for the patten of ...\n\ni see, that makes sense.\n\nI felt the dirtybit pattern fit well for usecases that need a getAndReset...() style cached bool variable but as you said differing views.",
+      "parentUuid": "aa331261_daf36895",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf256b78_e1929359",
