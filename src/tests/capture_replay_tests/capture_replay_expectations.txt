@@ -78,13 +78,8 @@ VertexAttributeCachingTest.*
 VertexAttributeOORTest.*
 VertexAttributeTest.*
 ViewportTest.*
-VulkanExternalImageTest.ShouldClearMutableNoStorageUsageOpaqueFdRGBA8/*
-VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphores/*
-VulkanExternalImageTest.ShouldClearZirconVmoRGBA8/*
-VulkanExternalImageTest.ShouldClearZirconWithFlagsVmoRGBA8/*
-VulkanExternalImageTest.ShouldImportSemaphoreOpaqueFd/*
-VulkanExternalImageTest.TextureFormatCompatChromiumMutableNoStorageZirconVmo/*
-VulkanExternalImageTest.TextureFormatCompatChromiumZirconVmo/*
+VulkanExternalImageTest.*
+
 WebGLCompatibilityTest.*
 WebGLFramebufferTest.*
 
