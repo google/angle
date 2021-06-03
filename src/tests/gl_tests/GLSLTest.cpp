@@ -10888,14 +10888,11 @@ TEST_P(GLSLTest_ES3, InitGlobalNonConstant)
 
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_EXT_shader_non_constant_global_initializers : require
-uniform U
-{
-vec4 u;
-} u;
+uniform vec4 u;
 out vec4 color;
 
-vec4 global1 = u.u;
-vec4 global2 = u.u + vec4(1);
+vec4 global1 = u;
+vec4 global2 = u + vec4(1);
 vec4 global3 = global1 * global2;
 void main()
 {
