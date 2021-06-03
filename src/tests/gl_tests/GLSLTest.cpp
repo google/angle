@@ -10880,6 +10880,32 @@ void main()
     glDeleteShader(shader);
 }
 
+// Test that initializing global variables with non-constant values work
+TEST_P(GLSLTest_ES3, InitGlobalNonConstant)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_non_constant_global_initializers"));
+
+    constexpr char kVS[] = R"(#version 300 es
+#extension GL_EXT_shader_non_constant_global_initializers : require
+uniform U
+{
+vec4 u;
+} u;
+out vec4 color;
+
+vec4 global1 = u.u;
+vec4 global2 = u.u + vec4(1);
+vec4 global3 = global1 * global2;
+void main()
+{
+    color = global3;
+})";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kVS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTest);

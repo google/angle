@@ -111,6 +111,17 @@ struct NodeData
     AccessChain accessChain;
 };
 
+struct FunctionIds
+{
+    // Id of the function type, return type and parameter types.
+    spirv::IdRef functionTypeId;
+    spirv::IdRef returnTypeId;
+    spirv::IdRefList parameterTypeIds;
+
+    // Id of the function itself.
+    spirv::IdRef functionId;
+};
+
 bool IsAccessChainRValue(const AccessChain &accessChain)
 {
     return accessChain.storageClass == spv::StorageClassMax;
@@ -227,10 +238,12 @@ class OutputSPIRVTraverser : public TIntermTraverser
     // A map of TSymbol to its SPIR-V id.  This could be a:
     //
     // - TVariable, or
-    // - TFunction, or
     // - TInterfaceBlock: because TIntermSymbols referencing a field of an unnamed interface block
     //   don't reference the TVariable that defines the struct, but the TInterfaceBlock itself.
     angle::HashMap<const TSymbol *, spirv::IdRef> mSymbolIdMap;
+
+    // A map of TFunction to its various SPIR-V ids.
+    angle::HashMap<const TFunction *, FunctionIds> mFunctionIdMap;
 
     // Whether the current symbol being visited is being declared.
     bool mIsSymbolBeingDeclared = false;
@@ -1287,8 +1300,8 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
     const TFunction *function = node->getFunction();
     ASSERT(function);
 
-    ASSERT(mSymbolIdMap.count(function) > 0);
-    const spirv::IdRef functionId = mSymbolIdMap[function];
+    ASSERT(mFunctionIdMap.count(function) > 0);
+    const spirv::IdRef functionId = mFunctionIdMap[function].functionId;
 
     // Get the list of parameters passed to the function.  The function parameters can only be
     // memory variables, or if the function argument is |const|, an rvalue.
@@ -2073,41 +2086,26 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
 {
     if (visit == PreVisit)
     {
+        return true;
+    }
+
+    // After the prototype is visited, generate the initial code for the function.
+    if (visit == InVisit)
+    {
         const TFunction *function = node->getFunction();
 
-        // Declare the function type
-        const spirv::IdRef returnTypeId =
-            mBuilder.getTypeData(function->getReturnType(), EbsUnspecified).id;
+        ASSERT(mFunctionIdMap.count(function) > 0);
+        const FunctionIds &ids = mFunctionIdMap[function];
 
-        spirv::IdRefList paramTypeIds;
-        for (size_t paramIndex = 0; paramIndex < function->getParamCount(); ++paramIndex)
-        {
-            const TType &paramType = function->getParam(paramIndex)->getType();
-
-            spirv::IdRef paramId = mBuilder.getTypeData(paramType, EbsUnspecified).id;
-
-            // const function parameters are intermediate values, while the rest are "variables"
-            // with the Function storage class.
-            if (paramType.getQualifier() != EvqConst)
-            {
-                paramId = mBuilder.getTypePointerId(paramId, spv::StorageClassFunction);
-            }
-
-            paramTypeIds.push_back(paramId);
-        }
-
-        const spirv::IdRef functionTypeId = mBuilder.getFunctionTypeId(returnTypeId, paramTypeIds);
-
-        // Declare the function itself
-        const spirv::IdRef functionId = mBuilder.getNewId();
-        spirv::WriteFunction(mBuilder.getSpirvFunctions(), returnTypeId, functionId,
-                             spv::FunctionControlMaskNone, functionTypeId);
+        // Declare the function.
+        spirv::WriteFunction(mBuilder.getSpirvFunctions(), ids.returnTypeId, ids.functionId,
+                             spv::FunctionControlMaskNone, ids.functionTypeId);
 
         for (size_t paramIndex = 0; paramIndex < function->getParamCount(); ++paramIndex)
         {
             const spirv::IdRef paramId = mBuilder.getNewId();
-            spirv::WriteFunctionParameter(mBuilder.getSpirvFunctions(), paramTypeIds[paramIndex],
-                                          paramId);
+            spirv::WriteFunctionParameter(mBuilder.getSpirvFunctions(),
+                                          ids.parameterTypeIds[paramIndex], paramId);
 
             // Remember the id of the variable for future look up.
             const TVariable *paramVariable = function->getParam(paramIndex);
@@ -2115,38 +2113,25 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
             mSymbolIdMap[paramVariable] = paramId;
         }
 
-        // Remember the ID of main() for the sake of OpEntryPoint.
-        if (function->isMain())
-        {
-            mBuilder.setEntryPointId(functionId);
-        }
-
-        mBuilder.startNewFunction(functionId, mBuilder.hashFunctionName(function).data());
-
-        // Remember the id of the function for future look up.
-        ASSERT(mSymbolIdMap.count(function) == 0);
-        mSymbolIdMap[function] = functionId;
+        mBuilder.startNewFunction(ids.functionId, mBuilder.hashFunctionName(function).data());
 
         return true;
     }
 
-    if (visit == PostVisit)
+    // If no explicit return was specified, add one automatically here.
+    if (!mBuilder.isCurrentFunctionBlockTerminated())
     {
-        // If no explicit return was specified, add one automatically here.
-        if (!mBuilder.isCurrentFunctionBlockTerminated())
-        {
-            // Only meaningful if the function returns void.  Otherwise it must have had a return
-            // value.
-            ASSERT(node->getFunction()->getReturnType().getBasicType() == EbtVoid);
-            spirv::WriteReturn(mBuilder.getSpirvCurrentFunctionBlock());
-            mBuilder.terminateCurrentFunctionBlock();
-        }
-
-        mBuilder.assembleSpirvFunctionBlocks();
-
-        // End the function
-        spirv::WriteFunctionEnd(mBuilder.getSpirvFunctions());
+        // Only meaningful if the function returns void.  Otherwise it must have had a return
+        // value.
+        ASSERT(node->getFunction()->getReturnType().getBasicType() == EbtVoid);
+        spirv::WriteReturn(mBuilder.getSpirvCurrentFunctionBlock());
+        mBuilder.terminateCurrentFunctionBlock();
     }
+
+    mBuilder.assembleSpirvFunctionBlocks();
+
+    // End the function
+    spirv::WriteFunctionEnd(mBuilder.getSpirvFunctions());
 
     return true;
 }
@@ -2162,7 +2147,49 @@ bool OutputSPIRVTraverser::visitGlobalQualifierDeclaration(Visit visit,
 
 void OutputSPIRVTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node)
 {
-    // Nothing to do.  The function type is declared together with its definition.
+    const TFunction *function = node->getFunction();
+
+    // If the function was previously forward declared, skip this.
+    if (mFunctionIdMap.count(function) > 0)
+    {
+        return;
+    }
+
+    FunctionIds ids;
+
+    // Declare the function type
+    ids.returnTypeId = mBuilder.getTypeData(function->getReturnType(), EbsUnspecified).id;
+
+    spirv::IdRefList paramTypeIds;
+    for (size_t paramIndex = 0; paramIndex < function->getParamCount(); ++paramIndex)
+    {
+        const TType &paramType = function->getParam(paramIndex)->getType();
+
+        spirv::IdRef paramId = mBuilder.getTypeData(paramType, EbsUnspecified).id;
+
+        // const function parameters are intermediate values, while the rest are "variables"
+        // with the Function storage class.
+        if (paramType.getQualifier() != EvqConst)
+        {
+            paramId = mBuilder.getTypePointerId(paramId, spv::StorageClassFunction);
+        }
+
+        ids.parameterTypeIds.push_back(paramId);
+    }
+
+    ids.functionTypeId = mBuilder.getFunctionTypeId(ids.returnTypeId, ids.parameterTypeIds);
+
+    // Allocate an id for the function up-front.
+    ids.functionId = mBuilder.getNewId();
+
+    // Remember the ID of main() for the sake of OpEntryPoint.
+    if (function->isMain())
+    {
+        mBuilder.setEntryPointId(ids.functionId);
+    }
+
+    // Remember the id of the function for future look up.
+    mFunctionIdMap[function] = ids;
 }
 
 bool OutputSPIRVTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
