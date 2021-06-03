@@ -22,6 +22,30 @@
       },
       "revId": "d0dc22fd07e40beb5a771840a8a0d43134aa20c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7be8e82a_f60f6542",
+        "filename": "scripts/trigger.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1163549
+      },
+      "writtenOn": "2021-06-03T17:06:08Z",
+      "side": 1,
+      "message": "AFAIK Gold tests and some perf tests are the only ones that actually need a service account since they need it for authentication.",
+      "parentUuid": "c5034dc9_30056dc4",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 67
+      },
+      "revId": "d0dc22fd07e40beb5a771840a8a0d43134aa20c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
