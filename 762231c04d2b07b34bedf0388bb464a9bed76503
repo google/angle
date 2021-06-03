@@ -144,6 +144,30 @@
       },
       "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1db3c596_27dc0d75",
+        "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-03T17:27:43Z",
+      "side": 1,
+      "message": "It\u0027s the same principle (there are only two choices) and it\u0027s faster to eliminate second condition by moving it to the assert.",
+      "parentUuid": "1533cc0d_8c07d279",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 50
+      },
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
