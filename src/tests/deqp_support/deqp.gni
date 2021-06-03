@@ -1211,6 +1211,12 @@ deqp_khr_gles32_sources = [
 ]
 
 deqp_khr_glesext_sources = [
+  "$deqp_path/external/openglcts/modules/glesext/disjoint_timer_query/esextcDisjointTimerQueryBase.cpp",
+  "$deqp_path/external/openglcts/modules/glesext/disjoint_timer_query/esextcDisjointTimerQueryBase.hpp",
+  "$deqp_path/external/openglcts/modules/glesext/disjoint_timer_query/esextcDisjointTimerQueryHandleReuse.cpp",
+  "$deqp_path/external/openglcts/modules/glesext/disjoint_timer_query/esextcDisjointTimerQueryHandleReuse.hpp",
+  "$deqp_path/external/openglcts/modules/glesext/disjoint_timer_query/esextcDisjointTimerQueryTests.cpp",
+  "$deqp_path/external/openglcts/modules/glesext/disjoint_timer_query/esextcDisjointTimerQueryTests.hpp",
   "$deqp_path/external/openglcts/modules/glesext/draw_buffers_indexed/esextcDrawBuffersIndexedBase.cpp",
   "$deqp_path/external/openglcts/modules/glesext/draw_buffers_indexed/esextcDrawBuffersIndexedBase.hpp",
   "$deqp_path/external/openglcts/modules/glesext/draw_buffers_indexed/esextcDrawBuffersIndexedBlending.cpp",
