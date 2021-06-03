@@ -76,9 +76,6 @@ bool TranslatorESSL::translate(TIntermBlock *root,
         sink << "// END: Generated code for built-in function emulation\n\n";
     }
 
-    // Write array bounds clamping emulation if needed.
-    getArrayBoundsClamper().OutputClampingFunctionDefinition(sink);
-
     if (getShaderType() == GL_FRAGMENT_SHADER)
     {
         EmitEarlyFragmentTestsGLSL(*this, sink);
@@ -97,9 +94,8 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     }
 
     // Write translated shader.
-    TOutputESSL outputESSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(),
-                           &getSymbolTable(), getShaderType(), shaderVer, precisionEmulation,
-                           compileOptions);
+    TOutputESSL outputESSL(sink, getHashFunction(), getNameMap(), &getSymbolTable(),
+                           getShaderType(), shaderVer, precisionEmulation, compileOptions);
 
     root->traverse(&outputESSL);
 

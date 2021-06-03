@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 259
+#define ANGLE_SH_VERSION 260
 
 enum ShShaderSpec
 {
@@ -123,10 +123,7 @@ const ShCompileOptions SH_ENFORCE_PACKING_RESTRICTIONS = UINT64_C(1) << 9;
 // This flag ensures all indirect (expression-based) array indexing
 // is clamped to the bounds of the array. This ensures, for example,
 // that you cannot read off the end of a uniform, whether an array
-// vec234, or mat234 type. The ShArrayIndexClampingStrategy enum,
-// specified in the ShBuiltInResources when constructing the
-// compiler, selects the strategy for the clamping implementation.
-// TODO(http://anglebug.com/4361): fix for compute shaders.
+// vec234, or mat234 type.
 const ShCompileOptions SH_CLAMP_INDIRECT_ARRAY_BOUNDS = UINT64_C(1) << 10;
 
 // This flag limits the complexity of an expression.
@@ -344,16 +341,6 @@ const ShCompileOptions SH_INIT_FRAGMENT_OUTPUT_VARIABLES = UINT64_C(1) << 57;
 // non-dcheck-enabled builds to avoid increasing ANGLE's binary size while both generators coexist.
 const ShCompileOptions SH_GENERATE_SPIRV_DIRECTLY = UINT64_C(1) << 58;
 
-// Defines alternate strategies for implementing array index clamping.
-enum ShArrayIndexClampingStrategy
-{
-    // Use the clamp intrinsic for array index clamping.
-    SH_CLAMP_WITH_CLAMP_INTRINSIC = 1,
-
-    // Use a user-defined function for array index clamping.
-    SH_CLAMP_WITH_USER_DEFINED_INT_CLAMP_FUNCTION
-};
-
 // The 64 bits hash function. The first parameter is the input string; the
 // second parameter is the string length.
 using ShHashFunction64 = khronos_uint64_t (*)(const char *, size_t);
@@ -451,10 +438,6 @@ struct ShBuiltInResources
     // Set a 64 bit hash function to enable user-defined name hashing.
     // Default is NULL.
     ShHashFunction64 HashFunction;
-
-    // Selects a strategy to use when implementing array index clamping.
-    // Default is SH_CLAMP_WITH_CLAMP_INTRINSIC.
-    ShArrayIndexClampingStrategy ArrayIndexClampingStrategy;
 
     // The maximum complexity an expression can be when SH_LIMIT_EXPRESSION_COMPLEXITY is turned on.
     int MaxExpressionComplexity;

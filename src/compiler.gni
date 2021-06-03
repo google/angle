@@ -123,6 +123,8 @@ angle_translator_sources = [
   "src/compiler/translator/glslang_tab_autogen.h",
   "src/compiler/translator/glslang_wrapper.h",
   "src/compiler/translator/length_limits.h",
+  "src/compiler/translator/tree_ops/ClampIndirectIndices.cpp",
+  "src/compiler/translator/tree_ops/ClampIndirectIndices.h",
   "src/compiler/translator/tree_ops/ClampPointSize.cpp",
   "src/compiler/translator/tree_ops/ClampPointSize.h",
   "src/compiler/translator/tree_ops/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
@@ -227,8 +229,6 @@ angle_translator_sources = [
   "src/compiler/translator/tree_util/Visit.h",
   "src/compiler/translator/util.cpp",
   "src/compiler/translator/util.h",
-  "src/third_party/compiler/ArrayBoundsClamper.cpp",
-  "src/third_party/compiler/ArrayBoundsClamper.h",
 ]
 angle_translator_glsl_base_sources = [
   "src/compiler/translator/OutputGLSLBase.cpp",

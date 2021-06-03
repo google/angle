@@ -8124,6 +8124,71 @@ foo
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
+// Test that clamp applied on non-literal indices is correct on es 100 shaders.
+TEST_P(GLSLTest, ValidIndexClampES100)
+{
+    // http://anglebug.com/6027
+    ANGLE_SKIP_TEST_IF(IsD3D9());
+
+    constexpr char kFS[] = R"(
+precision mediump float;
+uniform int u;
+uniform mat4 m[2];
+void main()
+{
+    gl_FragColor = vec4(m[u][1].xyz, 1);
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint uniformLocation = glGetUniformLocation(program, "u");
+    ASSERT_NE(-1, uniformLocation);
+
+    GLint matrixLocation = glGetUniformLocation(program, "m");
+    ASSERT_NE(matrixLocation, -1);
+    const std::array<GLfloat, 32> mValue = {{0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f,
+                                             0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f,
+                                             1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                                             0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f}};
+    glUniformMatrix4fv(matrixLocation, 2, false, mValue.data());
+
+    glUniform1i(uniformLocation, 1);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that clamp applied on non-literal indices is correct on es 300 shaders.
+TEST_P(GLSLTest_ES3, ValidIndexClampES300)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+uniform int u;
+mat4 m[4] = mat4[4](mat4(0.25), mat4(0.5), mat4(1), mat4(0.75));
+void main()
+{
+    color = vec4(m[u][2].xyz, 1);
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint uniformLocation = glGetUniformLocation(program, "u");
+    ASSERT_NE(-1, uniformLocation);
+
+    glUniform1i(uniformLocation, 2);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
 // Tests constant folding of non-square 'matrixCompMult'.
 TEST_P(GLSLTest_ES3, NonSquareMatrixCompMult)
 {

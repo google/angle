@@ -21,7 +21,6 @@ class TOutputVulkanGLSL : public TOutputGLSL
 {
   public:
     TOutputVulkanGLSL(TInfoSinkBase &objSink,
-                      ShArrayIndexClampingStrategy clampingStrategy,
                       ShHashFunction64 hashFunction,
                       NameMap &nameMap,
                       TSymbolTable *symbolTable,

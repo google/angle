@@ -82,7 +82,6 @@ Stream &operator<<(Stream &out, CommaSeparatedListItemPrefixGenerator &gen)
 }  // namespace
 
 TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
-                                 ShArrayIndexClampingStrategy clampingStrategy,
                                  ShHashFunction64 hashFunction,
                                  NameMap &nameMap,
                                  TSymbolTable *symbolTable,
@@ -93,7 +92,6 @@ TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
     : TIntermTraverser(true, true, true, symbolTable),
       mObjSink(objSink),
       mDeclaringVariable(false),
-      mClampingStrategy(clampingStrategy),
       mHashFunction(hashFunction),
       mNameMap(nameMap),
       mShaderType(shaderType),
@@ -597,62 +595,8 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
             break;
 
         case EOpIndexDirect:
-            writeTriplet(visit, nullptr, "[", "]");
-            break;
         case EOpIndexIndirect:
-            if (node->getAddIndexClamp())
-            {
-                if (visit == InVisit)
-                {
-                    if (mClampingStrategy == SH_CLAMP_WITH_CLAMP_INTRINSIC)
-                        out << "[int(clamp(float(";
-                    else
-                        out << "[webgl_int_clamp(";
-                }
-                else if (visit == PostVisit)
-                {
-                    TIntermTyped *left = node->getLeft();
-                    TType leftType     = left->getType();
-
-                    if (mClampingStrategy == SH_CLAMP_WITH_CLAMP_INTRINSIC)
-                        out << "), 0.0, float(";
-                    else
-                        out << ", 0, ";
-
-                    if (leftType.isUnsizedArray())
-                    {
-                        // For runtime-sized arrays in ESSL 3.10 we need to call the length method
-                        // to get the length to clamp against. See ESSL 3.10 section 4.1.9. Note
-                        // that a runtime-sized array expression is guaranteed not to have side
-                        // effects, so it's fine to add the expression to the output twice.
-                        ASSERT(mShaderVersion >= 310);
-                        ASSERT(!left->hasSideEffects());
-                        left->traverse(this);
-                        out << ".length() - 1";
-                    }
-                    else
-                    {
-                        int maxSize;
-                        if (leftType.isArray())
-                        {
-                            maxSize = static_cast<int>(leftType.getOutermostArraySize()) - 1;
-                        }
-                        else
-                        {
-                            maxSize = leftType.getNominalSize() - 1;
-                        }
-                        out << maxSize;
-                    }
-                    if (mClampingStrategy == SH_CLAMP_WITH_CLAMP_INTRINSIC)
-                        out << ")))]";
-                    else
-                        out << ")]";
-                }
-            }
-            else
-            {
-                writeTriplet(visit, nullptr, "[", "]");
-            }
+            writeTriplet(visit, nullptr, "[", "]");
             break;
         case EOpIndexDirectStruct:
             if (visit == InVisit)
