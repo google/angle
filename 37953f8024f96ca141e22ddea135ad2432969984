@@ -217,6 +217,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0ad4e18c_b63a8329",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-03T17:24:49Z",
+      "side": 1,
+      "message": "i took a look at the suggestion and there appears be to be a design conflict.\n\nupdateActiveTextures is called from syncState which has access to gl::Context but mGraphicsDirtyBits handlers are setup to be confined to ContextVk. Updates to Program and ProgramPipeline all need access to gl::Context. This design difference needs to be reconciled if we need to take the mGraphicsDirtyBits approach.\n\nJamie, what am i missing?",
+      "parentUuid": "31288b81_f8572321",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf256b78_e1929359",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 7
