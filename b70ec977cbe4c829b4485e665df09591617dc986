@@ -103,6 +103,42 @@
       "parentUuid": "39d7e465_cdba6e72",
       "revId": "b70ec977cbe4c829b4485e665df09591617dc986",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00cc3873_1dc6af49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116023
+      },
+      "writtenOn": "2021-06-03T19:34:45Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "08ab8fc5_01052ba6",
+      "revId": "b70ec977cbe4c829b4485e665df09591617dc986",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9b81ba5_65b923aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116023
+      },
+      "writtenOn": "2021-06-03T19:34:45Z",
+      "side": 1,
+      "message": "Sorry, I didn\u0027t verify this CL before uploading. vulkan_fuchsia_ext.h was defining zx_handle_t on other platforms. Added a bunch on ifdefs to avoid dependency on zx_handle_t on other platforms.",
+      "parentUuid": "e8184e2e_6c7070e4",
+      "revId": "b70ec977cbe4c829b4485e665df09591617dc986",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
