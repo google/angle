@@ -235,6 +235,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8505c106_f1882934",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T17:33:07Z",
+      "side": 1,
+      "message": "I think you should use your current design. Your issue here is solvable because you have access to the full context state via mState. That aside you should just do what you have here, just minus the dirty bits.",
+      "parentUuid": "0ad4e18c_b63a8329",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf256b78_e1929359",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 7
