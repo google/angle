@@ -527,6 +527,7 @@ MSG kTransfomFeedbackAlreadyActive = "Transform feedback is already active.";
 MSG kTransformFeedbackActiveDelete = "Attempt to delete an active transform feedback.";
 MSG kTransformFeedbackActiveDuringLink = "Cannot link program while program is associated with an active transform feedback object.";
 MSG kTransformFeedbackBufferDoubleBound = "A transform feedback buffer that would be written to is also bound to a non-transform-feedback target, which would cause undefined behavior.";
+MSG kTransformFeedbackBufferMissing = "Every binding point used in transform feedback mode must have a buffer object bound.";
 MSG kTransformFeedbackBufferMultipleOutputs = "Transform feedback has a buffer bound to multiple outputs.";
 MSG kTransformFeedbackBufferTooSmall = "Not enough space in bound transform feedback buffers.";
 MSG kTransformFeedbackDoesNotExist = "Transform feedback object that does not exist.";

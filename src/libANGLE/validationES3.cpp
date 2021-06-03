@@ -2684,7 +2684,7 @@ bool ValidateBeginTransformFeedback(const Context *context, PrimitiveMode primit
 
     for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
     {
-        const auto &buffer = transformFeedback->getIndexedBuffer(i);
+        const OffsetBindingPointer<Buffer> &buffer = transformFeedback->getIndexedBuffer(i);
         if (buffer.get())
         {
             if (buffer->isMapped())
@@ -2704,18 +2704,28 @@ bool ValidateBeginTransformFeedback(const Context *context, PrimitiveMode primit
     }
 
     const ProgramExecutable *programExecutable = context->getState().getProgramExecutable();
-    if (programExecutable)
-    {
-        if (programExecutable->getLinkedTransformFeedbackVaryings().size() == 0)
-        {
-            context->validationError(GL_INVALID_OPERATION, kNoTransformFeedbackOutputVariables);
-            return false;
-        }
-    }
-    else
+    if (!programExecutable)
     {
         context->validationError(GL_INVALID_OPERATION, kProgramNotBound);
         return false;
+    }
+
+    if (programExecutable->getLinkedTransformFeedbackVaryings().empty())
+    {
+        context->validationError(GL_INVALID_OPERATION, kNoTransformFeedbackOutputVariables);
+        return false;
+    }
+
+    size_t programXfbCount = programExecutable->getTransformFeedbackBufferCount();
+    for (size_t programXfbIndex = 0; programXfbIndex < programXfbCount; ++programXfbIndex)
+    {
+        const OffsetBindingPointer<Buffer> &buffer =
+            transformFeedback->getIndexedBuffer(programXfbIndex);
+        if (!buffer.get())
+        {
+            context->validationError(GL_INVALID_OPERATION, kTransformFeedbackBufferMissing);
+            return false;
+        }
     }
 
     return true;
