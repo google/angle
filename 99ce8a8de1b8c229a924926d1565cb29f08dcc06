@@ -51,6 +51,92 @@
       "parentUuid": "b7bf907b_c607ebd4",
       "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18c611ca_270f29c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-03T02:08:12Z",
+      "side": 1,
+      "message": "Can we just use android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_DISABLED) on Android R?\nWould be a much simpler fix.\n\nHowever, I recall we often had flakiness on Pixel 2 due to not being able to read the file to which stdout was redirected after the tests finished. I think this might be related, i.e. that file didn\u0027t exist because we failed this freopen() call.\n\nOne idea I have is to call System.setOut() Java-side before calling nativeRunTests(), instead of the freopen() C-side.",
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d43a3c4d_e5f87114",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-03T02:08:12Z",
+      "side": 1,
+      "message": "This class makes no sense to me without calling android_fdsan_exchange_owner_tag() and android_fdsan_close_with_tag() as in https://android.googlesource.com/platform/bionic/+/master/docs/fdsan.md#Enabling-fdsan-as-a-C_library-implementer",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 42
+      },
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8074c88b_1a7a6563",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-03T02:08:12Z",
+      "side": 1,
+      "message": "I don\u0027t see how this avoids race conditions.\nLet\u0027s say STDOUT_FILENO is 1 and dup(STDOUT_FILENO) is 3.\nWhen we call \"freopen(stdoutFilePath.c_str(), \"a+\", stdout)\", we still attempt to close fd 1, which this thread doesn\u0027t own, according to fdsan, so per my understanding this doesn\u0027t change anything.",
+      "range": {
+        "startLine": 189,
+        "startChar": 0,
+        "endLine": 189,
+        "endChar": 49
+      },
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b45d386_1972ebbb",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-03T02:08:12Z",
+      "side": 1,
+      "message": "I think this would cause \"fflush(stdout);\" in \"~ScopedMainEntryLogger()\" to fail, if it was checking the error code.\nI.e. I think it\u0027s wrong to close stdout here, even if this passed the bots.",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 19
+      },
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
