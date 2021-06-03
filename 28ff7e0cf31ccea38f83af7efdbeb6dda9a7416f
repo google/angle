@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b956f389_7a54b888",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-03T15:35:21Z",
+      "side": 1,
+      "message": "There are many webgl tests for this. I also locally checked said webgl tests and verified that the clamp is correctly added.\n\nFYI, This is only ever enabled for WebGL.",
+      "parentUuid": "ddc19d96_d3da05ed",
+      "revId": "28ff7e0cf31ccea38f83af7efdbeb6dda9a7416f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5308e9de_2ffe9284",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-06-03T15:27:52Z",
       "side": 1,
       "message": "Maybe this is not how the TIntermTraverser works, but wouldn\u0027t this need to be after the next block where you apply this to the left and right nodes?\n\nI\u0027m imagining something like:\nvar \u003d 1 - array[otherVar];\nwouldn\u0027t that show up as a EOpSub where we need to do this transform to the right node?",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 38,
+        "endChar": 0
+      },
+      "revId": "28ff7e0cf31ccea38f83af7efdbeb6dda9a7416f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eafe2a60_b2446d5a",
+        "filename": "src/compiler/translator/tree_ops/ClampIndirectIndices.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-03T15:35:21Z",
+      "side": 1,
+      "message": "`return true` means visit the children, so left and right are automatically visited by the traverser.",
+      "parentUuid": "5308e9de_2ffe9284",
       "range": {
         "startLine": 34,
         "startChar": 8,
