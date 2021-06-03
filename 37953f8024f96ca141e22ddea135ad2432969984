@@ -305,6 +305,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa331261_daf36895",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4894,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T19:35:52Z",
+      "side": 1,
+      "message": "Yeah, we should have a design doc for it. The rule I\u0027m following is - it\u0027s an optimization for the patten of \n\nif (a)\n\nif (b)\n\nif (c)\n\nyou can turn that pattern into for (bit in set)\n\nOtherwise use bools. But other people might have different points on that.",
+      "parentUuid": "446cb089_09caf78d",
+      "revId": "37953f8024f96ca141e22ddea135ad2432969984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf256b78_e1929359",
