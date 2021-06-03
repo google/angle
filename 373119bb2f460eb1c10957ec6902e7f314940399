@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63341063_024b9a5a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-03T01:03:35Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 14,
+        "startChar": 15,
+        "endLine": 14,
+        "endChar": 24
+      },
+      "revId": "373119bb2f460eb1c10957ec6902e7f314940399",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3afbb5b2_2877d9f7",
+        "filename": "src/compiler/translator/BuildSPIRV.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 829,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-03T01:03:35Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 829,
+        "startChar": 7,
+        "endLine": 829,
+        "endChar": 13
+      },
+      "revId": "373119bb2f460eb1c10957ec6902e7f314940399",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d23fc83e_5d45ba1a",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-03T01:03:35Z",
+      "side": 1,
+      "message": "Are there any concerns about name collisions (should this be something like \u0027ANGLEindexable\u0027)?   It looks like this is only used for debug information, but could that still lead to confusion in the future?",
+      "range": {
+        "startLine": 484,
+        "startChar": 87,
+        "endLine": 484,
+        "endChar": 96
+      },
+      "revId": "373119bb2f460eb1c10957ec6902e7f314940399",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
