@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5034dc9_30056dc4",
+        "filename": "scripts/trigger.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-03T00:51:07Z",
+      "side": 1,
+      "message": "Oh, does it work without service account for non-gold tests?\nI always use -service-account\u003dchromium-tester@chops-service-accounts.iam.gserviceaccount.com in my workflow.",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 67
+      },
+      "revId": "d0dc22fd07e40beb5a771840a8a0d43134aa20c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
