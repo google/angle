@@ -27,9 +27,9 @@ ANGLE_DISABLE_SUGGEST_OVERRIDE_WARNINGS
 #include <spirv-tools/libspirv.hpp>
 
 // Enable this for debug logging of pre-transform SPIR-V:
-#if !defined(ANGLE_DEBUG_SPIRV_TRANSFORMER)
-#    define ANGLE_DEBUG_SPIRV_TRANSFORMER 0
-#endif  // !defined(ANGLE_DEBUG_SPIRV_TRANSFORMER)
+#if !defined(ANGLE_DEBUG_SPIRV_GENERATION)
+#    define ANGLE_DEBUG_SPIRV_GENERATION 0
+#endif  // !defined(ANGLE_DEBUG_SPIRV_GENERATION)
 
 ANGLE_REENABLE_SUGGEST_OVERRIDE_WARNINGS
 ANGLE_REENABLE_SHADOWING_WARNING
@@ -171,12 +171,12 @@ ANGLE_NO_DISCARD bool GlslangCompileToSpirv(const ShBuiltInResources &resources,
     glslang::TIntermediate *intermediate = program.getIntermediate(language);
     glslang::GlslangToSpv(*intermediate, *spirvBlobOut);
 
-#if ANGLE_DEBUG_SPIRV_TRANSFORMER
+#if ANGLE_DEBUG_SPIRV_GENERATION
     spvtools::SpirvTools spirvTools(SPV_ENV_VULKAN_1_1);
     std::string readableSpirv;
     spirvTools.Disassemble(*spirvBlobOut, &readableSpirv, 0);
     fprintf(stderr, "%s\n%s\n", shaderString, readableSpirv.c_str());
-#endif  // ANGLE_DEBUG_SPIRV_TRANSFORMER
+#endif  // ANGLE_DEBUG_SPIRV_GENERATION
 
     return true;
 }

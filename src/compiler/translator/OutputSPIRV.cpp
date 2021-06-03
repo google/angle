@@ -22,9 +22,9 @@
 #include <spirv-tools/libspirv.hpp>
 
 // Enable this for debug logging of pre-transform SPIR-V:
-#if !defined(ANGLE_DEBUG_SPIRV_TRANSFORMER)
-#    define ANGLE_DEBUG_SPIRV_TRANSFORMER 0
-#endif  // !defined(ANGLE_DEBUG_SPIRV_TRANSFORMER)
+#if !defined(ANGLE_DEBUG_SPIRV_GENERATION)
+#    define ANGLE_DEBUG_SPIRV_GENERATION 0
+#endif  // !defined(ANGLE_DEBUG_SPIRV_GENERATION)
 
 namespace sh
 {
@@ -231,6 +231,9 @@ class OutputSPIRVTraverser : public TIntermTraverser
     // - TInterfaceBlock: because TIntermSymbols referencing a field of an unnamed interface block
     //   don't reference the TVariable that defines the struct, but the TInterfaceBlock itself.
     angle::HashMap<const TSymbol *, spirv::IdRef> mSymbolIdMap;
+
+    // Whether the current symbol being visited is being declared.
+    bool mIsSymbolBeingDeclared = false;
 };
 
 spv::StorageClass GetStorageClass(const TType &type)
@@ -1491,6 +1494,14 @@ void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
     // Constants are expected to be folded.
     ASSERT(!node->hasConstantValue());
 
+    // No-op visits to symbols that are being declared.  They are handled in visitDeclaration.
+    if (mIsSymbolBeingDeclared)
+    {
+        // Make sure this does not affect other symbols, for example in the initializer expression.
+        mIsSymbolBeingDeclared = false;
+        return;
+    }
+
     mNodeData.emplace_back();
 
     // The symbol is either:
@@ -1666,6 +1677,13 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
                 break;
         }
 
+        return true;
+    }
+
+    // If this is a variable initialization node, defer any code generation to visitDeclaration.
+    if (node->getOp() == EOpInitialize)
+    {
+        ASSERT(getParentNode()->getAsDeclarationNode() != nullptr);
         return true;
     }
 
@@ -2215,7 +2233,9 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
         mNodeData.emplace_back();
     }
 
-    if (visit != PreVisit)
+    mIsSymbolBeingDeclared = visit == PreVisit;
+
+    if (visit != PostVisit)
     {
         return true;
     }
@@ -2226,7 +2246,58 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
     ASSERT(sequence.size() == 1);
 
     TIntermSymbol *symbol = sequence.front()->getAsSymbolNode();
-    ASSERT(symbol != nullptr);
+    spirv::IdRef initializerId;
+    bool initializeWithDeclaration = false;
+
+    // Handle declarations with initializer.
+    if (symbol == nullptr)
+    {
+        TIntermBinary *assign = sequence.front()->getAsBinaryNode();
+        ASSERT(assign != nullptr && assign->getOp() == EOpInitialize);
+
+        symbol = assign->getLeft()->getAsSymbolNode();
+        ASSERT(symbol != nullptr);
+
+        // In SPIR-V, it's only possible to initialize a variable together with its declaration if
+        // the initializer is a constant or a global variable.  We ignore the global variable case
+        // to avoid tracking whether the variable has been modified since the beginning of the
+        // function.  Since variable declarations are always placed at the beginning of the function
+        // in SPIR-V, it would be wrong for example to initialize |var| below with the global
+        // variable at declaration time:
+        //
+        //     vec4 global = A;
+        //     void f()
+        //     {
+        //         global = B;
+        //         {
+        //             vec4 var = global;
+        //         }
+        //     }
+        //
+        // So the initializer is only used when declarating a variable when it's a constant
+        // expression.  Note that if the variable being declared is itself global (and the
+        // initializer is not constant), a previous AST transformation (DeferGlobalInitializers)
+        // makes sure their initialization is deferred to the beginning of main.
+
+        TIntermTyped *initializer = assign->getRight();
+        initializeWithDeclaration = initializer->getAsConstantUnion() != nullptr;
+
+        if (initializeWithDeclaration)
+        {
+            // If a constant, take the Id directly.
+            initializerId = mNodeData.back().baseId;
+        }
+        else
+        {
+            // Otherwise generate code to load from right hand side expression.
+            initializerId = accessChainLoad(&mNodeData.back());
+        }
+
+        // TODO: handle mismatching types.  http://anglebug.com/4889.
+
+        // Clean up the initializer data.
+        mNodeData.pop_back();
+    }
 
     const TType &type         = symbol->getType();
     const TVariable *variable = &symbol->variable();
@@ -2242,13 +2313,18 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
 
     const spirv::IdRef typeId = mBuilder.getTypeData(type, EbsUnspecified).id;
 
-    // TODO: handle constant declarations.  http://anglebug.com/4889
-
     spv::StorageClass storageClass = GetStorageClass(type);
 
-    // TODO: handle initializers.  http://anglebug.com/4889
-    const spirv::IdRef variableId =
-        mBuilder.declareVariable(typeId, storageClass, nullptr, mBuilder.hashName(variable).data());
+    const spirv::IdRef variableId = mBuilder.declareVariable(
+        typeId, storageClass, initializeWithDeclaration ? &initializerId : nullptr,
+        mBuilder.hashName(variable).data());
+
+    if (!initializeWithDeclaration && initializerId.valid())
+    {
+        // If not initializing at the same time as the declaration, issue a store instruction.
+        spirv::WriteStore(mBuilder.getSpirvCurrentFunctionBlock(), variableId, initializerId,
+                          nullptr);
+    }
 
     const bool isShaderInOut = IsShaderIn(type.getQualifier()) || IsShaderOut(type.getQualifier());
     const bool isInterfaceBlock = type.getBasicType() == EbtInterfaceBlock;
@@ -2378,13 +2454,13 @@ spirv::Blob OutputSPIRVTraverser::getSpirv()
     // Validate that correct SPIR-V was generated
     ASSERT(spirv::Validate(result));
 
-#if ANGLE_DEBUG_SPIRV_TRANSFORMER
+#if ANGLE_DEBUG_SPIRV_GENERATION
     // Disassemble and log the generated SPIR-V for debugging.
     spvtools::SpirvTools spirvTools(SPV_ENV_VULKAN_1_1);
     std::string readableSpirv;
     spirvTools.Disassemble(result, &readableSpirv, 0);
     fprintf(stderr, "%s\n", readableSpirv.c_str());
-#endif  // ANGLE_DEBUG_SPIRV_TRANSFORMER
+#endif  // ANGLE_DEBUG_SPIRV_GENERATION
 
     return result;
 }

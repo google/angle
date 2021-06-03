@@ -10829,6 +10829,25 @@ void main() {
     EXPECT_NE(compileResult, 0);
 }
 
+// Test that providing more components to a matrix constructor than necessary works.  Based on a
+// clusterfuzz test that caught an OOB array write in glslang.
+TEST_P(GLSLTest, MatrixConstructor)
+{
+    constexpr char kVS[] = R"(attribute vec4 aPosition;
+varying vec4 vColor;
+void main()
+{
+    gl_Position = aPosition;
+    vec4 color = vec4(aPosition.xy, 0, 1);
+    mat4 m4 = mat4(color, color.yzwx, color.zwx, color.zwxy, color.wxyz);
+    vColor = m4[0];
+})";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kVS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTest);
