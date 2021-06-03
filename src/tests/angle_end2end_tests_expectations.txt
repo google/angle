@@ -4,10 +4,15 @@
 
 // See deqp_support/README.md for format.
 
+// Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_D3D11 = SKIP
 4092 WIN VULKAN : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_Vulkan* = SKIP
 4092 WIN OPENGL : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_OpenGL = SKIP
 4092 WIN GLES : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_OpenGLES = SKIP
+
+// Mac
+6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8Index/ES3_OpenGL = SKIP
+6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8IndexSmallUpdates/ES3_OpenGL = SKIP
 
 // Pixel 4 expectations.
 5981 PIXEL4ORXL GLES : BlitFramebufferTest.BlitSRGBToRGBOversizedDestArea/* = SKIP
