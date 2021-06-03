@@ -33,6 +33,24 @@
       "message": "Is this a note to yourself?   If so, can it be fleshed out a bit more to describe what the \"special handling\" is (and maybe add a TODO)?",
       "revId": "c4a3b7f3aeda938e4450a4262ac83461c09cd151",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9dcc764f_45191a2a",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-03T02:30:10Z",
+      "side": 1,
+      "message": "No, it\u0027s just describing what this function does, like the other functions below and above do. Added pointers to where the special handling is done.",
+      "parentUuid": "ee5822a8_a8a52029",
+      "revId": "c4a3b7f3aeda938e4450a4262ac83461c09cd151",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
