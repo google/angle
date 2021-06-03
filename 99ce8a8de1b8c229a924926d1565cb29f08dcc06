@@ -88,6 +88,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "50c2504f_67dca512",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T15:36:04Z",
+      "side": 1,
+      "message": "Open to trying the system-based approach if this doesn\u0027t fix the issue. I also wonder if the root cause of the fdsan bug might be causing other flakiness.",
+      "parentUuid": "2fa8676a_fc57726e",
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d43a3c4d_e5f87114",
@@ -111,6 +129,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "854588d6_91961d3e",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T15:36:04Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "d43a3c4d_e5f87114",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 42
+      },
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8074c88b_1a7a6563",
@@ -124,6 +166,30 @@
       "writtenOn": "2021-06-03T02:08:12Z",
       "side": 1,
       "message": "I don\u0027t see how this avoids race conditions.\nLet\u0027s say STDOUT_FILENO is 1 and dup(STDOUT_FILENO) is 3.\nWhen we call \"freopen(stdoutFilePath.c_str(), \"a+\", stdout)\", we still attempt to close fd 1, which this thread doesn\u0027t own, according to fdsan, so per my understanding this doesn\u0027t change anything.",
+      "range": {
+        "startLine": 189,
+        "startChar": 0,
+        "endLine": 189,
+        "endChar": 49
+      },
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0115077f_da0b9839",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T15:36:04Z",
+      "side": 1,
+      "message": "I\u0027m not sure that\u0027s what actually happens. However I changed to a different approach here, PTAL.",
+      "parentUuid": "8074c88b_1a7a6563",
       "range": {
         "startLine": 189,
         "startChar": 0,
@@ -171,6 +237,30 @@
       "side": 1,
       "message": "- I wonder whether calling fclose() is sufficient for fixing this bug. (It is possible that the bug is caused by stdout not being closed by a previous shard)\n- fopen() is an alternative to freopen() if we do not want to close the file currently associated with the stream",
       "parentUuid": "3b45d386_1972ebbb",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 19
+      },
+      "revId": "99ce8a8de1b8c229a924926d1565cb29f08dcc06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "257bf6f9_8091160b",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-03T15:36:04Z",
+      "side": 1,
+      "message": "Done on the ScopedMainEntryLogger.\n\nI changed this to a fopen-based solution, PTAL.",
+      "parentUuid": "06427eb9_39438d77",
       "range": {
         "startLine": 209,
         "startChar": 0,
