@@ -23,7 +23,6 @@
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/VariablePacker.h"
-#include "compiler/translator/tree_ops/ClampIndirectIndices.h"
 #include "compiler/translator/tree_ops/ClampPointSize.h"
 #include "compiler/translator/tree_ops/DeclareAndInitBuiltinsForInstancedMultiview.h"
 #include "compiler/translator/tree_ops/DeferGlobalInitializers.h"
@@ -56,6 +55,7 @@
 #include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
 #include "compiler/translator/tree_util/ReplaceShadowingVariables.h"
 #include "compiler/translator/util.h"
+#include "third_party/compiler/ArrayBoundsClamper.h"
 
 namespace sh
 {
@@ -336,6 +336,7 @@ bool TCompiler::Init(const ShBuiltInResources &resources)
     setResourceString();
 
     InitExtensionBehavior(resources, mExtensionBehavior);
+    mArrayBoundsClamper.SetClampingStrategy(resources.ArrayIndexClampingStrategy);
     return true;
 }
 
@@ -689,10 +690,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // Clamping uniform array bounds needs to happen after validateLimitations pass.
     if ((compileOptions & SH_CLAMP_INDIRECT_ARRAY_BOUNDS) != 0)
     {
-        if (!ClampIndirectIndices(this, root, &mSymbolTable))
-        {
-            return false;
-        }
+        mArrayBoundsClamper.MarkIndirectArrayBoundsForClamping(root);
     }
 
     if ((compileOptions & SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW) != 0 &&
@@ -1266,6 +1264,7 @@ bool TCompiler::emulatePrecisionIfNeeded(TIntermBlock *root,
 
 void TCompiler::clearResults()
 {
+    mArrayBoundsClamper.Cleanup();
     mInfoSink.info.erase();
     mInfoSink.obj.erase();
     mInfoSink.debug.erase();
@@ -1560,6 +1559,16 @@ const char *TCompiler::getSourcePath() const
 const ShBuiltInResources &TCompiler::getResources() const
 {
     return mResources;
+}
+
+const ArrayBoundsClamper &TCompiler::getArrayBoundsClamper() const
+{
+    return mArrayBoundsClamper;
+}
+
+ShArrayIndexClampingStrategy TCompiler::getArrayIndexClampingStrategy() const
+{
+    return mResources.ArrayIndexClampingStrategy;
 }
 
 const BuiltInFunctionEmulator &TCompiler::getBuiltInFunctionEmulator() const

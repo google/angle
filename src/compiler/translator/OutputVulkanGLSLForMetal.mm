@@ -55,6 +55,7 @@ void TOutputVulkanGLSLForMetal::RemoveInvariantForTest(bool remove)
 }
 
 TOutputVulkanGLSLForMetal::TOutputVulkanGLSLForMetal(TInfoSinkBase &objSink,
+                                                     ShArrayIndexClampingStrategy clampingStrategy,
                                                      ShHashFunction64 hashFunction,
                                                      NameMap &nameMap,
                                                      TSymbolTable *symbolTable,
@@ -63,6 +64,7 @@ TOutputVulkanGLSLForMetal::TOutputVulkanGLSLForMetal(TInfoSinkBase &objSink,
                                                      ShShaderOutput output,
                                                      ShCompileOptions compileOptions)
     : TOutputVulkanGLSL(objSink,
+                        clampingStrategy,
                         hashFunction,
                         nameMap,
                         symbolTable,

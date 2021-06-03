@@ -12,6 +12,7 @@ namespace sh
 {
 
 TOutputGLSL::TOutputGLSL(TInfoSinkBase &objSink,
+                         ShArrayIndexClampingStrategy clampingStrategy,
                          ShHashFunction64 hashFunction,
                          NameMap &nameMap,
                          TSymbolTable *symbolTable,
@@ -20,6 +21,7 @@ TOutputGLSL::TOutputGLSL(TInfoSinkBase &objSink,
                          ShShaderOutput output,
                          ShCompileOptions compileOptions)
     : TOutputGLSLBase(objSink,
+                      clampingStrategy,
                       hashFunction,
                       nameMap,
                       symbolTable,

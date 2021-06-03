@@ -1112,7 +1112,8 @@ TIntermSwizzle::TIntermSwizzle(const TIntermSwizzle &node) : TIntermExpression(n
     mHasFoldedDuplicateOffsets = node.mHasFoldedDuplicateOffsets;
 }
 
-TIntermBinary::TIntermBinary(const TIntermBinary &node) : TIntermOperator(node)
+TIntermBinary::TIntermBinary(const TIntermBinary &node)
+    : TIntermOperator(node), mAddIndexClamp(node.mAddIndexClamp)
 {
     TIntermTyped *leftCopy  = node.mLeft->deepCopy();
     TIntermTyped *rightCopy = node.mRight->deepCopy();
@@ -1373,7 +1374,7 @@ TIntermUnary::TIntermUnary(TOperator op, TIntermTyped *operand, const TFunction 
 }
 
 TIntermBinary::TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *right)
-    : TIntermOperator(op), mLeft(left), mRight(right)
+    : TIntermOperator(op), mLeft(left), mRight(right), mAddIndexClamp(false)
 {
     ASSERT(mLeft);
     ASSERT(mRight);

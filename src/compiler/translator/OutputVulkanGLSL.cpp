@@ -20,6 +20,7 @@ namespace sh
 {
 
 TOutputVulkanGLSL::TOutputVulkanGLSL(TInfoSinkBase &objSink,
+                                     ShArrayIndexClampingStrategy clampingStrategy,
                                      ShHashFunction64 hashFunction,
                                      NameMap &nameMap,
                                      TSymbolTable *symbolTable,
@@ -30,6 +31,7 @@ TOutputVulkanGLSL::TOutputVulkanGLSL(TInfoSinkBase &objSink,
                                      bool enablePrecision,
                                      ShCompileOptions compileOptions)
     : TOutputGLSL(objSink,
+                  clampingStrategy,
                   hashFunction,
                   nameMap,
                   symbolTable,

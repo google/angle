@@ -26,6 +26,7 @@
 #include "compiler/translator/Pragma.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/ValidateAST.h"
+#include "third_party/compiler/ArrayBoundsClamper.h"
 
 namespace sh
 {
@@ -195,6 +196,8 @@ class TCompiler : public TShHandleBase
     // Relies on collectVariables having been called.
     bool isVaryingDefined(const char *varyingName);
 
+    const ArrayBoundsClamper &getArrayBoundsClamper() const;
+    ShArrayIndexClampingStrategy getArrayIndexClampingStrategy() const;
     const BuiltInFunctionEmulator &getBuiltInFunctionEmulator() const;
 
     virtual bool shouldFlattenPragmaStdglInvariantAll() = 0;
@@ -298,6 +301,7 @@ class TCompiler : public TShHandleBase
     // Built-in extensions with default behavior.
     TExtensionBehavior mExtensionBehavior;
 
+    ArrayBoundsClamper mArrayBoundsClamper;
     BuiltInFunctionEmulator mBuiltInFunctionEmulator;
 
     // Results of compilation.

@@ -20,6 +20,7 @@ class TOutputGLSLBase : public TIntermTraverser
 {
   public:
     TOutputGLSLBase(TInfoSinkBase &objSink,
+                    ShArrayIndexClampingStrategy clampingStrategy,
                     ShHashFunction64 hashFunction,
                     NameMap &nameMap,
                     TSymbolTable *symbolTable,
@@ -101,6 +102,8 @@ class TOutputGLSLBase : public TIntermTraverser
 
     TInfoSinkBase &mObjSink;
     bool mDeclaringVariable;
+
+    ShArrayIndexClampingStrategy mClampingStrategy;
 
     // name hashing.
     ShHashFunction64 mHashFunction;

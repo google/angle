@@ -130,6 +130,9 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
         sink << "// END: Generated code for built-in function emulation\n\n";
     }
 
+    // Write array bounds clamping emulation if needed.
+    getArrayBoundsClamper().OutputClampingFunctionDefinition(sink);
+
     // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
     // if it's core profile shaders and they are used.
     if (getShaderType() == GL_FRAGMENT_SHADER)
@@ -213,8 +216,9 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
     }
 
     // Write translated shader.
-    TOutputGLSL outputGLSL(sink, getHashFunction(), getNameMap(), &getSymbolTable(),
-                           getShaderType(), getShaderVersion(), getOutputType(), compileOptions);
+    TOutputGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(),
+                           &getSymbolTable(), getShaderType(), getShaderVersion(), getOutputType(),
+                           compileOptions);
 
     root->traverse(&outputGLSL);
 

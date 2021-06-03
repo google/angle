@@ -20,6 +20,7 @@ class TOutputVulkanGLSLForMetal : public TOutputVulkanGLSL
 {
   public:
     TOutputVulkanGLSLForMetal(TInfoSinkBase &objSink,
+                              ShArrayIndexClampingStrategy clampingStrategy,
                               ShHashFunction64 hashFunction,
                               NameMap &nameMap,
                               TSymbolTable *symbolTable,
