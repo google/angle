@@ -139,6 +139,24 @@
       "parentUuid": "e8184e2e_6c7070e4",
       "revId": "b70ec977cbe4c829b4485e665df09591617dc986",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da22a0c3_de128489",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-03T21:29:37Z",
+      "side": 1,
+      "message": "We generally tend to avoid #ifdefing all over the place like this. Why not add code to ANGLE (like in src/common/platform.h) that simply defines zx_handle_t on non-Fuchsia and remove all these #ifdefs? Are any of them for reasons other than zx_handle_t?\n\nWhat should have really been done is to keep Fuchsia related code in a specific file that simply not gets added to the build on non-Fuchsia. I\u0027m not asking you to do that though, it\u0027s out of the scope of this change.",
+      "parentUuid": "e9b81ba5_65b923aa",
+      "revId": "b70ec977cbe4c829b4485e665df09591617dc986",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

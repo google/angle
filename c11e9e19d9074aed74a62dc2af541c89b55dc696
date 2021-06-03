@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "317e0bdb_6139eb98",
+        "filename": "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-03T21:29:37Z",
+      "side": 1,
+      "message": "UNREACHABLE() is the name.",
+      "range": {
+        "startLine": 158,
+        "startChar": 4,
+        "endLine": 158,
+        "endChar": 14
+      },
+      "revId": "c11e9e19d9074aed74a62dc2af541c89b55dc696",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb45cade_6319c4d3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-03T21:29:37Z",
+      "side": 1,
+      "message": "Shouldn\u0027t need this include.",
+      "revId": "c11e9e19d9074aed74a62dc2af541c89b55dc696",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5a24076_f1825848",
+        "filename": "src/libANGLE/renderer/vulkan/SemaphoreVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-03T21:29:37Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "c11e9e19d9074aed74a62dc2af541c89b55dc696",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc758d9d_8c2695e5",
+        "filename": "src/libANGLE/renderer/vulkan/SemaphoreVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-03T21:29:37Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 281,
+        "startChar": 4,
+        "endLine": 281,
+        "endChar": 14
+      },
+      "revId": "c11e9e19d9074aed74a62dc2af541c89b55dc696",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
