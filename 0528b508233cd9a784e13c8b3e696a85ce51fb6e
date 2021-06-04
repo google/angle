@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2f7c53c_6a8487e8",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-04T01:01:23Z",
+      "side": 1,
+      "message": "getShareContextSet() returns the ShareGroup::mShareContextSet which is declared in Display.h (which is the thing in Display I think you\u0027re referring to).   This is necessary since we need a way to iterate through all of the Contexts in the ShareGroup in FrameCapture to force glFlushes, capture commands, etc.",
+      "parentUuid": "ffa82ff3_fac9e94c",
+      "range": {
+        "startLine": 501,
+        "startChar": 28,
+        "endLine": 501,
+        "endChar": 46
+      },
+      "revId": "0528b508233cd9a784e13c8b3e696a85ce51fb6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "14255971_6631e722",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eedad446_e5fd3017",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-04T01:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14255971_6631e722",
+      "range": {
+        "startLine": 592,
+        "startChar": 4,
+        "endLine": 592,
+        "endChar": 80
+      },
+      "revId": "0528b508233cd9a784e13c8b3e696a85ce51fb6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a5764ab6_3518da53",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-05-19T15:23:44Z",
       "side": 1,
       "message": "nit: GLContextID would be preferable if we need this enum.",
+      "range": {
+        "startLine": 714,
+        "startChar": 38,
+        "endLine": 714,
+        "endChar": 50
+      },
+      "revId": "0528b508233cd9a784e13c8b3e696a85ce51fb6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43313cd0_de5994e5",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-04T01:01:23Z",
+      "side": 1,
+      "message": "It\u0027s TEGLContext now as part of the changes to generate_entry_points.py.\n\nI\u0027m marking this \"resolved\" for now, since TGlContextID is gone now and I\u0027m sure the changes in the script will generate plenty of other discussion related to this area.",
+      "parentUuid": "a5764ab6_3518da53",
       "range": {
         "startLine": 714,
         "startChar": 38,
