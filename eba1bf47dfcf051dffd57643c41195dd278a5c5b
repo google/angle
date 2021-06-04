@@ -50,6 +50,24 @@
       "message": "After some digging, looks like using System.setOut() isn\u0027t supposed to affect C++ side.\nSorry for the false lead.\n\nThe only other idea that I have is to reproduce this locally and debug Bionic\u0027s libc to figure out why sometimes we own fd 1 and sometimes not.\nPerhaps, as Peter suggested, fd 1 is not being properly released by a previous invocation of the same Activity.\nI don\u0027t think we can close fd 1 in our code to fix that, though - it may be used by other parts of the system.\nMaybe we can force the activity to terminate in the catapult/devil code.",
       "revId": "eba1bf47dfcf051dffd57643c41195dd278a5c5b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58cdae8f_c96e3910",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-04T13:57:02Z",
+      "side": 1,
+      "message": "Well the prior fix hasn\u0027t had a flake yet... let\u0027s see what happens today.",
+      "parentUuid": "b795512c_8e6897e9",
+      "revId": "eba1bf47dfcf051dffd57643c41195dd278a5c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
