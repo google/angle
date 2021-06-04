@@ -32,7 +32,7 @@
   'mac_mini_intel_gpu_stable': { 'swarming': { 'dimensions': { 'cpu': 'x86-64',
                                                                'display_attached': '1',
                                                                'gpu': '8086:0a2e',
-                                                               'os': 'Mac-10.15.5'}}},
+                                                               'os': 'Mac-10.15.5|Mac-10.15.7'}}},
   'mac_retina_amd_gpu_stable': { 'swarming': { 'dimensions': { 'cpu': 'x86-64',
                                                                'display_attached': '1',
                                                                'gpu': '1002:6821',
