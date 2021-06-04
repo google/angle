@@ -175,6 +175,24 @@
       "parentUuid": "da22a0c3_de128489",
       "revId": "b70ec977cbe4c829b4485e665df09591617dc986",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f709f6c_9283e26a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-04T20:42:40Z",
+      "side": 1,
+      "message": "You are right, neither of these are great. The way we normally do this is something like this:\n\n- File A.cpp, includes Fuchsia-specific code\n- File A.h, includes the forward declarations for said code, but with one `#ifdef` stubs them out (with UNREACHABLE inside).\n- File B.cpp calls into A.h on Fuchsia paths.\n\nIn BUILD.gn, A.cpp is not included in non-Fuchsia builds. If you are up to doing this, it would be great, but I believe it\u0027s outside the scope of this change.\n\nHow about this, bring back vulkan_fuchsia_ext.h, which only has this (so basically the hack):\n\n    #if defined(ANGLE_PLATFORM_FUCHSIA)\n    #    include \u003czircon/types.h\u003e\n    #else\n    typedef uint32_t zx_handle_t;\n    #    define ZX_HANDLE_INVALID ((zx_handle_t)0)\n    #endif\n    #include \u003cvulkan_fuchsia.h\u003e\n    \nThen open a bug at anglebug.com/new to clean this up, and leave a TODO with a link to that bug like http://anglebug.com/NNNN. Then we can enable VVL faster, and we know there\u0027s work to be done here.",
+      "parentUuid": "b5d828ef_11b5ddc9",
+      "revId": "b70ec977cbe4c829b4485e665df09591617dc986",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
