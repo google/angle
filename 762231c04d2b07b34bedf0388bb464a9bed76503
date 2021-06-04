@@ -52,6 +52,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b1a6331_a84c41a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-04T23:16:37Z",
+      "side": 1,
+      "message": "I combined this CL into one that I was doing.  I made a change to resolve the issues in Patchset 2 of my CL (which retains Mark as the author).",
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf9f4907_680b75c4",
@@ -89,6 +106,30 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "cf9f4907_680b75c4",
+      "range": {
+        "startLine": 3030,
+        "startChar": 0,
+        "endLine": 3039,
+        "endChar": 5
+      },
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c78c19bb_6507dc28",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3039,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-04T23:16:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9139277_9d60a022",
       "range": {
         "startLine": 3030,
         "startChar": 0,
@@ -184,6 +225,30 @@
       "side": 1,
       "message": "Sorry, I didn\u0027t explain well.  There are 3 choices, only 2 of which we want to do something special for.  If a 3rd pipeline were developed, we\u0027d need 4 choices.\n\nThat\u0027s different than the other case, where there are only 2 choices and a new pipeline would need a 3rd.",
       "parentUuid": "1db3c596_27dc0d75",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 50
+      },
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ed0b246_739b4d7e",
+        "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-04T23:16:37Z",
+      "side": 1,
+      "message": "I\u0027m going to resolve this.  If you\u0027d like, we can discuss it Monday.",
+      "parentUuid": "8917f3bc_4bf487d7",
       "range": {
         "startLine": 47,
         "startChar": 0,
