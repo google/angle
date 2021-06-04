@@ -4820,7 +4820,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
     const gl::ActiveTextureMask &activeTextures    = executable->getActiveSamplersMask();
     const gl::ActiveTextureTypeArray &textureTypes = executable->getActiveSamplerTypes();
 
-    bool recreatePipelineLayout = false;
+    bool haveImmutableSampler = false;
     for (size_t textureUnit : activeTextures)
     {
         gl::Texture *texture        = textures[textureUnit];
@@ -4898,13 +4898,16 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
             textureVk->getImageViewSubresourceSerial(samplerState);
         mActiveTexturesDesc.update(textureUnit, imageViewSerial, samplerHelper.getSamplerSerial());
 
-        recreatePipelineLayout =
-            textureVk->getAndResetImmutableSamplerDirtyState() || recreatePipelineLayout;
+        if (textureVk->getImage().hasImmutableSampler())
+        {
+            haveImmutableSampler = true;
+        }
     }
 
-    // Recreate the pipeline layout, if necessary.
-    if (recreatePipelineLayout)
+    if (haveImmutableSampler)
     {
+        // TODO(http://anglebug.com/5033): This will recreate the descriptor pools each time, which
+        // will likely affect performance negatively.
         ANGLE_TRY(mExecutable->createPipelineLayout(context, &mActiveTextures));
 
         // The default uniforms descriptor set was reset during createPipelineLayout(), so mark them
