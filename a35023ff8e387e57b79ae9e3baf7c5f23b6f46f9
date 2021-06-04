@@ -16,6 +16,23 @@
       "message": "I made a change to address Cody\u0027s feedback to Mark\u0027s CL inside of this CL.",
       "revId": "a35023ff8e387e57b79ae9e3baf7c5f23b6f46f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a7f8d1c_74dbaa60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-04T23:21:32Z",
+      "side": 1,
+      "message": "Mike, please check whether your CL will work for this CL too.  I addressed the glClear issue we discussed last week.  It was easier than I thought, since ANGLE has a dedicated function for mid-render-pass clears.  The problem is that there\u0027s always only one Vulkan command, vkCmdClearAttachement.",
+      "revId": "a35023ff8e387e57b79ae9e3baf7c5f23b6f46f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
