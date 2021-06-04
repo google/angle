@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36f6e8e1_095621c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-04T23:08:32Z",
+      "side": 1,
+      "message": "I created a CL to handle glClear hierarchy issues.  It builds on top of Mark\u0027s CL.  I couldn\u0027t push mine on top of Mark\u0027s, and so I combined them.  I hope that\u0027s okay.\n\nThis first CL just combines the two CLs.  I\u0027ll try to address Cody\u0027s feedback in the next patchset.",
+      "revId": "1c5638b59d0a7e02eb025b4d5184a517864f3946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
