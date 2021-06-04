@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39e5056c_51da1cf9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-04T01:20:32Z",
+      "side": 1,
+      "message": "PTAL\n\nIt\u0027s not quite ready for a formal review, but I think most of the big stuff is taken care of, so I\u0027d like some feedback on how things look from a high level before breaking this up into something more manageable (refactor vs functional change CLs, etc.).   \n\nI\u0027ve also sent out a Google Drive link with the Asphalt 9 trace data that replays on linux.   It doesn\u0027t work on Android, since it\u0027s looking for the wrong .gz data (asphalt_9_capture_context4.angledata.gz rather than asphalt_9_capture_context_shared.angledata.gz) - I haven\u0027t dug into that yet.\n\nI\u0027m still not entirely sure about the EGL stuff (passing in EGLWindow in particular), but I\u0027m not sure of a good answer that still allows us to reuse all of the good stuff in EGLWindow::createContext().\n\nAlso, this changes how the traces themselves look quite a bit so the existing traces will need to be recaptured as part of landing this stuff.   I see retrace_restricted_traces.py is out there, but I haven\u0027t tried it yet with these changes.\n\nLet me know if either of you would like to setup a GVC to go over anything.",
+      "revId": "83a49a55c7315b795aa31c6f1ef9708cc9aecdd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
