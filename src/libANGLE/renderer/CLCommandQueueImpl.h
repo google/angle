@@ -102,6 +102,68 @@ class CLCommandQueueImpl : angle::NonCopyable
                                    CLEventImpl::CreateFunc *eventCreateFunc,
                                    cl_int &errorCode) = 0;
 
+    virtual cl_int enqueueReadImage(const cl::Image &image,
+                                    bool blocking,
+                                    const size_t origin[3],
+                                    const size_t region[3],
+                                    size_t rowPitch,
+                                    size_t slicePitch,
+                                    void *ptr,
+                                    const cl::EventPtrs &waitEvents,
+                                    CLEventImpl::CreateFunc *eventCreateFunc) = 0;
+
+    virtual cl_int enqueueWriteImage(const cl::Image &image,
+                                     bool blocking,
+                                     const size_t origin[3],
+                                     const size_t region[3],
+                                     size_t inputRowPitch,
+                                     size_t inputSlicePitch,
+                                     const void *ptr,
+                                     const cl::EventPtrs &waitEvents,
+                                     CLEventImpl::CreateFunc *eventCreateFunc) = 0;
+
+    virtual cl_int enqueueCopyImage(const cl::Image &srcImage,
+                                    const cl::Image &dstImage,
+                                    const size_t srcOrigin[3],
+                                    const size_t dstOrigin[3],
+                                    const size_t region[3],
+                                    const cl::EventPtrs &waitEvents,
+                                    CLEventImpl::CreateFunc *eventCreateFunc) = 0;
+
+    virtual cl_int enqueueFillImage(const cl::Image &image,
+                                    const void *fillColor,
+                                    const size_t origin[3],
+                                    const size_t region[3],
+                                    const cl::EventPtrs &waitEvents,
+                                    CLEventImpl::CreateFunc *eventCreateFunc) = 0;
+
+    virtual cl_int enqueueCopyImageToBuffer(const cl::Image &srcImage,
+                                            const cl::Buffer &dstBuffer,
+                                            const size_t srcOrigin[3],
+                                            const size_t region[3],
+                                            size_t dstOffset,
+                                            const cl::EventPtrs &waitEvents,
+                                            CLEventImpl::CreateFunc *eventCreateFunc) = 0;
+
+    virtual cl_int enqueueCopyBufferToImage(const cl::Buffer &srcBuffer,
+                                            const cl::Image &dstImage,
+                                            size_t srcOffset,
+                                            const size_t dstOrigin[3],
+                                            const size_t region[3],
+                                            const cl::EventPtrs &waitEvents,
+                                            CLEventImpl::CreateFunc *eventCreateFunc) = 0;
+
+    virtual void *enqueueMapImage(const cl::Image &image,
+                                  bool blocking,
+                                  cl::MapFlags mapFlags,
+                                  const size_t origin[3],
+                                  const size_t region[3],
+                                  size_t *imageRowPitch,
+                                  size_t *imageSlicePitch,
+                                  const cl::EventPtrs &waitEvents,
+                                  CLEventImpl::CreateFunc *eventCreateFunc,
+                                  cl_int &errorCode) = 0;
+
   protected:
     const cl::CommandQueue &mCommandQueue;
 };

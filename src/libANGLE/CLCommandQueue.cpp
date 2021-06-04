@@ -11,6 +11,7 @@
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
 #include "libANGLE/CLEvent.h"
+#include "libANGLE/CLImage.h"
 
 #include <cstring>
 
@@ -126,6 +127,7 @@ cl_int CommandQueue::enqueueReadBuffer(cl_mem buffer,
 
     cl_int errorCode =
         mImpl->enqueueReadBuffer(buf, blocking, offset, size, ptr, waitEvents, eventCreateFuncPtr);
+
     if (errorCode == CL_SUCCESS && event != nullptr)
     {
         ASSERT(eventCreateFunc);
@@ -152,6 +154,7 @@ cl_int CommandQueue::enqueueWriteBuffer(cl_mem buffer,
 
     cl_int errorCode =
         mImpl->enqueueWriteBuffer(buf, blocking, offset, size, ptr, waitEvents, eventCreateFuncPtr);
+
     if (errorCode == CL_SUCCESS && event != nullptr)
     {
         ASSERT(eventCreateFunc);
@@ -246,6 +249,7 @@ cl_int CommandQueue::enqueueCopyBuffer(cl_mem srcBuffer,
 
     cl_int errorCode = mImpl->enqueueCopyBuffer(src, dst, srcOffset, dstOffset, size, waitEvents,
                                                 eventCreateFuncPtr);
+
     if (errorCode == CL_SUCCESS && event != nullptr)
     {
         ASSERT(eventCreateFunc);
@@ -304,6 +308,7 @@ cl_int CommandQueue::enqueueFillBuffer(cl_mem buffer,
 
     cl_int errorCode = mImpl->enqueueFillBuffer(buf, pattern, patternSize, offset, size, waitEvents,
                                                 eventCreateFuncPtr);
+
     if (errorCode == CL_SUCCESS && event != nullptr)
     {
         ASSERT(eventCreateFunc);
@@ -329,14 +334,213 @@ void *CommandQueue::enqueueMapBuffer(cl_mem buffer,
     rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
         event != nullptr ? &eventCreateFunc : nullptr;
 
-    void *const region = mImpl->enqueueMapBuffer(buf, blocking, mapFlags, offset, size, waitEvents,
-                                                 eventCreateFuncPtr, errorCode);
+    void *const map = mImpl->enqueueMapBuffer(buf, blocking, mapFlags, offset, size, waitEvents,
+                                              eventCreateFuncPtr, errorCode);
+
     if (errorCode == CL_SUCCESS && event != nullptr)
     {
         ASSERT(eventCreateFunc);
         *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_MAP_BUFFER, eventCreateFunc);
     }
-    return region;
+    return map;
+}
+
+cl_int CommandQueue::enqueueReadImage(cl_mem image,
+                                      cl_bool blockingRead,
+                                      const size_t *origin,
+                                      const size_t *region,
+                                      size_t rowPitch,
+                                      size_t slicePitch,
+                                      void *ptr,
+                                      cl_uint numEventsInWaitList,
+                                      const cl_event *eventWaitList,
+                                      cl_event *event)
+{
+    const Image &img           = image->cast<Image>();
+    const bool blocking        = blockingRead != CL_FALSE;
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueReadImage(img, blocking, origin, region, rowPitch, slicePitch,
+                                               ptr, waitEvents, eventCreateFuncPtr);
+
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_READ_IMAGE, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueWriteImage(cl_mem image,
+                                       cl_bool blockingWrite,
+                                       const size_t *origin,
+                                       const size_t *region,
+                                       size_t inputRowPitch,
+                                       size_t inputSlicePitch,
+                                       const void *ptr,
+                                       cl_uint numEventsInWaitList,
+                                       const cl_event *eventWaitList,
+                                       cl_event *event)
+{
+    const Image &img           = image->cast<Image>();
+    const bool blocking        = blockingWrite != CL_FALSE;
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode =
+        mImpl->enqueueWriteImage(img, blocking, origin, region, inputRowPitch, inputSlicePitch, ptr,
+                                 waitEvents, eventCreateFuncPtr);
+
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_WRITE_IMAGE, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueCopyImage(cl_mem srcImage,
+                                      cl_mem dstImage,
+                                      const size_t *srcOrigin,
+                                      const size_t *dstOrigin,
+                                      const size_t *region,
+                                      cl_uint numEventsInWaitList,
+                                      const cl_event *eventWaitList,
+                                      cl_event *event)
+{
+    const Image &src           = srcImage->cast<Image>();
+    const Image &dst           = dstImage->cast<Image>();
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueCopyImage(src, dst, srcOrigin, dstOrigin, region, waitEvents,
+                                               eventCreateFuncPtr);
+
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_COPY_IMAGE, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueFillImage(cl_mem image,
+                                      const void *fillColor,
+                                      const size_t *origin,
+                                      const size_t *region,
+                                      cl_uint numEventsInWaitList,
+                                      const cl_event *eventWaitList,
+                                      cl_event *event)
+{
+    const Image &img           = image->cast<Image>();
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode =
+        mImpl->enqueueFillImage(img, fillColor, origin, region, waitEvents, eventCreateFuncPtr);
+
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_FILL_IMAGE, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueCopyImageToBuffer(cl_mem srcImage,
+                                              cl_mem dstBuffer,
+                                              const size_t *srcOrigin,
+                                              const size_t *region,
+                                              size_t dstOffset,
+                                              cl_uint numEventsInWaitList,
+                                              const cl_event *eventWaitList,
+                                              cl_event *event)
+{
+    const Image &src           = srcImage->cast<Image>();
+    const Buffer &dst          = dstBuffer->cast<Buffer>();
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueCopyImageToBuffer(src, dst, srcOrigin, region, dstOffset,
+                                                       waitEvents, eventCreateFuncPtr);
+
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_COPY_IMAGE_TO_BUFFER,
+                                       eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueCopyBufferToImage(cl_mem srcBuffer,
+                                              cl_mem dstImage,
+                                              size_t srcOffset,
+                                              const size_t *dstOrigin,
+                                              const size_t *region,
+                                              cl_uint numEventsInWaitList,
+                                              const cl_event *eventWaitList,
+                                              cl_event *event)
+{
+    const Buffer &src          = srcBuffer->cast<Buffer>();
+    const Image &dst           = dstImage->cast<Image>();
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueCopyBufferToImage(src, dst, srcOffset, dstOrigin, region,
+                                                       waitEvents, eventCreateFuncPtr);
+
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_COPY_BUFFER_TO_IMAGE,
+                                       eventCreateFunc);
+    }
+    return errorCode;
+}
+
+void *CommandQueue::enqueueMapImage(cl_mem image,
+                                    cl_bool blockingMap,
+                                    MapFlags mapFlags,
+                                    const size_t *origin,
+                                    const size_t *region,
+                                    size_t *imageRowPitch,
+                                    size_t *imageSlicePitch,
+                                    cl_uint numEventsInWaitList,
+                                    const cl_event *eventWaitList,
+                                    cl_event *event,
+                                    cl_int &errorCode)
+{
+    const Image &img           = image->cast<Image>();
+    const bool blocking        = blockingMap != CL_FALSE;
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    void *const map =
+        mImpl->enqueueMapImage(img, blocking, mapFlags, origin, region, imageRowPitch,
+                               imageSlicePitch, waitEvents, eventCreateFuncPtr, errorCode);
+
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_MAP_IMAGE, eventCreateFunc);
+    }
+    return map;
 }
 
 CommandQueue::~CommandQueue()

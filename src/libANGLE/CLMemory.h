@@ -35,6 +35,7 @@ class Memory : public _cl_mem, public Object
     void *getHostPtr() const;
     const MemoryPtr &getParent() const;
     size_t getOffset() const;
+    size_t getSize() const;
 
     template <typename T = rx::CLMemoryImpl>
     T &getImpl() const;
@@ -110,6 +111,11 @@ inline const MemoryPtr &Memory::getParent() const
 inline size_t Memory::getOffset() const
 {
     return mOffset;
+}
+
+inline size_t Memory::getSize() const
+{
+    return mSize;
 }
 
 template <typename T>

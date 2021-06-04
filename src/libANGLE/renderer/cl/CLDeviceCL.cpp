@@ -212,7 +212,7 @@ cl_int CLDeviceCL::createSubDevices(const cl_device_partition_property *properti
     {
         for (cl_device_id nativeSubDevice : nativeSubDevices)
         {
-            createFuncs.emplace_back([=](const cl::Device &device) {
+            createFuncs.emplace_back([nativeSubDevice](const cl::Device &device) {
                 return Ptr(new CLDeviceCL(device, nativeSubDevice));
             });
         }

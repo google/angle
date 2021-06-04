@@ -383,6 +383,62 @@ bool Device::supportsBuiltInKernel(const std::string &name) const
     return false;
 }
 
+bool Device::supportsNativeImageDimensions(const cl_image_desc &desc) const
+{
+    switch (desc.image_type)
+    {
+        case CL_MEM_OBJECT_IMAGE1D:
+            return desc.image_width <= mInfo.mImage2D_MaxWidth;
+        case CL_MEM_OBJECT_IMAGE2D:
+            return desc.image_width <= mInfo.mImage2D_MaxWidth &&
+                   desc.image_height <= mInfo.mImage2D_MaxHeight;
+        case CL_MEM_OBJECT_IMAGE3D:
+            return desc.image_width <= mInfo.mImage3D_MaxWidth &&
+                   desc.image_height <= mInfo.mImage3D_MaxHeight &&
+                   desc.image_depth <= mInfo.mImage3D_MaxDepth;
+        case CL_MEM_OBJECT_IMAGE1D_ARRAY:
+            return desc.image_width <= mInfo.mImage2D_MaxWidth &&
+                   desc.image_array_size <= mInfo.mImageMaxArraySize;
+        case CL_MEM_OBJECT_IMAGE2D_ARRAY:
+            return desc.image_width <= mInfo.mImage2D_MaxWidth &&
+                   desc.image_height <= mInfo.mImage2D_MaxHeight &&
+                   desc.image_array_size <= mInfo.mImageMaxArraySize;
+        case CL_MEM_OBJECT_IMAGE1D_BUFFER:
+            return desc.image_width <= mInfo.mImageMaxBufferSize;
+        default:
+            ASSERT(false);
+            break;
+    }
+    return false;
+}
+
+bool Device::supportsImageDimensions(const ImageDescriptor &desc) const
+{
+    switch (desc.type)
+    {
+        case CL_MEM_OBJECT_IMAGE1D:
+            return desc.width <= mInfo.mImage2D_MaxWidth;
+        case CL_MEM_OBJECT_IMAGE2D:
+            return desc.width <= mInfo.mImage2D_MaxWidth && desc.height <= mInfo.mImage2D_MaxHeight;
+        case CL_MEM_OBJECT_IMAGE3D:
+            return desc.width <= mInfo.mImage3D_MaxWidth &&
+                   desc.height <= mInfo.mImage3D_MaxHeight && desc.depth <= mInfo.mImage3D_MaxDepth;
+        case CL_MEM_OBJECT_IMAGE1D_ARRAY:
+            return desc.width <= mInfo.mImage2D_MaxWidth &&
+                   desc.arraySize <= mInfo.mImageMaxArraySize;
+        case CL_MEM_OBJECT_IMAGE2D_ARRAY:
+            return desc.width <= mInfo.mImage2D_MaxWidth &&
+                   desc.height <= mInfo.mImage2D_MaxHeight &&
+                   desc.arraySize <= mInfo.mImageMaxArraySize;
+        case CL_MEM_OBJECT_IMAGE1D_BUFFER:
+            return desc.width <= mInfo.mImageMaxBufferSize;
+        default:
+            ASSERT(false);
+            break;
+    }
+    return false;
+}
+
 Device::Device(Platform &platform,
                Device *parent,
                DeviceType type,

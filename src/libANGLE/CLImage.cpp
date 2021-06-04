@@ -116,6 +116,30 @@ bool Image::IsValid(const _cl_mem *image)
 
 Image::~Image() = default;
 
+bool Image::isRegionValid(const size_t origin[3], const size_t region[3]) const
+{
+    switch (getType())
+    {
+        case CL_MEM_OBJECT_IMAGE1D:
+        case CL_MEM_OBJECT_IMAGE1D_BUFFER:
+            return origin[0] + region[0] <= mDesc.width;
+        case CL_MEM_OBJECT_IMAGE2D:
+            return origin[0] + region[0] <= mDesc.width && origin[1] + region[1] <= mDesc.height;
+        case CL_MEM_OBJECT_IMAGE3D:
+            return origin[0] + region[0] <= mDesc.width && origin[1] + region[1] <= mDesc.height &&
+                   origin[2] + region[2] <= mDesc.depth;
+        case CL_MEM_OBJECT_IMAGE1D_ARRAY:
+            return origin[0] + region[0] <= mDesc.width && origin[1] + region[1] <= mDesc.arraySize;
+        case CL_MEM_OBJECT_IMAGE2D_ARRAY:
+            return origin[0] + region[0] <= mDesc.width && origin[1] + region[1] <= mDesc.height &&
+                   origin[2] + region[2] <= mDesc.arraySize;
+        default:
+            ASSERT(false);
+            break;
+    }
+    return false;
+}
+
 Image::Image(Context &context,
              PropArray &&properties,
              MemFlags flags,

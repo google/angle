@@ -10,6 +10,8 @@
 
 #include "libANGLE/CLMemory.h"
 
+#include "libANGLE/cl_utils.h"
+
 namespace cl
 {
 
@@ -29,6 +31,12 @@ class Image final : public Memory
 
     const cl_image_format &getFormat() const;
     const ImageDescriptor &getDescriptor() const;
+
+    bool isRegionValid(const size_t origin[3], const size_t region[3]) const;
+
+    size_t getElementSize() const;
+    size_t getRowSize() const;
+    size_t getSliceSize() const;
 
   private:
     Image(Context &context,
@@ -59,6 +67,21 @@ inline const cl_image_format &Image::getFormat() const
 inline const ImageDescriptor &Image::getDescriptor() const
 {
     return mDesc;
+}
+
+inline size_t Image::getElementSize() const
+{
+    return GetElementSize(mFormat);
+}
+
+inline size_t Image::getRowSize() const
+{
+    return GetElementSize(mFormat) * mDesc.width;
+}
+
+inline size_t Image::getSliceSize() const
+{
+    return GetElementSize(mFormat) * mDesc.width * mDesc.height;
 }
 
 }  // namespace cl

@@ -348,7 +348,7 @@ CLDeviceImpl::CreateDatas CLPlatformCL::createDevices() const
                 }
 
                 cl_device_id nativeDevice = nativeDevices[index];
-                createDatas.emplace_back(types[index], [=](const cl::Device &device) {
+                createDatas.emplace_back(types[index], [nativeDevice](const cl::Device &device) {
                     return CLDeviceCL::Ptr(new CLDeviceCL(device, nativeDevice));
                 });
             }
@@ -418,7 +418,7 @@ void CLPlatformCL::Initialize(CreateFuncs &createFuncs, bool isIcd)
     for (KHRicdVendor *vendorIt = khrIcdVendors; vendorIt != nullptr; vendorIt = vendorIt->next)
     {
         cl_platform_id nativePlatform = vendorIt->platform;
-        createFuncs.emplace_back([=](const cl::Platform &platform) {
+        createFuncs.emplace_back([nativePlatform](const cl::Platform &platform) {
             return Ptr(new CLPlatformCL(platform, nativePlatform));
         });
     }

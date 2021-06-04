@@ -118,6 +118,75 @@ class CommandQueue final : public _cl_command_queue, public Object
                            cl_event *event,
                            cl_int &errorCode);
 
+    cl_int enqueueReadImage(cl_mem image,
+                            cl_bool blockingRead,
+                            const size_t *origin,
+                            const size_t *region,
+                            size_t rowPitch,
+                            size_t slicePitch,
+                            void *ptr,
+                            cl_uint numEventsInWaitList,
+                            const cl_event *eventWaitList,
+                            cl_event *event);
+
+    cl_int enqueueWriteImage(cl_mem image,
+                             cl_bool blockingWrite,
+                             const size_t *origin,
+                             const size_t *region,
+                             size_t inputRowPitch,
+                             size_t inputSlicePitch,
+                             const void *ptr,
+                             cl_uint numEventsInWaitList,
+                             const cl_event *eventWaitList,
+                             cl_event *event);
+
+    cl_int enqueueCopyImage(cl_mem srcImage,
+                            cl_mem dstImage,
+                            const size_t *srcOrigin,
+                            const size_t *dstOrigin,
+                            const size_t *region,
+                            cl_uint numEventsInWaitList,
+                            const cl_event *eventWaitList,
+                            cl_event *event);
+
+    cl_int enqueueFillImage(cl_mem image,
+                            const void *fillColor,
+                            const size_t *origin,
+                            const size_t *region,
+                            cl_uint numEventsInWaitList,
+                            const cl_event *eventWaitList,
+                            cl_event *event);
+
+    cl_int enqueueCopyImageToBuffer(cl_mem srcImage,
+                                    cl_mem dstBuffer,
+                                    const size_t *srcOrigin,
+                                    const size_t *region,
+                                    size_t dstOffset,
+                                    cl_uint numEventsInWaitList,
+                                    const cl_event *eventWaitList,
+                                    cl_event *event);
+
+    cl_int enqueueCopyBufferToImage(cl_mem srcBuffer,
+                                    cl_mem dstImage,
+                                    size_t srcOffset,
+                                    const size_t *dstOrigin,
+                                    const size_t *region,
+                                    cl_uint numEventsInWaitList,
+                                    const cl_event *eventWaitList,
+                                    cl_event *event);
+
+    void *enqueueMapImage(cl_mem image,
+                          cl_bool blockingMap,
+                          MapFlags mapFlags,
+                          const size_t *origin,
+                          const size_t *region,
+                          size_t *imageRowPitch,
+                          size_t *imageSlicePitch,
+                          cl_uint numEventsInWaitList,
+                          const cl_event *eventWaitList,
+                          cl_event *event,
+                          cl_int &errorCode);
+
   public:
     using PropArray = std::vector<cl_queue_properties>;
 

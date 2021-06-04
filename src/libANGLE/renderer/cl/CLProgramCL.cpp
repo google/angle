@@ -70,7 +70,7 @@ cl_int CLProgramCL::createKernels(cl_uint numKernels,
     {
         for (cl_kernel nativeKernel : nativeKernels)
         {
-            createFuncs.emplace_back([=](const cl::Kernel &kernel) {
+            createFuncs.emplace_back([nativeKernel](const cl::Kernel &kernel) {
                 return CLKernelImpl::Ptr(new CLKernelCL(kernel, nativeKernel));
             });
         }

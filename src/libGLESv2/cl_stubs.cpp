@@ -835,8 +835,9 @@ cl_int EnqueueReadImage(cl_command_queue command_queue,
                         const cl_event *event_wait_list,
                         cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueReadImage);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueReadImage(
+        image, blocking_read, origin, region, row_pitch, slice_pitch, ptr, num_events_in_wait_list,
+        event_wait_list, event);
 }
 
 cl_int EnqueueWriteImage(cl_command_queue command_queue,
@@ -851,8 +852,9 @@ cl_int EnqueueWriteImage(cl_command_queue command_queue,
                          const cl_event *event_wait_list,
                          cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueWriteImage);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueWriteImage(
+        image, blocking_write, origin, region, input_row_pitch, input_slice_pitch, ptr,
+        num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int EnqueueFillImage(cl_command_queue command_queue,
@@ -864,8 +866,8 @@ cl_int EnqueueFillImage(cl_command_queue command_queue,
                         const cl_event *event_wait_list,
                         cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueFillImage);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueFillImage(
+        image, fill_color, origin, region, num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int EnqueueCopyImage(cl_command_queue command_queue,
@@ -878,8 +880,9 @@ cl_int EnqueueCopyImage(cl_command_queue command_queue,
                         const cl_event *event_wait_list,
                         cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueCopyImage);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueCopyImage(
+        src_image, dst_image, src_origin, dst_origin, region, num_events_in_wait_list,
+        event_wait_list, event);
 }
 
 cl_int EnqueueCopyImageToBuffer(cl_command_queue command_queue,
@@ -892,8 +895,9 @@ cl_int EnqueueCopyImageToBuffer(cl_command_queue command_queue,
                                 const cl_event *event_wait_list,
                                 cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueCopyImageToBuffer);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueCopyImageToBuffer(
+        src_image, dst_buffer, src_origin, region, dst_offset, num_events_in_wait_list,
+        event_wait_list, event);
 }
 
 cl_int EnqueueCopyBufferToImage(cl_command_queue command_queue,
@@ -906,8 +910,9 @@ cl_int EnqueueCopyBufferToImage(cl_command_queue command_queue,
                                 const cl_event *event_wait_list,
                                 cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueCopyBufferToImage);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueCopyBufferToImage(
+        src_buffer, dst_image, src_offset, dst_origin, region, num_events_in_wait_list,
+        event_wait_list, event);
 }
 
 void *EnqueueMapBuffer(cl_command_queue command_queue,
@@ -939,8 +944,9 @@ void *EnqueueMapImage(cl_command_queue command_queue,
                       cl_event *event,
                       cl_int &errorCode)
 {
-    WARN_NOT_SUPPORTED(EnqueueMapImage);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueMapImage(
+        image, blocking_map, map_flags, origin, region, image_row_pitch, image_slice_pitch,
+        num_events_in_wait_list, event_wait_list, event, errorCode);
 }
 
 cl_int EnqueueUnmapMemObject(cl_command_queue command_queue,
