@@ -68,6 +68,24 @@
       "parentUuid": "b795512c_8e6897e9",
       "revId": "eba1bf47dfcf051dffd57643c41195dd278a5c5b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4755d8df_3b563784",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-04T18:54:19Z",
+      "side": 1,
+      "message": "Cool!\nI suspect this might be due to freopen trying to take ownership of the closed stream internally, while dup2 not doing so.\nBut, if we don\u0027t have a problem of output file not existing after tests ran, LGTM.",
+      "parentUuid": "58cdae8f_c96e3910",
+      "revId": "eba1bf47dfcf051dffd57643c41195dd278a5c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
