@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7d02d68e_05d926b4",
+        "filename": "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-05T04:34:17Z",
+      "side": 1,
+      "message": "+Geoff for real",
+      "parentUuid": "22352b2b_b21ea2a9",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7debf0a2_457947d6",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
         "patchSetId": 15
@@ -207,6 +225,24 @@
       "side": 1,
       "message": "Yeah, seems like, but I am concerned about scenarios that I didn\u0027t think of.",
       "parentUuid": "0a16dc99_5ebcbbe1",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e18ee0b_f5aae7c6",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1007,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-05T04:34:17Z",
+      "side": 1,
+      "message": "I think you can simply cache the protected bit in the texture (maybe there\u0027s already some front-end state for it, or maybe there should be if possible?), then use that here. So the staging image is protected iff the image is protected.",
+      "parentUuid": "b8109b8a_2633a114",
       "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
