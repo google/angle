@@ -1293,7 +1293,8 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
             break;
     }
 
-    specConst->outputLayoutString(sink);
+    specConst->declareSpecConsts(root);
+    mValidateASTOptions.validateSpecConstReferences = true;
 
     // Gather specialization constant usage bits so that we can feedback to context.
     mSpecConstUsageBits = specConst->getSpecConstUsageBits();

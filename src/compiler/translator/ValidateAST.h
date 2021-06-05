@@ -25,6 +25,9 @@ struct ValidateASTOptions
     bool validateSingleParent = true;
     // Check that all symbols reference TVariables that have been declared.
     bool validateVariableReferences = true;
+    // Whether validateVariableReferences should also include specialization constants.  Their
+    // declaration is output after their usage is discovered, so this is disabled until then.
+    bool validateSpecConstReferences = false;
     // Check that all EOpCallFunctionInAST have their corresponding function definitions in the AST,
     // with matching symbol ids. There should also be at least a prototype declaration before the
     // function is called.

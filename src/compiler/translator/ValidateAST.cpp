@@ -279,12 +279,11 @@ bool ValidateAST::variableNeedsDeclaration(const TVariable *variable)
         return false;
     }
 
-    // Additionally, don't expect declaration for Vulkan specialization constants.  There is no
-    // representation for them in the AST.
-    if (variable->symbolType() == SymbolType::AngleInternal &&
-        SpecConst::IsSpecConstName(variable->name()))
+    // Additionally, don't expect declaration for Vulkan specialization constants if not enabled.
+    // The declaration of these variables is deferred.
+    if (variable->getType().getQualifier() == EvqSpecConst)
     {
-        return false;
+        return mOptions.validateSpecConstReferences;
     }
 
     return true;

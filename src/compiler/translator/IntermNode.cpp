@@ -1603,8 +1603,12 @@ void TIntermBinary::promote()
 
     TQualifier resultQualifier = EvqConst;
     // Binary operations results in temporary variables unless both
-    // operands are const.
-    if (mLeft->getQualifier() != EvqConst || mRight->getQualifier() != EvqConst)
+    // operands are const.  If initializing a specialization constant, make the declarator also
+    // EvqSpecConst.
+    const bool isSpecConstInit = mOp == EOpInitialize && mLeft->getQualifier() == EvqSpecConst;
+    const bool isEitherNonConst =
+        mLeft->getQualifier() != EvqConst || mRight->getQualifier() != EvqConst;
+    if (!isSpecConstInit && isEitherNonConst)
     {
         resultQualifier = EvqTemporary;
         getTypePointer()->setQualifier(EvqTemporary);

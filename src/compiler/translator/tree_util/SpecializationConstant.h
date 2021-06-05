@@ -13,6 +13,7 @@
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/SymbolTable.h"
 
+class TIntermBlock;
 class TIntermTyped;
 class TIntermSymbol;
 class TVariable;
@@ -44,10 +45,8 @@ class SpecConst
     // Half render area
     TIntermBinary *getHalfRenderArea();
 
-    void outputLayoutString(TInfoSinkBase &sink) const;
+    void declareSpecConsts(TIntermBlock *root);
     SpecConstUsageBits getSpecConstUsageBits() const { return mUsageBits; }
-
-    static bool IsSpecConstName(const ImmutableString &name);
 
   private:
     TIntermSymbol *getFlipRotation();
@@ -59,6 +58,11 @@ class SpecConst
     // If unsupported, this should be set to null.
     TSymbolTable *mSymbolTable;
     ShCompileOptions mCompileOptions;
+
+    TVariable *mLineRasterEmulationVar;
+    TVariable *mSurfaceRotationVar;
+    TVariable *mDrawableWidthVar;
+    TVariable *mDrawableHeightVar;
 
     // Bit is set if YFlip or Rotation has been used
     SpecConstUsageBits mUsageBits;

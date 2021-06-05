@@ -167,7 +167,7 @@ void TOutputGLSLBase::writeBuiltInFunctionTriplet(Visit visit,
 
 // Outputs what goes inside layout(), except for location and binding qualifiers, as they are
 // handled differently between GL GLSL and Vulkan GLSL.
-std::string TOutputGLSLBase::getCommonLayoutQualifiers(TIntermTyped *variable)
+std::string TOutputGLSLBase::getCommonLayoutQualifiers(TIntermSymbol *variable)
 {
     std::ostringstream out;
     CommaSeparatedListItemPrefixGenerator listItemPrefix;
@@ -245,7 +245,7 @@ std::string TOutputGLSLBase::getMemoryQualifiers(const TType &type)
     return out.str();
 }
 
-void TOutputGLSLBase::writeLayoutQualifier(TIntermTyped *variable)
+void TOutputGLSLBase::writeLayoutQualifier(TIntermSymbol *variable)
 {
     const TType &type = variable->getType();
 
@@ -1033,16 +1033,27 @@ bool TOutputGLSLBase::visitDeclaration(Visit visit, TIntermDeclaration *node)
         const TIntermSequence &sequence = *(node->getSequence());
         TIntermTyped *variable          = sequence.front()->getAsTyped();
         TIntermSymbol *symbolNode       = variable->getAsSymbolNode();
-        if (!symbolNode || (symbolNode->getName() != "gl_ClipDistance" &&
-                            symbolNode->getName() != "gl_CullDistance"))
+        if (symbolNode == nullptr)
+        {
+            ASSERT(variable->getAsBinaryNode() &&
+                   variable->getAsBinaryNode()->getOp() == EOpInitialize);
+            symbolNode = variable->getAsBinaryNode()->getLeft()->getAsSymbolNode();
+        }
+        ASSERT(symbolNode);
+
+        if (symbolNode->getName() != "gl_ClipDistance" &&
+            symbolNode->getName() != "gl_CullDistance")
         {
             // gl_Clip/CullDistance re-declaration doesn't need layout.
-            writeLayoutQualifier(variable);
+            writeLayoutQualifier(symbolNode);
         }
-        writeVariableType(variable->getType(), symbolNode ? &symbolNode->variable() : nullptr,
-                          false);
-        if (variable->getAsSymbolNode() == nullptr ||
-            variable->getAsSymbolNode()->variable().symbolType() != SymbolType::Empty)
+
+        // Note: the TIntermDeclaration type is used for variable declaration instead of the
+        // TIntermSymbol one.  The TIntermDeclaration type includes precision promotions from the
+        // right hand side that the symbol may be missing.  This is an inconsistency in the tree
+        // that is too ingrained.
+        writeVariableType(variable->getType(), &symbolNode->variable(), false);
+        if (symbolNode->variable().symbolType() != SymbolType::Empty)
         {
             out << " ";
         }
