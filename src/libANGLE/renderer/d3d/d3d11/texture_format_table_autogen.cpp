@@ -1608,6 +1608,34 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
                                          Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
             return info;
         }
+        case GL_G8_B8R8_2PLANE_420_UNORM_ANGLE:
+        {
+            static constexpr Format info(GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,
+                                         angle::FormatID::NONE,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         GL_NONE,
+                                         nullptr);
+            return info;
+        }
+        case GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE:
+        {
+            static constexpr Format info(GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE,
+                                         angle::FormatID::NONE,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         GL_NONE,
+                                         nullptr);
+            return info;
+        }
         case GL_LUMINANCE16F_EXT:
         {
             static constexpr Format info(GL_LUMINANCE16F_EXT,
