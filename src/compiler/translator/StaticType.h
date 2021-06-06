@@ -200,6 +200,12 @@ constexpr const TType *GetBasic()
     return Get<basicType, EbpUndefined, EvqGlobal, primarySize, secondarySize>();
 }
 
+template <TBasicType basicType, unsigned char primarySize = 1, unsigned char secondarySize = 1>
+constexpr const TType *GetTemporary()
+{
+    return Get<basicType, EbpUndefined, EvqTemporary, primarySize, secondarySize>();
+}
+
 template <TBasicType basicType,
           TQualifier qualifier,
           unsigned char primarySize   = 1,

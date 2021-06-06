@@ -846,7 +846,7 @@ spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
                                     ? &mSpirvCurrentFunctionBlocks.front().localVariables
                                     : &mSpirvVariableDecls;
 
-    spirv::IdRef variableId          = getNewId();
+    const spirv::IdRef variableId    = getNewId();
     const spirv::IdRef typePointerId = getTypePointerId(typeId, storageClass);
 
     spirv::WriteVariable(spirvSection, typePointerId, variableId, storageClass, initializerId);
@@ -858,6 +858,39 @@ spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
     }
 
     return variableId;
+}
+
+spirv::IdRef SPIRVBuilder::declareSpecConst(TBasicType type, int id, const char *name)
+{
+    const spirv::IdRef specConstId = getNewId();
+
+    SpirvType spirvType;
+    spirvType.type = type;
+
+    const spirv::IdRef typeId = getSpirvTypeData(spirvType, "").id;
+
+    // Note: all spec constants are 0 initialized by the translator.
+    if (type == EbtBool)
+    {
+        spirv::WriteSpecConstantFalse(&mSpirvTypeAndConstantDecls, typeId, specConstId);
+    }
+    else
+    {
+        spirv::WriteSpecConstant(&mSpirvTypeAndConstantDecls, typeId, specConstId,
+                                 spirv::LiteralContextDependentNumber(0));
+    }
+
+    // Add the SpecId decoration
+    spirv::WriteDecorate(&mSpirvDecorations, specConstId, spv::DecorationSpecId,
+                         {spirv::LiteralInteger(id)});
+
+    // Output debug information.
+    if (name)
+    {
+        spirv::WriteName(&mSpirvDebug, specConstId, name);
+    }
+
+    return specConstId;
 }
 
 void SPIRVBuilder::startConditional(size_t blockCount, bool isContinuable, bool isBreakable)

@@ -285,6 +285,8 @@ class SPIRVBuilder : angle::NonCopyable
                                  spv::StorageClass storageClass,
                                  spirv::IdRef *initializerId,
                                  const char *name);
+    // Helper to declare specialization constants.
+    spirv::IdRef declareSpecConst(TBasicType type, int id, const char *name);
 
     // Helpers for conditionals.
     void startConditional(size_t blockCount, bool isContinuable, bool isBreakable);

@@ -195,6 +195,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
                             TLayoutBlockStorage blockStorage) const;
     void nodeDataInitRValue(NodeData *data, spirv::IdRef baseId, spirv::IdRef typeId) const;
 
+    void declareSpecConst(TIntermDeclaration *decl);
     spirv::IdRef createConstant(const TType &type,
                                 TBasicType expectedBasicType,
                                 const TConstantUnion *constUnion);
@@ -780,6 +781,35 @@ spirv::IdRef OutputSPIRVTraverser::getAccessChainTypeId(NodeData *data)
     }
     ASSERT(accessChain.preSwizzleTypeId.valid());
     return accessChain.preSwizzleTypeId;
+}
+
+void OutputSPIRVTraverser::declareSpecConst(TIntermDeclaration *decl)
+{
+    const TIntermSequence &sequence = *decl->getSequence();
+    ASSERT(sequence.size() == 1);
+
+    TIntermBinary *assign = sequence.front()->getAsBinaryNode();
+    ASSERT(assign != nullptr && assign->getOp() == EOpInitialize);
+
+    TIntermSymbol *symbol = assign->getLeft()->getAsSymbolNode();
+    ASSERT(symbol != nullptr && symbol->getType().getQualifier() == EvqSpecConst);
+
+    TIntermConstantUnion *initializer = assign->getRight()->getAsConstantUnion();
+    ASSERT(initializer != nullptr);
+
+    const TType &type         = symbol->getType();
+    const TVariable *variable = &symbol->variable();
+
+    // All spec consts in ANGLE are initialized to 0.
+    ASSERT(initializer->isZero(0));
+
+    const spirv::IdRef specConstId =
+        mBuilder.declareSpecConst(type.getBasicType(), type.getLayoutQualifier().location,
+                                  mBuilder.hashName(variable).data());
+
+    // Remember the id of the variable for future look up.
+    ASSERT(mSymbolIdMap.count(variable) == 0);
+    mSymbolIdMap[variable] = specConstId;
 }
 
 spirv::IdRef OutputSPIRVTraverser::createConstant(const TType &type,
@@ -1520,9 +1550,13 @@ void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
 
     // The symbol is either:
     //
+    // - A specialization constant
     // - A variable (local, varying etc)
     // - An interface block
     // - A field of an unnamed interface block
+    //
+    // Specialization constants in SPIR-V are treated largely like constants, in which case make
+    // this behave like visitConstantUnion().
 
     const TType &type                     = node->getType();
     const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
@@ -1546,8 +1580,9 @@ void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
 
     const spirv::IdRef typeId = mBuilder.getTypeData(type, blockStorage).id;
 
-    // If the symbol is a const variable, such as a const function parameter, create an rvalue.
-    if (type.getQualifier() == EvqConst)
+    // If the symbol is a const variable, such as a const function parameter or specialization
+    // constant, create an rvalue.
+    if (type.getQualifier() == EvqConst || type.getQualifier() == EvqSpecConst)
     {
         ASSERT(mSymbolIdMap.count(symbol) > 0);
         nodeDataInitRValue(&mNodeData.back(), mSymbolIdMap[symbol], typeId);
@@ -1667,6 +1702,13 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
         return true;
     }
 
+    // If this is a variable initialization node, defer any code generation to visitDeclaration.
+    if (node->getOp() == EOpInitialize)
+    {
+        ASSERT(getParentNode()->getAsDeclarationNode() != nullptr);
+        return true;
+    }
+
     if (visit == InVisit)
     {
         // Left child visited.  Take the entry it created as the current node's.
@@ -1691,13 +1733,6 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
                 break;
         }
 
-        return true;
-    }
-
-    // If this is a variable initialization node, defer any code generation to visitDeclaration.
-    if (node->getOp() == EOpInitialize)
-    {
-        ASSERT(getParentNode()->getAsDeclarationNode() != nullptr);
         return true;
     }
 
@@ -2256,6 +2291,19 @@ bool OutputSPIRVTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
 bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *node)
 {
+    const TIntermSequence &sequence = *node->getSequence();
+
+    // Enforced by ValidateASTOptions::validateMultiDeclarations.
+    ASSERT(sequence.size() == 1);
+
+    // Declare specialization constants especially; they don't require processing the left and right
+    // nodes, and they are like constant declarations with special instructions and decorations.
+    if (sequence.front()->getAsTyped()->getType().getQualifier() == EvqSpecConst)
+    {
+        declareSpecConst(node);
+        return false;
+    }
+
     if (!mInGlobalScope && visit == PreVisit)
     {
         mNodeData.emplace_back();
@@ -2267,11 +2315,6 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
     {
         return true;
     }
-
-    const TIntermSequence &sequence = *node->getSequence();
-
-    // Enforced by ValidateASTOptions::validateMultiDeclarations.
-    ASSERT(sequence.size() == 1);
 
     TIntermSymbol *symbol = sequence.front()->getAsSymbolNode();
     spirv::IdRef initializerId;

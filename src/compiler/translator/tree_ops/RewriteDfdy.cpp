@@ -148,7 +148,7 @@ bool Traverser::visitUnaryWithRotation(Visit visit, TIntermUnary *node)
 
         // Multiply halfRotationMat by ANGLEUniforms.flipXY and store in a temporary variable
         TIntermBinary *rotatedFlipXY = new TIntermBinary(EOpMul, flipXY, halfRotationMat);
-        const TType *vec2Type        = StaticType::GetBasic<EbtFloat, 2>();
+        const TType *vec2Type        = StaticType::GetTemporary<EbtFloat, 2>();
         TIntermSymbol *tmpRotFlipXY = new TIntermSymbol(CreateTempVariable(mSymbolTable, vec2Type));
         TIntermSequence tmpDecl;
         tmpDecl.push_back(CreateTempInitDeclarationNode(&tmpRotFlipXY->variable(), rotatedFlipXY));
