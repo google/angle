@@ -232,26 +232,21 @@ CLProgramImpl::Ptr CLContextCL::createProgramWithIL(const cl::Program &program,
 }
 
 CLProgramImpl::Ptr CLContextCL::createProgramWithBinary(const cl::Program &program,
-                                                        const cl::Binaries &binaries,
+                                                        const size_t *lengths,
+                                                        const unsigned char **binaries,
                                                         cl_int *binaryStatus,
                                                         cl_int &errorCode)
 {
-    ASSERT(program.getDevices().size() == binaries.size());
     std::vector<cl_device_id> nativeDevices;
     for (const cl::DevicePtr &device : program.getDevices())
     {
         nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
     }
-    std::vector<size_t> lengths;
-    std::vector<const unsigned char *> nativeBinaries;
-    for (const cl::Binary &binary : binaries)
-    {
-        lengths.emplace_back(binary.size());
-        nativeBinaries.emplace_back(binary.data());
-    }
-    const cl_program nativeProgram = mNative->getDispatch().clCreateProgramWithBinary(
-        mNative, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(), lengths.data(),
-        nativeBinaries.data(), binaryStatus, &errorCode);
+
+    cl_program nativeProgram = mNative->getDispatch().clCreateProgramWithBinary(
+        mNative, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(), lengths,
+        binaries, binaryStatus, &errorCode);
+
     return CLProgramImpl::Ptr(nativeProgram != nullptr ? new CLProgramCL(program, nativeProgram)
                                                        : nullptr);
 }
@@ -268,6 +263,37 @@ CLProgramImpl::Ptr CLContextCL::createProgramWithBuiltInKernels(const cl::Progra
     const cl_program nativeProgram = mNative->getDispatch().clCreateProgramWithBuiltInKernels(
         mNative, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(), kernel_names,
         &errorCode);
+    return CLProgramImpl::Ptr(nativeProgram != nullptr ? new CLProgramCL(program, nativeProgram)
+                                                       : nullptr);
+}
+
+CLProgramImpl::Ptr CLContextCL::linkProgram(const cl::Program &program,
+                                            const cl::DevicePtrs &devices,
+                                            const char *options,
+                                            const cl::ProgramPtrs &inputPrograms,
+                                            cl::Program *notify,
+                                            cl_int &errorCode)
+{
+    std::vector<cl_device_id> nativeDevices;
+    for (const cl::DevicePtr &device : devices)
+    {
+        nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
+    }
+    const cl_uint numDevices = static_cast<cl_uint>(nativeDevices.size());
+    const cl_device_id *const nativeDevicesPtr =
+        !nativeDevices.empty() ? nativeDevices.data() : nullptr;
+
+    std::vector<cl_program> nativePrograms;
+    for (const cl::ProgramPtr &program : inputPrograms)
+    {
+        nativePrograms.emplace_back(program->getImpl<CLProgramCL>().getNative());
+    }
+    const cl_uint numInputHeaders = static_cast<cl_uint>(nativePrograms.size());
+
+    const cl::ProgramCB callback   = notify != nullptr ? CLProgramCL::Callback : nullptr;
+    const cl_program nativeProgram = mNative->getDispatch().clLinkProgram(
+        mNative, numDevices, nativeDevicesPtr, options, numInputHeaders, nativePrograms.data(),
+        callback, notify, &errorCode);
     return CLProgramImpl::Ptr(nativeProgram != nullptr ? new CLProgramCL(program, nativeProgram)
                                                        : nullptr);
 }

@@ -18,7 +18,7 @@ class CLDeviceCL : public CLDeviceImpl
   public:
     ~CLDeviceCL() override;
 
-    cl_device_id getNative();
+    cl_device_id getNative() const;
 
     Info createInfo(cl::DeviceType type) const override;
 
@@ -41,7 +41,7 @@ class CLDeviceCL : public CLDeviceImpl
     friend class CLPlatformCL;
 };
 
-inline cl_device_id CLDeviceCL::getNative()
+inline cl_device_id CLDeviceCL::getNative() const
 {
     return mNative;
 }

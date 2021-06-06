@@ -18,7 +18,7 @@ class CLPlatformCL : public CLPlatformImpl
   public:
     ~CLPlatformCL() override;
 
-    cl_platform_id getNative();
+    cl_platform_id getNative() const;
 
     Info createInfo() const override;
     CLDeviceImpl::CreateDatas createDevices() const override;
@@ -33,6 +33,8 @@ class CLPlatformCL : public CLPlatformImpl
                                              bool userSync,
                                              cl_int &errorCode) override;
 
+    cl_int unloadCompiler() override;
+
     static void Initialize(CreateFuncs &createFuncs, bool isIcd);
 
   private:
@@ -43,7 +45,7 @@ class CLPlatformCL : public CLPlatformImpl
     friend class CLContextCL;
 };
 
-inline cl_platform_id CLPlatformCL::getNative()
+inline cl_platform_id CLPlatformCL::getNative() const
 {
     return mNative;
 }

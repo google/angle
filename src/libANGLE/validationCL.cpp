@@ -1155,6 +1155,49 @@ cl_int ValidateBuildProgram(cl_program program,
                             void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
                             const void *user_data)
 {
+    // CL_INVALID_PROGRAM if program is not a valid program object.
+    if (!Program::IsValid(program))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+    const Program &prog = program->cast<Program>();
+
+    // CL_INVALID_VALUE if device_list is NULL and num_devices is greater than zero,
+    // or if device_list is not NULL and num_devices is zero.
+    if ((device_list != nullptr) != (num_devices != 0u))
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_DEVICE if any device in device_list
+    // is not in the list of devices associated with program.
+    while (num_devices-- != 0u)
+    {
+        if (!prog.hasDevice(*device_list++))
+        {
+            return CL_INVALID_DEVICE;
+        }
+    }
+
+    // CL_INVALID_VALUE if pfn_notify is NULL but user_data is not NULL.
+    if (pfn_notify == nullptr && user_data != nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_OPERATION if the build of a program executable for any of the devices listed
+    // in device_list by a previous call to clBuildProgram for program has not completed.
+    if (prog.isBuilding())
+    {
+        return CL_INVALID_OPERATION;
+    }
+
+    // CL_INVALID_OPERATION if there are kernel objects attached to program.
+    if (prog.hasAttachedKernels())
+    {
+        return CL_INVALID_OPERATION;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1164,14 +1207,15 @@ cl_int ValidateGetProgramInfo(cl_program program,
                               const void *param_value,
                               const size_t *param_value_size_ret)
 {
-    // CL_INVALID_PROGRAM if program is a not a valid program object.
+    // CL_INVALID_PROGRAM if program is not a valid program object.
     if (!Program::IsValid(program))
     {
         return CL_INVALID_PROGRAM;
     }
+    const Program &prog = program->cast<Program>();
 
     // CL_INVALID_VALUE if param_name is not valid.
-    const cl_version version = program->cast<Program>().getContext().getPlatform().getVersion();
+    const cl_version version = prog.getContext().getPlatform().getVersion();
     switch (param_name)
     {
         case ProgramInfo::NumKernels:
@@ -1202,6 +1246,36 @@ cl_int ValidateGetProgramBuildInfo(cl_program program,
                                    const void *param_value,
                                    const size_t *param_value_size_ret)
 {
+    // CL_INVALID_PROGRAM if program is not a valid program object.
+    if (!Program::IsValid(program))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+    const Program &prog = program->cast<Program>();
+
+    // CL_INVALID_DEVICE if device is not in the list of devices associated with program.
+    if (!prog.hasDevice(device))
+    {
+        return CL_INVALID_DEVICE;
+    }
+
+    // CL_INVALID_VALUE if param_name is not valid.
+    const cl_version version = prog.getContext().getPlatform().getVersion();
+    switch (param_name)
+    {
+        case ProgramBuildInfo::BinaryType:
+            ANGLE_VALIDATE_VERSION(version, 1, 2);
+            break;
+        case ProgramBuildInfo::GlobalVariableTotalSize:
+            ANGLE_VALIDATE_VERSION(version, 2, 0);
+            break;
+        case ProgramBuildInfo::InvalidEnum:
+            return CL_INVALID_VALUE;
+        default:
+            // All remaining possible values for param_name are valid for all versions.
+            break;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -2534,6 +2608,62 @@ cl_int ValidateCompileProgram(cl_program program,
                               void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
                               const void *user_data)
 {
+    // CL_INVALID_PROGRAM if program is not a valid program object.
+    if (!Program::IsValid(program))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+    const Program &prog = program->cast<Program>();
+    if (!prog.getContext().getPlatform().isVersionOrNewer(1u, 2u))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+
+    // CL_INVALID_VALUE if device_list is NULL and num_devices is greater than zero,
+    // or if device_list is not NULL and num_devices is zero.
+    if ((device_list != nullptr) != (num_devices != 0u))
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_DEVICE if any device in device_list
+    // is not in the list of devices associated with program.
+    while (num_devices-- != 0u)
+    {
+        if (!prog.hasDevice(*device_list++))
+        {
+            return CL_INVALID_DEVICE;
+        }
+    }
+
+    // CL_INVALID_VALUE if num_input_headers is zero and header_include_names
+    // or input_headers are not NULL
+    // or if num_input_headers is not zero and header_include_names or input_headers are NULL.
+    if ((num_input_headers != 0u) != (header_include_names != nullptr) ||
+        (num_input_headers != 0u) != (input_headers != nullptr))
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if pfn_notify is NULL but user_data is not NULL.
+    if (pfn_notify == nullptr && user_data != nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_OPERATION if the build of a program executable for any of the devices listed
+    // in device_list by a previous call to clBuildProgram for program has not completed.
+    if (prog.isBuilding())
+    {
+        return CL_INVALID_OPERATION;
+    }
+
+    // CL_INVALID_OPERATION if there are kernel objects attached to program.
+    if (prog.hasAttachedKernels())
+    {
+        return CL_INVALID_OPERATION;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -2546,11 +2676,61 @@ cl_int ValidateLinkProgram(cl_context context,
                            void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
                            const void *user_data)
 {
+    // CL_INVALID_CONTEXT if context is not a valid context.
+    if (!Context::IsValidAndVersionOrNewer(context, 1u, 2u))
+    {
+        return CL_INVALID_CONTEXT;
+    }
+    const Context &ctx = context->cast<Context>();
+
+    // CL_INVALID_VALUE if device_list is NULL and num_devices is greater than zero,
+    // or if device_list is not NULL and num_devices is zero.
+    if ((device_list != nullptr) != (num_devices != 0u))
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_DEVICE if any device in device_list
+    // is not in the list of devices associated with context.
+    while (num_devices-- != 0u)
+    {
+        if (!ctx.hasDevice(*device_list++))
+        {
+            return CL_INVALID_DEVICE;
+        }
+    }
+
+    // CL_INVALID_VALUE if num_input_programs is zero or input_programs is NULL.
+    if (num_input_programs == 0u || input_programs == nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_PROGRAM if programs specified in input_programs are not valid program objects.
+    while (num_input_programs-- != 0u)
+    {
+        if (!Program::IsValid(*input_programs++))
+        {
+            return CL_INVALID_PROGRAM;
+        }
+    }
+
+    // CL_INVALID_VALUE if pfn_notify is NULL but user_data is not NULL.
+    if (pfn_notify == nullptr && user_data != nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 
 cl_int ValidateUnloadPlatformCompiler(cl_platform_id platform)
 {
+    // CL_INVALID_PLATFORM if platform is not a valid platform.
+    if (!Platform::IsValid(platform) || !platform->cast<Platform>().isVersionOrNewer(1u, 2u))
+    {
+        return CL_INVALID_PLATFORM;
+    }
     return CL_SUCCESS;
 }
 

@@ -47,13 +47,21 @@ class CLContextCL : public CLContextImpl
                                            cl_int &errorCode) override;
 
     CLProgramImpl::Ptr createProgramWithBinary(const cl::Program &program,
-                                               const cl::Binaries &binaries,
+                                               const size_t *lengths,
+                                               const unsigned char **binaries,
                                                cl_int *binaryStatus,
                                                cl_int &errorCode) override;
 
     CLProgramImpl::Ptr createProgramWithBuiltInKernels(const cl::Program &program,
                                                        const char *kernel_names,
                                                        cl_int &errorCode) override;
+
+    CLProgramImpl::Ptr linkProgram(const cl::Program &program,
+                                   const cl::DevicePtrs &devices,
+                                   const char *options,
+                                   const cl::ProgramPtrs &inputPrograms,
+                                   cl::Program *notify,
+                                   cl_int &errorCode) override;
 
     CLEventImpl::Ptr createUserEvent(const cl::Event &event, cl_int &errorCode) override;
 

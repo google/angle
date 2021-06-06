@@ -7,7 +7,11 @@
 
 #include "libANGLE/renderer/cl/CLProgramCL.h"
 
+#include "libANGLE/renderer/cl/CLDeviceCL.h"
 #include "libANGLE/renderer/cl/CLKernelCL.h"
+
+#include "libANGLE/CLDevice.h"
+#include "libANGLE/CLProgram.h"
 
 namespace rx
 {
@@ -45,6 +49,71 @@ std::string CLProgramCL::getSource(cl_int &errorCode) const
     return std::string{};
 }
 
+cl_int CLProgramCL::build(const cl::DevicePtrs &devices, const char *options, cl::Program *notify)
+{
+    std::vector<cl_device_id> nativeDevices;
+    for (const cl::DevicePtr &device : devices)
+    {
+        nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
+    }
+    const cl_uint numDevices = static_cast<cl_uint>(nativeDevices.size());
+    const cl_device_id *const nativeDevicesPtr =
+        !nativeDevices.empty() ? nativeDevices.data() : nullptr;
+    const cl::ProgramCB callback = notify != nullptr ? Callback : nullptr;
+    return mNative->getDispatch().clBuildProgram(mNative, numDevices, nativeDevicesPtr, options,
+                                                 callback, notify);
+}
+
+cl_int CLProgramCL::compile(const cl::DevicePtrs &devices,
+                            const char *options,
+                            const cl::ProgramPtrs &inputHeaders,
+                            const char **headerIncludeNames,
+                            cl::Program *notify)
+{
+    std::vector<cl_device_id> nativeDevices;
+    for (const cl::DevicePtr &device : devices)
+    {
+        nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
+    }
+    const cl_uint numDevices = static_cast<cl_uint>(nativeDevices.size());
+    const cl_device_id *const nativeDevicesPtr =
+        !nativeDevices.empty() ? nativeDevices.data() : nullptr;
+
+    std::vector<cl_program> nativePrograms;
+    for (const cl::ProgramPtr &program : inputHeaders)
+    {
+        nativePrograms.emplace_back(program->getImpl<CLProgramCL>().getNative());
+    }
+    const cl_uint numInputHeaders = static_cast<cl_uint>(nativePrograms.size());
+    const cl_program *const inputHeadersPtr =
+        !nativePrograms.empty() ? nativePrograms.data() : nullptr;
+
+    const cl::ProgramCB callback = notify != nullptr ? Callback : nullptr;
+    return mNative->getDispatch().clCompileProgram(mNative, numDevices, nativeDevicesPtr, options,
+                                                   numInputHeaders, inputHeadersPtr,
+                                                   headerIncludeNames, callback, notify);
+}
+
+cl_int CLProgramCL::getInfo(cl::ProgramInfo name,
+                            size_t valueSize,
+                            void *value,
+                            size_t *valueSizeRet) const
+{
+    return mNative->getDispatch().clGetProgramInfo(mNative, cl::ToCLenum(name), valueSize, value,
+                                                   valueSizeRet);
+}
+
+cl_int CLProgramCL::getBuildInfo(const cl::Device &device,
+                                 cl::ProgramBuildInfo name,
+                                 size_t valueSize,
+                                 void *value,
+                                 size_t *valueSizeRet) const
+{
+    return mNative->getDispatch().clGetProgramBuildInfo(
+        mNative, device.getImpl<CLDeviceCL>().getNative(), cl::ToCLenum(name), valueSize, value,
+        valueSizeRet);
+}
+
 CLKernelImpl::Ptr CLProgramCL::createKernel(const cl::Kernel &kernel,
                                             const char *name,
                                             cl_int &errorCode)
@@ -76,6 +145,11 @@ cl_int CLProgramCL::createKernels(cl_uint numKernels,
         }
     }
     return errorCode;
+}
+
+void CLProgramCL::Callback(cl_program program, void *userData)
+{
+    static_cast<cl::Program *>(userData)->callback();
 }
 
 }  // namespace rx

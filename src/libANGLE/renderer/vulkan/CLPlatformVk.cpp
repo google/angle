@@ -83,6 +83,11 @@ CLContextImpl::Ptr CLPlatformVk::createContextFromType(cl::Context &context,
     return contextImpl;
 }
 
+cl_int CLPlatformVk::unloadCompiler()
+{
+    return CL_SUCCESS;
+}
+
 void CLPlatformVk::Initialize(CreateFuncs &createFuncs)
 {
     createFuncs.emplace_back(

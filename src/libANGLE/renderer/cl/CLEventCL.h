@@ -21,7 +21,7 @@ class CLEventCL : public CLEventImpl
     CLEventCL(const cl::Event &event, cl_event native);
     ~CLEventCL() override;
 
-    cl_event getNative();
+    cl_event getNative() const;
 
     cl_int getCommandExecutionStatus(cl_int &executionStatus) override;
 
@@ -37,7 +37,7 @@ class CLEventCL : public CLEventImpl
     const cl_event mNative;
 };
 
-inline cl_event CLEventCL::getNative()
+inline cl_event CLEventCL::getNative() const
 {
     return mNative;
 }

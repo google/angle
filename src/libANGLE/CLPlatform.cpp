@@ -252,6 +252,11 @@ cl_context Platform::CreateContextFromType(const cl_context_properties *properti
                                    userData, userSync);
 }
 
+cl_int Platform::unloadCompiler()
+{
+    return mImpl->unloadCompiler();
+}
+
 Platform::~Platform() = default;
 
 Platform::Platform(const rx::CLPlatformImpl::CreateFunc &createFunc)

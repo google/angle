@@ -54,9 +54,7 @@ using DevicePtrs   = std::vector<DevicePtr>;
 using EventPtrs    = std::vector<EventPtr>;
 using KernelPtrs   = std::vector<KernelPtr>;
 using PlatformPtrs = std::vector<PlatformPtr>;
-
-using Binary   = std::vector<unsigned char>;
-using Binaries = std::vector<Binary>;
+using ProgramPtrs  = std::vector<ProgramPtr>;
 
 struct ImageDescriptor
 {

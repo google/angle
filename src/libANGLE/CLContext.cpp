@@ -258,16 +258,12 @@ cl_program Context::createProgramWithBinary(cl_uint numDevices,
                                             cl_int &errorCode)
 {
     DevicePtrs devs;
-    Binaries bins;
     devs.reserve(numDevices);
-    bins.reserve(numDevices);
     while (numDevices-- != 0u)
     {
         devs.emplace_back(&(*devices++)->cast<Device>());
-        bins.emplace_back(*lengths++);
-        std::memcpy(bins.back().data(), *binaries++, bins.back().size());
     }
-    return Object::Create<Program>(errorCode, *this, std::move(devs), std::move(bins),
+    return Object::Create<Program>(errorCode, *this, std::move(devs), lengths, binaries,
                                    binaryStatus);
 }
 
@@ -283,6 +279,31 @@ cl_program Context::createProgramWithBuiltInKernels(cl_uint numDevices,
         devs.emplace_back(&(*devices++)->cast<Device>());
     }
     return Object::Create<Program>(errorCode, *this, std::move(devs), kernelNames);
+}
+
+cl_program Context::linkProgram(cl_uint numDevices,
+                                const cl_device_id *deviceList,
+                                const char *options,
+                                cl_uint numInputPrograms,
+                                const cl_program *inputPrograms,
+                                ProgramCB pfnNotify,
+                                void *userData,
+                                cl_int &errorCode)
+{
+    DevicePtrs devices;
+    devices.reserve(numDevices);
+    while (numDevices-- != 0u)
+    {
+        devices.emplace_back(&(*deviceList++)->cast<Device>());
+    }
+    ProgramPtrs programs;
+    programs.reserve(numInputPrograms);
+    while (numInputPrograms-- != 0u)
+    {
+        programs.emplace_back(&(*inputPrograms++)->cast<Program>());
+    }
+    return Object::Create<Program>(errorCode, *this, devices, options, programs, pfnNotify,
+                                   userData);
 }
 
 cl_event Context::createUserEvent(cl_int &errorCode)

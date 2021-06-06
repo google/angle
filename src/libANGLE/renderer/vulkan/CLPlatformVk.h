@@ -31,6 +31,8 @@ class CLPlatformVk : public CLPlatformImpl
                                              bool userSync,
                                              cl_int &errorCode) override;
 
+    cl_int unloadCompiler() override;
+
     static void Initialize(CreateFuncs &createFuncs);
 
     static constexpr cl_version GetVersion();

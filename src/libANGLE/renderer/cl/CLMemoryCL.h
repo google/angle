@@ -19,7 +19,7 @@ class CLMemoryCL : public CLMemoryImpl
     CLMemoryCL(const cl::Memory &memory, cl_mem native);
     ~CLMemoryCL() override;
 
-    cl_mem getNative();
+    cl_mem getNative() const;
 
     size_t getSize(cl_int &errorCode) const override;
 
@@ -31,7 +31,7 @@ class CLMemoryCL : public CLMemoryImpl
     const cl_mem mNative;
 };
 
-inline cl_mem CLMemoryCL::getNative()
+inline cl_mem CLMemoryCL::getNative() const
 {
     return mNative;
 }

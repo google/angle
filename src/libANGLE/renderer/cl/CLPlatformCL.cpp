@@ -401,6 +401,11 @@ CLContextImpl::Ptr CLPlatformCL::createContextFromType(cl::Context &context,
                                                        : nullptr);
 }
 
+cl_int CLPlatformCL::unloadCompiler()
+{
+    return mNative->getDispatch().clUnloadPlatformCompiler(mNative);
+}
+
 void CLPlatformCL::Initialize(CreateFuncs &createFuncs, bool isIcd)
 {
     // Using khrIcdInitialize() of the third party Khronos OpenCL ICD Loader to

@@ -53,6 +53,8 @@ class Platform final : public _cl_platform_id, public Object
                                             void *userData,
                                             cl_int &errorCode);
 
+    cl_int unloadCompiler();
+
   public:
     ~Platform() override;
 
