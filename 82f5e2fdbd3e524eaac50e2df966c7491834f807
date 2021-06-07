@@ -33,6 +33,24 @@
       "message": "So this was changed to properly capture DXGI_ERROR_INVALID_CALL, right? Do we need to update d3d11::isDeviceLostError, which seems to be used elsewhere, as well?",
       "revId": "82f5e2fdbd3e524eaac50e2df966c7491834f807",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c72042e_29df5b3d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2137,
+      "author": {
+        "id": 1513287
+      },
+      "writtenOn": "2021-06-07T17:46:56Z",
+      "side": 1,
+      "message": "Nope, though it\u0027s confusing. isDeviceLost applies to arbitrary return codes (e.g. to allocate a swapchain, where DXGI_ERROR_INVALID_CALL doesn\u0027t mean device lost) and GetDeviceRemovedReason is a special case (where DXGI_ERROR_INVALID_CALL does mean device lost).\n\nExplained by each file we invoke isDeviceLost:\n\nContext11::handleResult - this gets invoked in a lot of places where the goal is to test for DXGI_ERROR_DEVICE_REMOVED or DXGI_ERROR_DEVICE_RESET. For example in response to `mDeviceContext-\u003eGetData(mSyncQuery.get(), nullptr, 0, flags);` we wouldn\u0027t want to assume DXGI_ERROR_INVALID_CALL means device removal.\n\nRenderer11::testDeviceLost - Here we\u0027re testing a `mDevice-\u003eGetDeviceRemovedReason();`, so we do want to detect device removal here if it returns DXGI_ERROR_INVALID_CALL.\n\nSwapChain1 - Like Context11, the goal is to test for DXGI_ERROR_DEVICE_REMOVED or DXGI_ERROR_DEVICE_RESET. DXGI_ERROR_INVALID_CALL is a valid return value for reasons other than device removal (e.g. bad swapchain description / invalid color format).\n\nSee also: https://docs.microsoft.com/en-us/windows/uwp/gaming/handling-device-lost-scenarios",
+      "parentUuid": "cea48c80_780ac841",
+      "revId": "82f5e2fdbd3e524eaac50e2df966c7491834f807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
