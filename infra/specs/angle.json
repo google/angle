@@ -610,7 +610,8 @@
         "args": [
           "--test-machine-name",
           "${buildername}",
-          "--git-revision=${got_angle_revision}"
+          "--git-revision=${got_angle_revision}",
+          "--flaky-retries=1"
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {
@@ -1966,7 +1967,8 @@
         "args": [
           "--test-machine-name",
           "${buildername}",
-          "--git-revision=${got_angle_revision}"
+          "--git-revision=${got_angle_revision}",
+          "--flaky-retries=1"
         ],
         "isolate_name": "angle_restricted_trace_gold_tests",
         "merge": {

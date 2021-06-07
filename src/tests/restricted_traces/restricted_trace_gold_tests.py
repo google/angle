@@ -358,42 +358,53 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
         batches = _get_batches(traces, args.batch_size)
 
         for batch in batches:
-            with common.temporary_file() as tempfile_path:
-                gtest_filter = _get_gtest_filter_for_batch(batch)
-                cmd = [
-                    args.test_suite,
-                    gtest_filter,
-                    '--render-test-output-dir=%s' % screenshot_dir,
-                    '--one-frame-only',
-                    '--verbose-logging',
-                ] + extra_flags
+            for iteration in range(0, args.flaky_retries + 1):
+                with common.temporary_file() as tempfile_path:
+                    # This is how we signal early exit
+                    if not batch:
+                        logging.debug('All tests in batch completed.')
+                        break
+                    if iteration > 0:
+                        logging.info('Test run failed, running retry #%d...' % iteration)
 
-                batch_result = None
-                for iteration in range(0, args.flaky_retries + 1):
-                    if batch_result != PASS:
-                        if iteration > 0:
-                            logging.info('Test run failed, running retry #%d...' % (iteration + 1))
-                        batch_result = PASS if run_wrapper(args, cmd, env,
-                                                           tempfile_path) == 0 else FAIL
+                    gtest_filter = _get_gtest_filter_for_batch(batch)
+                    cmd = [
+                        args.test_suite,
+                        gtest_filter,
+                        '--render-test-output-dir=%s' % screenshot_dir,
+                        '--one-frame-only',
+                        '--verbose-logging',
+                    ] + extra_flags
+                    batch_result = PASS if run_wrapper(args, cmd, env,
+                                                       tempfile_path) == 0 else FAIL
 
-                for trace in batch:
-                    artifacts = {}
+                    next_batch = []
+                    for trace in batch:
+                        artifacts = {}
 
-                    if batch_result == PASS:
-                        logging.debug('upload test result: %s' % trace)
-                        result = upload_test_result_to_skia_gold(args, gold_session_manager,
-                                                                 gold_session, gold_properties,
-                                                                 screenshot_dir, trace, artifacts)
-                    else:
-                        result = batch_result
+                        if batch_result == PASS:
+                            logging.debug('upload test result: %s' % trace)
+                            result = upload_test_result_to_skia_gold(args, gold_session_manager,
+                                                                     gold_session, gold_properties,
+                                                                     screenshot_dir, trace,
+                                                                     artifacts)
+                        else:
+                            result = batch_result
 
-                    expected_result = SKIP if result == SKIP else PASS
-                    test_results[trace] = {'expected': expected_result, 'actual': result}
-                    if result == FAIL:
-                        test_results[trace]['is_unexpected'] = True
-                    if len(artifacts) > 0:
-                        test_results[trace]['artifacts'] = artifacts
-                    results['num_failures_by_type'][result] += 1
+                        expected_result = SKIP if result == SKIP else PASS
+                        test_results[trace] = {'expected': expected_result, 'actual': result}
+                        if len(artifacts) > 0:
+                            test_results[trace]['artifacts'] = artifacts
+                        if result == FAIL:
+                            next_batch.append(trace)
+                    batch = next_batch
+
+        # These properties are recorded after iteration to ensure they only happen once.
+        for _, trace_results in test_results.items():
+            result = trace_results['actual']
+            results['num_failures_by_type'][result] += 1
+            if result == FAIL:
+                trace_results['is_unexpected'] = True
 
         return results['num_failures_by_type'][FAIL] == 0
 
