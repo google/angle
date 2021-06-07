@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd215710_547826ae",
+        "filename": "src/libANGLE/CLDevice.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-07T15:50:50Z",
+      "side": 1,
+      "message": "nit: avoid overloading in ANGLE code.\n\nfeel free to file a bug on me to update the style guide with additional wording from the Google guide. The Google guide is somewhat cautious, whereas in ANGLE\u0027s we\u0027ve more firmly against it (with some excpetions)\n\nhttps://google.github.io/styleguide/cppguide.html#Function_Overloading",
+      "range": {
+        "startLine": 46,
+        "startChar": 9,
+        "endLine": 46,
+        "endChar": 32
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56cdcc58_b39d90d6",
+        "filename": "src/libANGLE/cl_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-07T15:50:50Z",
+      "side": 1,
+      "message": "nit: can you refactor the calling code to use the Range class in mathutil.h ? Feel free to update the class there as necessary.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2918d4db_d0c27cd7",
+        "filename": "src/libANGLE/renderer/cl/CLCommandQueueCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-07T15:50:50Z",
+      "side": 1,
+      "message": "here and for the other lambdas in this file, prefer explicit captures as these escape the scope.\n\nhttps://google.github.io/styleguide/cppguide.html#Lambda_expressions",
+      "range": {
+        "startLine": 454,
+        "startChar": 0,
+        "endLine": 456,
+        "endChar": 10
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67aad9c5_aef04703",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2868,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-07T15:50:50Z",
+      "side": 1,
+      "message": "nit: suggest you make a try macro for this pattern.",
+      "range": {
+        "startLine": 2864,
+        "startChar": 0,
+        "endLine": 2868,
+        "endChar": 5
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
