@@ -45,11 +45,16 @@ class ClampIndirectIndicesTraverser : public TIntermTraverser
 
         // Generate clamp(right, 0, N), where N is the size of the array being indexed minus 1.  If
         // the array is runtime-sized, the length() method is called on it.
+        const TType &leftType  = node->getLeft()->getType();
+        const TType &rightType = node->getRight()->getType();
+
+        // On GLSL es 100, clamp is only defined for float, so float arguments are used.
         //
-        // Note that on GLSL es 100, clamp is only defined for float, so float arguments are used.
-        const TType &leftType    = node->getLeft()->getType();
-        const TType &rightType   = node->getRight()->getType();
-        const bool useFloatClamp = mCompiler->getShaderVersion() == 100;
+        // However, float clamp is unconditionally emitted to workaround driver bugs with integer
+        // clamp on Qualcomm.  http://crbug.com/1217167
+        //
+        // const bool useFloatClamp = mCompiler->getShaderVersion() == 100;
+        const bool useFloatClamp = true;
 
         TIntermConstantUnion *zero = createClampValue(0, useFloatClamp);
         TIntermTyped *max;
@@ -59,6 +64,12 @@ class ClampIndirectIndicesTraverser : public TIntermTraverser
             // Unsized arrays are an ES3.1 feature, so integer clamp should be available already.
             max = new TIntermUnary(EOpArrayLength, node->getLeft(), nullptr);
             max = new TIntermBinary(EOpSub, max, CreateIndexNode(1));
+            if (useFloatClamp)
+            {
+                TIntermSequence constructorArgs = {max};
+                max = TIntermAggregate::CreateConstructor(*StaticType::GetBasic<EbtFloat>(),
+                                                          &constructorArgs);
+            }
         }
         else if (leftType.isArray())
         {
