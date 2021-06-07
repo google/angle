@@ -1,6 +1,52 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "498d1c13_562004ef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-07T19:18:51Z",
+      "side": 1,
+      "message": "nit: by",
+      "range": {
+        "startLine": 10,
+        "startChar": 50,
+        "endLine": 10,
+        "endChar": 51
+      },
+      "revId": "b0c6474ae2397e393e9f1ae28066f08836672740",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c47cc1d_6dfb205d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-07T19:18:51Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 11,
+        "startChar": 4,
+        "endLine": 11,
+        "endChar": 9
+      },
+      "revId": "b0c6474ae2397e393e9f1ae28066f08836672740",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bb2a280c_5aad8be5",
@@ -14,6 +60,46 @@
       "writtenOn": "2021-06-07T17:38:34Z",
       "side": 1,
       "message": "PTAL",
+      "revId": "b0c6474ae2397e393e9f1ae28066f08836672740",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f499594a_31e1b9b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-07T19:18:51Z",
+      "side": 1,
+      "message": "Thank you, LGTM! Just a few minor typos.",
+      "revId": "b0c6474ae2397e393e9f1ae28066f08836672740",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8a98cc6_38a2098c",
+        "filename": "include/vulkan/vulkan_fuchsia_ext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-07T19:18:51Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 20,
+        "startChar": 14,
+        "endLine": 20,
+        "endChar": 27
+      },
       "revId": "b0c6474ae2397e393e9f1ae28066f08836672740",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
