@@ -22,7 +22,25 @@ sys.path.insert(0, TESTING_BBOT_DIR)
 import generate_buildbot_json
 
 # Add custom mixins here.
-ADDITIONAL_MIXINS = {}
+ADDITIONAL_MIXINS = {
+    'angle_skia_gold_test': {
+        '$mixin_append': {
+            'args': [
+                '--git-revision=${got_angle_revision}',
+                # BREAK GLASS IN CASE OF EMERGENCY
+                # Uncommenting this argument will bypass all interactions with Skia
+                # Gold in any tests that use it. This is meant as a temporary
+                # emergency stop in case of a Gold outage that's affecting the bots.
+                # '--bypass-skia-gold-functionality',
+            ],
+            'precommit_args': [
+                '--gerrit-issue=${patch_issue}',
+                '--gerrit-patchset=${patch_set}',
+                '--buildbucket-id=${buildbucket_build_id}',
+            ],
+        }
+    },
+}
 MIXIN_FILE_NAME = os.path.join(THIS_DIR, 'mixins.pyl')
 MIXINS_PYL_TEMPLATE = """\
 # GENERATED FILE - DO NOT EDIT.
