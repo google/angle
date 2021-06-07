@@ -16,6 +16,23 @@
       "message": "LGTM! Think Geoff took some time off, Doug can you do second review? Also cc\u0027ed Jonah.",
       "revId": "82f5e2fdbd3e524eaac50e2df966c7491834f807",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cea48c80_780ac841",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2137,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-06-07T14:49:52Z",
+      "side": 1,
+      "message": "So this was changed to properly capture DXGI_ERROR_INVALID_CALL, right? Do we need to update d3d11::isDeviceLostError, which seems to be used elsewhere, as well?",
+      "revId": "82f5e2fdbd3e524eaac50e2df966c7491834f807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
