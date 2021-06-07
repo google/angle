@@ -356,7 +356,7 @@
           'script': '//scripts/angle_deqp_test_merge.py',
         },
         'swarming': {
-          'shards': 4,
+          'shards': 2,
         },
         'test': 'angle_deqp_gles3_tests',
         'use_isolated_scripts_api': True,
@@ -400,7 +400,7 @@
           'script': '//scripts/angle_deqp_test_merge.py',
         },
         'swarming': {
-          'shards': 4,
+          'shards': 2,
         },
         'test': 'angle_deqp_gles3_tests',
         'use_isolated_scripts_api': True,
