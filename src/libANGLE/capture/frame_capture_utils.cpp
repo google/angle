@@ -238,7 +238,7 @@ static const char *CompileStatusToString(gl::CompileStatus status)
 
 #undef ENUM_TO_STRING
 
-class GroupScope
+class ANGLE_NO_DISCARD GroupScope
 {
   public:
     GroupScope(JsonSerializer *json_, const std::string &name) : json(json_)
@@ -994,7 +994,7 @@ void SerializeVariableLocationsVector(JsonSerializer *json,
 
 void SerializeBlockMemberInfo(JsonSerializer *json, const sh::BlockMemberInfo &blockMemberInfo)
 {
-    GroupScope(json, "BlockMemberInfo");
+    GroupScope group(json, "BlockMemberInfo");
     json->addScalar("Offset", blockMemberInfo.offset);
     json->addScalar("Stride", blockMemberInfo.arrayStride);
     json->addScalar("MatrixStride", blockMemberInfo.matrixStride);
