@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ada8cabb_f74401c8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-07T15:41:28Z",
+      "side": 1,
+      "message": "The failing tests are due to a bug in glslang that I\u0027ve fixed, but glslang hasn\u0027t rolled yet.",
+      "revId": "b0277627e3c4c90e7ea733675fded21c62026a67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
