@@ -16,6 +16,52 @@
       "message": "Added retries to the Intel tests in this CL.",
       "revId": "9dc869cfc5959165c7fd3c94abf3c9aaf758d71d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c116ea8_78b8996e",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-07T18:56:14Z",
+      "side": 1,
+      "message": "It would be retry #(iteration)",
+      "range": {
+        "startLine": 368,
+        "startChar": 80,
+        "endLine": 368,
+        "endChar": 93
+      },
+      "revId": "9dc869cfc5959165c7fd3c94abf3c9aaf758d71d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e63b4fb0_39a7d891",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-07T18:56:14Z",
+      "side": 1,
+      "message": "Maybe I\u0027m mixing things up with how python works but doesn\u0027t this overwrite any traces appended by the previous line?",
+      "range": {
+        "startLine": 400,
+        "startChar": 20,
+        "endLine": 400,
+        "endChar": 38
+      },
+      "revId": "9dc869cfc5959165c7fd3c94abf3c9aaf758d71d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
