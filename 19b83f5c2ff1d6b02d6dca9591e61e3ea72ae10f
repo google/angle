@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7850fd92_d401bf36",
+        "filename": "src/libANGLE/CLDevice.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-07T17:40:41Z",
+      "side": 1,
+      "message": "I changed it, didn\u0027t mind. Though I was explicitely following your link, where it says: \u0027You may overload a function when there are no semantic differences between variants.\u0027 I am curious to see the reason to be more firm once it is documented in the ANGLE style guide.",
+      "parentUuid": "dd215710_547826ae",
+      "range": {
+        "startLine": 46,
+        "startChar": 9,
+        "endLine": 46,
+        "endChar": 32
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56cdcc58_b39d90d6",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-06-07T15:50:50Z",
       "side": 1,
       "message": "nit: can you refactor the calling code to use the Range class in mathutil.h ? Feel free to update the class there as necessary.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "501a0662_9271b95b",
+        "filename": "src/libANGLE/cl_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-07T17:40:41Z",
+      "side": 1,
+      "message": "I prefer to keep it because it explicitely implements a condition from the OpenCL specs, which I added in a comment.\n\nIn addition I don\u0027t see any benefit in using the Range class in this case, but there are several cons: Using the Range class would add code complexity and susceptibility to errors, because the OpenCL region (offset, size) would have to be converted to a Range (start, end), and it would add an unnecessary dependency to the Range class, just to refactor a single line of code.",
+      "parentUuid": "56cdcc58_b39d90d6",
       "range": {
         "startLine": 20,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4a10186_b4f60b24",
+        "filename": "src/libANGLE/renderer/cl/CLCommandQueueCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-07T17:40:41Z",
+      "side": 1,
+      "message": "Thanks, changed it in all of my code in ANGLE.",
+      "parentUuid": "2918d4db_d0c27cd7",
+      "range": {
+        "startLine": 454,
+        "startChar": 0,
+        "endLine": 456,
+        "endChar": 10
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "67aad9c5_aef04703",
@@ -83,6 +155,30 @@
       "writtenOn": "2021-06-07T15:50:50Z",
       "side": 1,
       "message": "nit: suggest you make a try macro for this pattern.",
+      "range": {
+        "startLine": 2864,
+        "startChar": 0,
+        "endLine": 2868,
+        "endChar": 5
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3fd363a_17f868cc",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2868,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-07T17:40:41Z",
+      "side": 1,
+      "message": "Sure, I also prefer to use macros where it improves readablity, but so far I was mainly avoiding them, following the Google C++ style guide: \"Avoid defining macros\".",
+      "parentUuid": "67aad9c5_aef04703",
       "range": {
         "startLine": 2864,
         "startChar": 0,
