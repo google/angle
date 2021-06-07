@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b71c9387_87747ec0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-07T21:31:57Z",
+      "side": 1,
+      "message": "Yuly, do you know if https://ci.chromium.org/p/chromium/builders/ci/Android%20FYI%20Release%20%28Pixel%202%29 has a trybot? I made a guess, though I\u0027m not sure.",
+      "revId": "fd6f883d60fe27567e3ad23eb2a2950289456095",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
