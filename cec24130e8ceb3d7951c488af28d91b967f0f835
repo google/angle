@@ -16,6 +16,23 @@
       "message": "LGTM, thanks (I don\u0027t have CR+1 permissions here)",
       "revId": "cec24130e8ceb3d7951c488af28d91b967f0f835",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "475a42ae_f1dbc987",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-07T13:46:15Z",
+      "side": 1,
+      "message": "Can you also make this class no-discard if that catches the error?",
+      "revId": "cec24130e8ceb3d7951c488af28d91b967f0f835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
