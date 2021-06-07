@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "991e1e43_528b92fc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-07T06:33:21Z",
+      "side": 1,
+      "message": "Since emitting SetupReplay late broke things, I\u0027ll resubmit the old version that would only submit InitializeReplay() late, which seems only to set the values of readBufferSize and maxClientArraySize. \n\nI\u0027m wondering what kind of test we could add to make sure the CI catches problems like with angleproject:5999. ",
+      "revId": "bd76a0b5c163e30ad5c27c92ba0a56f6b089ba48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
