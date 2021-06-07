@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e94987f_0f2a09bf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1116023
+      },
+      "writtenOn": "2021-06-07T20:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "498d1c13_562004ef",
+      "range": {
+        "startLine": 10,
+        "startChar": 50,
+        "endLine": 10,
+        "endChar": 51
+      },
+      "revId": "b0c6474ae2397e393e9f1ae28066f08836672740",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c47cc1d_6dfb205d",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-06-07T19:18:51Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 11,
+        "startChar": 4,
+        "endLine": 11,
+        "endChar": 9
+      },
+      "revId": "b0c6474ae2397e393e9f1ae28066f08836672740",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d344bc60_7fad9ae6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1116023
+      },
+      "writtenOn": "2021-06-07T20:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c47cc1d_6dfb205d",
       "range": {
         "startLine": 11,
         "startChar": 4,
@@ -94,6 +142,30 @@
       "writtenOn": "2021-06-07T19:18:51Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 20,
+        "startChar": 14,
+        "endLine": 20,
+        "endChar": 27
+      },
+      "revId": "b0c6474ae2397e393e9f1ae28066f08836672740",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdd4a510_d9346f2c",
+        "filename": "include/vulkan/vulkan_fuchsia_ext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1116023
+      },
+      "writtenOn": "2021-06-07T20:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8a98cc6_38a2098c",
       "range": {
         "startLine": 20,
         "startChar": 14,
