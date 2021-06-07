@@ -257,6 +257,30 @@
       },
       "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5a160c6_7f761835",
+        "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-07T19:29:24Z",
+      "side": 1,
+      "message": "Okay, the following would future proof the code and bake in the assumptions:\n\n ASSERT(isDrawEntryPoint(entryPoint) || isDispatchEntryPoint(entryPoint));",
+      "parentUuid": "0ed0b246_739b4d7e",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 50
+      },
+      "revId": "762231c04d2b07b34bedf0388bb464a9bed76503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
