@@ -9,6 +9,7 @@
 #ifndef COMPILER_TRANSLATOR_BUILDSPIRV_H_
 #define COMPILER_TRANSLATOR_BUILDSPIRV_H_
 
+#include "common/FixedVector.h"
 #include "common/hash_utils.h"
 #include "common/spirv/spirv_instruction_builder_autogen.h"
 #include "compiler/translator/Compiler.h"
@@ -156,6 +157,16 @@ struct SpirvTypeData
     uint32_t matrixStride;
 };
 
+// Decorations to be applied to variable or intermediate ids which are not part of the SPIR-V type
+// and are not specific enough (like DescriptorSet) to be handled automatically.  Currently, these
+// are:
+//
+//     RelaxedPrecision: used to implement |lowp| and |mediump|
+//     NoContraction: used to implement |precise|.  TODO: support this.  It requires the precise
+//                    property to be promoted through the nodes in the AST, which currently isn't.
+//                    http://anglebug.com/4889
+using SpirvDecorations = angle::FixedVector<spv::Decoration, 2>;
+
 // A block of code.  SPIR-V produces forward references to blocks, such as OpBranchConditional
 // specifying the id of the if and else blocks, each of those referencing the id of the block after
 // the else.  Additionally, local variable declarations are accumulated at the top of the first
@@ -213,11 +224,13 @@ class SPIRVBuilder : angle::NonCopyable
   public:
     SPIRVBuilder(TCompiler *compiler,
                  ShCompileOptions compileOptions,
+                 bool forceHighp,
                  ShHashFunction64 hashFunction,
                  NameMap &nameMap)
         : mCompiler(compiler),
           mCompileOptions(compileOptions),
           mShaderType(gl::FromGLenum<gl::ShaderType>(compiler->getShaderType())),
+          mDisableRelaxedPrecision(forceHighp),
           mNextAvailableId(1),
           mHashFunction(hashFunction),
           mNameMap(nameMap),
@@ -226,12 +239,15 @@ class SPIRVBuilder : angle::NonCopyable
           mNextUnusedOutputLocation(0)
     {}
 
-    spirv::IdRef getNewId();
+    spirv::IdRef getNewId(const SpirvDecorations &decorations);
     SpirvType getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const;
     const SpirvTypeData &getTypeData(const TType &type, TLayoutBlockStorage blockStorage);
     const SpirvTypeData &getSpirvTypeData(const SpirvType &type, const char *blockName);
     spirv::IdRef getTypePointerId(spirv::IdRef typeId, spv::StorageClass storageClass);
     spirv::IdRef getFunctionTypeId(spirv::IdRef returnTypeId, const spirv::IdRefList &paramTypeIds);
+
+    // Decorations that may apply to intermediate instructions (in addition to variables).
+    SpirvDecorations getDecorations(const TType &type);
 
     spirv::Blob *getSpirvDebug() { return &mSpirvDebug; }
     spirv::Blob *getSpirvDecorations() { return &mSpirvDecorations; }
@@ -264,11 +280,6 @@ class SPIRVBuilder : angle::NonCopyable
     void writePerVertexBuiltIns(const TType &type, spirv::IdRef typeId);
     void writeInterfaceVariableDecorations(const TType &type, spirv::IdRef variableId);
 
-    uint32_t calculateBaseAlignmentAndSize(const SpirvType &type,
-                                           uint32_t *sizeInStorageBlockOut,
-                                           uint32_t *matrixStrideOut);
-    uint32_t calculateSizeAndWriteOffsetDecorations(const SpirvType &type, spirv::IdRef typeId);
-
     spirv::IdRef getBoolConstant(bool value);
     spirv::IdRef getUintConstant(uint32_t value);
     spirv::IdRef getIntConstant(int32_t value);
@@ -283,6 +294,7 @@ class SPIRVBuilder : angle::NonCopyable
     // the current function.
     spirv::IdRef declareVariable(spirv::IdRef typeId,
                                  spv::StorageClass storageClass,
+                                 const SpirvDecorations &decorations,
                                  spirv::IdRef *initializerId,
                                  const char *name);
     // Helper to declare specialization constants.
@@ -308,6 +320,12 @@ class SPIRVBuilder : angle::NonCopyable
   private:
     SpirvTypeData declareType(const SpirvType &type, const char *blockName);
 
+    uint32_t calculateBaseAlignmentAndSize(const SpirvType &type,
+                                           uint32_t *sizeInStorageBlockOut,
+                                           uint32_t *matrixStrideOut);
+    uint32_t calculateSizeAndWriteOffsetDecorations(const SpirvType &type, spirv::IdRef typeId);
+    void writeMemberDecorations(const SpirvType &type, spirv::IdRef typeId);
+
     // Helpers for type declaration.
     void getImageTypeParameters(TBasicType type,
                                 spirv::IdRef *sampledTypeOut,
@@ -329,8 +347,9 @@ class SPIRVBuilder : angle::NonCopyable
     void generateExecutionModes(spirv::Blob *blob);
 
     ANGLE_MAYBE_UNUSED TCompiler *mCompiler;
-    ANGLE_MAYBE_UNUSED ShCompileOptions mCompileOptions;
+    ShCompileOptions mCompileOptions;
     gl::ShaderType mShaderType;
+    const bool mDisableRelaxedPrecision;
 
     // Capabilities the shader is using.  Accumulated as the instructions are generated.  The Shader
     // capability is unconditionally generated, so it's not tracked.

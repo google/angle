@@ -44,10 +44,16 @@ bool operator==(const SpirvType &a, const SpirvType &b)
            (a.arraySizes.empty() || a.blockStorage == b.blockStorage);
 }
 
-spirv::IdRef SPIRVBuilder::getNewId()
+spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
 {
     spirv::IdRef newId = mNextAvailableId;
     mNextAvailableId   = spirv::IdRef(mNextAvailableId + 1);
+
+    for (const spv::Decoration decoration : decorations)
+    {
+        spirv::WriteDecorate(&mSpirvDecorations, newId, decoration, {});
+    }
+
     return newId;
 }
 
@@ -133,7 +139,7 @@ spirv::IdRef SPIRVBuilder::getTypePointerId(spirv::IdRef typeId, spv::StorageCla
     auto iter = mTypePointerIdMap.find(key);
     if (iter == mTypePointerIdMap.end())
     {
-        const spirv::IdRef typePointerId = getNewId();
+        const spirv::IdRef typePointerId = getNewId({});
 
         spirv::WriteTypePointer(&mSpirvTypePointerDecls, typePointerId, storageClass, typeId);
 
@@ -151,7 +157,7 @@ spirv::IdRef SPIRVBuilder::getFunctionTypeId(spirv::IdRef returnTypeId,
     auto iter = mFunctionTypeIdMap.find(key);
     if (iter == mFunctionTypeIdMap.end())
     {
-        const spirv::IdRef functionTypeId = getNewId();
+        const spirv::IdRef functionTypeId = getNewId({});
 
         spirv::WriteTypeFunction(&mSpirvFunctionTypeDecls, functionTypeId, returnTypeId,
                                  paramTypeIds);
@@ -160,6 +166,25 @@ spirv::IdRef SPIRVBuilder::getFunctionTypeId(spirv::IdRef returnTypeId,
     }
 
     return iter->second;
+}
+
+SpirvDecorations SPIRVBuilder::getDecorations(const TType &type)
+{
+    const bool enablePrecision = (mCompileOptions & SH_IGNORE_PRECISION_QUALIFIERS) == 0;
+    const TPrecision precision = type.getPrecision();
+
+    SpirvDecorations decorations;
+
+    // Handle precision.
+    if (enablePrecision && !mDisableRelaxedPrecision &&
+        (precision == EbpMedium || precision == EbpLow))
+    {
+        decorations.push_back(spv::DecorationRelaxedPrecision);
+    }
+
+    // TODO: Handle |precise|.  http://anglebug.com/4889.
+
+    return decorations;
 }
 
 SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *blockName)
@@ -183,7 +208,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
         const spirv::IdRef subTypeId = getSpirvTypeData(subType, blockName).id;
 
         const unsigned int length = type.arraySizes.back();
-        typeId                    = getNewId();
+        typeId                    = getNewId({});
 
         if (length == 0)
         {
@@ -209,7 +234,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
             fieldTypeIds.push_back(fieldTypeId);
         }
 
-        typeId = getNewId();
+        typeId = getNewId({});
         spirv::WriteTypeStruct(&mSpirvTypeAndConstantDecls, typeId, fieldTypeIds);
     }
     else if (IsSampler(type.type) && !type.isSamplerBaseImage)
@@ -223,7 +248,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
 
         const spirv::IdRef nonSampledId = getSpirvTypeData(imageType, "").id;
 
-        typeId = getNewId();
+        typeId = getNewId({});
         spirv::WriteTypeSampledImage(&mSpirvTypeAndConstantDecls, typeId, nonSampledId);
     }
     else if (IsImage(type.type) || type.isSamplerBaseImage)
@@ -241,7 +266,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
                                &sampled);
         spv::ImageFormat imageFormat = getImageFormat(type.imageInternalFormat);
 
-        typeId = getNewId();
+        typeId = getNewId({});
         spirv::WriteTypeImage(&mSpirvTypeAndConstantDecls, typeId, sampledType, dim, depth, arrayed,
                               multisampled, sampled, imageFormat, nullptr);
     }
@@ -260,7 +285,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
 
         const spirv::IdRef columnTypeId = getSpirvTypeData(columnType, "").id;
 
-        typeId = getNewId();
+        typeId = getNewId({});
         spirv::WriteTypeMatrix(&mSpirvTypeAndConstantDecls, typeId, columnTypeId,
                                spirv::LiteralInteger(type.secondarySize));
     }
@@ -274,13 +299,13 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
 
         const spirv::IdRef componentTypeId = getSpirvTypeData(componentType, "").id;
 
-        typeId = getNewId();
+        typeId = getNewId({});
         spirv::WriteTypeVector(&mSpirvTypeAndConstantDecls, typeId, componentTypeId,
                                spirv::LiteralInteger(type.primarySize));
     }
     else
     {
-        typeId = getNewId();
+        typeId = getNewId({});
 
         // Declaring a basic type.  There's a different instruction for each.
         switch (type.type)
@@ -358,7 +383,11 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
         }
     }
 
-    // TODO: handle RelaxedPrecision types.  http://anglebug.com/4889.
+    // Write other member decorations.
+    if (type.block != nullptr && type.arraySizes.empty())
+    {
+        writeMemberDecorations(type, typeId);
+    }
 
     return {typeId, baseAlignment, sizeInStorageBlock, matrixStride};
 }
@@ -717,7 +746,7 @@ spirv::IdRef SPIRVBuilder::getBoolConstant(bool value)
 
         const spirv::IdRef boolTypeId = getSpirvTypeData(boolType, "").id;
 
-        mBoolConstants[asInt] = constantId = getNewId();
+        mBoolConstants[asInt] = constantId = getNewId({});
         if (value)
         {
             spirv::WriteConstantTrue(&mSpirvTypeAndConstantDecls, boolTypeId, constantId);
@@ -742,7 +771,7 @@ spirv::IdRef SPIRVBuilder::getBasicConstantHelper(uint32_t value,
         spirvType.type = type;
 
         const spirv::IdRef typeId     = getSpirvTypeData(spirvType, "").id;
-        const spirv::IdRef constantId = getNewId();
+        const spirv::IdRef constantId = getNewId({});
 
         spirv::WriteConstant(&mSpirvTypeAndConstantDecls, typeId, constantId,
                              spirv::LiteralContextDependentNumber(value));
@@ -782,7 +811,7 @@ spirv::IdRef SPIRVBuilder::getCompositeConstant(spirv::IdRef typeId, const spirv
     auto iter = mCompositeConstants.find(key);
     if (iter == mCompositeConstants.end())
     {
-        const spirv::IdRef constantId = getNewId();
+        const spirv::IdRef constantId = getNewId({});
 
         spirv::WriteConstantComposite(&mSpirvTypeAndConstantDecls, typeId, constantId, values);
 
@@ -798,7 +827,7 @@ void SPIRVBuilder::startNewFunction(spirv::IdRef functionId, const char *name)
 
     // Add the first block of the function.
     mSpirvCurrentFunctionBlocks.emplace_back();
-    mSpirvCurrentFunctionBlocks.back().labelId = getNewId();
+    mSpirvCurrentFunctionBlocks.back().labelId = getNewId({});
 
     // Output debug information.
     if (name)
@@ -832,6 +861,7 @@ void SPIRVBuilder::assembleSpirvFunctionBlocks()
 
 spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
                                            spv::StorageClass storageClass,
+                                           const SpirvDecorations &decorations,
                                            spirv::IdRef *initializerId,
                                            const char *name)
 {
@@ -846,7 +876,7 @@ spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
                                     ? &mSpirvCurrentFunctionBlocks.front().localVariables
                                     : &mSpirvVariableDecls;
 
-    const spirv::IdRef variableId    = getNewId();
+    const spirv::IdRef variableId    = getNewId(decorations);
     const spirv::IdRef typePointerId = getTypePointerId(typeId, storageClass);
 
     spirv::WriteVariable(spirvSection, typePointerId, variableId, storageClass, initializerId);
@@ -862,7 +892,7 @@ spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
 
 spirv::IdRef SPIRVBuilder::declareSpecConst(TBasicType type, int id, const char *name)
 {
-    const spirv::IdRef specConstId = getNewId();
+    const spirv::IdRef specConstId = getNewId({});
 
     SpirvType spirvType;
     spirvType.type = type;
@@ -902,7 +932,7 @@ void SPIRVBuilder::startConditional(size_t blockCount, bool isContinuable, bool 
     conditional.blockIds.resize(blockCount);
     for (spirv::IdRef &blockId : conditional.blockIds)
     {
-        blockId = getNewId();
+        blockId = getNewId({});
     }
 
     conditional.isContinuable = isContinuable;
@@ -1004,6 +1034,9 @@ void SPIRVBuilder::writePerVertexBuiltIns(const TType &type, spirv::IdRef typeId
                                    spv::DecorationBuiltIn,
                                    {spirv::LiteralInteger(decorationValue)});
     }
+
+    SpirvType spirvType = getSpirvType(type, EbsUnspecified);
+    writeMemberDecorations(spirvType, typeId);
 }
 
 void SPIRVBuilder::writeInterfaceVariableDecorations(const TType &type, spirv::IdRef variableId)
@@ -1247,7 +1280,36 @@ uint32_t SPIRVBuilder::calculateSizeAndWriteOffsetDecorations(const SpirvType &t
         spirv::WriteMemberDecorate(&mSpirvDecorations, typeId, spirv::LiteralInteger(fieldIndex),
                                    spv::DecorationOffset, {spirv::LiteralInteger(nextOffset)});
 
-        // While here, add matrix decorations if any.
+        // Calculate the next offset.  The next offset is the current offset plus the size of the
+        // field, aligned to its base alignment.
+        //
+        // > Rule 4. ... the base offset of the member following the array is rounded up to the next
+        // > multiple of the base alignment.
+        //
+        // > Rule 9. ... the base offset of the member following the sub-structure is rounded up to
+        // > the next multiple of the base alignment of the structure.
+        nextOffset = nextOffset + fieldTypeData.sizeInStorageBlock;
+        nextOffset = rx::roundUp(nextOffset, fieldTypeData.baseAlignment);
+
+        ++fieldIndex;
+    }
+
+    return nextOffset;
+}
+
+void SPIRVBuilder::writeMemberDecorations(const SpirvType &type, spirv::IdRef typeId)
+{
+    ASSERT(type.block != nullptr);
+
+    uint32_t fieldIndex = 0;
+
+    for (const TField *field : type.block->fields())
+    {
+        const TType &fieldType = *field->type();
+
+        const SpirvTypeData &fieldTypeData = getTypeData(fieldType, type.blockStorage);
+
+        // Add matrix decorations if any.
         if (fieldType.isMatrix())
         {
             ASSERT(fieldTypeData.matrixStride != 0);
@@ -1264,21 +1326,16 @@ uint32_t SPIRVBuilder::calculateSizeAndWriteOffsetDecorations(const SpirvType &t
                 isRowMajor ? spv::DecorationRowMajor : spv::DecorationColMajor, {});
         }
 
-        // Calculate the next offset.  The next offset is the current offset plus the size of the
-        // field, aligned to its base alignment.
-        //
-        // > Rule 4. ... the base offset of the member following the array is rounded up to the next
-        // > multiple of the base alignment.
-        //
-        // > Rule 9. ... the base offset of the member following the sub-structure is rounded up to
-        // > the next multiple of the base alignment of the structure.
-        nextOffset = nextOffset + fieldTypeData.sizeInStorageBlock;
-        nextOffset = rx::roundUp(nextOffset, fieldTypeData.baseAlignment);
+        // Add other decorations.
+        SpirvDecorations decorations = getDecorations(fieldType);
+        for (const spv::Decoration decoration : decorations)
+        {
+            spirv::WriteMemberDecorate(&mSpirvDecorations, typeId,
+                                       spirv::LiteralInteger(fieldIndex), decoration, {});
+        }
 
         ++fieldIndex;
     }
-
-    return nextOffset;
 }
 
 ImmutableString SPIRVBuilder::hashName(const TSymbol *symbol)
@@ -1330,7 +1387,7 @@ spirv::Blob SPIRVBuilder::getSpirv()
                    mSpirvFunctions.size());
 
     // Generate any necessary id before writing the id bound in header.
-    const spirv::IdRef extInstImportId = getNewId();
+    const spirv::IdRef extInstImportId = getNewId({});
 
     // Generate the SPIR-V header.
     spirv::WriteSpirvHeader(&result, mNextAvailableId);

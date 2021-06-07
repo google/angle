@@ -170,6 +170,7 @@ class TIntermTyped : public TIntermNode
     bool isVector() const { return getType().isVector(); }
     bool isScalar() const { return getType().isScalar(); }
     bool isScalarInt() const { return getType().isScalarInt(); }
+    bool isPrecise() const { return getType().isPrecise(); }
     const char *getBasicString() const { return getType().getBasicString(); }
 
     unsigned int getOutermostArraySize() const { return getType().getOutermostArraySize(); }
@@ -303,7 +304,6 @@ class TIntermExpression : public TIntermTyped
   protected:
     TType *getTypePointer() { return &mType; }
     void setType(const TType &t) { mType = t; }
-    void setTypePreservePrecision(const TType &t);
 
     TIntermExpression(const TIntermExpression &node) = default;
 

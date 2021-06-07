@@ -186,14 +186,6 @@ bool CanFoldAggregateBuiltInOp(TOperator op)
 
 TIntermExpression::TIntermExpression(const TType &t) : TIntermTyped(), mType(t) {}
 
-void TIntermExpression::setTypePreservePrecision(const TType &t)
-{
-    TPrecision precision = getPrecision();
-    mType                = t;
-    ASSERT(mType.getBasicType() != EbtBool || precision == EbpUndefined);
-    mType.setPrecision(precision);
-}
-
 #define REPLACE_IF_IS(node, type, original, replacement) \
     do                                                   \
     {                                                    \
