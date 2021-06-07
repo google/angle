@@ -657,6 +657,8 @@
           # Tell the tests to exit after one frame for faster iteration.
           '--one-frame-only',
           '--test-timeout=100',
+          # Do not run trace tests because they're already run in Gold tests.
+          '--gtest_filter=-TracePerfTest.*',
         ],
         'android_args': [
           '--test-launcher-batch-limit=1',
