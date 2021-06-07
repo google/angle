@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bdc096b_05b244d3",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1312,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-07T19:55:08Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 1312,
+        "startChar": 32,
+        "endLine": 1312,
+        "endChar": 38
+      },
+      "revId": "d86f7621e22305edcb02a62ea906eaef31a4f3bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
