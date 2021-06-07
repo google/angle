@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f857e87_581a1d71",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-07T17:54:40Z",
+      "side": 1,
+      "message": "Added retries to the Intel tests in this CL.",
+      "revId": "9dc869cfc5959165c7fd3c94abf3c9aaf758d71d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
