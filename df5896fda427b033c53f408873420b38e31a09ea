@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "905174de_6eaaafd0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1511618
+      },
+      "writtenOn": "2021-06-07T20:01:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9deb0caf_09a0ef8c",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 1
+      },
+      "revId": "df5896fda427b033c53f408873420b38e31a09ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "45561f10_ca33f369",
@@ -37,6 +61,24 @@
       "writtenOn": "2021-06-07T19:22:31Z",
       "side": 1,
       "message": "nit: This message is misleading! The dispatch commands themselves are not submitted on the render pass command buffer, it\u0027s just their debug event marker that is recorded on the wrong command buffer.",
+      "revId": "df5896fda427b033c53f408873420b38e31a09ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56717805_cdacb31d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1511618
+      },
+      "writtenOn": "2021-06-07T20:01:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45561f10_ca33f369",
       "revId": "df5896fda427b033c53f408873420b38e31a09ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
