@@ -974,7 +974,9 @@ TracePerfTest::TracePerfTest()
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
 
         // TODO: http://anglebug.com/6023 Crashes on Pixel 2 in vulkan driver
-        if (IsPixel2() && param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        // TODO: http://anglebug.com/6029 Crashes on Linux Intel Vulkan
+        if (((IsLinux() && IsIntel()) || IsPixel2()) &&
+            param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
         {
             mSkipTest = true;
         }
