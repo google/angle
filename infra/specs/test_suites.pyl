@@ -390,6 +390,8 @@
         'args': [
           'angle_deqp_gles3_tests',
           '--use-angle=metal',
+          # Flakiness on multiple configs. http://anglebug.com/6019
+          '--flaky-retries=2',
         ],
         'desktop_args': [
           '--bot-mode',
