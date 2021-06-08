@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32014f84_a4bbc837",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-08T18:58:09Z",
+      "side": 1,
+      "message": "Note: I wrote this CL, but it looks like Mark Lobodzinski is the author.  That\u0027s because at one point, I combined my CL and a CL of Mark L\u0027s, but later separated them again (but didn\u0027t fix the author).",
+      "revId": "4bafc5032ef49e9d9585e035bc368eeebdfccc7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
