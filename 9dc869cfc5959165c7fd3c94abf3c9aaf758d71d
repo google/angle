@@ -62,6 +62,30 @@
       },
       "revId": "9dc869cfc5959165c7fd3c94abf3c9aaf758d71d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "432baddf_e7932260",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-08T02:35:22Z",
+      "side": 1,
+      "message": "Should be \"batch \u003d next_batch\"",
+      "parentUuid": "e63b4fb0_39a7d891",
+      "range": {
+        "startLine": 400,
+        "startChar": 20,
+        "endLine": 400,
+        "endChar": 38
+      },
+      "revId": "9dc869cfc5959165c7fd3c94abf3c9aaf758d71d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
