@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a885ad6_14236143",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-08T16:37:13Z",
+      "side": 1,
+      "message": "I wonder if we can detect undefined texture contents in capture instead of forcing everything to be defined in the tests.",
+      "revId": "5e227c11d2c002de56c5b2289a81877d9cc96f43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
