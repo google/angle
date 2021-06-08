@@ -285,11 +285,23 @@ static bool ValidateTexImageFormatCombination(const Context *context,
     }
     else
     {
-        // The type and format are valid if any supported internal format has that type and format
-        if (!ValidES3Format(format))
+        // The type and format are valid if any supported internal format has that type and format.
+        // ANGLE_texture_external_yuv_sampling extension adds support for YUV formats
+        if (gl::IsYuvFormat(format))
         {
-            context->validationError(GL_INVALID_ENUM, kInvalidFormat);
-            return false;
+            if (!context->getExtensions().yuvInternalFormatANGLE)
+            {
+                context->validationError(GL_INVALID_ENUM, kInvalidFormat);
+                return false;
+            }
+        }
+        else
+        {
+            if (!ValidES3Format(format))
+            {
+                context->validationError(GL_INVALID_ENUM, kInvalidFormat);
+                return false;
+            }
         }
 
         if (!ValidES3Type(type))
@@ -332,10 +344,22 @@ static bool ValidateTexImageFormatCombination(const Context *context,
     else
     {
         // Check if this is a valid format combination to load texture data
-        if (!ValidES3FormatCombination(format, type, internalFormat))
+        // ANGLE_texture_external_yuv_sampling extension adds support for YUV formats
+        if (gl::IsYuvFormat(format))
         {
-            context->validationError(GL_INVALID_OPERATION, kInvalidFormatCombination);
-            return false;
+            if (type != GL_UNSIGNED_BYTE)
+            {
+                context->validationError(GL_INVALID_OPERATION, kInvalidFormatCombination);
+                return false;
+            }
+        }
+        else
+        {
+            if (!ValidES3FormatCombination(format, type, internalFormat))
+            {
+                context->validationError(GL_INVALID_OPERATION, kInvalidFormatCombination);
+                return false;
+            }
         }
     }
 
@@ -401,6 +425,29 @@ bool ValidateES3TexImageParametersBase(const Context *context,
                                        const void *pixels)
 {
     TextureType texType = TextureTargetToType(target);
+
+    if (gl::IsYuvFormat(format))
+    {
+        // According to ANGLE_yuv_internal_format, the texture needs to be an immutable
+        // texture, texture target can only be TEXTURE_2D and there is no mipmap support
+        if (!context->getExtensions().yuvInternalFormatANGLE || !isSubImage)
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidFormat);
+            return false;
+        }
+
+        if (target != TextureTarget::_2D)
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
+            return false;
+        }
+
+        if (level != 0)
+        {
+            context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
+            return false;
+        }
+    }
 
     // Validate image size
     if (!ValidImageSizeParameters(context, texType, level, width, height, depth, isSubImage))
@@ -1209,6 +1256,29 @@ bool ValidateES3TexStorageParametersBase(const Context *context,
     {
         context->validationError(GL_INVALID_OPERATION, kInvalidMipLevels);
         return false;
+    }
+
+    // From ANGLE_texture_external_yuv_sampling:
+    // Texture target can only be TEXTURE_2D, there is no mipmap support
+    if (gl::IsYuvFormat(internalformat))
+    {
+        if (!context->getExtensions().yuvInternalFormatANGLE)
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidFormat);
+            return false;
+        }
+
+        if (target != TextureType::_2D)
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
+            return false;
+        }
+
+        if (levels != 1)
+        {
+            context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
+            return false;
+        }
     }
 
     const Caps &caps = context->getCaps();

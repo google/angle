@@ -486,6 +486,32 @@ ANGLE_INLINE ComponentType GetVertexAttributeComponentType(bool pureInteger, Ver
         return ComponentType::Float;
     }
 }
+
+constexpr std::size_t kMaxYuvPlaneCount = 3;
+template <typename T>
+using YuvPlaneArray = std::array<T, kMaxYuvPlaneCount>;
+
+struct YuvFormatInfo
+{
+    // Sized types only.
+    YuvFormatInfo(GLenum internalFormat, const Extents &yPlaneExtent);
+
+    GLenum glInternalFormat;
+    uint32_t planeCount;
+    YuvPlaneArray<uint32_t> planeBpp;
+    YuvPlaneArray<Extents> planeExtent;
+    YuvPlaneArray<uint32_t> planePitch;
+    YuvPlaneArray<uint32_t> planeSize;
+    YuvPlaneArray<uint32_t> planeOffset;
+};
+
+bool IsYuvFormat(GLenum format);
+uint32_t GetPlaneCount(GLenum format);
+uint32_t GetYPlaneBpp(GLenum format);
+uint32_t GetChromaPlaneBpp(GLenum format);
+void GetSubSampleFactor(GLenum format,
+                        int *horizontalSubsampleFactor,
+                        int *verticalSubsampleFactor);
 }  // namespace gl
 
 #endif  // LIBANGLE_FORMATUTILS_H_
