@@ -1189,7 +1189,7 @@
   },
   "GL_G8_B8R8_2PLANE_420_UNORM_ANGLE": {
     "NONE": {
-      "GL_UNSIGNED_BYTE": "UnimplementedLoadFunction"
+      "GL_UNSIGNED_BYTE": "LoadYuvToNative"
     }
   }
 }

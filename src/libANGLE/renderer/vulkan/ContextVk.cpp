@@ -5005,9 +5005,9 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
     const gl::ActiveTextureMask &activeTextures    = executable->getActiveSamplersMask();
     const gl::ActiveTextureTypeArray &textureTypes = executable->getActiveSamplerTypes();
 
-    bool anyTextureHasImmutableSampler            = false;
-    bool recreatePipelineLayout                   = false;
-    ImmutableSamplerFormatIndexMap formatIndexMap = {};
+    bool recreatePipelineLayout                     = false;
+    FormatIndexMap<uint64_t> externalFormatIndexMap = {};
+    FormatIndexMap<VkFormat> vkFormatIndexMap       = {};
     for (size_t textureUnit : activeTextures)
     {
         gl::Texture *texture        = textures[textureUnit];
@@ -5087,21 +5087,24 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 
         if (textureVk->getImage().hasImmutableSampler())
         {
-            anyTextureHasImmutableSampler = true;
-            formatIndexMap[textureVk->getImage().getExternalFormat()] =
-                static_cast<uint32_t>(textureUnit);
+            uint64_t externalFormat = textureVk->getImage().getExternalFormat();
+            VkFormat vkFormat       = textureVk->getImage().getFormat().actualImageVkFormat();
+            if (externalFormat != 0)
+            {
+                externalFormatIndexMap[externalFormat] = static_cast<uint32_t>(textureUnit);
+            }
+            else
+            {
+                ASSERT(vkFormat != 0);
+                vkFormatIndexMap[vkFormat] = static_cast<uint32_t>(textureUnit);
+            }
         }
+
         recreatePipelineLayout =
             textureVk->getAndResetImmutableSamplerDirtyState() || recreatePipelineLayout;
     }
 
-    if (anyTextureHasImmutableSampler != mExecutable->usesImmutableSamplers())
-    {
-        recreatePipelineLayout = true;
-    }
-
-    if (mExecutable->usesImmutableSamplers() &&
-        !mExecutable->isImmutableSamplerFormatCompatible(formatIndexMap))
+    if (!mExecutable->isImmutableSamplerFormatCompatible(externalFormatIndexMap, vkFormatIndexMap))
     {
         recreatePipelineLayout = true;
     }

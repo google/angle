@@ -268,7 +268,8 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
         descriptorSetLayout.reset();
     }
     mImmutableSamplersMaxDescriptorCount = 1;
-    mSupportedImmutableSamplerFormatIndexMap.clear();
+    mExternalFormatIndexMap.clear();
+    mVkFormatIndexMap.clear();
     mPipelineLayout.reset();
 
     mDescriptorSets.fill(VK_NULL_HANDLE);
@@ -705,27 +706,41 @@ void ProgramExecutableVk::addTextureDescriptorSetDesc(
                 // externalFormat
                 const TextureVk *textureVk          = (*activeTextures)[textureUnit].texture;
                 const vk::Sampler &immutableSampler = textureVk->getSampler().get();
-                uint64_t externalFormat             = textureVk->getImage().getExternalFormat();
                 descOut->update(info.binding, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
                                 activeStages, &immutableSampler);
                 // The Vulkan spec has the following note -
                 // All descriptors in a binding use the same maximum
                 // combinedImageSamplerDescriptorCount descriptors to allow implementations to use a
                 // uniform stride for dynamic indexing of the descriptors in the binding.
+                uint64_t externalFormat = textureVk->getImage().getExternalFormat();
+                VkFormat vkFormat       = textureVk->getImage().getFormat().actualImageVkFormat();
                 uint32_t formatDescriptorCount = 0;
-                angle::Result result =
-                    contextVk->getRenderer()->getFormatDescriptorCountForExternalFormats(
+                angle::Result result           = angle::Result::Stop;
+
+                if (externalFormat != 0)
+                {
+                    mExternalFormatIndexMap[externalFormat] = textureIndex;
+                    result = contextVk->getRenderer()->getFormatDescriptorCountForExternalFormat(
                         contextVk, externalFormat, &formatDescriptorCount);
+                }
+                else
+                {
+                    ASSERT(vkFormat != 0);
+                    mVkFormatIndexMap[vkFormat] = textureIndex;
+                    result = contextVk->getRenderer()->getFormatDescriptorCountForVkFormat(
+                        contextVk, vkFormat, &formatDescriptorCount);
+                }
+
                 if (result != angle::Result::Continue)
                 {
                     // There was an error querying the descriptor count for this format, treat it as
                     // a non-fatal error and move on.
                     formatDescriptorCount = 1;
                 }
+
                 ASSERT(formatDescriptorCount > 0);
                 mImmutableSamplersMaxDescriptorCount =
                     std::max(mImmutableSamplersMaxDescriptorCount, formatDescriptorCount);
-                mSupportedImmutableSamplerFormatIndexMap[externalFormat] = textureIndex;
             }
             else
             {

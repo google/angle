@@ -101,8 +101,9 @@ struct DefaultUniformBlock final : private angle::NonCopyable
 };
 
 // Performance and resource counters.
-using DescriptorSetCountList         = angle::PackedEnumMap<DescriptorSetIndex, uint32_t>;
-using ImmutableSamplerFormatIndexMap = angle::HashMap<uint64_t, uint32_t>;
+using DescriptorSetCountList = angle::PackedEnumMap<DescriptorSetIndex, uint32_t>;
+template <typename T>
+using FormatIndexMap = angle::HashMap<T, uint32_t>;
 
 struct ProgramExecutablePerfCounters
 {
@@ -193,13 +194,11 @@ class ProgramExecutableVk
         return mUniformBufferDescriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
     }
 
-    bool usesImmutableSamplers() const { return !mSupportedImmutableSamplerFormatIndexMap.empty(); }
-
-    bool isImmutableSamplerFormatCompatible(
-        const ImmutableSamplerFormatIndexMap &immutableSamplerFormatIndexMap) const
+    bool isImmutableSamplerFormatCompatible(const FormatIndexMap<uint64_t> &externalFormatIndexMap,
+                                            const FormatIndexMap<VkFormat> &vkFormatIndexMap) const
     {
-        ASSERT(mSupportedImmutableSamplerFormatIndexMap.size() > 0);
-        return (mSupportedImmutableSamplerFormatIndexMap == immutableSamplerFormatIndexMap);
+        return (mExternalFormatIndexMap == externalFormatIndexMap &&
+                mVkFormatIndexMap == vkFormatIndexMap);
     }
 
     void accumulateCacheStats(VulkanCacheType cacheType, const CacheStats &cacheStats);
@@ -287,7 +286,8 @@ class ProgramExecutableVk
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get
     // deleted while this program is in use.
     uint32_t mImmutableSamplersMaxDescriptorCount;
-    ImmutableSamplerFormatIndexMap mSupportedImmutableSamplerFormatIndexMap;
+    FormatIndexMap<uint64_t> mExternalFormatIndexMap;
+    FormatIndexMap<VkFormat> mVkFormatIndexMap;
     vk::BindingPointer<vk::PipelineLayout> mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts;
 

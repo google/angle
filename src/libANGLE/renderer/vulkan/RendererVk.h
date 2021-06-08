@@ -394,9 +394,13 @@ class RendererVk : angle::NonCopyable
         return mSupportedVulkanPipelineStageMask;
     }
 
-    angle::Result getFormatDescriptorCountForExternalFormats(ContextVk *contextVk,
-                                                             uint64_t format,
-                                                             uint32_t *descriptorCountOut);
+    angle::Result getFormatDescriptorCountForVkFormat(ContextVk *contextVk,
+                                                      VkFormat format,
+                                                      uint32_t *descriptorCountOut);
+
+    angle::Result getFormatDescriptorCountForExternalFormat(ContextVk *contextVk,
+                                                            uint64_t format,
+                                                            uint32_t *descriptorCountOut);
 
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
@@ -527,6 +531,7 @@ class RendererVk : angle::NonCopyable
     vk::Allocator mAllocator;
     SamplerCache mSamplerCache;
     SamplerYcbcrConversionCache mYuvConversionCache;
+    angle::HashMap<VkFormat, uint32_t> mVkFormatDescriptorCountMap;
     vk::ActiveHandleCounter mActiveHandleCounts;
 
     // Tracks resource serials.
