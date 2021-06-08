@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "adf156bb_c5ef567b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-08T00:23:31Z",
+      "side": 1,
+      "message": "LGTM for CONTRIBUTORS change.  Please add \"LunarG, Inc.\" to the AUTHORS file as well (in the correct alphabetical position).  Thanks!",
+      "revId": "23b67cfde155b9429ee02e101393cd0c5611fefc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
