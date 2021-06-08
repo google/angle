@@ -16,6 +16,24 @@
       "message": "Doesn\u0027t seem to be necessary.",
       "revId": "da2cea0727fc1e40c5b9d7922f0ca4e2a0ed066c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "77a86d94_5649e148",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-08T04:28:52Z",
+      "side": 1,
+      "message": "Still a good change even if it doesn\u0027t help - shards are ~3 min -\u003e ~5 minutes. So we should do it even if it doesn\u0027t help the flakiness. Or is there something I\u0027m missing? Is this at all hazardous?",
+      "parentUuid": "48329fbe_838a9a94",
+      "revId": "da2cea0727fc1e40c5b9d7922f0ca4e2a0ed066c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
