@@ -2205,10 +2205,27 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
 bool OutputSPIRVTraverser::visitGlobalQualifierDeclaration(Visit visit,
                                                            TIntermGlobalQualifierDeclaration *node)
 {
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
+    if (node->isPrecise())
+    {
+        // TODO: handle precise.  http://anglebug.com/4889.
+        UNIMPLEMENTED();
+        return false;
+    }
 
-    return true;
+    // Global qualifier declarations apply to variables that are already declared.  Invariant simply
+    // adds a decoration to the variable declaration, which can be done right away.  Note that
+    // invariant cannot be applied to block members like this, except for gl_PerVertex built-ins,
+    // which are applied to the members directly by DeclarePerVertexBlocks.
+    ASSERT(node->isInvariant());
+
+    const TVariable *variable = &node->getSymbol()->variable();
+    ASSERT(mSymbolIdMap.count(variable) > 0);
+
+    const spirv::IdRef variableId = mSymbolIdMap[variable];
+
+    spirv::WriteDecorate(mBuilder.getSpirvDecorations(), variableId, spv::DecorationInvariant, {});
+
+    return false;
 }
 
 void OutputSPIRVTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node)
@@ -2420,9 +2437,16 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
 
     spv::StorageClass storageClass = GetStorageClass(type);
 
+    SpirvDecorations decorations = mBuilder.getDecorations(type);
+    if (mBuilder.isInvariantOutput(type))
+    {
+        // Apply the Invariant decoration to output variables if specified or if globally enabled.
+        decorations.push_back(spv::DecorationInvariant);
+    }
+
     const spirv::IdRef variableId = mBuilder.declareVariable(
-        typeId, storageClass, mBuilder.getDecorations(type),
-        initializeWithDeclaration ? &initializerId : nullptr, mBuilder.hashName(variable).data());
+        typeId, storageClass, decorations, initializeWithDeclaration ? &initializerId : nullptr,
+        mBuilder.hashName(variable).data());
 
     if (!initializeWithDeclaration && initializerId.valid())
     {

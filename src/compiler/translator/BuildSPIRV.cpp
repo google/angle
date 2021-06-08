@@ -32,7 +32,7 @@ bool operator==(const SpirvType &a, const SpirvType &b)
     // ValidateASTOptions::validateVariableReferences.
     if (a.block != nullptr)
     {
-        return a.blockStorage == b.blockStorage;
+        return a.blockStorage == b.blockStorage && a.isInvariant == b.isInvariant;
     }
 
     // Otherwise, match by the type contents.  The AST transformations sometimes recreate types that
@@ -68,7 +68,7 @@ SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage bloc
     spirvType.imageInternalFormat = type.getLayoutQualifier().imageInternalFormat;
     spirvType.blockStorage        = blockStorage;
 
-    // Turn unspecifed matrix packing into column-major.
+    // Turn unspecified matrix packing into column-major.
     if (spirvType.matrixPacking == EmpUnspecified)
     {
         spirvType.matrixPacking = EmpColumnMajor;
@@ -76,7 +76,8 @@ SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage bloc
 
     if (type.getStruct() != nullptr)
     {
-        spirvType.block = type.getStruct();
+        spirvType.block       = type.getStruct();
+        spirvType.isInvariant = isInvariantOutput(type);
     }
     else if (type.isInterfaceBlock())
     {
@@ -230,7 +231,17 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
         spirv::IdRefList fieldTypeIds;
         for (const TField *field : type.block->fields())
         {
-            spirv::IdRef fieldTypeId = getTypeData(*field->type(), type.blockStorage).id;
+            const TType &fieldType   = *field->type();
+            SpirvType fieldSpirvType = getSpirvType(fieldType, type.blockStorage);
+            const char *structName   = "";
+            // Propagate invariant to struct members.
+            if (fieldType.getStruct() != nullptr)
+            {
+                fieldSpirvType.isInvariant = type.isInvariant;
+                structName                 = fieldType.getStruct()->name().data();
+            }
+
+            spirv::IdRef fieldTypeId = getSpirvTypeData(fieldSpirvType, structName).id;
             fieldTypeIds.push_back(fieldTypeId);
         }
 
@@ -987,6 +998,13 @@ uint32_t SPIRVBuilder::nextUnusedOutputLocation(uint32_t consumedCount)
     return nextUnused;
 }
 
+bool SPIRVBuilder::isInvariantOutput(const TType &type) const
+{
+    // The Invariant decoration is applied to output variables if specified or if globally enabled.
+    return type.isInvariant() ||
+           (IsShaderOut(type.getQualifier()) && mCompiler->getPragma().stdgl.invariantAll);
+}
+
 void SPIRVBuilder::addCapability(spv::Capability capability)
 {
     mCapabilities.insert(capability);
@@ -1034,9 +1052,6 @@ void SPIRVBuilder::writePerVertexBuiltIns(const TType &type, spirv::IdRef typeId
                                    spv::DecorationBuiltIn,
                                    {spirv::LiteralInteger(decorationValue)});
     }
-
-    SpirvType spirvType = getSpirvType(type, EbsUnspecified);
-    writeMemberDecorations(spirvType, typeId);
 }
 
 void SPIRVBuilder::writeInterfaceVariableDecorations(const TType &type, spirv::IdRef variableId)
@@ -1308,6 +1323,14 @@ void SPIRVBuilder::writeMemberDecorations(const SpirvType &type, spirv::IdRef ty
         const TType &fieldType = *field->type();
 
         const SpirvTypeData &fieldTypeData = getTypeData(fieldType, type.blockStorage);
+
+        // Add invariant decoration if any.
+        if (type.isInvariant || fieldType.isInvariant())
+        {
+            spirv::WriteMemberDecorate(&mSpirvDecorations, typeId,
+                                       spirv::LiteralInteger(fieldIndex), spv::DecorationInvariant,
+                                       {});
+        }
 
         // Add matrix decorations if any.
         if (fieldType.isMatrix())

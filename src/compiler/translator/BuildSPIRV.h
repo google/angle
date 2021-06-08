@@ -33,6 +33,11 @@ struct SpirvType
     // except for non-block non-array types.
     TLayoutBlockStorage blockStorage = EbsUnspecified;
 
+    // If a structure is used in two I/O blocks or output varyings with and without the invariant
+    // qualifier, it would also have to generate two SPIR-V types, as its fields' Invariant
+    // decorations would be different.
+    bool isInvariant = false;
+
     // Otherwise, it's a basic type + column, row and array dimensions, or it's an image
     // declaration.
     //
@@ -92,6 +97,9 @@ struct SpirvTypeHash
         ASSERT(type.blockStorage == sh::EbsUnspecified || type.block != nullptr ||
                !type.arraySizes.empty());
 
+        // Invariant must only affect the type if it's a block type.
+        ASSERT(!type.isInvariant || type.block != nullptr);
+
         size_t result = 0;
 
         if (!type.arraySizes.empty())
@@ -103,7 +111,7 @@ struct SpirvTypeHash
         if (type.block != nullptr)
         {
             return result ^ angle::ComputeGenericHash(&type.block, sizeof(type.block)) ^
-                   type.blockStorage;
+                   static_cast<size_t>(type.isInvariant) ^ (type.blockStorage << 1);
         }
 
         static_assert(sh::EbtLast < 256, "Basic type doesn't fit in uint8_t");
@@ -165,6 +173,11 @@ struct SpirvTypeData
 //     NoContraction: used to implement |precise|.  TODO: support this.  It requires the precise
 //                    property to be promoted through the nodes in the AST, which currently isn't.
 //                    http://anglebug.com/4889
+//     Invariant: used to implement |invariant|, which is applied to output variables.
+//
+// Note that Invariant applies to variables and NoContraction to arithmetic instructions, so they
+// are mutually exclusive and a maximum of 2 decorations are possible.  FixedVector::push_back will
+// ASSERT if the given size is ever not enough.
 using SpirvDecorations = angle::FixedVector<spv::Decoration, 2>;
 
 // A block of code.  SPIR-V produces forward references to blocks, such as OpBranchConditional
@@ -273,6 +286,8 @@ class SPIRVBuilder : angle::NonCopyable
         mSpirvCurrentFunctionBlocks.back().isTerminated = true;
     }
     SpirvConditional *getCurrentConditional() { return &mConditionalStack.back(); }
+
+    bool isInvariantOutput(const TType &type) const;
 
     void addCapability(spv::Capability capability);
     void setEntryPointId(spirv::IdRef id);

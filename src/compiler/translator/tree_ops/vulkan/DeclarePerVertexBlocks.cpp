@@ -20,6 +20,29 @@ namespace sh
 {
 namespace
 {
+using PerVertexMemberFlags = std::array<bool, 4>;
+
+int GetPerVertexFieldIndex(const TQualifier qualifier, const ImmutableString &name)
+{
+    switch (qualifier)
+    {
+        case EvqPosition:
+            ASSERT(name == "gl_Position");
+            return 0;
+        case EvqPointSize:
+            ASSERT(name == "gl_PointSize");
+            return 1;
+        case EvqClipDistance:
+            ASSERT(name == "gl_ClipDistance");
+            return 2;
+        case EvqCullDistance:
+            ASSERT(name == "gl_CullDistance");
+            return 3;
+        default:
+            return -1;
+    }
+}
+
 // Traverser that:
 //
 // 1. Declares the input and output gl_PerVertex types and variables if not already (based on shader
@@ -28,14 +51,19 @@ namespace
 class DeclarePerVertexBlocksTraverser : public TIntermTraverser
 {
   public:
-    DeclarePerVertexBlocksTraverser(TCompiler *compiler, TSymbolTable *symbolTable)
+    DeclarePerVertexBlocksTraverser(TCompiler *compiler,
+                                    TSymbolTable *symbolTable,
+                                    const PerVertexMemberFlags &invariantFlags,
+                                    const PerVertexMemberFlags &preciseFlags)
         : TIntermTraverser(true, false, false, symbolTable),
           mShaderType(compiler->getShaderType()),
           mResources(compiler->getResources()),
           mPerVertexInVar(nullptr),
           mPerVertexOutVar(nullptr),
           mPerVertexInVarRedeclared(false),
-          mPerVertexOutVarRedeclared(false)
+          mPerVertexOutVarRedeclared(false),
+          mPerVertexOutInvariantFlags(invariantFlags),
+          mPerVertexOutPreciseFlags(preciseFlags)
     {}
 
     void visitSymbol(TIntermSymbol *symbol) override
@@ -51,6 +79,25 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
             // Declare gl_out if not already.
             if (mPerVertexOutVar == nullptr)
             {
+                // Record invariant and precise qualifiers used on the fields so they would be
+                // applied to the replacement gl_out.
+                for (const TField *field : type->getInterfaceBlock()->fields())
+                {
+                    const TType &fieldType = *field->type();
+                    const int fieldIndex =
+                        GetPerVertexFieldIndex(fieldType.getQualifier(), field->name());
+                    ASSERT(fieldIndex >= 0);
+
+                    if (fieldType.isInvariant())
+                    {
+                        mPerVertexOutInvariantFlags[fieldIndex] = true;
+                    }
+                    if (fieldType.isPrecise())
+                    {
+                        mPerVertexOutPreciseFlags[fieldIndex] = true;
+                    }
+                }
+
                 declareDefaultGlOut();
             }
 
@@ -111,27 +158,7 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
             return;
         }
 
-        int fieldIndex = -1;
-        if (type->getQualifier() == EvqPosition)
-        {
-            ASSERT(variable->name() == "gl_Position");
-            fieldIndex = 0;
-        }
-        if (type->getQualifier() == EvqPointSize)
-        {
-            ASSERT(variable->name() == "gl_PointSize");
-            fieldIndex = 1;
-        }
-        if (type->getQualifier() == EvqClipDistance)
-        {
-            ASSERT(variable->name() == "gl_ClipDistance");
-            fieldIndex = 2;
-        }
-        if (type->getQualifier() == EvqCullDistance)
-        {
-            ASSERT(variable->name() == "gl_CullDistance");
-            fieldIndex = 3;
-        }
+        const int fieldIndex = GetPerVertexFieldIndex(type->getQualifier(), variable->name());
 
         // Not the built-in we are looking for.
         if (fieldIndex < 0)
@@ -190,6 +217,19 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
 
         clipDistanceType->makeArray(mResources.MaxClipDistances);
         cullDistanceType->makeArray(mResources.MaxCullDistances);
+
+        if (qualifier == EvqPerVertexOut)
+        {
+            positionType->setInvariant(mPerVertexOutInvariantFlags[0]);
+            pointSizeType->setInvariant(mPerVertexOutInvariantFlags[1]);
+            clipDistanceType->setInvariant(mPerVertexOutInvariantFlags[2]);
+            cullDistanceType->setInvariant(mPerVertexOutInvariantFlags[3]);
+
+            positionType->setPrecise(mPerVertexOutPreciseFlags[0]);
+            pointSizeType->setPrecise(mPerVertexOutPreciseFlags[1]);
+            clipDistanceType->setPrecise(mPerVertexOutPreciseFlags[2]);
+            cullDistanceType->setPrecise(mPerVertexOutPreciseFlags[3]);
+        }
 
         fields->push_back(new TField(positionType, ImmutableString("gl_Position"), TSourceLoc(),
                                      SymbolType::AngleInternal));
@@ -267,6 +307,10 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
 
     // A map of already replaced built-in variables.
     VariableReplacementMap mVariableMap;
+
+    // Whether each field is invariant or precise.
+    PerVertexMemberFlags mPerVertexOutInvariantFlags;
+    PerVertexMemberFlags mPerVertexOutPreciseFlags;
 };
 
 void AddPerVertexDecl(TIntermBlock *root, const TVariable *variable)
@@ -294,7 +338,54 @@ bool DeclarePerVertexBlocks(TCompiler *compiler, TIntermBlock *root, TSymbolTabl
         return true;
     }
 
-    DeclarePerVertexBlocksTraverser traverser(compiler, symbolTable);
+    // First, visit all global qualifier declarations and find which built-ins are invariant or
+    // precise.
+    PerVertexMemberFlags invariantFlags = {};
+    PerVertexMemberFlags preciseFlags   = {};
+
+    TIntermSequence withoutPerVertexGlobalQualifierDeclarations;
+
+    for (TIntermNode *node : *root->getSequence())
+    {
+        TIntermGlobalQualifierDeclaration *asGlobalQualifierDecl =
+            node->getAsGlobalQualifierDeclarationNode();
+        if (asGlobalQualifierDecl == nullptr)
+        {
+            withoutPerVertexGlobalQualifierDeclarations.push_back(node);
+            continue;
+        }
+
+        TIntermSymbol *symbol = asGlobalQualifierDecl->getSymbol();
+
+        const int fieldIndex =
+            GetPerVertexFieldIndex(symbol->getType().getQualifier(), symbol->getName());
+        if (fieldIndex < 0)
+        {
+            withoutPerVertexGlobalQualifierDeclarations.push_back(node);
+            continue;
+        }
+
+        if (asGlobalQualifierDecl->isInvariant())
+        {
+            invariantFlags[fieldIndex] = true;
+        }
+        else if (asGlobalQualifierDecl->isPrecise())
+        {
+            preciseFlags[fieldIndex] = true;
+        }
+    }
+
+    // Remove the global qualifier declarations for the gl_PerVertex members.
+    root->replaceAllChildren(withoutPerVertexGlobalQualifierDeclarations);
+
+    // If #pragma STDGL invariant(all) is specified, make all outputs invariant.
+    if (compiler->getPragma().stdgl.invariantAll)
+    {
+        std::fill(invariantFlags.begin(), invariantFlags.end(), true);
+    }
+
+    // Then declare the in and out gl_PerVertex I/O blocks.
+    DeclarePerVertexBlocksTraverser traverser(compiler, symbolTable, invariantFlags, preciseFlags);
     root->traverse(&traverser);
     if (!traverser.updateTree(compiler, root))
     {
