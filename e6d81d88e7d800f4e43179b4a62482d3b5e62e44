@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e311042d_4b4cbea5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-08T17:57:18Z",
+      "side": 1,
+      "message": "nit: bug not relevant, the reason as well.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "e6d81d88e7d800f4e43179b4a62482d3b5e62e44",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
