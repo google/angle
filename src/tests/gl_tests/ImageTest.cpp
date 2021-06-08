@@ -273,6 +273,8 @@ class ImageTest : public ANGLETest
         glDeleteProgram(mTextureProgram);
         glDeleteProgram(mTextureExternalProgram);
         glDeleteProgram(mTextureExternalESSL3Program);
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
 
     void createEGLImage2DTextureSource(size_t width,
