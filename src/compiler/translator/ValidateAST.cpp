@@ -489,6 +489,20 @@ bool ValidateAST::visitGlobalQualifierDeclaration(Visit visit,
                                                   TIntermGlobalQualifierDeclaration *node)
 {
     visitNode(visit, node);
+
+    const TVariable *variable = &node->getSymbol()->variable();
+
+    if (mOptions.validateVariableReferences && variableNeedsDeclaration(variable))
+    {
+        if (!isVariableDeclared(variable))
+        {
+            mDiagnostics->error(node->getLine(),
+                                "Found reference to undeclared or inconsistently redeclared "
+                                "variable <validateVariableReferences>",
+                                variable->name().data());
+            mVariableReferencesFailed = true;
+        }
+    }
     return true;
 }
 
