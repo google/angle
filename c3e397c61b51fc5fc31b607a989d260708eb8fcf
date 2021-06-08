@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7159a74a_2450d8e6",
+        "filename": "src/compiler/translator/tree_ops/ClampIndirectIndices.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-08T18:14:23Z",
+      "side": 1,
+      "message": "I think it would be neater to define some \"workaround flag\" which would be enabled on Qualcomm.",
+      "range": {
+        "startLine": 57,
+        "startChar": 35,
+        "endLine": 57,
+        "endChar": 39
+      },
+      "revId": "c3e397c61b51fc5fc31b607a989d260708eb8fcf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
