@@ -51,6 +51,24 @@
       "parentUuid": "b3b1b3c3_f41ad1b3",
       "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "773c5356_cbcb23e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-08T20:09:33Z",
+      "side": 1,
+      "message": "The assert is there for a reason. If the levels are inconsistent you should be indexing them.",
+      "parentUuid": "7da8e9de_0a41e080",
+      "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
