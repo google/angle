@@ -34,6 +34,24 @@
       "parentUuid": "b71c9387_87747ec0",
       "revId": "fd6f883d60fe27567e3ad23eb2a2950289456095",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dce48bf6_8157c995",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-08T02:43:31Z",
+      "side": 1,
+      "message": "Which other bots? I see other failures than this on some other bots.",
+      "parentUuid": "72586a4c_657778a9",
+      "revId": "fd6f883d60fe27567e3ad23eb2a2950289456095",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
