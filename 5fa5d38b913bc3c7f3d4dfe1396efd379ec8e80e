@@ -245,6 +245,24 @@
       "parentUuid": "b8109b8a_2633a114",
       "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4bcfe41a_e4f061f3",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1007,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-08T16:53:33Z",
+      "side": 1,
+      "message": "This was added to the textures commit already. #3.",
+      "parentUuid": "4e18ee0b_f5aae7c6",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
