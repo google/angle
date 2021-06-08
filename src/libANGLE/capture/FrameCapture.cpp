@@ -5575,4 +5575,13 @@ void WriteParamValueReplay<ParamType::TUniformBlockIndex>(std::ostream &os,
     os << "gUniformBlockIndexes[gShaderProgramMap[" << programID.value << "]][" << value.value
        << "]";
 }
+
+template <>
+void WriteParamValueReplay<ParamType::TGLeglImageOES>(std::ostream &os,
+                                                      const CallCapture &call,
+                                                      GLeglImageOES value)
+{
+    os << "reinterpret_cast<EGLImageKHR>(" << value << ")";
+}
+
 }  // namespace angle

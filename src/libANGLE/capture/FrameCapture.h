@@ -664,6 +664,11 @@ void WriteParamValueReplay<ParamType::TGLsync>(std::ostream &os,
                                                const CallCapture &call,
                                                GLsync value);
 
+template <>
+void WriteParamValueReplay<ParamType::TGLeglImageOES>(std::ostream &os,
+                                                      const CallCapture &call,
+                                                      GLeglImageOES value);
+
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>
 void WriteParamValueReplay(std::ostream &os, const CallCapture &call, T value)
