@@ -22,6 +22,30 @@
       },
       "revId": "0710aab10c35508d7d82de1946048a0d65c13e5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4b94014_c8c1a6f3",
+        "filename": "src/compiler/translator/ValidateAST.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-08T14:51:57Z",
+      "side": 1,
+      "message": "It\u0027s not referring to redeclaration in GLSL (which is not possible), but AST transformations that replace a variable (by changing the type or something), but don\u0027t fix the AST completely. The message is used elsewhere too, if you don\u0027t mind I\u0027ll improve it together with another CL to save the bots a bit of time.",
+      "parentUuid": "c600f05b_f1b5153b",
+      "range": {
+        "startLine": 500,
+        "startChar": 63,
+        "endLine": 500,
+        "endChar": 91
+      },
+      "revId": "0710aab10c35508d7d82de1946048a0d65c13e5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
