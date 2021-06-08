@@ -33,6 +33,24 @@
       "message": "Can you also make this class no-discard if that catches the error?",
       "revId": "cec24130e8ceb3d7951c488af28d91b967f0f835",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa2062d6_d6056247",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-08T08:17:23Z",
+      "side": 1,
+      "message": "\u003e Can you also make this class no-discard if that catches the error?\n\nDone",
+      "parentUuid": "475a42ae_f1dbc987",
+      "revId": "cec24130e8ceb3d7951c488af28d91b967f0f835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
