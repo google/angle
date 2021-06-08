@@ -354,7 +354,7 @@ void ValidateAST::visitSymbol(TIntermSymbol *node)
             if (mNamelessInterfaceBlocks.count(interfaceBlock) == 0)
             {
                 mDiagnostics->error(node->getLine(),
-                                    "Found reference to undeclared or inconsistenly redeclared "
+                                    "Found reference to undeclared or inconsistenly transformed "
                                     "nameless interface block <validateVariableReferences>",
                                     node->getName().data());
                 mVariableReferencesFailed = true;
@@ -363,7 +363,7 @@ void ValidateAST::visitSymbol(TIntermSymbol *node)
                      node->getName() != fieldList[fieldIndex]->name())
             {
                 mDiagnostics->error(node->getLine(),
-                                    "Found reference to inconsistenly redeclared nameless "
+                                    "Found reference to inconsistenly transformed nameless "
                                     "interface block field <validateVariableReferences>",
                                     node->getName().data());
                 mVariableReferencesFailed = true;
@@ -377,7 +377,7 @@ void ValidateAST::visitSymbol(TIntermSymbol *node)
             if (!isStructDeclaration && !isVariableDeclared(variable))
             {
                 mDiagnostics->error(node->getLine(),
-                                    "Found reference to undeclared or inconsistently redeclared "
+                                    "Found reference to undeclared or inconsistently transformed "
                                     "variable <validateVariableReferences>",
                                     node->getName().data());
                 mVariableReferencesFailed = true;
@@ -496,7 +496,7 @@ bool ValidateAST::visitGlobalQualifierDeclaration(Visit visit,
         if (!isVariableDeclared(variable))
         {
             mDiagnostics->error(node->getLine(),
-                                "Found reference to undeclared or inconsistently redeclared "
+                                "Found reference to undeclared or inconsistently transformed "
                                 "variable <validateVariableReferences>",
                                 variable->name().data());
             mVariableReferencesFailed = true;

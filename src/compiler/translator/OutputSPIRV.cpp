@@ -18,6 +18,12 @@
 
 #include <cfloat>
 
+// Extended instructions
+namespace spv
+{
+#include <spirv/unified1/GLSL.std.450.h>
+}
+
 // SPIR-V tools include for disassembly
 #include <spirv-tools/libspirv.hpp>
 
@@ -1592,15 +1598,11 @@ void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
     }
 
     // Track the block storage; it's needed to determine the derived type in an access chain, but is
-    // not promoted in intermediate nodes' TType.  Defaults to std140.
+    // not promoted in intermediate nodes' TType.
     TLayoutBlockStorage blockStorage = EbsUnspecified;
     if (interfaceBlock)
     {
-        blockStorage = type.getLayoutQualifier().blockStorage;
-        if (!IsShaderIoBlock(type.getQualifier()) && blockStorage != EbsStd430)
-        {
-            blockStorage = EbsStd140;
-        }
+        blockStorage = mBuilder.getBlockStorage(type);
     }
 
     const spirv::IdRef typeId = mBuilder.getTypeData(type, blockStorage).id;
@@ -2018,8 +2020,381 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
 
 bool OutputSPIRVTraverser::visitUnary(Visit visit, TIntermUnary *node)
 {
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
+    // Constants are expected to be folded.
+    ASSERT(!node->hasConstantValue());
+
+    if (visit == PreVisit)
+    {
+        // Don't add an entry to the stack.  The child will create one, which we won't pop.
+        return true;
+    }
+
+    // It's a unary operation, so there can't be an InVisit.
+    ASSERT(visit != InVisit);
+
+    // There is at least on entry for the child.
+    ASSERT(mNodeData.size() >= 1);
+
+    TIntermTyped *operand = node->getOperand();
+
+    // Special case EOpArrayLength.  .length() on sized arrays is already constant folded, so this
+    // operation only applies to ssbo.last_member.length().  OpArrayLength takes the ssbo block
+    // *type* and the field index of last_member, so those need to be extracted from the access
+    // chain.  Additionally, OpArrayLength produces an unsigned int while GLSL produces an int, so a
+    // final cast is necessary.
+    if (node->getOp() == EOpArrayLength)
+    {
+        // The access chain must only include the base ssbo + one literal field index.
+        ASSERT(mNodeData.back().idList.size() == 1 && !mNodeData.back().idList.back().id.valid());
+        const spirv::LiteralInteger fieldIndex = mNodeData.back().idList.back().literal;
+
+        // Get the interface block type from the operand, which is either a symbol or a binary
+        // operator based on whether the interface block is nameless or not.
+        TIntermTyped *ssbo =
+            operand->getAsBinaryNode() ? operand->getAsBinaryNode()->getLeft() : operand;
+        const spirv::IdRef typeId = mBuilder.getTypeData(ssbo->getType(), EbsUnspecified).id;
+
+        // Get the int and uint type ids.
+        SpirvType intType;
+        intType.type                  = EbtInt;
+        const spirv::IdRef intTypeId  = mBuilder.getSpirvTypeData(intType, "").id;
+        intType.type                  = EbtUInt;
+        const spirv::IdRef uintTypeId = mBuilder.getSpirvTypeData(intType, "").id;
+
+        // Generate the instruction.
+        const spirv::IdRef resultId = mBuilder.getNewId({});
+        spirv::WriteArrayLength(mBuilder.getSpirvCurrentFunctionBlock(), uintTypeId, resultId,
+                                typeId, fieldIndex);
+
+        // Cast to int.
+        const spirv::IdRef castResultId = mBuilder.getNewId({});
+        spirv::WriteBitcast(mBuilder.getSpirvCurrentFunctionBlock(), intTypeId, castResultId,
+                            resultId);
+
+        // Replace the access chain with an rvalue that's the result.
+        nodeDataInitRValue(&mNodeData.back(), castResultId, intTypeId);
+
+        return true;
+    }
+
+    // Load the result of the node right away.
+    spirv::IdRef typeId = getAccessChainTypeId(&mNodeData.back());
+    spirv::IdRef value =
+        accessChainLoad(&mNodeData.back(), mBuilder.getDecorations(operand->getType()));
+
+    const TType &operandType    = operand->getType();
+    const TBasicType basicType  = operandType.getBasicType();
+    const bool isFloat          = basicType == EbtFloat || basicType == EbtDouble;
+    const bool isUnsigned       = basicType == EbtUInt;
+    const bool operateOnColumns = operandType.isMatrix();
+
+    // Some operators are implemented with a unary SPIR-V op.
+    using WriteUnaryOp        = void (*)(spirv::Blob * blob, spirv::IdResultType idResultType,
+                                  spirv::IdResult idResult, spirv::IdRef operand);
+    WriteUnaryOp writeUnaryOp = nullptr;
+
+    // Some operators are implemented with a binary SPIR-V op.
+    using WriteBinaryOp =
+        void (*)(spirv::Blob * blob, spirv::IdResultType idResultType, spirv::IdResult idResult,
+                 spirv::IdRef operand1, spirv::IdRef operand2);
+    WriteBinaryOp writeBinaryOp = nullptr;
+
+    // Some operators are implemented with an extended instruction.
+    spv::GLSLstd450 extendedInst = spv::GLSLstd450Bad;
+
+    switch (node->getOp())
+    {
+        case EOpNegative:
+            if (isFloat)
+                writeUnaryOp = spirv::WriteFNegate;
+            else
+                writeUnaryOp = spirv::WriteSNegate;
+            break;
+        case EOpPositive:
+            // This is a noop.
+            break;
+        case EOpLogicalNot:
+        case EOpLogicalNotComponentWise:
+            writeUnaryOp = spirv::WriteLogicalNot;
+            break;
+        case EOpBitwiseNot:
+            writeUnaryOp = spirv::WriteNot;
+            break;
+
+        case EOpPostIncrement:
+        case EOpPreIncrement:
+            if (isFloat)
+                writeBinaryOp = spirv::WriteFAdd;
+            else
+                writeBinaryOp = spirv::WriteIAdd;
+            break;
+        case EOpPostDecrement:
+        case EOpPreDecrement:
+            if (isFloat)
+                writeBinaryOp = spirv::WriteFSub;
+            else
+                writeBinaryOp = spirv::WriteISub;
+            break;
+
+        case EOpRadians:
+            extendedInst = spv::GLSLstd450Radians;
+            break;
+        case EOpDegrees:
+            extendedInst = spv::GLSLstd450Degrees;
+            break;
+        case EOpSin:
+            extendedInst = spv::GLSLstd450Sin;
+            break;
+        case EOpCos:
+            extendedInst = spv::GLSLstd450Cos;
+            break;
+        case EOpTan:
+            extendedInst = spv::GLSLstd450Tan;
+            break;
+        case EOpAsin:
+            extendedInst = spv::GLSLstd450Asin;
+            break;
+        case EOpAcos:
+            extendedInst = spv::GLSLstd450Acos;
+            break;
+            break;
+        case EOpAtan:
+            extendedInst = spv::GLSLstd450Atan;
+            break;
+
+        case EOpSinh:
+            extendedInst = spv::GLSLstd450Sinh;
+            break;
+        case EOpCosh:
+            extendedInst = spv::GLSLstd450Cosh;
+            break;
+        case EOpTanh:
+            extendedInst = spv::GLSLstd450Tanh;
+            break;
+        case EOpAsinh:
+            extendedInst = spv::GLSLstd450Asinh;
+            break;
+        case EOpAcosh:
+            extendedInst = spv::GLSLstd450Acosh;
+            break;
+        case EOpAtanh:
+            extendedInst = spv::GLSLstd450Atanh;
+            break;
+
+        case EOpExp:
+            extendedInst = spv::GLSLstd450Exp;
+            break;
+        case EOpLog:
+            extendedInst = spv::GLSLstd450Log;
+            break;
+        case EOpExp2:
+            extendedInst = spv::GLSLstd450Exp2;
+            break;
+        case EOpLog2:
+            extendedInst = spv::GLSLstd450Log2;
+            break;
+        case EOpSqrt:
+            extendedInst = spv::GLSLstd450Sqrt;
+            break;
+        case EOpInversesqrt:
+            extendedInst = spv::GLSLstd450InverseSqrt;
+            break;
+
+        case EOpAbs:
+            if (isFloat)
+                extendedInst = spv::GLSLstd450FAbs;
+            else
+                extendedInst = spv::GLSLstd450SAbs;
+            break;
+        case EOpSign:
+            if (isFloat)
+                extendedInst = spv::GLSLstd450FSign;
+            else
+                extendedInst = spv::GLSLstd450SSign;
+            break;
+        case EOpFloor:
+            extendedInst = spv::GLSLstd450Floor;
+            break;
+        case EOpTrunc:
+            extendedInst = spv::GLSLstd450Trunc;
+            break;
+        case EOpRound:
+            extendedInst = spv::GLSLstd450Round;
+            break;
+        case EOpRoundEven:
+            extendedInst = spv::GLSLstd450RoundEven;
+            break;
+        case EOpCeil:
+            extendedInst = spv::GLSLstd450Ceil;
+            break;
+        case EOpFract:
+            extendedInst = spv::GLSLstd450Fract;
+            break;
+        case EOpIsnan:
+            writeUnaryOp = spirv::WriteIsNan;
+            break;
+        case EOpIsinf:
+            writeUnaryOp = spirv::WriteIsInf;
+            break;
+
+        case EOpFloatBitsToInt:
+        case EOpFloatBitsToUint:
+        case EOpIntBitsToFloat:
+        case EOpUintBitsToFloat:
+            writeUnaryOp = spirv::WriteBitcast;
+            break;
+
+        case EOpPackSnorm2x16:
+            extendedInst = spv::GLSLstd450PackSnorm2x16;
+            break;
+        case EOpPackUnorm2x16:
+            extendedInst = spv::GLSLstd450PackUnorm2x16;
+            break;
+        case EOpPackHalf2x16:
+            extendedInst = spv::GLSLstd450PackHalf2x16;
+            break;
+        case EOpUnpackSnorm2x16:
+            extendedInst = spv::GLSLstd450UnpackSnorm2x16;
+            break;
+        case EOpUnpackUnorm2x16:
+            extendedInst = spv::GLSLstd450UnpackUnorm2x16;
+            break;
+        case EOpUnpackHalf2x16:
+            extendedInst = spv::GLSLstd450UnpackHalf2x16;
+            break;
+
+        case EOpPackUnorm4x8:
+            extendedInst = spv::GLSLstd450PackUnorm4x8;
+            break;
+        case EOpPackSnorm4x8:
+            extendedInst = spv::GLSLstd450PackSnorm4x8;
+            break;
+        case EOpUnpackUnorm4x8:
+            extendedInst = spv::GLSLstd450UnpackUnorm4x8;
+            break;
+        case EOpUnpackSnorm4x8:
+            extendedInst = spv::GLSLstd450UnpackSnorm4x8;
+            break;
+
+        case EOpLength:
+            extendedInst = spv::GLSLstd450Length;
+            break;
+        case EOpNormalize:
+            extendedInst = spv::GLSLstd450Normalize;
+            break;
+
+        case EOpDFdx:
+            writeUnaryOp = spirv::WriteDPdx;
+            break;
+        case EOpDFdy:
+            writeUnaryOp = spirv::WriteDPdy;
+            break;
+        case EOpFwidth:
+            writeUnaryOp = spirv::WriteFwidth;
+            break;
+
+        case EOpTranspose:
+            writeUnaryOp = spirv::WriteTranspose;
+            break;
+        case EOpDeterminant:
+            extendedInst = spv::GLSLstd450Determinant;
+            break;
+        case EOpInverse:
+            extendedInst = spv::GLSLstd450MatrixInverse;
+            break;
+
+        case EOpAny:
+            writeUnaryOp = spirv::WriteAny;
+            break;
+        case EOpAll:
+            writeUnaryOp = spirv::WriteAll;
+            break;
+
+        case EOpBitfieldReverse:
+            writeUnaryOp = spirv::WriteBitReverse;
+            break;
+        case EOpBitCount:
+            writeUnaryOp = spirv::WriteBitCount;
+            break;
+        case EOpFindLSB:
+            extendedInst = spv::GLSLstd450FindILsb;
+            break;
+        case EOpFindMSB:
+            if (isUnsigned)
+                extendedInst = spv::GLSLstd450FindUMsb;
+            else
+                extendedInst = spv::GLSLstd450FindSMsb;
+            break;
+
+        default:
+            UNREACHABLE();
+    }
+
+    const SpirvDecorations decorations = mBuilder.getDecorations(operandType);
+    spirv::IdRef result                = mBuilder.getNewId(decorations);
+
+    if (writeUnaryOp)
+    {
+        if (operateOnColumns)
+        {
+            // If negating a matrix, do that column by column.
+            spirv::IdRefList columnIds;
+
+            SpirvType columnType            = mBuilder.getSpirvType(operandType, EbsUnspecified);
+            columnType.secondarySize        = 1;
+            const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, "").id;
+
+            // Extract and apply the operator to each column.
+            for (int columnIndex = 0; columnIndex < operandType.getCols(); ++columnIndex)
+            {
+                const spirv::IdRef columnId = mBuilder.getNewId(decorations);
+                spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), columnTypeId,
+                                             columnId, value, {spirv::LiteralInteger(columnIndex)});
+
+                columnIds.push_back(mBuilder.getNewId(decorations));
+                writeUnaryOp(mBuilder.getSpirvCurrentFunctionBlock(), columnTypeId,
+                             columnIds.back(), columnId);
+            }
+
+            // Construct the result.
+            spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result,
+                                           columnIds);
+        }
+        else
+        {
+            // Otherwise just apply the operation.
+            writeUnaryOp(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result, value);
+        }
+    }
+    else if (writeBinaryOp)
+    {
+        // It's a pre/post increment/decrement.
+        const spirv::IdRef one =
+            isFloat ? mBuilder.getFloatConstant(1) : mBuilder.getIntConstant(1);
+
+        writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result, value, one);
+
+        // The result is always written back.
+        accessChainStore(&mNodeData.back(), result);
+
+        // Initialize the access chain with either the result or the value based on whether pre or
+        // post increment/decrement was used.  The result is always an rvalue.
+        if (node->getOp() == EOpPostIncrement || node->getOp() == EOpPostDecrement)
+        {
+            result = value;
+        }
+    }
+    else
+    {
+        // It's an extended instruction.
+        ASSERT(extendedInst != spv::GLSLstd450Bad);
+
+        spirv::WriteExtInst(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result,
+                            mBuilder.getExtInstImportIdStd(),
+                            spirv::LiteralExtInstInteger(extendedInst), {value});
+    }
+
+    nodeDataInitRValue(&mNodeData.back(), result, typeId);
 
     return true;
 }

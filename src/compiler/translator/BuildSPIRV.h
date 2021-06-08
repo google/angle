@@ -253,6 +253,7 @@ class SPIRVBuilder : angle::NonCopyable
     {}
 
     spirv::IdRef getNewId(const SpirvDecorations &decorations);
+    TLayoutBlockStorage getBlockStorage(const TType &type) const;
     SpirvType getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const;
     const SpirvTypeData &getTypeData(const TType &type, TLayoutBlockStorage blockStorage);
     const SpirvTypeData &getSpirvTypeData(const SpirvType &type, const char *blockName);
@@ -261,6 +262,9 @@ class SPIRVBuilder : angle::NonCopyable
 
     // Decorations that may apply to intermediate instructions (in addition to variables).
     SpirvDecorations getDecorations(const TType &type);
+
+    // Extended instructions
+    spirv::IdRef getExtInstImportIdStd();
 
     spirv::Blob *getSpirvDebug() { return &mSpirvDebug; }
     spirv::Blob *getSpirvDecorations() { return &mSpirvDecorations; }
@@ -374,6 +378,9 @@ class SPIRVBuilder : angle::NonCopyable
     // generated.  Used for the OpEntryPoint instruction.
     spirv::IdRefList mEntryPointInterfaceList;
     spirv::IdRef mEntryPointId;
+
+    // Id of imported instructions, if used.
+    spirv::IdRef mExtInstImportIdStd;
 
     // Current ID bound, used to allocate new ids.
     spirv::IdRef mNextAvailableId;

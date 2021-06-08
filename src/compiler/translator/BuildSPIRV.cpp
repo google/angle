@@ -57,6 +57,18 @@ spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
     return newId;
 }
 
+TLayoutBlockStorage SPIRVBuilder::getBlockStorage(const TType &type) const
+{
+    // Default to std140.
+    TLayoutBlockStorage blockStorage = type.getLayoutQualifier().blockStorage;
+    if (!IsShaderIoBlock(type.getQualifier()) && blockStorage != EbsStd430)
+    {
+        blockStorage = EbsStd140;
+    }
+
+    return blockStorage;
+}
+
 SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const
 {
     SpirvType spirvType;
@@ -84,14 +96,10 @@ SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage bloc
         spirvType.block = type.getInterfaceBlock();
 
         // Calculate the block storage from the interface block automatically.  The fields inherit
-        // from this.  Default to std140.
+        // from this.
         if (spirvType.blockStorage == EbsUnspecified)
         {
-            spirvType.blockStorage = type.getLayoutQualifier().blockStorage;
-            if (!IsShaderIoBlock(type.getQualifier()) && spirvType.blockStorage != EbsStd430)
-            {
-                spirvType.blockStorage = EbsStd140;
-            }
+            spirvType.blockStorage = getBlockStorage(type);
         }
     }
     else if (spirvType.arraySizes.empty())
@@ -186,6 +194,15 @@ SpirvDecorations SPIRVBuilder::getDecorations(const TType &type)
     // TODO: Handle |precise|.  http://anglebug.com/4889.
 
     return decorations;
+}
+
+spirv::IdRef SPIRVBuilder::getExtInstImportIdStd()
+{
+    if (!mExtInstImportIdStd.valid())
+    {
+        mExtInstImportIdStd = getNewId({});
+    }
+    return mExtInstImportIdStd;
 }
 
 SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *blockName)
@@ -1409,9 +1426,6 @@ spirv::Blob SPIRVBuilder::getSpirv()
                    mSpirvFunctionTypeDecls.size() + mSpirvVariableDecls.size() +
                    mSpirvFunctions.size());
 
-    // Generate any necessary id before writing the id bound in header.
-    const spirv::IdRef extInstImportId = getNewId({});
-
     // Generate the SPIR-V header.
     spirv::WriteSpirvHeader(&result, mNextAvailableId);
 
@@ -1427,7 +1441,10 @@ spirv::Blob SPIRVBuilder::getSpirv()
     // - OpExtension instructions (TODO: http://anglebug.com/4889)
 
     // - OpExtInstImport
-    spirv::WriteExtInstImport(&result, extInstImportId, "GLSL.std.450");
+    if (mExtInstImportIdStd.valid())
+    {
+        spirv::WriteExtInstImport(&result, mExtInstImportIdStd, "GLSL.std.450");
+    }
 
     // - OpMemoryModel
     spirv::WriteMemoryModel(&result, spv::AddressingModelLogical, spv::MemoryModelGLSL450);

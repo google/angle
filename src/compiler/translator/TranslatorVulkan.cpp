@@ -239,7 +239,7 @@ ANGLE_NO_DISCARD bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
     sequence.push_back(builtinRef->deepCopy());
     TIntermAggregate *aggregate =
         TIntermAggregate::CreateConstructor(builtin->getType(), &sequence);
-    TIntermBinary *assignment = new TIntermBinary(EOpInitialize, flippedBuiltinRef, aggregate);
+    TIntermBinary *assignment = new TIntermBinary(EOpAssign, flippedBuiltinRef, aggregate);
 
     // Create an assignment to the replaced variable's .xy.
     TIntermSwizzle *correctedXY =
@@ -1300,7 +1300,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
     }
 
 #if defined(ANGLE_ENABLE_DIRECT_SPIRV_GENERATION)
-    constexpr ShCompileOptions kUnsupportedTransformations = SH_ADD_BRESENHAM_LINE_RASTER_EMULATION;
+    constexpr ShCompileOptions kUnsupportedTransformations = SH_CLAMP_POINT_SIZE;
     if ((compileOptions & SH_GENERATE_SPIRV_DIRECTLY) != 0 &&
         ((getShaderType() == GL_VERTEX_SHADER &&
           (compileOptions & kUnsupportedTransformations) == 0) ||
