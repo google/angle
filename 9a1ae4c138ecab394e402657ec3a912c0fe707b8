@@ -22,6 +22,30 @@
       },
       "revId": "9a1ae4c138ecab394e402657ec3a912c0fe707b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70d1b25e_51ba20f0",
+        "filename": "src/libANGLE/CLProgram.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-08T07:38:13Z",
+      "side": 1,
+      "message": "Thanks, but no need here, doesn\u0027t apply to a local lambda. (Prefer explicit captures when the lambda will escape the current scope.)",
+      "parentUuid": "91522f96_66dad6f4",
+      "range": {
+        "startLine": 121,
+        "startChar": 60,
+        "endLine": 121,
+        "endChar": 63
+      },
+      "revId": "9a1ae4c138ecab394e402657ec3a912c0fe707b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
