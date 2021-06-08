@@ -22,6 +22,30 @@
       },
       "revId": "c3e397c61b51fc5fc31b607a989d260708eb8fcf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fece2fda_7676abc1",
+        "filename": "src/compiler/translator/tree_ops/ClampIndirectIndices.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-08T18:47:41Z",
+      "side": 1,
+      "message": "I thought about it, but didn\u0027t want to tie up one bit of translator flags for that. This reverts to the behavior clamping always had until recently, so it\u0027s not a regression at least. I\u0027ll open a bug to do that nevertheless at some point.",
+      "parentUuid": "7159a74a_2450d8e6",
+      "range": {
+        "startLine": 57,
+        "startChar": 35,
+        "endLine": 57,
+        "endChar": 39
+      },
+      "revId": "c3e397c61b51fc5fc31b607a989d260708eb8fcf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
