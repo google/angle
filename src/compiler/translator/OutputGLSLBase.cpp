@@ -1337,21 +1337,37 @@ void TOutputGLSLBase::declareInterfaceBlock(const TType &type)
         {
             writeFieldLayoutQualifier(field);
         }
-        out << getMemoryQualifiers(*field->type());
-        if (writeVariablePrecision(field->type()->getPrecision()))
-            out << " ";
 
-        const char *qualifier = getVariableInterpolation(field->type()->getQualifier());
+        const TType &fieldType = *field->type();
+
+        out << getMemoryQualifiers(fieldType);
+        if (writeVariablePrecision(fieldType.getPrecision()))
+            out << " ";
+        if (fieldType.isInvariant())
+        {
+            writeInvariantQualifier(fieldType);
+        }
+
+        const char *qualifier = getVariableInterpolation(fieldType.getQualifier());
         if (qualifier != nullptr)
             out << qualifier;
 
-        out << getTypeName(*field->type()) << " " << hashFieldName(field);
+        out << getTypeName(fieldType) << " " << hashFieldName(field);
 
-        if (field->type()->isArray())
-            out << ArrayString(*field->type());
+        if (fieldType.isArray())
+            out << ArrayString(fieldType);
         out << ";\n";
     }
     out << "}";
+}
+
+void WritePragma(TInfoSinkBase &out, ShCompileOptions compileOptions, const TPragma &pragma)
+{
+    if ((compileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL) == 0)
+    {
+        if (pragma.stdgl.invariantAll)
+            out << "#pragma STDGL invariant(all)\n";
+    }
 }
 
 void WriteGeometryShaderLayoutQualifiers(TInfoSinkBase &out,

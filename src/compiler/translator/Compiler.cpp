@@ -1567,16 +1567,6 @@ const BuiltInFunctionEmulator &TCompiler::getBuiltInFunctionEmulator() const
     return mBuiltInFunctionEmulator;
 }
 
-void TCompiler::writePragma(ShCompileOptions compileOptions)
-{
-    if ((compileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL) == 0)
-    {
-        TInfoSinkBase &sink = mInfoSink.obj;
-        if (mPragma.stdgl.invariantAll)
-            sink << "#pragma STDGL invariant(all)\n";
-    }
-}
-
 bool TCompiler::isVaryingDefined(const char *varyingName)
 {
     ASSERT(mVariablesCollected);

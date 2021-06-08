@@ -4270,7 +4270,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
     if (typeQualifier.invariant)
     {
-        error(typeQualifier.line, "invalid qualifier on interface block member", "invariant");
+        error(typeQualifier.line, "invalid qualifier on interface block", "invariant");
     }
 
     if (typeQualifier.qualifier != EvqBuffer)
@@ -4448,7 +4448,9 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
                 break;
         }
 
-        if (fieldType->isInvariant())
+        // On interface block members, invariant is only applicable to output I/O blocks.
+        const bool isOutputShaderIoBlock = isShaderIoBlock && IsShaderOut(typeQualifier.qualifier);
+        if (fieldType->isInvariant() && !isOutputShaderIoBlock)
         {
             error(field->line(), "invalid qualifier on interface block member", "invariant");
         }

@@ -12,6 +12,7 @@
 #include "compiler/translator/ExtensionBehavior.h"
 #include "compiler/translator/HashNames.h"
 #include "compiler/translator/InfoSink.h"
+#include "compiler/translator/Pragma.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
@@ -116,6 +117,8 @@ class TOutputGLSLBase : public TIntermTraverser
 
     ShCompileOptions mCompileOptions;
 };
+
+void WritePragma(TInfoSinkBase &out, ShCompileOptions compileOptions, const TPragma &pragma);
 
 void WriteGeometryShaderLayoutQualifiers(TInfoSinkBase &out,
                                          sh::TLayoutPrimitiveType inputPrimitive,
