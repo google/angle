@@ -33,6 +33,24 @@
       "message": "So, there were 3 separate problems in the bug this addresses:\n1. Some tests are flaky and need to be suppressed\n2. Some tests time out, probably should be added to long tests list\n3. Often a whole batch of 256 tests times out, probably related to the problems that we saw when switching between Metal and GL, attributed to caching, but probably needs to be investigated further\n\nI don\u0027t mind to add the retries to get the CQ faster, but someone needs to further look at the above problems.",
       "revId": "a11f4de4c286a0b44b82c63cf8d82794cf3df14c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be7f1467_9234219b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-08T05:24:01Z",
+      "side": 1,
+      "message": "This won\u0027t fix 3) I think. I should help with 1) and 2). The problem is I didn\u0027t see a consistent pattern with 1) and 2). It could be some OS-level thing, which sounds very difficult to pin down.\n\nWe could look at using the env variable to disable the cache instead and see if that\u0027s more reliable than the preloading method.\n\nIn any case, thanks for unblocking.",
+      "parentUuid": "8ac7d320_a51bce8a",
+      "revId": "a11f4de4c286a0b44b82c63cf8d82794cf3df14c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
