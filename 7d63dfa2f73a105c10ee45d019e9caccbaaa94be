@@ -16,6 +16,23 @@
       "message": "This one might be a bit controversial, maybe the assertion should be moved elsewhere. but I\u0027m not sure where. ",
       "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3b1b3c3_f41ad1b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-08T16:36:30Z",
+      "side": 1,
+      "message": "Maybe it\u0027s better to fix this by calling a different method if the texture is not cube complete and is a cube map?",
+      "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
