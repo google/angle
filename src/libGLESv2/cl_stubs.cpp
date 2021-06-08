@@ -694,14 +694,12 @@ cl_int GetEventProfilingInfo(cl_event event,
 
 cl_int Flush(cl_command_queue command_queue)
 {
-    WARN_NOT_SUPPORTED(Flush);
-    return 0;
+    return command_queue->cast<CommandQueue>().flush();
 }
 
 cl_int Finish(cl_command_queue command_queue)
 {
-    WARN_NOT_SUPPORTED(Finish);
-    return 0;
+    return command_queue->cast<CommandQueue>().finish();
 }
 
 cl_int EnqueueReadBuffer(cl_command_queue command_queue,
@@ -956,8 +954,8 @@ cl_int EnqueueUnmapMemObject(cl_command_queue command_queue,
                              const cl_event *event_wait_list,
                              cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueUnmapMemObject);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueUnmapMemObject(
+        memobj, mapped_ptr, num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int EnqueueMigrateMemObjects(cl_command_queue command_queue,
@@ -968,8 +966,8 @@ cl_int EnqueueMigrateMemObjects(cl_command_queue command_queue,
                                 const cl_event *event_wait_list,
                                 cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueMigrateMemObjects);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueMigrateMemObjects(
+        num_mem_objects, mem_objects, flags, num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int EnqueueNDRangeKernel(cl_command_queue command_queue,
@@ -982,8 +980,9 @@ cl_int EnqueueNDRangeKernel(cl_command_queue command_queue,
                             const cl_event *event_wait_list,
                             cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueNDRangeKernel);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueNDRangeKernel(
+        kernel, work_dim, global_work_offset, global_work_size, local_work_size,
+        num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int EnqueueNativeKernel(cl_command_queue command_queue,
@@ -997,8 +996,9 @@ cl_int EnqueueNativeKernel(cl_command_queue command_queue,
                            const cl_event *event_wait_list,
                            cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueNativeKernel);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueNativeKernel(
+        user_func, args, cb_args, num_mem_objects, mem_list, args_mem_loc, num_events_in_wait_list,
+        event_wait_list, event);
 }
 
 cl_int EnqueueMarkerWithWaitList(cl_command_queue command_queue,
@@ -1006,8 +1006,8 @@ cl_int EnqueueMarkerWithWaitList(cl_command_queue command_queue,
                                  const cl_event *event_wait_list,
                                  cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueMarkerWithWaitList);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueMarkerWithWaitList(num_events_in_wait_list,
+                                                                         event_wait_list, event);
 }
 
 cl_int EnqueueBarrierWithWaitList(cl_command_queue command_queue,
@@ -1015,8 +1015,8 @@ cl_int EnqueueBarrierWithWaitList(cl_command_queue command_queue,
                                   const cl_event *event_wait_list,
                                   cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueBarrierWithWaitList);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueBarrierWithWaitList(num_events_in_wait_list,
+                                                                          event_wait_list, event);
 }
 
 cl_int EnqueueSVMFree(cl_command_queue command_queue,
@@ -1141,22 +1141,19 @@ cl_mem CreateImage3D(cl_context context,
 
 cl_int EnqueueMarker(cl_command_queue command_queue, cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueMarker);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueMarker(event);
 }
 
 cl_int EnqueueWaitForEvents(cl_command_queue command_queue,
                             cl_uint num_events,
                             const cl_event *event_list)
 {
-    WARN_NOT_SUPPORTED(EnqueueWaitForEvents);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueWaitForEvents(num_events, event_list);
 }
 
 cl_int EnqueueBarrier(cl_command_queue command_queue)
 {
-    WARN_NOT_SUPPORTED(EnqueueBarrier);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueBarrier();
 }
 
 cl_int UnloadCompiler()
@@ -1200,8 +1197,8 @@ cl_int EnqueueTask(cl_command_queue command_queue,
                    const cl_event *event_wait_list,
                    cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueTask);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueTask(kernel, num_events_in_wait_list,
+                                                           event_wait_list, event);
 }
 
 }  // namespace cl

@@ -163,6 +163,51 @@ class CLCommandQueueCL : public CLCommandQueueImpl
                           CLEventImpl::CreateFunc *eventCreateFunc,
                           cl_int &errorCode) override;
 
+    cl_int enqueueUnmapMemObject(const cl::Memory &memory,
+                                 void *mappedPtr,
+                                 const cl::EventPtrs &waitEvents,
+                                 CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueMigrateMemObjects(const cl::MemoryPtrs &memObjects,
+                                    cl::MemMigrationFlags flags,
+                                    const cl::EventPtrs &waitEvents,
+                                    CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueNDRangeKernel(const cl::Kernel &kernel,
+                                cl_uint workDim,
+                                const size_t *globalWorkOffset,
+                                const size_t *globalWorkSize,
+                                const size_t *localWorkSize,
+                                const cl::EventPtrs &waitEvents,
+                                CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueTask(const cl::Kernel &kernel,
+                       const cl::EventPtrs &waitEvents,
+                       CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueNativeKernel(cl::UserFunc userFunc,
+                               void *args,
+                               size_t cbArgs,
+                               const cl::BufferPtrs &buffers,
+                               const std::vector<size_t> bufferPtrOffsets,
+                               const cl::EventPtrs &waitEvents,
+                               CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueMarkerWithWaitList(const cl::EventPtrs &waitEvents,
+                                     CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueMarker(CLEventImpl::CreateFunc &eventCreateFunc) override;
+
+    cl_int enqueueWaitForEvents(const cl::EventPtrs &events) override;
+
+    cl_int enqueueBarrierWithWaitList(const cl::EventPtrs &waitEvents,
+                                      CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueBarrier() override;
+
+    cl_int flush() override;
+    cl_int finish() override;
+
   private:
     const cl_command_queue mNative;
 };

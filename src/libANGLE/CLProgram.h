@@ -118,9 +118,7 @@ inline const DevicePtrs &Program::getDevices() const
 
 inline bool Program::hasDevice(const _cl_device_id *device) const
 {
-    return std::find_if(mDevices.cbegin(), mDevices.cend(), [=](const DevicePtr &ptr) {
-               return ptr.get() == device;
-           }) != mDevices.cend();
+    return std::find(mDevices.cbegin(), mDevices.cend(), device) != mDevices.cend();
 }
 
 inline bool Program::isBuilding() const

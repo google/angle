@@ -90,7 +90,8 @@ CLDeviceImpl::Info CLDeviceCL::createInfo(cl::DeviceType type) const
         !GetDeviceInfo(mNative, cl::DeviceInfo::Image3D_MaxWidth, info.mImage3D_MaxWidth) ||
         !GetDeviceInfo(mNative, cl::DeviceInfo::Image3D_MaxHeight, info.mImage3D_MaxHeight) ||
         !GetDeviceInfo(mNative, cl::DeviceInfo::Image3D_MaxDepth, info.mImage3D_MaxDepth) ||
-        !GetDeviceInfo(mNative, cl::DeviceInfo::MemBaseAddrAlign, info.mMemBaseAddrAlign))
+        !GetDeviceInfo(mNative, cl::DeviceInfo::MemBaseAddrAlign, info.mMemBaseAddrAlign) ||
+        !GetDeviceInfo(mNative, cl::DeviceInfo::ExecutionCapabilities, info.mExecCapabilities))
     {
         return Info{};
     }

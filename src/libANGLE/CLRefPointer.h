@@ -127,6 +127,42 @@ bool operator!=(nullptr_t, const RefPointer<T> &ptr) noexcept
     return ptr.get() != nullptr;
 }
 
+template <typename T, typename U>
+bool operator==(const RefPointer<T> &left, const RefPointer<U> &right) noexcept
+{
+    return left.get() == right.get();
+}
+
+template <typename T, typename U>
+bool operator!=(const RefPointer<T> &left, const RefPointer<U> &right) noexcept
+{
+    return left.get() != right.get();
+}
+
+template <typename T, typename U>
+bool operator==(const RefPointer<T> &left, const U *right) noexcept
+{
+    return left.get() == right;
+}
+
+template <typename T, typename U>
+bool operator==(const T *left, const RefPointer<U> &right) noexcept
+{
+    return left == right.get();
+}
+
+template <typename T, typename U>
+bool operator!=(const RefPointer<T> &left, const U *right) noexcept
+{
+    return left.get() != right;
+}
+
+template <typename T, typename U>
+bool operator!=(const T *left, const RefPointer<U> &right) noexcept
+{
+    return left != right.get();
+}
+
 }  // namespace cl
 
 #endif  // LIBANGLE_CLREFPOINTER_H_

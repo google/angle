@@ -187,6 +187,60 @@ class CommandQueue final : public _cl_command_queue, public Object
                           cl_event *event,
                           cl_int &errorCode);
 
+    cl_int enqueueUnmapMemObject(cl_mem memobj,
+                                 void *mappedPtr,
+                                 cl_uint numEventsInWaitList,
+                                 const cl_event *eventWaitList,
+                                 cl_event *event);
+
+    cl_int enqueueMigrateMemObjects(cl_uint numMemObjects,
+                                    const cl_mem *memObjects,
+                                    MemMigrationFlags flags,
+                                    cl_uint numEventsInWaitList,
+                                    const cl_event *eventWaitList,
+                                    cl_event *event);
+
+    cl_int enqueueNDRangeKernel(cl_kernel kernel,
+                                cl_uint workDim,
+                                const size_t *globalWorkOffset,
+                                const size_t *globalWorkSize,
+                                const size_t *localWorkSize,
+                                cl_uint numEventsInWaitList,
+                                const cl_event *eventWaitList,
+                                cl_event *event);
+
+    cl_int enqueueTask(cl_kernel kernel,
+                       cl_uint numEventsInWaitList,
+                       const cl_event *eventWaitList,
+                       cl_event *event);
+
+    cl_int enqueueNativeKernel(UserFunc userFunc,
+                               void *args,
+                               size_t cbArgs,
+                               cl_uint numMemObjects,
+                               const cl_mem *memList,
+                               const void **argsMemLoc,
+                               cl_uint numEventsInWaitList,
+                               const cl_event *eventWaitList,
+                               cl_event *event);
+
+    cl_int enqueueMarkerWithWaitList(cl_uint numEventsInWaitList,
+                                     const cl_event *eventWaitList,
+                                     cl_event *event);
+
+    cl_int enqueueMarker(cl_event *event);
+
+    cl_int enqueueWaitForEvents(cl_uint numEvents, const cl_event *eventList);
+
+    cl_int enqueueBarrierWithWaitList(cl_uint numEventsInWaitList,
+                                      const cl_event *eventWaitList,
+                                      cl_event *event);
+
+    cl_int enqueueBarrier();
+
+    cl_int flush();
+    cl_int finish();
+
   public:
     using PropArray = std::vector<cl_queue_properties>;
 
@@ -197,6 +251,9 @@ class CommandQueue final : public _cl_command_queue, public Object
     Context &getContext();
     const Context &getContext() const;
     const Device &getDevice() const;
+
+    // Get index of device in the context.
+    size_t getDeviceIndex() const;
 
     CommandQueueProperties getProperties() const;
     bool isOnHost() const;

@@ -85,7 +85,7 @@ cl_int Kernel::getWorkGroupInfo(cl_device_id device,
     if (device != nullptr)
     {
         const DevicePtrs &devices = mProgram->getContext().getDevices();
-        while (index < devices.size() && devices[index].get() != device)
+        while (index < devices.size() && devices[index] != device)
         {
             ++index;
         }

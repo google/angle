@@ -53,7 +53,8 @@ class CLDeviceImpl : angle::NonCopyable
         cl_uint mImagePitchAlignment       = 0u;
         cl_uint mImageBaseAddressAlignment = 0u;
         cl_uint mMemBaseAddrAlign          = 0u;
-        cl_uint mQueueOnDeviceMaxSize      = 0u;
+        cl::DeviceExecCapabilities mExecCapabilities;
+        cl_uint mQueueOnDeviceMaxSize = 0u;
         std::string mBuiltInKernels;
         NameVersionVector mBuiltInKernelsWithVersion;
         std::string mVersionStr;

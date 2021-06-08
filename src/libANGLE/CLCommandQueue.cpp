@@ -12,11 +12,31 @@
 #include "libANGLE/CLDevice.h"
 #include "libANGLE/CLEvent.h"
 #include "libANGLE/CLImage.h"
+#include "libANGLE/CLKernel.h"
+#include "libANGLE/CLMemory.h"
 
 #include <cstring>
 
 namespace cl
 {
+
+namespace
+{
+
+void CheckCreateEvent(CommandQueue &queue,
+                      cl_command_type commandType,
+                      const rx::CLEventImpl::CreateFunc &createFunc,
+                      cl_event *event,
+                      cl_int &errorCode)
+{
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(createFunc);
+        *event = Object::Create<Event>(errorCode, queue, commandType, createFunc);
+    }
+}
+
+}  // namespace
 
 cl_int CommandQueue::getInfo(CommandQueueInfo name,
                              size_t valueSize,
@@ -128,11 +148,7 @@ cl_int CommandQueue::enqueueReadBuffer(cl_mem buffer,
     cl_int errorCode =
         mImpl->enqueueReadBuffer(buf, blocking, offset, size, ptr, waitEvents, eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_READ_BUFFER, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_READ_BUFFER, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -155,11 +171,7 @@ cl_int CommandQueue::enqueueWriteBuffer(cl_mem buffer,
     cl_int errorCode =
         mImpl->enqueueWriteBuffer(buf, blocking, offset, size, ptr, waitEvents, eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_WRITE_BUFFER, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_WRITE_BUFFER, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -188,12 +200,7 @@ cl_int CommandQueue::enqueueReadBufferRect(cl_mem buffer,
         buf, blocking, bufferOrigin, hostOrigin, region, bufferRowPitch, bufferSlicePitch,
         hostRowPitch, hostSlicePitch, ptr, waitEvents, eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event =
-            Object::Create<Event>(errorCode, *this, CL_COMMAND_READ_BUFFER_RECT, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_READ_BUFFER_RECT, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -222,12 +229,7 @@ cl_int CommandQueue::enqueueWriteBufferRect(cl_mem buffer,
         buf, blocking, bufferOrigin, hostOrigin, region, bufferRowPitch, bufferSlicePitch,
         hostRowPitch, hostSlicePitch, ptr, waitEvents, eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event =
-            Object::Create<Event>(errorCode, *this, CL_COMMAND_WRITE_BUFFER_RECT, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_WRITE_BUFFER_RECT, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -250,11 +252,7 @@ cl_int CommandQueue::enqueueCopyBuffer(cl_mem srcBuffer,
     cl_int errorCode = mImpl->enqueueCopyBuffer(src, dst, srcOffset, dstOffset, size, waitEvents,
                                                 eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_COPY_BUFFER, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_COPY_BUFFER, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -282,12 +280,7 @@ cl_int CommandQueue::enqueueCopyBufferRect(cl_mem srcBuffer,
                                                     srcRowPitch, srcSlicePitch, dstRowPitch,
                                                     dstSlicePitch, waitEvents, eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event =
-            Object::Create<Event>(errorCode, *this, CL_COMMAND_COPY_BUFFER_RECT, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_COPY_BUFFER_RECT, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -309,11 +302,7 @@ cl_int CommandQueue::enqueueFillBuffer(cl_mem buffer,
     cl_int errorCode = mImpl->enqueueFillBuffer(buf, pattern, patternSize, offset, size, waitEvents,
                                                 eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_FILL_BUFFER, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_FILL_BUFFER, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -337,11 +326,7 @@ void *CommandQueue::enqueueMapBuffer(cl_mem buffer,
     void *const map = mImpl->enqueueMapBuffer(buf, blocking, mapFlags, offset, size, waitEvents,
                                               eventCreateFuncPtr, errorCode);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_MAP_BUFFER, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_MAP_BUFFER, eventCreateFunc, event, errorCode);
     return map;
 }
 
@@ -366,11 +351,7 @@ cl_int CommandQueue::enqueueReadImage(cl_mem image,
     cl_int errorCode = mImpl->enqueueReadImage(img, blocking, origin, region, rowPitch, slicePitch,
                                                ptr, waitEvents, eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_READ_IMAGE, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_READ_IMAGE, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -396,11 +377,7 @@ cl_int CommandQueue::enqueueWriteImage(cl_mem image,
         mImpl->enqueueWriteImage(img, blocking, origin, region, inputRowPitch, inputSlicePitch, ptr,
                                  waitEvents, eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_WRITE_IMAGE, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_WRITE_IMAGE, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -423,11 +400,7 @@ cl_int CommandQueue::enqueueCopyImage(cl_mem srcImage,
     cl_int errorCode = mImpl->enqueueCopyImage(src, dst, srcOrigin, dstOrigin, region, waitEvents,
                                                eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_COPY_IMAGE, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_COPY_IMAGE, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -448,11 +421,7 @@ cl_int CommandQueue::enqueueFillImage(cl_mem image,
     cl_int errorCode =
         mImpl->enqueueFillImage(img, fillColor, origin, region, waitEvents, eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_FILL_IMAGE, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_FILL_IMAGE, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -475,12 +444,7 @@ cl_int CommandQueue::enqueueCopyImageToBuffer(cl_mem srcImage,
     cl_int errorCode = mImpl->enqueueCopyImageToBuffer(src, dst, srcOrigin, region, dstOffset,
                                                        waitEvents, eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_COPY_IMAGE_TO_BUFFER,
-                                       eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_COPY_IMAGE_TO_BUFFER, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -503,12 +467,7 @@ cl_int CommandQueue::enqueueCopyBufferToImage(cl_mem srcBuffer,
     cl_int errorCode = mImpl->enqueueCopyBufferToImage(src, dst, srcOffset, dstOrigin, region,
                                                        waitEvents, eventCreateFuncPtr);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_COPY_BUFFER_TO_IMAGE,
-                                       eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_COPY_BUFFER_TO_IMAGE, eventCreateFunc, event, errorCode);
     return errorCode;
 }
 
@@ -535,12 +494,203 @@ void *CommandQueue::enqueueMapImage(cl_mem image,
         mImpl->enqueueMapImage(img, blocking, mapFlags, origin, region, imageRowPitch,
                                imageSlicePitch, waitEvents, eventCreateFuncPtr, errorCode);
 
-    if (errorCode == CL_SUCCESS && event != nullptr)
-    {
-        ASSERT(eventCreateFunc);
-        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_MAP_IMAGE, eventCreateFunc);
-    }
+    CheckCreateEvent(*this, CL_COMMAND_MAP_IMAGE, eventCreateFunc, event, errorCode);
     return map;
+}
+
+cl_int CommandQueue::enqueueUnmapMemObject(cl_mem memobj,
+                                           void *mappedPtr,
+                                           cl_uint numEventsInWaitList,
+                                           const cl_event *eventWaitList,
+                                           cl_event *event)
+{
+    const Memory &memory       = memobj->cast<Memory>();
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode =
+        mImpl->enqueueUnmapMemObject(memory, mappedPtr, waitEvents, eventCreateFuncPtr);
+
+    CheckCreateEvent(*this, CL_COMMAND_UNMAP_MEM_OBJECT, eventCreateFunc, event, errorCode);
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueMigrateMemObjects(cl_uint numMemObjects,
+                                              const cl_mem *memObjects,
+                                              MemMigrationFlags flags,
+                                              cl_uint numEventsInWaitList,
+                                              const cl_event *eventWaitList,
+                                              cl_event *event)
+{
+    MemoryPtrs memories;
+    memories.reserve(numMemObjects);
+    while (numMemObjects-- != 0u)
+    {
+        memories.emplace_back(&(*memObjects++)->cast<Memory>());
+    }
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode =
+        mImpl->enqueueMigrateMemObjects(memories, flags, waitEvents, eventCreateFuncPtr);
+
+    CheckCreateEvent(*this, CL_COMMAND_MIGRATE_MEM_OBJECTS, eventCreateFunc, event, errorCode);
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueNDRangeKernel(cl_kernel kernel,
+                                          cl_uint workDim,
+                                          const size_t *globalWorkOffset,
+                                          const size_t *globalWorkSize,
+                                          const size_t *localWorkSize,
+                                          cl_uint numEventsInWaitList,
+                                          const cl_event *eventWaitList,
+                                          cl_event *event)
+{
+    const Kernel &krnl         = kernel->cast<Kernel>();
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueNDRangeKernel(krnl, workDim, globalWorkOffset, globalWorkSize,
+                                                   localWorkSize, waitEvents, eventCreateFuncPtr);
+
+    CheckCreateEvent(*this, CL_COMMAND_NDRANGE_KERNEL, eventCreateFunc, event, errorCode);
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueTask(cl_kernel kernel,
+                                 cl_uint numEventsInWaitList,
+                                 const cl_event *eventWaitList,
+                                 cl_event *event)
+{
+    const Kernel &krnl         = kernel->cast<Kernel>();
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueTask(krnl, waitEvents, eventCreateFuncPtr);
+
+    CheckCreateEvent(*this, CL_COMMAND_TASK, eventCreateFunc, event, errorCode);
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueNativeKernel(UserFunc userFunc,
+                                         void *args,
+                                         size_t cbArgs,
+                                         cl_uint numMemObjects,
+                                         const cl_mem *memList,
+                                         const void **argsMemLoc,
+                                         cl_uint numEventsInWaitList,
+                                         const cl_event *eventWaitList,
+                                         cl_event *event)
+{
+    std::vector<unsigned char> funcArgs;
+    BufferPtrs buffers;
+    std::vector<size_t> offsets;
+    if (numMemObjects != 0u)
+    {
+        // If argument memory block contains memory objects, make a copy.
+        funcArgs.resize(cbArgs);
+        std::memcpy(funcArgs.data(), args, cbArgs);
+        buffers.reserve(numMemObjects);
+        offsets.reserve(numMemObjects);
+
+        while (numMemObjects-- != 0u)
+        {
+            buffers.emplace_back(&(*memList++)->cast<Buffer>());
+
+            // Calc memory offset of cl_mem object in args.
+            offsets.emplace_back(static_cast<const char *>(*argsMemLoc++) -
+                                 static_cast<const char *>(args));
+
+            // Fetch location of cl_mem object in copied function argument memory block.
+            void *loc = &funcArgs[offsets.back()];
+
+            // Cast cl_mem object to cl::Buffer pointer in place.
+            *reinterpret_cast<Buffer **>(loc) = &(*reinterpret_cast<cl_mem *>(loc))->cast<Buffer>();
+        }
+
+        // Use copied argument memory block.
+        args = funcArgs.data();
+    }
+
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueNativeKernel(userFunc, args, cbArgs, buffers, offsets,
+                                                  waitEvents, eventCreateFuncPtr);
+
+    CheckCreateEvent(*this, CL_COMMAND_NATIVE_KERNEL, eventCreateFunc, event, errorCode);
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueMarkerWithWaitList(cl_uint numEventsInWaitList,
+                                               const cl_event *eventWaitList,
+                                               cl_event *event)
+{
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueMarkerWithWaitList(waitEvents, eventCreateFuncPtr);
+
+    CheckCreateEvent(*this, CL_COMMAND_MARKER, eventCreateFunc, event, errorCode);
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueMarker(cl_event *event)
+{
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+
+    cl_int errorCode = mImpl->enqueueMarker(eventCreateFunc);
+
+    CheckCreateEvent(*this, CL_COMMAND_MARKER, eventCreateFunc, event, errorCode);
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueWaitForEvents(cl_uint numEvents, const cl_event *eventList)
+{
+    return mImpl->enqueueWaitForEvents(Event::Cast(numEvents, eventList));
+}
+
+cl_int CommandQueue::enqueueBarrierWithWaitList(cl_uint numEventsInWaitList,
+                                                const cl_event *eventWaitList,
+                                                cl_event *event)
+{
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueBarrierWithWaitList(waitEvents, eventCreateFuncPtr);
+
+    CheckCreateEvent(*this, CL_COMMAND_BARRIER, eventCreateFunc, event, errorCode);
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueBarrier()
+{
+    return mImpl->enqueueBarrier();
+}
+
+cl_int CommandQueue::flush()
+{
+    return mImpl->flush();
+}
+
+cl_int CommandQueue::finish()
+{
+    return mImpl->finish();
 }
 
 CommandQueue::~CommandQueue()
@@ -549,6 +699,12 @@ CommandQueue::~CommandQueue()
     {
         mDevice->mDefaultCommandQueue = nullptr;
     }
+}
+
+size_t CommandQueue::getDeviceIndex() const
+{
+    return std::find(mContext->getDevices().cbegin(), mContext->getDevices().cend(), mDevice) -
+           mContext->getDevices().cbegin();
 }
 
 CommandQueue::CommandQueue(Context &context,

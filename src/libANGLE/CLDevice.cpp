@@ -108,7 +108,6 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
         case DeviceInfo::GlobalMemSize:
         case DeviceInfo::MaxConstantBufferSize:
         case DeviceInfo::LocalMemSize:
-        case DeviceInfo::ExecutionCapabilities:
         case DeviceInfo::QueueOnHostProperties:
         case DeviceInfo::QueueOnDeviceProperties:
         case DeviceInfo::PartitionAffinityDomain:
@@ -223,6 +222,10 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
         case DeviceInfo::MemBaseAddrAlign:
             copyValue = &mInfo.mMemBaseAddrAlign;
             copySize  = sizeof(mInfo.mMemBaseAddrAlign);
+            break;
+        case DeviceInfo::ExecutionCapabilities:
+            copyValue = &mInfo.mExecCapabilities;
+            copySize  = sizeof(mInfo.mExecCapabilities);
             break;
         case DeviceInfo::QueueOnDeviceMaxSize:
             copyValue = &mInfo.mQueueOnDeviceMaxSize;
