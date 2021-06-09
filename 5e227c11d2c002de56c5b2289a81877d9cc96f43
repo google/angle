@@ -34,6 +34,42 @@
       "parentUuid": "7a885ad6_14236143",
       "revId": "5e227c11d2c002de56c5b2289a81877d9cc96f43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07673e8f_08f1cd4c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T15:44:03Z",
+      "side": 1,
+      "message": "ANGLE does track uninit contents already, although it looks like this tracking is disabled when the resource resource init extension is disabled.\n\nI wonder if we could track this specifically for frame capture. It may be a slightly bigger scope for something you can easily work around on a per-test basis, but it would be a more complete fix. What do you think Cody/Gert? The change would be to implement just the tracking of uninit data without the resource initialization step we do before the draw for WebGL.",
+      "parentUuid": "31e7239d_19139717",
+      "revId": "5e227c11d2c002de56c5b2289a81877d9cc96f43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab370714_21c5e77e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T15:44:03Z",
+      "side": 1,
+      "message": "ANGLE does track uninit contents already, although it looks like this tracking is disabled when the resource resource init extension is disabled.\n\nI wonder if we could track this specifically for frame capture. It may be a slightly bigger scope for something you can easily work around on a per-test basis, but it would be a more complete fix. What do you think Cody/Gert? The change would be to implement just the tracking of uninit data without the resource initialization step we do before draws in WebGL.",
+      "parentUuid": "31e7239d_19139717",
+      "revId": "5e227c11d2c002de56c5b2289a81877d9cc96f43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
