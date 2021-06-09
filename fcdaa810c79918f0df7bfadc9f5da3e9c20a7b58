@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bbc6099_12aca1f0",
+        "filename": "src/compiler/translator/tree_util/SpecializationConstant.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-09T15:50:54Z",
+      "side": 1,
+      "message": "Was it a bug that these width/height values used to be uint?   Or should there not be a noticeable behavioral change either way?",
+      "range": {
+        "startLine": 300,
+        "startChar": 65,
+        "endLine": 300,
+        "endChar": 80
+      },
+      "revId": "fcdaa810c79918f0df7bfadc9f5da3e9c20a7b58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
