@@ -2513,7 +2513,7 @@ void MemoryBarrierTestBase::textureUpdateBitImageWriteThenCopy(ShaderWritePipeli
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, kTextureSize, kTextureSize);
 
     const std::array<float, 4> kExpectedData = {
-        0, 1.0, writePipeline == ShaderWritePipeline::Graphics ? 1.0 : 0, 1.0};
+        0, 1.0f, writePipeline == ShaderWritePipeline::Graphics ? 1.0f : 0, 1.0f};
     verifyFramebufferAndImageContents(writePipeline, writeResource, texture, kExpectedData);
 }
 
