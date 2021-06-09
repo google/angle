@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1602df28_35a0158b",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-09T20:52:24Z",
+      "side": 1,
+      "message": "from \"OES_EGL_image_external.txt\" spec -\n\n        Each TEXTURE_EXTERNAL_OES texture object may require up to 3 texture\n        image units for each texture unit to which it is bound.  The number of\n        texture image units required by a bound texture object can be queried\n        using GetTexParameteriv() with \u003ctarget\u003e set to the texture target in\n        question, \u003cvalue\u003e set to REQUIRED_TEXTURE_IMAGE_UNITS_OES\n        ...\n        RESOLVED: allow the implementation to set the number of texture\n        image units required by each texture object.  Allow the app to query\n        this with REQUIRED_TEXTURE_IMAGE_UNITS_OES.  Have drawing commands\n        fail (INVALID_OPERATION) when the number of texture image units\n        required by all enabled/referenced texture units exceeds the\n        implementation limit (which can be queried with\n        MAX_COMBINED_TEXTURE_IMAGE_UNITS ...",
+      "parentUuid": "4c45cb17_99efeb56",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 75
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27e3abe7_18b77590",
         "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
         "patchSetId": 6
@@ -121,6 +145,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f9701861_d770526b",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-09T20:52:24Z",
+      "side": 1,
+      "message": "you already have \"G8_B8_R8_3PLANE_420_UNORM_ANGLEX\" assigned to \"0x6B00\".\n\nDo i change that as well?",
+      "parentUuid": "aa5ca4d5_e7b8098a",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 62
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "138f2c88_37b1521e",
         "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
         "patchSetId": 6
@@ -144,6 +192,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5dbca711_8fdb9fcd",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-09T20:52:24Z",
+      "side": 1,
+      "message": "i dont think i see the issue. This extension converts a run time query into an offline or worst case app start up check",
+      "parentUuid": "138f2c88_37b1521e",
+      "range": {
+        "startLine": 108,
+        "startChar": 48,
+        "endLine": 108,
+        "endChar": 57
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0df8e1e7_c2062d05",
         "filename": "src/common/angleutils.h",
         "patchSetId": 6
@@ -155,6 +227,30 @@
       "writtenOn": "2021-06-09T20:32:06Z",
       "side": 1,
       "message": "these will go in glext_angle.h, be renamed, and generally use the same patterns as that file.",
+      "range": {
+        "startLine": 297,
+        "startChar": 0,
+        "endLine": 308,
+        "endChar": 52
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbd1994a_588021e5",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-09T20:52:24Z",
+      "side": 1,
+      "message": "was following precedent set here -\u003e https://chromium-review.googlesource.com/c/angle/angle/+/2623813\n\ni took a look at \"glext_angle.h\" and was not sure if that is the right file because I dont think this change is modifying glext.h.",
+      "parentUuid": "0df8e1e7_c2062d05",
       "range": {
         "startLine": 297,
         "startChar": 0,
