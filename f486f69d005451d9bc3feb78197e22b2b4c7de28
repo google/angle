@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81b66197_48ed2342",
+        "filename": "src/libANGLE/renderer/cl/CLContextCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T14:39:28Z",
+      "side": 1,
+      "message": "Because this will interface with Vulkan it would be good to refactor it to fit in better with the Vk back-end/ANGLE in general. For instance, handling an error here is more difficult because you\u0027re calling this from a constructor.\n\nInstead of returning an impl object from an action command, use virtual create methods to create Impl objects like in GLES ANGLE. And make the link method pass down an error - my guess is in Vulkan we\u0027ll need some error processing around this.",
+      "range": {
+        "startLine": 270,
+        "startChar": 15,
+        "endLine": 270,
+        "endChar": 18
+      },
+      "revId": "f486f69d005451d9bc3feb78197e22b2b4c7de28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
