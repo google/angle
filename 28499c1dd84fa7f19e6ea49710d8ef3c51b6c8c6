@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "47ed0dd9_048bac23",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T20:58:02Z",
+      "side": 1,
+      "message": "What does this extension do exactly? Sorry I am having trouble tracking it.",
+      "parentUuid": "1602df28_35a0158b",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 75
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27e3abe7_18b77590",
         "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
         "patchSetId": 6
@@ -204,6 +228,30 @@
       "side": 1,
       "message": "i dont think i see the issue. This extension converts a run time query into an offline or worst case app start up check",
       "parentUuid": "138f2c88_37b1521e",
+      "range": {
+        "startLine": 108,
+        "startChar": 48,
+        "endLine": 108,
+        "endChar": 57
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "baf295c3_2a88e9d5",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T20:58:02Z",
+      "side": 1,
+      "message": "How can you query angle \"offline\"? It\u0027s run time no matter what, unless I am confused. I\u0027m trying to correct your wording here. ANGLE exposes extensions that encode certain behaviours. We don\u0027t achieve functionality via strings.",
+      "parentUuid": "5dbca711_8fdb9fcd",
       "range": {
         "startLine": 108,
         "startChar": 48,
