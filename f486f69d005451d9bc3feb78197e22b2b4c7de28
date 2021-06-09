@@ -22,6 +22,30 @@
       },
       "revId": "f486f69d005451d9bc3feb78197e22b2b4c7de28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80d622c9_a4424748",
+        "filename": "src/libANGLE/renderer/cl/CLContextCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-09T14:51:58Z",
+      "side": 1,
+      "message": "The name \"linkProgram\" is confusing, since it actually creates a program, so consistent with all other create functions I have to return the impl object. Any change can be discussed, but would for sure result in a significant refactorization as all creating functions would be involved, which should happen in a separate CL. I propose to keep it like it is for this CL.",
+      "parentUuid": "81b66197_48ed2342",
+      "range": {
+        "startLine": 270,
+        "startChar": 15,
+        "endLine": 270,
+        "endChar": 18
+      },
+      "revId": "f486f69d005451d9bc3feb78197e22b2b4c7de28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
