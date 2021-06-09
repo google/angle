@@ -46,6 +46,30 @@
       },
       "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca9e2674_93a82566",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T19:08:07Z",
+      "side": 1,
+      "message": "Well, the macro is really at its best when you have patterns like this:\n\nerr \u003d function1(..)\nif (err \u003d\u003d error)\n{\n   return err;\n}\n\nerr \u003d function2(..)\nif (err \u003d\u003d error)\n{\n   return err;\n}\n\nSeeing as you just have a single \"try\" instance in all these spots, I\u0027m fine if you want to just fold this into a function rather than a macro. The macro is only really needed for the return / early exit pattern. Seeing as all the code that runs after the early exit you\u0027d have here fits the same pattern, function does make sense for now. I\u0027d be surprised if try pattern doesn\u0027t come up again.",
+      "parentUuid": "0ea56b64_83ac12fd",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 0
+      },
+      "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
