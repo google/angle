@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "aa5ca4d5_e7b8098a",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T20:38:51Z",
+      "side": 1,
+      "message": "Ahh... that was our EGL space.. please use 0x96B1-0x96B8",
+      "parentUuid": "62652f04_128d609b",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 62
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "138f2c88_37b1521e",
         "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
         "patchSetId": 6
