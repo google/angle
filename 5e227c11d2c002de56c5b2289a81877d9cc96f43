@@ -88,6 +88,24 @@
       "parentUuid": "ab370714_21c5e77e",
       "revId": "5e227c11d2c002de56c5b2289a81877d9cc96f43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8305887c_ace5dddd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T15:47:12Z",
+      "side": 1,
+      "message": "One last thought - in the self-tests, we could enable robust init because performance doesn\u0027t matter. Maybe that\u0027s the easiest fix for now.",
+      "parentUuid": "d3c85ab5_0952f91e",
+      "revId": "5e227c11d2c002de56c5b2289a81877d9cc96f43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
