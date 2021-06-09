@@ -69,6 +69,42 @@
       "parentUuid": "7da8e9de_0a41e080",
       "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dce4cd27_dbb1eaf9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-09T11:33:13Z",
+      "side": 1,
+      "message": "The call chain leading to the assertion doesn\u0027t seem to be very capture specific, i.e. it is called from syncState, and this is triggered by  getTexImage: \n\n\nTextureState::getBaseLevelDesc() const at Texture.cpp:?\nrx::TextureVk::getBaseLevelFormat ... at TextureVk.cpp:3008\nrx::TextureVk::ensureImageInitialized ... at TextureVk.cpp:2230\nrx::TextureVk::syncState ... at TextureVk.cpp:2523\ngl::Texture::syncState ... at Texture.cpp:2021\ngl::Texture::getTexImage ... \n\n\nSo I don\u0027t think there is a simple way to work around this. For now my proposal is to skip get getTexImage if the texture is cube and not cube complete. There is a caveat, but I don\u0027t think it is really an issue, certainly not as long as the serialized state is actually de-serialized and used to start a trace.",
+      "parentUuid": "773c5356_cbcb23e0",
+      "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffef9b95_ba455f7c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-09T11:33:13Z",
+      "side": 1,
+      "message": "See above.",
+      "parentUuid": "773c5356_cbcb23e0",
+      "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
