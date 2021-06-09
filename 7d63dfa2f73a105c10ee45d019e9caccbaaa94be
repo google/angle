@@ -123,6 +123,24 @@
       "parentUuid": "ffef9b95_ba455f7c",
       "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5512a36e_08279099",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-09T15:27:50Z",
+      "side": 1,
+      "message": "I know that you added the extension for GLES, GetTexImage is part of OpenGL though, and if you ever consider also supporting this, then it would have to follow that standard. \n\nIt seems that GetTexImage is not defining any specific behavior if the texture is  not complete, so it\u0027s hard to say what would make sense to do in such a case. \n\nBut back to the code, the call that leads to the assert is actually Texture::syncState, and this is called from many places, but I also see that there is http://anglebug.com/4058, but it is marked as fixed. \n\nI reordered the series, so that this patch is no longer required to get the other stuff landed, so I think I\u0027ll take a deep dive to see whether this can be fixed correctly.",
+      "parentUuid": "10ff5352_50fd6f70",
+      "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
