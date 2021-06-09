@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a172673_372024a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T19:58:11Z",
+      "side": 1,
+      "message": "LGTM - but rather than enforcing this policy of always-defined pixel contents in the test, it would be safer to pursue a systematic solution.",
+      "revId": "cd1b548817c040c7bdf6840ce13041d2cbc23914",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
