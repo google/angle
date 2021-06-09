@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eaebc3c1_ef001f2f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-09T21:42:16Z",
+      "side": 1,
+      "message": "Please take another look at infra/specs/generate_test_spec_json.py\nI think this might be the reason why the autoroller failed to create a CL\nLocally it gave me\n\nTraceback (most recent call last):\n  File \"generate_test_spec_json.py\", line 132, in \u003cmodule\u003e\n    sys.exit(main())\n  File \"generate_test_spec_json.py\", line 109, in main\n    assert (mixin in chromium_generator.mixins)\nAssertionError\n\nwhen running scripts/run_code_generation.py",
+      "revId": "40cdcbaca500482c0a560ce8d947a3a93fa9f52f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
