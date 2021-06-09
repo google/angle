@@ -22,6 +22,30 @@
       },
       "revId": "163f6ac055f4840a66696aaee70b4f02f9886d0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c171d2f5_b28827b8",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T16:03:52Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0e1bfe9a_1da071ce",
+      "range": {
+        "startLine": 385,
+        "startChar": 0,
+        "endLine": 386,
+        "endChar": 92
+      },
+      "revId": "163f6ac055f4840a66696aaee70b4f02f9886d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
