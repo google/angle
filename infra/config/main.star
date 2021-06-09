@@ -401,6 +401,12 @@ luci.cq_group(
             disable_reuse = True,
         ),
         luci.cq_tryjob_verifier(
+            builder = "chromium:try/android-angle-chromium-try",
+        ),
+        luci.cq_tryjob_verifier(
+            builder = "chromium:try/android-angle-try",
+        ),
+        luci.cq_tryjob_verifier(
             builder = "chromium:try/android_angle_deqp_rel_ng",
         ),
         luci.cq_tryjob_verifier(
