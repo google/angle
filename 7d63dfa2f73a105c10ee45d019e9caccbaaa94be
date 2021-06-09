@@ -105,6 +105,24 @@
       "parentUuid": "773c5356_cbcb23e0",
       "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10ff5352_50fd6f70",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T13:31:55Z",
+      "side": 1,
+      "message": "It is capture related. getTexImage is an extension we added for capture specifically. So it\u0027s covering code paths we don\u0027t support via other GL APIs. If the image is not complete, would need to look at the getTexImage API and see what makes sense.",
+      "parentUuid": "ffef9b95_ba455f7c",
+      "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
