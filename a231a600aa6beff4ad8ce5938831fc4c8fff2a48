@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47b0c71f_aabfafc2",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T16:28:24Z",
+      "side": 1,
+      "message": "rather than this specific macro for this event use case, make a try macro that wraps the call where the error code is generated. see ANGLE_TRY for an example. You could call it ANGLE_CL_TRY or similar.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 0
+      },
+      "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
