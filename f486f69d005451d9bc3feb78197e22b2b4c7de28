@@ -46,6 +46,30 @@
       },
       "revId": "f486f69d005451d9bc3feb78197e22b2b4c7de28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d751c3de_a1b4547f",
+        "filename": "src/libANGLE/renderer/cl/CLContextCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T19:05:35Z",
+      "side": 1,
+      "message": "http://anglebug.com/6044",
+      "parentUuid": "80d622c9_a4424748",
+      "range": {
+        "startLine": 270,
+        "startChar": 15,
+        "endLine": 270,
+        "endChar": 18
+      },
+      "revId": "f486f69d005451d9bc3feb78197e22b2b4c7de28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
