@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8bd11ac4_e742deb6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-09T19:54:49Z",
+      "side": 1,
+      "message": "Note to reviewers on why I picked you: Mark has been dealing with the AGI hierarchy bugs, and Shabi has more-general understanding of the ANGLE Vulkan back-end.\n\nCreating debug-util markers for AGI, for draw and dispatch is easier than handling gl{Begin|End}Query, because the vkCmd{Begin|End}Query commands can be submitted to either the outer or RP command buffers.  ANGLE submits to both, which made this more difficult.  Which command buffer is used needs to be stored/remembered for when ContextVk::endEventLog() is called by the front end (at the end of processing the gl*Query command).",
+      "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
