@@ -16,6 +16,52 @@
       "message": "I\u0027m not seeing a real difference with Asphalt 9 in AGI, but I\u0027ll try and give Charlie\u0027s CPU overhead script on the traces too.\n\nRegardless, I think this cleans up the code a bit too and should prevent issues like the \u0027pTexelBufferView\u0027 thing that this fixes.",
       "revId": "963b78e5aef08799ea356419ea7695b0fc1bec46",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3432036a_c28eba23",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T20:09:49Z",
+      "side": 1,
+      "message": "nit: please cache first \u0026 second so we can see their types. There\u0027s discussion of this in the Google c++ guide if you\u0027re curious.",
+      "range": {
+        "startLine": 366,
+        "startChar": 28,
+        "endLine": 366,
+        "endChar": 69
+      },
+      "revId": "963b78e5aef08799ea356419ea7695b0fc1bec46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03347f06_fa5e2ef9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 5723,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T20:09:49Z",
+      "side": 1,
+      "message": "This is going to trigger allocations IIUC. What\u0027s the guarantees we can make of the size of the lists in these methods?\n\nanother approach is to use a helper object, say owned by context, that builds up a list of these guys, but can reuse the temporary storage between submits.",
+      "range": {
+        "startLine": 5723,
+        "startChar": 45,
+        "endLine": 5723,
+        "endChar": 99
+      },
+      "revId": "963b78e5aef08799ea356419ea7695b0fc1bec46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
