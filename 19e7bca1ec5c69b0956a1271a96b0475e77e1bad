@@ -33,6 +33,24 @@
       "message": "Why is this changing the test, rather than adding a new one?   Are we losing test coverage by doing this?",
       "revId": "19e7bca1ec5c69b0956a1271a96b0475e77e1bad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2accd69_d73f0150",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 10858,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-09T19:49:05Z",
+      "side": 1,
+      "message": "Not really. I added this change originally like this in a previous change (which is really testing global variable initialization, not uniforms), and testing it with my code realized default uniforms had a bug. I committed that temporarily with a uniform block, but this was the original form of the test.\n\nAgain, not a relevant part of the test anyway.",
+      "parentUuid": "d2a1add3_e618045c",
+      "revId": "19e7bca1ec5c69b0956a1271a96b0475e77e1bad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
