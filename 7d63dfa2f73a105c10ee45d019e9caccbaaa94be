@@ -141,6 +141,24 @@
       "parentUuid": "10ff5352_50fd6f70",
       "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc41a2dd_3dd2ffd6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T15:40:24Z",
+      "side": 1,
+      "message": "ANGLE implements GLES right now, and for the forseeable future, so GetTexImage is only implemented for the ANGLE ext. We do want similar/same functionality in general. Looking at the API, the cube face is specified in the target parameter, so this API should work for incomplete cube textures. That means we shouldn\u0027t be calling syncState, and a proper fix would be to handle the texture update (if necessary) in the back-end without touching dirty bits. It could be annoying for some edge cases, like a cube map that could never be complete - we\u0027d need to read back staged data somehow.\n\nSGTM on reordering, this does seem a minor issue that is a bit annoying to fix. Also skipping capture for non-cube-complete cube maps is a reasonable workaround while we don\u0027t have a complete fix so LGTM.",
+      "parentUuid": "5512a36e_08279099",
+      "revId": "7d63dfa2f73a105c10ee45d019e9caccbaaa94be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
