@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1eb59895_370abd88",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T21:00:24Z",
+      "side": 1,
+      "message": "I would also avoid using the term \"non-standard\" as it doesn\u0027t have an agreed upon meaning. I would refer to them as new formats, or that the extensions adds filterable (is that what you mean by sampling?) YUV formats for use with external images.",
+      "parentUuid": "47ed0dd9_048bac23",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 75
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27e3abe7_18b77590",
         "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
         "patchSetId": 6
