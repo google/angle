@@ -46,6 +46,30 @@
       },
       "revId": "d0dc22fd07e40beb5a771840a8a0d43134aa20c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17fc4210_e9adf7c5",
+        "filename": "scripts/trigger.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T16:04:13Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7be8e82a_f60f6542",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 67
+      },
+      "revId": "d0dc22fd07e40beb5a771840a8a0d43134aa20c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
