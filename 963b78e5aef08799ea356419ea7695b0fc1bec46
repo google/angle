@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6958a670_40b2dd25",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-09T02:45:50Z",
+      "side": 1,
+      "message": "I\u0027m not seeing a real difference with Asphalt 9 in AGI, but I\u0027ll try and give Charlie\u0027s CPU overhead script on the traces too.\n\nRegardless, I think this cleans up the code a bit too and should prevent issues like the \u0027pTexelBufferView\u0027 thing that this fixes.",
+      "revId": "963b78e5aef08799ea356419ea7695b0fc1bec46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
