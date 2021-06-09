@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e96e1e3_f817206c",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-09T16:07:46Z",
+      "side": 1,
+      "message": "Done. Also here I was avoiding macros as advised in the Google C++ style guide.",
+      "parentUuid": "f7517cf4_8853df62",
+      "range": {
+        "startLine": 593,
+        "startChar": 8,
+        "endLine": 593,
+        "endChar": 31
+      },
+      "revId": "94884a21a057e52fe924708f754b84c8031814e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5cb5d22_1656bde7",
@@ -47,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef810ad0_b2817b3a",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-09T16:07:46Z",
+      "side": 1,
+      "message": "Thanks, was a leftover from a different implementation. Fixed.",
+      "parentUuid": "f5cb5d22_1656bde7",
+      "range": {
+        "startLine": 788,
+        "startChar": 31,
+        "endLine": 788,
+        "endChar": 39
+      },
+      "revId": "94884a21a057e52fe924708f754b84c8031814e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3e352759_3216effb",
@@ -60,6 +108,30 @@
       "writtenOn": "2021-06-09T14:43:55Z",
       "side": 1,
       "message": "nit: also try macro places",
+      "range": {
+        "startLine": 719,
+        "startChar": 8,
+        "endLine": 719,
+        "endChar": 17
+      },
+      "revId": "94884a21a057e52fe924708f754b84c8031814e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "97b17c22_2991893d",
+        "filename": "src/libANGLE/renderer/cl/CLCommandQueueCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-09T16:07:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e352759_3216effb",
       "range": {
         "startLine": 719,
         "startChar": 8,
