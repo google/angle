@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7517cf4_8853df62",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T14:43:55Z",
+      "side": 1,
+      "message": "nit: use a TRY macro pattern for this kind of check.",
+      "range": {
+        "startLine": 593,
+        "startChar": 8,
+        "endLine": 593,
+        "endChar": 31
+      },
+      "revId": "94884a21a057e52fe924708f754b84c8031814e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5cb5d22_1656bde7",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T14:43:55Z",
+      "side": 1,
+      "message": "we we friends with Context? Can\u0027t we use accessors?",
+      "range": {
+        "startLine": 788,
+        "startChar": 31,
+        "endLine": 788,
+        "endChar": 39
+      },
+      "revId": "94884a21a057e52fe924708f754b84c8031814e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e352759_3216effb",
+        "filename": "src/libANGLE/renderer/cl/CLCommandQueueCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-09T14:43:55Z",
+      "side": 1,
+      "message": "nit: also try macro places",
+      "range": {
+        "startLine": 719,
+        "startChar": 8,
+        "endLine": 719,
+        "endChar": 17
+      },
+      "revId": "94884a21a057e52fe924708f754b84c8031814e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
