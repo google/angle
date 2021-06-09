@@ -744,6 +744,9 @@ struct Extensions
 
     // GL_ANGLE_relaxed_vertex_attribute_type
     bool relaxedVertexAttributeTypeANGLE = false;
+
+    // GL_ANGLE_yuv_internal_format
+    bool yuvInternalFormatANGLE = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

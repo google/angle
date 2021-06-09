@@ -751,6 +751,51 @@ void AddCompressedFormat(InternalFormatInfoMap *map,
     InsertFormatInfo(map, formatInfo);
 }
 
+void AddYUVFormat(InternalFormatInfoMap *map,
+                  GLenum internalFormat,
+                  bool sized,
+                  GLuint cr,
+                  GLuint y,
+                  GLuint cb,
+                  GLuint alpha,
+                  GLuint shared,
+                  GLenum format,
+                  GLenum type,
+                  GLenum componentType,
+                  bool srgb,
+                  InternalFormat::SupportCheckFunction textureSupport,
+                  InternalFormat::SupportCheckFunction filterSupport,
+                  InternalFormat::SupportCheckFunction textureAttachmentSupport,
+                  InternalFormat::SupportCheckFunction renderbufferSupport,
+                  InternalFormat::SupportCheckFunction blendSupport)
+{
+    ASSERT(sized);
+
+    InternalFormat formatInfo;
+    formatInfo.internalFormat      = internalFormat;
+    formatInfo.sized               = sized;
+    formatInfo.sizedInternalFormat = internalFormat;
+    formatInfo.redBits             = cr;
+    formatInfo.greenBits           = y;
+    formatInfo.blueBits            = cb;
+    formatInfo.alphaBits           = alpha;
+    formatInfo.sharedBits          = shared;
+    formatInfo.pixelBytes          = (cr + y + cb + alpha + shared) / 8;
+    formatInfo.componentCount =
+        ((cr > 0) ? 1 : 0) + ((y > 0) ? 1 : 0) + ((cb > 0) ? 1 : 0) + ((alpha > 0) ? 1 : 0);
+    formatInfo.format                   = format;
+    formatInfo.type                     = type;
+    formatInfo.componentType            = componentType;
+    formatInfo.colorEncoding            = (srgb ? GL_SRGB : GL_LINEAR);
+    formatInfo.textureSupport           = textureSupport;
+    formatInfo.filterSupport            = filterSupport;
+    formatInfo.textureAttachmentSupport = textureAttachmentSupport;
+    formatInfo.renderbufferSupport      = renderbufferSupport;
+    formatInfo.blendSupport             = blendSupport;
+
+    InsertFormatInfo(map, formatInfo);
+}
+
 // Notes:
 // 1. "Texture supported" includes all the means by which texture can be created, however,
 //    GL_EXT_texture_storage in ES2 is a special case, when only glTexStorage* is allowed.
@@ -1120,6 +1165,11 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddDepthStencilFormat(&map, GL_DEPTH_STENCIL,   false, 32, 8, 24, GL_DEPTH_STENCIL,   GL_FLOAT_32_UNSIGNED_INT_24_8_REV, GL_FLOAT,               RequireESOrExt<3, 0, &Extensions::packedDepthStencilOES>, AlwaysSupported, RequireExt<&Extensions::packedDepthStencilOES>,                                       RequireExt<&Extensions::packedDepthStencilOES>,                                       RequireExt<&Extensions::packedDepthStencilOES>);
     AddDepthStencilFormat(&map, GL_STENCIL,         false,  0, 8,  0, GL_STENCIL,         GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, RequireES<1, 0>,                                          NeverSupported , RequireES<1, 0>,                                                                      RequireES<1, 0>,                                                                      RequireES<1, 0>);
     AddDepthStencilFormat(&map, GL_STENCIL_INDEX,   false,  0, 8,  0, GL_STENCIL_INDEX,   GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, RequireES<3, 1>,                                          NeverSupported , RequireES<3, 1>,                                                                      RequireES<3, 1>,                                                                      RequireES<3, 1>);
+
+    // Non-standard YUV formats
+    //                 | Internal format                             | sized | Cr | Y | Cb | A | S | Format                              | Type            | Comp                  | SRGB | Texture supported                                       | Filterable                                              | Texture attachment                                      | Renderbuffer  | Blend
+    AddYUVFormat(&map,  GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,            true,   8,   8,  8,   0,  0,  GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,    GL_UNSIGNED_BYTE, GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::yuvInternalFormatANGLE>,          RequireExt<&Extensions::yuvInternalFormatANGLE>,          RequireExt<&Extensions::yuvInternalFormatANGLE>,          NeverSupported, NeverSupported);
+    AddYUVFormat(&map,  GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE,           true,   8,   8,  8,   0,  0,  GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE,   GL_UNSIGNED_BYTE, GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::yuvInternalFormatANGLE>,          RequireExt<&Extensions::yuvInternalFormatANGLE>,          RequireExt<&Extensions::yuvInternalFormatANGLE>,          NeverSupported, NeverSupported);
     // clang-format on
 
     return map;
