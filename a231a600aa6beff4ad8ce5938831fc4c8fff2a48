@@ -22,6 +22,30 @@
       },
       "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ea56b64_83ac12fd",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-09T16:37:48Z",
+      "side": 1,
+      "message": "I can\u0027t think of a generic macro ANGLE_CL_TRY that would be useful here.",
+      "parentUuid": "47b0c71f_aabfafc2",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 0
+      },
+      "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
