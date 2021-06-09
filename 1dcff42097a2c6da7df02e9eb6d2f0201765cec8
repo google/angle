@@ -34,6 +34,24 @@
       "parentUuid": "8bd11ac4_e742deb6",
       "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2598532_f76d9d76",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-09T20:11:45Z",
+      "side": 1,
+      "message": "By the time ContextVk::endEventLog() is called, it doesn\u0027t know what happened (now in the past).",
+      "parentUuid": "cf2db7cb_aea8aee4",
+      "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
