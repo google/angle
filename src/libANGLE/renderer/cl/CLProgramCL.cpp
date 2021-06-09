@@ -134,7 +134,7 @@ cl_int CLProgramCL::createKernels(cl_uint numKernels,
 
     std::vector<cl_kernel> nativeKernels(numKernels, nullptr);
     const cl_int errorCode = mNative->getDispatch().clCreateKernelsInProgram(
-        mNative, numKernels, nativeKernels.data(), nullptr);
+        mNative, numKernels, nativeKernels.data(), numKernelsRet);
     if (errorCode == CL_SUCCESS)
     {
         for (cl_kernel nativeKernel : nativeKernels)

@@ -21,9 +21,16 @@ class CLSamplerCL : public CLSamplerImpl
     CLSamplerCL(const cl::Sampler &sampler, cl_sampler native);
     ~CLSamplerCL() override;
 
+    cl_sampler getNative() const;
+
   private:
     const cl_sampler mNative;
 };
+
+inline cl_sampler CLSamplerCL::getNative() const
+{
+    return mNative;
+}
 
 }  // namespace rx
 

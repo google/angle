@@ -29,11 +29,10 @@ using ContextErrorCB = void(CL_CALLBACK *)(const char *errinfo,
                                            size_t cb,
                                            void *user_data);
 
+using MemoryCB  = void(CL_CALLBACK *)(cl_mem memobj, void *user_data);
 using ProgramCB = void(CL_CALLBACK *)(cl_program program, void *user_data);
-
-using EventCB = void(CL_CALLBACK *)(cl_event event, cl_int event_command_status, void *user_data);
-
-using UserFunc = void(CL_CALLBACK *)(void *args);
+using EventCB   = void(CL_CALLBACK *)(cl_event event, cl_int event_command_status, void *user_data);
+using UserFunc  = void(CL_CALLBACK *)(void *args);
 
 template <typename T = void>
 struct Dispatch
@@ -79,6 +78,11 @@ struct NativeObject : public Dispatch<>
     }
 
     NativeObjectType *getNative() { return static_cast<NativeObjectType *>(this); }
+
+    const NativeObjectType *getNative() const
+    {
+        return static_cast<const NativeObjectType *>(this);
+    }
 
     static NativeObjectType *CastNative(NativeObjectType *p) { return p; }
 };

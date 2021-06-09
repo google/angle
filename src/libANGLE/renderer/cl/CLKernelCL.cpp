@@ -7,13 +7,19 @@
 
 #include "libANGLE/renderer/cl/CLKernelCL.h"
 
+#include "libANGLE/renderer/cl/CLCommandQueueCL.h"
+#include "libANGLE/renderer/cl/CLContextCL.h"
 #include "libANGLE/renderer/cl/CLDeviceCL.h"
+#include "libANGLE/renderer/cl/CLMemoryCL.h"
+#include "libANGLE/renderer/cl/CLSamplerCL.h"
 
+#include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLKernel.h"
+#include "libANGLE/CLMemory.h"
 #include "libANGLE/CLPlatform.h"
 #include "libANGLE/CLProgram.h"
-#include "libANGLE/Debug.h"
+#include "libANGLE/CLSampler.h"
 
 namespace rx
 {
@@ -42,7 +48,11 @@ bool GetArgInfo(cl_kernel kernel,
 {
     errorCode = kernel->getDispatch().clGetKernelArgInfo(kernel, index, cl::ToCLenum(name),
                                                          sizeof(T), &value, nullptr);
-    return errorCode == CL_SUCCESS || errorCode == CL_KERNEL_ARG_INFO_NOT_AVAILABLE;
+    if (errorCode == CL_KERNEL_ARG_INFO_NOT_AVAILABLE)
+    {
+        errorCode = CL_SUCCESS;
+    }
+    return errorCode == CL_SUCCESS;
 }
 
 template <typename T>
@@ -64,6 +74,7 @@ bool GetArgString(cl_kernel kernel,
                                                          nullptr, &size);
     if (errorCode == CL_KERNEL_ARG_INFO_NOT_AVAILABLE)
     {
+        errorCode = CL_SUCCESS;
         return true;
     }
     else if (errorCode != CL_SUCCESS)
@@ -115,6 +126,47 @@ CLKernelCL::~CLKernelCL()
     }
 }
 
+cl_int CLKernelCL::setArg(cl_uint argIndex, size_t argSize, const void *argValue)
+{
+    void *value = nullptr;
+    if (argValue != nullptr)
+    {
+        // If argument is a CL object, fetch the mapped value
+        const CLContextCL &ctx = mKernel.getProgram().getContext().getImpl<CLContextCL>();
+        if (argSize == sizeof(cl_mem))
+        {
+            cl_mem memory = *static_cast<const cl_mem *>(argValue);
+            if (ctx.hasMemory(memory))
+            {
+                value = memory->cast<cl::Memory>().getImpl<CLMemoryCL>().getNative();
+            }
+        }
+        if (value == nullptr && argSize == sizeof(cl_sampler))
+        {
+            cl_sampler sampler = *static_cast<const cl_sampler *>(argValue);
+            if (ctx.hasSampler(sampler))
+            {
+                value = sampler->cast<cl::Sampler>().getImpl<CLSamplerCL>().getNative();
+            }
+        }
+        if (value == nullptr && argSize == sizeof(cl_command_queue))
+        {
+            cl_command_queue queue = *static_cast<const cl_command_queue *>(argValue);
+            if (ctx.hasDeviceQueue(queue))
+            {
+                value = queue->cast<cl::CommandQueue>().getImpl<CLCommandQueueCL>().getNative();
+            }
+        }
+    }
+
+    // If mapped value was found, use it instead of original value
+    if (value != nullptr)
+    {
+        argValue = &value;
+    }
+    return mNative->getDispatch().clSetKernelArg(mNative, argIndex, argSize, argValue);
+}
+
 CLKernelImpl::Info CLKernelCL::createInfo(cl_int &errorCode) const
 {
     const cl::Context &ctx = mKernel.getProgram().getContext();
@@ -133,7 +185,9 @@ CLKernelImpl::Info CLKernelCL::createInfo(cl_int &errorCode) const
     {
         const cl_device_id device = ctx.getDevices()[index]->getImpl<CLDeviceCL>().getNative();
         WorkGroupInfo &workGroup  = info.mWorkGroups[index];
+
         if ((ctx.getPlatform().isVersionOrNewer(1u, 2u) &&
+             ctx.getDevices()[index]->supportsBuiltInKernel(info.mFunctionName) &&
              !GetWorkGroupInfo(mNative, device, cl::KernelWorkGroupInfo::GlobalWorkSize,
                                workGroup.mGlobalWorkSize, errorCode)) ||
             !GetWorkGroupInfo(mNative, device, cl::KernelWorkGroupInfo::WorkGroupSize,

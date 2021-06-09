@@ -493,8 +493,8 @@ cl_int ValidateImageForDevice(const Image &image,
     {
         // If image is a 1D image or 1D image buffer object,
         // origin[1] and origin[2] must be 0 and region[1] and region[2] must be 1.
-        case CL_MEM_OBJECT_IMAGE1D:
-        case CL_MEM_OBJECT_IMAGE1D_BUFFER:
+        case MemObjectType::Image1D:
+        case MemObjectType::Image1D_Buffer:
             if (origin[1] != 0u || origin[2] != 0u || region[1] != 1u || region[2] != 1u)
             {
                 return CL_INVALID_VALUE;
@@ -502,15 +502,15 @@ cl_int ValidateImageForDevice(const Image &image,
             break;
         // If image is a 2D image object or a 1D image array object,
         // origin[2] must be 0 and region[2] must be 1.
-        case CL_MEM_OBJECT_IMAGE2D:
-        case CL_MEM_OBJECT_IMAGE1D_ARRAY:
+        case MemObjectType::Image2D:
+        case MemObjectType::Image1D_Array:
             if (origin[2] != 0u || region[2] != 1u)
             {
                 return CL_INVALID_VALUE;
             }
             break;
-        case CL_MEM_OBJECT_IMAGE3D:
-        case CL_MEM_OBJECT_IMAGE2D_ARRAY:
+        case MemObjectType::Image3D:
+        case MemObjectType::Image2D_Array:
             break;
         default:
             ASSERT(false);
@@ -535,6 +535,7 @@ cl_int ValidateImageForDevice(const Image &image,
 }
 
 cl_int ValidateHostRegionForImage(const Image &image,
+                                  const size_t region[3],
                                   size_t rowPitch,
                                   size_t slicePitch,
                                   const void *ptr)
@@ -542,23 +543,23 @@ cl_int ValidateHostRegionForImage(const Image &image,
     // CL_INVALID_VALUE if row_pitch is not 0 and is less than the element size in bytes x width.
     if (rowPitch == 0u)
     {
-        rowPitch = image.getRowSize();
+        rowPitch = image.getElementSize() * region[0];
     }
-    else if (rowPitch < image.getRowSize())
+    else if (rowPitch < image.getElementSize() * region[0])
     {
         return CL_INVALID_VALUE;
     }
     if (slicePitch != 0u)
     {
         // slice_pitch must be 0 if image is a 1D or 2D image.
-        if (image.getType() == CL_MEM_OBJECT_IMAGE1D ||
-            image.getType() == CL_MEM_OBJECT_IMAGE1D_BUFFER ||
-            image.getType() == CL_MEM_OBJECT_IMAGE2D)
+        if (image.getType() == MemObjectType::Image1D ||
+            image.getType() == MemObjectType::Image1D_Buffer ||
+            image.getType() == MemObjectType::Image2D)
         {
             return CL_INVALID_VALUE;
         }
         // CL_INVALID_VALUE if slice_pitch is not 0 and is less than row_pitch x height.
-        if (slicePitch < rowPitch * image.getDescriptor().height)
+        if (slicePitch < rowPitch * region[1])
         {
             return CL_INVALID_VALUE;
         }
@@ -958,6 +959,24 @@ cl_int ValidateGetSupportedImageFormats(cl_context context,
                                         const cl_image_format *image_formats,
                                         const cl_uint *num_image_formats)
 {
+    // CL_INVALID_CONTEXT if context is not a valid context.
+    if (!Context::IsValid(context))
+    {
+        return CL_INVALID_CONTEXT;
+    }
+    const Context &ctx = context->cast<Context>();
+
+    // CL_INVALID_VALUE if flags or image_type are not valid,
+    if (!ValidateMemoryFlags(flags, ctx.getPlatform()) || !Image::IsTypeValid(image_type))
+    {
+        return CL_INVALID_VALUE;
+    }
+    // or if num_entries is 0 and image_formats is not NULL.
+    if (num_entries == 0u && image_formats != nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1327,6 +1346,97 @@ cl_int ValidateSetKernelArg(cl_kernel kernel,
                             size_t arg_size,
                             const void *arg_value)
 {
+    // CL_INVALID_KERNEL if kernel is not a valid kernel object.
+    if (!Kernel::IsValid(kernel))
+    {
+        return CL_INVALID_KERNEL;
+    }
+    const Kernel &krnl = kernel->cast<Kernel>();
+
+    // CL_INVALID_ARG_INDEX if arg_index is not a valid argument index.
+    if (arg_index >= krnl.getInfo().mArgs.size())
+    {
+        return CL_INVALID_ARG_INDEX;
+    }
+
+    if (arg_size == sizeof(cl_mem) && arg_value != nullptr)
+    {
+        const std::string &typeName = krnl.getInfo().mArgs[arg_index].mTypeName;
+
+        // CL_INVALID_MEM_OBJECT for an argument declared to be a memory object
+        // when the specified arg_value is not a valid memory object.
+        if (typeName == "image1d_t")
+        {
+            const cl_mem image = *static_cast<const cl_mem *>(arg_value);
+            if (!Image::IsValid(image) || image->cast<Image>().getType() != MemObjectType::Image1D)
+            {
+                return CL_INVALID_MEM_OBJECT;
+            }
+        }
+        else if (typeName == "image2d_t")
+        {
+            const cl_mem image = *static_cast<const cl_mem *>(arg_value);
+            if (!Image::IsValid(image) || image->cast<Image>().getType() != MemObjectType::Image2D)
+            {
+                return CL_INVALID_MEM_OBJECT;
+            }
+        }
+        else if (typeName == "image3d_t")
+        {
+            const cl_mem image = *static_cast<const cl_mem *>(arg_value);
+            if (!Image::IsValid(image) || image->cast<Image>().getType() != MemObjectType::Image3D)
+            {
+                return CL_INVALID_MEM_OBJECT;
+            }
+        }
+        else if (typeName == "image1d_array_t")
+        {
+            const cl_mem image = *static_cast<const cl_mem *>(arg_value);
+            if (!Image::IsValid(image) ||
+                image->cast<Image>().getType() != MemObjectType::Image1D_Array)
+            {
+                return CL_INVALID_MEM_OBJECT;
+            }
+        }
+        else if (typeName == "image2d_array_t")
+        {
+            const cl_mem image = *static_cast<const cl_mem *>(arg_value);
+            if (!Image::IsValid(image) ||
+                image->cast<Image>().getType() != MemObjectType::Image2D_Array)
+            {
+                return CL_INVALID_MEM_OBJECT;
+            }
+        }
+        else if (typeName == "image1d_buffer_t")
+        {
+            const cl_mem image = *static_cast<const cl_mem *>(arg_value);
+            if (!Image::IsValid(image) ||
+                image->cast<Image>().getType() != MemObjectType::Image1D_Buffer)
+            {
+                return CL_INVALID_MEM_OBJECT;
+            }
+        }
+        // CL_INVALID_SAMPLER for an argument declared to be of type sampler_t
+        // when the specified arg_value is not a valid sampler object.
+        else if (typeName == "sampler_t")
+        {
+            if (!Sampler::IsValid(*static_cast<const cl_sampler *>(arg_value)))
+            {
+                return CL_INVALID_SAMPLER;
+            }
+        }
+        // CL_INVALID_DEVICE_QUEUE for an argument declared to be of type queue_t
+        // when the specified arg_value is not a valid device queue object.
+        else if (typeName == "queue_t")
+        {
+            const cl_command_queue queue = *static_cast<const cl_command_queue *>(arg_value);
+            if (!CommandQueue::IsValid(queue) || !queue->cast<CommandQueue>().isOnDevice())
+            {
+                return CL_INVALID_DEVICE_QUEUE;
+            }
+        }
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1502,6 +1612,39 @@ cl_int ValidateGetEventProfilingInfo(cl_event event,
                                      const void *param_value,
                                      const size_t *param_value_size_ret)
 {
+    // CL_INVALID_EVENT if event is a not a valid event object.
+    if (!Event::IsValid(event))
+    {
+        return CL_INVALID_EVENT;
+    }
+    const Event &evt = event->cast<Event>();
+
+    // CL_PROFILING_INFO_NOT_AVAILABLE
+    // if the CL_QUEUE_PROFILING_ENABLE flag is not set for the command-queue,
+    if (evt.getCommandQueue()->getProperties().isNotSet(CL_QUEUE_PROFILING_ENABLE))
+    {
+        return CL_PROFILING_INFO_NOT_AVAILABLE;
+    }
+    // or if event is a user event object.
+    if (evt.getCommandType() == CL_COMMAND_USER)
+    {
+        return CL_PROFILING_INFO_NOT_AVAILABLE;
+    }
+
+    // CL_INVALID_VALUE if param_name is not valid.
+    const cl_version version = evt.getContext().getPlatform().getVersion();
+    switch (param_name)
+    {
+        case ProfilingInfo::CommandComplete:
+            ANGLE_VALIDATE_VERSION(version, 2, 0);
+            break;
+        case ProfilingInfo::InvalidEnum:
+            return CL_INVALID_VALUE;
+        default:
+            // All remaining possible values for param_name are valid for all versions.
+            break;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1639,7 +1782,7 @@ cl_int ValidateEnqueueReadImage(cl_command_queue command_queue,
     const Image &img = image->cast<Image>();
 
     ANGLE_TRY(ValidateImageForDevice(img, queue.getDevice(), origin, region));
-    ANGLE_TRY(ValidateHostRegionForImage(img, row_pitch, slice_pitch, ptr));
+    ANGLE_TRY(ValidateHostRegionForImage(img, region, row_pitch, slice_pitch, ptr));
 
     return CL_SUCCESS;
 }
@@ -1664,7 +1807,7 @@ cl_int ValidateEnqueueWriteImage(cl_command_queue command_queue,
     const Image &img = image->cast<Image>();
 
     ANGLE_TRY(ValidateImageForDevice(img, queue.getDevice(), origin, region));
-    ANGLE_TRY(ValidateHostRegionForImage(img, input_row_pitch, input_slice_pitch, ptr));
+    ANGLE_TRY(ValidateHostRegionForImage(img, region, input_row_pitch, input_slice_pitch, ptr));
 
     return CL_SUCCESS;
 }
@@ -1703,11 +1846,11 @@ cl_int ValidateEnqueueCopyImage(cl_command_queue command_queue,
     // and the source and destination regions overlap.
     if (&src == &dst)
     {
-        const cl_mem_object_type type = src.getType();
+        const MemObjectType type = src.getType();
         // Check overlap in first dimension
         if (OverlapRegions(src_origin[0], dst_origin[0], region[0]))
         {
-            if (type == CL_MEM_OBJECT_IMAGE1D || type == CL_MEM_OBJECT_IMAGE1D_BUFFER)
+            if (type == MemObjectType::Image1D || type == MemObjectType::Image1D_Buffer)
             {
                 return CL_MEM_COPY_OVERLAP;
             }
@@ -1715,7 +1858,7 @@ cl_int ValidateEnqueueCopyImage(cl_command_queue command_queue,
             // Check overlap in second dimension
             if (OverlapRegions(src_origin[1], dst_origin[1], region[1]))
             {
-                if (type == CL_MEM_OBJECT_IMAGE2D || type == CL_MEM_OBJECT_IMAGE1D_ARRAY)
+                if (type == MemObjectType::Image2D || type == MemObjectType::Image1D_Array)
                 {
                     return CL_MEM_COPY_OVERLAP;
                 }
@@ -1753,7 +1896,7 @@ cl_int ValidateEnqueueCopyImageToBuffer(cl_command_queue command_queue,
     const Buffer &dst = dst_buffer->cast<Buffer>();
 
     // CL_INVALID_MEM_OBJECT if src_image is a 1D image buffer object created from dst_buffer.
-    if (src.getType() == CL_MEM_OBJECT_IMAGE1D_BUFFER && src.getParent() == &dst)
+    if (src.getType() == MemObjectType::Image1D_Buffer && src.getParent() == &dst)
     {
         return CL_INVALID_MEM_OBJECT;
     }
@@ -1762,12 +1905,12 @@ cl_int ValidateEnqueueCopyImageToBuffer(cl_command_queue command_queue,
 
     // CL_INVALID_VALUE if the region specified by dst_offset and dst_offset + dst_cb
     // refer to a region outside dst_buffer.
-    const cl_mem_object_type type = src.getType();
-    size_t dst_cb                 = src.getElementSize() * region[0];
-    if (type != CL_MEM_OBJECT_IMAGE1D && type != CL_MEM_OBJECT_IMAGE1D_BUFFER)
+    const MemObjectType type = src.getType();
+    size_t dst_cb            = src.getElementSize() * region[0];
+    if (type != MemObjectType::Image1D && type != MemObjectType::Image1D_Buffer)
     {
         dst_cb *= region[1];
-        if (type != CL_MEM_OBJECT_IMAGE2D && type != CL_MEM_OBJECT_IMAGE1D_ARRAY)
+        if (type != MemObjectType::Image2D && type != MemObjectType::Image1D_Array)
         {
             dst_cb *= region[2];
         }
@@ -1801,7 +1944,7 @@ cl_int ValidateEnqueueCopyBufferToImage(cl_command_queue command_queue,
     const Image &dst = dst_image->cast<Image>();
 
     // CL_INVALID_MEM_OBJECT if dst_image is a 1D image buffer object created from src_buffer.
-    if (dst.getType() == CL_MEM_OBJECT_IMAGE1D_BUFFER && dst.getParent() == &src)
+    if (dst.getType() == MemObjectType::Image1D_Buffer && dst.getParent() == &src)
     {
         return CL_INVALID_MEM_OBJECT;
     }
@@ -1810,12 +1953,12 @@ cl_int ValidateEnqueueCopyBufferToImage(cl_command_queue command_queue,
 
     // CL_INVALID_VALUE if the region specified by src_offset and src_offset + src_cb
     // refer to a region outside src_buffer.
-    const cl_mem_object_type type = dst.getType();
-    size_t src_cb                 = dst.getElementSize() * region[0];
-    if (type != CL_MEM_OBJECT_IMAGE1D && type != CL_MEM_OBJECT_IMAGE1D_BUFFER)
+    const MemObjectType type = dst.getType();
+    size_t src_cb            = dst.getElementSize() * region[0];
+    if (type != MemObjectType::Image1D && type != MemObjectType::Image1D_Buffer)
     {
         src_cb *= region[1];
-        if (type != CL_MEM_OBJECT_IMAGE2D && type != CL_MEM_OBJECT_IMAGE1D_ARRAY)
+        if (type != MemObjectType::Image2D && type != MemObjectType::Image1D_Array)
         {
             src_cb *= region[2];
         }
@@ -1901,8 +2044,8 @@ cl_int ValidateEnqueueMapImage(cl_command_queue command_queue,
 
     // CL_INVALID_VALUE if image is a 3D image, 1D or 2D image array object
     // and image_slice_pitch is NULL.
-    if ((img.getType() == CL_MEM_OBJECT_IMAGE3D || img.getType() == CL_MEM_OBJECT_IMAGE1D_ARRAY ||
-         img.getType() == CL_MEM_OBJECT_IMAGE2D_ARRAY) &&
+    if ((img.getType() == MemObjectType::Image3D || img.getType() == MemObjectType::Image1D_Array ||
+         img.getType() == MemObjectType::Image2D_Array) &&
         image_slice_pitch == nullptr)
     {
         return CL_INVALID_VALUE;
@@ -1928,7 +2071,7 @@ cl_int ValidateEnqueueUnmapMemObject(cl_command_queue command_queue,
         return CL_INVALID_MEM_OBJECT;
     }
     const Memory &memory = memobj->cast<Memory>();
-    if (memory.getType() == CL_MEM_OBJECT_PIPE)
+    if (memory.getType() == MemObjectType::Pipe)
     {
         return CL_INVALID_MEM_OBJECT;
     }
@@ -2391,6 +2534,18 @@ cl_int ValidateSetMemObjectDestructorCallback(cl_mem memobj,
                                                                             void *user_data),
                                               const void *user_data)
 {
+    // CL_INVALID_MEM_OBJECT if memobj is not a valid memory object.
+    if (!Memory::IsValid(memobj))
+    {
+        return CL_INVALID_MEM_OBJECT;
+    }
+
+    // CL_INVALID_VALUE if pfn_notify is NULL.
+    if (pfn_notify == nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -2656,41 +2811,41 @@ cl_int ValidateCreateImage(cl_context context,
     const size_t sliceSize = imageHeight * rowPitch;
 
     // CL_INVALID_IMAGE_DESCRIPTOR if values specified in image_desc are not valid.
-    switch (image_desc->image_type)
+    switch (FromCLenum<MemObjectType>(image_desc->image_type))
     {
-        case CL_MEM_OBJECT_IMAGE1D:
+        case MemObjectType::Image1D:
             if (image_desc->image_width == 0u)
             {
                 return CL_INVALID_IMAGE_DESCRIPTOR;
             }
             break;
-        case CL_MEM_OBJECT_IMAGE2D:
+        case MemObjectType::Image2D:
             if (image_desc->image_width == 0u || image_desc->image_height == 0u)
             {
                 return CL_INVALID_IMAGE_DESCRIPTOR;
             }
             break;
-        case CL_MEM_OBJECT_IMAGE3D:
+        case MemObjectType::Image3D:
             if (image_desc->image_width == 0u || image_desc->image_height == 0u ||
                 image_desc->image_depth == 0u)
             {
                 return CL_INVALID_IMAGE_DESCRIPTOR;
             }
             break;
-        case CL_MEM_OBJECT_IMAGE1D_ARRAY:
+        case MemObjectType::Image1D_Array:
             if (image_desc->image_width == 0u || image_desc->image_array_size == 0u)
             {
                 return CL_INVALID_IMAGE_DESCRIPTOR;
             }
             break;
-        case CL_MEM_OBJECT_IMAGE2D_ARRAY:
+        case MemObjectType::Image2D_Array:
             if (image_desc->image_width == 0u || image_desc->image_height == 0u ||
                 image_desc->image_array_size == 0u)
             {
                 return CL_INVALID_IMAGE_DESCRIPTOR;
             }
             break;
-        case CL_MEM_OBJECT_IMAGE1D_BUFFER:
+        case MemObjectType::Image1D_Buffer:
             if (image_desc->image_width == 0u)
             {
                 return CL_INVALID_IMAGE_DESCRIPTOR;

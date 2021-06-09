@@ -31,12 +31,12 @@ class CLKernelImpl : angle::NonCopyable
         WorkGroupInfo(WorkGroupInfo &&);
         WorkGroupInfo &operator=(WorkGroupInfo &&);
 
-        size_t mGlobalWorkSize[3]         = {};
-        size_t mWorkGroupSize             = 0u;
-        size_t mCompileWorkGroupSize[3]   = {};
-        cl_ulong mLocalMemSize            = 0u;
-        size_t mPrefWorkGroupSizeMultiple = 0u;
-        cl_ulong mPrivateMemSize          = 0u;
+        std::array<size_t, 3u> mGlobalWorkSize       = {};
+        size_t mWorkGroupSize                        = 0u;
+        std::array<size_t, 3u> mCompileWorkGroupSize = {};
+        cl_ulong mLocalMemSize                       = 0u;
+        size_t mPrefWorkGroupSizeMultiple            = 0u;
+        cl_ulong mPrivateMemSize                     = 0u;
     };
 
     struct ArgInfo
@@ -82,6 +82,8 @@ class CLKernelImpl : angle::NonCopyable
 
     CLKernelImpl(const cl::Kernel &kernel);
     virtual ~CLKernelImpl();
+
+    virtual cl_int setArg(cl_uint argIndex, size_t argSize, const void *argValue) = 0;
 
     virtual Info createInfo(cl_int &errorCode) const = 0;
 

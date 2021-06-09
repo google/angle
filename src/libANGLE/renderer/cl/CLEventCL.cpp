@@ -41,6 +41,15 @@ cl_int CLEventCL::setCallback(cl::Event &event, cl_int commandExecCallbackType)
                                                      &event);
 }
 
+cl_int CLEventCL::getProfilingInfo(cl::ProfilingInfo name,
+                                   size_t valueSize,
+                                   void *value,
+                                   size_t *valueSizeRet)
+{
+    return mNative->getDispatch().clGetEventProfilingInfo(mNative, cl::ToCLenum(name), valueSize,
+                                                          value, valueSizeRet);
+}
+
 std::vector<cl_event> CLEventCL::Cast(const cl::EventPtrs &events)
 {
     std::vector<cl_event> nativeEvents;

@@ -93,20 +93,16 @@ cl_int Image::getInfo(ImageInfo name, size_t valueSize, void *value, size_t *val
     return CL_SUCCESS;
 }
 
-bool Image::IsValid(const _cl_mem *image)
+bool Image::IsTypeValid(MemObjectType imageType)
 {
-    if (!Memory::IsValid(image))
+    switch (imageType)
     {
-        return false;
-    }
-    switch (image->cast<Memory>().getType())
-    {
-        case CL_MEM_OBJECT_IMAGE1D:
-        case CL_MEM_OBJECT_IMAGE2D:
-        case CL_MEM_OBJECT_IMAGE3D:
-        case CL_MEM_OBJECT_IMAGE1D_ARRAY:
-        case CL_MEM_OBJECT_IMAGE2D_ARRAY:
-        case CL_MEM_OBJECT_IMAGE1D_BUFFER:
+        case MemObjectType::Image1D:
+        case MemObjectType::Image2D:
+        case MemObjectType::Image3D:
+        case MemObjectType::Image1D_Array:
+        case MemObjectType::Image2D_Array:
+        case MemObjectType::Image1D_Buffer:
             break;
         default:
             return false;
@@ -120,17 +116,17 @@ bool Image::isRegionValid(const size_t origin[3], const size_t region[3]) const
 {
     switch (getType())
     {
-        case CL_MEM_OBJECT_IMAGE1D:
-        case CL_MEM_OBJECT_IMAGE1D_BUFFER:
+        case MemObjectType::Image1D:
+        case MemObjectType::Image1D_Buffer:
             return origin[0] + region[0] <= mDesc.width;
-        case CL_MEM_OBJECT_IMAGE2D:
+        case MemObjectType::Image2D:
             return origin[0] + region[0] <= mDesc.width && origin[1] + region[1] <= mDesc.height;
-        case CL_MEM_OBJECT_IMAGE3D:
+        case MemObjectType::Image3D:
             return origin[0] + region[0] <= mDesc.width && origin[1] + region[1] <= mDesc.height &&
                    origin[2] + region[2] <= mDesc.depth;
-        case CL_MEM_OBJECT_IMAGE1D_ARRAY:
+        case MemObjectType::Image1D_Array:
             return origin[0] + region[0] <= mDesc.width && origin[1] + region[1] <= mDesc.arraySize;
-        case CL_MEM_OBJECT_IMAGE2D_ARRAY:
+        case MemObjectType::Image2D_Array:
             return origin[0] + region[0] <= mDesc.width && origin[1] + region[1] <= mDesc.height &&
                    origin[2] + region[2] <= mDesc.arraySize;
         default:

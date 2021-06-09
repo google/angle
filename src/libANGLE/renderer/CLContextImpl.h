@@ -41,6 +41,12 @@ class CLContextImpl : angle::NonCopyable
                                           void *hostPtr,
                                           cl_int &errorCode) = 0;
 
+    virtual cl_int getSupportedImageFormats(cl::MemFlags flags,
+                                            cl::MemObjectType imageType,
+                                            cl_uint numEntries,
+                                            cl_image_format *imageFormats,
+                                            cl_uint *numImageFormats) = 0;
+
     virtual CLSamplerImpl::Ptr createSampler(const cl::Sampler &sampler, cl_int &errorCode) = 0;
 
     virtual CLProgramImpl::Ptr createProgramWithSource(const cl::Program &program,

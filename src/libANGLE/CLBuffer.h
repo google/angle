@@ -31,7 +31,7 @@ class Buffer final : public Memory
   public:
     ~Buffer() override;
 
-    cl_mem_object_type getType() const final;
+    MemObjectType getType() const final;
 
     bool isSubBuffer() const;
 
@@ -60,12 +60,12 @@ inline bool Buffer::isRegionValid(const cl_buffer_region &region) const
 
 inline bool Buffer::IsValid(const _cl_mem *buffer)
 {
-    return Memory::IsValid(buffer) && buffer->cast<Memory>().getType() == CL_MEM_OBJECT_BUFFER;
+    return Memory::IsValid(buffer) && buffer->cast<Memory>().getType() == MemObjectType::Buffer;
 }
 
-inline cl_mem_object_type Buffer::getType() const
+inline MemObjectType Buffer::getType() const
 {
-    return CL_MEM_OBJECT_BUFFER;
+    return MemObjectType::Buffer;
 }
 
 inline bool Buffer::isSubBuffer() const

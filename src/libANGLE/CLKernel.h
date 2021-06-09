@@ -19,6 +19,8 @@ class Kernel final : public _cl_kernel, public Object
   public:
     // Front end entry functions, only called from OpenCL entry points
 
+    cl_int setArg(cl_uint argIndex, size_t argSize, const void *argValue);
+
     cl_int getInfo(KernelInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
     cl_int getWorkGroupInfo(cl_device_id device,

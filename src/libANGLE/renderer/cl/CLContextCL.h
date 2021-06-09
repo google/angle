@@ -8,7 +8,11 @@
 #ifndef LIBANGLE_RENDERER_CL_CLCONTEXTCL_H_
 #define LIBANGLE_RENDERER_CL_CLCONTEXTCL_H_
 
+#include "libANGLE/renderer/cl/cl_types.h"
+
 #include "libANGLE/renderer/CLContextImpl.h"
+
+#include <unordered_set>
 
 namespace rx
 {
@@ -18,6 +22,10 @@ class CLContextCL : public CLContextImpl
   public:
     CLContextCL(const cl::Context &context, cl_context native);
     ~CLContextCL() override;
+
+    bool hasMemory(cl_mem memory) const;
+    bool hasSampler(cl_sampler sampler) const;
+    bool hasDeviceQueue(cl_command_queue queue) const;
 
     cl::DevicePtrs getDevices(cl_int &errorCode) const override;
 
@@ -34,6 +42,12 @@ class CLContextCL : public CLContextImpl
                                   const cl::ImageDescriptor &desc,
                                   void *hostPtr,
                                   cl_int &errorCode) override;
+
+    cl_int getSupportedImageFormats(cl::MemFlags flags,
+                                    cl::MemObjectType imageType,
+                                    cl_uint numEntries,
+                                    cl_image_format *imageFormats,
+                                    cl_uint *numImageFormats) override;
 
     CLSamplerImpl::Ptr createSampler(const cl::Sampler &sampler, cl_int &errorCode) override;
 
@@ -69,7 +83,30 @@ class CLContextCL : public CLContextImpl
 
   private:
     const cl_context mNative;
+
+    std::unordered_set<const _cl_mem *> mMemories;
+    std::unordered_set<const _cl_sampler *> mSamplers;
+    std::unordered_set<const _cl_command_queue *> mDeviceQueues;
+
+    friend class CLCommandQueueCL;
+    friend class CLMemoryCL;
+    friend class CLSamplerCL;
 };
+
+inline bool CLContextCL::hasMemory(cl_mem memory) const
+{
+    return mMemories.find(memory) != mMemories.cend();
+}
+
+inline bool CLContextCL::hasSampler(cl_sampler sampler) const
+{
+    return mSamplers.find(sampler) != mSamplers.cend();
+}
+
+inline bool CLContextCL::hasDeviceQueue(cl_command_queue queue) const
+{
+    return mDeviceQueues.find(queue) != mDeviceQueues.cend();
+}
 
 }  // namespace rx
 

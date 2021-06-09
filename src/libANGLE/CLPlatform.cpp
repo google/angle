@@ -70,16 +70,7 @@ void Platform::Initialize(const cl_icd_dispatch &dispatch,
         ERR() << "Already initialized";
         return;
     }
-
-    _cl_platform_id::sDispatch   = &dispatch;
-    _cl_device_id::sDispatch     = &dispatch;
-    _cl_context::sDispatch       = &dispatch;
-    _cl_command_queue::sDispatch = &dispatch;
-    _cl_mem::sDispatch           = &dispatch;
-    _cl_program::sDispatch       = &dispatch;
-    _cl_kernel::sDispatch        = &dispatch;
-    _cl_event::sDispatch         = &dispatch;
-    _cl_sampler::sDispatch       = &dispatch;
+    Dispatch::sDispatch = &dispatch;
 
     platforms.reserve(createFuncs.size());
     while (!createFuncs.empty())

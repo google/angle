@@ -285,7 +285,7 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             copySize   = sizeof(valPointer);
             break;
         case DeviceInfo::ParentDevice:
-            valPointer = mParent->getNative();
+            valPointer = Device::CastNative(mParent.get());
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
@@ -388,25 +388,25 @@ bool Device::supportsBuiltInKernel(const std::string &name) const
 
 bool Device::supportsNativeImageDimensions(const cl_image_desc &desc) const
 {
-    switch (desc.image_type)
+    switch (FromCLenum<MemObjectType>(desc.image_type))
     {
-        case CL_MEM_OBJECT_IMAGE1D:
+        case MemObjectType::Image1D:
             return desc.image_width <= mInfo.mImage2D_MaxWidth;
-        case CL_MEM_OBJECT_IMAGE2D:
+        case MemObjectType::Image2D:
             return desc.image_width <= mInfo.mImage2D_MaxWidth &&
                    desc.image_height <= mInfo.mImage2D_MaxHeight;
-        case CL_MEM_OBJECT_IMAGE3D:
+        case MemObjectType::Image3D:
             return desc.image_width <= mInfo.mImage3D_MaxWidth &&
                    desc.image_height <= mInfo.mImage3D_MaxHeight &&
                    desc.image_depth <= mInfo.mImage3D_MaxDepth;
-        case CL_MEM_OBJECT_IMAGE1D_ARRAY:
+        case MemObjectType::Image1D_Array:
             return desc.image_width <= mInfo.mImage2D_MaxWidth &&
                    desc.image_array_size <= mInfo.mImageMaxArraySize;
-        case CL_MEM_OBJECT_IMAGE2D_ARRAY:
+        case MemObjectType::Image2D_Array:
             return desc.image_width <= mInfo.mImage2D_MaxWidth &&
                    desc.image_height <= mInfo.mImage2D_MaxHeight &&
                    desc.image_array_size <= mInfo.mImageMaxArraySize;
-        case CL_MEM_OBJECT_IMAGE1D_BUFFER:
+        case MemObjectType::Image1D_Buffer:
             return desc.image_width <= mInfo.mImageMaxBufferSize;
         default:
             ASSERT(false);
@@ -419,21 +419,21 @@ bool Device::supportsImageDimensions(const ImageDescriptor &desc) const
 {
     switch (desc.type)
     {
-        case CL_MEM_OBJECT_IMAGE1D:
+        case MemObjectType::Image1D:
             return desc.width <= mInfo.mImage2D_MaxWidth;
-        case CL_MEM_OBJECT_IMAGE2D:
+        case MemObjectType::Image2D:
             return desc.width <= mInfo.mImage2D_MaxWidth && desc.height <= mInfo.mImage2D_MaxHeight;
-        case CL_MEM_OBJECT_IMAGE3D:
+        case MemObjectType::Image3D:
             return desc.width <= mInfo.mImage3D_MaxWidth &&
                    desc.height <= mInfo.mImage3D_MaxHeight && desc.depth <= mInfo.mImage3D_MaxDepth;
-        case CL_MEM_OBJECT_IMAGE1D_ARRAY:
+        case MemObjectType::Image1D_Array:
             return desc.width <= mInfo.mImage2D_MaxWidth &&
                    desc.arraySize <= mInfo.mImageMaxArraySize;
-        case CL_MEM_OBJECT_IMAGE2D_ARRAY:
+        case MemObjectType::Image2D_Array:
             return desc.width <= mInfo.mImage2D_MaxWidth &&
                    desc.height <= mInfo.mImage2D_MaxHeight &&
                    desc.arraySize <= mInfo.mImageMaxArraySize;
-        case CL_MEM_OBJECT_IMAGE1D_BUFFER:
+        case MemObjectType::Image1D_Buffer:
             return desc.width <= mInfo.mImageMaxBufferSize;
         default:
             ASSERT(false);

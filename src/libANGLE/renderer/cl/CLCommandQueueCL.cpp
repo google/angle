@@ -7,11 +7,14 @@
 
 #include "libANGLE/renderer/cl/CLCommandQueueCL.h"
 
+#include "libANGLE/renderer/cl/CLContextCL.h"
 #include "libANGLE/renderer/cl/CLEventCL.h"
 #include "libANGLE/renderer/cl/CLKernelCL.h"
 #include "libANGLE/renderer/cl/CLMemoryCL.h"
 
 #include "libANGLE/CLBuffer.h"
+#include "libANGLE/CLCommandQueue.h"
+#include "libANGLE/CLContext.h"
 #include "libANGLE/CLImage.h"
 #include "libANGLE/CLKernel.h"
 #include "libANGLE/CLMemory.h"
@@ -36,10 +39,24 @@ void CheckCreateEvent(cl_int errorCode, cl_event nativeEvent, CLEventImpl::Creat
 
 CLCommandQueueCL::CLCommandQueueCL(const cl::CommandQueue &commandQueue, cl_command_queue native)
     : CLCommandQueueImpl(commandQueue), mNative(native)
-{}
+{
+    if (commandQueue.getProperties().isSet(CL_QUEUE_ON_DEVICE))
+    {
+        commandQueue.getContext().getImpl<CLContextCL>().mDeviceQueues.emplace(
+            commandQueue.getNative());
+    }
+}
 
 CLCommandQueueCL::~CLCommandQueueCL()
 {
+    if (mCommandQueue.getProperties().isSet(CL_QUEUE_ON_DEVICE))
+    {
+        const size_t numRemoved =
+            mCommandQueue.getContext().getImpl<CLContextCL>().mDeviceQueues.erase(
+                mCommandQueue.getNative());
+        ASSERT(numRemoved == 1u);
+    }
+
     if (mNative->getDispatch().clReleaseCommandQueue(mNative) != CL_SUCCESS)
     {
         ERR() << "Error while releasing CL command-queue";

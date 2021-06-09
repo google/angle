@@ -22,12 +22,13 @@ class Image final : public Memory
 
     cl_int getInfo(ImageInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
+    static bool IsTypeValid(MemObjectType imageType);
     static bool IsValid(const _cl_mem *image);
 
   public:
     ~Image() override;
 
-    cl_mem_object_type getType() const final;
+    MemObjectType getType() const final;
 
     const cl_image_format &getFormat() const;
     const ImageDescriptor &getDescriptor() const;
@@ -54,7 +55,12 @@ class Image final : public Memory
     friend class Object;
 };
 
-inline cl_mem_object_type Image::getType() const
+inline bool Image::IsValid(const _cl_mem *image)
+{
+    return Memory::IsValid(image) && IsTypeValid(image->cast<Memory>().getType());
+}
+
+inline MemObjectType Image::getType() const
 {
     return mDesc.type;
 }

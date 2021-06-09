@@ -13,9 +13,15 @@
 namespace rx
 {
 
+class CLCommandQueueCL;
 class CLContextCL;
 class CLDeviceCL;
+class CLEventCL;
+class CLKernelCL;
+class CLMemoryCL;
 class CLPlatformCL;
+class CLProgramCL;
+class CLSamplerCL;
 
 }  // namespace rx
 

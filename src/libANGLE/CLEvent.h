@@ -28,6 +28,11 @@ class Event final : public _cl_event, public Object
 
     cl_int setCallback(cl_int commandExecCallbackType, EventCB pfnNotify, void *userData);
 
+    cl_int getProfilingInfo(ProfilingInfo name,
+                            size_t valueSize,
+                            void *value,
+                            size_t *valueSizeRet);
+
   public:
     ~Event() override;
 

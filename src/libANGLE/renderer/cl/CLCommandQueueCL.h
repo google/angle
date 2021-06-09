@@ -20,6 +20,8 @@ class CLCommandQueueCL : public CLCommandQueueImpl
     CLCommandQueueCL(const cl::CommandQueue &commandQueue, cl_command_queue native);
     ~CLCommandQueueCL() override;
 
+    cl_command_queue getNative() const;
+
     cl_int setProperty(cl::CommandQueueProperties properties, cl_bool enable) override;
 
     cl_int enqueueReadBuffer(const cl::Buffer &buffer,
@@ -211,6 +213,11 @@ class CLCommandQueueCL : public CLCommandQueueImpl
   private:
     const cl_command_queue mNative;
 };
+
+inline cl_command_queue CLCommandQueueCL::getNative() const
+{
+    return mNative;
+}
 
 }  // namespace rx
 

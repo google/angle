@@ -309,8 +309,8 @@ cl_int GetSupportedImageFormats(cl_context context,
                                 cl_image_format *image_formats,
                                 cl_uint *num_image_formats)
 {
-    WARN_NOT_SUPPORTED(GetSupportedImageFormats);
-    return 0;
+    return context->cast<Context>().getSupportedImageFormats(flags, image_type, num_entries,
+                                                             image_formats, num_image_formats);
 }
 
 cl_int GetMemObjectInfo(cl_mem memobj,
@@ -347,8 +347,7 @@ cl_int SetMemObjectDestructorCallback(cl_mem memobj,
                                       void(CL_CALLBACK *pfn_notify)(cl_mem memobj, void *user_data),
                                       void *user_data)
 {
-    WARN_NOT_SUPPORTED(SetMemObjectDestructorCallback);
-    return 0;
+    return memobj->cast<Memory>().setDestructorCallback(pfn_notify, user_data);
 }
 
 void *SVMAlloc(cl_context context, SVM_MemFlags flags, size_t size, cl_uint alignment)
@@ -567,8 +566,7 @@ cl_int ReleaseKernel(cl_kernel kernel)
 
 cl_int SetKernelArg(cl_kernel kernel, cl_uint arg_index, size_t arg_size, const void *arg_value)
 {
-    WARN_NOT_SUPPORTED(SetKernelArg);
-    return 0;
+    return kernel->cast<Kernel>().setArg(arg_index, arg_size, arg_value);
 }
 
 cl_int SetKernelArgSVMPointer(cl_kernel kernel, cl_uint arg_index, const void *arg_value)
@@ -688,8 +686,8 @@ cl_int GetEventProfilingInfo(cl_event event,
                              void *param_value,
                              size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetEventProfilingInfo);
-    return 0;
+    return event->cast<Event>().getProfilingInfo(param_name, param_value_size, param_value,
+                                                 param_value_size_ret);
 }
 
 cl_int Flush(cl_command_queue command_queue)

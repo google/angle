@@ -23,6 +23,8 @@ class CLKernelCL : public CLKernelImpl
 
     cl_kernel getNative() const;
 
+    cl_int setArg(cl_uint argIndex, size_t argSize, const void *argValue) override;
+
     Info createInfo(cl_int &errorCode) const override;
 
   private:

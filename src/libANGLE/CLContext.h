@@ -62,6 +62,12 @@ class Context final : public _cl_context, public Object
                          void *hostPtr,
                          cl_int &errorCode);
 
+    cl_int getSupportedImageFormats(MemFlags flags,
+                                    MemObjectType imageType,
+                                    cl_uint numEntries,
+                                    cl_image_format *imageFormats,
+                                    cl_uint *numImageFormats);
+
     cl_sampler createSamplerWithProperties(const cl_sampler_properties *properties,
                                            cl_int &errorCode);
 

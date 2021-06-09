@@ -15,6 +15,11 @@
 namespace cl
 {
 
+cl_int Kernel::setArg(cl_uint argIndex, size_t argSize, const void *argValue)
+{
+    return mImpl->setArg(argIndex, argSize, argValue);
+}
+
 cl_int Kernel::getInfo(KernelInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     cl_uint valUInt       = 0u;

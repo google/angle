@@ -135,12 +135,12 @@ CLMemoryImpl::Ptr CLContextCL::createImage(const cl::Image &image,
 
     if (mContext.getPlatform().isVersionOrNewer(1u, 2u))
     {
+        const cl_mem_object_type nativeType = cl::ToCLenum(desc.type);
+        const cl_mem nativeParent =
+            image.getParent() ? image.getParent()->getImpl<CLMemoryCL>().getNative() : nullptr;
         const cl_image_desc nativeDesc = {
-            desc.type,       desc.width,
-            desc.height,     desc.depth,
-            desc.arraySize,  desc.rowPitch,
-            desc.slicePitch, desc.numMipLevels,
-            desc.numSamples, {cl::Memory::CastNative(image.getParent().get())}};
+            nativeType,    desc.width,      desc.height,       desc.depth,      desc.arraySize,
+            desc.rowPitch, desc.slicePitch, desc.numMipLevels, desc.numSamples, {nativeParent}};
 
         if (image.getProperties().empty())
         {
@@ -158,12 +158,12 @@ CLMemoryImpl::Ptr CLContextCL::createImage(const cl::Image &image,
     {
         switch (desc.type)
         {
-            case CL_MEM_OBJECT_IMAGE2D:
+            case cl::MemObjectType::Image2D:
                 nativeImage = mNative->getDispatch().clCreateImage2D(
                     mNative, image.getFlags().get(), &format, desc.width, desc.height,
                     desc.rowPitch, hostPtr, &errorCode);
                 break;
-            case CL_MEM_OBJECT_IMAGE3D:
+            case cl::MemObjectType::Image3D:
                 nativeImage = mNative->getDispatch().clCreateImage3D(
                     mNative, image.getFlags().get(), &format, desc.width, desc.height, desc.depth,
                     desc.rowPitch, desc.slicePitch, hostPtr, &errorCode);
@@ -176,6 +176,16 @@ CLMemoryImpl::Ptr CLContextCL::createImage(const cl::Image &image,
     }
 
     return CLMemoryImpl::Ptr(nativeImage != nullptr ? new CLMemoryCL(image, nativeImage) : nullptr);
+}
+
+cl_int CLContextCL::getSupportedImageFormats(cl::MemFlags flags,
+                                             cl::MemObjectType imageType,
+                                             cl_uint numEntries,
+                                             cl_image_format *imageFormats,
+                                             cl_uint *numImageFormats)
+{
+    return mNative->getDispatch().clGetSupportedImageFormats(
+        mNative, flags.get(), cl::ToCLenum(imageType), numEntries, imageFormats, numImageFormats);
 }
 
 CLSamplerImpl::Ptr CLContextCL::createSampler(const cl::Sampler &sampler, cl_int &errorCode)

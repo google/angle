@@ -106,6 +106,14 @@ cl_int Event::setCallback(cl_int commandExecCallbackType, EventCB pfnNotify, voi
     return CL_SUCCESS;
 }
 
+cl_int Event::getProfilingInfo(ProfilingInfo name,
+                               size_t valueSize,
+                               void *value,
+                               size_t *valueSizeRet)
+{
+    return mImpl->getProfilingInfo(name, valueSize, value, valueSizeRet);
+}
+
 Event::~Event() = default;
 
 void Event::callback(cl_int commandStatus)

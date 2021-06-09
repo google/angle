@@ -28,6 +28,11 @@ class CLEventImpl : angle::NonCopyable
 
     virtual cl_int setCallback(cl::Event &event, cl_int commandExecCallbackType) = 0;
 
+    virtual cl_int getProfilingInfo(cl::ProfilingInfo name,
+                                    size_t valueSize,
+                                    void *value,
+                                    size_t *valueSizeRet) = 0;
+
   protected:
     const cl::Event &mEvent;
 };

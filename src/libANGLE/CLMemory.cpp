@@ -15,6 +15,12 @@
 namespace cl
 {
 
+cl_int Memory::setDestructorCallback(MemoryCB pfnNotify, void *userData)
+{
+    mDestructorCallbacks.emplace(pfnNotify, userData);
+    return CL_SUCCESS;
+}
+
 cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     static_assert(
@@ -29,7 +35,7 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
     switch (name)
     {
         case MemInfo::Type:
-            valUInt   = getType();
+            valUInt   = ToCLenum(getType());
             copyValue = &valUInt;
             copySize  = sizeof(valUInt);
             break;
@@ -101,7 +107,16 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
     return CL_SUCCESS;
 }
 
-Memory::~Memory() = default;
+Memory::~Memory()
+{
+    while (!mDestructorCallbacks.empty())
+    {
+        const MemoryCB callback = mDestructorCallbacks.top().first;
+        void *const userData    = mDestructorCallbacks.top().second;
+        mDestructorCallbacks.pop();
+        callback(this, userData);
+    }
+}
 
 MemFlags Memory::getEffectiveFlags() const
 {

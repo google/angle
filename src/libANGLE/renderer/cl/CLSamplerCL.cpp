@@ -7,17 +7,26 @@
 
 #include "libANGLE/renderer/cl/CLSamplerCL.h"
 
-#include "libANGLE/Debug.h"
+#include "libANGLE/renderer/cl/CLContextCL.h"
+
+#include "libANGLE/CLContext.h"
+#include "libANGLE/CLSampler.h"
 
 namespace rx
 {
 
 CLSamplerCL::CLSamplerCL(const cl::Sampler &sampler, cl_sampler native)
     : CLSamplerImpl(sampler), mNative(native)
-{}
+{
+    sampler.getContext().getImpl<CLContextCL>().mSamplers.emplace(sampler.getNative());
+}
 
 CLSamplerCL::~CLSamplerCL()
 {
+    const size_t numRemoved =
+        mSampler.getContext().getImpl<CLContextCL>().mSamplers.erase(mSampler.getNative());
+    ASSERT(numRemoved == 1u);
+
     if (mNative->getDispatch().clReleaseSampler(mNative) != CL_SUCCESS)
     {
         ERR() << "Error while releasing CL sampler";

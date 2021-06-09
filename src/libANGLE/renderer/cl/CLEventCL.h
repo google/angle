@@ -29,6 +29,11 @@ class CLEventCL : public CLEventImpl
 
     cl_int setCallback(cl::Event &event, cl_int commandExecCallbackType) override;
 
+    cl_int getProfilingInfo(cl::ProfilingInfo name,
+                            size_t valueSize,
+                            void *value,
+                            size_t *valueSizeRet) override;
+
     static std::vector<cl_event> Cast(const cl::EventPtrs &events);
 
   private:

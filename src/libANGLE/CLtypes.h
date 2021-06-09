@@ -17,6 +17,7 @@
 
 // Include frequently used standard headers
 #include <algorithm>
+#include <array>
 #include <functional>
 #include <list>
 #include <memory>
@@ -61,7 +62,7 @@ using ProgramPtrs  = std::vector<ProgramPtr>;
 
 struct ImageDescriptor
 {
-    cl_mem_object_type type;
+    MemObjectType type;
     size_t width;
     size_t height;
     size_t depth;
