@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f63e2b29_6e6dddaf",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T04:24:11Z",
+      "side": 1,
+      "message": "It seems that the `mRenderPassCommandBuffer \u003d\u003d nullptr` inside this function meant to really say hasStartedRenderPassWithCommands() (like used below to determine `isMidRenderPassClear`).\n\nBut I was wondering though, does this mean glClear for mid-RP clears will appear correctly in AGI, but not out-of-RP clears? Shouldn\u0027t glClear always appear as glClear no matter what? I don\u0027t really follow the logic of `mSkippedLoggingAClear`. Seems to me that if RP is not open, the event should simply record on the outside-RP commands, maybe?",
+      "range": {
+        "startLine": 460,
+        "startChar": 25,
+        "endLine": 460,
+        "endChar": 54
+      },
+      "revId": "ec122371a568236ef1eaf97aeaabf3f1f56e5fc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
