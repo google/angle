@@ -104,13 +104,12 @@ def main():
             assert isinstance(test, dict)
             seen_mixins = seen_mixins.union(test.get('mixins', set()))
 
-    found_mixins = {}
+    found_mixins = ADDITIONAL_MIXINS.copy()
     for mixin in seen_mixins:
+        if mixin in found_mixins:
+            continue
         assert (mixin in chromium_generator.mixins)
         found_mixins[mixin] = chromium_generator.mixins[mixin]
-
-    for mixin_name, mixin in ADDITIONAL_MIXINS.items():
-        found_mixins[mixin_name] = mixin
 
     pp = pprint.PrettyPrinter(indent=2)
 
