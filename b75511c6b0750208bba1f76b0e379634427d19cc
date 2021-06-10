@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6a99fa6_fcf27f17",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2845,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-10T15:57:03Z",
+      "side": 1,
+      "message": "Looking at the tests (which do more than the game I originally developed this for), I can see that doing this here doesn\u0027t work when queries are deferred.  This can end up being called repeatedly for different draw calls.  We need this to be called once, at the time that gl{Begin|End}Query is called.",
+      "range": {
+        "startLine": 2845,
+        "startChar": 8,
+        "endLine": 2845,
+        "endChar": 35
+      },
+      "revId": "b75511c6b0750208bba1f76b0e379634427d19cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
