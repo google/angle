@@ -48,6 +48,10 @@ void DebugAnnotatorVk::endEvent(gl::Context *context,
         {
             contextVk->endEventLog(entryPoint, PipelineType::Compute);
         }
+        else if (isQueryEntryPoint(entryPoint))
+        {
+            contextVk->endEventLogForQuery();
+        }
     }
 }
 
@@ -115,6 +119,22 @@ bool DebugAnnotatorVk::isDispatchEntryPoint(angle::EntryPoint entryPoint) const
     {
         case angle::EntryPoint::GLDispatchCompute:
         case angle::EntryPoint::GLDispatchComputeIndirect:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool DebugAnnotatorVk::isQueryEntryPoint(angle::EntryPoint entryPoint) const
+{
+    switch (entryPoint)
+    {
+        case angle::EntryPoint::GLBeginQuery:
+        case angle::EntryPoint::GLBeginQueryEXT:
+        case angle::EntryPoint::GLBeginQueryIndexed:
+        case angle::EntryPoint::GLEndQuery:
+        case angle::EntryPoint::GLEndQueryEXT:
+        case angle::EntryPoint::GLEndQueryIndexed:
             return true;
         default:
             return false;

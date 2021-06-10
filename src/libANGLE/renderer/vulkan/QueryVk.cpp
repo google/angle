@@ -353,7 +353,7 @@ angle::Result QueryVk::end(const gl::Context *context)
             QueryVk *shareQuery = GetShareQuery(contextVk, mType);
             ASSERT(shareQuery == nullptr || &mQueryHelper.get() == &shareQuery->mQueryHelper.get());
 
-            contextVk->endRenderPassQuery(this);
+            ANGLE_TRY(contextVk->endRenderPassQuery(this));
 
             // If another query shares its query helper with this one, its query has just ended!
             // Make it stash its query and create a new one so it can continue.

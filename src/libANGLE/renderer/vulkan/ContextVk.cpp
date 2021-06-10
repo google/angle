@@ -440,6 +440,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mEmulateSeamfulCubeMapSampling(false),
       mOutsideRenderPassCommands(nullptr),
       mRenderPassCommands(nullptr),
+      mQueryEventType(QueryEventCmdBuf::NotInQueryCmd),
       mGpuEventsEnabled(false),
       mEGLSyncObjectPendingFlush(false),
       mHasDeferredFlush(false),
@@ -3039,6 +3040,33 @@ void ContextVk::endEventLog(angle::EntryPoint entryPoint, PipelineType pipelineT
         mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
     }
 }
+void ContextVk::endEventLogForQuery()
+{
+    ASSERT(mQueryEventType == QueryEventCmdBuf::InOutsideCmdBufQueryCmd ||
+           mQueryEventType == QueryEventCmdBuf::InRenderPassCmdBufQueryCmd);
+    if (!mRenderer->angleDebuggerMode())
+    {
+        return;
+    }
+
+    vk::CommandBuffer *commandBuffer = nullptr;
+    switch (mQueryEventType)
+    {
+        case QueryEventCmdBuf::InOutsideCmdBufQueryCmd:
+            ASSERT(mOutsideRenderPassCommands);
+            commandBuffer = &mOutsideRenderPassCommands->getCommandBuffer();
+            break;
+        case QueryEventCmdBuf::InRenderPassCmdBufQueryCmd:
+            ASSERT(mRenderPassCommands);
+            commandBuffer = &mRenderPassCommands->getCommandBuffer();
+            break;
+        default:
+            UNREACHABLE();
+    }
+    commandBuffer->endDebugUtilsLabelEXT();
+
+    mQueryEventType = QueryEventCmdBuf::NotInQueryCmd;
+}
 
 angle::Result ContextVk::handleNoopDrawEvent()
 {
@@ -3049,6 +3077,33 @@ angle::Result ContextVk::handleNoopDrawEvent()
 angle::Result ContextVk::handleMidRenderPassClearEvent()
 {
     return handleDirtyEventLogImpl(mRenderPassCommandBuffer);
+}
+
+angle::Result ContextVk::handleQueryEvent(QueryEventCmdBuf queryEventType)
+{
+    ASSERT(mQueryEventType == QueryEventCmdBuf::NotInQueryCmd);
+    if (!mRenderer->angleDebuggerMode())
+    {
+        return angle::Result::Continue;
+    }
+
+    mQueryEventType = queryEventType;
+
+    vk::CommandBuffer *commandBuffer = nullptr;
+    switch (mQueryEventType)
+    {
+        case QueryEventCmdBuf::InOutsideCmdBufQueryCmd:
+            ASSERT(mOutsideRenderPassCommands);
+            commandBuffer = &mOutsideRenderPassCommands->getCommandBuffer();
+            break;
+        case QueryEventCmdBuf::InRenderPassCmdBufQueryCmd:
+            ASSERT(mRenderPassCommands);
+            commandBuffer = &mRenderPassCommands->getCommandBuffer();
+            break;
+        default:
+            UNREACHABLE();
+    }
+    return handleDirtyEventLogImpl(commandBuffer);
 }
 
 bool ContextVk::isViewportFlipEnabledForDrawFBO() const
@@ -5642,6 +5697,9 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
 
 angle::Result ContextVk::beginRenderPassQuery(QueryVk *queryVk)
 {
+    // Emit debug-util markers before calling the query command.
+    ANGLE_TRY(handleQueryEvent(rx::QueryEventCmdBuf::InRenderPassCmdBufQueryCmd));
+
     // To avoid complexity, we always start and end these queries inside the render pass.  If the
     // render pass has not yet started, the query is deferred until it does.
     if (mRenderPassCommandBuffer)
@@ -5657,8 +5715,11 @@ angle::Result ContextVk::beginRenderPassQuery(QueryVk *queryVk)
     return angle::Result::Continue;
 }
 
-void ContextVk::endRenderPassQuery(QueryVk *queryVk)
+angle::Result ContextVk::endRenderPassQuery(QueryVk *queryVk)
 {
+    // Emit debug-util markers before calling the query command.
+    ANGLE_TRY(handleQueryEvent(rx::QueryEventCmdBuf::InRenderPassCmdBufQueryCmd));
+
     if (mRenderPassCommandBuffer)
     {
         queryVk->getQueryHelper()->endRenderPassQuery(this);
@@ -5668,6 +5729,8 @@ void ContextVk::endRenderPassQuery(QueryVk *queryVk)
 
     ASSERT(mActiveRenderPassQueries[type] == queryVk);
     mActiveRenderPassQueries[type] = nullptr;
+
+    return angle::Result::Continue;
 }
 
 void ContextVk::pauseRenderPassQueriesIfActive()
