@@ -126,11 +126,17 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermSymbol *symbol)
 
     if (needsLocation)
     {
-        const unsigned int locationCount =
-            CalculateVaryingLocationCount(symbol->getType(), getShaderType());
-        uint32_t location = IsShaderIn(type.getQualifier())
-                                ? nextUnusedInputLocation(locationCount)
-                                : nextUnusedOutputLocation(locationCount);
+        uint32_t location = 0;
+        if (layoutQualifier.index <= 0)
+        {
+            // Note: for index == 1 (dual source blending), don't count locations as they are
+            // expected to alias the color output locations.  Only one dual-source output is
+            // supported, so location will be always 0.
+            const unsigned int locationCount =
+                CalculateVaryingLocationCount(symbol->getType(), getShaderType());
+            location = IsShaderIn(type.getQualifier()) ? nextUnusedInputLocation(locationCount)
+                                                       : nextUnusedOutputLocation(locationCount);
+        }
 
         out << separator << "location=" << location;
         separator = kCommaSeparator;

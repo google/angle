@@ -859,7 +859,7 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         }
     }
     SymbolEnv symbolEnv(*this, *root);
-    // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
+    // Declare gl_FragColor and gl_FragData as webgl_FragColor and webgl_FragData
     // if it's core profile shaders and they are used.
     if (getShaderType() == GL_FRAGMENT_SHADER)
     {

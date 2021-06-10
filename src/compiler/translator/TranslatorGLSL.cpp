@@ -189,11 +189,11 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
         }
         if (hasGLSecondaryFragColor)
         {
-            sink << "out vec4 angle_SecondaryFragColor;\n";
+            sink << "out vec4 webgl_SecondaryFragColor;\n";
         }
         if (hasGLSecondaryFragData)
         {
-            sink << "out vec4 angle_SecondaryFragData[" << getResources().MaxDualSourceDrawBuffers
+            sink << "out vec4 webgl_SecondaryFragData[" << getResources().MaxDualSourceDrawBuffers
                  << "];\n";
         }
 

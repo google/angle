@@ -334,13 +334,13 @@ void AssignSecondaryOutputLocations(const gl::ProgramState &programState,
             if (outputVar.name == "gl_SecondaryFragColorEXT")
             {
                 AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment,
-                                "angle_SecondaryFragColor", 0,
+                                "webgl_SecondaryFragColor", 0,
                                 ShaderInterfaceVariableInfo::kInvalid, 0, 0);
             }
             else if (outputVar.name == "gl_SecondaryFragDataEXT")
             {
                 AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment,
-                                "angle_SecondaryFragData", 0, ShaderInterfaceVariableInfo::kInvalid,
+                                "webgl_SecondaryFragData", 0, ShaderInterfaceVariableInfo::kInvalid,
                                 0, 0);
             }
         }

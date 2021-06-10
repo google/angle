@@ -28,6 +28,7 @@
 #include "compiler/translator/tree_ops/RewriteDfdy.h"
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 #include "compiler/translator/tree_ops/vulkan/DeclarePerVertexBlocks.h"
+#include "compiler/translator/tree_ops/vulkan/EmulateFragColorData.h"
 #include "compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.h"
 #include "compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.h"
 #include "compiler/translator/tree_ops/vulkan/ReplaceForShaderFramebufferFetch.h"
@@ -1048,67 +1049,24 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                 }
             }
 
-            bool hasGLFragColor          = false;
-            bool hasGLFragData           = false;
-            bool usePreRotation          = (compileOptions & SH_ADD_PRE_ROTATION) != 0;
-            bool hasGLSampleMask         = false;
-            bool hasGLSecondaryFragColor = false;
-            bool hasGLSecondaryFragData  = false;
+            bool usePreRotation  = (compileOptions & SH_ADD_PRE_ROTATION) != 0;
+            bool hasGLSampleMask = false;
 
             for (const ShaderVariable &outputVar : mOutputVariables)
             {
-                if (outputVar.name == "gl_FragColor")
-                {
-                    ASSERT(!hasGLFragColor);
-                    hasGLFragColor = true;
-                    continue;
-                }
-                else if (outputVar.name == "gl_FragData")
-                {
-                    ASSERT(!hasGLFragData);
-                    hasGLFragData = true;
-                    continue;
-                }
-                else if (outputVar.name == "gl_SampleMask")
+                if (outputVar.name == "gl_SampleMask")
                 {
                     ASSERT(!hasGLSampleMask);
                     hasGLSampleMask = true;
                     continue;
                 }
-                else if (outputVar.name == "gl_SecondaryFragColorEXT")
-                {
-                    ASSERT(!hasGLSecondaryFragColor);
-                    hasGLSecondaryFragColor = true;
-                    continue;
-                }
-                else if (outputVar.name == "gl_SecondaryFragDataEXT")
-                {
-                    ASSERT(!hasGLSecondaryFragData);
-                    hasGLSecondaryFragData = true;
-                    continue;
-                }
             }
 
-            // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
-            // if it's core profile shaders and they are used.
-            ASSERT(!((hasGLFragColor || hasGLSecondaryFragColor) &&
-                     (hasGLFragData || hasGLSecondaryFragData)));
-            if (hasGLFragColor)
+            // Emulate gl_FragColor and gl_FragData with normal output variables.
+            mValidateASTOptions.validateVariableReferences = false;
+            if (!EmulateFragColorData(this, root, &getSymbolTable()))
             {
-                sink << "layout(location = 0) out vec4 webgl_FragColor;\n";
-            }
-            if (hasGLFragData)
-            {
-                sink << "layout(location = 0) out vec4 webgl_FragData[gl_MaxDrawBuffers];\n";
-            }
-            if (hasGLSecondaryFragColor)
-            {
-                sink << "layout(location = 0, index = 1) out vec4 angle_SecondaryFragColor;\n";
-            }
-            if (hasGLSecondaryFragData)
-            {
-                sink << "layout(location = 0, index = 1) out vec4 angle_SecondaryFragData["
-                     << getResources().MaxDualSourceDrawBuffers << "];\n";
+                return false;
             }
 
             if (usesPointCoord)

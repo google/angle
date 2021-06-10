@@ -324,12 +324,12 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                         mFunctions->bindFragDataLocationIndexed(mProgramID, 0, 0,
                                                                 "webgl_FragColor");
                         mFunctions->bindFragDataLocationIndexed(mProgramID, 0, 1,
-                                                                "angle_SecondaryFragColor");
+                                                                "webgl_SecondaryFragColor");
                     }
                     else if (output.name == "gl_SecondaryFragDataEXT")
                     {
                         // Basically we should have a loop here going over the output
-                        // array binding "webgl_FragData[i]" and "angle_SecondaryFragData[i]" array
+                        // array binding "webgl_FragData[i]" and "webgl_SecondaryFragData[i]" array
                         // indices to the correct color buffers and color indices.
                         // However I'm not sure if this construct is legal or not, neither ARB or
                         // EXT version of the spec mention this. They only mention that
@@ -349,7 +349,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
 
                         mFunctions->bindFragDataLocationIndexed(mProgramID, 0, 0, "webgl_FragData");
                         mFunctions->bindFragDataLocationIndexed(mProgramID, 0, 1,
-                                                                "angle_SecondaryFragData");
+                                                                "webgl_SecondaryFragData");
                     }
                 }
             }
