@@ -405,7 +405,7 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
             UNIMPLEMENTED();
     }
 
-    const spirv::IdRef typeId = mBuilder.getSpirvTypeData(spirvType, "").id;
+    const spirv::IdRef typeId = mBuilder.getSpirvTypeData(spirvType, nullptr).id;
     const spirv::IdRef varId  = mBuilder.declareVariable(
         typeId, *storageClass, mBuilder.getDecorations(type), nullptr, name);
 
@@ -524,10 +524,10 @@ void OutputSPIRVTraverser::accessChainPushDynamicComponent(NodeData *data,
 
         SpirvType type;
         type.type                     = EbtUInt;
-        const spirv::IdRef uintTypeId = mBuilder.getSpirvTypeData(type, "").id;
+        const spirv::IdRef uintTypeId = mBuilder.getSpirvTypeData(type, nullptr).id;
 
         type.primarySize              = static_cast<uint8_t>(swizzleIds.size());
-        const spirv::IdRef uvecTypeId = mBuilder.getSpirvTypeData(type, "").id;
+        const spirv::IdRef uvecTypeId = mBuilder.getSpirvTypeData(type, nullptr).id;
 
         const spirv::IdRef swizzlesId = mBuilder.getNewId({});
         spirv::WriteConstantComposite(mBuilder.getSpirvTypeAndConstantDecls(), uvecTypeId,
@@ -1070,7 +1070,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromScalar(
 
     SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
     columnType.secondarySize        = 1;
-    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, "").id;
+    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
 
     for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
     {
@@ -1117,7 +1117,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromVectors(
 
     SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
     columnType.secondarySize        = 1;
-    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, "").id;
+    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
 
     // Chunk up the extracted components by column and construct intermediary vectors.
     for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
@@ -1175,15 +1175,16 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
 
     SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
     columnType.secondarySize        = 1;
-    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, "").id;
+    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
 
     if (parameterType.getCols() >= type.getCols() && parameterType.getRows() >= type.getRows())
     {
         // If the parameter is a larger matrix than the constructor type, extract the columns
         // directly and potentially swizzle them.
-        SpirvType paramColumnType            = mBuilder.getSpirvType(parameterType, EbsUnspecified);
-        paramColumnType.secondarySize        = 1;
-        const spirv::IdRef paramColumnTypeId = mBuilder.getSpirvTypeData(paramColumnType, "").id;
+        SpirvType paramColumnType     = mBuilder.getSpirvType(parameterType, EbsUnspecified);
+        paramColumnType.secondarySize = 1;
+        const spirv::IdRef paramColumnTypeId =
+            mBuilder.getSpirvTypeData(paramColumnType, nullptr).id;
 
         const bool needsSwizzle           = parameterType.getRows() > type.getRows();
         spirv::LiteralIntegerList swizzle = {spirv::LiteralInteger(0), spirv::LiteralInteger(1),
@@ -1219,7 +1220,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
         paramComponentType.primarySize   = 1;
         paramComponentType.secondarySize = 1;
         const spirv::IdRef paramComponentTypeId =
-            mBuilder.getSpirvTypeData(paramComponentType, "").id;
+            mBuilder.getSpirvTypeData(paramComponentType, nullptr).id;
 
         for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
         {
@@ -1307,7 +1308,8 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
         {
             SpirvType componentType   = mBuilder.getSpirvType(argumentType, EbsUnspecified);
             componentType.primarySize = 1;
-            const spirv::IdRef componentTypeId = mBuilder.getSpirvTypeData(componentType, "").id;
+            const spirv::IdRef componentTypeId =
+                mBuilder.getSpirvTypeData(componentType, nullptr).id;
 
             // For vector parameters, take components out of the vector one by one.
             for (int componentIndex = 0; componentIndex < argumentType.getNominalSize() &&
@@ -1329,7 +1331,7 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
         SpirvType componentType            = mBuilder.getSpirvType(argumentType, EbsUnspecified);
         componentType.primarySize          = 1;
         componentType.secondarySize        = 1;
-        const spirv::IdRef componentTypeId = mBuilder.getSpirvTypeData(componentType, "").id;
+        const spirv::IdRef componentTypeId = mBuilder.getSpirvTypeData(componentType, nullptr).id;
 
         // For matrix parameters, take components out of the matrix one by one in column-major
         // order.
@@ -2185,9 +2187,9 @@ bool OutputSPIRVTraverser::visitUnary(Visit visit, TIntermUnary *node)
         // Get the int and uint type ids.
         SpirvType intType;
         intType.type                  = EbtInt;
-        const spirv::IdRef intTypeId  = mBuilder.getSpirvTypeData(intType, "").id;
+        const spirv::IdRef intTypeId  = mBuilder.getSpirvTypeData(intType, nullptr).id;
         intType.type                  = EbtUInt;
-        const spirv::IdRef uintTypeId = mBuilder.getSpirvTypeData(intType, "").id;
+        const spirv::IdRef uintTypeId = mBuilder.getSpirvTypeData(intType, nullptr).id;
 
         // Generate the instruction.
         const spirv::IdRef resultId = mBuilder.getNewId({});
@@ -2470,7 +2472,7 @@ bool OutputSPIRVTraverser::visitUnary(Visit visit, TIntermUnary *node)
 
             SpirvType columnType            = mBuilder.getSpirvType(operandType, EbsUnspecified);
             columnType.secondarySize        = 1;
-            const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, "").id;
+            const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
 
             // Extract and apply the operator to each column.
             for (int columnIndex = 0; columnIndex < operandType.getCols(); ++columnIndex)
@@ -2663,7 +2665,7 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
             mSymbolIdMap[paramVariable] = paramId;
         }
 
-        mBuilder.startNewFunction(ids.functionId, mBuilder.hashFunctionName(function).data());
+        mBuilder.startNewFunction(ids.functionId, function);
 
         return true;
     }
@@ -2948,7 +2950,7 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
     {
         SpirvType elementType  = mBuilder.getSpirvType(type, EbsUnspecified);
         elementType.arraySizes = {};
-        nonArrayTypeId         = mBuilder.getSpirvTypeData(elementType, "").id;
+        nonArrayTypeId         = mBuilder.getSpirvTypeData(elementType, nullptr).id;
     }
 
     if (isShaderInOut)

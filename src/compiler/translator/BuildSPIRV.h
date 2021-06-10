@@ -252,7 +252,7 @@ class SPIRVBuilder : angle::NonCopyable
     TLayoutBlockStorage getBlockStorage(const TType &type) const;
     SpirvType getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const;
     const SpirvTypeData &getTypeData(const TType &type, TLayoutBlockStorage blockStorage);
-    const SpirvTypeData &getSpirvTypeData(const SpirvType &type, const char *blockName);
+    const SpirvTypeData &getSpirvTypeData(const SpirvType &type, const TSymbol *block);
     spirv::IdRef getTypePointerId(spirv::IdRef typeId, spv::StorageClass storageClass);
     spirv::IdRef getFunctionTypeId(spirv::IdRef returnTypeId, const spirv::IdRefList &paramTypeIds);
 
@@ -313,7 +313,7 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getCompositeConstant(spirv::IdRef typeId, const spirv::IdRefList &values);
 
     // Helpers to start and end a function.
-    void startNewFunction(spirv::IdRef functionId, const char *name);
+    void startNewFunction(spirv::IdRef functionId, const TFunction *func);
     void assembleSpirvFunctionBlocks();
 
     // Helper to declare a variable.  Function-local variables must be placed in the first block of
@@ -344,7 +344,7 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::Blob getSpirv();
 
   private:
-    SpirvTypeData declareType(const SpirvType &type, const char *blockName);
+    SpirvTypeData declareType(const SpirvType &type, const TSymbol *block);
 
     const SpirvTypeData &getFieldTypeDataForAlignmentAndSize(const TType &type,
                                                              TLayoutBlockStorage blockStorage);

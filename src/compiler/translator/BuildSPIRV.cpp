@@ -119,25 +119,25 @@ const SpirvTypeData &SPIRVBuilder::getTypeData(const TType &type, TLayoutBlockSt
 {
     SpirvType spirvType = getSpirvType(type, blockStorage);
 
-    const char *blockName = "";
+    const TSymbol *block = nullptr;
     if (type.getStruct() != nullptr)
     {
-        blockName = type.getStruct()->name().data();
+        block = type.getStruct();
     }
     else if (type.isInterfaceBlock())
     {
-        blockName = type.getInterfaceBlock()->name().data();
+        block = type.getInterfaceBlock();
     }
 
-    return getSpirvTypeData(spirvType, blockName);
+    return getSpirvTypeData(spirvType, block);
 }
 
-const SpirvTypeData &SPIRVBuilder::getSpirvTypeData(const SpirvType &type, const char *blockName)
+const SpirvTypeData &SPIRVBuilder::getSpirvTypeData(const SpirvType &type, const TSymbol *block)
 {
     auto iter = mTypeMap.find(type);
     if (iter == mTypeMap.end())
     {
-        SpirvTypeData newTypeData = declareType(type, blockName);
+        SpirvTypeData newTypeData = declareType(type, block);
 
         iter = mTypeMap.insert({type, newTypeData}).first;
     }
@@ -209,7 +209,7 @@ spirv::IdRef SPIRVBuilder::getExtInstImportIdStd()
     return mExtInstImportIdStd;
 }
 
-SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *blockName)
+SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *block)
 {
     // Recursively declare the type.  Type id is allocated afterwards purely for better id order in
     // output.
@@ -227,7 +227,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
             subType.blockStorage = EbsUnspecified;
         }
 
-        const spirv::IdRef subTypeId = getSpirvTypeData(subType, blockName).id;
+        const spirv::IdRef subTypeId = getSpirvTypeData(subType, block).id;
 
         const unsigned int length = type.arraySizes.back();
         typeId                    = getNewId({});
@@ -254,15 +254,14 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
         {
             const TType &fieldType   = *field->type();
             SpirvType fieldSpirvType = getSpirvType(fieldType, type.blockStorage);
-            const char *structName   = "";
+            const TSymbol *structure = fieldType.getStruct();
             // Propagate invariant to struct members.
-            if (fieldType.getStruct() != nullptr)
+            if (structure != nullptr)
             {
                 fieldSpirvType.isInvariant = type.isInvariant;
-                structName                 = fieldType.getStruct()->name().data();
             }
 
-            spirv::IdRef fieldTypeId = getSpirvTypeData(fieldSpirvType, structName).id;
+            spirv::IdRef fieldTypeId = getSpirvTypeData(fieldSpirvType, structure).id;
             fieldTypeIds.push_back(fieldTypeId);
         }
 
@@ -278,7 +277,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
         imageType.isSamplerBaseImage = true;
         imageType.blockStorage       = EbsUnspecified;
 
-        const spirv::IdRef nonSampledId = getSpirvTypeData(imageType, "").id;
+        const spirv::IdRef nonSampledId = getSpirvTypeData(imageType, nullptr).id;
 
         typeId = getNewId({});
         spirv::WriteTypeSampledImage(&mSpirvTypeAndConstantDecls, typeId, nonSampledId);
@@ -315,7 +314,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
         columnType.secondarySize = 1;
         columnType.blockStorage  = EbsUnspecified;
 
-        const spirv::IdRef columnTypeId = getSpirvTypeData(columnType, "").id;
+        const spirv::IdRef columnTypeId = getSpirvTypeData(columnType, nullptr).id;
 
         typeId = getNewId({});
         spirv::WriteTypeMatrix(&mSpirvTypeAndConstantDecls, typeId, columnTypeId,
@@ -329,7 +328,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
         componentType.primarySize  = 1;
         componentType.blockStorage = EbsUnspecified;
 
-        const spirv::IdRef componentTypeId = getSpirvTypeData(componentType, "").id;
+        const spirv::IdRef componentTypeId = getSpirvTypeData(componentType, nullptr).id;
 
         typeId = getNewId({});
         spirv::WriteTypeVector(&mSpirvTypeAndConstantDecls, typeId, componentTypeId,
@@ -377,13 +376,13 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
     // binary size that gets written to disk cache.  http://anglebug.com/4889
     if (type.block != nullptr && type.arraySizes.empty())
     {
-        spirv::WriteName(&mSpirvDebug, typeId, blockName);
+        spirv::WriteName(&mSpirvDebug, typeId, hashName(block).data());
 
         uint32_t fieldIndex = 0;
         for (const TField *field : type.block->fields())
         {
             spirv::WriteMemberName(&mSpirvDebug, typeId, spirv::LiteralInteger(fieldIndex++),
-                                   field->name().data());
+                                   hashFieldName(field).data());
         }
     }
 
@@ -665,7 +664,7 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
     SpirvType sampledSpirvType;
     sampledSpirvType.type = sampledType;
 
-    *sampledTypeOut = getSpirvTypeData(sampledSpirvType, "").id;
+    *sampledTypeOut = getSpirvTypeData(sampledSpirvType, nullptr).id;
 
     const bool isSampledImage = IsSampler(type);
 
@@ -776,7 +775,7 @@ spirv::IdRef SPIRVBuilder::getBoolConstant(bool value)
         SpirvType boolType;
         boolType.type = EbtBool;
 
-        const spirv::IdRef boolTypeId = getSpirvTypeData(boolType, "").id;
+        const spirv::IdRef boolTypeId = getSpirvTypeData(boolType, nullptr).id;
 
         mBoolConstants[asInt] = constantId = getNewId({});
         if (value)
@@ -802,7 +801,7 @@ spirv::IdRef SPIRVBuilder::getBasicConstantHelper(uint32_t value,
         SpirvType spirvType;
         spirvType.type = type;
 
-        const spirv::IdRef typeId     = getSpirvTypeData(spirvType, "").id;
+        const spirv::IdRef typeId     = getSpirvTypeData(spirvType, nullptr).id;
         const spirv::IdRef constantId = getNewId({});
 
         spirv::WriteConstant(&mSpirvTypeAndConstantDecls, typeId, constantId,
@@ -853,7 +852,7 @@ spirv::IdRef SPIRVBuilder::getCompositeConstant(spirv::IdRef typeId, const spirv
     return iter->second;
 }
 
-void SPIRVBuilder::startNewFunction(spirv::IdRef functionId, const char *name)
+void SPIRVBuilder::startNewFunction(spirv::IdRef functionId, const TFunction *func)
 {
     ASSERT(mSpirvCurrentFunctionBlocks.empty());
 
@@ -862,10 +861,7 @@ void SPIRVBuilder::startNewFunction(spirv::IdRef functionId, const char *name)
     mSpirvCurrentFunctionBlocks.back().labelId = getNewId({});
 
     // Output debug information.
-    if (name)
-    {
-        spirv::WriteName(&mSpirvDebug, functionId, name);
-    }
+    spirv::WriteName(&mSpirvDebug, functionId, hashFunctionName(func).data());
 }
 
 void SPIRVBuilder::assembleSpirvFunctionBlocks()
@@ -929,7 +925,7 @@ spirv::IdRef SPIRVBuilder::declareSpecConst(TBasicType type, int id, const char 
     SpirvType spirvType;
     spirvType.type = type;
 
-    const spirv::IdRef typeId = getSpirvTypeData(spirvType, "").id;
+    const spirv::IdRef typeId = getSpirvTypeData(spirvType, nullptr).id;
 
     // Note: all spec constants are 0 initialized by the translator.
     if (type == EbtBool)
@@ -1181,7 +1177,7 @@ const SpirvTypeData &SPIRVBuilder::getFieldTypeDataForAlignmentAndSize(
         std::swap(fieldSpirvType.primarySize, fieldSpirvType.secondarySize);
     }
 
-    return getSpirvTypeData(fieldSpirvType, "");
+    return getSpirvTypeData(fieldSpirvType, nullptr);
 }
 
 uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
@@ -1206,7 +1202,7 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
             baseType.blockStorage = EbsUnspecified;
         }
 
-        const SpirvTypeData &baseTypeData = getSpirvTypeData(baseType, "");
+        const SpirvTypeData &baseTypeData = getSpirvTypeData(baseType, nullptr);
         uint32_t baseAlignment            = baseTypeData.baseAlignment;
 
         // For std140 only:
@@ -1282,7 +1278,7 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
         vectorType.primarySize   = vectorType.secondarySize;
         vectorType.secondarySize = 1;
 
-        const SpirvTypeData &vectorTypeData = getSpirvTypeData(vectorType, "");
+        const SpirvTypeData &vectorTypeData = getSpirvTypeData(vectorType, nullptr);
         uint32_t baseAlignment              = vectorTypeData.baseAlignment;
 
         // For std140 only:
@@ -1310,7 +1306,7 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
         SpirvType baseType   = type;
         baseType.primarySize = 1;
 
-        const SpirvTypeData &baseTypeData = getSpirvTypeData(baseType, "");
+        const SpirvTypeData &baseTypeData = getSpirvTypeData(baseType, nullptr);
         uint32_t baseAlignment            = baseTypeData.baseAlignment;
 
         uint32_t multiplier = type.primarySize != 3 ? type.primarySize : 4;
