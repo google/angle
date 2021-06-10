@@ -142,6 +142,24 @@
       "parentUuid": "bcc0ad96_4f6b0126",
       "revId": "5e227c11d2c002de56c5b2289a81877d9cc96f43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f750740_4f24a602",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T13:55:57Z",
+      "side": 1,
+      "message": "If the tests still run with RobustResourceInit, even if they don\u0027t pass, this sounds good to me as a systemic fix for uninitialized resources.",
+      "parentUuid": "85b389f0_5ea63656",
+      "revId": "5e227c11d2c002de56c5b2289a81877d9cc96f43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
