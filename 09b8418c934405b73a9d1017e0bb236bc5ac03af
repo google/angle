@@ -34,6 +34,23 @@
       "parentUuid": "bdee6338_c50a3c7b",
       "revId": "09b8418c934405b73a9d1017e0bb236bc5ac03af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06c9faf5_287d919f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-10T17:56:28Z",
+      "side": 1,
+      "message": "Shabi FYI, going to land manually (as you are ANGLE Wrangler. I expect this will not be disruptive.)",
+      "revId": "09b8418c934405b73a9d1017e0bb236bc5ac03af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
