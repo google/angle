@@ -101,9 +101,6 @@ FramebufferObjectTest.TextureObjectDifferentFormats/*
 BootAnimationTest.DefaultBootAnimation/*
 
 # ES1 compile failed tests
-ClipPlaneTest.InitialState/*
-ClipPlaneTest.Negative/*
-ClipPlaneTest.Set/*
 CurrentColorTest.Set/*
 FogTest.NegativeParameter/*
 FogTest.NegativeValues/*

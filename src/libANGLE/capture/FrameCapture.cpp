@@ -5412,6 +5412,22 @@ void WriteParamValueReplay<ParamType::TvoidConstPointer>(std::ostream &os,
 }
 
 template <>
+void WriteParamValueReplay<ParamType::TGLfloatConstPointer>(std::ostream &os,
+                                                            const CallCapture &call,
+                                                            const GLfloat *value)
+{
+    if (value == 0)
+    {
+        os << "nullptr";
+    }
+    else
+    {
+        os << "reinterpret_cast<const GLfloat *>("
+           << static_cast<int>(reinterpret_cast<uintptr_t>(value)) << ")";
+    }
+}
+
+template <>
 void WriteParamValueReplay<ParamType::TGLDEBUGPROCKHR>(std::ostream &os,
                                                        const CallCapture &call,
                                                        GLDEBUGPROCKHR value)

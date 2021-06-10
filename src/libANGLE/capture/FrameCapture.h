@@ -575,6 +575,11 @@ void WriteParamValueReplay<ParamType::TvoidConstPointer>(std::ostream &os,
                                                          const void *value);
 
 template <>
+void WriteParamValueReplay<ParamType::TGLfloatConstPointer>(std::ostream &os,
+                                                            const CallCapture &call,
+                                                            const GLfloat *value);
+
+template <>
 void WriteParamValueReplay<ParamType::TGLDEBUGPROCKHR>(std::ostream &os,
                                                        const CallCapture &call,
                                                        GLDEBUGPROCKHR value);

@@ -20,7 +20,7 @@ void CaptureClipPlanef_eqn(const State &glState,
                            const GLfloat *eqn,
                            ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(eqn, 4 * sizeof(GLfloat), paramCapture);
 }
 
 void CaptureClipPlanex_equation(const State &glState,
@@ -67,7 +67,7 @@ void CaptureGetClipPlanef_equation(const State &glState,
                                    GLfloat *equation,
                                    ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(equation, 4 * sizeof(GLfloat), paramCapture);
 }
 
 void CaptureGetClipPlanex_equation(const State &glState,
