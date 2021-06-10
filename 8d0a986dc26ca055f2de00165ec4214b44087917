@@ -99,6 +99,24 @@
       "parentUuid": "9f5f304b_c9b95212",
       "revId": "8d0a986dc26ca055f2de00165ec4214b44087917",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6757189f_345361cb",
+        "filename": "tools/variations/fieldtrial_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-10T17:57:15Z",
+      "side": 1,
+      "message": "Spoke to a Chrome Browser Infra owner who recommended we skip presubmit for this change.",
+      "parentUuid": "6152b613_11365ba0",
+      "revId": "8d0a986dc26ca055f2de00165ec4214b44087917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
