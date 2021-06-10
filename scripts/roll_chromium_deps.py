@@ -80,6 +80,7 @@ ANGLE_CHROMIUM_DEPS = [
     'tools/mb',
     'tools/md_browser',
     'tools/memory',
+    'tools/perf',
     'tools/protoc_wrapper',
     'tools/python',
     'tools/skia_goldctl/linux',
