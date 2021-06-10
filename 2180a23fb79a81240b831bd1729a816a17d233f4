@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3774dc40_0c3085d2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T20:33:56Z",
+      "side": 1,
+      "message": "LGTM with some requests.",
+      "revId": "2180a23fb79a81240b831bd1729a816a17d233f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9bbb026_081e596a",
+        "filename": "src/libANGLE/CLMemory.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T20:33:56Z",
+      "side": 1,
+      "message": "This line is a bit mind bending.  Can you add a comment explaining what it\u0027s doing?",
+      "range": {
+        "startLine": 114,
+        "startChar": 8,
+        "endLine": 114,
+        "endChar": 82
+      },
+      "revId": "2180a23fb79a81240b831bd1729a816a17d233f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03e9d640_1d7e442b",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T20:33:56Z",
+      "side": 1,
+      "message": "Is this debug code?",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 30
+      },
+      "revId": "2180a23fb79a81240b831bd1729a816a17d233f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf0a0c26_edfe6175",
+        "filename": "src/libANGLE/renderer/cl/CLKernelCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T20:33:56Z",
+      "side": 1,
+      "message": "Looks like are mutually exclusive, could this use \"else ifs\" for clarity? And if the expectation is that one of them should be hit, put an assert in the final else.",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 158,
+        "endChar": 9
+      },
+      "revId": "2180a23fb79a81240b831bd1729a816a17d233f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27168824_78bcb5e8",
+        "filename": "src/libANGLE/renderer/cl/CLKernelCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T20:33:56Z",
+      "side": 1,
+      "message": "Should this be an assert?",
+      "range": {
+        "startLine": 161,
+        "startChar": 8,
+        "endLine": 161,
+        "endChar": 24
+      },
+      "revId": "2180a23fb79a81240b831bd1729a816a17d233f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17698343_ea070915",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T20:33:56Z",
+      "side": 1,
+      "message": "Not clear if this is intended.  If it is, can\u0027t you add a TODO or comment?",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 0
+      },
+      "revId": "2180a23fb79a81240b831bd1729a816a17d233f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f047758_23b0e98c",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1439,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T20:33:56Z",
+      "side": 1,
+      "message": "I believe this is also a pattern of mutually exclusive conditions that can be reworked with \"else if\" for clarity and speed.",
+      "range": {
+        "startLine": 1368,
+        "startChar": 0,
+        "endLine": 1439,
+        "endChar": 9
+      },
+      "revId": "2180a23fb79a81240b831bd1729a816a17d233f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
