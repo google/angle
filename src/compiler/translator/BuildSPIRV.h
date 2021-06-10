@@ -51,9 +51,8 @@ struct SpirvType
     // - `matrixPacking` only applies to members of a struct
     TBasicType type = EbtFloat;
 
-    uint8_t primarySize                = 1;
-    uint8_t secondarySize              = 1;
-    TLayoutMatrixPacking matrixPacking = EmpColumnMajor;
+    uint8_t primarySize   = 1;
+    uint8_t secondarySize = 1;
 
     TSpan<const unsigned int> arraySizes;
 
@@ -117,14 +116,13 @@ struct SpirvTypeHash
         static_assert(sh::EbtLast < 256, "Basic type doesn't fit in uint8_t");
         static_assert(sh::EbsLast < 8, "Block storage doesn't fit in 3 bits");
         static_assert(sh::EiifLast < 32, "Image format doesn't fit in 5 bits");
-        static_assert(sh::EmpLast < 4, "Matrix packing doesn't fit in 2 bits");
         ASSERT(type.primarySize > 0 && type.primarySize <= 4);
         ASSERT(type.secondarySize > 0 && type.secondarySize <= 4);
 
         const uint8_t properties[4] = {
             static_cast<uint8_t>(type.type),
             static_cast<uint8_t>((type.primarySize - 1) | (type.secondarySize - 1) << 2 |
-                                 type.isSamplerBaseImage << 4 | type.matrixPacking << 5),
+                                 type.isSamplerBaseImage << 4),
             static_cast<uint8_t>(type.blockStorage | type.imageInternalFormat << 3),
             // Padding because ComputeGenericHash expects a key size divisible by 4
         };
@@ -161,8 +159,6 @@ struct SpirvTypeData
     // applicable).
     uint32_t baseAlignment;
     uint32_t sizeInStorageBlock;
-    // The matrix stride, if matrix or array of matrix.
-    uint32_t matrixStride;
 };
 
 // Decorations to be applied to variable or intermediate ids which are not part of the SPIR-V type
@@ -350,9 +346,9 @@ class SPIRVBuilder : angle::NonCopyable
   private:
     SpirvTypeData declareType(const SpirvType &type, const char *blockName);
 
-    uint32_t calculateBaseAlignmentAndSize(const SpirvType &type,
-                                           uint32_t *sizeInStorageBlockOut,
-                                           uint32_t *matrixStrideOut);
+    const SpirvTypeData &getFieldTypeDataForAlignmentAndSize(const TType &type,
+                                                             TLayoutBlockStorage blockStorage);
+    uint32_t calculateBaseAlignmentAndSize(const SpirvType &type, uint32_t *sizeInStorageBlockOut);
     uint32_t calculateSizeAndWriteOffsetDecorations(const SpirvType &type, spirv::IdRef typeId);
     void writeMemberDecorations(const SpirvType &type, spirv::IdRef typeId);
 

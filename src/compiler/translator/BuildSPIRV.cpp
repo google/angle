@@ -38,10 +38,21 @@ bool operator==(const SpirvType &a, const SpirvType &b)
     // Otherwise, match by the type contents.  The AST transformations sometimes recreate types that
     // are already defined, so we can't rely on pointers being unique.
     return a.type == b.type && a.primarySize == b.primarySize &&
-           a.secondarySize == b.secondarySize && a.matrixPacking == b.matrixPacking &&
-           a.imageInternalFormat == b.imageInternalFormat &&
+           a.secondarySize == b.secondarySize && a.imageInternalFormat == b.imageInternalFormat &&
            a.isSamplerBaseImage == b.isSamplerBaseImage &&
            (a.arraySizes.empty() || a.blockStorage == b.blockStorage);
+}
+
+uint32_t GetTotalArrayElements(const SpirvType &type)
+{
+    uint32_t arraySizeProduct = 1;
+    for (uint32_t arraySize : type.arraySizes)
+    {
+        // For runtime arrays, arraySize will be 0 and should be excluded.
+        arraySizeProduct *= arraySize > 0 ? arraySize : 1;
+    }
+
+    return arraySizeProduct;
 }
 
 spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
@@ -75,16 +86,9 @@ SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage bloc
     spirvType.type                = type.getBasicType();
     spirvType.primarySize         = static_cast<uint8_t>(type.getNominalSize());
     spirvType.secondarySize       = static_cast<uint8_t>(type.getSecondarySize());
-    spirvType.matrixPacking       = type.getLayoutQualifier().matrixPacking;
     spirvType.arraySizes          = type.getArraySizes();
     spirvType.imageInternalFormat = type.getLayoutQualifier().imageInternalFormat;
     spirvType.blockStorage        = blockStorage;
-
-    // Turn unspecified matrix packing into column-major.
-    if (spirvType.matrixPacking == EmpUnspecified)
-    {
-        spirvType.matrixPacking = EmpColumnMajor;
-    }
 
     if (type.getStruct() != nullptr)
     {
@@ -385,14 +389,13 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
 
     uint32_t baseAlignment      = 4;
     uint32_t sizeInStorageBlock = 0;
-    uint32_t matrixStride       = 0;
 
     // Calculate base alignment and sizes for types.  Size for blocks are not calculated, as they
     // are done later at the same time Offset decorations are written.
     const bool isOpaqueType = IsOpaqueType(type.type);
     if (!isOpaqueType)
     {
-        baseAlignment = calculateBaseAlignmentAndSize(type, &sizeInStorageBlock, &matrixStride);
+        baseAlignment = calculateBaseAlignmentAndSize(type, &sizeInStorageBlock);
     }
 
     // Write decorations for interface block fields.
@@ -401,8 +404,9 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
         if (!isOpaqueType && !type.arraySizes.empty())
         {
             // Write the ArrayStride decoration for arrays inside interface blocks.
-            spirv::WriteDecorate(&mSpirvDecorations, typeId, spv::DecorationArrayStride,
-                                 {spirv::LiteralInteger(sizeInStorageBlock)});
+            spirv::WriteDecorate(
+                &mSpirvDecorations, typeId, spv::DecorationArrayStride,
+                {spirv::LiteralInteger(sizeInStorageBlock / GetTotalArrayElements(type))});
         }
         else if (type.arraySizes.empty() && type.block != nullptr)
         {
@@ -417,7 +421,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
         writeMemberDecorations(type, typeId);
     }
 
-    return {typeId, baseAlignment, sizeInStorageBlock, matrixStride};
+    return {typeId, baseAlignment, sizeInStorageBlock};
 }
 
 void SPIRVBuilder::getImageTypeParameters(TBasicType type,
@@ -1159,9 +1163,29 @@ void SPIRVBuilder::writeBranchConditionalBlockEnd()
     nextConditionalBlock();
 }
 
+// This function is nearly identical to getTypeData(), except for row-major matrices.  For the
+// purposes of base alignment and size calculations, it swaps the primary and secondary sizes such
+// that the look up always assumes column-major matrices.  Row-major matrices are only applicable to
+// interface block fields, so this function is only called on those.
+const SpirvTypeData &SPIRVBuilder::getFieldTypeDataForAlignmentAndSize(
+    const TType &type,
+    TLayoutBlockStorage blockStorage)
+{
+    SpirvType fieldSpirvType = getSpirvType(type, blockStorage);
+
+    // If the field is row-major, swap the rows and columns for the purposes of base alignment
+    // calculation.
+    const bool isRowMajor = type.getLayoutQualifier().matrixPacking == EmpRowMajor;
+    if (isRowMajor)
+    {
+        std::swap(fieldSpirvType.primarySize, fieldSpirvType.secondarySize);
+    }
+
+    return getSpirvTypeData(fieldSpirvType, "");
+}
+
 uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
-                                                     uint32_t *sizeInStorageBlockOut,
-                                                     uint32_t *matrixStrideOut)
+                                                     uint32_t *sizeInStorageBlockOut)
 {
     // Calculate the base alignment of a type according to the rules of std140 and std430 packing.
     //
@@ -1200,16 +1224,7 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
 
         // The size occupied by the array is simply the size of each element (which is already
         // aligned to baseAlignment) multiplied by the number of elements.
-        uint32_t arraySizeProduct = 1;
-        for (uint32_t arraySize : type.arraySizes)
-        {
-            // For runtime arrays, arraySize will be 0 and should be excluded.
-            arraySizeProduct *= arraySize > 0 ? arraySize : 1;
-        }
-        *sizeInStorageBlockOut = baseTypeData.sizeInStorageBlock * arraySizeProduct;
-
-        // Matrix is inherited from the non-array type.
-        *matrixStrideOut = baseTypeData.matrixStride;
+        *sizeInStorageBlockOut = baseTypeData.sizeInStorageBlock * GetTotalArrayElements(type);
 
         return baseAlignment;
     }
@@ -1223,7 +1238,8 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
         uint32_t baseAlignment = 4;
         for (const TField *field : type.block->fields())
         {
-            const SpirvTypeData &fieldTypeData = getTypeData(*field->type(), type.blockStorage);
+            const SpirvTypeData &fieldTypeData =
+                getFieldTypeDataForAlignmentAndSize(*field->type(), type.blockStorage);
             baseAlignment = std::max(baseAlignment, fieldTypeData.baseAlignment);
         }
 
@@ -1258,11 +1274,12 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
         // base alignment of a vec4 (secondary size) if column-major, and a vec3 (primary size) if
         // row-major.
         //
+        // Here, we always calculate the base alignment and size for column-major matrices.  If a
+        // row-major matrix is used in a block, the columns and rows are simply swapped before
+        // looking up the base alignment and size.
+        //
         // TODO: verify that ANGLE's primary size is 3 in the example above.
-        if (type.matrixPacking != EmpRowMajor)
-        {
-            vectorType.primarySize = vectorType.secondarySize;
-        }
+        vectorType.primarySize   = vectorType.secondarySize;
         vectorType.secondarySize = 1;
 
         const SpirvTypeData &vectorTypeData = getSpirvTypeData(vectorType, "");
@@ -1277,11 +1294,7 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
 
         // The size occupied by the matrix is the size of each vector multiplied by the number of
         // vectors.
-        *sizeInStorageBlockOut = vectorTypeData.sizeInStorageBlock * type.primarySize *
-                                 type.secondarySize / vectorType.primarySize;
-
-        // The matrix stride is simply the alignment of the vector constituting a column or row.
-        *matrixStrideOut = baseAlignment;
+        *sizeInStorageBlockOut = vectorTypeData.sizeInStorageBlock * vectorType.primarySize;
 
         return baseAlignment;
     }
@@ -1338,8 +1351,9 @@ uint32_t SPIRVBuilder::calculateSizeAndWriteOffsetDecorations(const SpirvType &t
         // > A structure and each structure member have a base offset and a base alignment, from
         // > which an aligned offset is computed by rounding the base offset up to a multiple of the
         // > base alignment.
-        const SpirvTypeData &fieldTypeData = getTypeData(fieldType, type.blockStorage);
-        nextOffset                         = rx::roundUp(nextOffset, fieldTypeData.baseAlignment);
+        const SpirvTypeData &fieldTypeData =
+            getFieldTypeDataForAlignmentAndSize(fieldType, type.blockStorage);
+        nextOffset = rx::roundUp(nextOffset, fieldTypeData.baseAlignment);
 
         // Write the Offset decoration.
         spirv::WriteMemberDecorate(&mSpirvDecorations, typeId, spirv::LiteralInteger(fieldIndex),
@@ -1371,8 +1385,8 @@ void SPIRVBuilder::writeMemberDecorations(const SpirvType &type, spirv::IdRef ty
     for (const TField *field : type.block->fields())
     {
         const TType &fieldType = *field->type();
-
-        const SpirvTypeData &fieldTypeData = getTypeData(fieldType, type.blockStorage);
+        const SpirvTypeData &fieldTypeData =
+            getFieldTypeDataForAlignmentAndSize(fieldType, type.blockStorage);
 
         // Add invariant decoration if any.
         if (type.isInvariant || fieldType.isInvariant())
@@ -1385,12 +1399,13 @@ void SPIRVBuilder::writeMemberDecorations(const SpirvType &type, spirv::IdRef ty
         // Add matrix decorations if any.
         if (fieldType.isMatrix())
         {
-            ASSERT(fieldTypeData.matrixStride != 0);
+            // The matrix stride is simply the alignment of the vector constituting a column or row.
+            const uint32_t matrixStride = fieldTypeData.baseAlignment;
 
             // MatrixStride
             spirv::WriteMemberDecorate(
                 &mSpirvDecorations, typeId, spirv::LiteralInteger(fieldIndex),
-                spv::DecorationMatrixStride, {spirv::LiteralInteger(fieldTypeData.matrixStride)});
+                spv::DecorationMatrixStride, {spirv::LiteralInteger(matrixStride)});
 
             // ColMajor or RowMajor
             const bool isRowMajor = fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor;
