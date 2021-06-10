@@ -124,6 +124,24 @@
       "parentUuid": "8305887c_ace5dddd",
       "revId": "5e227c11d2c002de56c5b2289a81877d9cc96f43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85b389f0_5ea63656",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-10T13:38:11Z",
+      "side": 1,
+      "message": "I think the best option would be to force on robust init for all testing scenarios with capture/replay, using an override. Even if the feature interacts with some of the tests, seemingly it shouldn\u0027t break those tests. I don\u0027t know if I\u0027d want to maintain a list of specific tests that we enable it with, seems like more maintenance long-term.\n\nI\u0027d suggest adding a \"front-end feature\" to ANGLE, and using the right environment variable to override this in the test harness when we run the test replay executable.\n\nFront-end features:\n\nhttps://source.chromium.org/chromium/chromium/src/+/main:third_party/angle/include/platform/FrontendFeatures.h;l\u003d11?q\u003dfrontendfe\u0026sq\u003d\u0026ss\u003dchromium\n\nExample extension override using a front-end feature:\n\nhttps://source.chromium.org/chromium/chromium/src/+/main:third_party/angle/include/platform/FrontendFeatures.h;l\u003d11;bpv\u003d1;bpt\u003d1?q\u003dfrontendfe\u0026ss\u003dchromium\n\nYou\u0027d be enabling an ext rather than disabling.\n\nAdditionally the env variable is here:\n\nhttps://source.chromium.org/chromium/chromium/src/+/main:third_party/angle/src/libANGLE/renderer/renderer_utils.cpp;l\u003d984?q\u003dangle_Feature_overrides_enabled\u0026ss\u003dchromium\n\nYou could alternately make this a flag to angle_end2end_tests but I think the feature is better because it would act directly on ANGLE instead of the test harness. Otherwise if we wanted to use it with other tests we\u0027d have to also add it to them (potentially).\n\nWDYT?",
+      "parentUuid": "bcc0ad96_4f6b0126",
+      "revId": "5e227c11d2c002de56c5b2289a81877d9cc96f43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
