@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2974b470_d3394b24",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-10T22:06:11Z",
+      "side": 1,
+      "message": "Done.  I fixed the enum values too.",
+      "parentUuid": "706b2751_ee3232ae",
+      "range": {
+        "startLine": 1076,
+        "startChar": 86,
+        "endLine": 1076,
+        "endChar": 91
+      },
+      "revId": "f78617db031814832def0871bd0013edbc2a75ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e45703a7_bcc47f95",
@@ -54,6 +78,24 @@
       "writtenOn": "2021-06-10T21:14:17Z",
       "side": 1,
       "message": "Could these be called automatically by ContextVk inside beginRPQuery and beginQuery? Same with end",
+      "revId": "f78617db031814832def0871bd0013edbc2a75ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a0f9a57_506b7822",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-10T22:06:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e45703a7_bcc47f95",
       "revId": "f78617db031814832def0871bd0013edbc2a75ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
