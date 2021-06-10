@@ -1341,10 +1341,8 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
     }
 
 #if defined(ANGLE_ENABLE_DIRECT_SPIRV_GENERATION)
-    constexpr ShCompileOptions kUnsupportedTransformations = SH_CLAMP_POINT_SIZE;
     if ((compileOptions & SH_GENERATE_SPIRV_DIRECTLY) != 0 &&
-        ((getShaderType() == GL_VERTEX_SHADER &&
-          (compileOptions & kUnsupportedTransformations) == 0) ||
+        (getShaderType() == GL_VERTEX_SHADER || getShaderType() == GL_FRAGMENT_SHADER ||
          getShaderType() == GL_COMPUTE_SHADER))
     {
         // Declare the implicitly defined gl_PerVertex I/O blocks if not already.  This will help

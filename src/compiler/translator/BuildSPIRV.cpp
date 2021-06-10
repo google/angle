@@ -311,6 +311,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
         // Declaring a matrix.  Declare the column type first, then create a matrix out of it.
 
         SpirvType columnType     = type;
+        columnType.primarySize   = columnType.secondarySize;
         columnType.secondarySize = 1;
         columnType.blockStorage  = EbsUnspecified;
 
@@ -318,7 +319,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
 
         typeId = getNewId({});
         spirv::WriteTypeMatrix(&mSpirvTypeAndConstantDecls, typeId, columnTypeId,
-                               spirv::LiteralInteger(type.secondarySize));
+                               spirv::LiteralInteger(type.primarySize));
     }
     else if (type.primarySize > 1)
     {
@@ -1276,8 +1277,7 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
         // Here, we always calculate the base alignment and size for column-major matrices.  If a
         // row-major matrix is used in a block, the columns and rows are simply swapped before
         // looking up the base alignment and size.
-        //
-        // TODO: verify that ANGLE's primary size is 3 in the example above.
+
         vectorType.primarySize   = vectorType.secondarySize;
         vectorType.secondarySize = 1;
 
@@ -1537,6 +1537,10 @@ void SPIRVBuilder::generateExecutionModes(spirv::Blob *blob)
 {
     switch (mShaderType)
     {
+        case gl::ShaderType::Fragment:
+            spirv::WriteExecutionMode(blob, mEntryPointId, spv::ExecutionModeOriginUpperLeft, {});
+            break;
+
         case gl::ShaderType::Compute:
         {
             const sh::WorkGroupSize &localSize = mCompiler->getComputeShaderLocalSize();

@@ -41,6 +41,13 @@
 // Mac
 6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8Index/ES3_OpenGL = SKIP
 6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8IndexSmallUpdates/ES3_OpenGL = SKIP
+6096 MAC METAL : GLSLTest_ES3.InitGlobalComplexConstant/ES3_Metal = SKIP
+
+// D3D
+6091 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
+
+// Android
+6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/ES3_OpenGLES = SKIP
 
 // Pixel 4 expectations.
 5981 PIXEL4ORXL GLES : BlitFramebufferTest.BlitSRGBToRGBOversizedDestArea/* = SKIP

@@ -77,8 +77,9 @@ struct AccessChain
     // dynamicComponent will contain the id of the index.
     spirv::IdRef dynamicComponent;
 
-    // Type of expression before swizzle is applied, after swizzle is applied and after dynamic
-    // component is applied.
+    // Type of base expression, before swizzle is applied, after swizzle is applied and after
+    // dynamic component is applied.
+    spirv::IdRef baseTypeId;
     spirv::IdRef preSwizzleTypeId;
     spirv::IdRef postSwizzleTypeId;
     spirv::IdRef postDynamicComponentTypeId;
@@ -205,6 +206,9 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef createConstant(const TType &type,
                                 TBasicType expectedBasicType,
                                 const TConstantUnion *constUnion);
+    spirv::IdRef createComplexConstant(const TType &type,
+                                       spirv::IdRef typeId,
+                                       const spirv::IdRefList &parameters);
     spirv::IdRef createConstructor(TIntermAggregate *node, spirv::IdRef typeId);
     spirv::IdRef createArrayOrStructConstructor(TIntermAggregate *node,
                                                 spirv::IdRef typeId,
@@ -315,12 +319,19 @@ spv::StorageClass GetStorageClass(const TType &type)
 
         case EvqVertexID:
         case EvqInstanceID:
+        case EvqFragCoord:
+        case EvqFrontFacing:
+        case EvqPointCoord:
+        case EvqHelperInvocation:
         case EvqNumWorkGroups:
         case EvqWorkGroupID:
         case EvqLocalInvocationID:
         case EvqGlobalInvocationID:
         case EvqLocalInvocationIndex:
             return spv::StorageClassInput;
+
+        case EvqFragDepth:
+            return spv::StorageClassOutput;
 
         default:
             // TODO: http://anglebug.com/4889
@@ -363,55 +374,67 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
     // This must be an implicitly defined variable, define it now.
     const char *name               = nullptr;
     spv::BuiltIn builtInDecoration = spv::BuiltInMax;
-    SpirvType spirvType;
 
     switch (type.getQualifier())
     {
         case EvqVertexID:
             name              = "gl_VertexIndex";
             builtInDecoration = spv::BuiltInVertexIndex;
-            spirvType.type    = EbtInt;
             break;
         case EvqInstanceID:
             name              = "gl_InstanceIndex";
             builtInDecoration = spv::BuiltInInstanceIndex;
-            spirvType.type    = EbtInt;
             break;
+
+        // Fragment shader built-ins
+        case EvqFragCoord:
+            name              = "gl_FragCoord";
+            builtInDecoration = spv::BuiltInFragCoord;
+            break;
+        case EvqFrontFacing:
+            name              = "gl_FrontFacing";
+            builtInDecoration = spv::BuiltInFrontFacing;
+            break;
+        case EvqPointCoord:
+            name              = "gl_PointCoord";
+            builtInDecoration = spv::BuiltInPointCoord;
+            break;
+        case EvqFragDepth:
+            name              = "gl_FragDepth";
+            builtInDecoration = spv::BuiltInFragDepth;
+            break;
+        case EvqHelperInvocation:
+            name              = "gl_HelperInvocation";
+            builtInDecoration = spv::BuiltInHelperInvocation;
+            break;
+
+        // Compute shader built-ins
         case EvqNumWorkGroups:
-            name                  = "gl_NumWorkGroups";
-            builtInDecoration     = spv::BuiltInNumWorkgroups;
-            spirvType.type        = EbtUInt;
-            spirvType.primarySize = 3;
+            name              = "gl_NumWorkGroups";
+            builtInDecoration = spv::BuiltInNumWorkgroups;
             break;
         case EvqWorkGroupID:
-            name                  = "gl_WorkGroupID";
-            builtInDecoration     = spv::BuiltInWorkgroupId;
-            spirvType.type        = EbtUInt;
-            spirvType.primarySize = 3;
+            name              = "gl_WorkGroupID";
+            builtInDecoration = spv::BuiltInWorkgroupId;
             break;
         case EvqLocalInvocationID:
-            name                  = "gl_LocalInvocationID";
-            builtInDecoration     = spv::BuiltInLocalInvocationId;
-            spirvType.type        = EbtUInt;
-            spirvType.primarySize = 3;
+            name              = "gl_LocalInvocationID";
+            builtInDecoration = spv::BuiltInLocalInvocationId;
             break;
         case EvqGlobalInvocationID:
-            name                  = "gl_GlobalInvocationID";
-            builtInDecoration     = spv::BuiltInGlobalInvocationId;
-            spirvType.type        = EbtUInt;
-            spirvType.primarySize = 3;
+            name              = "gl_GlobalInvocationID";
+            builtInDecoration = spv::BuiltInGlobalInvocationId;
             break;
         case EvqLocalInvocationIndex:
             name              = "gl_LocalInvocationIndex";
             builtInDecoration = spv::BuiltInLocalInvocationIndex;
-            spirvType.type    = EbtUInt;
             break;
         default:
             // TODO: more built-ins.  http://anglebug.com/4889
             UNIMPLEMENTED();
     }
 
-    const spirv::IdRef typeId = mBuilder.getSpirvTypeData(spirvType, nullptr).id;
+    const spirv::IdRef typeId = mBuilder.getTypeData(type, EbsUnspecified).id;
     const spirv::IdRef varId  = mBuilder.declareVariable(
         typeId, *storageClass, mBuilder.getDecorations(type), nullptr, name);
 
@@ -434,6 +457,7 @@ void OutputSPIRVTraverser::nodeDataInitLValue(NodeData *data,
     // Initialize the access chain as an lvalue.  Useful when an access chain is resolved, but needs
     // to be replaced by a reference to a temporary variable holding the result.
     data->baseId                       = baseId;
+    data->accessChain.baseTypeId       = typeId;
     data->accessChain.preSwizzleTypeId = typeId;
     data->accessChain.storageClass     = storageClass;
     data->accessChain.baseBlockStorage = blockStorage;
@@ -448,6 +472,7 @@ void OutputSPIRVTraverser::nodeDataInitRValue(NodeData *data,
     // Initialize the access chain as an rvalue.  Useful when an access chain is resolved, and needs
     // to be replaced by a reference to it.
     data->baseId                       = baseId;
+    data->accessChain.baseTypeId       = typeId;
     data->accessChain.preSwizzleTypeId = typeId;
 }
 
@@ -627,9 +652,9 @@ spirv::IdRef OutputSPIRVTraverser::accessChainLoad(NodeData *data,
             else
             {
                 // Create a temp variable to hold the rvalue so an access chain can be made on it.
-                const spirv::IdRef tempVar = mBuilder.declareVariable(
-                    accessChain.preSwizzleTypeId, spv::StorageClassFunction, decorations, nullptr,
-                    "indexable");
+                const spirv::IdRef tempVar =
+                    mBuilder.declareVariable(accessChain.baseTypeId, spv::StorageClassFunction,
+                                             decorations, nullptr, "indexable");
 
                 // Write the rvalue into the temp variable
                 spirv::WriteStore(mBuilder.getSpirvCurrentFunctionBlock(), tempVar, loadResult,
@@ -895,12 +920,41 @@ spirv::IdRef OutputSPIRVTraverser::createConstant(const TType &type,
     // If this is a composite, create a composite constant from the components.
     if (type.getBasicType() == EbtStruct || componentIds.size() > 1)
     {
-        return mBuilder.getCompositeConstant(typeId, componentIds);
+        return createComplexConstant(type, typeId, componentIds);
     }
 
     // Otherwise return the sole component.
     ASSERT(componentIds.size() == 1);
     return componentIds[0];
+}
+
+spirv::IdRef OutputSPIRVTraverser::createComplexConstant(const TType &type,
+                                                         spirv::IdRef typeId,
+                                                         const spirv::IdRefList &parameters)
+{
+    if (type.isMatrix() && !type.isArray())
+    {
+        // Matrices are constructed from its columns.
+        spirv::IdRefList columnIds;
+
+        SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
+        columnType.primarySize          = columnType.secondarySize;
+        columnType.secondarySize        = 1;
+        const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+
+        for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
+        {
+            auto columnParametersStart = parameters.begin() + columnIndex * type.getRows();
+            spirv::IdRefList columnParameters(columnParametersStart,
+                                              columnParametersStart + type.getRows());
+
+            columnIds.push_back(mBuilder.getCompositeConstant(columnTypeId, columnParameters));
+        }
+
+        return mBuilder.getCompositeConstant(typeId, columnIds);
+    }
+
+    return mBuilder.getCompositeConstant(typeId, parameters);
 }
 
 spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spirv::IdRef typeId)
@@ -942,6 +996,12 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
     //
     // Additionally, array and structs are constructed by OpCompositeConstruct followed by ids of
     // each parameter which must enumerate every individual element / field.
+
+    // In some cases, constructors with constant value are not folded.  That is handled here.
+    if (node->hasConstantValue())
+    {
+        return createComplexConstant(node->getType(), typeId, parameters);
+    }
 
     if (type.isArray() || type.getStruct() != nullptr)
     {
@@ -1061,6 +1121,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromScalar(
     spirv::IdRefList columnIds;
 
     SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
+    columnType.primarySize          = columnType.secondarySize;
     columnType.secondarySize        = 1;
     const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
 
@@ -1108,6 +1169,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromVectors(
     spirv::IdRefList columnIds;
 
     SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
+    columnType.primarySize          = columnType.secondarySize;
     columnType.secondarySize        = 1;
     const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
 
@@ -1166,6 +1228,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
     spirv::IdRefList columnIds;
 
     SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
+    columnType.primarySize          = columnType.secondarySize;
     columnType.secondarySize        = 1;
     const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
 
@@ -1639,7 +1702,10 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     const bool isFloat            = basicType == EbtFloat || basicType == EbtDouble;
     const bool isUnsigned         = basicType == EbtUInt;
     const bool isBool             = basicType == EbtBool;
-    const bool operateOnColumns   = firstOperandType.isMatrix();
+    // Whether the operation needs to be applied column by column.
+    TIntermBinary *asBinary = node->getAsBinaryNode();
+    bool operateOnColumns   = asBinary && (asBinary->getLeft()->getType().isMatrix() ||
+                                         asBinary->getRight()->getType().isMatrix());
     // Whether the operands need to be swapped in the (binary) instruction
     bool binarySwapOperands = false;
     // Whether the scalar operand needs to be extended to match the other operand which is a vector
@@ -1717,6 +1783,8 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
 
         case EOpEqual:
         case EOpEqualComponentWise:
+            // TODO: handle vector, matrix and other complex comparisons.  EOpEqual must use OpAll
+            // to reduce to a bool.  http://anglebug.com/4889.
             if (isFloat)
                 writeBinaryOp = spirv::WriteFOrdEqual;
             else if (isBool)
@@ -1726,6 +1794,8 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             break;
         case EOpNotEqual:
         case EOpNotEqualComponentWise:
+            // TODO: handle vector, matrix and other complex comparisons.  EOpNotEqual must use
+            // OpAny to reduce to a bool.  http://anglebug.com/4889.
             if (isFloat)
                 writeBinaryOp = spirv::WriteFUnordNotEqual;
             else if (isBool)
@@ -1783,18 +1853,23 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             break;
         case EOpVectorTimesMatrix:
         case EOpVectorTimesMatrixAssign:
-            writeBinaryOp = spirv::WriteVectorTimesMatrix;
+            writeBinaryOp    = spirv::WriteVectorTimesMatrix;
+            operateOnColumns = false;
             break;
         case EOpMatrixTimesVector:
-            writeBinaryOp = spirv::WriteMatrixTimesVector;
+            writeBinaryOp    = spirv::WriteMatrixTimesVector;
+            operateOnColumns = false;
             break;
         case EOpMatrixTimesScalar:
         case EOpMatrixTimesScalarAssign:
-            writeBinaryOp = spirv::WriteMatrixTimesScalar;
+            writeBinaryOp      = spirv::WriteMatrixTimesScalar;
+            binarySwapOperands = asBinary->getRight()->getType().isMatrix();
+            operateOnColumns   = false;
             break;
         case EOpMatrixTimesMatrix:
         case EOpMatrixTimesMatrixAssign:
-            writeBinaryOp = spirv::WriteMatrixTimesMatrix;
+            writeBinaryOp    = spirv::WriteMatrixTimesMatrix;
+            operateOnColumns = false;
             break;
 
         case EOpLogicalOr:
@@ -2232,8 +2307,14 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         const SpirvDecorations operandDecorations = mBuilder.getDecorations(firstOperandType);
 
         SpirvType columnType            = mBuilder.getSpirvType(firstOperandType, EbsUnspecified);
+        columnType.primarySize          = columnType.secondarySize;
         columnType.secondarySize        = 1;
         const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+
+        if (binarySwapOperands)
+        {
+            std::swap(parameters[0], parameters[1]);
+        }
 
         // Extract and apply the operator to each column.
         for (int columnIndex = 0; columnIndex < firstOperandType.getCols(); ++columnIndex)
@@ -2304,13 +2385,6 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         // Write the operation that combines the left and right values.
         writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result, parameters[0],
                       parameters[1]);
-
-        // If it's an assignment, store the calculated value.
-        if (IsAssignment(node->getOp()))
-        {
-            ASSERT(mNodeData.size() >= 2);
-            accessChainStore(&mNodeData[mNodeData.size() - 2], result);
-        }
     }
     else if (writeTernaryOp)
     {
@@ -2340,6 +2414,14 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         spirv::WriteExtInst(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result,
                             mBuilder.getExtInstImportIdStd(),
                             spirv::LiteralExtInstInteger(extendedInst), parameters);
+    }
+
+    // If it's an assignment, store the calculated value.
+    if (IsAssignment(node->getOp()))
+    {
+        ASSERT(mNodeData.size() >= 2);
+        ASSERT(parameters.size() == 2);
+        accessChainStore(&mNodeData[mNodeData.size() - 2], result);
     }
 
     return result;
@@ -3108,8 +3190,9 @@ void OutputSPIRVTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node
 
 bool OutputSPIRVTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 {
-    // Constants are expected to be folded.
-    ASSERT(!node->hasConstantValue());
+    // Constants are expected to be folded.  However, large constructors (such as arrays) are not
+    // folded and are handled here.
+    ASSERT(node->getOp() == EOpConstruct || !node->hasConstantValue());
 
     if (visit == PreVisit)
     {
@@ -3237,7 +3320,8 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
         // makes sure their initialization is deferred to the beginning of main.
 
         TIntermTyped *initializer = assign->getRight();
-        initializeWithDeclaration = initializer->getAsConstantUnion() != nullptr;
+        initializeWithDeclaration =
+            initializer->getAsConstantUnion() != nullptr || initializer->hasConstantValue();
 
         if (initializeWithDeclaration)
         {

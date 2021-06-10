@@ -99,7 +99,7 @@ TIntermTyped *GenerateMat2x2ArrayWithIndex(const Mat2x2EnumMap &matrix, TIntermS
         CreateMat2x2(matrix, vk::SurfaceRotation::FlippedRotated180Degrees),
         CreateMat2x2(matrix, vk::SurfaceRotation::FlippedRotated270Degrees)};
     TIntermTyped *array = TIntermAggregate::CreateConstructor(*typeMat2Array, &sequences);
-    return new TIntermBinary(EOpIndexDirect, array, rotation);
+    return new TIntermBinary(EOpIndexIndirect, array, rotation);
 }
 
 using Vec2 = std::array<float, 2>;
@@ -156,7 +156,7 @@ TIntermTyped *CreateVec2ArrayWithIndex(Vec2EnumMap vec2Values,
         CreateVec2(vec2Values, yscale, vk::SurfaceRotation::FlippedRotated180Degrees),
         CreateVec2(vec2Values, yscale, vk::SurfaceRotation::FlippedRotated270Degrees)};
     TIntermTyped *vec2Array = TIntermAggregate::CreateConstructor(*typeVec2Array, &sequences);
-    return new TIntermBinary(EOpIndexDirect, vec2Array, rotation);
+    return new TIntermBinary(EOpIndexIndirect, vec2Array, rotation);
 }
 
 // Returns [flipX*m0, flipY*m1], where [m0 m1] is the first column of kFragRotation matrix.
@@ -229,7 +229,7 @@ TIntermTyped *CreateFloatArrayWithRotationIndex(const Vec2EnumMap &valuesEnumMap
                         scale)};
     TIntermTyped *array = TIntermAggregate::CreateConstructor(*typeFloat8, &sequences);
 
-    return new TIntermBinary(EOpIndexDirect, array, rotation);
+    return new TIntermBinary(EOpIndexIndirect, array, rotation);
 }
 
 const TType *MakeSpecConst(const TType &type, vk::SpecializationConstantId id)
