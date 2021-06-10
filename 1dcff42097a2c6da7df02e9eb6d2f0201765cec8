@@ -52,6 +52,24 @@
       "parentUuid": "cf2db7cb_aea8aee4",
       "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8355a64_19544811",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T04:29:11Z",
+      "side": 1,
+      "message": "Ok. I\u0027m just weary of caching the pointer, instead of say, what query it was (so inside/outside RP can be decided based on that), or just a flag.\n\nAlso, have you tested this with nested queries? For example, how about this?\n\n- Begin Occlusion query\n- Draw\n- Begin Transform feedback query\n- Draw\n- End Occlusion query\n- Draw\n- End Transform feedback query\n\nThese both use in-RP queries\n\nYou should also test this:\n\n- Begin Occlusion query\n- Draw\n- Begin time-elapsed query\n- Draw\n- End Occlusion query\n- Draw\n- End time-elapsed query\n\nThe time-elapsed query uses outside-RP queries.",
+      "parentUuid": "d2598532_f76d9d76",
+      "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
