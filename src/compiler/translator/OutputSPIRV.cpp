@@ -229,6 +229,9 @@ class OutputSPIRVTraverser : public TIntermTraverser
                            const spirv::IdRefList &parameters,
                            spirv::IdRefList *extractedComponentsOut);
 
+    void startShortCircuit(TIntermBinary *node);
+    spirv::IdRef endShortCircuit(TIntermBinary *node, spirv::IdRef *typeId);
+
     spirv::IdRef createFunctionCall(TIntermAggregate *node, spirv::IdRef resultTypeId);
     spirv::IdRef createAtomicBuiltIn(TIntermAggregate *node, spirv::IdRef resultTypeId);
 
@@ -739,7 +742,7 @@ void OutputSPIRVTraverser::accessChainStore(NodeData *data, spirv::IdRef value)
         // written.  Use the final result as the value to be written to the vector.
         const spirv::IdRef result = mBuilder.getNewId({});
         spirv::WriteVectorShuffle(mBuilder.getSpirvCurrentFunctionBlock(),
-                                  accessChain.postSwizzleTypeId, result, loadResult, value,
+                                  accessChain.preSwizzleTypeId, result, loadResult, value,
                                   swizzleList);
         value = result;
     }
@@ -1350,6 +1353,77 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
     }
 }
 
+void OutputSPIRVTraverser::startShortCircuit(TIntermBinary *node)
+{
+    // Emulate && and || as such:
+    //
+    //   || => if (!left) result = right
+    //   && => if ( left) result = right
+    //
+    // When this function is called, |left| has already been visited, so it creates the appropriate
+    // |if| construct in preparation for visiting |right|.
+
+    // Load |left| and replace the access chain with an rvalue that's the result.
+    spirv::IdRef typeId = getAccessChainTypeId(&mNodeData.back());
+    const spirv::IdRef left =
+        accessChainLoad(&mNodeData.back(), mBuilder.getDecorations(node->getLeft()->getType()));
+    nodeDataInitRValue(&mNodeData.back(), left, typeId);
+
+    // Keep the id of the block |left| was evaluated in.
+    mNodeData.back().idList.push_back(mBuilder.getSpirvCurrentFunctionBlockId());
+
+    // Two blocks necessary, one for the |if| block, and one for the merge block.
+    mBuilder.startConditional(2, false, false);
+
+    // Generate the branch instructions.
+    SpirvConditional *conditional = mBuilder.getCurrentConditional();
+
+    const spirv::IdRef mergeBlock = conditional->blockIds.back();
+    const spirv::IdRef ifBlock    = conditional->blockIds.front();
+    spirv::IdRef trueBlock        = node->getOp() == EOpLogicalAnd ? ifBlock : mergeBlock;
+    spirv::IdRef falseBlock       = node->getOp() == EOpLogicalOr ? ifBlock : mergeBlock;
+
+    // Note that no logical not is necessary.  For ||, the branch will target the merge block in the
+    // true case.
+    mBuilder.writeBranchConditional(left, trueBlock, falseBlock, mergeBlock);
+}
+
+spirv::IdRef OutputSPIRVTraverser::endShortCircuit(TIntermBinary *node, spirv::IdRef *typeId)
+{
+    // Load the right hand side.
+    const spirv::IdRef right =
+        accessChainLoad(&mNodeData.back(), mBuilder.getDecorations(node->getRight()->getType()));
+    mNodeData.pop_back();
+
+    // Get the id of the block |right| is evaluated in.
+    const spirv::IdRef rightBlockId = mBuilder.getSpirvCurrentFunctionBlockId();
+
+    // And the cached id of the block |left| is evaluated in.
+    ASSERT(mNodeData.back().idList.size() == 1);
+    const spirv::IdRef leftBlockId = mNodeData.back().idList[0].id;
+    mNodeData.back().idList.clear();
+
+    // Move on to the merge block.
+    mBuilder.writeBranchConditionalBlockEnd();
+
+    // Pop from the conditional stack.
+    mBuilder.endConditional();
+
+    // Get the previously loaded result of the left hand side.
+    *typeId                 = getAccessChainTypeId(&mNodeData.back());
+    const spirv::IdRef left = mNodeData.back().baseId;
+
+    // Create an OpPhi instruction that selects either the |left| or |right| based on which block
+    // was traversed.
+    const spirv::IdRef result = mBuilder.getNewId(mBuilder.getDecorations(node->getType()));
+
+    spirv::WritePhi(
+        mBuilder.getSpirvCurrentFunctionBlock(), *typeId, result,
+        {spirv::PairIdRefIdRef{left, leftBlockId}, spirv::PairIdRefIdRef{right, rightBlockId}});
+
+    return result;
+}
+
 spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
                                                       spirv::IdRef resultTypeId)
 {
@@ -1718,6 +1792,24 @@ bool OutputSPIRVTraverser::visitSwizzle(Visit visit, TIntermSwizzle *node)
     return true;
 }
 
+bool IsShortCircuitNeeded(TIntermBinary *node)
+{
+    TOperator op = node->getOp();
+
+    // Short circuit is only necessary for && and ||.
+    if (op != EOpLogicalAnd && op != EOpLogicalOr)
+    {
+        return false;
+    }
+
+    // If the right hand side does not have side effects, short-circuiting is unnecessary.
+    // TODO: experiment with the performance of OpLogicalAnd/Or vs short-circuit based on the
+    // complexity of the right hand side expression.  We could potentially only allow
+    // OpLogicalAnd/Or if the right hand side is a constant or an access chain and have more complex
+    // expressions be placed inside an if block.  http://anglebug.com/4889
+    return node->getRight()->hasSideEffects();
+}
+
 bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
 {
     // Constants are expected to be folded.
@@ -1733,6 +1825,27 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
     if (node->getOp() == EOpInitialize)
     {
         ASSERT(getParentNode()->getAsDeclarationNode() != nullptr);
+        return true;
+    }
+
+    if (IsShortCircuitNeeded(node))
+    {
+        // For && and ||, if short-circuiting behavior is needed, we need to emulate it with an
+        // |if| construct.  At this point, the left-hand side is already evaluated, so we need to
+        // create an appropriate conditional on in-visit and visit the right-hand-side inside the
+        // conditional block.  On post-visit, OpPhi is used to calculate the result.
+        if (visit == InVisit)
+        {
+            startShortCircuit(node);
+            return true;
+        }
+
+        spirv::IdRef typeId;
+        const spirv::IdRef result = endShortCircuit(node, &typeId);
+
+        // Replace the access chain with an rvalue that's the result.
+        nodeDataInitRValue(&mNodeData.back(), result, typeId);
+
         return true;
     }
 
@@ -1937,6 +2050,21 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
                 writeBinaryOp = spirv::WriteUGreaterThanEqual;
             else
                 writeBinaryOp = spirv::WriteSGreaterThanEqual;
+            break;
+
+        case EOpLogicalOr:
+            ASSERT(!IsShortCircuitNeeded(node));
+            extendScalarToVector = false;
+            writeBinaryOp        = spirv::WriteLogicalOr;
+            break;
+        case EOpLogicalXor:
+            extendScalarToVector = false;
+            writeBinaryOp        = spirv::WriteLogicalNotEqual;
+            break;
+        case EOpLogicalAnd:
+            ASSERT(!IsShortCircuitNeeded(node));
+            extendScalarToVector = false;
+            writeBinaryOp        = spirv::WriteLogicalAnd;
             break;
 
         case EOpBitShiftLeft:
@@ -2431,9 +2559,9 @@ bool OutputSPIRVTraverser::visitIfElse(Visit visit, TIntermIfElse *node)
         // Generate the branch instructions.
         SpirvConditional *conditional = mBuilder.getCurrentConditional();
 
-        spirv::IdRef mergeBlock = conditional->blockIds.back();
-        spirv::IdRef trueBlock  = mergeBlock;
-        spirv::IdRef falseBlock = mergeBlock;
+        const spirv::IdRef mergeBlock = conditional->blockIds.back();
+        spirv::IdRef trueBlock        = mergeBlock;
+        spirv::IdRef falseBlock       = mergeBlock;
 
         size_t nextBlockIndex = 0;
         if (node->getTrueBlock())
@@ -2445,32 +2573,13 @@ bool OutputSPIRVTraverser::visitIfElse(Visit visit, TIntermIfElse *node)
             falseBlock = conditional->blockIds[nextBlockIndex++];
         }
 
-        // Generate the following:
-        //
-        //     OpSelectionMerge %mergeBlock None
-        //     OpBranchConditional %conditionValue %trueBlock %falseBlock
-        //
-        spirv::WriteSelectionMerge(mBuilder.getSpirvCurrentFunctionBlock(), mergeBlock,
-                                   spv::SelectionControlMaskNone);
-        spirv::WriteBranchConditional(mBuilder.getSpirvCurrentFunctionBlock(), conditionValue,
-                                      trueBlock, falseBlock, {});
-        mBuilder.terminateCurrentFunctionBlock();
-
-        // Start the true or false block, whichever exists.
-        mBuilder.nextConditionalBlock();
-
+        mBuilder.writeBranchConditional(conditionValue, trueBlock, falseBlock, mergeBlock);
         return true;
     }
 
     // Otherwise move on to the next block, inserting a branch to the merge block at the end of each
     // block.
-    spirv::IdRef mergeBlock = mBuilder.getCurrentConditional()->blockIds.back();
-
-    ASSERT(!mBuilder.isCurrentFunctionBlockTerminated());
-    spirv::WriteBranch(mBuilder.getSpirvCurrentFunctionBlock(), mergeBlock);
-    mBuilder.terminateCurrentFunctionBlock();
-
-    mBuilder.nextConditionalBlock();
+    mBuilder.writeBranchConditionalBlockEnd();
 
     // Pop from the conditional stack when done.
     if (visit == PostVisit)

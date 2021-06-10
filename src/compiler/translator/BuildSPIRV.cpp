@@ -1126,6 +1126,39 @@ void SPIRVBuilder::writeInterfaceVariableDecorations(const TType &type, spirv::I
     }
 }
 
+void SPIRVBuilder::writeBranchConditional(spirv::IdRef conditionValue,
+                                          spirv::IdRef trueBlock,
+                                          spirv::IdRef falseBlock,
+                                          spirv::IdRef mergeBlock)
+{
+    // Generate the following:
+    //
+    //     OpSelectionMerge %mergeBlock None
+    //     OpBranchConditional %conditionValue %trueBlock %falseBlock
+    //
+    spirv::WriteSelectionMerge(getSpirvCurrentFunctionBlock(), mergeBlock,
+                               spv::SelectionControlMaskNone);
+    spirv::WriteBranchConditional(getSpirvCurrentFunctionBlock(), conditionValue, trueBlock,
+                                  falseBlock, {});
+    terminateCurrentFunctionBlock();
+
+    // Start the true or false block, whichever exists.
+    nextConditionalBlock();
+}
+
+void SPIRVBuilder::writeBranchConditionalBlockEnd()
+{
+    // Insert a branch to the merge block at the end of each if-else block.
+    const spirv::IdRef mergeBlock = getCurrentConditional()->blockIds.back();
+
+    ASSERT(!isCurrentFunctionBlockTerminated());
+    spirv::WriteBranch(getSpirvCurrentFunctionBlock(), mergeBlock);
+    terminateCurrentFunctionBlock();
+
+    // Move on to the next block.
+    nextConditionalBlock();
+}
+
 uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
                                                      uint32_t *sizeInStorageBlockOut,
                                                      uint32_t *matrixStrideOut)
@@ -1411,6 +1444,8 @@ ImmutableString SPIRVBuilder::hashFunctionName(const TFunction *func)
 
 spirv::Blob SPIRVBuilder::getSpirv()
 {
+    ASSERT(mConditionalStack.empty());
+
     spirv::Blob result;
 
     // Reserve a minimum amount of memory.

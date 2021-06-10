@@ -235,11 +235,8 @@ ANGLE_NO_DISCARD bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
     TIntermBinary *plusPivot   = new TIntermBinary(EOpAdd, inverseXY, pivot->deepCopy());
 
     // Create the corrected variable and copy the value of the original builtin.
-    TIntermSequence sequence;
-    sequence.push_back(builtinRef->deepCopy());
-    TIntermAggregate *aggregate =
-        TIntermAggregate::CreateConstructor(builtin->getType(), &sequence);
-    TIntermBinary *assignment = new TIntermBinary(EOpAssign, flippedBuiltinRef, aggregate);
+    TIntermBinary *assignment =
+        new TIntermBinary(EOpAssign, flippedBuiltinRef, builtinRef->deepCopy());
 
     // Create an assignment to the replaced variable's .xy.
     TIntermSwizzle *correctedXY =

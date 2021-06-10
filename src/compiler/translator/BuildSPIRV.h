@@ -279,6 +279,12 @@ class SPIRVBuilder : angle::NonCopyable
                !mSpirvCurrentFunctionBlocks.back().isTerminated);
         return &mSpirvCurrentFunctionBlocks.back().body;
     }
+    spirv::IdRef getSpirvCurrentFunctionBlockId()
+    {
+        ASSERT(!mSpirvCurrentFunctionBlocks.empty() &&
+               !mSpirvCurrentFunctionBlocks.back().isTerminated);
+        return mSpirvCurrentFunctionBlocks.back().labelId;
+    }
     bool isCurrentFunctionBlockTerminated() const
     {
         ASSERT(!mSpirvCurrentFunctionBlocks.empty());
@@ -298,6 +304,11 @@ class SPIRVBuilder : angle::NonCopyable
     void addEntryPointInterfaceVariableId(spirv::IdRef id);
     void writePerVertexBuiltIns(const TType &type, spirv::IdRef typeId);
     void writeInterfaceVariableDecorations(const TType &type, spirv::IdRef variableId);
+    void writeBranchConditional(spirv::IdRef conditionValue,
+                                spirv::IdRef trueBlock,
+                                spirv::IdRef falseBlock,
+                                spirv::IdRef mergeBlock);
+    void writeBranchConditionalBlockEnd();
 
     spirv::IdRef getBoolConstant(bool value);
     spirv::IdRef getUintConstant(uint32_t value);
