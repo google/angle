@@ -16,6 +16,23 @@
       "message": "Let\u0027s see if this works.",
       "revId": "c6e452c0c4c299cd1eb2cd80394e195eb5175089",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8777f3ca_dd07c684",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-10T15:32:24Z",
+      "side": 1,
+      "message": "The presubmit is bogus - it\u0027s running presubmit in a DEP because we deleted the files and now it detects these as changed \"ghost\" files.",
+      "revId": "c6e452c0c4c299cd1eb2cd80394e195eb5175089",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
