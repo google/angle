@@ -43,6 +43,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "98752cf8_ff91761e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4798,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T14:03:24Z",
+      "side": 1,
+      "message": "Downside of this cleanup is that now the *Info contents are being copied.",
+      "revId": "963b78e5aef08799ea356419ea7695b0fc1bec46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "03347f06_fa5e2ef9",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 10
@@ -54,6 +71,30 @@
       "writtenOn": "2021-06-09T20:09:49Z",
       "side": 1,
       "message": "This is going to trigger allocations IIUC. What\u0027s the guarantees we can make of the size of the lists in these methods?\n\nanother approach is to use a helper object, say owned by context, that builds up a list of these guys, but can reuse the temporary storage between submits.",
+      "range": {
+        "startLine": 5723,
+        "startChar": 45,
+        "endLine": 5723,
+        "endChar": 99
+      },
+      "revId": "963b78e5aef08799ea356419ea7695b0fc1bec46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4fdbce8_6d90ae28",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 5723,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T14:03:24Z",
+      "side": 1,
+      "message": "+1 to having the context maintain the memory that gets gets reused. Then you can switch back to reserving infos and filling them in-place instead of creating a temporary and copying it. Preserving the memory also has the benefit that at some point the vector stops growing and there would be no more copies.",
+      "parentUuid": "03347f06_fa5e2ef9",
       "range": {
         "startLine": 5723,
         "startChar": 45,
