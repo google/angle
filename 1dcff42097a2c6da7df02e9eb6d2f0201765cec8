@@ -88,6 +88,24 @@
       "parentUuid": "d8355a64_19544811",
       "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17fa9b6a_56db1ec3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-10T19:03:54Z",
+      "side": 1,
+      "message": "I redid per our discussion, including using an enum (over a bool) that allows for ASSERT testing.",
+      "parentUuid": "400e20a3_109c5d16",
+      "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

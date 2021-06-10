@@ -22,6 +22,30 @@
       },
       "revId": "b75511c6b0750208bba1f76b0e379634427d19cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c10b7c7e_cf4d06d4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2845,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-10T19:03:54Z",
+      "side": 1,
+      "message": "I redid how debug-util markers are done for queries, so that they are processed while in the GLES command (nothing deferred and no chance for overlap of GLES commands).  This gets the tests passing.",
+      "parentUuid": "d6a99fa6_fcf27f17",
+      "range": {
+        "startLine": 2845,
+        "startChar": 8,
+        "endLine": 2845,
+        "endChar": 35
+      },
+      "revId": "b75511c6b0750208bba1f76b0e379634427d19cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

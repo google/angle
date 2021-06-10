@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a0bf3a3_e23a19b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-10T19:03:54Z",
+      "side": 1,
+      "message": "After fixing on Windows, I need to do:\n\n- Test this on Android with AGI\n- Remove some of the \"end\" methods, that can go back to returning void",
+      "revId": "f78617db031814832def0871bd0013edbc2a75ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
