@@ -108,6 +108,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dffefbbc_56f9a8e3",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-10T23:25:11Z",
+      "side": 1,
+      "message": "Curiously, the PipelineRasterizationLine State includes a field for fontFace and cullMode, strange coincidence?",
+      "parentUuid": "a472c84b_0b757a1b",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "03c00fb8_cbc3c0ad",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
         "patchSetId": 15
