@@ -1,0 +1,226 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47d4d03c_b165f3fd",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "This keeps reappearing! This is the same as VariableColumnCount and can be removed.",
+      "range": {
+        "startLine": 478,
+        "startChar": 0,
+        "endLine": 521,
+        "endChar": 1
+      },
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8e507a7_b4647818",
+        "filename": "src/compiler.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "!",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a837fec_98e715c6",
+        "filename": "src/compiler.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "Doesn\u0027t exist?",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b95092d_27b35470",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "nit: Bug tag with TODO\n\nThe GetFormatSupport part below _is_ the runtime check. Isn\u0027t the backend querying the format features correctly? If it isn\u0027t, you don\u0027t want to be adding these hacks for every odd format.",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fad43239_e0985053",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0eca352c_967cb52c",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "Fishy. Is this used anywhere?",
+      "range": {
+        "startLine": 264,
+        "startChar": 9,
+        "endLine": 264,
+        "endChar": 43
+      },
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9e9499c_9474bb8b",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "Suggest either removing this, or if we have to keep it, remove it through the gn files.",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d64b8b59_312b9e98",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "Giant NOPE. This file should be reverted.",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2edd7f44_7fc05463",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "This is used inside mtl_glslang_mtl_utils.mm only, maybe we could have the metal-internal flags passed separately.\n\nBy the way, I haven\u0027t renamed the files/variables yet, but there\u0027s nothing about glslang here anymore.",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9836be1d_548d31ff",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "Why is there anything about SPIR-V here? Don\u0027t they generate MSL directly?",
+      "range": {
+        "startLine": 384,
+        "startChar": 13,
+        "endLine": 384,
+        "endChar": 24
+      },
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfcdf483_f9c84096",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "If primcount is 0, does the spec say it\u0027s fine if the attribs are erroneous? If not, then this is wrong.",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cb9f3d5_f9049c5a",
+        "filename": "third_party/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:43:59Z",
+      "side": 1,
+      "message": "Please revert this file. Repos containing ANGLE may not have libjpeg_turbo in the same path as ANGLE and chromium.",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
