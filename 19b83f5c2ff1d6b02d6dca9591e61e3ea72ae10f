@@ -119,6 +119,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1b08998_d271505d",
+        "filename": "src/libANGLE/cl_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-10T14:35:45Z",
+      "side": 1,
+      "message": "Dependencies are always a potential point of failure, for example recently when my code broke because it depended on angle::GetModuleDirectory().",
+      "parentUuid": "f19d754d_ffc275d5",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2918d4db_d0c27cd7",
