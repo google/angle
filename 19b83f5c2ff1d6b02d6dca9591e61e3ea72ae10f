@@ -191,6 +191,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e61861e4_68c7c74f",
+        "filename": "src/libANGLE/cl_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T15:37:05Z",
+      "side": 1,
+      "message": "My goal is to make code like this usable and accessible for other ANGLE developers.  There is value here.  Can you add a new helper to math_util that aligns to the semantics you want to use here?  It doesn\u0027t have to use Ranges as is, you can modify the class to take offsets, or even create a new class if you prefer.",
+      "parentUuid": "b025faef_4c53a250",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2918d4db_d0c27cd7",
