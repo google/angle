@@ -39,6 +39,24 @@
       "message": "Why is this file needed?",
       "revId": "8d0a986dc26ca055f2de00165ec4214b44087917",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f5f304b_c9b95212",
+        "filename": "tools/variations/fieldtrial_utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-10T16:33:17Z",
+      "side": 1,
+      "message": "Ah, I see - it\u0027s for new presubmit tests tools/perf brings with it.\nMaybe we can disable presubmit for third-party repos?",
+      "parentUuid": "124bc37a_9f311721",
+      "revId": "8d0a986dc26ca055f2de00165ec4214b44087917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
