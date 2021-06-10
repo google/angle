@@ -16,6 +16,24 @@
       "message": "Looks like the current patch set is good. If it\u0027s ok with you I\u0027ll land this despite the red presubmit and tell the ANGLE wrangler.",
       "revId": "09b8418c934405b73a9d1017e0bb236bc5ac03af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e271476c_6b450e24",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-10T16:56:35Z",
+      "side": 1,
+      "message": "It should only fail for this specific build - because of the \u0027affected files\u0027.",
+      "parentUuid": "bdee6338_c50a3c7b",
+      "revId": "09b8418c934405b73a9d1017e0bb236bc5ac03af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
