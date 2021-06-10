@@ -16,6 +16,23 @@
       "message": "Jamie, friendly reminder.",
       "revId": "626625e051213563a016d67065f3f4144438aee0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "836760cc_7bc46fcd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-10T16:24:22Z",
+      "side": 1,
+      "message": "In the interests of moving the code along, approving.",
+      "revId": "626625e051213563a016d67065f3f4144438aee0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
