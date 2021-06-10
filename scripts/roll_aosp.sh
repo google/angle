@@ -7,7 +7,14 @@
 # Generates a roll CL within the ANGLE repository of AOSP.
 
 # exit when any command fails
-set -e
+set -eE -o functrace
+
+failure() {
+  local lineno=$1
+  local msg=$2
+  echo "Failed at $lineno: $msg"
+}
+trap 'failure ${LINENO} "$BASH_COMMAND"' ERR
 
 # Change the working directory to the ANGLE root directory
 cd "${0%/*}/.."
@@ -99,10 +106,8 @@ rm -rf ${DEPOT_TOOLS_DIR}
 git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ${DEPOT_TOOLS_DIR}
 export PATH=`pwd`/${DEPOT_TOOLS_DIR}:$PATH
 
-deps=(
+third_party_deps=(
     "third_party/abseil-cpp"
-    "third_party/jsoncpp"
-    "third_party/jsoncpp/source"
     "third_party/vulkan-deps/glslang/src"
     "third_party/vulkan-deps/spirv-headers/src"
     "third_party/vulkan-deps/spirv-tools/src"
@@ -113,16 +118,11 @@ deps=(
 
 # Only add the parts of NDK and vulkan-deps that are required by ANGLE. The entire dep is too large.
 delete_only_deps=(
-    "third_party/android_ndk"
     "third_party/vulkan-deps"
 )
 
-add_only_deps=(
-    "third_party/android_ndk/sources/android/cpufeatures"
-)
-
 # Delete dep directories so that gclient can check them out
-for dep in "${deps[@]}" "${delete_only_deps[@]}"; do
+for dep in "${third_party_deps[@]}" "${delete_only_deps[@]}"; do
     rm -rf "$dep"
 done
 
@@ -132,11 +132,21 @@ gclient sync --reset --force --ignore_locks --delete_unversioned_trees --break_r
 
 generate_Android_bp_file
 
+# Delete all unsupported 3rd party dependencies. Do this after generate_Android_bp_file, so
+# it has access to all of the necessary BUILD.gn files.
+# Any 3rd party dependencies that are added to this list must have their licenses verified.
+find third_party/ -maxdepth 1 -type d ! -wholename third_party/ \
+    ! -wholename third_party/abseil-cpp \
+    ! -wholename third_party/vulkan-deps \
+    ! -wholename third_party/vulkan_memory_allocator \
+    ! -wholename third_party/zlib \
+    -print0 | xargs --null rm -rf
+
 git add Android.bp
 
 # Delete the .git files in each dep so that it can be added to this repo. Some deps like jsoncpp
 # have multiple layers of deps so delete everything before adding them.
-for dep in "${deps[@]}" "${delete_only_deps[@]}"; do
+for dep in "${third_party_deps[@]}"; do
    rm -rf "$dep"/.git
 done
 
@@ -144,7 +154,6 @@ extra_removal_files=(
    # Some third_party deps have OWNERS files which contains users that have not logged into
    # the Android gerrit. Repo cannot upload with these files present.
    "third_party/abseil-cpp/OWNERS"
-   "third_party/jsoncpp/OWNERS"
    "third_party/vulkan_memory_allocator/OWNERS"
    "third_party/zlib/OWNERS"
    "third_party/zlib/google/OWNERS"
@@ -157,7 +166,7 @@ for removal_file in "${extra_removal_files[@]}"; do
    rm -f "$removal_file"
 done
 
-for dep in "${deps[@]}" "${add_only_deps[@]}"; do
+for dep in "${third_party_deps[@]}"; do
    git add -f "$dep"
 done
 

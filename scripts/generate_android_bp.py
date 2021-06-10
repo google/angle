@@ -107,7 +107,7 @@ def gn_target_to_blueprint_target(target, target_info):
 
     # Split the gn target name (in the form of //gn_file_path:target_name) into gn_file_path and
     # target_name
-    target_regex = re.compile(r"^//([a-zA-Z0-9\-_/]*):([a-zA-Z0-9\-_.]+)$")
+    target_regex = re.compile(r"^//([a-zA-Z0-9\-\+_/]*):([a-zA-Z0-9\-\+_.]+)$")
     match = re.match(target_regex, target)
     assert match is not None
 
@@ -179,8 +179,16 @@ target_blockist = [
     '//third_party/vulkan-validation-layers/src:vulkan_clean_old_validation_layer_objects',
 ]
 
+third_party_target_allowlist = [
+    '//third_party/abseil-cpp',
+    '//third_party/vulkan-deps',
+    '//third_party/vulkan_memory_allocator',
+    '//third_party/zlib',
+]
+
 include_blocklist = [
     '//out/Android/gen/third_party/vulkan-deps/glslang/src/include/',
+    '//third_party/android_ndk/sources/android/cpufeatures/',
 ]
 
 
@@ -194,7 +202,8 @@ def gn_deps_to_blueprint_deps(target_info, build_info):
         return static_libs, defaults
 
     for dep in target_info['deps']:
-        if dep not in target_blockist:
+        if dep not in target_blockist and (not dep.startswith('//third_party') or any(
+                dep.startswith(substring) for substring in third_party_target_allowlist)):
             dep_info = build_info[dep]
             blueprint_dep_name = gn_target_to_blueprint_target(dep, dep_info)
 
@@ -220,6 +229,13 @@ def gn_deps_to_blueprint_deps(target_info, build_info):
             # target depends on another's genrule, it wont find the outputs. Propogate generated
             # headers up the dependency stack.
             generated_headers += child_generated_headers
+        elif dep == '//third_party/android_ndk:cpu_features':
+            # chrome_zlib needs cpufeatures from the Android NDK. Rather than including the
+            # entire NDK is a dep in the ANGLE checkout, use the library that's already part
+            # of Android.
+            dep_info = build_info[dep]
+            blueprint_dep_name = gn_target_to_blueprint_target(dep, dep_info)
+            static_libs.append('cpufeatures')
 
     return static_libs, shared_libs, defaults, generated_headers, header_libs
 
