@@ -16,6 +16,23 @@
       "message": "I addressed all of Shabi\u0027s feedback and I removed the angle::Result return values that are no longer needed with the new approach.  Thanks!\n\nI see that the try bots are busy, and so I won\u0027t kick off CQ just yet.",
       "revId": "06b608110de6415e61a3887322be468100c55cef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae8060c2_0d01b1d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-10T23:35:31Z",
+      "side": 1,
+      "message": "Mark still doesn\u0027t have +2 ability, and so I\u0027ll do it for him.",
+      "revId": "06b608110de6415e61a3887322be468100c55cef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
