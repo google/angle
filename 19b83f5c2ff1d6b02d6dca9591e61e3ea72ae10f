@@ -167,6 +167,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b025faef_4c53a250",
+        "filename": "src/libANGLE/cl_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-10T15:26:28Z",
+      "side": 1,
+      "message": "I think it is also very readable that I have implemented the overlap check exactly as given in the OpenCL spec. If I refactor it to use the Range class, the offset/size will be converted to start/end, and then it would be very hard to verify if the overlap check was correctly implemented.\nIf I would store instances of ranges somewhere and would use multiple operations of the class, then it would make sense to use it. But we are talking here about a single line of code. The implementation of the range conversion would already take more than that. Please don\u0027t forget the cost/benefit factor.",
+      "parentUuid": "79b8a3a9_7c231b28",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2918d4db_d0c27cd7",
