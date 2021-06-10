@@ -16,6 +16,23 @@
       "message": "Looks like some test failures still.",
       "revId": "8d48894bc79fcd46da4b0d1373c5804785d42b57",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbbd0ecd_3fc79c61",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T14:38:27Z",
+      "side": 1,
+      "message": "My suggestion is to instead cache the size alongside mDynamicUniformDescriptorOffsets. So instead of using the range [allocation-offset, end of buffer), you would use [allocation-offset, allocation-end) which is more precise, and doesn\u0027t require offsetIndex tracking and passing around.",
+      "revId": "8d48894bc79fcd46da4b0d1373c5804785d42b57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
