@@ -70,6 +70,47 @@
       },
       "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c0c53cb_73b6cd89",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T18:56:10Z",
+      "side": 1,
+      "message": "+1 to a generic macro/function  if you can think of one, otherwise I think what you\u0027ve got here is still an improvement.",
+      "parentUuid": "ca9e2674_93a82566",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 0
+      },
+      "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e455c13b_11152268",
+        "filename": "src/libANGLE/renderer/cl/CLCommandQueueCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T18:56:10Z",
+      "side": 1,
+      "message": "This looks different than the macro defined earlier in this CL.  Can you give it a unique name?",
+      "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
