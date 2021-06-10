@@ -143,6 +143,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "79b8a3a9_7c231b28",
+        "filename": "src/libANGLE/cl_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-10T15:11:04Z",
+      "side": 1,
+      "message": "ANGLE typically has utility code like this in helpers that folks can find and reuse, it improves the project, makes it accessible.  I think it is a reasonable request to add it to a util to make the CL code more readable/understandable/maintainable.  You wouldn\u0027t be introducing an external dependency that would add risk.  If someone breaks the util such that it breaks your code, that means ANGLE has regressed and we want to catch it, fix it!",
+      "parentUuid": "c1b08998_d271505d",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "19b83f5c2ff1d6b02d6dca9591e61e3ea72ae10f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2918d4db_d0c27cd7",
