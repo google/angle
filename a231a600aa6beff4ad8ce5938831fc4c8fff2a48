@@ -96,6 +96,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f71f299_22f70073",
+        "filename": "src/libANGLE/CLCommandQueue.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-10T19:22:21Z",
+      "side": 1,
+      "message": "Replaced the macro with a function as requested.",
+      "parentUuid": "5c0c53cb_73b6cd89",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 0
+      },
+      "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e455c13b_11152268",
@@ -109,6 +133,24 @@
       "writtenOn": "2021-06-10T18:56:10Z",
       "side": 1,
       "message": "This looks different than the macro defined earlier in this CL.  Can you give it a unique name?",
+      "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5eed8fd8_64731dbe",
+        "filename": "src/libANGLE/renderer/cl/CLCommandQueueCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-10T19:22:21Z",
+      "side": 1,
+      "message": "Also replaced this macro with a function.",
+      "parentUuid": "e455c13b_11152268",
       "revId": "a231a600aa6beff4ad8ce5938831fc4c8fff2a48",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
