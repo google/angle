@@ -70,6 +70,24 @@
       "parentUuid": "d2598532_f76d9d76",
       "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "400e20a3_109c5d16",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-10T15:25:30Z",
+      "side": 1,
+      "message": "I understand wary-ness of caching pointers.  I\u0027ll try using a flag.\n\nI also see that some of the query tests are failing, and so I\u0027ll look at those (they fail on Windows which is easier to debug than Android:-), and see that what you suggest is tested.\n\nThanks!",
+      "parentUuid": "d8355a64_19544811",
+      "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
