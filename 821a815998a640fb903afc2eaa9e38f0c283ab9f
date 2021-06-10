@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "821a815998a640fb903afc2eaa9e38f0c283ab9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8addd699_f1744987",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5473,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:59:01Z",
+      "side": 1,
+      "message": "ASSERT please",
+      "revId": "821a815998a640fb903afc2eaa9e38f0c283ab9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51a2765e_fcd89d16",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5595,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T03:59:01Z",
+      "side": 1,
+      "message": "Probably good to turn into a helper in gl::InternalFormat, like `compute*` functions below.",
+      "range": {
+        "startLine": 5582,
+        "startChar": 1,
+        "endLine": 5595,
+        "endChar": 29
+      },
+      "revId": "821a815998a640fb903afc2eaa9e38f0c283ab9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
