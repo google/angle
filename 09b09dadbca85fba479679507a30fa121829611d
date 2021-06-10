@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "27571914_08cccb70",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T21:17:58Z",
+      "side": 1,
+      "message": "FYI, you can force-enable the emulation path for debugging like this:\n\n     if (ExtensionFound(VK_EXT_LINE_RASTERIZATION_EXTENSION_NAME, deviceExtensionNames))\n     {\n-        vk::AddToPNextChain(\u0026deviceFeatures, \u0026mLineRasterizationFeatures);\n+        // vk::AddToPNextChain(\u0026deviceFeatures, \u0026mLineRasterizationFeatures);\n     }\n\nwhich basically doesn\u0027t query the features from the device in the first place (and the rest of the code thinks it\u0027s not supported)",
+      "parentUuid": "b79e8cfe_7a54ba95",
+      "revId": "09b09dadbca85fba479679507a30fa121829611d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e39340cc_55757eaa",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
         "patchSetId": 16
