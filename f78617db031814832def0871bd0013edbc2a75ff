@@ -16,6 +16,46 @@
       "message": "After fixing on Windows, I need to do:\n\n- Test this on Android with AGI\n- Remove some of the \"end\" methods, that can go back to returning void",
       "revId": "f78617db031814832def0871bd0013edbc2a75ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "706b2751_ee3232ae",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T21:14:17Z",
+      "side": 1,
+      "message": "nit: outside",
+      "range": {
+        "startLine": 1076,
+        "startChar": 86,
+        "endLine": 1076,
+        "endChar": 91
+      },
+      "revId": "f78617db031814832def0871bd0013edbc2a75ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e45703a7_bcc47f95",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T21:14:17Z",
+      "side": 1,
+      "message": "Could these be called automatically by ContextVk inside beginRPQuery and beginQuery? Same with end",
+      "revId": "f78617db031814832def0871bd0013edbc2a75ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

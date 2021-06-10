@@ -106,6 +106,24 @@
       "parentUuid": "400e20a3_109c5d16",
       "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32bff0c7_547fdc8a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-10T21:14:17Z",
+      "side": 1,
+      "message": "Pfft, wary and weary are two different words!",
+      "parentUuid": "17fa9b6a_56db1ec3",
+      "revId": "1dcff42097a2c6da7df02e9eb6d2f0201765cec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
