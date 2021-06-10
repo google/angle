@@ -22,6 +22,30 @@
       },
       "revId": "ec122371a568236ef1eaf97aeaabf3f1f56e5fc7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee11422d_cac22872",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-10T15:25:24Z",
+      "side": 1,
+      "message": "So far, all of the \"graphics pipeline\" AGI markers have equated to inside-RP command buffers.  I think this is worth a try.\n\nIn our 1-on-1, I\u0027ll talk with you about the dilemma/discussion that\u0027s been had about showing all glClear\u0027s at the high-level in AGI.  The mid-render-pass approach was an attempt to bridge that gap, but I\u0027m evolving back to showing them all (different people have had diverged opinions about what to show).",
+      "parentUuid": "f63e2b29_6e6dddaf",
+      "range": {
+        "startLine": 460,
+        "startChar": 25,
+        "endLine": 460,
+        "endChar": 54
+      },
+      "revId": "ec122371a568236ef1eaf97aeaabf3f1f56e5fc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
