@@ -947,8 +947,6 @@ deqp_khr_common_sources = [
   "$deqp_path/external/openglcts/modules/common/glcShaderRenderCase.hpp",
   "$deqp_path/external/openglcts/modules/common/glcShaderStructTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcShaderStructTests.hpp",
-  "$deqp_path/external/openglcts/modules/common/glcShaderSwitchTests.cpp",
-  "$deqp_path/external/openglcts/modules/common/glcShaderSwitchTests.hpp",
   "$deqp_path/external/openglcts/modules/common/glcSpirvUtils.cpp",
   "$deqp_path/external/openglcts/modules/common/glcSpirvUtils.hpp",
   "$deqp_path/external/openglcts/modules/common/glcTestCase.cpp",
