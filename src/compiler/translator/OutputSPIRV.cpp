@@ -3018,8 +3018,8 @@ bool OutputSPIRVTraverser::visitBranch(Visit visit, TIntermBranch *node)
     switch (node->getFlowOp())
     {
         case EOpKill:
-            // TODO: http://anglebug.com/4889
-            UNIMPLEMENTED();
+            spirv::WriteKill(mBuilder.getSpirvCurrentFunctionBlock());
+            mBuilder.terminateCurrentFunctionBlock();
             break;
         case EOpBreak:
             // TODO: http://anglebug.com/4889

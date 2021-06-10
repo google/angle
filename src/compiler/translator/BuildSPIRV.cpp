@@ -1148,12 +1148,15 @@ void SPIRVBuilder::writeBranchConditional(spirv::IdRef conditionValue,
 
 void SPIRVBuilder::writeBranchConditionalBlockEnd()
 {
-    // Insert a branch to the merge block at the end of each if-else block.
-    const spirv::IdRef mergeBlock = getCurrentConditional()->blockIds.back();
+    if (!isCurrentFunctionBlockTerminated())
+    {
+        // Insert a branch to the merge block at the end of each if-else block, unless the block is
+        // already terminated, such as with a return or discard.
+        const spirv::IdRef mergeBlock = getCurrentConditional()->blockIds.back();
 
-    ASSERT(!isCurrentFunctionBlockTerminated());
-    spirv::WriteBranch(getSpirvCurrentFunctionBlock(), mergeBlock);
-    terminateCurrentFunctionBlock();
+        spirv::WriteBranch(getSpirvCurrentFunctionBlock(), mergeBlock);
+        terminateCurrentFunctionBlock();
+    }
 
     // Move on to the next block.
     nextConditionalBlock();
