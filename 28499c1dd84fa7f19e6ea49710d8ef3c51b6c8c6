@@ -115,6 +115,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bf81ea01_fafba91e",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-10T13:31:48Z",
+      "side": 1,
+      "message": "does this mean they\u0027re accepted as valid enums in TexStorage2D? suggest you say that explicitly.",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 47
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8848044_0b0f9f9f",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-10T13:31:48Z",
+      "side": 1,
+      "message": "suggest you spell out which enums are valid in this case specifically.",
+      "range": {
+        "startLine": 56,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 62
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27e3abe7_18b77590",
         "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
         "patchSetId": 6
