@@ -67,6 +67,24 @@
       "message": "Renderbuffers have no property/attribute to make them protected. Only in the case when they are backed by EGLImages. So here, when RB is allocated, I have \"false\" for protected.",
       "revId": "b6a3fd1082596b03e9de4bbf30fa9c8ebd421213",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19132852_08d314be",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-11T14:30:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7079287f_8161fd8e",
+      "revId": "b6a3fd1082596b03e9de4bbf30fa9c8ebd421213",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
