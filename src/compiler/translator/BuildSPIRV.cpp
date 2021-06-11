@@ -996,6 +996,19 @@ void SPIRVBuilder::endConditional()
     mConditionalStack.pop_back();
 }
 
+bool SPIRVBuilder::isInLoop() const
+{
+    for (const SpirvConditional &conditional : mConditionalStack)
+    {
+        if (conditional.isContinuable)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 uint32_t SPIRVBuilder::nextUnusedBinding()
 {
     return mNextUnusedBinding++;
@@ -1159,6 +1172,84 @@ void SPIRVBuilder::writeBranchConditionalBlockEnd()
     }
 
     // Move on to the next block.
+    nextConditionalBlock();
+}
+
+void SPIRVBuilder::writeLoopHeader(spirv::IdRef branchToBlock,
+                                   spirv::IdRef continueBlock,
+                                   spirv::IdRef mergeBlock)
+{
+    // First, jump to the header block:
+    //
+    //     OpBranch %header
+    //
+    const spirv::IdRef headerBlock = mConditionalStack.back().blockIds[0];
+    spirv::WriteBranch(getSpirvCurrentFunctionBlock(), headerBlock);
+    terminateCurrentFunctionBlock();
+
+    // Start the header block.
+    nextConditionalBlock();
+
+    // Generate the following:
+    //
+    //     OpLoopMerge %mergeBlock %continueBlock None
+    //     OpBranch %branchToBlock (%cond or if do-while, %body)
+    //
+    spirv::WriteLoopMerge(getSpirvCurrentFunctionBlock(), mergeBlock, continueBlock,
+                          spv::LoopControlMaskNone);
+    spirv::WriteBranch(getSpirvCurrentFunctionBlock(), branchToBlock);
+    terminateCurrentFunctionBlock();
+
+    // Start the next block, which is either %cond or %body.
+    nextConditionalBlock();
+}
+
+void SPIRVBuilder::writeLoopConditionEnd(spirv::IdRef conditionValue,
+                                         spirv::IdRef branchToBlock,
+                                         spirv::IdRef mergeBlock)
+{
+    // Generate the following:
+    //
+    //     OpBranchConditional %conditionValue %branchToBlock %mergeBlock
+    //
+    // %branchToBlock is either %body or if do-while, %header
+    //
+    spirv::WriteBranchConditional(getSpirvCurrentFunctionBlock(), conditionValue, branchToBlock,
+                                  mergeBlock, {});
+    terminateCurrentFunctionBlock();
+
+    // Start the next block, which is either %continue or %body.
+    nextConditionalBlock();
+}
+
+void SPIRVBuilder::writeLoopContinueEnd(spirv::IdRef headerBlock)
+{
+    // Generate the following:
+    //
+    //     OpBranch %headerBlock
+    //
+    spirv::WriteBranch(getSpirvCurrentFunctionBlock(), headerBlock);
+    terminateCurrentFunctionBlock();
+
+    // Start the next block, which is %body.
+    nextConditionalBlock();
+}
+
+void SPIRVBuilder::writeLoopBodyEnd(spirv::IdRef continueBlock)
+{
+    // Generate the following:
+    //
+    //     OpBranch %continueBlock
+    //
+    // This is only done if the block isn't already terminated in another way, such as with an
+    // unconditional continue/etc at the end of the loop.
+    if (!isCurrentFunctionBlockTerminated())
+    {
+        spirv::WriteBranch(getSpirvCurrentFunctionBlock(), continueBlock);
+        terminateCurrentFunctionBlock();
+    }
+
+    // Start the next block, which is %merge or if while, %continue.
     nextConditionalBlock();
 }
 

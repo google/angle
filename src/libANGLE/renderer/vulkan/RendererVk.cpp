@@ -2511,6 +2511,14 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // improves 7%.
     ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitAtFBOBoundary, isARM);
 
+    // When generating SPIR-V, the following workarounds are applied on buggy drivers:
+    //
+    // - AMD/Windows: Function parameters are passed in temporary variables even if they are already
+    //   variables.
+    //
+    // http://anglebug.com/6110
+    ANGLE_FEATURE_CONDITION(&mFeatures, directSPIRVGenerationWorkarounds, IsWindows() && isAMD);
+
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);
 

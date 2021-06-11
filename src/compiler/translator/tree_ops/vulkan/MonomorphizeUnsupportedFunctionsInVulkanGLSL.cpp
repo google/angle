@@ -218,9 +218,11 @@ const TFunction *MonomorphizeFunction(TSymbolTable *symbolTable,
                 if (asBinary->getOp() == EOpIndexIndirect)
                 {
                     TIntermTyped *index = asBinary->getRight();
+                    TType *indexType    = new TType(index->getType());
+                    indexType->setQualifier(EvqIn);
 
-                    TVariable *param = new TVariable(symbolTable, kEmptyImmutableString,
-                                                     &index->getType(), SymbolType::AngleInternal);
+                    TVariable *param = new TVariable(symbolTable, kEmptyImmutableString, indexType,
+                                                     SymbolType::AngleInternal);
                     substituteFunction->addParameter(param);
 
                     // The argument now uses the function parameters as indices.

@@ -305,6 +305,14 @@ class SPIRVBuilder : angle::NonCopyable
                                 spirv::IdRef falseBlock,
                                 spirv::IdRef mergeBlock);
     void writeBranchConditionalBlockEnd();
+    void writeLoopHeader(spirv::IdRef branchToBlock,
+                         spirv::IdRef continueBlock,
+                         spirv::IdRef mergeBlock);
+    void writeLoopConditionEnd(spirv::IdRef conditionValue,
+                               spirv::IdRef branchToBlock,
+                               spirv::IdRef mergeBlock);
+    void writeLoopContinueEnd(spirv::IdRef headerBlock);
+    void writeLoopBodyEnd(spirv::IdRef continueBlock);
 
     spirv::IdRef getBoolConstant(bool value);
     spirv::IdRef getUintConstant(uint32_t value);
@@ -330,6 +338,7 @@ class SPIRVBuilder : angle::NonCopyable
     void startConditional(size_t blockCount, bool isContinuable, bool isBreakable);
     void nextConditionalBlock();
     void endConditional();
+    bool isInLoop() const;
 
     // TODO: remove name hashing once translation through glslang is removed.  That is necessary to
     // avoid name collision between ANGLE's internal symbols and user-defined ones when compiling

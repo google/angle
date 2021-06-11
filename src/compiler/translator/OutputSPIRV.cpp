@@ -246,7 +246,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef createFunctionCall(TIntermAggregate *node, spirv::IdRef resultTypeId);
 
     ANGLE_MAYBE_UNUSED TCompiler *mCompiler;
-    ANGLE_MAYBE_UNUSED ShCompileOptions mCompileOptions;
+    ShCompileOptions mCompileOptions;
 
     SPIRVBuilder mBuilder;
 
@@ -1459,8 +1459,8 @@ void OutputSPIRVTraverser::startShortCircuit(TIntermBinary *node)
 
     const spirv::IdRef mergeBlock = conditional->blockIds.back();
     const spirv::IdRef ifBlock    = conditional->blockIds.front();
-    spirv::IdRef trueBlock        = node->getOp() == EOpLogicalAnd ? ifBlock : mergeBlock;
-    spirv::IdRef falseBlock       = node->getOp() == EOpLogicalOr ? ifBlock : mergeBlock;
+    const spirv::IdRef trueBlock  = node->getOp() == EOpLogicalAnd ? ifBlock : mergeBlock;
+    const spirv::IdRef falseBlock = node->getOp() == EOpLogicalOr ? ifBlock : mergeBlock;
 
     // Note that no logical not is necessary.  For ||, the branch will target the merge block in the
     // true case.
@@ -1548,15 +1548,23 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
         spirv::IdRef paramValue;
         SpirvDecorations decorations = mBuilder.getDecorations(paramType);
 
-        if (IsOpaqueType(paramType.getBasicType()) || paramQualifier == EvqConst ||
-            IsAccessChainUnindexedLValue(param))
+        if (IsOpaqueType(paramType.getBasicType()) || paramQualifier == EvqConst)
         {
-            // The following parameters are passed directly:
+            // The following parameters are passed as rvalue:
             //
             // - Opaque uniforms,
             // - const parameters,
-            // - unindexed lvalues.
             paramValue = accessChainLoad(&param, decorations);
+        }
+        else if (IsAccessChainUnindexedLValue(param) &&
+                 (mCompileOptions & SH_GENERATE_SPIRV_WORKAROUNDS) == 0)
+        {
+            // The following parameters are passed directly:
+            //
+            // - unindexed lvalues.
+            //
+            // This optimization is not applied on buggy drivers.  http://anglebug.com/6110.
+            paramValue = param.baseId;
         }
         else
         {
@@ -3071,7 +3079,7 @@ bool OutputSPIRVTraverser::visitIfElse(Visit visit, TIntermIfElse *node)
         return true;
     }
 
-    size_t lastChildIndex = getLastTraversedChildIndex(visit);
+    const size_t lastChildIndex = getLastTraversedChildIndex(visit);
 
     // If the condition was just visited, evaluate it and create the branch instructions.
     if (lastChildIndex == 0)
@@ -3189,6 +3197,9 @@ bool OutputSPIRVTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionD
             // Remember the id of the variable for future look up.
             ASSERT(mSymbolIdMap.count(paramVariable) == 0);
             mSymbolIdMap[paramVariable] = paramId;
+
+            spirv::WriteName(mBuilder.getSpirvDebug(), paramId,
+                             mBuilder.hashName(paramVariable).data());
         }
 
         mBuilder.startNewFunction(ids.functionId, function);
@@ -3420,10 +3431,14 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
         // expression.  Note that if the variable being declared is itself global (and the
         // initializer is not constant), a previous AST transformation (DeferGlobalInitializers)
         // makes sure their initialization is deferred to the beginning of main.
+        //
+        // Additionally, if the variable is being defined inside a loop, the initializer is not used
+        // as that would prevent it from being reintialized in the next iteration of the loop.
 
         TIntermTyped *initializer = assign->getRight();
         initializeWithDeclaration =
-            initializer->getAsConstantUnion() != nullptr || initializer->hasConstantValue();
+            !mBuilder.isInLoop() &&
+            (initializer->getAsConstantUnion() != nullptr || initializer->hasConstantValue());
 
         if (initializeWithDeclaration)
         {
@@ -3532,12 +3547,236 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
     return false;
 }
 
+void GetLoopBlocks(const SpirvConditional *conditional,
+                   TLoopType loopType,
+                   bool hasCondition,
+                   spirv::IdRef *headerBlock,
+                   spirv::IdRef *condBlock,
+                   spirv::IdRef *bodyBlock,
+                   spirv::IdRef *continueBlock,
+                   spirv::IdRef *mergeBlock)
+{
+    // The order of the blocks is for |for| and |while|:
+    //
+    //     %header %cond [optional] %body %continue %merge
+    //
+    // and for |do-while|:
+    //
+    //     %header %body %cond %merge
+    //
+    // Note that the |break| target is always the last block and the |continue| target is the one
+    // before last.
+    //
+    // If %continue is not present, all jumps are made to %cond (which is necessarily present).
+    // If %cond is not present, all jumps are made to %body instead.
+
+    size_t nextBlock = 0;
+    *headerBlock     = conditional->blockIds[nextBlock++];
+    // %cond, if any is after header except for |do-while|.
+    if (loopType != ELoopDoWhile && hasCondition)
+    {
+        *condBlock = conditional->blockIds[nextBlock++];
+    }
+    *bodyBlock = conditional->blockIds[nextBlock++];
+    // After the block is either %cond or %continue based on |do-while| or not.
+    if (loopType != ELoopDoWhile)
+    {
+        *continueBlock = conditional->blockIds[nextBlock++];
+    }
+    else
+    {
+        *condBlock = conditional->blockIds[nextBlock++];
+    }
+    *mergeBlock = conditional->blockIds[nextBlock++];
+
+    ASSERT(nextBlock == conditional->blockIds.size());
+
+    if (!continueBlock->valid())
+    {
+        ASSERT(condBlock->valid());
+        *continueBlock = *condBlock;
+    }
+    if (!condBlock->valid())
+    {
+        *condBlock = *bodyBlock;
+    }
+}
+
 bool OutputSPIRVTraverser::visitLoop(Visit visit, TIntermLoop *node)
 {
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
+    // There are three kinds of loops, and they translate as such:
+    //
+    // for (init; cond; expr) body;
+    //
+    //               // pre-loop block
+    //               init
+    //               OpBranch %header
+    //
+    //     %header = OpLabel
+    //               OpLoopMerge %merge %continue None
+    //               OpBranch %cond
+    //
+    //               // Note: if cond doesn't exist, this section is not generated.  The above
+    //               // OpBranch would jump directly to %body.
+    //       %cond = OpLabel
+    //          %v = cond
+    //               OpBranchConditional %v %body %merge None
+    //
+    //       %body = OpLabel
+    //               body
+    //               OpBranch %continue
+    //
+    //   %continue = OpLabel
+    //               expr
+    //               OpBranch %header
+    //
+    //               // post-loop block
+    //       %merge = OpLabel
+    //
+    //
+    // while (cond) body;
+    //
+    //               // pre-for block
+    //               OpBranch %header
+    //
+    //     %header = OpLabel
+    //               OpLoopMerge %merge %continue None
+    //               OpBranch %cond
+    //
+    //       %cond = OpLabel
+    //          %v = cond
+    //               OpBranchConditional %v %body %merge None
+    //
+    //       %body = OpLabel
+    //               body
+    //               OpBranch %continue
+    //
+    //   %continue = OpLabel
+    //               OpBranch %header
+    //
+    //               // post-loop block
+    //       %merge = OpLabel
+    //
+    //
+    // do body; while (cond);
+    //
+    //               // pre-for block
+    //               OpBranch %header
+    //
+    //     %header = OpLabel
+    //               OpLoopMerge %merge %cond None
+    //               OpBranch %body
+    //
+    //       %body = OpLabel
+    //               body
+    //               OpBranch %cond
+    //
+    //       %cond = OpLabel
+    //          %v = cond
+    //               OpBranchConditional %v %header %merge None
+    //
+    //               // post-loop block
+    //       %merge = OpLabel
+    //
 
-    return true;
+    // The order of the blocks is not necessarily the same as traversed, so it's much simpler if
+    // this function enforces traversal in the right order.
+    ASSERT(visit == PreVisit);
+    mNodeData.emplace_back();
+
+    const TLoopType loopType = node->getType();
+
+    // The init statement of a for loop is placed in the previous block, so continue generating code
+    // as-is until that statement is done.
+    if (node->getInit())
+    {
+        ASSERT(loopType == ELoopFor);
+        node->getInit()->traverse(this);
+        mNodeData.pop_back();
+    }
+
+    const bool hasCondition = node->getCondition() != nullptr;
+
+    // Once the init node is visited, if any, we need to set up the loop.
+    //
+    // For |for| and |while|, we need %header, %body, %continue and %merge.  For |do-while|, we
+    // need %header, %body and %merge.  If condition is present, an additional %cond block is
+    // needed in each case.
+    const size_t blockCount = (loopType == ELoopDoWhile ? 3 : 4) + (hasCondition ? 1 : 0);
+    mBuilder.startConditional(blockCount, true, true);
+
+    // Generate the %header block.
+    const SpirvConditional *conditional = mBuilder.getCurrentConditional();
+
+    spirv::IdRef headerBlock, condBlock, bodyBlock, continueBlock, mergeBlock;
+    GetLoopBlocks(conditional, loopType, hasCondition, &headerBlock, &condBlock, &bodyBlock,
+                  &continueBlock, &mergeBlock);
+
+    mBuilder.writeLoopHeader(loopType == ELoopDoWhile ? bodyBlock : condBlock, continueBlock,
+                             mergeBlock);
+
+    // %cond, if any is after header except for |do-while|.
+    if (loopType != ELoopDoWhile && hasCondition)
+    {
+        node->getCondition()->traverse(this);
+
+        // Generate the branch at the end of the %cond block.
+        const spirv::IdRef conditionValue = accessChainLoad(
+            &mNodeData.back(), mBuilder.getDecorations(node->getCondition()->getType()));
+        mBuilder.writeLoopConditionEnd(conditionValue, bodyBlock, mergeBlock);
+
+        mNodeData.pop_back();
+    }
+
+    // Next comes %body.
+    {
+        node->getBody()->traverse(this);
+
+        // Generate the branch at the end of the %body block.
+        mBuilder.writeLoopBodyEnd(continueBlock);
+    }
+
+    switch (loopType)
+    {
+        case ELoopFor:
+            // For |for| loops, the expression is placed after the body and acts as the continue
+            // block.
+            if (node->getExpression())
+            {
+                node->getExpression()->traverse(this);
+                mNodeData.pop_back();
+            }
+
+            // Generate the branch at the end of the %continue block.
+            mBuilder.writeLoopContinueEnd(headerBlock);
+            break;
+
+        case ELoopWhile:
+            // |for| loops have the expression in the continue block and |do-while| loops have their
+            // condition block act as the loop's continue block.  |while| loops need a branch-only
+            // continue loop, which is generated here.
+            mBuilder.writeLoopContinueEnd(headerBlock);
+            break;
+
+        case ELoopDoWhile:
+            // For |do-while|, %cond comes last.
+            ASSERT(hasCondition);
+            node->getCondition()->traverse(this);
+
+            // Generate the branch at the end of the %cond block.
+            const spirv::IdRef conditionValue = accessChainLoad(
+                &mNodeData.back(), mBuilder.getDecorations(node->getCondition()->getType()));
+            mBuilder.writeLoopConditionEnd(conditionValue, headerBlock, mergeBlock);
+
+            mNodeData.pop_back();
+            break;
+    }
+
+    // Pop from the conditional stack when done.
+    mBuilder.endConditional();
+
+    // Don't traverse the children, that's done already.
+    return false;
 }
 
 bool OutputSPIRVTraverser::visitBranch(Visit visit, TIntermBranch *node)

@@ -104,6 +104,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
     if (contextVk->getFeatures().directSPIRVGeneration.enabled)
     {
         compileOptions |= SH_GENERATE_SPIRV_DIRECTLY;
+
+        if (contextVk->getFeatures().directSPIRVGenerationWorkarounds.enabled)
+        {
+            compileOptions |= SH_GENERATE_SPIRV_WORKAROUNDS;
+        }
     }
 
     return compileImpl(context, compilerInstance, mState.getSource(), compileOptions | options);

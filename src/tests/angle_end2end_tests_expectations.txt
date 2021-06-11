@@ -22,6 +22,9 @@
 
 // Linux
 6065 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
+// Fails in older mesa
+6109 LINUX INTEL : GLSLTestLoops.BasicDoWhile/ES3_* = SKIP
+6109 LINUX INTEL : GLSLTestLoops.BasicWhile/ES3_* = SKIP
 
 // Intel Vulkan
 

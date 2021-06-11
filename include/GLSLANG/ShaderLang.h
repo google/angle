@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 260
+#define ANGLE_SH_VERSION 261
 
 enum ShShaderSpec
 {
@@ -340,6 +340,9 @@ const ShCompileOptions SH_INIT_FRAGMENT_OUTPUT_VARIABLES = UINT64_C(1) << 57;
 // Transitory flag to select between producing SPIR-V directly vs using glslang.  Ignored in
 // non-dcheck-enabled builds to avoid increasing ANGLE's binary size while both generators coexist.
 const ShCompileOptions SH_GENERATE_SPIRV_DIRECTLY = UINT64_C(1) << 58;
+
+// Generate workarounds in SPIR-V for buggy code.
+const ShCompileOptions SH_GENERATE_SPIRV_WORKAROUNDS = UINT64_C(1) << 59;
 
 // The 64 bits hash function. The first parameter is the input string; the
 // second parameter is the string length.
