@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "78bf8b12_ac67f347",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:07:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47d4d03c_b165f3fd",
+      "range": {
+        "startLine": 478,
+        "startChar": 0,
+        "endLine": 521,
+        "endChar": 1
+      },
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c8e507a7_b4647818",
@@ -41,6 +65,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8ad75da_e78ee736",
+        "filename": "src/compiler.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:07:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8e507a7_b4647818",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7a837fec_98e715c6",
@@ -54,6 +96,24 @@
       "writtenOn": "2021-06-10T03:43:59Z",
       "side": 1,
       "message": "Doesn\u0027t exist?",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00f595f6_4a5c3108",
+        "filename": "src/compiler.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:07:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a837fec_98e715c6",
       "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -115,6 +175,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37470e48_8af62ecc",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:07:57Z",
+      "side": 1,
+      "message": "Nope, removed, same with Program.h",
+      "parentUuid": "0eca352c_967cb52c",
+      "range": {
+        "startLine": 264,
+        "startChar": 9,
+        "endLine": 264,
+        "endChar": 43
+      },
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f9e9499c_9474bb8b",
@@ -132,6 +216,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e7149dd_0848438c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:07:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9e9499c_9474bb8b",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d64b8b59_312b9e98",
@@ -145,6 +247,24 @@
       "writtenOn": "2021-06-10T03:43:59Z",
       "side": 1,
       "message": "Giant NOPE. This file should be reverted.",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7359a3e3_a4231b9a",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:07:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d64b8b59_312b9e98",
       "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
