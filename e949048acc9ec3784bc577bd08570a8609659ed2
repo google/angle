@@ -33,6 +33,23 @@
       "message": "Excellent! 💯 💯",
       "revId": "e949048acc9ec3784bc577bd08570a8609659ed2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "669082d0_6b23d002",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-11T03:43:55Z",
+      "side": 1,
+      "message": "Bots operational\nhttps://ci.chromium.org/ui/p/chromium/builders/try/android-angle-chromium-try/2/overview\nhttps://ci.chromium.org/ui/p/chromium/builders/try/android-angle-try/2/overview\nlanding",
+      "revId": "e949048acc9ec3784bc577bd08570a8609659ed2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
