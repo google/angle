@@ -16,6 +16,23 @@
       "message": "This is the alternative to initializing the textures ",
       "revId": "7bbb9576b39f10707014061bc666fd713e319e23",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8400606f_e9b7f442",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-11T12:26:02Z",
+      "side": 1,
+      "message": "Hey Gert, I\u0027m surprised you did this approach. I was in favor of the feature method.",
+      "revId": "7bbb9576b39f10707014061bc666fd713e319e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
