@@ -117,7 +117,8 @@ void CaptureGetMaterialfv_params(const State &glState,
                                  GLfloat *params,
                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    unsigned int size = GetMaterialParameterCount(pnamePacked);
+    CaptureMemory(params, sizeof(GLfloat) * size, paramCapture);
 }
 
 void CaptureGetMaterialxv_params(const State &glState,

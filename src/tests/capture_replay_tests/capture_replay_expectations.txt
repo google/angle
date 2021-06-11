@@ -88,8 +88,3 @@ RobustResourceInitTest.SurfaceInitializedAfterSwap/*
 
 # ES1 comparison failed tests
 BootAnimationTest.DefaultBootAnimation/*
-
-# ES1 compile failed tests
-MaterialsTest.InitialState/*
-MaterialsTest.InvalidParameter/*
-MaterialsTest.SetParameters/*
