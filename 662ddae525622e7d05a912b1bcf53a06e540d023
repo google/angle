@@ -81,6 +81,24 @@
       "parentUuid": "647b3732_7c552400",
       "revId": "662ddae525622e7d05a912b1bcf53a06e540d023",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1bae774_058e89b1",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-11T19:34:00Z",
+      "side": 1,
+      "message": "Either way works",
+      "parentUuid": "60a21a7b_167eb10d",
+      "revId": "662ddae525622e7d05a912b1bcf53a06e540d023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
