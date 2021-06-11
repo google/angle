@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a27d64e_12f35ec9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1511618
+      },
+      "writtenOn": "2021-06-11T16:47:34Z",
+      "side": 1,
+      "message": "Seems much cleaner this way -- LGTM.",
+      "revId": "7341b40cc896ea1309fd47669fc4ab322955d222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
