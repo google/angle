@@ -49,7 +49,8 @@ void CaptureFogfv_params(const State &glState,
                          const GLfloat *params,
                          ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    int count = (pname == GL_FOG_COLOR) ? 4 : 1;
+    CaptureMemory(params, count * sizeof(GLfloat), paramCapture);
 }
 
 void CaptureFogxv_param(const State &glState,
