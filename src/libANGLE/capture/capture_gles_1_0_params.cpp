@@ -96,7 +96,8 @@ void CaptureGetLightfv_params(const State &glState,
                               GLfloat *params,
                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    int count = GetLightParameterCount(pnamePacked);
+    CaptureMemory(params, count * sizeof(GLfloat), paramCapture);
 }
 
 void CaptureGetLightxv_params(const State &glState,
