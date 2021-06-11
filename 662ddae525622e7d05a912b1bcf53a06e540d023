@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "524ee2c5_007061a0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3026,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-11T16:01:17Z",
+      "side": 1,
+      "message": "Good point!  That was something I added with the earlier approach for handling clear\u0027s, which now don\u0027t go through this method.",
+      "parentUuid": "d51c5a70_0e5adf8f",
+      "range": {
+        "startLine": 3026,
+        "startChar": 43,
+        "endLine": 3026,
+        "endChar": 78
+      },
+      "revId": "662ddae525622e7d05a912b1bcf53a06e540d023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "647b3732_7c552400",
@@ -37,6 +61,24 @@
       "writtenOn": "2021-06-11T14:38:03Z",
       "side": 1,
       "message": "As we discussed, if you want to nest an event log here that says \"deferred until usage\", that should be done right here.",
+      "revId": "662ddae525622e7d05a912b1bcf53a06e540d023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60a21a7b_167eb10d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-11T16:01:17Z",
+      "side": 1,
+      "message": "I\u0027m actually going to have AGI add a message, based on whether it sees a Vulkan command under the glClear* hierarchy.",
+      "parentUuid": "647b3732_7c552400",
       "revId": "662ddae525622e7d05a912b1bcf53a06e540d023",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
