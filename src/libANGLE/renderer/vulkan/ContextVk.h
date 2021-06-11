@@ -53,7 +53,7 @@ struct ContextVkPerfCounters
     ContextVkDescriptorSetList descriptorSetsAllocated;
 };
 
-enum class QueryEventCmdBuf
+enum class GraphicsEventCmdBuf
 {
     NotInQueryCmd              = 0,
     InOutsideCmdBufQueryCmd    = 1,
@@ -219,7 +219,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Record GL API calls for debuggers
     void logEvent(const char *eventString);
     void endEventLog(angle::EntryPoint entryPoint, PipelineType pipelineType);
-    void endEventLogForQuery();
+    void endEventLogForClearOrQuery();
 
     bool isViewportFlipEnabledForDrawFBO() const;
     bool isViewportFlipEnabledForReadFBO() const;
@@ -627,8 +627,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void onProgramExecutableReset(ProgramExecutableVk *executableVk);
 
-    angle::Result handleMidRenderPassClearEvent();
-    angle::Result handleQueryEvent(QueryEventCmdBuf queryEventType);
+    angle::Result handleGraphicsEventLog(GraphicsEventCmdBuf queryEventType);
 
   private:
     // Dirty bits.
@@ -1074,14 +1073,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // The following is used when creating debug-util markers for graphics debuggers (e.g. AGI).  A
     // given gl{Begin|End}Query command may result in commands being submitted to the outside or
-    // render-pass command buffer.  The ContextVk::handleQueryEvent() method records the
+    // render-pass command buffer.  The ContextVk::handleGraphicsEventLog() method records the
     // appropriate command buffer for use by ContextVk::endEventLogForQuery().  The knowledge of
     // which command buffer to use depends on the particular type of query (e.g. samples
     // vs. timestamp), and is only known by the query code, which is what calls
-    // ContextVk::handleQueryEvent().  After all back-end processing of the gl*Query command is
-    // complete, the front-end calls ContextVk::endEventLogForQuery(), which needs to know which
+    // ContextVk::handleGraphicsEventLog().  After all back-end processing of the gl*Query command
+    // is complete, the front-end calls ContextVk::endEventLogForQuery(), which needs to know which
     // command buffer to call endDebugUtilsLabelEXT() for.
-    QueryEventCmdBuf mQueryEventType;
+    GraphicsEventCmdBuf mQueryEventType;
 
     // Transform feedback buffers.
     angle::FastUnorderedSet<const vk::BufferHelper *,

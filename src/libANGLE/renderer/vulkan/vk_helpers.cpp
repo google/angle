@@ -2800,7 +2800,7 @@ angle::Result QueryHelper::beginQuery(ContextVk *contextVk)
     CommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
 
-    ANGLE_TRY(contextVk->handleQueryEvent(rx::QueryEventCmdBuf::InOutsideCmdBufQueryCmd));
+    ANGLE_TRY(contextVk->handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd));
 
     beginQueryImpl(contextVk, commandBuffer, commandBuffer);
 
@@ -2817,7 +2817,7 @@ angle::Result QueryHelper::endQuery(ContextVk *contextVk)
     CommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
 
-    ANGLE_TRY(contextVk->handleQueryEvent(rx::QueryEventCmdBuf::InOutsideCmdBufQueryCmd));
+    ANGLE_TRY(contextVk->handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd));
 
     endQueryImpl(contextVk, commandBuffer);
 

@@ -40,7 +40,7 @@ void DebugAnnotatorVk::endEvent(gl::Context *context,
     if (vkCmdBeginDebugUtilsLabelEXT && context)
     {
         ContextVk *contextVk = vk::GetImpl(static_cast<gl::Context *>(context));
-        if (isDrawOrClearEntryPoint(entryPoint))
+        if (isDrawEntryPoint(entryPoint))
         {
             contextVk->endEventLog(entryPoint, PipelineType::Graphics);
         }
@@ -48,9 +48,9 @@ void DebugAnnotatorVk::endEvent(gl::Context *context,
         {
             contextVk->endEventLog(entryPoint, PipelineType::Compute);
         }
-        else if (isQueryEntryPoint(entryPoint))
+        else if (isClearOrQueryEntryPoint(entryPoint))
         {
-            contextVk->endEventLogForQuery();
+            contextVk->endEventLogForClearOrQuery();
         }
     }
 }
@@ -60,15 +60,10 @@ bool DebugAnnotatorVk::getStatus()
     return true;
 }
 
-bool DebugAnnotatorVk::isDrawOrClearEntryPoint(angle::EntryPoint entryPoint) const
+bool DebugAnnotatorVk::isDrawEntryPoint(angle::EntryPoint entryPoint) const
 {
     switch (entryPoint)
     {
-        case angle::EntryPoint::GLClear:
-        case angle::EntryPoint::GLClearBufferfi:
-        case angle::EntryPoint::GLClearBufferfv:
-        case angle::EntryPoint::GLClearBufferiv:
-        case angle::EntryPoint::GLClearBufferuiv:
         case angle::EntryPoint::GLDrawArrays:
         case angle::EntryPoint::GLDrawArraysIndirect:
         case angle::EntryPoint::GLDrawArraysInstanced:
@@ -125,10 +120,15 @@ bool DebugAnnotatorVk::isDispatchEntryPoint(angle::EntryPoint entryPoint) const
     }
 }
 
-bool DebugAnnotatorVk::isQueryEntryPoint(angle::EntryPoint entryPoint) const
+bool DebugAnnotatorVk::isClearOrQueryEntryPoint(angle::EntryPoint entryPoint) const
 {
     switch (entryPoint)
     {
+        case angle::EntryPoint::GLClear:
+        case angle::EntryPoint::GLClearBufferfi:
+        case angle::EntryPoint::GLClearBufferfv:
+        case angle::EntryPoint::GLClearBufferiv:
+        case angle::EntryPoint::GLClearBufferuiv:
         case angle::EntryPoint::GLBeginQuery:
         case angle::EntryPoint::GLBeginQueryEXT:
         case angle::EntryPoint::GLBeginQueryIndexed:

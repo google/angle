@@ -501,6 +501,16 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         vk::Framebuffer *currentFramebuffer = nullptr;
         ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer, nullptr));
         ASSERT(contextVk->hasStartedRenderPassWithFramebuffer(currentFramebuffer));
+
+        // Emit debug-util markers for this mid-render-pass clear
+        ANGLE_TRY(
+            contextVk->handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InRenderPassCmdBufQueryCmd));
+    }
+    else
+    {
+        // Emit debug-util markers for this outside-render-pass clear
+        ANGLE_TRY(
+            contextVk->handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd));
     }
 
     const bool preferDrawOverClearAttachments =
@@ -2343,9 +2353,6 @@ angle::Result FramebufferVk::clearWithCommand(ContextVk *contextVk,
         // now.
         updateRenderPassReadOnlyDepthMode(contextVk, renderpassCommands);
     }
-
-    // Emit debug-util markers for this mid-render-pass clear
-    ANGLE_TRY(contextVk->handleMidRenderPassClearEvent());
 
     VkClearRect rect                           = {};
     rect.rect.extent.width                     = scissoredRenderArea.width;
