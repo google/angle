@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "84fa6a3f_016b3399",
+        "filename": "include/platform/FeaturesMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b84846fe_8b395832",
+      "range": {
+        "startLine": 30,
+        "startChar": 38,
+        "endLine": 30,
+        "endChar": 62
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6423f5b4_4665957e",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "this was renamed on upstream. Pls keep upstream version.",
+      "range": {
+        "startLine": 43,
+        "startChar": 33,
+        "endLine": 43,
+        "endChar": 51
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a7b8f7c_67c5efca",
+        "filename": "include/platform/FeaturesMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6423f5b4_4665957e",
       "range": {
         "startLine": 43,
         "startChar": 33,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "421f375e_6f03be74",
+        "filename": "include/platform/FeaturesMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b840157_31fe13db",
+      "range": {
+        "startLine": 100,
+        "startChar": 12,
+        "endLine": 100,
+        "endChar": 35
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a7969c2_14892cad",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "These instance draw emulations are not needed. At that time, I thought older iOS devices don\u0027t support instance draws if base vertex instance draw feature is not supported. But it is not the case.",
+      "range": {
+        "startLine": 723,
+        "startChar": 0,
+        "endLine": 748,
+        "endChar": 1
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e5c8a27_aa55bd02",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a7969c2_14892cad",
       "range": {
         "startLine": 723,
         "startChar": 0,
@@ -133,6 +229,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a82c093_377703b0",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 1890,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea2cb16f_3dd7cdbc",
+      "range": {
+        "startLine": 1888,
+        "startChar": 4,
+        "endLine": 1890,
+        "endChar": 27
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0b4cb260_16bd8f36",
@@ -146,6 +266,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "this flag is out of date. It was removed from upstream ANGLE.",
+      "range": {
+        "startLine": 205,
+        "startChar": 4,
+        "endLine": 206,
+        "endChar": 29
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee23fad1_e72b3d34",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b4cb260_16bd8f36",
       "range": {
         "startLine": 205,
         "startChar": 4,
@@ -179,6 +323,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "81e97522_fe7ef6b6",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "448a3902_16d8a724",
+      "range": {
+        "startLine": 152,
+        "startChar": 8,
+        "endLine": 152,
+        "endChar": 33
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "763343e8_de24bf0f",
@@ -192,6 +360,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "this flag is out of date. It was removed from upstream ANGLE.",
+      "range": {
+        "startLine": 184,
+        "startChar": 4,
+        "endLine": 184,
+        "endChar": 28
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf35561a_a2c0c451",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "763343e8_de24bf0f",
       "range": {
         "startLine": 184,
         "startChar": 4,
@@ -225,6 +417,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "acb2e5b4_bff7497f",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6cd89650_e1758739",
+      "range": {
+        "startLine": 435,
+        "startChar": 4,
+        "endLine": 435,
+        "endChar": 61
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b5409d9b_984c0640",
@@ -238,6 +454,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "we decided to use EGL_TEXTURE_2D for IOSurface. So rectangle textures are not needed.",
+      "range": {
+        "startLine": 770,
+        "startChar": 4,
+        "endLine": 771,
+        "endChar": 46
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40514ade_7cd54441",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 771,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5409d9b_984c0640",
       "range": {
         "startLine": 770,
         "startChar": 4,
@@ -420,6 +660,53 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "96ec802f_dc800d95",
+        "filename": "src/libANGLE/renderer/metal/RenderTargetMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3fa8d48_e1e6c20c",
+      "range": {
+        "startLine": 59,
+        "startChar": 3,
+        "endLine": 60,
+        "endChar": 89
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "600f7bb4_a33e62b4",
+        "filename": "src/libANGLE/renderer/metal/SurfaceMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Bad name",
+      "range": {
+        "startLine": 27,
+        "startChar": 8,
+        "endLine": 27,
+        "endChar": 24
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9e4646ca_4b254ad2",
@@ -443,6 +730,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5421511a_a0c83638",
+        "filename": "src/libANGLE/renderer/metal/SyncMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e4646ca_4b254ad2",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 50
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e2420b7_57e7a7db",
@@ -456,6 +767,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "implemented on upstream",
+      "range": {
+        "startLine": 132,
+        "startChar": 4,
+        "endLine": 132,
+        "endChar": 17
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e43c8f5_2bd35922",
+        "filename": "src/libANGLE/renderer/metal/SyncMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e2420b7_57e7a7db",
       "range": {
         "startLine": 132,
         "startChar": 4,
@@ -581,6 +916,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "64540f2c_e9d2bf81",
+        "filename": "src/libANGLE/renderer/metal/doc/APPLE_clip_distance.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e66a8fff_e3405766",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 27
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8bc3d07e_74475d22",
@@ -598,6 +957,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "24a841ec_30d1e38f",
+        "filename": "src/libANGLE/renderer/metal/mtl_buffer_pool.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8bc3d07e_74475d22",
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ecf5aa9c_8ea05800",
@@ -611,6 +988,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "This was renamed to ready() to make it more intuitive.",
+      "range": {
+        "startLine": 105,
+        "startChar": 9,
+        "endLine": 105,
+        "endChar": 14
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb3cc656_6dbbf881",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecf5aa9c_8ea05800",
       "range": {
         "startLine": 105,
         "startChar": 9,
@@ -644,6 +1045,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b91e81da_35e64b85",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5999a702_542ad103",
+      "range": {
+        "startLine": 133,
+        "startChar": 9,
+        "endLine": 133,
+        "endChar": 18
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d744698b_567b526c",
@@ -657,6 +1082,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "I think I changed these arguments to raw pointers, there are no need to use shared_ptr.",
+      "range": {
+        "startLine": 588,
+        "startChar": 39,
+        "endLine": 589,
+        "endChar": 71
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae70a921_5a56aad9",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d744698b_567b526c",
       "range": {
         "startLine": 588,
         "startChar": 39,
@@ -690,6 +1139,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a15e502_f36ade4e",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85439769_84bbffa4",
+      "range": {
+        "startLine": 578,
+        "startChar": 20,
+        "endLine": 578,
+        "endChar": 25
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "52bd2bd9_d03b8ccc",
@@ -703,6 +1176,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "This was renamed to ready() to make it more intuitive.",
+      "range": {
+        "startLine": 582,
+        "startChar": 11,
+        "endLine": 582,
+        "endChar": 20
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a5432ec_45fa2478",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52bd2bd9_d03b8ccc",
       "range": {
         "startLine": 582,
         "startChar": 11,
@@ -736,6 +1233,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "83176bc9_60c34df3",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eef1f321_60d46f38",
+      "range": {
+        "startLine": 201,
+        "startChar": 4,
+        "endLine": 212,
+        "endChar": 5
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e69458ab_af26734c",
@@ -749,6 +1270,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "this function was converted to autogenerated one instead of hand-written code.",
+      "range": {
+        "startLine": 432,
+        "startChar": 4,
+        "endLine": 439,
+        "endChar": 70
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "785362f7_44b74b05",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "I will probably need to follow up and add new formats to the autogen script",
+      "parentUuid": "e69458ab_af26734c",
       "range": {
         "startLine": 432,
         "startChar": 4,
@@ -805,6 +1350,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "639d2011_91f9338f",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48195e34_485e52d3",
+      "range": {
+        "startLine": 280,
+        "startChar": 43,
+        "endLine": 280,
+        "endChar": 93
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8c86756d_643766dc",
@@ -851,6 +1420,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "59fabca5_7537b408",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c8ad1cb_812af8eb",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 33
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9b1da60e_5e60b729",
@@ -864,6 +1457,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "missing sRGB flag to generate sRGB mipmaps. This flag was added to upstream ANGLE.",
+      "range": {
+        "startLine": 103,
+        "startChar": 7,
+        "endLine": 103,
+        "endChar": 30
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5dac66af_b7a5e02f",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b1da60e_5e60b729",
       "range": {
         "startLine": 103,
         "startChar": 7,
@@ -897,6 +1514,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "90476db8_5b4a7a0c",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "424d0557_e6a02844",
+      "range": {
+        "startLine": 310,
+        "startChar": 15,
+        "endLine": 310,
+        "endChar": 20
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "36637ba5_c5020cfe",
@@ -910,6 +1551,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "this is out of date. We should use `unmapAndFlushSubset` like updated code on upstream because only a region of the buffer is updated in this function.",
+      "range": {
+        "startLine": 446,
+        "startChar": 15,
+        "endLine": 446,
+        "endChar": 20
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de8e0422_1b6a0aec",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36637ba5_c5020cfe",
       "range": {
         "startLine": 446,
         "startChar": 15,
@@ -943,6 +1608,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d623eaad_f098cdc0",
+        "filename": "src/libANGLE/renderer/metal/mtl_resources.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83c2b48e_c53d04db",
+      "range": {
+        "startLine": 37,
+        "startChar": 5,
+        "endLine": 37,
+        "endChar": 16
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0c333419_1ba3faa6",
@@ -956,6 +1645,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "this function was renamed, and we don\u0027t need shared_ptr anymore which would require shared_from_this() call.",
+      "range": {
+        "startLine": 52,
+        "startChar": 5,
+        "endLine": 52,
+        "endChar": 24
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "197e1d84_be6a3b81",
+        "filename": "src/libANGLE/renderer/metal/mtl_resources.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c333419_1ba3faa6",
       "range": {
         "startLine": 52,
         "startChar": 5,
@@ -989,6 +1702,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "74d93e31_1ea14e4d",
+        "filename": "src/libANGLE/renderer/metal/mtl_state_cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94772ad6_85b26c56",
+      "range": {
+        "startLine": 116,
+        "startChar": 12,
+        "endLine": 116,
+        "endChar": 33
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "acd5c838_025f2042",
@@ -1002,6 +1739,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "fyi, this is MetalANGLE\u0027s old code. I removed it.",
+      "range": {
+        "startLine": 296,
+        "startChar": 0,
+        "endLine": 315,
+        "endChar": 2
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "785352b5_845138bf",
+        "filename": "src/libANGLE/renderer/metal/mtl_state_cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "acd5c838_025f2042",
       "range": {
         "startLine": 296,
         "startChar": 0,
@@ -1035,6 +1796,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8457fb04_28a555f0",
+        "filename": "src/libANGLE/renderer/metal/mtl_state_cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "971a1a10_375f8af8",
+      "range": {
+        "startLine": 353,
+        "startChar": 4,
+        "endLine": 353,
+        "endChar": 72
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3334d5db_19e73a82",
@@ -1048,6 +1833,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "these code was removed by Alexey. He updated them to support per attachment\u0027s blend states.",
+      "range": {
+        "startLine": 571,
+        "startChar": 0,
+        "endLine": 609,
+        "endChar": 1
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8aa4aac5_6fa46630",
+        "filename": "src/libANGLE/renderer/metal/mtl_state_cache.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3334d5db_19e73a82",
       "range": {
         "startLine": 571,
         "startChar": 0,
@@ -1081,6 +1890,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e28264ca_08f53bf2",
+        "filename": "src/libANGLE/renderer/metal/mtl_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d6efb83_475f4237",
+      "range": {
+        "startLine": 105,
+        "startChar": 14,
+        "endLine": 105,
+        "endChar": 39
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "efaf0a02_e812a279",
@@ -1094,6 +1927,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "pls keep the upstream version of this function. The version in this CL is out of date (the variables were renamed as requested by ANGLE devs)",
+      "range": {
+        "startLine": 917,
+        "startChar": 18,
+        "endLine": 917,
+        "endChar": 43
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eaa06f10_cf982676",
+        "filename": "src/libANGLE/renderer/metal/mtl_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 917,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "efaf0a02_e812a279",
       "range": {
         "startLine": 917,
         "startChar": 18,
@@ -1127,6 +1984,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad7159bf_104b0d3b",
+        "filename": "src/libANGLE/renderer/metal/shaders/blit.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cbff8d5_1a85531c",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 337,
+        "endChar": 1
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1721fbe0_b2d64d2b",
@@ -1144,6 +2025,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ef56ee9_5f1102f4",
+        "filename": "src/libANGLE/renderer/metal/shaders/blit.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1721fbe0_b2d64d2b",
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "769b795e_3f89c68a",
@@ -1157,6 +2056,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "pls keep \"@@\" before #",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 27
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "639283a4_4279834e",
+        "filename": "src/libANGLE/renderer/metal/shaders/common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "769b795e_3f89c68a",
       "range": {
         "startLine": 13,
         "startChar": 0,
@@ -1190,6 +2113,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e2d013a_12508aea",
+        "filename": "src/libANGLE/renderer/metal/shaders/copy_buffer.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "758c4eac_f5f7ee9f",
+      "range": {
+        "startLine": 19,
+        "startChar": 49,
+        "endLine": 19,
+        "endChar": 50
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4aa8f3c7_285c1bfb",
@@ -1203,6 +2150,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "pls keep the function constant\u0027s index on upstream",
+      "range": {
+        "startLine": 22,
+        "startChar": 50,
+        "endLine": 22,
+        "endChar": 51
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ef9046b_db829958",
+        "filename": "src/libANGLE/renderer/metal/shaders/copy_buffer.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4aa8f3c7_285c1bfb",
       "range": {
         "startLine": 22,
         "startChar": 50,
@@ -1236,6 +2207,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8523bbf_2aac33e6",
+        "filename": "src/libANGLE/renderer/metal/shaders/gen_mipmap.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea7de4d_b52215f7",
+      "range": {
+        "startLine": 29,
+        "startChar": 7,
+        "endLine": 29,
+        "endChar": 19
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9bb8a2e7_5d71f86c",
@@ -1249,6 +2244,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "pls keep the function constant\u0027s index on upstream",
+      "range": {
+        "startLine": 9,
+        "startChar": 61,
+        "endLine": 9,
+        "endChar": 62
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c9d1f69_8ed0f9ab",
+        "filename": "src/libANGLE/renderer/metal/shaders/visibility.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:06:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9bb8a2e7_5d71f86c",
       "range": {
         "startLine": 9,
         "startChar": 61,
