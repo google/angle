@@ -5600,4 +5600,13 @@ void WriteParamValueReplay<ParamType::TGLeglImageOES>(std::ostream &os,
     os << "reinterpret_cast<EGLImageKHR>(" << value << ")";
 }
 
+template <>
+void WriteParamValueReplay<ParamType::TGLubyte>(std::ostream &os,
+                                                const CallCapture &call,
+                                                GLubyte value)
+{
+    const int v = value;
+    os << v;
+}
+
 }  // namespace angle
