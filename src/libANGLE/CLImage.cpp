@@ -14,6 +14,23 @@
 namespace cl
 {
 
+bool Image::IsTypeValid(MemObjectType imageType)
+{
+    switch (imageType)
+    {
+        case MemObjectType::Image1D:
+        case MemObjectType::Image2D:
+        case MemObjectType::Image3D:
+        case MemObjectType::Image1D_Array:
+        case MemObjectType::Image2D_Array:
+        case MemObjectType::Image1D_Buffer:
+            break;
+        default:
+            return false;
+    }
+    return true;
+}
+
 cl_int Image::getInfo(ImageInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     size_t valSizeT       = 0u;
@@ -91,23 +108,6 @@ cl_int Image::getInfo(ImageInfo name, size_t valueSize, void *value, size_t *val
         *valueSizeRet = copySize;
     }
     return CL_SUCCESS;
-}
-
-bool Image::IsTypeValid(MemObjectType imageType)
-{
-    switch (imageType)
-    {
-        case MemObjectType::Image1D:
-        case MemObjectType::Image2D:
-        case MemObjectType::Image3D:
-        case MemObjectType::Image1D_Array:
-        case MemObjectType::Image2D_Array:
-        case MemObjectType::Image1D_Buffer:
-            break;
-        default:
-            return false;
-    }
-    return true;
 }
 
 Image::~Image() = default;

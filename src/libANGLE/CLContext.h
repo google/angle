@@ -21,6 +21,8 @@ class Context final : public _cl_context, public Object
   public:
     // Front end entry functions, only called from OpenCL entry points
 
+    static bool IsValidAndVersionOrNewer(const _cl_context *context, cl_uint major, cl_uint minor);
+
     cl_int getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
     cl_command_queue createCommandQueueWithProperties(cl_device_id device,
@@ -108,8 +110,6 @@ class Context final : public _cl_context, public Object
 
     cl_int waitForEvents(cl_uint numEvents, const cl_event *eventList);
 
-    static bool IsValidAndVersionOrNewer(const _cl_context *context, cl_uint major, cl_uint minor);
-
   public:
     using PropArray = std::vector<cl_context_properties>;
 
@@ -190,14 +190,14 @@ inline T &Context::getImpl() const
 inline bool Context::supportsImages() const
 {
     return (std::find_if(mDevices.cbegin(), mDevices.cend(), [](const DevicePtr &ptr) {
-                return ptr->getInfo().mImageSupport == CL_TRUE;
+                return ptr->getInfo().imageSupport == CL_TRUE;
             }) != mDevices.cend());
 }
 
 inline bool Context::supportsIL() const
 {
     return (std::find_if(mDevices.cbegin(), mDevices.cend(), [](const DevicePtr &ptr) {
-                return !ptr->getInfo().mIL_Version.empty();
+                return !ptr->getInfo().IL_Version.empty();
             }) != mDevices.cend());
 }
 

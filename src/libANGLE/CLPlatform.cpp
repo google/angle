@@ -116,37 +116,37 @@ cl_int Platform::getInfo(PlatformInfo name,
     switch (name)
     {
         case PlatformInfo::Profile:
-            copyValue = mInfo.mProfile.c_str();
-            copySize  = mInfo.mProfile.length() + 1u;
+            copyValue = mInfo.profile.c_str();
+            copySize  = mInfo.profile.length() + 1u;
             break;
         case PlatformInfo::Version:
-            copyValue = mInfo.mVersionStr.c_str();
-            copySize  = mInfo.mVersionStr.length() + 1u;
+            copyValue = mInfo.versionStr.c_str();
+            copySize  = mInfo.versionStr.length() + 1u;
             break;
         case PlatformInfo::NumericVersion:
-            copyValue = &mInfo.mVersion;
-            copySize  = sizeof(mInfo.mVersion);
+            copyValue = &mInfo.version;
+            copySize  = sizeof(mInfo.version);
             break;
         case PlatformInfo::Name:
-            copyValue = mInfo.mName.c_str();
-            copySize  = mInfo.mName.length() + 1u;
+            copyValue = mInfo.name.c_str();
+            copySize  = mInfo.name.length() + 1u;
             break;
         case PlatformInfo::Vendor:
             copyValue = kVendor;
             copySize  = sizeof(kVendor);
             break;
         case PlatformInfo::Extensions:
-            copyValue = mInfo.mExtensions.c_str();
-            copySize  = mInfo.mExtensions.length() + 1u;
+            copyValue = mInfo.extensions.c_str();
+            copySize  = mInfo.extensions.length() + 1u;
             break;
         case PlatformInfo::ExtensionsWithVersion:
-            copyValue = mInfo.mExtensionsWithVersion.data();
-            copySize  = mInfo.mExtensionsWithVersion.size() *
-                       sizeof(decltype(mInfo.mExtensionsWithVersion)::value_type);
+            copyValue = mInfo.extensionsWithVersion.data();
+            copySize  = mInfo.extensionsWithVersion.size() *
+                       sizeof(decltype(mInfo.extensionsWithVersion)::value_type);
             break;
         case PlatformInfo::HostTimerResolution:
-            copyValue = &mInfo.mHostTimerRes;
-            copySize  = sizeof(mInfo.mHostTimerRes);
+            copyValue = &mInfo.hostTimerRes;
+            copySize  = sizeof(mInfo.hostTimerRes);
             break;
         case PlatformInfo::IcdSuffix:
             copyValue = kIcdSuffix;
@@ -185,7 +185,7 @@ cl_int Platform::getDeviceIDs(DeviceType deviceType,
     cl_uint found = 0u;
     for (const DevicePtr &device : mDevices)
     {
-        if (IsDeviceTypeMatch(deviceType, device->getInfo().mType))
+        if (IsDeviceTypeMatch(deviceType, device->getInfo().type))
         {
             if (devices != nullptr && found < numEntries)
             {

@@ -46,12 +46,13 @@ size_t CLMemoryCL::getSize(cl_int &errorCode) const
 }
 
 CLMemoryImpl::Ptr CLMemoryCL::createSubBuffer(const cl::Buffer &buffer,
+                                              cl::MemFlags flags,
                                               size_t size,
                                               cl_int &errorCode)
 {
     const cl_buffer_region region = {buffer.getOffset(), size};
     const cl_mem nativeBuffer     = mNative->getDispatch().clCreateSubBuffer(
-        mNative, buffer.getFlags().get(), CL_BUFFER_CREATE_TYPE_REGION, &region, &errorCode);
+        mNative, flags.get(), CL_BUFFER_CREATE_TYPE_REGION, &region, &errorCode);
     return CLMemoryImpl::Ptr(nativeBuffer != nullptr ? new CLMemoryCL(buffer, nativeBuffer)
                                                      : nullptr);
 }

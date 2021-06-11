@@ -82,6 +82,11 @@ bool EndsWith(const std::string &str, const char *suffix);
 // The comparison is case sensitive.
 bool EndsWith(const char *str, const char *suffix);
 
+// Check if the given token string contains the given token.
+// The tokens are separated by the given delimiter.
+// The comparison is case sensitive.
+bool ContainsToken(const std::string &tokenStr, char delimiter, const std::string &token);
+
 // Convert to lower-case.
 void ToLower(std::string *str);
 

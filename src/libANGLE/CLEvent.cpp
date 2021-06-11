@@ -36,7 +36,7 @@ cl_int Event::getInfo(EventInfo name, size_t valueSize, void *value, size_t *val
     switch (name)
     {
         case EventInfo::CommandQueue:
-            valPointer = mCommandQueue->getNative();
+            valPointer = CommandQueue::CastNative(mCommandQueue.get());
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;

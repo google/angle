@@ -14,7 +14,7 @@ namespace rx
 
 CLDeviceImpl::Info::Info() = default;
 
-CLDeviceImpl::Info::Info(cl::DeviceType type) : mType(type) {}
+CLDeviceImpl::Info::Info(cl::DeviceType deviceType) : type(deviceType) {}
 
 CLDeviceImpl::Info::~Info() = default;
 

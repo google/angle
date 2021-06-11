@@ -172,55 +172,55 @@ CLKernelImpl::Info CLKernelCL::createInfo(cl_int &errorCode) const
     const cl::Context &ctx = mKernel.getProgram().getContext();
     Info info;
 
-    if (!GetKernelString(mNative, cl::KernelInfo::FunctionName, info.mFunctionName, errorCode) ||
-        !GetKernelInfo(mNative, cl::KernelInfo::NumArgs, info.mNumArgs, errorCode) ||
+    if (!GetKernelString(mNative, cl::KernelInfo::FunctionName, info.functionName, errorCode) ||
+        !GetKernelInfo(mNative, cl::KernelInfo::NumArgs, info.numArgs, errorCode) ||
         (ctx.getPlatform().isVersionOrNewer(1u, 2u) &&
-         !GetKernelString(mNative, cl::KernelInfo::Attributes, info.mAttributes, errorCode)))
+         !GetKernelString(mNative, cl::KernelInfo::Attributes, info.attributes, errorCode)))
     {
         return Info{};
     }
 
-    info.mWorkGroups.resize(ctx.getDevices().size());
+    info.workGroups.resize(ctx.getDevices().size());
     for (size_t index = 0u; index < ctx.getDevices().size(); ++index)
     {
         const cl_device_id device = ctx.getDevices()[index]->getImpl<CLDeviceCL>().getNative();
-        WorkGroupInfo &workGroup  = info.mWorkGroups[index];
+        WorkGroupInfo &workGroup  = info.workGroups[index];
 
         if ((ctx.getPlatform().isVersionOrNewer(1u, 2u) &&
-             ctx.getDevices()[index]->supportsBuiltInKernel(info.mFunctionName) &&
+             ctx.getDevices()[index]->supportsBuiltInKernel(info.functionName) &&
              !GetWorkGroupInfo(mNative, device, cl::KernelWorkGroupInfo::GlobalWorkSize,
-                               workGroup.mGlobalWorkSize, errorCode)) ||
+                               workGroup.globalWorkSize, errorCode)) ||
             !GetWorkGroupInfo(mNative, device, cl::KernelWorkGroupInfo::WorkGroupSize,
-                              workGroup.mWorkGroupSize, errorCode) ||
+                              workGroup.workGroupSize, errorCode) ||
             !GetWorkGroupInfo(mNative, device, cl::KernelWorkGroupInfo::CompileWorkGroupSize,
-                              workGroup.mCompileWorkGroupSize, errorCode) ||
+                              workGroup.compileWorkGroupSize, errorCode) ||
             !GetWorkGroupInfo(mNative, device, cl::KernelWorkGroupInfo::LocalMemSize,
-                              workGroup.mLocalMemSize, errorCode) ||
+                              workGroup.localMemSize, errorCode) ||
             !GetWorkGroupInfo(mNative, device,
                               cl::KernelWorkGroupInfo::PreferredWorkGroupSizeMultiple,
-                              workGroup.mPrefWorkGroupSizeMultiple, errorCode) ||
+                              workGroup.prefWorkGroupSizeMultiple, errorCode) ||
             !GetWorkGroupInfo(mNative, device, cl::KernelWorkGroupInfo::PrivateMemSize,
-                              workGroup.mPrivateMemSize, errorCode))
+                              workGroup.privateMemSize, errorCode))
         {
             return Info{};
         }
     }
 
-    info.mArgs.resize(info.mNumArgs);
+    info.args.resize(info.numArgs);
     if (ctx.getPlatform().isVersionOrNewer(1u, 2u))
     {
-        for (cl_uint index = 0u; index < info.mNumArgs; ++index)
+        for (cl_uint index = 0u; index < info.numArgs; ++index)
         {
-            ArgInfo &arg = info.mArgs[index];
+            ArgInfo &arg = info.args[index];
             if (!GetArgInfo(mNative, index, cl::KernelArgInfo::AddressQualifier,
-                            arg.mAddressQualifier, errorCode) ||
-                !GetArgInfo(mNative, index, cl::KernelArgInfo::AccessQualifier,
-                            arg.mAccessQualifier, errorCode) ||
-                !GetArgString(mNative, index, cl::KernelArgInfo::TypeName, arg.mTypeName,
-                              errorCode) ||
-                !GetArgInfo(mNative, index, cl::KernelArgInfo::TypeQualifier, arg.mTypeQualifier,
+                            arg.addressQualifier, errorCode) ||
+                !GetArgInfo(mNative, index, cl::KernelArgInfo::AccessQualifier, arg.accessQualifier,
                             errorCode) ||
-                !GetArgString(mNative, index, cl::KernelArgInfo::Name, arg.mName, errorCode))
+                !GetArgString(mNative, index, cl::KernelArgInfo::TypeName, arg.typeName,
+                              errorCode) ||
+                !GetArgInfo(mNative, index, cl::KernelArgInfo::TypeQualifier, arg.typeQualifier,
+                            errorCode) ||
+                !GetArgString(mNative, index, cl::KernelArgInfo::Name, arg.name, errorCode))
             {
                 return Info{};
             }

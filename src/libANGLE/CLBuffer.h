@@ -18,6 +18,8 @@ class Buffer final : public Memory
   public:
     // Front end entry functions, only called from OpenCL entry points
 
+    static bool IsValid(const _cl_mem *buffer);
+
     cl_mem createSubBuffer(MemFlags flags,
                            cl_buffer_create_type createType,
                            const void *createInfo,
@@ -25,8 +27,6 @@ class Buffer final : public Memory
 
     bool isRegionValid(size_t offset, size_t size) const;
     bool isRegionValid(const cl_buffer_region &region) const;
-
-    static bool IsValid(const _cl_mem *buffer);
 
   public:
     ~Buffer() override;
@@ -48,6 +48,11 @@ class Buffer final : public Memory
     friend class Object;
 };
 
+inline bool Buffer::IsValid(const _cl_mem *buffer)
+{
+    return Memory::IsValid(buffer) && buffer->cast<Memory>().getType() == MemObjectType::Buffer;
+}
+
 inline bool Buffer::isRegionValid(size_t offset, size_t size) const
 {
     return offset < mSize && offset + size <= mSize;
@@ -56,11 +61,6 @@ inline bool Buffer::isRegionValid(size_t offset, size_t size) const
 inline bool Buffer::isRegionValid(const cl_buffer_region &region) const
 {
     return region.origin < mSize && region.origin + region.size <= mSize;
-}
-
-inline bool Buffer::IsValid(const _cl_mem *buffer)
-{
-    return Memory::IsValid(buffer) && buffer->cast<Memory>().getType() == MemObjectType::Buffer;
 }
 
 inline MemObjectType Buffer::getType() const

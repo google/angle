@@ -20,6 +20,15 @@
         }                                                      \
     } while (0)
 
+#define ANGLE_VALIDATE_EXTENSION(extension) \
+    do                                      \
+    {                                       \
+        if (!extension)                     \
+        {                                   \
+            return CL_INVALID_VALUE;        \
+        }                                   \
+    } while (0)
+
 #define ANGLE_TRY(expression)                \
     do                                       \
     {                                        \
@@ -195,13 +204,25 @@ bool ValidateImageFormat(const cl_image_format *imageFormat, const Platform &pla
             }
             break;
 
-        case CL_DEPTH:
         case CL_ABGR:
         case CL_sRGB:
         case CL_sRGBA:
         case CL_sBGRA:
         case CL_sRGBx:
             if (!platform.isVersionOrNewer(2u, 0u))
+            {
+                return false;
+            }
+            break;
+
+        case CL_DEPTH:
+            // CL_DEPTH can only be used if channel data type = CL_UNORM_INT16 or CL_FLOAT.
+            if (imageFormat->image_channel_data_type != CL_UNORM_INT16 &&
+                imageFormat->image_channel_data_type != CL_FLOAT)
+            {
+                return false;
+            }
+            if (!platform.getInfo().khrDepthImages)
             {
                 return false;
             }
@@ -268,7 +289,7 @@ cl_int ValidateCommandQueueAndEventWaitList(cl_command_queue commandQueue,
     if (validateImageSupport)
     {
         // CL_INVALID_OPERATION if the device associated with command_queue does not support images.
-        if (queue.getDevice().getInfo().mImageSupport == CL_FALSE)
+        if (queue.getDevice().getInfo().imageSupport == CL_FALSE)
         {
             return CL_INVALID_OPERATION;
         }
@@ -319,23 +340,23 @@ cl_int ValidateEnqueueBuffer(const CommandQueue &queue,
 
     // CL_MISALIGNED_SUB_BUFFER_OFFSET if buffer is a sub-buffer object and offset specified
     // when the sub-buffer object is created is not aligned to CL_DEVICE_MEM_BASE_ADDR_ALIGN
-    // value for device associated with queue.
+    // value (which is in bits!) for device associated with queue.
     if (buf.isSubBuffer() &&
-        (buf.getOffset() % queue.getDevice().getInfo().mMemBaseAddrAlign) != 0u)
+        (buf.getOffset() % (queue.getDevice().getInfo().memBaseAddrAlign / 8u)) != 0u)
     {
         return CL_MISALIGNED_SUB_BUFFER_OFFSET;
     }
 
     // CL_INVALID_OPERATION if a read function is called on buffer which
     // has been created with CL_MEM_HOST_WRITE_ONLY or CL_MEM_HOST_NO_ACCESS.
-    if (hostRead && buf.getEffectiveFlags().isSet(CL_MEM_HOST_WRITE_ONLY | CL_MEM_HOST_NO_ACCESS))
+    if (hostRead && buf.getFlags().isSet(CL_MEM_HOST_WRITE_ONLY | CL_MEM_HOST_NO_ACCESS))
     {
         return CL_INVALID_OPERATION;
     }
 
     // CL_INVALID_OPERATION if a write function is called on buffer which
     // has been created with CL_MEM_HOST_READ_ONLY or CL_MEM_HOST_NO_ACCESS.
-    if (hostWrite && buf.getEffectiveFlags().isSet(CL_MEM_HOST_READ_ONLY | CL_MEM_HOST_NO_ACCESS))
+    if (hostWrite && buf.getFlags().isSet(CL_MEM_HOST_READ_ONLY | CL_MEM_HOST_NO_ACCESS))
     {
         return CL_INVALID_OPERATION;
     }
@@ -456,14 +477,14 @@ cl_int ValidateEnqueueImage(const CommandQueue &queue, cl_mem image, bool hostRe
 
     // CL_INVALID_OPERATION if a read function is called on image which
     // has been created with CL_MEM_HOST_WRITE_ONLY or CL_MEM_HOST_NO_ACCESS.
-    if (hostRead && img.getEffectiveFlags().isSet(CL_MEM_HOST_WRITE_ONLY | CL_MEM_HOST_NO_ACCESS))
+    if (hostRead && img.getFlags().isSet(CL_MEM_HOST_WRITE_ONLY | CL_MEM_HOST_NO_ACCESS))
     {
         return CL_INVALID_OPERATION;
     }
 
     // CL_INVALID_OPERATION if a write function is called on image which
     // has been created with CL_MEM_HOST_READ_ONLY or CL_MEM_HOST_NO_ACCESS.
-    if (hostWrite && img.getEffectiveFlags().isSet(CL_MEM_HOST_READ_ONLY | CL_MEM_HOST_NO_ACCESS))
+    if (hostWrite && img.getFlags().isSet(CL_MEM_HOST_READ_ONLY | CL_MEM_HOST_NO_ACCESS))
     {
         return CL_INVALID_OPERATION;
     }
@@ -664,11 +685,13 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
     {
         return CL_INVALID_DEVICE;
     }
+    const Device &dev = device->cast<Device>();
 
     // CL_INVALID_VALUE if param_name is not one of the supported values
     // or if param_name is a value that is available as an extension
     // and the corresponding extension is not supported by the device.
-    const cl_version version = device->cast<Device>().getVersion();
+    const cl_version version           = dev.getVersion();
+    const rx::CLDeviceImpl::Info &info = dev.getInfo();
     // Enums ordered within their version block as they appear in the OpenCL spec V3.0.7, table 5
     switch (param_name)
     {
@@ -687,7 +710,6 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
 
         case DeviceInfo::ImageMaxBufferSize:
         case DeviceInfo::ImageMaxArraySize:
-        case DeviceInfo::DoubleFpConfig:
         case DeviceInfo::LinkerAvailable:
         case DeviceInfo::BuiltInKernels:
         case DeviceInfo::PrintfBufferSize:
@@ -743,6 +765,10 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
         case DeviceInfo::PreferredWorkGroupSizeMultiple:
         case DeviceInfo::LatestConformanceVersionPassed:
             ANGLE_VALIDATE_VERSION(version, 3, 0);
+            break;
+
+        case DeviceInfo::DoubleFpConfig:
+            ANGLE_VALIDATE_EXTENSION(info.khrFP64);
             break;
 
         case DeviceInfo::InvalidEnum:
@@ -923,7 +949,7 @@ cl_int ValidateCreateBuffer(cl_context context, MemFlags flags, size_t size, con
     for (const DevicePtr &device : ctx.getDevices())
     {
         // or if size is greater than CL_DEVICE_MAX_MEM_ALLOC_SIZE for all devices in context.
-        if (size > device->getInfo().mMaxMemAllocSize)
+        if (size > device->getInfo().maxMemAllocSize)
         {
             return CL_INVALID_BUFFER_SIZE;
         }
@@ -1354,14 +1380,14 @@ cl_int ValidateSetKernelArg(cl_kernel kernel,
     const Kernel &krnl = kernel->cast<Kernel>();
 
     // CL_INVALID_ARG_INDEX if arg_index is not a valid argument index.
-    if (arg_index >= krnl.getInfo().mArgs.size())
+    if (arg_index >= krnl.getInfo().args.size())
     {
         return CL_INVALID_ARG_INDEX;
     }
 
     if (arg_size == sizeof(cl_mem) && arg_value != nullptr)
     {
-        const std::string &typeName = krnl.getInfo().mArgs[arg_index].mTypeName;
+        const std::string &typeName = krnl.getInfo().args[arg_index].typeName;
 
         // CL_INVALID_MEM_OBJECT for an argument declared to be a memory object
         // when the specified arg_value is not a valid memory object.
@@ -1511,14 +1537,14 @@ cl_int ValidateGetKernelWorkGroupInfo(cl_kernel kernel,
     }
 
     // CL_INVALID_VALUE if param_name is not valid.
-    const cl_version version = krnl.getProgram().getContext().getPlatform().getInfo().mVersion;
+    const cl_version version = krnl.getProgram().getContext().getPlatform().getInfo().version;
     switch (param_name)
     {
         case KernelWorkGroupInfo::GlobalWorkSize:
             ANGLE_VALIDATE_VERSION(version, 1, 2);
             // CL_INVALID_VALUE if param_name is CL_KERNEL_GLOBAL_WORK_SIZE and
             // device is not a custom device and kernel is not a built-in kernel.
-            if (!dev->supportsBuiltInKernel(krnl.getInfo().mFunctionName))
+            if (!dev->supportsBuiltInKernel(krnl.getInfo().functionName))
             {
                 return CL_INVALID_VALUE;
             }
@@ -1619,14 +1645,13 @@ cl_int ValidateGetEventProfilingInfo(cl_event event,
     }
     const Event &evt = event->cast<Event>();
 
-    // CL_PROFILING_INFO_NOT_AVAILABLE
-    // if the CL_QUEUE_PROFILING_ENABLE flag is not set for the command-queue,
-    if (evt.getCommandQueue()->getProperties().isNotSet(CL_QUEUE_PROFILING_ENABLE))
+    // CL_PROFILING_INFO_NOT_AVAILABLE if event is a user event object,
+    if (evt.getCommandType() == CL_COMMAND_USER)
     {
         return CL_PROFILING_INFO_NOT_AVAILABLE;
     }
-    // or if event is a user event object.
-    if (evt.getCommandType() == CL_COMMAND_USER)
+    // or if the CL_QUEUE_PROFILING_ENABLE flag is not set for the command-queue.
+    if (evt.getCommandQueue()->getProperties().isNotSet(CL_QUEUE_PROFILING_ENABLE))
     {
         return CL_PROFILING_INFO_NOT_AVAILABLE;
     }
@@ -2114,7 +2139,7 @@ cl_int ValidateEnqueueNDRangeKernel(cl_command_queue command_queue,
     }
 
     // CL_INVALID_WORK_DIMENSION if work_dim is not a valid value.
-    if (work_dim == 0u || work_dim > device.getInfo().mMaxWorkItemSizes.size())
+    if (work_dim == 0u || work_dim > device.getInfo().maxWorkItemSizes.size())
     {
         return CL_INVALID_WORK_DIMENSION;
     }
@@ -2153,7 +2178,7 @@ cl_int ValidateEnqueueNDRangeKernel(cl_command_queue command_queue,
         // CL_DEVICE_MAX_WORK_ITEM_SIZES[0] ... CL_DEVICE_MAX_WORK_ITEM_SIZES[work_dim - 1].
         for (cl_uint dim = 0u; dim < work_dim; ++dim)
         {
-            if (local_work_size[dim] > device.getInfo().mMaxWorkItemSizes[dim])
+            if (local_work_size[dim] > device.getInfo().maxWorkItemSizes[dim])
             {
                 return CL_INVALID_WORK_ITEM_SIZE;
             }
@@ -2164,7 +2189,7 @@ cl_int ValidateEnqueueNDRangeKernel(cl_command_queue command_queue,
         // and the total number of work-items in the work-group computed as
         // local_work_size[0] x ... local_work_size[work_dim - 1] is greater than the value
         // specified by CL_KERNEL_WORK_GROUP_SIZE in the Kernel Object Device Queries table.
-        if (numWorkItems > krnl.getInfo().mWorkGroups[queue.getDeviceIndex()].mWorkGroupSize)
+        if (numWorkItems > krnl.getInfo().workGroups[queue.getDeviceIndex()].workGroupSize)
         {
             return CL_INVALID_WORK_GROUP_SIZE;
         }
@@ -2190,7 +2215,7 @@ cl_int ValidateEnqueueNativeKernel(cl_command_queue command_queue,
 
     // CL_INVALID_OPERATION if the device associated with command_queue
     // cannot execute the native kernel.
-    if (queue.getDevice().getInfo().mExecCapabilities.isNotSet(CL_EXEC_NATIVE_KERNEL))
+    if (queue.getDevice().getInfo().execCapabilities.isNotSet(CL_EXEC_NATIVE_KERNEL))
     {
         return CL_INVALID_OPERATION;
     }
@@ -2735,7 +2760,7 @@ cl_int ValidateCreateSubDevices(cl_device_id in_device,
     // CL_INVALID_VALUE if values specified in properties are not valid
     // or if values specified in properties are valid but not supported by the device
     const std::vector<cl_device_partition_property> &devProps =
-        device.getInfo().mPartitionProperties;
+        device.getInfo().partitionProperties;
     if (properties == nullptr ||
         std::find(devProps.cbegin(), devProps.cend(), *properties) == devProps.cend())
     {
@@ -3141,13 +3166,13 @@ cl_int ValidateGetKernelArgInfo(cl_kernel kernel,
     }
 
     // CL_INVALID_ARG_INDEX if arg_index is not a valid argument index.
-    if (arg_index >= krnl.getInfo().mArgs.size())
+    if (arg_index >= krnl.getInfo().args.size())
     {
         return CL_INVALID_ARG_INDEX;
     }
 
     // CL_KERNEL_ARG_INFO_NOT_AVAILABLE if the argument information is not available for kernel.
-    if (!krnl.getInfo().mArgs[arg_index].isAvailable())
+    if (!krnl.getInfo().args[arg_index].isAvailable())
     {
         return CL_KERNEL_ARG_INFO_NOT_AVAILABLE;
     }
@@ -3374,7 +3399,7 @@ cl_int ValidateCreateCommandQueueWithProperties(cl_context context,
                 case CL_QUEUE_SIZE:
                 {
                     // CL_QUEUE_SIZE must be a value <= CL_DEVICE_QUEUE_ON_DEVICE_MAX_SIZE.
-                    if (*properties++ > device->cast<Device>().getInfo().mQueueOnDeviceMaxSize)
+                    if (*properties++ > device->cast<Device>().getInfo().queueOnDeviceMaxSize)
                     {
                         return CL_INVALID_VALUE;
                     }

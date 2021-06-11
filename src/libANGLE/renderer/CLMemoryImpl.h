@@ -24,6 +24,7 @@ class CLMemoryImpl : angle::NonCopyable
     virtual size_t getSize(cl_int &errorCode) const = 0;
 
     virtual CLMemoryImpl::Ptr createSubBuffer(const cl::Buffer &buffer,
+                                              cl::MemFlags flags,
                                               size_t size,
                                               cl_int &errorCode) = 0;
 

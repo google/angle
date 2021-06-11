@@ -20,10 +20,10 @@ class Image final : public Memory
   public:
     // Front end entry functions, only called from OpenCL entry points
 
-    cl_int getInfo(ImageInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
-
     static bool IsTypeValid(MemObjectType imageType);
     static bool IsValid(const _cl_mem *image);
+
+    cl_int getInfo(ImageInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
   public:
     ~Image() override;

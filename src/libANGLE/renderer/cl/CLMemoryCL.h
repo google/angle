@@ -24,6 +24,7 @@ class CLMemoryCL : public CLMemoryImpl
     size_t getSize(cl_int &errorCode) const override;
 
     CLMemoryImpl::Ptr createSubBuffer(const cl::Buffer &buffer,
+                                      cl::MemFlags flags,
                                       size_t size,
                                       cl_int &errorCode) override;
 

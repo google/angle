@@ -46,13 +46,13 @@ CLPlatformImpl::Info CLPlatformVk::createInfo() const
         cl_name_version{CL_MAKE_VERSION(1, 0, 0), "cl_khr_extended_versioning"}};
 
     Info info;
-    info.mProfile.assign("FULL_PROFILE");
-    info.mVersionStr.assign(GetVersionString());
-    info.mVersion = GetVersion();
-    info.mName.assign("ANGLE Vulkan");
-    info.mExtensions.assign(CreateExtensionString(extList));
-    info.mExtensionsWithVersion = std::move(extList);
-    info.mHostTimerRes          = 0u;
+    info.initializeExtensions(CreateExtensionString(extList));
+    info.profile.assign("FULL_PROFILE");
+    info.versionStr.assign(GetVersionString());
+    info.version = GetVersion();
+    info.name.assign("ANGLE Vulkan");
+    info.extensionsWithVersion = std::move(extList);
+    info.hostTimerRes          = 0u;
     return info;
 }
 

@@ -10,6 +10,7 @@
 
 #include "libANGLE/renderer/CLContextImpl.h"
 #include "libANGLE/renderer/CLDeviceImpl.h"
+#include "libANGLE/renderer/CLExtensions.h"
 
 namespace rx
 {
@@ -21,7 +22,7 @@ class CLPlatformImpl : angle::NonCopyable
     using CreateFunc  = std::function<Ptr(const cl::Platform &)>;
     using CreateFuncs = std::list<CreateFunc>;
 
-    struct Info
+    struct Info : public CLExtensions
     {
         Info();
         ~Info();
@@ -32,15 +33,14 @@ class CLPlatformImpl : angle::NonCopyable
         Info(Info &&);
         Info &operator=(Info &&);
 
-        bool isValid() const { return mVersion != 0u; }
+        bool isValid() const { return version != 0u; }
 
-        std::string mProfile;
-        std::string mVersionStr;
-        cl_version mVersion = 0u;
-        std::string mName;
-        std::string mExtensions;
-        NameVersionVector mExtensionsWithVersion;
-        cl_ulong mHostTimerRes = 0u;
+        std::string profile;
+        std::string versionStr;
+        cl_version version = 0u;
+        std::string name;
+        NameVersionVector extensionsWithVersion;
+        cl_ulong hostTimerRes = 0u;
     };
 
     explicit CLPlatformImpl(const cl::Platform &platform);

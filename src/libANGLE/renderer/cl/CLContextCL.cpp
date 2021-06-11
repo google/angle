@@ -126,6 +126,7 @@ CLMemoryImpl::Ptr CLContextCL::createBuffer(const cl::Buffer &buffer,
 }
 
 CLMemoryImpl::Ptr CLContextCL::createImage(const cl::Image &image,
+                                           cl::MemFlags flags,
                                            const cl_image_format &format,
                                            const cl::ImageDescriptor &desc,
                                            void *hostPtr,
@@ -144,14 +145,14 @@ CLMemoryImpl::Ptr CLContextCL::createImage(const cl::Image &image,
 
         if (image.getProperties().empty())
         {
-            nativeImage = mNative->getDispatch().clCreateImage(
-                mNative, image.getFlags().get(), &format, &nativeDesc, hostPtr, &errorCode);
+            nativeImage = mNative->getDispatch().clCreateImage(mNative, flags.get(), &format,
+                                                               &nativeDesc, hostPtr, &errorCode);
         }
         else
         {
             nativeImage = mNative->getDispatch().clCreateImageWithProperties(
-                mNative, image.getProperties().data(), image.getFlags().get(), &format, &nativeDesc,
-                hostPtr, &errorCode);
+                mNative, image.getProperties().data(), flags.get(), &format, &nativeDesc, hostPtr,
+                &errorCode);
         }
     }
     else
@@ -160,12 +161,12 @@ CLMemoryImpl::Ptr CLContextCL::createImage(const cl::Image &image,
         {
             case cl::MemObjectType::Image2D:
                 nativeImage = mNative->getDispatch().clCreateImage2D(
-                    mNative, image.getFlags().get(), &format, desc.width, desc.height,
-                    desc.rowPitch, hostPtr, &errorCode);
+                    mNative, flags.get(), &format, desc.width, desc.height, desc.rowPitch, hostPtr,
+                    &errorCode);
                 break;
             case cl::MemObjectType::Image3D:
                 nativeImage = mNative->getDispatch().clCreateImage3D(
-                    mNative, image.getFlags().get(), &format, desc.width, desc.height, desc.depth,
+                    mNative, flags.get(), &format, desc.width, desc.height, desc.depth,
                     desc.rowPitch, desc.slicePitch, hostPtr, &errorCode);
                 break;
             default:

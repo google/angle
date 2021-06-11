@@ -9,6 +9,8 @@
 
 #include "libANGLE/CLPlatform.h"
 
+#include "common/string_utils.h"
+
 #include <cstring>
 
 namespace cl
@@ -153,129 +155,129 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
 
         // Handle all cached values
         case DeviceInfo::Type:
-            copyValue = &mInfo.mType;
-            copySize  = sizeof(mInfo.mType);
+            copyValue = &mInfo.type;
+            copySize  = sizeof(mInfo.type);
             break;
         case DeviceInfo::MaxWorkItemDimensions:
-            valUInt   = static_cast<cl_uint>(mInfo.mMaxWorkItemSizes.size());
+            valUInt   = static_cast<cl_uint>(mInfo.maxWorkItemSizes.size());
             copyValue = &valUInt;
             copySize  = sizeof(valUInt);
             break;
         case DeviceInfo::MaxWorkItemSizes:
-            copyValue = mInfo.mMaxWorkItemSizes.data();
-            copySize  = mInfo.mMaxWorkItemSizes.size() *
-                       sizeof(decltype(mInfo.mMaxWorkItemSizes)::value_type);
+            copyValue = mInfo.maxWorkItemSizes.data();
+            copySize  = mInfo.maxWorkItemSizes.size() *
+                       sizeof(decltype(mInfo.maxWorkItemSizes)::value_type);
             break;
         case DeviceInfo::MaxMemAllocSize:
-            copyValue = &mInfo.mMaxMemAllocSize;
-            copySize  = sizeof(mInfo.mMaxMemAllocSize);
+            copyValue = &mInfo.maxMemAllocSize;
+            copySize  = sizeof(mInfo.maxMemAllocSize);
             break;
         case DeviceInfo::ImageSupport:
-            copyValue = &mInfo.mImageSupport;
-            copySize  = sizeof(mInfo.mImageSupport);
+            copyValue = &mInfo.imageSupport;
+            copySize  = sizeof(mInfo.imageSupport);
             break;
         case DeviceInfo::IL_Version:
-            copyValue = mInfo.mIL_Version.c_str();
-            copySize  = mInfo.mIL_Version.length() + 1u;
+            copyValue = mInfo.IL_Version.c_str();
+            copySize  = mInfo.IL_Version.length() + 1u;
             break;
         case DeviceInfo::ILsWithVersion:
-            copyValue = mInfo.mILsWithVersion.data();
+            copyValue = mInfo.ILsWithVersion.data();
             copySize =
-                mInfo.mILsWithVersion.size() * sizeof(decltype(mInfo.mILsWithVersion)::value_type);
+                mInfo.ILsWithVersion.size() * sizeof(decltype(mInfo.ILsWithVersion)::value_type);
             break;
         case DeviceInfo::Image2D_MaxWidth:
-            copyValue = &mInfo.mImage2D_MaxWidth;
-            copySize  = sizeof(mInfo.mImage2D_MaxWidth);
+            copyValue = &mInfo.image2D_MaxWidth;
+            copySize  = sizeof(mInfo.image2D_MaxWidth);
             break;
         case DeviceInfo::Image2D_MaxHeight:
-            copyValue = &mInfo.mImage2D_MaxHeight;
-            copySize  = sizeof(mInfo.mImage2D_MaxHeight);
+            copyValue = &mInfo.image2D_MaxHeight;
+            copySize  = sizeof(mInfo.image2D_MaxHeight);
             break;
         case DeviceInfo::Image3D_MaxWidth:
-            copyValue = &mInfo.mImage3D_MaxWidth;
-            copySize  = sizeof(mInfo.mImage3D_MaxWidth);
+            copyValue = &mInfo.image3D_MaxWidth;
+            copySize  = sizeof(mInfo.image3D_MaxWidth);
             break;
         case DeviceInfo::Image3D_MaxHeight:
-            copyValue = &mInfo.mImage3D_MaxHeight;
-            copySize  = sizeof(mInfo.mImage3D_MaxHeight);
+            copyValue = &mInfo.image3D_MaxHeight;
+            copySize  = sizeof(mInfo.image3D_MaxHeight);
             break;
         case DeviceInfo::Image3D_MaxDepth:
-            copyValue = &mInfo.mImage3D_MaxDepth;
-            copySize  = sizeof(mInfo.mImage3D_MaxDepth);
+            copyValue = &mInfo.image3D_MaxDepth;
+            copySize  = sizeof(mInfo.image3D_MaxDepth);
             break;
         case DeviceInfo::ImageMaxBufferSize:
-            copyValue = &mInfo.mImageMaxBufferSize;
-            copySize  = sizeof(mInfo.mImageMaxBufferSize);
+            copyValue = &mInfo.imageMaxBufferSize;
+            copySize  = sizeof(mInfo.imageMaxBufferSize);
             break;
         case DeviceInfo::ImageMaxArraySize:
-            copyValue = &mInfo.mImageMaxArraySize;
-            copySize  = sizeof(mInfo.mImageMaxArraySize);
+            copyValue = &mInfo.imageMaxArraySize;
+            copySize  = sizeof(mInfo.imageMaxArraySize);
             break;
         case DeviceInfo::ImagePitchAlignment:
-            copyValue = &mInfo.mImagePitchAlignment;
-            copySize  = sizeof(mInfo.mImagePitchAlignment);
+            copyValue = &mInfo.imagePitchAlignment;
+            copySize  = sizeof(mInfo.imagePitchAlignment);
             break;
         case DeviceInfo::ImageBaseAddressAlignment:
-            copyValue = &mInfo.mImageBaseAddressAlignment;
-            copySize  = sizeof(mInfo.mImageBaseAddressAlignment);
+            copyValue = &mInfo.imageBaseAddressAlignment;
+            copySize  = sizeof(mInfo.imageBaseAddressAlignment);
             break;
         case DeviceInfo::MemBaseAddrAlign:
-            copyValue = &mInfo.mMemBaseAddrAlign;
-            copySize  = sizeof(mInfo.mMemBaseAddrAlign);
+            copyValue = &mInfo.memBaseAddrAlign;
+            copySize  = sizeof(mInfo.memBaseAddrAlign);
             break;
         case DeviceInfo::ExecutionCapabilities:
-            copyValue = &mInfo.mExecCapabilities;
-            copySize  = sizeof(mInfo.mExecCapabilities);
+            copyValue = &mInfo.execCapabilities;
+            copySize  = sizeof(mInfo.execCapabilities);
             break;
         case DeviceInfo::QueueOnDeviceMaxSize:
-            copyValue = &mInfo.mQueueOnDeviceMaxSize;
-            copySize  = sizeof(mInfo.mQueueOnDeviceMaxSize);
+            copyValue = &mInfo.queueOnDeviceMaxSize;
+            copySize  = sizeof(mInfo.queueOnDeviceMaxSize);
             break;
         case DeviceInfo::BuiltInKernels:
-            copyValue = mInfo.mBuiltInKernels.c_str();
-            copySize  = mInfo.mBuiltInKernels.length() + 1u;
+            copyValue = mInfo.builtInKernels.c_str();
+            copySize  = mInfo.builtInKernels.length() + 1u;
             break;
         case DeviceInfo::BuiltInKernelsWithVersion:
-            copyValue = mInfo.mBuiltInKernelsWithVersion.data();
-            copySize  = mInfo.mBuiltInKernelsWithVersion.size() *
-                       sizeof(decltype(mInfo.mBuiltInKernelsWithVersion)::value_type);
+            copyValue = mInfo.builtInKernelsWithVersion.data();
+            copySize  = mInfo.builtInKernelsWithVersion.size() *
+                       sizeof(decltype(mInfo.builtInKernelsWithVersion)::value_type);
             break;
         case DeviceInfo::Version:
-            copyValue = mInfo.mVersionStr.c_str();
-            copySize  = mInfo.mVersionStr.length() + 1u;
+            copyValue = mInfo.versionStr.c_str();
+            copySize  = mInfo.versionStr.length() + 1u;
             break;
         case DeviceInfo::NumericVersion:
-            copyValue = &mInfo.mVersion;
-            copySize  = sizeof(mInfo.mVersion);
+            copyValue = &mInfo.version;
+            copySize  = sizeof(mInfo.version);
             break;
         case DeviceInfo::OpenCL_C_AllVersions:
-            copyValue = mInfo.mOpenCL_C_AllVersions.data();
-            copySize  = mInfo.mOpenCL_C_AllVersions.size() *
-                       sizeof(decltype(mInfo.mOpenCL_C_AllVersions)::value_type);
+            copyValue = mInfo.OpenCL_C_AllVersions.data();
+            copySize  = mInfo.OpenCL_C_AllVersions.size() *
+                       sizeof(decltype(mInfo.OpenCL_C_AllVersions)::value_type);
             break;
         case DeviceInfo::OpenCL_C_Features:
-            copyValue = mInfo.mOpenCL_C_Features.data();
-            copySize  = mInfo.mOpenCL_C_Features.size() *
-                       sizeof(decltype(mInfo.mOpenCL_C_Features)::value_type);
+            copyValue = mInfo.OpenCL_C_Features.data();
+            copySize  = mInfo.OpenCL_C_Features.size() *
+                       sizeof(decltype(mInfo.OpenCL_C_Features)::value_type);
             break;
         case DeviceInfo::Extensions:
-            copyValue = mInfo.mExtensions.c_str();
-            copySize  = mInfo.mExtensions.length() + 1u;
+            copyValue = mInfo.extensions.c_str();
+            copySize  = mInfo.extensions.length() + 1u;
             break;
         case DeviceInfo::ExtensionsWithVersion:
-            copyValue = mInfo.mExtensionsWithVersion.data();
-            copySize  = mInfo.mExtensionsWithVersion.size() *
-                       sizeof(decltype(mInfo.mExtensionsWithVersion)::value_type);
+            copyValue = mInfo.extensionsWithVersion.data();
+            copySize  = mInfo.extensionsWithVersion.size() *
+                       sizeof(decltype(mInfo.extensionsWithVersion)::value_type);
             break;
         case DeviceInfo::PartitionProperties:
-            copyValue = mInfo.mPartitionProperties.data();
-            copySize  = mInfo.mPartitionProperties.size() *
-                       sizeof(decltype(mInfo.mPartitionProperties)::value_type);
+            copyValue = mInfo.partitionProperties.data();
+            copySize  = mInfo.partitionProperties.size() *
+                       sizeof(decltype(mInfo.partitionProperties)::value_type);
             break;
         case DeviceInfo::PartitionType:
-            copyValue = mInfo.mPartitionType.data();
+            copyValue = mInfo.partitionType.data();
             copySize =
-                mInfo.mPartitionType.size() * sizeof(decltype(mInfo.mPartitionType)::value_type);
+                mInfo.partitionType.size() * sizeof(decltype(mInfo.partitionType)::value_type);
             break;
 
         // Handle all mapped values
@@ -338,7 +340,7 @@ cl_int Device::createSubDevices(const cl_device_partition_property *properties,
         mImpl->createSubDevices(properties, numDevices, subDeviceCreateFuncs, numDevicesRet);
     if (errorCode == CL_SUCCESS)
     {
-        cl::DeviceType type = mInfo.mType;
+        cl::DeviceType type = mInfo.type;
         type.clear(CL_DEVICE_TYPE_DEFAULT);
         DevicePtrs devices;
         devices.reserve(subDeviceCreateFuncs.size());
@@ -363,27 +365,7 @@ Device::~Device() = default;
 
 bool Device::supportsBuiltInKernel(const std::string &name) const
 {
-    if (name.empty() || mInfo.mBuiltInKernels.empty())
-    {
-        return false;
-    }
-    // Compare kernel name with all sub-strings terminated by semi-colon or end of string
-    std::string::size_type start = 0u;
-    do
-    {
-        std::string::size_type end = mInfo.mBuiltInKernels.find(';', start);
-        if (end == std::string::npos)
-        {
-            end = mInfo.mBuiltInKernels.length();
-        }
-        const std::string::size_type length = end - start;
-        if (length == name.length() && mInfo.mBuiltInKernels.compare(start, length, name) == 0)
-        {
-            return true;
-        }
-        start = end + 1u;
-    } while (start < mInfo.mBuiltInKernels.size());
-    return false;
+    return angle::ContainsToken(mInfo.builtInKernels, ';', name);
 }
 
 bool Device::supportsNativeImageDimensions(const cl_image_desc &desc) const
@@ -391,23 +373,23 @@ bool Device::supportsNativeImageDimensions(const cl_image_desc &desc) const
     switch (FromCLenum<MemObjectType>(desc.image_type))
     {
         case MemObjectType::Image1D:
-            return desc.image_width <= mInfo.mImage2D_MaxWidth;
+            return desc.image_width <= mInfo.image2D_MaxWidth;
         case MemObjectType::Image2D:
-            return desc.image_width <= mInfo.mImage2D_MaxWidth &&
-                   desc.image_height <= mInfo.mImage2D_MaxHeight;
+            return desc.image_width <= mInfo.image2D_MaxWidth &&
+                   desc.image_height <= mInfo.image2D_MaxHeight;
         case MemObjectType::Image3D:
-            return desc.image_width <= mInfo.mImage3D_MaxWidth &&
-                   desc.image_height <= mInfo.mImage3D_MaxHeight &&
-                   desc.image_depth <= mInfo.mImage3D_MaxDepth;
+            return desc.image_width <= mInfo.image3D_MaxWidth &&
+                   desc.image_height <= mInfo.image3D_MaxHeight &&
+                   desc.image_depth <= mInfo.image3D_MaxDepth;
         case MemObjectType::Image1D_Array:
-            return desc.image_width <= mInfo.mImage2D_MaxWidth &&
-                   desc.image_array_size <= mInfo.mImageMaxArraySize;
+            return desc.image_width <= mInfo.image2D_MaxWidth &&
+                   desc.image_array_size <= mInfo.imageMaxArraySize;
         case MemObjectType::Image2D_Array:
-            return desc.image_width <= mInfo.mImage2D_MaxWidth &&
-                   desc.image_height <= mInfo.mImage2D_MaxHeight &&
-                   desc.image_array_size <= mInfo.mImageMaxArraySize;
+            return desc.image_width <= mInfo.image2D_MaxWidth &&
+                   desc.image_height <= mInfo.image2D_MaxHeight &&
+                   desc.image_array_size <= mInfo.imageMaxArraySize;
         case MemObjectType::Image1D_Buffer:
-            return desc.image_width <= mInfo.mImageMaxBufferSize;
+            return desc.image_width <= mInfo.imageMaxBufferSize;
         default:
             ASSERT(false);
             break;
@@ -420,21 +402,20 @@ bool Device::supportsImageDimensions(const ImageDescriptor &desc) const
     switch (desc.type)
     {
         case MemObjectType::Image1D:
-            return desc.width <= mInfo.mImage2D_MaxWidth;
+            return desc.width <= mInfo.image2D_MaxWidth;
         case MemObjectType::Image2D:
-            return desc.width <= mInfo.mImage2D_MaxWidth && desc.height <= mInfo.mImage2D_MaxHeight;
+            return desc.width <= mInfo.image2D_MaxWidth && desc.height <= mInfo.image2D_MaxHeight;
         case MemObjectType::Image3D:
-            return desc.width <= mInfo.mImage3D_MaxWidth &&
-                   desc.height <= mInfo.mImage3D_MaxHeight && desc.depth <= mInfo.mImage3D_MaxDepth;
+            return desc.width <= mInfo.image3D_MaxWidth && desc.height <= mInfo.image3D_MaxHeight &&
+                   desc.depth <= mInfo.image3D_MaxDepth;
         case MemObjectType::Image1D_Array:
-            return desc.width <= mInfo.mImage2D_MaxWidth &&
-                   desc.arraySize <= mInfo.mImageMaxArraySize;
+            return desc.width <= mInfo.image2D_MaxWidth &&
+                   desc.arraySize <= mInfo.imageMaxArraySize;
         case MemObjectType::Image2D_Array:
-            return desc.width <= mInfo.mImage2D_MaxWidth &&
-                   desc.height <= mInfo.mImage2D_MaxHeight &&
-                   desc.arraySize <= mInfo.mImageMaxArraySize;
+            return desc.width <= mInfo.image2D_MaxWidth && desc.height <= mInfo.image2D_MaxHeight &&
+                   desc.arraySize <= mInfo.imageMaxArraySize;
         case MemObjectType::Image1D_Buffer:
-            return desc.width <= mInfo.mImageMaxBufferSize;
+            return desc.width <= mInfo.imageMaxBufferSize;
         default:
             ASSERT(false);
             break;

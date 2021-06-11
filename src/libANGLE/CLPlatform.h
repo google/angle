@@ -99,7 +99,7 @@ inline Platform *Platform::CastOrDefault(cl_platform_id platform)
 // default, so this function returns true for a nullptr value if a default platform exists.
 inline bool Platform::IsValidOrDefault(const _cl_platform_id *platform)
 {
-    return platform != nullptr ? platform->isValid() : GetDefault() != nullptr;
+    return platform != nullptr ? IsValid(platform) : GetDefault() != nullptr;
 }
 
 inline const rx::CLPlatformImpl::Info &Platform::getInfo() const
@@ -109,12 +109,12 @@ inline const rx::CLPlatformImpl::Info &Platform::getInfo() const
 
 inline cl_version Platform::getVersion() const
 {
-    return mInfo.mVersion;
+    return mInfo.version;
 }
 
 inline bool Platform::isVersionOrNewer(cl_uint major, cl_uint minor) const
 {
-    return mInfo.mVersion >= CL_MAKE_VERSION(major, minor, 0u);
+    return mInfo.version >= CL_MAKE_VERSION(major, minor, 0u);
 }
 
 inline const DevicePtrs &Platform::getDevices() const

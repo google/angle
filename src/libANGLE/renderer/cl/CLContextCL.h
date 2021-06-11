@@ -38,6 +38,7 @@ class CLContextCL : public CLContextImpl
                                    cl_int &errorCode) override;
 
     CLMemoryImpl::Ptr createImage(const cl::Image &image,
+                                  cl::MemFlags flags,
                                   const cl_image_format &format,
                                   const cl::ImageDescriptor &desc,
                                   void *hostPtr,

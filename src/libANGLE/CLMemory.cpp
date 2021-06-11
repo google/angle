@@ -15,6 +15,34 @@
 namespace cl
 {
 
+namespace
+{
+
+MemFlags InheritMemFlags(MemFlags flags, Memory *parent)
+{
+    if (parent != nullptr)
+    {
+        const MemFlags parentFlags = parent->getFlags();
+        const MemFlags access(CL_MEM_READ_WRITE | CL_MEM_READ_ONLY | CL_MEM_WRITE_ONLY);
+        const MemFlags hostAccess(CL_MEM_HOST_WRITE_ONLY | CL_MEM_HOST_READ_ONLY |
+                                  CL_MEM_HOST_NO_ACCESS);
+        const MemFlags hostPtrFlags(CL_MEM_USE_HOST_PTR | CL_MEM_ALLOC_HOST_PTR |
+                                    CL_MEM_COPY_HOST_PTR);
+        if (flags.isNotSet(access))
+        {
+            flags.set(parentFlags.mask(access));
+        }
+        if (flags.isNotSet(hostAccess))
+        {
+            flags.set(parentFlags.mask(hostAccess));
+        }
+        flags.set(parentFlags.mask(hostPtrFlags));
+    }
+    return flags;
+}
+
+}  // namespace
+
 cl_int Memory::setDestructorCallback(MemoryCB pfnNotify, void *userData)
 {
     mDestructorCallbacks.emplace(pfnNotify, userData);
@@ -118,30 +146,6 @@ Memory::~Memory()
     }
 }
 
-MemFlags Memory::getEffectiveFlags() const
-{
-    MemFlags flags = mFlags;
-    if (mParent)
-    {
-        const MemFlags parent = mParent->getFlags();
-        const MemFlags access(CL_MEM_READ_WRITE | CL_MEM_READ_ONLY | CL_MEM_WRITE_ONLY);
-        const MemFlags hostAccess(CL_MEM_HOST_WRITE_ONLY | CL_MEM_HOST_READ_ONLY |
-                                  CL_MEM_HOST_NO_ACCESS);
-        const MemFlags hostPtrFlags(CL_MEM_USE_HOST_PTR | CL_MEM_ALLOC_HOST_PTR |
-                                    CL_MEM_COPY_HOST_PTR);
-        if (flags.isNotSet(access))
-        {
-            flags.set(parent.mask(access));
-        }
-        if (flags.isNotSet(hostAccess))
-        {
-            flags.set(parent.mask(hostAccess));
-        }
-        flags.set(parent.mask(hostPtrFlags));
-    }
-    return flags;
-}
-
 Memory::Memory(const Buffer &buffer,
                Context &context,
                PropArray &&properties,
@@ -164,12 +168,12 @@ Memory::Memory(const Buffer &buffer,
                size_t size,
                cl_int &errorCode)
     : mContext(parent.mContext),
-      mFlags(flags),
+      mFlags(InheritMemFlags(flags, &parent)),
       mHostPtr(parent.mHostPtr != nullptr ? static_cast<char *>(parent.mHostPtr) + offset
                                           : nullptr),
       mParent(&parent),
       mOffset(offset),
-      mImpl(parent.mImpl->createSubBuffer(buffer, size, errorCode)),
+      mImpl(parent.mImpl->createSubBuffer(buffer, flags, size, errorCode)),
       mSize(size)
 {}
 
@@ -184,10 +188,10 @@ Memory::Memory(const Image &image,
                cl_int &errorCode)
     : mContext(&context),
       mProperties(std::move(properties)),
-      mFlags(flags),
+      mFlags(InheritMemFlags(flags, parent)),
       mHostPtr(flags.isSet(CL_MEM_USE_HOST_PTR) ? hostPtr : nullptr),
       mParent(parent),
-      mImpl(context.getImpl().createImage(image, format, desc, hostPtr, errorCode)),
+      mImpl(context.getImpl().createImage(image, flags, format, desc, hostPtr, errorCode)),
       mSize(mImpl ? mImpl->getSize(errorCode) : 0u)
 {}
 

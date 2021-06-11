@@ -36,6 +36,7 @@ class CLContextImpl : angle::NonCopyable
                                            cl_int &errorCode) = 0;
 
     virtual CLMemoryImpl::Ptr createImage(const cl::Image &image,
+                                          cl::MemFlags flags,
                                           const cl_image_format &format,
                                           const cl::ImageDescriptor &desc,
                                           void *hostPtr,

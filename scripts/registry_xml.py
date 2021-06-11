@@ -196,8 +196,24 @@ supported_egl_extensions = [
 ]
 
 supported_cl_extensions = [
+    # Since OpenCL 1.1
+    "cl_khr_byte_addressable_store",
+    "cl_khr_global_int32_base_atomics",
+    "cl_khr_global_int32_extended_atomics",
+    "cl_khr_local_int32_base_atomics",
+    "cl_khr_local_int32_extended_atomics",
+
+    # OpenCL 2.0 - 2.2
+    "cl_khr_3d_image_writes",
+    "cl_khr_depth_images",
+    "cl_khr_image2d_from_buffer",
+
+    # Optional
     "cl_khr_extended_versioning",
+    "cl_khr_fp64",
     "cl_khr_icd",
+    "cl_khr_int64_base_atomics",
+    "cl_khr_int64_extended_atomics",
 ]
 
 # Strip these suffixes from Context entry point names. NV is excluded (for now).

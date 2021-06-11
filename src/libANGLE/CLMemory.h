@@ -44,8 +44,6 @@ class Memory : public _cl_mem, public Object
     template <typename T = rx::CLMemoryImpl>
     T &getImpl() const;
 
-    MemFlags getEffectiveFlags() const;
-
     static Memory *Cast(cl_mem memobj);
 
   protected:

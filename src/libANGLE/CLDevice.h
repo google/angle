@@ -87,12 +87,12 @@ inline const rx::CLDeviceImpl::Info &Device::getInfo() const
 
 inline cl_version Device::getVersion() const
 {
-    return mInfo.mVersion;
+    return mInfo.version;
 }
 
 inline bool Device::isVersionOrNewer(cl_uint major, cl_uint minor) const
 {
-    return mInfo.mVersion >= CL_MAKE_VERSION(major, minor, 0u);
+    return mInfo.version >= CL_MAKE_VERSION(major, minor, 0u);
 }
 
 template <typename T>
