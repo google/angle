@@ -118,6 +118,8 @@ const char *GetCommandString(CommandID id)
             return "SetEvent";
         case CommandID::SetScissor:
             return "SetScissor";
+        case CommandID::SetViewport:
+            return "SetViewport";
         case CommandID::WaitEvents:
             return "WaitEvents";
         case CommandID::WriteTimestamp:
@@ -545,6 +547,13 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                 {
                     const SetScissorParams *params = getParamPtr<SetScissorParams>(currentCommand);
                     vkCmdSetScissor(cmdBuffer, 0, 1, &params->scissor);
+                    break;
+                }
+                case CommandID::SetViewport:
+                {
+                    const SetViewportParams *params =
+                        getParamPtr<SetViewportParams>(currentCommand);
+                    vkCmdSetViewport(cmdBuffer, 0, 1, &params->viewport);
                     break;
                 }
                 case CommandID::WaitEvents:

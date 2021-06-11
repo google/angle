@@ -886,6 +886,10 @@ struct PerfCounters
 
 // A Vulkan image level index.
 using LevelIndex = gl::LevelIndexWrapper<uint32_t>;
+
+// Ensure viewport is within Vulkan requirements
+void ClampViewport(VkViewport *viewport);
+
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)

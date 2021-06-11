@@ -2076,12 +2076,12 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     const float clearDepthValue = params.depthStencilClearValue.depth;
     gl_vk::GetViewport(completeRenderArea, clearDepthValue, clearDepthValue, invertViewport,
                        clipSpaceOriginUpperLeft, completeRenderArea.height, &viewport);
-    pipelineDesc.setViewport(viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
 
-    // Scissored clears can create a large number of pipelines in some tests.  Use dynamic state for
-    // scissors.
-    pipelineDesc.setDynamicScissor();
     const VkRect2D scissor = gl_vk::GetRect(params.clearArea);
+    commandBuffer->setScissor(0, 1, &scissor);
+
+    contextVk->invalidateViewportAndScissor();
 
     vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
@@ -2108,7 +2108,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     // Make sure this draw call doesn't count towards occlusion query results.
     contextVk->pauseRenderPassQueriesIfActive();
-    commandBuffer->setScissor(0, 1, &scissor);
+
     commandBuffer->draw(3, 0);
     ANGLE_TRY(contextVk->resumeRenderPassQueriesIfActive());
 
@@ -2301,16 +2301,20 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
         SetStencilForShaderExport(contextVk, &pipelineDesc);
     }
 
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, params.blitArea, &commandBuffer, nullptr));
+
     VkViewport viewport;
     gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
     gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, false, false, completeRenderArea.height,
                        &viewport);
-    pipelineDesc.setViewport(viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
 
-    pipelineDesc.setScissor(gl_vk::GetRect(params.blitArea));
+    VkRect2D scissor = gl_vk::GetRect(params.blitArea);
+    commandBuffer->setScissor(0, 1, &scissor);
 
-    vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, params.blitArea, &commandBuffer, nullptr));
+    contextVk->invalidateViewportAndScissor();
+
     contextVk->onImageRenderPassRead(src->getAspectFlags(), vk::ImageLayout::FragmentShaderReadOnly,
                                      src);
 
@@ -2737,16 +2741,18 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
         std::swap(renderArea.width, renderArea.height);
     }
 
-    VkViewport viewport;
-    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dest->getExtents().height, &viewport);
-    pipelineDesc.setViewport(viewport);
-
-    VkRect2D scissor = gl_vk::GetRect(renderArea);
-    pipelineDesc.setScissor(scissor);
-
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(
         startRenderPass(contextVk, dest, destView, renderPassDesc, renderArea, &commandBuffer));
+
+    VkViewport viewport;
+    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dest->getExtents().height, &viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
+
+    VkRect2D scissor = gl_vk::GetRect(renderArea);
+    commandBuffer->setScissor(0, 1, &scissor);
+
+    contextVk->invalidateViewportAndScissor();
 
     // Change source layout inside render pass.
     contextVk->onImageRenderPassRead(VK_IMAGE_ASPECT_COLOR_BIT,
@@ -3190,6 +3196,9 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         SetStencilForShaderExport(contextVk, &pipelineDesc);
     }
 
+    vk::CommandBuffer *commandBuffer =
+        &contextVk->getStartedRenderPassCommands().getCommandBuffer();
+
     VkViewport viewport;
     gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
     bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
@@ -3197,9 +3206,12 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         contextVk->getState().getClipSpaceOrigin() == gl::ClipSpaceOrigin::UpperLeft;
     gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, invertViewport, clipSpaceOriginUpperLeft,
                        completeRenderArea.height, &viewport);
-    pipelineDesc.setViewport(viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
 
-    pipelineDesc.setScissor(gl_vk::GetRect(completeRenderArea));
+    VkRect2D scissor = gl_vk::GetRect(completeRenderArea);
+    commandBuffer->setScissor(0, 1, &scissor);
+
+    contextVk->invalidateViewportAndScissor();
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
@@ -3247,9 +3259,6 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
     ANGLE_TRY(GetUnresolveFrag(contextVk, colorAttachmentCount, colorAttachmentTypes,
                                params.unresolveDepth, params.unresolveStencil, fragmentShader));
-
-    vk::CommandBuffer *commandBuffer =
-        &contextVk->getStartedRenderPassCommands().getCommandBuffer();
 
     ANGLE_TRY(setupProgram(contextVk, function, fragmentShader, vertexShader,
                            &mUnresolvePrograms[flags], &pipelineDesc, descriptorSet, nullptr, 0,

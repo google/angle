@@ -528,21 +528,11 @@ struct PackedInputAssemblyAndColorBlendStateInfo final
     PrimitiveState primitive;
 };
 
-struct PackedScissor final
-{
-    uint16_t x;
-    uint16_t y;
-    uint16_t width;
-    uint16_t height;
-};
-
 struct PackedExtent final
 {
     uint16_t width;
     uint16_t height;
 };
-// This is invalid value for PackedScissor.x. It is used to indicate scissor is a dynamic state
-constexpr int32_t kDynamicScissorSentinel = std::numeric_limits<decltype(PackedScissor::x)>::max();
 
 constexpr size_t kPackedInputAssemblyAndColorBlendStateSize =
     sizeof(PackedInputAssemblyAndColorBlendStateInfo);
@@ -550,8 +540,8 @@ static_assert(kPackedInputAssemblyAndColorBlendStateSize == 56, "Size check fail
 
 constexpr size_t kGraphicsPipelineDescSumOfSizes =
     kVertexInputAttributesSize + kRenderPassDescSize + kPackedRasterizationAndMultisampleStateSize +
-    kPackedDepthStencilStateSize + kPackedInputAssemblyAndColorBlendStateSize + sizeof(VkViewport) +
-    sizeof(PackedScissor) + sizeof(PackedExtent);
+    kPackedDepthStencilStateSize + kPackedInputAssemblyAndColorBlendStateSize +
+    sizeof(PackedExtent);
 
 // Number of dirty bits in the dirty bit set.
 constexpr size_t kGraphicsPipelineDirtyBitBytes = 4;
@@ -711,16 +701,6 @@ class GraphicsPipelineDesc final
     void updatePolygonOffset(GraphicsPipelineTransitionBits *transition,
                              const gl::RasterizerState &rasterState);
 
-    // Viewport and scissor.
-    void setViewport(const VkViewport &viewport);
-    void updateViewport(GraphicsPipelineTransitionBits *transition, const VkViewport &viewport);
-    void updateDepthRange(GraphicsPipelineTransitionBits *transition,
-                          float nearPlane,
-                          float farPlane);
-    void setDynamicScissor();
-    void setScissor(const VkRect2D &scissor);
-    void updateScissor(GraphicsPipelineTransitionBits *transition, const VkRect2D &scissor);
-
     // Tessellation
     void updatePatchVertices(GraphicsPipelineTransitionBits *transition, GLuint value);
 
@@ -751,10 +731,6 @@ class GraphicsPipelineDesc final
     PackedRasterizationAndMultisampleStateInfo mRasterizationAndMultisampleStateInfo;
     PackedDepthStencilStateInfo mDepthStencilStateInfo;
     PackedInputAssemblyAndColorBlendStateInfo mInputAssemblyAndColorBlendStateInfo;
-    VkViewport mViewport;
-    // The special value of .offset.x == INT_MIN for scissor implies dynamic scissor that needs to
-    // be set through vkCmdSetScissor.
-    PackedScissor mScissor;
     PackedExtent mDrawableSize;
 };
 
