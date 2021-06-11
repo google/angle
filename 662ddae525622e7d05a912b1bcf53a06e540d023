@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d51c5a70_0e5adf8f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3026,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-11T14:38:03Z",
+      "side": 1,
+      "message": "Is this really correct? What if the pipeline was Compute?",
+      "range": {
+        "startLine": 3026,
+        "startChar": 43,
+        "endLine": 3026,
+        "endChar": 78
+      },
+      "revId": "662ddae525622e7d05a912b1bcf53a06e540d023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "647b3732_7c552400",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-11T14:38:03Z",
+      "side": 1,
+      "message": "As we discussed, if you want to nest an event log here that says \"deferred until usage\", that should be done right here.",
+      "revId": "662ddae525622e7d05a912b1bcf53a06e540d023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
