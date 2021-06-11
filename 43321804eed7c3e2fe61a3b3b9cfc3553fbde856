@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba3c9b0f_dfad51d8",
+        "filename": "src/libANGLE/renderer/metal/ShaderMtl.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-11T20:14:14Z",
+      "side": 1,
+      "message": "nit",
+      "revId": "43321804eed7c3e2fe61a3b3b9cfc3553fbde856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
