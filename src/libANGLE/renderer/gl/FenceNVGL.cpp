@@ -69,9 +69,11 @@ FenceNVSyncGL::~FenceNVSyncGL()
 angle::Result FenceNVSyncGL::set(const gl::Context *context, GLenum condition)
 {
     ASSERT(condition == GL_ALL_COMPLETED_NV);
-    mSyncObject = mFunctions->fenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-    ANGLE_CHECK(GetImplAs<ContextGL>(context), mSyncObject != 0,
-                "glFenceSync failed to create a GLsync object.", GL_OUT_OF_MEMORY);
+    ContextGL *contextGL = GetImplAs<ContextGL>(context);
+    mSyncObject          = mFunctions->fenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+    ANGLE_CHECK(contextGL, mSyncObject != 0, "glFenceSync failed to create a GLsync object.",
+                GL_OUT_OF_MEMORY);
+    contextGL->markWorkSubmitted();
     return angle::Result::Continue;
 }
 
