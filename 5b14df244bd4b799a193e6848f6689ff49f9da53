@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5774386f_77777870",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-06-11T20:50:56Z",
+      "side": 1,
+      "message": "Looks like you covered all the bases we were thinking of - clear*, blitFramebuffer, fenceSync, mapBuffer, beginQuery, etc.\n\nlgtm\n",
+      "revId": "5b14df244bd4b799a193e6848f6689ff49f9da53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
