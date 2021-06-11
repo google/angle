@@ -3065,8 +3065,6 @@ void ContextVk::endEventLog(angle::EntryPoint entryPoint, PipelineType pipelineT
 }
 void ContextVk::endEventLogForClearOrQuery()
 {
-    ASSERT(mQueryEventType == GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd ||
-           mQueryEventType == GraphicsEventCmdBuf::InRenderPassCmdBufQueryCmd);
     if (!mRenderer->angleDebuggerMode())
     {
         return;
@@ -3083,6 +3081,12 @@ void ContextVk::endEventLogForClearOrQuery()
             ASSERT(mRenderPassCommands);
             commandBuffer = &mRenderPassCommands->getCommandBuffer();
             break;
+        case GraphicsEventCmdBuf::NotInQueryCmd:
+            // The glClear* or gl*Query* command was noop'd or otherwise ended early.  We could
+            // call handleDirtyEventLogImpl() to start the hierarchy, but it isn't clear which (if
+            // any) command buffer to use.  We'll just skip processing this command (other than to
+            // let it stay queued for the next time handleDirtyEventLogImpl() is called.
+            return;
         default:
             UNREACHABLE();
     }
