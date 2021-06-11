@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e0f69d9_d5173af2",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-11T23:57:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3432036a_c28eba23",
+      "range": {
+        "startLine": 366,
+        "startChar": 28,
+        "endLine": 366,
+        "endChar": 69
+      },
+      "revId": "963b78e5aef08799ea356419ea7695b0fc1bec46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "98752cf8_ff91761e",
@@ -54,6 +78,24 @@
       "writtenOn": "2021-06-10T14:03:24Z",
       "side": 1,
       "message": "Downside of this cleanup is that now the *Info contents are being copied.",
+      "revId": "963b78e5aef08799ea356419ea7695b0fc1bec46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4daae258_54660e57",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4798,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-11T23:57:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "98752cf8_ff91761e",
       "revId": "963b78e5aef08799ea356419ea7695b0fc1bec46",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -95,6 +137,30 @@
       "side": 1,
       "message": "+1 to having the context maintain the memory that gets gets reused. Then you can switch back to reserving infos and filling them in-place instead of creating a temporary and copying it. Preserving the memory also has the benefit that at some point the vector stops growing and there would be no more copies.",
       "parentUuid": "03347f06_fa5e2ef9",
+      "range": {
+        "startLine": 5723,
+        "startChar": 45,
+        "endLine": 5723,
+        "endChar": 99
+      },
+      "revId": "963b78e5aef08799ea356419ea7695b0fc1bec46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01e3569e_6df47ff4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 5723,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-11T23:57:00Z",
+      "side": 1,
+      "message": "\u003e What\u0027s the guarantees we can make of the size of the lists in these methods?\n\nWe\u0027re still filling in the same number of VkDescriptorBufferInfo objects as before, so no changes due to this change.\n\n\u003e another approach is to use a helper object, say owned by context, that builds up a list of these guys, but can reuse the temporary storage between submits.\n\n\u003e +1 to having the context maintain the memory that gets gets reused. Then you can switch back to reserving infos and filling them in-place instead of creating a temporary and copying it. Preserving the memory also has the benefit that at some point the vector stops growing and there would be no more copies.\n\nDone.\n\nThe ContextVk controls the memory and reallocates from the vectors each time so the number of new allocations will be the same as prior to this change, without the overhead of manually copying entries if one occurs.   Let me know what you think.",
+      "parentUuid": "c4fdbce8_6d90ae28",
       "range": {
         "startLine": 5723,
         "startChar": 45,
