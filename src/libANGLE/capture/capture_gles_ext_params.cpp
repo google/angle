@@ -3082,7 +3082,7 @@ void CaptureDeleteFramebuffersOES_framebuffersPacked(const State &glState,
                                                      const FramebufferID *framebuffers,
                                                      ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(framebuffers, n * sizeof(GLuint), paramCapture);
 }
 
 void CaptureDeleteRenderbuffersOES_renderbuffersPacked(const State &glState,
@@ -3091,7 +3091,7 @@ void CaptureDeleteRenderbuffersOES_renderbuffersPacked(const State &glState,
                                                        const RenderbufferID *renderbuffers,
                                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(renderbuffers, n * sizeof(GLuint), paramCapture);
 }
 
 void CaptureGenFramebuffersOES_framebuffersPacked(const State &glState,
@@ -3100,7 +3100,7 @@ void CaptureGenFramebuffersOES_framebuffersPacked(const State &glState,
                                                   FramebufferID *framebuffers,
                                                   ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureGenHandles(n, framebuffers, paramCapture);
 }
 
 void CaptureGenRenderbuffersOES_renderbuffersPacked(const State &glState,
@@ -3109,7 +3109,7 @@ void CaptureGenRenderbuffersOES_renderbuffersPacked(const State &glState,
                                                     RenderbufferID *renderbuffers,
                                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureGenHandles(n, renderbuffers, paramCapture);
 }
 
 void CaptureGetFramebufferAttachmentParameterivOES_params(const State &glState,
@@ -3120,7 +3120,7 @@ void CaptureGetFramebufferAttachmentParameterivOES_params(const State &glState,
                                                           GLint *params,
                                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLint), paramCapture);
 }
 
 void CaptureGetRenderbufferParameterivOES_params(const State &glState,
@@ -3130,7 +3130,7 @@ void CaptureGetRenderbufferParameterivOES_params(const State &glState,
                                                  GLint *params,
                                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLint), paramCapture);
 }
 
 void CaptureGetProgramBinaryOES_length(const State &glState,
