@@ -426,19 +426,26 @@ void TIntermTraverser::traverseFunctionDefinition(TIntermFunctionDefinition *nod
 
     bool visit = true;
 
+    mCurrentChildIndex = 0;
+
     if (preVisit)
         visit = node->visit(PreVisit, this);
 
     if (visit)
     {
+        mCurrentChildIndex = 0;
         node->getFunctionPrototype()->traverse(this);
+        mCurrentChildIndex = 0;
+
         if (inVisit)
             visit = node->visit(InVisit, this);
         if (visit)
         {
-            mInGlobalScope = false;
+            mInGlobalScope     = false;
+            mCurrentChildIndex = 1;
             node->getBody()->traverse(this);
-            mInGlobalScope = true;
+            mCurrentChildIndex = 1;
+            mInGlobalScope     = true;
             if (postVisit)
                 visit = node->visit(PostVisit, this);
         }
@@ -457,6 +464,7 @@ void TIntermTraverser::traverseBlock(TIntermBlock *node)
 
     bool visit = true;
 
+    mCurrentChildIndex        = 0;
     TIntermSequence *sequence = node->getSequence();
 
     if (preVisit)
@@ -464,11 +472,15 @@ void TIntermTraverser::traverseBlock(TIntermBlock *node)
 
     if (visit)
     {
-        for (auto *child : *sequence)
+        for (size_t childIndex = 0; childIndex < sequence->size(); ++childIndex)
         {
+            TIntermNode *child = (*sequence)[childIndex];
             if (visit)
             {
+                mCurrentChildIndex = childIndex;
                 child->traverse(this);
+                mCurrentChildIndex = childIndex;
+
                 if (inVisit)
                 {
                     if (child != sequence->back())

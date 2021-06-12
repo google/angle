@@ -603,12 +603,19 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // Folding should only be able to generate warnings.
     ASSERT(mDiagnostics.numErrors() == 0);
 
+    // Validate no barrier() after return before prunning it in |PruneNoOps()| below.
+    if (mShaderType == GL_TESS_CONTROL_SHADER && !ValidateBarrierFunctionCall(root, &mDiagnostics))
+    {
+        return false;
+    }
+
     // We prune no-ops to work around driver bugs and to keep AST processing and output simple.
     // The following kinds of no-ops are pruned:
     //   1. Empty declarations "int;".
     //   2. Literal statements: "1.0;". The ESSL output doesn't define a default precision
     //      for float, so float literal statements would end up with no precision which is
     //      invalid ESSL.
+    //   3. Any unreachable statement after a discard, return, break or continue.
     // After this empty declarations are not allowed in the AST.
     if (!PruneNoOps(this, root, &mSymbolTable))
     {
@@ -666,11 +673,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     if (mShaderVersion >= 300 && mShaderType == GL_FRAGMENT_SHADER &&
         !ValidateOutputs(root, getExtensionBehavior(), mResources.MaxDrawBuffers, &mDiagnostics))
-    {
-        return false;
-    }
-
-    if (mShaderType == GL_TESS_CONTROL_SHADER && !ValidateBarrierFunctionCall(root, &mDiagnostics))
     {
         return false;
     }

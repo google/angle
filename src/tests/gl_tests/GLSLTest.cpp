@@ -9064,6 +9064,109 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that dead code after discard, return, continue and branch are pruned.
+TEST_P(GLSLTest_ES3, DeadCodeIsPruned)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+
+vec4 f(vec4 c)
+{
+    return c;
+    // dead code
+    c = vec4(0, 0, 1, 1);
+    return c;
+}
+
+void main()
+{
+    vec4 result = vec4(0, 0.5, 0, 1);
+    int var = int(result.y * 2.2);
+
+    {
+        if (result.x > 1.0)
+        {
+            discard;
+            // dead code
+            result = vec4(1, 0, 0, 1);
+        }
+        for (int i = 0; i < 3; ++i)
+        {
+            if (i < 2)
+            {
+                result = f(result);
+                continue;
+                // dead code
+                result = vec4(1, 0, 1, 1);
+            }
+            result = f(result);
+            break;
+            // dead code
+            result = vec4(1, 0, 1, 0);
+        }
+        while (true)
+        {
+            if (result.x > -1.0)
+            {
+                {
+                    result = f(result);
+                    {
+                        break;
+                        // dead code
+                        result = vec4(1, 0, 0, 0);
+                    }
+                    // dead code
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        if (j > 1) continue;
+                        result = vec4(0, 0, 1, 0);
+                        color = vec4(0.5, 0, 0.5, 0.5);
+                        return;
+                    }
+                }
+                // dead code
+                result = vec4(0.5, 0, 0, 0);
+            }
+        }
+        switch (var)
+        {
+        case 2:
+            return;
+            // dead code
+            color = vec4(0.25, 0, 0.25, 0.25);
+        case 1:
+            {
+                // Make sure this path is not pruned due to the return in the previous case.
+                result.y += 0.5;
+                break;
+                // dead code
+                color = vec4(0.25, 0, 0, 0);
+            }
+            // dead code
+            color = vec4(0, 0, 0.25, 0);
+            break;
+        default:
+            break;
+        }
+
+        color = result;
+        return;
+        // dead code
+        color = vec4(0, 0, 0.5, 0);
+    }
+    // dead code
+    color = vec4(0, 0, 0, 0.5);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test shader with all resources (default uniform, UBO, SSBO, image, sampler and atomic counter) to
 // make sure they are all linked ok.  The front-end sorts these resources and traverses the list of
 // "uniforms" to find the range for each resource.  A bug there was causing some resource ranges to
