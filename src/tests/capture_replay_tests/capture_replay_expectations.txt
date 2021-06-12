@@ -105,6 +105,4 @@ MaterialsTest.InitialState/*
 MaterialsTest.InvalidParameter/*
 MaterialsTest.SetParameters/*
 
-TextureEnvTest.InitialState/*
-TextureEnvTest.Set/*
 TextureParameterTest.SetFixedPoint/*
