@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c69faea1_da995e73",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1064,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-12T03:42:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d5749fe_47100b2d",
+      "range": {
+        "startLine": 1064,
+        "startChar": 40,
+        "endLine": 1064,
+        "endChar": 50
+      },
+      "revId": "a353d54e65a268bd4ca0ef1c7d9c0b4424b2d661",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0d8e140f_809f2d93",
@@ -47,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "06f7afe9_6dac1c38",
+        "filename": "src/compiler/translator/tree_ops/vulkan/EmulateFragColorData.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-12T03:42:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d8e140f_809f2d93",
+      "range": {
+        "startLine": 52,
+        "startChar": 71,
+        "endLine": 52,
+        "endChar": 82
+      },
+      "revId": "a353d54e65a268bd4ca0ef1c7d9c0b4424b2d661",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c8f68462_05f34ad0",
@@ -60,6 +108,24 @@
       "writtenOn": "2021-06-11T22:36:36Z",
       "side": 1,
       "message": "nit: Needs updating.",
+      "revId": "a353d54e65a268bd4ca0ef1c7d9c0b4424b2d661",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a16dec6_7393348e",
+        "filename": "src/compiler/translator/tree_ops/vulkan/EmulateFragColorData.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-12T03:42:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8f68462_05f34ad0",
       "revId": "a353d54e65a268bd4ca0ef1c7d9c0b4424b2d661",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
