@@ -692,7 +692,7 @@ void CaptureTextureAndSamplerParameter_params(GLenum pname,
                                               const T *param,
                                               angle::ParamCapture *paramCapture)
 {
-    if (pname == GL_TEXTURE_BORDER_COLOR)
+    if (pname == GL_TEXTURE_BORDER_COLOR || pname == GL_TEXTURE_CROP_RECT_OES)
     {
         CaptureMemory(param, sizeof(T) * 4, paramCapture);
     }
