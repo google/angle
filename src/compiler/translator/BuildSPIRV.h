@@ -291,7 +291,7 @@ class SPIRVBuilder : angle::NonCopyable
         ASSERT(!mSpirvCurrentFunctionBlocks.empty());
         mSpirvCurrentFunctionBlocks.back().isTerminated = true;
     }
-    SpirvConditional *getCurrentConditional() { return &mConditionalStack.back(); }
+    const SpirvConditional *getCurrentConditional() { return &mConditionalStack.back(); }
 
     bool isInvariantOutput(const TType &type) const;
 

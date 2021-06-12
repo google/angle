@@ -921,12 +921,11 @@ spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
 
 spirv::IdRef SPIRVBuilder::declareSpecConst(TBasicType type, int id, const char *name)
 {
-    const spirv::IdRef specConstId = getNewId({});
-
     SpirvType spirvType;
     spirvType.type = type;
 
-    const spirv::IdRef typeId = getSpirvTypeData(spirvType, nullptr).id;
+    const spirv::IdRef typeId      = getSpirvTypeData(spirvType, nullptr).id;
+    const spirv::IdRef specConstId = getNewId({});
 
     // Note: all spec constants are 0 initialized by the translator.
     if (type == EbtBool)

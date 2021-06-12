@@ -1443,7 +1443,7 @@ void OutputSPIRVTraverser::startShortCircuit(TIntermBinary *node)
     // |if| construct in preparation for visiting |right|.
 
     // Load |left| and replace the access chain with an rvalue that's the result.
-    spirv::IdRef typeId = getAccessChainTypeId(&mNodeData.back());
+    const spirv::IdRef typeId = getAccessChainTypeId(&mNodeData.back());
     const spirv::IdRef left =
         accessChainLoad(&mNodeData.back(), mBuilder.getDecorations(node->getLeft()->getType()));
     nodeDataInitRValue(&mNodeData.back(), left, typeId);
@@ -1455,7 +1455,7 @@ void OutputSPIRVTraverser::startShortCircuit(TIntermBinary *node)
     mBuilder.startConditional(2, false, false);
 
     // Generate the branch instructions.
-    SpirvConditional *conditional = mBuilder.getCurrentConditional();
+    const SpirvConditional *conditional = mBuilder.getCurrentConditional();
 
     const spirv::IdRef mergeBlock = conditional->blockIds.back();
     const spirv::IdRef ifBlock    = conditional->blockIds.front();
@@ -2955,8 +2955,110 @@ bool OutputSPIRVTraverser::visitUnary(Visit visit, TIntermUnary *node)
 
 bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
 {
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
+    if (visit == PreVisit)
+    {
+        // Don't add an entry to the stack.  The condition will create one, which we won't pop.
+        return true;
+    }
+
+    size_t lastChildIndex = getLastTraversedChildIndex(visit);
+
+    // If the condition was just visited, evaluate it and decide if OpSelect could be used or an
+    // if-else must be emitted.  OpSelect is only used if the type is scalar or vector (required by
+    // OpSelect) and if neither side has a side effect.
+    const TType &type         = node->getType();
+    const bool canUseOpSelect = (type.isScalar() || type.isVector()) &&
+                                !node->getTrueExpression()->hasSideEffects() &&
+                                !node->getFalseExpression()->hasSideEffects();
+
+    if (lastChildIndex == 0)
+    {
+        spirv::IdRef typeId         = getAccessChainTypeId(&mNodeData.back());
+        spirv::IdRef conditionValue = accessChainLoad(
+            &mNodeData.back(), mBuilder.getDecorations(node->getCondition()->getType()));
+
+        // If OpSelect can be used, keep the condition for later usage.
+        if (canUseOpSelect)
+        {
+            // SPIR-V 1.0 requires that the condition value have as many components as the result.
+            // So when selecting between vectors, we must replicate the condition scalar.
+            if (type.isVector())
+            {
+                SpirvType spirvType;
+                spirvType.type        = node->getCondition()->getType().getBasicType();
+                spirvType.primarySize = static_cast<uint8_t>(type.getNominalSize());
+
+                typeId = mBuilder.getSpirvTypeData(spirvType, nullptr).id;
+                conditionValue =
+                    createConstructorVectorFromScalar(type, typeId, {{conditionValue}});
+            }
+            nodeDataInitRValue(&mNodeData.back(), conditionValue, typeId);
+            return true;
+        }
+
+        // Otherwise generate an if-else construct.
+
+        // Three blocks necessary; the true, false and merge.
+        mBuilder.startConditional(3, false, false);
+
+        // Generate the branch instructions.
+        const SpirvConditional *conditional = mBuilder.getCurrentConditional();
+
+        const spirv::IdRef trueBlockId  = conditional->blockIds[0];
+        const spirv::IdRef falseBlockId = conditional->blockIds[1];
+        const spirv::IdRef mergeBlockId = conditional->blockIds.back();
+
+        mBuilder.writeBranchConditional(conditionValue, trueBlockId, falseBlockId, mergeBlockId);
+        return true;
+    }
+
+    // Load the result of the true or false part, and keep it for the end.  It's either used in
+    // OpSelect or OpPhi.
+    // TODO: handle mismatching types.  http://anglebug.com/4889.
+    const spirv::IdRef typeId = getAccessChainTypeId(&mNodeData.back());
+    const spirv::IdRef value  = accessChainLoad(&mNodeData.back(), mBuilder.getDecorations(type));
+    mNodeData.pop_back();
+    mNodeData.back().idList.push_back(value);
+
+    if (!canUseOpSelect)
+    {
+        // Move on to the next block.
+        mBuilder.writeBranchConditionalBlockEnd();
+    }
+
+    // When done, generate either OpSelect or OpPhi.
+    if (visit == PostVisit)
+    {
+        const spirv::IdRef result = mBuilder.getNewId(mBuilder.getDecorations(node->getType()));
+
+        ASSERT(mNodeData.back().idList.size() == 2);
+        const spirv::IdRef trueValue  = mNodeData.back().idList[0].id;
+        const spirv::IdRef falseValue = mNodeData.back().idList[1].id;
+
+        if (canUseOpSelect)
+        {
+            const spirv::IdRef conditionValue = mNodeData.back().baseId;
+
+            spirv::WriteSelect(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result,
+                               conditionValue, trueValue, falseValue);
+        }
+        else
+        {
+            const SpirvConditional *conditional = mBuilder.getCurrentConditional();
+
+            const spirv::IdRef trueBlockId  = conditional->blockIds[0];
+            const spirv::IdRef falseBlockId = conditional->blockIds[1];
+
+            spirv::WritePhi(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result,
+                            {spirv::PairIdRefIdRef{trueValue, trueBlockId},
+                             spirv::PairIdRefIdRef{falseValue, falseBlockId}});
+
+            mBuilder.endConditional();
+        }
+
+        // Replace the access chain with an rvalue that's the result.
+        nodeDataInitRValue(&mNodeData.back(), result, typeId);
+    }
 
     return true;
 }
@@ -2983,7 +3085,7 @@ bool OutputSPIRVTraverser::visitIfElse(Visit visit, TIntermIfElse *node)
         mBuilder.startConditional(node->getChildCount(), false, false);
 
         // Generate the branch instructions.
-        SpirvConditional *conditional = mBuilder.getCurrentConditional();
+        const SpirvConditional *conditional = mBuilder.getCurrentConditional();
 
         const spirv::IdRef mergeBlock = conditional->blockIds.back();
         spirv::IdRef trueBlock        = mergeBlock;
