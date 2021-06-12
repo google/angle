@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dab7ff99_d951b422",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-12T00:13:40Z",
+      "side": 1,
+      "message": "To try and reduce the license issues with ANGLE is AOSP, this CL removes all of the unused libraries from third_party/.   I\u0027ve uploaded a CL with what this looks like in AOSP:\nhttps://android-review.googlesource.com/c/platform/external/angle/+/1734516\n\nAuditing the remaining libraries with the scan_project tool is available here:\nhttps://docs.google.com/document/d/1T4kyhdkOTHsL9MoB8gq1tFIZHxHYhPC3bbHuavrLr0U/edit#bookmark\u003did.g05t50ukhoow\n\nWhile this should make it easier to convince everyone that all of the used libraries have acceptable licenses, this obviously causes a bit of a divergence between ToT ANGLE and what\u0027s in AOSP, so let me know what you think.",
+      "revId": "01e55905178121026f4c3ee0308cc81e63c273f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
