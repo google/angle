@@ -1009,6 +1009,43 @@ bool SPIRVBuilder::isInLoop() const
     return false;
 }
 
+spirv::IdRef SPIRVBuilder::getBreakTargetId() const
+{
+    for (size_t index = mConditionalStack.size(); index > 0; --index)
+    {
+        const SpirvConditional &conditional = mConditionalStack[index - 1];
+
+        if (conditional.isBreakable)
+        {
+            // The target of break; is always the merge block, and the merge block is always the
+            // last block.
+            return conditional.blockIds.back();
+        }
+    }
+
+    UNREACHABLE();
+    return spirv::IdRef{};
+}
+
+spirv::IdRef SPIRVBuilder::getContinueTargetId() const
+{
+    for (size_t index = mConditionalStack.size(); index > 0; --index)
+    {
+        const SpirvConditional &conditional = mConditionalStack[index - 1];
+
+        if (conditional.isContinuable)
+        {
+            // The target of continue; is always the block before merge, so it's the one before
+            // last.
+            ASSERT(conditional.blockIds.size() > 2);
+            return conditional.blockIds[conditional.blockIds.size() - 2];
+        }
+    }
+
+    UNREACHABLE();
+    return spirv::IdRef{};
+}
+
 uint32_t SPIRVBuilder::nextUnusedBinding()
 {
     return mNextUnusedBinding++;

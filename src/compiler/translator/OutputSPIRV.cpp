@@ -3797,12 +3797,14 @@ bool OutputSPIRVTraverser::visitBranch(Visit visit, TIntermBranch *node)
             mBuilder.terminateCurrentFunctionBlock();
             break;
         case EOpBreak:
-            // TODO: http://anglebug.com/4889
-            UNIMPLEMENTED();
+            spirv::WriteBranch(mBuilder.getSpirvCurrentFunctionBlock(),
+                               mBuilder.getBreakTargetId());
+            mBuilder.terminateCurrentFunctionBlock();
             break;
         case EOpContinue:
-            // TODO: http://anglebug.com/4889
-            UNIMPLEMENTED();
+            spirv::WriteBranch(mBuilder.getSpirvCurrentFunctionBlock(),
+                               mBuilder.getContinueTargetId());
+            mBuilder.terminateCurrentFunctionBlock();
             break;
         case EOpReturn:
             // Evaluate the expression if any, and return.
