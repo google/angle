@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "646605b5_a2c6348f",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-12T02:12:27Z",
+      "side": 1,
+      "message": "Could be ASSERT? Is this for a null buffer bound when the shader doesn\u0027t use any uniforms?",
+      "revId": "fcab5dc71e2d93b6c8459a26848b53514fd93cce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
