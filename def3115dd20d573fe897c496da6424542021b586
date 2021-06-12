@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa1de9b3_7fedd73e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-12T05:42:02Z",
+      "side": 1,
+      "message": "Tested locally with some of the tests I had written for row-major matrix transformation which tested side effects in short-circuit expressions. The suite (GLSLTests) is too large to enable yet.",
+      "revId": "def3115dd20d573fe897c496da6424542021b586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
