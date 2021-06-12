@@ -104,7 +104,7 @@ BootAnimationTest.DefaultBootAnimation/*
 MaterialsTest.InitialState/*
 MaterialsTest.InvalidParameter/*
 MaterialsTest.SetParameters/*
-MatrixModeTest.InitialState/*
+
 PointParameterTest.NegativeEnum/*
 PointParameterTest.NegativeValue/*
 PointParameterTest.Set/*
