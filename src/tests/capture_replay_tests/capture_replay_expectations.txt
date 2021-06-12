@@ -104,5 +104,3 @@ BootAnimationTest.DefaultBootAnimation/*
 MaterialsTest.InitialState/*
 MaterialsTest.InvalidParameter/*
 MaterialsTest.SetParameters/*
-
-TextureParameterTest.SetFixedPoint/*
