@@ -105,9 +105,6 @@ MaterialsTest.InitialState/*
 MaterialsTest.InvalidParameter/*
 MaterialsTest.SetParameters/*
 
-PointParameterTest.NegativeEnum/*
-PointParameterTest.NegativeValue/*
-PointParameterTest.Set/*
 TextureEnvTest.InitialState/*
 TextureEnvTest.Set/*
 TextureParameterTest.SetFixedPoint/*
