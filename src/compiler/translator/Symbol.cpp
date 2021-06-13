@@ -39,9 +39,9 @@ TSymbol::TSymbol(TSymbolTable *symbolTable,
                  TExtension extension)
     : mName(name),
       mUniqueId(symbolTable->nextUniqueId()),
-      mSymbolType(symbolType),
       mExtensions(
           std::array<TExtension, 3u>{{extension, TExtension::UNDEFINED, TExtension::UNDEFINED}}),
+      mSymbolType(symbolType),
       mSymbolClass(symbolClass)
 {
     ASSERT(mSymbolType == SymbolType::BuiltIn || extension == TExtension::UNDEFINED);
@@ -56,8 +56,8 @@ TSymbol::TSymbol(TSymbolTable *symbolTable,
                  const std::array<TExtension, 3u> &extensions)
     : mName(name),
       mUniqueId(symbolTable->nextUniqueId()),
-      mSymbolType(symbolType),
       mExtensions(extensions),
+      mSymbolType(symbolType),
       mSymbolClass(symbolClass)
 {
     ASSERT(mSymbolType == SymbolType::BuiltIn || extensions[0] == TExtension::UNDEFINED);
@@ -190,9 +190,9 @@ TFunction::TFunction(TSymbolTable *symbolTable,
     : TSymbol(symbolTable, name, symbolType, SymbolClass::Function, TExtension::UNDEFINED),
       mParametersVector(new TParamVector()),
       mParameters(nullptr),
-      mParamCount(0u),
       returnType(retType),
       mMangledName(""),
+      mParamCount(0u),
       mOp(EOpNull),
       defined(false),
       mHasPrototypeDeclaration(false),
