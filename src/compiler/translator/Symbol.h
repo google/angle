@@ -103,6 +103,8 @@ class TSymbol : angle::NonCopyable
     const SymbolClass mSymbolClass : 4;
 };
 
+static_assert(sizeof(TSymbol) <= 24, "Size check failed");
+
 // Variable.
 // May store the value of a constant variable of any type (float, int, bool or struct).
 class TVariable : public TSymbol
@@ -381,8 +383,8 @@ class TFunction : public TSymbol
     const TVariable *const *mParameters;
     const TType *const returnType;
     mutable ImmutableString mMangledName;
-    size_t mParamCount : 16;
-    const TOperator mOp : 8;  // Only set for built-ins
+    size_t mParamCount : 32;
+    const TOperator mOp;  // Only set for built-ins
     bool defined : 1;
     bool mHasPrototypeDeclaration : 1;
     bool mKnownToNotHaveSideEffects : 1;

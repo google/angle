@@ -347,7 +347,7 @@ static const char *GetOperatorString(TOperator op,
             return "+";
         case TOperator::EOpLogicalNot:
             return "!";
-        case TOperator::EOpLogicalNotComponentWise:
+        case TOperator::EOpNotComponentWise:
             return "!";
         case TOperator::EOpBitwiseNot:
             return "~";
@@ -451,7 +451,7 @@ static const char *GetOperatorString(TOperator op,
             return "ANGLE_faceforward";
         case TOperator::EOpReflect:
             return "ANGLE_reflect";
-        case TOperator::EOpMulMatrixComponentWise:
+        case TOperator::EOpMatrixCompMult:
             return "ANGLE_componentWiseMultiply";
         case TOperator::EOpOuterProduct:
             return "ANGLE_outerProduct";
@@ -653,7 +653,7 @@ static const char *GetOperatorString(TOperator op,
         case TOperator::EOpAtomicCompSwap:
         case TOperator::EOpEmitVertex:
         case TOperator::EOpEndPrimitive:
-        case TOperator::EOpFTransform:
+        case TOperator::EOpFtransform:
         case TOperator::EOpPackDouble2x32:
         case TOperator::EOpUnpackDouble2x32:
         case TOperator::EOpArrayLength:
@@ -664,12 +664,14 @@ static const char *GetOperatorString(TOperator op,
         case TOperator::EOpConstruct:
         case TOperator::EOpCallFunctionInAST:
         case TOperator::EOpCallInternalRawFunction:
-        case TOperator::EOpCallBuiltInFunction:
         case TOperator::EOpIndexDirect:
         case TOperator::EOpIndexIndirect:
         case TOperator::EOpIndexDirectStruct:
         case TOperator::EOpIndexDirectInterfaceBlock:
             UNREACHABLE();
+            return nullptr;
+        default:
+            // Any other built-in function.
             return nullptr;
     }
 }
@@ -679,11 +681,12 @@ static bool IsSymbolicOperator(TOperator op,
                                const TType *argType0,
                                const TType *argType1 = nullptr)
 {
-    if (op == TOperator::EOpCallBuiltInFunction)
+    const char *operatorString = GetOperatorString(op, resultType, argType0, argType1);
+    if (operatorString == nullptr)
     {
         return false;
     }
-    return !std::isalnum(GetOperatorString(op, resultType, argType0, argType1)[0]);
+    return !std::isalnum(operatorString[0]);
 }
 
 static TIntermBinary *AsSpecificBinaryNode(TIntermNode &node, TOperator op)
@@ -1980,16 +1983,6 @@ bool GenMetalTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                 return false;
             }
 
-            case TOperator::EOpCallBuiltInFunction:
-            {
-                const TFunction &func = *aggregateNode->getFunction();
-                auto it               = mFuncToName.find(func.name());
-                ASSERT(it != mFuncToName.end());
-                EmitName(mOut, it->second);
-                emitArgList("(", ")");
-                return false;
-            }
-
             default:
             {
                 auto getArgType = [&](size_t index) -> const TType * {
@@ -2046,6 +2039,15 @@ bool GenMetalTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                             UNREACHABLE();
                             return false;
                     }
+                }
+                else if (opName == nullptr)
+                {
+                    const TFunction &func = *aggregateNode->getFunction();
+                    auto it               = mFuncToName.find(func.name());
+                    ASSERT(it != mFuncToName.end());
+                    EmitName(mOut, it->second);
+                    emitArgList("(", ")");
+                    return false;
                 }
                 else
                 {

@@ -7,6 +7,7 @@
 #include "compiler/translator/ValidateAST.h"
 
 #include "compiler/translator/Diagnostics.h"
+#include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/tree_util/SpecializationConstant.h"
@@ -52,6 +53,8 @@ class ValidateAST : public TIntermTraverser
     // Visit a structure or interface block, and recursively visit its fields of structure type.
     void visitStructOrInterfaceBlockDeclaration(const TType &type, const TSourceLoc &location);
     void visitStructInDeclarationUsage(const TType &type, const TSourceLoc &location);
+    // Visit a unary or aggregate node and validate it's built-in op against it's built-in function.
+    void visitBuiltIn(TIntermOperator *op, const TFunction *function);
 
     void scope(Visit visit);
     bool isVariableDeclared(const TVariable *variable);
@@ -74,6 +77,9 @@ class ValidateAST : public TIntermTraverser
     std::vector<std::set<const TVariable *>> mDeclaredVariables;
     std::set<const TInterfaceBlock *> mNamelessInterfaceBlocks;
     bool mVariableReferencesFailed = false;
+
+    // For validateBuiltInOps:
+    bool mBuiltInOpsFailed = false;
 
     // For validateNullNodes:
     bool mNullNodesFailed = false;
@@ -226,6 +232,38 @@ void ValidateAST::visitStructInDeclarationUsage(const TType &type, const TSource
                             "<validateStructUsage>",
                             typeName.data());
         mStructUsageFailed = true;
+    }
+}
+
+void ValidateAST::visitBuiltIn(TIntermOperator *node, const TFunction *function)
+{
+    const TOperator op = node->getOp();
+    if (!BuiltInGroup::IsBuiltIn(op))
+    {
+        return;
+    }
+
+    ImmutableStringBuilder opValueBuilder(16);
+    opValueBuilder << "op: ";
+    opValueBuilder.appendDecimal(op);
+
+    ImmutableString opValue = opValueBuilder;
+
+    if (function == nullptr)
+    {
+        mDiagnostics->error(node->getLine(),
+                            "Found node calling built-in without a reference to the built-in "
+                            "function <validateBuiltInOps>",
+                            opValue.data());
+        mVariableReferencesFailed = true;
+    }
+    else if (function->getBuiltInOp() != op)
+    {
+        mDiagnostics->error(node->getLine(),
+                            "Found node calling built-in with a reference to a different function "
+                            "<validateBuiltInOps>",
+                            opValue.data());
+        mVariableReferencesFailed = true;
     }
 }
 
@@ -406,6 +444,12 @@ bool ValidateAST::visitBinary(Visit visit, TIntermBinary *node)
 bool ValidateAST::visitUnary(Visit visit, TIntermUnary *node)
 {
     visitNode(visit, node);
+
+    if (visit == PreVisit && mOptions.validateBuiltInOps)
+    {
+        visitBuiltIn(node, node->getFunction());
+    }
+
     return true;
 }
 
@@ -473,6 +517,12 @@ bool ValidateAST::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     visitNode(visit, node);
     expectNonNullChildren(visit, node, 0);
+
+    if (visit == PreVisit && mOptions.validateBuiltInOps)
+    {
+        visitBuiltIn(node, node->getFunction());
+    }
+
     return true;
 }
 
@@ -596,8 +646,8 @@ void ValidateAST::visitPreprocessorDirective(TIntermPreprocessorDirective *node)
 
 bool ValidateAST::validateInternal()
 {
-    return !mSingleParentFailed && !mVariableReferencesFailed && !mNullNodesFailed &&
-           !mStructUsageFailed && !mMultiDeclarationsFailed;
+    return !mSingleParentFailed && !mVariableReferencesFailed && !mBuiltInOpsFailed &&
+           !mNullNodesFailed && !mStructUsageFailed && !mMultiDeclarationsFailed;
 }
 
 }  // anonymous namespace

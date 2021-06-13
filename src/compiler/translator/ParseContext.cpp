@@ -12,7 +12,6 @@
 #include "common/mathutil.h"
 #include "compiler/preprocessor/SourceLocation.h"
 #include "compiler/translator/Declarator.h"
-#include "compiler/translator/ParseContext_interm.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/ValidateSwitch.h"
@@ -5853,14 +5852,16 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
                 return nullptr;
             }
             break;
-        // Operators for built-ins are already type checked against their prototype.
+        // Operators for math built-ins are already type checked against their prototype.
         default:
             break;
     }
 
     if (child->getMemoryQualifier().writeonly)
     {
-        unaryOpError(loc, GetOperatorString(op), child->getType());
+        const char *opStr =
+            BuiltInGroup::IsBuiltIn(op) ? func->name().data() : GetOperatorString(op);
+        unaryOpError(loc, opStr, child->getType());
         return nullptr;
     }
 
@@ -6443,12 +6444,12 @@ void TParseContext::appendStatement(TIntermBlock *block, TIntermNode *statement)
 
 void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
 {
-    ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
+    const TOperator op    = functionCall->getOp();
     const TFunction *func = functionCall->getFunction();
-    if (BuiltInGroup::isTextureGather(func))
+    if (BuiltInGroup::IsTextureGather(op))
     {
         bool isTextureGatherOffsetOrOffsets =
-            BuiltInGroup::isTextureGatherOffset(func) || BuiltInGroup::isTextureGatherOffsets(func);
+            BuiltInGroup::IsTextureGatherOffset(op) || BuiltInGroup::IsTextureGatherOffsets(op);
         TIntermNode *componentNode = nullptr;
         TIntermSequence *arguments = functionCall->getSequence();
         ASSERT(arguments->size() >= 2u && arguments->size() <= 4u);
@@ -6471,6 +6472,9 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
             case EbtSamplerCube:
             case EbtISamplerCube:
             case EbtUSamplerCube:
+            case EbtSamplerCubeArray:
+            case EbtISamplerCubeArray:
+            case EbtUSamplerCubeArray:
                 ASSERT(!isTextureGatherOffsetOrOffsets);
                 if (arguments->size() == 3u)
                 {
@@ -6480,6 +6484,7 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
             case EbtSampler2DShadow:
             case EbtSampler2DArrayShadow:
             case EbtSamplerCubeShadow:
+            case EbtSamplerCubeArrayShadow:
                 break;
             default:
                 UNREACHABLE();
@@ -6509,20 +6514,18 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
 
 void TParseContext::checkTextureOffset(TIntermAggregate *functionCall)
 {
-    ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
+    const TOperator op         = functionCall->getOp();
     const TFunction *func      = functionCall->getFunction();
     TIntermNode *offset        = nullptr;
     TIntermSequence *arguments = functionCall->getSequence();
 
-    if (BuiltInGroup::isTextureOffsetNoBias(func) ||
-        BuiltInGroup::isTextureGatherOffsetNoComp(func) ||
-        BuiltInGroup::isTextureGatherOffsetsNoComp(func))
+    if (BuiltInGroup::IsTextureOffsetNoBias(op) || BuiltInGroup::IsTextureGatherOffsetNoComp(op) ||
+        BuiltInGroup::IsTextureGatherOffsetsNoComp(op))
     {
         offset = arguments->back();
     }
-    else if (BuiltInGroup::isTextureOffsetBias(func) ||
-             BuiltInGroup::isTextureGatherOffsetComp(func) ||
-             BuiltInGroup::isTextureGatherOffsetsComp(func))
+    else if (BuiltInGroup::IsTextureOffsetBias(op) || BuiltInGroup::IsTextureGatherOffsetComp(op) ||
+             BuiltInGroup::IsTextureGatherOffsetsComp(op))
     {
         // A bias or comp parameter follows the offset parameter.
         ASSERT(arguments->size() >= 3);
@@ -6535,8 +6538,8 @@ void TParseContext::checkTextureOffset(TIntermAggregate *functionCall)
         return;
     }
 
-    bool isTextureGatherOffset             = BuiltInGroup::isTextureGatherOffset(func);
-    bool isTextureGatherOffsets            = BuiltInGroup::isTextureGatherOffsets(func);
+    bool isTextureGatherOffset             = BuiltInGroup::IsTextureGatherOffset(op);
+    bool isTextureGatherOffsets            = BuiltInGroup::IsTextureGatherOffsets(op);
     bool useTextureGatherOffsetConstraints = isTextureGatherOffset || isTextureGatherOffsets;
 
     int minOffsetValue =
@@ -6635,7 +6638,7 @@ void TParseContext::checkSingleTextureOffset(const TSourceLoc &line,
 void TParseContext::checkInterpolationFS(TIntermAggregate *functionCall)
 {
     const TFunction *func = functionCall->getFunction();
-    if (!BuiltInGroup::isInterpolationFS(func))
+    if (!BuiltInGroup::IsInterpolationFS(functionCall->getOp()))
     {
         return;
     }
@@ -6670,9 +6673,8 @@ void TParseContext::checkInterpolationFS(TIntermAggregate *functionCall)
 void TParseContext::checkAtomicMemoryBuiltinFunctions(TIntermAggregate *functionCall)
 {
     const TFunction *func = functionCall->getFunction();
-    if (BuiltInGroup::isAtomicMemory(func))
+    if (BuiltInGroup::IsAtomicMemory(functionCall->getOp()))
     {
-        ASSERT(IsAtomicFunction(functionCall->getOp()));
         TIntermSequence *arguments = functionCall->getSequence();
         TIntermTyped *memNode      = (*arguments)[0]->getAsTyped();
 
@@ -6704,18 +6706,16 @@ void TParseContext::checkAtomicMemoryBuiltinFunctions(TIntermAggregate *function
 // GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
 void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall)
 {
-    ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
+    const TOperator op = functionCall->getOp();
 
-    const TFunction *func = functionCall->getFunction();
-
-    if (BuiltInGroup::isImage(func))
+    if (BuiltInGroup::IsImage(op))
     {
         TIntermSequence *arguments = functionCall->getSequence();
         TIntermTyped *imageNode    = (*arguments)[0]->getAsTyped();
 
         const TMemoryQualifier &memoryQualifier = imageNode->getMemoryQualifier();
 
-        if (BuiltInGroup::isImageStore(func))
+        if (BuiltInGroup::IsImageStore(op))
         {
             if (memoryQualifier.readonly)
             {
@@ -6724,7 +6724,7 @@ void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *
                       GetImageArgumentToken(imageNode));
             }
         }
-        else if (BuiltInGroup::isImageLoad(func))
+        else if (BuiltInGroup::IsImageLoad(op))
         {
             if (memoryQualifier.writeonly)
             {
@@ -6733,7 +6733,7 @@ void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *
                       GetImageArgumentToken(imageNode));
             }
         }
-        else if (BuiltInGroup::isImageAtomic(func))
+        else if (BuiltInGroup::IsImageAtomic(op))
         {
             if (memoryQualifier.readonly)
             {
@@ -6915,44 +6915,34 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
                 checkCanUseOneOfExtensions(loc, fnCandidate->extensions());
             }
 
+            // All function calls are mapped to a built-in operation.
             TOperator op = fnCandidate->getBuiltInOp();
-            if (op != EOpCallBuiltInFunction)
+            if (BuiltInGroup::IsMath(op) && fnCandidate->getParamCount() == 1)
             {
-                // A function call mapped to a built-in operation.
-                if (fnCandidate->getParamCount() == 1)
-                {
-                    // Treat it like a built-in unary operator.
-                    TIntermNode *unaryParamNode = fnCall->arguments().front();
-                    TIntermTyped *callNode =
-                        createUnaryMath(op, unaryParamNode->getAsTyped(), loc, fnCandidate);
-                    ASSERT(callNode != nullptr);
-                    return callNode;
-                }
-
-                TIntermAggregate *callNode =
-                    TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, &fnCall->arguments());
-                callNode->setLine(loc);
-
-                checkAtomicMemoryBuiltinFunctions(callNode);
-
-                // Some built-in functions have out parameters too.
-                functionCallRValueLValueErrorCheck(fnCandidate, callNode);
-
-                // See if we can constant fold a built-in. Note that this may be possible
-                // even if it is not const-qualified.
-                return callNode->fold(mDiagnostics);
+                // Treat it like a built-in unary operator.
+                TIntermNode *unaryParamNode = fnCall->arguments().front();
+                TIntermTyped *callNode =
+                    createUnaryMath(op, unaryParamNode->getAsTyped(), loc, fnCandidate);
+                ASSERT(callNode != nullptr);
+                return callNode;
             }
 
-            // This is a built-in function with no op associated with it.
             TIntermAggregate *callNode =
                 TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, &fnCall->arguments());
             callNode->setLine(loc);
+
+            checkAtomicMemoryBuiltinFunctions(callNode);
             checkTextureOffset(callNode);
             checkTextureGather(callNode);
             checkInterpolationFS(callNode);
             checkImageMemoryAccessForBuiltinFunctions(callNode);
+
+            // Some built-in functions have out parameters too.
             functionCallRValueLValueErrorCheck(fnCandidate, callNode);
-            return callNode;
+
+            // See if we can constant fold a built-in. Note that this may be possible
+            // even if it is not const-qualified.
+            return callNode->fold(mDiagnostics);
         }
         else
         {

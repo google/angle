@@ -346,11 +346,20 @@ TIntermTyped *CreateBuiltInFunctionCallNode(const char *name,
     const TFunction *fn = LookUpBuiltInFunction(name, arguments, symbolTable, shaderVersion);
     ASSERT(fn);
     TOperator op = fn->getBuiltInOp();
-    if (op != EOpCallBuiltInFunction && arguments->size() == 1)
+    if (BuiltInGroup::IsMath(op) && arguments->size() == 1)
     {
         return new TIntermUnary(op, arguments->at(0)->getAsTyped(), fn);
     }
     return TIntermAggregate::CreateBuiltInFunctionCall(*fn, arguments);
+}
+
+TIntermTyped *CreateBuiltInUnaryFunctionCallNode(const char *name,
+                                                 TIntermTyped *argument,
+                                                 const TSymbolTable &symbolTable,
+                                                 int shaderVersion)
+{
+    TIntermSequence seq = {argument};
+    return CreateBuiltInFunctionCallNode(name, &seq, symbolTable, shaderVersion);
 }
 
 }  // namespace sh

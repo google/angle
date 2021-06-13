@@ -649,7 +649,7 @@ bool EmulatePrecision::visitUnary(Visit visit, TIntermUnary *node)
         case EOpPostDecrement:
         case EOpPreIncrement:
         case EOpPreDecrement:
-        case EOpLogicalNotComponentWise:
+        case EOpNotComponentWise:
             break;
         default:
             if (canRoundFloat(node->getType()) && visit == PreVisit)

@@ -30,7 +30,8 @@ class Rewriter : public TIntermRebuild
     //     //const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
     //     if(type.isMatrix())
     //     {
-    //         return *(new TIntermUnary(EOpTranspose, symbolNode.deepCopy(), nullptr));
+    //         return CreateBuiltInUnaryFunctionCallNode("transpose", symbolNode.deepCopy(),
+    //                                                   mSymbolTable, 300));
     //     }
     //     return symbolNode;
     // }

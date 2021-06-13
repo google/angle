@@ -28,6 +28,9 @@ struct ValidateASTOptions
     // Whether validateVariableReferences should also include specialization constants.  Their
     // declaration is output after their usage is discovered, so this is disabled until then.
     bool validateSpecConstReferences = false;
+    // Check that TIntermUnary and TIntermAggregate nodes with a built-in op reference a function
+    // with said op.
+    bool validateBuiltInOps = true;
     // Check that all EOpCallFunctionInAST have their corresponding function definitions in the AST,
     // with matching symbol ids. There should also be at least a prototype declaration before the
     // function is called.

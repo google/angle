@@ -214,7 +214,7 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
 
     bool visitAggregate(Visit visit, TIntermAggregate *node) override
     {
-        if (node->getOp() == EOpCallBuiltInFunction)
+        if (BuiltInGroup::IsBuiltIn(node->getOp()))
         {
             bool converted = convertBuiltinFunction(node);
             return !converted;
@@ -243,9 +243,11 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
   private:
     bool convertBuiltinFunction(TIntermAggregate *node)
     {
+        const TOperator op = node->getOp();
+
         // If the function is |memoryBarrierAtomicCounter|, simply replace it with
         // |memoryBarrierBuffer|.
-        if (node->getFunction()->name() == "memoryBarrierAtomicCounter")
+        if (op == EOpMemoryBarrierAtomicCounter)
         {
             TIntermSequence emptySequence;
             TIntermTyped *substituteCall = CreateBuiltInFunctionCallNode(
@@ -260,18 +262,16 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
             return false;
         }
 
-        const ImmutableString &functionName = node->getFunction()->name();
-
         // Note: atomicAdd(0) is used for atomic reads.
         uint32_t valueChange                = 0;
         constexpr char kAtomicAddFunction[] = "atomicAdd";
         bool isDecrement                    = false;
 
-        if (functionName == "atomicCounterIncrement")
+        if (op == EOpAtomicCounterIncrement)
         {
             valueChange = 1;
         }
-        else if (functionName == "atomicCounterDecrement")
+        else if (op == EOpAtomicCounterDecrement)
         {
             // uint values are required to wrap around, so 0xFFFFFFFFu is used as -1.
             valueChange = std::numeric_limits<uint32_t>::max();
@@ -282,7 +282,7 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
         }
         else
         {
-            ASSERT(functionName == "atomicCounter");
+            ASSERT(op == EOpAtomicCounter);
         }
 
         TIntermTyped *param = (*node->getSequence())[0]->getAsTyped();

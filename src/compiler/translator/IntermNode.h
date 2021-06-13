@@ -25,7 +25,7 @@
 #include "compiler/translator/Common.h"
 #include "compiler/translator/ConstantUnion.h"
 #include "compiler/translator/ImmutableString.h"
-#include "compiler/translator/Operator.h"
+#include "compiler/translator/Operator_autogen.h"
 #include "compiler/translator/SymbolUniqueId.h"
 #include "compiler/translator/Types.h"
 #include "compiler/translator/tree_util/Visit.h"
@@ -362,7 +362,9 @@ class TIntermConstantUnion : public TIntermExpression
     bool replaceChildNode(TIntermNode *, TIntermNode *) override { return false; }
 
     TConstantUnion *foldUnaryNonComponentWise(TOperator op);
-    TConstantUnion *foldUnaryComponentWise(TOperator op, TDiagnostics *diagnostics);
+    TConstantUnion *foldUnaryComponentWise(TOperator op,
+                                           const TFunction *function,
+                                           TDiagnostics *diagnostics);
 
     static const TConstantUnion *FoldBinary(TOperator op,
                                             const TConstantUnion *leftArray,
@@ -404,8 +406,7 @@ class TIntermOperator : public TIntermExpression
     bool isMultiplication() const;
     bool isConstructor() const;
 
-    // Returns true for calls mapped to EOpCall*, false for built-ins that have their own specific
-    // ops.
+    // Returns true for calls mapped to EOpCall*, false for all built-ins.
     bool isFunctionCall() const;
 
     bool hasSideEffects() const override { return isAssignment(); }
@@ -652,13 +653,13 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
     void setPrecisionFromChildren();
 
-    void setPrecisionForBuiltInOp();
+    void setPrecisionForMathBuiltInOp();
 
     // Returns true if precision was set according to special rules for this built-in.
     bool setPrecisionForSpecialBuiltInOp();
 
-    // Used for built-in functions under EOpCallBuiltInFunction. The function name in the symbol
-    // info needs to be set before calling this.
+    // Used for non-math built-in functions. The function name in the symbol info needs to be set
+    // before calling this.
     void setBuiltInFunctionPrecision();
 };
 

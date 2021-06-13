@@ -99,7 +99,9 @@ class TOutputGLSLBase : public TIntermTraverser
     void declareInterfaceBlockLayout(const TType &type);
     void declareInterfaceBlock(const TType &type);
 
-    void writeBuiltInFunctionTriplet(Visit visit, TOperator op, bool useEmulatedFunction);
+    void writeFunctionTriplet(Visit visit,
+                              const ImmutableString &functionName,
+                              bool useEmulatedFunction);
 
     TInfoSinkBase &mObjSink;
     bool mDeclaringVariable;

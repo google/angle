@@ -33,7 +33,7 @@ class FlagSamplersWithTexelFetchTraverser : public TIntermTraverser
     bool visitAggregate(Visit visit, TIntermAggregate *node) override
     {
         // Decide if the node is a call to texelFetch[Offset]
-        if (node->getOp() != EOpCallBuiltInFunction)
+        if (!BuiltInGroup::IsBuiltIn(node->getOp()))
         {
             return true;
         }

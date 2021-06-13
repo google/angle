@@ -141,21 +141,20 @@ void TOutputGLSLBase::writeTriplet(Visit visit,
         out << postStr;
 }
 
-void TOutputGLSLBase::writeBuiltInFunctionTriplet(Visit visit,
-                                                  TOperator op,
-                                                  bool useEmulatedFunction)
+void TOutputGLSLBase::writeFunctionTriplet(Visit visit,
+                                           const ImmutableString &functionName,
+                                           bool useEmulatedFunction)
 {
     TInfoSinkBase &out = objSink();
     if (visit == PreVisit)
     {
-        const char *opStr(GetOperatorString(op));
         if (useEmulatedFunction)
         {
-            BuiltInFunctionEmulator::WriteEmulatedFunctionName(out, opStr);
+            BuiltInFunctionEmulator::WriteEmulatedFunctionName(out, functionName.data());
         }
         else
         {
-            out << opStr;
+            out << functionName;
         }
         out << "(";
     }
@@ -742,69 +741,10 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
             postString = ").length())";
             break;
 
-        case EOpRadians:
-        case EOpDegrees:
-        case EOpSin:
-        case EOpCos:
-        case EOpTan:
-        case EOpAsin:
-        case EOpAcos:
-        case EOpAtan:
-        case EOpSinh:
-        case EOpCosh:
-        case EOpTanh:
-        case EOpAsinh:
-        case EOpAcosh:
-        case EOpAtanh:
-        case EOpExp:
-        case EOpLog:
-        case EOpExp2:
-        case EOpLog2:
-        case EOpSqrt:
-        case EOpInversesqrt:
-        case EOpAbs:
-        case EOpSign:
-        case EOpFloor:
-        case EOpTrunc:
-        case EOpRound:
-        case EOpRoundEven:
-        case EOpCeil:
-        case EOpFract:
-        case EOpIsnan:
-        case EOpIsinf:
-        case EOpFloatBitsToInt:
-        case EOpFloatBitsToUint:
-        case EOpIntBitsToFloat:
-        case EOpUintBitsToFloat:
-        case EOpPackSnorm2x16:
-        case EOpPackUnorm2x16:
-        case EOpPackHalf2x16:
-        case EOpUnpackSnorm2x16:
-        case EOpUnpackUnorm2x16:
-        case EOpUnpackHalf2x16:
-        case EOpPackUnorm4x8:
-        case EOpPackSnorm4x8:
-        case EOpUnpackUnorm4x8:
-        case EOpUnpackSnorm4x8:
-        case EOpLength:
-        case EOpNormalize:
-        case EOpDFdx:
-        case EOpDFdy:
-        case EOpFwidth:
-        case EOpTranspose:
-        case EOpDeterminant:
-        case EOpInverse:
-        case EOpAny:
-        case EOpAll:
-        case EOpLogicalNotComponentWise:
-        case EOpBitfieldReverse:
-        case EOpBitCount:
-        case EOpFindLSB:
-        case EOpFindMSB:
-            writeBuiltInFunctionTriplet(visit, node->getOp(), node->getUseEmulatedFunction());
-            return true;
         default:
-            UNREACHABLE();
+            writeFunctionTriplet(visit, node->getFunction()->name(),
+                                 node->getUseEmulatedFunction());
+            return true;
     }
 
     writeTriplet(visit, preString, nullptr, postString);
@@ -937,88 +877,28 @@ void TOutputGLSLBase::visitFunctionPrototype(TIntermFunctionPrototype *node)
 bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     bool visitChildren = true;
-    TInfoSinkBase &out = objSink();
-    switch (node->getOp())
+    if (node->getOp() == EOpConstruct)
     {
-        case EOpCallFunctionInAST:
-        case EOpCallInternalRawFunction:
-        case EOpCallBuiltInFunction:
-            // Function call.
-            if (visit == PreVisit)
+        writeConstructorTriplet(visit, node->getType());
+    }
+    else
+    {
+        // Function call.
+        ImmutableString functionName = node->getFunction()->name();
+        if (visit == PreVisit)
+        {
+            if (node->getOp() == EOpCallFunctionInAST ||
+                node->getOp() == EOpCallInternalRawFunction)
             {
-                if (node->getOp() == EOpCallBuiltInFunction)
-                {
-                    out << translateTextureFunction(node->getFunction()->name(), mCompileOptions);
-                }
-                else
-                {
-                    out << hashFunctionNameIfNeeded(node->getFunction());
-                }
-                out << "(";
+                functionName = hashFunctionNameIfNeeded(node->getFunction());
             }
-            else if (visit == InVisit)
-                out << ", ";
             else
-                out << ")";
-            break;
-        case EOpConstruct:
-            writeConstructorTriplet(visit, node->getType());
-            break;
-
-        case EOpEqualComponentWise:
-        case EOpNotEqualComponentWise:
-        case EOpLessThanComponentWise:
-        case EOpGreaterThanComponentWise:
-        case EOpLessThanEqualComponentWise:
-        case EOpGreaterThanEqualComponentWise:
-        case EOpMod:
-        case EOpModf:
-        case EOpPow:
-        case EOpAtan:
-        case EOpMin:
-        case EOpMax:
-        case EOpClamp:
-        case EOpMix:
-        case EOpStep:
-        case EOpSmoothstep:
-        case EOpFma:
-        case EOpFrexp:
-        case EOpLdexp:
-        case EOpDistance:
-        case EOpDot:
-        case EOpCross:
-        case EOpFaceforward:
-        case EOpReflect:
-        case EOpRefract:
-        case EOpMulMatrixComponentWise:
-        case EOpOuterProduct:
-        case EOpBitfieldExtract:
-        case EOpBitfieldInsert:
-        case EOpUaddCarry:
-        case EOpUsubBorrow:
-        case EOpUmulExtended:
-        case EOpImulExtended:
-        case EOpBarrier:
-        case EOpMemoryBarrier:
-        case EOpMemoryBarrierAtomicCounter:
-        case EOpMemoryBarrierBuffer:
-        case EOpMemoryBarrierImage:
-        case EOpMemoryBarrierShared:
-        case EOpGroupMemoryBarrier:
-        case EOpAtomicAdd:
-        case EOpAtomicMin:
-        case EOpAtomicMax:
-        case EOpAtomicAnd:
-        case EOpAtomicOr:
-        case EOpAtomicXor:
-        case EOpAtomicExchange:
-        case EOpAtomicCompSwap:
-        case EOpEmitVertex:
-        case EOpEndPrimitive:
-            writeBuiltInFunctionTriplet(visit, node->getOp(), node->getUseEmulatedFunction());
-            break;
-        default:
-            UNREACHABLE();
+            {
+                functionName =
+                    translateTextureFunction(node->getFunction()->name(), mCompileOptions);
+            }
+        }
+        writeFunctionTriplet(visit, functionName, node->getUseEmulatedFunction());
     }
     return visitChildren;
 }

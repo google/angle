@@ -115,7 +115,7 @@ TIntermTyped *RewriteBuiltinFunctionCall(TCompiler *compiler,
                                          TIntermAggregate *node,
                                          const ImageMap &imageMap)
 {
-    if (node->getOp() != EOpCallBuiltInFunction)
+    if (!BuiltInGroup::IsBuiltIn(node->getOp()))
     {
         // AST functions don't require modification as r32f image function parameters are removed by
         // MonomorphizeUnsupportedFunctionsInVulkanGLSL.
@@ -202,8 +202,9 @@ TIntermTyped *RewriteBuiltinFunctionCall(TCompiler *compiler,
     if (functionName == "imageStore" || isImageAtomicExchange)
     {
         // The last parameter is float data, which should be changed to floatBitsToUint(data).
-        TIntermTyped *data         = substituteArguments.back()->getAsTyped();
-        substituteArguments.back() = new TIntermUnary(EOpFloatBitsToUint, data, nullptr);
+        TIntermTyped *data = substituteArguments.back()->getAsTyped();
+        substituteArguments.back() =
+            CreateBuiltInUnaryFunctionCallNode("floatBitsToUint", data, *symbolTable, 300);
     }
     else if (functionName == "imageLoad")
     {
@@ -230,7 +231,8 @@ TIntermTyped *RewriteBuiltinFunctionCall(TCompiler *compiler,
         }
 
         // uintBitsToFloat(imageLoad().rgb), or uintBitsToFloat(imageAtomicExchange())
-        replacementCall = new TIntermUnary(EOpUintBitsToFloat, replacementCall, nullptr);
+        replacementCall = CreateBuiltInUnaryFunctionCallNode("uintBitsToFloat", replacementCall,
+                                                             *symbolTable, 300);
 
         if (isImageLoad)
         {

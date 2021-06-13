@@ -38,10 +38,10 @@ class Traverser : public TIntermTraverser
               ShCompileOptions compileOptions,
               SpecConst *specConst,
               const DriverUniform *driverUniforms);
-    bool visitUnary(Visit visit, TIntermUnary *node) override;
+    bool visitAggregate(Visit visit, TIntermAggregate *node) override;
 
-    bool visitUnaryWithRotation(Visit visit, TIntermUnary *node);
-    bool visitUnaryWithoutRotation(Visit visit, TIntermUnary *node);
+    bool visitAggregateWithRotation(Visit visit, TIntermAggregate *node);
+    bool visitAggregateWithoutRotation(Visit visit, TIntermAggregate *node);
 
     SpecConst *mRotationSpecConst        = nullptr;
     const DriverUniform *mDriverUniforms = nullptr;
@@ -72,16 +72,16 @@ bool Traverser::Apply(TCompiler *compiler,
     return traverser.updateTree(compiler, root);
 }
 
-bool Traverser::visitUnary(Visit visit, TIntermUnary *node)
+bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     if (mUsePreRotation)
     {
-        return visitUnaryWithRotation(visit, node);
+        return visitAggregateWithRotation(visit, node);
     }
-    return visitUnaryWithoutRotation(visit, node);
+    return visitAggregateWithoutRotation(visit, node);
 }
 
-bool Traverser::visitUnaryWithRotation(Visit visit, TIntermUnary *node)
+bool Traverser::visitAggregateWithRotation(Visit visit, TIntermAggregate *node)
 {
     // Decide if the node represents a call to dFdx() or dFdy()
     if ((node->getOp() != EOpDFdx) && (node->getOp() != EOpDFdy))
@@ -162,11 +162,15 @@ bool Traverser::visitUnaryWithRotation(Visit visit, TIntermUnary *node)
     }
 
     // Get the results of dFdx(operand) and dFdy(operand), and multiply them by the swizzles
-    TIntermTyped *operand = node->getOperand();
-    TIntermUnary *dFdx    = new TIntermUnary(EOpDFdx, operand->deepCopy(), node->getFunction());
-    TIntermUnary *dFdy    = new TIntermUnary(EOpDFdy, operand->deepCopy(), node->getFunction());
-    size_t objectSize     = node->getType().getObjectSize();
-    TOperator multiplyOp  = (objectSize == 1) ? EOpMul : EOpVectorTimesScalar;
+    TIntermTyped *operand = node->getChildNode(0)->getAsTyped();
+
+    TIntermTyped *dFdx =
+        CreateBuiltInUnaryFunctionCallNode("dFdx", operand->deepCopy(), *mSymbolTable, 300);
+    TIntermTyped *dFdy =
+        CreateBuiltInUnaryFunctionCallNode("dFdy", operand->deepCopy(), *mSymbolTable, 300);
+
+    size_t objectSize                 = node->getType().getObjectSize();
+    TOperator multiplyOp              = (objectSize == 1) ? EOpMul : EOpVectorTimesScalar;
     TIntermBinary *rotatedFlippedDfdx = new TIntermBinary(multiplyOp, dFdx, multiplierX);
     TIntermBinary *rotatedFlippedDfdy = new TIntermBinary(multiplyOp, dFdy, multiplierY);
 
@@ -180,7 +184,7 @@ bool Traverser::visitUnaryWithRotation(Visit visit, TIntermUnary *node)
     return true;
 }
 
-bool Traverser::visitUnaryWithoutRotation(Visit visit, TIntermUnary *node)
+bool Traverser::visitAggregateWithoutRotation(Visit visit, TIntermAggregate *node)
 {
     // Decide if the node represents a call to dFdy()
     if (node->getOp() != EOpDFdy)
@@ -189,7 +193,7 @@ bool Traverser::visitUnaryWithoutRotation(Visit visit, TIntermUnary *node)
     }
 
     // Copy the dFdy node so we can replace it with the corrected value
-    TIntermUnary *newDfdy = node->deepCopy()->getAsUnaryNode();
+    TIntermAggregate *newDfdy = node->deepCopy()->getAsAggregate();
 
     size_t objectSize    = node->getType().getObjectSize();
     TOperator multiplyOp = (objectSize == 1) ? EOpMul : EOpVectorTimesScalar;

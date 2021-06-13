@@ -3580,7 +3580,7 @@ void ProgramPrelude::visitOperator(TOperator op,
             }
             break;
 
-        case TOperator::EOpMulMatrixComponentWise:
+        case TOperator::EOpMatrixCompMult:
             if (argType0->isMatrix() && argType1->isMatrix())
             {
                 componentWiseMultiply();
@@ -3679,7 +3679,7 @@ void ProgramPrelude::visitOperator(TOperator op,
         case TOperator::EOpLogicalAnd:
         case TOperator::EOpPositive:
         case TOperator::EOpLogicalNot:
-        case TOperator::EOpLogicalNotComponentWise:
+        case TOperator::EOpNotComponentWise:
         case TOperator::EOpBitwiseNot:
         case TOperator::EOpVectorTimesScalarAssign:
         case TOperator::EOpVectorTimesMatrixAssign:
@@ -3755,7 +3755,7 @@ void ProgramPrelude::visitOperator(TOperator op,
         case TOperator::EOpAtomicCompSwap:
         case TOperator::EOpEmitVertex:
         case TOperator::EOpEndPrimitive:
-        case TOperator::EOpFTransform:
+        case TOperator::EOpFtransform:
         case TOperator::EOpPackDouble2x32:
         case TOperator::EOpUnpackDouble2x32:
         case TOperator::EOpArrayLength:
@@ -3768,7 +3768,7 @@ void ProgramPrelude::visitOperator(TOperator op,
 
         case TOperator::EOpCallFunctionInAST:
         case TOperator::EOpCallInternalRawFunction:
-        case TOperator::EOpCallBuiltInFunction:
+        default:
             ASSERT(func);
             if (mHandled.insert(func).second)
             {

@@ -523,10 +523,10 @@ bool UnmangledEntry::matches(const ImmutableString &name,
         if (mGLSLVersion > shaderVersion)
             return false;
 
-        if (static_cast<TExtension>(mGLSLExtension) == TExtension::UNDEFINED)
+        if (mGLSLExtension == TExtension::UNDEFINED)
             return true;
 
-        return IsExtensionEnabled(extensions, static_cast<TExtension>(mGLSLExtension));
+        return IsExtensionEnabled(extensions, mGLSLExtension);
     }
     else
     {
@@ -536,10 +536,21 @@ bool UnmangledEntry::matches(const ImmutableString &name,
         if (mESSLVersion > shaderVersion)
             return false;
 
-        if (static_cast<TExtension>(mESSLExtension) == TExtension::UNDEFINED)
+        bool anyExtension        = false;
+        bool anyExtensionEnabled = false;
+        for (TExtension ext : mESSLExtensions)
+        {
+            if (ext != TExtension::UNDEFINED)
+            {
+                anyExtension        = true;
+                anyExtensionEnabled = anyExtensionEnabled || IsExtensionEnabled(extensions, ext);
+            }
+        }
+
+        if (!anyExtension)
             return true;
 
-        return IsExtensionEnabled(extensions, static_cast<TExtension>(mESSLExtension));
+        return anyExtensionEnabled;
     }
 }
 }  // namespace sh

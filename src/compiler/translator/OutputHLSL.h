@@ -128,7 +128,7 @@ class OutputHLSL : public TIntermTraverser
     void outputEqual(Visit visit, const TType &type, TOperator op, TInfoSinkBase &out);
     void outputAssign(Visit visit, const TType &type, TInfoSinkBase &out);
 
-    void writeEmulatedFunctionTriplet(TInfoSinkBase &out, Visit visit, TOperator op);
+    void writeEmulatedFunctionTriplet(TInfoSinkBase &out, Visit visit, const TFunction *function);
 
     // Returns true if it found a 'same symbol' initializer (initializer that references the
     // variable it's initting)

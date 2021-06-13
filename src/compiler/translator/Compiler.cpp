@@ -335,10 +335,6 @@ bool TCompiler::Init(const ShBuiltInResources &resources)
     mResources = resources;
     setResourceString();
 
-    // The number of function parameters in TFunction is stored in 15 bits.  Validate that no more
-    // than that is allowed.
-    ASSERT(mResources.MaxFunctionParameters < (1 << 15));
-
     InitExtensionBehavior(resources, mExtensionBehavior);
     return true;
 }

@@ -338,7 +338,8 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationVS(TCompiler *compiler,
     TIntermConstantUnion *scaleConstant = CreateFloatNode(static_cast<float>(1 << subpixelBits));
     TIntermBinary *windowScaled =
         new TIntermBinary(EOpVectorTimesScalar, CreateTempSymbolNode(windowCoords), scaleConstant);
-    TIntermUnary *windowRounded = new TIntermUnary(EOpRound, windowScaled, nullptr);
+    TIntermTyped *windowRounded =
+        CreateBuiltInUnaryFunctionCallNode("round", windowScaled, *symbolTable, 300);
     TIntermBinary *windowRoundedBack =
         new TIntermBinary(EOpDiv, windowRounded, scaleConstant->deepCopy());
     TVariable *clampedWindowCoords = CreateTempVariable(symbolTable, vec2Type);
@@ -676,8 +677,10 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationFS(TCompiler *compiler,
     TIntermDeclaration *pDecl     = CreateTempInitDeclarationNode(p, windowPosition);
 
     // vec2 d = dFdx(p) + dFdy(p)
-    TIntermUnary *dfdx        = new TIntermUnary(EOpDFdx, new TIntermSymbol(p), nullptr);
-    TIntermUnary *dfdy        = new TIntermUnary(EOpDFdy, new TIntermSymbol(p), nullptr);
+    TIntermTyped *dfdx =
+        CreateBuiltInUnaryFunctionCallNode("dFdx", new TIntermSymbol(p), *symbolTable, 300);
+    TIntermTyped *dfdy =
+        CreateBuiltInUnaryFunctionCallNode("dFdy", new TIntermSymbol(p), *symbolTable, 300);
     TIntermBinary *dfsum      = new TIntermBinary(EOpAdd, dfdx, dfdy);
     TVariable *d              = CreateTempVariable(symbolTable, vec2Type);
     TIntermDeclaration *dDecl = CreateTempInitDeclarationNode(d, dfsum);
@@ -709,8 +712,9 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationFS(TCompiler *compiler,
     TIntermBinary *ddfp = new TIntermBinary(EOpMul, dd, fp);
     TIntermBinary *pf   = new TIntermBinary(EOpSub, new TIntermSymbol(p), new TIntermSymbol(f));
     TIntermBinary *expr = new TIntermBinary(EOpAdd, pf, ddfp);
-    TIntermUnary *absd  = new TIntermUnary(EOpAbs, expr, nullptr);
-    TVariable *i        = CreateTempVariable(symbolTable, vec2Type);
+
+    TIntermTyped *absd        = CreateBuiltInUnaryFunctionCallNode("abs", expr, *symbolTable, 100);
+    TVariable *i              = CreateTempVariable(symbolTable, vec2Type);
     TIntermDeclaration *iDecl = CreateTempInitDeclarationNode(i, absd);
 
     // Using a small epsilon value ensures that we don't suffer from numerical instability when

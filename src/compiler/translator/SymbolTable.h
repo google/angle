@@ -171,8 +171,9 @@ const TSymbol *FindMangledBuiltIn(ShShaderSpec shaderSpec,
 class UnmangledEntry
 {
   public:
+    template <size_t ESSLExtCount>
     constexpr UnmangledEntry(const char *name,
-                             TExtension esslExtension,
+                             const std::array<TExtension, ESSLExtCount> &esslExtensions,
                              TExtension glslExtension,
                              int esslVersion,
                              int glslVersion,
@@ -186,22 +187,42 @@ class UnmangledEntry
 
   private:
     const char *mName;
-    uint8_t mESSLExtension;
-    uint8_t mGLSLExtension;
+    std::array<TExtension, 2u> mESSLExtensions;
+    TExtension mGLSLExtension;
     uint8_t mShaderType;
     uint16_t mESSLVersion;
     uint16_t mGLSLVersion;
 };
 
+template <>
 constexpr UnmangledEntry::UnmangledEntry(const char *name,
-                                         TExtension esslExtension,
+                                         const std::array<TExtension, 1> &esslExtensions,
                                          TExtension glslExtension,
                                          int esslVersion,
                                          int glslVersion,
                                          Shader shaderType)
     : mName(name),
-      mESSLExtension(static_cast<uint8_t>(esslExtension)),
-      mGLSLExtension(static_cast<uint8_t>(glslExtension)),
+      mESSLExtensions{esslExtensions[0], TExtension::UNDEFINED},
+      mGLSLExtension(glslExtension),
+      mShaderType(static_cast<uint8_t>(shaderType)),
+      mESSLVersion(esslVersion < 0 ? std::numeric_limits<uint16_t>::max()
+                                   : static_cast<uint16_t>(esslVersion)),
+      mGLSLVersion(glslVersion < 0 ? std::numeric_limits<uint16_t>::max()
+                                   : static_cast<uint16_t>(glslVersion))
+{}
+
+// Note: Until C++17, std::array functions are not constexpr, so the constructor is necessarily
+// duplicated.
+template <>
+constexpr UnmangledEntry::UnmangledEntry(const char *name,
+                                         const std::array<TExtension, 2> &esslExtensions,
+                                         TExtension glslExtension,
+                                         int esslVersion,
+                                         int glslVersion,
+                                         Shader shaderType)
+    : mName(name),
+      mESSLExtensions{esslExtensions[0], esslExtensions[1]},
+      mGLSLExtension(glslExtension),
       mShaderType(static_cast<uint8_t>(shaderType)),
       mESSLVersion(esslVersion < 0 ? std::numeric_limits<uint16_t>::max()
                                    : static_cast<uint16_t>(esslVersion)),
