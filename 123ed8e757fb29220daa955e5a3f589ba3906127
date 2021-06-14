@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fceb788_8b13577f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-14T21:08:49Z",
+      "side": 1,
+      "message": "I don\u0027t think this is true. glReadPixels is not a slow call if the resource being read back is not in-use by the GPU. With this change, you will unconditionally incur a GPU bubble.\n\nThere are improvements possible to the code as is, but a high level feedback first. Why not do the color-space conversion on the CPU after readback has been done?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 42
+      },
+      "revId": "123ed8e757fb29220daa955e5a3f589ba3906127",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f722f8aa_8f78b843",
