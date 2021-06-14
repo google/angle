@@ -34,6 +34,24 @@
       "parentUuid": "646605b5_a2c6348f",
       "revId": "fcab5dc71e2d93b6c8459a26848b53514fd93cce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df03aa40_7a2c89a9",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-14T15:45:21Z",
+      "side": 1,
+      "message": "Ok, in the spirit of getting rid of VK_WHOLE_SIZE down the line, can we set the size to the size of the empty buffer instead? This should do:\n\n    size \u003d contextVk-\u003egetEmptyBuffer().getSize();",
+      "parentUuid": "816eb826_fffdf4e1",
+      "revId": "fcab5dc71e2d93b6c8459a26848b53514fd93cce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
