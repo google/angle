@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "695d823d_dcaff28a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-14T16:11:31Z",
+      "side": 1,
+      "message": "Geoff/Jonah, can you guys take a look at the blit logic to see if I have this right? It\u0027s a bit tricky to follow.",
+      "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
