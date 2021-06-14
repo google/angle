@@ -52,6 +52,47 @@
       "parentUuid": "0eaa0ac1_02bc439a",
       "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88913a36_5c6016f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-14T20:17:48Z",
+      "side": 1,
+      "message": "It looks mostly right to me.  We handled the case when the rectangles didn\u0027t intersect but when there is an intersection we were still copying using the original bounds even though they were not all valid.",
+      "parentUuid": "a3c13c8a_69e8d4be",
+      "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ef6c0c6_c273283e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-14T20:17:48Z",
+      "side": 1,
+      "message": "I *think* these should stay as destArea. It computes the source row to read based on the pre-clipped texture coordinate. There is a gl::clamp below to ensure it\u0027s safe.",
+      "range": {
+        "startLine": 69,
+        "startChar": 45,
+        "endLine": 69,
+        "endChar": 82
+      },
+      "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
