@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8fa4fc4a_f74416ef",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T19:33:41Z",
+      "side": 1,
+      "message": "This is just setting pointers in this VkWriteDescriptorSet.   What\u0027s being copied?",
+      "parentUuid": "ea7e385f_dde71a11",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 65
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6c570e37_79057eb7",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 11
@@ -54,6 +78,30 @@
       "writtenOn": "2021-06-14T14:53:36Z",
       "side": 1,
       "message": "eg this could be a \u0027flushUpdates\u0027 helper method in the class.",
+      "range": {
+        "startLine": 360,
+        "startChar": 0,
+        "endLine": 368,
+        "endChar": 5
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c408f918_137586e2",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T19:33:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6c570e37_79057eb7",
       "range": {
         "startLine": 360,
         "startChar": 0,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1be99861_4ea2fe44",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T19:33:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6fd5e9bc_5ba393d7",
+      "range": {
+        "startLine": 609,
+        "startChar": 0,
+        "endLine": 610,
+        "endChar": 64
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ab66d803_cbf9a295",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-06-14T01:16:23Z",
       "side": 1,
       "message": "super nit: Since it says \"Infos\", \"Infos[0].\" reads better than \"Infos-\u003e\" IMO.",
+      "range": {
+        "startLine": 4815,
+        "startChar": 14,
+        "endLine": 4815,
+        "endChar": 17
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9ac4b3a_b6176f56",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4815,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T19:33:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab66d803_cbf9a295",
       "range": {
         "startLine": 4815,
         "startChar": 14,
@@ -141,6 +237,24 @@
       "side": 1,
       "message": "this could be a getInfosAndWriteInfo member of the helper class.",
       "parentUuid": "72d6b3a1_e4ea9d34",
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "44cb7b48_8eae406d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 5760,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T19:33:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37effac2_e6443a15",
       "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -192,6 +306,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8bbf2ebc_88a4cb70",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T19:33:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce025712_7f66f75d",
+      "range": {
+        "startLine": 1115,
+        "startChar": 16,
+        "endLine": 1115,
+        "endChar": 41
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eda57f82_c55a0406",
@@ -205,6 +343,30 @@
       "writtenOn": "2021-06-14T18:30:53Z",
       "side": 1,
       "message": "Instead of tracking this here, can you just issue flushDescriptorSetUpdates() when the bufferView is released and it is still has commands not flushed? I think this is cheaper than have to do another tracking here since delete buffer usually is less often than reference it. mUse should have the information to detect pending unflushed commands.",
+      "range": {
+        "startLine": 1125,
+        "startChar": 43,
+        "endLine": 1125,
+        "endChar": 61
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3716c2b8_d89dcdd4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T19:33:41Z",
+      "side": 1,
+      "message": "\u003e Instead of tracking this here, can you just issue flushDescriptorSetUpdates() when the bufferView is released and it is still has commands not flushed?\n\nI don\u0027t know enough to say how this would work.   I\u0027d have to look around at it a bit more.\n\nThe assumption has been that it needs to be done during flushRenderPassCommands()/flushOutsideRPCommands(), since the descriptor sets need to be updated before they are used by the command buffer.   Doing it before the flush*Commands() calls (as part of release()) should also work, but I\u0027m not sure why that\u0027s better/cleaner since we still have to do all of the tracking anyway and we\u0027d still need to call it during flush*Commands() anyway.\n\n\n\u003e I think this is cheaper than have to do another tracking here since delete buffer usually is less often than reference it.\n\nFor VkBufferView specifically, we fill out the VkWriteDescriptorSet in the following paths:\n\n    ProgramExecutableVk::updateImagesDescriptorSet\n        ProgramExecutableVk::updateShaderResourcesDescriptorSet\n            ContextVk::handleDirtyShaderResourcesImpl\n                ContextVk::handleDirtyComputeShaderResources\n                ContextVk::handleDirtyGraphicsShaderResources\n    ProgramExecutableVk::updateTexturesDescriptorSet\n        ContextVk::handleDirtyTexturesImpl\n            ContextVk::handleDirtyComputeTextures\n            ContextVk::handleDirtyGraphicsTextures\n\nWe need to hang onto the filled out VkWriteDescriptorSet so we can flushDescriptorSetUpdates() at any time later (either during release() or flush*Commands()).   That VkWriteDescriptorSet may be part of an array of other VkWriteDescriptorSets, which flushDescriptorSetUpdates() updates all at once, so we need to know which struct to update with the correct value.\n\nHow does calling flushDescriptorSetUpdates() during BufferViewHelper::release() prevent needing to do this tracking?",
+      "parentUuid": "eda57f82_c55a0406",
       "range": {
         "startLine": 1125,
         "startChar": 43,
