@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0786419_350cf232",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-14T19:47:18Z",
+      "side": 1,
+      "message": "In the next change I\u0027m changing it to 15. The limit is really ShBuiltInResources::MaxFunctionParameters so there\u0027s no inherent reason why the parameter count should be a uint16_t. We set the limit to 1024 currently and that\u0027s why 16 bit works.\n\nI can add an ASSERT about that somewhere.",
+      "parentUuid": "69db4678_630cb0cd",
+      "revId": "64a2d378844666b2140ee14ed06bde2e48b700f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f366c96a_9631cacc",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-06-14T19:33:19Z",
       "side": 1,
       "message": "TOperator is already a uint8, so this should be unnecessary.",
+      "revId": "64a2d378844666b2140ee14ed06bde2e48b700f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17a94a23_f56e1413",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-14T19:47:18Z",
+      "side": 1,
+      "message": "Not in the next change, which turns this to 9.",
+      "parentUuid": "f366c96a_9631cacc",
       "revId": "64a2d378844666b2140ee14ed06bde2e48b700f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
