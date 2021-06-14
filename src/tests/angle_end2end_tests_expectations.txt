@@ -39,9 +39,11 @@
 6068 INTEL VULKAN : MultiviewRenderPrimitiveTest.LineStrip/* = SKIP
 
 // Mac
-6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8Index/ES3_OpenGL = SKIP
-6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8IndexSmallUpdates/ES3_OpenGL = SKIP
-6096 MAC METAL : GLSLTest_ES3.InitGlobalComplexConstant/ES3_Metal = SKIP
+6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8Index/* = SKIP
+6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8IndexSmallUpdates/* = SKIP
+6096 MAC METAL : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
+6060 MAC METAL : BlitFramebufferTest.OOBWrite/* = SKIP
+6101 WIN OPENGL INTEL : BlitFramebufferTest.OOBWrite/* = SKIP
 
 // D3D
 6091 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP

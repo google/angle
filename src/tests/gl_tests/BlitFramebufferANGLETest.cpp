@@ -2548,6 +2548,29 @@ TEST_P(BlitFramebufferTest, BlitFramebufferStencilClipNoIntersection)
     EXPECT_GL_NO_ERROR();
 }
 
+// Covers an edge case with blitting borderline values.
+TEST_P(BlitFramebufferTest, OOBWrite)
+{
+    constexpr size_t length = 0x100000;
+    GLFramebuffer rfb;
+    GLFramebuffer dfb;
+    GLRenderbuffer rb1;
+    GLRenderbuffer rb2;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, rfb);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dfb);
+    glBindRenderbuffer(GL_RENDERBUFFER, rb1);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 0x1000, 2);
+    glBindRenderbuffer(GL_RENDERBUFFER, rb2);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 2, 2);
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              rb1);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              rb2);
+    glBlitFramebuffer(1, 0, 0, 1, 1, 0, (2147483648 / 2) - (length / 4) + 1, 1,
+                      GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BlitFramebufferANGLETest);
