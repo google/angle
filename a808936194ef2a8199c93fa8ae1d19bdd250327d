@@ -16,6 +16,23 @@
       "message": "Easy peasy",
       "revId": "a808936194ef2a8199c93fa8ae1d19bdd250327d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c126d3e6_b0c6f36f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-14T15:35:55Z",
+      "side": 1,
+      "message": "stamp LGTM",
+      "revId": "a808936194ef2a8199c93fa8ae1d19bdd250327d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
