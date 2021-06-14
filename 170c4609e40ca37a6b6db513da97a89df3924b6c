@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab66d803_cbf9a295",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4815,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-14T01:16:23Z",
+      "side": 1,
+      "message": "super nit: Since it says \"Infos\", \"Infos[0].\" reads better than \"Infos-\u003e\" IMO.",
+      "range": {
+        "startLine": 4815,
+        "startChar": 14,
+        "endLine": 4815,
+        "endChar": 17
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72d6b3a1_e4ea9d34",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 5760,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-14T01:16:23Z",
+      "side": 1,
+      "message": "Nice!\n\nPlease use a helper like there previously was (with template parameters for the fields that are different) to avoid triplication of this logic.",
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9dfac778_966a135b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-14T01:16:23Z",
+      "side": 1,
+      "message": "Could use a small struct, which avoids duplicating that comment above and has better field names than first and second.",
+      "range": {
+        "startLine": 1115,
+        "startChar": 16,
+        "endLine": 1115,
+        "endChar": 41
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
