@@ -45,6 +45,30 @@
       },
       "revId": "795a92576428f521df703fc31a5815f8775422b5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec2c99ba_cfed43fa",
+        "filename": "src/libANGLE/renderer/CLExtensions.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-14T17:20:45Z",
+      "side": 1,
+      "message": "I looked at it and tried to find the benefits. It is clearly not performance, since the splitting solution has an overhead for each extension of five string copies, two hash calculations and an expensive search for six whitespace characters instead of only one. It is also not readablity, since \"hasExtension()\" is more readable than \"extensionSet.count() !\u003d 0\".\n\nI do agree on an earlier comment from Cody that code sharing is important, so I would propose to move my lambda as \"bool ContainsToken(const std::string \u0026tokenStr, char delimiter, const std::string \u0026token)\" to src/common/string_utils.h. Then I could also reuse it for \"cl::Device::supportsBuildInKernel()\".",
+      "parentUuid": "d9a4b492_335e0157",
+      "range": {
+        "startLine": 21,
+        "startChar": 19,
+        "endLine": 21,
+        "endChar": 39
+      },
+      "revId": "795a92576428f521df703fc31a5815f8775422b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
