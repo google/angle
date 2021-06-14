@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fc9131f4_009db432",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-14T21:01:18Z",
+      "side": 1,
+      "message": "Right, sorry not copy but I mean patch up pointers in VkWriteDescriptorSet. The way it worked before is that we only need to patch pointers when we have to resize the info structure. I did this specifically try to avoid the patch in most of time, which after growDesciptorCapacity() a few times it should not grow any more. Once you get into that stable state, no more pointer patching. With this CL it seems you opt to always patch up pointers, effectively abandon the prior optimization. I am wondering if this is necessary because of something I am not aware of or is an oversight? My understanding is that the original mechanism should still work and flushDescriptorSetUpdates can still be as simple as vkUpdateDescriptorSets() call.",
+      "parentUuid": "8fa4fc4a_f74416ef",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 65
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6c570e37_79057eb7",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 11
@@ -367,6 +391,30 @@
       "side": 1,
       "message": "\u003e Instead of tracking this here, can you just issue flushDescriptorSetUpdates() when the bufferView is released and it is still has commands not flushed?\n\nI don\u0027t know enough to say how this would work.   I\u0027d have to look around at it a bit more.\n\nThe assumption has been that it needs to be done during flushRenderPassCommands()/flushOutsideRPCommands(), since the descriptor sets need to be updated before they are used by the command buffer.   Doing it before the flush*Commands() calls (as part of release()) should also work, but I\u0027m not sure why that\u0027s better/cleaner since we still have to do all of the tracking anyway and we\u0027d still need to call it during flush*Commands() anyway.\n\n\n\u003e I think this is cheaper than have to do another tracking here since delete buffer usually is less often than reference it.\n\nFor VkBufferView specifically, we fill out the VkWriteDescriptorSet in the following paths:\n\n    ProgramExecutableVk::updateImagesDescriptorSet\n        ProgramExecutableVk::updateShaderResourcesDescriptorSet\n            ContextVk::handleDirtyShaderResourcesImpl\n                ContextVk::handleDirtyComputeShaderResources\n                ContextVk::handleDirtyGraphicsShaderResources\n    ProgramExecutableVk::updateTexturesDescriptorSet\n        ContextVk::handleDirtyTexturesImpl\n            ContextVk::handleDirtyComputeTextures\n            ContextVk::handleDirtyGraphicsTextures\n\nWe need to hang onto the filled out VkWriteDescriptorSet so we can flushDescriptorSetUpdates() at any time later (either during release() or flush*Commands()).   That VkWriteDescriptorSet may be part of an array of other VkWriteDescriptorSets, which flushDescriptorSetUpdates() updates all at once, so we need to know which struct to update with the correct value.\n\nHow does calling flushDescriptorSetUpdates() during BufferViewHelper::release() prevent needing to do this tracking?",
       "parentUuid": "eda57f82_c55a0406",
+      "range": {
+        "startLine": 1125,
+        "startChar": 43,
+        "endLine": 1125,
+        "endChar": 61
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87743e4c_3b9e4bcc",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-14T21:01:18Z",
+      "side": 1,
+      "message": "`How does calling flushDescriptorSetUpdates() during BufferViewHelper::release() prevent needing to do this tracking?`\nYou are tracking mBufferViewIndices because you are using it at flushDescriptorSetUpdates() call after view been deleted. But if you detect the view is been used by current command buffer, and you call flushDescriptorSetUpdates before deleting view, then the bug is fixed as well. It is better because it avoids tracking mBufferViewIndices.",
+      "parentUuid": "3716c2b8_d89dcdd4",
       "range": {
         "startLine": 1125,
         "startChar": 43,
