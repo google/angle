@@ -557,7 +557,8 @@ struct FeaturesGL : FeatureSetBase
 
     // Mac OpenGL drivers often hang when calling glTexSubImage with >120kb of data. Instead, upload
     // the data in <120kb chunks.
-    Feature uploadTextureDataInChunks = {
+    static constexpr const size_t kUploadTextureDataInChunksUploadSize = (120 * 1024) - 1;
+    Feature uploadTextureDataInChunks                                  = {
         "chunked_texture_upload", FeatureCategory::OpenGLWorkarounds,
         "Upload texture data in <120kb chunks to work around Mac driver hangs and crashes.",
         &members, "http://crbug.com/1181068"};

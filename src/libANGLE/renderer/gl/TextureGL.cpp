@@ -358,9 +358,9 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
 
     if (features.uploadTextureDataInChunks.enabled)
     {
-        constexpr const size_t kMaxUploadChunkSize = (120 * 1024) - 1;
-        return setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
-                                             unpackBuffer, kMaxUploadChunkSize, pixels);
+        return setSubImageRowByRowWorkaround(
+            context, target, level, area, format, type, unpack, unpackBuffer,
+            angle::FeaturesGL::kUploadTextureDataInChunksUploadSize, pixels);
     }
 
     if (nativegl::UseTexImage2D(getType()))
@@ -2077,11 +2077,22 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
 
         if (nativegl::UseTexImage2D(getType()))
         {
-            ANGLE_GL_TRY(context,
-                         functions->texSubImage2D(ToGLenum(imageIndex.getTarget()),
-                                                  imageIndex.getLevelIndex(), 0, 0, desc.size.width,
-                                                  desc.size.height, nativeSubImageFormat.format,
-                                                  nativeSubImageFormat.type, zero->data()));
+            if (features.uploadTextureDataInChunks.enabled)
+            {
+                gl::Box area(0, 0, 0, desc.size.width, desc.size.height, 1);
+                ANGLE_TRY(setSubImageRowByRowWorkaround(
+                    context, imageIndex.getTarget(), imageIndex.getLevelIndex(), area,
+                    nativeSubImageFormat.format, nativeSubImageFormat.type, unpackState, nullptr,
+                    angle::FeaturesGL::kUploadTextureDataInChunksUploadSize, zero->data()));
+            }
+            else
+            {
+                ANGLE_GL_TRY(context,
+                             functions->texSubImage2D(
+                                 ToGLenum(imageIndex.getTarget()), imageIndex.getLevelIndex(), 0, 0,
+                                 desc.size.width, desc.size.height, nativeSubImageFormat.format,
+                                 nativeSubImageFormat.type, zero->data()));
+            }
         }
         else
         {
