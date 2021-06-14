@@ -33,6 +33,29 @@
       "message": "stamp LGTM",
       "revId": "374e08290fcac39b004c64a4cb8b1fa0ce789b99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d01ec18_c57cdc58",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T22:31:47Z",
+      "side": 1,
+      "message": "BuiltInFrontFacing",
+      "range": {
+        "startLine": 386,
+        "startChar": 37,
+        "endLine": 386,
+        "endChar": 53
+      },
+      "revId": "374e08290fcac39b004c64a4cb8b1fa0ce789b99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
