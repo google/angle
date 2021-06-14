@@ -33,6 +33,52 @@
       "message": "stamp LGTM",
       "revId": "def3115dd20d573fe897c496da6424542021b586",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "451bc730_9474deab",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1384,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T20:59:03Z",
+      "side": 1,
+      "message": "Why doesn\u0027t this result in the merge block being executed twice?\n\nIt looks like this is going straight to the merge block if the conditions are right, but then the merge block is added again by writeBranchConditionalBlockEnd().",
+      "range": {
+        "startLine": 1381,
+        "startChar": 0,
+        "endLine": 1384,
+        "endChar": 89
+      },
+      "revId": "def3115dd20d573fe897c496da6424542021b586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdac2ab6_e14c8533",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1806,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T20:59:03Z",
+      "side": 1,
+      "message": "Why not always enable short-circuiting as an optimization?\n\nIt\u0027s common to order conditional checks based on how expensive they are to perform with the expectation that the expensive checks will be skipped if an earlier simple check is already enough to know the answer.",
+      "range": {
+        "startLine": 1805,
+        "startChar": 0,
+        "endLine": 1806,
+        "endChar": 46
+      },
+      "revId": "def3115dd20d573fe897c496da6424542021b586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
