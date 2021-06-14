@@ -16,6 +16,23 @@
       "message": "See green run in previous PS",
       "revId": "99dba594f37fa48c71b02659fa45a99f26eb3e5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8d28c96_75da3b13",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-14T15:35:12Z",
+      "side": 1,
+      "message": "stamp LGTM",
+      "revId": "99dba594f37fa48c71b02659fa45a99f26eb3e5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
