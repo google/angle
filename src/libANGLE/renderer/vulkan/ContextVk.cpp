@@ -5583,7 +5583,14 @@ angle::Result ContextVk::flushDirtyGraphicsRenderPass(DirtyBits::Iterator *dirty
 
     ANGLE_TRY(flushCommandsAndEndRenderPassImpl());
 
+    // Set dirty bits that need processing on new render pass on the dirty bits iterator that's
+    // being processed right now.
     dirtyBitsIterator->setLaterBits(mNewGraphicsCommandBufferDirtyBits & dirtyBitMask);
+
+    // Additionally, make sure any dirty bits not included in the mask are left for future
+    // processing.  Note that |dirtyBitMask| is removed from |mNewGraphicsCommandBufferDirtyBits|
+    // after dirty bits are iterated, so there's no need to mask them out.
+    mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
 
     // Restart at subpass 0.
     mGraphicsPipelineDesc->resetSubpass(&mGraphicsPipelineTransition);
