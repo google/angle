@@ -82,6 +82,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2a86203_4fc11abb",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1384,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T22:38:48Z",
+      "side": 1,
+      "message": "Ah, right, these are the branches, not the blocks themselves.",
+      "parentUuid": "7ecbc842_7630c994",
+      "range": {
+        "startLine": 1381,
+        "startChar": 0,
+        "endLine": 1384,
+        "endChar": 89
+      },
+      "revId": "def3115dd20d573fe897c496da6424542021b586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cdac2ab6_e14c8533",
@@ -119,6 +143,30 @@
       "side": 1,
       "message": "1. It produces many more instructions.\n2. You are absolutely right, and indeed the drivers do make this sort of optimizations translating from SPIR-V for the very same reason (so it\u0027s not necessary for ANGLE to do).\n\nOf course we need data to understand what\u0027s best here. Potentially we could change this to `!is_constant_or_symbol` and err on the side of if-else. I\u0027ll add a TODO to look into this when the work is done so we can actually try and compare the two. Until then, I prefer to generate smaller SPIR-V as I suspect the driver makes this optimization anyway (they do the opposite too, flattening the if-else).",
       "parentUuid": "cdac2ab6_e14c8533",
+      "range": {
+        "startLine": 1805,
+        "startChar": 0,
+        "endLine": 1806,
+        "endChar": 46
+      },
+      "revId": "def3115dd20d573fe897c496da6424542021b586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bce14cfa_a7d9bed4",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1806,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T22:38:48Z",
+      "side": 1,
+      "message": "Ack\n\nTODO sounds good to me.",
+      "parentUuid": "dc8c1205_6de90367",
       "range": {
         "startLine": 1805,
         "startChar": 0,
