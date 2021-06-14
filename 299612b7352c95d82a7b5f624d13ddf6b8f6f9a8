@@ -16,6 +16,24 @@
       "message": "Geoff/Jonah, can you guys take a look at the blit logic to see if I have this right? It\u0027s a bit tricky to follow.",
       "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0eaa0ac1_02bc439a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-14T16:55:05Z",
+      "side": 1,
+      "message": "Am I following right?\nSets dest x1 to some large positive integer boundary, but since source x\u0027s are reversed, this gets flipped to some overflowed negative boundary. But this change clips the negative values to 0.",
+      "parentUuid": "695d823d_dcaff28a",
+      "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
