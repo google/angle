@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "43df9bc7_27b4870b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-14T22:27:10Z",
+      "side": 1,
+      "message": "\u003e With this change, you will unconditionally incur a GPU bubble.\n\nonly for those usecases that have colorspace overrides applied to them, right?\n\n\nthe other paths available were compute shader based conversion and CPU path but the GPU path was the quickest in terms of implementation and verification without hand-writing a piecewise function.\n\nAre there helpers already present that does all this math on the CPU?",
+      "parentUuid": "1fceb788_8b13577f",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 42
+      },
+      "revId": "123ed8e757fb29220daa955e5a3f589ba3906127",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f722f8aa_8f78b843",
