@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "010e1d77_e4af050d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-14T18:30:53Z",
+      "side": 1,
+      "message": "Some drive by comment.",
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea7e385f_dde71a11",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-14T18:30:53Z",
+      "side": 1,
+      "message": "I am wondering why the need of all these extra for loops in this function come from. These are another extra data copy here, will be good to eliminate if possible.",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 65
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6c570e37_79057eb7",
@@ -147,6 +187,29 @@
         "startChar": 16,
         "endLine": 1115,
         "endChar": 41
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eda57f82_c55a0406",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-14T18:30:53Z",
+      "side": 1,
+      "message": "Instead of tracking this here, can you just issue flushDescriptorSetUpdates() when the bufferView is released and it is still has commands not flushed? I think this is cheaper than have to do another tracking here since delete buffer usually is less often than reference it. mUse should have the information to detect pending unflushed commands.",
+      "range": {
+        "startLine": 1125,
+        "startChar": 43,
+        "endLine": 1125,
+        "endChar": 61
       },
       "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
