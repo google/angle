@@ -80,6 +80,30 @@
       },
       "revId": "01e55905178121026f4c3ee0308cc81e63c273f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c2e1ef0_736ad9f4",
+        "filename": "scripts/roll_aosp.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-14T19:10:48Z",
+      "side": 1,
+      "message": "Nevermind, I see what you mean.",
+      "parentUuid": "dce22182_ebf96bd8",
+      "range": {
+        "startLine": 138,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 33
+      },
+      "revId": "01e55905178121026f4c3ee0308cc81e63c273f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
