@@ -16,6 +16,24 @@
       "message": "Could be ASSERT? Is this for a null buffer bound when the shader doesn\u0027t use any uniforms?",
       "revId": "fcab5dc71e2d93b6c8459a26848b53514fd93cce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "816eb826_fffdf4e1",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-14T15:27:19Z",
+      "side": 1,
+      "message": "can\u0027t be an assert, size of 0 is an error. This is needed for the dummy buffers we attach when there are no user defined uniforms in a shader. Without this there are a few tests that continue to fail",
+      "parentUuid": "646605b5_a2c6348f",
+      "revId": "fcab5dc71e2d93b6c8459a26848b53514fd93cce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
