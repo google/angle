@@ -16,6 +16,23 @@
       "message": "Regarding Linux failures, there\u0027s probably some other workaround enabled only on Linux that\u0027s using a built-in function I haven\u0027t implemented yet. I\u0027ll just have to find that and disable the tests for it. The code itself is good for review.",
       "revId": "374e08290fcac39b004c64a4cb8b1fa0ce789b99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f080ec80_328a67d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-14T15:36:01Z",
+      "side": 1,
+      "message": "stamp LGTM",
+      "revId": "374e08290fcac39b004c64a4cb8b1fa0ce789b99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
