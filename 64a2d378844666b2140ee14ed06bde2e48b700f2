@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69db4678_630cb0cd",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T19:33:19Z",
+      "side": 1,
+      "message": "I think it would be better to just make this a uint61_t to make it clearer to all of the callers the limit on the values it can hold.   This would probably need some casting too.",
+      "revId": "64a2d378844666b2140ee14ed06bde2e48b700f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f366c96a_9631cacc",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T19:33:19Z",
+      "side": 1,
+      "message": "TOperator is already a uint8, so this should be unnecessary.",
+      "revId": "64a2d378844666b2140ee14ed06bde2e48b700f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
