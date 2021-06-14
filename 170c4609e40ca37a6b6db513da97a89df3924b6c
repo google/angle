@@ -91,6 +91,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e7942b7b_d0b3a9ad",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T21:42:48Z",
+      "side": 1,
+      "message": "\u003e With this CL it seems you opt to always patch up pointers, effectively abandon the prior optimization.\n\nThere is no \"patching\" of pointers required, since the pointers are never set in the first place.   Instead, they are only set once during flushDescriptorSetUpdates() when they addresses are known and stable.\n\nThe patching that exists today looked like more of a workaround to handle the vector reallocation than an optimization, but maybe I misinterpreted it.\n\n\u003e I am wondering if this is necessary because of something I am not aware of or is an oversight?\n\nThe initial implementation was missing caching the VkBufferView handles.   This works today, because flushDescriptorSetUpdates() is always called after updateImagesDescriptorSet()/updateTexturesDescriptorSet(), so the BufferViews are still valid.   However, delaying the call to flushRenderPassCommands() means that the BufferViews may have been deleted, so the memory containing the handle has been discarded.   See the bug for the full details:\nhttps://bugs.chromium.org/p/angleproject/issues/detail?id\u003d5706#c7\n\nThe fix is to create memory that the ContextVk owns which will exist longer than the BufferView, so the VkWriteDescriptorSet can point to a valid value.   Since this needs to be done for BufferViews, I refactored the code to treat all of the fields the same to try and prevent bugs in the future.\n\nHowever, an alternative (as you pointed out) is to call flushRenderPassCommands() in BufferViewHelper::release() before the BufferView is garbage collected.\n\nI\u0027m not sure which is better.",
+      "parentUuid": "fc9131f4_009db432",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 65
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6c570e37_79057eb7",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 11
