@@ -56,6 +56,30 @@
       },
       "revId": "01e55905178121026f4c3ee0308cc81e63c273f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dce22182_ebf96bd8",
+        "filename": "scripts/roll_aosp.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-14T18:19:30Z",
+      "side": 1,
+      "message": "That\u0027s straightforward in Python, but my bash scripting isn\u0027t good enough to iterate a list and only delete directories that aren\u0027t in it, since we don\u0027t want to have to update this when new unused dependencies are added.   This felt the cleanest to accomplish that, though admittedly using `third_party_deps` would be nicer if it\u0027s simple.\n\nDo you have an example I can follow that does what you\u0027re describing?",
+      "parentUuid": "4615f94c_6a2d50f1",
+      "range": {
+        "startLine": 138,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 33
+      },
+      "revId": "01e55905178121026f4c3ee0308cc81e63c273f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
