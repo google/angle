@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c30cf474_b9e76662",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-15T14:02:37Z",
+      "side": 1,
+      "message": "PTAL. The GOLD failure is 1-value pixel differences.\n\nThere is more cleanup that can be done in builtin_function_declarations.txt, but I think at this point the change is already huge.\n\nAlso, Jonah, could you please give this a try with the direct metal changes to see if I broke anything? If there are bugs there would be quite minor nevertheless.",
+      "revId": "a76820b0765fe7340e911ea05444eac1ae0aed1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
