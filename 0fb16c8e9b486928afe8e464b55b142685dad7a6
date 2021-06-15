@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30ef0838_25d2fd30",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6833,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-15T18:00:01Z",
+      "side": 1,
+      "message": "Only this one actually failed without the fix. It\u0027s impossible to trigger the bug without another context submitting the partial work of the first context, because the original vkCmdBindIndexBuffer in the first render pass remains valid until the primary command buffer is flushed, even if the render pass closes and restarts in between.",
+      "revId": "0fb16c8e9b486928afe8e464b55b142685dad7a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1568259_3dd339fe",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6836,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-15T18:00:01Z",
+      "side": 1,
+      "message": "Will update this once I find all the platforms that are affected so I can create the bug.",
+      "range": {
+        "startLine": 6836,
+        "startChar": 27,
+        "endLine": 6836,
+        "endChar": 31
+      },
+      "revId": "0fb16c8e9b486928afe8e464b55b142685dad7a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
