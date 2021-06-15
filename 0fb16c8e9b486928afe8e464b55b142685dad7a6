@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9ccd800_eb5dea54",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-15T18:53:36Z",
+      "side": 1,
+      "message": "If you change context 2 to context 1 (one of the tests is actually doing this) the issue doesn\u0027t reproduce because if context 1 causes a submit, it will close the render pass and set all dirty bits.\n\nIt\u0027s true that the second render pass doesn\u0027t contain vkCmdBindIndexBuffer in that case as well, but that is not an error as long as both render passes are recorded in the same primary command buffer.",
+      "parentUuid": "642a4306_81c88a92",
+      "revId": "0fb16c8e9b486928afe8e464b55b142685dad7a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30ef0838_25d2fd30",
