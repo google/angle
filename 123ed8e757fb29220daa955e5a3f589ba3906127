@@ -96,6 +96,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "42ad7204_882e6602",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-15T17:57:11Z",
+      "side": 1,
+      "message": "\u003e i see, so basically add a `sRGBToLinear(...)` method to `struct R8G8B8A8SRGB` and call that in packpixels\n\nNot sure to be honest. I was looking at the part of the function that says:\n\n    pixelReadFunction(src, temp);\n    pixelWriteFunction(temp, dest);\n\nI imagine if one format is sRGB and the other isn\u0027t that one of those functions will do the conversion automatically?\n\n\u003e that takes care of RGBA8 format, but there are tons of other formats that have srgb variants.\n\nAgain, depends on whether the pixelRead/WriteFunction above already take care of it. If not, we could add a flag to PackPixelsParams to do sRGB conversion, and implement that in a generic way (like always convert to float, convert to the other space and back to original type).\n\n\u003e Do you suggest writing such CPU funcs for each of those formats (including compressed)?\n\nCan\u0027t glReadPixels compressed textures ;)",
+      "parentUuid": "9da03514_e00b0218",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 42
+      },
+      "revId": "123ed8e757fb29220daa955e5a3f589ba3906127",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f722f8aa_8f78b843",
