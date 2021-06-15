@@ -39,6 +39,30 @@
       },
       "revId": "d94b8c009bf599027c699534a4765e1b4e1346dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7609cc13_9d429fde",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003232
+      },
+      "writtenOn": "2021-06-15T22:04:53Z",
+      "side": 1,
+      "message": "For the record, the gclient_gn_args file is generated when you run `gclient sync` and contains the valuse of the gclient_gn_args (in GN-compatible format).",
+      "parentUuid": "9ea1826a_fcb60543",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 1
+      },
+      "revId": "d94b8c009bf599027c699534a4765e1b4e1346dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
