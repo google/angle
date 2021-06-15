@@ -181,9 +181,10 @@ class IOSurfaceClientBufferTest : public ANGLETest
             EGL_HEIGHT,                        height,
             EGL_IOSURFACE_PLANE_ANGLE,         plane,
             EGL_TEXTURE_TARGET,                getTextureTarget(),
-            EGL_TEXTURE_INTERNAL_FORMAT_ANGLE, internalFormat,
+            EGL_TEXTURE_INTERNAL_FORMAT_ANGLE,
+                static_cast<EGLint>(internalFormat),
             EGL_TEXTURE_FORMAT,                EGL_TEXTURE_RGBA,
-            EGL_TEXTURE_TYPE_ANGLE,            type,
+            EGL_TEXTURE_TYPE_ANGLE,            static_cast<EGLint>(type),
             EGL_NONE,                          EGL_NONE,
         };
         // clang-format on
