@@ -50,6 +50,24 @@
       "message": "nit: I think \"disableRelaxedPrecision\" would be more accurate by matching the decoratin name and would match ShaderInterfaceVariableInfo::useRelaxedPrecision better.",
       "revId": "99dba594f37fa48c71b02659fa45a99f26eb3e5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c38a264a_9df5c86b",
+        "filename": "src/compiler/translator/BuildSPIRV.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-15T02:51:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "902b2f0d_0bcb33a1",
+      "revId": "99dba594f37fa48c71b02659fa45a99f26eb3e5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
