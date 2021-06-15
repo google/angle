@@ -12,6 +12,8 @@
 #include "test_utils/gl_raii.h"
 #include "util/random_utils.h"
 
+#include <thread>
+
 using namespace angle;
 
 namespace
@@ -6659,6 +6661,278 @@ TEST_P(WebGL2ValidationStateChangeTest, DrawElementsEmptyVertexArray)
     glDrawElements(GL_LINE_STRIP, 0x1000, GL_UNSIGNED_SHORT,
                    reinterpret_cast<const GLvoid *>(0x1000));
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Test that closing the render pass due to an update to UBO data then drawing non-indexed followed
+// by indexed works.
+TEST_P(SimpleStateChangeTestES31, DrawThenUpdateUBOThenDrawThenDrawIndexed)
+{
+    // First, create the index buffer and issue an indexed draw call.  This clears the index dirty
+    // bit.
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+
+    const std::array<GLuint, 4> kIndexData = {0, 1, 2, 0};
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kIndexData), kIndexData.data(), GL_STATIC_DRAW);
+
+    // Setup vertices.
+    const std::array<GLfloat, 6> kVertices = {
+        -1, -1, 3, -1, -1, 3,
+    };
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kVertices), kVertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    // Create a uniform buffer that will get modified.  This is used to break the render pass.
+    const std::array<GLuint, 4> kUboData1 = {0x12345678u, 0, 0, 0};
+
+    GLBuffer ubo;
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kUboData1), kUboData1.data(), GL_DYNAMIC_DRAW);
+
+    // Set up a program.  The same program is used for all draw calls to avoid state change due to
+    // program change.
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform block { uint data; } ubo;
+uniform uint expect;
+uniform vec4 successColor;
+out vec4 colorOut;
+void main()
+{
+    colorOut = ubo.data == expect ? successColor : colorOut = vec4(0, 0, 0, 0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    const GLint positionLoc = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
+    const GLint expectLoc   = glGetUniformLocation(program, "expect");
+    const GLint successLoc  = glGetUniformLocation(program, "successColor");
+    ASSERT_NE(-1, positionLoc);
+    ASSERT_NE(-1, expectLoc);
+    ASSERT_NE(-1, successLoc);
+
+    glVertexAttribPointer(positionLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLoc);
+
+    glUniform1ui(expectLoc, kUboData1[0]);
+    glUniform4f(successLoc, 0, 0, 0, 1);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Then upload data to the UBO so on next use the render pass has to break.  This draw call is
+    // not indexed.
+    constexpr GLuint kUboData2 = 0x87654321u;
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(kUboData2), &kUboData2);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glUniform1ui(expectLoc, kUboData2);
+    glUniform4f(successLoc, 0, 1, 0, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Issue another draw call that is indexed.  The index buffer should be bound correctly on the
+    // new render pass.
+    glUniform4f(successLoc, 0, 0, 1, 0);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Ensure correct rendering.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
+// Test that switching framebuffers then a non-indexed draw followed by an indexed one works.
+TEST_P(SimpleStateChangeTestES31, DrawThenChangeFBOThenDrawThenDrawIndexed)
+{
+    // Create a framebuffer, and make sure it and the default framebuffer are fully synced.
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    GLFramebuffer fbo;
+    GLTexture texture;
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 16, 16);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // First, create the index buffer and issue an indexed draw call.  This clears the index dirty
+    // bit.
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+
+    const std::array<GLuint, 4> kIndexData = {0, 1, 2, 0};
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kIndexData), kIndexData.data(), GL_STATIC_DRAW);
+
+    // Setup vertices.
+    const std::array<GLfloat, 6> kVertices = {
+        -1, -1, 3, -1, -1, 3,
+    };
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kVertices), kVertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    // Set up a program.  The same program is used for all draw calls to avoid state change due to
+    // program change.
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform vec4 colorIn;
+out vec4 colorOut;
+void main()
+{
+    colorOut = colorIn;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    const GLint positionLoc = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
+    const GLint colorLoc    = glGetUniformLocation(program, "colorIn");
+    ASSERT_NE(-1, positionLoc);
+    ASSERT_NE(-1, colorLoc);
+
+    glVertexAttribPointer(positionLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLoc);
+
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Then switch to fbo and issue a non-indexed draw call followed by an indexed one.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glUniform4f(colorLoc, 0, 1, 0, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glUniform4f(colorLoc, 0, 0, 1, 0);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Ensure correct rendering.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// Test that switching framebuffers then a non-indexed draw followed by an indexed one works, with
+// another context flushing work in between the two draw calls.
+TEST_P(SimpleStateChangeTestES31, DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed)
+{
+    // Create a framebuffer, and make sure it and the default framebuffer are fully synced.
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    GLFramebuffer fbo;
+    GLTexture texture;
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 16, 16);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // First, create the index buffer and issue an indexed draw call.  This clears the index dirty
+    // bit.
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+
+    const std::array<GLuint, 4> kIndexData = {0, 1, 2, 0};
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kIndexData), kIndexData.data(), GL_STATIC_DRAW);
+
+    // Setup vertices.
+    const std::array<GLfloat, 6> kVertices = {
+        -1, -1, 3, -1, -1, 3,
+    };
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kVertices), kVertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    // Set up a program.  The same program is used for all draw calls to avoid state change due to
+    // program change.
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform vec4 colorIn;
+out vec4 colorOut;
+void main()
+{
+    colorOut = colorIn;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    const GLint positionLoc = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
+    const GLint colorLoc    = glGetUniformLocation(program, "colorIn");
+    ASSERT_NE(-1, positionLoc);
+    ASSERT_NE(-1, colorLoc);
+
+    glVertexAttribPointer(positionLoc, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLoc);
+
+    glUniform4f(colorLoc, 0, 0, 0, 1);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Then switch to fbo and issue a non-indexed draw call followed by an indexed one.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glUniform4f(colorLoc, 0, 1, 0, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // In between the two calls, make sure the first render pass is submitted, so the primary
+    // command buffer is reset.
+    {
+        EGLWindow *window          = getEGLWindow();
+        EGLDisplay dpy             = window->getDisplay();
+        EGLConfig config           = window->getConfig();
+        EGLint pbufferAttributes[] = {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE};
+        EGLSurface surface         = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
+        EGLContext ctx             = window->createContext(EGL_NO_CONTEXT);
+        EXPECT_EGL_SUCCESS();
+        std::thread flushThread = std::thread([&]() {
+            EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, ctx));
+            EXPECT_EGL_SUCCESS();
+
+            glClearColor(1, 0, 0, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
+            EXPECT_GL_NO_ERROR();
+
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        });
+        flushThread.join();
+
+        eglDestroySurface(dpy, surface);
+        eglDestroyContext(dpy, ctx);
+    }
+
+    glUniform4f(colorLoc, 0, 0, 1, 0);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Ensure correct rendering.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
 }
 }  // anonymous namespace
 

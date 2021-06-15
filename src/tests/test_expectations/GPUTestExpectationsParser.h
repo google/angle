@@ -51,6 +51,7 @@ class GPUTestExpectationsParser
     // Get the test expectation of a given test on a given bot.
     int32_t getTestExpectation(const std::string &testName);
     int32_t getTestExpectationWithConfig(const GPUTestConfig &config, const std::string &testName);
+    void setTestExpectationsAllowMask(uint32_t mask) { mExpectationsAllowMask = mask; }
 
   private:
     struct GPUTestExpectationEntry
@@ -95,6 +96,8 @@ class GPUTestExpectationsParser
 
     std::vector<GPUTestExpectationEntry> mEntries;
     std::vector<std::string> mErrorMessages;
+
+    uint32_t mExpectationsAllowMask;
 };
 
 const char *GetConditionName(uint32_t condition);

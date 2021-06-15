@@ -107,6 +107,7 @@ enum ErrorType
     kErrorIllegalEntry,
     kErrorInvalidEntry,
     kErrorEntryWithExpectationConflicts,
+    kErrorEntryWithDisallowedExpectation,
     kErrorEntriesOverlap,
 
     kNumberOfErrors,
@@ -195,6 +196,7 @@ const char *kErrorMessage[kNumberOfErrors] = {
     "entry with wrong format",
     "entry invalid, likely unimplemented modifiers",
     "entry with expectation modifier conflicts",
+    "entry with unsupported expectation",
     "two entries' configs overlap",
 };
 
@@ -294,6 +296,10 @@ const char *GetConditionName(uint32_t condition)
 }
 
 GPUTestExpectationsParser::GPUTestExpectationsParser()
+    : mExpectationsAllowMask(
+          GPUTestExpectationsParser::kGpuTestPass | GPUTestExpectationsParser::kGpuTestFail |
+          GPUTestExpectationsParser::kGpuTestFlaky | GPUTestExpectationsParser::kGpuTestTimeout |
+          GPUTestExpectationsParser::kGpuTestSkip)
 {
     // Some initial checks.
     ASSERT((static_cast<unsigned int>(kNumberOfTokens)) ==
@@ -579,6 +585,12 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig *config,
                 if (entry.testExpectation != 0)
                 {
                     pushErrorMessage(kErrorMessage[kErrorEntryWithExpectationConflicts],
+                                     lineNumber);
+                    return false;
+                }
+                if ((mExpectationsAllowMask & kTokenData[token].expectation) == 0)
+                {
+                    pushErrorMessage(kErrorMessage[kErrorEntryWithDisallowedExpectation],
                                      lineNumber);
                     return false;
                 }

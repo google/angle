@@ -4,11 +4,20 @@
 
 // See deqp_support/README.md for format.
 
+// Generic
+// Fails in the flush thread when calling eglMakeCurrent.
+6063 OPENGL : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
+6063 GLES : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
+
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_D3D11 = SKIP
 4092 WIN VULKAN : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_Vulkan* = SKIP
 4092 WIN OPENGL : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_OpenGL = SKIP
 4092 WIN GLES : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_OpenGLES = SKIP
+6064 WIN D3D11 : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
+
+// Linux
+6065 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
 
 // Mac
 6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8Index/ES3_OpenGL = SKIP

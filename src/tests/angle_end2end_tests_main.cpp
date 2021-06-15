@@ -42,6 +42,9 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    // end2end test expectations only allow SKIP at the moment.
+    testSuite.setTestExpectationsAllowMask(angle::GPUTestExpectationsParser::kGpuTestSkip);
+
     if (!testSuite.loadAllTestExpectationsFromFile(std::string(foundDataPath.data())))
     {
         return EXIT_FAILURE;

@@ -152,6 +152,10 @@ class TestSuite
     int32_t getTestExpectation(const std::string &testName);
     int32_t getTestExpectationWithConfig(const GPUTestConfig &config, const std::string &testName);
     bool logAnyUnusedTestExpectations();
+    void setTestExpectationsAllowMask(uint32_t mask)
+    {
+        mTestExpectationsParser.setTestExpectationsAllowMask(mask);
+    }
 
   private:
     bool parseSingleArg(const char *argument);
