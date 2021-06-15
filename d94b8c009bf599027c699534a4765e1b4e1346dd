@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c00f37b9_cf57d87b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-15T18:05:53Z",
+      "side": 1,
+      "message": "I tested this CL on my Windows build, and it works.  I have a question (because I don\u0027t understand all of this), but am happy to see it land.",
+      "revId": "d94b8c009bf599027c699534a4765e1b4e1346dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ea1826a_fcb60543",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-15T18:05:53Z",
+      "side": 1,
+      "message": "Please clarify the relationship between `gclient_gn_args` and `gclient_gn_args_file`.  I thought the file is where `gclient_gn_args` would be auto-generated.  Is that not the case?",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 1
+      },
+      "revId": "d94b8c009bf599027c699534a4765e1b4e1346dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
