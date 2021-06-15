@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d05097ec_be7d466a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-15T20:52:55Z",
+      "side": 1,
+      "message": "I\u0027m not sure what caused the mac build issues, but I\u0027m going to try to kill this autoroll in favor of retrying the autoroll that first failed last night.",
+      "revId": "b24e68071fd6f02261e1280b70b209c3a41cfc98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
