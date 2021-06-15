@@ -325,9 +325,10 @@ void Sleep(unsigned int milliseconds)
     }
     else
     {
-        timespec sleepTime = {
-            .tv_sec  = milliseconds / 1000,
-            .tv_nsec = (milliseconds % 1000) * 1000000,
+        long milliseconds_long = milliseconds;
+        timespec sleepTime     = {
+            .tv_sec  = milliseconds_long / 1000,
+            .tv_nsec = (milliseconds_long % 1000) * 1000000,
         };
 
         nanosleep(&sleepTime, nullptr);
