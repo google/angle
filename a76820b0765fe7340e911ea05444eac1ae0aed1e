@@ -51,6 +51,24 @@
       "parentUuid": "331f1f06_57d44554",
       "revId": "a76820b0765fe7340e911ea05444eac1ae0aed1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ff7a1e9_6c6a1e59",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-15T21:03:21Z",
+      "side": 1,
+      "message": "Direct metal changes aren\u0027t in a testable state yet, but if it compiles on the bots then it\u0027s about as good as I can test for now.",
+      "parentUuid": "c30cf474_b9e76662",
+      "revId": "a76820b0765fe7340e911ea05444eac1ae0aed1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
