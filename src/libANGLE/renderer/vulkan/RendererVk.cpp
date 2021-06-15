@@ -1228,6 +1228,12 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mMultisampledRenderToSingleSampledFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_FEATURES_EXT;
 
+    mMultiviewFeatures       = {};
+    mMultiviewFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES;
+
+    mMultiviewProperties       = {};
+    mMultiviewProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES;
+
     mDriverProperties       = {};
     mDriverProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
 
@@ -1314,11 +1320,18 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
         vk::AddToPNextChain(&deviceProperties, &mDepthStencilResolveProperties);
     }
 
-    // Query multisampled render to single-sampled properties
+    // Query multisampled render to single-sampled features
     if (ExtensionFound(VK_EXT_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_EXTENSION_NAME,
                        deviceExtensionNames))
     {
         vk::AddToPNextChain(&deviceFeatures, &mMultisampledRenderToSingleSampledFeatures);
+    }
+
+    // Query multiview features and properties
+    if (ExtensionFound(VK_KHR_MULTIVIEW_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mMultiviewFeatures);
+        vk::AddToPNextChain(&deviceProperties, &mMultiviewProperties);
     }
 
     // Query driver properties
@@ -1375,6 +1388,8 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mShaderFloat16Int8Features.pNext                 = nullptr;
     mDepthStencilResolveProperties.pNext             = nullptr;
     mMultisampledRenderToSingleSampledFeatures.pNext = nullptr;
+    mMultiviewFeatures.pNext                         = nullptr;
+    mMultiviewProperties.pNext                       = nullptr;
     mDriverProperties.pNext                          = nullptr;
     mSamplerYcbcrConversionFeatures.pNext            = nullptr;
 }
@@ -1735,6 +1750,16 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         enabledDeviceExtensions.push_back(
             VK_EXT_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_EXTENSION_NAME);
         vk::AddToPNextChain(&createInfo, &mMultisampledRenderToSingleSampledFeatures);
+    }
+
+    if (getFeatures().supportsMultiview.enabled)
+    {
+        // OVR_multiview disallows multiview with geometry and tessellation, so don't request these
+        // features.
+        mMultiviewFeatures.multiviewGeometryShader     = VK_FALSE;
+        mMultiviewFeatures.multiviewTessellationShader = VK_FALSE;
+        enabledDeviceExtensions.push_back(VK_KHR_MULTIVIEW_EXTENSION_NAME);
+        vk::AddToPNextChain(&createInfo, &mMultiviewFeatures);
     }
 
     if (getFeatures().logMemoryReportCallbacks.enabled ||
@@ -2320,6 +2345,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         mFeatures.supportsRenderpass2.enabled && mFeatures.supportsDepthStencilResolve.enabled &&
             mMultisampledRenderToSingleSampledFeatures.multisampledRenderToSingleSampled ==
                 VK_TRUE);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsMultiview, mMultiviewFeatures.multiview == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateTransformFeedback,
                             (!mFeatures.supportsTransformFeedbackExtension.enabled &&

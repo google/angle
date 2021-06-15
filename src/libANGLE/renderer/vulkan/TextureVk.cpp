@@ -202,43 +202,50 @@ bool CanGenerateMipmapWithCompute(RendererVk *renderer,
 
 void GetRenderTargetLayerCountAndIndex(vk::ImageHelper *image,
                                        const gl::ImageIndex &index,
+                                       GLuint *layerIndex,
                                        GLuint *layerCount,
-                                       GLuint *layerIndex)
+                                       GLuint *imageLayerCount)
 {
-    // If the render target is to a single layer (usual case), index.hasLayer() is true.  If the
-    // render target is layered (used with geometry shaders), it would be false.  In the latter
-    // case, layerIndex is given the value of layerCount to signify this.  The arrays indexed by
-    // layerIndex therefore contain the layered render target as the last element.
+    *layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
+    *layerCount = index.getLayerCount();
+
     switch (index.getType())
     {
         case gl::TextureType::_2D:
         case gl::TextureType::_2DMultisample:
-            *layerCount = 1;
-            *layerIndex = 0;
-            return;
+            ASSERT(*layerIndex == 0 &&
+                   (*layerCount == 1 ||
+                    *layerCount == static_cast<GLuint>(gl::ImageIndex::kEntireLevel)));
+            *imageLayerCount = 1;
+            break;
 
         case gl::TextureType::CubeMap:
-            *layerCount = gl::kCubeFaceCount;
-            *layerIndex = index.hasLayer() ? index.cubeMapFaceIndex() : *layerCount;
-            return;
+            ASSERT(!index.hasLayer() ||
+                   *layerIndex == static_cast<GLuint>(index.cubeMapFaceIndex()));
+            *imageLayerCount = gl::kCubeFaceCount;
+            break;
 
         case gl::TextureType::_3D:
         {
             gl::LevelIndex levelGL(index.getLevelIndex());
-            *layerCount = image->getLevelExtents(image->toVkLevel(levelGL)).depth;
-            *layerIndex = index.hasLayer() ? index.getLayerIndex() : *layerCount;
-            return;
+            *imageLayerCount = image->getLevelExtents(image->toVkLevel(levelGL)).depth;
+            break;
         }
 
         case gl::TextureType::_2DArray:
         case gl::TextureType::_2DMultisampleArray:
         case gl::TextureType::CubeMapArray:
-            *layerCount = image->getLayerCount();
-            *layerIndex = index.hasLayer() ? index.getLayerIndex() : *layerCount;
-            return;
+            *imageLayerCount = image->getLayerCount();
+            break;
 
         default:
             UNREACHABLE();
+    }
+
+    if (*layerCount == static_cast<GLuint>(gl::ImageIndex::kEntireLevel))
+    {
+        ASSERT(*layerIndex == 0);
+        *layerCount = *imageLayerCount;
     }
 }
 
@@ -927,9 +934,6 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
     uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : destOffset.z;
     uint32_t layerCount = sourceBox.depth;
 
-    ASSERT(layerCount == static_cast<uint32_t>(gl::ImageIndex::kEntireLevel) ||
-           layerCount == static_cast<uint32_t>(sourceBox.depth));
-
     gl::Offset srcOffset = {sourceBox.x, sourceBox.y, sourceBox.z};
     gl::Extents extents  = {sourceBox.width, sourceBox.height, sourceBox.depth};
 
@@ -1119,9 +1123,6 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
 
     uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : destOffset.z;
     uint32_t layerCount = sourceBox.depth;
-
-    ASSERT(layerCount == static_cast<uint32_t>(gl::ImageIndex::kEntireLevel) ||
-           layerCount == static_cast<uint32_t>(sourceBox.depth));
 
     gl::Extents extents = {sourceBox.width, sourceBox.height, sourceBox.depth};
 
@@ -1502,7 +1503,7 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
     updateImageHelper(contextVk, format.getImageCopyBufferAlignment());
 
     // Force re-creation of render targets next time they are needed
-    for (auto &renderTargets : mRenderTargets)
+    for (auto &renderTargets : mSingleLayerRenderTargets)
     {
         for (RenderTargetVector &renderTargetLevels : renderTargets)
         {
@@ -1510,6 +1511,7 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
         }
         renderTargets.clear();
     }
+    mMultiLayerRenderTargets.clear();
 
     if (!selfOwned)
     {
@@ -2203,15 +2205,27 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
 
     // Don't flush staged updates here. We'll handle that in FramebufferVk so it can defer clears.
 
-    GLuint layerIndex = 0, layerCount = 0;
-    GetRenderTargetLayerCountAndIndex(mImage, imageIndex, &layerCount, &layerIndex);
+    GLuint layerIndex = 0, layerCount = 0, imageLayerCount = 0;
+    GetRenderTargetLayerCountAndIndex(mImage, imageIndex, &layerIndex, &layerCount,
+                                      &imageLayerCount);
 
-    ANGLE_TRY(initRenderTargets(contextVk, layerCount, gl::LevelIndex(imageIndex.getLevelIndex()),
-                                renderToTextureIndex));
+    if (layerCount == 1)
+    {
+        initSingleLayerRenderTargets(contextVk, imageLayerCount,
+                                     gl::LevelIndex(imageIndex.getLevelIndex()),
+                                     renderToTextureIndex);
 
-    ASSERT(imageIndex.getLevelIndex() <
-           static_cast<int32_t>(mRenderTargets[renderToTextureIndex].size()));
-    *rtOut = &mRenderTargets[renderToTextureIndex][imageIndex.getLevelIndex()][layerIndex];
+        ASSERT(imageIndex.getLevelIndex() <
+               static_cast<int32_t>(mSingleLayerRenderTargets[renderToTextureIndex].size()));
+        *rtOut = &mSingleLayerRenderTargets[renderToTextureIndex][imageIndex.getLevelIndex()]
+                                           [layerIndex];
+    }
+    else
+    {
+        ASSERT(layerCount > 0);
+        *rtOut = getMultiLayerRenderTarget(contextVk, gl::LevelIndex(imageIndex.getLevelIndex()),
+                                           layerIndex, layerCount);
+    }
 
     return angle::Result::Continue;
 }
@@ -2274,12 +2288,13 @@ angle::Result TextureVk::flushImageStagedUpdates(ContextVk *contextVk)
         mImage->getLayerCount(), mRedefinedLevels);
 }
 
-angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
-                                           GLuint layerCount,
-                                           gl::LevelIndex levelIndex,
-                                           gl::RenderToTextureImageIndex renderToTextureIndex)
+void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
+                                             GLuint layerCount,
+                                             gl::LevelIndex levelIndex,
+                                             gl::RenderToTextureImageIndex renderToTextureIndex)
 {
-    std::vector<RenderTargetVector> &allLevelsRenderTargets = mRenderTargets[renderToTextureIndex];
+    std::vector<RenderTargetVector> &allLevelsRenderTargets =
+        mSingleLayerRenderTargets[renderToTextureIndex];
 
     if (allLevelsRenderTargets.size() <= static_cast<uint32_t>(levelIndex.get()))
     {
@@ -2291,12 +2306,11 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
     // Lazy init. Check if already initialized.
     if (!renderTargets.empty())
     {
-        return angle::Result::Continue;
+        return;
     }
 
-    // There are |layerCount| render targets, one for each layer.  There is also one render target
-    // viewing all layers.
-    renderTargets.resize(layerCount + 1);
+    // There are |layerCount| render targets, one for each layer
+    renderTargets.resize(layerCount);
 
     const bool isMultisampledRenderToTexture =
         renderToTextureIndex != gl::RenderToTextureImageIndex::Default;
@@ -2336,17 +2350,35 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
                                        getNativeImageLevel(levelIndex),
                                        getNativeImageLayer(layerIndex), 1, transience);
     }
+}
 
-    // Create the layered render target.  Note that multisampled render to texture is not allowed
-    // with layered render targets.
-    if (!isMultisampledRenderToTexture)
+RenderTargetVk *TextureVk::getMultiLayerRenderTarget(ContextVk *contextVk,
+                                                     gl::LevelIndex level,
+                                                     GLuint layerIndex,
+                                                     GLuint layerCount)
+{
+    vk::ImageSubresourceRange range =
+        vk::MakeImageSubresourceDrawRange(level, layerIndex, vk::GetLayerMode(*mImage, layerCount),
+                                          gl::SrgbWriteControlMode::Default);
+
+    auto iter = mMultiLayerRenderTargets.find(range);
+    if (iter != mMultiLayerRenderTargets.end())
     {
-        renderTargets[layerCount].init(mImage, &getImageViews(), nullptr, nullptr,
-                                       getNativeImageLevel(levelIndex), getNativeImageLayer(0),
-                                       layerCount, RenderTargetTransience::Default);
+        return iter->second.get();
     }
 
-    return angle::Result::Continue;
+    // Create the layered render target.  Note that multisampled render to texture is not
+    // allowed with layered render targets.
+    std::unique_ptr<RenderTargetVk> &rt = mMultiLayerRenderTargets[range];
+    if (!rt)
+    {
+        rt = std::make_unique<RenderTargetVk>();
+    }
+
+    rt->init(mImage, &getImageViews(), nullptr, nullptr, getNativeImageLevel(level),
+             getNativeImageLayer(layerIndex), layerCount, RenderTargetTransience::Default);
+
+    return rt.get();
 }
 
 void TextureVk::prepareForGenerateMipmap(ContextVk *contextVk)
@@ -2840,7 +2872,7 @@ void TextureVk::releaseImage(ContextVk *contextVk)
         imageViews.release(renderer);
     }
 
-    for (auto &renderTargets : mRenderTargets)
+    for (auto &renderTargets : mSingleLayerRenderTargets)
     {
         for (RenderTargetVector &renderTargetLevels : renderTargets)
         {
@@ -2850,6 +2882,7 @@ void TextureVk::releaseImage(ContextVk *contextVk)
         // Then clear the levels
         renderTargets.clear();
     }
+    mMultiLayerRenderTargets.clear();
 
     onStateChange(angle::SubjectMessage::SubjectChanged);
     mRedefinedLevels.reset();

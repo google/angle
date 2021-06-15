@@ -784,6 +784,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
     }
 
     sink << "#version 450 core\n";
+    writeExtensionBehavior(compileOptions, sink);
 
     // Write out default uniforms into a uniform block assigned to a specific set/binding.
     int defaultUniformCount           = 0;
@@ -1265,6 +1266,45 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
     }
 
     return true;
+}
+
+void TranslatorVulkan::writeExtensionBehavior(ShCompileOptions compileOptions, TInfoSinkBase &sink)
+{
+    const TExtensionBehavior &extBehavior = getExtensionBehavior();
+    TBehavior multiviewBehavior           = EBhUndefined;
+    TBehavior multiview2Behavior          = EBhUndefined;
+    for (const auto &iter : extBehavior)
+    {
+        if (iter.second == EBhUndefined || iter.second == EBhDisable)
+        {
+            continue;
+        }
+
+        switch (iter.first)
+        {
+            case TExtension::OVR_multiview:
+                multiviewBehavior = iter.second;
+                break;
+            case TExtension::OVR_multiview2:
+                multiviewBehavior = iter.second;
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (multiviewBehavior != EBhUndefined || multiview2Behavior != EBhUndefined)
+    {
+        // Only either OVR_multiview or OVR_multiview2 should be emitted.
+        TExtension ext     = TExtension::OVR_multiview;
+        TBehavior behavior = multiviewBehavior;
+        if (multiview2Behavior != EBhUndefined)
+        {
+            ext      = TExtension::OVR_multiview2;
+            behavior = multiview2Behavior;
+        }
+        EmitMultiviewGLSL(*this, compileOptions, ext, behavior, sink);
+    }
 }
 
 bool TranslatorVulkan::translate(TIntermBlock *root,

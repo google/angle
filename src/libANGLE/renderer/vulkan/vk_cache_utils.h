@@ -201,11 +201,13 @@ class alignas(4) RenderPassDesc final
     void setSamples(GLint samples) { mSamples = static_cast<uint8_t>(samples); }
     uint8_t samples() const { return mSamples; }
 
+    void setViewCount(GLsizei viewCount) { mViewCount = static_cast<uint8_t>(viewCount); }
+    uint8_t viewCount() const { return mViewCount; }
+
     void setFramebufferFetchMode(bool hasFramebufferFetch)
     {
         mHasFramebufferFetch = hasFramebufferFetch;
     }
-
     bool getFramebufferFetchMode() const { return mHasFramebufferFetch; }
 
     void updateRenderToTexture(bool isRenderToTexture) { mIsRenderToTexture = isRenderToTexture; }
@@ -220,7 +222,8 @@ class alignas(4) RenderPassDesc final
   private:
     uint8_t mSamples;
     uint8_t mColorAttachmentRange;
-    // TODO: For upcoming multiview support.  http://anglebug.com/6048
+
+    // Multivew
     uint8_t mViewCount;
 
     // sRGB
@@ -1002,15 +1005,38 @@ ANGLE_INLINE PipelineHelper::PipelineHelper(Pipeline &&pipeline) : mPipeline(std
 
 struct ImageSubresourceRange
 {
-    uint16_t level : 10;            // GL max is 1000 (fits in 10 bits).
-    uint16_t levelCount : 6;        // Max 63 levels (2 ** 6 - 1). If we need more, take from layer.
-    uint16_t layer : 13;            // Implementation max is 2048 (11 bits).
-    uint16_t singleLayer : 1;       // true/false only. Not possible to use sub-slices of levels.
-    uint16_t srgbDecodeMode : 1;    // Values from vk::SrgbDecodeMode.
-    uint16_t srgbOverrideMode : 1;  // Values from gl::SrgbOverride, either Default or SRGB.
+    // GL max is 1000 (fits in 10 bits).
+    uint32_t level : 10;
+    // Max 31 levels (2 ** 5 - 1). Can store levelCount-1 if we need to save another bit.
+    uint32_t levelCount : 5;
+    // Implementation max is 2048 (11 bits).
+    uint32_t layer : 12;
+    // One of vk::LayerMode values.  If 0, it means all layers.  Otherwise it's the count of layers
+    // which is usually 1, except for multiview in which case it can be up to
+    // gl::IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS.
+    uint32_t layerMode : 3;
+    // Values from vk::SrgbDecodeMode.  Unused with draw views.
+    uint32_t srgbDecodeMode : 1;
+    // For read views: Values from gl::SrgbOverride, either Default or SRGB.
+    // For draw views: Values from gl::SrgbWriteControlMode.
+    uint32_t srgbMode : 1;
+
+    static_assert(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS < (1 << 5),
+                  "Not enough bits for level count");
+    static_assert(gl::IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS <= (1 << 12),
+                  "Not enough bits for layer index");
+    static_assert(gl::IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS <= (1 << 3),
+                  "Not enough bits for layer count");
 };
 
 static_assert(sizeof(ImageSubresourceRange) == sizeof(uint32_t), "Size mismatch");
+
+inline bool operator==(const ImageSubresourceRange &a, const ImageSubresourceRange &b)
+{
+    return a.level == b.level && a.levelCount == b.levelCount && a.layer == b.layer &&
+           a.layerMode == b.layerMode && a.srgbDecodeMode == b.srgbDecodeMode &&
+           a.srgbMode == b.srgbMode;
+}
 
 constexpr ImageSubresourceRange kInvalidImageSubresourceRange = {0, 0, 0, 0, 0, 0};
 
@@ -1165,6 +1191,7 @@ class FramebufferDesc
     {
         mSrgbWriteControlMode = static_cast<uint16_t>(mode);
     }
+    void updateIsMultiview(bool isMultiview) { mIsMultiview = isMultiview; }
     size_t hash() const;
 
     bool operator==(const FramebufferDesc &other) const;
@@ -1187,6 +1214,8 @@ class FramebufferDesc
     void updateLayerCount(uint32_t layerCount);
     uint32_t getLayerCount() const { return mLayerCount; }
     void updateFramebufferFetchMode(bool hasFramebufferFetch);
+
+    bool isMultiview() const { return mIsMultiview; }
 
     void updateRenderToTexture(bool isRenderToTexture);
 
@@ -1212,7 +1241,9 @@ class FramebufferDesc
 
     // Whether this is a multisampled-render-to-single-sampled framebuffer.  Only used when using
     // VK_EXT_multisampled_render_to_single_sampled.  Only one bit is used and the rest is padding.
-    uint16_t mIsRenderToTexture : 16 - kMaxFramebufferNonResolveAttachments;
+    uint16_t mIsRenderToTexture : 15 - kMaxFramebufferNonResolveAttachments;
+
+    uint16_t mIsMultiview : 1;
 
     FramebufferAttachmentArray<ImageOrBufferViewSubresourceSerial> mSerials;
 };
@@ -1302,6 +1333,15 @@ template <>
 struct hash<rx::vk::PipelineLayoutDesc>
 {
     size_t operator()(const rx::vk::PipelineLayoutDesc &key) const { return key.hash(); }
+};
+
+template <>
+struct hash<rx::vk::ImageSubresourceRange>
+{
+    size_t operator()(const rx::vk::ImageSubresourceRange &key) const
+    {
+        return *reinterpret_cast<const uint32_t *>(&key);
+    }
 };
 
 template <>

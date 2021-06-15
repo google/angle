@@ -228,6 +228,11 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports the VK_EXT_multisampled_render_to_single_sampled extension", &members,
         "http://anglebug.com/4836"};
 
+    // Whether the VkDevice supports the VK_KHR_multiview extension.  http://anglebug.com/6048
+    Feature supportsMultiview = {"supportsMultiview", FeatureCategory::VulkanFeatures,
+                                 "VkDevice supports the VK_KHR_multiview extension", &members,
+                                 "http://anglebug.com/6048"};
+
     // VK_PRESENT_MODE_FIFO_KHR causes random timeouts on Linux Intel. http://anglebug.com/3153
     Feature disableFifoPresentMode = {"disableFifoPresentMode", FeatureCategory::VulkanWorkarounds,
                                       "VK_PRESENT_MODE_FIFO_KHR causes random timeouts", &members,

@@ -23,6 +23,21 @@
 // Linux
 6065 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
 
+// Intel Vulkan
+
+// On Intel/Vulkan/Linux, The following image is produced, failing the test on the corner of the
+// image.  The same corner is missing if a LINE_STRIP is used.
+//
+//     ++++
+//     +  +
+//     +  +
+//     +++
+//
+// Unknown whether it's a driver bug or the test relying on undefined behavior as the comment on
+// the test says.  The test also fails on Intel/Vulkan/Windows.
+6068 INTEL VULKAN : MultiviewRenderPrimitiveTest.LineLoop/* = SKIP
+6068 INTEL VULKAN : MultiviewRenderPrimitiveTest.LineStrip/* = SKIP
+
 // Mac
 6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8Index/ES3_OpenGL = SKIP
 6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8IndexSmallUpdates/ES3_OpenGL = SKIP

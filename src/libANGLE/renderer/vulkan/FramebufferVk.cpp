@@ -1364,7 +1364,17 @@ void FramebufferVk::updateLayerCount()
         layerCount = mState.getDefaultLayers();
     }
 
+    // While layer count and view count are mutually exclusive, they result in different render
+    // passes (and thus framebuffers).  For multiview, layer count is set to view count and a flag
+    // signifies that the framebuffer is multiview (as opposed to layered).
+    const bool isMultiview = mState.isMultiview();
+    if (isMultiview)
+    {
+        layerCount = mState.getNumViews();
+    }
+
     mCurrentFramebufferDesc.updateLayerCount(layerCount);
+    mCurrentFramebufferDesc.updateIsMultiview(isMultiview);
 }
 
 angle::Result FramebufferVk::resolveColorWithSubpass(ContextVk *contextVk,
@@ -1921,6 +1931,7 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
 {
     mRenderPassDesc = {};
     mRenderPassDesc.setSamples(getSamples());
+    mRenderPassDesc.setViewCount(mState.isMultiview() ? mState.getNumViews() : 0);
 
     // Color attachments.
     const auto &colorRenderTargets               = mRenderTargetCache.getColors();
@@ -2107,7 +2118,11 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     framebufferInfo.pAttachments    = attachments.data();
     framebufferInfo.width           = static_cast<uint32_t>(attachmentsSize.width);
     framebufferInfo.height          = static_cast<uint32_t>(attachmentsSize.height);
-    framebufferInfo.layers          = std::max(mCurrentFramebufferDesc.getLayerCount(), 1u);
+    framebufferInfo.layers          = 1;
+    if (!mCurrentFramebufferDesc.isMultiview())
+    {
+        framebufferInfo.layers = std::max(mCurrentFramebufferDesc.getLayerCount(), 1u);
+    }
 
     vk::FramebufferHelper newFramebuffer;
     ANGLE_TRY(newFramebuffer.init(contextVk, framebufferInfo));
@@ -2203,7 +2218,7 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
         // geometry shader that is instanced layerCount times (or loops layerCount times), each time
         // selecting a different layer.
         // http://anglebug.com/5453
-        ASSERT(colorRenderTarget->getLayerCount() == 1);
+        ASSERT(mCurrentFramebufferDesc.isMultiview() || colorRenderTarget->getLayerCount() == 1);
 
         ANGLE_TRY(contextVk->getUtils().clearFramebuffer(contextVk, this, params));
 

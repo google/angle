@@ -1034,6 +1034,13 @@ void RendererVk::ensureCapsInitialized() const
 
     // GL_ANGLE_relaxed_vertex_attribute_type
     mNativeExtensions.relaxedVertexAttributeTypeANGLE = true;
+
+    // GL_OVR_multiview*.  Bresenham line emulation does not work with multiview.  There's no
+    // limitation in Vulkan to restrict an application to multiview 1.
+    mNativeExtensions.multiview =
+        mMultiviewFeatures.multiview && mFeatures.bresenhamLineRasterization.enabled;
+    mNativeExtensions.multiview2 = mNativeExtensions.multiview;
+    mNativeExtensions.maxViews   = mMultiviewProperties.maxMultiviewViewCount;
 }
 
 namespace vk

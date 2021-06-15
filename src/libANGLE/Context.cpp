@@ -3734,6 +3734,8 @@ void Context::initCaps()
 
     ANGLE_LIMIT_CAP(mState.mCaps.maxSampleMaskWords, MAX_SAMPLE_MASK_WORDS);
 
+    ANGLE_LIMIT_CAP(mState.mExtensions.maxViews, IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS);
+
     ANGLE_LIMIT_CAP(mState.mExtensions.maxDualSourceDrawBuffers,
                     IMPLEMENTATION_MAX_DUAL_SOURCE_DRAW_BUFFERS);
 

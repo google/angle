@@ -613,12 +613,14 @@ void ToSubpassDescription2(const VkSubpassDescription &desc,
                            const gl::DrawBuffersVector<VkAttachmentReference2KHR> &colorRefs,
                            const gl::DrawBuffersVector<VkAttachmentReference2KHR> &resolveRefs,
                            const VkAttachmentReference2KHR &depthStencilRef,
+                           uint32_t viewMask,
                            VkSubpassDescription2KHR *desc2Out)
 {
     *desc2Out                         = {};
     desc2Out->sType                   = VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR;
     desc2Out->flags                   = desc.flags;
     desc2Out->pipelineBindPoint       = desc.pipelineBindPoint;
+    desc2Out->viewMask                = viewMask;
     desc2Out->inputAttachmentCount    = static_cast<uint32_t>(inputRefs.size());
     desc2Out->pInputAttachments       = !inputRefs.empty() ? inputRefs.data() : nullptr;
     desc2Out->colorAttachmentCount    = static_cast<uint32_t>(colorRefs.size());
@@ -645,6 +647,7 @@ void ToSubpassDependency2(const VkSubpassDependency &dep, VkSubpassDependency2KH
 angle::Result CreateRenderPass2(Context *context,
                                 const VkRenderPassCreateInfo &createInfo,
                                 const VkSubpassDescriptionDepthStencilResolve &depthStencilResolve,
+                                const VkRenderPassMultiviewCreateInfo &multiviewInfo,
                                 bool unresolveDepth,
                                 bool unresolveStencil,
                                 bool isRenderToTexture,
@@ -730,7 +733,7 @@ angle::Result CreateRenderPass2(Context *context,
 
         // Convert subpass itself.
         ToSubpassDescription2(desc, inputRefs, colorRefs, resolveRefs, depthStencilRef,
-                              &subpassDescriptions[subpass]);
+                              multiviewInfo.pViewMasks[subpass], &subpassDescriptions[subpass]);
     }
 
     VkMultisampledRenderToSingleSampledInfoEXT renderToTextureInfo = {};
@@ -774,6 +777,8 @@ angle::Result CreateRenderPass2(Context *context,
     createInfo2.pSubpasses                 = subpassDescriptions.data();
     createInfo2.dependencyCount            = static_cast<uint32_t>(subpassDependencies.size());
     createInfo2.pDependencies = !subpassDependencies.empty() ? subpassDependencies.data() : nullptr;
+    createInfo2.correlatedViewMaskCount = multiviewInfo.correlationMaskCount;
+    createInfo2.pCorrelatedViewMasks    = multiviewInfo.pCorrelationMasks;
 
     // Initialize the render pass.
     ANGLE_VK_TRY(context, renderPass->init2(context->getDevice(), createInfo2));
@@ -1197,12 +1202,33 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         createInfo.pDependencies   = subpassDependencies.data();
     }
 
+    SubpassVector<uint32_t> viewMasks(subpassDesc.size(),
+                                      angle::Bit<uint32_t>(desc.viewCount()) - 1);
+    VkRenderPassMultiviewCreateInfo multiviewInfo = {};
+    multiviewInfo.sType        = VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO;
+    multiviewInfo.subpassCount = createInfo.subpassCount;
+    multiviewInfo.pViewMasks   = viewMasks.data();
+
+    if (desc.viewCount() > 0)
+    {
+        // For VR, the views are correlated, so this would be an optimization.  However, an
+        // application can also use multiview for example to render to all 6 faces of a cubemap, in
+        // which case the views are actually not so correlated.  In the absence of any hints from
+        // the application (TODO: verify that extension has no hints), we have to decide on one or
+        // the other.  Since VR is more expensive, the views are marked as correlated to optimize
+        // that use case.
+        multiviewInfo.correlationMaskCount = 1;
+        multiviewInfo.pCorrelationMasks    = viewMasks.data();
+
+        createInfo.pNext = &multiviewInfo;
+    }
+
     // If depth/stencil resolve is used, we need to create the render pass with
     // vkCreateRenderPass2KHR.  Same when using the VK_EXT_multisampled_render_to_single_sampled
     // extension.
     if (depthStencilResolve.pDepthStencilResolveAttachment != nullptr || desc.isRenderToTexture())
     {
-        ANGLE_TRY(CreateRenderPass2(contextVk, createInfo, depthStencilResolve,
+        ANGLE_TRY(CreateRenderPass2(contextVk, createInfo, depthStencilResolve, multiviewInfo,
                                     desc.hasDepthUnresolveAttachment(),
                                     desc.hasStencilUnresolveAttachment(), desc.isRenderToTexture(),
                                     renderToTextureSamples, &renderPassHelper->getRenderPass()));

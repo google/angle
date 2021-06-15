@@ -7134,6 +7134,15 @@ void FramebufferHelper::release(ContextVk *contextVk)
     contextVk->addGarbage(&mFramebuffer);
 }
 
+LayerMode GetLayerMode(const vk::ImageHelper &image, uint32_t layerCount)
+{
+    const uint32_t imageLayerCount = GetImageLayerCountForView(image);
+    const bool allLayers           = layerCount == imageLayerCount;
+
+    ASSERT(allLayers || layerCount > 0 && layerCount <= gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    return allLayers ? LayerMode::All : static_cast<LayerMode>(layerCount);
+}
+
 // ImageViewHelper implementation.
 ImageViewHelper::ImageViewHelper() : mCurrentMaxLevel(0), mLinearColorspace(true) {}
 
@@ -7151,10 +7160,9 @@ ImageViewHelper::ImageViewHelper(ImageViewHelper &&other) : Resource(std::move(o
     std::swap(mLinearColorspace, other.mLinearColorspace);
 
     std::swap(mPerLevelStencilReadImageViews, other.mPerLevelStencilReadImageViews);
-    std::swap(mLevelDrawImageViews, other.mLevelDrawImageViews);
     std::swap(mLayerLevelDrawImageViews, other.mLayerLevelDrawImageViews);
-    std::swap(mLevelDrawImageViewsLinear, other.mLevelDrawImageViewsLinear);
     std::swap(mLayerLevelDrawImageViewsLinear, other.mLayerLevelDrawImageViewsLinear);
+    std::swap(mSubresourceDrawImageViews, other.mSubresourceDrawImageViews);
     std::swap(mLevelStorageImageViews, other.mLevelStorageImageViews);
     std::swap(mLayerLevelStorageImageViews, other.mLayerLevelStorageImageViews);
     std::swap(mImageViewSerial, other.mImageViewSerial);
@@ -7186,8 +7194,6 @@ void ImageViewHelper::release(RendererVk *renderer)
     ReleaseImageViews(&mPerLevelStencilReadImageViews, &garbage);
 
     // Release the draw views
-    ReleaseImageViews(&mLevelDrawImageViews, &garbage);
-    ReleaseImageViews(&mLevelDrawImageViewsLinear, &garbage);
     for (ImageViewVector &layerViews : mLayerLevelDrawImageViews)
     {
         for (ImageView &imageView : layerViews)
@@ -7209,6 +7215,16 @@ void ImageViewHelper::release(RendererVk *renderer)
             }
         }
     }
+    mLayerLevelDrawImageViewsLinear.clear();
+    for (auto &iter : mSubresourceDrawImageViews)
+    {
+        std::unique_ptr<ImageView> &imageView = iter.second;
+        if (imageView->valid())
+        {
+            garbage.emplace_back(GetGarbage(imageView.get()));
+        }
+    }
+    mSubresourceDrawImageViews.clear();
 
     // Release the storage views
     ReleaseImageViews(&mLevelStorageImageViews, &garbage);
@@ -7222,7 +7238,6 @@ void ImageViewHelper::release(RendererVk *renderer)
             }
         }
     }
-    mLayerLevelDrawImageViewsLinear.clear();
     mLayerLevelStorageImageViews.clear();
 
     if (!garbage.empty())
@@ -7251,8 +7266,6 @@ void ImageViewHelper::destroy(VkDevice device)
     DestroyImageViews(&mPerLevelStencilReadImageViews, device);
 
     // Release the draw views
-    DestroyImageViews(&mLevelDrawImageViews, device);
-    DestroyImageViews(&mLevelDrawImageViewsLinear, device);
     for (ImageViewVector &layerViews : mLayerLevelDrawImageViews)
     {
         for (ImageView &imageView : layerViews)
@@ -7268,6 +7281,13 @@ void ImageViewHelper::destroy(VkDevice device)
             imageView.destroy(device);
         }
     }
+    mLayerLevelDrawImageViewsLinear.clear();
+    for (auto &iter : mSubresourceDrawImageViews)
+    {
+        std::unique_ptr<ImageView> &imageView = iter.second;
+        imageView->destroy(device);
+    }
+    mSubresourceDrawImageViews.clear();
 
     // Release the storage views
     DestroyImageViews(&mLevelStorageImageViews, device);
@@ -7278,7 +7298,6 @@ void ImageViewHelper::destroy(VkDevice device)
             imageView.destroy(device);
         }
     }
-    mLayerLevelDrawImageViewsLinear.clear();
     mLayerLevelStorageImageViews.clear();
 
     mImageViewSerial = kInvalidImageOrBufferViewSerial;
@@ -7534,6 +7553,9 @@ angle::Result ImageViewHelper::getLevelLayerStorageImageView(ContextVk *contextV
 angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
                                                      const ImageHelper &image,
                                                      LevelIndex levelVk,
+                                                     uint32_t layer,
+                                                     uint32_t layerCount,
+                                                     gl::SrgbWriteControlMode mode,
                                                      const ImageView **imageViewOut)
 {
     ASSERT(image.valid());
@@ -7542,23 +7564,25 @@ angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
 
     retain(&contextVk->getResourceUseList());
 
-    // Lazily allocate the storage for image views
-    ImageView *imageView = GetLevelImageView(&mLevelDrawImageViews, levelVk, image.getLevelCount());
-    *imageViewOut        = imageView;
+    ImageSubresourceRange range = MakeImageSubresourceDrawRange(
+        image.toGLLevel(levelVk), layer, GetLayerMode(image, layerCount), mode);
 
-    if (imageView->valid())
+    std::unique_ptr<ImageView> &view = mSubresourceDrawImageViews[range];
+    if (view)
     {
+        *imageViewOut = view.get();
         return angle::Result::Continue;
     }
 
-    // Lazily allocate the image view itself.
+    view          = std::make_unique<ImageView>();
+    *imageViewOut = view.get();
+
+    // Lazily allocate the image view.
     // Note that these views are specifically made to be used as framebuffer attachments, and
     // therefore don't have swizzle.
-    const uint32_t layerCount = GetImageLayerCountForView(image);
-    gl::TextureType viewType  = Get2DTextureType(layerCount, image.getSamples());
+    gl::TextureType viewType = Get2DTextureType(layerCount, image.getSamples());
     return image.initLayerImageView(contextVk, viewType, image.getAspectFlags(), gl::SwizzleState(),
-                                    imageView, levelVk, 1, 0, layerCount,
-                                    gl::SrgbWriteControlMode::Default);
+                                    view.get(), levelVk, 1, layer, layerCount, mode);
 }
 
 angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
@@ -7607,14 +7631,46 @@ ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerial(
     ASSERT(mImageViewSerial.valid());
 
     ImageOrBufferViewSubresourceSerial serial;
-    serial.viewSerial = mImageViewSerial;
-    SetBitField(serial.subresource.level, levelGL.get());
-    SetBitField(serial.subresource.levelCount, levelCount);
-    SetBitField(serial.subresource.layer, layer);
-    SetBitField(serial.subresource.singleLayer, layerMode == LayerMode::Single ? 1 : 0);
-    SetBitField(serial.subresource.srgbDecodeMode, srgbDecodeMode);
-    SetBitField(serial.subresource.srgbOverrideMode, srgbOverrideMode);
+    serial.viewSerial  = mImageViewSerial;
+    serial.subresource = MakeImageSubresourceReadRange(levelGL, levelCount, layer, layerMode,
+                                                       srgbDecodeMode, srgbOverrideMode);
     return serial;
+}
+
+ImageSubresourceRange MakeImageSubresourceReadRange(gl::LevelIndex level,
+                                                    uint32_t levelCount,
+                                                    uint32_t layer,
+                                                    LayerMode layerMode,
+                                                    SrgbDecodeMode srgbDecodeMode,
+                                                    gl::SrgbOverride srgbOverrideMode)
+{
+    ImageSubresourceRange range;
+
+    SetBitField(range.level, level.get());
+    SetBitField(range.levelCount, levelCount);
+    SetBitField(range.layer, layer);
+    SetBitField(range.layerMode, layerMode);
+    SetBitField(range.srgbDecodeMode, srgbDecodeMode);
+    SetBitField(range.srgbMode, srgbOverrideMode);
+
+    return range;
+}
+
+ImageSubresourceRange MakeImageSubresourceDrawRange(gl::LevelIndex level,
+                                                    uint32_t layer,
+                                                    LayerMode layerMode,
+                                                    gl::SrgbWriteControlMode srgbWriteControlMode)
+{
+    ImageSubresourceRange range;
+
+    SetBitField(range.level, level.get());
+    SetBitField(range.levelCount, 1);
+    SetBitField(range.layer, layer);
+    SetBitField(range.layerMode, layerMode);
+    SetBitField(range.srgbDecodeMode, 0);
+    SetBitField(range.srgbMode, srgbWriteControlMode);
+
+    return range;
 }
 
 // BufferViewHelper implementation.

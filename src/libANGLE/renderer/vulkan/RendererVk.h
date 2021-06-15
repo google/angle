@@ -446,6 +446,8 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceDepthStencilResolvePropertiesKHR mDepthStencilResolveProperties;
     VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT
         mMultisampledRenderToSingleSampledFeatures;
+    VkPhysicalDeviceMultiviewFeatures mMultiviewFeatures;
+    VkPhysicalDeviceMultiviewProperties mMultiviewProperties;
     VkPhysicalDeviceDriverPropertiesKHR mDriverProperties;
     VkPhysicalDeviceCustomBorderColorFeaturesEXT mCustomBorderColorFeatures;
     VkExternalFenceProperties mExternalFenceProperties;

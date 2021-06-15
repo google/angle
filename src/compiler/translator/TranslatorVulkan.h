@@ -41,6 +41,8 @@ class TranslatorVulkan : public TCompiler
                                         SpecConst *specConst,
                                         DriverUniform *driverUniforms);
 
+    void writeExtensionBehavior(ShCompileOptions compileOptions, TInfoSinkBase &sink);
+
     // Give subclass such as TranslatorMetal a chance to do depth transform before
     // TranslatorVulkan apply its own transform.
     ANGLE_NO_DISCARD virtual bool transformDepthBeforeCorrection(
