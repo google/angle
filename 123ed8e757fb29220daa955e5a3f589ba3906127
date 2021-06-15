@@ -72,6 +72,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9da03514_e00b0218",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-15T17:30:46Z",
+      "side": 1,
+      "message": "\u003e Does PackPixels() work for you?\n\ni see, so basically add a `sRGBToLinear(...)` method to `struct R8G8B8A8SRGB` and call that in packpixels\n\nthat takes care of RGBA8 format, but there are tons of other formats that have srgb variants. Do you suggest writing such CPU funcs for each of those formats (including compressed)?",
+      "parentUuid": "023a1de0_fa5c51d0",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 42
+      },
+      "revId": "123ed8e757fb29220daa955e5a3f589ba3906127",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f722f8aa_8f78b843",
