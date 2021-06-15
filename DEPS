@@ -7,6 +7,10 @@ use_relative_paths = True
 
 gclient_gn_args_file = 'build/config/gclient_args.gni'
 
+gclient_gn_args = [
+  'generate_location_tags',
+]
+
 vars = {
   'android_git': 'https://android.googlesource.com',
   'chromium_git': 'https://chromium.googlesource.com',
@@ -15,6 +19,9 @@ vars = {
 
   # This variable is overrided in Chromium's DEPS file.
   'build_with_chromium': False,
+
+  # We don't use location metadata in our test isolates.
+  'generate_location_tags': False,
 
   # Only check out public sources by default. This can be overridden with custom_vars.
   'checkout_angle_internal': False,
