@@ -33,6 +33,24 @@
       "message": "I know bitfields aren\u0027t guaranteed to pack into what you would expect them to based on their size. Is this meant to be a change that works when we compile+ship ANGLE so it\u0027s ok? Or a change that\u0027s expected to always work on any platform?\nIf latter I think it\u0027d be better to use an array with bit mask access, but up to you.",
       "revId": "a26321357cc1b3b53ffecb7918694cf5ea2fd155",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "665acf8c_2feec8e8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-15T17:21:47Z",
+      "side": 1,
+      "message": "That\u0027s right they are not guaranteed. I\u0027ll add a static_assert in the next change to make sure the assumption holds.",
+      "parentUuid": "bfd13105_8912fd2d",
+      "revId": "a26321357cc1b3b53ffecb7918694cf5ea2fd155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
