@@ -115,6 +115,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "283adecf_a49bcf52",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-16T16:28:46Z",
+      "side": 1,
+      "message": "-1 to flushRP when releasing a resource.",
+      "parentUuid": "e7942b7b_d0b3a9ad",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 65
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6c570e37_79057eb7",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 11
