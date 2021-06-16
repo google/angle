@@ -30,7 +30,9 @@ FenceNVGL::~FenceNVGL()
 angle::Result FenceNVGL::set(const gl::Context *context, GLenum condition)
 {
     ASSERT(condition == GL_ALL_COMPLETED_NV);
+    ContextGL *contextGL = GetImplAs<ContextGL>(context);
     mFunctions->setFenceNV(mFence, condition);
+    contextGL->markWorkSubmitted();
     return angle::Result::Continue;
 }
 
