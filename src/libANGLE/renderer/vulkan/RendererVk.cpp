@@ -171,8 +171,6 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/5331
     "VUID-VkSubpassDescriptionDepthStencilResolve-depthResolveMode-parameter",
     "VUID-VkSubpassDescriptionDepthStencilResolve-stencilResolveMode-parameter",
-    // https://crbug.com/1183542
-    "VUID-vkCmdBindDescriptorSets-pDescriptorSets-01979",
     // https://issuetracker.google.com/175584609
     "VUID-vkCmdDraw-None-04584",
     "VUID-vkCmdDrawIndexed-None-04584",

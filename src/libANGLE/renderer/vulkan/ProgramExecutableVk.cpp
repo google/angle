@@ -1056,7 +1056,8 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
         contextVk, driverUniformsSetDesc, DescriptorSetIndex::Internal,
         mDescriptorSetLayouts[DescriptorSetIndex::Internal].get().getHandle()));
 
-    mDynamicUniformDescriptorOffsets.resize(glExecutable.getLinkedShaderStageCount());
+    mDynamicUniformDescriptorOffsets.clear();
+    mDynamicUniformDescriptorOffsets.resize(glExecutable.getLinkedShaderStageCount(), 0);
 
     return angle::Result::Continue;
 }
@@ -1115,15 +1116,19 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
     VkWriteDescriptorSet &writeInfo    = contextVk->allocWriteDescriptorSet();
     VkDescriptorBufferInfo &bufferInfo = contextVk->allocDescriptorBufferInfo();
 
+    // Size is set to the size of the empty buffer for shader statges with no uniform data,
+    // otherwise it is set to the total size of the uniform data in the current shader stage
+    VkDeviceSize size              = defaultUniformBlock.uniformData.size();
     vk::BufferHelper *bufferHelper = defaultUniformBuffer;
     if (defaultUniformBlock.uniformData.empty())
     {
         bufferHelper = &contextVk->getEmptyBuffer();
         bufferHelper->retain(&contextVk->getResourceUseList());
+        size = bufferHelper->getSize();
     }
 
     WriteBufferDescriptorSetBinding(
-        *bufferHelper, 0, VK_WHOLE_SIZE, mDescriptorSets[DescriptorSetIndex::UniformsAndXfb],
+        *bufferHelper, 0, size, mDescriptorSets[DescriptorSetIndex::UniformsAndXfb],
         VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, info.binding, 0, 0, &bufferInfo, &writeInfo);
 }
 
