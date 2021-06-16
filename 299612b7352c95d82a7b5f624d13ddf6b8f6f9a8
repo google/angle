@@ -93,6 +93,30 @@
       },
       "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "792c4010_0e074a55",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T15:35:44Z",
+      "side": 1,
+      "message": "Interestingly for a one pixel height this was returning Inf. Do you know what we should be doing instead?",
+      "parentUuid": "8ef6c0c6_c273283e",
+      "range": {
+        "startLine": 69,
+        "startChar": 45,
+        "endLine": 69,
+        "endChar": 82
+      },
+      "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
