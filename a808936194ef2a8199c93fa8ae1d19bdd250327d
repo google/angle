@@ -50,6 +50,24 @@
       "message": "redundant",
       "revId": "a808936194ef2a8199c93fa8ae1d19bdd250327d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aedbdc35_0f080299",
+        "filename": "src/compiler/translator/BuildSPIRV.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1156,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-16T17:49:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34288e33_018ac309",
+      "revId": "a808936194ef2a8199c93fa8ae1d19bdd250327d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
