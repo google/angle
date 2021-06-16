@@ -117,6 +117,30 @@
       },
       "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cfd01c11_83709343",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-16T19:28:25Z",
+      "side": 1,
+      "message": "Ugh, I see. Yea, the floating point range doesn\u0027t cover the entire int range.  safe math + INVALID_OPERATION if we overflow?",
+      "parentUuid": "792c4010_0e074a55",
+      "range": {
+        "startLine": 69,
+        "startChar": 45,
+        "endLine": 69,
+        "endChar": 82
+      },
+      "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
