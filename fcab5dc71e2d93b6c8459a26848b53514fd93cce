@@ -69,6 +69,24 @@
       "parentUuid": "816eb826_fffdf4e1",
       "revId": "fcab5dc71e2d93b6c8459a26848b53514fd93cce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be6cf6b6_b2f4363e",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-16T18:26:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df03aa40_7a2c89a9",
+      "revId": "fcab5dc71e2d93b6c8459a26848b53514fd93cce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
