@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "08b7c453_be664224",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-16T22:56:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1ab1865_094cde7d",
+      "range": {
+        "startLine": 28,
+        "startChar": 10,
+        "endLine": 28,
+        "endChar": 59
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e03457dd_988a107e",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-06-16T20:51:31Z",
       "side": 1,
       "message": "nit: link instead of text",
+      "range": {
+        "startLine": 41,
+        "startChar": 34,
+        "endLine": 41,
+        "endChar": 85
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6de73e9b_217e71ac",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-16T22:56:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e03457dd_988a107e",
       "range": {
         "startLine": 41,
         "startChar": 34,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "124b500e_5b78f835",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-16T22:56:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dfc6163_8735051e",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 148
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b7549180_b44a82d3",
@@ -127,6 +199,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0d02594_ad2c91c3",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-16T22:56:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7549180_b44a82d3",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 83
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66ea6e06_fede7be7",
@@ -140,6 +236,30 @@
       "writtenOn": "2021-06-16T20:51:31Z",
       "side": 1,
       "message": "nit: can omit this",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 16
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "798ea027_db983552",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-16T22:56:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66ea6e06_fede7be7",
       "range": {
         "startLine": 69,
         "startChar": 0,
@@ -175,6 +295,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "52b0d19c_bcfda44f",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-16T22:56:37Z",
+      "side": 1,
+      "message": "Sorry, but this was part of the original motivation for this CL.  I\u0027ve done wrangler duties before, but did not remember how to find/add a Skia component.",
+      "parentUuid": "a127d629_afd3b3fb",
+      "range": {
+        "startLine": 74,
+        "startChar": 46,
+        "endLine": 74,
+        "endChar": 105
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "21faa40a_2c7eae02",
         "filename": "infra/ANGLEWrangling.md",
         "patchSetId": 1
@@ -186,6 +330,30 @@
       "writtenOn": "2021-06-16T20:51:31Z",
       "side": 1,
       "message": "I\u0027d add one line after each:\n\nGPU: For general GPU bugs\nANGLE: For ANGLE-related Chromium bugs\nSkia: For Skia-specific bugs",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 21
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56a56ca5_8d8f2d10",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-16T22:56:37Z",
+      "side": 1,
+      "message": "Done. Definitely a good add!",
+      "parentUuid": "21faa40a_2c7eae02",
       "range": {
         "startLine": 75,
         "startChar": 0,
