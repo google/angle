@@ -8,7 +8,7 @@
 #ifndef LIBANGLE_CL_UTILS_H_
 #define LIBANGLE_CL_UTILS_H_
 
-#include "libANGLE/CLtypes.h"
+#include "libANGLE/renderer/CLtypes.h"
 
 namespace cl
 {
@@ -25,6 +25,8 @@ inline bool OverlapRegions(size_t offset1, size_t offset2, size_t size)
     return (offset1 <= offset2 && offset2 <= offset1 + size - 1u) ||
            (offset2 <= offset1 && offset1 <= offset2 + size - 1u);
 }
+
+bool IsValidImageFormat(const cl_image_format *imageFormat, const rx::CLExtensions &extensions);
 
 }  // namespace cl
 

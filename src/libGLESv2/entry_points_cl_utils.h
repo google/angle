@@ -13,6 +13,7 @@
 
 #include "common/PackedCLEnums_autogen.h"
 
+#include <cinttypes>
 #include <cstdio>
 
 #if defined(ANGLE_ENABLE_DEBUG_TRACE)

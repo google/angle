@@ -394,7 +394,6 @@ CLContextImpl::Ptr CLPlatformCL::createContext(cl::Context &context,
         nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
     }
 
-    CLContextImpl::Ptr contextImpl;
     cl_context nativeContext = mNative->getDispatch().clCreateContext(
         properties, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(),
         cl::Context::ErrorCallback, &context, &errorCode);

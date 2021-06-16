@@ -11,6 +11,7 @@
 #include "libANGLE/renderer/cl/CLDeviceCL.h"
 #include "libANGLE/renderer/cl/CLEventCL.h"
 #include "libANGLE/renderer/cl/CLMemoryCL.h"
+#include "libANGLE/renderer/cl/CLPlatformCL.h"
 #include "libANGLE/renderer/cl/CLProgramCL.h"
 #include "libANGLE/renderer/cl/CLSamplerCL.h"
 
@@ -24,6 +25,7 @@
 #include "libANGLE/CLPlatform.h"
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/CLSampler.h"
+#include "libANGLE/cl_utils.h"
 
 namespace rx
 {
@@ -185,8 +187,35 @@ cl_int CLContextCL::getSupportedImageFormats(cl::MemFlags flags,
                                              cl_image_format *imageFormats,
                                              cl_uint *numImageFormats)
 {
-    return mNative->getDispatch().clGetSupportedImageFormats(
-        mNative, flags.get(), cl::ToCLenum(imageType), numEntries, imageFormats, numImageFormats);
+    // Fetch available image formats for given flags and image type.
+    cl_uint numFormats = 0u;
+    ANGLE_CL_TRY(mNative->getDispatch().clGetSupportedImageFormats(
+        mNative, flags.get(), cl::ToCLenum(imageType), 0u, nullptr, &numFormats));
+    std::vector<cl_image_format> formats(numFormats);
+    ANGLE_CL_TRY(mNative->getDispatch().clGetSupportedImageFormats(
+        mNative, flags.get(), cl::ToCLenum(imageType), numFormats, formats.data(), nullptr));
+
+    // Filter out formats which are not supported by front end.
+    const CLPlatformImpl::Info &info = mContext.getPlatform().getInfo();
+    std::vector<cl_image_format> supportedFormats;
+    supportedFormats.reserve(formats.size());
+    std::copy_if(
+        formats.cbegin(), formats.cend(), std::back_inserter(supportedFormats),
+        [&](const cl_image_format &format) { return cl::IsValidImageFormat(&format, info); });
+
+    if (imageFormats != nullptr)
+    {
+        auto formatIt = supportedFormats.cbegin();
+        while (numEntries-- != 0u && formatIt != supportedFormats.cend())
+        {
+            *imageFormats++ = *formatIt++;
+        }
+    }
+    if (numImageFormats != nullptr)
+    {
+        *numImageFormats = static_cast<cl_uint>(supportedFormats.size());
+    }
+    return CL_SUCCESS;
 }
 
 CLSamplerImpl::Ptr CLContextCL::createSampler(const cl::Sampler &sampler, cl_int &errorCode)

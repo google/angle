@@ -26,7 +26,11 @@ struct CLExtensions
 
     void initializeExtensions(std::string &&extensionStr);
 
+    std::string versionStr;
+    cl_version version = 0u;
+
     std::string extensions;
+    NameVersionVector extensionsWithVersion;
 
     // These Khronos extension names must be returned by all devices that support OpenCL 1.1.
     bool khrByteAddressableStore       = false;  // cl_khr_byte_addressable_store

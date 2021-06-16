@@ -57,11 +57,8 @@ class CLDeviceImpl : angle::NonCopyable
         cl_uint queueOnDeviceMaxSize = 0u;
         std::string builtInKernels;
         NameVersionVector builtInKernelsWithVersion;
-        std::string versionStr;
-        cl_version version = 0u;
         NameVersionVector OpenCL_C_AllVersions;
         NameVersionVector OpenCL_C_Features;
-        NameVersionVector extensionsWithVersion;
         std::vector<cl_device_partition_property> partitionProperties;
         std::vector<cl_device_partition_property> partitionType;
     };

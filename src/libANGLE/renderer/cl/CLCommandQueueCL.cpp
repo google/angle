@@ -446,6 +446,14 @@ void *CLCommandQueueCL::enqueueMapImage(const cl::Image &image,
         mNative, nativeImage, block, mapFlags.get(), origin, region, imageRowPitch, imageSlicePitch,
         numEvents, nativeEventsPtr, nativeEventPtr, &errorCode);
 
+    // TODO(jplate) Remove workaround after bug is fixed http://anglebug.com/6066
+    if (imageSlicePitch != nullptr && (image.getType() == cl::MemObjectType::Image1D ||
+                                       image.getType() == cl::MemObjectType::Image1D_Buffer ||
+                                       image.getType() == cl::MemObjectType::Image2D))
+    {
+        *imageSlicePitch = 0u;
+    }
+
     CheckCreateEvent(errorCode, nativeEvent, eventCreateFunc);
     return map;
 }

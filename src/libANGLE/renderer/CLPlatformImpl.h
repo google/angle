@@ -36,10 +36,7 @@ class CLPlatformImpl : angle::NonCopyable
         bool isValid() const { return version != 0u; }
 
         std::string profile;
-        std::string versionStr;
-        cl_version version = 0u;
         std::string name;
-        NameVersionVector extensionsWithVersion;
         cl_ulong hostTimerRes = 0u;
     };
 

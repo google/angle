@@ -29,16 +29,6 @@
         }                                   \
     } while (0)
 
-#define ANGLE_TRY(expression)                \
-    do                                       \
-    {                                        \
-        const cl_int errorCode = expression; \
-        if (errorCode != CL_SUCCESS)         \
-        {                                    \
-            return errorCode;                \
-        }                                    \
-    } while (0)
-
 namespace cl
 {
 
@@ -171,101 +161,6 @@ bool ValidateMemoryProperties(const cl_mem_properties *properties)
         {
             return false;
         }
-    }
-    return true;
-}
-
-bool ValidateImageFormat(const cl_image_format *imageFormat, const Platform &platform)
-{
-    if (imageFormat == nullptr)
-    {
-        return false;
-    }
-    switch (imageFormat->image_channel_order)
-    {
-        case CL_R:
-        case CL_A:
-        case CL_LUMINANCE:
-        case CL_INTENSITY:
-        case CL_RG:
-        case CL_RA:
-        case CL_RGB:
-        case CL_RGBA:
-        case CL_ARGB:
-        case CL_BGRA:
-            break;
-
-        case CL_Rx:
-        case CL_RGx:
-        case CL_RGBx:
-            if (!platform.isVersionOrNewer(1u, 1u))
-            {
-                return false;
-            }
-            break;
-
-        case CL_ABGR:
-        case CL_sRGB:
-        case CL_sRGBA:
-        case CL_sBGRA:
-        case CL_sRGBx:
-            if (!platform.isVersionOrNewer(2u, 0u))
-            {
-                return false;
-            }
-            break;
-
-        case CL_DEPTH:
-            // CL_DEPTH can only be used if channel data type = CL_UNORM_INT16 or CL_FLOAT.
-            if (imageFormat->image_channel_data_type != CL_UNORM_INT16 &&
-                imageFormat->image_channel_data_type != CL_FLOAT)
-            {
-                return false;
-            }
-            if (!platform.getInfo().khrDepthImages)
-            {
-                return false;
-            }
-            break;
-
-        default:
-            return false;
-    }
-    switch (imageFormat->image_channel_data_type)
-    {
-        case CL_SNORM_INT8:
-        case CL_SNORM_INT16:
-        case CL_UNORM_INT8:
-        case CL_UNORM_INT16:
-        case CL_SIGNED_INT8:
-        case CL_SIGNED_INT16:
-        case CL_SIGNED_INT32:
-        case CL_UNSIGNED_INT8:
-        case CL_UNSIGNED_INT16:
-        case CL_UNSIGNED_INT32:
-        case CL_HALF_FLOAT:
-        case CL_FLOAT:
-            break;
-
-        case CL_UNORM_SHORT_565:
-        case CL_UNORM_SHORT_555:
-        case CL_UNORM_INT_101010:
-            if (imageFormat->image_channel_order != CL_RGB &&
-                imageFormat->image_channel_order != CL_RGBx)
-            {
-                return false;
-            }
-            break;
-
-        case CL_UNORM_INT_101010_2:
-            if (!platform.isVersionOrNewer(2u, 1u) || imageFormat->image_channel_order != CL_RGBA)
-            {
-                return false;
-            }
-            break;
-
-        default:
-            return false;
     }
     return true;
 }
@@ -572,6 +467,8 @@ cl_int ValidateHostRegionForImage(const Image &image,
     }
     if (slicePitch != 0u)
     {
+        // TODO(jplate) Follow up with https://github.com/KhronosGroup/OpenCL-Docs/issues/624
+        // This error is missing in the OpenCL spec.
         // slice_pitch must be 0 if image is a 1D or 2D image.
         if (image.getType() == MemObjectType::Image1D ||
             image.getType() == MemObjectType::Image1D_Buffer ||
@@ -791,7 +688,7 @@ cl_int ValidateCreateContext(const cl_context_properties *properties,
                              const void *user_data)
 {
     const Platform *platform = nullptr;
-    ANGLE_TRY(ValidateContextProperties(properties, platform));
+    ANGLE_CL_TRY(ValidateContextProperties(properties, platform));
 
     // CL_INVALID_VALUE if devices is NULL or if num_devices is equal to zero
     // or if pfn_notify is NULL but user_data is not NULL.
@@ -822,7 +719,7 @@ cl_int ValidateCreateContextFromType(const cl_context_properties *properties,
                                      const void *user_data)
 {
     const Platform *platform = nullptr;
-    ANGLE_TRY(ValidateContextProperties(properties, platform));
+    ANGLE_CL_TRY(ValidateContextProperties(properties, platform));
 
     // CL_INVALID_DEVICE_TYPE if device_type is not a valid value.
     if (!Device::IsValidType(device_type))
@@ -1703,9 +1600,9 @@ cl_int ValidateEnqueueReadBuffer(cl_command_queue command_queue,
                                  const cl_event *event_wait_list,
                                  const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
-    ANGLE_TRY(ValidateEnqueueBuffer(command_queue->cast<CommandQueue>(), buffer, true, false));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(command_queue->cast<CommandQueue>(), buffer, true, false));
 
     // CL_INVALID_VALUE if the region being read or written specified
     // by (offset, size) is out of bounds or if ptr is a NULL value.
@@ -1727,9 +1624,9 @@ cl_int ValidateEnqueueWriteBuffer(cl_command_queue command_queue,
                                   const cl_event *event_wait_list,
                                   const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
-    ANGLE_TRY(ValidateEnqueueBuffer(command_queue->cast<CommandQueue>(), buffer, false, true));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(command_queue->cast<CommandQueue>(), buffer, false, true));
 
     // CL_INVALID_VALUE if the region being read or written specified
     // by (offset, size) is out of bounds or if ptr is a NULL value.
@@ -1751,14 +1648,14 @@ cl_int ValidateEnqueueCopyBuffer(cl_command_queue command_queue,
                                  const cl_event *event_wait_list,
                                  const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
 
-    ANGLE_TRY(ValidateEnqueueBuffer(queue, src_buffer, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(queue, src_buffer, false, false));
     const Buffer &src = src_buffer->cast<Buffer>();
 
-    ANGLE_TRY(ValidateEnqueueBuffer(queue, dst_buffer, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(queue, dst_buffer, false, false));
     const Buffer &dst = dst_buffer->cast<Buffer>();
 
     // CL_INVALID_VALUE if src_offset, dst_offset, size, src_offset + size or dst_offset + size
@@ -1799,15 +1696,15 @@ cl_int ValidateEnqueueReadImage(cl_command_queue command_queue,
                                 const cl_event *event_wait_list,
                                 const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
 
-    ANGLE_TRY(ValidateEnqueueImage(queue, image, true, false));
+    ANGLE_CL_TRY(ValidateEnqueueImage(queue, image, true, false));
     const Image &img = image->cast<Image>();
 
-    ANGLE_TRY(ValidateImageForDevice(img, queue.getDevice(), origin, region));
-    ANGLE_TRY(ValidateHostRegionForImage(img, region, row_pitch, slice_pitch, ptr));
+    ANGLE_CL_TRY(ValidateImageForDevice(img, queue.getDevice(), origin, region));
+    ANGLE_CL_TRY(ValidateHostRegionForImage(img, region, row_pitch, slice_pitch, ptr));
 
     return CL_SUCCESS;
 }
@@ -1824,15 +1721,15 @@ cl_int ValidateEnqueueWriteImage(cl_command_queue command_queue,
                                  const cl_event *event_wait_list,
                                  const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
 
-    ANGLE_TRY(ValidateEnqueueImage(queue, image, false, true));
+    ANGLE_CL_TRY(ValidateEnqueueImage(queue, image, false, true));
     const Image &img = image->cast<Image>();
 
-    ANGLE_TRY(ValidateImageForDevice(img, queue.getDevice(), origin, region));
-    ANGLE_TRY(ValidateHostRegionForImage(img, region, input_row_pitch, input_slice_pitch, ptr));
+    ANGLE_CL_TRY(ValidateImageForDevice(img, queue.getDevice(), origin, region));
+    ANGLE_CL_TRY(ValidateHostRegionForImage(img, region, input_row_pitch, input_slice_pitch, ptr));
 
     return CL_SUCCESS;
 }
@@ -1847,14 +1744,14 @@ cl_int ValidateEnqueueCopyImage(cl_command_queue command_queue,
                                 const cl_event *event_wait_list,
                                 const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
 
-    ANGLE_TRY(ValidateEnqueueImage(queue, src_image, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueImage(queue, src_image, false, false));
     const Image &src = src_image->cast<Image>();
 
-    ANGLE_TRY(ValidateEnqueueImage(queue, dst_image, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueImage(queue, dst_image, false, false));
     const Image &dst = dst_image->cast<Image>();
 
     // CL_IMAGE_FORMAT_MISMATCH if src_image and dst_image do not use the same image format.
@@ -1864,8 +1761,8 @@ cl_int ValidateEnqueueCopyImage(cl_command_queue command_queue,
         return CL_IMAGE_FORMAT_MISMATCH;
     }
 
-    ANGLE_TRY(ValidateImageForDevice(src, queue.getDevice(), src_origin, region));
-    ANGLE_TRY(ValidateImageForDevice(dst, queue.getDevice(), dst_origin, region));
+    ANGLE_CL_TRY(ValidateImageForDevice(src, queue.getDevice(), src_origin, region));
+    ANGLE_CL_TRY(ValidateImageForDevice(dst, queue.getDevice(), dst_origin, region));
 
     // CL_MEM_COPY_OVERLAP if src_image and dst_image are the same image object
     // and the source and destination regions overlap.
@@ -1910,14 +1807,14 @@ cl_int ValidateEnqueueCopyImageToBuffer(cl_command_queue command_queue,
                                         const cl_event *event_wait_list,
                                         const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
 
-    ANGLE_TRY(ValidateEnqueueImage(queue, src_image, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueImage(queue, src_image, false, false));
     const Image &src = src_image->cast<Image>();
 
-    ANGLE_TRY(ValidateEnqueueBuffer(queue, dst_buffer, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(queue, dst_buffer, false, false));
     const Buffer &dst = dst_buffer->cast<Buffer>();
 
     // CL_INVALID_MEM_OBJECT if src_image is a 1D image buffer object created from dst_buffer.
@@ -1926,7 +1823,7 @@ cl_int ValidateEnqueueCopyImageToBuffer(cl_command_queue command_queue,
         return CL_INVALID_MEM_OBJECT;
     }
 
-    ANGLE_TRY(ValidateImageForDevice(src, queue.getDevice(), src_origin, region));
+    ANGLE_CL_TRY(ValidateImageForDevice(src, queue.getDevice(), src_origin, region));
 
     // CL_INVALID_VALUE if the region specified by dst_offset and dst_offset + dst_cb
     // refer to a region outside dst_buffer.
@@ -1958,14 +1855,14 @@ cl_int ValidateEnqueueCopyBufferToImage(cl_command_queue command_queue,
                                         const cl_event *event_wait_list,
                                         const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
 
-    ANGLE_TRY(ValidateEnqueueBuffer(queue, src_buffer, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(queue, src_buffer, false, false));
     const Buffer &src = src_buffer->cast<Buffer>();
 
-    ANGLE_TRY(ValidateEnqueueImage(queue, dst_image, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueImage(queue, dst_image, false, false));
     const Image &dst = dst_image->cast<Image>();
 
     // CL_INVALID_MEM_OBJECT if dst_image is a 1D image buffer object created from src_buffer.
@@ -1974,7 +1871,7 @@ cl_int ValidateEnqueueCopyBufferToImage(cl_command_queue command_queue,
         return CL_INVALID_MEM_OBJECT;
     }
 
-    ANGLE_TRY(ValidateImageForDevice(dst, queue.getDevice(), dst_origin, region));
+    ANGLE_CL_TRY(ValidateImageForDevice(dst, queue.getDevice(), dst_origin, region));
 
     // CL_INVALID_VALUE if the region specified by src_offset and src_offset + src_cb
     // refer to a region outside src_buffer.
@@ -2006,15 +1903,15 @@ cl_int ValidateEnqueueMapBuffer(cl_command_queue command_queue,
                                 const cl_event *event_wait_list,
                                 const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
 
     // CL_INVALID_OPERATION if buffer has been created with CL_MEM_HOST_WRITE_ONLY or
     // CL_MEM_HOST_NO_ACCESS and CL_MAP_READ is set in map_flags
     // or if buffer has been created with CL_MEM_HOST_READ_ONLY or CL_MEM_HOST_NO_ACCESS
     // and CL_MAP_WRITE or CL_MAP_WRITE_INVALIDATE_REGION is set in map_flags.
-    ANGLE_TRY(
+    ANGLE_CL_TRY(
         ValidateEnqueueBuffer(queue, buffer, map_flags.isSet(CL_MAP_READ),
                               map_flags.isSet(CL_MAP_WRITE | CL_MAP_WRITE_INVALIDATE_REGION)));
 
@@ -2041,19 +1938,20 @@ cl_int ValidateEnqueueMapImage(cl_command_queue command_queue,
                                const cl_event *event_wait_list,
                                const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
 
     // CL_INVALID_OPERATION if image has been created with CL_MEM_HOST_WRITE_ONLY or
     // CL_MEM_HOST_NO_ACCESS and CL_MAP_READ is set in map_flags
     // or if image has been created with CL_MEM_HOST_READ_ONLY or CL_MEM_HOST_NO_ACCESS
     // and CL_MAP_WRITE or CL_MAP_WRITE_INVALIDATE_REGION is set in map_flags.
-    ANGLE_TRY(ValidateEnqueueImage(queue, image, map_flags.isSet(CL_MAP_READ),
-                                   map_flags.isSet(CL_MAP_WRITE | CL_MAP_WRITE_INVALIDATE_REGION)));
+    ANGLE_CL_TRY(
+        ValidateEnqueueImage(queue, image, map_flags.isSet(CL_MAP_READ),
+                             map_flags.isSet(CL_MAP_WRITE | CL_MAP_WRITE_INVALIDATE_REGION)));
     const Image &img = image->cast<Image>();
 
-    ANGLE_TRY(ValidateImageForDevice(img, queue.getDevice(), origin, region));
+    ANGLE_CL_TRY(ValidateImageForDevice(img, queue.getDevice(), origin, region));
 
     // CL_INVALID_VALUE if values specified in map_flags are not valid.
     if (!ValidateMapFlags(map_flags, queue.getContext().getPlatform()))
@@ -2086,8 +1984,8 @@ cl_int ValidateEnqueueUnmapMemObject(cl_command_queue command_queue,
                                      const cl_event *event_wait_list,
                                      const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
 
     // CL_INVALID_MEM_OBJECT if memobj is not a valid memory object or is a pipe object.
@@ -2120,8 +2018,8 @@ cl_int ValidateEnqueueNDRangeKernel(cl_command_queue command_queue,
                                     const cl_event *event_wait_list,
                                     const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
     const Device &device      = queue.getDevice();
 
@@ -2209,8 +2107,8 @@ cl_int ValidateEnqueueNativeKernel(cl_command_queue command_queue,
                                    const cl_event *event_wait_list,
                                    const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
 
     // CL_INVALID_OPERATION if the device associated with command_queue
@@ -2460,8 +2358,8 @@ cl_int ValidateEnqueueTask(cl_command_queue command_queue,
                            const cl_event *event_wait_list,
                            const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
 
     // CL_INVALID_KERNEL if kernel is not a valid kernel object.
     if (!Kernel::IsValid(kernel))
@@ -2651,18 +2549,18 @@ cl_int ValidateEnqueueReadBufferRect(cl_command_queue command_queue,
                                      const cl_event *event_wait_list,
                                      const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
     if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 1u))
     {
         return CL_INVALID_COMMAND_QUEUE;
     }
 
-    ANGLE_TRY(ValidateEnqueueBuffer(queue, buffer, true, false));
-    ANGLE_TRY(ValidateBufferRect(buffer->cast<Buffer>(), buffer_origin, region, buffer_row_pitch,
-                                 buffer_slice_pitch));
-    ANGLE_TRY(ValidateHostRect(host_origin, region, host_row_pitch, host_slice_pitch, ptr));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(queue, buffer, true, false));
+    ANGLE_CL_TRY(ValidateBufferRect(buffer->cast<Buffer>(), buffer_origin, region, buffer_row_pitch,
+                                    buffer_slice_pitch));
+    ANGLE_CL_TRY(ValidateHostRect(host_origin, region, host_row_pitch, host_slice_pitch, ptr));
 
     return CL_SUCCESS;
 }
@@ -2682,18 +2580,18 @@ cl_int ValidateEnqueueWriteBufferRect(cl_command_queue command_queue,
                                       const cl_event *event_wait_list,
                                       const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
     if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 1u))
     {
         return CL_INVALID_COMMAND_QUEUE;
     }
 
-    ANGLE_TRY(ValidateEnqueueBuffer(queue, buffer, false, true));
-    ANGLE_TRY(ValidateBufferRect(buffer->cast<Buffer>(), buffer_origin, region, buffer_row_pitch,
-                                 buffer_slice_pitch));
-    ANGLE_TRY(ValidateHostRect(host_origin, region, host_row_pitch, host_slice_pitch, ptr));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(queue, buffer, false, true));
+    ANGLE_CL_TRY(ValidateBufferRect(buffer->cast<Buffer>(), buffer_origin, region, buffer_row_pitch,
+                                    buffer_slice_pitch));
+    ANGLE_CL_TRY(ValidateHostRect(host_origin, region, host_row_pitch, host_slice_pitch, ptr));
 
     return CL_SUCCESS;
 }
@@ -2712,22 +2610,22 @@ cl_int ValidateEnqueueCopyBufferRect(cl_command_queue command_queue,
                                      const cl_event *event_wait_list,
                                      const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
     if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 1u))
     {
         return CL_INVALID_COMMAND_QUEUE;
     }
 
-    ANGLE_TRY(ValidateEnqueueBuffer(queue, src_buffer, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(queue, src_buffer, false, false));
     const Buffer &src = src_buffer->cast<Buffer>();
 
-    ANGLE_TRY(ValidateEnqueueBuffer(queue, dst_buffer, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(queue, dst_buffer, false, false));
     const Buffer &dst = dst_buffer->cast<Buffer>();
 
-    ANGLE_TRY(ValidateBufferRect(src, src_origin, region, src_row_pitch, src_slice_pitch));
-    ANGLE_TRY(ValidateBufferRect(dst, dst_origin, region, dst_row_pitch, dst_slice_pitch));
+    ANGLE_CL_TRY(ValidateBufferRect(src, src_origin, region, src_row_pitch, src_slice_pitch));
+    ANGLE_CL_TRY(ValidateBufferRect(dst, dst_origin, region, dst_row_pitch, dst_slice_pitch));
 
     // CL_INVALID_VALUE if src_buffer and dst_buffer are the same buffer object and src_slice_pitch
     // is not equal to dst_slice_pitch or src_row_pitch is not equal to dst_row_pitch.
@@ -2811,7 +2709,7 @@ cl_int ValidateCreateImage(cl_context context,
 
     // CL_INVALID_IMAGE_FORMAT_DESCRIPTOR if values specified in image_format are not valid
     // or if image_format is NULL.
-    if (!ValidateImageFormat(image_format, ctx.getPlatform()))
+    if (!IsValidImageFormat(image_format, ctx.getPlatform().getInfo()))
     {
         return CL_INVALID_IMAGE_FORMAT_DESCRIPTOR;
     }
@@ -3196,15 +3094,15 @@ cl_int ValidateEnqueueFillBuffer(cl_command_queue command_queue,
                                  const cl_event *event_wait_list,
                                  const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
     if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 2u))
     {
         return CL_INVALID_COMMAND_QUEUE;
     }
 
-    ANGLE_TRY(ValidateEnqueueBuffer(queue, buffer, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueBuffer(queue, buffer, false, false));
 
     // CL_INVALID_VALUE if offset or offset + size require accessing
     // elements outside the buffer object respectively.
@@ -3239,18 +3137,18 @@ cl_int ValidateEnqueueFillImage(cl_command_queue command_queue,
                                 const cl_event *event_wait_list,
                                 const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, true, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
     if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 2u))
     {
         return CL_INVALID_COMMAND_QUEUE;
     }
 
-    ANGLE_TRY(ValidateEnqueueImage(queue, image, false, false));
+    ANGLE_CL_TRY(ValidateEnqueueImage(queue, image, false, false));
     const Image &img = image->cast<Image>();
 
-    ANGLE_TRY(ValidateImageForDevice(img, queue.getDevice(), origin, region));
+    ANGLE_CL_TRY(ValidateImageForDevice(img, queue.getDevice(), origin, region));
 
     // CL_INVALID_VALUE if fill_color is NULL.
     if (fill_color == nullptr)
@@ -3269,8 +3167,8 @@ cl_int ValidateEnqueueMigrateMemObjects(cl_command_queue command_queue,
                                         const cl_event *event_wait_list,
                                         const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
     if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 2u))
     {
@@ -3316,8 +3214,8 @@ cl_int ValidateEnqueueMarkerWithWaitList(cl_command_queue command_queue,
                                          const cl_event *event_wait_list,
                                          const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     if (!command_queue->cast<CommandQueue>().getContext().getPlatform().isVersionOrNewer(1u, 2u))
     {
         return CL_INVALID_COMMAND_QUEUE;
@@ -3330,8 +3228,8 @@ cl_int ValidateEnqueueBarrierWithWaitList(cl_command_queue command_queue,
                                           const cl_event *event_wait_list,
                                           const cl_event *event)
 {
-    ANGLE_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
-                                                   event_wait_list));
+    ANGLE_CL_TRY(ValidateCommandQueueAndEventWaitList(command_queue, false, num_events_in_wait_list,
+                                                      event_wait_list));
     if (!command_queue->cast<CommandQueue>().getContext().getPlatform().isVersionOrNewer(1u, 2u))
     {
         return CL_INVALID_COMMAND_QUEUE;
@@ -3688,7 +3586,7 @@ cl_int ValidateCreateBufferWithProperties(cl_context context,
                                           size_t size,
                                           const void *host_ptr)
 {
-    ANGLE_TRY(ValidateCreateBuffer(context, flags, size, host_ptr));
+    ANGLE_CL_TRY(ValidateCreateBuffer(context, flags, size, host_ptr));
 
     // CL_INVALID_CONTEXT if context is not a valid context.
     if (!context->cast<Context>().getPlatform().isVersionOrNewer(3u, 0u))
@@ -3714,7 +3612,7 @@ cl_int ValidateCreateImageWithProperties(cl_context context,
                                          const cl_image_desc *image_desc,
                                          const void *host_ptr)
 {
-    ANGLE_TRY(ValidateCreateImage(context, flags, image_format, image_desc, host_ptr));
+    ANGLE_CL_TRY(ValidateCreateImage(context, flags, image_format, image_desc, host_ptr));
 
     // CL_INVALID_CONTEXT if context is not a valid context.
     if (!context->cast<Context>().getPlatform().isVersionOrNewer(3u, 0u))
