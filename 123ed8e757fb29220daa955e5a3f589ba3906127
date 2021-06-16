@@ -162,6 +162,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bba3e06b_f8c6fad2",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-16T15:57:38Z",
+      "side": 1,
+      "message": "sample usecase is that we create a source texture is RGBA8, then create EGL image sibling with a colorspace override. Create a target texture sibling and readpixel from it.\n\nin such a case the underlying vkImage will be RGBA8 but the vkImageView of the target texture will be RGBA8_sRGB. We cannot infer this fact from the rest of the parameters.",
+      "parentUuid": "d44096be_391fa121",
+      "range": {
+        "startLine": 786,
+        "startChar": 20,
+        "endLine": 786,
+        "endChar": 41
+      },
+      "revId": "123ed8e757fb29220daa955e5a3f589ba3906127",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ba5b768f_0d3b0ac8",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 3
