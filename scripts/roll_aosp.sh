@@ -135,11 +135,15 @@ generate_Android_bp_file
 # Delete all unsupported 3rd party dependencies. Do this after generate_Android_bp_file, so
 # it has access to all of the necessary BUILD.gn files.
 # Any 3rd party dependencies that are added to this list must have their licenses verified.
-find third_party/ -maxdepth 1 -type d ! -wholename third_party/ \
-    ! -wholename third_party/abseil-cpp \
-    ! -wholename third_party/vulkan-deps \
-    ! -wholename third_party/vulkan_memory_allocator \
-    ! -wholename third_party/zlib \
+find third_party/ -maxdepth 2 -type d ! -path third_party/ \
+    ! -path 'third_party/abseil-cpp*' \
+    ! -path 'third_party/vulkan-deps' \
+    ! -path 'third_party/vulkan-deps/glslang*' \
+    ! -path 'third_party/vulkan-deps/spirv-headers*' \
+    ! -path 'third_party/vulkan-deps/spirv-tools*' \
+    ! -path 'third_party/vulkan-deps/vulkan-headers*' \
+    ! -path 'third_party/vulkan_memory_allocator*' \
+    ! -path 'third_party/zlib*' \
     -print0 | xargs --null rm -rf
 
 git add Android.bp
