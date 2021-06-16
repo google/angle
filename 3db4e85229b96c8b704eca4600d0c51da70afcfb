@@ -16,6 +16,184 @@
       "message": "I did this CL in response to Ken\u0027s chat feedback on a bug that I filed (about Skia Gold).  I tried to improve this for non-Chromium/Android folks.  I also fixed a few other things (e.g. master-\u003emain, improve consistency, where to put Labels).\n\nRelative to bug \"Components\", I would click on it for the bug I was creating, and it would show a list that wasn\u0027t relevant.  That\u0027s part of why I made it clear what some of the choices are, and that if somebody starts typing \"Internal\", that a relevant list will start to appear.",
       "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5e64ae9_a54d1aae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T20:51:31Z",
+      "side": 1,
+      "message": "Thanks Ian for updating the docs.",
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1ab1865_094cde7d",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T20:51:31Z",
+      "side": 1,
+      "message": "nit: grammar. (These are...)",
+      "range": {
+        "startLine": 28,
+        "startChar": 10,
+        "endLine": 28,
+        "endChar": 59
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e03457dd_988a107e",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T20:51:31Z",
+      "side": 1,
+      "message": "nit: link instead of text",
+      "range": {
+        "startLine": 41,
+        "startChar": 34,
+        "endLine": 41,
+        "endChar": 85
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8dfc6163_8735051e",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T20:51:31Z",
+      "side": 1,
+      "message": "nit: please use a helper link for readability (see other examples such as WranglerBugs)",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 148
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7549180_b44a82d3",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T20:51:31Z",
+      "side": 1,
+      "message": "nit: can you include this in the section?",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 83
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66ea6e06_fede7be7",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T20:51:31Z",
+      "side": 1,
+      "message": "nit: can omit this",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 16
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a127d629_afd3b3fb",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T20:51:31Z",
+      "side": 1,
+      "message": "nit: can omit this for brevity, it\u0027s isn\u0027t in the scope to tutorialize monorail. we can make one or more templates if we feel it\u0027s necessary.",
+      "range": {
+        "startLine": 74,
+        "startChar": 46,
+        "endLine": 74,
+        "endChar": 105
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21faa40a_2c7eae02",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T20:51:31Z",
+      "side": 1,
+      "message": "I\u0027d add one line after each:\n\nGPU: For general GPU bugs\nANGLE: For ANGLE-related Chromium bugs\nSkia: For Skia-specific bugs",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 21
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
