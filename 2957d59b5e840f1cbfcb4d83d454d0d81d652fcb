@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "2957d59b5e840f1cbfcb4d83d454d0d81d652fcb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41edf7d8_eb92c0bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-16T18:31:56Z",
+      "side": 1,
+      "message": "Much nicer! Re-LGTM",
+      "revId": "2957d59b5e840f1cbfcb4d83d454d0d81d652fcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
