@@ -175,6 +175,30 @@
       },
       "revId": "def3115dd20d573fe897c496da6424542021b586",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bb708d7_a6d56151",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1806,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-16T04:41:33Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "bce14cfa_a7d9bed4",
+      "range": {
+        "startLine": 1805,
+        "startChar": 0,
+        "endLine": 1806,
+        "endChar": 46
+      },
+      "revId": "def3115dd20d573fe897c496da6424542021b586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
