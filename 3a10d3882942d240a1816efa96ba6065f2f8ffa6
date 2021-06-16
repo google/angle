@@ -16,6 +16,23 @@
       "message": "Autoroller doesn\u0027t want to trigger manual rolls, trying manual manual roll.",
       "revId": "3a10d3882942d240a1816efa96ba6065f2f8ffa6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22772eb7_ea29a45a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-16T03:48:50Z",
+      "side": 1,
+      "message": "Oh, now the autoroller woke up.",
+      "revId": "3a10d3882942d240a1816efa96ba6065f2f8ffa6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
