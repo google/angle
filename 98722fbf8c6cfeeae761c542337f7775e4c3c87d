@@ -16,6 +16,23 @@
       "message": "I finally give up on keeping this struct packed!",
       "revId": "98722fbf8c6cfeeae761c542337f7775e4c3c87d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6cd31570_7e71b4de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T15:38:15Z",
+      "side": 1,
+      "message": "My only hesitation is that the RPD is part of PipelineDesc. I wonder if we should make the viewport/scissor fully dynamic to compensate for this increase.",
+      "revId": "98722fbf8c6cfeeae761c542337f7775e4c3c87d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
