@@ -101,6 +101,24 @@
       "message": "Not sure what\u0027s happening here:\n\n[1760:775:0616/140137.982751:FATAL:system_info_handler.cc(326)] Check failed: false. Gathering system GPU info took more than 5 seconds.",
       "revId": "2957d59b5e840f1cbfcb4d83d454d0d81d652fcb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "677c035c_a1146e9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T21:18:56Z",
+      "side": 1,
+      "message": "Filed http://crbug.com/1220848",
+      "parentUuid": "5f46b364_58c69706",
+      "revId": "2957d59b5e840f1cbfcb4d83d454d0d81d652fcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
