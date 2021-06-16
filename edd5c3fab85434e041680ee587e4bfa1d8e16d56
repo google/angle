@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe509263_b532a6ff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T15:43:28Z",
+      "side": 1,
+      "message": "Helper code and design LGTM. I\u0027m also good if you find a solution that doesn\u0027t have to track the indices.",
+      "revId": "edd5c3fab85434e041680ee587e4bfa1d8e16d56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39628b2a_d26d14d3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T15:43:28Z",
+      "side": 1,
+      "message": "nit: can you make this more specific at all? just wondering. feel free to say no. :)",
+      "range": {
+        "startLine": 66,
+        "startChar": 10,
+        "endLine": 66,
+        "endChar": 19
+      },
+      "revId": "edd5c3fab85434e041680ee587e4bfa1d8e16d56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69568e92_b446d239",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T15:43:28Z",
+      "side": 1,
+      "message": "nit: How about just WriteDescriptorSetHelper ?",
+      "range": {
+        "startLine": 67,
+        "startChar": 6,
+        "endLine": 67,
+        "endChar": 39
+      },
+      "revId": "edd5c3fab85434e041680ee587e4bfa1d8e16d56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8ae4390_844e4ab9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T15:43:28Z",
+      "side": 1,
+      "message": "nit: const",
+      "range": {
+        "startLine": 76,
+        "startChar": 9,
+        "endLine": 76,
+        "endChar": 14
+      },
+      "revId": "edd5c3fab85434e041680ee587e4bfa1d8e16d56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
