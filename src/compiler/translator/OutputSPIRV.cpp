@@ -2114,7 +2114,7 @@ bool OutputSPIRVTraverser::visitUnary(Visit visit, TIntermUnary *node)
             // This is a noop.
             break;
         case EOpLogicalNot:
-        case EOpLogicalNotComponentWise:
+        case EOpNotComponentWise:
             writeUnaryOp = spirv::WriteLogicalNot;
             break;
         case EOpBitwiseNot:
