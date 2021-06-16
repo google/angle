@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28be9df7_a0549cb3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-06-16T20:37:35Z",
+      "side": 1,
+      "message": "I did this CL in response to Ken\u0027s chat feedback on a bug that I filed (about Skia Gold).  I tried to improve this for non-Chromium/Android folks.  I also fixed a few other things (e.g. master-\u003emain, improve consistency, where to put Labels).\n\nRelative to bug \"Components\", I would click on it for the bug I was creating, and it would show a list that wasn\u0027t relevant.  That\u0027s part of why I made it clear what some of the choices are, and that if somebody starts typing \"Internal\", that a relevant list will start to appear.",
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
