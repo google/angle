@@ -7,7 +7,7 @@
 # gen_restricted_traces.py:
 #   Generates integration code for the restricted trace tests.
 
-import copy
+import glob
 import fnmatch
 import json
 import os
@@ -172,16 +172,24 @@ def reject_duplicate_keys(pairs):
     return found_keys
 
 
+# TODO(http://anglebug.com/5878): Revert back to non-autogen'ed file names for the angledata.gz.
+def get_angledata_filename(trace):
+    angledata_files = glob.glob('%s/%s*angledata.gz' % (trace, trace))
+    assert len(angledata_files) == 1, "Trace '%s' has %d angledata.gz files" % (
+        trace, len(angledata_files))
+    return angledata_files[0]
+
+
 def gen_gni(traces, gni_file, format_args):
     test_list = []
     for trace in traces:
         context = get_context(trace)
-        files = []
+        angledata_file = get_angledata_filename(trace)
         with open('%s/%s_capture_context%s_files.txt' % (trace, trace, context)) as f:
             files = f.readlines()
             f.close()
         files = ['"%s/%s"' % (trace, file.strip()) for file in files]
-        test_list += ['["%s", %s, [%s]]' % (trace, context, ','.join(files))]
+        test_list += ['["%s", %s, [%s], "%s"]' % (trace, context, ','.join(files), angledata_file)]
 
     format_args['test_list'] = ',\n'.join(test_list)
     gni_data = GNI_TEMPLATE.format(**format_args)
@@ -191,7 +199,7 @@ def gen_gni(traces, gni_file, format_args):
 
 
 def contains_context_version(trace):
-    "Determines if the trace contains the major/minor context version"
+    """Determines if the trace contains the major/minor context version"""
     for file in os.listdir(trace):
         if fnmatch.fnmatch(file, '*.h'):
             with open(os.path.join(trace, file)) as f:
@@ -219,16 +227,16 @@ def get_trace_info(trace):
 
 
 def get_context(trace):
-    "Returns the context number used by trace header file"
+    """Returns the context number used by trace txt file"""
     for file in os.listdir(trace):
         # Load up the only header present for each trace
-        if fnmatch.fnmatch(file, '*.h'):
+        if fnmatch.fnmatch(file, '*.txt'):
             # Strip the extension to isolate the context by scanning
             # for numbers leading up to the last one, i.e.:
-            #     app_capture_context123.h
+            #     app_capture_context123_files.txt
             #                          ^^
             #                  start---||---end
-            start = len(file) - 3
+            start = len(file) - 11
             end = start + 1
             while file[start - 1].isdigit():
                 start -= 1

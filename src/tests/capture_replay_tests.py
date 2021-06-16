@@ -474,11 +474,13 @@ class Test():
                 source_txt_count += 1
             elif f.endswith(".h"):
                 context_header_count += 1
-                context_id = int(f.split(TRACE_FILE_SUFFIX)[1][:-2])
+                context = f.split(TRACE_FILE_SUFFIX)[1][:-2]
+                if context != "_shared":
+                    context_id = int(context)
             elif f.endswith(".cpp"):
                 context_source_count += 1
-        can_run_replay = frame_files_count >= 1 and context_header_count == 1 \
-            and context_source_count == 1 and source_txt_count == 1
+        can_run_replay = frame_files_count >= 1 and context_header_count >= 1 \
+            and context_source_count >= 1 and source_txt_count == 1
         if not can_run_replay:
             return False
         self.context_id = context_id
@@ -654,12 +656,14 @@ class TestBatch():
 
             fname = "%s%s%d_files.txt" % (label, TRACE_FILE_SUFFIX, test.context_id)
             fpath = os.path.join(self.trace_folder_path, fname)
-            files = []
             with open(fpath) as f:
                 files = f.readlines()
                 f.close()
             files = ['"%s/%s"' % (self.trace_dir, file.strip()) for file in files]
-            test_list += ['["%s", %s, [%s]]' % (label, test.context_id, ','.join(files))]
+            angledata = "%s%s_shared.angledata.gz" % (label, TRACE_FILE_SUFFIX)
+            test_list += [
+                '["%s", %s, [%s], "%s"]' % (label, test.context_id, ','.join(files), angledata)
+            ]
         gni_path = os.path.join(self.trace_folder_path, "traces%d.gni" % composite_file_id)
         with open(gni_path, "w") as f:
             f.write("trace_data = [\n%s\n]\n" % ',\n'.join(test_list))

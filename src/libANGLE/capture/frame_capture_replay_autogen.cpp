@@ -20,9 +20,9 @@ using namespace gl;
 namespace angle
 {
 
-void FrameCapture::ReplayCall(gl::Context *context,
-                              ReplayContext *replayContext,
-                              const CallCapture &call)
+void FrameCaptureShared::ReplayCall(gl::Context *context,
+                                    ReplayContext *replayContext,
+                                    const CallCapture &call)
 {
     const ParamBuffer &params = call.params;
     switch (call.entryPoint)

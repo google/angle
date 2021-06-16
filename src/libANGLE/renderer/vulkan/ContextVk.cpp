@@ -592,7 +592,7 @@ void ContextVk::onDestroy(const gl::Context *context)
     outputCumulativePerfCounters();
 
     // Remove context from the share group
-    mShareGroupVk->getShareContextSet()->erase(this);
+    mShareGroupVk->getContexts()->erase(this);
 
     // This will not destroy any resources. It will release them to be collected after finish.
     mIncompleteTextures.onDestroy(context);
@@ -802,7 +802,7 @@ angle::Result ContextVk::initialize()
                         kStagingBufferSize, true, vk::DynamicBufferPolicy::SporadicTextureUpload);
 
     // Add context into the share group
-    mShareGroupVk->getShareContextSet()->insert(this);
+    mShareGroupVk->getContexts()->insert(this);
 
     return angle::Result::Continue;
 }

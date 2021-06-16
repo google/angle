@@ -23,11 +23,12 @@ ResourceTracker::~ResourceTracker() {}
 
 FrameCapture::FrameCapture() {}
 FrameCapture::~FrameCapture() {}
-void FrameCapture::onEndFrame(const gl::Context *context) {}
-void FrameCapture::onMakeCurrent(const gl::Context *context, const egl::Surface *drawSurface) {}
-void FrameCapture::onDestroyContext(const gl::Context *context) {}
-void FrameCapture::replay(gl::Context *context) {}
 
 FrameCaptureShared::FrameCaptureShared() {}
 FrameCaptureShared::~FrameCaptureShared() {}
+void FrameCaptureShared::onEndFrame(const gl::Context *context) {}
+void FrameCaptureShared::onMakeCurrent(const gl::Context *context, const egl::Surface *drawSurface)
+{}
+void FrameCaptureShared::onDestroyContext(const gl::Context *context) {}
+void FrameCaptureShared::replay(gl::Context *context) {}
 }  // namespace angle

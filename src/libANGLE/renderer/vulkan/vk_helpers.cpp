@@ -4120,7 +4120,7 @@ void ImageHelper::releaseImageFromShareContexts(RendererVk *renderer, ContextVk 
 {
     if (contextVk && mImageSerial.valid())
     {
-        ShareContextSet &shareContextSet = *contextVk->getShareGroupVk()->getShareContextSet();
+        ContextVkSet &shareContextSet = *contextVk->getShareGroupVk()->getContexts();
         for (ContextVk *ctx : shareContextSet)
         {
             ctx->finalizeImageLayout(this);

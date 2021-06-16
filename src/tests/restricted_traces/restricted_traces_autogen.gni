@@ -24,6 +24,7 @@ angle_restricted_traces = [
       "aliexpress/aliexpress_capture_context1_frame009.cpp",
       "aliexpress/aliexpress_capture_context1_frame010.cpp",
     ],
+    "aliexpress/aliexpress_capture_context1.angledata.gz",
   ],
   [
     "among_us",
@@ -40,6 +41,7 @@ angle_restricted_traces = [
       "among_us/among_us_capture_context1_frame009.cpp",
       "among_us/among_us_capture_context1_frame010.cpp",
     ],
+    "among_us/among_us_capture_context1.angledata.gz",
   ],
   [
     "angry_birds_2_1500",
@@ -57,6 +59,7 @@ angle_restricted_traces = [
       "angry_birds_2_1500/angry_birds_2_1500_capture_context1_frame010.cpp",
       "angry_birds_2_1500/angry_birds_2_1500_capture_context1_frame011.cpp",
     ],
+    "angry_birds_2_1500/angry_birds_2_1500_capture_context1.angledata.gz",
   ],
   [
     "arena_of_valor",
@@ -73,6 +76,7 @@ angle_restricted_traces = [
       "arena_of_valor/arena_of_valor_capture_context1_frame009.cpp",
       "arena_of_valor/arena_of_valor_capture_context1_frame010.cpp",
     ],
+    "arena_of_valor/arena_of_valor_capture_context1.angledata.gz",
   ],
   [
     "asphalt_8",
@@ -89,6 +93,7 @@ angle_restricted_traces = [
       "asphalt_8/asphalt_8_capture_context1_frame009.cpp",
       "asphalt_8/asphalt_8_capture_context1_frame010.cpp",
     ],
+    "asphalt_8/asphalt_8_capture_context1.angledata.gz",
   ],
   [
     "avakin_life",
@@ -105,6 +110,7 @@ angle_restricted_traces = [
       "avakin_life/avakin_life_capture_context1_frame009.cpp",
       "avakin_life/avakin_life_capture_context1_frame010.cpp",
     ],
+    "avakin_life/avakin_life_capture_context1.angledata.gz",
   ],
   [
     "aztec_ruins",
@@ -121,6 +127,7 @@ angle_restricted_traces = [
       "aztec_ruins/aztec_ruins_capture_context1_frame009.cpp",
       "aztec_ruins/aztec_ruins_capture_context1_frame010.cpp",
     ],
+    "aztec_ruins/aztec_ruins_capture_context1.angledata.gz",
   ],
   [
     "beach_buggy_racing",
@@ -177,6 +184,7 @@ angle_restricted_traces = [
       "beach_buggy_racing/beach_buggy_racing_capture_context1_frame049.cpp",
       "beach_buggy_racing/beach_buggy_racing_capture_context1_frame050.cpp",
     ],
+    "beach_buggy_racing/beach_buggy_racing_capture_context1.angledata.gz",
   ],
   [
     "brawl_stars",
@@ -193,6 +201,7 @@ angle_restricted_traces = [
       "brawl_stars/brawl_stars_capture_context1_frame009.cpp",
       "brawl_stars/brawl_stars_capture_context1_frame010.cpp",
     ],
+    "brawl_stars/brawl_stars_capture_context1.angledata.gz",
   ],
   [
     "bricks_breaker_quest",
@@ -229,6 +238,7 @@ angle_restricted_traces = [
       "bricks_breaker_quest/bricks_breaker_quest_capture_context2_frame029.cpp",
       "bricks_breaker_quest/bricks_breaker_quest_capture_context2_frame030.cpp",
     ],
+    "bricks_breaker_quest/bricks_breaker_quest_capture_context2.angledata.gz",
   ],
   [
     "bubble_shooter",
@@ -335,6 +345,7 @@ angle_restricted_traces = [
       "bubble_shooter/bubble_shooter_capture_context5_frame099.cpp",
       "bubble_shooter/bubble_shooter_capture_context5_frame100.cpp",
     ],
+    "bubble_shooter/bubble_shooter_capture_context5.angledata.gz",
   ],
   [
     "bus_simulator_indonesia",
@@ -351,6 +362,7 @@ angle_restricted_traces = [
       "bus_simulator_indonesia/bus_simulator_indonesia_capture_context1_frame009.cpp",
       "bus_simulator_indonesia/bus_simulator_indonesia_capture_context1_frame010.cpp",
     ],
+    "bus_simulator_indonesia/bus_simulator_indonesia_capture_context1.angledata.gz",
   ],
   [
     "call_break_offline_card_game",
@@ -457,6 +469,7 @@ angle_restricted_traces = [
       "call_break_offline_card_game/call_break_offline_card_game_capture_context2_frame099.cpp",
       "call_break_offline_card_game/call_break_offline_card_game_capture_context2_frame100.cpp",
     ],
+    "call_break_offline_card_game/call_break_offline_card_game_capture_context2.angledata.gz",
   ],
   [
     "candy_crush_500",
@@ -474,6 +487,7 @@ angle_restricted_traces = [
       "candy_crush_500/candy_crush_500_capture_context1_frame010.cpp",
       "candy_crush_500/candy_crush_500_capture_context1_frame011.cpp",
     ],
+    "candy_crush_500/candy_crush_500_capture_context1.angledata.gz",
   ],
   [
     "candy_crush_soda_saga",
@@ -580,6 +594,7 @@ angle_restricted_traces = [
       "candy_crush_soda_saga/candy_crush_soda_saga_capture_context2_frame099.cpp",
       "candy_crush_soda_saga/candy_crush_soda_saga_capture_context2_frame100.cpp",
     ],
+    "candy_crush_soda_saga/candy_crush_soda_saga_capture_context2.angledata.gz",
   ],
   [
     "car_parking_multiplayer",
@@ -596,6 +611,7 @@ angle_restricted_traces = [
       "car_parking_multiplayer/car_parking_multiplayer_capture_context1_frame009.cpp",
       "car_parking_multiplayer/car_parking_multiplayer_capture_context1_frame010.cpp",
     ],
+    "car_parking_multiplayer/car_parking_multiplayer_capture_context1.angledata.gz",
   ],
   [
     "clash_of_clans",
@@ -612,6 +628,7 @@ angle_restricted_traces = [
       "clash_of_clans/clash_of_clans_capture_context1_frame009.cpp",
       "clash_of_clans/clash_of_clans_capture_context1_frame010.cpp",
     ],
+    "clash_of_clans/clash_of_clans_capture_context1.angledata.gz",
   ],
   [
     "clash_royale",
@@ -628,6 +645,7 @@ angle_restricted_traces = [
       "clash_royale/clash_royale_capture_context1_frame009.cpp",
       "clash_royale/clash_royale_capture_context1_frame010.cpp",
     ],
+    "clash_royale/clash_royale_capture_context1.angledata.gz",
   ],
   [
     "cod_mobile",
@@ -644,6 +662,7 @@ angle_restricted_traces = [
       "cod_mobile/cod_mobile_capture_context1_frame009.cpp",
       "cod_mobile/cod_mobile_capture_context1_frame010.cpp",
     ],
+    "cod_mobile/cod_mobile_capture_context1.angledata.gz",
   ],
   [
     "coin_master",
@@ -660,6 +679,7 @@ angle_restricted_traces = [
       "coin_master/coin_master_capture_context1_frame009.cpp",
       "coin_master/coin_master_capture_context1_frame010.cpp",
     ],
+    "coin_master/coin_master_capture_context1.angledata.gz",
   ],
   [
     "command_and_conquer_rivals",
@@ -676,6 +696,7 @@ angle_restricted_traces = [
       "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame009.cpp",
       "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame010.cpp",
     ],
+    "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2.angledata.gz",
   ],
   [
     "cookie_run_kingdom",
@@ -732,6 +753,7 @@ angle_restricted_traces = [
       "cookie_run_kingdom/cookie_run_kingdom_capture_context2_frame049.cpp",
       "cookie_run_kingdom/cookie_run_kingdom_capture_context2_frame050.cpp",
     ],
+    "cookie_run_kingdom/cookie_run_kingdom_capture_context2.angledata.gz",
   ],
   [
     "disney_tsum_tsum",
@@ -838,6 +860,7 @@ angle_restricted_traces = [
       "disney_tsum_tsum/disney_tsum_tsum_capture_context3_frame099.cpp",
       "disney_tsum_tsum/disney_tsum_tsum_capture_context3_frame100.cpp",
     ],
+    "disney_tsum_tsum/disney_tsum_tsum_capture_context3.angledata.gz",
   ],
   [
     "dr_driving",
@@ -894,6 +917,7 @@ angle_restricted_traces = [
       "dr_driving/dr_driving_capture_context3_frame049.cpp",
       "dr_driving/dr_driving_capture_context3_frame050.cpp",
     ],
+    "dr_driving/dr_driving_capture_context3.angledata.gz",
   ],
   [
     "dragon_ball_legends",
@@ -910,6 +934,7 @@ angle_restricted_traces = [
       "dragon_ball_legends/dragon_ball_legends_capture_context1_frame009.cpp",
       "dragon_ball_legends/dragon_ball_legends_capture_context1_frame010.cpp",
     ],
+    "dragon_ball_legends/dragon_ball_legends_capture_context1.angledata.gz",
   ],
   [
     "dragon_raja",
@@ -927,6 +952,7 @@ angle_restricted_traces = [
       "dragon_raja/dragon_raja_capture_context1_frame010.cpp",
       "dragon_raja/dragon_raja_capture_context1_frame011.cpp",
     ],
+    "dragon_raja/dragon_raja_capture_context1.angledata.gz",
   ],
   [
     "efootball_pes_2021",
@@ -943,6 +969,7 @@ angle_restricted_traces = [
       "efootball_pes_2021/efootball_pes_2021_capture_context1_frame009.cpp",
       "efootball_pes_2021/efootball_pes_2021_capture_context1_frame010.cpp",
     ],
+    "efootball_pes_2021/efootball_pes_2021_capture_context1.angledata.gz",
   ],
   [
     "egypt_1500",
@@ -960,6 +987,7 @@ angle_restricted_traces = [
       "egypt_1500/egypt_1500_capture_context1_frame010.cpp",
       "egypt_1500/egypt_1500_capture_context1_frame011.cpp",
     ],
+    "egypt_1500/egypt_1500_capture_context1.angledata.gz",
   ],
   [
     "eight_ball_pool",
@@ -976,6 +1004,7 @@ angle_restricted_traces = [
       "eight_ball_pool/eight_ball_pool_capture_context1_frame009.cpp",
       "eight_ball_pool/eight_ball_pool_capture_context1_frame010.cpp",
     ],
+    "eight_ball_pool/eight_ball_pool_capture_context1.angledata.gz",
   ],
   [
     "extreme_car_driving_simulator",
@@ -992,6 +1021,7 @@ angle_restricted_traces = [
       "extreme_car_driving_simulator/extreme_car_driving_simulator_capture_context1_frame009.cpp",
       "extreme_car_driving_simulator/extreme_car_driving_simulator_capture_context1_frame010.cpp",
     ],
+    "extreme_car_driving_simulator/extreme_car_driving_simulator_capture_context1.angledata.gz",
   ],
   [
     "fallout_shelter_online",
@@ -1008,6 +1038,7 @@ angle_restricted_traces = [
       "fallout_shelter_online/fallout_shelter_online_capture_context1_frame009.cpp",
       "fallout_shelter_online/fallout_shelter_online_capture_context1_frame010.cpp",
     ],
+    "fallout_shelter_online/fallout_shelter_online_capture_context1.angledata.gz",
   ],
   [
     "farm_heroes_saga",
@@ -1114,6 +1145,7 @@ angle_restricted_traces = [
       "farm_heroes_saga/farm_heroes_saga_capture_context2_frame099.cpp",
       "farm_heroes_saga/farm_heroes_saga_capture_context2_frame100.cpp",
     ],
+    "farm_heroes_saga/farm_heroes_saga_capture_context2.angledata.gz",
   ],
   [
     "fate_grand_order",
@@ -1130,6 +1162,7 @@ angle_restricted_traces = [
       "fate_grand_order/fate_grand_order_capture_context1_frame009.cpp",
       "fate_grand_order/fate_grand_order_capture_context1_frame010.cpp",
     ],
+    "fate_grand_order/fate_grand_order_capture_context1.angledata.gz",
   ],
   [
     "fifa_mobile",
@@ -1146,6 +1179,7 @@ angle_restricted_traces = [
       "fifa_mobile/fifa_mobile_capture_context1_frame009.cpp",
       "fifa_mobile/fifa_mobile_capture_context1_frame010.cpp",
     ],
+    "fifa_mobile/fifa_mobile_capture_context1.angledata.gz",
   ],
   [
     "free_fire",
@@ -1162,6 +1196,7 @@ angle_restricted_traces = [
       "free_fire/free_fire_capture_context1_frame009.cpp",
       "free_fire/free_fire_capture_context1_frame010.cpp",
     ],
+    "free_fire/free_fire_capture_context1.angledata.gz",
   ],
   [
     "gardenscapes",
@@ -1198,6 +1233,7 @@ angle_restricted_traces = [
       "gardenscapes/gardenscapes_capture_context1_frame029.cpp",
       "gardenscapes/gardenscapes_capture_context1_frame030.cpp",
     ],
+    "gardenscapes/gardenscapes_capture_context1.angledata.gz",
   ],
   [
     "genshin_impact",
@@ -1304,6 +1340,7 @@ angle_restricted_traces = [
       "genshin_impact/genshin_impact_capture_context3_frame099.cpp",
       "genshin_impact/genshin_impact_capture_context3_frame100.cpp",
     ],
+    "genshin_impact/genshin_impact_capture_context3.angledata.gz",
   ],
   [
     "google_maps",
@@ -1610,6 +1647,7 @@ angle_restricted_traces = [
       "google_maps/google_maps_capture_context1_frame299.cpp",
       "google_maps/google_maps_capture_context1_frame300.cpp",
     ],
+    "google_maps/google_maps_capture_context1.angledata.gz",
   ],
   [
     "happy_color",
@@ -1626,6 +1664,7 @@ angle_restricted_traces = [
       "happy_color/happy_color_capture_context1_frame009.cpp",
       "happy_color/happy_color_capture_context1_frame010.cpp",
     ],
+    "happy_color/happy_color_capture_context1.angledata.gz",
   ],
   [
     "hay_day",
@@ -1642,6 +1681,7 @@ angle_restricted_traces = [
       "hay_day/hay_day_capture_context1_frame009.cpp",
       "hay_day/hay_day_capture_context1_frame010.cpp",
     ],
+    "hay_day/hay_day_capture_context1.angledata.gz",
   ],
   [
     "hearthstone",
@@ -1658,6 +1698,7 @@ angle_restricted_traces = [
       "hearthstone/hearthstone_capture_context1_frame009.cpp",
       "hearthstone/hearthstone_capture_context1_frame010.cpp",
     ],
+    "hearthstone/hearthstone_capture_context1.angledata.gz",
   ],
   [
     "higgs_domino_island",
@@ -1694,6 +1735,7 @@ angle_restricted_traces = [
       "higgs_domino_island/higgs_domino_island_capture_context2_frame029.cpp",
       "higgs_domino_island/higgs_domino_island_capture_context2_frame030.cpp",
     ],
+    "higgs_domino_island/higgs_domino_island_capture_context2.angledata.gz",
   ],
   [
     "hill_climb_racing",
@@ -1710,6 +1752,7 @@ angle_restricted_traces = [
       "hill_climb_racing/hill_climb_racing_capture_context1_frame009.cpp",
       "hill_climb_racing/hill_climb_racing_capture_context1_frame010.cpp",
     ],
+    "hill_climb_racing/hill_climb_racing_capture_context1.angledata.gz",
   ],
   [
     "homescapes",
@@ -1726,6 +1769,7 @@ angle_restricted_traces = [
       "homescapes/homescapes_capture_context1_frame009.cpp",
       "homescapes/homescapes_capture_context1_frame010.cpp",
     ],
+    "homescapes/homescapes_capture_context1.angledata.gz",
   ],
   [
     "idle_heroes",
@@ -2731,6 +2775,7 @@ angle_restricted_traces = [
       "idle_heroes/idle_heroes_capture_context2_frame998.cpp",
       "idle_heroes/idle_heroes_capture_context2_frame999.cpp",
     ],
+    "idle_heroes/idle_heroes_capture_context2.angledata.gz",
   ],
   [
     "junes_journey",
@@ -2747,6 +2792,7 @@ angle_restricted_traces = [
       "junes_journey/junes_journey_capture_context1_frame009.cpp",
       "junes_journey/junes_journey_capture_context1_frame010.cpp",
     ],
+    "junes_journey/junes_journey_capture_context1.angledata.gz",
   ],
   [
     "kartrider_rush",
@@ -2763,6 +2809,7 @@ angle_restricted_traces = [
       "kartrider_rush/kartrider_rush_capture_context1_frame009.cpp",
       "kartrider_rush/kartrider_rush_capture_context1_frame010.cpp",
     ],
+    "kartrider_rush/kartrider_rush_capture_context1.angledata.gz",
   ],
   [
     "klondike_adventures",
@@ -2779,6 +2826,7 @@ angle_restricted_traces = [
       "klondike_adventures/klondike_adventures_capture_context1_frame009.cpp",
       "klondike_adventures/klondike_adventures_capture_context1_frame010.cpp",
     ],
+    "klondike_adventures/klondike_adventures_capture_context1.angledata.gz",
   ],
   [
     "league_of_legends_wild_rift",
@@ -2795,6 +2843,7 @@ angle_restricted_traces = [
       "league_of_legends_wild_rift/league_of_legends_wild_rift_capture_context1_frame009.cpp",
       "league_of_legends_wild_rift/league_of_legends_wild_rift_capture_context1_frame010.cpp",
     ],
+    "league_of_legends_wild_rift/league_of_legends_wild_rift_capture_context1.angledata.gz",
   ],
   [
     "lego_legacy",
@@ -2811,6 +2860,7 @@ angle_restricted_traces = [
       "lego_legacy/lego_legacy_capture_context1_frame009.cpp",
       "lego_legacy/lego_legacy_capture_context1_frame010.cpp",
     ],
+    "lego_legacy/lego_legacy_capture_context1.angledata.gz",
   ],
   [
     "lineage_m",
@@ -2827,6 +2877,7 @@ angle_restricted_traces = [
       "lineage_m/lineage_m_capture_context1_frame009.cpp",
       "lineage_m/lineage_m_capture_context1_frame010.cpp",
     ],
+    "lineage_m/lineage_m_capture_context1.angledata.gz",
   ],
   [
     "ludo_king",
@@ -2863,6 +2914,7 @@ angle_restricted_traces = [
       "ludo_king/ludo_king_capture_context1_frame029.cpp",
       "ludo_king/ludo_king_capture_context1_frame030.cpp",
     ],
+    "ludo_king/ludo_king_capture_context1.angledata.gz",
   ],
   [
     "magic_tiles_3",
@@ -2879,6 +2931,7 @@ angle_restricted_traces = [
       "magic_tiles_3/magic_tiles_3_capture_context1_frame009.cpp",
       "magic_tiles_3/magic_tiles_3_capture_context1_frame010.cpp",
     ],
+    "magic_tiles_3/magic_tiles_3_capture_context1.angledata.gz",
   ],
   [
     "manhattan_10",
@@ -2896,6 +2949,7 @@ angle_restricted_traces = [
       "manhattan_10/manhattan_10_capture_context1_frame010.cpp",
       "manhattan_10/manhattan_10_capture_context1_frame011.cpp",
     ],
+    "manhattan_10/manhattan_10_capture_context1.angledata.gz",
   ],
   [
     "manhattan_31",
@@ -3002,6 +3056,7 @@ angle_restricted_traces = [
       "manhattan_31/manhattan_31_capture_context1_frame099.cpp",
       "manhattan_31/manhattan_31_capture_context1_frame100.cpp",
     ],
+    "manhattan_31/manhattan_31_capture_context1.angledata.gz",
   ],
   [
     "mario_kart_tour",
@@ -3108,6 +3163,7 @@ angle_restricted_traces = [
       "mario_kart_tour/mario_kart_tour_capture_context1_frame099.cpp",
       "mario_kart_tour/mario_kart_tour_capture_context1_frame100.cpp",
     ],
+    "mario_kart_tour/mario_kart_tour_capture_context1.angledata.gz",
   ],
   [
     "marvel_contest_of_champions",
@@ -3124,6 +3180,7 @@ angle_restricted_traces = [
       "marvel_contest_of_champions/marvel_contest_of_champions_capture_context1_frame009.cpp",
       "marvel_contest_of_champions/marvel_contest_of_champions_capture_context1_frame010.cpp",
     ],
+    "marvel_contest_of_champions/marvel_contest_of_champions_capture_context1.angledata.gz",
   ],
   [
     "messenger_lite",
@@ -3140,6 +3197,7 @@ angle_restricted_traces = [
       "messenger_lite/messenger_lite_capture_context1_frame009.cpp",
       "messenger_lite/messenger_lite_capture_context1_frame010.cpp",
     ],
+    "messenger_lite/messenger_lite_capture_context1.angledata.gz",
   ],
   [
     "minecraft",
@@ -3156,6 +3214,7 @@ angle_restricted_traces = [
       "minecraft/minecraft_capture_context1_frame009.cpp",
       "minecraft/minecraft_capture_context1_frame010.cpp",
     ],
+    "minecraft/minecraft_capture_context1.angledata.gz",
   ],
   [
     "mobile_legends",
@@ -3172,6 +3231,7 @@ angle_restricted_traces = [
       "mobile_legends/mobile_legends_capture_context1_frame009.cpp",
       "mobile_legends/mobile_legends_capture_context1_frame010.cpp",
     ],
+    "mobile_legends/mobile_legends_capture_context1.angledata.gz",
   ],
   [
     "nba2k20_800",
@@ -3189,6 +3249,7 @@ angle_restricted_traces = [
       "nba2k20_800/nba2k20_800_capture_context1_frame010.cpp",
       "nba2k20_800/nba2k20_800_capture_context1_frame011.cpp",
     ],
+    "nba2k20_800/nba2k20_800_capture_context1.angledata.gz",
   ],
   [
     "one_punch_man",
@@ -3205,6 +3266,7 @@ angle_restricted_traces = [
       "one_punch_man/one_punch_man_capture_context1_frame009.cpp",
       "one_punch_man/one_punch_man_capture_context1_frame010.cpp",
     ],
+    "one_punch_man/one_punch_man_capture_context1.angledata.gz",
   ],
   [
     "plants_vs_zombies_2",
@@ -3221,6 +3283,7 @@ angle_restricted_traces = [
       "plants_vs_zombies_2/plants_vs_zombies_2_capture_context1_frame009.cpp",
       "plants_vs_zombies_2/plants_vs_zombies_2_capture_context1_frame010.cpp",
     ],
+    "plants_vs_zombies_2/plants_vs_zombies_2_capture_context1.angledata.gz",
   ],
   [
     "pokemon_go",
@@ -3327,6 +3390,7 @@ angle_restricted_traces = [
       "pokemon_go/pokemon_go_capture_context2_frame099.cpp",
       "pokemon_go/pokemon_go_capture_context2_frame100.cpp",
     ],
+    "pokemon_go/pokemon_go_capture_context2.angledata.gz",
   ],
   [
     "professional_baseball_spirits",
@@ -3533,6 +3597,7 @@ angle_restricted_traces = [
       "professional_baseball_spirits/professional_baseball_spirits_capture_context1_frame199.cpp",
       "professional_baseball_spirits/professional_baseball_spirits_capture_context1_frame200.cpp",
     ],
+    "professional_baseball_spirits/professional_baseball_spirits_capture_context1.angledata.gz",
   ],
   [
     "pubg_mobile_lite",
@@ -3549,6 +3614,7 @@ angle_restricted_traces = [
       "pubg_mobile_lite/pubg_mobile_lite_capture_context1_frame009.cpp",
       "pubg_mobile_lite/pubg_mobile_lite_capture_context1_frame010.cpp",
     ],
+    "pubg_mobile_lite/pubg_mobile_lite_capture_context1.angledata.gz",
   ],
   [
     "ragnarok_m_eternal_love",
@@ -3565,6 +3631,7 @@ angle_restricted_traces = [
       "ragnarok_m_eternal_love/ragnarok_m_eternal_love_capture_context1_frame009.cpp",
       "ragnarok_m_eternal_love/ragnarok_m_eternal_love_capture_context1_frame010.cpp",
     ],
+    "ragnarok_m_eternal_love/ragnarok_m_eternal_love_capture_context1.angledata.gz",
   ],
   [
     "raid_shadow_legends",
@@ -3581,6 +3648,7 @@ angle_restricted_traces = [
       "raid_shadow_legends/raid_shadow_legends_capture_context1_frame009.cpp",
       "raid_shadow_legends/raid_shadow_legends_capture_context1_frame010.cpp",
     ],
+    "raid_shadow_legends/raid_shadow_legends_capture_context1.angledata.gz",
   ],
   [
     "real_commando_secret_mission",
@@ -3597,6 +3665,7 @@ angle_restricted_traces = [
       "real_commando_secret_mission/real_commando_secret_mission_capture_context1_frame009.cpp",
       "real_commando_secret_mission/real_commando_secret_mission_capture_context1_frame010.cpp",
     ],
+    "real_commando_secret_mission/real_commando_secret_mission_capture_context1.angledata.gz",
   ],
   [
     "real_cricket_20",
@@ -3613,6 +3682,7 @@ angle_restricted_traces = [
       "real_cricket_20/real_cricket_20_capture_context1_frame009.cpp",
       "real_cricket_20/real_cricket_20_capture_context1_frame010.cpp",
     ],
+    "real_cricket_20/real_cricket_20_capture_context1.angledata.gz",
   ],
   [
     "real_gangster_crime",
@@ -3629,6 +3699,7 @@ angle_restricted_traces = [
       "real_gangster_crime/real_gangster_crime_capture_context1_frame009.cpp",
       "real_gangster_crime/real_gangster_crime_capture_context1_frame010.cpp",
     ],
+    "real_gangster_crime/real_gangster_crime_capture_context1.angledata.gz",
   ],
   [
     "rise_of_kingdoms",
@@ -3645,6 +3716,7 @@ angle_restricted_traces = [
       "rise_of_kingdoms/rise_of_kingdoms_capture_context1_frame009.cpp",
       "rise_of_kingdoms/rise_of_kingdoms_capture_context1_frame010.cpp",
     ],
+    "rise_of_kingdoms/rise_of_kingdoms_capture_context1.angledata.gz",
   ],
   [
     "romancing_saga",
@@ -3661,6 +3733,7 @@ angle_restricted_traces = [
       "romancing_saga/romancing_saga_capture_context1_frame009.cpp",
       "romancing_saga/romancing_saga_capture_context1_frame010.cpp",
     ],
+    "romancing_saga/romancing_saga_capture_context1.angledata.gz",
   ],
   [
     "rope_hero_vice_town",
@@ -3677,6 +3750,7 @@ angle_restricted_traces = [
       "rope_hero_vice_town/rope_hero_vice_town_capture_context1_frame009.cpp",
       "rope_hero_vice_town/rope_hero_vice_town_capture_context1_frame010.cpp",
     ],
+    "rope_hero_vice_town/rope_hero_vice_town_capture_context1.angledata.gz",
   ],
   [
     "saint_seiya_awakening",
@@ -3693,6 +3767,7 @@ angle_restricted_traces = [
       "saint_seiya_awakening/saint_seiya_awakening_capture_context1_frame009.cpp",
       "saint_seiya_awakening/saint_seiya_awakening_capture_context1_frame010.cpp",
     ],
+    "saint_seiya_awakening/saint_seiya_awakening_capture_context1.angledata.gz",
   ],
   [
     "sakura_school_simulator",
@@ -3729,6 +3804,7 @@ angle_restricted_traces = [
       "sakura_school_simulator/sakura_school_simulator_capture_context2_frame029.cpp",
       "sakura_school_simulator/sakura_school_simulator_capture_context2_frame030.cpp",
     ],
+    "sakura_school_simulator/sakura_school_simulator_capture_context2.angledata.gz",
   ],
   [
     "shadow_fight_2",
@@ -3745,6 +3821,7 @@ angle_restricted_traces = [
       "shadow_fight_2/shadow_fight_2_capture_context1_frame009.cpp",
       "shadow_fight_2/shadow_fight_2_capture_context1_frame010.cpp",
     ],
+    "shadow_fight_2/shadow_fight_2_capture_context1.angledata.gz",
   ],
   [
     "slingshot_test1",
@@ -3951,6 +4028,7 @@ angle_restricted_traces = [
       "slingshot_test1/slingshot_test1_capture_context2_frame199.cpp",
       "slingshot_test1/slingshot_test1_capture_context2_frame200.cpp",
     ],
+    "slingshot_test1/slingshot_test1_capture_context2.angledata.gz",
   ],
   [
     "slingshot_test2",
@@ -4157,6 +4235,7 @@ angle_restricted_traces = [
       "slingshot_test2/slingshot_test2_capture_context2_frame199.cpp",
       "slingshot_test2/slingshot_test2_capture_context2_frame200.cpp",
     ],
+    "slingshot_test2/slingshot_test2_capture_context2.angledata.gz",
   ],
   [
     "sniper_3d",
@@ -4173,6 +4252,7 @@ angle_restricted_traces = [
       "sniper_3d/sniper_3d_capture_context1_frame009.cpp",
       "sniper_3d/sniper_3d_capture_context1_frame010.cpp",
     ],
+    "sniper_3d/sniper_3d_capture_context1.angledata.gz",
   ],
   [
     "standoff_2",
@@ -4189,6 +4269,7 @@ angle_restricted_traces = [
       "standoff_2/standoff_2_capture_context1_frame009.cpp",
       "standoff_2/standoff_2_capture_context1_frame010.cpp",
     ],
+    "standoff_2/standoff_2_capture_context1.angledata.gz",
   ],
   [
     "subway_princess_runner",
@@ -4205,6 +4286,7 @@ angle_restricted_traces = [
       "subway_princess_runner/subway_princess_runner_capture_context2_frame009.cpp",
       "subway_princess_runner/subway_princess_runner_capture_context2_frame010.cpp",
     ],
+    "subway_princess_runner/subway_princess_runner_capture_context2.angledata.gz",
   ],
   [
     "subway_surfers",
@@ -4221,6 +4303,7 @@ angle_restricted_traces = [
       "subway_surfers/subway_surfers_capture_context1_frame009.cpp",
       "subway_surfers/subway_surfers_capture_context1_frame010.cpp",
     ],
+    "subway_surfers/subway_surfers_capture_context1.angledata.gz",
   ],
   [
     "summoners_war",
@@ -4277,6 +4360,7 @@ angle_restricted_traces = [
       "summoners_war/summoners_war_capture_context2_frame049.cpp",
       "summoners_war/summoners_war_capture_context2_frame050.cpp",
     ],
+    "summoners_war/summoners_war_capture_context2.angledata.gz",
   ],
   [
     "talking_tom_hero_dash",
@@ -4293,6 +4377,7 @@ angle_restricted_traces = [
       "talking_tom_hero_dash/talking_tom_hero_dash_capture_context1_frame009.cpp",
       "talking_tom_hero_dash/talking_tom_hero_dash_capture_context1_frame010.cpp",
     ],
+    "talking_tom_hero_dash/talking_tom_hero_dash_capture_context1.angledata.gz",
   ],
   [
     "temple_run_2",
@@ -4309,6 +4394,7 @@ angle_restricted_traces = [
       "temple_run_2/temple_run_2_capture_context1_frame009.cpp",
       "temple_run_2/temple_run_2_capture_context1_frame010.cpp",
     ],
+    "temple_run_2/temple_run_2_capture_context1.angledata.gz",
   ],
   [
     "temple_run_300",
@@ -4326,6 +4412,7 @@ angle_restricted_traces = [
       "temple_run_300/temple_run_300_capture_context1_frame010.cpp",
       "temple_run_300/temple_run_300_capture_context1_frame011.cpp",
     ],
+    "temple_run_300/temple_run_300_capture_context1.angledata.gz",
   ],
   [
     "toon_blast",
@@ -4432,6 +4519,7 @@ angle_restricted_traces = [
       "toon_blast/toon_blast_capture_context2_frame099.cpp",
       "toon_blast/toon_blast_capture_context2_frame100.cpp",
     ],
+    "toon_blast/toon_blast_capture_context2.angledata.gz",
   ],
   [
     "township",
@@ -4448,6 +4536,7 @@ angle_restricted_traces = [
       "township/township_capture_context2_frame009.cpp",
       "township/township_capture_context2_frame010.cpp",
     ],
+    "township/township_capture_context2.angledata.gz",
   ],
   [
     "trex_200",
@@ -4465,6 +4554,7 @@ angle_restricted_traces = [
       "trex_200/trex_200_capture_context1_frame010.cpp",
       "trex_200/trex_200_capture_context1_frame011.cpp",
     ],
+    "trex_200/trex_200_capture_context1.angledata.gz",
   ],
   [
     "whatsapp",
@@ -4651,6 +4741,7 @@ angle_restricted_traces = [
       "whatsapp/whatsapp_capture_context1_frame179.cpp",
       "whatsapp/whatsapp_capture_context1_frame180.cpp",
     ],
+    "whatsapp/whatsapp_capture_context1.angledata.gz",
   ],
   [
     "world_of_tanks_blitz",
@@ -4667,6 +4758,7 @@ angle_restricted_traces = [
       "world_of_tanks_blitz/world_of_tanks_blitz_capture_context1_frame009.cpp",
       "world_of_tanks_blitz/world_of_tanks_blitz_capture_context1_frame010.cpp",
     ],
+    "world_of_tanks_blitz/world_of_tanks_blitz_capture_context1.angledata.gz",
   ],
   [
     "world_war_doh",
@@ -4683,6 +4775,7 @@ angle_restricted_traces = [
       "world_war_doh/world_war_doh_capture_context1_frame009.cpp",
       "world_war_doh/world_war_doh_capture_context1_frame010.cpp",
     ],
+    "world_war_doh/world_war_doh_capture_context1.angledata.gz",
   ],
   [
     "worms_zone_io",
@@ -4699,5 +4792,6 @@ angle_restricted_traces = [
       "worms_zone_io/worms_zone_io_capture_context1_frame009.cpp",
       "worms_zone_io/worms_zone_io_capture_context1_frame010.cpp",
     ],
+    "worms_zone_io/worms_zone_io_capture_context1.angledata.gz",
   ],
 ]

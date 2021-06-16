@@ -38,6 +38,7 @@ foreach(_trace_data, angle_restricted_traces) {
     trace_dir = _trace
     trace_ctx = _trace_data[1]
     sources = _trace_data[2]
+    angledata = _trace_data[3]
     fixture = ":angle_restricted_trace_fixture"
   }
 
