@@ -1368,28 +1368,6 @@ RenderPassDesc::RenderPassDesc(const RenderPassDesc &other)
     memcpy(this, &other, sizeof(RenderPassDesc));
 }
 
-void RenderPassDesc::setSamples(GLint samples)
-{
-    SetBitField(mLogSamples, PackSampleCount(samples));
-}
-
-void RenderPassDesc::setFramebufferFetchMode(bool hasFramebufferFetch)
-{
-    SetBitField(mHasFramebufferFetch, hasFramebufferFetch);
-}
-
-void RenderPassDesc::updateRenderToTexture(bool isRenderToTexture)
-{
-    if (isRenderToTexture)
-    {
-        mAttachmentFormats.back() |= kIsRenderToTexture;
-    }
-    else
-    {
-        mAttachmentFormats.back() &= ~kIsRenderToTexture;
-    }
-}
-
 void RenderPassDesc::packColorAttachment(size_t colorIndexGL, angle::FormatID formatID)
 {
     ASSERT(colorIndexGL < mAttachmentFormats.size());
@@ -1404,9 +1382,7 @@ void RenderPassDesc::packColorAttachment(size_t colorIndexGL, angle::FormatID fo
     SetBitField(packedFormat, formatID);
 
     // Set color attachment range such that it covers the range from index 0 through last active
-    // index.  Additionally, a few bits at the end of the array are used for other purposes, so we
-    // need the last format to use only a few bits.  These are the reasons why we need depth/stencil
-    // to be packed last.
+    // index.  This is the reasons why we need depth/stencil to be packed last.
     SetBitField(mColorAttachmentRange, std::max<size_t>(mColorAttachmentRange, colorIndexGL + 1));
 }
 
@@ -1425,11 +1401,7 @@ void RenderPassDesc::packColorAttachmentGap(size_t colorIndexGL)
 
 void RenderPassDesc::packDepthStencilAttachment(angle::FormatID formatID)
 {
-    // Though written as Count, there is only ever a single depth/stencil attachment.
     ASSERT(!hasDepthStencilAttachment());
-
-    // 3 bits are used to store the depth/stencil attachment format.
-    ASSERT(static_cast<uint8_t>(formatID) <= kDepthStencilFormatStorageMask);
 
     size_t index = depthStencilAttachmentIndex();
     ASSERT(index < mAttachmentFormats.size());
@@ -1442,7 +1414,7 @@ void RenderPassDesc::packColorResolveAttachment(size_t colorIndexGL)
 {
     ASSERT(isColorAttachmentEnabled(colorIndexGL));
     ASSERT(!mColorResolveAttachmentMask.test(colorIndexGL));
-    ASSERT(mLogSamples > 0);
+    ASSERT(mSamples > 1);
     mColorResolveAttachmentMask.set(colorIndexGL);
 }
 
@@ -1467,33 +1439,21 @@ void RenderPassDesc::packDepthStencilResolveAttachment()
     ASSERT(hasDepthStencilAttachment());
     ASSERT(!hasDepthStencilResolveAttachment());
 
-    static_assert((kDepthStencilFormatStorageMask & kResolveDepthStencilFlag) == 0,
-                  "Collision in depth/stencil format and flag bits");
-
-    mAttachmentFormats.back() |= kResolveDepthStencilFlag;
+    mResolveDepthStencil = true;
 }
 
 void RenderPassDesc::packDepthStencilUnresolveAttachment(bool unresolveDepth, bool unresolveStencil)
 {
     ASSERT(hasDepthStencilAttachment());
 
-    static_assert(
-        (kDepthStencilFormatStorageMask & (kUnresolveDepthFlag | kUnresolveStencilFlag)) == 0,
-        "Collision in depth/stencil format and flag bits");
-
-    if (unresolveDepth)
-    {
-        mAttachmentFormats.back() |= kUnresolveDepthFlag;
-    }
-    if (unresolveStencil)
-    {
-        mAttachmentFormats.back() |= kUnresolveStencilFlag;
-    }
+    mUnresolveDepth   = unresolveDepth;
+    mUnresolveStencil = unresolveStencil;
 }
 
 void RenderPassDesc::removeDepthStencilUnresolveAttachment()
 {
-    mAttachmentFormats.back() &= ~(kUnresolveDepthFlag | kUnresolveStencilFlag);
+    mUnresolveDepth   = false;
+    mUnresolveStencil = false;
 }
 
 RenderPassDesc &RenderPassDesc::operator=(const RenderPassDesc &other)
@@ -1504,14 +1464,7 @@ RenderPassDesc &RenderPassDesc::operator=(const RenderPassDesc &other)
 
 void RenderPassDesc::setWriteControlMode(gl::SrgbWriteControlMode mode)
 {
-    if (mode == gl::SrgbWriteControlMode::Default)
-    {
-        mAttachmentFormats.back() &= ~kSrgbWriteControlFlag;
-    }
-    else
-    {
-        mAttachmentFormats.back() |= kSrgbWriteControlFlag;
-    }
+    SetBitField(mSrgbWriteControl, mode);
 }
 
 size_t RenderPassDesc::hash() const

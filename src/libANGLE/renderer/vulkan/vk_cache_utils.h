@@ -185,60 +185,59 @@ class alignas(4) RenderPassDesc final
     {
         return mColorUnresolveAttachmentMask.test(colorIndexGL);
     }
-    bool hasDepthStencilResolveAttachment() const
-    {
-        return (mAttachmentFormats.back() & kResolveDepthStencilFlag) != 0;
-    }
-    bool hasDepthStencilUnresolveAttachment() const
-    {
-        return (mAttachmentFormats.back() & (kUnresolveDepthFlag | kUnresolveStencilFlag)) != 0;
-    }
-    bool hasDepthUnresolveAttachment() const
-    {
-        return (mAttachmentFormats.back() & kUnresolveDepthFlag) != 0;
-    }
-    bool hasStencilUnresolveAttachment() const
-    {
-        return (mAttachmentFormats.back() & kUnresolveStencilFlag) != 0;
-    }
+    bool hasDepthStencilResolveAttachment() const { return mResolveDepthStencil; }
+    bool hasDepthStencilUnresolveAttachment() const { return mUnresolveDepth || mUnresolveStencil; }
+    bool hasDepthUnresolveAttachment() const { return mUnresolveDepth; }
+    bool hasStencilUnresolveAttachment() const { return mUnresolveStencil; }
     gl::SrgbWriteControlMode getSRGBWriteControlMode() const
     {
-        return ((mAttachmentFormats.back() & kSrgbWriteControlFlag) != 0)
-                   ? gl::SrgbWriteControlMode::Linear
-                   : gl::SrgbWriteControlMode::Default;
+        return static_cast<gl::SrgbWriteControlMode>(mSrgbWriteControl);
     }
 
     // Get the number of attachments in the Vulkan render pass, i.e. after removing disabled
     // color attachments.
     size_t attachmentCount() const;
 
-    void setSamples(GLint samples);
+    void setSamples(GLint samples) { mSamples = static_cast<uint8_t>(samples); }
+    uint8_t samples() const { return mSamples; }
 
-    uint8_t samples() const { return 1u << mLogSamples; }
+    void setFramebufferFetchMode(bool hasFramebufferFetch)
+    {
+        mHasFramebufferFetch = hasFramebufferFetch;
+    }
 
-    void setFramebufferFetchMode(bool hasFramebufferFetch);
     bool getFramebufferFetchMode() const { return mHasFramebufferFetch; }
 
-    void updateRenderToTexture(bool isRenderToTexture);
-    bool isRenderToTexture() const { return (mAttachmentFormats.back() & kIsRenderToTexture) != 0; }
+    void updateRenderToTexture(bool isRenderToTexture) { mIsRenderToTexture = isRenderToTexture; }
+    bool isRenderToTexture() const { return mIsRenderToTexture; }
 
     angle::FormatID operator[](size_t index) const
     {
         ASSERT(index < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1);
-
-        uint8_t format = mAttachmentFormats[index];
-        if (index >= depthStencilAttachmentIndex())
-        {
-            format &= kDepthStencilFormatStorageMask;
-        }
-        return static_cast<angle::FormatID>(format);
+        return static_cast<angle::FormatID>(mAttachmentFormats[index]);
     }
 
   private:
-    // Store log(samples), to be able to store it in 3 bits.
-    uint8_t mLogSamples : 3;
-    uint8_t mColorAttachmentRange : 4;
+    uint8_t mSamples;
+    uint8_t mColorAttachmentRange;
+    // TODO: For upcoming multiview support.  http://anglebug.com/6048
+    uint8_t mViewCount;
+
+    // sRGB
+    uint8_t mSrgbWriteControl : 1;
+
+    // Framebuffer fetch
     uint8_t mHasFramebufferFetch : 1;
+
+    // Multisampled render to texture
+    uint8_t mIsRenderToTexture : 1;
+    uint8_t mResolveDepthStencil : 1;
+    uint8_t mUnresolveDepth : 1;
+    uint8_t mUnresolveStencil : 1;
+
+    // Available space for expansion.
+    uint8_t mPadding1 : 2;
+    uint8_t mPadding2;
 
     // Whether each color attachment has a corresponding resolve attachment.  Color resolve
     // attachments can be used to optimize resolve through glBlitFramebuffer() as well as support
@@ -275,27 +274,13 @@ class alignas(4) RenderPassDesc final
     //
     // The resolve attachments are packed after the non-resolve attachments.  They use the same
     // formats, so they are not specified in this array.
-    //
-    // The depth/stencil angle::FormatID values are in the range [1, 7], and therefore require only
-    // 3 bits to be stored.  As a result, the upper 5 bits of mAttachmentFormats.back() is free to
-    // use for other purposes.
     FramebufferNonResolveAttachmentArray<uint8_t> mAttachmentFormats;
-
-    // Depth/stencil format is stored in 3 bits.
-    static constexpr uint8_t kDepthStencilFormatStorageMask = 0x7;
-
-    // Flags stored in the upper 5 bits of mAttachmentFormats.back().
-    static constexpr uint8_t kIsRenderToTexture       = 0x80;
-    static constexpr uint8_t kResolveDepthStencilFlag = 0x40;
-    static constexpr uint8_t kUnresolveDepthFlag      = 0x20;
-    static constexpr uint8_t kUnresolveStencilFlag    = 0x10;
-    static constexpr uint8_t kSrgbWriteControlFlag    = 0x08;
 };
 
 bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs);
 
 constexpr size_t kRenderPassDescSize = sizeof(RenderPassDesc);
-static_assert(kRenderPassDescSize == 12, "Size check failed");
+static_assert(kRenderPassDescSize == 16, "Size check failed");
 
 struct PackedAttachmentOpsDesc final
 {
