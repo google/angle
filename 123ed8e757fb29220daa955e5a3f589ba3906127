@@ -135,6 +135,52 @@
       "message": "PTAL",
       "revId": "123ed8e757fb29220daa955e5a3f589ba3906127",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d44096be_391fa121",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T15:46:16Z",
+      "side": 1,
+      "message": "curious - what information does this give you that you don\u0027t have from the other parameters?",
+      "range": {
+        "startLine": 786,
+        "startChar": 20,
+        "endLine": 786,
+        "endChar": 41
+      },
+      "revId": "123ed8e757fb29220daa955e5a3f589ba3906127",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba5b768f_0d3b0ac8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6740,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T15:46:16Z",
+      "side": 1,
+      "message": "nit: Caps\n\nAlso instead of handleConversion can you just call this ConvertImageColorspace?",
+      "range": {
+        "startLine": 6740,
+        "startChar": 14,
+        "endLine": 6740,
+        "endChar": 40
+      },
+      "revId": "123ed8e757fb29220daa955e5a3f589ba3906127",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
