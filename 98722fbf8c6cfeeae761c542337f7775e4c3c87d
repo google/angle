@@ -33,6 +33,24 @@
       "message": "My only hesitation is that the RPD is part of PipelineDesc. I wonder if we should make the viewport/scissor fully dynamic to compensate for this increase.",
       "revId": "98722fbf8c6cfeeae761c542337f7775e4c3c87d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49253278_cd2e2d18",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-16T16:26:56Z",
+      "side": 1,
+      "message": "Maybe in a separate change? That has other implications so conflating the two (unpack RPD vs dynamic scissor/viewport) will make it hard to understand where any inefficiency may come from.",
+      "parentUuid": "6cd31570_7e71b4de",
+      "revId": "98722fbf8c6cfeeae761c542337f7775e4c3c87d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
