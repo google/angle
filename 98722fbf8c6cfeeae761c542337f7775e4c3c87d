@@ -51,6 +51,24 @@
       "parentUuid": "6cd31570_7e71b4de",
       "revId": "98722fbf8c6cfeeae761c542337f7775e4c3c87d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c06d8d34_21589ee5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-16T16:32:16Z",
+      "side": 1,
+      "message": "Yeah for sure, the question is prior or subsequent.",
+      "parentUuid": "49253278_cd2e2d18",
+      "revId": "98722fbf8c6cfeeae761c542337f7775e4c3c87d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
