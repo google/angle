@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bc008ec_9eb805dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T12:56:05Z",
+      "side": 1,
+      "message": "LGTM. I\u0027m not sure how much value keeping the feature in place has, maybe you can make a follow-up CL just to remove the static viewport/scissor pronto.",
+      "revId": "f23c5696dea84ff456e7a28e8e6d9408b5b972a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf1c14ab_43150f47",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2130,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T12:56:05Z",
+      "side": 1,
+      "message": "maybe you should use the same bit pattern for the viewport bits to keep things in sync.",
+      "range": {
+        "startLine": 2130,
+        "startChar": 12,
+        "endLine": 2130,
+        "endChar": 33
+      },
+      "revId": "f23c5696dea84ff456e7a28e8e6d9408b5b972a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
