@@ -121,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6029ab04_8a7c6f41",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3235,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-17T20:45:31Z",
+      "side": 1,
+      "message": "Well yes, there are many states like that we don\u0027t need to set if we are the only context (like binding the pipeline). I\u0027d leave that as a separate optimization (if even necessary, since render passes are supposed to be few anyway). That optimization could move the setting of mNewGraphicsCommandBufferDirtyBits from startRP to flush if single-context.",
+      "parentUuid": "72358b88_e77d5f93",
+      "range": {
+        "startLine": 3235,
+        "startChar": 4,
+        "endLine": 3235,
+        "endChar": 46
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "06aa2566_a5903d4f",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 10
