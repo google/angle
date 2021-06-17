@@ -280,6 +280,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "30ec2f16_a9074c6a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-17T22:06:30Z",
+      "side": 1,
+      "message": "Seems to have done the trick :)\n\nThere\u0027s a weird flake I\u0027ve never seen before with swapchain size.",
+      "parentUuid": "b6f2415f_d3a8c194",
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "83d2a5b6_a5958ba0",
