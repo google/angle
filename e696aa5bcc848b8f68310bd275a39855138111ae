@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "18b5c8be_0ce53fe0",
+        "filename": "src/common/Spinlock.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-17T15:29:47Z",
+      "side": 1,
+      "message": "That would be nice, but if we add a debug counter which asserts when over a threshold, it would trigger when a thread is locked longer because you debug another thread. I will think about it.",
+      "parentUuid": "eeb3c48c_06added0",
+      "range": {
+        "startLine": 8,
+        "startChar": 5,
+        "endLine": 8,
+        "endChar": 72
+      },
+      "revId": "e696aa5bcc848b8f68310bd275a39855138111ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "06168c90_93da7399",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-06-17T15:18:48Z",
       "side": 1,
       "message": "I think this came from boost, but I believe the following is equivalent and is easier to follow:\n\n  __asm__ __volatile__(\"pause;\") \n  \n(Source) http://boost.2283326.n4.nabble.com/x86-CPU-spinning-should-use-pause-td3851387.html\n\nAlso, we need a TODO or assert here for Android.  I believe there are ARM specific versions we can add.",
+      "range": {
+        "startLine": 20,
+        "startChar": 29,
+        "endLine": 20,
+        "endChar": 77
+      },
+      "revId": "e696aa5bcc848b8f68310bd275a39855138111ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15a1ef87_ead3dfd5",
+        "filename": "src/common/Spinlock.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-17T15:29:47Z",
+      "side": 1,
+      "message": "Great find, thanks! Yes, I will replace it, it is more readable.\nNo assert needed for Android, it is an optional optimization for SMT and works fine without it. I will add a TODO.",
+      "parentUuid": "06168c90_93da7399",
       "range": {
         "startLine": 20,
         "startChar": 29,
