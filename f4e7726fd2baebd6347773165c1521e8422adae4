@@ -353,6 +353,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6e85411d_f1836205",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2079,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-17T21:54:08Z",
+      "side": 1,
+      "message": "Actually looking again that\u0027s not even true. The viewport set here is not the same as the context\u0027s; it has the clear depth value set in it. The scissor should be the same, though technically the function could work with any scissor.\n\nThere _may_ be some cleanup possible (for example by not setting scissor, but instead asking the context to flush its scissor dirty bit), but honestly it\u0027s both minor and a complication better left to another change.",
+      "parentUuid": "a024b265_3415bfa8",
+      "range": {
+        "startLine": 2079,
+        "startChar": 4,
+        "endLine": 2079,
+        "endChar": 48
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "91c6d899_f2511b2a",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 10
