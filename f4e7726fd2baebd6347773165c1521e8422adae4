@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aeb7916c_dcb5430a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1996,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T21:36:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "895daec7_cb6a86dd",
+      "range": {
+        "startLine": 1996,
+        "startChar": 11,
+        "endLine": 1996,
+        "endChar": 34
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4cab7c3d_4176fcaf",
@@ -238,6 +262,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6f2415f_d3a8c194",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T21:36:43Z",
+      "side": 1,
+      "message": "Okay, I\u0027ve marked them dirty anywhere we directly modified viewport and scissor in UtilsVk.cpp, thanks for the pointer!",
+      "parentUuid": "a2673e5c_fee8c9c7",
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "83d2a5b6_a5958ba0",
@@ -346,6 +388,30 @@
       "side": 1,
       "message": "Sure, can switch it to consuming a pointer.",
       "parentUuid": "91c6d899_f2511b2a",
+      "range": {
+        "startLine": 817,
+        "startChar": 30,
+        "endLine": 817,
+        "endChar": 31
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6448446_a8b80b3b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 817,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T21:36:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3e266f8_6e328514",
       "range": {
         "startLine": 817,
         "startChar": 30,
