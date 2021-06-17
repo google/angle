@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea973e81_485d51cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T16:43:06Z",
+      "side": 1,
+      "message": "With some local testing, I can see that I\u0027ve broken the old path, so I\u0027ll just drop it, no need to maintain both.",
+      "parentUuid": "6b07e526_01892bde",
+      "revId": "f23c5696dea84ff456e7a28e8e6d9408b5b972a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bf1c14ab_43150f47",
