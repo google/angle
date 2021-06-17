@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0566ef8_bc65e343",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1126674
+      },
+      "writtenOn": "2021-06-17T18:02:01Z",
+      "side": 1,
+      "message": "Thanks for this - not sure how temporary this is meant to be, but in general we discourage flags other than compiler flags to depend on is_official_build, as we basically have no test coverage with is_official_build, and developers generally don\u0027t set is_official_build locally.",
+      "revId": "dc334829d87fc04c26ff4e2ac4f8aaf061b9cf36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
