@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eeb3c48c_06added0",
+        "filename": "src/common/Spinlock.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T15:18:48Z",
+      "side": 1,
+      "message": "Would be nice if there was a way in debug to ensure this code isn\u0027t being hit much.",
+      "range": {
+        "startLine": 8,
+        "startChar": 5,
+        "endLine": 8,
+        "endChar": 72
+      },
+      "revId": "e696aa5bcc848b8f68310bd275a39855138111ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06168c90_93da7399",
+        "filename": "src/common/Spinlock.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T15:18:48Z",
+      "side": 1,
+      "message": "I think this came from boost, but I believe the following is equivalent and is easier to follow:\n\n  __asm__ __volatile__(\"pause;\") \n  \n(Source) http://boost.2283326.n4.nabble.com/x86-CPU-spinning-should-use-pause-td3851387.html\n\nAlso, we need a TODO or assert here for Android.  I believe there are ARM specific versions we can add.",
+      "range": {
+        "startLine": 20,
+        "startChar": 29,
+        "endLine": 20,
+        "endChar": 77
+      },
+      "revId": "e696aa5bcc848b8f68310bd275a39855138111ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
