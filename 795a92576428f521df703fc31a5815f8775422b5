@@ -117,6 +117,30 @@
       },
       "revId": "795a92576428f521df703fc31a5815f8775422b5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d35e2c52_4000c507",
+        "filename": "src/libANGLE/renderer/CLExtensions.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-17T15:06:15Z",
+      "side": 1,
+      "message": "Thanks, implemented as proposed.",
+      "parentUuid": "8865d3b0_7abdacd0",
+      "range": {
+        "startLine": 21,
+        "startChar": 19,
+        "endLine": 21,
+        "endChar": 39
+      },
+      "revId": "795a92576428f521df703fc31a5815f8775422b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
