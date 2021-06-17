@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36239eac_6d0fc7ac",
+        "filename": "src/libANGLE/CLEvent.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T16:12:45Z",
+      "side": 1,
+      "message": "nit: explicit type preferred unless it\u0027s a doubly nested template or something like that.",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 8
+      },
+      "revId": "768cde1e4275c532ed08a15b35a6512bf915a061",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2af79815_2942937a",
+        "filename": "src/libANGLE/CLEvent.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T16:12:45Z",
+      "side": 1,
+      "message": "nice use of the try macro.",
+      "range": {
+        "startLine": 98,
+        "startChar": 8,
+        "endLine": 98,
+        "endChar": 20
+      },
+      "revId": "768cde1e4275c532ed08a15b35a6512bf915a061",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b2cc3eb_ad48473a",
+        "filename": "src/libANGLE/renderer/cl/CLContextCL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T16:12:45Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 107,
+        "startChar": 10,
+        "endLine": 107,
+        "endChar": 14
+      },
+      "revId": "768cde1e4275c532ed08a15b35a6512bf915a061",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
