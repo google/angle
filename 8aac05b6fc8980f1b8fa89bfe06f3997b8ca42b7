@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "76794e17_78b5c868",
+        "filename": "src/libANGLE/CLtypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T19:33:24Z",
+      "side": 1,
+      "message": "Please use the existing one, and feel free let me know if it has any problems.",
+      "parentUuid": "e7731279_bb29a9aa",
+      "range": {
+        "startLine": 31,
+        "startChar": 21,
+        "endLine": 31,
+        "endChar": 31
+      },
+      "revId": "8aac05b6fc8980f1b8fa89bfe06f3997b8ca42b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "15e2c39b_06c37314",
         "filename": "src/libANGLE/cl_utils.cpp",
         "patchSetId": 1
