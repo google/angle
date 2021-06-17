@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ea2f6eab_3f785f83",
+        "filename": "src/libANGLE/CLtypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T16:16:20Z",
+      "side": 1,
+      "message": "please use the ANGLE_LOCAL_VAR helper for this. was there a reason you avoided it?",
+      "range": {
+        "startLine": 31,
+        "startChar": 21,
+        "endLine": 31,
+        "endChar": 31
+      },
+      "revId": "8aac05b6fc8980f1b8fa89bfe06f3997b8ca42b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15e2c39b_06c37314",
+        "filename": "src/libANGLE/cl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T16:16:20Z",
+      "side": 1,
+      "message": "nit: please use \"\" includes. if you run into issues let me know and I\u0027ll debug.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 43
+      },
+      "revId": "8aac05b6fc8980f1b8fa89bfe06f3997b8ca42b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "08c1b283_4decfbb2",
         "filename": "src/libANGLE/cl_utils.cpp",
         "patchSetId": 1
