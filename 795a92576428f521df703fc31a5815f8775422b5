@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "979ac591_a22c5882",
+        "filename": "include/angle_cl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-17T09:12:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1f4c399_deb50595",
+      "range": {
+        "startLine": 40,
+        "startChar": 23,
+        "endLine": 40,
+        "endChar": 33
+      },
+      "revId": "795a92576428f521df703fc31a5815f8775422b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d9a4b492_335e0157",
