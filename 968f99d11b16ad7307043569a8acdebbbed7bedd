@@ -111,6 +111,30 @@
       },
       "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ffcf984_bfcded43",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-06-17T21:28:01Z",
+      "side": 1,
+      "message": "hmm, it\u0027s not the state that is messing with the dirty bits, right? It\u0027s the renderer. I could pull this out to a separate method private to the class, and have prepareForDraw() call that new method -- WDYT? I\u0027m not sure where the callsite would be if we made it public and moved the handling outside of this class.",
+      "parentUuid": "ce3d5034_248a9e37",
+      "range": {
+        "startLine": 621,
+        "startChar": 0,
+        "endLine": 630,
+        "endChar": 9
+      },
+      "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
