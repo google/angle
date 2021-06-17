@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c6ae1bf7_e6b95687",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T18:48:30Z",
+      "side": 1,
+      "message": "Ah, carry over from the initial port.  I\u0027ll drop it.",
+      "parentUuid": "1dcf8320_9d650d04",
+      "range": {
+        "startLine": 801,
+        "startChar": 9,
+        "endLine": 801,
+        "endChar": 34
+      },
+      "revId": "728c358a55175cf71f663888b0840504304b6776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e50e4e46_1f4750b4",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
         "patchSetId": 9
@@ -71,6 +95,30 @@
       "writtenOn": "2021-06-17T18:41:14Z",
       "side": 1,
       "message": "Should this can be removed, and the viewport/scissor data member in GraphicsPipelineDesc as well?",
+      "range": {
+        "startLine": 718,
+        "startChar": 9,
+        "endLine": 718,
+        "endChar": 19
+      },
+      "revId": "728c358a55175cf71f663888b0840504304b6776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fa871e8_ca0fe919",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T18:48:30Z",
+      "side": 1,
+      "message": "I had it written up that way 5 minutes before I submitted this, but decided to keep it all just in case it was ever needed.  I\u0027m open to dropping them since they will be unused.",
+      "parentUuid": "e50e4e46_1f4750b4",
       "range": {
         "startLine": 718,
         "startChar": 9,
