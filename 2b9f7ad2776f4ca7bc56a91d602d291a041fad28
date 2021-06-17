@@ -33,6 +33,23 @@
       "message": "LGTM as the urgent patch.",
       "revId": "2b9f7ad2776f4ca7bc56a91d602d291a041fad28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f80b3616_f28a99cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T22:28:00Z",
+      "side": 1,
+      "message": "Is that pattern the same as for Fuchsia or is that one devised in your testing?",
+      "revId": "2b9f7ad2776f4ca7bc56a91d602d291a041fad28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
