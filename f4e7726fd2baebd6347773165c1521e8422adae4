@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80c9936f_982871a4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1996,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-17T19:34:39Z",
+      "side": 1,
+      "message": "No need for an Impl helper. Only the ones that share code with compute have these Impl functions. You can just move the code from the Impl helpers to here and remove those.",
+      "range": {
+        "startLine": 1996,
+        "startChar": 11,
+        "endLine": 1996,
+        "endChar": 34
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06aa2566_a5903d4f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-17T19:34:39Z",
+      "side": 1,
+      "message": "Don\u0027t need this (emphasis mine):\n\n\u003e dynamic state can be modified at any time and **persists for the lifetime of the command buffer**, or until modified by another dynamic state setting command or another pipeline bind.\n\nRemoving this should save you a lot of unnecessary calls. You should be able to see the removal of the calls visually in RenderDoc or AGI to confirm.",
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91c6d899_f2511b2a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 817,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-17T19:34:39Z",
+      "side": 1,
+      "message": "nit: we used to disallow non-const references. That limitation was lifted in chromium, though I personally like to see it continued in ANGLE. I don\u0027t remember if we reached a consensus.\n\nMy own reasoning is that it\u0027s not clear looking at the call site if the variable is being passed by value or reference, so makes the code harder to reason about.",
+      "range": {
+        "startLine": 817,
+        "startChar": 30,
+        "endLine": 817,
+        "endChar": 31
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
