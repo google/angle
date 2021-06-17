@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b07e526_01892bde",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T14:08:16Z",
+      "side": 1,
+      "message": "I maintained it in case we do run into apps that really need it baked into the pipeline.  Also to facilitate easy comparisons.  But if we\u0027d rather keep things simpler, I can take it out.",
+      "parentUuid": "9bc008ec_9eb805dc",
+      "revId": "f23c5696dea84ff456e7a28e8e6d9408b5b972a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bf1c14ab_43150f47",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-06-17T12:56:05Z",
       "side": 1,
       "message": "maybe you should use the same bit pattern for the viewport bits to keep things in sync.",
+      "range": {
+        "startLine": 2130,
+        "startChar": 12,
+        "endLine": 2130,
+        "endChar": 33
+      },
+      "revId": "f23c5696dea84ff456e7a28e8e6d9408b5b972a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4380d8ba_87ff0d73",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2130,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T14:08:16Z",
+      "side": 1,
+      "message": "I believe the IsScissorStateDynamic stuff will go away if we remove the pipeline desc support.  It is designed to support a mix for clears (see setDynamicScissor).",
+      "parentUuid": "bf1c14ab_43150f47",
       "range": {
         "startLine": 2130,
         "startChar": 12,
