@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b5718850_f2f711d6",
+        "filename": "src/libANGLE/CLtypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-17T19:34:55Z",
+      "side": 1,
+      "message": "The macro ANGLE_LOCAL_VAR is unnecessary, complex, and dangerous. I could show you a case of someone who undefined a macro like this in a big project, and nobody noticed it for 5 years. So I propose to delete the macro.",
+      "parentUuid": "76794e17_78b5c868",
+      "range": {
+        "startLine": 31,
+        "startChar": 21,
+        "endLine": 31,
+        "endChar": 31
+      },
+      "revId": "8aac05b6fc8980f1b8fa89bfe06f3997b8ca42b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "15e2c39b_06c37314",
         "filename": "src/libANGLE/cl_utils.cpp",
         "patchSetId": 1
