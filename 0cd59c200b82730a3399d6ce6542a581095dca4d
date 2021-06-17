@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a82dfefc_cbe943a6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T22:01:44Z",
+      "side": 1,
+      "message": "Not sure if you want to use this CL or the other WIP CL, but hoping we can do the FrontendFeatures approach. Also did you confirm this fixes a lot of the uninit variable issues without needing the many small patches to force defined data in the tests?",
+      "revId": "0cd59c200b82730a3399d6ce6542a581095dca4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1daecf69_ae48af65",
+        "filename": "include/platform/Feature.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T22:01:44Z",
+      "side": 1,
+      "message": "can you move this to FrontendFeatures? I confirmed that the warning message is spurious and we should fix that separately.",
+      "range": {
+        "startLine": 194,
+        "startChar": 19,
+        "endLine": 194,
+        "endChar": 42
+      },
+      "revId": "0cd59c200b82730a3399d6ce6542a581095dca4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "071c3e9a_0128612a",
+        "filename": "include/platform/Feature.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T22:01:44Z",
+      "side": 1,
+      "message": "nit: please mirror the variable name (the underscore stuff is a Chrome anachronism.)",
+      "range": {
+        "startLine": 195,
+        "startChar": 9,
+        "endLine": 195,
+        "endChar": 35
+      },
+      "revId": "0cd59c200b82730a3399d6ce6542a581095dca4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09866b2a_d108a037",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T22:01:44Z",
+      "side": 1,
+      "message": "You shouldn\u0027t need any of this code - ANGLE internally has logic to match feature names to the environment variable. What happens when you just remove all of this block?",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 1
+      },
+      "revId": "0cd59c200b82730a3399d6ce6542a581095dca4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
