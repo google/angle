@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "895daec7_cb6a86dd",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1996,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T19:57:28Z",
+      "side": 1,
+      "message": "Okay, will do.",
+      "parentUuid": "80c9936f_982871a4",
+      "range": {
+        "startLine": 1996,
+        "startChar": 11,
+        "endLine": 1996,
+        "endChar": 34
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "06aa2566_a5903d4f",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 10
@@ -43,6 +67,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0a197848_e208aefe",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T19:57:28Z",
+      "side": 1,
+      "message": "Those were the last additions to the CL to get dEQP passing.  See 5-\u003e6:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2954925/5..6\n\nThe failures before that can be seen here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2954925/5\n\nIt was inspired by Jamie\u0027s original change here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/1316888/8/src/libANGLE/renderer/vulkan/ContextVk.cpp#1065\n\nI think the alternative is to find where to dirty the bits for viewport/scissor individually?",
+      "parentUuid": "06aa2566_a5903d4f",
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "91c6d899_f2511b2a",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 10
@@ -54,6 +96,30 @@
       "writtenOn": "2021-06-17T19:34:39Z",
       "side": 1,
       "message": "nit: we used to disallow non-const references. That limitation was lifted in chromium, though I personally like to see it continued in ANGLE. I don\u0027t remember if we reached a consensus.\n\nMy own reasoning is that it\u0027s not clear looking at the call site if the variable is being passed by value or reference, so makes the code harder to reason about.",
+      "range": {
+        "startLine": 817,
+        "startChar": 30,
+        "endLine": 817,
+        "endChar": 31
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3e266f8_6e328514",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 817,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T19:57:28Z",
+      "side": 1,
+      "message": "Sure, can switch it to consuming a pointer.",
+      "parentUuid": "91c6d899_f2511b2a",
       "range": {
         "startLine": 817,
         "startChar": 30,
