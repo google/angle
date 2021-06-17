@@ -82,6 +82,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "decbc6ce_7dcea396",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T19:18:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6ae1bf7_e6b95687",
+      "range": {
+        "startLine": 801,
+        "startChar": 9,
+        "endLine": 801,
+        "endChar": 34
+      },
+      "revId": "728c358a55175cf71f663888b0840504304b6776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e50e4e46_1f4750b4",
@@ -143,6 +167,30 @@
       "side": 1,
       "message": "I will vote to just remove it - git still have what what you need anytime you want to bring it back.",
       "parentUuid": "2fa871e8_ca0fe919",
+      "range": {
+        "startLine": 718,
+        "startChar": 9,
+        "endLine": 718,
+        "endChar": 19
+      },
+      "revId": "728c358a55175cf71f663888b0840504304b6776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9811509_ad4ae306",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T19:18:10Z",
+      "side": 1,
+      "message": "Okay, removed all the unused members and methods.",
+      "parentUuid": "aef5a8d4_89c0f7a5",
       "range": {
         "startLine": 718,
         "startChar": 9,
