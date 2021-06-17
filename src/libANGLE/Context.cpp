@@ -9006,6 +9006,7 @@ void Context::dirtyAllState()
 {
     mState.setAllDirtyBits();
     mState.setAllDirtyObjects();
+    mState.gles1().setAllDirty();
 }
 
 // ErrorSet implementation.

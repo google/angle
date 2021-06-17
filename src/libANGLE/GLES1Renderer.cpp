@@ -618,6 +618,14 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
 {
     if (mRendererProgramInitialized)
     {
+        // If we're already done the initialization/compilation, but there has been some
+        // state change, just reload the compiled program.
+        GLES1State &gles1State = glState->gles1();
+        if (gles1State.shouldHandleDirtyProgram())
+        {
+            Program *programObject = getProgram(mProgramState.program);
+            ANGLE_TRY(glState->setProgram(context, programObject));
+        }
         return angle::Result::Continue;
     }
 

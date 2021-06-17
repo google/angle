@@ -219,6 +219,13 @@ const angle::Vector3 &GLES1State::getCurrentNormal() const
     return mCurrentNormal;
 }
 
+bool GLES1State::shouldHandleDirtyProgram()
+{
+    bool ret = isDirty(DIRTY_GLES1_PROGRAM);
+    clearDirtyBits(DIRTY_GLES1_PROGRAM);
+    return ret;
+}
+
 void GLES1State::setCurrentTextureCoords(unsigned int unit, const TextureCoordF &coords)
 {
     setDirty(DIRTY_GLES1_CURRENT_VECTOR);
@@ -563,26 +570,6 @@ GLenum GLES1State::getHint(GLenum target) const
             UNREACHABLE();
             return 0;
     }
-}
-
-void GLES1State::setDirty(DirtyGles1Type type)
-{
-    mDirtyBits.set(type);
-}
-
-void GLES1State::setAllDirty()
-{
-    mDirtyBits.set();
-}
-
-void GLES1State::clearDirty()
-{
-    mDirtyBits.reset();
-}
-
-bool GLES1State::isDirty(DirtyGles1Type type) const
-{
-    return mDirtyBits.test(type);
 }
 
 }  // namespace gl
