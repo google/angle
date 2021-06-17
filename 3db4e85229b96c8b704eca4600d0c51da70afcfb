@@ -319,6 +319,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "363bc00e_423dccb9",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T12:52:23Z",
+      "side": 1,
+      "message": "I\u0027d still prefer if you left it out. If someone else runs into it you can re-add it.",
+      "parentUuid": "52b0d19c_bcfda44f",
+      "range": {
+        "startLine": 74,
+        "startChar": 46,
+        "endLine": 74,
+        "endChar": 105
+      },
+      "revId": "3db4e85229b96c8b704eca4600d0c51da70afcfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "21faa40a_2c7eae02",
         "filename": "infra/ANGLEWrangling.md",
         "patchSetId": 1
