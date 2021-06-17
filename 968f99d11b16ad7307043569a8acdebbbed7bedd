@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bcbabc13_61f33b2b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T21:14:31Z",
+      "side": 1,
+      "message": "LGTM. Please use \u0027git cl upload\u0027 when pushing changes to angle so you run presubmit.",
+      "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5a93fd9_1d56c57a",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T21:14:31Z",
+      "side": 1,
+      "message": "this looks like a somewhat separate change? like an optimization. maybe split?",
+      "range": {
+        "startLine": 621,
+        "startChar": 0,
+        "endLine": 630,
+        "endChar": 9
+      },
+      "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
