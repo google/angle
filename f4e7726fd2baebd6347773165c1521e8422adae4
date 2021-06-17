@@ -50,6 +50,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4cab7c3d_4176fcaf",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3235,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-17T20:09:32Z",
+      "side": 1,
+      "message": "I think we should check if mScissor actually changed or not and only set dirty bit if changed. Given this is command buffer state, if you switch two FBOs with same size, you really don\u0027t need dirty bit set.\n\nSame for viewport.",
+      "range": {
+        "startLine": 3235,
+        "startChar": 4,
+        "endLine": 3235,
+        "endChar": 46
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "06aa2566_a5903d4f",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 10
@@ -97,6 +120,47 @@
       "side": 1,
       "message": "I suspect it was UtilsVk code that\u0027s setting the scissor/viewport and not dirtying the bit. It\u0027s only clear that\u0027s not starting its own render pass, so that must have been the problem. See this in ContextVk.h:\n\n    // When UtilsVk issues draw or dispatch calls, it binds a new pipeline and descriptor sets that\n    // the context is not aware of.  These functions are called to make sure the pipeline and\n    // affected descriptor set bindings are dirtied for the next application draw/dispatch call.\n    void invalidateGraphicsPipelineBinding();\n    void invalidateComputePipelineBinding();\n    void invalidateGraphicsDescriptorSet(DescriptorSetIndex usedDescriptorSet);\n    void invalidateComputeDescriptorSet(DescriptorSetIndex usedDescriptorSet);\n\nYou would need to add an `invalidateScissorAndViewport()` and call it from UtilsVk where necessary.",
       "parentUuid": "0a197848_e208aefe",
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2673e5c_fee8c9c7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-17T20:09:32Z",
+      "side": 1,
+      "message": "+1. Thanks Shabi, this is exact what I was looking for in spec this morning.",
+      "parentUuid": "06aa2566_a5903d4f",
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83d2a5b6_a5958ba0",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2079,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-17T20:09:32Z",
+      "side": 1,
+      "message": "Given the dynamic state is per command buffer, I don\u0027t think you need this and scissor at line 2082. I think this should already covered in contextVk.cpp.\n\nSame thing apply to other places in UtilsVk.cpp",
+      "range": {
+        "startLine": 2079,
+        "startChar": 4,
+        "endLine": 2079,
+        "endChar": 48
+      },
       "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
