@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed663a58_a73499d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T22:02:36Z",
+      "side": 1,
+      "message": "Also if we can confirm the robust resource init flag is properly being captured when it\u0027s forced on, that would be good.",
+      "parentUuid": "a82dfefc_cbe943a6",
+      "revId": "0cd59c200b82730a3399d6ce6542a581095dca4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1daecf69_ae48af65",
