@@ -73,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a8f0f1ea_a9e43648",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3235,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-17T20:21:46Z",
+      "side": 1,
+      "message": "If you switch FBOs we start a new render pass and we always set a bunch of state including viewport/scissor (not just conservatively, we have to for multithreading and multicontexts). So I don\u0027t think that\u0027s a concern here.\n\nWe do have this sort of check in the front-end to ignore no-op state changes (see `State::setScissorParams` for example).\n\nYou could potentially add some debug thing here though to warn if unnecessary state change happens. Something similar to ANGLE_PERF_WARNING, but which has a counter and only warns if the condition is true more than N times. Then we could have `if (!already_dirty \u0026\u0026 prev_scissor \u003d\u003d new_scissor) ANGLE_INTERNAL_PERF_WARNING(20, ...)`",
+      "parentUuid": "4cab7c3d_4176fcaf",
+      "range": {
+        "startLine": 3235,
+        "startChar": 4,
+        "endLine": 3235,
+        "endChar": 46
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "06aa2566_a5903d4f",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 10
@@ -155,6 +179,30 @@
       "writtenOn": "2021-06-17T20:09:32Z",
       "side": 1,
       "message": "Given the dynamic state is per command buffer, I don\u0027t think you need this and scissor at line 2082. I think this should already covered in contextVk.cpp.\n\nSame thing apply to other places in UtilsVk.cpp",
+      "range": {
+        "startLine": 2079,
+        "startChar": 4,
+        "endLine": 2079,
+        "endChar": 48
+      },
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba890573_54e8d06a",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2079,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-17T20:21:46Z",
+      "side": 1,
+      "message": "You do if this function starts the render pass itself, because context dirty bits are not processed.",
+      "parentUuid": "83d2a5b6_a5958ba0",
       "range": {
         "startLine": 2079,
         "startChar": 4,
