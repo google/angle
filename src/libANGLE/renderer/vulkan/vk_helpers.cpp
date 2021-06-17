@@ -2092,11 +2092,12 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
             ASSERT(!mBuffer);
         }
 
-        if (sizeToAllocate > mSize)
+        const size_t sizeIgnoringHistory = std::max(mInitialSize, sizeToAllocate);
+        if (sizeToAllocate > mSize || sizeIgnoringHistory < mSize / 4)
         {
-            mSize = std::max(mInitialSize, sizeToAllocate);
+            mSize = sizeIgnoringHistory;
 
-            // Clear the free list since the free buffers are now too small.
+            // Clear the free list since the free buffers are now either too small or too big.
             ReleaseBufferListToRenderer(contextVk->getRenderer(), &mBufferFreeList);
         }
 
