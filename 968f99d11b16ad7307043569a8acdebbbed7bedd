@@ -87,6 +87,30 @@
       },
       "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce3d5034_248a9e37",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-17T21:22:27Z",
+      "side": 1,
+      "message": "Something about it doesn\u0027t look right, like the state shouldn\u0027t be messing with dirty bits directly here. I\u0027d maybe make this a public member like maybeHandleDirtyProgram() or something and if it finds the dirty bit it sets an out variable to true. Instead of manipulating the dirty bits directly here. Sound reasonable?",
+      "parentUuid": "b7d4977c_60785c0f",
+      "range": {
+        "startLine": 621,
+        "startChar": 0,
+        "endLine": 630,
+        "endChar": 9
+      },
+      "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
