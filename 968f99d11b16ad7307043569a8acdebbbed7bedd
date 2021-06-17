@@ -39,6 +39,30 @@
       },
       "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "190899bc_41f2cda7",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-06-17T21:16:14Z",
+      "side": 1,
+      "message": "This is important. The problem is that prior to this change dirtying the context would result in the program being cleared on State. When we went to draw a GLES1 context, mRendererProgramInitialized would be set and the program on State would still be nullptr, resulting in a crash later. This makes it so that we restore the program before we draw.",
+      "parentUuid": "e5a93fd9_1d56c57a",
+      "range": {
+        "startLine": 621,
+        "startChar": 0,
+        "endLine": 630,
+        "endChar": 9
+      },
+      "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
