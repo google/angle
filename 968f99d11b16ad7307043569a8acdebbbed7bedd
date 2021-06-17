@@ -63,6 +63,30 @@
       },
       "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7d4977c_60785c0f",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-06-17T21:20:10Z",
+      "side": 1,
+      "message": "It is an optimization in that we don\u0027t run through the whole re-initialization routine below, which we could do but results in extremely poor performance",
+      "parentUuid": "190899bc_41f2cda7",
+      "range": {
+        "startLine": 621,
+        "startChar": 0,
+        "endLine": 630,
+        "endChar": 9
+      },
+      "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
