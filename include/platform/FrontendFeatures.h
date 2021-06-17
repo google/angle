@@ -76,6 +76,10 @@ struct FrontendFeatures : angle::FeatureSetBase
     angle::Feature enableCompressingPipelineCacheInThreadPool = {
         "enableCompressingPipelineCacheInThreadPool", angle::FeatureCategory::FrontendWorkarounds,
         "Enable compressing pipeline cache in thread pool.", &members, "http://anglebug.com/4722"};
+
+    angle::Feature forceRobustResourceInit = {
+        "forceRobustResourceInit", angle::FeatureCategory::FrontendWorkarounds,
+        "Force-enable robust resource init", &members, "http://anglebug.com/6041"};
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;

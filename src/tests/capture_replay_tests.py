@@ -509,6 +509,7 @@ class TestBatch():
         env = os.environ.copy()
         env['ANGLE_CAPTURE_FRAME_END'] = '{}'.format(self.CAPTURE_FRAME_END)
         env['ANGLE_CAPTURE_SERIALIZE_STATE'] = '1'
+        env['ANGLE_FEATURE_OVERRIDES_ENABLED'] = 'forceRobustResourceInit'
         env['ANGLE_CAPTURE_ENABLED'] = '1'
 
         info('Setting ANGLE_CAPTURE_OUT_DIR to %s' % self.trace_folder_path)

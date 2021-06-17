@@ -51,6 +51,7 @@ bool SurfaceState::isRobustResourceInitEnabled() const
 Surface::Surface(EGLint surfaceType,
                  const egl::Config *config,
                  const AttributeMap &attributes,
+                 bool forceRobustResourceInit,
                  EGLenum buftype)
     : FramebufferAttachmentObject(),
       mState(config, attributes),
@@ -108,6 +109,7 @@ Surface::Surface(EGLint surfaceType,
     mMipmapTexture = (attributes.get(EGL_MIPMAP_TEXTURE, EGL_FALSE) == EGL_TRUE);
 
     mRobustResourceInitialization =
+        forceRobustResourceInit ||
         (attributes.get(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE);
     if (mRobustResourceInitialization)
     {
@@ -677,8 +679,9 @@ void Surface::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
 WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,
                              const egl::Config *config,
                              EGLNativeWindowType window,
-                             const AttributeMap &attribs)
-    : Surface(EGL_WINDOW_BIT, config, attribs)
+                             const AttributeMap &attribs,
+                             bool robustResourceInit)
+    : Surface(EGL_WINDOW_BIT, config, attribs, robustResourceInit)
 {
     mImplementation = implFactory->createWindowSurface(mState, window, attribs);
 }
@@ -687,8 +690,9 @@ WindowSurface::~WindowSurface() {}
 
 PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
                                const Config *config,
-                               const AttributeMap &attribs)
-    : Surface(EGL_PBUFFER_BIT, config, attribs)
+                               const AttributeMap &attribs,
+                               bool robustResourceInit)
+    : Surface(EGL_PBUFFER_BIT, config, attribs, robustResourceInit)
 {
     mImplementation = implFactory->createPbufferSurface(mState, attribs);
 }
@@ -697,8 +701,9 @@ PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
                                const Config *config,
                                EGLenum buftype,
                                EGLClientBuffer clientBuffer,
-                               const AttributeMap &attribs)
-    : Surface(EGL_PBUFFER_BIT, config, attribs, buftype)
+                               const AttributeMap &attribs,
+                               bool robustResourceInit)
+    : Surface(EGL_PBUFFER_BIT, config, attribs, robustResourceInit, buftype)
 {
     mImplementation =
         implFactory->createPbufferFromClientBuffer(mState, buftype, clientBuffer, attribs);
@@ -709,8 +714,9 @@ PbufferSurface::~PbufferSurface() {}
 PixmapSurface::PixmapSurface(rx::EGLImplFactory *implFactory,
                              const Config *config,
                              NativePixmapType nativePixmap,
-                             const AttributeMap &attribs)
-    : Surface(EGL_PIXMAP_BIT, config, attribs)
+                             const AttributeMap &attribs,
+                             bool robustResourceInit)
+    : Surface(EGL_PIXMAP_BIT, config, attribs, robustResourceInit)
 {
     mImplementation = implFactory->createPixmapSurface(mState, nativePixmap, attribs);
 }

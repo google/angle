@@ -211,9 +211,11 @@ bool GetClientArraysEnabled(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE, EGL_TRUE) == EGL_TRUE);
 }
 
-bool GetRobustResourceInit(const egl::AttributeMap &attribs)
+bool GetRobustResourceInit(egl::Display *display, const egl::AttributeMap &attribs)
 {
-    return (attribs.get(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE);
+    const angle::FrontendFeatures &frontendFeatures = display->getFrontendFeatures();
+    return (frontendFeatures.forceRobustResourceInit.enabled ||
+            attribs.get(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE);
 }
 
 EGLenum GetContextPriority(const egl::AttributeMap &attribs)
@@ -325,7 +327,7 @@ Context::Context(egl::Display *display,
              GetDebug(attribs),
              GetBindGeneratesResource(attribs),
              GetClientArraysEnabled(attribs),
-             GetRobustResourceInit(attribs),
+             GetRobustResourceInit(display, attribs),
              memoryProgramCache != nullptr,
              GetContextPriority(attribs)),
       mShared(shareContext != nullptr),

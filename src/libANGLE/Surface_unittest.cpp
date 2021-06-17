@@ -66,7 +66,7 @@ TEST(SurfaceTest, DestructionDeletesImpl)
 
     egl::Config config;
     egl::Surface *surface = new egl::WindowSurface(
-        &factory, &config, static_cast<EGLNativeWindowType>(0), egl::AttributeMap());
+        &factory, &config, static_cast<EGLNativeWindowType>(0), egl::AttributeMap(), false);
 
     EXPECT_CALL(*impl, destroy(_)).Times(1).RetiresOnSaturation();
     EXPECT_CALL(*impl, destructor()).Times(1).RetiresOnSaturation();

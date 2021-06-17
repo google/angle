@@ -192,6 +192,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     Surface(EGLint surfaceType,
             const egl::Config *config,
             const AttributeMap &attributes,
+            bool forceRobustResourceInit,
             EGLenum buftype = EGL_NONE);
     ~Surface() override;
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override;
@@ -266,7 +267,8 @@ class WindowSurface final : public Surface
     WindowSurface(rx::EGLImplFactory *implFactory,
                   const Config *config,
                   EGLNativeWindowType window,
-                  const AttributeMap &attribs);
+                  const AttributeMap &attribs,
+                  bool robustResourceInit);
     ~WindowSurface() override;
 };
 
@@ -275,12 +277,14 @@ class PbufferSurface final : public Surface
   public:
     PbufferSurface(rx::EGLImplFactory *implFactory,
                    const Config *config,
-                   const AttributeMap &attribs);
+                   const AttributeMap &attribs,
+                   bool robustResourceInit);
     PbufferSurface(rx::EGLImplFactory *implFactory,
                    const Config *config,
                    EGLenum buftype,
                    EGLClientBuffer clientBuffer,
-                   const AttributeMap &attribs);
+                   const AttributeMap &attribs,
+                   bool robustResourceInit);
 
   protected:
     ~PbufferSurface() override;
@@ -292,7 +296,8 @@ class PixmapSurface final : public Surface
     PixmapSurface(rx::EGLImplFactory *implFactory,
                   const Config *config,
                   NativePixmapType nativePixmap,
-                  const AttributeMap &attribs);
+                  const AttributeMap &attribs,
+                  bool robustResourceInit);
 
   protected:
     ~PixmapSurface() override;
