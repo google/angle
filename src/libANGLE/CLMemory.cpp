@@ -45,7 +45,7 @@ MemFlags InheritMemFlags(MemFlags flags, Memory *parent)
 
 cl_int Memory::setDestructorCallback(MemoryCB pfnNotify, void *userData)
 {
-    mDestructorCallbacks.emplace(pfnNotify, userData);
+    mDestructorCallbacks->emplace(pfnNotify, userData);
     return CL_SUCCESS;
 }
 
@@ -80,8 +80,9 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
             copySize  = sizeof(mHostPtr);
             break;
         case MemInfo::MapCount:
-            copyValue = &mMapCount;
-            copySize  = sizeof(mMapCount);
+            valUInt   = mMapCount;
+            copyValue = &valUInt;
+            copySize  = sizeof(valUInt);
             break;
         case MemInfo::ReferenceCount:
             valUInt   = getRefCount();
@@ -137,11 +138,13 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
 
 Memory::~Memory()
 {
-    while (!mDestructorCallbacks.empty())
+    std::stack<CallbackData> callbacks;
+    mDestructorCallbacks->swap(callbacks);
+    while (!callbacks.empty())
     {
-        const MemoryCB callback = mDestructorCallbacks.top().first;
-        void *const userData    = mDestructorCallbacks.top().second;
-        mDestructorCallbacks.pop();
+        const MemoryCB callback = callbacks.top().first;
+        void *const userData    = callbacks.top().second;
+        callbacks.pop();
         callback(this, userData);
     }
 }
@@ -158,7 +161,8 @@ Memory::Memory(const Buffer &buffer,
       mFlags(flags),
       mHostPtr(flags.isSet(CL_MEM_USE_HOST_PTR) ? hostPtr : nullptr),
       mImpl(context.getImpl().createBuffer(buffer, size, hostPtr, errorCode)),
-      mSize(size)
+      mSize(size),
+      mMapCount(0u)
 {}
 
 Memory::Memory(const Buffer &buffer,
@@ -174,7 +178,8 @@ Memory::Memory(const Buffer &buffer,
       mParent(&parent),
       mOffset(offset),
       mImpl(parent.mImpl->createSubBuffer(buffer, flags, size, errorCode)),
-      mSize(size)
+      mSize(size),
+      mMapCount(0u)
 {}
 
 Memory::Memory(const Image &image,
@@ -192,7 +197,8 @@ Memory::Memory(const Image &image,
       mHostPtr(flags.isSet(CL_MEM_USE_HOST_PTR) ? hostPtr : nullptr),
       mParent(parent),
       mImpl(context.getImpl().createImage(image, flags, format, desc, hostPtr, errorCode)),
-      mSize(mImpl ? mImpl->getSize(errorCode) : 0u)
+      mSize(mImpl ? mImpl->getSize(errorCode) : 0u),
+      mMapCount(0u)
 {}
 
 }  // namespace cl

@@ -18,13 +18,13 @@ namespace rx
 CLSamplerCL::CLSamplerCL(const cl::Sampler &sampler, cl_sampler native)
     : CLSamplerImpl(sampler), mNative(native)
 {
-    sampler.getContext().getImpl<CLContextCL>().mSamplers.emplace(sampler.getNative());
+    sampler.getContext().getImpl<CLContextCL>().mData->mSamplers.emplace(sampler.getNative());
 }
 
 CLSamplerCL::~CLSamplerCL()
 {
     const size_t numRemoved =
-        mSampler.getContext().getImpl<CLContextCL>().mSamplers.erase(mSampler.getNative());
+        mSampler.getContext().getImpl<CLContextCL>().mData->mSamplers.erase(mSampler.getNative());
     ASSERT(numRemoved == 1u);
 
     if (mNative->getDispatch().clReleaseSampler(mNative) != CL_SUCCESS)

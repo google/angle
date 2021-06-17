@@ -12,6 +12,9 @@
 #include "libANGLE/CLKernel.h"
 #include "libANGLE/renderer/CLProgramImpl.h"
 
+#include "common/Spinlock.h"
+#include "common/SynchronizedValue.h"
+
 #include <atomic>
 
 namespace cl
@@ -86,16 +89,19 @@ class Program final : public _cl_program, public Object
             void *userData,
             cl_int &errorCode);
 
+    using CallbackData = std::pair<ProgramCB, void *>;
+
     const ContextPtr mContext;
     const DevicePtrs mDevices;
     const std::string mIL;
+
+    // mCallback might be accessed from implementation initialization
+    // and needs to be initialized first.
+    angle::SynchronizedValue<CallbackData, angle::Spinlock> mCallback;
+    std::atomic<cl_uint> mNumAttachedKernels;
+
     const rx::CLProgramImpl::Ptr mImpl;
     const std::string mSource;
-
-    ProgramCB mCallback = nullptr;
-    void *mUserData     = nullptr;
-
-    std::atomic<cl_uint> mNumAttachedKernels;
 
     friend class Kernel;
     friend class Object;
@@ -123,7 +129,7 @@ inline bool Program::hasDevice(const _cl_device_id *device) const
 
 inline bool Program::isBuilding() const
 {
-    return mCallback != nullptr;
+    return mCallback->first != nullptr;
 }
 
 inline bool Program::hasAttachedKernels() const

@@ -12,6 +12,8 @@
 #include "libANGLE/CLObject.h"
 #include "libANGLE/renderer/CLEventImpl.h"
 
+#include "common/SynchronizedValue.h"
+
 #include <array>
 
 namespace cl
@@ -51,6 +53,7 @@ class Event final : public _cl_event, public Object
 
   private:
     using CallbackData = std::pair<EventCB, void *>;
+    using Callbacks    = std::vector<CallbackData>;
 
     Event(Context &context, cl_int &errorCode);
 
@@ -69,7 +72,7 @@ class Event final : public _cl_event, public Object
     // Create separate storage for each possible callback type.
     static_assert(CL_COMPLETE == 0 && CL_RUNNING == 1 && CL_SUBMITTED == 2,
                   "OpenCL command execution status values are not as assumed");
-    std::array<std::vector<CallbackData>, 3u> mCallbacks;
+    angle::SynchronizedValue<std::array<Callbacks, 3u>> mCallbacks;
 
     friend class Object;
 };

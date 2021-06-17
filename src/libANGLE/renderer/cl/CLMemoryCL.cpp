@@ -18,13 +18,13 @@ namespace rx
 CLMemoryCL::CLMemoryCL(const cl::Memory &memory, cl_mem native)
     : CLMemoryImpl(memory), mNative(native)
 {
-    memory.getContext().getImpl<CLContextCL>().mMemories.emplace(memory.getNative());
+    memory.getContext().getImpl<CLContextCL>().mData->mMemories.emplace(memory.getNative());
 }
 
 CLMemoryCL::~CLMemoryCL()
 {
     const size_t numRemoved =
-        mMemory.getContext().getImpl<CLContextCL>().mMemories.erase(mMemory.getNative());
+        mMemory.getContext().getImpl<CLContextCL>().mData->mMemories.erase(mMemory.getNative());
     ASSERT(numRemoved == 1u);
 
     if (mNative->getDispatch().clReleaseMemObject(mNative) != CL_SUCCESS)

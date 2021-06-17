@@ -19,6 +19,8 @@ libangle_common_sources = [
   "src/common/PackedGLEnums_autogen.h",
   "src/common/PoolAlloc.cpp",
   "src/common/PoolAlloc.h",
+  "src/common/Spinlock.h",
+  "src/common/SynchronizedValue.h",
   "src/common/aligned_memory.cpp",
   "src/common/aligned_memory.h",
   "src/common/android_util.cpp",

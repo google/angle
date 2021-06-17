@@ -12,6 +12,10 @@
 #include "libANGLE/CLObject.h"
 #include "libANGLE/renderer/CLMemoryImpl.h"
 
+#include "common/Spinlock.h"
+#include "common/SynchronizedValue.h"
+
+#include <atomic>
 #include <stack>
 
 namespace cl
@@ -83,8 +87,8 @@ class Memory : public _cl_mem, public Object
     const rx::CLMemoryImpl::Ptr mImpl;
     const size_t mSize;
 
-    std::stack<CallbackData> mDestructorCallbacks;
-    cl_uint mMapCount = 0u;
+    angle::SynchronizedValue<std::stack<CallbackData>, angle::Spinlock> mDestructorCallbacks;
+    std::atomic<cl_uint> mMapCount;
 
     friend class Buffer;
     friend class Context;

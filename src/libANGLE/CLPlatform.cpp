@@ -76,6 +76,8 @@ void Platform::Initialize(const cl_icd_dispatch &dispatch,
     while (!createFuncs.empty())
     {
         platforms.emplace_back(new Platform(createFuncs.front()));
+        // Release initialization reference, lifetime controlled by RefPointer.
+        platforms.back()->release();
         if (!platforms.back()->mInfo.isValid() || platforms.back()->mDevices.empty())
         {
             platforms.pop_back();
@@ -264,6 +266,8 @@ DevicePtrs Platform::createDevices(rx::CLDeviceImpl::CreateDatas &&createDatas)
     {
         devices.emplace_back(
             new Device(*this, nullptr, createDatas.front().first, createDatas.front().second));
+        // Release initialization reference, lifetime controlled by RefPointer.
+        devices.back()->release();
         if (!devices.back()->mInfo.isValid())
         {
             devices.pop_back();

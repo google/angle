@@ -12,6 +12,8 @@
 #include "libANGLE/CLObject.h"
 #include "libANGLE/renderer/CLCommandQueueImpl.h"
 
+#include "common/SynchronizedValue.h"
+
 #include <limits>
 
 namespace cl
@@ -281,7 +283,7 @@ class CommandQueue final : public _cl_command_queue, public Object
     const ContextPtr mContext;
     const DevicePtr mDevice;
     const PropArray mPropArray;
-    CommandQueueProperties mProperties;
+    angle::SynchronizedValue<CommandQueueProperties> mProperties;
     const cl_uint mSize = kNoSize;
     const rx::CLCommandQueueImpl::Ptr mImpl;
 
@@ -305,17 +307,17 @@ inline const Device &CommandQueue::getDevice() const
 
 inline CommandQueueProperties CommandQueue::getProperties() const
 {
-    return mProperties;
+    return *mProperties;
 }
 
 inline bool CommandQueue::isOnHost() const
 {
-    return mProperties.isNotSet(CL_QUEUE_ON_DEVICE);
+    return mProperties->isNotSet(CL_QUEUE_ON_DEVICE);
 }
 
 inline bool CommandQueue::isOnDevice() const
 {
-    return mProperties.isSet(CL_QUEUE_ON_DEVICE);
+    return mProperties->isSet(CL_QUEUE_ON_DEVICE);
 }
 
 inline bool CommandQueue::hasSize() const

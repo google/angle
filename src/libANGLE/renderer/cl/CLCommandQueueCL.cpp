@@ -42,7 +42,7 @@ CLCommandQueueCL::CLCommandQueueCL(const cl::CommandQueue &commandQueue, cl_comm
 {
     if (commandQueue.getProperties().isSet(CL_QUEUE_ON_DEVICE))
     {
-        commandQueue.getContext().getImpl<CLContextCL>().mDeviceQueues.emplace(
+        commandQueue.getContext().getImpl<CLContextCL>().mData->mDeviceQueues.emplace(
             commandQueue.getNative());
     }
 }
@@ -52,7 +52,7 @@ CLCommandQueueCL::~CLCommandQueueCL()
     if (mCommandQueue.getProperties().isSet(CL_QUEUE_ON_DEVICE))
     {
         const size_t numRemoved =
-            mCommandQueue.getContext().getImpl<CLContextCL>().mDeviceQueues.erase(
+            mCommandQueue.getContext().getImpl<CLContextCL>().mData->mDeviceQueues.erase(
                 mCommandQueue.getNative());
         ASSERT(numRemoved == 1u);
     }

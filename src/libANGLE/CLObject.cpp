@@ -10,7 +10,7 @@
 namespace cl
 {
 
-Object::Object() : mRefCount(0u) {}
+Object::Object() : mRefCount(1u) {}
 
 Object::~Object()
 {
