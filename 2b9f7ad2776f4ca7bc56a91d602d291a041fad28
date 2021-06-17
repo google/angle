@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2e5a3d4_a3592291",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-17T22:22:21Z",
+      "side": 1,
+      "message": "This is a rather urgent fix for Fuchsia, so I apologize for the lack of extensive testing. Charlie\u0027s work in this area will either make this obsolete or shed more lights on its effect on performance. I can verify that this makes the Manhattan trace free buffers 5 extra times (during loading, and no more), and doesn\u0027t affect T-Rex.\n\nDavid, I believe both 16MB allocations should now be gone with this, but I\u0027d appreciate it if you would confirm.",
+      "revId": "2b9f7ad2776f4ca7bc56a91d602d291a041fad28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
