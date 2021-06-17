@@ -16,6 +16,7 @@
 #include <map>
 
 #include "GLSLANG/ShaderLang.h"
+#include "common/Color.h"
 #include "common/angleutils.h"
 #include "common/utilities.h"
 #include "libANGLE/angletypes.h"
@@ -158,7 +159,19 @@ struct LoadImageFunctionInfo
     bool requiresConversion;
 };
 
-using LoadFunctionMap = LoadImageFunctionInfo (*)(GLenum);
+using LoadFunctionMap           = LoadImageFunctionInfo (*)(GLenum);
+using LoadTextureBorderFunction = void (*)(angle::ColorF &mBorderColor);
+struct LoadTextureBorderFunctionInfo
+{
+    LoadTextureBorderFunctionInfo() : loadFunction(nullptr) {}
+    LoadTextureBorderFunctionInfo(LoadTextureBorderFunction loadFunction)
+        : loadFunction(loadFunction)
+    {}
+
+    LoadTextureBorderFunction loadFunction;
+};
+
+using LoadTextureBorderFunctionMap = LoadTextureBorderFunctionInfo (*)();
 
 bool ShouldUseDebugLayers(const egl::AttributeMap &attribs);
 bool ShouldUseVirtualizedContexts(const egl::AttributeMap &attribs, bool defaultValue);

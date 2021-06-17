@@ -347,6 +347,16 @@
 5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.per_axis_wrap_mode.texture_2d.compressed_color.linear.s_repeat_t_clamp_to_border_npot = SKIP
 5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.per_axis_wrap_mode.texture_2d.compressed_color.linear.s_mirrored_repeat_t_clamp_to_border_pot = SKIP
 5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.per_axis_wrap_mode.texture_2d.compressed_color.linear.s_mirrored_repeat_t_clamp_to_border_npot = SKIP
+5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.formats.alpha.nearest_size_pot = SKIP
+5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.formats.alpha.nearest_size_npot = SKIP
+5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.formats.alpha.linear_size_pot = SKIP
+5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.formats.alpha.linear_size_npot = SKIP
+5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.formats.luminance_alpha.nearest_size_pot = SKIP
+5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.formats.luminance_alpha.nearest_size_npot = SKIP
+5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.formats.luminance_alpha.linear_size_pot = SKIP
+5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.formats.luminance_alpha.linear_size_npot = SKIP
+5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.unused_channels.alpha = SKIP
+5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.unused_channels.luminance_alpha = SKIP
 
 // Pixel 4 expectations.
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.android_extension_pack.extensions.oes_sample_variables = SKIP

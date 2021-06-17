@@ -3098,12 +3098,13 @@ SamplerDesc::SamplerDesc(const SamplerDesc &other) = default;
 
 SamplerDesc &SamplerDesc::operator=(const SamplerDesc &rhs) = default;
 
-SamplerDesc::SamplerDesc(const angle::FeaturesVk &featuresVk,
+SamplerDesc::SamplerDesc(ContextVk *contextVk,
                          const gl::SamplerState &samplerState,
                          bool stencilMode,
-                         uint64_t externalFormat)
+                         uint64_t externalFormat,
+                         angle::FormatID formatID)
 {
-    update(featuresVk, samplerState, stencilMode, externalFormat);
+    update(contextVk, samplerState, stencilMode, externalFormat, formatID);
 }
 
 void SamplerDesc::reset()
@@ -3130,12 +3131,14 @@ void SamplerDesc::reset()
     mReserved          = 0;
 }
 
-void SamplerDesc::update(const angle::FeaturesVk &featuresVk,
+void SamplerDesc::update(ContextVk *contextVk,
                          const gl::SamplerState &samplerState,
                          bool stencilMode,
-                         uint64_t externalFormat)
+                         uint64_t externalFormat,
+                         angle::FormatID formatID)
 {
-    mMipLodBias = 0.0f;
+    const angle::FeaturesVk &featuresVk = contextVk->getFeatures();
+    mMipLodBias                         = 0.0f;
     for (size_t lodOffsetFeatureIdx = 0;
          lodOffsetFeatureIdx < featuresVk.forceTextureLODOffset.size(); lodOffsetFeatureIdx++)
     {
@@ -3199,7 +3202,14 @@ void SamplerDesc::update(const angle::FeaturesVk &featuresVk,
 
     mBorderColorType =
         (samplerState.getBorderColor().type == angle::ColorGeneric::Type::Float) ? 0 : 1;
-    mBorderColor = samplerState.getBorderColor().colorF;
+
+    mBorderColor               = samplerState.getBorderColor().colorF;
+    const vk::Format &vkFormat = contextVk->getRenderer()->getFormat(formatID);
+    if (vkFormat.intendedFormatID != angle::FormatID::NONE)
+    {
+        LoadTextureBorderFunctionInfo loadFunction = vkFormat.textureBorderLoadFunctions();
+        loadFunction.loadFunction(mBorderColor);
+    }
 
     mReserved = 0;
 }

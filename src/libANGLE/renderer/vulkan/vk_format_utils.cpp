@@ -11,6 +11,7 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/load_functions_table.h"
+#include "libANGLE/renderer/load_texture_border_functions_table.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
@@ -281,6 +282,8 @@ void FormatTable::initialize(RendererVk *renderer,
         {
             format.textureLoadFunctions =
                 GetLoadFunctionsMap(format.intendedGLFormat, format.actualImageFormatID);
+            format.textureBorderLoadFunctions = GetLoadTextureBorderFunctionsMap(
+                format.intendedGLFormat, format.actualImageFormatID);
         }
 
         if (angleFormat.isBlock)
