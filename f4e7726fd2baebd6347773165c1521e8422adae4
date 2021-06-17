@@ -85,6 +85,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dcd74e28_b6e18975",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-17T20:03:23Z",
+      "side": 1,
+      "message": "I suspect it was UtilsVk code that\u0027s setting the scissor/viewport and not dirtying the bit. It\u0027s only clear that\u0027s not starting its own render pass, so that must have been the problem. See this in ContextVk.h:\n\n    // When UtilsVk issues draw or dispatch calls, it binds a new pipeline and descriptor sets that\n    // the context is not aware of.  These functions are called to make sure the pipeline and\n    // affected descriptor set bindings are dirtied for the next application draw/dispatch call.\n    void invalidateGraphicsPipelineBinding();\n    void invalidateComputePipelineBinding();\n    void invalidateGraphicsDescriptorSet(DescriptorSetIndex usedDescriptorSet);\n    void invalidateComputeDescriptorSet(DescriptorSetIndex usedDescriptorSet);\n\nYou would need to add an `invalidateScissorAndViewport()` and call it from UtilsVk where necessary.",
+      "parentUuid": "0a197848_e208aefe",
+      "revId": "f4e7726fd2baebd6347773165c1521e8422adae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "91c6d899_f2511b2a",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 10
