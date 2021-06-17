@@ -16,6 +16,69 @@
       "message": "Okay, removed the feature flag, now dynamic is the only way to go.",
       "revId": "728c358a55175cf71f663888b0840504304b6776",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c346fe8c_36334f62",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-17T18:41:14Z",
+      "side": 1,
+      "message": "LGT.",
+      "revId": "728c358a55175cf71f663888b0840504304b6776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1dcf8320_9d650d04",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-17T18:41:14Z",
+      "side": 1,
+      "message": "Is this accidental? I am not seeing it been used.",
+      "range": {
+        "startLine": 801,
+        "startChar": 9,
+        "endLine": 801,
+        "endChar": 34
+      },
+      "revId": "728c358a55175cf71f663888b0840504304b6776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e50e4e46_1f4750b4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-17T18:41:14Z",
+      "side": 1,
+      "message": "Should this can be removed, and the viewport/scissor data member in GraphicsPipelineDesc as well?",
+      "range": {
+        "startLine": 718,
+        "startChar": 9,
+        "endLine": 718,
+        "endChar": 19
+      },
+      "revId": "728c358a55175cf71f663888b0840504304b6776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
