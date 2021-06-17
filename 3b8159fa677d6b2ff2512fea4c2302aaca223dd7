@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afebc9c9_c7d844be",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-06-17T00:11:36Z",
+      "side": 1,
+      "message": "lgtm overall; couple small requests.\n\nThanks for improving the docs.\n",
+      "revId": "3b8159fa677d6b2ff2512fea4c2302aaca223dd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71a0aeab_fa53ea02",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-06-17T00:11:36Z",
+      "side": 1,
+      "message": "typo: encountering",
+      "revId": "3b8159fa677d6b2ff2512fea4c2302aaca223dd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "045d7ea9_3905159a",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-06-17T00:11:36Z",
+      "side": 1,
+      "message": "Please add:\n\nInternals\u003eGPU\u003eTesting for failures that look infrastructure-related",
+      "revId": "3b8159fa677d6b2ff2512fea4c2302aaca223dd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
