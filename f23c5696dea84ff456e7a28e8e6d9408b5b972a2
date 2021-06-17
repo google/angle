@@ -99,6 +99,30 @@
       },
       "revId": "f23c5696dea84ff456e7a28e8e6d9408b5b972a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "915d31ba_3f9ad929",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2130,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-17T17:54:15Z",
+      "side": 1,
+      "message": "Removed the extra dynamic scissor handling.",
+      "parentUuid": "4380d8ba_87ff0d73",
+      "range": {
+        "startLine": 2130,
+        "startChar": 12,
+        "endLine": 2130,
+        "endChar": 33
+      },
+      "revId": "f23c5696dea84ff456e7a28e8e6d9408b5b972a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
