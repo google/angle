@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ac6e544_f6ace326",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-06-17T22:37:24Z",
+      "side": 1,
+      "message": "`git cl upload` doesn\u0027t work for me, not sure who can help debug, but for example I get:\n\nhttplib2.ServerNotFoundError: Unable to find the server at chromium-review",
+      "parentUuid": "bcbabc13_61f33b2b",
+      "revId": "968f99d11b16ad7307043569a8acdebbbed7bedd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5a93fd9_1d56c57a",
