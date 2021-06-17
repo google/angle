@@ -125,6 +125,7 @@ declare_args() {
 
   angle_enable_vulkan =
       angle_has_build &&
+      !(is_android && build_with_chromium && is_official_build) &&
       ((is_win && !angle_is_winuwp) ||
        (is_linux && (angle_use_x11 || angle_use_vulkan_display) &&
         !is_chromeos) || is_android || is_fuchsia || is_ggp || is_mac)
