@@ -120,6 +120,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97377be3_99c9e876",
+        "filename": "src/libANGLE/CLtypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-18T18:48:31Z",
+      "side": 1,
+      "message": "As discussed in the chat the macro will be deleted.",
+      "parentUuid": "91d20602_c250d5e8",
+      "range": {
+        "startLine": 31,
+        "startChar": 21,
+        "endLine": 31,
+        "endChar": 31
+      },
+      "revId": "8aac05b6fc8980f1b8fa89bfe06f3997b8ca42b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "15e2c39b_06c37314",
