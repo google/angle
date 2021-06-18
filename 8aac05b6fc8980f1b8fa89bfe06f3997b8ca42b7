@@ -98,6 +98,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "91d20602_c250d5e8",
+        "filename": "src/libANGLE/CLtypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-06-18T09:04:55Z",
+      "side": 1,
+      "message": "I think I should check if anyone of the team has an objection about this proposal, so let\u0027s discuss in the group chat.",
+      "parentUuid": "b5718850_f2f711d6",
+      "range": {
+        "startLine": 31,
+        "startChar": 21,
+        "endLine": 31,
+        "endChar": 31
+      },
+      "revId": "8aac05b6fc8980f1b8fa89bfe06f3997b8ca42b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "15e2c39b_06c37314",
         "filename": "src/libANGLE/cl_utils.cpp",
         "patchSetId": 1
