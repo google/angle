@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7af637e_72a0d59b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-18T12:51:20Z",
+      "side": 1,
+      "message": "Cheryl, can we make the generated code you added part of the main Vk format table?",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
