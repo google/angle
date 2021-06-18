@@ -16,6 +16,24 @@
       "message": "Cheryl, can we make the generated code you added part of the main Vk format table?",
       "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "680267a4_d0ea9abc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-18T14:40:58Z",
+      "side": 1,
+      "message": "Why do we even need special code for it? Isn\u0027t the translation exactly the same as done when uploading texture data?\n\nIsn\u0027t vk::Format::textureLoadFunctions sufficient?",
+      "parentUuid": "e7af637e_72a0d59b",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
