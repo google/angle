@@ -387,546 +387,547 @@ GROUP BEGIN Math {"queryFunction": true}
   GROUP END Integer
 GROUP END Math
 
-GROUP BEGIN TextureFirstVersions
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
-    vec4 texture2D(sampler2D, vec2);
-    vec4 texture2DProj(sampler2D, vec3);
-    vec4 texture2DProj(sampler2D, vec4);
-    vec4 textureCube(samplerCube, vec3);
-  DEFAULT METADATA {"glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
-    vec4 texture1D(sampler1D, float);
-    vec4 texture1DProj(sampler1D, vec2);
-    vec4 texture1DProj(sampler1D, vec4);
-    vec4 texture3D(sampler3D, vec3);
-    vec4 texture3DProj(sampler3D, vec4);
-    vec4 shadow1D(sampler1DShadow, vec3);
-    vec4 shadow1DProj(sampler1DShadow, vec4);
-    vec4 shadow2D(sampler2DShadow, vec3);
-    vec4 shadow2DProj(sampler2DShadow, vec4);
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "essl_extension": "OES_EGL_image_external, NV_EGL_stream_consumer_external", "hasSideEffects": "true"}
-    vec4 texture2D(samplerExternalOES, vec2);
-    vec4 texture2DProj(samplerExternalOES, vec3);
-    vec4 texture2DProj(samplerExternalOES, vec4);
-GROUP END TextureFirstVersions
+GROUP BEGIN Texture {"queryFunction": true}
+  GROUP BEGIN FirstVersions
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+      vec4 texture2D(sampler2D, vec2);
+      vec4 texture2DProj(sampler2D, vec3);
+      vec4 texture2DProj(sampler2D, vec4);
+      vec4 textureCube(samplerCube, vec3);
+    DEFAULT METADATA {"glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+      vec4 texture1D(sampler1D, float);
+      vec4 texture1DProj(sampler1D, vec2);
+      vec4 texture1DProj(sampler1D, vec4);
+      vec4 texture3D(sampler3D, vec3);
+      vec4 texture3DProj(sampler3D, vec4);
+      vec4 shadow1D(sampler1DShadow, vec3);
+      vec4 shadow1DProj(sampler1DShadow, vec4);
+      vec4 shadow2D(sampler2DShadow, vec3);
+      vec4 shadow2DProj(sampler2DShadow, vec4);
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "essl_extension": "OES_EGL_image_external, NV_EGL_stream_consumer_external", "hasSideEffects": "true"}
+      vec4 texture2D(samplerExternalOES, vec2);
+      vec4 texture2DProj(samplerExternalOES, vec3);
+      vec4 texture2DProj(samplerExternalOES, vec4);
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "ARB_texture_rectangle"}
+      vec4 texture2DRect(sampler2DRect, vec2);
+      vec4 texture2DRectProj(sampler2DRect, vec3);
+      vec4 texture2DRectProj(sampler2DRect, vec4);
+    // The *Grad* variants are new to both vertex and fragment shaders; the fragment
+    // shader specific pieces are added separately below.
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_shader_texture_lod"}
+      vec4 texture2DGradEXT(sampler2D, vec2, vec2, vec2);
+      vec4 texture2DProjGradEXT(sampler2D, vec3, vec2, vec2);
+      vec4 texture2DProjGradEXT(sampler2D, vec4, vec2, vec2);
+      vec4 textureCubeGradEXT(samplerCube, vec3, vec3, vec3);
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true", "extension": "WEBGL_video_texture"}
+        vec4 textureVideoWEBGL(samplerVideoWEBGL, vec2);
+  GROUP END FirstVersions
 
-GROUP BEGIN ARB_texture_rectangle
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "ARB_texture_rectangle"}
-    vec4 texture2DRect(sampler2DRect, vec2);
-    vec4 texture2DRectProj(sampler2DRect, vec3);
-    vec4 texture2DRectProj(sampler2DRect, vec4);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "opSuffix": "Rect", "hasSideEffects": "true", "essl_extension": "ARB_texture_rectangle"}
-    // We don't have a rectangle texture essl_extension for OpenGL ES however based on the behavior of
-    // rectangle texture in desktop OpenGL, they should be sampled with a "texture" overload in
-    // GLSL version that have such an overload. This is the case for ESSL3 and above.
-    vec4 texture(sampler2DRect, vec2);
-    vec4 textureProj(sampler2DRect, vec3);
-    vec4 textureProj(sampler2DRect, vec4);
-GROUP END ARB_texture_rectangle
+  GROUP BEGIN FirstVersionsFS {"shader_type": "FRAGMENT", "opSuffix": "FS"}
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+      vec4 texture2D(sampler2D, vec2, float);
+      vec4 texture2DProj(sampler2D, vec3, float);
+      vec4 texture2DProj(sampler2D, vec4, float);
+      vec4 textureCube(samplerCube, vec3, float);
+    DEFAULT METADATA {"glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+      vec4 texture3D(sampler3D, vec3, float);
+      vec4 texture3DProj(sampler3D, vec4, float);
+      vec4 texture3DLod(sampler3D, vec3, float);
+      vec4 texture3DProjLod(sampler3D, vec4, float);
+      vec4 texture1D(sampler1D, float, float);
+      vec4 texture1DProj(sampler1D, vec2, float);
+      vec4 texture1DProj(sampler1D, vec4, float);
+      vec4 shadow1D(sampler1DShadow, vec3, float);
+      vec4 shadow1DProj(sampler1DShadow, vec4, float);
+      vec4 shadow2D(sampler2DShadow, vec3, float);
+      vec4 shadow2DProj(sampler2DShadow, vec4, float);
+  GROUP END FirstVersionsFS
 
-// The *Grad* variants are new to both vertex and fragment shaders; the fragment
-// shader specific pieces are added separately below.
-GROUP BEGIN EXT_shader_texture_lod
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_shader_texture_lod"}
-    vec4 texture2DGradEXT(sampler2D, vec2, vec2, vec2);
-    vec4 texture2DProjGradEXT(sampler2D, vec3, vec2, vec2);
-    vec4 texture2DProjGradEXT(sampler2D, vec4, vec2, vec2);
-    vec4 textureCubeGradEXT(samplerCube, vec3, vec3, vec3);
-GROUP END EXT_shader_texture_lod
+  GROUP BEGIN FirstVersionsFSExt {"shader_type": "FRAGMENT", "opSuffix": "FSExt"}
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_shader_texture_lod"}
+      vec4 texture2DLodEXT(sampler2D, vec2, float);
+      vec4 texture2DProjLodEXT(sampler2D, vec3, float);
+      vec4 texture2DProjLodEXT(sampler2D, vec4, float);
+      vec4 textureCubeLodEXT(samplerCube, vec3, float);
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_shadow_samplers"}
+      float shadow2DEXT(sampler2DShadow, vec3);
+      float shadow2DProjEXT(sampler2DShadow, vec4);
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
+      vec4 texture3D(sampler3D, vec3);
+      vec4 texture3DProj(sampler3D, vec4);
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
+      vec4 texture3D(sampler3D, vec3, float);
+      vec4 texture3DProj(sampler3D, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
+      vec4 texture3DLod(sampler3D, vec3, float);
+      vec4 texture3DProjLod(sampler3D, vec4, float);
+  GROUP END FirstVersionsFSExt
 
-GROUP BEGIN TextureFirstVersionsFS {"shader_type": "FRAGMENT", "opSuffix": "FS"}
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
-    vec4 texture2D(sampler2D, vec2, float);
-    vec4 texture2DProj(sampler2D, vec3, float);
-    vec4 texture2DProj(sampler2D, vec4, float);
-    vec4 textureCube(samplerCube, vec3, float);
-  DEFAULT METADATA {"glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
-    vec4 texture3D(sampler3D, vec3, float);
-    vec4 texture3DProj(sampler3D, vec4, float);
-    vec4 texture3DLod(sampler3D, vec3, float);
-    vec4 texture3DProjLod(sampler3D, vec4, float);
-    vec4 texture1D(sampler1D, float, float);
-    vec4 texture1DProj(sampler1D, vec2, float);
-    vec4 texture1DProj(sampler1D, vec4, float);
-    vec4 shadow1D(sampler1DShadow, vec3, float);
-    vec4 shadow1DProj(sampler1DShadow, vec4, float);
-    vec4 shadow2D(sampler2DShadow, vec3, float);
-    vec4 shadow2DProj(sampler2DShadow, vec4, float);
-GROUP END TextureFirstVersionsFS
+  GROUP BEGIN FirstVersionsVS {"shader_type": "VERTEX"}
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+      vec4 texture2DLod(sampler2D, vec2, float);
+      vec4 texture2DProjLod(sampler2D, vec3, float);
+      vec4 texture2DProjLod(sampler2D, vec4, float);
+      vec4 textureCubeLod(samplerCube, vec3, float);
+    DEFAULT METADATA {"glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+      vec4 texture1DLod(sampler1D, float, float);
+      vec4 texture1DProjLod(sampler1D, vec2, float);
+      vec4 texture1DProjLod(sampler1D, vec4, float);
+      vec4 shadow1DLod(sampler1DShadow, vec3, float);
+      vec4 shadow1DProjLod(sampler1DShadow, vec4, float);
+      vec4 shadow2DLod(sampler2DShadow, vec3, float);
+      vec4 shadow2DProjLod(sampler2DShadow, vec4, float);
+  GROUP END FirstVersionsVS
 
-GROUP BEGIN TextureFirstVersionsFSExt {"shader_type": "FRAGMENT", "opSuffix": "FSExt"}
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_shader_texture_lod"}
-    vec4 texture2DLodEXT(sampler2D, vec2, float);
-    vec4 texture2DProjLodEXT(sampler2D, vec3, float);
-    vec4 texture2DProjLodEXT(sampler2D, vec4, float);
-    vec4 textureCubeLodEXT(samplerCube, vec3, float);
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_shadow_samplers"}
-    float shadow2DEXT(sampler2DShadow, vec3);
-    float shadow2DProjEXT(sampler2DShadow, vec4);
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
-    vec4 texture3D(sampler3D, vec3);
-    vec4 texture3DProj(sampler3D, vec4);
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
-    vec4 texture3D(sampler3D, vec3, float);
-    vec4 texture3DProj(sampler3D, vec4, float);
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
-    vec4 texture3DLod(sampler3D, vec3, float);
-    vec4 texture3DProjLod(sampler3D, vec4, float);
-GROUP END TextureFirstVersionsFSExt
+  GROUP BEGIN NoBias
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texture(gsampler2D, vec2);
+      gvec4 texture(gsampler3D, vec3);
+      gvec4 texture(gsamplerCube, vec3);
+      gvec4 texture(gsampler2DArray, vec3);
+      float texture(sampler2DShadow, vec3);
+      float texture(samplerCubeShadow, vec4);
+      float texture(sampler2DArrayShadow, vec4);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texture(gsampler1D, float);
+      float texture(sampler1DShadow, vec3);
+      gvec4 texture(gsampler1DArray, vec3);
+      float texture(sampler1DArrayShadow, vec3);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texture(gsampler2DRect, vec2);
+      float texture(sampler2DRectShadow, vec3);
+    DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texture(gsamplerCubeArray, vec4);
+      gvec4 texture(gsamplerCubeArray, vec4, float);
+      float texture(samplerCubeArrayShadow, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
+      gvec4 texture(gsamplerCubeArray, vec4);
+      gvec4 texture(gsamplerCubeArray, vec4, float);
+      float texture(samplerCubeArrayShadow, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
+      vec4 texture(samplerExternalOES, vec2);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
+      vec4 texture(samplerExternal2DY2YEXT, vec2);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "opSuffix": "Rect", "hasSideEffects": "true", "essl_extension": "ARB_texture_rectangle"}
+      // We don't have a rectangle texture essl_extension for OpenGL ES however based on the behavior of
+      // rectangle texture in desktop OpenGL, they should be sampled with a "texture" overload in
+      // GLSL version that have such an overload. This is the case for ESSL3 and above.
+      vec4 texture(sampler2DRect, vec2);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true", "extension": "WEBGL_video_texture"}
+      vec4 texture(samplerVideoWEBGL, vec2);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProj(gsampler2D, vec3);
+      gvec4 textureProj(gsampler2D, vec4);
+      gvec4 textureProj(gsampler3D, vec4);
+      float textureProj(sampler2DShadow, vec4);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProj(gsampler1D, vec2);
+      gvec4 textureProj(gsampler1D, vec4);
+      float textureProj(sampler1DShadow, vec4);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProj(gsampler2DRect, vec3);
+      gvec4 textureProj(gsampler2DRect, vec4);
+      float textureProj(sampler2DRectShadow, vec4);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
+      vec4 textureProj(samplerExternalOES, vec3);
+      vec4 textureProj(samplerExternalOES, vec4);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
+      vec4 textureProj(samplerExternal2DY2YEXT, vec3);
+      vec4 textureProj(samplerExternal2DY2YEXT, vec4);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "opSuffix": "Rect", "hasSideEffects": "true", "essl_extension": "ARB_texture_rectangle"}
+      vec4 textureProj(sampler2DRect, vec3);
+      vec4 textureProj(sampler2DRect, vec4);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureLod(gsampler2D, vec2, float);
+      gvec4 textureLod(gsampler3D, vec3, float);
+      gvec4 textureLod(gsamplerCube, vec3, float);
+      gvec4 textureLod(gsampler2DArray, vec3, float);
+      float textureLod(sampler2DShadow, vec3, float);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureLod(gsampler1D, float, float);
+      float textureLod(sampler1DShadow, vec3, float);
+      gvec4 textureLod(gsampler1DArray, vec2, float);
+      float textureLod(sampler1DArrayShadow, vec3, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureLod(gsamplerCubeArray, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
+      gvec4 textureLod(gsamplerCubeArray, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      ivec2 textureSize(gsampler2D, int);
+      ivec3 textureSize(gsampler3D, int);
+      ivec2 textureSize(gsamplerCube, int);
+      ivec3 textureSize(gsampler2DArray, int);
+      ivec2 textureSize(sampler2DShadow, int);
+      ivec2 textureSize(samplerCubeShadow, int);
+      ivec3 textureSize(sampler2DArrayShadow, int);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      int textureSize(gsampler1D, int);
+      int textureSize(sampler1DShadow, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      ivec3 textureSize(gsamplerCubeArray, int);
+      ivec3 textureSize(samplerCubeArrayShadow, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
+      ivec3 textureSize(gsamplerCubeArray, int);
+      ivec3 textureSize(samplerCubeArrayShadow, int);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      ivec2 textureSize(gsampler2DRect);
+      ivec2 textureSize(sampler2DRectShadow);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      ivec2 textureSize(gsampler1DArray, int);
+      ivec2 textureSize(sampler1DArrayShadow, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      int textureSize(gsamplerBuffer);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_buffer, EXT_texture_buffer", "suffix": "Ext"}
+      int textureSize(gsamplerBuffer);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL1_5_BUILTINS", "hasSideEffects": "true"}
+      ivec2 textureSize(gsampler2DMS);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "ANGLE_texture_multisample", "suffix": "Ext"}
+      ivec2 textureSize(gsampler2DMS);
+    DEFAULT METADATA {"glsl_level": "GLSL1_5_BUILTINS", "hasSideEffects": "true"}
+      ivec3 textureSize(gsampler2DMSArray);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_storage_multisample_2d_array", "suffix": "Ext"}
+      ivec3 textureSize(gsampler2DMSArray);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
+      ivec2 textureSize(samplerExternalOES, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
+      ivec2 textureSize(samplerExternal2DY2YEXT, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjLod(gsampler2D, vec3, float);
+      gvec4 textureProjLod(gsampler2D, vec4, float);
+      gvec4 textureProjLod(gsampler3D, vec4, float);
+      float textureProjLod(sampler2DShadow, vec4, float);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjLod(gsampler1D, vec2, float);
+      gvec4 textureProjLod(gsampler1D, vec4, float);
+      float textureProjLod(sampler1DShadow, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetch(gsampler2D, ivec2, int);
+      gvec4 texelFetch(gsampler3D, ivec3, int);
+      gvec4 texelFetch(gsampler2DArray, ivec3, int);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetch(gsampler1D, int, int);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetch(gsampler2DRect, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetch(gsampler1DArray, ivec2, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetch(gsamplerBuffer, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_buffer, EXT_texture_buffer", "suffix": "Ext"}
+      gvec4 texelFetch(gsamplerBuffer, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL1_5_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetch(gsampler2DMS, ivec2, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "ANGLE_texture_multisample", "suffix": "Ext"}
+      gvec4 texelFetch(gsampler2DMS, ivec2, int);
+    DEFAULT METADATA {"glsl_level": "GLSL1_5_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetch(gsampler2DMSArray, ivec3, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_storage_multisample_2d_array", "suffix": "Ext"}
+      gvec4 texelFetch(gsampler2DMSArray, ivec3, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
+      vec4 texelFetch(samplerExternalOES, ivec2, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
+      vec4 texelFetch(samplerExternal2DY2YEXT, ivec2, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureGrad(gsampler2D, vec2, vec2, vec2);
+      gvec4 textureGrad(gsampler3D, vec3, vec3, vec3);
+      gvec4 textureGrad(gsamplerCube, vec3, vec3, vec3);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureGrad(gsampler2D, float, float, float);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureGrad(gsampler2DRect, vec2, vec2, vec2);
+      gvec4 textureGrad(sampler2DRectShadow, vec3, vec2, vec2);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      float textureGrad(sampler2DShadow, vec3, vec2, vec2);
+      float textureGrad(samplerCubeShadow, vec4, vec3, vec3);
+      gvec4 textureGrad(gsampler2DArray, vec3, vec2, vec2);
+      float textureGrad(sampler2DArrayShadow, vec4, vec2, vec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      float textureGrad(sampler1DShadow, vec3, float, float);
+      gvec4 textureGrad(gsampler1DArray, vec2, float, float);
+      float textureGrad(sampler1DArrayShadow, vec3, float, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureGrad(gsamplerCubeArray, vec4, vec3, vec3);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
+      gvec4 textureGrad(gsamplerCubeArray, vec4, vec3, vec3);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjGrad(gsampler2D, vec3, vec2, vec2);
+      gvec4 textureProjGrad(gsampler2D, vec4, vec2, vec2);
+      gvec4 textureProjGrad(gsampler3D, vec4, vec3, vec3);
+      float textureProjGrad(sampler2DShadow, vec4, vec2, vec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjGrad(gsampler1D, vec2, float, float);
+      gvec4 textureProjGrad(gsampler1D, vec4, float, float);
+      float textureProjGrad(sampler1DShadow, vec4, float, float);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjGrad(gsampler2DRect, vec3, vec2, vec2);
+      gvec4 textureProjGrad(gsampler2DRect, vec4, vec2, vec2);
+      float textureProjGrad(sampler2DRectShadow, vec4, vec2, vec2);
+    DEFAULT METADATA {"glsl_level": "GLSL4_3_BUILTINS", "hasSideEffects": "true"}
+      int textureQueryLevels(gsampler1D);
+      int textureQueryLevels(gsampler2D);
+      int textureQueryLevels(gsampler3D);
+      int textureQueryLevels(gsamplerCube);
+      int textureQueryLevels(gsampler1DArray);
+      int textureQueryLevels(gsampler2DArray);
+      int textureQueryLevels(gsamplerCubeArray);
+      int textureQueryLevels(sampler1DShadow);
+      int textureQueryLevels(sampler2DShadow);
+      int textureQueryLevels(samplerCubeShadow);
+      int textureQueryLevels(sampler1DArrayShadow);
+      int textureQueryLevels(sampler2DArrayShadow);
+      int textureQueryLevels(samplerCubeArrayShadow);
+    DEFAULT METADATA {"glsl_level": "GLSL4_5_BUILTINS", "hasSideEffects": "true"}
+      int textureSamples(gsampler2DMS);
+      int textureSamples(gsampler2DMSArray);
+  GROUP END NoBias
 
-GROUP BEGIN TextureFirstVersionsVS {"shader_type": "VERTEX"}
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
-    vec4 texture2DLod(sampler2D, vec2, float);
-    vec4 texture2DProjLod(sampler2D, vec3, float);
-    vec4 texture2DProjLod(sampler2D, vec4, float);
-    vec4 textureCubeLod(samplerCube, vec3, float);
-  DEFAULT METADATA {"glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
-    vec4 texture1DLod(sampler1D, float, float);
-    vec4 texture1DProjLod(sampler1D, vec2, float);
-    vec4 texture1DProjLod(sampler1D, vec4, float);
-    vec4 shadow1DLod(sampler1DShadow, vec3, float);
-    vec4 shadow1DProjLod(sampler1DShadow, vec4, float);
-    vec4 shadow2DLod(sampler2DShadow, vec3, float);
-    vec4 shadow2DProjLod(sampler2DShadow, vec4, float);
-GROUP END TextureFirstVersionsVS
+  GROUP BEGIN Bias {"shader_type": "FRAGMENT", "opSuffix": "Bias"}
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texture(gsampler2D, vec2, float);
+      gvec4 texture(gsampler3D, vec3, float);
+      gvec4 texture(gsamplerCube, vec3, float);
+      gvec4 texture(gsampler2DArray, vec3, float);
+      gvec4 textureProj(gsampler2D, vec3, float);
+      gvec4 textureProj(gsampler2D, vec4, float);
+      gvec4 textureProj(gsampler3D, vec4, float);
+      float texture(sampler2DShadow, vec3, float);
+      float texture(samplerCubeShadow, vec4, float);
+      float textureProj(sampler2DShadow, vec4, float);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texture(gsampler1D, float, float);
+      float texture(sampler1DShadow, vec3, float);
+      gvec4 texture(gsampler1DArray, vec3, float);
+      float texture(sampler1DArrayShadow, vec3, float);
+      float texture(sampler2DArrayShadow, vec4, float);
+      gvec4 textureProj(gsampler1D, vec2, float);
+      gvec4 textureProj(gsampler1D, vec4, float);
+      float textureProj(sampler1DShadow, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
+      vec4 texture(samplerExternalOES, vec2, float);
+      vec4 textureProj(samplerExternalOES, vec3, float);
+      vec4 textureProj(samplerExternalOES, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
+      vec4 texture(samplerExternal2DY2YEXT, vec2, float);
+      vec4 textureProj(samplerExternal2DY2YEXT, vec3, float);
+      vec4 textureProj(samplerExternal2DY2YEXT, vec4, float);
+  GROUP END Bias
 
-GROUP BEGIN TextureNoBias
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texture(gsampler2D, vec2);
-    gvec4 texture(gsampler3D, vec3);
-    gvec4 texture(gsamplerCube, vec3);
-    gvec4 texture(gsampler2DArray, vec3);
-    float texture(sampler2DShadow, vec3);
-    float texture(samplerCubeShadow, vec4);
-    float texture(sampler2DArrayShadow, vec4);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texture(gsampler1D, float);
-    float texture(sampler1DShadow, vec3);
-    gvec4 texture(gsampler1DArray, vec3);
-    float texture(sampler1DArrayShadow, vec3);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texture(gsampler2DRect, vec2);
-    float texture(sampler2DRectShadow, vec3);
-  DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texture(gsamplerCubeArray, vec4);
-    gvec4 texture(gsamplerCubeArray, vec4, float);
-    float texture(samplerCubeArrayShadow, vec4, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
-    gvec4 texture(gsamplerCubeArray, vec4);
-    gvec4 texture(gsamplerCubeArray, vec4, float);
-    float texture(samplerCubeArrayShadow, vec4, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
-    vec4 texture(samplerExternalOES, vec2);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
-    vec4 texture(samplerExternal2DY2YEXT, vec2);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProj(gsampler2D, vec3);
-    gvec4 textureProj(gsampler2D, vec4);
-    gvec4 textureProj(gsampler3D, vec4);
-    float textureProj(sampler2DShadow, vec4);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProj(gsampler1D, vec2);
-    gvec4 textureProj(gsampler1D, vec4);
-    float textureProj(sampler1DShadow, vec4);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProj(gsampler2DRect, vec3);
-    gvec4 textureProj(gsampler2DRect, vec4);
-    float textureProj(sampler2DRectShadow, vec4);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
-    vec4 textureProj(samplerExternalOES, vec3);
-    vec4 textureProj(samplerExternalOES, vec4);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
-    vec4 textureProj(samplerExternal2DY2YEXT, vec3);
-    vec4 textureProj(samplerExternal2DY2YEXT, vec4);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureLod(gsampler2D, vec2, float);
-    gvec4 textureLod(gsampler3D, vec3, float);
-    gvec4 textureLod(gsamplerCube, vec3, float);
-    gvec4 textureLod(gsampler2DArray, vec3, float);
-    float textureLod(sampler2DShadow, vec3, float);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureLod(gsampler1D, float, float);
-    float textureLod(sampler1DShadow, vec3, float);
-    gvec4 textureLod(gsampler1DArray, vec2, float);
-    float textureLod(sampler1DArrayShadow, vec3, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureLod(gsamplerCubeArray, vec4, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
-    gvec4 textureLod(gsamplerCubeArray, vec4, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    ivec2 textureSize(gsampler2D, int);
-    ivec3 textureSize(gsampler3D, int);
-    ivec2 textureSize(gsamplerCube, int);
-    ivec3 textureSize(gsampler2DArray, int);
-    ivec2 textureSize(sampler2DShadow, int);
-    ivec2 textureSize(samplerCubeShadow, int);
-    ivec3 textureSize(sampler2DArrayShadow, int);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    int textureSize(gsampler1D, int);
-    int textureSize(sampler1DShadow, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    ivec3 textureSize(gsamplerCubeArray, int);
-    ivec3 textureSize(samplerCubeArrayShadow, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
-    ivec3 textureSize(gsamplerCubeArray, int);
-    ivec3 textureSize(samplerCubeArrayShadow, int);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    ivec2 textureSize(gsampler2DRect);
-    ivec2 textureSize(sampler2DRectShadow);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    ivec2 textureSize(gsampler1DArray, int);
-    ivec2 textureSize(sampler1DArrayShadow, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    int textureSize(gsamplerBuffer);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_buffer, EXT_texture_buffer", "suffix": "Ext"}
-    int textureSize(gsamplerBuffer);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL1_5_BUILTINS", "hasSideEffects": "true"}
-    ivec2 textureSize(gsampler2DMS);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "ANGLE_texture_multisample", "suffix": "Ext"}
-    ivec2 textureSize(gsampler2DMS);
-  DEFAULT METADATA {"glsl_level": "GLSL1_5_BUILTINS", "hasSideEffects": "true"}
-    ivec3 textureSize(gsampler2DMSArray);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_storage_multisample_2d_array", "suffix": "Ext"}
-    ivec3 textureSize(gsampler2DMSArray);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
-    ivec2 textureSize(samplerExternalOES, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
-    ivec2 textureSize(samplerExternal2DY2YEXT, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjLod(gsampler2D, vec3, float);
-    gvec4 textureProjLod(gsampler2D, vec4, float);
-    gvec4 textureProjLod(gsampler3D, vec4, float);
-    float textureProjLod(sampler2DShadow, vec4, float);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjLod(gsampler1D, vec2, float);
-    gvec4 textureProjLod(gsampler1D, vec4, float);
-    float textureProjLod(sampler1DShadow, vec4, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetch(gsampler2D, ivec2, int);
-    gvec4 texelFetch(gsampler3D, ivec3, int);
-    gvec4 texelFetch(gsampler2DArray, ivec3, int);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetch(gsampler1D, int, int);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetch(gsampler2DRect, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetch(gsampler1DArray, ivec2, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetch(gsamplerBuffer, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_buffer, EXT_texture_buffer", "suffix": "Ext"}
-    gvec4 texelFetch(gsamplerBuffer, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL1_5_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetch(gsampler2DMS, ivec2, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "ANGLE_texture_multisample", "suffix": "Ext"}
-    gvec4 texelFetch(gsampler2DMS, ivec2, int);
-  DEFAULT METADATA {"glsl_level": "GLSL1_5_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetch(gsampler2DMSArray, ivec3, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_storage_multisample_2d_array", "suffix": "Ext"}
-    gvec4 texelFetch(gsampler2DMSArray, ivec3, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
-    vec4 texelFetch(samplerExternalOES, ivec2, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
-    vec4 texelFetch(samplerExternal2DY2YEXT, ivec2, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureGrad(gsampler2D, vec2, vec2, vec2);
-    gvec4 textureGrad(gsampler3D, vec3, vec3, vec3);
-    gvec4 textureGrad(gsamplerCube, vec3, vec3, vec3);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureGrad(gsampler2D, float, float, float);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureGrad(gsampler2DRect, vec2, vec2, vec2);
-    gvec4 textureGrad(sampler2DRectShadow, vec3, vec2, vec2);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    float textureGrad(sampler2DShadow, vec3, vec2, vec2);
-    float textureGrad(samplerCubeShadow, vec4, vec3, vec3);
-    gvec4 textureGrad(gsampler2DArray, vec3, vec2, vec2);
-    float textureGrad(sampler2DArrayShadow, vec4, vec2, vec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    float textureGrad(sampler1DShadow, vec3, float, float);
-    gvec4 textureGrad(gsampler1DArray, vec2, float, float);
-    float textureGrad(sampler1DArrayShadow, vec3, float, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureGrad(gsamplerCubeArray, vec4, vec3, vec3);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
-    gvec4 textureGrad(gsamplerCubeArray, vec4, vec3, vec3);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjGrad(gsampler2D, vec3, vec2, vec2);
-    gvec4 textureProjGrad(gsampler2D, vec4, vec2, vec2);
-    gvec4 textureProjGrad(gsampler3D, vec4, vec3, vec3);
-    float textureProjGrad(sampler2DShadow, vec4, vec2, vec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjGrad(gsampler1D, vec2, float, float);
-    gvec4 textureProjGrad(gsampler1D, vec4, float, float);
-    float textureProjGrad(sampler1DShadow, vec4, float, float);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjGrad(gsampler2DRect, vec3, vec2, vec2);
-    gvec4 textureProjGrad(gsampler2DRect, vec4, vec2, vec2);
-    float textureProjGrad(sampler2DRectShadow, vec4, vec2, vec2);
-  DEFAULT METADATA {"glsl_level": "GLSL4_3_BUILTINS", "hasSideEffects": "true"}
-    int textureQueryLevels(gsampler1D);
-    int textureQueryLevels(gsampler2D);
-    int textureQueryLevels(gsampler3D);
-    int textureQueryLevels(gsamplerCube);
-    int textureQueryLevels(gsampler1DArray);
-    int textureQueryLevels(gsampler2DArray);
-    int textureQueryLevels(gsamplerCubeArray);
-    int textureQueryLevels(sampler1DShadow);
-    int textureQueryLevels(sampler2DShadow);
-    int textureQueryLevels(samplerCubeShadow);
-    int textureQueryLevels(sampler1DArrayShadow);
-    int textureQueryLevels(sampler2DArrayShadow);
-    int textureQueryLevels(samplerCubeArrayShadow);
-  DEFAULT METADATA {"glsl_level": "GLSL4_5_BUILTINS", "hasSideEffects": "true"}
-    int textureSamples(gsampler2DMS);
-    int textureSamples(gsampler2DMSArray);
-GROUP END TextureNoBias
+  GROUP BEGIN QueryLod {"shader_type": "FRAGMENT"}
+    DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      vec2 textureQueryLod(gsampler1D, float);
+      vec2 textureQueryLod(gsampler2D, vec2);
+      vec2 textureQueryLod(gsampler3D, vec3);
+      vec2 textureQueryLod(gsamplerCube, vec3);
+      vec2 textureQueryLod(gsampler1DArray, float);
+      vec2 textureQueryLod(gsampler2DArray, vec2);
+      vec2 textureQueryLod(gsamplerCubeArray, vec3);
+      vec2 textureQueryLod(sampler1DShadow, float);
+      vec2 textureQueryLod(sampler2DShadow, vec2);
+      vec2 textureQueryLod(samplerCubeShadow, vec3);
+      vec2 textureQueryLod(sampler1DArrayShadow, float);
+      vec2 textureQueryLod(sampler2DArrayShadow, vec2);
+      vec2 textureQueryLod(samplerCubeArrayShadow, vec3);
+  GROUP END QueryLod
 
-GROUP BEGIN TextureBias {"shader_type": "FRAGMENT", "opSuffix": "Bias"}
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texture(gsampler2D, vec2, float);
-    gvec4 texture(gsampler3D, vec3, float);
-    gvec4 texture(gsamplerCube, vec3, float);
-    gvec4 texture(gsampler2DArray, vec3, float);
-    gvec4 textureProj(gsampler2D, vec3, float);
-    gvec4 textureProj(gsampler2D, vec4, float);
-    gvec4 textureProj(gsampler3D, vec4, float);
-    float texture(sampler2DShadow, vec3, float);
-    float texture(samplerCubeShadow, vec4, float);
-    float textureProj(sampler2DShadow, vec4, float);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texture(gsampler1D, float, float);
-    float texture(sampler1DShadow, vec3, float);
-    gvec4 texture(gsampler1DArray, vec3, float);
-    float texture(sampler1DArrayShadow, vec3, float);
-    float texture(sampler2DArrayShadow, vec4, float);
-    gvec4 textureProj(gsampler1D, vec2, float);
-    gvec4 textureProj(gsampler1D, vec4, float);
-    float textureProj(sampler1DShadow, vec4, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
-    vec4 texture(samplerExternalOES, vec2, float);
-    vec4 textureProj(samplerExternalOES, vec3, float);
-    vec4 textureProj(samplerExternalOES, vec4, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
-    vec4 texture(samplerExternal2DY2YEXT, vec2, float);
-    vec4 textureProj(samplerExternal2DY2YEXT, vec3, float);
-    vec4 textureProj(samplerExternal2DY2YEXT, vec4, float);
-GROUP END TextureBias
+  GROUP BEGIN OffsetNoBias {"queryFunction": true}
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureOffset(gsampler2D, vec2, ivec2);
+      gvec4 textureOffset(gsampler3D, vec3, ivec3);
+      float textureOffset(sampler2DShadow, vec3, ivec2);
+      gvec4 textureOffset(gsampler2DArray, vec3, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureOffset(gsampler1D, float, int);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureOffset(gsampler2DRect, vec2, ivec2);
+      float textureOffset(sampler2DRectShadow, vec3, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      float textureOffset(sampler1DShadow, vec3, int);
+      gvec4 textureOffset(gsampler1DArray, vec2, int);
+      float textureOffset(sampler1DArrayShadow, vec3, int);
+    DEFAULT METADATA {"glsl_level": "GLSL4_3_BUILTINS", "hasSideEffects": "true"}
+      float textureOffset(sampler2DArrayShadow, vec4, ivec2);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjOffset(gsampler2D, vec3, ivec2);
+      gvec4 textureProjOffset(gsampler2D, vec4, ivec2);
+      gvec4 textureProjOffset(gsampler3D, vec4, ivec3);
+      float textureProjOffset(sampler2DShadow, vec4, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjOffset(gsampler1D, vec2, int);
+      gvec4 textureProjOffset(gsampler1D, vec4, int);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjOffset(gsampler2DRect, vec3, ivec2);
+      gvec4 textureProjOffset(gsampler2DRect, vec4, ivec2);
+      float textureProjOffset(sampler2DRectShadow, vec4, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      float textureProjOffset(sampler1DShadow, vec4, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureLodOffset(gsampler2D, vec2, float, ivec2);
+      gvec4 textureLodOffset(gsampler3D, vec3, float, ivec3);
+      float textureLodOffset(sampler2DShadow, vec3, float, ivec2);
+      gvec4 textureLodOffset(gsampler2DArray, vec3, float, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureLodOffset(gsampler1D, float, float, int);
+      float textureLodOffset(sampler1DShadow, vec3, float, int);
+      gvec4 textureLodOffset(gsampler1DArray, vec2, float, int);
+      float textureLodOffset(sampler1DArrayShadow, vec3, float, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjLodOffset(gsampler2D, vec3, float, ivec2);
+      gvec4 textureProjLodOffset(gsampler2D, vec4, float, ivec2);
+      gvec4 textureProjLodOffset(gsampler3D, vec4, float, ivec3);
+      float textureProjLodOffset(sampler2DShadow, vec4, float, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjLodOffset(gsampler1D, vec2, float, int);
+      gvec4 textureProjLodOffset(gsampler1D, vec4, float, int);
+      float textureProjLodOffset(sampler1DShadow, vec4, float, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetchOffset(gsampler2D, ivec2, int, ivec2);
+      gvec4 texelFetchOffset(gsampler3D, ivec3, int, ivec3);
+      gvec4 texelFetchOffset(gsampler2DArray, ivec3, int, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetchOffset(gsampler1D, int, int, int);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetchOffset(gsampler2DRect, ivec2, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texelFetchOffset(gsampler1DArray, ivec2, int, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureGradOffset(gsampler2D, vec2, vec2, vec2, ivec2);
+      gvec4 textureGradOffset(gsampler3D, vec3, vec3, vec3, ivec3);
+      float textureGradOffset(sampler2DShadow, vec3, vec2, vec2, ivec2);
+      gvec4 textureGradOffset(gsampler2DArray, vec3, vec2, vec2, ivec2);
+      float textureGradOffset(sampler2DArrayShadow, vec4, vec2, vec2, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureGradOffset(gsampler1D, float, float, float, int);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureGradOffset(gsampler2DRect, vec2, vec2, vec2, ivec2);
+      float textureGradOffset(sampler2DRectShadow, vec3, vec2, vec2, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      float textureGradOffset(sampler1DShadow, vec3, float, float, int);
+      gvec4 textureGradOffset(gsampler1DArray, vec2, float, float, int);
+      float textureGradOffset(sampler1DArrayShadow, vec3, float, float, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjGradOffset(gsampler2D, vec3, vec2, vec2, ivec2);
+      gvec4 textureProjGradOffset(gsampler2D, vec4, vec2, vec2, ivec2);
+      gvec4 textureProjGradOffset(gsampler3D, vec4, vec3, vec3, ivec3);
+      float textureProjGradOffset(sampler2DShadow, vec4, vec2, vec2, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjGradOffset(gsampler1D, vec2, float, float, int);
+      gvec4 textureProjGradOffset(gsampler1D, vec4, float, float, int);
+    DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjGradOffset(gsampler2DRect, vec3, vec2, vec2, ivec2);
+      gvec4 textureProjGradOffset(gsampler2DRect, vec4, vec2, vec2, ivec2);
+      float textureProjGradOffset(sampler2DRectShadow, vec4, vec2, vec2, ivec2);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      float textureProjGradOffset(sampler1DShadow, vec4, float, float, int);
+  GROUP END OffsetNoBias
 
-GROUP BEGIN TextureQueryLod {"shader_type": "FRAGMENT"}
-  DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    vec2 textureQueryLod(gsampler1D, float);
-    vec2 textureQueryLod(gsampler2D, vec2);
-    vec2 textureQueryLod(gsampler3D, vec3);
-    vec2 textureQueryLod(gsamplerCube, vec3);
-    vec2 textureQueryLod(gsampler1DArray, float);
-    vec2 textureQueryLod(gsampler2DArray, vec2);
-    vec2 textureQueryLod(gsamplerCubeArray, vec3);
-    vec2 textureQueryLod(sampler1DShadow, float);
-    vec2 textureQueryLod(sampler2DShadow, vec2);
-    vec2 textureQueryLod(samplerCubeShadow, vec3);
-    vec2 textureQueryLod(sampler1DArrayShadow, float);
-    vec2 textureQueryLod(sampler2DArrayShadow, vec2);
-    vec2 textureQueryLod(samplerCubeArrayShadow, vec3);
-GROUP END TextureQueryLod
+  GROUP BEGIN OffsetBias {"queryFunction": true, "shader_type": "FRAGMENT", "opSuffix": "Bias"}
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureOffset(gsampler2D, vec2, ivec2, float);
+      gvec4 textureOffset(gsampler3D, vec3, ivec3, float);
+      float textureOffset(sampler2DShadow, vec3, ivec2, float);
+      gvec4 textureOffset(gsampler2DArray, vec3, ivec2, float);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureOffset(gsampler1D, float, int, float);
+      float textureOffset(sampler1DShadow, vec3, int, float);
+      gvec4 textureOffset(gsampler1DArray, vec2, int, float);
+      float textureOffset(sampler1DArrayShadow, vec3, int, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjOffset(gsampler2D, vec3, ivec2, float);
+      gvec4 textureProjOffset(gsampler2D, vec4, ivec2, float);
+      gvec4 textureProjOffset(gsampler3D, vec4, ivec3, float);
+      float textureProjOffset(sampler2DShadow, vec4, ivec2, float);
+    DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureProjOffset(gsampler1D, vec2, int, float);
+      gvec4 textureProjOffset(gsampler1D, vec4, int, float);
+      float textureProjOffset(sampler1DShadow, vec4, int, float);
+  GROUP END OffsetBias
 
-GROUP BEGIN TextureOffsetNoBias {"queryFunction": true}
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureOffset(gsampler2D, vec2, ivec2);
-    gvec4 textureOffset(gsampler3D, vec3, ivec3);
-    float textureOffset(sampler2DShadow, vec3, ivec2);
-    gvec4 textureOffset(gsampler2DArray, vec3, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureOffset(gsampler1D, float, int);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureOffset(gsampler2DRect, vec2, ivec2);
-    float textureOffset(sampler2DRectShadow, vec3, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    float textureOffset(sampler1DShadow, vec3, int);
-    gvec4 textureOffset(gsampler1DArray, vec2, int);
-    float textureOffset(sampler1DArrayShadow, vec3, int);
-  DEFAULT METADATA {"glsl_level": "GLSL4_3_BUILTINS", "hasSideEffects": "true"}
-    float textureOffset(sampler2DArrayShadow, vec4, ivec2);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjOffset(gsampler2D, vec3, ivec2);
-    gvec4 textureProjOffset(gsampler2D, vec4, ivec2);
-    gvec4 textureProjOffset(gsampler3D, vec4, ivec3);
-    float textureProjOffset(sampler2DShadow, vec4, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjOffset(gsampler1D, vec2, int);
-    gvec4 textureProjOffset(gsampler1D, vec4, int);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjOffset(gsampler2DRect, vec3, ivec2);
-    gvec4 textureProjOffset(gsampler2DRect, vec4, ivec2);
-    float textureProjOffset(sampler2DRectShadow, vec4, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    float textureProjOffset(sampler1DShadow, vec4, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureLodOffset(gsampler2D, vec2, float, ivec2);
-    gvec4 textureLodOffset(gsampler3D, vec3, float, ivec3);
-    float textureLodOffset(sampler2DShadow, vec3, float, ivec2);
-    gvec4 textureLodOffset(gsampler2DArray, vec3, float, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureLodOffset(gsampler1D, float, float, int);
-    float textureLodOffset(sampler1DShadow, vec3, float, int);
-    gvec4 textureLodOffset(gsampler1DArray, vec2, float, int);
-    float textureLodOffset(sampler1DArrayShadow, vec3, float, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjLodOffset(gsampler2D, vec3, float, ivec2);
-    gvec4 textureProjLodOffset(gsampler2D, vec4, float, ivec2);
-    gvec4 textureProjLodOffset(gsampler3D, vec4, float, ivec3);
-    float textureProjLodOffset(sampler2DShadow, vec4, float, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjLodOffset(gsampler1D, vec2, float, int);
-    gvec4 textureProjLodOffset(gsampler1D, vec4, float, int);
-    float textureProjLodOffset(sampler1DShadow, vec4, float, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetchOffset(gsampler2D, ivec2, int, ivec2);
-    gvec4 texelFetchOffset(gsampler3D, ivec3, int, ivec3);
-    gvec4 texelFetchOffset(gsampler2DArray, ivec3, int, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetchOffset(gsampler1D, int, int, int);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetchOffset(gsampler2DRect, ivec2, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 texelFetchOffset(gsampler1DArray, ivec2, int, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureGradOffset(gsampler2D, vec2, vec2, vec2, ivec2);
-    gvec4 textureGradOffset(gsampler3D, vec3, vec3, vec3, ivec3);
-    float textureGradOffset(sampler2DShadow, vec3, vec2, vec2, ivec2);
-    gvec4 textureGradOffset(gsampler2DArray, vec3, vec2, vec2, ivec2);
-    float textureGradOffset(sampler2DArrayShadow, vec4, vec2, vec2, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureGradOffset(gsampler1D, float, float, float, int);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureGradOffset(gsampler2DRect, vec2, vec2, vec2, ivec2);
-    float textureGradOffset(sampler2DRectShadow, vec3, vec2, vec2, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    float textureGradOffset(sampler1DShadow, vec3, float, float, int);
-    gvec4 textureGradOffset(gsampler1DArray, vec2, float, float, int);
-    float textureGradOffset(sampler1DArrayShadow, vec3, float, float, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjGradOffset(gsampler2D, vec3, vec2, vec2, ivec2);
-    gvec4 textureProjGradOffset(gsampler2D, vec4, vec2, vec2, ivec2);
-    gvec4 textureProjGradOffset(gsampler3D, vec4, vec3, vec3, ivec3);
-    float textureProjGradOffset(sampler2DShadow, vec4, vec2, vec2, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjGradOffset(gsampler1D, vec2, float, float, int);
-    gvec4 textureProjGradOffset(gsampler1D, vec4, float, float, int);
-  DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjGradOffset(gsampler2DRect, vec3, vec2, vec2, ivec2);
-    gvec4 textureProjGradOffset(gsampler2DRect, vec4, vec2, vec2, ivec2);
-    float textureProjGradOffset(sampler2DRectShadow, vec4, vec2, vec2, ivec2);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    float textureProjGradOffset(sampler1DShadow, vec4, float, float, int);
-GROUP END TextureOffsetNoBias
+  GROUP BEGIN Gather {"queryFunction": true}
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureGather(gsampler2D, vec2);
+      gvec4 textureGather(gsampler2D, vec2, int);
+      gvec4 textureGather(gsampler2DArray, vec3);
+      gvec4 textureGather(gsampler2DArray, vec3, int);
+      gvec4 textureGather(gsamplerCube, vec3);
+      gvec4 textureGather(gsamplerCube, vec3, int);
+    DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureGather(gsamplerCubeArray, vec4);
+      gvec4 textureGather(gsamplerCubeArray, vec4, int);
+      vec4 textureGather(samplerCubeArrayShadow, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
+      gvec4 textureGather(gsamplerCubeArray, vec4);
+      gvec4 textureGather(gsamplerCubeArray, vec4, int);
+      vec4 textureGather(samplerCubeArrayShadow, vec4, float);
+    DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 textureGather(gsampler2DRect, vec3);
+      gvec4 textureGather(gsampler2DRect, vec3, int);
+      vec4 textureGather(sampler2DRectShadow, vec2, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true"}
+      vec4 textureGather(sampler2DShadow, vec2);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      vec4 textureGather(sampler2DShadow, vec2, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true"}
+      vec4 textureGather(sampler2DArrayShadow, vec3);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      vec4 textureGather(sampler2DArrayShadow, vec3, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true"}
+      vec4 textureGather(samplerCubeShadow, vec3);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      vec4 textureGather(samplerCubeShadow, vec3, float);
 
-GROUP BEGIN TextureOffsetBias {"queryFunction": true, "shader_type": "FRAGMENT", "opSuffix": "Bias"}
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureOffset(gsampler2D, vec2, ivec2, float);
-    gvec4 textureOffset(gsampler3D, vec3, ivec3, float);
-    float textureOffset(sampler2DShadow, vec3, ivec2, float);
-    gvec4 textureOffset(gsampler2DArray, vec3, ivec2, float);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureOffset(gsampler1D, float, int, float);
-    float textureOffset(sampler1DShadow, vec3, int, float);
-    gvec4 textureOffset(gsampler1DArray, vec2, int, float);
-    float textureOffset(sampler1DArrayShadow, vec3, int, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjOffset(gsampler2D, vec3, ivec2, float);
-    gvec4 textureProjOffset(gsampler2D, vec4, ivec2, float);
-    gvec4 textureProjOffset(gsampler3D, vec4, ivec3, float);
-    float textureProjOffset(sampler2DShadow, vec4, ivec2, float);
-  DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureProjOffset(gsampler1D, vec2, int, float);
-    gvec4 textureProjOffset(gsampler1D, vec4, int, float);
-    float textureProjOffset(sampler1DShadow, vec4, int, float);
-GROUP END TextureOffsetBias
+      GROUP BEGIN Offset {"queryFunction": true}
+        GROUP BEGIN NoComp {"queryFunction": true}
+          DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+            gvec4 textureGatherOffset(gsampler2D, vec2, ivec2);
+            gvec4 textureGatherOffset(gsampler2DArray, vec3, ivec2);
+            vec4 textureGatherOffset(sampler2DShadow, vec2, float, ivec2);
+            vec4 textureGatherOffset(sampler2DArrayShadow, vec3, float, ivec2);
+          DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+            gvec4 textureGatherOffset(gsampler2DRect, vec2, ivec2);
+            vec4 textureGatherOffset(sampler2DRectShadow, vec2, float, ivec2);
+        GROUP END NoComp
+        GROUP BEGIN Comp {"queryFunction": true, "opSuffix": "Comp"}
+          DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+            gvec4 textureGatherOffset(gsampler2D, vec2, ivec2, int);
+            gvec4 textureGatherOffset(gsampler2DArray, vec3, ivec2, int);
+          DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+            gvec4 textureGatherOffset(gsampler2DRect, vec2, ivec2, int);
+        GROUP END Comp
+      GROUP END Offset
+      GROUP BEGIN Offsets {"queryFunction": true}
+        GROUP BEGIN NoComp {"queryFunction": true}
+          DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+            gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4]);
+            gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4]);
+            vec4 textureGatherOffsets(sampler2DShadow, vec2, float, ivec2[4]);
+            vec4 textureGatherOffsets(sampler2DArrayShadow, vec3, float, ivec2[4]);
+          DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_gpu_shader5", "suffix": "Ext"}
+            gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4]);
+            gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4]);
+            vec4 textureGatherOffsets(sampler2DShadow, vec2, float, ivec2[4]);
+            vec4 textureGatherOffsets(sampler2DArrayShadow, vec3, float, ivec2[4]);
+          DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+            gvec4 textureGatherOffsets(gsampler2DRect, vec2, ivec2[4]);
+            vec4 textureGatherOffsets(sampler2DRectShadow, vec2, float, ivec2[4]);
+        GROUP END NoComp
+        GROUP BEGIN Comp {"queryFunction": true, "opSuffix": "Comp"}
+          DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+            gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4], int);
+            gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4], int);
+          DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_gpu_shader5", "suffix": "Ext"}
+            gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4], int);
+            gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4], int);
+          DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+            gvec4 textureGatherOffsets(gsampler2DRect, vec2, ivec2[4], int);
+        GROUP END Comp
+      GROUP END Offsets
+  GROUP END Gather
+GROUP END Texture
 
-GROUP BEGIN EXT_yuv_target
+GROUP BEGIN EXT_YUV_target
   DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
     vec3 rgb_2_yuv(vec3, yuvCscStandardEXT);
     vec3 yuv_2_rgb(vec3, yuvCscStandardEXT);
-GROUP END EXT_yuv_target
-
-GROUP BEGIN TextureGather {"queryFunction": true}
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureGather(gsampler2D, vec2);
-    gvec4 textureGather(gsampler2D, vec2, int);
-    gvec4 textureGather(gsampler2DArray, vec3);
-    gvec4 textureGather(gsampler2DArray, vec3, int);
-    gvec4 textureGather(gsamplerCube, vec3);
-    gvec4 textureGather(gsamplerCube, vec3, int);
-  DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureGather(gsamplerCubeArray, vec4);
-    gvec4 textureGather(gsamplerCubeArray, vec4, int);
-    vec4 textureGather(samplerCubeArrayShadow, vec4, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
-    gvec4 textureGather(gsamplerCubeArray, vec4);
-    gvec4 textureGather(gsamplerCubeArray, vec4, int);
-    vec4 textureGather(samplerCubeArrayShadow, vec4, float);
-  DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    gvec4 textureGather(gsampler2DRect, vec3);
-    gvec4 textureGather(gsampler2DRect, vec3, int);
-    vec4 textureGather(sampler2DRectShadow, vec2, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true"}
-    vec4 textureGather(sampler2DShadow, vec2);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    vec4 textureGather(sampler2DShadow, vec2, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true"}
-    vec4 textureGather(sampler2DArrayShadow, vec3);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    vec4 textureGather(sampler2DArrayShadow, vec3, float);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true"}
-    vec4 textureGather(samplerCubeShadow, vec3);
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-    vec4 textureGather(samplerCubeShadow, vec3, float);
-
-    GROUP BEGIN Offset {"queryFunction": true}
-      GROUP BEGIN NoComp {"queryFunction": true}
-        DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-          gvec4 textureGatherOffset(gsampler2D, vec2, ivec2);
-          gvec4 textureGatherOffset(gsampler2DArray, vec3, ivec2);
-          vec4 textureGatherOffset(sampler2DShadow, vec2, float, ivec2);
-          vec4 textureGatherOffset(sampler2DArrayShadow, vec3, float, ivec2);
-        DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-          gvec4 textureGatherOffset(gsampler2DRect, vec2, ivec2);
-          vec4 textureGatherOffset(sampler2DRectShadow, vec2, float, ivec2);
-      GROUP END NoComp
-      GROUP BEGIN Comp {"queryFunction": true, "opSuffix": "Comp"}
-        DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-          gvec4 textureGatherOffset(gsampler2D, vec2, ivec2, int);
-          gvec4 textureGatherOffset(gsampler2DArray, vec3, ivec2, int);
-        DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-          gvec4 textureGatherOffset(gsampler2DRect, vec2, ivec2, int);
-      GROUP END Comp
-    GROUP END Offset
-    GROUP BEGIN Offsets {"queryFunction": true}
-      GROUP BEGIN NoComp {"queryFunction": true}
-        DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-          gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4]);
-          gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4]);
-          vec4 textureGatherOffsets(sampler2DShadow, vec2, float, ivec2[4]);
-          vec4 textureGatherOffsets(sampler2DArrayShadow, vec3, float, ivec2[4]);
-        DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_gpu_shader5", "suffix": "Ext"}
-          gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4]);
-          gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4]);
-          vec4 textureGatherOffsets(sampler2DShadow, vec2, float, ivec2[4]);
-          vec4 textureGatherOffsets(sampler2DArrayShadow, vec3, float, ivec2[4]);
-        DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-          gvec4 textureGatherOffsets(gsampler2DRect, vec2, ivec2[4]);
-          vec4 textureGatherOffsets(sampler2DRectShadow, vec2, float, ivec2[4]);
-      GROUP END NoComp
-      GROUP BEGIN Comp {"queryFunction": true, "opSuffix": "Comp"}
-        DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-          gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4], int);
-          gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4], int);
-        DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_gpu_shader5", "suffix": "Ext"}
-          gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4], int);
-          gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4], int);
-        DEFAULT METADATA {"glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
-          gvec4 textureGatherOffsets(gsampler2DRect, vec2, ivec2[4], int);
-      GROUP END Comp
-    GROUP END Offsets
-GROUP END TextureGather
+GROUP END EXT_YUV_target
 
 GROUP BEGIN DerivativesFS {"shader_type": "FRAGMENT"}
   DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "essl_extension": "OES_standard_derivatives", "hasSideEffects": "true", "suffix": "Ext"}
@@ -1084,6 +1085,7 @@ GROUP BEGIN Image {"queryFunction": true}
   DEFAULT METADATA {"glsl_level": "GLSL4_5_BUILTINS", "hasSideEffects": "true"}
     int imageSamples(readonly writeonly gimage2DMS);
     int imageSamples(readonly writeonly gimage2DMSArray);
+
   GROUP BEGIN Atomic {"queryFunction": true}
       DEFAULT METADATA {"glsl_level": "GLSL4_2_BUILTINS", "hasSideEffects": "true"}
         uint imageAtomicAdd(IMAGE_PARAMS, uint);
@@ -1180,10 +1182,3 @@ GROUP BEGIN ShaderInvocationGroup
     bool allInvocations(bool);
     bool allInvocationsEqual(bool);
 GROUP END ShaderInvocationGroup
-
-GROUP BEGIN WEBGLVideoTexture
-  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true", "extension": "WEBGL_video_texture"}
-      vec4 textureVideoWEBGL(samplerVideoWEBGL, vec2);
-  DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "opSuffix": "VideoWEBGL", "hasSideEffects": "true", "extension": "WEBGL_video_texture"}
-    vec4 texture(samplerVideoWEBGL, vec2);
-GROUP END WEBGLVideoTexture

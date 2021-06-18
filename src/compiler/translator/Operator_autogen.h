@@ -244,6 +244,8 @@ enum TOperator : uint16_t
     EOpUmulExtended,
     EOpImulExtended,
 
+    // Group Texture
+
     // Group TextureFirstVersions
     EOpTexture2D,
     EOpTexture2DProj,
@@ -256,17 +258,12 @@ enum TOperator : uint16_t
     EOpShadow1DProj,
     EOpShadow2D,
     EOpShadow2DProj,
-
-    // Group ARB_texture_rectangle
     EOpTexture2DRect,
     EOpTexture2DRectProj,
-    EOpTextureRect,
-    EOpTextureProjRect,
-
-    // Group EXT_shader_texture_lod
     EOpTexture2DGradEXT,
     EOpTexture2DProjGradEXT,
     EOpTextureCubeGradEXT,
+    EOpTextureVideoWEBGL,
 
     // Group TextureFirstVersionsFS
     EOpTexture2DFS,
@@ -307,7 +304,9 @@ enum TOperator : uint16_t
 
     // Group TextureNoBias
     EOpTexture,
+    EOpTextureRect,
     EOpTextureProj,
+    EOpTextureProjRect,
     EOpTextureLod,
     EOpTextureSize,
     EOpTextureProjLod,
@@ -337,10 +336,6 @@ enum TOperator : uint16_t
     EOpTextureOffsetBias,
     EOpTextureProjOffsetBias,
 
-    // Group EXT_yuv_target
-    EOpRgb_2_yuv,
-    EOpYuv_2_rgb,
-
     // Group TextureGather
     EOpTextureGather,
 
@@ -359,6 +354,10 @@ enum TOperator : uint16_t
 
     // Group TextureGatherOffsetsComp
     EOpTextureGatherOffsetsComp,
+
+    // Group EXT_YUV_target
+    EOpRgb_2_yuv,
+    EOpYuv_2_rgb,
 
     // Group DerivativesFS
     EOpDFdx,
@@ -453,9 +452,6 @@ enum TOperator : uint16_t
     EOpAnyInvocation,
     EOpAllInvocations,
     EOpAllInvocationsEqual,
-
-    // Group WEBGLVideoTexture
-    EOpTextureVideoWEBGL,
 };
 
 // Returns the string corresponding to the operator in GLSL.  For built-in functions use the
@@ -510,6 +506,10 @@ static inline bool IsTextureGatherOffsets(TOperator op)
 static inline bool IsTextureGather(TOperator op)
 {
     return op >= EOpTextureGather && op <= EOpTextureGatherOffsetsComp;
+}
+static inline bool IsTexture(TOperator op)
+{
+    return op >= EOpTexture2D && op <= EOpTextureGatherOffsetsComp;
 }
 static inline bool IsInterpolationFS(TOperator op)
 {

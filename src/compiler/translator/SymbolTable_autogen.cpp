@@ -677,13 +677,11 @@ constexpr const TSymbolUniqueId BuiltInId::texture2DProj_SamplerExternalOES1_Flo
 constexpr const TSymbolUniqueId BuiltInId::texture2DRect_Sampler2DRect1_Float2;
 constexpr const TSymbolUniqueId BuiltInId::texture2DRectProj_Sampler2DRect1_Float3;
 constexpr const TSymbolUniqueId BuiltInId::texture2DRectProj_Sampler2DRect1_Float4;
-constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2DRect1_Float2;
-constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2DRect1_Float3;
-constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2DRect1_Float4;
 constexpr const TSymbolUniqueId BuiltInId::texture2DGradEXT_Sampler2D1_Float2_Float2_Float2;
 constexpr const TSymbolUniqueId BuiltInId::texture2DProjGradEXT_Sampler2D1_Float3_Float2_Float2;
 constexpr const TSymbolUniqueId BuiltInId::texture2DProjGradEXT_Sampler2D1_Float4_Float2_Float2;
 constexpr const TSymbolUniqueId BuiltInId::textureCubeGradEXT_SamplerCube1_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureVideoWEBGL_SamplerVideoWEBGL1_Float2;
 constexpr const TSymbolUniqueId BuiltInId::texture2D_Sampler2D1_Float2_Float1;
 constexpr const TSymbolUniqueId BuiltInId::texture2DProj_Sampler2D1_Float3_Float1;
 constexpr const TSymbolUniqueId BuiltInId::texture2DProj_Sampler2D1_Float4_Float1;
@@ -739,6 +737,7 @@ constexpr const TSymbolUniqueId BuiltInId::texture_Sampler1DArray1_Float3;
 constexpr const TSymbolUniqueId BuiltInId::texture_ISampler1DArray1_Float3;
 constexpr const TSymbolUniqueId BuiltInId::texture_USampler1DArray1_Float3;
 constexpr const TSymbolUniqueId BuiltInId::texture_Sampler1DArrayShadow1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2DRect1_Float2;
 constexpr const TSymbolUniqueId BuiltInId::texture_ISampler2DRect1_Float2;
 constexpr const TSymbolUniqueId BuiltInId::texture_USampler2DRect1_Float2;
 constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2DRectShadow1_Float3;
@@ -758,6 +757,7 @@ constexpr const TSymbolUniqueId BuiltInId::textureExt_USamplerCubeArray1_Float4_
 constexpr const TSymbolUniqueId BuiltInId::textureExt_SamplerCubeArrayShadow1_Float4_Float1;
 constexpr const TSymbolUniqueId BuiltInId::texture_SamplerExternalOES1_Float2;
 constexpr const TSymbolUniqueId BuiltInId::texture_SamplerExternal2DY2YEXT1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::texture_SamplerVideoWEBGL1_Float2;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2D1_Float3;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_ISampler2D1_Float3;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_USampler2D1_Float3;
@@ -775,8 +775,10 @@ constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler1D1_Float4;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_ISampler1D1_Float4;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_USampler1D1_Float4;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler1DShadow1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2DRect1_Float3;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_ISampler2DRect1_Float3;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_USampler2DRect1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2DRect1_Float4;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_ISampler2DRect1_Float4;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_USampler2DRect1_Float4;
 constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2DRectShadow1_Float4;
@@ -1306,8 +1308,6 @@ constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_Sampler1D1_Float4_I
 constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_ISampler1D1_Float4_Int1_Float1;
 constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_USampler1D1_Float4_Int1_Float1;
 constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_Sampler1DShadow1_Float4_Int1_Float1;
-constexpr const TSymbolUniqueId BuiltInId::rgb_2_yuv_Float3_YuvCscStandardEXT1;
-constexpr const TSymbolUniqueId BuiltInId::yuv_2_rgb_Float3_YuvCscStandardEXT1;
 constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2D1_Float2;
 constexpr const TSymbolUniqueId BuiltInId::textureGather_ISampler2D1_Float2;
 constexpr const TSymbolUniqueId BuiltInId::textureGather_USampler2D1_Float2;
@@ -1419,6 +1419,8 @@ constexpr const TSymbolUniqueId
 constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_Sampler2DRect1_Float2_4xInt2_Int1;
 constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_ISampler2DRect1_Float2_4xInt2_Int1;
 constexpr const TSymbolUniqueId BuiltInId::textureGatherOffsets_USampler2DRect1_Float2_4xInt2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::rgb_2_yuv_Float3_YuvCscStandardEXT1;
+constexpr const TSymbolUniqueId BuiltInId::yuv_2_rgb_Float3_YuvCscStandardEXT1;
 constexpr const TSymbolUniqueId BuiltInId::dFdxExt_Float1;
 constexpr const TSymbolUniqueId BuiltInId::dFdxExt_Float2;
 constexpr const TSymbolUniqueId BuiltInId::dFdxExt_Float3;
@@ -2812,8 +2814,6 @@ constexpr const TSymbolUniqueId BuiltInId::subpassLoad_USubpassInputMS1_Int1;
 constexpr const TSymbolUniqueId BuiltInId::anyInvocation_Bool1;
 constexpr const TSymbolUniqueId BuiltInId::allInvocations_Bool1;
 constexpr const TSymbolUniqueId BuiltInId::allInvocationsEqual_Bool1;
-constexpr const TSymbolUniqueId BuiltInId::textureVideoWEBGL_SamplerVideoWEBGL1_Float2;
-constexpr const TSymbolUniqueId BuiltInId::texture_SamplerVideoWEBGL1_Float2;
 constexpr const TSymbolUniqueId BuiltInId::gl_DepthRangeParameters;
 constexpr const TSymbolUniqueId BuiltInId::gl_DepthRange;
 constexpr const TSymbolUniqueId BuiltInId::gl_NumSamples;
@@ -5806,7 +5806,7 @@ namespace Func
 constexpr const TFunction radians_00B(BuiltInId::radians_Float1,
                                       BuiltInName::radians,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p00B00D,
+                                      BuiltInParameters::p00B_o_00B,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpRadians,
@@ -5814,7 +5814,7 @@ constexpr const TFunction radians_00B(BuiltInId::radians_Float1,
 constexpr const TFunction radians_10B(BuiltInId::radians_Float2,
                                       BuiltInName::radians,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p10B_o_10B,
+                                      BuiltInParameters::p10B10D,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpRadians,
@@ -5822,7 +5822,7 @@ constexpr const TFunction radians_10B(BuiltInId::radians_Float2,
 constexpr const TFunction radians_20B(BuiltInId::radians_Float3,
                                       BuiltInName::radians,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p20B_o_20B,
+                                      BuiltInParameters::p20B00D,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                       EOpRadians,
@@ -5830,7 +5830,7 @@ constexpr const TFunction radians_20B(BuiltInId::radians_Float3,
 constexpr const TFunction radians_30B(BuiltInId::radians_Float4,
                                       BuiltInName::radians,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p30B20B,
+                                      BuiltInParameters::p30B10B,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpRadians,
@@ -5838,7 +5838,7 @@ constexpr const TFunction radians_30B(BuiltInId::radians_Float4,
 constexpr const TFunction degrees_00B(BuiltInId::degrees_Float1,
                                       BuiltInName::degrees,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p00B00D,
+                                      BuiltInParameters::p00B_o_00B,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpDegrees,
@@ -5846,7 +5846,7 @@ constexpr const TFunction degrees_00B(BuiltInId::degrees_Float1,
 constexpr const TFunction degrees_10B(BuiltInId::degrees_Float2,
                                       BuiltInName::degrees,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p10B_o_10B,
+                                      BuiltInParameters::p10B10D,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpDegrees,
@@ -5854,7 +5854,7 @@ constexpr const TFunction degrees_10B(BuiltInId::degrees_Float2,
 constexpr const TFunction degrees_20B(BuiltInId::degrees_Float3,
                                       BuiltInName::degrees,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p20B_o_20B,
+                                      BuiltInParameters::p20B00D,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                       EOpDegrees,
@@ -5862,7 +5862,7 @@ constexpr const TFunction degrees_20B(BuiltInId::degrees_Float3,
 constexpr const TFunction degrees_30B(BuiltInId::degrees_Float4,
                                       BuiltInName::degrees,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p30B20B,
+                                      BuiltInParameters::p30B10B,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpDegrees,
@@ -5870,7 +5870,7 @@ constexpr const TFunction degrees_30B(BuiltInId::degrees_Float4,
 constexpr const TFunction sin_00B(BuiltInId::sin_Float1,
                                   BuiltInName::sin,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p00B00D,
+                                  BuiltInParameters::p00B_o_00B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                   EOpSin,
@@ -5878,7 +5878,7 @@ constexpr const TFunction sin_00B(BuiltInId::sin_Float1,
 constexpr const TFunction sin_10B(BuiltInId::sin_Float2,
                                   BuiltInName::sin,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p10B_o_10B,
+                                  BuiltInParameters::p10B10D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                   EOpSin,
@@ -5886,7 +5886,7 @@ constexpr const TFunction sin_10B(BuiltInId::sin_Float2,
 constexpr const TFunction sin_20B(BuiltInId::sin_Float3,
                                   BuiltInName::sin,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p20B_o_20B,
+                                  BuiltInParameters::p20B00D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                   EOpSin,
@@ -5894,7 +5894,7 @@ constexpr const TFunction sin_20B(BuiltInId::sin_Float3,
 constexpr const TFunction sin_30B(BuiltInId::sin_Float4,
                                   BuiltInName::sin,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p30B20B,
+                                  BuiltInParameters::p30B10B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                   EOpSin,
@@ -5902,7 +5902,7 @@ constexpr const TFunction sin_30B(BuiltInId::sin_Float4,
 constexpr const TFunction cos_00B(BuiltInId::cos_Float1,
                                   BuiltInName::cos,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p00B00D,
+                                  BuiltInParameters::p00B_o_00B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                   EOpCos,
@@ -5910,7 +5910,7 @@ constexpr const TFunction cos_00B(BuiltInId::cos_Float1,
 constexpr const TFunction cos_10B(BuiltInId::cos_Float2,
                                   BuiltInName::cos,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p10B_o_10B,
+                                  BuiltInParameters::p10B10D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                   EOpCos,
@@ -5918,7 +5918,7 @@ constexpr const TFunction cos_10B(BuiltInId::cos_Float2,
 constexpr const TFunction cos_20B(BuiltInId::cos_Float3,
                                   BuiltInName::cos,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p20B_o_20B,
+                                  BuiltInParameters::p20B00D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                   EOpCos,
@@ -5926,7 +5926,7 @@ constexpr const TFunction cos_20B(BuiltInId::cos_Float3,
 constexpr const TFunction cos_30B(BuiltInId::cos_Float4,
                                   BuiltInName::cos,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p30B20B,
+                                  BuiltInParameters::p30B10B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                   EOpCos,
@@ -5934,7 +5934,7 @@ constexpr const TFunction cos_30B(BuiltInId::cos_Float4,
 constexpr const TFunction tan_00B(BuiltInId::tan_Float1,
                                   BuiltInName::tan,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p00B00D,
+                                  BuiltInParameters::p00B_o_00B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                   EOpTan,
@@ -5942,7 +5942,7 @@ constexpr const TFunction tan_00B(BuiltInId::tan_Float1,
 constexpr const TFunction tan_10B(BuiltInId::tan_Float2,
                                   BuiltInName::tan,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p10B_o_10B,
+                                  BuiltInParameters::p10B10D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                   EOpTan,
@@ -5950,7 +5950,7 @@ constexpr const TFunction tan_10B(BuiltInId::tan_Float2,
 constexpr const TFunction tan_20B(BuiltInId::tan_Float3,
                                   BuiltInName::tan,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p20B_o_20B,
+                                  BuiltInParameters::p20B00D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                   EOpTan,
@@ -5958,7 +5958,7 @@ constexpr const TFunction tan_20B(BuiltInId::tan_Float3,
 constexpr const TFunction tan_30B(BuiltInId::tan_Float4,
                                   BuiltInName::tan,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p30B20B,
+                                  BuiltInParameters::p30B10B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                   EOpTan,
@@ -5966,7 +5966,7 @@ constexpr const TFunction tan_30B(BuiltInId::tan_Float4,
 constexpr const TFunction asin_00B(BuiltInId::asin_Float1,
                                    BuiltInName::asin,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpAsin,
@@ -5974,7 +5974,7 @@ constexpr const TFunction asin_00B(BuiltInId::asin_Float1,
 constexpr const TFunction asin_10B(BuiltInId::asin_Float2,
                                    BuiltInName::asin,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpAsin,
@@ -5982,7 +5982,7 @@ constexpr const TFunction asin_10B(BuiltInId::asin_Float2,
 constexpr const TFunction asin_20B(BuiltInId::asin_Float3,
                                    BuiltInName::asin,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpAsin,
@@ -5990,7 +5990,7 @@ constexpr const TFunction asin_20B(BuiltInId::asin_Float3,
 constexpr const TFunction asin_30B(BuiltInId::asin_Float4,
                                    BuiltInName::asin,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpAsin,
@@ -5998,7 +5998,7 @@ constexpr const TFunction asin_30B(BuiltInId::asin_Float4,
 constexpr const TFunction acos_00B(BuiltInId::acos_Float1,
                                    BuiltInName::acos,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpAcos,
@@ -6006,7 +6006,7 @@ constexpr const TFunction acos_00B(BuiltInId::acos_Float1,
 constexpr const TFunction acos_10B(BuiltInId::acos_Float2,
                                    BuiltInName::acos,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpAcos,
@@ -6014,7 +6014,7 @@ constexpr const TFunction acos_10B(BuiltInId::acos_Float2,
 constexpr const TFunction acos_20B(BuiltInId::acos_Float3,
                                    BuiltInName::acos,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpAcos,
@@ -6022,7 +6022,7 @@ constexpr const TFunction acos_20B(BuiltInId::acos_Float3,
 constexpr const TFunction acos_30B(BuiltInId::acos_Float4,
                                    BuiltInName::acos,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpAcos,
@@ -6030,7 +6030,7 @@ constexpr const TFunction acos_30B(BuiltInId::acos_Float4,
 constexpr const TFunction atan_00B00B(BuiltInId::atan_Float1_Float1,
                                       BuiltInName::atan,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p00B00B10B,
+                                      BuiltInParameters::p00B00B30B,
                                       2,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpAtan,
@@ -6038,7 +6038,7 @@ constexpr const TFunction atan_00B00B(BuiltInId::atan_Float1_Float1,
 constexpr const TFunction atan_10B10B(BuiltInId::atan_Float2_Float2,
                                       BuiltInName::atan,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p10B10B10F,
+                                      BuiltInParameters::p10B10B10B,
                                       2,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpAtan,
@@ -6054,7 +6054,7 @@ constexpr const TFunction atan_20B20B(BuiltInId::atan_Float3_Float3,
 constexpr const TFunction atan_30B30B(BuiltInId::atan_Float4_Float4,
                                       BuiltInName::atan,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p30B30B30B,
+                                      BuiltInParameters::p30B30B30F,
                                       2,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpAtan,
@@ -6062,7 +6062,7 @@ constexpr const TFunction atan_30B30B(BuiltInId::atan_Float4_Float4,
 constexpr const TFunction atan_00B(BuiltInId::atan_Float1,
                                    BuiltInName::atan,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpAtan,
@@ -6070,7 +6070,7 @@ constexpr const TFunction atan_00B(BuiltInId::atan_Float1,
 constexpr const TFunction atan_10B(BuiltInId::atan_Float2,
                                    BuiltInName::atan,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpAtan,
@@ -6078,7 +6078,7 @@ constexpr const TFunction atan_10B(BuiltInId::atan_Float2,
 constexpr const TFunction atan_20B(BuiltInId::atan_Float3,
                                    BuiltInName::atan,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpAtan,
@@ -6086,7 +6086,7 @@ constexpr const TFunction atan_20B(BuiltInId::atan_Float3,
 constexpr const TFunction atan_30B(BuiltInId::atan_Float4,
                                    BuiltInName::atan,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpAtan,
@@ -6094,7 +6094,7 @@ constexpr const TFunction atan_30B(BuiltInId::atan_Float4,
 constexpr const TFunction sinh_00B(BuiltInId::sinh_Float1,
                                    BuiltInName::sinh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpSinh,
@@ -6102,7 +6102,7 @@ constexpr const TFunction sinh_00B(BuiltInId::sinh_Float1,
 constexpr const TFunction sinh_10B(BuiltInId::sinh_Float2,
                                    BuiltInName::sinh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpSinh,
@@ -6110,7 +6110,7 @@ constexpr const TFunction sinh_10B(BuiltInId::sinh_Float2,
 constexpr const TFunction sinh_20B(BuiltInId::sinh_Float3,
                                    BuiltInName::sinh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpSinh,
@@ -6118,7 +6118,7 @@ constexpr const TFunction sinh_20B(BuiltInId::sinh_Float3,
 constexpr const TFunction sinh_30B(BuiltInId::sinh_Float4,
                                    BuiltInName::sinh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpSinh,
@@ -6126,7 +6126,7 @@ constexpr const TFunction sinh_30B(BuiltInId::sinh_Float4,
 constexpr const TFunction cosh_00B(BuiltInId::cosh_Float1,
                                    BuiltInName::cosh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpCosh,
@@ -6134,7 +6134,7 @@ constexpr const TFunction cosh_00B(BuiltInId::cosh_Float1,
 constexpr const TFunction cosh_10B(BuiltInId::cosh_Float2,
                                    BuiltInName::cosh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpCosh,
@@ -6142,7 +6142,7 @@ constexpr const TFunction cosh_10B(BuiltInId::cosh_Float2,
 constexpr const TFunction cosh_20B(BuiltInId::cosh_Float3,
                                    BuiltInName::cosh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpCosh,
@@ -6150,7 +6150,7 @@ constexpr const TFunction cosh_20B(BuiltInId::cosh_Float3,
 constexpr const TFunction cosh_30B(BuiltInId::cosh_Float4,
                                    BuiltInName::cosh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpCosh,
@@ -6158,7 +6158,7 @@ constexpr const TFunction cosh_30B(BuiltInId::cosh_Float4,
 constexpr const TFunction tanh_00B(BuiltInId::tanh_Float1,
                                    BuiltInName::tanh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpTanh,
@@ -6166,7 +6166,7 @@ constexpr const TFunction tanh_00B(BuiltInId::tanh_Float1,
 constexpr const TFunction tanh_10B(BuiltInId::tanh_Float2,
                                    BuiltInName::tanh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpTanh,
@@ -6174,7 +6174,7 @@ constexpr const TFunction tanh_10B(BuiltInId::tanh_Float2,
 constexpr const TFunction tanh_20B(BuiltInId::tanh_Float3,
                                    BuiltInName::tanh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpTanh,
@@ -6182,7 +6182,7 @@ constexpr const TFunction tanh_20B(BuiltInId::tanh_Float3,
 constexpr const TFunction tanh_30B(BuiltInId::tanh_Float4,
                                    BuiltInName::tanh,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpTanh,
@@ -6190,7 +6190,7 @@ constexpr const TFunction tanh_30B(BuiltInId::tanh_Float4,
 constexpr const TFunction asinh_00B(BuiltInId::asinh_Float1,
                                     BuiltInName::asinh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00B00D,
+                                    BuiltInParameters::p00B_o_00B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpAsinh,
@@ -6198,7 +6198,7 @@ constexpr const TFunction asinh_00B(BuiltInId::asinh_Float1,
 constexpr const TFunction asinh_10B(BuiltInId::asinh_Float2,
                                     BuiltInName::asinh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10B_o_10B,
+                                    BuiltInParameters::p10B10D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpAsinh,
@@ -6206,7 +6206,7 @@ constexpr const TFunction asinh_10B(BuiltInId::asinh_Float2,
 constexpr const TFunction asinh_20B(BuiltInId::asinh_Float3,
                                     BuiltInName::asinh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20B_o_20B,
+                                    BuiltInParameters::p20B00D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpAsinh,
@@ -6214,7 +6214,7 @@ constexpr const TFunction asinh_20B(BuiltInId::asinh_Float3,
 constexpr const TFunction asinh_30B(BuiltInId::asinh_Float4,
                                     BuiltInName::asinh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30B20B,
+                                    BuiltInParameters::p30B10B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpAsinh,
@@ -6222,7 +6222,7 @@ constexpr const TFunction asinh_30B(BuiltInId::asinh_Float4,
 constexpr const TFunction acosh_00B(BuiltInId::acosh_Float1,
                                     BuiltInName::acosh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00B00D,
+                                    BuiltInParameters::p00B_o_00B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpAcosh,
@@ -6230,7 +6230,7 @@ constexpr const TFunction acosh_00B(BuiltInId::acosh_Float1,
 constexpr const TFunction acosh_10B(BuiltInId::acosh_Float2,
                                     BuiltInName::acosh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10B_o_10B,
+                                    BuiltInParameters::p10B10D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpAcosh,
@@ -6238,7 +6238,7 @@ constexpr const TFunction acosh_10B(BuiltInId::acosh_Float2,
 constexpr const TFunction acosh_20B(BuiltInId::acosh_Float3,
                                     BuiltInName::acosh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20B_o_20B,
+                                    BuiltInParameters::p20B00D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpAcosh,
@@ -6246,7 +6246,7 @@ constexpr const TFunction acosh_20B(BuiltInId::acosh_Float3,
 constexpr const TFunction acosh_30B(BuiltInId::acosh_Float4,
                                     BuiltInName::acosh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30B20B,
+                                    BuiltInParameters::p30B10B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpAcosh,
@@ -6254,7 +6254,7 @@ constexpr const TFunction acosh_30B(BuiltInId::acosh_Float4,
 constexpr const TFunction atanh_00B(BuiltInId::atanh_Float1,
                                     BuiltInName::atanh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00B00D,
+                                    BuiltInParameters::p00B_o_00B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpAtanh,
@@ -6262,7 +6262,7 @@ constexpr const TFunction atanh_00B(BuiltInId::atanh_Float1,
 constexpr const TFunction atanh_10B(BuiltInId::atanh_Float2,
                                     BuiltInName::atanh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10B_o_10B,
+                                    BuiltInParameters::p10B10D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpAtanh,
@@ -6270,7 +6270,7 @@ constexpr const TFunction atanh_10B(BuiltInId::atanh_Float2,
 constexpr const TFunction atanh_20B(BuiltInId::atanh_Float3,
                                     BuiltInName::atanh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20B_o_20B,
+                                    BuiltInParameters::p20B00D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpAtanh,
@@ -6278,7 +6278,7 @@ constexpr const TFunction atanh_20B(BuiltInId::atanh_Float3,
 constexpr const TFunction atanh_30B(BuiltInId::atanh_Float4,
                                     BuiltInName::atanh,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30B20B,
+                                    BuiltInParameters::p30B10B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpAtanh,
@@ -6286,7 +6286,7 @@ constexpr const TFunction atanh_30B(BuiltInId::atanh_Float4,
 constexpr const TFunction pow_00B00B(BuiltInId::pow_Float1_Float1,
                                      BuiltInName::pow,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00B10B,
+                                     BuiltInParameters::p00B00B30B,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpPow,
@@ -6294,7 +6294,7 @@ constexpr const TFunction pow_00B00B(BuiltInId::pow_Float1_Float1,
 constexpr const TFunction pow_10B10B(BuiltInId::pow_Float2_Float2,
                                      BuiltInName::pow,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B10B10F,
+                                     BuiltInParameters::p10B10B10B,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpPow,
@@ -6310,7 +6310,7 @@ constexpr const TFunction pow_20B20B(BuiltInId::pow_Float3_Float3,
 constexpr const TFunction pow_30B30B(BuiltInId::pow_Float4_Float4,
                                      BuiltInName::pow,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B30B30B,
+                                     BuiltInParameters::p30B30B30F,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpPow,
@@ -6318,7 +6318,7 @@ constexpr const TFunction pow_30B30B(BuiltInId::pow_Float4_Float4,
 constexpr const TFunction exp_00B(BuiltInId::exp_Float1,
                                   BuiltInName::exp,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p00B00D,
+                                  BuiltInParameters::p00B_o_00B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                   EOpExp,
@@ -6326,7 +6326,7 @@ constexpr const TFunction exp_00B(BuiltInId::exp_Float1,
 constexpr const TFunction exp_10B(BuiltInId::exp_Float2,
                                   BuiltInName::exp,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p10B_o_10B,
+                                  BuiltInParameters::p10B10D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                   EOpExp,
@@ -6334,7 +6334,7 @@ constexpr const TFunction exp_10B(BuiltInId::exp_Float2,
 constexpr const TFunction exp_20B(BuiltInId::exp_Float3,
                                   BuiltInName::exp,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p20B_o_20B,
+                                  BuiltInParameters::p20B00D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                   EOpExp,
@@ -6342,7 +6342,7 @@ constexpr const TFunction exp_20B(BuiltInId::exp_Float3,
 constexpr const TFunction exp_30B(BuiltInId::exp_Float4,
                                   BuiltInName::exp,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p30B20B,
+                                  BuiltInParameters::p30B10B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                   EOpExp,
@@ -6350,7 +6350,7 @@ constexpr const TFunction exp_30B(BuiltInId::exp_Float4,
 constexpr const TFunction log_00B(BuiltInId::log_Float1,
                                   BuiltInName::log,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p00B00D,
+                                  BuiltInParameters::p00B_o_00B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                   EOpLog,
@@ -6358,7 +6358,7 @@ constexpr const TFunction log_00B(BuiltInId::log_Float1,
 constexpr const TFunction log_10B(BuiltInId::log_Float2,
                                   BuiltInName::log,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p10B_o_10B,
+                                  BuiltInParameters::p10B10D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                   EOpLog,
@@ -6366,7 +6366,7 @@ constexpr const TFunction log_10B(BuiltInId::log_Float2,
 constexpr const TFunction log_20B(BuiltInId::log_Float3,
                                   BuiltInName::log,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p20B_o_20B,
+                                  BuiltInParameters::p20B00D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                   EOpLog,
@@ -6374,7 +6374,7 @@ constexpr const TFunction log_20B(BuiltInId::log_Float3,
 constexpr const TFunction log_30B(BuiltInId::log_Float4,
                                   BuiltInName::log,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p30B20B,
+                                  BuiltInParameters::p30B10B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                   EOpLog,
@@ -6382,7 +6382,7 @@ constexpr const TFunction log_30B(BuiltInId::log_Float4,
 constexpr const TFunction exp2_00B(BuiltInId::exp2_Float1,
                                    BuiltInName::exp2,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpExp2,
@@ -6390,7 +6390,7 @@ constexpr const TFunction exp2_00B(BuiltInId::exp2_Float1,
 constexpr const TFunction exp2_10B(BuiltInId::exp2_Float2,
                                    BuiltInName::exp2,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpExp2,
@@ -6398,7 +6398,7 @@ constexpr const TFunction exp2_10B(BuiltInId::exp2_Float2,
 constexpr const TFunction exp2_20B(BuiltInId::exp2_Float3,
                                    BuiltInName::exp2,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpExp2,
@@ -6406,7 +6406,7 @@ constexpr const TFunction exp2_20B(BuiltInId::exp2_Float3,
 constexpr const TFunction exp2_30B(BuiltInId::exp2_Float4,
                                    BuiltInName::exp2,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpExp2,
@@ -6414,7 +6414,7 @@ constexpr const TFunction exp2_30B(BuiltInId::exp2_Float4,
 constexpr const TFunction log2_00B(BuiltInId::log2_Float1,
                                    BuiltInName::log2,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpLog2,
@@ -6422,7 +6422,7 @@ constexpr const TFunction log2_00B(BuiltInId::log2_Float1,
 constexpr const TFunction log2_10B(BuiltInId::log2_Float2,
                                    BuiltInName::log2,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpLog2,
@@ -6430,7 +6430,7 @@ constexpr const TFunction log2_10B(BuiltInId::log2_Float2,
 constexpr const TFunction log2_20B(BuiltInId::log2_Float3,
                                    BuiltInName::log2,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpLog2,
@@ -6438,7 +6438,7 @@ constexpr const TFunction log2_20B(BuiltInId::log2_Float3,
 constexpr const TFunction log2_30B(BuiltInId::log2_Float4,
                                    BuiltInName::log2,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpLog2,
@@ -6446,7 +6446,7 @@ constexpr const TFunction log2_30B(BuiltInId::log2_Float4,
 constexpr const TFunction sqrt_00B(BuiltInId::sqrt_Float1,
                                    BuiltInName::sqrt,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpSqrt,
@@ -6454,7 +6454,7 @@ constexpr const TFunction sqrt_00B(BuiltInId::sqrt_Float1,
 constexpr const TFunction sqrt_10B(BuiltInId::sqrt_Float2,
                                    BuiltInName::sqrt,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpSqrt,
@@ -6462,7 +6462,7 @@ constexpr const TFunction sqrt_10B(BuiltInId::sqrt_Float2,
 constexpr const TFunction sqrt_20B(BuiltInId::sqrt_Float3,
                                    BuiltInName::sqrt,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpSqrt,
@@ -6470,7 +6470,7 @@ constexpr const TFunction sqrt_20B(BuiltInId::sqrt_Float3,
 constexpr const TFunction sqrt_30B(BuiltInId::sqrt_Float4,
                                    BuiltInName::sqrt,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpSqrt,
@@ -6478,7 +6478,7 @@ constexpr const TFunction sqrt_30B(BuiltInId::sqrt_Float4,
 constexpr const TFunction sqrt_00C(BuiltInId::sqrt_Double1,
                                    BuiltInName::sqrt,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00C20C,
+                                   BuiltInParameters::p00C00C10C,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpSqrt,
@@ -6486,7 +6486,7 @@ constexpr const TFunction sqrt_00C(BuiltInId::sqrt_Double1,
 constexpr const TFunction sqrt_10C(BuiltInId::sqrt_Double2,
                                    BuiltInName::sqrt,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10C_o_10D,
+                                   BuiltInParameters::p10C10D,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpSqrt,
@@ -6494,7 +6494,7 @@ constexpr const TFunction sqrt_10C(BuiltInId::sqrt_Double2,
 constexpr const TFunction sqrt_20C(BuiltInId::sqrt_Double3,
                                    BuiltInName::sqrt,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20C_o_20C,
+                                   BuiltInParameters::p20C00C00C,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpSqrt,
@@ -6502,7 +6502,7 @@ constexpr const TFunction sqrt_20C(BuiltInId::sqrt_Double3,
 constexpr const TFunction sqrt_30C(BuiltInId::sqrt_Double4,
                                    BuiltInName::sqrt,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30C_o_30D,
+                                   BuiltInParameters::p30C00C00C,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpSqrt,
@@ -6511,7 +6511,7 @@ constexpr const TFunction inversesqrt_00B(
     BuiltInId::inversesqrt_Float1,
     BuiltInName::inversesqrt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00B00D,
+    BuiltInParameters::p00B_o_00B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpInversesqrt,
@@ -6520,7 +6520,7 @@ constexpr const TFunction inversesqrt_10B(
     BuiltInId::inversesqrt_Float2,
     BuiltInName::inversesqrt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B_o_10B,
+    BuiltInParameters::p10B10D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpInversesqrt,
@@ -6529,7 +6529,7 @@ constexpr const TFunction inversesqrt_20B(
     BuiltInId::inversesqrt_Float3,
     BuiltInName::inversesqrt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20B_o_20B,
+    BuiltInParameters::p20B00D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpInversesqrt,
@@ -6538,7 +6538,7 @@ constexpr const TFunction inversesqrt_30B(
     BuiltInId::inversesqrt_Float4,
     BuiltInName::inversesqrt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B20B,
+    BuiltInParameters::p30B10B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpInversesqrt,
@@ -6547,7 +6547,7 @@ constexpr const TFunction inversesqrt_00C(
     BuiltInId::inversesqrt_Double1,
     BuiltInName::inversesqrt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00C20C,
+    BuiltInParameters::p00C00C10C,
     1,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpInversesqrt,
@@ -6556,7 +6556,7 @@ constexpr const TFunction inversesqrt_10C(
     BuiltInId::inversesqrt_Double2,
     BuiltInName::inversesqrt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10C_o_10D,
+    BuiltInParameters::p10C10D,
     1,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpInversesqrt,
@@ -6565,7 +6565,7 @@ constexpr const TFunction inversesqrt_20C(
     BuiltInId::inversesqrt_Double3,
     BuiltInName::inversesqrt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20C_o_20C,
+    BuiltInParameters::p20C00C00C,
     1,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpInversesqrt,
@@ -6574,7 +6574,7 @@ constexpr const TFunction inversesqrt_30C(
     BuiltInId::inversesqrt_Double4,
     BuiltInName::inversesqrt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30C_o_30D,
+    BuiltInParameters::p30C00C00C,
     1,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpInversesqrt,
@@ -6582,7 +6582,7 @@ constexpr const TFunction inversesqrt_30C(
 constexpr const TFunction abs_00B(BuiltInId::abs_Float1,
                                   BuiltInName::abs,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p00B00D,
+                                  BuiltInParameters::p00B_o_00B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                   EOpAbs,
@@ -6590,7 +6590,7 @@ constexpr const TFunction abs_00B(BuiltInId::abs_Float1,
 constexpr const TFunction abs_10B(BuiltInId::abs_Float2,
                                   BuiltInName::abs,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p10B_o_10B,
+                                  BuiltInParameters::p10B10D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                   EOpAbs,
@@ -6598,7 +6598,7 @@ constexpr const TFunction abs_10B(BuiltInId::abs_Float2,
 constexpr const TFunction abs_20B(BuiltInId::abs_Float3,
                                   BuiltInName::abs,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p20B_o_20B,
+                                  BuiltInParameters::p20B00D,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                   EOpAbs,
@@ -6606,7 +6606,7 @@ constexpr const TFunction abs_20B(BuiltInId::abs_Float3,
 constexpr const TFunction abs_30B(BuiltInId::abs_Float4,
                                   BuiltInName::abs,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p30B20B,
+                                  BuiltInParameters::p30B10B,
                                   1,
                                   StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                   EOpAbs,
@@ -6614,7 +6614,7 @@ constexpr const TFunction abs_30B(BuiltInId::abs_Float4,
 constexpr const TFunction abs_00D(BuiltInId::abs_Int1,
                                   BuiltInName::abs,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p00D00D_o_00D_o_00D,
+                                  BuiltInParameters::p00D00D00D00D,
                                   1,
                                   StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                   EOpAbs,
@@ -6622,7 +6622,7 @@ constexpr const TFunction abs_00D(BuiltInId::abs_Int1,
 constexpr const TFunction abs_10D(BuiltInId::abs_Int2,
                                   BuiltInName::abs,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p10D10D00D00D,
+                                  BuiltInParameters::p10D10D10D,
                                   1,
                                   StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                   EOpAbs,
@@ -6646,7 +6646,7 @@ constexpr const TFunction abs_30D(BuiltInId::abs_Int4,
 constexpr const TFunction abs_00C(BuiltInId::abs_Double1,
                                   BuiltInName::abs,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p00C20C,
+                                  BuiltInParameters::p00C00C10C,
                                   1,
                                   StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                   EOpAbs,
@@ -6654,7 +6654,7 @@ constexpr const TFunction abs_00C(BuiltInId::abs_Double1,
 constexpr const TFunction abs_10C(BuiltInId::abs_Double2,
                                   BuiltInName::abs,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p10C_o_10D,
+                                  BuiltInParameters::p10C10D,
                                   1,
                                   StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                   EOpAbs,
@@ -6662,7 +6662,7 @@ constexpr const TFunction abs_10C(BuiltInId::abs_Double2,
 constexpr const TFunction abs_20C(BuiltInId::abs_Double3,
                                   BuiltInName::abs,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p20C_o_20C,
+                                  BuiltInParameters::p20C00C00C,
                                   1,
                                   StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                   EOpAbs,
@@ -6670,7 +6670,7 @@ constexpr const TFunction abs_20C(BuiltInId::abs_Double3,
 constexpr const TFunction abs_30C(BuiltInId::abs_Double4,
                                   BuiltInName::abs,
                                   std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                  BuiltInParameters::p30C_o_30D,
+                                  BuiltInParameters::p30C00C00C,
                                   1,
                                   StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                   EOpAbs,
@@ -6678,7 +6678,7 @@ constexpr const TFunction abs_30C(BuiltInId::abs_Double4,
 constexpr const TFunction sign_00B(BuiltInId::sign_Float1,
                                    BuiltInName::sign,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpSign,
@@ -6686,7 +6686,7 @@ constexpr const TFunction sign_00B(BuiltInId::sign_Float1,
 constexpr const TFunction sign_10B(BuiltInId::sign_Float2,
                                    BuiltInName::sign,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpSign,
@@ -6694,7 +6694,7 @@ constexpr const TFunction sign_10B(BuiltInId::sign_Float2,
 constexpr const TFunction sign_20B(BuiltInId::sign_Float3,
                                    BuiltInName::sign,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpSign,
@@ -6702,7 +6702,7 @@ constexpr const TFunction sign_20B(BuiltInId::sign_Float3,
 constexpr const TFunction sign_30B(BuiltInId::sign_Float4,
                                    BuiltInName::sign,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpSign,
@@ -6710,7 +6710,7 @@ constexpr const TFunction sign_30B(BuiltInId::sign_Float4,
 constexpr const TFunction sign_00D(BuiltInId::sign_Int1,
                                    BuiltInName::sign,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00D00D_o_00D_o_00D,
+                                   BuiltInParameters::p00D00D00D00D,
                                    1,
                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpSign,
@@ -6718,7 +6718,7 @@ constexpr const TFunction sign_00D(BuiltInId::sign_Int1,
 constexpr const TFunction sign_10D(BuiltInId::sign_Int2,
                                    BuiltInName::sign,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10D10D00D00D,
+                                   BuiltInParameters::p10D10D10D,
                                    1,
                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpSign,
@@ -6742,7 +6742,7 @@ constexpr const TFunction sign_30D(BuiltInId::sign_Int4,
 constexpr const TFunction sign_00C(BuiltInId::sign_Double1,
                                    BuiltInName::sign,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00C20C,
+                                   BuiltInParameters::p00C00C10C,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpSign,
@@ -6750,7 +6750,7 @@ constexpr const TFunction sign_00C(BuiltInId::sign_Double1,
 constexpr const TFunction sign_10C(BuiltInId::sign_Double2,
                                    BuiltInName::sign,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10C_o_10D,
+                                   BuiltInParameters::p10C10D,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpSign,
@@ -6758,7 +6758,7 @@ constexpr const TFunction sign_10C(BuiltInId::sign_Double2,
 constexpr const TFunction sign_20C(BuiltInId::sign_Double3,
                                    BuiltInName::sign,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20C_o_20C,
+                                   BuiltInParameters::p20C00C00C,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpSign,
@@ -6766,7 +6766,7 @@ constexpr const TFunction sign_20C(BuiltInId::sign_Double3,
 constexpr const TFunction sign_30C(BuiltInId::sign_Double4,
                                    BuiltInName::sign,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30C_o_30D,
+                                   BuiltInParameters::p30C00C00C,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpSign,
@@ -6774,7 +6774,7 @@ constexpr const TFunction sign_30C(BuiltInId::sign_Double4,
 constexpr const TFunction floor_00B(BuiltInId::floor_Float1,
                                     BuiltInName::floor,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00B00D,
+                                    BuiltInParameters::p00B_o_00B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpFloor,
@@ -6782,7 +6782,7 @@ constexpr const TFunction floor_00B(BuiltInId::floor_Float1,
 constexpr const TFunction floor_10B(BuiltInId::floor_Float2,
                                     BuiltInName::floor,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10B_o_10B,
+                                    BuiltInParameters::p10B10D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpFloor,
@@ -6790,7 +6790,7 @@ constexpr const TFunction floor_10B(BuiltInId::floor_Float2,
 constexpr const TFunction floor_20B(BuiltInId::floor_Float3,
                                     BuiltInName::floor,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20B_o_20B,
+                                    BuiltInParameters::p20B00D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpFloor,
@@ -6798,7 +6798,7 @@ constexpr const TFunction floor_20B(BuiltInId::floor_Float3,
 constexpr const TFunction floor_30B(BuiltInId::floor_Float4,
                                     BuiltInName::floor,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30B20B,
+                                    BuiltInParameters::p30B10B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpFloor,
@@ -6806,7 +6806,7 @@ constexpr const TFunction floor_30B(BuiltInId::floor_Float4,
 constexpr const TFunction floor_00C(BuiltInId::floor_Double1,
                                     BuiltInName::floor,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00C20C,
+                                    BuiltInParameters::p00C00C10C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpFloor,
@@ -6814,7 +6814,7 @@ constexpr const TFunction floor_00C(BuiltInId::floor_Double1,
 constexpr const TFunction floor_10C(BuiltInId::floor_Double2,
                                     BuiltInName::floor,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10C_o_10D,
+                                    BuiltInParameters::p10C10D,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpFloor,
@@ -6822,7 +6822,7 @@ constexpr const TFunction floor_10C(BuiltInId::floor_Double2,
 constexpr const TFunction floor_20C(BuiltInId::floor_Double3,
                                     BuiltInName::floor,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20C_o_20C,
+                                    BuiltInParameters::p20C00C00C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpFloor,
@@ -6830,7 +6830,7 @@ constexpr const TFunction floor_20C(BuiltInId::floor_Double3,
 constexpr const TFunction floor_30C(BuiltInId::floor_Double4,
                                     BuiltInName::floor,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30C_o_30D,
+                                    BuiltInParameters::p30C00C00C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpFloor,
@@ -6838,7 +6838,7 @@ constexpr const TFunction floor_30C(BuiltInId::floor_Double4,
 constexpr const TFunction trunc_00B(BuiltInId::trunc_Float1,
                                     BuiltInName::trunc,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00B00D,
+                                    BuiltInParameters::p00B_o_00B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpTrunc,
@@ -6846,7 +6846,7 @@ constexpr const TFunction trunc_00B(BuiltInId::trunc_Float1,
 constexpr const TFunction trunc_10B(BuiltInId::trunc_Float2,
                                     BuiltInName::trunc,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10B_o_10B,
+                                    BuiltInParameters::p10B10D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpTrunc,
@@ -6854,7 +6854,7 @@ constexpr const TFunction trunc_10B(BuiltInId::trunc_Float2,
 constexpr const TFunction trunc_20B(BuiltInId::trunc_Float3,
                                     BuiltInName::trunc,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20B_o_20B,
+                                    BuiltInParameters::p20B00D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpTrunc,
@@ -6862,7 +6862,7 @@ constexpr const TFunction trunc_20B(BuiltInId::trunc_Float3,
 constexpr const TFunction trunc_30B(BuiltInId::trunc_Float4,
                                     BuiltInName::trunc,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30B20B,
+                                    BuiltInParameters::p30B10B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpTrunc,
@@ -6870,7 +6870,7 @@ constexpr const TFunction trunc_30B(BuiltInId::trunc_Float4,
 constexpr const TFunction trunc_00C(BuiltInId::trunc_Double1,
                                     BuiltInName::trunc,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00C20C,
+                                    BuiltInParameters::p00C00C10C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpTrunc,
@@ -6878,7 +6878,7 @@ constexpr const TFunction trunc_00C(BuiltInId::trunc_Double1,
 constexpr const TFunction trunc_10C(BuiltInId::trunc_Double2,
                                     BuiltInName::trunc,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10C_o_10D,
+                                    BuiltInParameters::p10C10D,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpTrunc,
@@ -6886,7 +6886,7 @@ constexpr const TFunction trunc_10C(BuiltInId::trunc_Double2,
 constexpr const TFunction trunc_20C(BuiltInId::trunc_Double3,
                                     BuiltInName::trunc,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20C_o_20C,
+                                    BuiltInParameters::p20C00C00C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpTrunc,
@@ -6894,7 +6894,7 @@ constexpr const TFunction trunc_20C(BuiltInId::trunc_Double3,
 constexpr const TFunction trunc_30C(BuiltInId::trunc_Double4,
                                     BuiltInName::trunc,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30C_o_30D,
+                                    BuiltInParameters::p30C00C00C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpTrunc,
@@ -6902,7 +6902,7 @@ constexpr const TFunction trunc_30C(BuiltInId::trunc_Double4,
 constexpr const TFunction round_00B(BuiltInId::round_Float1,
                                     BuiltInName::round,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00B00D,
+                                    BuiltInParameters::p00B_o_00B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpRound,
@@ -6910,7 +6910,7 @@ constexpr const TFunction round_00B(BuiltInId::round_Float1,
 constexpr const TFunction round_10B(BuiltInId::round_Float2,
                                     BuiltInName::round,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10B_o_10B,
+                                    BuiltInParameters::p10B10D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpRound,
@@ -6918,7 +6918,7 @@ constexpr const TFunction round_10B(BuiltInId::round_Float2,
 constexpr const TFunction round_20B(BuiltInId::round_Float3,
                                     BuiltInName::round,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20B_o_20B,
+                                    BuiltInParameters::p20B00D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpRound,
@@ -6926,7 +6926,7 @@ constexpr const TFunction round_20B(BuiltInId::round_Float3,
 constexpr const TFunction round_30B(BuiltInId::round_Float4,
                                     BuiltInName::round,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30B20B,
+                                    BuiltInParameters::p30B10B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpRound,
@@ -6934,7 +6934,7 @@ constexpr const TFunction round_30B(BuiltInId::round_Float4,
 constexpr const TFunction round_00C(BuiltInId::round_Double1,
                                     BuiltInName::round,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00C20C,
+                                    BuiltInParameters::p00C00C10C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpRound,
@@ -6942,7 +6942,7 @@ constexpr const TFunction round_00C(BuiltInId::round_Double1,
 constexpr const TFunction round_10C(BuiltInId::round_Double2,
                                     BuiltInName::round,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10C_o_10D,
+                                    BuiltInParameters::p10C10D,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpRound,
@@ -6950,7 +6950,7 @@ constexpr const TFunction round_10C(BuiltInId::round_Double2,
 constexpr const TFunction round_20C(BuiltInId::round_Double3,
                                     BuiltInName::round,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20C_o_20C,
+                                    BuiltInParameters::p20C00C00C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpRound,
@@ -6958,7 +6958,7 @@ constexpr const TFunction round_20C(BuiltInId::round_Double3,
 constexpr const TFunction round_30C(BuiltInId::round_Double4,
                                     BuiltInName::round,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30C_o_30D,
+                                    BuiltInParameters::p30C00C00C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpRound,
@@ -6966,7 +6966,7 @@ constexpr const TFunction round_30C(BuiltInId::round_Double4,
 constexpr const TFunction roundEven_00B(BuiltInId::roundEven_Float1,
                                         BuiltInName::roundEven,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p00B00D,
+                                        BuiltInParameters::p00B_o_00B,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpRoundEven,
@@ -6974,7 +6974,7 @@ constexpr const TFunction roundEven_00B(BuiltInId::roundEven_Float1,
 constexpr const TFunction roundEven_10B(BuiltInId::roundEven_Float2,
                                         BuiltInName::roundEven,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p10B_o_10B,
+                                        BuiltInParameters::p10B10D,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpRoundEven,
@@ -6982,7 +6982,7 @@ constexpr const TFunction roundEven_10B(BuiltInId::roundEven_Float2,
 constexpr const TFunction roundEven_20B(BuiltInId::roundEven_Float3,
                                         BuiltInName::roundEven,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p20B_o_20B,
+                                        BuiltInParameters::p20B00D,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpRoundEven,
@@ -6990,7 +6990,7 @@ constexpr const TFunction roundEven_20B(BuiltInId::roundEven_Float3,
 constexpr const TFunction roundEven_30B(BuiltInId::roundEven_Float4,
                                         BuiltInName::roundEven,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p30B20B,
+                                        BuiltInParameters::p30B10B,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                         EOpRoundEven,
@@ -6998,7 +6998,7 @@ constexpr const TFunction roundEven_30B(BuiltInId::roundEven_Float4,
 constexpr const TFunction roundEven_00C(BuiltInId::roundEven_Double1,
                                         BuiltInName::roundEven,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p00C20C,
+                                        BuiltInParameters::p00C00C10C,
                                         1,
                                         StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpRoundEven,
@@ -7006,7 +7006,7 @@ constexpr const TFunction roundEven_00C(BuiltInId::roundEven_Double1,
 constexpr const TFunction roundEven_10C(BuiltInId::roundEven_Double2,
                                         BuiltInName::roundEven,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p10C_o_10D,
+                                        BuiltInParameters::p10C10D,
                                         1,
                                         StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpRoundEven,
@@ -7014,7 +7014,7 @@ constexpr const TFunction roundEven_10C(BuiltInId::roundEven_Double2,
 constexpr const TFunction roundEven_20C(BuiltInId::roundEven_Double3,
                                         BuiltInName::roundEven,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p20C_o_20C,
+                                        BuiltInParameters::p20C00C00C,
                                         1,
                                         StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpRoundEven,
@@ -7022,7 +7022,7 @@ constexpr const TFunction roundEven_20C(BuiltInId::roundEven_Double3,
 constexpr const TFunction roundEven_30C(BuiltInId::roundEven_Double4,
                                         BuiltInName::roundEven,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p30C_o_30D,
+                                        BuiltInParameters::p30C00C00C,
                                         1,
                                         StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                         EOpRoundEven,
@@ -7030,7 +7030,7 @@ constexpr const TFunction roundEven_30C(BuiltInId::roundEven_Double4,
 constexpr const TFunction ceil_00B(BuiltInId::ceil_Float1,
                                    BuiltInName::ceil,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpCeil,
@@ -7038,7 +7038,7 @@ constexpr const TFunction ceil_00B(BuiltInId::ceil_Float1,
 constexpr const TFunction ceil_10B(BuiltInId::ceil_Float2,
                                    BuiltInName::ceil,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpCeil,
@@ -7046,7 +7046,7 @@ constexpr const TFunction ceil_10B(BuiltInId::ceil_Float2,
 constexpr const TFunction ceil_20B(BuiltInId::ceil_Float3,
                                    BuiltInName::ceil,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpCeil,
@@ -7054,7 +7054,7 @@ constexpr const TFunction ceil_20B(BuiltInId::ceil_Float3,
 constexpr const TFunction ceil_30B(BuiltInId::ceil_Float4,
                                    BuiltInName::ceil,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpCeil,
@@ -7062,7 +7062,7 @@ constexpr const TFunction ceil_30B(BuiltInId::ceil_Float4,
 constexpr const TFunction ceil_00C(BuiltInId::ceil_Double1,
                                    BuiltInName::ceil,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00C20C,
+                                   BuiltInParameters::p00C00C10C,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpCeil,
@@ -7070,7 +7070,7 @@ constexpr const TFunction ceil_00C(BuiltInId::ceil_Double1,
 constexpr const TFunction ceil_10C(BuiltInId::ceil_Double2,
                                    BuiltInName::ceil,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10C_o_10D,
+                                   BuiltInParameters::p10C10D,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpCeil,
@@ -7078,7 +7078,7 @@ constexpr const TFunction ceil_10C(BuiltInId::ceil_Double2,
 constexpr const TFunction ceil_20C(BuiltInId::ceil_Double3,
                                    BuiltInName::ceil,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20C_o_20C,
+                                   BuiltInParameters::p20C00C00C,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpCeil,
@@ -7086,7 +7086,7 @@ constexpr const TFunction ceil_20C(BuiltInId::ceil_Double3,
 constexpr const TFunction ceil_30C(BuiltInId::ceil_Double4,
                                    BuiltInName::ceil,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30C_o_30D,
+                                   BuiltInParameters::p30C00C00C,
                                    1,
                                    StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpCeil,
@@ -7094,7 +7094,7 @@ constexpr const TFunction ceil_30C(BuiltInId::ceil_Double4,
 constexpr const TFunction fract_00B(BuiltInId::fract_Float1,
                                     BuiltInName::fract,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00B00D,
+                                    BuiltInParameters::p00B_o_00B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpFract,
@@ -7102,7 +7102,7 @@ constexpr const TFunction fract_00B(BuiltInId::fract_Float1,
 constexpr const TFunction fract_10B(BuiltInId::fract_Float2,
                                     BuiltInName::fract,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10B_o_10B,
+                                    BuiltInParameters::p10B10D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpFract,
@@ -7110,7 +7110,7 @@ constexpr const TFunction fract_10B(BuiltInId::fract_Float2,
 constexpr const TFunction fract_20B(BuiltInId::fract_Float3,
                                     BuiltInName::fract,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20B_o_20B,
+                                    BuiltInParameters::p20B00D,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpFract,
@@ -7118,7 +7118,7 @@ constexpr const TFunction fract_20B(BuiltInId::fract_Float3,
 constexpr const TFunction fract_30B(BuiltInId::fract_Float4,
                                     BuiltInName::fract,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30B20B,
+                                    BuiltInParameters::p30B10B,
                                     1,
                                     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpFract,
@@ -7126,7 +7126,7 @@ constexpr const TFunction fract_30B(BuiltInId::fract_Float4,
 constexpr const TFunction fract_00C(BuiltInId::fract_Double1,
                                     BuiltInName::fract,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00C20C,
+                                    BuiltInParameters::p00C00C10C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpFract,
@@ -7134,7 +7134,7 @@ constexpr const TFunction fract_00C(BuiltInId::fract_Double1,
 constexpr const TFunction fract_10C(BuiltInId::fract_Double2,
                                     BuiltInName::fract,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10C_o_10D,
+                                    BuiltInParameters::p10C10D,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpFract,
@@ -7142,7 +7142,7 @@ constexpr const TFunction fract_10C(BuiltInId::fract_Double2,
 constexpr const TFunction fract_20C(BuiltInId::fract_Double3,
                                     BuiltInName::fract,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20C_o_20C,
+                                    BuiltInParameters::p20C00C00C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpFract,
@@ -7150,7 +7150,7 @@ constexpr const TFunction fract_20C(BuiltInId::fract_Double3,
 constexpr const TFunction fract_30C(BuiltInId::fract_Double4,
                                     BuiltInName::fract,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30C_o_30D,
+                                    BuiltInParameters::p30C00C00C,
                                     1,
                                     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpFract,
@@ -7158,7 +7158,7 @@ constexpr const TFunction fract_30C(BuiltInId::fract_Double4,
 constexpr const TFunction mod_00B00B(BuiltInId::mod_Float1_Float1,
                                      BuiltInName::mod,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00B10B,
+                                     BuiltInParameters::p00B00B30B,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpMod,
@@ -7190,7 +7190,7 @@ constexpr const TFunction mod_30B00B(BuiltInId::mod_Float4_Float1,
 constexpr const TFunction mod_10B10B(BuiltInId::mod_Float2_Float2,
                                      BuiltInName::mod,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B10B10F,
+                                     BuiltInParameters::p10B10B10B,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpMod,
@@ -7206,7 +7206,7 @@ constexpr const TFunction mod_20B20B(BuiltInId::mod_Float3_Float3,
 constexpr const TFunction mod_30B30B(BuiltInId::mod_Float4_Float4,
                                      BuiltInName::mod,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B30B30B,
+                                     BuiltInParameters::p30B30B30F,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpMod,
@@ -7214,7 +7214,7 @@ constexpr const TFunction mod_30B30B(BuiltInId::mod_Float4_Float4,
 constexpr const TFunction mod_00C00C(BuiltInId::mod_Double1_Double1,
                                      BuiltInName::mod,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00C00C20C,
+                                     BuiltInParameters::p00C00C10C,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpMod,
@@ -7246,7 +7246,7 @@ constexpr const TFunction mod_30C00C(BuiltInId::mod_Double4_Double1,
 constexpr const TFunction mod_10C10C(BuiltInId::mod_Double2_Double2,
                                      BuiltInName::mod,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10C10C10C,
+                                     BuiltInParameters::p10C10C00B,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpMod,
@@ -7254,7 +7254,7 @@ constexpr const TFunction mod_10C10C(BuiltInId::mod_Double2_Double2,
 constexpr const TFunction mod_20C20C(BuiltInId::mod_Double3_Double3,
                                      BuiltInName::mod,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20C20C20F,
+                                     BuiltInParameters::p20C20C00C,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpMod,
@@ -7262,7 +7262,7 @@ constexpr const TFunction mod_20C20C(BuiltInId::mod_Double3_Double3,
 constexpr const TFunction mod_30C30C(BuiltInId::mod_Double4_Double4,
                                      BuiltInName::mod,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30C30C30C,
+                                     BuiltInParameters::p30C30C00B,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpMod,
@@ -7270,7 +7270,7 @@ constexpr const TFunction mod_30C30C(BuiltInId::mod_Double4_Double4,
 constexpr const TFunction min_00B00B(BuiltInId::min_Float1_Float1,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00B10B,
+                                     BuiltInParameters::p00B00B30B,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpMin,
@@ -7302,7 +7302,7 @@ constexpr const TFunction min_30B00B(BuiltInId::min_Float4_Float1,
 constexpr const TFunction min_10B10B(BuiltInId::min_Float2_Float2,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B10B10F,
+                                     BuiltInParameters::p10B10B10B,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpMin,
@@ -7318,7 +7318,7 @@ constexpr const TFunction min_20B20B(BuiltInId::min_Float3_Float3,
 constexpr const TFunction min_30B30B(BuiltInId::min_Float4_Float4,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B30B30B,
+                                     BuiltInParameters::p30B30B30F,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpMin,
@@ -7326,7 +7326,7 @@ constexpr const TFunction min_30B30B(BuiltInId::min_Float4_Float4,
 constexpr const TFunction min_00C00C(BuiltInId::min_Double1_Double1,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00C00C20C,
+                                     BuiltInParameters::p00C00C10C,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpMin,
@@ -7334,7 +7334,7 @@ constexpr const TFunction min_00C00C(BuiltInId::min_Double1_Double1,
 constexpr const TFunction min_10C10C(BuiltInId::min_Double2_Double2,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10C10C10C,
+                                     BuiltInParameters::p10C10C00B,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpMin,
@@ -7342,7 +7342,7 @@ constexpr const TFunction min_10C10C(BuiltInId::min_Double2_Double2,
 constexpr const TFunction min_20C20C(BuiltInId::min_Double3_Double3,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20C20C20F,
+                                     BuiltInParameters::p20C20C00C,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpMin,
@@ -7350,7 +7350,7 @@ constexpr const TFunction min_20C20C(BuiltInId::min_Double3_Double3,
 constexpr const TFunction min_30C30C(BuiltInId::min_Double4_Double4,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30C30C30C,
+                                     BuiltInParameters::p30C30C00B,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpMin,
@@ -7382,7 +7382,7 @@ constexpr const TFunction min_30C00C(BuiltInId::min_Double4_Double1,
 constexpr const TFunction min_00D00D(BuiltInId::min_Int1_Int1,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00D00D_o_00D_o_00D,
+                                     BuiltInParameters::p00D00D00D00D,
                                      2,
                                      StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpMin,
@@ -7390,7 +7390,7 @@ constexpr const TFunction min_00D00D(BuiltInId::min_Int1_Int1,
 constexpr const TFunction min_10D10D(BuiltInId::min_Int2_Int2,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10D10D00D00D,
+                                     BuiltInParameters::p10D10D10D,
                                      2,
                                      StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpMin,
@@ -7438,7 +7438,7 @@ constexpr const TFunction min_30D00D(BuiltInId::min_Int4_Int1,
 constexpr const TFunction min_00E00E(BuiltInId::min_UInt1_UInt1,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00E00E00F,
+                                     BuiltInParameters::p00E00E_o_00E_o_00E,
                                      2,
                                      StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpMin,
@@ -7454,7 +7454,7 @@ constexpr const TFunction min_10E10E(BuiltInId::min_UInt2_UInt2,
 constexpr const TFunction min_20E20E(BuiltInId::min_UInt3_UInt3,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20E20E00D00D,
+                                     BuiltInParameters::p20E20E20E,
                                      2,
                                      StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpMin,
@@ -7462,7 +7462,7 @@ constexpr const TFunction min_20E20E(BuiltInId::min_UInt3_UInt3,
 constexpr const TFunction min_30E30E(BuiltInId::min_UInt4_UInt4,
                                      BuiltInName::min,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30E30E_o_30E_o_30E,
+                                     BuiltInParameters::p30E30E30F,
                                      2,
                                      StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpMin,
@@ -7494,7 +7494,7 @@ constexpr const TFunction min_30E00E(BuiltInId::min_UInt4_UInt1,
 constexpr const TFunction max_00B00B(BuiltInId::max_Float1_Float1,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00B10B,
+                                     BuiltInParameters::p00B00B30B,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpMax,
@@ -7526,7 +7526,7 @@ constexpr const TFunction max_30B00B(BuiltInId::max_Float4_Float1,
 constexpr const TFunction max_10B10B(BuiltInId::max_Float2_Float2,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B10B10F,
+                                     BuiltInParameters::p10B10B10B,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpMax,
@@ -7542,7 +7542,7 @@ constexpr const TFunction max_20B20B(BuiltInId::max_Float3_Float3,
 constexpr const TFunction max_30B30B(BuiltInId::max_Float4_Float4,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B30B30B,
+                                     BuiltInParameters::p30B30B30F,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpMax,
@@ -7550,7 +7550,7 @@ constexpr const TFunction max_30B30B(BuiltInId::max_Float4_Float4,
 constexpr const TFunction max_00C00C(BuiltInId::max_Double1_Double1,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00C00C20C,
+                                     BuiltInParameters::p00C00C10C,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpMax,
@@ -7558,7 +7558,7 @@ constexpr const TFunction max_00C00C(BuiltInId::max_Double1_Double1,
 constexpr const TFunction max_10C10C(BuiltInId::max_Double2_Double2,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10C10C10C,
+                                     BuiltInParameters::p10C10C00B,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpMax,
@@ -7566,7 +7566,7 @@ constexpr const TFunction max_10C10C(BuiltInId::max_Double2_Double2,
 constexpr const TFunction max_20C20C(BuiltInId::max_Double3_Double3,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20C20C20F,
+                                     BuiltInParameters::p20C20C00C,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpMax,
@@ -7574,7 +7574,7 @@ constexpr const TFunction max_20C20C(BuiltInId::max_Double3_Double3,
 constexpr const TFunction max_30C30C(BuiltInId::max_Double4_Double4,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30C30C30C,
+                                     BuiltInParameters::p30C30C00B,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpMax,
@@ -7606,7 +7606,7 @@ constexpr const TFunction max_30C00C(BuiltInId::max_Double4_Double1,
 constexpr const TFunction max_00D00D(BuiltInId::max_Int1_Int1,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00D00D_o_00D_o_00D,
+                                     BuiltInParameters::p00D00D00D00D,
                                      2,
                                      StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpMax,
@@ -7614,7 +7614,7 @@ constexpr const TFunction max_00D00D(BuiltInId::max_Int1_Int1,
 constexpr const TFunction max_10D10D(BuiltInId::max_Int2_Int2,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10D10D00D00D,
+                                     BuiltInParameters::p10D10D10D,
                                      2,
                                      StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpMax,
@@ -7662,7 +7662,7 @@ constexpr const TFunction max_30D00D(BuiltInId::max_Int4_Int1,
 constexpr const TFunction max_00E00E(BuiltInId::max_UInt1_UInt1,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00E00E00F,
+                                     BuiltInParameters::p00E00E_o_00E_o_00E,
                                      2,
                                      StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpMax,
@@ -7678,7 +7678,7 @@ constexpr const TFunction max_10E10E(BuiltInId::max_UInt2_UInt2,
 constexpr const TFunction max_20E20E(BuiltInId::max_UInt3_UInt3,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20E20E00D00D,
+                                     BuiltInParameters::p20E20E20E,
                                      2,
                                      StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpMax,
@@ -7686,7 +7686,7 @@ constexpr const TFunction max_20E20E(BuiltInId::max_UInt3_UInt3,
 constexpr const TFunction max_30E30E(BuiltInId::max_UInt4_UInt4,
                                      BuiltInName::max,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30E30E_o_30E_o_30E,
+                                     BuiltInParameters::p30E30E30F,
                                      2,
                                      StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpMax,
@@ -8228,7 +8228,7 @@ constexpr const TFunction mix_30F30F30F(BuiltInId::mix_Bool4_Bool4_Bool4,
 constexpr const TFunction step_00B00B(BuiltInId::step_Float1_Float1,
                                       BuiltInName::step,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p00B00B10B,
+                                      BuiltInParameters::p00B00B30B,
                                       2,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpStep,
@@ -8236,7 +8236,7 @@ constexpr const TFunction step_00B00B(BuiltInId::step_Float1_Float1,
 constexpr const TFunction step_10B10B(BuiltInId::step_Float2_Float2,
                                       BuiltInName::step,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p10B10B10F,
+                                      BuiltInParameters::p10B10B10B,
                                       2,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpStep,
@@ -8252,7 +8252,7 @@ constexpr const TFunction step_20B20B(BuiltInId::step_Float3_Float3,
 constexpr const TFunction step_30B30B(BuiltInId::step_Float4_Float4,
                                       BuiltInName::step,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p30B30B30B,
+                                      BuiltInParameters::p30B30B30F,
                                       2,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpStep,
@@ -8284,7 +8284,7 @@ constexpr const TFunction step_00B30B(BuiltInId::step_Float1_Float4,
 constexpr const TFunction step_00C00C(BuiltInId::step_Double1_Double1,
                                       BuiltInName::step,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p00C00C20C,
+                                      BuiltInParameters::p00C00C10C,
                                       2,
                                       StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpStep,
@@ -8292,7 +8292,7 @@ constexpr const TFunction step_00C00C(BuiltInId::step_Double1_Double1,
 constexpr const TFunction step_10C10C(BuiltInId::step_Double2_Double2,
                                       BuiltInName::step,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p10C10C10C,
+                                      BuiltInParameters::p10C10C00B,
                                       2,
                                       StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpStep,
@@ -8300,7 +8300,7 @@ constexpr const TFunction step_10C10C(BuiltInId::step_Double2_Double2,
 constexpr const TFunction step_20C20C(BuiltInId::step_Double3_Double3,
                                       BuiltInName::step,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p20C20C20F,
+                                      BuiltInParameters::p20C20C00C,
                                       2,
                                       StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                       EOpStep,
@@ -8308,7 +8308,7 @@ constexpr const TFunction step_20C20C(BuiltInId::step_Double3_Double3,
 constexpr const TFunction step_30C30C(BuiltInId::step_Double4_Double4,
                                       BuiltInName::step,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p30C30C30C,
+                                      BuiltInParameters::p30C30C00B,
                                       2,
                                       StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpStep,
@@ -8530,7 +8530,7 @@ constexpr const TFunction modf_30C30C(BuiltInId::modf_Double4_Double4,
 constexpr const TFunction isnan_00B(BuiltInId::isnan_Float1,
                                     BuiltInName::isnan,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00B00D,
+                                    BuiltInParameters::p00B_o_00B,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpIsnan,
@@ -8538,7 +8538,7 @@ constexpr const TFunction isnan_00B(BuiltInId::isnan_Float1,
 constexpr const TFunction isnan_10B(BuiltInId::isnan_Float2,
                                     BuiltInName::isnan,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10B_o_10B,
+                                    BuiltInParameters::p10B10D,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpIsnan,
@@ -8546,7 +8546,7 @@ constexpr const TFunction isnan_10B(BuiltInId::isnan_Float2,
 constexpr const TFunction isnan_20B(BuiltInId::isnan_Float3,
                                     BuiltInName::isnan,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20B_o_20B,
+                                    BuiltInParameters::p20B00D,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpIsnan,
@@ -8554,7 +8554,7 @@ constexpr const TFunction isnan_20B(BuiltInId::isnan_Float3,
 constexpr const TFunction isnan_30B(BuiltInId::isnan_Float4,
                                     BuiltInName::isnan,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30B20B,
+                                    BuiltInParameters::p30B10B,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpIsnan,
@@ -8562,7 +8562,7 @@ constexpr const TFunction isnan_30B(BuiltInId::isnan_Float4,
 constexpr const TFunction isnan_00C(BuiltInId::isnan_Double1,
                                     BuiltInName::isnan,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00C20C,
+                                    BuiltInParameters::p00C00C10C,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpIsnan,
@@ -8570,7 +8570,7 @@ constexpr const TFunction isnan_00C(BuiltInId::isnan_Double1,
 constexpr const TFunction isnan_10C(BuiltInId::isnan_Double2,
                                     BuiltInName::isnan,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10C_o_10D,
+                                    BuiltInParameters::p10C10D,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpIsnan,
@@ -8578,7 +8578,7 @@ constexpr const TFunction isnan_10C(BuiltInId::isnan_Double2,
 constexpr const TFunction isnan_20C(BuiltInId::isnan_Double3,
                                     BuiltInName::isnan,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20C_o_20C,
+                                    BuiltInParameters::p20C00C00C,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpIsnan,
@@ -8586,7 +8586,7 @@ constexpr const TFunction isnan_20C(BuiltInId::isnan_Double3,
 constexpr const TFunction isnan_30C(BuiltInId::isnan_Double4,
                                     BuiltInName::isnan,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30C_o_30D,
+                                    BuiltInParameters::p30C00C00C,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpIsnan,
@@ -8594,7 +8594,7 @@ constexpr const TFunction isnan_30C(BuiltInId::isnan_Double4,
 constexpr const TFunction isinf_00B(BuiltInId::isinf_Float1,
                                     BuiltInName::isinf,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00B00D,
+                                    BuiltInParameters::p00B_o_00B,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpIsinf,
@@ -8602,7 +8602,7 @@ constexpr const TFunction isinf_00B(BuiltInId::isinf_Float1,
 constexpr const TFunction isinf_10B(BuiltInId::isinf_Float2,
                                     BuiltInName::isinf,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10B_o_10B,
+                                    BuiltInParameters::p10B10D,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpIsinf,
@@ -8610,7 +8610,7 @@ constexpr const TFunction isinf_10B(BuiltInId::isinf_Float2,
 constexpr const TFunction isinf_20B(BuiltInId::isinf_Float3,
                                     BuiltInName::isinf,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20B_o_20B,
+                                    BuiltInParameters::p20B00D,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpIsinf,
@@ -8618,7 +8618,7 @@ constexpr const TFunction isinf_20B(BuiltInId::isinf_Float3,
 constexpr const TFunction isinf_30B(BuiltInId::isinf_Float4,
                                     BuiltInName::isinf,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30B20B,
+                                    BuiltInParameters::p30B10B,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpIsinf,
@@ -8626,7 +8626,7 @@ constexpr const TFunction isinf_30B(BuiltInId::isinf_Float4,
 constexpr const TFunction isinf_00C(BuiltInId::isinf_Double1,
                                     BuiltInName::isinf,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p00C20C,
+                                    BuiltInParameters::p00C00C10C,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
                                     EOpIsinf,
@@ -8634,7 +8634,7 @@ constexpr const TFunction isinf_00C(BuiltInId::isinf_Double1,
 constexpr const TFunction isinf_10C(BuiltInId::isinf_Double2,
                                     BuiltInName::isinf,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p10C_o_10D,
+                                    BuiltInParameters::p10C10D,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
                                     EOpIsinf,
@@ -8642,7 +8642,7 @@ constexpr const TFunction isinf_10C(BuiltInId::isinf_Double2,
 constexpr const TFunction isinf_20C(BuiltInId::isinf_Double3,
                                     BuiltInName::isinf,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p20C_o_20C,
+                                    BuiltInParameters::p20C00C00C,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
                                     EOpIsinf,
@@ -8650,7 +8650,7 @@ constexpr const TFunction isinf_20C(BuiltInId::isinf_Double3,
 constexpr const TFunction isinf_30C(BuiltInId::isinf_Double4,
                                     BuiltInName::isinf,
                                     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                    BuiltInParameters::p30C_o_30D,
+                                    BuiltInParameters::p30C00C00C,
                                     1,
                                     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                     EOpIsinf,
@@ -8659,7 +8659,7 @@ constexpr const TFunction floatBitsToInt_00B(
     BuiltInId::floatBitsToInt_Float1,
     BuiltInName::floatBitsToInt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00B00D,
+    BuiltInParameters::p00B_o_00B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpFloatBitsToInt,
@@ -8668,7 +8668,7 @@ constexpr const TFunction floatBitsToInt_10B(
     BuiltInId::floatBitsToInt_Float2,
     BuiltInName::floatBitsToInt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B_o_10B,
+    BuiltInParameters::p10B10D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpFloatBitsToInt,
@@ -8677,7 +8677,7 @@ constexpr const TFunction floatBitsToInt_20B(
     BuiltInId::floatBitsToInt_Float3,
     BuiltInName::floatBitsToInt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20B_o_20B,
+    BuiltInParameters::p20B00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpFloatBitsToInt,
@@ -8686,7 +8686,7 @@ constexpr const TFunction floatBitsToInt_30B(
     BuiltInId::floatBitsToInt_Float4,
     BuiltInName::floatBitsToInt,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B20B,
+    BuiltInParameters::p30B10B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpFloatBitsToInt,
@@ -8695,7 +8695,7 @@ constexpr const TFunction floatBitsToUint_00B(
     BuiltInId::floatBitsToUint_Float1,
     BuiltInName::floatBitsToUint,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00B00D,
+    BuiltInParameters::p00B_o_00B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpFloatBitsToUint,
@@ -8704,7 +8704,7 @@ constexpr const TFunction floatBitsToUint_10B(
     BuiltInId::floatBitsToUint_Float2,
     BuiltInName::floatBitsToUint,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B_o_10B,
+    BuiltInParameters::p10B10D,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpFloatBitsToUint,
@@ -8713,7 +8713,7 @@ constexpr const TFunction floatBitsToUint_20B(
     BuiltInId::floatBitsToUint_Float3,
     BuiltInName::floatBitsToUint,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20B_o_20B,
+    BuiltInParameters::p20B00D,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpFloatBitsToUint,
@@ -8722,7 +8722,7 @@ constexpr const TFunction floatBitsToUint_30B(
     BuiltInId::floatBitsToUint_Float4,
     BuiltInName::floatBitsToUint,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B20B,
+    BuiltInParameters::p30B10B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpFloatBitsToUint,
@@ -8731,7 +8731,7 @@ constexpr const TFunction intBitsToFloat_00D(
     BuiltInId::intBitsToFloat_Int1,
     BuiltInName::intBitsToFloat,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00D00D_o_00D_o_00D,
+    BuiltInParameters::p00D00D00D00D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpIntBitsToFloat,
@@ -8740,7 +8740,7 @@ constexpr const TFunction intBitsToFloat_10D(
     BuiltInId::intBitsToFloat_Int2,
     BuiltInName::intBitsToFloat,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10D10D00D00D,
+    BuiltInParameters::p10D10D10D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpIntBitsToFloat,
@@ -8767,7 +8767,7 @@ constexpr const TFunction uintBitsToFloat_00E(
     BuiltInId::uintBitsToFloat_UInt1,
     BuiltInName::uintBitsToFloat,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00E00E00F,
+    BuiltInParameters::p00E00E_o_00E_o_00E,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpUintBitsToFloat,
@@ -8785,7 +8785,7 @@ constexpr const TFunction uintBitsToFloat_20E(
     BuiltInId::uintBitsToFloat_UInt3,
     BuiltInName::uintBitsToFloat,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20E20E00D00D,
+    BuiltInParameters::p20E00E00E,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpUintBitsToFloat,
@@ -8794,7 +8794,7 @@ constexpr const TFunction uintBitsToFloat_30E(
     BuiltInId::uintBitsToFloat_UInt4,
     BuiltInName::uintBitsToFloat,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30E30E_o_30E_o_30E,
+    BuiltInParameters::p30E30E30F,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpUintBitsToFloat,
@@ -9031,7 +9031,7 @@ constexpr const TFunction packSnorm2x16_10B(
     BuiltInId::packSnorm2x16_Float2,
     BuiltInName::packSnorm2x16,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B_o_10B,
+    BuiltInParameters::p10B10D,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpPackSnorm2x16,
@@ -9040,7 +9040,7 @@ constexpr const TFunction packHalf2x16_10B(
     BuiltInId::packHalf2x16_Float2,
     BuiltInName::packHalf2x16,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B_o_10B,
+    BuiltInParameters::p10B10D,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpPackHalf2x16,
@@ -9049,7 +9049,7 @@ constexpr const TFunction unpackSnorm2x16_00E(
     BuiltInId::unpackSnorm2x16_UInt1,
     BuiltInName::unpackSnorm2x16,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00E00E00F,
+    BuiltInParameters::p00E00E_o_00E_o_00E,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpUnpackSnorm2x16,
@@ -9058,7 +9058,7 @@ constexpr const TFunction unpackHalf2x16_00E(
     BuiltInId::unpackHalf2x16_UInt1,
     BuiltInName::unpackHalf2x16,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00E00E00F,
+    BuiltInParameters::p00E00E_o_00E_o_00E,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpUnpackHalf2x16,
@@ -9067,7 +9067,7 @@ constexpr const TFunction packUnorm2x16_10B(
     BuiltInId::packUnorm2x16_Float2,
     BuiltInName::packUnorm2x16,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B_o_10B,
+    BuiltInParameters::p10B10D,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpPackUnorm2x16,
@@ -9076,7 +9076,7 @@ constexpr const TFunction unpackUnorm2x16_00E(
     BuiltInId::unpackUnorm2x16_UInt1,
     BuiltInName::unpackUnorm2x16,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00E00E00F,
+    BuiltInParameters::p00E00E_o_00E_o_00E,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpUnpackUnorm2x16,
@@ -9085,7 +9085,7 @@ constexpr const TFunction packUnorm4x8_30B(
     BuiltInId::packUnorm4x8_Float4,
     BuiltInName::packUnorm4x8,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B20B,
+    BuiltInParameters::p30B10B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpPackUnorm4x8,
@@ -9094,7 +9094,7 @@ constexpr const TFunction packSnorm4x8_30B(
     BuiltInId::packSnorm4x8_Float4,
     BuiltInName::packSnorm4x8,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B20B,
+    BuiltInParameters::p30B10B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpPackSnorm4x8,
@@ -9103,7 +9103,7 @@ constexpr const TFunction unpackUnorm4x8_00E(
     BuiltInId::unpackUnorm4x8_UInt1,
     BuiltInName::unpackUnorm4x8,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00E00E00F,
+    BuiltInParameters::p00E00E_o_00E_o_00E,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpUnpackUnorm4x8,
@@ -9112,7 +9112,7 @@ constexpr const TFunction unpackSnorm4x8_00E(
     BuiltInId::unpackSnorm4x8_UInt1,
     BuiltInName::unpackSnorm4x8,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00E00E00F,
+    BuiltInParameters::p00E00E_o_00E_o_00E,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpUnpackSnorm4x8,
@@ -9130,7 +9130,7 @@ constexpr const TFunction unpackDouble2x32_00C(
     BuiltInId::unpackDouble2x32_Double1,
     BuiltInName::unpackDouble2x32,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00C20C,
+    BuiltInParameters::p00C00C10C,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpUnpackDouble2x32,
@@ -9138,7 +9138,7 @@ constexpr const TFunction unpackDouble2x32_00C(
 constexpr const TFunction length_00B(BuiltInId::length_Float1,
                                      BuiltInName::length,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00D,
+                                     BuiltInParameters::p00B_o_00B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpLength,
@@ -9146,7 +9146,7 @@ constexpr const TFunction length_00B(BuiltInId::length_Float1,
 constexpr const TFunction length_10B(BuiltInId::length_Float2,
                                      BuiltInName::length,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B_o_10B,
+                                     BuiltInParameters::p10B10D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpLength,
@@ -9154,7 +9154,7 @@ constexpr const TFunction length_10B(BuiltInId::length_Float2,
 constexpr const TFunction length_20B(BuiltInId::length_Float3,
                                      BuiltInName::length,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20B_o_20B,
+                                     BuiltInParameters::p20B00D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpLength,
@@ -9162,7 +9162,7 @@ constexpr const TFunction length_20B(BuiltInId::length_Float3,
 constexpr const TFunction length_30B(BuiltInId::length_Float4,
                                      BuiltInName::length,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B20B,
+                                     BuiltInParameters::p30B10B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpLength,
@@ -9170,7 +9170,7 @@ constexpr const TFunction length_30B(BuiltInId::length_Float4,
 constexpr const TFunction length_00C(BuiltInId::length_Double1,
                                      BuiltInName::length,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00C20C,
+                                     BuiltInParameters::p00C00C10C,
                                      1,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpLength,
@@ -9178,7 +9178,7 @@ constexpr const TFunction length_00C(BuiltInId::length_Double1,
 constexpr const TFunction length_10C(BuiltInId::length_Double2,
                                      BuiltInName::length,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10C_o_10D,
+                                     BuiltInParameters::p10C10D,
                                      1,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpLength,
@@ -9186,7 +9186,7 @@ constexpr const TFunction length_10C(BuiltInId::length_Double2,
 constexpr const TFunction length_20C(BuiltInId::length_Double3,
                                      BuiltInName::length,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20C_o_20C,
+                                     BuiltInParameters::p20C00C00C,
                                      1,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpLength,
@@ -9194,7 +9194,7 @@ constexpr const TFunction length_20C(BuiltInId::length_Double3,
 constexpr const TFunction length_30C(BuiltInId::length_Double4,
                                      BuiltInName::length,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30C_o_30D,
+                                     BuiltInParameters::p30C00C00C,
                                      1,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpLength,
@@ -9203,7 +9203,7 @@ constexpr const TFunction distance_00B00B(
     BuiltInId::distance_Float1_Float1,
     BuiltInName::distance,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00B00B10B,
+    BuiltInParameters::p00B00B30B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpDistance,
@@ -9212,7 +9212,7 @@ constexpr const TFunction distance_10B10B(
     BuiltInId::distance_Float2_Float2,
     BuiltInName::distance,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B10B10F,
+    BuiltInParameters::p10B10B10B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpDistance,
@@ -9230,7 +9230,7 @@ constexpr const TFunction distance_30B30B(
     BuiltInId::distance_Float4_Float4,
     BuiltInName::distance,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B30B30B,
+    BuiltInParameters::p30B30B30F,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpDistance,
@@ -9239,7 +9239,7 @@ constexpr const TFunction distance_00C00C(
     BuiltInId::distance_Double1_Double1,
     BuiltInName::distance,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00C00C20C,
+    BuiltInParameters::p00C00C10C,
     2,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpDistance,
@@ -9248,7 +9248,7 @@ constexpr const TFunction distance_10C10C(
     BuiltInId::distance_Double2_Double2,
     BuiltInName::distance,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10C10C10C,
+    BuiltInParameters::p10C10C00B,
     2,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpDistance,
@@ -9257,7 +9257,7 @@ constexpr const TFunction distance_20C20C(
     BuiltInId::distance_Double3_Double3,
     BuiltInName::distance,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20C20C20F,
+    BuiltInParameters::p20C20C00C,
     2,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpDistance,
@@ -9266,7 +9266,7 @@ constexpr const TFunction distance_30C30C(
     BuiltInId::distance_Double4_Double4,
     BuiltInName::distance,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30C30C30C,
+    BuiltInParameters::p30C30C00B,
     2,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpDistance,
@@ -9274,7 +9274,7 @@ constexpr const TFunction distance_30C30C(
 constexpr const TFunction dot_00B00B(BuiltInId::dot_Float1_Float1,
                                      BuiltInName::dot,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00B10B,
+                                     BuiltInParameters::p00B00B30B,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpDot,
@@ -9282,7 +9282,7 @@ constexpr const TFunction dot_00B00B(BuiltInId::dot_Float1_Float1,
 constexpr const TFunction dot_10B10B(BuiltInId::dot_Float2_Float2,
                                      BuiltInName::dot,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B10B10F,
+                                     BuiltInParameters::p10B10B10B,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpDot,
@@ -9298,7 +9298,7 @@ constexpr const TFunction dot_20B20B(BuiltInId::dot_Float3_Float3,
 constexpr const TFunction dot_30B30B(BuiltInId::dot_Float4_Float4,
                                      BuiltInName::dot,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B30B30B,
+                                     BuiltInParameters::p30B30B30F,
                                      2,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpDot,
@@ -9306,7 +9306,7 @@ constexpr const TFunction dot_30B30B(BuiltInId::dot_Float4_Float4,
 constexpr const TFunction dot_00C00C(BuiltInId::dot_Double1_Double1,
                                      BuiltInName::dot,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00C00C20C,
+                                     BuiltInParameters::p00C00C10C,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpDot,
@@ -9314,7 +9314,7 @@ constexpr const TFunction dot_00C00C(BuiltInId::dot_Double1_Double1,
 constexpr const TFunction dot_10C10C(BuiltInId::dot_Double2_Double2,
                                      BuiltInName::dot,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10C10C10C,
+                                     BuiltInParameters::p10C10C00B,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpDot,
@@ -9322,7 +9322,7 @@ constexpr const TFunction dot_10C10C(BuiltInId::dot_Double2_Double2,
 constexpr const TFunction dot_20C20C(BuiltInId::dot_Double3_Double3,
                                      BuiltInName::dot,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20C20C20F,
+                                     BuiltInParameters::p20C20C00C,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpDot,
@@ -9330,7 +9330,7 @@ constexpr const TFunction dot_20C20C(BuiltInId::dot_Double3_Double3,
 constexpr const TFunction dot_30C30C(BuiltInId::dot_Double4_Double4,
                                      BuiltInName::dot,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30C30C30C,
+                                     BuiltInParameters::p30C30C00B,
                                      2,
                                      StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpDot,
@@ -9346,7 +9346,7 @@ constexpr const TFunction cross_20B20B(BuiltInId::cross_Float3_Float3,
 constexpr const TFunction cross_20C20C(BuiltInId::cross_Double3_Double3,
                                        BuiltInName::cross,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p20C20C20F,
+                                       BuiltInParameters::p20C20C00C,
                                        2,
                                        StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                        EOpCross,
@@ -9354,7 +9354,7 @@ constexpr const TFunction cross_20C20C(BuiltInId::cross_Double3_Double3,
 constexpr const TFunction normalize_00B(BuiltInId::normalize_Float1,
                                         BuiltInName::normalize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p00B00D,
+                                        BuiltInParameters::p00B_o_00B,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpNormalize,
@@ -9362,7 +9362,7 @@ constexpr const TFunction normalize_00B(BuiltInId::normalize_Float1,
 constexpr const TFunction normalize_10B(BuiltInId::normalize_Float2,
                                         BuiltInName::normalize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p10B_o_10B,
+                                        BuiltInParameters::p10B10D,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpNormalize,
@@ -9370,7 +9370,7 @@ constexpr const TFunction normalize_10B(BuiltInId::normalize_Float2,
 constexpr const TFunction normalize_20B(BuiltInId::normalize_Float3,
                                         BuiltInName::normalize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p20B_o_20B,
+                                        BuiltInParameters::p20B00D,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpNormalize,
@@ -9378,7 +9378,7 @@ constexpr const TFunction normalize_20B(BuiltInId::normalize_Float3,
 constexpr const TFunction normalize_30B(BuiltInId::normalize_Float4,
                                         BuiltInName::normalize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p30B20B,
+                                        BuiltInParameters::p30B10B,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                         EOpNormalize,
@@ -9386,7 +9386,7 @@ constexpr const TFunction normalize_30B(BuiltInId::normalize_Float4,
 constexpr const TFunction normalize_00C(BuiltInId::normalize_Double1,
                                         BuiltInName::normalize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p00C20C,
+                                        BuiltInParameters::p00C00C10C,
                                         1,
                                         StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpNormalize,
@@ -9394,7 +9394,7 @@ constexpr const TFunction normalize_00C(BuiltInId::normalize_Double1,
 constexpr const TFunction normalize_10C(BuiltInId::normalize_Double2,
                                         BuiltInName::normalize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p10C_o_10D,
+                                        BuiltInParameters::p10C10D,
                                         1,
                                         StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpNormalize,
@@ -9402,7 +9402,7 @@ constexpr const TFunction normalize_10C(BuiltInId::normalize_Double2,
 constexpr const TFunction normalize_20C(BuiltInId::normalize_Double3,
                                         BuiltInName::normalize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p20C_o_20C,
+                                        BuiltInParameters::p20C00C00C,
                                         1,
                                         StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpNormalize,
@@ -9410,7 +9410,7 @@ constexpr const TFunction normalize_20C(BuiltInId::normalize_Double3,
 constexpr const TFunction normalize_30C(BuiltInId::normalize_Double4,
                                         BuiltInName::normalize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p30C_o_30D,
+                                        BuiltInParameters::p30C00C00C,
                                         1,
                                         StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
                                         EOpNormalize,
@@ -9490,7 +9490,7 @@ constexpr const TFunction faceforward_30C30C30C(
 constexpr const TFunction reflect_00B00B(BuiltInId::reflect_Float1_Float1,
                                          BuiltInName::reflect,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00B00B10B,
+                                         BuiltInParameters::p00B00B30B,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                          EOpReflect,
@@ -9498,7 +9498,7 @@ constexpr const TFunction reflect_00B00B(BuiltInId::reflect_Float1_Float1,
 constexpr const TFunction reflect_10B10B(BuiltInId::reflect_Float2_Float2,
                                          BuiltInName::reflect,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p10B10B10F,
+                                         BuiltInParameters::p10B10B10B,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                          EOpReflect,
@@ -9514,7 +9514,7 @@ constexpr const TFunction reflect_20B20B(BuiltInId::reflect_Float3_Float3,
 constexpr const TFunction reflect_30B30B(BuiltInId::reflect_Float4_Float4,
                                          BuiltInName::reflect,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p30B30B30B,
+                                         BuiltInParameters::p30B30B30F,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpReflect,
@@ -9523,7 +9523,7 @@ constexpr const TFunction reflect_00C00C(
     BuiltInId::reflect_Double1_Double1,
     BuiltInName::reflect,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00C00C20C,
+    BuiltInParameters::p00C00C10C,
     2,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpReflect,
@@ -9532,7 +9532,7 @@ constexpr const TFunction reflect_10C10C(
     BuiltInId::reflect_Double2_Double2,
     BuiltInName::reflect,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10C10C10C,
+    BuiltInParameters::p10C10C00B,
     2,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpReflect,
@@ -9541,7 +9541,7 @@ constexpr const TFunction reflect_20C20C(
     BuiltInId::reflect_Double3_Double3,
     BuiltInName::reflect,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20C20C20F,
+    BuiltInParameters::p20C20C00C,
     2,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpReflect,
@@ -9550,7 +9550,7 @@ constexpr const TFunction reflect_30C30C(
     BuiltInId::reflect_Double4_Double4,
     BuiltInName::reflect,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30C30C30C,
+    BuiltInParameters::p30C30C00B,
     2,
     StaticType::Get<EbtDouble, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpReflect,
@@ -9720,7 +9720,7 @@ constexpr const TFunction outerProduct_10B10B(
     BuiltInId::outerProduct_Float2_Float2,
     BuiltInName::outerProduct,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B10B10F,
+    BuiltInParameters::p10B10B10B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>(),
     EOpOuterProduct,
@@ -9738,7 +9738,7 @@ constexpr const TFunction outerProduct_30B30B(
     BuiltInId::outerProduct_Float4_Float4,
     BuiltInName::outerProduct,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B30B30B,
+    BuiltInParameters::p30B30B30F,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>(),
     EOpOuterProduct,
@@ -9923,7 +9923,7 @@ constexpr const TFunction inverse_F0B(BuiltInId::inverse_Float4x4,
 constexpr const TFunction lessThan_10B10B(BuiltInId::lessThan_Float2_Float2,
                                           BuiltInName::lessThan,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p10B10B10F,
+                                          BuiltInParameters::p10B10B10B,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
                                           EOpLessThanComponentWise,
@@ -9939,7 +9939,7 @@ constexpr const TFunction lessThan_20B20B(BuiltInId::lessThan_Float3_Float3,
 constexpr const TFunction lessThan_30B30B(BuiltInId::lessThan_Float4_Float4,
                                           BuiltInName::lessThan,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p30B30B30B,
+                                          BuiltInParameters::p30B30B30F,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                           EOpLessThanComponentWise,
@@ -9947,7 +9947,7 @@ constexpr const TFunction lessThan_30B30B(BuiltInId::lessThan_Float4_Float4,
 constexpr const TFunction lessThan_10D10D(BuiltInId::lessThan_Int2_Int2,
                                           BuiltInName::lessThan,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p10D10D00D00D,
+                                          BuiltInParameters::p10D10D10D,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
                                           EOpLessThanComponentWise,
@@ -9979,7 +9979,7 @@ constexpr const TFunction lessThan_10E10E(BuiltInId::lessThan_UInt2_UInt2,
 constexpr const TFunction lessThan_20E20E(BuiltInId::lessThan_UInt3_UInt3,
                                           BuiltInName::lessThan,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p20E20E00D00D,
+                                          BuiltInParameters::p20E20E20E,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
                                           EOpLessThanComponentWise,
@@ -9987,7 +9987,7 @@ constexpr const TFunction lessThan_20E20E(BuiltInId::lessThan_UInt3_UInt3,
 constexpr const TFunction lessThan_30E30E(BuiltInId::lessThan_UInt4_UInt4,
                                           BuiltInName::lessThan,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p30E30E_o_30E_o_30E,
+                                          BuiltInParameters::p30E30E30F,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                           EOpLessThanComponentWise,
@@ -9996,7 +9996,7 @@ constexpr const TFunction lessThanEqual_10B10B(
     BuiltInId::lessThanEqual_Float2_Float2,
     BuiltInName::lessThanEqual,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B10B10F,
+    BuiltInParameters::p10B10B10B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpLessThanEqualComponentWise,
@@ -10014,7 +10014,7 @@ constexpr const TFunction lessThanEqual_30B30B(
     BuiltInId::lessThanEqual_Float4_Float4,
     BuiltInName::lessThanEqual,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B30B30B,
+    BuiltInParameters::p30B30B30F,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpLessThanEqualComponentWise,
@@ -10023,7 +10023,7 @@ constexpr const TFunction lessThanEqual_10D10D(
     BuiltInId::lessThanEqual_Int2_Int2,
     BuiltInName::lessThanEqual,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10D10D00D00D,
+    BuiltInParameters::p10D10D10D,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpLessThanEqualComponentWise,
@@ -10059,7 +10059,7 @@ constexpr const TFunction lessThanEqual_20E20E(
     BuiltInId::lessThanEqual_UInt3_UInt3,
     BuiltInName::lessThanEqual,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20E20E00D00D,
+    BuiltInParameters::p20E20E20E,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpLessThanEqualComponentWise,
@@ -10068,7 +10068,7 @@ constexpr const TFunction lessThanEqual_30E30E(
     BuiltInId::lessThanEqual_UInt4_UInt4,
     BuiltInName::lessThanEqual,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30E30E_o_30E_o_30E,
+    BuiltInParameters::p30E30E30F,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpLessThanEqualComponentWise,
@@ -10077,7 +10077,7 @@ constexpr const TFunction greaterThan_10B10B(
     BuiltInId::greaterThan_Float2_Float2,
     BuiltInName::greaterThan,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B10B10F,
+    BuiltInParameters::p10B10B10B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpGreaterThanComponentWise,
@@ -10095,7 +10095,7 @@ constexpr const TFunction greaterThan_30B30B(
     BuiltInId::greaterThan_Float4_Float4,
     BuiltInName::greaterThan,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B30B30B,
+    BuiltInParameters::p30B30B30F,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpGreaterThanComponentWise,
@@ -10104,7 +10104,7 @@ constexpr const TFunction greaterThan_10D10D(
     BuiltInId::greaterThan_Int2_Int2,
     BuiltInName::greaterThan,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10D10D00D00D,
+    BuiltInParameters::p10D10D10D,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpGreaterThanComponentWise,
@@ -10140,7 +10140,7 @@ constexpr const TFunction greaterThan_20E20E(
     BuiltInId::greaterThan_UInt3_UInt3,
     BuiltInName::greaterThan,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20E20E00D00D,
+    BuiltInParameters::p20E20E20E,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpGreaterThanComponentWise,
@@ -10149,7 +10149,7 @@ constexpr const TFunction greaterThan_30E30E(
     BuiltInId::greaterThan_UInt4_UInt4,
     BuiltInName::greaterThan,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30E30E_o_30E_o_30E,
+    BuiltInParameters::p30E30E30F,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpGreaterThanComponentWise,
@@ -10158,7 +10158,7 @@ constexpr const TFunction greaterThanEqual_10B10B(
     BuiltInId::greaterThanEqual_Float2_Float2,
     BuiltInName::greaterThanEqual,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B10B10F,
+    BuiltInParameters::p10B10B10B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpGreaterThanEqualComponentWise,
@@ -10176,7 +10176,7 @@ constexpr const TFunction greaterThanEqual_30B30B(
     BuiltInId::greaterThanEqual_Float4_Float4,
     BuiltInName::greaterThanEqual,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B30B30B,
+    BuiltInParameters::p30B30B30F,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpGreaterThanEqualComponentWise,
@@ -10185,7 +10185,7 @@ constexpr const TFunction greaterThanEqual_10D10D(
     BuiltInId::greaterThanEqual_Int2_Int2,
     BuiltInName::greaterThanEqual,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10D10D00D00D,
+    BuiltInParameters::p10D10D10D,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpGreaterThanEqualComponentWise,
@@ -10221,7 +10221,7 @@ constexpr const TFunction greaterThanEqual_20E20E(
     BuiltInId::greaterThanEqual_UInt3_UInt3,
     BuiltInName::greaterThanEqual,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20E20E00D00D,
+    BuiltInParameters::p20E20E20E,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpGreaterThanEqualComponentWise,
@@ -10230,7 +10230,7 @@ constexpr const TFunction greaterThanEqual_30E30E(
     BuiltInId::greaterThanEqual_UInt4_UInt4,
     BuiltInName::greaterThanEqual,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30E30E_o_30E_o_30E,
+    BuiltInParameters::p30E30E30F,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpGreaterThanEqualComponentWise,
@@ -10238,7 +10238,7 @@ constexpr const TFunction greaterThanEqual_30E30E(
 constexpr const TFunction equal_10B10B(BuiltInId::equal_Float2_Float2,
                                        BuiltInName::equal,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p10B10B10F,
+                                       BuiltInParameters::p10B10B10B,
                                        2,
                                        StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
                                        EOpEqualComponentWise,
@@ -10254,7 +10254,7 @@ constexpr const TFunction equal_20B20B(BuiltInId::equal_Float3_Float3,
 constexpr const TFunction equal_30B30B(BuiltInId::equal_Float4_Float4,
                                        BuiltInName::equal,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p30B30B30B,
+                                       BuiltInParameters::p30B30B30F,
                                        2,
                                        StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                        EOpEqualComponentWise,
@@ -10262,7 +10262,7 @@ constexpr const TFunction equal_30B30B(BuiltInId::equal_Float4_Float4,
 constexpr const TFunction equal_10D10D(BuiltInId::equal_Int2_Int2,
                                        BuiltInName::equal,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p10D10D00D00D,
+                                       BuiltInParameters::p10D10D10D,
                                        2,
                                        StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
                                        EOpEqualComponentWise,
@@ -10294,7 +10294,7 @@ constexpr const TFunction equal_10E10E(BuiltInId::equal_UInt2_UInt2,
 constexpr const TFunction equal_20E20E(BuiltInId::equal_UInt3_UInt3,
                                        BuiltInName::equal,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p20E20E00D00D,
+                                       BuiltInParameters::p20E20E20E,
                                        2,
                                        StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
                                        EOpEqualComponentWise,
@@ -10302,7 +10302,7 @@ constexpr const TFunction equal_20E20E(BuiltInId::equal_UInt3_UInt3,
 constexpr const TFunction equal_30E30E(BuiltInId::equal_UInt4_UInt4,
                                        BuiltInName::equal,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p30E30E_o_30E_o_30E,
+                                       BuiltInParameters::p30E30E30F,
                                        2,
                                        StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                        EOpEqualComponentWise,
@@ -10334,7 +10334,7 @@ constexpr const TFunction equal_30F30F(BuiltInId::equal_Bool4_Bool4,
 constexpr const TFunction notEqual_10B10B(BuiltInId::notEqual_Float2_Float2,
                                           BuiltInName::notEqual,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p10B10B10F,
+                                          BuiltInParameters::p10B10B10B,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
                                           EOpNotEqualComponentWise,
@@ -10350,7 +10350,7 @@ constexpr const TFunction notEqual_20B20B(BuiltInId::notEqual_Float3_Float3,
 constexpr const TFunction notEqual_30B30B(BuiltInId::notEqual_Float4_Float4,
                                           BuiltInName::notEqual,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p30B30B30B,
+                                          BuiltInParameters::p30B30B30F,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                           EOpNotEqualComponentWise,
@@ -10358,7 +10358,7 @@ constexpr const TFunction notEqual_30B30B(BuiltInId::notEqual_Float4_Float4,
 constexpr const TFunction notEqual_10D10D(BuiltInId::notEqual_Int2_Int2,
                                           BuiltInName::notEqual,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p10D10D00D00D,
+                                          BuiltInParameters::p10D10D10D,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
                                           EOpNotEqualComponentWise,
@@ -10390,7 +10390,7 @@ constexpr const TFunction notEqual_10E10E(BuiltInId::notEqual_UInt2_UInt2,
 constexpr const TFunction notEqual_20E20E(BuiltInId::notEqual_UInt3_UInt3,
                                           BuiltInName::notEqual,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p20E20E00D00D,
+                                          BuiltInParameters::p20E20E20E,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
                                           EOpNotEqualComponentWise,
@@ -10398,7 +10398,7 @@ constexpr const TFunction notEqual_20E20E(BuiltInId::notEqual_UInt3_UInt3,
 constexpr const TFunction notEqual_30E30E(BuiltInId::notEqual_UInt4_UInt4,
                                           BuiltInName::notEqual,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p30E30E_o_30E_o_30E,
+                                          BuiltInParameters::p30E30E30F,
                                           2,
                                           StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
                                           EOpNotEqualComponentWise,
@@ -10647,7 +10647,7 @@ constexpr const TFunction bitfieldReverse_00D(
     BuiltInId::bitfieldReverse_Int1,
     BuiltInName::bitfieldReverse,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00D00D_o_00D_o_00D,
+    BuiltInParameters::p00D00D00D00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpBitfieldReverse,
@@ -10656,7 +10656,7 @@ constexpr const TFunction bitfieldReverse_10D(
     BuiltInId::bitfieldReverse_Int2,
     BuiltInName::bitfieldReverse,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10D10D00D00D,
+    BuiltInParameters::p10D10D10D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpBitfieldReverse,
@@ -10683,7 +10683,7 @@ constexpr const TFunction bitfieldReverse_00E(
     BuiltInId::bitfieldReverse_UInt1,
     BuiltInName::bitfieldReverse,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00E00E00F,
+    BuiltInParameters::p00E00E_o_00E_o_00E,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpBitfieldReverse,
@@ -10701,7 +10701,7 @@ constexpr const TFunction bitfieldReverse_20E(
     BuiltInId::bitfieldReverse_UInt3,
     BuiltInName::bitfieldReverse,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20E20E00D00D,
+    BuiltInParameters::p20E00E00E,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpBitfieldReverse,
@@ -10710,7 +10710,7 @@ constexpr const TFunction bitfieldReverse_30E(
     BuiltInId::bitfieldReverse_UInt4,
     BuiltInName::bitfieldReverse,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30E30E_o_30E_o_30E,
+    BuiltInParameters::p30E30E30F,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpBitfieldReverse,
@@ -10718,7 +10718,7 @@ constexpr const TFunction bitfieldReverse_30E(
 constexpr const TFunction bitCount_00D(BuiltInId::bitCount_Int1,
                                        BuiltInName::bitCount,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p00D00D_o_00D_o_00D,
+                                       BuiltInParameters::p00D00D00D00D,
                                        1,
                                        StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                        EOpBitCount,
@@ -10726,7 +10726,7 @@ constexpr const TFunction bitCount_00D(BuiltInId::bitCount_Int1,
 constexpr const TFunction bitCount_10D(BuiltInId::bitCount_Int2,
                                        BuiltInName::bitCount,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p10D10D00D00D,
+                                       BuiltInParameters::p10D10D10D,
                                        1,
                                        StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                        EOpBitCount,
@@ -10750,7 +10750,7 @@ constexpr const TFunction bitCount_30D(BuiltInId::bitCount_Int4,
 constexpr const TFunction bitCount_00E(BuiltInId::bitCount_UInt1,
                                        BuiltInName::bitCount,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p00E00E00F,
+                                       BuiltInParameters::p00E00E_o_00E_o_00E,
                                        1,
                                        StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                        EOpBitCount,
@@ -10766,7 +10766,7 @@ constexpr const TFunction bitCount_10E(BuiltInId::bitCount_UInt2,
 constexpr const TFunction bitCount_20E(BuiltInId::bitCount_UInt3,
                                        BuiltInName::bitCount,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p20E20E00D00D,
+                                       BuiltInParameters::p20E00E00E,
                                        1,
                                        StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                        EOpBitCount,
@@ -10774,7 +10774,7 @@ constexpr const TFunction bitCount_20E(BuiltInId::bitCount_UInt3,
 constexpr const TFunction bitCount_30E(BuiltInId::bitCount_UInt4,
                                        BuiltInName::bitCount,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p30E30E_o_30E_o_30E,
+                                       BuiltInParameters::p30E30E30F,
                                        1,
                                        StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                        EOpBitCount,
@@ -10782,7 +10782,7 @@ constexpr const TFunction bitCount_30E(BuiltInId::bitCount_UInt4,
 constexpr const TFunction findLSB_00D(BuiltInId::findLSB_Int1,
                                       BuiltInName::findLSB,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p00D00D_o_00D_o_00D,
+                                      BuiltInParameters::p00D00D00D00D,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpFindLSB,
@@ -10790,7 +10790,7 @@ constexpr const TFunction findLSB_00D(BuiltInId::findLSB_Int1,
 constexpr const TFunction findLSB_10D(BuiltInId::findLSB_Int2,
                                       BuiltInName::findLSB,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p10D10D00D00D,
+                                      BuiltInParameters::p10D10D10D,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpFindLSB,
@@ -10814,7 +10814,7 @@ constexpr const TFunction findLSB_30D(BuiltInId::findLSB_Int4,
 constexpr const TFunction findLSB_00E(BuiltInId::findLSB_UInt1,
                                       BuiltInName::findLSB,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p00E00E00F,
+                                      BuiltInParameters::p00E00E_o_00E_o_00E,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpFindLSB,
@@ -10830,7 +10830,7 @@ constexpr const TFunction findLSB_10E(BuiltInId::findLSB_UInt2,
 constexpr const TFunction findLSB_20E(BuiltInId::findLSB_UInt3,
                                       BuiltInName::findLSB,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p20E20E00D00D,
+                                      BuiltInParameters::p20E00E00E,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                       EOpFindLSB,
@@ -10838,7 +10838,7 @@ constexpr const TFunction findLSB_20E(BuiltInId::findLSB_UInt3,
 constexpr const TFunction findLSB_30E(BuiltInId::findLSB_UInt4,
                                       BuiltInName::findLSB,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p30E30E_o_30E_o_30E,
+                                      BuiltInParameters::p30E30E30F,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpFindLSB,
@@ -10846,7 +10846,7 @@ constexpr const TFunction findLSB_30E(BuiltInId::findLSB_UInt4,
 constexpr const TFunction findMSB_00D(BuiltInId::findMSB_Int1,
                                       BuiltInName::findMSB,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p00D00D_o_00D_o_00D,
+                                      BuiltInParameters::p00D00D00D00D,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpFindMSB,
@@ -10854,7 +10854,7 @@ constexpr const TFunction findMSB_00D(BuiltInId::findMSB_Int1,
 constexpr const TFunction findMSB_10D(BuiltInId::findMSB_Int2,
                                       BuiltInName::findMSB,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p10D10D00D00D,
+                                      BuiltInParameters::p10D10D10D,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpFindMSB,
@@ -10878,7 +10878,7 @@ constexpr const TFunction findMSB_30D(BuiltInId::findMSB_Int4,
 constexpr const TFunction findMSB_00E(BuiltInId::findMSB_UInt1,
                                       BuiltInName::findMSB,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p00E00E00F,
+                                      BuiltInParameters::p00E00E_o_00E_o_00E,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpFindMSB,
@@ -10894,7 +10894,7 @@ constexpr const TFunction findMSB_10E(BuiltInId::findMSB_UInt2,
 constexpr const TFunction findMSB_20E(BuiltInId::findMSB_UInt3,
                                       BuiltInName::findMSB,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p20E20E00D00D,
+                                      BuiltInParameters::p20E00E00E,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                       EOpFindMSB,
@@ -10902,7 +10902,7 @@ constexpr const TFunction findMSB_20E(BuiltInId::findMSB_UInt3,
 constexpr const TFunction findMSB_30E(BuiltInId::findMSB_UInt4,
                                       BuiltInName::findMSB,
                                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                      BuiltInParameters::p30E30E_o_30E_o_30E,
+                                      BuiltInParameters::p30E30E30F,
                                       1,
                                       StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpFindMSB,
@@ -11055,7 +11055,7 @@ constexpr const TFunction texture2D_00I10B(
     BuiltInId::texture2D_Sampler2D1_Float2,
     BuiltInName::texture2D,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00I10B10Dx400D,
+    BuiltInParameters::p00I10B10B10B10D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTexture2D,
@@ -11064,7 +11064,7 @@ constexpr const TFunction texture2DProj_00I20B(
     BuiltInId::texture2DProj_Sampler2D1_Float3,
     BuiltInName::texture2DProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00I20B00B10D,
+    BuiltInParameters::p00I20B10D00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTexture2DProj,
@@ -11073,7 +11073,7 @@ constexpr const TFunction texture2DProj_00I30B(
     BuiltInId::texture2DProj_Sampler2D1_Float4,
     BuiltInName::texture2DProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00I30B00B10D,
+    BuiltInParameters::p00I30B10B10B10D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTexture2DProj,
@@ -11109,7 +11109,7 @@ constexpr const TFunction texture1DProj_00g30B(
     BuiltInId::texture1DProj_Sampler1D1_Float4,
     BuiltInName::texture1DProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00g30B00B00B00D,
+    BuiltInParameters::p00g30B00D00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTexture1DProj,
@@ -11136,7 +11136,7 @@ constexpr const TFunction shadow1D_00m20B(
     BuiltInId::shadow1D_Sampler1DShadow1_Float3,
     BuiltInName::shadow1D,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m20B00B00D,
+    BuiltInParameters::p00m20B00B00B00D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpShadow1D,
@@ -11145,7 +11145,7 @@ constexpr const TFunction shadow1DProj_00m30B(
     BuiltInId::shadow1DProj_Sampler1DShadow1_Float4,
     BuiltInName::shadow1DProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m30B00D00B,
+    BuiltInParameters::p00m30B00B00D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpShadow1DProj,
@@ -11202,7 +11202,7 @@ constexpr const TFunction texture2DRect_00O10B(
     BuiltInId::texture2DRect_Sampler2DRect1_Float2,
     BuiltInName::texture2DRect,
     std::array<TExtension, 1u>{{TExtension::ARB_texture_rectangle}},
-    BuiltInParameters::p00O10B10B10B10D,
+    BuiltInParameters::p00O10B10Dx400D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTexture2DRect,
@@ -11224,33 +11224,6 @@ constexpr const TFunction texture2DRectProj_00O30B(
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTexture2DRectProj,
-    false);
-constexpr const TFunction texture_00O10B(BuiltInId::texture_Sampler2DRect1_Float2,
-                                         BuiltInName::texture,
-                                         std::array<TExtension, 1u>{
-                                             {TExtension::ARB_texture_rectangle}},
-                                         BuiltInParameters::p00O10B10B10B10D,
-                                         2,
-                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-                                         EOpTextureRect,
-                                         false);
-constexpr const TFunction textureProj_00O20B(
-    BuiltInId::textureProj_Sampler2DRect1_Float3,
-    BuiltInName::textureProj,
-    std::array<TExtension, 1u>{{TExtension::ARB_texture_rectangle}},
-    BuiltInParameters::p00O20B10B10B10D,
-    2,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureProjRect,
-    false);
-constexpr const TFunction textureProj_00O30B(
-    BuiltInId::textureProj_Sampler2DRect1_Float4,
-    BuiltInName::textureProj,
-    std::array<TExtension, 1u>{{TExtension::ARB_texture_rectangle}},
-    BuiltInParameters::p00O30B10D,
-    2,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureProjRect,
     false);
 constexpr const TFunction texture2DGradEXT_00I10B10B10B(
     BuiltInId::texture2DGradEXT_Sampler2D1_Float2_Float2_Float2,
@@ -11287,6 +11260,15 @@ constexpr const TFunction textureCubeGradEXT_00K20B20B20B(
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureCubeGradEXT,
+    false);
+constexpr const TFunction textureVideoWEBGL_00y10B(
+    BuiltInId::textureVideoWEBGL_SamplerVideoWEBGL1_Float2,
+    BuiltInName::textureVideoWEBGL,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00y10B,
+    2,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureVideoWEBGL,
     false);
 constexpr const TFunction texture2D_00I10B00B(
     BuiltInId::texture2D_Sampler2D1_Float2_Float1,
@@ -11391,7 +11373,7 @@ constexpr const TFunction shadow1D_00m20B00B(
     BuiltInId::shadow1D_Sampler1DShadow1_Float3_Float1,
     BuiltInName::shadow1D,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m20B00B00D,
+    BuiltInParameters::p00m20B00B00B00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpShadow1DFS,
@@ -11400,7 +11382,7 @@ constexpr const TFunction shadow1DProj_00m30B00B(
     BuiltInId::shadow1DProj_Sampler1DShadow1_Float4_Float1,
     BuiltInName::shadow1DProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m30B00B00B00D,
+    BuiltInParameters::p00m30B00B00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpShadow1DProjFS,
@@ -11544,7 +11526,7 @@ constexpr const TFunction shadow1DLod_00m20B00B(
     BuiltInId::shadow1DLod_Sampler1DShadow1_Float3_Float1,
     BuiltInName::shadow1DLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m20B00B00D,
+    BuiltInParameters::p00m20B00B00B00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpShadow1DLod,
@@ -11553,7 +11535,7 @@ constexpr const TFunction shadow1DProjLod_00m30B00B(
     BuiltInId::shadow1DProjLod_Sampler1DShadow1_Float4_Float1,
     BuiltInName::shadow1DProjLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m30B00B00B00D,
+    BuiltInParameters::p00m30B00B00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpShadow1DProjLod,
@@ -11579,7 +11561,7 @@ constexpr const TFunction shadow2DProjLod_00d30B00B(
 constexpr const TFunction texture_00I10B(BuiltInId::texture_Sampler2D1_Float2,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00I10B10Dx400D,
+                                         BuiltInParameters::p00I10B10B10B10D,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11587,7 +11569,7 @@ constexpr const TFunction texture_00I10B(BuiltInId::texture_Sampler2D1_Float2,
 constexpr const TFunction texture_00R10B(BuiltInId::texture_ISampler2D1_Float2,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00R10B10D00D,
+                                         BuiltInParameters::p00R10B10D00B,
                                          2,
                                          StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11595,7 +11577,7 @@ constexpr const TFunction texture_00R10B(BuiltInId::texture_ISampler2D1_Float2,
 constexpr const TFunction texture_00X10B(BuiltInId::texture_USampler2D1_Float2,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00X10B00B10D,
+                                         BuiltInParameters::p00X10B10B10B10D,
                                          2,
                                          StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11611,7 +11593,7 @@ constexpr const TFunction texture_00J20B(BuiltInId::texture_Sampler3D1_Float3,
 constexpr const TFunction texture_00S20B(BuiltInId::texture_ISampler3D1_Float3,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00S20B00B20D,
+                                         BuiltInParameters::p00S20B20D00B,
                                          2,
                                          StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11619,7 +11601,7 @@ constexpr const TFunction texture_00S20B(BuiltInId::texture_ISampler3D1_Float3,
 constexpr const TFunction texture_00Y20B(BuiltInId::texture_USampler3D1_Float3,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00Y20B20D00B,
+                                         BuiltInParameters::p00Y20B00B20D,
                                          2,
                                          StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11635,7 +11617,7 @@ constexpr const TFunction texture_00K20B(BuiltInId::texture_SamplerCube1_Float3,
 constexpr const TFunction texture_00T20B(BuiltInId::texture_ISamplerCube1_Float3,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00T20B00D,
+                                         BuiltInParameters::p00T20B20B20B,
                                          2,
                                          StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11643,7 +11625,7 @@ constexpr const TFunction texture_00T20B(BuiltInId::texture_ISamplerCube1_Float3
 constexpr const TFunction texture_00Z20B(BuiltInId::texture_USamplerCube1_Float3,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00Z20B20B20B,
+                                         BuiltInParameters::p00Z20B00B,
                                          2,
                                          StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11651,7 +11633,7 @@ constexpr const TFunction texture_00Z20B(BuiltInId::texture_USamplerCube1_Float3
 constexpr const TFunction texture_00L20B(BuiltInId::texture_Sampler2DArray1_Float3,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00L20B10B10B10D,
+                                         BuiltInParameters::p00L20B00B10D,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11659,7 +11641,7 @@ constexpr const TFunction texture_00L20B(BuiltInId::texture_Sampler2DArray1_Floa
 constexpr const TFunction texture_00U20B(BuiltInId::texture_ISampler2DArray1_Float3,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00U20B10D00B,
+                                         BuiltInParameters::p00U20B10Dx400D,
                                          2,
                                          StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11667,7 +11649,7 @@ constexpr const TFunction texture_00U20B(BuiltInId::texture_ISampler2DArray1_Flo
 constexpr const TFunction texture_00a20B(BuiltInId::texture_USampler2DArray1_Float3,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00a20B10Dx400D,
+                                         BuiltInParameters::p00a20B10D00D,
                                          2,
                                          StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11683,7 +11665,7 @@ constexpr const TFunction texture_00d20B(BuiltInId::texture_Sampler2DShadow1_Flo
 constexpr const TFunction texture_00e30B(BuiltInId::texture_SamplerCubeShadow1_Float4,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00e30B00B,
+                                         BuiltInParameters::p00e30B20B20B,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                          EOpTexture,
@@ -11707,7 +11689,7 @@ constexpr const TFunction texture_00g00B(BuiltInId::texture_Sampler1D1_Float1,
 constexpr const TFunction texture_00o00B(BuiltInId::texture_ISampler1D1_Float1,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00o00B00B00B00D,
+                                         BuiltInParameters::p00o00B00B00D,
                                          2,
                                          StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11723,7 +11705,7 @@ constexpr const TFunction texture_00t00B(BuiltInId::texture_USampler1D1_Float1,
 constexpr const TFunction texture_00m20B(BuiltInId::texture_Sampler1DShadow1_Float3,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00m20B00B00D,
+                                         BuiltInParameters::p00m20B00B00B00D,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                          EOpTexture,
@@ -11755,15 +11737,23 @@ constexpr const TFunction texture_00u20B(BuiltInId::texture_USampler1DArray1_Flo
 constexpr const TFunction texture_00i20B(BuiltInId::texture_Sampler1DArrayShadow1_Float3,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00i20B00D00B,
+                                         BuiltInParameters::p00i20B00B00D,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
+                                         EOpTexture,
+                                         false);
+constexpr const TFunction texture_00O10B(BuiltInId::texture_Sampler2DRect1_Float2,
+                                         BuiltInName::texture,
+                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+                                         BuiltInParameters::p00O10B10Dx400D,
+                                         2,
+                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
                                          false);
 constexpr const TFunction texture_00q10B(BuiltInId::texture_ISampler2DRect1_Float2,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00q10B10D00D,
+                                         BuiltInParameters::p00q10B10B10B10D,
                                          2,
                                          StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11771,7 +11761,7 @@ constexpr const TFunction texture_00q10B(BuiltInId::texture_ISampler2DRect1_Floa
 constexpr const TFunction texture_00v10B(BuiltInId::texture_USampler2DRect1_Float2,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00v10B10B10B10D,
+                                         BuiltInParameters::p00v10B10Dx400D,
                                          2,
                                          StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11779,7 +11769,7 @@ constexpr const TFunction texture_00v10B(BuiltInId::texture_USampler2DRect1_Floa
 constexpr const TFunction texture_00n20B(BuiltInId::texture_Sampler2DRectShadow1_Float3,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00n20B10D,
+                                         BuiltInParameters::p00n20B10B10B10D,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                          EOpTexture,
@@ -11787,7 +11777,7 @@ constexpr const TFunction texture_00n20B(BuiltInId::texture_Sampler2DRectShadow1
 constexpr const TFunction texture_00k30B(BuiltInId::texture_SamplerCubeArray1_Float4,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00k30B20B20B,
+                                         BuiltInParameters::p00k30B00D,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11795,7 +11785,7 @@ constexpr const TFunction texture_00k30B(BuiltInId::texture_SamplerCubeArray1_Fl
 constexpr const TFunction texture_00s30B(BuiltInId::texture_ISamplerCubeArray1_Float4,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00s30B20B20B,
+                                         BuiltInParameters::p00s30B00D,
                                          2,
                                          StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11803,7 +11793,7 @@ constexpr const TFunction texture_00s30B(BuiltInId::texture_ISamplerCubeArray1_F
 constexpr const TFunction texture_00x30B(BuiltInId::texture_USamplerCubeArray1_Float4,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00x30B00B,
+                                         BuiltInParameters::p00x30B20B20B,
                                          2,
                                          StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
@@ -11849,7 +11839,7 @@ constexpr const TFunction textureExt_00k30B(
     BuiltInName::textureExt,
     std::array<TExtension, 2u>{
         {TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array}},
-    BuiltInParameters::p00k30B20B20B,
+    BuiltInParameters::p00k30B00D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTexture,
@@ -11859,7 +11849,7 @@ constexpr const TFunction textureExt_00s30B(
     BuiltInName::textureExt,
     std::array<TExtension, 2u>{
         {TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array}},
-    BuiltInParameters::p00s30B20B20B,
+    BuiltInParameters::p00s30B00D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTexture,
@@ -11869,7 +11859,7 @@ constexpr const TFunction textureExt_00x30B(
     BuiltInName::textureExt,
     std::array<TExtension, 2u>{
         {TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array}},
-    BuiltInParameters::p00x30B00B,
+    BuiltInParameters::p00x30B20B20B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTexture,
@@ -11931,11 +11921,19 @@ constexpr const TFunction texture_00N10B(BuiltInId::texture_SamplerExternal2DY2Y
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpTexture,
                                          false);
+constexpr const TFunction texture_00y10B(BuiltInId::texture_SamplerVideoWEBGL1_Float2,
+                                         BuiltInName::texture,
+                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+                                         BuiltInParameters::p00y10B,
+                                         2,
+                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+                                         EOpTexture,
+                                         false);
 constexpr const TFunction textureProj_00I20B(
     BuiltInId::textureProj_Sampler2D1_Float3,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00I20B00B10D,
+    BuiltInParameters::p00I20B10D00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -11953,7 +11951,7 @@ constexpr const TFunction textureProj_00X20B(
     BuiltInId::textureProj_USampler2D1_Float3,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00X20B10D00B,
+    BuiltInParameters::p00X20B00B10D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -11962,7 +11960,7 @@ constexpr const TFunction textureProj_00I30B(
     BuiltInId::textureProj_Sampler2D1_Float4,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00I30B00B10D,
+    BuiltInParameters::p00I30B10B10B10D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -11971,7 +11969,7 @@ constexpr const TFunction textureProj_00R30B(
     BuiltInId::textureProj_ISampler2D1_Float4,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00R30B10D00B,
+    BuiltInParameters::p00R30B00B10D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -11980,7 +11978,7 @@ constexpr const TFunction textureProj_00X30B(
     BuiltInId::textureProj_USampler2D1_Float4,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00X30B10B10B10D,
+    BuiltInParameters::p00X30B10D00B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -11998,7 +11996,7 @@ constexpr const TFunction textureProj_00S30B(
     BuiltInId::textureProj_ISampler3D1_Float4,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00S30B00B20D,
+    BuiltInParameters::p00S30B20B20B20D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -12043,7 +12041,7 @@ constexpr const TFunction textureProj_00t10B(
     BuiltInId::textureProj_USampler1D1_Float2,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00t10B00B00B00D,
+    BuiltInParameters::p00t10B00B00D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -12052,7 +12050,7 @@ constexpr const TFunction textureProj_00g30B(
     BuiltInId::textureProj_Sampler1D1_Float4,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00g30B00B00B00D,
+    BuiltInParameters::p00g30B00D00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -12070,7 +12068,7 @@ constexpr const TFunction textureProj_00t30B(
     BuiltInId::textureProj_USampler1D1_Float4,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00t30B00D00B,
+    BuiltInParameters::p00t30B00B00D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -12079,16 +12077,25 @@ constexpr const TFunction textureProj_00m30B(
     BuiltInId::textureProj_Sampler1DShadow1_Float4,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m30B00D00B,
+    BuiltInParameters::p00m30B00B00D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
+    EOpTextureProj,
+    false);
+constexpr const TFunction textureProj_00O20B(
+    BuiltInId::textureProj_Sampler2DRect1_Float3,
+    BuiltInName::textureProj,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00O20B10B10B10D,
+    2,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
     false);
 constexpr const TFunction textureProj_00q20B(
     BuiltInId::textureProj_ISampler2DRect1_Float3,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00q20B10D,
+    BuiltInParameters::p00q20B10B10B10D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -12097,16 +12104,25 @@ constexpr const TFunction textureProj_00v20B(
     BuiltInId::textureProj_USampler2DRect1_Float3,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00v20B10D,
+    BuiltInParameters::p00v20B00D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureProj,
+    false);
+constexpr const TFunction textureProj_00O30B(
+    BuiltInId::textureProj_Sampler2DRect1_Float4,
+    BuiltInName::textureProj,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00O30B10D,
+    2,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
     false);
 constexpr const TFunction textureProj_00q30B(
     BuiltInId::textureProj_ISampler2DRect1_Float4,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00q30B10D,
+    BuiltInParameters::p00q30B10B10B10D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -12115,7 +12131,7 @@ constexpr const TFunction textureProj_00v30B(
     BuiltInId::textureProj_USampler2DRect1_Float4,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00v30B10B10B10D,
+    BuiltInParameters::p00v30B10D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProj,
@@ -12295,7 +12311,7 @@ constexpr const TFunction textureLod_00o00B00B(
     BuiltInId::textureLod_ISampler1D1_Float1_Float1,
     BuiltInName::textureLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00o00B00B00B00D,
+    BuiltInParameters::p00o00B00B00D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureLod,
@@ -12313,7 +12329,7 @@ constexpr const TFunction textureLod_00m20B00B(
     BuiltInId::textureLod_Sampler1DShadow1_Float3_Float1,
     BuiltInName::textureLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m20B00B00D,
+    BuiltInParameters::p00m20B00B00B00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureLod,
@@ -12349,7 +12365,7 @@ constexpr const TFunction textureLod_00i20B00B(
     BuiltInId::textureLod_Sampler1DArrayShadow1_Float3_Float1,
     BuiltInName::textureLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00i20B00B00B00D,
+    BuiltInParameters::p00i20B00B00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureLod,
@@ -12661,7 +12677,7 @@ constexpr const TFunction textureSizeExt_00l00D(
 constexpr const TFunction textureSize_00O(BuiltInId::textureSize_Sampler2DRect1,
                                           BuiltInName::textureSize,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p00O10B10B10B10D,
+                                          BuiltInParameters::p00O20B10B10B10D,
                                           1,
                                           StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                           EOpTextureSize,
@@ -12669,7 +12685,7 @@ constexpr const TFunction textureSize_00O(BuiltInId::textureSize_Sampler2DRect1,
 constexpr const TFunction textureSize_00q(BuiltInId::textureSize_ISampler2DRect1,
                                           BuiltInName::textureSize,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p00q10B10D00D,
+                                          BuiltInParameters::p00q10B10B10B10D,
                                           1,
                                           StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                           EOpTextureSize,
@@ -12677,7 +12693,7 @@ constexpr const TFunction textureSize_00q(BuiltInId::textureSize_ISampler2DRect1
 constexpr const TFunction textureSize_00v(BuiltInId::textureSize_USampler2DRect1,
                                           BuiltInName::textureSize,
                                           std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                          BuiltInParameters::p00v30B10B10B10D,
+                                          BuiltInParameters::p00v30B10D,
                                           1,
                                           StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                           EOpTextureSize,
@@ -13009,7 +13025,7 @@ constexpr const TFunction textureProjLod_00t10B00B(
     BuiltInId::textureProjLod_USampler1D1_Float2_Float1,
     BuiltInName::textureProjLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00t10B00B00B00D,
+    BuiltInParameters::p00t10B00B00D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProjLod,
@@ -13036,7 +13052,7 @@ constexpr const TFunction textureProjLod_00t30B00B(
     BuiltInId::textureProjLod_USampler1D1_Float4_Float1,
     BuiltInName::textureProjLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00t30B00B00B00D,
+    BuiltInParameters::p00t30B00B00D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProjLod,
@@ -13045,7 +13061,7 @@ constexpr const TFunction textureProjLod_00m30B00B(
     BuiltInId::textureProjLod_Sampler1DShadow1_Float4_Float1,
     BuiltInName::textureProjLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m30B00B00B00D,
+    BuiltInParameters::p00m30B00B00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureProjLod,
@@ -13930,7 +13946,7 @@ constexpr const TFunction textureQueryLevels_00t(
     BuiltInId::textureQueryLevels_USampler1D1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00t10B00B00B00D,
+    BuiltInParameters::p00t00D00D00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -13939,7 +13955,7 @@ constexpr const TFunction textureQueryLevels_00I(
     BuiltInId::textureQueryLevels_Sampler2D1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00I20B00B10D,
+    BuiltInParameters::p00I10B10B10B10D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -13948,7 +13964,7 @@ constexpr const TFunction textureQueryLevels_00R(
     BuiltInId::textureQueryLevels_ISampler2D1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00R00D,
+    BuiltInParameters::p00R10B10D00B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -13957,7 +13973,7 @@ constexpr const TFunction textureQueryLevels_00X(
     BuiltInId::textureQueryLevels_USampler2D1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00X10B00B10D,
+    BuiltInParameters::p00X00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -13975,7 +13991,7 @@ constexpr const TFunction textureQueryLevels_00S(
     BuiltInId::textureQueryLevels_ISampler3D1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00S00D,
+    BuiltInParameters::p00S20B20D00B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -13984,7 +14000,7 @@ constexpr const TFunction textureQueryLevels_00Y(
     BuiltInId::textureQueryLevels_USampler3D1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00Y20B20D00B,
+    BuiltInParameters::p00Y20D00D20D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14002,7 +14018,7 @@ constexpr const TFunction textureQueryLevels_00T(
     BuiltInId::textureQueryLevels_ISamplerCube1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00T00D,
+    BuiltInParameters::p00T20B20B20B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14011,7 +14027,7 @@ constexpr const TFunction textureQueryLevels_00Z(
     BuiltInId::textureQueryLevels_USamplerCube1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00Z20B20B20B,
+    BuiltInParameters::p00Z20B00B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14020,7 +14036,7 @@ constexpr const TFunction textureQueryLevels_00h(
     BuiltInId::textureQueryLevels_Sampler1DArray1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00h00D,
+    BuiltInParameters::p00h10B00D00B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14029,7 +14045,7 @@ constexpr const TFunction textureQueryLevels_00p(
     BuiltInId::textureQueryLevels_ISampler1DArray1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00p10B00B00B00D,
+    BuiltInParameters::p00p00B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14038,7 +14054,7 @@ constexpr const TFunction textureQueryLevels_00u(
     BuiltInId::textureQueryLevels_USampler1DArray1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00u10B00D00B,
+    BuiltInParameters::p00u10B00B00B00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14047,7 +14063,7 @@ constexpr const TFunction textureQueryLevels_00L(
     BuiltInId::textureQueryLevels_Sampler2DArray1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00L20B10B10B10D,
+    BuiltInParameters::p00L20B00B10D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14056,7 +14072,7 @@ constexpr const TFunction textureQueryLevels_00U(
     BuiltInId::textureQueryLevels_ISampler2DArray1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00U10B,
+    BuiltInParameters::p00U20B10Dx400D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14065,7 +14081,7 @@ constexpr const TFunction textureQueryLevels_00a(
     BuiltInId::textureQueryLevels_USampler2DArray1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00a20B10Dx400D,
+    BuiltInParameters::p00a20B10D00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14074,7 +14090,7 @@ constexpr const TFunction textureQueryLevels_00k(
     BuiltInId::textureQueryLevels_SamplerCubeArray1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00k20B,
+    BuiltInParameters::p00k00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14083,7 +14099,7 @@ constexpr const TFunction textureQueryLevels_00s(
     BuiltInId::textureQueryLevels_ISamplerCubeArray1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00s30B20B20B,
+    BuiltInParameters::p00s30B00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14092,7 +14108,7 @@ constexpr const TFunction textureQueryLevels_00x(
     BuiltInId::textureQueryLevels_USamplerCubeArray1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00x30B00B,
+    BuiltInParameters::p00x00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14101,7 +14117,7 @@ constexpr const TFunction textureQueryLevels_00m(
     BuiltInId::textureQueryLevels_Sampler1DShadow1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m30B00D00B,
+    BuiltInParameters::p00m20B00B00B00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14110,7 +14126,7 @@ constexpr const TFunction textureQueryLevels_00d(
     BuiltInId::textureQueryLevels_Sampler2DShadow1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00d30B10B10B10D,
+    BuiltInParameters::p00d10B00B10Dx4,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14119,7 +14135,7 @@ constexpr const TFunction textureQueryLevels_00e(
     BuiltInId::textureQueryLevels_SamplerCubeShadow1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00e00D,
+    BuiltInParameters::p00e20B00B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14128,7 +14144,7 @@ constexpr const TFunction textureQueryLevels_00i(
     BuiltInId::textureQueryLevels_Sampler1DArrayShadow1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00i00D,
+    BuiltInParameters::p00i00B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14137,7 +14153,7 @@ constexpr const TFunction textureQueryLevels_00f(
     BuiltInId::textureQueryLevels_Sampler2DArrayShadow1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00f20B00B10Dx4,
+    BuiltInParameters::p00f10B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14146,7 +14162,7 @@ constexpr const TFunction textureQueryLevels_00l(
     BuiltInId::textureQueryLevels_SamplerCubeArrayShadow1,
     BuiltInName::textureQueryLevels,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00l20B,
+    BuiltInParameters::p00l30B00B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureQueryLevels,
@@ -14434,7 +14450,7 @@ constexpr const TFunction texture_00o00B00B(
     BuiltInId::texture_ISampler1D1_Float1_Float1,
     BuiltInName::texture,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00o00B00B00B00D,
+    BuiltInParameters::p00o00B00B00D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureBias,
@@ -14452,7 +14468,7 @@ constexpr const TFunction texture_00m20B00B(
     BuiltInId::texture_Sampler1DShadow1_Float3_Float1,
     BuiltInName::texture,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m20B00B00D,
+    BuiltInParameters::p00m20B00B00B00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureBias,
@@ -14488,7 +14504,7 @@ constexpr const TFunction texture_00i20B00B(
     BuiltInId::texture_Sampler1DArrayShadow1_Float3_Float1,
     BuiltInName::texture,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00i20B00B00B00D,
+    BuiltInParameters::p00i20B00B00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureBias,
@@ -14524,7 +14540,7 @@ constexpr const TFunction textureProj_00t10B00B(
     BuiltInId::textureProj_USampler1D1_Float2_Float1,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00t10B00B00B00D,
+    BuiltInParameters::p00t10B00B00D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProjBias,
@@ -14551,7 +14567,7 @@ constexpr const TFunction textureProj_00t30B00B(
     BuiltInId::textureProj_USampler1D1_Float4_Float1,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00t30B00B00B00D,
+    BuiltInParameters::p00t30B00B00D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureProjBias,
@@ -14560,7 +14576,7 @@ constexpr const TFunction textureProj_00m30B00B(
     BuiltInId::textureProj_Sampler1DShadow1_Float4_Float1,
     BuiltInName::textureProj,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00m30B00B00B00D,
+    BuiltInParameters::p00m30B00B00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureProjBias,
@@ -14632,7 +14648,7 @@ constexpr const TFunction textureQueryLod_00o00B(
     BuiltInId::textureQueryLod_ISampler1D1_Float1,
     BuiltInName::textureQueryLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00o00B00B00B00D,
+    BuiltInParameters::p00o00B00B00D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpTextureQueryLod,
@@ -14650,7 +14666,7 @@ constexpr const TFunction textureQueryLod_00I10B(
     BuiltInId::textureQueryLod_Sampler2D1_Float2,
     BuiltInName::textureQueryLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00I10B10Dx400D,
+    BuiltInParameters::p00I10B10B10B10D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpTextureQueryLod,
@@ -14659,7 +14675,7 @@ constexpr const TFunction textureQueryLod_00R10B(
     BuiltInId::textureQueryLod_ISampler2D1_Float2,
     BuiltInName::textureQueryLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00R10B10D00D,
+    BuiltInParameters::p00R10B10D00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpTextureQueryLod,
@@ -14668,7 +14684,7 @@ constexpr const TFunction textureQueryLod_00X10B(
     BuiltInId::textureQueryLod_USampler2D1_Float2,
     BuiltInName::textureQueryLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00X10B00B10D,
+    BuiltInParameters::p00X10B10B10B10D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpTextureQueryLod,
@@ -14686,7 +14702,7 @@ constexpr const TFunction textureQueryLod_00S20B(
     BuiltInId::textureQueryLod_ISampler3D1_Float3,
     BuiltInName::textureQueryLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00S20B00B20D,
+    BuiltInParameters::p00S20B20D00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpTextureQueryLod,
@@ -14695,7 +14711,7 @@ constexpr const TFunction textureQueryLod_00Y20B(
     BuiltInId::textureQueryLod_USampler3D1_Float3,
     BuiltInName::textureQueryLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00Y20B20D00B,
+    BuiltInParameters::p00Y20B00B20D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpTextureQueryLod,
@@ -14713,7 +14729,7 @@ constexpr const TFunction textureQueryLod_00T20B(
     BuiltInId::textureQueryLod_ISamplerCube1_Float3,
     BuiltInName::textureQueryLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00T20B00D,
+    BuiltInParameters::p00T20B20B20B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpTextureQueryLod,
@@ -14722,7 +14738,7 @@ constexpr const TFunction textureQueryLod_00Z20B(
     BuiltInId::textureQueryLod_USamplerCube1_Float3,
     BuiltInName::textureQueryLod,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00Z20B20B20B,
+    BuiltInParameters::p00Z20B00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpTextureQueryLod,
@@ -14875,7 +14891,7 @@ constexpr const TFunction textureOffset_00R10B10D(
     BuiltInId::textureOffset_ISampler2D1_Float2_Int2,
     BuiltInName::textureOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00R10B10D00D,
+    BuiltInParameters::p00R10B10D00B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureOffset,
@@ -14884,7 +14900,7 @@ constexpr const TFunction textureOffset_00X10B10D(
     BuiltInId::textureOffset_USampler2D1_Float2_Int2,
     BuiltInName::textureOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00X10B10Dx400D,
+    BuiltInParameters::p00X10B10D00B,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureOffset,
@@ -14929,7 +14945,7 @@ constexpr const TFunction textureOffset_00L20B10D(
     BuiltInId::textureOffset_Sampler2DArray1_Float3_Int2,
     BuiltInName::textureOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00L20B10D00D,
+    BuiltInParameters::p00L20B10D00B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureOffset,
@@ -14938,7 +14954,7 @@ constexpr const TFunction textureOffset_00U20B10D(
     BuiltInId::textureOffset_ISampler2DArray1_Float3_Int2,
     BuiltInName::textureOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00U20B10D00B,
+    BuiltInParameters::p00U20B10Dx400D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureOffset,
@@ -14947,7 +14963,7 @@ constexpr const TFunction textureOffset_00a20B10D(
     BuiltInId::textureOffset_USampler2DArray1_Float3_Int2,
     BuiltInName::textureOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00a20B10Dx400D,
+    BuiltInParameters::p00a20B10D00D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureOffset,
@@ -14983,7 +14999,7 @@ constexpr const TFunction textureOffset_00O10B10D(
     BuiltInId::textureOffset_Sampler2DRect1_Float2_Int2,
     BuiltInName::textureOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00O10B10D00D,
+    BuiltInParameters::p00O10B10Dx400D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureOffset,
@@ -15001,7 +15017,7 @@ constexpr const TFunction textureOffset_00v10B10D(
     BuiltInId::textureOffset_USampler2DRect1_Float2_Int2,
     BuiltInName::textureOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00v10B10D00D,
+    BuiltInParameters::p00v10B10Dx400D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureOffset,
@@ -16500,29 +16516,11 @@ constexpr const TFunction textureProjOffset_00m30B00D00B(
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureProjOffsetBias,
     false);
-constexpr const TFunction rgb_2_yuv_20B00H(
-    BuiltInId::rgb_2_yuv_Float3_YuvCscStandardEXT1,
-    BuiltInName::rgb_2_yuv,
-    std::array<TExtension, 1u>{{TExtension::EXT_YUV_target}},
-    BuiltInParameters::p20B00H,
-    2,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    EOpRgb_2_yuv,
-    false);
-constexpr const TFunction yuv_2_rgb_20B00H(
-    BuiltInId::yuv_2_rgb_Float3_YuvCscStandardEXT1,
-    BuiltInName::yuv_2_rgb,
-    std::array<TExtension, 1u>{{TExtension::EXT_YUV_target}},
-    BuiltInParameters::p20B00H,
-    2,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    EOpYuv_2_rgb,
-    false);
 constexpr const TFunction textureGather_00I10B(
     BuiltInId::textureGather_Sampler2D1_Float2,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00I10B10Dx400D,
+    BuiltInParameters::p00I10B10B10B10D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16531,7 +16529,7 @@ constexpr const TFunction textureGather_00R10B(
     BuiltInId::textureGather_ISampler2D1_Float2,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00R10B10D00D,
+    BuiltInParameters::p00R10B10D00B,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16540,7 +16538,7 @@ constexpr const TFunction textureGather_00X10B(
     BuiltInId::textureGather_USampler2D1_Float2,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00X10B00B10D,
+    BuiltInParameters::p00X10B10B10B10D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16576,7 +16574,7 @@ constexpr const TFunction textureGather_00L20B(
     BuiltInId::textureGather_Sampler2DArray1_Float3,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00L20B10B10B10D,
+    BuiltInParameters::p00L20B00B10D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16585,7 +16583,7 @@ constexpr const TFunction textureGather_00U20B(
     BuiltInId::textureGather_ISampler2DArray1_Float3,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00U20B10D00B,
+    BuiltInParameters::p00U20B10Dx400D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16594,7 +16592,7 @@ constexpr const TFunction textureGather_00a20B(
     BuiltInId::textureGather_USampler2DArray1_Float3,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00a20B10Dx400D,
+    BuiltInParameters::p00a20B10D00D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16639,7 +16637,7 @@ constexpr const TFunction textureGather_00T20B(
     BuiltInId::textureGather_ISamplerCube1_Float3,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00T20B00D,
+    BuiltInParameters::p00T20B20B20B,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16648,7 +16646,7 @@ constexpr const TFunction textureGather_00Z20B(
     BuiltInId::textureGather_USamplerCube1_Float3,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00Z20B20B20B,
+    BuiltInParameters::p00Z20B00B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16684,7 +16682,7 @@ constexpr const TFunction textureGather_00k30B(
     BuiltInId::textureGather_SamplerCubeArray1_Float4,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00k30B20B20B,
+    BuiltInParameters::p00k30B00D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16693,7 +16691,7 @@ constexpr const TFunction textureGather_00s30B(
     BuiltInId::textureGather_ISamplerCubeArray1_Float4,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00s30B20B20B,
+    BuiltInParameters::p00s30B00D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16702,7 +16700,7 @@ constexpr const TFunction textureGather_00x30B(
     BuiltInId::textureGather_USamplerCubeArray1_Float4,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00x30B00B,
+    BuiltInParameters::p00x30B20B20B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16748,7 +16746,7 @@ constexpr const TFunction textureGatherExt_00k30B(
     BuiltInName::textureGatherExt,
     std::array<TExtension, 2u>{
         {TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array}},
-    BuiltInParameters::p00k30B20B20B,
+    BuiltInParameters::p00k30B00D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16758,7 +16756,7 @@ constexpr const TFunction textureGatherExt_00s30B(
     BuiltInName::textureGatherExt,
     std::array<TExtension, 2u>{
         {TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array}},
-    BuiltInParameters::p00s30B20B20B,
+    BuiltInParameters::p00s30B00D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16768,7 +16766,7 @@ constexpr const TFunction textureGatherExt_00x30B(
     BuiltInName::textureGatherExt,
     std::array<TExtension, 2u>{
         {TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array}},
-    BuiltInParameters::p00x30B00B,
+    BuiltInParameters::p00x30B20B20B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16826,7 +16824,7 @@ constexpr const TFunction textureGather_00q20B(
     BuiltInId::textureGather_ISampler2DRect1_Float3,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00q20B10D,
+    BuiltInParameters::p00q20B10B10B10D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16835,7 +16833,7 @@ constexpr const TFunction textureGather_00v20B(
     BuiltInId::textureGather_USampler2DRect1_Float3,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00v20B10D,
+    BuiltInParameters::p00v20B00D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -16943,7 +16941,7 @@ constexpr const TFunction textureGatherOffset_00R10B10D(
     BuiltInId::textureGatherOffset_ISampler2D1_Float2_Int2,
     BuiltInName::textureGatherOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00R10B10D00D,
+    BuiltInParameters::p00R10B10D00B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffset,
@@ -16952,7 +16950,7 @@ constexpr const TFunction textureGatherOffset_00X10B10D(
     BuiltInId::textureGatherOffset_USampler2D1_Float2_Int2,
     BuiltInName::textureGatherOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00X10B10Dx400D,
+    BuiltInParameters::p00X10B10D00B,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffset,
@@ -16961,7 +16959,7 @@ constexpr const TFunction textureGatherOffset_00L20B10D(
     BuiltInId::textureGatherOffset_Sampler2DArray1_Float3_Int2,
     BuiltInName::textureGatherOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00L20B10D00D,
+    BuiltInParameters::p00L20B10D00B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffset,
@@ -16970,7 +16968,7 @@ constexpr const TFunction textureGatherOffset_00U20B10D(
     BuiltInId::textureGatherOffset_ISampler2DArray1_Float3_Int2,
     BuiltInName::textureGatherOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00U20B10D00B,
+    BuiltInParameters::p00U20B10Dx400D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffset,
@@ -16979,7 +16977,7 @@ constexpr const TFunction textureGatherOffset_00a20B10D(
     BuiltInId::textureGatherOffset_USampler2DArray1_Float3_Int2,
     BuiltInName::textureGatherOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00a20B10Dx400D,
+    BuiltInParameters::p00a20B10D00D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffset,
@@ -17006,7 +17004,7 @@ constexpr const TFunction textureGatherOffset_00O10B10D(
     BuiltInId::textureGatherOffset_Sampler2DRect1_Float2_Int2,
     BuiltInName::textureGatherOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00O10B10D00D,
+    BuiltInParameters::p00O10B10Dx400D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffset,
@@ -17024,7 +17022,7 @@ constexpr const TFunction textureGatherOffset_00v10B10D(
     BuiltInId::textureGatherOffset_USampler2DRect1_Float2_Int2,
     BuiltInName::textureGatherOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00v10B10D00D,
+    BuiltInParameters::p00v10B10Dx400D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffset,
@@ -17434,11 +17432,29 @@ constexpr const TFunction textureGatherOffsets_00v10B10Dx400D(
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffsetsComp,
     false);
+constexpr const TFunction rgb_2_yuv_20B00H(
+    BuiltInId::rgb_2_yuv_Float3_YuvCscStandardEXT1,
+    BuiltInName::rgb_2_yuv,
+    std::array<TExtension, 1u>{{TExtension::EXT_YUV_target}},
+    BuiltInParameters::p20B00H,
+    2,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
+    EOpRgb_2_yuv,
+    false);
+constexpr const TFunction yuv_2_rgb_20B00H(
+    BuiltInId::yuv_2_rgb_Float3_YuvCscStandardEXT1,
+    BuiltInName::yuv_2_rgb,
+    std::array<TExtension, 1u>{{TExtension::EXT_YUV_target}},
+    BuiltInParameters::p20B00H,
+    2,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
+    EOpYuv_2_rgb,
+    false);
 constexpr const TFunction dFdxExt_00B(BuiltInId::dFdxExt_Float1,
                                       BuiltInName::dFdxExt,
                                       std::array<TExtension, 1u>{
                                           {TExtension::OES_standard_derivatives}},
-                                      BuiltInParameters::p00B00D,
+                                      BuiltInParameters::p00B_o_00B,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpDFdx,
@@ -17447,7 +17463,7 @@ constexpr const TFunction dFdxExt_10B(BuiltInId::dFdxExt_Float2,
                                       BuiltInName::dFdxExt,
                                       std::array<TExtension, 1u>{
                                           {TExtension::OES_standard_derivatives}},
-                                      BuiltInParameters::p10B_o_10B,
+                                      BuiltInParameters::p10B10D,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpDFdx,
@@ -17456,7 +17472,7 @@ constexpr const TFunction dFdxExt_20B(BuiltInId::dFdxExt_Float3,
                                       BuiltInName::dFdxExt,
                                       std::array<TExtension, 1u>{
                                           {TExtension::OES_standard_derivatives}},
-                                      BuiltInParameters::p20B_o_20B,
+                                      BuiltInParameters::p20B00D,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                       EOpDFdx,
@@ -17465,7 +17481,7 @@ constexpr const TFunction dFdxExt_30B(BuiltInId::dFdxExt_Float4,
                                       BuiltInName::dFdxExt,
                                       std::array<TExtension, 1u>{
                                           {TExtension::OES_standard_derivatives}},
-                                      BuiltInParameters::p30B20B,
+                                      BuiltInParameters::p30B10B,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpDFdx,
@@ -17474,7 +17490,7 @@ constexpr const TFunction dFdyExt_00B(BuiltInId::dFdyExt_Float1,
                                       BuiltInName::dFdyExt,
                                       std::array<TExtension, 1u>{
                                           {TExtension::OES_standard_derivatives}},
-                                      BuiltInParameters::p00B00D,
+                                      BuiltInParameters::p00B_o_00B,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                       EOpDFdy,
@@ -17483,7 +17499,7 @@ constexpr const TFunction dFdyExt_10B(BuiltInId::dFdyExt_Float2,
                                       BuiltInName::dFdyExt,
                                       std::array<TExtension, 1u>{
                                           {TExtension::OES_standard_derivatives}},
-                                      BuiltInParameters::p10B_o_10B,
+                                      BuiltInParameters::p10B10D,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                       EOpDFdy,
@@ -17492,7 +17508,7 @@ constexpr const TFunction dFdyExt_20B(BuiltInId::dFdyExt_Float3,
                                       BuiltInName::dFdyExt,
                                       std::array<TExtension, 1u>{
                                           {TExtension::OES_standard_derivatives}},
-                                      BuiltInParameters::p20B_o_20B,
+                                      BuiltInParameters::p20B00D,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                       EOpDFdy,
@@ -17501,7 +17517,7 @@ constexpr const TFunction dFdyExt_30B(BuiltInId::dFdyExt_Float4,
                                       BuiltInName::dFdyExt,
                                       std::array<TExtension, 1u>{
                                           {TExtension::OES_standard_derivatives}},
-                                      BuiltInParameters::p30B20B,
+                                      BuiltInParameters::p30B10B,
                                       1,
                                       StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                       EOpDFdy,
@@ -17510,7 +17526,7 @@ constexpr const TFunction fwidthExt_00B(BuiltInId::fwidthExt_Float1,
                                         BuiltInName::fwidthExt,
                                         std::array<TExtension, 1u>{
                                             {TExtension::OES_standard_derivatives}},
-                                        BuiltInParameters::p00B00D,
+                                        BuiltInParameters::p00B_o_00B,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpFwidth,
@@ -17519,7 +17535,7 @@ constexpr const TFunction fwidthExt_10B(BuiltInId::fwidthExt_Float2,
                                         BuiltInName::fwidthExt,
                                         std::array<TExtension, 1u>{
                                             {TExtension::OES_standard_derivatives}},
-                                        BuiltInParameters::p10B_o_10B,
+                                        BuiltInParameters::p10B10D,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpFwidth,
@@ -17528,7 +17544,7 @@ constexpr const TFunction fwidthExt_20B(BuiltInId::fwidthExt_Float3,
                                         BuiltInName::fwidthExt,
                                         std::array<TExtension, 1u>{
                                             {TExtension::OES_standard_derivatives}},
-                                        BuiltInParameters::p20B_o_20B,
+                                        BuiltInParameters::p20B00D,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpFwidth,
@@ -17537,7 +17553,7 @@ constexpr const TFunction fwidthExt_30B(BuiltInId::fwidthExt_Float4,
                                         BuiltInName::fwidthExt,
                                         std::array<TExtension, 1u>{
                                             {TExtension::OES_standard_derivatives}},
-                                        BuiltInParameters::p30B20B,
+                                        BuiltInParameters::p30B10B,
                                         1,
                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                         EOpFwidth,
@@ -17545,7 +17561,7 @@ constexpr const TFunction fwidthExt_30B(BuiltInId::fwidthExt_Float4,
 constexpr const TFunction dFdx_00B(BuiltInId::dFdx_Float1,
                                    BuiltInName::dFdx,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpDFdx,
@@ -17553,7 +17569,7 @@ constexpr const TFunction dFdx_00B(BuiltInId::dFdx_Float1,
 constexpr const TFunction dFdx_10B(BuiltInId::dFdx_Float2,
                                    BuiltInName::dFdx,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpDFdx,
@@ -17561,7 +17577,7 @@ constexpr const TFunction dFdx_10B(BuiltInId::dFdx_Float2,
 constexpr const TFunction dFdx_20B(BuiltInId::dFdx_Float3,
                                    BuiltInName::dFdx,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpDFdx,
@@ -17569,7 +17585,7 @@ constexpr const TFunction dFdx_20B(BuiltInId::dFdx_Float3,
 constexpr const TFunction dFdx_30B(BuiltInId::dFdx_Float4,
                                    BuiltInName::dFdx,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpDFdx,
@@ -17577,7 +17593,7 @@ constexpr const TFunction dFdx_30B(BuiltInId::dFdx_Float4,
 constexpr const TFunction dFdy_00B(BuiltInId::dFdy_Float1,
                                    BuiltInName::dFdy,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p00B00D,
+                                   BuiltInParameters::p00B_o_00B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                    EOpDFdy,
@@ -17585,7 +17601,7 @@ constexpr const TFunction dFdy_00B(BuiltInId::dFdy_Float1,
 constexpr const TFunction dFdy_10B(BuiltInId::dFdy_Float2,
                                    BuiltInName::dFdy,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p10B_o_10B,
+                                   BuiltInParameters::p10B10D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                    EOpDFdy,
@@ -17593,7 +17609,7 @@ constexpr const TFunction dFdy_10B(BuiltInId::dFdy_Float2,
 constexpr const TFunction dFdy_20B(BuiltInId::dFdy_Float3,
                                    BuiltInName::dFdy,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p20B_o_20B,
+                                   BuiltInParameters::p20B00D,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                    EOpDFdy,
@@ -17601,7 +17617,7 @@ constexpr const TFunction dFdy_20B(BuiltInId::dFdy_Float3,
 constexpr const TFunction dFdy_30B(BuiltInId::dFdy_Float4,
                                    BuiltInName::dFdy,
                                    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                   BuiltInParameters::p30B20B,
+                                   BuiltInParameters::p30B10B,
                                    1,
                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                    EOpDFdy,
@@ -17609,7 +17625,7 @@ constexpr const TFunction dFdy_30B(BuiltInId::dFdy_Float4,
 constexpr const TFunction fwidth_00B(BuiltInId::fwidth_Float1,
                                      BuiltInName::fwidth,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00D,
+                                     BuiltInParameters::p00B_o_00B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpFwidth,
@@ -17617,7 +17633,7 @@ constexpr const TFunction fwidth_00B(BuiltInId::fwidth_Float1,
 constexpr const TFunction fwidth_10B(BuiltInId::fwidth_Float2,
                                      BuiltInName::fwidth,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B_o_10B,
+                                     BuiltInParameters::p10B10D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpFwidth,
@@ -17625,7 +17641,7 @@ constexpr const TFunction fwidth_10B(BuiltInId::fwidth_Float2,
 constexpr const TFunction fwidth_20B(BuiltInId::fwidth_Float3,
                                      BuiltInName::fwidth,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20B_o_20B,
+                                     BuiltInParameters::p20B00D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpFwidth,
@@ -17633,7 +17649,7 @@ constexpr const TFunction fwidth_20B(BuiltInId::fwidth_Float3,
 constexpr const TFunction fwidth_30B(BuiltInId::fwidth_Float4,
                                      BuiltInName::fwidth,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B20B,
+                                     BuiltInParameters::p30B10B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpFwidth,
@@ -17641,7 +17657,7 @@ constexpr const TFunction fwidth_30B(BuiltInId::fwidth_Float4,
 constexpr const TFunction dFdxFine_00B(BuiltInId::dFdxFine_Float1,
                                        BuiltInName::dFdxFine,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p00B00D,
+                                       BuiltInParameters::p00B_o_00B,
                                        1,
                                        StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                        EOpDFdxFine,
@@ -17649,7 +17665,7 @@ constexpr const TFunction dFdxFine_00B(BuiltInId::dFdxFine_Float1,
 constexpr const TFunction dFdxFine_10B(BuiltInId::dFdxFine_Float2,
                                        BuiltInName::dFdxFine,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p10B_o_10B,
+                                       BuiltInParameters::p10B10D,
                                        1,
                                        StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                        EOpDFdxFine,
@@ -17657,7 +17673,7 @@ constexpr const TFunction dFdxFine_10B(BuiltInId::dFdxFine_Float2,
 constexpr const TFunction dFdxFine_20B(BuiltInId::dFdxFine_Float3,
                                        BuiltInName::dFdxFine,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p20B_o_20B,
+                                       BuiltInParameters::p20B00D,
                                        1,
                                        StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                        EOpDFdxFine,
@@ -17665,7 +17681,7 @@ constexpr const TFunction dFdxFine_20B(BuiltInId::dFdxFine_Float3,
 constexpr const TFunction dFdxFine_30B(BuiltInId::dFdxFine_Float4,
                                        BuiltInName::dFdxFine,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p30B20B,
+                                       BuiltInParameters::p30B10B,
                                        1,
                                        StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                        EOpDFdxFine,
@@ -17673,7 +17689,7 @@ constexpr const TFunction dFdxFine_30B(BuiltInId::dFdxFine_Float4,
 constexpr const TFunction dFdyFine_00B(BuiltInId::dFdyFine_Float1,
                                        BuiltInName::dFdyFine,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p00B00D,
+                                       BuiltInParameters::p00B_o_00B,
                                        1,
                                        StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                        EOpDFdyFine,
@@ -17681,7 +17697,7 @@ constexpr const TFunction dFdyFine_00B(BuiltInId::dFdyFine_Float1,
 constexpr const TFunction dFdyFine_10B(BuiltInId::dFdyFine_Float2,
                                        BuiltInName::dFdyFine,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p10B_o_10B,
+                                       BuiltInParameters::p10B10D,
                                        1,
                                        StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                        EOpDFdyFine,
@@ -17689,7 +17705,7 @@ constexpr const TFunction dFdyFine_10B(BuiltInId::dFdyFine_Float2,
 constexpr const TFunction dFdyFine_20B(BuiltInId::dFdyFine_Float3,
                                        BuiltInName::dFdyFine,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p20B_o_20B,
+                                       BuiltInParameters::p20B00D,
                                        1,
                                        StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                        EOpDFdyFine,
@@ -17697,7 +17713,7 @@ constexpr const TFunction dFdyFine_20B(BuiltInId::dFdyFine_Float3,
 constexpr const TFunction dFdyFine_30B(BuiltInId::dFdyFine_Float4,
                                        BuiltInName::dFdyFine,
                                        std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                       BuiltInParameters::p30B20B,
+                                       BuiltInParameters::p30B10B,
                                        1,
                                        StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                        EOpDFdyFine,
@@ -17705,7 +17721,7 @@ constexpr const TFunction dFdyFine_30B(BuiltInId::dFdyFine_Float4,
 constexpr const TFunction dFdxCoarse_00B(BuiltInId::dFdxCoarse_Float1,
                                          BuiltInName::dFdxCoarse,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00B00D,
+                                         BuiltInParameters::p00B_o_00B,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                          EOpDFdxCoarse,
@@ -17713,7 +17729,7 @@ constexpr const TFunction dFdxCoarse_00B(BuiltInId::dFdxCoarse_Float1,
 constexpr const TFunction dFdxCoarse_10B(BuiltInId::dFdxCoarse_Float2,
                                          BuiltInName::dFdxCoarse,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p10B_o_10B,
+                                         BuiltInParameters::p10B10D,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                          EOpDFdxCoarse,
@@ -17721,7 +17737,7 @@ constexpr const TFunction dFdxCoarse_10B(BuiltInId::dFdxCoarse_Float2,
 constexpr const TFunction dFdxCoarse_20B(BuiltInId::dFdxCoarse_Float3,
                                          BuiltInName::dFdxCoarse,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p20B_o_20B,
+                                         BuiltInParameters::p20B00D,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                          EOpDFdxCoarse,
@@ -17729,7 +17745,7 @@ constexpr const TFunction dFdxCoarse_20B(BuiltInId::dFdxCoarse_Float3,
 constexpr const TFunction dFdxCoarse_30B(BuiltInId::dFdxCoarse_Float4,
                                          BuiltInName::dFdxCoarse,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p30B20B,
+                                         BuiltInParameters::p30B10B,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpDFdxCoarse,
@@ -17737,7 +17753,7 @@ constexpr const TFunction dFdxCoarse_30B(BuiltInId::dFdxCoarse_Float4,
 constexpr const TFunction dFdyCoarse_00B(BuiltInId::dFdyCoarse_Float1,
                                          BuiltInName::dFdyCoarse,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00B00D,
+                                         BuiltInParameters::p00B_o_00B,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                          EOpDFdyCoarse,
@@ -17745,7 +17761,7 @@ constexpr const TFunction dFdyCoarse_00B(BuiltInId::dFdyCoarse_Float1,
 constexpr const TFunction dFdyCoarse_10B(BuiltInId::dFdyCoarse_Float2,
                                          BuiltInName::dFdyCoarse,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p10B_o_10B,
+                                         BuiltInParameters::p10B10D,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                          EOpDFdyCoarse,
@@ -17753,7 +17769,7 @@ constexpr const TFunction dFdyCoarse_10B(BuiltInId::dFdyCoarse_Float2,
 constexpr const TFunction dFdyCoarse_20B(BuiltInId::dFdyCoarse_Float3,
                                          BuiltInName::dFdyCoarse,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p20B_o_20B,
+                                         BuiltInParameters::p20B00D,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                          EOpDFdyCoarse,
@@ -17761,7 +17777,7 @@ constexpr const TFunction dFdyCoarse_20B(BuiltInId::dFdyCoarse_Float3,
 constexpr const TFunction dFdyCoarse_30B(BuiltInId::dFdyCoarse_Float4,
                                          BuiltInName::dFdyCoarse,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p30B20B,
+                                         BuiltInParameters::p30B10B,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpDFdyCoarse,
@@ -17769,7 +17785,7 @@ constexpr const TFunction dFdyCoarse_30B(BuiltInId::dFdyCoarse_Float4,
 constexpr const TFunction fwidthFine_00B(BuiltInId::fwidthFine_Float1,
                                          BuiltInName::fwidthFine,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00B00D,
+                                         BuiltInParameters::p00B_o_00B,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                          EOpFwidthFine,
@@ -17777,7 +17793,7 @@ constexpr const TFunction fwidthFine_00B(BuiltInId::fwidthFine_Float1,
 constexpr const TFunction fwidthFine_10B(BuiltInId::fwidthFine_Float2,
                                          BuiltInName::fwidthFine,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p10B_o_10B,
+                                         BuiltInParameters::p10B10D,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                          EOpFwidthFine,
@@ -17785,7 +17801,7 @@ constexpr const TFunction fwidthFine_10B(BuiltInId::fwidthFine_Float2,
 constexpr const TFunction fwidthFine_20B(BuiltInId::fwidthFine_Float3,
                                          BuiltInName::fwidthFine,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p20B_o_20B,
+                                         BuiltInParameters::p20B00D,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                          EOpFwidthFine,
@@ -17793,7 +17809,7 @@ constexpr const TFunction fwidthFine_20B(BuiltInId::fwidthFine_Float3,
 constexpr const TFunction fwidthFine_30B(BuiltInId::fwidthFine_Float4,
                                          BuiltInName::fwidthFine,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p30B20B,
+                                         BuiltInParameters::p30B10B,
                                          1,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                          EOpFwidthFine,
@@ -17802,7 +17818,7 @@ constexpr const TFunction fwidthCoarse_00B(
     BuiltInId::fwidthCoarse_Float1,
     BuiltInName::fwidthCoarse,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00B00D,
+    BuiltInParameters::p00B_o_00B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpFwidthCoarse,
@@ -17811,7 +17827,7 @@ constexpr const TFunction fwidthCoarse_10B(
     BuiltInId::fwidthCoarse_Float2,
     BuiltInName::fwidthCoarse,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B_o_10B,
+    BuiltInParameters::p10B10D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpFwidthCoarse,
@@ -17820,7 +17836,7 @@ constexpr const TFunction fwidthCoarse_20B(
     BuiltInId::fwidthCoarse_Float3,
     BuiltInName::fwidthCoarse,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20B_o_20B,
+    BuiltInParameters::p20B00D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpFwidthCoarse,
@@ -17829,7 +17845,7 @@ constexpr const TFunction fwidthCoarse_30B(
     BuiltInId::fwidthCoarse_Float4,
     BuiltInName::fwidthCoarse,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B20B,
+    BuiltInParameters::p30B10B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpFwidthCoarse,
@@ -17838,7 +17854,7 @@ constexpr const TFunction interpolateAtCentroid_00B(
     BuiltInId::interpolateAtCentroid_Float1,
     BuiltInName::interpolateAtCentroid,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00B00D,
+    BuiltInParameters::p00B_o_00B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpInterpolateAtCentroid,
@@ -17847,7 +17863,7 @@ constexpr const TFunction interpolateAtCentroid_10B(
     BuiltInId::interpolateAtCentroid_Float2,
     BuiltInName::interpolateAtCentroid,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B_o_10B,
+    BuiltInParameters::p10B10D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpInterpolateAtCentroid,
@@ -17856,7 +17872,7 @@ constexpr const TFunction interpolateAtCentroid_20B(
     BuiltInId::interpolateAtCentroid_Float3,
     BuiltInName::interpolateAtCentroid,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p20B_o_20B,
+    BuiltInParameters::p20B00D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpInterpolateAtCentroid,
@@ -17865,7 +17881,7 @@ constexpr const TFunction interpolateAtCentroid_30B(
     BuiltInId::interpolateAtCentroid_Float4,
     BuiltInName::interpolateAtCentroid,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p30B20B,
+    BuiltInParameters::p30B10B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpInterpolateAtCentroid,
@@ -17919,7 +17935,7 @@ constexpr const TFunction interpolateAtOffset_10B10B(
     BuiltInId::interpolateAtOffset_Float2_Float2,
     BuiltInName::interpolateAtOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p10B10B10F,
+    BuiltInParameters::p10B10B10B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpInterpolateAtOffset,
@@ -17946,7 +17962,7 @@ constexpr const TFunction interpolateAtCentroidExt_00B(
     BuiltInId::interpolateAtCentroidExt_Float1,
     BuiltInName::interpolateAtCentroidExt,
     std::array<TExtension, 1u>{{TExtension::OES_shader_multisample_interpolation}},
-    BuiltInParameters::p00B00D,
+    BuiltInParameters::p00B_o_00B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpInterpolateAtCentroid,
@@ -17955,7 +17971,7 @@ constexpr const TFunction interpolateAtCentroidExt_10B(
     BuiltInId::interpolateAtCentroidExt_Float2,
     BuiltInName::interpolateAtCentroidExt,
     std::array<TExtension, 1u>{{TExtension::OES_shader_multisample_interpolation}},
-    BuiltInParameters::p10B_o_10B,
+    BuiltInParameters::p10B10D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpInterpolateAtCentroid,
@@ -17964,7 +17980,7 @@ constexpr const TFunction interpolateAtCentroidExt_20B(
     BuiltInId::interpolateAtCentroidExt_Float3,
     BuiltInName::interpolateAtCentroidExt,
     std::array<TExtension, 1u>{{TExtension::OES_shader_multisample_interpolation}},
-    BuiltInParameters::p20B_o_20B,
+    BuiltInParameters::p20B00D,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
     EOpInterpolateAtCentroid,
@@ -17973,7 +17989,7 @@ constexpr const TFunction interpolateAtCentroidExt_30B(
     BuiltInId::interpolateAtCentroidExt_Float4,
     BuiltInName::interpolateAtCentroidExt,
     std::array<TExtension, 1u>{{TExtension::OES_shader_multisample_interpolation}},
-    BuiltInParameters::p30B20B,
+    BuiltInParameters::p30B10B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpInterpolateAtCentroid,
@@ -18027,7 +18043,7 @@ constexpr const TFunction interpolateAtOffsetExt_10B10B(
     BuiltInId::interpolateAtOffsetExt_Float2_Float2,
     BuiltInName::interpolateAtOffsetExt,
     std::array<TExtension, 1u>{{TExtension::OES_shader_multisample_interpolation}},
-    BuiltInParameters::p10B10B10F,
+    BuiltInParameters::p10B10B10B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
     EOpInterpolateAtOffset,
@@ -18298,7 +18314,7 @@ constexpr const TFunction atomicCompSwap_00D00D00D(
 constexpr const TFunction imageSize_00z(BuiltInId::imageSize_Image2D1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p00z10D00D00D,
+                                        BuiltInParameters::p00z10D00B,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpImageSize,
@@ -18306,7 +18322,7 @@ constexpr const TFunction imageSize_00z(BuiltInId::imageSize_Image2D1,
 constexpr const TFunction imageSize_01A(BuiltInId::imageSize_IImage2D1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01A10D00E00E,
+                                        BuiltInParameters::p01A10D30D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpImageSize,
@@ -18314,7 +18330,7 @@ constexpr const TFunction imageSize_01A(BuiltInId::imageSize_IImage2D1,
 constexpr const TFunction imageSize_01B(BuiltInId::imageSize_UImage2D1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01B10D00B,
+                                        BuiltInParameters::p01B10D30E,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpImageSize,
@@ -18330,7 +18346,7 @@ constexpr const TFunction imageSize_01C(BuiltInId::imageSize_Image3D1,
 constexpr const TFunction imageSize_01D(BuiltInId::imageSize_IImage3D1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01D20D30D,
+                                        BuiltInParameters::p01D20D00B,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpImageSize,
@@ -18338,7 +18354,7 @@ constexpr const TFunction imageSize_01D(BuiltInId::imageSize_IImage3D1,
 constexpr const TFunction imageSize_01E(BuiltInId::imageSize_UImage3D1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01E20D00D00D,
+                                        BuiltInParameters::p01E20D00E00E,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpImageSize,
@@ -18346,7 +18362,7 @@ constexpr const TFunction imageSize_01E(BuiltInId::imageSize_UImage3D1,
 constexpr const TFunction imageSize_01F(BuiltInId::imageSize_Image2DArray1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01F20D00D00D,
+                                        BuiltInParameters::p01F20D00B,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpImageSize,
@@ -18354,7 +18370,7 @@ constexpr const TFunction imageSize_01F(BuiltInId::imageSize_Image2DArray1,
 constexpr const TFunction imageSize_01G(BuiltInId::imageSize_IImage2DArray1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01G20D00D00D,
+                                        BuiltInParameters::p01G20D00B,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpImageSize,
@@ -18362,7 +18378,7 @@ constexpr const TFunction imageSize_01G(BuiltInId::imageSize_IImage2DArray1,
 constexpr const TFunction imageSize_01H(BuiltInId::imageSize_UImage2DArray1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01H20D00B,
+                                        BuiltInParameters::p01H20D00D00D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpImageSize,
@@ -18370,7 +18386,7 @@ constexpr const TFunction imageSize_01H(BuiltInId::imageSize_UImage2DArray1,
 constexpr const TFunction imageSize_01I(BuiltInId::imageSize_ImageCube1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01I20D00E00E,
+                                        BuiltInParameters::p01I20D00B,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpImageSize,
@@ -18378,7 +18394,7 @@ constexpr const TFunction imageSize_01I(BuiltInId::imageSize_ImageCube1,
 constexpr const TFunction imageSize_01J(BuiltInId::imageSize_IImageCube1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01J20D00E00E,
+                                        BuiltInParameters::p01J20D00B,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpImageSize,
@@ -18386,7 +18402,7 @@ constexpr const TFunction imageSize_01J(BuiltInId::imageSize_IImageCube1,
 constexpr const TFunction imageSize_01K(BuiltInId::imageSize_UImageCube1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01K20D00D00D,
+                                        BuiltInParameters::p01K20D00E00E,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpImageSize,
@@ -18402,7 +18418,7 @@ constexpr const TFunction imageSize_01X(BuiltInId::imageSize_ImageCubeArray1,
 constexpr const TFunction imageSize_01Y(BuiltInId::imageSize_IImageCubeArray1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01Y20D00E00E,
+                                        BuiltInParameters::p01Y20D30D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpImageSize,
@@ -18410,7 +18426,7 @@ constexpr const TFunction imageSize_01Y(BuiltInId::imageSize_IImageCubeArray1,
 constexpr const TFunction imageSize_01Z(BuiltInId::imageSize_UImageCubeArray1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01Z20D00D00D,
+                                        BuiltInParameters::p01Z20D00B,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpImageSize,
@@ -18430,7 +18446,7 @@ constexpr const TFunction imageSizeExt_01Y(BuiltInId::imageSizeExt_IImageCubeArr
                                            std::array<TExtension, 2u>{
                                                {TExtension::OES_texture_cube_map_array,
                                                 TExtension::EXT_texture_cube_map_array}},
-                                           BuiltInParameters::p01Y20D00E00E,
+                                           BuiltInParameters::p01Y20D30D,
                                            1,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                            EOpImageSize,
@@ -18440,7 +18456,7 @@ constexpr const TFunction imageSizeExt_01Z(BuiltInId::imageSizeExt_UImageCubeArr
                                            std::array<TExtension, 2u>{
                                                {TExtension::OES_texture_cube_map_array,
                                                 TExtension::EXT_texture_cube_map_array}},
-                                           BuiltInParameters::p01Z20D00D00D,
+                                           BuiltInParameters::p01Z20D00B,
                                            1,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                            EOpImageSize,
@@ -18448,7 +18464,7 @@ constexpr const TFunction imageSizeExt_01Z(BuiltInId::imageSizeExt_UImageCubeArr
 constexpr const TFunction imageSize_01d(BuiltInId::imageSize_ImageBuffer1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01d00D30B,
+                                        BuiltInParameters::p01d00D00E00E,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpImageSize,
@@ -18456,7 +18472,7 @@ constexpr const TFunction imageSize_01d(BuiltInId::imageSize_ImageBuffer1,
 constexpr const TFunction imageSize_01e(BuiltInId::imageSize_IImageBuffer1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01e00D00E00E,
+                                        BuiltInParameters::p01e00D00D00D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpImageSize,
@@ -18473,7 +18489,7 @@ constexpr const TFunction imageSizeExt_01d(
     BuiltInId::imageSizeExt_ImageBuffer1,
     BuiltInName::imageSizeExt,
     std::array<TExtension, 2u>{{TExtension::OES_texture_buffer, TExtension::EXT_texture_buffer}},
-    BuiltInParameters::p01d00D30B,
+    BuiltInParameters::p01d00D00E00E,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageSize,
@@ -18482,7 +18498,7 @@ constexpr const TFunction imageSizeExt_01e(
     BuiltInId::imageSizeExt_IImageBuffer1,
     BuiltInName::imageSizeExt,
     std::array<TExtension, 2u>{{TExtension::OES_texture_buffer, TExtension::EXT_texture_buffer}},
-    BuiltInParameters::p01e00D00E00E,
+    BuiltInParameters::p01e00D00D00D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageSize,
@@ -18499,7 +18515,7 @@ constexpr const TFunction imageSizeExt_01f(
 constexpr const TFunction imageSize_01L(BuiltInId::imageSize_Image1D1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01L00D00E00E,
+                                        BuiltInParameters::p01L00D00D00D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpImageSize,
@@ -18507,7 +18523,7 @@ constexpr const TFunction imageSize_01L(BuiltInId::imageSize_Image1D1,
 constexpr const TFunction imageSize_01M(BuiltInId::imageSize_IImage1D1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01M00D00E00E,
+                                        BuiltInParameters::p01M00D30D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpImageSize,
@@ -18515,7 +18531,7 @@ constexpr const TFunction imageSize_01M(BuiltInId::imageSize_IImage1D1,
 constexpr const TFunction imageSize_01N(BuiltInId::imageSize_UImage1D1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01N00D30E,
+                                        BuiltInParameters::p01N00D00E00E,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                         EOpImageSize,
@@ -18523,7 +18539,7 @@ constexpr const TFunction imageSize_01N(BuiltInId::imageSize_UImage1D1,
 constexpr const TFunction imageSize_01a(BuiltInId::imageSize_ImageRect1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01a10D30B,
+                                        BuiltInParameters::p01a10D00E00E,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpImageSize,
@@ -18547,7 +18563,7 @@ constexpr const TFunction imageSize_01c(BuiltInId::imageSize_UImageRect1,
 constexpr const TFunction imageSize_01O(BuiltInId::imageSize_Image1DArray1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01O10D00E00E,
+                                        BuiltInParameters::p01O10D00B,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpImageSize,
@@ -18563,7 +18579,7 @@ constexpr const TFunction imageSize_01P(BuiltInId::imageSize_IImage1DArray1,
 constexpr const TFunction imageSize_01Q(BuiltInId::imageSize_UImage1DArray1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01Q10D00E00E,
+                                        BuiltInParameters::p01Q10D00D00D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpImageSize,
@@ -18579,7 +18595,7 @@ constexpr const TFunction imageSize_01R(BuiltInId::imageSize_Image2DMS1,
 constexpr const TFunction imageSize_01S(BuiltInId::imageSize_IImage2DMS1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01S10D00D00B,
+                                        BuiltInParameters::p01S10D00D30D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                         EOpImageSize,
@@ -18595,7 +18611,7 @@ constexpr const TFunction imageSize_01T(BuiltInId::imageSize_UImage2DMS1,
 constexpr const TFunction imageSize_01U(BuiltInId::imageSize_Image2DMSArray1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01U20D00D00B,
+                                        BuiltInParameters::p01U20D00D00D00D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpImageSize,
@@ -18603,7 +18619,7 @@ constexpr const TFunction imageSize_01U(BuiltInId::imageSize_Image2DMSArray1,
 constexpr const TFunction imageSize_01V(BuiltInId::imageSize_IImage2DMSArray1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01V20D00D30D,
+                                        BuiltInParameters::p01V20D00D00D00D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpImageSize,
@@ -18611,7 +18627,7 @@ constexpr const TFunction imageSize_01V(BuiltInId::imageSize_IImage2DMSArray1,
 constexpr const TFunction imageSize_01W(BuiltInId::imageSize_UImage2DMSArray1,
                                         BuiltInName::imageSize,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                        BuiltInParameters::p01W20D00D30E,
+                                        BuiltInParameters::p01W20D00D00D00D,
                                         1,
                                         StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                         EOpImageSize,
@@ -18627,7 +18643,7 @@ constexpr const TFunction imageSamples_01R(BuiltInId::imageSamples_Image2DMS1,
 constexpr const TFunction imageSamples_01S(BuiltInId::imageSamples_IImage2DMS1,
                                            BuiltInName::imageSamples,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01S10D00D00B,
+                                           BuiltInParameters::p01S10D00D30D,
                                            1,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                            EOpImageSamples,
@@ -18643,7 +18659,7 @@ constexpr const TFunction imageSamples_01T(BuiltInId::imageSamples_UImage2DMS1,
 constexpr const TFunction imageSamples_01U(BuiltInId::imageSamples_Image2DMSArray1,
                                            BuiltInName::imageSamples,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01U20D00D00B,
+                                           BuiltInParameters::p01U20D00D00D00D,
                                            1,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                            EOpImageSamples,
@@ -18651,7 +18667,7 @@ constexpr const TFunction imageSamples_01U(BuiltInId::imageSamples_Image2DMSArra
 constexpr const TFunction imageSamples_01V(BuiltInId::imageSamples_IImage2DMSArray1,
                                            BuiltInName::imageSamples,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01V20D00D30D,
+                                           BuiltInParameters::p01V20D00D00D00D,
                                            1,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                            EOpImageSamples,
@@ -18659,7 +18675,7 @@ constexpr const TFunction imageSamples_01V(BuiltInId::imageSamples_IImage2DMSArr
 constexpr const TFunction imageSamples_01W(BuiltInId::imageSamples_UImage2DMSArray1,
                                            BuiltInName::imageSamples,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01W20D00D30E,
+                                           BuiltInParameters::p01W20D00D00D00D,
                                            1,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                            EOpImageSamples,
@@ -19022,7 +19038,7 @@ constexpr const TFunction imageLoad_00z10D(
     BuiltInId::imageLoad_Image2D1_Int2,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00z10D00D00D,
+    BuiltInParameters::p00z10D00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19030,7 +19046,7 @@ constexpr const TFunction imageLoad_00z10D(
 constexpr const TFunction imageLoad_01A10D(BuiltInId::imageLoad_IImage2D1_Int2,
                                            BuiltInName::imageLoad,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01A10D00E00E,
+                                           BuiltInParameters::p01A10D30D,
                                            2,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                            EOpImageLoad,
@@ -19039,7 +19055,7 @@ constexpr const TFunction imageLoad_01B10D(
     BuiltInId::imageLoad_UImage2D1_Int2,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01B10D00B,
+    BuiltInParameters::p01B10D30E,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19056,7 +19072,7 @@ constexpr const TFunction imageLoad_01C20D(
 constexpr const TFunction imageLoad_01D20D(BuiltInId::imageLoad_IImage3D1_Int3,
                                            BuiltInName::imageLoad,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01D20D30D,
+                                           BuiltInParameters::p01D20D00B,
                                            2,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                            EOpImageLoad,
@@ -19065,7 +19081,7 @@ constexpr const TFunction imageLoad_01E20D(
     BuiltInId::imageLoad_UImage3D1_Int3,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01E20D00D00D,
+    BuiltInParameters::p01E20D00E00E,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19074,7 +19090,7 @@ constexpr const TFunction imageLoad_01F20D(
     BuiltInId::imageLoad_Image2DArray1_Int3,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01F20D00D00D,
+    BuiltInParameters::p01F20D00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19082,7 +19098,7 @@ constexpr const TFunction imageLoad_01F20D(
 constexpr const TFunction imageLoad_01G20D(BuiltInId::imageLoad_IImage2DArray1_Int3,
                                            BuiltInName::imageLoad,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01G20D00D00D,
+                                           BuiltInParameters::p01G20D00B,
                                            2,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                            EOpImageLoad,
@@ -19091,7 +19107,7 @@ constexpr const TFunction imageLoad_01H20D(
     BuiltInId::imageLoad_UImage2DArray1_Int3,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01H20D00B,
+    BuiltInParameters::p01H20D00D00D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19100,7 +19116,7 @@ constexpr const TFunction imageLoad_01I20D(
     BuiltInId::imageLoad_ImageCube1_Int3,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01I20D00E00E,
+    BuiltInParameters::p01I20D00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19108,7 +19124,7 @@ constexpr const TFunction imageLoad_01I20D(
 constexpr const TFunction imageLoad_01J20D(BuiltInId::imageLoad_IImageCube1_Int3,
                                            BuiltInName::imageLoad,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01J20D00E00E,
+                                           BuiltInParameters::p01J20D00B,
                                            2,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                            EOpImageLoad,
@@ -19117,7 +19133,7 @@ constexpr const TFunction imageLoad_01K20D(
     BuiltInId::imageLoad_UImageCube1_Int3,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01K20D00D00D,
+    BuiltInParameters::p01K20D00E00E,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19134,7 +19150,7 @@ constexpr const TFunction imageLoad_01X20D(
 constexpr const TFunction imageLoad_01Y20D(BuiltInId::imageLoad_IImageCubeArray1_Int3,
                                            BuiltInName::imageLoad,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01Y20D00E00E,
+                                           BuiltInParameters::p01Y20D30D,
                                            2,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                            EOpImageLoad,
@@ -19143,7 +19159,7 @@ constexpr const TFunction imageLoad_01Z20D(
     BuiltInId::imageLoad_UImageCubeArray1_Int3,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01Z20D00D00D,
+    BuiltInParameters::p01Z20D00B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19163,7 +19179,7 @@ constexpr const TFunction imageLoadExt_01Y20D(
     BuiltInName::imageLoadExt,
     std::array<TExtension, 2u>{
         {TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array}},
-    BuiltInParameters::p01Y20D00E00E,
+    BuiltInParameters::p01Y20D30D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19173,7 +19189,7 @@ constexpr const TFunction imageLoadExt_01Z20D(
     BuiltInName::imageLoadExt,
     std::array<TExtension, 2u>{
         {TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array}},
-    BuiltInParameters::p01Z20D00D00D,
+    BuiltInParameters::p01Z20D00B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19182,7 +19198,7 @@ constexpr const TFunction imageLoad_01d00D(
     BuiltInId::imageLoad_ImageBuffer1_Int1,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01d00D30B,
+    BuiltInParameters::p01d00D00E00E,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19190,7 +19206,7 @@ constexpr const TFunction imageLoad_01d00D(
 constexpr const TFunction imageLoad_01e00D(BuiltInId::imageLoad_IImageBuffer1_Int1,
                                            BuiltInName::imageLoad,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01e00D00E00E,
+                                           BuiltInParameters::p01e00D00D00D,
                                            2,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                            EOpImageLoad,
@@ -19208,7 +19224,7 @@ constexpr const TFunction imageLoadExt_01d00D(
     BuiltInId::imageLoadExt_ImageBuffer1_Int1,
     BuiltInName::imageLoadExt,
     std::array<TExtension, 2u>{{TExtension::OES_texture_buffer, TExtension::EXT_texture_buffer}},
-    BuiltInParameters::p01d00D30B,
+    BuiltInParameters::p01d00D00E00E,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19217,7 +19233,7 @@ constexpr const TFunction imageLoadExt_01e00D(
     BuiltInId::imageLoadExt_IImageBuffer1_Int1,
     BuiltInName::imageLoadExt,
     std::array<TExtension, 2u>{{TExtension::OES_texture_buffer, TExtension::EXT_texture_buffer}},
-    BuiltInParameters::p01e00D00E00E,
+    BuiltInParameters::p01e00D00D00D,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19235,7 +19251,7 @@ constexpr const TFunction imageLoad_01L00D(
     BuiltInId::imageLoad_Image1D1_Int1,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01L00D00E00E,
+    BuiltInParameters::p01L00D00D00D,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19243,7 +19259,7 @@ constexpr const TFunction imageLoad_01L00D(
 constexpr const TFunction imageLoad_01M00D(BuiltInId::imageLoad_IImage1D1_Int1,
                                            BuiltInName::imageLoad,
                                            std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                           BuiltInParameters::p01M00D00E00E,
+                                           BuiltInParameters::p01M00D30D,
                                            2,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
                                            EOpImageLoad,
@@ -19252,7 +19268,7 @@ constexpr const TFunction imageLoad_01N00D(
     BuiltInId::imageLoad_UImage1D1_Int1,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01N00D30E,
+    BuiltInParameters::p01N00D00E00E,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19261,7 +19277,7 @@ constexpr const TFunction imageLoad_01O10D(
     BuiltInId::imageLoad_Image1DArray1_Int2,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01O10D00E00E,
+    BuiltInParameters::p01O10D00B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19278,7 +19294,7 @@ constexpr const TFunction imageLoad_01Q10D(
     BuiltInId::imageLoad_UImage1DArray1_Int2,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01Q10D00E00E,
+    BuiltInParameters::p01Q10D00D00D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19287,7 +19303,7 @@ constexpr const TFunction imageLoad_01a10D(
     BuiltInId::imageLoad_ImageRect1_Int2,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01a10D30B,
+    BuiltInParameters::p01a10D00E00E,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19322,7 +19338,7 @@ constexpr const TFunction imageLoad_01S10D00D(
     BuiltInId::imageLoad_IImage2DMS1_Int2_Int1,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01S10D00D00B,
+    BuiltInParameters::p01S10D00D30D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19340,7 +19356,7 @@ constexpr const TFunction imageLoad_01U20D00D(
     BuiltInId::imageLoad_Image2DMSArray1_Int3_Int1,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01U20D00D00B,
+    BuiltInParameters::p01U20D00D00D00D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19349,7 +19365,7 @@ constexpr const TFunction imageLoad_01V20D00D(
     BuiltInId::imageLoad_IImage2DMSArray1_Int3_Int1,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01V20D00D30D,
+    BuiltInParameters::p01V20D00D00D00D,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -19358,7 +19374,7 @@ constexpr const TFunction imageLoad_01W20D00D(
     BuiltInId::imageLoad_UImage2DMSArray1_Int3_Int1,
     BuiltInName::imageLoad,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p01W20D00D30E,
+    BuiltInParameters::p01W20D00D00D00D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpImageLoad,
@@ -29464,7 +29480,7 @@ constexpr const TFunction imageAtomicCompSwapExt_01W20D00D00D00D(
 constexpr const TFunction noise1_00B(BuiltInId::noise1_Float1,
                                      BuiltInName::noise1,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00D,
+                                     BuiltInParameters::p00B_o_00B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpNoise1,
@@ -29472,7 +29488,7 @@ constexpr const TFunction noise1_00B(BuiltInId::noise1_Float1,
 constexpr const TFunction noise1_10B(BuiltInId::noise1_Float2,
                                      BuiltInName::noise1,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B_o_10B,
+                                     BuiltInParameters::p10B10D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpNoise1,
@@ -29480,7 +29496,7 @@ constexpr const TFunction noise1_10B(BuiltInId::noise1_Float2,
 constexpr const TFunction noise1_20B(BuiltInId::noise1_Float3,
                                      BuiltInName::noise1,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20B_o_20B,
+                                     BuiltInParameters::p20B00D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpNoise1,
@@ -29488,7 +29504,7 @@ constexpr const TFunction noise1_20B(BuiltInId::noise1_Float3,
 constexpr const TFunction noise1_30B(BuiltInId::noise1_Float4,
                                      BuiltInName::noise1,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B20B,
+                                     BuiltInParameters::p30B10B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                      EOpNoise1,
@@ -29496,7 +29512,7 @@ constexpr const TFunction noise1_30B(BuiltInId::noise1_Float4,
 constexpr const TFunction noise2_00B(BuiltInId::noise2_Float1,
                                      BuiltInName::noise2,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00D,
+                                     BuiltInParameters::p00B_o_00B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpNoise2,
@@ -29504,7 +29520,7 @@ constexpr const TFunction noise2_00B(BuiltInId::noise2_Float1,
 constexpr const TFunction noise2_10B(BuiltInId::noise2_Float2,
                                      BuiltInName::noise2,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B_o_10B,
+                                     BuiltInParameters::p10B10D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpNoise2,
@@ -29512,7 +29528,7 @@ constexpr const TFunction noise2_10B(BuiltInId::noise2_Float2,
 constexpr const TFunction noise2_20B(BuiltInId::noise2_Float3,
                                      BuiltInName::noise2,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20B_o_20B,
+                                     BuiltInParameters::p20B00D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpNoise2,
@@ -29520,7 +29536,7 @@ constexpr const TFunction noise2_20B(BuiltInId::noise2_Float3,
 constexpr const TFunction noise2_30B(BuiltInId::noise2_Float4,
                                      BuiltInName::noise2,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B20B,
+                                     BuiltInParameters::p30B10B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
                                      EOpNoise2,
@@ -29528,7 +29544,7 @@ constexpr const TFunction noise2_30B(BuiltInId::noise2_Float4,
 constexpr const TFunction noise3_00B(BuiltInId::noise3_Float1,
                                      BuiltInName::noise3,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00D,
+                                     BuiltInParameters::p00B_o_00B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpNoise3,
@@ -29536,7 +29552,7 @@ constexpr const TFunction noise3_00B(BuiltInId::noise3_Float1,
 constexpr const TFunction noise3_10B(BuiltInId::noise3_Float2,
                                      BuiltInName::noise3,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B_o_10B,
+                                     BuiltInParameters::p10B10D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpNoise3,
@@ -29544,7 +29560,7 @@ constexpr const TFunction noise3_10B(BuiltInId::noise3_Float2,
 constexpr const TFunction noise3_20B(BuiltInId::noise3_Float3,
                                      BuiltInName::noise3,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20B_o_20B,
+                                     BuiltInParameters::p20B00D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpNoise3,
@@ -29552,7 +29568,7 @@ constexpr const TFunction noise3_20B(BuiltInId::noise3_Float3,
 constexpr const TFunction noise3_30B(BuiltInId::noise3_Float4,
                                      BuiltInName::noise3,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B20B,
+                                     BuiltInParameters::p30B10B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
                                      EOpNoise3,
@@ -29560,7 +29576,7 @@ constexpr const TFunction noise3_30B(BuiltInId::noise3_Float4,
 constexpr const TFunction noise4_00B(BuiltInId::noise4_Float1,
                                      BuiltInName::noise4,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p00B00D,
+                                     BuiltInParameters::p00B_o_00B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpNoise4,
@@ -29568,7 +29584,7 @@ constexpr const TFunction noise4_00B(BuiltInId::noise4_Float1,
 constexpr const TFunction noise4_10B(BuiltInId::noise4_Float2,
                                      BuiltInName::noise4,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p10B_o_10B,
+                                     BuiltInParameters::p10B10D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpNoise4,
@@ -29576,7 +29592,7 @@ constexpr const TFunction noise4_10B(BuiltInId::noise4_Float2,
 constexpr const TFunction noise4_20B(BuiltInId::noise4_Float3,
                                      BuiltInName::noise4,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p20B_o_20B,
+                                     BuiltInParameters::p20B00D,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpNoise4,
@@ -29584,7 +29600,7 @@ constexpr const TFunction noise4_20B(BuiltInId::noise4_Float3,
 constexpr const TFunction noise4_30B(BuiltInId::noise4_Float4,
                                      BuiltInName::noise4,
                                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                     BuiltInParameters::p30B20B,
+                                     BuiltInParameters::p30B10B,
                                      1,
                                      StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
                                      EOpNoise4,
@@ -29698,7 +29714,7 @@ constexpr const TFunction EmitStreamVertex_00D(
     BuiltInId::EmitStreamVertex_Int1,
     BuiltInName::EmitStreamVertex,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00D00D_o_00D_o_00D,
+    BuiltInParameters::p00D00D00D00D,
     1,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpEmitStreamVertex,
@@ -29707,7 +29723,7 @@ constexpr const TFunction EndStreamPrimitive_00D(
     BuiltInId::EndStreamPrimitive_Int1,
     BuiltInName::EndStreamPrimitive,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00D00D_o_00D_o_00D,
+    BuiltInParameters::p00D00D00D00D,
     1,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpEndStreamPrimitive,
@@ -29791,23 +29807,6 @@ constexpr const TFunction allInvocationsEqual_00F(
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpAllInvocationsEqual,
     false);
-constexpr const TFunction textureVideoWEBGL_00y10B(
-    BuiltInId::textureVideoWEBGL_SamplerVideoWEBGL1_Float2,
-    BuiltInName::textureVideoWEBGL,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00y10B,
-    2,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureVideoWEBGL,
-    false);
-constexpr const TFunction texture_00y10B(BuiltInId::texture_SamplerVideoWEBGL1_Float2,
-                                         BuiltInName::texture,
-                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00y10B,
-                                         2,
-                                         StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-                                         EOpTextureVideoWEBGL,
-                                         false);
 
 }  // namespace Func
 
@@ -30958,12 +30957,6 @@ constexpr SymbolRule kRules[] = {
         &texture2DRectProj_00O20B),
     Rule::Get<Spec::ESSL, 100, Shader::ALL, EXT_INDEX(ARB_texture_rectangle)>(
         &texture2DRectProj_00O30B),
-    Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&texture_00O10B),
-    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ARB_texture_rectangle)>(&texture_00O10B),
-    Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&textureProj_00O20B),
-    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ARB_texture_rectangle)>(&textureProj_00O20B),
-    Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&textureProj_00O30B),
-    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ARB_texture_rectangle)>(&textureProj_00O30B),
     Rule::Get<Spec::ESSL, 100, Shader::ALL, EXT_INDEX(EXT_shader_texture_lod)>(
         &texture2DGradEXT_00I10B10B10B),
     Rule::Get<Spec::ESSL, 100, Shader::ALL, EXT_INDEX(EXT_shader_texture_lod)>(
@@ -30972,6 +30965,8 @@ constexpr SymbolRule kRules[] = {
         &texture2DProjGradEXT_00I30B10B10B),
     Rule::Get<Spec::ESSL, 100, Shader::ALL, EXT_INDEX(EXT_shader_texture_lod)>(
         &textureCubeGradEXT_00K20B20B20B),
+    Rule::Get<Spec::ESSL, 100, Shader::ALL, 0>(&textureVideoWEBGL_00y10B),
+    Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&textureVideoWEBGL_00y10B),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, 0>(&texture2D_00I10B00B),
     Rule::Get<Spec::GLSL, 0, Shader::FRAGMENT, 0>(&texture2D_00I10B00B),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, 0>(&texture2DProj_00I20B00B),
@@ -31063,6 +31058,8 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texture_00p20B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texture_00u20B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texture_00i20B),
+    Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&texture_00O10B),
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ARB_texture_rectangle)>(&texture_00O10B),
     Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&texture_00q10B),
     Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&texture_00v10B),
     Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&texture_00n20B),
@@ -31111,6 +31108,8 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(OES_EGL_image_external_essl3)>(
         &texture_00M10B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(EXT_YUV_target)>(&texture_00N10B),
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&texture_00y10B),
+    Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texture_00y10B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureProj_00I20B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProj_00I20B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureProj_00R20B),
@@ -31138,8 +31137,12 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProj_00o30B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProj_00t30B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProj_00m30B),
+    Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&textureProj_00O20B),
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ARB_texture_rectangle)>(&textureProj_00O20B),
     Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&textureProj_00q20B),
     Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&textureProj_00v20B),
+    Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&textureProj_00O30B),
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(ARB_texture_rectangle)>(&textureProj_00O30B),
     Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&textureProj_00q30B),
     Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&textureProj_00v30B),
     Rule::Get<Spec::GLSL, 140, Shader::ALL, 0>(&textureProj_00n30B),
@@ -31892,8 +31895,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProjOffset_00o30B00D00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProjOffset_00t30B00D00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProjOffset_00m30B00D00B),
-    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(EXT_YUV_target)>(&rgb_2_yuv_20B00H),
-    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(EXT_YUV_target)>(&yuv_2_rgb_20B00H),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&textureGather_00I10B),
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGather_00I10B),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, 0>(&textureGather_00R10B),
@@ -32086,6 +32087,8 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00O10B10Dx400D),
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00q10B10Dx400D),
     Rule::Get<Spec::GLSL, 400, Shader::ALL, 0>(&textureGatherOffsets_00v10B10Dx400D),
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(EXT_YUV_target)>(&rgb_2_yuv_20B00H),
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(EXT_YUV_target)>(&yuv_2_rgb_20B00H),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&dFdx_00B),
     Rule::Get<Spec::GLSL, 0, Shader::FRAGMENT, 0>(&dFdx_00B),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, EXT_INDEX(OES_standard_derivatives)>(&dFdxExt_00B),
@@ -34199,10 +34202,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 460, Shader::ALL, 0>(&anyInvocation_00F),
     Rule::Get<Spec::GLSL, 460, Shader::ALL, 0>(&allInvocations_00F),
     Rule::Get<Spec::GLSL, 460, Shader::ALL, 0>(&allInvocationsEqual_00F),
-    Rule::Get<Spec::ESSL, 100, Shader::ALL, 0>(&textureVideoWEBGL_00y10B),
-    Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&textureVideoWEBGL_00y10B),
-    Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&texture_00y10B),
-    Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&texture_00y10B),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&TableBase::m_gl_DepthRangeParameters),
     Rule::Get<Spec::GLSL, 0, Shader::ALL, 0>(&TableBase::m_gl_DepthRangeParameters),
     Rule::Get<Spec::ESSL, 0, Shader::ALL, 0>(&TableBase::m_gl_DepthRange),
@@ -35314,13 +35313,11 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "texture2DRect(00O10B",
                                          "texture2DRectProj(00O20B",
                                          "texture2DRectProj(00O30B",
-                                         "texture(00O10B",
-                                         "textureProj(00O20B",
-                                         "textureProj(00O30B",
                                          "texture2DGradEXT(00I10B10B10B",
                                          "texture2DProjGradEXT(00I20B10B10B",
                                          "texture2DProjGradEXT(00I30B10B10B",
                                          "textureCubeGradEXT(00K20B20B20B",
+                                         "textureVideoWEBGL(00y10B",
                                          "texture2D(00I10B00B",
                                          "texture2DProj(00I20B00B",
                                          "texture2DProj(00I30B00B",
@@ -35376,6 +35373,7 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "texture(00p20B",
                                          "texture(00u20B",
                                          "texture(00i20B",
+                                         "texture(00O10B",
                                          "texture(00q10B",
                                          "texture(00v10B",
                                          "texture(00n20B",
@@ -35388,6 +35386,7 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "texture(00l30B00B",
                                          "texture(00M10B",
                                          "texture(00N10B",
+                                         "texture(00y10B",
                                          "textureProj(00I20B",
                                          "textureProj(00R20B",
                                          "textureProj(00X20B",
@@ -35405,8 +35404,10 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "textureProj(00o30B",
                                          "textureProj(00t30B",
                                          "textureProj(00m30B",
+                                         "textureProj(00O20B",
                                          "textureProj(00q20B",
                                          "textureProj(00v20B",
+                                         "textureProj(00O30B",
                                          "textureProj(00q30B",
                                          "textureProj(00v30B",
                                          "textureProj(00n30B",
@@ -35868,8 +35869,6 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "textureProjOffset(00o30B00D00B",
                                          "textureProjOffset(00t30B00D00B",
                                          "textureProjOffset(00m30B00D00B",
-                                         "rgb_2_yuv(20B00H",
-                                         "yuv_2_rgb(20B00H",
                                          "textureGather(00I10B",
                                          "textureGather(00R10B",
                                          "textureGather(00X10B",
@@ -35950,6 +35949,8 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "textureGatherOffsets(00O10B10Dx400D",
                                          "textureGatherOffsets(00q10B10Dx400D",
                                          "textureGatherOffsets(00v10B10Dx400D",
+                                         "rgb_2_yuv(20B00H",
+                                         "yuv_2_rgb(20B00H",
                                          "dFdx(00B",
                                          "dFdx(10B",
                                          "dFdx(20B",
@@ -36728,8 +36729,6 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "anyInvocation(00F",
                                          "allInvocations(00F",
                                          "allInvocationsEqual(00F",
-                                         "textureVideoWEBGL(00y10B",
-                                         "texture(00y10B",
                                          "gl_DepthRangeParameters",
                                          "gl_DepthRange",
                                          "gl_NumSamples",
@@ -37497,80 +37496,80 @@ constexpr uint16_t kMangledOffsets[] = {
     1129,  // texture2DRect_00O10B
     1130,  // texture2DRectProj_00O20B
     1131,  // texture2DRectProj_00O30B
-    1132,  // texture_00O10B
-    1134,  // textureProj_00O20B
-    1136,  // textureProj_00O30B
-    1138,  // texture2DGradEXT_00I10B10B10B
-    1139,  // texture2DProjGradEXT_00I20B10B10B
-    1140,  // texture2DProjGradEXT_00I30B10B10B
-    1141,  // textureCubeGradEXT_00K20B20B20B
-    1142,  // texture2D_00I10B00B
-    1144,  // texture2DProj_00I20B00B
-    1146,  // texture2DProj_00I30B00B
-    1148,  // textureCube_00K20B00B
-    1150,  // texture3D_00J20B00B
-    1152,  // texture3DProj_00J30B00B
-    1154,  // texture3DLod_00J20B00B
-    1156,  // texture3DProjLod_00J30B00B
-    1158,  // texture1D_00g00B00B
-    1159,  // texture1DProj_00g10B00B
-    1160,  // texture1DProj_00g30B00B
-    1161,  // shadow1D_00m20B00B
-    1162,  // shadow1DProj_00m30B00B
-    1163,  // shadow2D_00d20B00B
-    1164,  // shadow2DProj_00d30B00B
-    1165,  // texture2DLodEXT_00I10B00B
-    1166,  // texture2DProjLodEXT_00I20B00B
-    1167,  // texture2DProjLodEXT_00I30B00B
-    1168,  // textureCubeLodEXT_00K20B00B
-    1169,  // shadow2DEXT_00d20B
-    1170,  // shadow2DProjEXT_00d30B
-    1171,  // texture2DLod_00I10B00B
-    1173,  // texture2DProjLod_00I20B00B
-    1175,  // texture2DProjLod_00I30B00B
-    1177,  // textureCubeLod_00K20B00B
-    1179,  // texture1DLod_00g00B00B
-    1180,  // texture1DProjLod_00g10B00B
-    1181,  // texture1DProjLod_00g30B00B
-    1182,  // shadow1DLod_00m20B00B
-    1183,  // shadow1DProjLod_00m30B00B
-    1184,  // shadow2DLod_00d20B00B
-    1185,  // shadow2DProjLod_00d30B00B
-    1186,  // texture_00I10B
-    1188,  // texture_00R10B
-    1190,  // texture_00X10B
-    1192,  // texture_00J20B
-    1194,  // texture_00S20B
-    1196,  // texture_00Y20B
-    1198,  // texture_00K20B
-    1200,  // texture_00T20B
-    1202,  // texture_00Z20B
-    1204,  // texture_00L20B
-    1206,  // texture_00U20B
-    1208,  // texture_00a20B
-    1210,  // texture_00d20B
-    1212,  // texture_00e30B
-    1214,  // texture_00f30B
-    1216,  // texture_00g00B
-    1217,  // texture_00o00B
-    1218,  // texture_00t00B
-    1219,  // texture_00m20B
-    1220,  // texture_00h20B
-    1221,  // texture_00p20B
-    1222,  // texture_00u20B
-    1223,  // texture_00i20B
-    1224,  // texture_00q10B
-    1225,  // texture_00v10B
-    1226,  // texture_00n20B
-    1227,  // texture_00k30B
-    1231,  // texture_00s30B
-    1235,  // texture_00x30B
-    1239,  // texture_00k30B00B
-    1243,  // texture_00s30B00B
-    1247,  // texture_00x30B00B
-    1251,  // texture_00l30B00B
-    1255,  // texture_00M10B
-    1256,  // texture_00N10B
+    1132,  // texture2DGradEXT_00I10B10B10B
+    1133,  // texture2DProjGradEXT_00I20B10B10B
+    1134,  // texture2DProjGradEXT_00I30B10B10B
+    1135,  // textureCubeGradEXT_00K20B20B20B
+    1136,  // textureVideoWEBGL_00y10B
+    1138,  // texture2D_00I10B00B
+    1140,  // texture2DProj_00I20B00B
+    1142,  // texture2DProj_00I30B00B
+    1144,  // textureCube_00K20B00B
+    1146,  // texture3D_00J20B00B
+    1148,  // texture3DProj_00J30B00B
+    1150,  // texture3DLod_00J20B00B
+    1152,  // texture3DProjLod_00J30B00B
+    1154,  // texture1D_00g00B00B
+    1155,  // texture1DProj_00g10B00B
+    1156,  // texture1DProj_00g30B00B
+    1157,  // shadow1D_00m20B00B
+    1158,  // shadow1DProj_00m30B00B
+    1159,  // shadow2D_00d20B00B
+    1160,  // shadow2DProj_00d30B00B
+    1161,  // texture2DLodEXT_00I10B00B
+    1162,  // texture2DProjLodEXT_00I20B00B
+    1163,  // texture2DProjLodEXT_00I30B00B
+    1164,  // textureCubeLodEXT_00K20B00B
+    1165,  // shadow2DEXT_00d20B
+    1166,  // shadow2DProjEXT_00d30B
+    1167,  // texture2DLod_00I10B00B
+    1169,  // texture2DProjLod_00I20B00B
+    1171,  // texture2DProjLod_00I30B00B
+    1173,  // textureCubeLod_00K20B00B
+    1175,  // texture1DLod_00g00B00B
+    1176,  // texture1DProjLod_00g10B00B
+    1177,  // texture1DProjLod_00g30B00B
+    1178,  // shadow1DLod_00m20B00B
+    1179,  // shadow1DProjLod_00m30B00B
+    1180,  // shadow2DLod_00d20B00B
+    1181,  // shadow2DProjLod_00d30B00B
+    1182,  // texture_00I10B
+    1184,  // texture_00R10B
+    1186,  // texture_00X10B
+    1188,  // texture_00J20B
+    1190,  // texture_00S20B
+    1192,  // texture_00Y20B
+    1194,  // texture_00K20B
+    1196,  // texture_00T20B
+    1198,  // texture_00Z20B
+    1200,  // texture_00L20B
+    1202,  // texture_00U20B
+    1204,  // texture_00a20B
+    1206,  // texture_00d20B
+    1208,  // texture_00e30B
+    1210,  // texture_00f30B
+    1212,  // texture_00g00B
+    1213,  // texture_00o00B
+    1214,  // texture_00t00B
+    1215,  // texture_00m20B
+    1216,  // texture_00h20B
+    1217,  // texture_00p20B
+    1218,  // texture_00u20B
+    1219,  // texture_00i20B
+    1220,  // texture_00O10B
+    1222,  // texture_00q10B
+    1223,  // texture_00v10B
+    1224,  // texture_00n20B
+    1225,  // texture_00k30B
+    1229,  // texture_00s30B
+    1233,  // texture_00x30B
+    1237,  // texture_00k30B00B
+    1241,  // texture_00s30B00B
+    1245,  // texture_00x30B00B
+    1249,  // texture_00l30B00B
+    1253,  // texture_00M10B
+    1254,  // texture_00N10B
+    1255,  // texture_00y10B
     1257,  // textureProj_00I20B
     1259,  // textureProj_00R20B
     1261,  // textureProj_00X20B
@@ -37588,1331 +37587,1331 @@ constexpr uint16_t kMangledOffsets[] = {
     1281,  // textureProj_00o30B
     1282,  // textureProj_00t30B
     1283,  // textureProj_00m30B
-    1284,  // textureProj_00q20B
-    1285,  // textureProj_00v20B
-    1286,  // textureProj_00q30B
-    1287,  // textureProj_00v30B
-    1288,  // textureProj_00n30B
-    1289,  // textureProj_00M20B
-    1290,  // textureProj_00M30B
-    1291,  // textureProj_00N20B
-    1292,  // textureProj_00N30B
-    1293,  // textureLod_00I10B00B
-    1295,  // textureLod_00R10B00B
-    1297,  // textureLod_00X10B00B
-    1299,  // textureLod_00J20B00B
-    1301,  // textureLod_00S20B00B
-    1303,  // textureLod_00Y20B00B
-    1305,  // textureLod_00K20B00B
-    1307,  // textureLod_00T20B00B
-    1309,  // textureLod_00Z20B00B
-    1311,  // textureLod_00L20B00B
-    1313,  // textureLod_00U20B00B
-    1315,  // textureLod_00a20B00B
-    1317,  // textureLod_00d20B00B
-    1319,  // textureLod_00g00B00B
-    1320,  // textureLod_00o00B00B
-    1321,  // textureLod_00t00B00B
-    1322,  // textureLod_00m20B00B
-    1323,  // textureLod_00h10B00B
-    1324,  // textureLod_00p10B00B
-    1325,  // textureLod_00u10B00B
-    1326,  // textureLod_00i20B00B
-    1327,  // textureLod_00k30B00B
-    1331,  // textureLod_00s30B00B
-    1335,  // textureLod_00x30B00B
-    1339,  // textureSize_00I00D
-    1341,  // textureSize_00R00D
-    1343,  // textureSize_00X00D
-    1345,  // textureSize_00J00D
-    1347,  // textureSize_00S00D
-    1349,  // textureSize_00Y00D
-    1351,  // textureSize_00K00D
-    1353,  // textureSize_00T00D
-    1355,  // textureSize_00Z00D
-    1357,  // textureSize_00L00D
-    1359,  // textureSize_00U00D
-    1361,  // textureSize_00a00D
-    1363,  // textureSize_00d00D
-    1365,  // textureSize_00e00D
-    1367,  // textureSize_00f00D
-    1369,  // textureSize_00g00D
-    1370,  // textureSize_00o00D
-    1371,  // textureSize_00t00D
-    1372,  // textureSize_00m00D
-    1373,  // textureSize_00k00D
-    1377,  // textureSize_00s00D
-    1381,  // textureSize_00x00D
-    1385,  // textureSize_00l00D
-    1389,  // textureSize_00O
-    1390,  // textureSize_00q
-    1391,  // textureSize_00v
-    1392,  // textureSize_00n
-    1393,  // textureSize_00h00D
-    1394,  // textureSize_00p00D
-    1395,  // textureSize_00u00D
-    1396,  // textureSize_00i00D
-    1397,  // textureSize_00j
-    1401,  // textureSize_00r
-    1405,  // textureSize_00w
-    1409,  // textureSize_00P
-    1412,  // textureSize_00V
-    1415,  // textureSize_00b
-    1418,  // textureSize_00Q
-    1420,  // textureSize_00W
-    1422,  // textureSize_00c
-    1424,  // textureSize_00M00D
-    1425,  // textureSize_00N00D
-    1426,  // textureProjLod_00I20B00B
-    1428,  // textureProjLod_00R20B00B
-    1430,  // textureProjLod_00X20B00B
-    1432,  // textureProjLod_00I30B00B
-    1434,  // textureProjLod_00R30B00B
-    1436,  // textureProjLod_00X30B00B
-    1438,  // textureProjLod_00J30B00B
-    1440,  // textureProjLod_00S30B00B
-    1442,  // textureProjLod_00Y30B00B
-    1444,  // textureProjLod_00d30B00B
-    1446,  // textureProjLod_00g10B00B
-    1447,  // textureProjLod_00o10B00B
-    1448,  // textureProjLod_00t10B00B
-    1449,  // textureProjLod_00g30B00B
-    1450,  // textureProjLod_00o30B00B
-    1451,  // textureProjLod_00t30B00B
-    1452,  // textureProjLod_00m30B00B
-    1453,  // texelFetch_00I10D00D
-    1455,  // texelFetch_00R10D00D
-    1457,  // texelFetch_00X10D00D
-    1459,  // texelFetch_00J20D00D
-    1461,  // texelFetch_00S20D00D
-    1463,  // texelFetch_00Y20D00D
-    1465,  // texelFetch_00L20D00D
-    1467,  // texelFetch_00U20D00D
-    1469,  // texelFetch_00a20D00D
-    1471,  // texelFetch_00g00D00D
-    1472,  // texelFetch_00o00D00D
-    1473,  // texelFetch_00t00D00D
-    1474,  // texelFetch_00O10D
-    1475,  // texelFetch_00q10D
-    1476,  // texelFetch_00v10D
-    1477,  // texelFetch_00h10D00D
-    1478,  // texelFetch_00p10D00D
-    1479,  // texelFetch_00u10D00D
-    1480,  // texelFetch_00j00D
-    1484,  // texelFetch_00r00D
-    1488,  // texelFetch_00w00D
-    1492,  // texelFetch_00P10D00D
-    1495,  // texelFetch_00V10D00D
-    1498,  // texelFetch_00b10D00D
-    1501,  // texelFetch_00Q20D00D
-    1503,  // texelFetch_00W20D00D
-    1505,  // texelFetch_00c20D00D
-    1507,  // texelFetch_00M10D00D
-    1508,  // texelFetch_00N10D00D
-    1509,  // textureGrad_00I10B10B10B
-    1511,  // textureGrad_00R10B10B10B
-    1513,  // textureGrad_00X10B10B10B
-    1515,  // textureGrad_00J20B20B20B
-    1517,  // textureGrad_00S20B20B20B
-    1519,  // textureGrad_00Y20B20B20B
-    1521,  // textureGrad_00K20B20B20B
-    1523,  // textureGrad_00T20B20B20B
-    1525,  // textureGrad_00Z20B20B20B
-    1527,  // textureGrad_00I00B00B00B
-    1528,  // textureGrad_00R00B00B00B
-    1529,  // textureGrad_00X00B00B00B
-    1530,  // textureGrad_00O10B10B10B
-    1531,  // textureGrad_00q10B10B10B
-    1532,  // textureGrad_00v10B10B10B
-    1533,  // textureGrad_00n20B10B10B
-    1534,  // textureGrad_00d20B10B10B
-    1536,  // textureGrad_00e30B20B20B
-    1538,  // textureGrad_00L20B10B10B
-    1540,  // textureGrad_00U20B10B10B
-    1542,  // textureGrad_00a20B10B10B
-    1544,  // textureGrad_00f30B10B10B
-    1546,  // textureGrad_00m20B00B00B
-    1547,  // textureGrad_00h10B00B00B
-    1548,  // textureGrad_00p10B00B00B
-    1549,  // textureGrad_00u10B00B00B
-    1550,  // textureGrad_00i20B00B00B
-    1551,  // textureGrad_00k30B20B20B
-    1555,  // textureGrad_00s30B20B20B
-    1559,  // textureGrad_00x30B20B20B
-    1563,  // textureProjGrad_00I20B10B10B
-    1565,  // textureProjGrad_00R20B10B10B
-    1567,  // textureProjGrad_00X20B10B10B
-    1569,  // textureProjGrad_00I30B10B10B
-    1571,  // textureProjGrad_00R30B10B10B
-    1573,  // textureProjGrad_00X30B10B10B
-    1575,  // textureProjGrad_00J30B20B20B
-    1577,  // textureProjGrad_00S30B20B20B
-    1579,  // textureProjGrad_00Y30B20B20B
-    1581,  // textureProjGrad_00d30B10B10B
-    1583,  // textureProjGrad_00g10B00B00B
-    1584,  // textureProjGrad_00o10B00B00B
-    1585,  // textureProjGrad_00t10B00B00B
-    1586,  // textureProjGrad_00g30B00B00B
-    1587,  // textureProjGrad_00o30B00B00B
-    1588,  // textureProjGrad_00t30B00B00B
-    1589,  // textureProjGrad_00m30B00B00B
-    1590,  // textureProjGrad_00O20B10B10B
-    1591,  // textureProjGrad_00q20B10B10B
-    1592,  // textureProjGrad_00v20B10B10B
-    1593,  // textureProjGrad_00O30B10B10B
-    1594,  // textureProjGrad_00q30B10B10B
-    1595,  // textureProjGrad_00v30B10B10B
-    1596,  // textureProjGrad_00n30B10B10B
-    1597,  // textureQueryLevels_00g
-    1598,  // textureQueryLevels_00o
-    1599,  // textureQueryLevels_00t
-    1600,  // textureQueryLevels_00I
-    1601,  // textureQueryLevels_00R
-    1602,  // textureQueryLevels_00X
-    1603,  // textureQueryLevels_00J
-    1604,  // textureQueryLevels_00S
-    1605,  // textureQueryLevels_00Y
-    1606,  // textureQueryLevels_00K
-    1607,  // textureQueryLevels_00T
-    1608,  // textureQueryLevels_00Z
-    1609,  // textureQueryLevels_00h
-    1610,  // textureQueryLevels_00p
-    1611,  // textureQueryLevels_00u
-    1612,  // textureQueryLevels_00L
-    1613,  // textureQueryLevels_00U
-    1614,  // textureQueryLevels_00a
-    1615,  // textureQueryLevels_00k
-    1616,  // textureQueryLevels_00s
-    1617,  // textureQueryLevels_00x
-    1618,  // textureQueryLevels_00m
-    1619,  // textureQueryLevels_00d
-    1620,  // textureQueryLevels_00e
-    1621,  // textureQueryLevels_00i
-    1622,  // textureQueryLevels_00f
-    1623,  // textureQueryLevels_00l
-    1624,  // textureSamples_00P
-    1625,  // textureSamples_00V
-    1626,  // textureSamples_00b
-    1627,  // textureSamples_00Q
-    1628,  // textureSamples_00W
-    1629,  // textureSamples_00c
-    1630,  // texture_00I10B00B
-    1632,  // texture_00R10B00B
-    1634,  // texture_00X10B00B
-    1636,  // texture_00J20B00B
-    1638,  // texture_00S20B00B
-    1640,  // texture_00Y20B00B
-    1642,  // texture_00K20B00B
-    1644,  // texture_00T20B00B
-    1646,  // texture_00Z20B00B
-    1648,  // texture_00L20B00B
-    1650,  // texture_00U20B00B
-    1652,  // texture_00a20B00B
-    1654,  // textureProj_00I20B00B
-    1656,  // textureProj_00R20B00B
-    1658,  // textureProj_00X20B00B
-    1660,  // textureProj_00I30B00B
-    1662,  // textureProj_00R30B00B
-    1664,  // textureProj_00X30B00B
-    1666,  // textureProj_00J30B00B
-    1668,  // textureProj_00S30B00B
-    1670,  // textureProj_00Y30B00B
-    1672,  // texture_00d20B00B
-    1674,  // texture_00e30B00B
-    1676,  // textureProj_00d30B00B
-    1678,  // texture_00g00B00B
-    1679,  // texture_00o00B00B
-    1680,  // texture_00t00B00B
-    1681,  // texture_00m20B00B
-    1682,  // texture_00h20B00B
-    1683,  // texture_00p20B00B
-    1684,  // texture_00u20B00B
-    1685,  // texture_00i20B00B
-    1686,  // texture_00f30B00B
-    1687,  // textureProj_00g10B00B
-    1688,  // textureProj_00o10B00B
-    1689,  // textureProj_00t10B00B
-    1690,  // textureProj_00g30B00B
-    1691,  // textureProj_00o30B00B
-    1692,  // textureProj_00t30B00B
-    1693,  // textureProj_00m30B00B
-    1694,  // texture_00M10B00B
-    1695,  // textureProj_00M20B00B
-    1696,  // textureProj_00M30B00B
-    1697,  // texture_00N10B00B
-    1698,  // textureProj_00N20B00B
-    1699,  // textureProj_00N30B00B
-    1700,  // textureQueryLod_00g00B
-    1701,  // textureQueryLod_00o00B
-    1702,  // textureQueryLod_00t00B
-    1703,  // textureQueryLod_00I10B
-    1704,  // textureQueryLod_00R10B
-    1705,  // textureQueryLod_00X10B
-    1706,  // textureQueryLod_00J20B
-    1707,  // textureQueryLod_00S20B
-    1708,  // textureQueryLod_00Y20B
-    1709,  // textureQueryLod_00K20B
-    1710,  // textureQueryLod_00T20B
-    1711,  // textureQueryLod_00Z20B
-    1712,  // textureQueryLod_00h00B
-    1713,  // textureQueryLod_00p00B
-    1714,  // textureQueryLod_00u00B
-    1715,  // textureQueryLod_00L10B
-    1716,  // textureQueryLod_00U10B
-    1717,  // textureQueryLod_00a10B
-    1718,  // textureQueryLod_00k20B
-    1719,  // textureQueryLod_00s20B
-    1720,  // textureQueryLod_00x20B
-    1721,  // textureQueryLod_00m00B
-    1722,  // textureQueryLod_00d10B
-    1723,  // textureQueryLod_00e20B
-    1724,  // textureQueryLod_00i00B
-    1725,  // textureQueryLod_00f10B
-    1726,  // textureQueryLod_00l20B
-    1727,  // textureOffset_00I10B10D
-    1729,  // textureOffset_00R10B10D
-    1731,  // textureOffset_00X10B10D
-    1733,  // textureOffset_00J20B20D
-    1735,  // textureOffset_00S20B20D
-    1737,  // textureOffset_00Y20B20D
-    1739,  // textureOffset_00d20B10D
-    1741,  // textureOffset_00L20B10D
-    1743,  // textureOffset_00U20B10D
-    1745,  // textureOffset_00a20B10D
-    1747,  // textureOffset_00g00B00D
-    1748,  // textureOffset_00o00B00D
-    1749,  // textureOffset_00t00B00D
-    1750,  // textureOffset_00O10B10D
-    1751,  // textureOffset_00q10B10D
-    1752,  // textureOffset_00v10B10D
-    1753,  // textureOffset_00n20B10D
-    1754,  // textureOffset_00m20B00D
-    1755,  // textureOffset_00h10B00D
-    1756,  // textureOffset_00p10B00D
-    1757,  // textureOffset_00u10B00D
-    1758,  // textureOffset_00i20B00D
-    1759,  // textureOffset_00f30B10D
-    1760,  // textureProjOffset_00I20B10D
-    1762,  // textureProjOffset_00R20B10D
-    1764,  // textureProjOffset_00X20B10D
-    1766,  // textureProjOffset_00I30B10D
-    1768,  // textureProjOffset_00R30B10D
-    1770,  // textureProjOffset_00X30B10D
-    1772,  // textureProjOffset_00J30B20D
-    1774,  // textureProjOffset_00S30B20D
-    1776,  // textureProjOffset_00Y30B20D
-    1778,  // textureProjOffset_00d30B10D
-    1780,  // textureProjOffset_00g10B00D
-    1781,  // textureProjOffset_00o10B00D
-    1782,  // textureProjOffset_00t10B00D
-    1783,  // textureProjOffset_00g30B00D
-    1784,  // textureProjOffset_00o30B00D
-    1785,  // textureProjOffset_00t30B00D
-    1786,  // textureProjOffset_00O20B10D
-    1787,  // textureProjOffset_00q20B10D
-    1788,  // textureProjOffset_00v20B10D
-    1789,  // textureProjOffset_00O30B10D
-    1790,  // textureProjOffset_00q30B10D
-    1791,  // textureProjOffset_00v30B10D
-    1792,  // textureProjOffset_00n30B10D
-    1793,  // textureProjOffset_00m30B00D
-    1794,  // textureLodOffset_00I10B00B10D
-    1796,  // textureLodOffset_00R10B00B10D
-    1798,  // textureLodOffset_00X10B00B10D
-    1800,  // textureLodOffset_00J20B00B20D
-    1802,  // textureLodOffset_00S20B00B20D
-    1804,  // textureLodOffset_00Y20B00B20D
-    1806,  // textureLodOffset_00d20B00B10D
-    1808,  // textureLodOffset_00L20B00B10D
-    1810,  // textureLodOffset_00U20B00B10D
-    1812,  // textureLodOffset_00a20B00B10D
-    1814,  // textureLodOffset_00g00B00B00D
-    1815,  // textureLodOffset_00o00B00B00D
-    1816,  // textureLodOffset_00t00B00B00D
-    1817,  // textureLodOffset_00m20B00B00D
-    1818,  // textureLodOffset_00h10B00B00D
-    1819,  // textureLodOffset_00p10B00B00D
-    1820,  // textureLodOffset_00u10B00B00D
-    1821,  // textureLodOffset_00i20B00B00D
-    1822,  // textureProjLodOffset_00I20B00B10D
-    1824,  // textureProjLodOffset_00R20B00B10D
-    1826,  // textureProjLodOffset_00X20B00B10D
-    1828,  // textureProjLodOffset_00I30B00B10D
-    1830,  // textureProjLodOffset_00R30B00B10D
-    1832,  // textureProjLodOffset_00X30B00B10D
-    1834,  // textureProjLodOffset_00J30B00B20D
-    1836,  // textureProjLodOffset_00S30B00B20D
-    1838,  // textureProjLodOffset_00Y30B00B20D
-    1840,  // textureProjLodOffset_00d30B00B10D
-    1842,  // textureProjLodOffset_00g10B00B00D
-    1843,  // textureProjLodOffset_00o10B00B00D
-    1844,  // textureProjLodOffset_00t10B00B00D
-    1845,  // textureProjLodOffset_00g30B00B00D
-    1846,  // textureProjLodOffset_00o30B00B00D
-    1847,  // textureProjLodOffset_00t30B00B00D
-    1848,  // textureProjLodOffset_00m30B00B00D
-    1849,  // texelFetchOffset_00I10D00D10D
-    1851,  // texelFetchOffset_00R10D00D10D
-    1853,  // texelFetchOffset_00X10D00D10D
-    1855,  // texelFetchOffset_00J20D00D20D
-    1857,  // texelFetchOffset_00S20D00D20D
-    1859,  // texelFetchOffset_00Y20D00D20D
-    1861,  // texelFetchOffset_00L20D00D10D
-    1863,  // texelFetchOffset_00U20D00D10D
-    1865,  // texelFetchOffset_00a20D00D10D
-    1867,  // texelFetchOffset_00g00D00D00D
-    1868,  // texelFetchOffset_00o00D00D00D
-    1869,  // texelFetchOffset_00t00D00D00D
-    1870,  // texelFetchOffset_00O10D10D
-    1871,  // texelFetchOffset_00q10D10D
-    1872,  // texelFetchOffset_00v10D10D
-    1873,  // texelFetchOffset_00h10D00D00D
-    1874,  // texelFetchOffset_00p10D00D00D
-    1875,  // texelFetchOffset_00u10D00D00D
-    1876,  // textureGradOffset_00I10B10B10B10D
-    1878,  // textureGradOffset_00R10B10B10B10D
-    1880,  // textureGradOffset_00X10B10B10B10D
-    1882,  // textureGradOffset_00J20B20B20B20D
-    1884,  // textureGradOffset_00S20B20B20B20D
-    1886,  // textureGradOffset_00Y20B20B20B20D
-    1888,  // textureGradOffset_00d20B10B10B10D
-    1890,  // textureGradOffset_00L20B10B10B10D
-    1892,  // textureGradOffset_00U20B10B10B10D
-    1894,  // textureGradOffset_00a20B10B10B10D
-    1896,  // textureGradOffset_00f30B10B10B10D
-    1898,  // textureGradOffset_00g00B00B00B00D
-    1899,  // textureGradOffset_00o00B00B00B00D
-    1900,  // textureGradOffset_00t00B00B00B00D
-    1901,  // textureGradOffset_00O10B10B10B10D
-    1902,  // textureGradOffset_00q10B10B10B10D
-    1903,  // textureGradOffset_00v10B10B10B10D
-    1904,  // textureGradOffset_00n20B10B10B10D
-    1905,  // textureGradOffset_00m20B00B00B00D
-    1906,  // textureGradOffset_00h10B00B00B00D
-    1907,  // textureGradOffset_00p10B00B00B00D
-    1908,  // textureGradOffset_00u10B00B00B00D
-    1909,  // textureGradOffset_00i20B00B00B00D
-    1910,  // textureProjGradOffset_00I20B10B10B10D
-    1912,  // textureProjGradOffset_00R20B10B10B10D
-    1914,  // textureProjGradOffset_00X20B10B10B10D
-    1916,  // textureProjGradOffset_00I30B10B10B10D
-    1918,  // textureProjGradOffset_00R30B10B10B10D
-    1920,  // textureProjGradOffset_00X30B10B10B10D
-    1922,  // textureProjGradOffset_00J30B20B20B20D
-    1924,  // textureProjGradOffset_00S30B20B20B20D
-    1926,  // textureProjGradOffset_00Y30B20B20B20D
-    1928,  // textureProjGradOffset_00d30B10B10B10D
-    1930,  // textureProjGradOffset_00g10B00B00B00D
-    1931,  // textureProjGradOffset_00o10B00B00B00D
-    1932,  // textureProjGradOffset_00t10B00B00B00D
-    1933,  // textureProjGradOffset_00g30B00B00B00D
-    1934,  // textureProjGradOffset_00o30B00B00B00D
-    1935,  // textureProjGradOffset_00t30B00B00B00D
-    1936,  // textureProjGradOffset_00O20B10B10B10D
-    1937,  // textureProjGradOffset_00q20B10B10B10D
-    1938,  // textureProjGradOffset_00v20B10B10B10D
-    1939,  // textureProjGradOffset_00O30B10B10B10D
-    1940,  // textureProjGradOffset_00q30B10B10B10D
-    1941,  // textureProjGradOffset_00v30B10B10B10D
-    1942,  // textureProjGradOffset_00n30B10B10B10D
-    1943,  // textureProjGradOffset_00m30B00B00B00D
-    1944,  // textureOffset_00I10B10D00B
-    1946,  // textureOffset_00R10B10D00B
-    1948,  // textureOffset_00X10B10D00B
-    1950,  // textureOffset_00J20B20D00B
-    1952,  // textureOffset_00S20B20D00B
-    1954,  // textureOffset_00Y20B20D00B
-    1956,  // textureOffset_00d20B10D00B
-    1958,  // textureOffset_00L20B10D00B
-    1960,  // textureOffset_00U20B10D00B
-    1962,  // textureOffset_00a20B10D00B
-    1964,  // textureOffset_00g00B00D00B
-    1965,  // textureOffset_00o00B00D00B
-    1966,  // textureOffset_00t00B00D00B
-    1967,  // textureOffset_00m20B00D00B
-    1968,  // textureOffset_00h10B00D00B
-    1969,  // textureOffset_00p10B00D00B
-    1970,  // textureOffset_00u10B00D00B
-    1971,  // textureOffset_00i20B00D00B
-    1972,  // textureProjOffset_00I20B10D00B
-    1974,  // textureProjOffset_00R20B10D00B
-    1976,  // textureProjOffset_00X20B10D00B
-    1978,  // textureProjOffset_00I30B10D00B
-    1980,  // textureProjOffset_00R30B10D00B
-    1982,  // textureProjOffset_00X30B10D00B
-    1984,  // textureProjOffset_00J30B20D00B
-    1986,  // textureProjOffset_00S30B20D00B
-    1988,  // textureProjOffset_00Y30B20D00B
-    1990,  // textureProjOffset_00d30B10D00B
-    1992,  // textureProjOffset_00g10B00D00B
-    1993,  // textureProjOffset_00o10B00D00B
-    1994,  // textureProjOffset_00t10B00D00B
-    1995,  // textureProjOffset_00g30B00D00B
-    1996,  // textureProjOffset_00o30B00D00B
-    1997,  // textureProjOffset_00t30B00D00B
-    1998,  // textureProjOffset_00m30B00D00B
-    1999,  // rgb_2_yuv_20B00H
-    2000,  // yuv_2_rgb_20B00H
-    2001,  // textureGather_00I10B
-    2003,  // textureGather_00R10B
-    2005,  // textureGather_00X10B
-    2007,  // textureGather_00I10B00D
-    2009,  // textureGather_00R10B00D
-    2011,  // textureGather_00X10B00D
-    2013,  // textureGather_00L20B
-    2015,  // textureGather_00U20B
-    2017,  // textureGather_00a20B
-    2019,  // textureGather_00L20B00D
-    2021,  // textureGather_00U20B00D
-    2023,  // textureGather_00a20B00D
-    2025,  // textureGather_00K20B
-    2027,  // textureGather_00T20B
-    2029,  // textureGather_00Z20B
-    2031,  // textureGather_00K20B00D
-    2033,  // textureGather_00T20B00D
-    2035,  // textureGather_00Z20B00D
-    2037,  // textureGather_00k30B
-    2041,  // textureGather_00s30B
-    2045,  // textureGather_00x30B
-    2049,  // textureGather_00k30B00D
-    2053,  // textureGather_00s30B00D
-    2057,  // textureGather_00x30B00D
-    2061,  // textureGather_00l30B00B
-    2065,  // textureGather_00O20B
-    2066,  // textureGather_00q20B
-    2067,  // textureGather_00v20B
-    2068,  // textureGather_00O20B00D
-    2069,  // textureGather_00q20B00D
-    2070,  // textureGather_00v20B00D
-    2071,  // textureGather_00n10B00B
-    2072,  // textureGather_00d10B
-    2073,  // textureGather_00d10B00B
-    2075,  // textureGather_00f20B
-    2076,  // textureGather_00f20B00B
-    2078,  // textureGather_00e20B
-    2079,  // textureGather_00e20B00B
-    2081,  // textureGatherOffset_00I10B10D
-    2083,  // textureGatherOffset_00R10B10D
-    2085,  // textureGatherOffset_00X10B10D
-    2087,  // textureGatherOffset_00L20B10D
-    2089,  // textureGatherOffset_00U20B10D
-    2091,  // textureGatherOffset_00a20B10D
-    2093,  // textureGatherOffset_00d10B00B10D
-    2095,  // textureGatherOffset_00f20B00B10D
-    2097,  // textureGatherOffset_00O10B10D
-    2098,  // textureGatherOffset_00q10B10D
-    2099,  // textureGatherOffset_00v10B10D
-    2100,  // textureGatherOffset_00n10B00B10D
-    2101,  // textureGatherOffset_00I10B10D00D
-    2103,  // textureGatherOffset_00R10B10D00D
-    2105,  // textureGatherOffset_00X10B10D00D
-    2107,  // textureGatherOffset_00L20B10D00D
-    2109,  // textureGatherOffset_00U20B10D00D
-    2111,  // textureGatherOffset_00a20B10D00D
-    2113,  // textureGatherOffset_00O10B10D00D
-    2114,  // textureGatherOffset_00q10B10D00D
-    2115,  // textureGatherOffset_00v10B10D00D
-    2116,  // textureGatherOffsets_00I10B10Dx4
-    2119,  // textureGatherOffsets_00R10B10Dx4
-    2122,  // textureGatherOffsets_00X10B10Dx4
-    2125,  // textureGatherOffsets_00L20B10Dx4
-    2128,  // textureGatherOffsets_00U20B10Dx4
-    2131,  // textureGatherOffsets_00a20B10Dx4
-    2134,  // textureGatherOffsets_00d10B00B10Dx4
-    2137,  // textureGatherOffsets_00f20B00B10Dx4
-    2140,  // textureGatherOffsets_00O10B10Dx4
-    2141,  // textureGatherOffsets_00q10B10Dx4
-    2142,  // textureGatherOffsets_00v10B10Dx4
-    2143,  // textureGatherOffsets_00n10B00B10Dx4
-    2144,  // textureGatherOffsets_00I10B10Dx400D
-    2147,  // textureGatherOffsets_00R10B10Dx400D
-    2150,  // textureGatherOffsets_00X10B10Dx400D
-    2153,  // textureGatherOffsets_00L20B10Dx400D
-    2156,  // textureGatherOffsets_00U20B10Dx400D
-    2159,  // textureGatherOffsets_00a20B10Dx400D
-    2162,  // textureGatherOffsets_00O10B10Dx400D
-    2163,  // textureGatherOffsets_00q10B10Dx400D
-    2164,  // textureGatherOffsets_00v10B10Dx400D
-    2165,  // dFdx_00B
-    2168,  // dFdx_10B
-    2171,  // dFdx_20B
-    2174,  // dFdx_30B
-    2177,  // dFdy_00B
-    2180,  // dFdy_10B
-    2183,  // dFdy_20B
-    2186,  // dFdy_30B
-    2189,  // fwidth_00B
-    2192,  // fwidth_10B
-    2195,  // fwidth_20B
-    2198,  // fwidth_30B
-    2201,  // dFdxFine_00B
-    2202,  // dFdxFine_10B
-    2203,  // dFdxFine_20B
-    2204,  // dFdxFine_30B
-    2205,  // dFdyFine_00B
-    2206,  // dFdyFine_10B
-    2207,  // dFdyFine_20B
-    2208,  // dFdyFine_30B
-    2209,  // dFdxCoarse_00B
-    2210,  // dFdxCoarse_10B
-    2211,  // dFdxCoarse_20B
-    2212,  // dFdxCoarse_30B
-    2213,  // dFdyCoarse_00B
-    2214,  // dFdyCoarse_10B
-    2215,  // dFdyCoarse_20B
-    2216,  // dFdyCoarse_30B
-    2217,  // fwidthFine_00B
-    2218,  // fwidthFine_10B
-    2219,  // fwidthFine_20B
-    2220,  // fwidthFine_30B
-    2221,  // fwidthCoarse_00B
-    2222,  // fwidthCoarse_10B
-    2223,  // fwidthCoarse_20B
-    2224,  // fwidthCoarse_30B
-    2225,  // interpolateAtCentroid_00B
-    2228,  // interpolateAtCentroid_10B
-    2231,  // interpolateAtCentroid_20B
-    2234,  // interpolateAtCentroid_30B
-    2237,  // interpolateAtSample_00B00D
-    2240,  // interpolateAtSample_10B00D
-    2243,  // interpolateAtSample_20B00D
-    2246,  // interpolateAtSample_30B00D
-    2249,  // interpolateAtOffset_00B10B
-    2252,  // interpolateAtOffset_10B10B
-    2255,  // interpolateAtOffset_20B10B
-    2258,  // interpolateAtOffset_30B10B
-    2261,  // atomicCounter_00G
-    2263,  // atomicCounterIncrement_00G
-    2265,  // atomicCounterDecrement_00G
-    2267,  // atomicCounterAdd_00G00E
-    2268,  // atomicCounterSubtract_00G00E
-    2269,  // atomicCounterMin_00G00E
-    2270,  // atomicCounterMax_00G00E
-    2271,  // atomicCounterAnd_00G00E
-    2272,  // atomicCounterOr_00G00E
-    2273,  // atomicCounterXor_00G00E
-    2274,  // atomicCounterExchange_00G00E
-    2275,  // atomicCounterCompSwap_00G00E00E
-    2276,  // atomicAdd_00E00E
-    2278,  // atomicAdd_00D00D
-    2280,  // atomicMin_00E00E
-    2282,  // atomicMin_00D00D
-    2284,  // atomicMax_00E00E
-    2286,  // atomicMax_00D00D
-    2288,  // atomicAnd_00E00E
-    2290,  // atomicAnd_00D00D
-    2292,  // atomicOr_00E00E
-    2294,  // atomicOr_00D00D
-    2296,  // atomicXor_00E00E
-    2298,  // atomicXor_00D00D
-    2300,  // atomicExchange_00E00E
-    2302,  // atomicExchange_00D00D
-    2304,  // atomicCompSwap_00E00E00E
-    2306,  // atomicCompSwap_00D00D00D
-    2308,  // imageSize_00z
-    2310,  // imageSize_01A
-    2312,  // imageSize_01B
-    2314,  // imageSize_01C
-    2316,  // imageSize_01D
-    2318,  // imageSize_01E
-    2320,  // imageSize_01F
-    2322,  // imageSize_01G
-    2324,  // imageSize_01H
-    2326,  // imageSize_01I
-    2328,  // imageSize_01J
-    2330,  // imageSize_01K
-    2332,  // imageSize_01X
-    2336,  // imageSize_01Y
-    2340,  // imageSize_01Z
-    2344,  // imageSize_01d
-    2348,  // imageSize_01e
-    2352,  // imageSize_01f
-    2356,  // imageSize_01L
-    2357,  // imageSize_01M
-    2358,  // imageSize_01N
-    2359,  // imageSize_01a
-    2360,  // imageSize_01b
-    2361,  // imageSize_01c
-    2362,  // imageSize_01O
-    2363,  // imageSize_01P
-    2364,  // imageSize_01Q
-    2365,  // imageSize_01R
-    2366,  // imageSize_01S
-    2367,  // imageSize_01T
-    2368,  // imageSize_01U
-    2369,  // imageSize_01V
-    2370,  // imageSize_01W
-    2371,  // imageSamples_01R
-    2372,  // imageSamples_01S
-    2373,  // imageSamples_01T
-    2374,  // imageSamples_01U
-    2375,  // imageSamples_01V
-    2376,  // imageSamples_01W
-    2377,  // imageStore_00z10D30B
-    2379,  // imageStore_01A10D30D
-    2381,  // imageStore_01B10D30E
-    2383,  // imageStore_01C20D30B
-    2385,  // imageStore_01D20D30D
-    2387,  // imageStore_01E20D30E
-    2389,  // imageStore_01F20D30B
-    2391,  // imageStore_01G20D30D
-    2393,  // imageStore_01H20D30E
-    2395,  // imageStore_01I20D30B
-    2397,  // imageStore_01J20D30D
-    2399,  // imageStore_01K20D30E
-    2401,  // imageStore_01X20D30B
-    2405,  // imageStore_01Y20D30D
-    2409,  // imageStore_01Z20D30E
-    2413,  // imageStore_01d00D30B
-    2417,  // imageStore_01e00D30D
-    2421,  // imageStore_01f00D30E
-    2425,  // imageStore_01L00D30B
-    2426,  // imageStore_01M00D30D
-    2427,  // imageStore_01N00D30E
-    2428,  // imageStore_01O10D30B
-    2429,  // imageStore_01P10D30D
-    2430,  // imageStore_01Q10D30E
-    2431,  // imageStore_01a10D30B
-    2432,  // imageStore_01b10D30D
-    2433,  // imageStore_01c10D30E
-    2434,  // imageStore_01R10D00D30B
-    2435,  // imageStore_01S10D00D30D
-    2436,  // imageStore_01T10D00D30E
-    2437,  // imageStore_01U20D00D30B
-    2438,  // imageStore_01V20D00D30D
-    2439,  // imageStore_01W20D00D30E
-    2440,  // imageLoad_00z10D
-    2442,  // imageLoad_01A10D
-    2444,  // imageLoad_01B10D
-    2446,  // imageLoad_01C20D
-    2448,  // imageLoad_01D20D
-    2450,  // imageLoad_01E20D
-    2452,  // imageLoad_01F20D
-    2454,  // imageLoad_01G20D
-    2456,  // imageLoad_01H20D
-    2458,  // imageLoad_01I20D
-    2460,  // imageLoad_01J20D
-    2462,  // imageLoad_01K20D
-    2464,  // imageLoad_01X20D
-    2468,  // imageLoad_01Y20D
-    2472,  // imageLoad_01Z20D
-    2476,  // imageLoad_01d00D
-    2480,  // imageLoad_01e00D
-    2484,  // imageLoad_01f00D
-    2488,  // imageLoad_01L00D
-    2489,  // imageLoad_01M00D
-    2490,  // imageLoad_01N00D
-    2491,  // imageLoad_01O10D
-    2492,  // imageLoad_01P10D
-    2493,  // imageLoad_01Q10D
-    2494,  // imageLoad_01a10D
-    2495,  // imageLoad_01b10D
-    2496,  // imageLoad_01c10D
-    2497,  // imageLoad_01R10D00D
-    2498,  // imageLoad_01S10D00D
-    2499,  // imageLoad_01T10D00D
-    2500,  // imageLoad_01U20D00D
-    2501,  // imageLoad_01V20D00D
-    2502,  // imageLoad_01W20D00D
-    2503,  // imageAtomicAdd_00z10D00E
-    2505,  // imageAtomicAdd_01A10D00E
-    2507,  // imageAtomicAdd_01B10D00E
-    2509,  // imageAtomicAdd_01C20D00E
-    2511,  // imageAtomicAdd_01D20D00E
-    2513,  // imageAtomicAdd_01E20D00E
-    2515,  // imageAtomicAdd_01I20D00E
-    2517,  // imageAtomicAdd_01J20D00E
-    2519,  // imageAtomicAdd_01K20D00E
-    2521,  // imageAtomicAdd_01d00D00E
-    2523,  // imageAtomicAdd_01e00D00E
-    2525,  // imageAtomicAdd_01f00D00E
-    2527,  // imageAtomicAdd_01F20D00E
-    2529,  // imageAtomicAdd_01G20D00E
-    2531,  // imageAtomicAdd_01H20D00E
-    2533,  // imageAtomicAdd_01X20D00E
-    2535,  // imageAtomicAdd_01Y20D00E
-    2537,  // imageAtomicAdd_01Z20D00E
-    2539,  // imageAtomicAdd_01L00D00E
-    2541,  // imageAtomicAdd_01M00D00E
-    2543,  // imageAtomicAdd_01N00D00E
-    2545,  // imageAtomicAdd_01O10D00E
-    2547,  // imageAtomicAdd_01P10D00E
-    2549,  // imageAtomicAdd_01Q10D00E
-    2551,  // imageAtomicAdd_01a10D00E
-    2553,  // imageAtomicAdd_01b10D00E
-    2555,  // imageAtomicAdd_01c10D00E
-    2557,  // imageAtomicAdd_01R10D00D00E
-    2559,  // imageAtomicAdd_01S10D00D00E
-    2561,  // imageAtomicAdd_01T10D00D00E
-    2563,  // imageAtomicAdd_01U20D00D00E
-    2565,  // imageAtomicAdd_01V20D00D00E
-    2567,  // imageAtomicAdd_01W20D00D00E
-    2569,  // imageAtomicAdd_00z10D00D
-    2571,  // imageAtomicAdd_01A10D00D
-    2573,  // imageAtomicAdd_01B10D00D
-    2575,  // imageAtomicAdd_01C20D00D
-    2577,  // imageAtomicAdd_01D20D00D
-    2579,  // imageAtomicAdd_01E20D00D
-    2581,  // imageAtomicAdd_01I20D00D
-    2583,  // imageAtomicAdd_01J20D00D
-    2585,  // imageAtomicAdd_01K20D00D
-    2587,  // imageAtomicAdd_01d00D00D
-    2589,  // imageAtomicAdd_01e00D00D
-    2591,  // imageAtomicAdd_01f00D00D
-    2593,  // imageAtomicAdd_01F20D00D
-    2595,  // imageAtomicAdd_01G20D00D
-    2597,  // imageAtomicAdd_01H20D00D
-    2599,  // imageAtomicAdd_01X20D00D
-    2601,  // imageAtomicAdd_01Y20D00D
-    2603,  // imageAtomicAdd_01Z20D00D
-    2605,  // imageAtomicAdd_01L00D00D
-    2607,  // imageAtomicAdd_01M00D00D
-    2609,  // imageAtomicAdd_01N00D00D
-    2611,  // imageAtomicAdd_01O10D00D
-    2613,  // imageAtomicAdd_01P10D00D
-    2615,  // imageAtomicAdd_01Q10D00D
-    2617,  // imageAtomicAdd_01a10D00D
-    2619,  // imageAtomicAdd_01b10D00D
-    2621,  // imageAtomicAdd_01c10D00D
-    2623,  // imageAtomicAdd_01R10D00D00D
-    2625,  // imageAtomicAdd_01S10D00D00D
-    2627,  // imageAtomicAdd_01T10D00D00D
-    2629,  // imageAtomicAdd_01U20D00D00D
-    2631,  // imageAtomicAdd_01V20D00D00D
-    2633,  // imageAtomicAdd_01W20D00D00D
-    2635,  // imageAtomicMin_00z10D00E
-    2637,  // imageAtomicMin_01A10D00E
-    2639,  // imageAtomicMin_01B10D00E
-    2641,  // imageAtomicMin_01C20D00E
-    2643,  // imageAtomicMin_01D20D00E
-    2645,  // imageAtomicMin_01E20D00E
-    2647,  // imageAtomicMin_01I20D00E
-    2649,  // imageAtomicMin_01J20D00E
-    2651,  // imageAtomicMin_01K20D00E
-    2653,  // imageAtomicMin_01d00D00E
-    2655,  // imageAtomicMin_01e00D00E
-    2657,  // imageAtomicMin_01f00D00E
-    2659,  // imageAtomicMin_01F20D00E
-    2661,  // imageAtomicMin_01G20D00E
-    2663,  // imageAtomicMin_01H20D00E
-    2665,  // imageAtomicMin_01X20D00E
-    2667,  // imageAtomicMin_01Y20D00E
-    2669,  // imageAtomicMin_01Z20D00E
-    2671,  // imageAtomicMin_01L00D00E
-    2673,  // imageAtomicMin_01M00D00E
-    2675,  // imageAtomicMin_01N00D00E
-    2677,  // imageAtomicMin_01O10D00E
-    2679,  // imageAtomicMin_01P10D00E
-    2681,  // imageAtomicMin_01Q10D00E
-    2683,  // imageAtomicMin_01a10D00E
-    2685,  // imageAtomicMin_01b10D00E
-    2687,  // imageAtomicMin_01c10D00E
-    2689,  // imageAtomicMin_01R10D00D00E
-    2691,  // imageAtomicMin_01S10D00D00E
-    2693,  // imageAtomicMin_01T10D00D00E
-    2695,  // imageAtomicMin_01U20D00D00E
-    2697,  // imageAtomicMin_01V20D00D00E
-    2699,  // imageAtomicMin_01W20D00D00E
-    2701,  // imageAtomicMin_00z10D00D
-    2703,  // imageAtomicMin_01A10D00D
-    2705,  // imageAtomicMin_01B10D00D
-    2707,  // imageAtomicMin_01C20D00D
-    2709,  // imageAtomicMin_01D20D00D
-    2711,  // imageAtomicMin_01E20D00D
-    2713,  // imageAtomicMin_01I20D00D
-    2715,  // imageAtomicMin_01J20D00D
-    2717,  // imageAtomicMin_01K20D00D
-    2719,  // imageAtomicMin_01d00D00D
-    2721,  // imageAtomicMin_01e00D00D
-    2723,  // imageAtomicMin_01f00D00D
-    2725,  // imageAtomicMin_01F20D00D
-    2727,  // imageAtomicMin_01G20D00D
-    2729,  // imageAtomicMin_01H20D00D
-    2731,  // imageAtomicMin_01X20D00D
-    2733,  // imageAtomicMin_01Y20D00D
-    2735,  // imageAtomicMin_01Z20D00D
-    2737,  // imageAtomicMin_01L00D00D
-    2739,  // imageAtomicMin_01M00D00D
-    2741,  // imageAtomicMin_01N00D00D
-    2743,  // imageAtomicMin_01O10D00D
-    2745,  // imageAtomicMin_01P10D00D
-    2747,  // imageAtomicMin_01Q10D00D
-    2749,  // imageAtomicMin_01a10D00D
-    2751,  // imageAtomicMin_01b10D00D
-    2753,  // imageAtomicMin_01c10D00D
-    2755,  // imageAtomicMin_01R10D00D00D
-    2757,  // imageAtomicMin_01S10D00D00D
-    2759,  // imageAtomicMin_01T10D00D00D
-    2761,  // imageAtomicMin_01U20D00D00D
-    2763,  // imageAtomicMin_01V20D00D00D
-    2765,  // imageAtomicMin_01W20D00D00D
-    2767,  // imageAtomicMax_00z10D00E
-    2769,  // imageAtomicMax_01A10D00E
-    2771,  // imageAtomicMax_01B10D00E
-    2773,  // imageAtomicMax_01C20D00E
-    2775,  // imageAtomicMax_01D20D00E
-    2777,  // imageAtomicMax_01E20D00E
-    2779,  // imageAtomicMax_01I20D00E
-    2781,  // imageAtomicMax_01J20D00E
-    2783,  // imageAtomicMax_01K20D00E
-    2785,  // imageAtomicMax_01d00D00E
-    2787,  // imageAtomicMax_01e00D00E
-    2789,  // imageAtomicMax_01f00D00E
-    2791,  // imageAtomicMax_01F20D00E
-    2793,  // imageAtomicMax_01G20D00E
-    2795,  // imageAtomicMax_01H20D00E
-    2797,  // imageAtomicMax_01X20D00E
-    2799,  // imageAtomicMax_01Y20D00E
-    2801,  // imageAtomicMax_01Z20D00E
-    2803,  // imageAtomicMax_01L00D00E
-    2805,  // imageAtomicMax_01M00D00E
-    2807,  // imageAtomicMax_01N00D00E
-    2809,  // imageAtomicMax_01O10D00E
-    2811,  // imageAtomicMax_01P10D00E
-    2813,  // imageAtomicMax_01Q10D00E
-    2815,  // imageAtomicMax_01a10D00E
-    2817,  // imageAtomicMax_01b10D00E
-    2819,  // imageAtomicMax_01c10D00E
-    2821,  // imageAtomicMax_01R10D00D00E
-    2823,  // imageAtomicMax_01S10D00D00E
-    2825,  // imageAtomicMax_01T10D00D00E
-    2827,  // imageAtomicMax_01U20D00D00E
-    2829,  // imageAtomicMax_01V20D00D00E
-    2831,  // imageAtomicMax_01W20D00D00E
-    2833,  // imageAtomicMax_00z10D00D
-    2835,  // imageAtomicMax_01A10D00D
-    2837,  // imageAtomicMax_01B10D00D
-    2839,  // imageAtomicMax_01C20D00D
-    2841,  // imageAtomicMax_01D20D00D
-    2843,  // imageAtomicMax_01E20D00D
-    2845,  // imageAtomicMax_01I20D00D
-    2847,  // imageAtomicMax_01J20D00D
-    2849,  // imageAtomicMax_01K20D00D
-    2851,  // imageAtomicMax_01d00D00D
-    2853,  // imageAtomicMax_01e00D00D
-    2855,  // imageAtomicMax_01f00D00D
-    2857,  // imageAtomicMax_01F20D00D
-    2859,  // imageAtomicMax_01G20D00D
-    2861,  // imageAtomicMax_01H20D00D
-    2863,  // imageAtomicMax_01X20D00D
-    2865,  // imageAtomicMax_01Y20D00D
-    2867,  // imageAtomicMax_01Z20D00D
-    2869,  // imageAtomicMax_01L00D00D
-    2871,  // imageAtomicMax_01M00D00D
-    2873,  // imageAtomicMax_01N00D00D
-    2875,  // imageAtomicMax_01O10D00D
-    2877,  // imageAtomicMax_01P10D00D
-    2879,  // imageAtomicMax_01Q10D00D
-    2881,  // imageAtomicMax_01a10D00D
-    2883,  // imageAtomicMax_01b10D00D
-    2885,  // imageAtomicMax_01c10D00D
-    2887,  // imageAtomicMax_01R10D00D00D
-    2889,  // imageAtomicMax_01S10D00D00D
-    2891,  // imageAtomicMax_01T10D00D00D
-    2893,  // imageAtomicMax_01U20D00D00D
-    2895,  // imageAtomicMax_01V20D00D00D
-    2897,  // imageAtomicMax_01W20D00D00D
-    2899,  // imageAtomicAnd_00z10D00E
-    2901,  // imageAtomicAnd_01A10D00E
-    2903,  // imageAtomicAnd_01B10D00E
-    2905,  // imageAtomicAnd_01C20D00E
-    2907,  // imageAtomicAnd_01D20D00E
-    2909,  // imageAtomicAnd_01E20D00E
-    2911,  // imageAtomicAnd_01I20D00E
-    2913,  // imageAtomicAnd_01J20D00E
-    2915,  // imageAtomicAnd_01K20D00E
-    2917,  // imageAtomicAnd_01d00D00E
-    2919,  // imageAtomicAnd_01e00D00E
-    2921,  // imageAtomicAnd_01f00D00E
-    2923,  // imageAtomicAnd_01F20D00E
-    2925,  // imageAtomicAnd_01G20D00E
-    2927,  // imageAtomicAnd_01H20D00E
-    2929,  // imageAtomicAnd_01X20D00E
-    2931,  // imageAtomicAnd_01Y20D00E
-    2933,  // imageAtomicAnd_01Z20D00E
-    2935,  // imageAtomicAnd_01L00D00E
-    2937,  // imageAtomicAnd_01M00D00E
-    2939,  // imageAtomicAnd_01N00D00E
-    2941,  // imageAtomicAnd_01O10D00E
-    2943,  // imageAtomicAnd_01P10D00E
-    2945,  // imageAtomicAnd_01Q10D00E
-    2947,  // imageAtomicAnd_01a10D00E
-    2949,  // imageAtomicAnd_01b10D00E
-    2951,  // imageAtomicAnd_01c10D00E
-    2953,  // imageAtomicAnd_01R10D00D00E
-    2955,  // imageAtomicAnd_01S10D00D00E
-    2957,  // imageAtomicAnd_01T10D00D00E
-    2959,  // imageAtomicAnd_01U20D00D00E
-    2961,  // imageAtomicAnd_01V20D00D00E
-    2963,  // imageAtomicAnd_01W20D00D00E
-    2965,  // imageAtomicAnd_00z10D00D
-    2967,  // imageAtomicAnd_01A10D00D
-    2969,  // imageAtomicAnd_01B10D00D
-    2971,  // imageAtomicAnd_01C20D00D
-    2973,  // imageAtomicAnd_01D20D00D
-    2975,  // imageAtomicAnd_01E20D00D
-    2977,  // imageAtomicAnd_01I20D00D
-    2979,  // imageAtomicAnd_01J20D00D
-    2981,  // imageAtomicAnd_01K20D00D
-    2983,  // imageAtomicAnd_01d00D00D
-    2985,  // imageAtomicAnd_01e00D00D
-    2987,  // imageAtomicAnd_01f00D00D
-    2989,  // imageAtomicAnd_01F20D00D
-    2991,  // imageAtomicAnd_01G20D00D
-    2993,  // imageAtomicAnd_01H20D00D
-    2995,  // imageAtomicAnd_01X20D00D
-    2997,  // imageAtomicAnd_01Y20D00D
-    2999,  // imageAtomicAnd_01Z20D00D
-    3001,  // imageAtomicAnd_01L00D00D
-    3003,  // imageAtomicAnd_01M00D00D
-    3005,  // imageAtomicAnd_01N00D00D
-    3007,  // imageAtomicAnd_01O10D00D
-    3009,  // imageAtomicAnd_01P10D00D
-    3011,  // imageAtomicAnd_01Q10D00D
-    3013,  // imageAtomicAnd_01a10D00D
-    3015,  // imageAtomicAnd_01b10D00D
-    3017,  // imageAtomicAnd_01c10D00D
-    3019,  // imageAtomicAnd_01R10D00D00D
-    3021,  // imageAtomicAnd_01S10D00D00D
-    3023,  // imageAtomicAnd_01T10D00D00D
-    3025,  // imageAtomicAnd_01U20D00D00D
-    3027,  // imageAtomicAnd_01V20D00D00D
-    3029,  // imageAtomicAnd_01W20D00D00D
-    3031,  // imageAtomicOr_00z10D00E
-    3033,  // imageAtomicOr_01A10D00E
-    3035,  // imageAtomicOr_01B10D00E
-    3037,  // imageAtomicOr_01C20D00E
-    3039,  // imageAtomicOr_01D20D00E
-    3041,  // imageAtomicOr_01E20D00E
-    3043,  // imageAtomicOr_01I20D00E
-    3045,  // imageAtomicOr_01J20D00E
-    3047,  // imageAtomicOr_01K20D00E
-    3049,  // imageAtomicOr_01d00D00E
-    3051,  // imageAtomicOr_01e00D00E
-    3053,  // imageAtomicOr_01f00D00E
-    3055,  // imageAtomicOr_01F20D00E
-    3057,  // imageAtomicOr_01G20D00E
-    3059,  // imageAtomicOr_01H20D00E
-    3061,  // imageAtomicOr_01X20D00E
-    3063,  // imageAtomicOr_01Y20D00E
-    3065,  // imageAtomicOr_01Z20D00E
-    3067,  // imageAtomicOr_01L00D00E
-    3069,  // imageAtomicOr_01M00D00E
-    3071,  // imageAtomicOr_01N00D00E
-    3073,  // imageAtomicOr_01O10D00E
-    3075,  // imageAtomicOr_01P10D00E
-    3077,  // imageAtomicOr_01Q10D00E
-    3079,  // imageAtomicOr_01a10D00E
-    3081,  // imageAtomicOr_01b10D00E
-    3083,  // imageAtomicOr_01c10D00E
-    3085,  // imageAtomicOr_01R10D00D00E
-    3087,  // imageAtomicOr_01S10D00D00E
-    3089,  // imageAtomicOr_01T10D00D00E
-    3091,  // imageAtomicOr_01U20D00D00E
-    3093,  // imageAtomicOr_01V20D00D00E
-    3095,  // imageAtomicOr_01W20D00D00E
-    3097,  // imageAtomicOr_00z10D00D
-    3099,  // imageAtomicOr_01A10D00D
-    3101,  // imageAtomicOr_01B10D00D
-    3103,  // imageAtomicOr_01C20D00D
-    3105,  // imageAtomicOr_01D20D00D
-    3107,  // imageAtomicOr_01E20D00D
-    3109,  // imageAtomicOr_01I20D00D
-    3111,  // imageAtomicOr_01J20D00D
-    3113,  // imageAtomicOr_01K20D00D
-    3115,  // imageAtomicOr_01d00D00D
-    3117,  // imageAtomicOr_01e00D00D
-    3119,  // imageAtomicOr_01f00D00D
-    3121,  // imageAtomicOr_01F20D00D
-    3123,  // imageAtomicOr_01G20D00D
-    3125,  // imageAtomicOr_01H20D00D
-    3127,  // imageAtomicOr_01X20D00D
-    3129,  // imageAtomicOr_01Y20D00D
-    3131,  // imageAtomicOr_01Z20D00D
-    3133,  // imageAtomicOr_01L00D00D
-    3135,  // imageAtomicOr_01M00D00D
-    3137,  // imageAtomicOr_01N00D00D
-    3139,  // imageAtomicOr_01O10D00D
-    3141,  // imageAtomicOr_01P10D00D
-    3143,  // imageAtomicOr_01Q10D00D
-    3145,  // imageAtomicOr_01a10D00D
-    3147,  // imageAtomicOr_01b10D00D
-    3149,  // imageAtomicOr_01c10D00D
-    3151,  // imageAtomicOr_01R10D00D00D
-    3153,  // imageAtomicOr_01S10D00D00D
-    3155,  // imageAtomicOr_01T10D00D00D
-    3157,  // imageAtomicOr_01U20D00D00D
-    3159,  // imageAtomicOr_01V20D00D00D
-    3161,  // imageAtomicOr_01W20D00D00D
-    3163,  // imageAtomicXor_00z10D00E
-    3165,  // imageAtomicXor_01A10D00E
-    3167,  // imageAtomicXor_01B10D00E
-    3169,  // imageAtomicXor_01C20D00E
-    3171,  // imageAtomicXor_01D20D00E
-    3173,  // imageAtomicXor_01E20D00E
-    3175,  // imageAtomicXor_01I20D00E
-    3177,  // imageAtomicXor_01J20D00E
-    3179,  // imageAtomicXor_01K20D00E
-    3181,  // imageAtomicXor_01d00D00E
-    3183,  // imageAtomicXor_01e00D00E
-    3185,  // imageAtomicXor_01f00D00E
-    3187,  // imageAtomicXor_01F20D00E
-    3189,  // imageAtomicXor_01G20D00E
-    3191,  // imageAtomicXor_01H20D00E
-    3193,  // imageAtomicXor_01X20D00E
-    3195,  // imageAtomicXor_01Y20D00E
-    3197,  // imageAtomicXor_01Z20D00E
-    3199,  // imageAtomicXor_01L00D00E
-    3201,  // imageAtomicXor_01M00D00E
-    3203,  // imageAtomicXor_01N00D00E
-    3205,  // imageAtomicXor_01O10D00E
-    3207,  // imageAtomicXor_01P10D00E
-    3209,  // imageAtomicXor_01Q10D00E
-    3211,  // imageAtomicXor_01a10D00E
-    3213,  // imageAtomicXor_01b10D00E
-    3215,  // imageAtomicXor_01c10D00E
-    3217,  // imageAtomicXor_01R10D00D00E
-    3219,  // imageAtomicXor_01S10D00D00E
-    3221,  // imageAtomicXor_01T10D00D00E
-    3223,  // imageAtomicXor_01U20D00D00E
-    3225,  // imageAtomicXor_01V20D00D00E
-    3227,  // imageAtomicXor_01W20D00D00E
-    3229,  // imageAtomicXor_00z10D00D
-    3231,  // imageAtomicXor_01A10D00D
-    3233,  // imageAtomicXor_01B10D00D
-    3235,  // imageAtomicXor_01C20D00D
-    3237,  // imageAtomicXor_01D20D00D
-    3239,  // imageAtomicXor_01E20D00D
-    3241,  // imageAtomicXor_01I20D00D
-    3243,  // imageAtomicXor_01J20D00D
-    3245,  // imageAtomicXor_01K20D00D
-    3247,  // imageAtomicXor_01d00D00D
-    3249,  // imageAtomicXor_01e00D00D
-    3251,  // imageAtomicXor_01f00D00D
-    3253,  // imageAtomicXor_01F20D00D
-    3255,  // imageAtomicXor_01G20D00D
-    3257,  // imageAtomicXor_01H20D00D
-    3259,  // imageAtomicXor_01X20D00D
-    3261,  // imageAtomicXor_01Y20D00D
-    3263,  // imageAtomicXor_01Z20D00D
-    3265,  // imageAtomicXor_01L00D00D
-    3267,  // imageAtomicXor_01M00D00D
-    3269,  // imageAtomicXor_01N00D00D
-    3271,  // imageAtomicXor_01O10D00D
-    3273,  // imageAtomicXor_01P10D00D
-    3275,  // imageAtomicXor_01Q10D00D
-    3277,  // imageAtomicXor_01a10D00D
-    3279,  // imageAtomicXor_01b10D00D
-    3281,  // imageAtomicXor_01c10D00D
-    3283,  // imageAtomicXor_01R10D00D00D
-    3285,  // imageAtomicXor_01S10D00D00D
-    3287,  // imageAtomicXor_01T10D00D00D
-    3289,  // imageAtomicXor_01U20D00D00D
-    3291,  // imageAtomicXor_01V20D00D00D
-    3293,  // imageAtomicXor_01W20D00D00D
-    3295,  // imageAtomicExchange_00z10D00E
-    3297,  // imageAtomicExchange_01A10D00E
-    3299,  // imageAtomicExchange_01B10D00E
-    3301,  // imageAtomicExchange_01C20D00E
-    3303,  // imageAtomicExchange_01D20D00E
-    3305,  // imageAtomicExchange_01E20D00E
-    3307,  // imageAtomicExchange_01I20D00E
-    3309,  // imageAtomicExchange_01J20D00E
-    3311,  // imageAtomicExchange_01K20D00E
-    3313,  // imageAtomicExchange_01d00D00E
-    3315,  // imageAtomicExchange_01e00D00E
-    3317,  // imageAtomicExchange_01f00D00E
-    3319,  // imageAtomicExchange_01F20D00E
-    3321,  // imageAtomicExchange_01G20D00E
-    3323,  // imageAtomicExchange_01H20D00E
-    3325,  // imageAtomicExchange_01X20D00E
-    3327,  // imageAtomicExchange_01Y20D00E
-    3329,  // imageAtomicExchange_01Z20D00E
-    3331,  // imageAtomicExchange_01L00D00E
-    3333,  // imageAtomicExchange_01M00D00E
-    3335,  // imageAtomicExchange_01N00D00E
-    3337,  // imageAtomicExchange_01O10D00E
-    3339,  // imageAtomicExchange_01P10D00E
-    3341,  // imageAtomicExchange_01Q10D00E
-    3343,  // imageAtomicExchange_01a10D00E
-    3345,  // imageAtomicExchange_01b10D00E
-    3347,  // imageAtomicExchange_01c10D00E
-    3349,  // imageAtomicExchange_01R10D00D00E
-    3351,  // imageAtomicExchange_01S10D00D00E
-    3353,  // imageAtomicExchange_01T10D00D00E
-    3355,  // imageAtomicExchange_01U20D00D00E
-    3357,  // imageAtomicExchange_01V20D00D00E
-    3359,  // imageAtomicExchange_01W20D00D00E
-    3361,  // imageAtomicExchange_00z10D00D
-    3363,  // imageAtomicExchange_01A10D00D
-    3365,  // imageAtomicExchange_01B10D00D
-    3367,  // imageAtomicExchange_01C20D00D
-    3369,  // imageAtomicExchange_01D20D00D
-    3371,  // imageAtomicExchange_01E20D00D
-    3373,  // imageAtomicExchange_01I20D00D
-    3375,  // imageAtomicExchange_01J20D00D
-    3377,  // imageAtomicExchange_01K20D00D
-    3379,  // imageAtomicExchange_01d00D00D
-    3381,  // imageAtomicExchange_01e00D00D
-    3383,  // imageAtomicExchange_01f00D00D
-    3385,  // imageAtomicExchange_01F20D00D
-    3387,  // imageAtomicExchange_01G20D00D
-    3389,  // imageAtomicExchange_01H20D00D
-    3391,  // imageAtomicExchange_01X20D00D
-    3393,  // imageAtomicExchange_01Y20D00D
-    3395,  // imageAtomicExchange_01Z20D00D
-    3397,  // imageAtomicExchange_01L00D00D
-    3399,  // imageAtomicExchange_01M00D00D
-    3401,  // imageAtomicExchange_01N00D00D
-    3403,  // imageAtomicExchange_01O10D00D
-    3405,  // imageAtomicExchange_01P10D00D
-    3407,  // imageAtomicExchange_01Q10D00D
-    3409,  // imageAtomicExchange_01a10D00D
-    3411,  // imageAtomicExchange_01b10D00D
-    3413,  // imageAtomicExchange_01c10D00D
-    3415,  // imageAtomicExchange_01R10D00D00D
-    3417,  // imageAtomicExchange_01S10D00D00D
-    3419,  // imageAtomicExchange_01T10D00D00D
-    3421,  // imageAtomicExchange_01U20D00D00D
-    3423,  // imageAtomicExchange_01V20D00D00D
-    3425,  // imageAtomicExchange_01W20D00D00D
-    3427,  // imageAtomicExchange_00z10D00B
-    3429,  // imageAtomicExchange_01A10D00B
-    3431,  // imageAtomicExchange_01B10D00B
-    3433,  // imageAtomicExchange_01C20D00B
-    3435,  // imageAtomicExchange_01D20D00B
-    3437,  // imageAtomicExchange_01E20D00B
-    3439,  // imageAtomicExchange_01I20D00B
-    3441,  // imageAtomicExchange_01J20D00B
-    3443,  // imageAtomicExchange_01K20D00B
-    3445,  // imageAtomicExchange_01d00D00B
-    3447,  // imageAtomicExchange_01e00D00B
-    3449,  // imageAtomicExchange_01f00D00B
-    3451,  // imageAtomicExchange_01F20D00B
-    3453,  // imageAtomicExchange_01G20D00B
-    3455,  // imageAtomicExchange_01H20D00B
-    3457,  // imageAtomicExchange_01X20D00B
-    3459,  // imageAtomicExchange_01Y20D00B
-    3461,  // imageAtomicExchange_01Z20D00B
-    3463,  // imageAtomicExchange_01L00D00B
-    3465,  // imageAtomicExchange_01M00D00B
-    3467,  // imageAtomicExchange_01N00D00B
-    3469,  // imageAtomicExchange_01O10D00B
-    3471,  // imageAtomicExchange_01P10D00B
-    3473,  // imageAtomicExchange_01Q10D00B
-    3475,  // imageAtomicExchange_01a10D00B
-    3477,  // imageAtomicExchange_01b10D00B
-    3479,  // imageAtomicExchange_01c10D00B
-    3481,  // imageAtomicExchange_01R10D00D00B
-    3483,  // imageAtomicExchange_01S10D00D00B
-    3485,  // imageAtomicExchange_01T10D00D00B
-    3487,  // imageAtomicExchange_01U20D00D00B
-    3489,  // imageAtomicExchange_01V20D00D00B
-    3491,  // imageAtomicExchange_01W20D00D00B
-    3493,  // imageAtomicCompSwap_00z10D00E00E
-    3495,  // imageAtomicCompSwap_01A10D00E00E
-    3497,  // imageAtomicCompSwap_01B10D00E00E
-    3499,  // imageAtomicCompSwap_01C20D00E00E
-    3501,  // imageAtomicCompSwap_01D20D00E00E
-    3503,  // imageAtomicCompSwap_01E20D00E00E
-    3505,  // imageAtomicCompSwap_01I20D00E00E
-    3507,  // imageAtomicCompSwap_01J20D00E00E
-    3509,  // imageAtomicCompSwap_01K20D00E00E
-    3511,  // imageAtomicCompSwap_01d00D00E00E
-    3513,  // imageAtomicCompSwap_01e00D00E00E
-    3515,  // imageAtomicCompSwap_01f00D00E00E
-    3517,  // imageAtomicCompSwap_01F20D00E00E
-    3519,  // imageAtomicCompSwap_01G20D00E00E
-    3521,  // imageAtomicCompSwap_01H20D00E00E
-    3523,  // imageAtomicCompSwap_01X20D00E00E
-    3525,  // imageAtomicCompSwap_01Y20D00E00E
-    3527,  // imageAtomicCompSwap_01Z20D00E00E
-    3529,  // imageAtomicCompSwap_01L00D00E00E
-    3531,  // imageAtomicCompSwap_01M00D00E00E
-    3533,  // imageAtomicCompSwap_01N00D00E00E
-    3535,  // imageAtomicCompSwap_01O10D00E00E
-    3537,  // imageAtomicCompSwap_01P10D00E00E
-    3539,  // imageAtomicCompSwap_01Q10D00E00E
-    3541,  // imageAtomicCompSwap_01a10D00E00E
-    3543,  // imageAtomicCompSwap_01b10D00E00E
-    3545,  // imageAtomicCompSwap_01c10D00E00E
-    3547,  // imageAtomicCompSwap_01R10D00D00E00E
-    3549,  // imageAtomicCompSwap_01S10D00D00E00E
-    3551,  // imageAtomicCompSwap_01T10D00D00E00E
-    3553,  // imageAtomicCompSwap_01U20D00D00E00E
-    3555,  // imageAtomicCompSwap_01V20D00D00E00E
-    3557,  // imageAtomicCompSwap_01W20D00D00E00E
-    3559,  // imageAtomicCompSwap_00z10D00D00D
-    3561,  // imageAtomicCompSwap_01A10D00D00D
-    3563,  // imageAtomicCompSwap_01B10D00D00D
-    3565,  // imageAtomicCompSwap_01C20D00D00D
-    3567,  // imageAtomicCompSwap_01D20D00D00D
-    3569,  // imageAtomicCompSwap_01E20D00D00D
-    3571,  // imageAtomicCompSwap_01I20D00D00D
-    3573,  // imageAtomicCompSwap_01J20D00D00D
-    3575,  // imageAtomicCompSwap_01K20D00D00D
-    3577,  // imageAtomicCompSwap_01d00D00D00D
-    3579,  // imageAtomicCompSwap_01e00D00D00D
-    3581,  // imageAtomicCompSwap_01f00D00D00D
-    3583,  // imageAtomicCompSwap_01F20D00D00D
-    3585,  // imageAtomicCompSwap_01G20D00D00D
-    3587,  // imageAtomicCompSwap_01H20D00D00D
-    3589,  // imageAtomicCompSwap_01X20D00D00D
-    3591,  // imageAtomicCompSwap_01Y20D00D00D
-    3593,  // imageAtomicCompSwap_01Z20D00D00D
-    3595,  // imageAtomicCompSwap_01L00D00D00D
-    3597,  // imageAtomicCompSwap_01M00D00D00D
-    3599,  // imageAtomicCompSwap_01N00D00D00D
-    3601,  // imageAtomicCompSwap_01O10D00D00D
-    3603,  // imageAtomicCompSwap_01P10D00D00D
-    3605,  // imageAtomicCompSwap_01Q10D00D00D
-    3607,  // imageAtomicCompSwap_01a10D00D00D
-    3609,  // imageAtomicCompSwap_01b10D00D00D
-    3611,  // imageAtomicCompSwap_01c10D00D00D
-    3613,  // imageAtomicCompSwap_01R10D00D00D00D
-    3615,  // imageAtomicCompSwap_01S10D00D00D00D
-    3617,  // imageAtomicCompSwap_01T10D00D00D00D
-    3619,  // imageAtomicCompSwap_01U20D00D00D00D
-    3621,  // imageAtomicCompSwap_01V20D00D00D00D
-    3623,  // imageAtomicCompSwap_01W20D00D00D00D
-    3625,  // noise1_00B
-    3626,  // noise1_10B
-    3627,  // noise1_20B
-    3628,  // noise1_30B
-    3629,  // noise2_00B
-    3630,  // noise2_10B
-    3631,  // noise2_20B
-    3632,  // noise2_30B
-    3633,  // noise3_00B
-    3634,  // noise3_10B
-    3635,  // noise3_20B
-    3636,  // noise3_30B
-    3637,  // noise4_00B
-    3638,  // noise4_10B
-    3639,  // noise4_20B
-    3640,  // noise4_30B
-    3641,  // memoryBarrier_
-    3643,  // memoryBarrierAtomicCounter_
-    3645,  // memoryBarrierBuffer_
-    3647,  // memoryBarrierImage_
-    3649,  // barrier_
-    3653,  // memoryBarrierShared_
-    3655,  // groupMemoryBarrier_
-    3657,  // EmitVertex_
-    3661,  // EndPrimitive_
-    3665,  // EmitStreamVertex_00D
-    3666,  // EndStreamPrimitive_00D
-    3667,  // subpassLoad_01g
-    3668,  // subpassLoad_01h
-    3669,  // subpassLoad_01i
-    3670,  // subpassLoad_01j00D
-    3671,  // subpassLoad_01k00D
-    3672,  // subpassLoad_01l00D
-    3673,  // anyInvocation_00F
-    3674,  // allInvocations_00F
-    3675,  // allInvocationsEqual_00F
-    3676,  // textureVideoWEBGL_00y10B
-    3678,  // texture_00y10B
+    1284,  // textureProj_00O20B
+    1286,  // textureProj_00q20B
+    1287,  // textureProj_00v20B
+    1288,  // textureProj_00O30B
+    1290,  // textureProj_00q30B
+    1291,  // textureProj_00v30B
+    1292,  // textureProj_00n30B
+    1293,  // textureProj_00M20B
+    1294,  // textureProj_00M30B
+    1295,  // textureProj_00N20B
+    1296,  // textureProj_00N30B
+    1297,  // textureLod_00I10B00B
+    1299,  // textureLod_00R10B00B
+    1301,  // textureLod_00X10B00B
+    1303,  // textureLod_00J20B00B
+    1305,  // textureLod_00S20B00B
+    1307,  // textureLod_00Y20B00B
+    1309,  // textureLod_00K20B00B
+    1311,  // textureLod_00T20B00B
+    1313,  // textureLod_00Z20B00B
+    1315,  // textureLod_00L20B00B
+    1317,  // textureLod_00U20B00B
+    1319,  // textureLod_00a20B00B
+    1321,  // textureLod_00d20B00B
+    1323,  // textureLod_00g00B00B
+    1324,  // textureLod_00o00B00B
+    1325,  // textureLod_00t00B00B
+    1326,  // textureLod_00m20B00B
+    1327,  // textureLod_00h10B00B
+    1328,  // textureLod_00p10B00B
+    1329,  // textureLod_00u10B00B
+    1330,  // textureLod_00i20B00B
+    1331,  // textureLod_00k30B00B
+    1335,  // textureLod_00s30B00B
+    1339,  // textureLod_00x30B00B
+    1343,  // textureSize_00I00D
+    1345,  // textureSize_00R00D
+    1347,  // textureSize_00X00D
+    1349,  // textureSize_00J00D
+    1351,  // textureSize_00S00D
+    1353,  // textureSize_00Y00D
+    1355,  // textureSize_00K00D
+    1357,  // textureSize_00T00D
+    1359,  // textureSize_00Z00D
+    1361,  // textureSize_00L00D
+    1363,  // textureSize_00U00D
+    1365,  // textureSize_00a00D
+    1367,  // textureSize_00d00D
+    1369,  // textureSize_00e00D
+    1371,  // textureSize_00f00D
+    1373,  // textureSize_00g00D
+    1374,  // textureSize_00o00D
+    1375,  // textureSize_00t00D
+    1376,  // textureSize_00m00D
+    1377,  // textureSize_00k00D
+    1381,  // textureSize_00s00D
+    1385,  // textureSize_00x00D
+    1389,  // textureSize_00l00D
+    1393,  // textureSize_00O
+    1394,  // textureSize_00q
+    1395,  // textureSize_00v
+    1396,  // textureSize_00n
+    1397,  // textureSize_00h00D
+    1398,  // textureSize_00p00D
+    1399,  // textureSize_00u00D
+    1400,  // textureSize_00i00D
+    1401,  // textureSize_00j
+    1405,  // textureSize_00r
+    1409,  // textureSize_00w
+    1413,  // textureSize_00P
+    1416,  // textureSize_00V
+    1419,  // textureSize_00b
+    1422,  // textureSize_00Q
+    1424,  // textureSize_00W
+    1426,  // textureSize_00c
+    1428,  // textureSize_00M00D
+    1429,  // textureSize_00N00D
+    1430,  // textureProjLod_00I20B00B
+    1432,  // textureProjLod_00R20B00B
+    1434,  // textureProjLod_00X20B00B
+    1436,  // textureProjLod_00I30B00B
+    1438,  // textureProjLod_00R30B00B
+    1440,  // textureProjLod_00X30B00B
+    1442,  // textureProjLod_00J30B00B
+    1444,  // textureProjLod_00S30B00B
+    1446,  // textureProjLod_00Y30B00B
+    1448,  // textureProjLod_00d30B00B
+    1450,  // textureProjLod_00g10B00B
+    1451,  // textureProjLod_00o10B00B
+    1452,  // textureProjLod_00t10B00B
+    1453,  // textureProjLod_00g30B00B
+    1454,  // textureProjLod_00o30B00B
+    1455,  // textureProjLod_00t30B00B
+    1456,  // textureProjLod_00m30B00B
+    1457,  // texelFetch_00I10D00D
+    1459,  // texelFetch_00R10D00D
+    1461,  // texelFetch_00X10D00D
+    1463,  // texelFetch_00J20D00D
+    1465,  // texelFetch_00S20D00D
+    1467,  // texelFetch_00Y20D00D
+    1469,  // texelFetch_00L20D00D
+    1471,  // texelFetch_00U20D00D
+    1473,  // texelFetch_00a20D00D
+    1475,  // texelFetch_00g00D00D
+    1476,  // texelFetch_00o00D00D
+    1477,  // texelFetch_00t00D00D
+    1478,  // texelFetch_00O10D
+    1479,  // texelFetch_00q10D
+    1480,  // texelFetch_00v10D
+    1481,  // texelFetch_00h10D00D
+    1482,  // texelFetch_00p10D00D
+    1483,  // texelFetch_00u10D00D
+    1484,  // texelFetch_00j00D
+    1488,  // texelFetch_00r00D
+    1492,  // texelFetch_00w00D
+    1496,  // texelFetch_00P10D00D
+    1499,  // texelFetch_00V10D00D
+    1502,  // texelFetch_00b10D00D
+    1505,  // texelFetch_00Q20D00D
+    1507,  // texelFetch_00W20D00D
+    1509,  // texelFetch_00c20D00D
+    1511,  // texelFetch_00M10D00D
+    1512,  // texelFetch_00N10D00D
+    1513,  // textureGrad_00I10B10B10B
+    1515,  // textureGrad_00R10B10B10B
+    1517,  // textureGrad_00X10B10B10B
+    1519,  // textureGrad_00J20B20B20B
+    1521,  // textureGrad_00S20B20B20B
+    1523,  // textureGrad_00Y20B20B20B
+    1525,  // textureGrad_00K20B20B20B
+    1527,  // textureGrad_00T20B20B20B
+    1529,  // textureGrad_00Z20B20B20B
+    1531,  // textureGrad_00I00B00B00B
+    1532,  // textureGrad_00R00B00B00B
+    1533,  // textureGrad_00X00B00B00B
+    1534,  // textureGrad_00O10B10B10B
+    1535,  // textureGrad_00q10B10B10B
+    1536,  // textureGrad_00v10B10B10B
+    1537,  // textureGrad_00n20B10B10B
+    1538,  // textureGrad_00d20B10B10B
+    1540,  // textureGrad_00e30B20B20B
+    1542,  // textureGrad_00L20B10B10B
+    1544,  // textureGrad_00U20B10B10B
+    1546,  // textureGrad_00a20B10B10B
+    1548,  // textureGrad_00f30B10B10B
+    1550,  // textureGrad_00m20B00B00B
+    1551,  // textureGrad_00h10B00B00B
+    1552,  // textureGrad_00p10B00B00B
+    1553,  // textureGrad_00u10B00B00B
+    1554,  // textureGrad_00i20B00B00B
+    1555,  // textureGrad_00k30B20B20B
+    1559,  // textureGrad_00s30B20B20B
+    1563,  // textureGrad_00x30B20B20B
+    1567,  // textureProjGrad_00I20B10B10B
+    1569,  // textureProjGrad_00R20B10B10B
+    1571,  // textureProjGrad_00X20B10B10B
+    1573,  // textureProjGrad_00I30B10B10B
+    1575,  // textureProjGrad_00R30B10B10B
+    1577,  // textureProjGrad_00X30B10B10B
+    1579,  // textureProjGrad_00J30B20B20B
+    1581,  // textureProjGrad_00S30B20B20B
+    1583,  // textureProjGrad_00Y30B20B20B
+    1585,  // textureProjGrad_00d30B10B10B
+    1587,  // textureProjGrad_00g10B00B00B
+    1588,  // textureProjGrad_00o10B00B00B
+    1589,  // textureProjGrad_00t10B00B00B
+    1590,  // textureProjGrad_00g30B00B00B
+    1591,  // textureProjGrad_00o30B00B00B
+    1592,  // textureProjGrad_00t30B00B00B
+    1593,  // textureProjGrad_00m30B00B00B
+    1594,  // textureProjGrad_00O20B10B10B
+    1595,  // textureProjGrad_00q20B10B10B
+    1596,  // textureProjGrad_00v20B10B10B
+    1597,  // textureProjGrad_00O30B10B10B
+    1598,  // textureProjGrad_00q30B10B10B
+    1599,  // textureProjGrad_00v30B10B10B
+    1600,  // textureProjGrad_00n30B10B10B
+    1601,  // textureQueryLevels_00g
+    1602,  // textureQueryLevels_00o
+    1603,  // textureQueryLevels_00t
+    1604,  // textureQueryLevels_00I
+    1605,  // textureQueryLevels_00R
+    1606,  // textureQueryLevels_00X
+    1607,  // textureQueryLevels_00J
+    1608,  // textureQueryLevels_00S
+    1609,  // textureQueryLevels_00Y
+    1610,  // textureQueryLevels_00K
+    1611,  // textureQueryLevels_00T
+    1612,  // textureQueryLevels_00Z
+    1613,  // textureQueryLevels_00h
+    1614,  // textureQueryLevels_00p
+    1615,  // textureQueryLevels_00u
+    1616,  // textureQueryLevels_00L
+    1617,  // textureQueryLevels_00U
+    1618,  // textureQueryLevels_00a
+    1619,  // textureQueryLevels_00k
+    1620,  // textureQueryLevels_00s
+    1621,  // textureQueryLevels_00x
+    1622,  // textureQueryLevels_00m
+    1623,  // textureQueryLevels_00d
+    1624,  // textureQueryLevels_00e
+    1625,  // textureQueryLevels_00i
+    1626,  // textureQueryLevels_00f
+    1627,  // textureQueryLevels_00l
+    1628,  // textureSamples_00P
+    1629,  // textureSamples_00V
+    1630,  // textureSamples_00b
+    1631,  // textureSamples_00Q
+    1632,  // textureSamples_00W
+    1633,  // textureSamples_00c
+    1634,  // texture_00I10B00B
+    1636,  // texture_00R10B00B
+    1638,  // texture_00X10B00B
+    1640,  // texture_00J20B00B
+    1642,  // texture_00S20B00B
+    1644,  // texture_00Y20B00B
+    1646,  // texture_00K20B00B
+    1648,  // texture_00T20B00B
+    1650,  // texture_00Z20B00B
+    1652,  // texture_00L20B00B
+    1654,  // texture_00U20B00B
+    1656,  // texture_00a20B00B
+    1658,  // textureProj_00I20B00B
+    1660,  // textureProj_00R20B00B
+    1662,  // textureProj_00X20B00B
+    1664,  // textureProj_00I30B00B
+    1666,  // textureProj_00R30B00B
+    1668,  // textureProj_00X30B00B
+    1670,  // textureProj_00J30B00B
+    1672,  // textureProj_00S30B00B
+    1674,  // textureProj_00Y30B00B
+    1676,  // texture_00d20B00B
+    1678,  // texture_00e30B00B
+    1680,  // textureProj_00d30B00B
+    1682,  // texture_00g00B00B
+    1683,  // texture_00o00B00B
+    1684,  // texture_00t00B00B
+    1685,  // texture_00m20B00B
+    1686,  // texture_00h20B00B
+    1687,  // texture_00p20B00B
+    1688,  // texture_00u20B00B
+    1689,  // texture_00i20B00B
+    1690,  // texture_00f30B00B
+    1691,  // textureProj_00g10B00B
+    1692,  // textureProj_00o10B00B
+    1693,  // textureProj_00t10B00B
+    1694,  // textureProj_00g30B00B
+    1695,  // textureProj_00o30B00B
+    1696,  // textureProj_00t30B00B
+    1697,  // textureProj_00m30B00B
+    1698,  // texture_00M10B00B
+    1699,  // textureProj_00M20B00B
+    1700,  // textureProj_00M30B00B
+    1701,  // texture_00N10B00B
+    1702,  // textureProj_00N20B00B
+    1703,  // textureProj_00N30B00B
+    1704,  // textureQueryLod_00g00B
+    1705,  // textureQueryLod_00o00B
+    1706,  // textureQueryLod_00t00B
+    1707,  // textureQueryLod_00I10B
+    1708,  // textureQueryLod_00R10B
+    1709,  // textureQueryLod_00X10B
+    1710,  // textureQueryLod_00J20B
+    1711,  // textureQueryLod_00S20B
+    1712,  // textureQueryLod_00Y20B
+    1713,  // textureQueryLod_00K20B
+    1714,  // textureQueryLod_00T20B
+    1715,  // textureQueryLod_00Z20B
+    1716,  // textureQueryLod_00h00B
+    1717,  // textureQueryLod_00p00B
+    1718,  // textureQueryLod_00u00B
+    1719,  // textureQueryLod_00L10B
+    1720,  // textureQueryLod_00U10B
+    1721,  // textureQueryLod_00a10B
+    1722,  // textureQueryLod_00k20B
+    1723,  // textureQueryLod_00s20B
+    1724,  // textureQueryLod_00x20B
+    1725,  // textureQueryLod_00m00B
+    1726,  // textureQueryLod_00d10B
+    1727,  // textureQueryLod_00e20B
+    1728,  // textureQueryLod_00i00B
+    1729,  // textureQueryLod_00f10B
+    1730,  // textureQueryLod_00l20B
+    1731,  // textureOffset_00I10B10D
+    1733,  // textureOffset_00R10B10D
+    1735,  // textureOffset_00X10B10D
+    1737,  // textureOffset_00J20B20D
+    1739,  // textureOffset_00S20B20D
+    1741,  // textureOffset_00Y20B20D
+    1743,  // textureOffset_00d20B10D
+    1745,  // textureOffset_00L20B10D
+    1747,  // textureOffset_00U20B10D
+    1749,  // textureOffset_00a20B10D
+    1751,  // textureOffset_00g00B00D
+    1752,  // textureOffset_00o00B00D
+    1753,  // textureOffset_00t00B00D
+    1754,  // textureOffset_00O10B10D
+    1755,  // textureOffset_00q10B10D
+    1756,  // textureOffset_00v10B10D
+    1757,  // textureOffset_00n20B10D
+    1758,  // textureOffset_00m20B00D
+    1759,  // textureOffset_00h10B00D
+    1760,  // textureOffset_00p10B00D
+    1761,  // textureOffset_00u10B00D
+    1762,  // textureOffset_00i20B00D
+    1763,  // textureOffset_00f30B10D
+    1764,  // textureProjOffset_00I20B10D
+    1766,  // textureProjOffset_00R20B10D
+    1768,  // textureProjOffset_00X20B10D
+    1770,  // textureProjOffset_00I30B10D
+    1772,  // textureProjOffset_00R30B10D
+    1774,  // textureProjOffset_00X30B10D
+    1776,  // textureProjOffset_00J30B20D
+    1778,  // textureProjOffset_00S30B20D
+    1780,  // textureProjOffset_00Y30B20D
+    1782,  // textureProjOffset_00d30B10D
+    1784,  // textureProjOffset_00g10B00D
+    1785,  // textureProjOffset_00o10B00D
+    1786,  // textureProjOffset_00t10B00D
+    1787,  // textureProjOffset_00g30B00D
+    1788,  // textureProjOffset_00o30B00D
+    1789,  // textureProjOffset_00t30B00D
+    1790,  // textureProjOffset_00O20B10D
+    1791,  // textureProjOffset_00q20B10D
+    1792,  // textureProjOffset_00v20B10D
+    1793,  // textureProjOffset_00O30B10D
+    1794,  // textureProjOffset_00q30B10D
+    1795,  // textureProjOffset_00v30B10D
+    1796,  // textureProjOffset_00n30B10D
+    1797,  // textureProjOffset_00m30B00D
+    1798,  // textureLodOffset_00I10B00B10D
+    1800,  // textureLodOffset_00R10B00B10D
+    1802,  // textureLodOffset_00X10B00B10D
+    1804,  // textureLodOffset_00J20B00B20D
+    1806,  // textureLodOffset_00S20B00B20D
+    1808,  // textureLodOffset_00Y20B00B20D
+    1810,  // textureLodOffset_00d20B00B10D
+    1812,  // textureLodOffset_00L20B00B10D
+    1814,  // textureLodOffset_00U20B00B10D
+    1816,  // textureLodOffset_00a20B00B10D
+    1818,  // textureLodOffset_00g00B00B00D
+    1819,  // textureLodOffset_00o00B00B00D
+    1820,  // textureLodOffset_00t00B00B00D
+    1821,  // textureLodOffset_00m20B00B00D
+    1822,  // textureLodOffset_00h10B00B00D
+    1823,  // textureLodOffset_00p10B00B00D
+    1824,  // textureLodOffset_00u10B00B00D
+    1825,  // textureLodOffset_00i20B00B00D
+    1826,  // textureProjLodOffset_00I20B00B10D
+    1828,  // textureProjLodOffset_00R20B00B10D
+    1830,  // textureProjLodOffset_00X20B00B10D
+    1832,  // textureProjLodOffset_00I30B00B10D
+    1834,  // textureProjLodOffset_00R30B00B10D
+    1836,  // textureProjLodOffset_00X30B00B10D
+    1838,  // textureProjLodOffset_00J30B00B20D
+    1840,  // textureProjLodOffset_00S30B00B20D
+    1842,  // textureProjLodOffset_00Y30B00B20D
+    1844,  // textureProjLodOffset_00d30B00B10D
+    1846,  // textureProjLodOffset_00g10B00B00D
+    1847,  // textureProjLodOffset_00o10B00B00D
+    1848,  // textureProjLodOffset_00t10B00B00D
+    1849,  // textureProjLodOffset_00g30B00B00D
+    1850,  // textureProjLodOffset_00o30B00B00D
+    1851,  // textureProjLodOffset_00t30B00B00D
+    1852,  // textureProjLodOffset_00m30B00B00D
+    1853,  // texelFetchOffset_00I10D00D10D
+    1855,  // texelFetchOffset_00R10D00D10D
+    1857,  // texelFetchOffset_00X10D00D10D
+    1859,  // texelFetchOffset_00J20D00D20D
+    1861,  // texelFetchOffset_00S20D00D20D
+    1863,  // texelFetchOffset_00Y20D00D20D
+    1865,  // texelFetchOffset_00L20D00D10D
+    1867,  // texelFetchOffset_00U20D00D10D
+    1869,  // texelFetchOffset_00a20D00D10D
+    1871,  // texelFetchOffset_00g00D00D00D
+    1872,  // texelFetchOffset_00o00D00D00D
+    1873,  // texelFetchOffset_00t00D00D00D
+    1874,  // texelFetchOffset_00O10D10D
+    1875,  // texelFetchOffset_00q10D10D
+    1876,  // texelFetchOffset_00v10D10D
+    1877,  // texelFetchOffset_00h10D00D00D
+    1878,  // texelFetchOffset_00p10D00D00D
+    1879,  // texelFetchOffset_00u10D00D00D
+    1880,  // textureGradOffset_00I10B10B10B10D
+    1882,  // textureGradOffset_00R10B10B10B10D
+    1884,  // textureGradOffset_00X10B10B10B10D
+    1886,  // textureGradOffset_00J20B20B20B20D
+    1888,  // textureGradOffset_00S20B20B20B20D
+    1890,  // textureGradOffset_00Y20B20B20B20D
+    1892,  // textureGradOffset_00d20B10B10B10D
+    1894,  // textureGradOffset_00L20B10B10B10D
+    1896,  // textureGradOffset_00U20B10B10B10D
+    1898,  // textureGradOffset_00a20B10B10B10D
+    1900,  // textureGradOffset_00f30B10B10B10D
+    1902,  // textureGradOffset_00g00B00B00B00D
+    1903,  // textureGradOffset_00o00B00B00B00D
+    1904,  // textureGradOffset_00t00B00B00B00D
+    1905,  // textureGradOffset_00O10B10B10B10D
+    1906,  // textureGradOffset_00q10B10B10B10D
+    1907,  // textureGradOffset_00v10B10B10B10D
+    1908,  // textureGradOffset_00n20B10B10B10D
+    1909,  // textureGradOffset_00m20B00B00B00D
+    1910,  // textureGradOffset_00h10B00B00B00D
+    1911,  // textureGradOffset_00p10B00B00B00D
+    1912,  // textureGradOffset_00u10B00B00B00D
+    1913,  // textureGradOffset_00i20B00B00B00D
+    1914,  // textureProjGradOffset_00I20B10B10B10D
+    1916,  // textureProjGradOffset_00R20B10B10B10D
+    1918,  // textureProjGradOffset_00X20B10B10B10D
+    1920,  // textureProjGradOffset_00I30B10B10B10D
+    1922,  // textureProjGradOffset_00R30B10B10B10D
+    1924,  // textureProjGradOffset_00X30B10B10B10D
+    1926,  // textureProjGradOffset_00J30B20B20B20D
+    1928,  // textureProjGradOffset_00S30B20B20B20D
+    1930,  // textureProjGradOffset_00Y30B20B20B20D
+    1932,  // textureProjGradOffset_00d30B10B10B10D
+    1934,  // textureProjGradOffset_00g10B00B00B00D
+    1935,  // textureProjGradOffset_00o10B00B00B00D
+    1936,  // textureProjGradOffset_00t10B00B00B00D
+    1937,  // textureProjGradOffset_00g30B00B00B00D
+    1938,  // textureProjGradOffset_00o30B00B00B00D
+    1939,  // textureProjGradOffset_00t30B00B00B00D
+    1940,  // textureProjGradOffset_00O20B10B10B10D
+    1941,  // textureProjGradOffset_00q20B10B10B10D
+    1942,  // textureProjGradOffset_00v20B10B10B10D
+    1943,  // textureProjGradOffset_00O30B10B10B10D
+    1944,  // textureProjGradOffset_00q30B10B10B10D
+    1945,  // textureProjGradOffset_00v30B10B10B10D
+    1946,  // textureProjGradOffset_00n30B10B10B10D
+    1947,  // textureProjGradOffset_00m30B00B00B00D
+    1948,  // textureOffset_00I10B10D00B
+    1950,  // textureOffset_00R10B10D00B
+    1952,  // textureOffset_00X10B10D00B
+    1954,  // textureOffset_00J20B20D00B
+    1956,  // textureOffset_00S20B20D00B
+    1958,  // textureOffset_00Y20B20D00B
+    1960,  // textureOffset_00d20B10D00B
+    1962,  // textureOffset_00L20B10D00B
+    1964,  // textureOffset_00U20B10D00B
+    1966,  // textureOffset_00a20B10D00B
+    1968,  // textureOffset_00g00B00D00B
+    1969,  // textureOffset_00o00B00D00B
+    1970,  // textureOffset_00t00B00D00B
+    1971,  // textureOffset_00m20B00D00B
+    1972,  // textureOffset_00h10B00D00B
+    1973,  // textureOffset_00p10B00D00B
+    1974,  // textureOffset_00u10B00D00B
+    1975,  // textureOffset_00i20B00D00B
+    1976,  // textureProjOffset_00I20B10D00B
+    1978,  // textureProjOffset_00R20B10D00B
+    1980,  // textureProjOffset_00X20B10D00B
+    1982,  // textureProjOffset_00I30B10D00B
+    1984,  // textureProjOffset_00R30B10D00B
+    1986,  // textureProjOffset_00X30B10D00B
+    1988,  // textureProjOffset_00J30B20D00B
+    1990,  // textureProjOffset_00S30B20D00B
+    1992,  // textureProjOffset_00Y30B20D00B
+    1994,  // textureProjOffset_00d30B10D00B
+    1996,  // textureProjOffset_00g10B00D00B
+    1997,  // textureProjOffset_00o10B00D00B
+    1998,  // textureProjOffset_00t10B00D00B
+    1999,  // textureProjOffset_00g30B00D00B
+    2000,  // textureProjOffset_00o30B00D00B
+    2001,  // textureProjOffset_00t30B00D00B
+    2002,  // textureProjOffset_00m30B00D00B
+    2003,  // textureGather_00I10B
+    2005,  // textureGather_00R10B
+    2007,  // textureGather_00X10B
+    2009,  // textureGather_00I10B00D
+    2011,  // textureGather_00R10B00D
+    2013,  // textureGather_00X10B00D
+    2015,  // textureGather_00L20B
+    2017,  // textureGather_00U20B
+    2019,  // textureGather_00a20B
+    2021,  // textureGather_00L20B00D
+    2023,  // textureGather_00U20B00D
+    2025,  // textureGather_00a20B00D
+    2027,  // textureGather_00K20B
+    2029,  // textureGather_00T20B
+    2031,  // textureGather_00Z20B
+    2033,  // textureGather_00K20B00D
+    2035,  // textureGather_00T20B00D
+    2037,  // textureGather_00Z20B00D
+    2039,  // textureGather_00k30B
+    2043,  // textureGather_00s30B
+    2047,  // textureGather_00x30B
+    2051,  // textureGather_00k30B00D
+    2055,  // textureGather_00s30B00D
+    2059,  // textureGather_00x30B00D
+    2063,  // textureGather_00l30B00B
+    2067,  // textureGather_00O20B
+    2068,  // textureGather_00q20B
+    2069,  // textureGather_00v20B
+    2070,  // textureGather_00O20B00D
+    2071,  // textureGather_00q20B00D
+    2072,  // textureGather_00v20B00D
+    2073,  // textureGather_00n10B00B
+    2074,  // textureGather_00d10B
+    2075,  // textureGather_00d10B00B
+    2077,  // textureGather_00f20B
+    2078,  // textureGather_00f20B00B
+    2080,  // textureGather_00e20B
+    2081,  // textureGather_00e20B00B
+    2083,  // textureGatherOffset_00I10B10D
+    2085,  // textureGatherOffset_00R10B10D
+    2087,  // textureGatherOffset_00X10B10D
+    2089,  // textureGatherOffset_00L20B10D
+    2091,  // textureGatherOffset_00U20B10D
+    2093,  // textureGatherOffset_00a20B10D
+    2095,  // textureGatherOffset_00d10B00B10D
+    2097,  // textureGatherOffset_00f20B00B10D
+    2099,  // textureGatherOffset_00O10B10D
+    2100,  // textureGatherOffset_00q10B10D
+    2101,  // textureGatherOffset_00v10B10D
+    2102,  // textureGatherOffset_00n10B00B10D
+    2103,  // textureGatherOffset_00I10B10D00D
+    2105,  // textureGatherOffset_00R10B10D00D
+    2107,  // textureGatherOffset_00X10B10D00D
+    2109,  // textureGatherOffset_00L20B10D00D
+    2111,  // textureGatherOffset_00U20B10D00D
+    2113,  // textureGatherOffset_00a20B10D00D
+    2115,  // textureGatherOffset_00O10B10D00D
+    2116,  // textureGatherOffset_00q10B10D00D
+    2117,  // textureGatherOffset_00v10B10D00D
+    2118,  // textureGatherOffsets_00I10B10Dx4
+    2121,  // textureGatherOffsets_00R10B10Dx4
+    2124,  // textureGatherOffsets_00X10B10Dx4
+    2127,  // textureGatherOffsets_00L20B10Dx4
+    2130,  // textureGatherOffsets_00U20B10Dx4
+    2133,  // textureGatherOffsets_00a20B10Dx4
+    2136,  // textureGatherOffsets_00d10B00B10Dx4
+    2139,  // textureGatherOffsets_00f20B00B10Dx4
+    2142,  // textureGatherOffsets_00O10B10Dx4
+    2143,  // textureGatherOffsets_00q10B10Dx4
+    2144,  // textureGatherOffsets_00v10B10Dx4
+    2145,  // textureGatherOffsets_00n10B00B10Dx4
+    2146,  // textureGatherOffsets_00I10B10Dx400D
+    2149,  // textureGatherOffsets_00R10B10Dx400D
+    2152,  // textureGatherOffsets_00X10B10Dx400D
+    2155,  // textureGatherOffsets_00L20B10Dx400D
+    2158,  // textureGatherOffsets_00U20B10Dx400D
+    2161,  // textureGatherOffsets_00a20B10Dx400D
+    2164,  // textureGatherOffsets_00O10B10Dx400D
+    2165,  // textureGatherOffsets_00q10B10Dx400D
+    2166,  // textureGatherOffsets_00v10B10Dx400D
+    2167,  // rgb_2_yuv_20B00H
+    2168,  // yuv_2_rgb_20B00H
+    2169,  // dFdx_00B
+    2172,  // dFdx_10B
+    2175,  // dFdx_20B
+    2178,  // dFdx_30B
+    2181,  // dFdy_00B
+    2184,  // dFdy_10B
+    2187,  // dFdy_20B
+    2190,  // dFdy_30B
+    2193,  // fwidth_00B
+    2196,  // fwidth_10B
+    2199,  // fwidth_20B
+    2202,  // fwidth_30B
+    2205,  // dFdxFine_00B
+    2206,  // dFdxFine_10B
+    2207,  // dFdxFine_20B
+    2208,  // dFdxFine_30B
+    2209,  // dFdyFine_00B
+    2210,  // dFdyFine_10B
+    2211,  // dFdyFine_20B
+    2212,  // dFdyFine_30B
+    2213,  // dFdxCoarse_00B
+    2214,  // dFdxCoarse_10B
+    2215,  // dFdxCoarse_20B
+    2216,  // dFdxCoarse_30B
+    2217,  // dFdyCoarse_00B
+    2218,  // dFdyCoarse_10B
+    2219,  // dFdyCoarse_20B
+    2220,  // dFdyCoarse_30B
+    2221,  // fwidthFine_00B
+    2222,  // fwidthFine_10B
+    2223,  // fwidthFine_20B
+    2224,  // fwidthFine_30B
+    2225,  // fwidthCoarse_00B
+    2226,  // fwidthCoarse_10B
+    2227,  // fwidthCoarse_20B
+    2228,  // fwidthCoarse_30B
+    2229,  // interpolateAtCentroid_00B
+    2232,  // interpolateAtCentroid_10B
+    2235,  // interpolateAtCentroid_20B
+    2238,  // interpolateAtCentroid_30B
+    2241,  // interpolateAtSample_00B00D
+    2244,  // interpolateAtSample_10B00D
+    2247,  // interpolateAtSample_20B00D
+    2250,  // interpolateAtSample_30B00D
+    2253,  // interpolateAtOffset_00B10B
+    2256,  // interpolateAtOffset_10B10B
+    2259,  // interpolateAtOffset_20B10B
+    2262,  // interpolateAtOffset_30B10B
+    2265,  // atomicCounter_00G
+    2267,  // atomicCounterIncrement_00G
+    2269,  // atomicCounterDecrement_00G
+    2271,  // atomicCounterAdd_00G00E
+    2272,  // atomicCounterSubtract_00G00E
+    2273,  // atomicCounterMin_00G00E
+    2274,  // atomicCounterMax_00G00E
+    2275,  // atomicCounterAnd_00G00E
+    2276,  // atomicCounterOr_00G00E
+    2277,  // atomicCounterXor_00G00E
+    2278,  // atomicCounterExchange_00G00E
+    2279,  // atomicCounterCompSwap_00G00E00E
+    2280,  // atomicAdd_00E00E
+    2282,  // atomicAdd_00D00D
+    2284,  // atomicMin_00E00E
+    2286,  // atomicMin_00D00D
+    2288,  // atomicMax_00E00E
+    2290,  // atomicMax_00D00D
+    2292,  // atomicAnd_00E00E
+    2294,  // atomicAnd_00D00D
+    2296,  // atomicOr_00E00E
+    2298,  // atomicOr_00D00D
+    2300,  // atomicXor_00E00E
+    2302,  // atomicXor_00D00D
+    2304,  // atomicExchange_00E00E
+    2306,  // atomicExchange_00D00D
+    2308,  // atomicCompSwap_00E00E00E
+    2310,  // atomicCompSwap_00D00D00D
+    2312,  // imageSize_00z
+    2314,  // imageSize_01A
+    2316,  // imageSize_01B
+    2318,  // imageSize_01C
+    2320,  // imageSize_01D
+    2322,  // imageSize_01E
+    2324,  // imageSize_01F
+    2326,  // imageSize_01G
+    2328,  // imageSize_01H
+    2330,  // imageSize_01I
+    2332,  // imageSize_01J
+    2334,  // imageSize_01K
+    2336,  // imageSize_01X
+    2340,  // imageSize_01Y
+    2344,  // imageSize_01Z
+    2348,  // imageSize_01d
+    2352,  // imageSize_01e
+    2356,  // imageSize_01f
+    2360,  // imageSize_01L
+    2361,  // imageSize_01M
+    2362,  // imageSize_01N
+    2363,  // imageSize_01a
+    2364,  // imageSize_01b
+    2365,  // imageSize_01c
+    2366,  // imageSize_01O
+    2367,  // imageSize_01P
+    2368,  // imageSize_01Q
+    2369,  // imageSize_01R
+    2370,  // imageSize_01S
+    2371,  // imageSize_01T
+    2372,  // imageSize_01U
+    2373,  // imageSize_01V
+    2374,  // imageSize_01W
+    2375,  // imageSamples_01R
+    2376,  // imageSamples_01S
+    2377,  // imageSamples_01T
+    2378,  // imageSamples_01U
+    2379,  // imageSamples_01V
+    2380,  // imageSamples_01W
+    2381,  // imageStore_00z10D30B
+    2383,  // imageStore_01A10D30D
+    2385,  // imageStore_01B10D30E
+    2387,  // imageStore_01C20D30B
+    2389,  // imageStore_01D20D30D
+    2391,  // imageStore_01E20D30E
+    2393,  // imageStore_01F20D30B
+    2395,  // imageStore_01G20D30D
+    2397,  // imageStore_01H20D30E
+    2399,  // imageStore_01I20D30B
+    2401,  // imageStore_01J20D30D
+    2403,  // imageStore_01K20D30E
+    2405,  // imageStore_01X20D30B
+    2409,  // imageStore_01Y20D30D
+    2413,  // imageStore_01Z20D30E
+    2417,  // imageStore_01d00D30B
+    2421,  // imageStore_01e00D30D
+    2425,  // imageStore_01f00D30E
+    2429,  // imageStore_01L00D30B
+    2430,  // imageStore_01M00D30D
+    2431,  // imageStore_01N00D30E
+    2432,  // imageStore_01O10D30B
+    2433,  // imageStore_01P10D30D
+    2434,  // imageStore_01Q10D30E
+    2435,  // imageStore_01a10D30B
+    2436,  // imageStore_01b10D30D
+    2437,  // imageStore_01c10D30E
+    2438,  // imageStore_01R10D00D30B
+    2439,  // imageStore_01S10D00D30D
+    2440,  // imageStore_01T10D00D30E
+    2441,  // imageStore_01U20D00D30B
+    2442,  // imageStore_01V20D00D30D
+    2443,  // imageStore_01W20D00D30E
+    2444,  // imageLoad_00z10D
+    2446,  // imageLoad_01A10D
+    2448,  // imageLoad_01B10D
+    2450,  // imageLoad_01C20D
+    2452,  // imageLoad_01D20D
+    2454,  // imageLoad_01E20D
+    2456,  // imageLoad_01F20D
+    2458,  // imageLoad_01G20D
+    2460,  // imageLoad_01H20D
+    2462,  // imageLoad_01I20D
+    2464,  // imageLoad_01J20D
+    2466,  // imageLoad_01K20D
+    2468,  // imageLoad_01X20D
+    2472,  // imageLoad_01Y20D
+    2476,  // imageLoad_01Z20D
+    2480,  // imageLoad_01d00D
+    2484,  // imageLoad_01e00D
+    2488,  // imageLoad_01f00D
+    2492,  // imageLoad_01L00D
+    2493,  // imageLoad_01M00D
+    2494,  // imageLoad_01N00D
+    2495,  // imageLoad_01O10D
+    2496,  // imageLoad_01P10D
+    2497,  // imageLoad_01Q10D
+    2498,  // imageLoad_01a10D
+    2499,  // imageLoad_01b10D
+    2500,  // imageLoad_01c10D
+    2501,  // imageLoad_01R10D00D
+    2502,  // imageLoad_01S10D00D
+    2503,  // imageLoad_01T10D00D
+    2504,  // imageLoad_01U20D00D
+    2505,  // imageLoad_01V20D00D
+    2506,  // imageLoad_01W20D00D
+    2507,  // imageAtomicAdd_00z10D00E
+    2509,  // imageAtomicAdd_01A10D00E
+    2511,  // imageAtomicAdd_01B10D00E
+    2513,  // imageAtomicAdd_01C20D00E
+    2515,  // imageAtomicAdd_01D20D00E
+    2517,  // imageAtomicAdd_01E20D00E
+    2519,  // imageAtomicAdd_01I20D00E
+    2521,  // imageAtomicAdd_01J20D00E
+    2523,  // imageAtomicAdd_01K20D00E
+    2525,  // imageAtomicAdd_01d00D00E
+    2527,  // imageAtomicAdd_01e00D00E
+    2529,  // imageAtomicAdd_01f00D00E
+    2531,  // imageAtomicAdd_01F20D00E
+    2533,  // imageAtomicAdd_01G20D00E
+    2535,  // imageAtomicAdd_01H20D00E
+    2537,  // imageAtomicAdd_01X20D00E
+    2539,  // imageAtomicAdd_01Y20D00E
+    2541,  // imageAtomicAdd_01Z20D00E
+    2543,  // imageAtomicAdd_01L00D00E
+    2545,  // imageAtomicAdd_01M00D00E
+    2547,  // imageAtomicAdd_01N00D00E
+    2549,  // imageAtomicAdd_01O10D00E
+    2551,  // imageAtomicAdd_01P10D00E
+    2553,  // imageAtomicAdd_01Q10D00E
+    2555,  // imageAtomicAdd_01a10D00E
+    2557,  // imageAtomicAdd_01b10D00E
+    2559,  // imageAtomicAdd_01c10D00E
+    2561,  // imageAtomicAdd_01R10D00D00E
+    2563,  // imageAtomicAdd_01S10D00D00E
+    2565,  // imageAtomicAdd_01T10D00D00E
+    2567,  // imageAtomicAdd_01U20D00D00E
+    2569,  // imageAtomicAdd_01V20D00D00E
+    2571,  // imageAtomicAdd_01W20D00D00E
+    2573,  // imageAtomicAdd_00z10D00D
+    2575,  // imageAtomicAdd_01A10D00D
+    2577,  // imageAtomicAdd_01B10D00D
+    2579,  // imageAtomicAdd_01C20D00D
+    2581,  // imageAtomicAdd_01D20D00D
+    2583,  // imageAtomicAdd_01E20D00D
+    2585,  // imageAtomicAdd_01I20D00D
+    2587,  // imageAtomicAdd_01J20D00D
+    2589,  // imageAtomicAdd_01K20D00D
+    2591,  // imageAtomicAdd_01d00D00D
+    2593,  // imageAtomicAdd_01e00D00D
+    2595,  // imageAtomicAdd_01f00D00D
+    2597,  // imageAtomicAdd_01F20D00D
+    2599,  // imageAtomicAdd_01G20D00D
+    2601,  // imageAtomicAdd_01H20D00D
+    2603,  // imageAtomicAdd_01X20D00D
+    2605,  // imageAtomicAdd_01Y20D00D
+    2607,  // imageAtomicAdd_01Z20D00D
+    2609,  // imageAtomicAdd_01L00D00D
+    2611,  // imageAtomicAdd_01M00D00D
+    2613,  // imageAtomicAdd_01N00D00D
+    2615,  // imageAtomicAdd_01O10D00D
+    2617,  // imageAtomicAdd_01P10D00D
+    2619,  // imageAtomicAdd_01Q10D00D
+    2621,  // imageAtomicAdd_01a10D00D
+    2623,  // imageAtomicAdd_01b10D00D
+    2625,  // imageAtomicAdd_01c10D00D
+    2627,  // imageAtomicAdd_01R10D00D00D
+    2629,  // imageAtomicAdd_01S10D00D00D
+    2631,  // imageAtomicAdd_01T10D00D00D
+    2633,  // imageAtomicAdd_01U20D00D00D
+    2635,  // imageAtomicAdd_01V20D00D00D
+    2637,  // imageAtomicAdd_01W20D00D00D
+    2639,  // imageAtomicMin_00z10D00E
+    2641,  // imageAtomicMin_01A10D00E
+    2643,  // imageAtomicMin_01B10D00E
+    2645,  // imageAtomicMin_01C20D00E
+    2647,  // imageAtomicMin_01D20D00E
+    2649,  // imageAtomicMin_01E20D00E
+    2651,  // imageAtomicMin_01I20D00E
+    2653,  // imageAtomicMin_01J20D00E
+    2655,  // imageAtomicMin_01K20D00E
+    2657,  // imageAtomicMin_01d00D00E
+    2659,  // imageAtomicMin_01e00D00E
+    2661,  // imageAtomicMin_01f00D00E
+    2663,  // imageAtomicMin_01F20D00E
+    2665,  // imageAtomicMin_01G20D00E
+    2667,  // imageAtomicMin_01H20D00E
+    2669,  // imageAtomicMin_01X20D00E
+    2671,  // imageAtomicMin_01Y20D00E
+    2673,  // imageAtomicMin_01Z20D00E
+    2675,  // imageAtomicMin_01L00D00E
+    2677,  // imageAtomicMin_01M00D00E
+    2679,  // imageAtomicMin_01N00D00E
+    2681,  // imageAtomicMin_01O10D00E
+    2683,  // imageAtomicMin_01P10D00E
+    2685,  // imageAtomicMin_01Q10D00E
+    2687,  // imageAtomicMin_01a10D00E
+    2689,  // imageAtomicMin_01b10D00E
+    2691,  // imageAtomicMin_01c10D00E
+    2693,  // imageAtomicMin_01R10D00D00E
+    2695,  // imageAtomicMin_01S10D00D00E
+    2697,  // imageAtomicMin_01T10D00D00E
+    2699,  // imageAtomicMin_01U20D00D00E
+    2701,  // imageAtomicMin_01V20D00D00E
+    2703,  // imageAtomicMin_01W20D00D00E
+    2705,  // imageAtomicMin_00z10D00D
+    2707,  // imageAtomicMin_01A10D00D
+    2709,  // imageAtomicMin_01B10D00D
+    2711,  // imageAtomicMin_01C20D00D
+    2713,  // imageAtomicMin_01D20D00D
+    2715,  // imageAtomicMin_01E20D00D
+    2717,  // imageAtomicMin_01I20D00D
+    2719,  // imageAtomicMin_01J20D00D
+    2721,  // imageAtomicMin_01K20D00D
+    2723,  // imageAtomicMin_01d00D00D
+    2725,  // imageAtomicMin_01e00D00D
+    2727,  // imageAtomicMin_01f00D00D
+    2729,  // imageAtomicMin_01F20D00D
+    2731,  // imageAtomicMin_01G20D00D
+    2733,  // imageAtomicMin_01H20D00D
+    2735,  // imageAtomicMin_01X20D00D
+    2737,  // imageAtomicMin_01Y20D00D
+    2739,  // imageAtomicMin_01Z20D00D
+    2741,  // imageAtomicMin_01L00D00D
+    2743,  // imageAtomicMin_01M00D00D
+    2745,  // imageAtomicMin_01N00D00D
+    2747,  // imageAtomicMin_01O10D00D
+    2749,  // imageAtomicMin_01P10D00D
+    2751,  // imageAtomicMin_01Q10D00D
+    2753,  // imageAtomicMin_01a10D00D
+    2755,  // imageAtomicMin_01b10D00D
+    2757,  // imageAtomicMin_01c10D00D
+    2759,  // imageAtomicMin_01R10D00D00D
+    2761,  // imageAtomicMin_01S10D00D00D
+    2763,  // imageAtomicMin_01T10D00D00D
+    2765,  // imageAtomicMin_01U20D00D00D
+    2767,  // imageAtomicMin_01V20D00D00D
+    2769,  // imageAtomicMin_01W20D00D00D
+    2771,  // imageAtomicMax_00z10D00E
+    2773,  // imageAtomicMax_01A10D00E
+    2775,  // imageAtomicMax_01B10D00E
+    2777,  // imageAtomicMax_01C20D00E
+    2779,  // imageAtomicMax_01D20D00E
+    2781,  // imageAtomicMax_01E20D00E
+    2783,  // imageAtomicMax_01I20D00E
+    2785,  // imageAtomicMax_01J20D00E
+    2787,  // imageAtomicMax_01K20D00E
+    2789,  // imageAtomicMax_01d00D00E
+    2791,  // imageAtomicMax_01e00D00E
+    2793,  // imageAtomicMax_01f00D00E
+    2795,  // imageAtomicMax_01F20D00E
+    2797,  // imageAtomicMax_01G20D00E
+    2799,  // imageAtomicMax_01H20D00E
+    2801,  // imageAtomicMax_01X20D00E
+    2803,  // imageAtomicMax_01Y20D00E
+    2805,  // imageAtomicMax_01Z20D00E
+    2807,  // imageAtomicMax_01L00D00E
+    2809,  // imageAtomicMax_01M00D00E
+    2811,  // imageAtomicMax_01N00D00E
+    2813,  // imageAtomicMax_01O10D00E
+    2815,  // imageAtomicMax_01P10D00E
+    2817,  // imageAtomicMax_01Q10D00E
+    2819,  // imageAtomicMax_01a10D00E
+    2821,  // imageAtomicMax_01b10D00E
+    2823,  // imageAtomicMax_01c10D00E
+    2825,  // imageAtomicMax_01R10D00D00E
+    2827,  // imageAtomicMax_01S10D00D00E
+    2829,  // imageAtomicMax_01T10D00D00E
+    2831,  // imageAtomicMax_01U20D00D00E
+    2833,  // imageAtomicMax_01V20D00D00E
+    2835,  // imageAtomicMax_01W20D00D00E
+    2837,  // imageAtomicMax_00z10D00D
+    2839,  // imageAtomicMax_01A10D00D
+    2841,  // imageAtomicMax_01B10D00D
+    2843,  // imageAtomicMax_01C20D00D
+    2845,  // imageAtomicMax_01D20D00D
+    2847,  // imageAtomicMax_01E20D00D
+    2849,  // imageAtomicMax_01I20D00D
+    2851,  // imageAtomicMax_01J20D00D
+    2853,  // imageAtomicMax_01K20D00D
+    2855,  // imageAtomicMax_01d00D00D
+    2857,  // imageAtomicMax_01e00D00D
+    2859,  // imageAtomicMax_01f00D00D
+    2861,  // imageAtomicMax_01F20D00D
+    2863,  // imageAtomicMax_01G20D00D
+    2865,  // imageAtomicMax_01H20D00D
+    2867,  // imageAtomicMax_01X20D00D
+    2869,  // imageAtomicMax_01Y20D00D
+    2871,  // imageAtomicMax_01Z20D00D
+    2873,  // imageAtomicMax_01L00D00D
+    2875,  // imageAtomicMax_01M00D00D
+    2877,  // imageAtomicMax_01N00D00D
+    2879,  // imageAtomicMax_01O10D00D
+    2881,  // imageAtomicMax_01P10D00D
+    2883,  // imageAtomicMax_01Q10D00D
+    2885,  // imageAtomicMax_01a10D00D
+    2887,  // imageAtomicMax_01b10D00D
+    2889,  // imageAtomicMax_01c10D00D
+    2891,  // imageAtomicMax_01R10D00D00D
+    2893,  // imageAtomicMax_01S10D00D00D
+    2895,  // imageAtomicMax_01T10D00D00D
+    2897,  // imageAtomicMax_01U20D00D00D
+    2899,  // imageAtomicMax_01V20D00D00D
+    2901,  // imageAtomicMax_01W20D00D00D
+    2903,  // imageAtomicAnd_00z10D00E
+    2905,  // imageAtomicAnd_01A10D00E
+    2907,  // imageAtomicAnd_01B10D00E
+    2909,  // imageAtomicAnd_01C20D00E
+    2911,  // imageAtomicAnd_01D20D00E
+    2913,  // imageAtomicAnd_01E20D00E
+    2915,  // imageAtomicAnd_01I20D00E
+    2917,  // imageAtomicAnd_01J20D00E
+    2919,  // imageAtomicAnd_01K20D00E
+    2921,  // imageAtomicAnd_01d00D00E
+    2923,  // imageAtomicAnd_01e00D00E
+    2925,  // imageAtomicAnd_01f00D00E
+    2927,  // imageAtomicAnd_01F20D00E
+    2929,  // imageAtomicAnd_01G20D00E
+    2931,  // imageAtomicAnd_01H20D00E
+    2933,  // imageAtomicAnd_01X20D00E
+    2935,  // imageAtomicAnd_01Y20D00E
+    2937,  // imageAtomicAnd_01Z20D00E
+    2939,  // imageAtomicAnd_01L00D00E
+    2941,  // imageAtomicAnd_01M00D00E
+    2943,  // imageAtomicAnd_01N00D00E
+    2945,  // imageAtomicAnd_01O10D00E
+    2947,  // imageAtomicAnd_01P10D00E
+    2949,  // imageAtomicAnd_01Q10D00E
+    2951,  // imageAtomicAnd_01a10D00E
+    2953,  // imageAtomicAnd_01b10D00E
+    2955,  // imageAtomicAnd_01c10D00E
+    2957,  // imageAtomicAnd_01R10D00D00E
+    2959,  // imageAtomicAnd_01S10D00D00E
+    2961,  // imageAtomicAnd_01T10D00D00E
+    2963,  // imageAtomicAnd_01U20D00D00E
+    2965,  // imageAtomicAnd_01V20D00D00E
+    2967,  // imageAtomicAnd_01W20D00D00E
+    2969,  // imageAtomicAnd_00z10D00D
+    2971,  // imageAtomicAnd_01A10D00D
+    2973,  // imageAtomicAnd_01B10D00D
+    2975,  // imageAtomicAnd_01C20D00D
+    2977,  // imageAtomicAnd_01D20D00D
+    2979,  // imageAtomicAnd_01E20D00D
+    2981,  // imageAtomicAnd_01I20D00D
+    2983,  // imageAtomicAnd_01J20D00D
+    2985,  // imageAtomicAnd_01K20D00D
+    2987,  // imageAtomicAnd_01d00D00D
+    2989,  // imageAtomicAnd_01e00D00D
+    2991,  // imageAtomicAnd_01f00D00D
+    2993,  // imageAtomicAnd_01F20D00D
+    2995,  // imageAtomicAnd_01G20D00D
+    2997,  // imageAtomicAnd_01H20D00D
+    2999,  // imageAtomicAnd_01X20D00D
+    3001,  // imageAtomicAnd_01Y20D00D
+    3003,  // imageAtomicAnd_01Z20D00D
+    3005,  // imageAtomicAnd_01L00D00D
+    3007,  // imageAtomicAnd_01M00D00D
+    3009,  // imageAtomicAnd_01N00D00D
+    3011,  // imageAtomicAnd_01O10D00D
+    3013,  // imageAtomicAnd_01P10D00D
+    3015,  // imageAtomicAnd_01Q10D00D
+    3017,  // imageAtomicAnd_01a10D00D
+    3019,  // imageAtomicAnd_01b10D00D
+    3021,  // imageAtomicAnd_01c10D00D
+    3023,  // imageAtomicAnd_01R10D00D00D
+    3025,  // imageAtomicAnd_01S10D00D00D
+    3027,  // imageAtomicAnd_01T10D00D00D
+    3029,  // imageAtomicAnd_01U20D00D00D
+    3031,  // imageAtomicAnd_01V20D00D00D
+    3033,  // imageAtomicAnd_01W20D00D00D
+    3035,  // imageAtomicOr_00z10D00E
+    3037,  // imageAtomicOr_01A10D00E
+    3039,  // imageAtomicOr_01B10D00E
+    3041,  // imageAtomicOr_01C20D00E
+    3043,  // imageAtomicOr_01D20D00E
+    3045,  // imageAtomicOr_01E20D00E
+    3047,  // imageAtomicOr_01I20D00E
+    3049,  // imageAtomicOr_01J20D00E
+    3051,  // imageAtomicOr_01K20D00E
+    3053,  // imageAtomicOr_01d00D00E
+    3055,  // imageAtomicOr_01e00D00E
+    3057,  // imageAtomicOr_01f00D00E
+    3059,  // imageAtomicOr_01F20D00E
+    3061,  // imageAtomicOr_01G20D00E
+    3063,  // imageAtomicOr_01H20D00E
+    3065,  // imageAtomicOr_01X20D00E
+    3067,  // imageAtomicOr_01Y20D00E
+    3069,  // imageAtomicOr_01Z20D00E
+    3071,  // imageAtomicOr_01L00D00E
+    3073,  // imageAtomicOr_01M00D00E
+    3075,  // imageAtomicOr_01N00D00E
+    3077,  // imageAtomicOr_01O10D00E
+    3079,  // imageAtomicOr_01P10D00E
+    3081,  // imageAtomicOr_01Q10D00E
+    3083,  // imageAtomicOr_01a10D00E
+    3085,  // imageAtomicOr_01b10D00E
+    3087,  // imageAtomicOr_01c10D00E
+    3089,  // imageAtomicOr_01R10D00D00E
+    3091,  // imageAtomicOr_01S10D00D00E
+    3093,  // imageAtomicOr_01T10D00D00E
+    3095,  // imageAtomicOr_01U20D00D00E
+    3097,  // imageAtomicOr_01V20D00D00E
+    3099,  // imageAtomicOr_01W20D00D00E
+    3101,  // imageAtomicOr_00z10D00D
+    3103,  // imageAtomicOr_01A10D00D
+    3105,  // imageAtomicOr_01B10D00D
+    3107,  // imageAtomicOr_01C20D00D
+    3109,  // imageAtomicOr_01D20D00D
+    3111,  // imageAtomicOr_01E20D00D
+    3113,  // imageAtomicOr_01I20D00D
+    3115,  // imageAtomicOr_01J20D00D
+    3117,  // imageAtomicOr_01K20D00D
+    3119,  // imageAtomicOr_01d00D00D
+    3121,  // imageAtomicOr_01e00D00D
+    3123,  // imageAtomicOr_01f00D00D
+    3125,  // imageAtomicOr_01F20D00D
+    3127,  // imageAtomicOr_01G20D00D
+    3129,  // imageAtomicOr_01H20D00D
+    3131,  // imageAtomicOr_01X20D00D
+    3133,  // imageAtomicOr_01Y20D00D
+    3135,  // imageAtomicOr_01Z20D00D
+    3137,  // imageAtomicOr_01L00D00D
+    3139,  // imageAtomicOr_01M00D00D
+    3141,  // imageAtomicOr_01N00D00D
+    3143,  // imageAtomicOr_01O10D00D
+    3145,  // imageAtomicOr_01P10D00D
+    3147,  // imageAtomicOr_01Q10D00D
+    3149,  // imageAtomicOr_01a10D00D
+    3151,  // imageAtomicOr_01b10D00D
+    3153,  // imageAtomicOr_01c10D00D
+    3155,  // imageAtomicOr_01R10D00D00D
+    3157,  // imageAtomicOr_01S10D00D00D
+    3159,  // imageAtomicOr_01T10D00D00D
+    3161,  // imageAtomicOr_01U20D00D00D
+    3163,  // imageAtomicOr_01V20D00D00D
+    3165,  // imageAtomicOr_01W20D00D00D
+    3167,  // imageAtomicXor_00z10D00E
+    3169,  // imageAtomicXor_01A10D00E
+    3171,  // imageAtomicXor_01B10D00E
+    3173,  // imageAtomicXor_01C20D00E
+    3175,  // imageAtomicXor_01D20D00E
+    3177,  // imageAtomicXor_01E20D00E
+    3179,  // imageAtomicXor_01I20D00E
+    3181,  // imageAtomicXor_01J20D00E
+    3183,  // imageAtomicXor_01K20D00E
+    3185,  // imageAtomicXor_01d00D00E
+    3187,  // imageAtomicXor_01e00D00E
+    3189,  // imageAtomicXor_01f00D00E
+    3191,  // imageAtomicXor_01F20D00E
+    3193,  // imageAtomicXor_01G20D00E
+    3195,  // imageAtomicXor_01H20D00E
+    3197,  // imageAtomicXor_01X20D00E
+    3199,  // imageAtomicXor_01Y20D00E
+    3201,  // imageAtomicXor_01Z20D00E
+    3203,  // imageAtomicXor_01L00D00E
+    3205,  // imageAtomicXor_01M00D00E
+    3207,  // imageAtomicXor_01N00D00E
+    3209,  // imageAtomicXor_01O10D00E
+    3211,  // imageAtomicXor_01P10D00E
+    3213,  // imageAtomicXor_01Q10D00E
+    3215,  // imageAtomicXor_01a10D00E
+    3217,  // imageAtomicXor_01b10D00E
+    3219,  // imageAtomicXor_01c10D00E
+    3221,  // imageAtomicXor_01R10D00D00E
+    3223,  // imageAtomicXor_01S10D00D00E
+    3225,  // imageAtomicXor_01T10D00D00E
+    3227,  // imageAtomicXor_01U20D00D00E
+    3229,  // imageAtomicXor_01V20D00D00E
+    3231,  // imageAtomicXor_01W20D00D00E
+    3233,  // imageAtomicXor_00z10D00D
+    3235,  // imageAtomicXor_01A10D00D
+    3237,  // imageAtomicXor_01B10D00D
+    3239,  // imageAtomicXor_01C20D00D
+    3241,  // imageAtomicXor_01D20D00D
+    3243,  // imageAtomicXor_01E20D00D
+    3245,  // imageAtomicXor_01I20D00D
+    3247,  // imageAtomicXor_01J20D00D
+    3249,  // imageAtomicXor_01K20D00D
+    3251,  // imageAtomicXor_01d00D00D
+    3253,  // imageAtomicXor_01e00D00D
+    3255,  // imageAtomicXor_01f00D00D
+    3257,  // imageAtomicXor_01F20D00D
+    3259,  // imageAtomicXor_01G20D00D
+    3261,  // imageAtomicXor_01H20D00D
+    3263,  // imageAtomicXor_01X20D00D
+    3265,  // imageAtomicXor_01Y20D00D
+    3267,  // imageAtomicXor_01Z20D00D
+    3269,  // imageAtomicXor_01L00D00D
+    3271,  // imageAtomicXor_01M00D00D
+    3273,  // imageAtomicXor_01N00D00D
+    3275,  // imageAtomicXor_01O10D00D
+    3277,  // imageAtomicXor_01P10D00D
+    3279,  // imageAtomicXor_01Q10D00D
+    3281,  // imageAtomicXor_01a10D00D
+    3283,  // imageAtomicXor_01b10D00D
+    3285,  // imageAtomicXor_01c10D00D
+    3287,  // imageAtomicXor_01R10D00D00D
+    3289,  // imageAtomicXor_01S10D00D00D
+    3291,  // imageAtomicXor_01T10D00D00D
+    3293,  // imageAtomicXor_01U20D00D00D
+    3295,  // imageAtomicXor_01V20D00D00D
+    3297,  // imageAtomicXor_01W20D00D00D
+    3299,  // imageAtomicExchange_00z10D00E
+    3301,  // imageAtomicExchange_01A10D00E
+    3303,  // imageAtomicExchange_01B10D00E
+    3305,  // imageAtomicExchange_01C20D00E
+    3307,  // imageAtomicExchange_01D20D00E
+    3309,  // imageAtomicExchange_01E20D00E
+    3311,  // imageAtomicExchange_01I20D00E
+    3313,  // imageAtomicExchange_01J20D00E
+    3315,  // imageAtomicExchange_01K20D00E
+    3317,  // imageAtomicExchange_01d00D00E
+    3319,  // imageAtomicExchange_01e00D00E
+    3321,  // imageAtomicExchange_01f00D00E
+    3323,  // imageAtomicExchange_01F20D00E
+    3325,  // imageAtomicExchange_01G20D00E
+    3327,  // imageAtomicExchange_01H20D00E
+    3329,  // imageAtomicExchange_01X20D00E
+    3331,  // imageAtomicExchange_01Y20D00E
+    3333,  // imageAtomicExchange_01Z20D00E
+    3335,  // imageAtomicExchange_01L00D00E
+    3337,  // imageAtomicExchange_01M00D00E
+    3339,  // imageAtomicExchange_01N00D00E
+    3341,  // imageAtomicExchange_01O10D00E
+    3343,  // imageAtomicExchange_01P10D00E
+    3345,  // imageAtomicExchange_01Q10D00E
+    3347,  // imageAtomicExchange_01a10D00E
+    3349,  // imageAtomicExchange_01b10D00E
+    3351,  // imageAtomicExchange_01c10D00E
+    3353,  // imageAtomicExchange_01R10D00D00E
+    3355,  // imageAtomicExchange_01S10D00D00E
+    3357,  // imageAtomicExchange_01T10D00D00E
+    3359,  // imageAtomicExchange_01U20D00D00E
+    3361,  // imageAtomicExchange_01V20D00D00E
+    3363,  // imageAtomicExchange_01W20D00D00E
+    3365,  // imageAtomicExchange_00z10D00D
+    3367,  // imageAtomicExchange_01A10D00D
+    3369,  // imageAtomicExchange_01B10D00D
+    3371,  // imageAtomicExchange_01C20D00D
+    3373,  // imageAtomicExchange_01D20D00D
+    3375,  // imageAtomicExchange_01E20D00D
+    3377,  // imageAtomicExchange_01I20D00D
+    3379,  // imageAtomicExchange_01J20D00D
+    3381,  // imageAtomicExchange_01K20D00D
+    3383,  // imageAtomicExchange_01d00D00D
+    3385,  // imageAtomicExchange_01e00D00D
+    3387,  // imageAtomicExchange_01f00D00D
+    3389,  // imageAtomicExchange_01F20D00D
+    3391,  // imageAtomicExchange_01G20D00D
+    3393,  // imageAtomicExchange_01H20D00D
+    3395,  // imageAtomicExchange_01X20D00D
+    3397,  // imageAtomicExchange_01Y20D00D
+    3399,  // imageAtomicExchange_01Z20D00D
+    3401,  // imageAtomicExchange_01L00D00D
+    3403,  // imageAtomicExchange_01M00D00D
+    3405,  // imageAtomicExchange_01N00D00D
+    3407,  // imageAtomicExchange_01O10D00D
+    3409,  // imageAtomicExchange_01P10D00D
+    3411,  // imageAtomicExchange_01Q10D00D
+    3413,  // imageAtomicExchange_01a10D00D
+    3415,  // imageAtomicExchange_01b10D00D
+    3417,  // imageAtomicExchange_01c10D00D
+    3419,  // imageAtomicExchange_01R10D00D00D
+    3421,  // imageAtomicExchange_01S10D00D00D
+    3423,  // imageAtomicExchange_01T10D00D00D
+    3425,  // imageAtomicExchange_01U20D00D00D
+    3427,  // imageAtomicExchange_01V20D00D00D
+    3429,  // imageAtomicExchange_01W20D00D00D
+    3431,  // imageAtomicExchange_00z10D00B
+    3433,  // imageAtomicExchange_01A10D00B
+    3435,  // imageAtomicExchange_01B10D00B
+    3437,  // imageAtomicExchange_01C20D00B
+    3439,  // imageAtomicExchange_01D20D00B
+    3441,  // imageAtomicExchange_01E20D00B
+    3443,  // imageAtomicExchange_01I20D00B
+    3445,  // imageAtomicExchange_01J20D00B
+    3447,  // imageAtomicExchange_01K20D00B
+    3449,  // imageAtomicExchange_01d00D00B
+    3451,  // imageAtomicExchange_01e00D00B
+    3453,  // imageAtomicExchange_01f00D00B
+    3455,  // imageAtomicExchange_01F20D00B
+    3457,  // imageAtomicExchange_01G20D00B
+    3459,  // imageAtomicExchange_01H20D00B
+    3461,  // imageAtomicExchange_01X20D00B
+    3463,  // imageAtomicExchange_01Y20D00B
+    3465,  // imageAtomicExchange_01Z20D00B
+    3467,  // imageAtomicExchange_01L00D00B
+    3469,  // imageAtomicExchange_01M00D00B
+    3471,  // imageAtomicExchange_01N00D00B
+    3473,  // imageAtomicExchange_01O10D00B
+    3475,  // imageAtomicExchange_01P10D00B
+    3477,  // imageAtomicExchange_01Q10D00B
+    3479,  // imageAtomicExchange_01a10D00B
+    3481,  // imageAtomicExchange_01b10D00B
+    3483,  // imageAtomicExchange_01c10D00B
+    3485,  // imageAtomicExchange_01R10D00D00B
+    3487,  // imageAtomicExchange_01S10D00D00B
+    3489,  // imageAtomicExchange_01T10D00D00B
+    3491,  // imageAtomicExchange_01U20D00D00B
+    3493,  // imageAtomicExchange_01V20D00D00B
+    3495,  // imageAtomicExchange_01W20D00D00B
+    3497,  // imageAtomicCompSwap_00z10D00E00E
+    3499,  // imageAtomicCompSwap_01A10D00E00E
+    3501,  // imageAtomicCompSwap_01B10D00E00E
+    3503,  // imageAtomicCompSwap_01C20D00E00E
+    3505,  // imageAtomicCompSwap_01D20D00E00E
+    3507,  // imageAtomicCompSwap_01E20D00E00E
+    3509,  // imageAtomicCompSwap_01I20D00E00E
+    3511,  // imageAtomicCompSwap_01J20D00E00E
+    3513,  // imageAtomicCompSwap_01K20D00E00E
+    3515,  // imageAtomicCompSwap_01d00D00E00E
+    3517,  // imageAtomicCompSwap_01e00D00E00E
+    3519,  // imageAtomicCompSwap_01f00D00E00E
+    3521,  // imageAtomicCompSwap_01F20D00E00E
+    3523,  // imageAtomicCompSwap_01G20D00E00E
+    3525,  // imageAtomicCompSwap_01H20D00E00E
+    3527,  // imageAtomicCompSwap_01X20D00E00E
+    3529,  // imageAtomicCompSwap_01Y20D00E00E
+    3531,  // imageAtomicCompSwap_01Z20D00E00E
+    3533,  // imageAtomicCompSwap_01L00D00E00E
+    3535,  // imageAtomicCompSwap_01M00D00E00E
+    3537,  // imageAtomicCompSwap_01N00D00E00E
+    3539,  // imageAtomicCompSwap_01O10D00E00E
+    3541,  // imageAtomicCompSwap_01P10D00E00E
+    3543,  // imageAtomicCompSwap_01Q10D00E00E
+    3545,  // imageAtomicCompSwap_01a10D00E00E
+    3547,  // imageAtomicCompSwap_01b10D00E00E
+    3549,  // imageAtomicCompSwap_01c10D00E00E
+    3551,  // imageAtomicCompSwap_01R10D00D00E00E
+    3553,  // imageAtomicCompSwap_01S10D00D00E00E
+    3555,  // imageAtomicCompSwap_01T10D00D00E00E
+    3557,  // imageAtomicCompSwap_01U20D00D00E00E
+    3559,  // imageAtomicCompSwap_01V20D00D00E00E
+    3561,  // imageAtomicCompSwap_01W20D00D00E00E
+    3563,  // imageAtomicCompSwap_00z10D00D00D
+    3565,  // imageAtomicCompSwap_01A10D00D00D
+    3567,  // imageAtomicCompSwap_01B10D00D00D
+    3569,  // imageAtomicCompSwap_01C20D00D00D
+    3571,  // imageAtomicCompSwap_01D20D00D00D
+    3573,  // imageAtomicCompSwap_01E20D00D00D
+    3575,  // imageAtomicCompSwap_01I20D00D00D
+    3577,  // imageAtomicCompSwap_01J20D00D00D
+    3579,  // imageAtomicCompSwap_01K20D00D00D
+    3581,  // imageAtomicCompSwap_01d00D00D00D
+    3583,  // imageAtomicCompSwap_01e00D00D00D
+    3585,  // imageAtomicCompSwap_01f00D00D00D
+    3587,  // imageAtomicCompSwap_01F20D00D00D
+    3589,  // imageAtomicCompSwap_01G20D00D00D
+    3591,  // imageAtomicCompSwap_01H20D00D00D
+    3593,  // imageAtomicCompSwap_01X20D00D00D
+    3595,  // imageAtomicCompSwap_01Y20D00D00D
+    3597,  // imageAtomicCompSwap_01Z20D00D00D
+    3599,  // imageAtomicCompSwap_01L00D00D00D
+    3601,  // imageAtomicCompSwap_01M00D00D00D
+    3603,  // imageAtomicCompSwap_01N00D00D00D
+    3605,  // imageAtomicCompSwap_01O10D00D00D
+    3607,  // imageAtomicCompSwap_01P10D00D00D
+    3609,  // imageAtomicCompSwap_01Q10D00D00D
+    3611,  // imageAtomicCompSwap_01a10D00D00D
+    3613,  // imageAtomicCompSwap_01b10D00D00D
+    3615,  // imageAtomicCompSwap_01c10D00D00D
+    3617,  // imageAtomicCompSwap_01R10D00D00D00D
+    3619,  // imageAtomicCompSwap_01S10D00D00D00D
+    3621,  // imageAtomicCompSwap_01T10D00D00D00D
+    3623,  // imageAtomicCompSwap_01U20D00D00D00D
+    3625,  // imageAtomicCompSwap_01V20D00D00D00D
+    3627,  // imageAtomicCompSwap_01W20D00D00D00D
+    3629,  // noise1_00B
+    3630,  // noise1_10B
+    3631,  // noise1_20B
+    3632,  // noise1_30B
+    3633,  // noise2_00B
+    3634,  // noise2_10B
+    3635,  // noise2_20B
+    3636,  // noise2_30B
+    3637,  // noise3_00B
+    3638,  // noise3_10B
+    3639,  // noise3_20B
+    3640,  // noise3_30B
+    3641,  // noise4_00B
+    3642,  // noise4_10B
+    3643,  // noise4_20B
+    3644,  // noise4_30B
+    3645,  // memoryBarrier_
+    3647,  // memoryBarrierAtomicCounter_
+    3649,  // memoryBarrierBuffer_
+    3651,  // memoryBarrierImage_
+    3653,  // barrier_
+    3657,  // memoryBarrierShared_
+    3659,  // groupMemoryBarrier_
+    3661,  // EmitVertex_
+    3665,  // EndPrimitive_
+    3669,  // EmitStreamVertex_00D
+    3670,  // EndStreamPrimitive_00D
+    3671,  // subpassLoad_01g
+    3672,  // subpassLoad_01h
+    3673,  // subpassLoad_01i
+    3674,  // subpassLoad_01j00D
+    3675,  // subpassLoad_01k00D
+    3676,  // subpassLoad_01l00D
+    3677,  // anyInvocation_00F
+    3678,  // allInvocations_00F
+    3679,  // allInvocationsEqual_00F
     3680,  // gl_DepthRangeParameters
     3682,  // gl_DepthRange
     3684,  // gl_NumSamples
@@ -39186,15 +39185,14 @@ constexpr UnmangledEntry unmangled[] = {
      -1, Shader::ALL},
     {"texture2DRectProj", std::array<TExtension, 1>{{Ext::ARB_texture_rectangle}}, Ext::UNDEFINED,
      100, -1, Shader::ALL},
-    {"texture", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, 300, 130, Shader::ALL},
-    {"textureProj", std::array<TExtension, 1>{{Ext::OES_EGL_image_external_essl3}}, Ext::UNDEFINED,
-     300, -1, Shader::FRAGMENT},
     {"texture2DGradEXT", std::array<TExtension, 1>{{Ext::EXT_shader_texture_lod}}, Ext::UNDEFINED,
      100, -1, Shader::ALL},
     {"texture2DProjGradEXT", std::array<TExtension, 1>{{Ext::EXT_shader_texture_lod}},
      Ext::UNDEFINED, 100, -1, Shader::ALL},
     {"textureCubeGradEXT", std::array<TExtension, 1>{{Ext::EXT_shader_texture_lod}}, Ext::UNDEFINED,
      100, -1, Shader::ALL},
+    {"textureVideoWEBGL", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, 100, 0,
+     Shader::ALL},
     {"texture3DLod", std::array<TExtension, 1>{{Ext::OES_texture_3D}}, Ext::UNDEFINED, 100, -1,
      Shader::FRAGMENT},
     {"texture3DProjLod", std::array<TExtension, 1>{{Ext::OES_texture_3D}}, Ext::UNDEFINED, 100, -1,
@@ -39227,6 +39225,10 @@ constexpr UnmangledEntry unmangled[] = {
      Shader::VERTEX},
     {"shadow2DProjLod", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, -1, 0,
      Shader::VERTEX},
+    {"texture", std::array<TExtension, 1>{{Ext::OES_EGL_image_external_essl3}}, Ext::UNDEFINED, 300,
+     -1, Shader::FRAGMENT},
+    {"textureProj", std::array<TExtension, 1>{{Ext::OES_EGL_image_external_essl3}}, Ext::UNDEFINED,
+     300, -1, Shader::FRAGMENT},
     {"textureLod",
      std::array<TExtension, 2>{{Ext::OES_texture_cube_map_array, Ext::EXT_texture_cube_map_array}},
      Ext::UNDEFINED, 310, -1, Shader::ALL},
@@ -39261,15 +39263,15 @@ constexpr UnmangledEntry unmangled[] = {
      Shader::ALL},
     {"textureProjGradOffset", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, -1, 130,
      Shader::ALL},
-    {"rgb_2_yuv", std::array<TExtension, 1>{{Ext::EXT_YUV_target}}, Ext::UNDEFINED, 300, -1,
-     Shader::ALL},
-    {"yuv_2_rgb", std::array<TExtension, 1>{{Ext::EXT_YUV_target}}, Ext::UNDEFINED, 300, -1,
-     Shader::ALL},
     {"textureGather", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, 310, 400,
      Shader::ALL},
     {"textureGatherOffset", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, -1, 400,
      Shader::ALL},
     {"textureGatherOffsets", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, -1, 400,
+     Shader::ALL},
+    {"rgb_2_yuv", std::array<TExtension, 1>{{Ext::EXT_YUV_target}}, Ext::UNDEFINED, 300, -1,
+     Shader::ALL},
+    {"yuv_2_rgb", std::array<TExtension, 1>{{Ext::EXT_YUV_target}}, Ext::UNDEFINED, 300, -1,
      Shader::ALL},
     {"dFdx", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, 300, 0, Shader::FRAGMENT},
     {"dFdy", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, 300, 0, Shader::FRAGMENT},
@@ -39391,8 +39393,6 @@ constexpr UnmangledEntry unmangled[] = {
     {"allInvocations", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, -1, 460,
      Shader::ALL},
     {"allInvocationsEqual", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, -1, 460,
-     Shader::ALL},
-    {"textureVideoWEBGL", std::array<TExtension, 1>{{Ext::UNDEFINED}}, Ext::UNDEFINED, 100, 0,
      Shader::ALL}};
 
 }  // namespace BuiltInArray
