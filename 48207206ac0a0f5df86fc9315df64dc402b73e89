@@ -16,6 +16,24 @@
       "message": "Not sure if it\u0027s better to just do this at the setAllDirtyBits() callsite. Seems not clean that we handle GLES1 state here and in clearyDirtyBits() but get and the parameterized cleraDirtyBits(const [..]) don\u0027t touch the GLES1 state.",
       "revId": "48207206ac0a0f5df86fc9315df64dc402b73e89",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55bf555b_91a86843",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-06-18T16:01:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72adf990_5ed2fb77",
+      "revId": "48207206ac0a0f5df86fc9315df64dc402b73e89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
