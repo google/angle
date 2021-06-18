@@ -309,6 +309,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "78b7a202_934596ff",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-18T20:57:48Z",
+      "side": 1,
+      "message": "Nevermind, they use SPIR-V Cross to generate MSL.",
+      "parentUuid": "9836be1d_548d31ff",
+      "range": {
+        "startLine": 384,
+        "startChar": 13,
+        "endLine": 384,
+        "endChar": 24
+      },
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bfcdf483_f9c84096",
