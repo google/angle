@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64c46b39_25c17c1b",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_mtl_utils.mm",
+        "patchSetId": 14
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-18T01:59:15Z",
+      "side": 1,
+      "message": "nit: copyright notices on files",
+      "revId": "7b8823ee0045505edde0c98c56f5fcf934de8c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
