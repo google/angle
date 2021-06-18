@@ -71,6 +71,9 @@ function generate_Android_bp_file() {
 
             # Disable _LIBCPP_ABI_UNSTABLE, since it breaks std::string
             "libcxx_abi_unstable = false"
+
+            # rapidJSON is used for ANGLE's frame capture (among other things), which is unnecessary for AOSP builds.
+            "angle_has_rapidjson = false"
         )
 
         if [[ "$1" == "--enableApiTrace" ]]; then
@@ -128,7 +131,7 @@ done
 
 # Sync all of ANGLE's deps so that 'gn gen' works
 python scripts/bootstrap.py
-gclient sync --reset --force --ignore_locks --delete_unversioned_trees --break_repo_locks
+gclient sync --reset --force --delete_unversioned_trees
 
 generate_Android_bp_file
 

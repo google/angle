@@ -45,6 +45,9 @@ declare_args() {
 
   # Optional feature that forces dirty state whenever we use a new context regardless of thread.
   angle_force_context_check_every_call = false
+
+  # Indicate if the rapidJSON library is available to build with in third_party/.
+  angle_has_rapidjson = angle_has_build
 }
 
 if (angle_build_all) {
@@ -975,7 +978,7 @@ group("angle_compression") {
       [ "$angle_zlib_compression_utils_dir:compression_utils_portable" ]
 }
 
-if (angle_has_build) {
+if (angle_has_rapidjson) {
   config("angle_rapidjson_config") {
     defines = [ "ANGLE_HAS_RAPIDJSON" ]
   }
@@ -998,7 +1001,7 @@ angle_source_set("libANGLE_with_capture") {
   public_configs = [ ":angle_frame_capture_enabled" ]
   sources = libangle_capture_sources
 
-  if (angle_has_build) {
+  if (angle_has_rapidjson) {
     public_deps += [ ":angle_json_serializer" ]
     sources += [ "src/libANGLE/capture/frame_capture_utils.cpp" ]
   } else {
