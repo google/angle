@@ -414,7 +414,7 @@ class DynamicQueryPool final : public DynamicallyGrowingPool<QueryPool>
     angle::Result init(ContextVk *contextVk, VkQueryType type, uint32_t poolSize);
     void destroy(VkDevice device);
 
-    angle::Result allocateQuery(ContextVk *contextVk, QueryHelper *queryOut);
+    angle::Result allocateQuery(ContextVk *contextVk, QueryHelper *queryOut, uint32_t queryCount);
     void freeQuery(ContextVk *contextVk, QueryHelper *query);
 
     const QueryPool &getQueryPool(size_t index) const { return mPools[index]; }
@@ -439,12 +439,12 @@ class QueryResult final
     }
 
     size_t getDataSize() const { return mIntsPerResult * sizeof(uint64_t); }
+    void setResults(uint64_t *results, uint32_t queryCount);
     uint64_t getResult(size_t index) const
     {
         ASSERT(index < mIntsPerResult);
         return mResults[index];
     }
-    uint64_t *getPointerToResults() { return mResults.data(); }
 
     static constexpr size_t kDefaultResultIndex                      = 0;
     static constexpr size_t kTransformFeedbackPrimitivesWrittenIndex = 0;
@@ -455,7 +455,7 @@ class QueryResult final
     std::array<uint64_t, 2> mResults;
 };
 
-// Queries in vulkan are identified by the query pool and an index for a query within that pool.
+// Queries in Vulkan are identified by the query pool and an index for a query within that pool.
 // Unlike other pools, such as descriptor pools where an allocation returns an independent object
 // from the pool, the query allocations are not done through a Vulkan function and are only an
 // integer index.
@@ -463,7 +463,9 @@ class QueryResult final
 // Furthermore, to support arbitrarily large number of queries, DynamicQueryPool creates query pools
 // of a fixed size as needed and allocates indices within those pools.
 //
-// The QueryHelper class below keeps the pool and index pair together.
+// The QueryHelper class below keeps the pool and index pair together.  For multiview, multiple
+// consecutive query indices are implicitly written to by the driver, so the query count is
+// additionally kept.
 class QueryHelper final : public Resource
 {
   public:
@@ -473,7 +475,8 @@ class QueryHelper final : public Resource
     QueryHelper &operator=(QueryHelper &&rhs);
     void init(const DynamicQueryPool *dynamicQueryPool,
               const size_t queryPoolIndex,
-              uint32_t query);
+              uint32_t query,
+              uint32_t queryCount);
     void deinit();
 
     bool valid() const { return mDynamicQueryPool != nullptr; }
@@ -513,10 +516,14 @@ class QueryHelper final : public Resource
                         CommandBuffer *resetCommandBuffer,
                         CommandBuffer *commandBuffer);
     void endQueryImpl(ContextVk *contextVk, CommandBuffer *commandBuffer);
+    VkResult getResultImpl(ContextVk *contextVk,
+                           const VkQueryResultFlags flags,
+                           QueryResult *resultOut);
 
     const DynamicQueryPool *mDynamicQueryPool;
     size_t mQueryPoolIndex;
     uint32_t mQuery;
+    uint32_t mQueryCount;
 };
 
 // DynamicSemaphorePool allocates semaphores as needed.  It uses a std::vector

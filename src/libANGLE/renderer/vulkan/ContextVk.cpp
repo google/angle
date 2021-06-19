@@ -2270,7 +2270,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
 
     // Create a query used to receive the GPU timestamp
     vk::QueryHelper timestampQuery;
-    ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &timestampQuery));
+    ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &timestampQuery, 1));
 
     // Create the three events
     VkEventCreateInfo eventCreateInfo = {};
@@ -2402,7 +2402,7 @@ angle::Result ContextVk::traceGpuEventImpl(vk::CommandBuffer *commandBuffer,
     GpuEventQuery gpuEvent;
     gpuEvent.name  = name;
     gpuEvent.phase = phase;
-    ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &gpuEvent.queryHelper));
+    ANGLE_TRY(mGpuEventQueryPool.allocateQuery(this, &gpuEvent.queryHelper, 1));
 
     gpuEvent.queryHelper.writeTimestamp(this, commandBuffer);
 
@@ -5374,7 +5374,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     vk::DeviceScoped<vk::DynamicQueryPool> timestampQueryPool(device);
     vk::QueryHelper timestampQuery;
     ANGLE_TRY(timestampQueryPool.get().init(this, VK_QUERY_TYPE_TIMESTAMP, 1));
-    ANGLE_TRY(timestampQueryPool.get().allocateQuery(this, &timestampQuery));
+    ANGLE_TRY(timestampQueryPool.get().allocateQuery(this, &timestampQuery, 1));
 
     vk::ResourceUseList scratchResourceUseList;
 
@@ -5596,6 +5596,12 @@ void ContextVk::restoreFinishedRenderPass(vk::Framebuffer *framebuffer)
 uint32_t ContextVk::getCurrentSubpassIndex() const
 {
     return mGraphicsPipelineDesc->getSubpass();
+}
+
+uint32_t ContextVk::getCurrentViewCount() const
+{
+    ASSERT(mDrawFramebuffer);
+    return mDrawFramebuffer->getRenderPassDesc().viewCount();
 }
 
 angle::Result ContextVk::flushCommandsAndEndRenderPassImpl()

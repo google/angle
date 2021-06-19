@@ -117,7 +117,18 @@ angle::Result QueryVk::allocateQuery(ContextVk *contextVk)
     ASSERT(!mQueryHelper.isReferenced());
     mQueryHelper.setUnreferenced(new vk::RefCounted<vk::QueryHelper>);
 
-    return contextVk->getQueryPool(mType)->allocateQuery(contextVk, &mQueryHelper.get());
+    // When used with multiview, render pass queries write as many queries as the number of views.
+    // Render pass queries are always allocated at the beginning of the render pass, so the number
+    // of views is known at this time.
+    uint32_t queryCount = 1;
+    if (IsRenderPassQuery(contextVk, mType))
+    {
+        ASSERT(contextVk->hasStartedRenderPass());
+        queryCount = std::max(contextVk->getCurrentViewCount(), 1u);
+    }
+
+    return contextVk->getQueryPool(mType)->allocateQuery(contextVk, &mQueryHelper.get(),
+                                                         queryCount);
 }
 
 void QueryVk::assignSharedQuery(QueryVk *shareQuery)
@@ -318,8 +329,10 @@ angle::Result QueryVk::begin(const gl::Context *context)
             // Note: TimeElapsed is implemented by using two Timestamp queries and taking the diff.
             if (!mQueryHelperTimeElapsedBegin.valid())
             {
+                // Note that timestamp queries are not allowed with multiview, so query count is
+                // always 1.
                 ANGLE_TRY(contextVk->getQueryPool(mType)->allocateQuery(
-                    contextVk, &mQueryHelperTimeElapsedBegin));
+                    contextVk, &mQueryHelperTimeElapsedBegin, 1));
             }
 
             ANGLE_TRY(mQueryHelperTimeElapsedBegin.flushAndWriteTimestamp(contextVk));

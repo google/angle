@@ -1440,9 +1440,6 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyRightVisible)
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
     ANGLE_SKIP_TEST_IF(!requestOcclusionQueryExtension());
 
-    // TODO: fix occlusion queries with multiview on Vulkan.  http://anglebug.com/6048
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     const std::string VS =
         "#version 300 es\n"
         "#extension " +

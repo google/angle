@@ -2680,18 +2680,22 @@ void DynamicQueryPool::destroy(VkDevice device)
     destroyEntryPool();
 }
 
-angle::Result DynamicQueryPool::allocateQuery(ContextVk *contextVk, QueryHelper *queryOut)
+angle::Result DynamicQueryPool::allocateQuery(ContextVk *contextVk,
+                                              QueryHelper *queryOut,
+                                              uint32_t queryCount)
 {
     ASSERT(!queryOut->valid());
 
-    if (mCurrentFreeEntry >= mPoolSize)
+    if (mCurrentFreeEntry + queryCount > mPoolSize)
     {
         // No more queries left in this pool, create another one.
         ANGLE_TRY(allocateNewPool(contextVk));
     }
 
-    uint32_t queryIndex = mCurrentFreeEntry++;
-    queryOut->init(this, mCurrentPool, queryIndex);
+    uint32_t queryIndex = mCurrentFreeEntry;
+    mCurrentFreeEntry += queryCount;
+
+    queryOut->init(this, mCurrentPool, queryIndex, queryCount);
 
     return angle::Result::Continue;
 }
@@ -2735,8 +2739,27 @@ angle::Result DynamicQueryPool::allocateNewPool(ContextVk *contextVk)
     return allocateNewEntryPool(contextVk, std::move(queryPool));
 }
 
+// QueryResult implementation
+void QueryResult::setResults(uint64_t *results, uint32_t queryCount)
+{
+    ASSERT(mResults[0] == 0 && mResults[1] == 0);
+
+    // Accumulate the query results.  For multiview, where multiple query indices are used to return
+    // the results, it's undefined how the results are distributed between indices, but the sum is
+    // guaranteed to be the desired result.
+    for (uint32_t query = 0; query < queryCount; ++query)
+    {
+        for (uint32_t perQueryIndex = 0; perQueryIndex < mIntsPerResult; ++perQueryIndex)
+        {
+            mResults[perQueryIndex] += results[query * mIntsPerResult + perQueryIndex];
+        }
+    }
+}
+
 // QueryHelper implementation
-QueryHelper::QueryHelper() : mDynamicQueryPool(nullptr), mQueryPoolIndex(0), mQuery(0) {}
+QueryHelper::QueryHelper()
+    : mDynamicQueryPool(nullptr), mQueryPoolIndex(0), mQuery(0), mQueryCount(0)
+{}
 
 QueryHelper::~QueryHelper() {}
 
@@ -2745,11 +2768,13 @@ QueryHelper::QueryHelper(QueryHelper &&rhs)
     : Resource(std::move(rhs)),
       mDynamicQueryPool(rhs.mDynamicQueryPool),
       mQueryPoolIndex(rhs.mQueryPoolIndex),
-      mQuery(rhs.mQuery)
+      mQuery(rhs.mQuery),
+      mQueryCount(rhs.mQueryCount)
 {
     rhs.mDynamicQueryPool = nullptr;
     rhs.mQueryPoolIndex   = 0;
     rhs.mQuery            = 0;
+    rhs.mQueryCount       = 0;
 }
 
 QueryHelper &QueryHelper::operator=(QueryHelper &&rhs)
@@ -2757,16 +2782,21 @@ QueryHelper &QueryHelper::operator=(QueryHelper &&rhs)
     std::swap(mDynamicQueryPool, rhs.mDynamicQueryPool);
     std::swap(mQueryPoolIndex, rhs.mQueryPoolIndex);
     std::swap(mQuery, rhs.mQuery);
+    std::swap(mQueryCount, rhs.mQueryCount);
     return *this;
 }
 
 void QueryHelper::init(const DynamicQueryPool *dynamicQueryPool,
                        const size_t queryPoolIndex,
-                       uint32_t query)
+                       uint32_t query,
+                       uint32_t queryCount)
 {
     mDynamicQueryPool = dynamicQueryPool;
     mQueryPoolIndex   = queryPoolIndex;
     mQuery            = query;
+    mQueryCount       = queryCount;
+
+    ASSERT(mQueryCount <= gl::IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS);
 }
 
 void QueryHelper::deinit()
@@ -2774,6 +2804,7 @@ void QueryHelper::deinit()
     mDynamicQueryPool = nullptr;
     mQueryPoolIndex   = 0;
     mQuery            = 0;
+    mQueryCount       = 0;
     mUse.release();
     mUse.init();
 }
@@ -2783,7 +2814,7 @@ void QueryHelper::beginQueryImpl(ContextVk *contextVk,
                                  CommandBuffer *commandBuffer)
 {
     const QueryPool &queryPool = getQueryPool();
-    resetCommandBuffer->resetQueryPool(queryPool.getHandle(), mQuery, 1);
+    resetCommandBuffer->resetQueryPool(queryPool.getHandle(), mQuery, mQueryCount);
     commandBuffer->beginQuery(queryPool.getHandle(), mQuery, 0);
 }
 
@@ -2866,14 +2897,14 @@ void QueryHelper::writeTimestampToPrimary(ContextVk *contextVk, PrimaryCommandBu
     // Note that commands may not be flushed at this point.
 
     const QueryPool &queryPool = getQueryPool();
-    primary->resetQueryPool(queryPool, mQuery, 1);
+    primary->resetQueryPool(queryPool, mQuery, mQueryCount);
     primary->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool, mQuery);
 }
 
 void QueryHelper::writeTimestamp(ContextVk *contextVk, CommandBuffer *commandBuffer)
 {
     const QueryPool &queryPool = getQueryPool();
-    commandBuffer->resetQueryPool(queryPool.getHandle(), mQuery, 1);
+    commandBuffer->resetQueryPool(queryPool.getHandle(), mQuery, mQueryCount);
     commandBuffer->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool.getHandle(),
                                   mQuery);
     // timestamp results are available immediately, retain this query so that we get its serial
@@ -2897,11 +2928,8 @@ angle::Result QueryHelper::getUint64ResultNonBlocking(ContextVk *contextVk,
     // wait forever and trigger GPU timeout.
     if (hasSubmittedCommands())
     {
-        VkDevice device                     = contextVk->getDevice();
         constexpr VkQueryResultFlags kFlags = VK_QUERY_RESULT_64_BIT;
-        result =
-            getQueryPool().getResults(device, mQuery, 1, resultOut->getDataSize(),
-                                      resultOut->getPointerToResults(), sizeof(uint64_t), kFlags);
+        result                              = getResultImpl(contextVk, kFlags, resultOut);
     }
     else
     {
@@ -2927,17 +2955,32 @@ angle::Result QueryHelper::getUint64Result(ContextVk *contextVk, QueryResult *re
     ASSERT(valid());
     if (hasSubmittedCommands())
     {
-        VkDevice device                     = contextVk->getDevice();
         constexpr VkQueryResultFlags kFlags = VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT;
-        ANGLE_VK_TRY(contextVk, getQueryPool().getResults(
-                                    device, mQuery, 1, resultOut->getDataSize(),
-                                    resultOut->getPointerToResults(), sizeof(uint64_t), kFlags));
+        ANGLE_VK_TRY(contextVk, getResultImpl(contextVk, kFlags, resultOut));
     }
     else
     {
         *resultOut = 0;
     }
     return angle::Result::Continue;
+}
+
+VkResult QueryHelper::getResultImpl(ContextVk *contextVk,
+                                    const VkQueryResultFlags flags,
+                                    QueryResult *resultOut)
+{
+    std::array<uint64_t, 2 * gl::IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS> results;
+
+    VkDevice device = contextVk->getDevice();
+    VkResult result = getQueryPool().getResults(device, mQuery, mQueryCount, sizeof(results),
+                                                results.data(), sizeof(uint64_t), flags);
+
+    if (result == VK_SUCCESS)
+    {
+        resultOut->setResults(results.data(), mQueryCount);
+    }
+
+    return result;
 }
 
 // DynamicSemaphorePool implementation

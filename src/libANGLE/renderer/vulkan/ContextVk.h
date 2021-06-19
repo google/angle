@@ -558,6 +558,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void restoreFinishedRenderPass(vk::Framebuffer *framebuffer);
 
     uint32_t getCurrentSubpassIndex() const;
+    uint32_t getCurrentViewCount() const;
 
     egl::ContextPriority getContextPriority() const override { return mContextPriority; }
     angle::Result startRenderPass(gl::Rectangle renderArea,
