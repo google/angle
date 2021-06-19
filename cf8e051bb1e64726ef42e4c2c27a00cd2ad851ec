@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2732c335_bad4c313",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-19T02:35:54Z",
+      "side": 1,
+      "message": "IIUC we are still not allowing fragment-only programs, as in they are still no-oped. Isn\u0027t that true?",
+      "range": {
+        "startLine": 7,
+        "startChar": 17,
+        "endLine": 7,
+        "endChar": 37
+      },
+      "revId": "cf8e051bb1e64726ef42e4c2c27a00cd2ad851ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "172cca41_dc4d1ef3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-19T02:35:54Z",
+      "side": 1,
+      "message": "I\u0027m having a hard time believing that VS-only draws were no-oped! How was this only failing GS tests? It\u0027s not uncommon to have VS-only draw calls just to fill in the depth/stencil buffer.",
+      "revId": "cf8e051bb1e64726ef42e4c2c27a00cd2ad851ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b72f3036_9995aaf8",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-19T02:35:54Z",
+      "side": 1,
+      "message": "You should be able to get rid of both hasVertexAndFragmentShader and updateHasVertexAndFragmentShader. I don\u0027t believe there should be any scenario where we care if FS is set or not, and even if necessary we can just get that information out of the shader stages mask.",
+      "revId": "cf8e051bb1e64726ef42e4c2c27a00cd2ad851ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1917273_cbe01374",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-19T02:35:54Z",
+      "side": 1,
+      "message": "Redundant if (we established above that vertexProgram exists)",
+      "revId": "cf8e051bb1e64726ef42e4c2c27a00cd2ad851ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1d92925_3e0d85bd",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 674,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-19T02:35:54Z",
+      "side": 1,
+      "message": "Why is this necessary? It\u0027s fine if the program is VS only.",
+      "range": {
+        "startLine": 674,
+        "startChar": 34,
+        "endLine": 674,
+        "endChar": 83
+      },
+      "revId": "cf8e051bb1e64726ef42e4c2c27a00cd2ad851ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
