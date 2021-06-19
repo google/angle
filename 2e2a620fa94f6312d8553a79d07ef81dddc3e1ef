@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "93c94485_6a571368",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-19T03:57:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c680425_92d6db4e",
+      "range": {
+        "startLine": 49,
+        "startChar": 2,
+        "endLine": 49,
+        "endChar": 21
+      },
+      "revId": "2e2a620fa94f6312d8553a79d07ef81dddc3e1ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b0661949_bcf25923",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-06-18T22:10:52Z",
       "side": 1,
       "message": "not strictly correct, it\u0027s used in tests and other code as well.",
+      "range": {
+        "startLine": 75,
+        "startChar": 27,
+        "endLine": 75,
+        "endChar": 31
+      },
+      "revId": "2e2a620fa94f6312d8553a79d07ef81dddc3e1ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f641ec7e_9cf85b54",
+        "filename": "scripts/roll_aosp.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-19T03:57:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0661949_bcf25923",
       "range": {
         "startLine": 75,
         "startChar": 27,
