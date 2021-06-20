@@ -54,6 +54,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "59a2f5e7_0bf72cad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-06-20T08:50:00Z",
+      "side": 1,
+      "message": "cc @Alexey for the changes in DisplayMtl.mm and format autogen",
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8f77f4a0_45c3e064",
