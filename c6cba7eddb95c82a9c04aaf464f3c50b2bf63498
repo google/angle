@@ -211,6 +211,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "50bfc71e_b97f1944",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 1097,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-20T12:32:10Z",
+      "side": 1,
+      "message": "Exactly. Jonah, would it be possible to keep \"Apple\" here since it\u0027s better aligned with Metal docs?",
+      "parentUuid": "f4e57c57_d5132cb2",
+      "range": {
+        "startLine": 1097,
+        "startChar": 17,
+        "endLine": 1097,
+        "endChar": 37
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d2aa31a7_8b5adb60",
         "filename": "src/libANGLE/renderer/metal/FrameBufferMtl.mm",
         "patchSetId": 15
