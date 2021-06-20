@@ -354,6 +354,7 @@ constexpr char kReuseDisplays[]                  = "--reuse-displays";
 constexpr char kEnableANGLEPerTestCaptureLabel[] = "--angle-per-test-capture-label";
 constexpr char kBatchId[]                        = "--batch-id=";
 constexpr char kDelayTestStart[]                 = "--delay-test-start=";
+constexpr char kRenderDoc[]                      = "--renderdoc";
 
 void SetupEnvironmentVarsForCaptureReplay()
 {
@@ -377,6 +378,8 @@ void SetTestStartDelay(const char *testStartDelay)
 {
     gTestStartDelaySeconds = std::stoi(testStartDelay);
 }
+
+bool gEnableRenderDocCapture = false;
 
 // static
 std::array<Vector3, 6> ANGLETestBase::GetQuadVertices()
@@ -423,6 +426,11 @@ ANGLETestBase::ANGLETestBase(const PlatformParameters &params)
 #else
         withMethods.eglParameters.debugLayersEnabled = false;
 #endif
+    }
+
+    if (gEnableRenderDocCapture)
+    {
+        mRenderDoc.attach();
     }
 
     auto iter = gFixtures.find(withMethods);
@@ -684,6 +692,8 @@ void ANGLETestBase::ANGLETestSetUp()
     glViewport(0, 0, mWidth, mHeight);
 
     mIsSetUp = true;
+
+    mRenderDoc.startFrame();
 }
 
 void ANGLETestBase::ANGLETestTearDown()
@@ -699,11 +709,14 @@ void ANGLETestBase::ANGLETestTearDown()
 
     if (mCurrentParams->noFixture || !mFixture->osWindow->valid())
     {
+        mRenderDoc.endFrame();
         return;
     }
 
     swapBuffers();
     mFixture->osWindow->messageLoop();
+
+    mRenderDoc.endFrame();
 
     if (mFixture->eglWindow)
     {
@@ -1521,6 +1534,10 @@ void ANGLEProcessTestArgs(int *argc, char *argv[])
         else if (strncmp(argv[argIndex], kDelayTestStart, strlen(kDelayTestStart)) == 0)
         {
             SetTestStartDelay(argv[argIndex] + strlen(kDelayTestStart));
+        }
+        else if (strncmp(argv[argIndex], kRenderDoc, strlen(kRenderDoc)) == 0)
+        {
+            gEnableRenderDocCapture = true;
         }
     }
 }

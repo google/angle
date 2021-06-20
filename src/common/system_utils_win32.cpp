@@ -50,6 +50,9 @@ class Win32Library : public Library
             case SearchType::SystemDir:
                 mModule = LoadLibraryExA(libraryName, nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
                 break;
+            case SearchType::AlreadyLoaded:
+                mModule = GetModuleHandleA(libraryName);
+                break;
         }
     }
 

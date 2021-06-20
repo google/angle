@@ -44,6 +44,7 @@ class UwpLibrary : public Library
                 mModule = LoadPackagedLibrary(wideBuffer.c_str(), 0);
                 break;
             case SearchType::SystemDir:
+            case SearchType::AlreadyLoaded:
                 // Not supported in UWP
                 break;
         }

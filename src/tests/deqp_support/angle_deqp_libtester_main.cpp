@@ -51,7 +51,8 @@ std::string GetLogFileName(std::string deqpDataDir)
 ANGLE_LIBTESTER_EXPORT bool deqp_libtester_init_platform(int argc,
                                                          const char *argv[],
                                                          void *logErrorFunc,
-                                                         uint32_t preRotation)
+                                                         uint32_t preRotation,
+                                                         bool enableRenderDocCapture)
 {
     try
     {
@@ -81,7 +82,7 @@ ANGLE_LIBTESTER_EXPORT bool deqp_libtester_init_platform(int argc,
         g_log     = new tcu::TestLog(GetLogFileName(deqpDataDir).c_str(), g_cmdLine->getLogFlags());
         g_testCtx = new tcu::TestContext(*g_platform, *g_archive, *g_log, *g_cmdLine, DE_NULL);
         g_root    = new tcu::TestPackageRoot(*g_testCtx, tcu::TestPackageRegistry::getSingleton());
-        g_executor = new tcu::RandomOrderExecutor(*g_root, *g_testCtx);
+        g_executor = new tcu::RandomOrderExecutor(*g_root, *g_testCtx, enableRenderDocCapture);
     }
     catch (const std::exception &e)
     {
@@ -95,7 +96,7 @@ ANGLE_LIBTESTER_EXPORT bool deqp_libtester_init_platform(int argc,
 // Exported to the tester app.
 ANGLE_LIBTESTER_EXPORT int deqp_libtester_main(int argc, const char *argv[])
 {
-    if (!deqp_libtester_init_platform(argc, argv, nullptr, 0))
+    if (!deqp_libtester_init_platform(argc, argv, nullptr, 0, false))
     {
         tcu::die("Could not initialize the dEQP platform");
     }

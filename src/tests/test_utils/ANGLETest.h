@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <array>
 
+#include "RenderDoc.h"
 #include "angle_test_configs.h"
 #include "angle_test_platform.h"
 #include "common/angleutils.h"
@@ -583,6 +584,8 @@ class ANGLETestBase
     static std::map<angle::PlatformParameters, TestFixture> gFixtures;
     const angle::PlatformParameters *mCurrentParams;
     TestFixture *mFixture;
+
+    RenderDoc mRenderDoc;
 
     // Workaround for NVIDIA not being able to share a window with OpenGL and Vulkan.
     static Optional<EGLint> mLastRendererType;

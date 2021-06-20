@@ -2021,6 +2021,9 @@ deqp_libtester_sources = [
   "deqp_support/tcuANGLENativeDisplayFactory.h",
 
   # TODO(jmadill): integrate with dEQP
+  "$angle_root/third_party/renderdoc/src/renderdoc_app.h",
   "deqp_support/tcuRandomOrderExecutor.cpp",
   "deqp_support/tcuRandomOrderExecutor.h",
+  "test_utils/RenderDoc.cpp",
+  "test_utils/RenderDoc.h",
 ]

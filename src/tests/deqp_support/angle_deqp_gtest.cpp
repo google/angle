@@ -116,6 +116,7 @@ constexpr char kANGLEEGLString[]   = "--use-angle=";
 constexpr char kANGLEPreRotation[] = "--emulated-pre-rotation=";
 constexpr char kdEQPCaseString[]   = "--deqp-case=";
 constexpr char kVerboseString[]    = "--verbose";
+constexpr char kRenderDocString[]  = "--renderdoc";
 
 std::array<char, 500> gCaseStringBuffer;
 
@@ -132,6 +133,8 @@ constexpr uint32_t kDefaultPreRotation = 0;
 
 const APIInfo *gInitAPI = nullptr;
 uint32_t gPreRotation   = kDefaultPreRotation;
+
+bool gEnableRenderDocCapture = false;
 
 constexpr const char gdEQPEGLConfigNameString[] = "--deqp-gl-config-name=";
 constexpr const char gdEQPLogImagesString[]     = "--deqp-log-images=";
@@ -555,7 +558,8 @@ void dEQPTest<TestModuleIndex>::SetUpTestCase()
 
     // Init the platform.
     if (!deqp_libtester_init_platform(static_cast<int>(argv.size()), argv.data(),
-                                      reinterpret_cast<void *>(&HandlePlatformError), gPreRotation))
+                                      reinterpret_cast<void *>(&HandlePlatformError), gPreRotation,
+                                      gEnableRenderDocCapture))
     {
         std::cout << "Aborting test due to dEQP initialization error." << std::endl;
         exit(1);
@@ -757,6 +761,10 @@ void InitTestHarness(int *argc, char **argv)
         else if (strncmp(argv[argIndex], gdEQPLogImagesString, strlen(gdEQPLogImagesString)) == 0)
         {
             HandleLogImages(argv[argIndex] + strlen(gdEQPLogImagesString));
+        }
+        else if (strncmp(argv[argIndex], kRenderDocString, strlen(kRenderDocString)) == 0)
+        {
+            gEnableRenderDocCapture = true;
         }
         argIndex++;
     }
