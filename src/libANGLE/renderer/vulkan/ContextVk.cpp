@@ -678,7 +678,16 @@ angle::Result ContextVk::initialize()
             vk::kDefaultTransformFeedbackQueryPoolSize));
     }
 
-    // Init gles to vulkan index type map
+    // The primitives generated query is provided through the Vulkan pipeline statistics query if
+    // supported.  TODO: If VK_EXT_primitives_generated_query is supported, use that instead.
+    // http://anglebug.com/5430
+    if (getFeatures().supportsPipelineStatisticsQuery.enabled)
+    {
+        ANGLE_TRY(mQueryPools[gl::QueryType::PrimitivesGenerated].init(
+            this, VK_QUERY_TYPE_PIPELINE_STATISTICS, vk::kDefaultPrimitivesGeneratedQueryPoolSize));
+    }
+
+    // Init GLES to Vulkan index type map.
     initIndexTypeMap();
 
     // Init driver uniforms and get the descriptor set layouts.
@@ -1997,11 +2006,29 @@ angle::Result ContextVk::handleDirtyGraphicsViewport(DirtyBits::Iterator *dirtyB
     mRenderPassCommandBuffer->setViewport(0, 1, &mViewport);
     return angle::Result::Continue;
 }
+
 angle::Result ContextVk::handleDirtyGraphicsScissor(DirtyBits::Iterator *dirtyBitsIterator,
                                                     DirtyBits dirtyBitMask)
 {
-    mRenderPassCommandBuffer->setScissor(0, 1, &mScissor);
+    handleDirtyGraphicsScissorImpl(mState.isQueryActive(gl::QueryType::PrimitivesGenerated));
     return angle::Result::Continue;
+}
+
+void ContextVk::handleDirtyGraphicsScissorImpl(bool isPrimitivesGeneratedQueryActive)
+{
+    // If primitives generated query and rasterizer discard are both active, but the Vulkan
+    // implementation of the query does not support rasterizer discard, use an empty scissor to
+    // emulate it.
+    if (isEmulatingRasterizerDiscardDuringPrimitivesGeneratedQuery(
+            isPrimitivesGeneratedQueryActive))
+    {
+        VkRect2D emptyScissor = {};
+        mRenderPassCommandBuffer->setScissor(0, 1, &emptyScissor);
+    }
+    else
+    {
+        mRenderPassCommandBuffer->setScissor(0, 1, &mScissor);
+    }
 }
 
 angle::Result ContextVk::handleDirtyComputeDescriptorSets()
@@ -3324,6 +3351,39 @@ void ContextVk::updateRasterizationSamples(const uint32_t rasterizationSamples)
     updateSampleMaskWithRasterizationSamples(rasterizationSamples);
 }
 
+void ContextVk::updateRasterizerDiscardEnabled(bool isPrimitivesGeneratedQueryActive)
+{
+    // On some devices, when rasterizerDiscardEnable is enabled, the
+    // VK_EXT_primitives_generated_query as well as the pipeline statistics query used to emulate it
+    // are non-functional.  For VK_EXT_primitives_generated_query there's a feature bit but not for
+    // pipeline statistics query.  If the primitives generated query is active (and rasterizer
+    // discard is not supported), rasterizerDiscardEnable is set to false and the functionality
+    // is otherwise emulated (by using an empty scissor).
+
+    // If the primitives generated query implementation supports rasterizer discard, just set
+    // rasterizer discard as requested.  Otherwise disable it.
+    bool isRasterizerDiscardEnabled   = mState.isRasterizerDiscardEnabled();
+    bool isEmulatingRasterizerDiscard = isEmulatingRasterizerDiscardDuringPrimitivesGeneratedQuery(
+        isPrimitivesGeneratedQueryActive);
+
+    mGraphicsPipelineDesc->updateRasterizerDiscardEnabled(
+        &mGraphicsPipelineTransition, isRasterizerDiscardEnabled && !isEmulatingRasterizerDiscard);
+
+    invalidateCurrentGraphicsPipeline();
+
+    if (!isEmulatingRasterizerDiscard)
+    {
+        return;
+    }
+
+    // If we are emulating rasterizer discard, update the scissor if in render pass.  If not in
+    // render pass, DIRTY_BIT_SCISSOR will be set when the render pass next starts.
+    if (hasStartedRenderPass())
+    {
+        handleDirtyGraphicsScissorImpl(isPrimitivesGeneratedQueryActive);
+    }
+}
+
 void ContextVk::invalidateProgramBindingHelper(const gl::State &glState)
 {
     mProgram         = nullptr;
@@ -3543,8 +3603,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                                            glState.getRasterizerState());
                 break;
             case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
-                mGraphicsPipelineDesc->updateRasterizerDiscardEnabled(
-                    &mGraphicsPipelineTransition, glState.isRasterizerDiscardEnabled());
+                updateRasterizerDiscardEnabled(
+                    mState.isQueryActive(gl::QueryType::PrimitivesGenerated));
                 break;
             case gl::State::DIRTY_BIT_LINE_WIDTH:
                 mGraphicsPipelineDesc->updateLineWidth(&mGraphicsPipelineTransition,
@@ -3613,6 +3673,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                glState.getFarPlane());
                 updateColorMasks(glState.getBlendStateExt());
                 updateRasterizationSamples(mDrawFramebuffer->getSamples());
+                updateRasterizerDiscardEnabled(
+                    mState.isQueryActive(gl::QueryType::PrimitivesGenerated));
 
                 mGraphicsPipelineDesc->updateFrontFace(&mGraphicsPipelineTransition,
                                                        glState.getRasterizerState(),
@@ -4544,9 +4606,17 @@ vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
            queryType == gl::QueryType::TransformFeedbackPrimitivesWritten ||
            queryType == gl::QueryType::Timestamp || queryType == gl::QueryType::TimeElapsed);
 
-    // For PrimitivesGenerated queries, use the same pool as TransformFeedbackPrimitivesWritten.
-    // They are served with the same Vulkan query.
-    if (queryType == gl::QueryType::PrimitivesGenerated)
+    // For PrimitivesGenerated queries:
+    //
+    // - If VK_EXT_primitives_generated_query is supported, use that.
+    //   TODO: http://anglebug.com/5430
+    // - Otherwise, if pipelineStatisticsQuery is supported, use that,
+    // - Otherwise, use the same pool as TransformFeedbackPrimitivesWritten and share the query as
+    //   the Vulkan transform feedback query produces both results.  This option is non-conformant
+    //   as the primitives generated query will not be functional without transform feedback.
+    //
+    if (queryType == gl::QueryType::PrimitivesGenerated &&
+        !getFeatures().supportsPipelineStatisticsQuery.enabled)
     {
         queryType = gl::QueryType::TransformFeedbackPrimitivesWritten;
     }
@@ -5748,6 +5818,12 @@ angle::Result ContextVk::beginRenderPassQuery(QueryVk *queryVk)
     if (mRenderPassCommandBuffer)
     {
         ANGLE_TRY(queryVk->getQueryHelper()->beginRenderPassQuery(this));
+
+        // Update rasterizer discard emulation with primitives generated query if necessary.
+        if (queryVk->getType() == gl::QueryType::PrimitivesGenerated)
+        {
+            updateRasterizerDiscardEnabled(true);
+        }
     }
 
     gl::QueryType type = queryVk->getType();
@@ -5766,6 +5842,12 @@ angle::Result ContextVk::endRenderPassQuery(QueryVk *queryVk)
     if (mRenderPassCommandBuffer)
     {
         queryVk->getQueryHelper()->endRenderPassQuery(this);
+
+        // Update rasterizer discard emulation with primitives generated query if necessary.
+        if (queryVk->getType() == gl::QueryType::PrimitivesGenerated)
+        {
+            updateRasterizerDiscardEnabled(false);
+        }
     }
 
     gl::QueryType type = queryVk->getType();
@@ -5788,6 +5870,9 @@ void ContextVk::pauseRenderPassQueriesIfActive()
         if (activeQuery)
         {
             activeQuery->onRenderPassEnd(this);
+
+            // No need to update rasterizer discard emulation with primitives generated query.  The
+            // state will be updated when the next render pass starts.
         }
     }
 }
@@ -5802,10 +5887,38 @@ angle::Result ContextVk::resumeRenderPassQueriesIfActive()
         if (activeQuery)
         {
             ANGLE_TRY(activeQuery->onRenderPassStart(this));
+
+            // Update rasterizer discard emulation with primitives generated query if necessary.
+            if (activeQuery->getType() == gl::QueryType::PrimitivesGenerated)
+            {
+                updateRasterizerDiscardEnabled(true);
+            }
         }
     }
 
     return angle::Result::Continue;
+}
+
+bool ContextVk::doesPrimitivesGeneratedQuerySupportRasterizerDiscard() const
+{
+    // TODO: If primitives generated is implemented with VK_EXT_primitives_generated_query, check
+    // the corresponding feature bit.  http://anglebug.com/5430.
+
+    // If primitives generated is emulated with pipeline statistics query, it's unknown on which
+    // hardware rasterizer discard is supported.  Assume it's supported on none.
+    if (getFeatures().supportsPipelineStatisticsQuery.enabled)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ContextVk::isEmulatingRasterizerDiscardDuringPrimitivesGeneratedQuery(
+    bool isPrimitivesGeneratedQueryActive) const
+{
+    return isPrimitivesGeneratedQueryActive && mState.isRasterizerDiscardEnabled() &&
+           !doesPrimitivesGeneratedQuerySupportRasterizerDiscard();
 }
 
 QueryVk *ContextVk::getActiveRenderPassQuery(gl::QueryType queryType) const

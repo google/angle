@@ -53,7 +53,7 @@ class QueryVk : public QueryImpl
     bool isCurrentlyInUse(Serial lastCompletedSerial) const;
     angle::Result finishRunningCommands(ContextVk *contextVk);
     void stashQueryHelper();
-    uint32_t getQueryResultCount() const;
+    uint32_t getQueryResultCount(ContextVk *contextVk) const;
     angle::Result accumulateStashedQueryResult(ContextVk *contextVk, vk::QueryResult *result);
 
     // Manage query allocations

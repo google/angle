@@ -21,8 +21,8 @@ class TransformFeedbackTestBase : public ANGLETest
   protected:
     TransformFeedbackTestBase() : mProgram(0), mTransformFeedbackBuffer(0), mTransformFeedback(0)
     {
-        setWindowWidth(128);
-        setWindowHeight(128);
+        setWindowWidth(48);
+        setWindowHeight(32);
         setConfigRedBits(8);
         setConfigGreenBits(8);
         setConfigBlueBits(8);
@@ -2893,7 +2893,14 @@ void main()
 }
 
 class TransformFeedbackTestES32 : public TransformFeedbackTest
-{};
+{
+  public:
+    TransformFeedbackTestES32() : TransformFeedbackTest()
+    {
+        setConfigDepthBits(24);
+        setConfigStencilBits(8);
+    }
+};
 
 // Test that simultaneous use of transform feedback primitives written and primitives generated
 // queries works.
@@ -2902,7 +2909,7 @@ TEST_P(TransformFeedbackTestES32, PrimitivesWrittenAndGenerated)
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
-    // No ES3.2 support on out bots.  http://anglebug.com/5435
+    // No ES3.2 support on our bots.  http://anglebug.com/5435
     ANGLE_SKIP_TEST_IF(IsPixel2() && IsVulkan());
 
     // No VK_EXT_transform_feedback support on the following configurations.
@@ -3050,6 +3057,313 @@ TEST_P(TransformFeedbackTestES32, PrimitivesWrittenAndGenerated)
         EXPECT_EQ(primitivesWritten, kPrimitivesWrittenExpected[queryIndex]) << queryIndex;
         EXPECT_EQ(primitivesGenerated, kPrimitivesGeneratedExpected[queryIndex]) << queryIndex;
     }
+}
+
+// Test that primitives generated query and rasterizer discard interact well.
+TEST_P(TransformFeedbackTestES32, PrimitivesGeneratedVsRasterizerDiscard)
+{
+    // No ES3.2 support on our bots.  http://anglebug.com/5435
+    ANGLE_SKIP_TEST_IF(IsPixel2() && IsVulkan());
+
+    // No pipelineStatisticsQuery or VK_EXT_transform_feedback support on the following
+    // configurations.  http://anglebug.com/5435
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsNVIDIA() && IsWindows7());
+
+    // http://anglebug.com/5539
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux());
+
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClearDepthf(0.1f);
+    glClearStencil(0x5A);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // First, disable all output.
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    glDepthMask(GL_FALSE);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x3E, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    int w = getWindowWidth();
+    int h = getWindowHeight();
+
+    // Render to a part of the output.  It should produce nothing.
+    glScissor(0, 0, w / 4, h / 2);
+    glEnable(GL_SCISSOR_TEST);
+    glUniform4f(colorUniformLocation, 0.1f, 0.2f, 0.3f, 0.4f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Then enable the primitives generated query, and issue another draw call.  Still no output
+    // should be produced.
+    GLQuery primitivesGeneratedQuery;
+    glBeginQuery(GL_PRIMITIVES_GENERATED, primitivesGeneratedQuery);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Enable rasterizer discard.  Still no output should be produced.
+    glEnable(GL_RASTERIZER_DISCARD);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Enable color output.  Render to another part.  No output should be produced.
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glScissor(w / 4, 0, w / 4, h / 2);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Enable depth and stencil output.  Render to another part.  No output should be produced.
+    glDepthMask(GL_TRUE);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glScissor(w / 2, 0, w / 4, h / 2);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Disable rasterizer discard.  Render to another part.  Should produce output.
+    glDisable(GL_RASTERIZER_DISCARD);
+    glScissor(3 * w / 4, 0, w / 4, h / 2);
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass by validating the results.  Note that the query is still active, and
+    // rasterizer discard is not.
+    EXPECT_PIXEL_RECT_EQ(0, 0, 3 * w / 4, h / 2, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(3 * w / 4, 0, w / 4, h / 2, GLColor::red);
+
+    // Start another render pass.  Render to the another part.  Should produce output.
+    glScissor(0, h / 2, w / 4, h / 2);
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Enable rasterizer discard.  Render to another part.  No output should be produced.
+    glEnable(GL_RASTERIZER_DISCARD);
+    glScissor(w / 4, h / 2, w / 4, h / 2);
+    glUniform4f(colorUniformLocation, 0.1f, 0.2f, 0.3f, 0.4f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass by validating the results.  Note that the query is still active, and
+    // so is rasterizer discard.
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 4, h / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(w / 4, h / 2, w / 4, h / 2, GLColor::blue);
+
+    // Start another render pass.  Render to the another part.  No output should be produced.
+    glScissor(w / 2, h / 2, w / 4, h / 2);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Disable rasterizer discard.  Render to another part.  Should produce output.
+    glDisable(GL_RASTERIZER_DISCARD);
+    glScissor(3 * w / 4, h / 2, w / 4, h / 2);
+    glUniform4f(colorUniformLocation, 1.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify color results
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 4, h / 2, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(3 * w / 4, h / 2, w / 4, h / 2, GLColor::yellow);
+
+    // Verify that depth/stencil has correct results.
+    glDepthFunc(GL_LESS);
+    glStencilFunc(GL_EQUAL, 0x3E, 0xFF);
+
+    glScissor(0, 0, w, h);
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 1.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.55f);
+    ASSERT_GL_NO_ERROR();
+
+    // Validate that depth/stencil is modified only where color is modified above.
+    EXPECT_PIXEL_RECT_EQ(0, 0, 3 * w / 4, h / 2, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(3 * w / 4, 0, w / 4, h / 2, GLColor::cyan);
+
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 4, h / 2, GLColor::cyan);
+    EXPECT_PIXEL_RECT_EQ(w / 4, h / 2, w / 4, h / 2, GLColor::blue);
+
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 4, h / 2, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(3 * w / 4, h / 2, w / 4, h / 2, GLColor::cyan);
+
+    // End the query and verify the count.
+    glEndQuery(GL_PRIMITIVES_GENERATED);
+    EXPECT_GL_NO_ERROR();
+
+    GLuint primitivesGenerated = 0;
+    glGetQueryObjectuiv(primitivesGeneratedQuery, GL_QUERY_RESULT, &primitivesGenerated);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(primitivesGenerated, 20u);  // 10 draw calls, 2 triangles each.
+}
+
+// Test that primitives generated query and rasterizer discard interact well when the framebuffer
+// changes.
+TEST_P(TransformFeedbackTestES32, PrimitivesGeneratedVsRasterizerDiscardAndFramebufferChange)
+{
+    // No ES3.2 support on our bots.  http://anglebug.com/5435
+    ANGLE_SKIP_TEST_IF(IsPixel2() && IsVulkan());
+
+    // No pipelineStatisticsQuery or VK_EXT_transform_feedback support on the following
+    // configurations.  http://anglebug.com/5435
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsNVIDIA() && IsWindows7());
+
+    // http://anglebug.com/5539
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux());
+
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClearDepthf(0.1f);
+    glClearStencil(0x5A);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    constexpr GLsizei kFBOSize = 16;
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kFBOSize, kFBOSize);
+
+    GLTexture depthStencilTexture;
+    glBindTexture(GL_TEXTURE_2D, depthStencilTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, kFBOSize, kFBOSize);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                           depthStencilTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // First, disable all output.
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    glDepthMask(GL_FALSE);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x3E, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    int w = getWindowWidth();
+    int h = getWindowHeight();
+
+    // Render to a part of the output.  It should produce nothing.
+    glScissor(0, 0, w / 4, h);
+    glEnable(GL_SCISSOR_TEST);
+    glUniform4f(colorUniformLocation, 0.1f, 0.2f, 0.3f, 0.4f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Then enable the primitives generated query, and issue another draw call.  Still no output
+    // should be produced.
+    GLQuery primitivesGeneratedQuery;
+    glBeginQuery(GL_PRIMITIVES_GENERATED, primitivesGeneratedQuery);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Enable rasterizer discard.  Still no output should be produced.
+    glEnable(GL_RASTERIZER_DISCARD);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Enable color output.  Render to another part.  No output should be produced.
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glScissor(w / 4, 0, w / 4, h);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Enable depth and stencil output and disable rasterizer discard.  Render to another part.
+    // Should produce output.
+    glDisable(GL_RASTERIZER_DISCARD);
+    glDepthMask(GL_TRUE);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glScissor(w / 2, 0, w / 4, h);
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Enable rasterizer discard again.  Render to another part.  No output should be produced.
+    glEnable(GL_RASTERIZER_DISCARD);
+    glScissor(3 * w / 4, 0, w / 4, h);
+    glUniform4f(colorUniformLocation, 0.1f, 0.2f, 0.3f, 0.4f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass by validating the results.  Note that the query is still active, and
+    // so is rasterizer discard.
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(3 * w / 4, 0, w / 4, h, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 4, h, GLColor::red);
+
+    // Switch to another framebuffer.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // Start another render pass.  Render to a part of the framebuffer.  No output should be
+    // produced.
+    glScissor(0, 0, kFBOSize / 2, kFBOSize);
+    glUniform4f(colorUniformLocation, 0.4f, 0.3f, 0.2f, 0.1f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Enable rasterizer discard.  Render to another part.  Should produce output.
+    glDisable(GL_RASTERIZER_DISCARD);
+    glScissor(kFBOSize / 2, 0, kFBOSize / 2, kFBOSize);
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+
+    // Disable color write.  Render to the same part.  No output should be produced.
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    glUniform4f(colorUniformLocation, 0.4f, 0.3f, 0.2f, 0.1f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass by validating the results.  Note that the query is still active, and
+    // rasterizer discard is not.
+    EXPECT_PIXEL_RECT_EQ(0, 0, kFBOSize / 2, kFBOSize, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(kFBOSize / 2, 0, kFBOSize / 2, kFBOSize, GLColor::green);
+
+    // Verify that depth/stencil has correct results in the FBO.
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glDepthFunc(GL_LESS);
+    glStencilFunc(GL_EQUAL, 0x3E, 0xFF);
+
+    glScissor(0, 0, kFBOSize, kFBOSize);
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 1.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.55f);
+
+    // Validate that depth/stencil is modified only where color is modified above.
+    EXPECT_PIXEL_RECT_EQ(0, 0, kFBOSize / 2, kFBOSize, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(kFBOSize / 2, 0, kFBOSize / 2, kFBOSize, GLColor::magenta);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Verify that depth/stencil has correct results.
+    glScissor(0, 0, w, h);
+    glUniform4f(colorUniformLocation, 1.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.55f);
+
+    // Validate that depth/stencil is modified only where color is modified above.
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(3 * w / 4, 0, w / 4, h, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 4, h, GLColor::yellow);
+
+    // End the query and verify the count.
+    glEndQuery(GL_PRIMITIVES_GENERATED);
+    EXPECT_GL_NO_ERROR();
+
+    GLuint primitivesGenerated = 0;
+    glGetQueryObjectuiv(primitivesGeneratedQuery, GL_QUERY_RESULT, &primitivesGenerated);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(primitivesGenerated, 20u);  // 10 draw calls, 2 triangles each.
 }
 
 class TransformFeedbackTestIOBlocks : public TransformFeedbackTestES31

@@ -398,9 +398,10 @@ class DynamicallyGrowingPool : angle::NonCopyable
 // another is created.  The query pools live permanently, but are recycled as indices get freed.
 
 // These are arbitrary default sizes for query pools.
-constexpr uint32_t kDefaultOcclusionQueryPoolSize         = 64;
-constexpr uint32_t kDefaultTimestampQueryPoolSize         = 64;
-constexpr uint32_t kDefaultTransformFeedbackQueryPoolSize = 128;
+constexpr uint32_t kDefaultOcclusionQueryPoolSize           = 64;
+constexpr uint32_t kDefaultTimestampQueryPoolSize           = 64;
+constexpr uint32_t kDefaultTransformFeedbackQueryPoolSize   = 128;
+constexpr uint32_t kDefaultPrimitivesGeneratedQueryPoolSize = 128;
 
 class QueryHelper;
 

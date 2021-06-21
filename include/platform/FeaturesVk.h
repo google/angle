@@ -161,10 +161,16 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports the EGL_ANDROID_native_fence_sync extension", &members,
         "http://anglebug.com/2517"};
 
-    // Whether the VkDevice can support imageCubeArray feature properly.
+    // Whether the VkDevice can support the imageCubeArray feature properly.
     Feature supportsImageCubeArray = {"supportsImageCubeArray", FeatureCategory::VulkanFeatures,
                                       "VkDevice supports the imageCubeArray feature properly",
                                       &members, "http://anglebug.com/3584"};
+
+    // Whether the VkDevice supports the pipelineStatisticsQuery feature.
+    Feature supportsPipelineStatisticsQuery = {
+        "supportsPipelineStatisticsQuery", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the pipelineStatisticsQuery feature", &members,
+        "http://anglebug.com/5430"};
 
     // Whether the VkDevice supports the VK_EXT_shader_stencil_export extension, which is used to
     // perform multisampled resolve of stencil buffer.  A multi-step workaround is used instead if
