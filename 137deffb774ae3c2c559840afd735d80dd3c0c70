@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a56b4c76_4be2b20e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T12:46:23Z",
+      "side": 1,
+      "message": "LGTM - what do we need to do to use this in ANGLE libGLESv2 without the test harness? It would be useful for applications like GfxBench that don\u0027t use an ANGLE test front-end.",
+      "revId": "137deffb774ae3c2c559840afd735d80dd3c0c70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
