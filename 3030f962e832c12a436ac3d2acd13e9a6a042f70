@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "158fd55d_087385bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T12:48:48Z",
+      "side": 1,
+      "message": "Gert: any link to a failure you can paste in the bug report?",
+      "revId": "3030f962e832c12a436ac3d2acd13e9a6a042f70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
