@@ -49,6 +49,273 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a53a2e6d_469c56c4",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "Extra spaces before \":\".",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 122,
+        "endChar": 69
+      },
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89b288bf_2d082b93",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "Ditto.",
+      "range": {
+        "startLine": 136,
+        "startChar": 12,
+        "endLine": 163,
+        "endChar": 69
+      },
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e32c8214_580de09c",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "This format is resolvable only on Mac GPU according to the \"Metal Feature Set Tables\".",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "faa3cffa_c2841621",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "Ditto + 4 more times below (RG[BA]16{U,S}norm).",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f1a55d3_0b480b70",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "This format is resolvable only on Mac GPU according to the \"Metal Feature Set Tables\".",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efeaab6b_7a8f1319",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "This format supports MSAA only on Mac GPU according to the \"Metal Feature Set Tables\".",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c2f599b_32fcfd7c",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0449841b_0b7954c6",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "Apple GPU Family 7 is required for this format to support MSAA according to the \"Metal Feature Set Tables\".",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a59fad42_f35af4de",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "695e48f5_cd6e82f6",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "This format supports MSAA only on Mac GPU according to the \"Metal Feature Set Tables\".",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d545465_5fd17dd9",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e7099b9_aa7a1d3a",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "Apple GPU Family 7 is required for this format to support MSAA according to the \"Metal Feature Set Tables\".",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ca3f7a5_3d8c8e77",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "This format is resolvable only on Mac GPU according to the \"Metal Feature Set Tables\".",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7910858f_b5bfb7d3",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "This format is blendable only on Mac GPU according to the \"Metal Feature Set Tables\".",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97cc76c8_834a1281",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 17
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-21T20:24:11Z",
+      "side": 1,
+      "message": "Apple GPU Family 7 is required for this format to support MSAA according to the \"Metal Feature Set Tables\".",
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ec235aa5_5cbdc113",
         "filename": "src/libGLESv2.gni",
         "patchSetId": 17
