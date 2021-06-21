@@ -34,6 +34,24 @@
       "parentUuid": "e7af637e_72a0d59b",
       "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efae28eb_1652f2a8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1446209
+      },
+      "writtenOn": "2021-06-21T09:49:47Z",
+      "side": 1,
+      "message": "Hi Shabaz,\n\nI doesn\u0027t think vk::Format::textureLoadFunctions is enough for border color,for example,for ALPHA8_EXT_to_R8_UNORM translation,it uses LoadToNative which do no translation,this is appropriate for uploading texture data,but it isn\u0027t for texture border color.\n\nCheers,\nCheryl",
+      "parentUuid": "680267a4_d0ea9abc",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
