@@ -392,6 +392,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d6661d9_ecfc46e7",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T21:37:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35d1ab4a_eb5536a9",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9cb9f3d5_f9049c5a",

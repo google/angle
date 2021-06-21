@@ -47,6 +47,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8af333b1_8675d57f",
+        "filename": "src/libANGLE/renderer/driver_utils_ios.mm",
+        "patchSetId": 17
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T21:37:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74d2e5de_c871c6b6",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a53a2e6d_469c56c4",
@@ -337,6 +361,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d98f8f5_46c75247",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 17
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T21:37:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec235aa5_5cbdc113",
+      "range": {
+        "startLine": 519,
+        "startChar": 0,
+        "endLine": 520,
+        "endChar": 70
+      },
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a55bad37_21f8013c",
@@ -350,6 +398,30 @@
       "writtenOn": "2021-06-21T19:55:40Z",
       "side": 1,
       "message": "nit: dates",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6c24955_41fdfcef",
+        "filename": "util/ios/IOSPixmap.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T21:37:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a55bad37_21f8013c",
       "range": {
         "startLine": 2,
         "startChar": 13,
