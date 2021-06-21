@@ -88,6 +88,24 @@
       "parentUuid": "26d27ca5_a28b033b",
       "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e07b706_b375defd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1452687
+      },
+      "writtenOn": "2021-06-21T19:53:22Z",
+      "side": 1,
+      "message": "I\u0027m only just now following up on this. For 3 of the 8 end2end tests that are failing (I\u0027ll follow on with the other 5, but I want to confirm/dump my understanding)\n\nValidationStateChangeTest.UniformBlockNegativeAPI/ES3_.*\nsrc/tests/gl_tests/StateChangeTest.cpp::5214\n\nThe test fails because of checks:\n- ::5268 ASSERT_GL_ERROR(GL_INVALID_OPERATION) ...\n- ::5280 ASSERT_GL_ERROR(GL_INVALID_OPERATION) ...\n- ::5291 EXPECT_GL_ERROR(GL_INVALID_OPERATION) ...\n\nThe `err` at that point in the test is 0, because this new CL means that the code is no longer erroring at these points. From what I can tell, we want to change these calls to be conditional or either robustness or webgl.\n\nBut @timvp points out that we may not have a means of querying webgl-ness?\n\nIs that understanding correct?",
+      "parentUuid": "3909689e_65538403",
+      "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
