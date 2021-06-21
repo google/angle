@@ -82,7 +82,7 @@ class TestSuiteTest : public testing::Test
             printf("\n");
         }
 
-        ProcessHandle process(args, true, true);
+        ProcessHandle process(args, ProcessOutputCapture::StdoutAndStderrSeparately);
         EXPECT_TRUE(process->started());
         EXPECT_TRUE(process->finish());
         EXPECT_TRUE(process->finished());

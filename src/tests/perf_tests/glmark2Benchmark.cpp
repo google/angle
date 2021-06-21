@@ -150,7 +150,7 @@ class GLMark2Benchmark : public testing::TestWithParam<GLMark2TestParams>
         }
         args.push_back(nullptr);
 
-        ProcessHandle process(args, true, false);
+        ProcessHandle process(args, ProcessOutputCapture::StdoutOnly);
         ASSERT_TRUE(process && process->started());
         ASSERT_TRUE(process->finish());
 
