@@ -94,6 +94,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b49b3e1_e99098eb",
+        "filename": "src/libANGLE/renderer/metal/BufferMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f77f4a0_45c3e064",
+      "range": {
+        "startLine": 28,
+        "startChar": 17,
+        "endLine": 28,
+        "endChar": 46
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b761fb2_55b0382c",
@@ -107,6 +131,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "This was renamed to kSharedMemBufferMaxBufSizeHint (on upstream)",
+      "range": {
+        "startLine": 456,
+        "startChar": 32,
+        "endLine": 456,
+        "endChar": 60
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be7612c2_3ba69ae9",
+        "filename": "src/libANGLE/renderer/metal/BufferMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b761fb2_55b0382c",
       "range": {
         "startLine": 456,
         "startChar": 32,
@@ -186,6 +234,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "02880fe7_06465dee",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 2112,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3dca66c3_1687d596",
+      "range": {
+        "startLine": 2112,
+        "startChar": 34,
+        "endLine": 2112,
+        "endChar": 55
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4e57c57_d5132cb2",
@@ -233,6 +305,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "36761305_acc288fb",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 1097,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50bfc71e_b97f1944",
+      "range": {
+        "startLine": 1097,
+        "startChar": 17,
+        "endLine": 1097,
+        "endChar": 37
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d2aa31a7_8b5adb60",
@@ -246,6 +342,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "As per the GLES 3.0 spec, stencil value is masked, not clamped.\nReviewed on this https://chromium-review.googlesource.com/c/angle/angle/+/2433329.\nNoticed by @Alexey",
+      "range": {
+        "startLine": 201,
+        "startChar": 33,
+        "endLine": 201,
+        "endChar": 38
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d2a7ec2_b3c5ce6c",
+        "filename": "src/libANGLE/renderer/metal/FrameBufferMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2aa31a7_8b5adb60",
       "range": {
         "startLine": 201,
         "startChar": 33,
@@ -279,6 +399,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53a85264_c82acf50",
+        "filename": "src/libANGLE/renderer/metal/FrameBufferMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 1032,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce018484_2f9e5211",
+      "range": {
+        "startLine": 1032,
+        "startChar": 21,
+        "endLine": 1032,
+        "endChar": 39
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59306b5a_077b5a47",
@@ -292,6 +436,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "All these frame capture functions seem to be duplicated from SurfaceMtl.mm",
+      "range": {
+        "startLine": 71,
+        "startChar": 5,
+        "endLine": 71,
+        "endChar": 26
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b25dd2d_2278e4b7",
+        "filename": "src/libANGLE/renderer/metal/IOSurfaceSurfaceMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59306b5a_077b5a47",
       "range": {
         "startLine": 71,
         "startChar": 5,
@@ -325,6 +493,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5575bf9d_ebdb7ebe",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16e24faa_5f714eac",
+      "range": {
+        "startLine": 318,
+        "startChar": 4,
+        "endLine": 321,
+        "endChar": 5
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "61665b7e_1de5a47e",
@@ -338,6 +530,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "These code should be moved to loadShaderInternalInfo. See above",
+      "range": {
+        "startLine": 331,
+        "startChar": 4,
+        "endLine": 334,
+        "endChar": 5
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb6fae4e_2a5b1b00",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61665b7e_1de5a47e",
       "range": {
         "startLine": 331,
         "startChar": 4,
@@ -371,6 +587,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d91b621_e67b2de7",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "We are not meant to turn on the backend in this CL. Removed.",
+      "parentUuid": "80ed076a_8b947c5d",
+      "range": {
+        "startLine": 461,
+        "startChar": 4,
+        "endLine": 461,
+        "endChar": 65
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f282304f_8b505b67",
@@ -384,6 +624,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "seems to be unused",
+      "range": {
+        "startLine": 1159,
+        "startChar": 41,
+        "endLine": 1159,
+        "endChar": 62
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08839b8c_4bf81b03",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 1159,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f282304f_8b505b67",
       "range": {
         "startLine": 1159,
         "startChar": 41,
@@ -419,6 +683,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2f700ba5_b2b0f24b",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Noted. I removed this block for now. If we run into issues I\u0027ll come back to this. Does anyone else have thoughts?",
+      "parentUuid": "26f8a490_cdf1f011",
+      "range": {
+        "startLine": 1220,
+        "startChar": 8,
+        "endLine": 1220,
+        "endChar": 75
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b7bec9d3_35a61708",
         "filename": "src/libANGLE/renderer/metal/RenderBufferMtl.mm",
         "patchSetId": 15
@@ -430,6 +718,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "Aren\u0027t width, height, samples already `GLsizei`? Think these casting are remnant of old code.",
+      "range": {
+        "startLine": 47,
+        "startChar": 12,
+        "endLine": 49,
+        "endChar": 41
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "861d9aaa_68b26fac",
+        "filename": "src/libANGLE/renderer/metal/RenderBufferMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7bec9d3_35a61708",
       "range": {
         "startLine": 47,
         "startChar": 12,
@@ -486,6 +798,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff873aeb_c51f66f3",
+        "filename": "src/libANGLE/renderer/metal/VertexArrayMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8773016_f2858129",
+      "range": {
+        "startLine": 456,
+        "startChar": 20,
+        "endLine": 459,
+        "endChar": 61
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "afb95cab_93846ff3",
@@ -499,6 +835,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "should keep mtl::kVertexAttribBufferStrideAlignment",
+      "range": {
+        "startLine": 663,
+        "startChar": 39,
+        "endLine": 663,
+        "endChar": 40
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa1a275f_fadcc5c3",
+        "filename": "src/libANGLE/renderer/metal/VertexArrayMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "afb95cab_93846ff3",
       "range": {
         "startLine": 663,
         "startChar": 39,
@@ -532,6 +892,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "73f55e29_27e94296",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e8b7cf9_c21484c1",
+      "range": {
+        "startLine": 576,
+        "startChar": 4,
+        "endLine": 583,
+        "endChar": 57
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "79b68bcb_bd3682e1",
@@ -545,6 +929,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "I did implement this. Seems to be a mistake to delete the current implementations.",
+      "range": {
+        "startLine": 679,
+        "startChar": 4,
+        "endLine": 679,
+        "endChar": 36
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90e05edd_3562d419",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79b68bcb_bd3682e1",
       "range": {
         "startLine": 679,
         "startChar": 4,
@@ -578,6 +986,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a92842d_cb4168e7",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b00ba7c_1d8dca83",
+      "range": {
+        "startLine": 684,
+        "startChar": 4,
+        "endLine": 684,
+        "endChar": 36
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1870722a_858ac49f",
@@ -591,6 +1023,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "This function seems to be a remnant of old code. We never used uint32_t as native mipmap level anymore. `MipmapNativeLevel` should be used as above function does instead. This was to avoid mistakes in native mipmap level calculation from GL level (with non-zero base level).",
+      "range": {
+        "startLine": 2067,
+        "startChar": 0,
+        "endLine": 2074,
+        "endChar": 72
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c312abb4_925b3f29",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 2074,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1870722a_858ac49f",
       "range": {
         "startLine": 2067,
         "startChar": 0,
@@ -647,6 +1103,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "077b0528_e21bf2c2",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c07612ad_08115532",
+      "range": {
+        "startLine": 9,
+        "startChar": 3,
+        "endLine": 10,
+        "endChar": 32
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "60f472ba_25181092",
@@ -693,6 +1173,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8de6a579_c2df5148",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 2648,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b17f148_8eb8b2de",
+      "range": {
+        "startLine": 2606,
+        "startChar": 4,
+        "endLine": 2648,
+        "endChar": 57
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cfe49caf_02fc3ca1",
@@ -706,6 +1210,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "not needed. Previously it was needed because I used shared_from_this(), but not anymore.",
+      "range": {
+        "startLine": 332,
+        "startChar": 21,
+        "endLine": 332,
+        "endChar": 64
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64bb4a93_5f1a3330",
+        "filename": "src/libANGLE/renderer/metal/mtl_resources.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cfe49caf_02fc3ca1",
       "range": {
         "startLine": 332,
         "startChar": 21,
@@ -739,6 +1267,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1ac5689_6baa7bd1",
+        "filename": "src/libANGLE/renderer/metal/mtl_resources.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e23d35a0_b1480847",
+      "range": {
+        "startLine": 478,
+        "startChar": 4,
+        "endLine": 478,
+        "endChar": 50
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec6615f4_43e4350c",
@@ -752,6 +1304,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "seems to be remnant comment.",
+      "range": {
+        "startLine": 469,
+        "startChar": 4,
+        "endLine": 469,
+        "endChar": 65
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ad8ec67_a2196c39",
+        "filename": "src/libANGLE/renderer/metal/mtl_state_cache.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec6615f4_43e4350c",
       "range": {
         "startLine": 469,
         "startChar": 4,

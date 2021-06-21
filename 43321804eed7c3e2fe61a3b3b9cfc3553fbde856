@@ -16,6 +16,24 @@
       "message": "nit",
       "revId": "43321804eed7c3e2fe61a3b3b9cfc3553fbde856",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "391ccb1d_b9e3fe4d",
+        "filename": "src/libANGLE/renderer/metal/ShaderMtl.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba3c9b0f_dfad51d8",
+      "revId": "43321804eed7c3e2fe61a3b3b9cfc3553fbde856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

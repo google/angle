@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5159300_421fb54d",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "282f9931_c15b1a50",
+      "range": {
+        "startLine": 676,
+        "startChar": 5,
+        "endLine": 676,
+        "endChar": 34
+      },
+      "revId": "013613ea9bed29040fe6b6cdb215daa6d1715d10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "25a9e1d1_d3168eea",
@@ -47,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e62551b_fe4a8cde",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "25a9e1d1_d3168eea",
+      "range": {
+        "startLine": 331,
+        "startChar": 4,
+        "endLine": 332,
+        "endChar": 43
+      },
+      "revId": "013613ea9bed29040fe6b6cdb215daa6d1715d10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "08998b01_df44332d",
@@ -60,6 +108,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 0,
       "message": "This fallback mechanism should be kept. 3D mipmap generation currently uses 8x8x8 threads per group. Some hardwares might not support this.",
+      "range": {
+        "startLine": 2409,
+        "startChar": 4,
+        "endLine": 2429,
+        "endChar": 5
+      },
+      "revId": "013613ea9bed29040fe6b6cdb215daa6d1715d10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5daf1f4c_b2cf2c3d",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 2429,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "08998b01_df44332d",
       "range": {
         "startLine": 2409,
         "startChar": 4,

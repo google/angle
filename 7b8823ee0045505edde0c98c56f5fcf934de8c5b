@@ -16,6 +16,24 @@
       "message": "nit: copyright notices on files",
       "revId": "7b8823ee0045505edde0c98c56f5fcf934de8c5b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "408aced3_75768772",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_mtl_utils.mm",
+        "patchSetId": 14
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64c46b39_25c17c1b",
+      "revId": "7b8823ee0045505edde0c98c56f5fcf934de8c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
