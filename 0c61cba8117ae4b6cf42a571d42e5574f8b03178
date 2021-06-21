@@ -123,6 +123,47 @@
       "message": "Trevor: can you add a small test that showcases the UB and what you\u0027re fixing? Would be helpful to evaluate if the fix is correct.",
       "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91768244_20e0e6dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T20:04:54Z",
+      "side": 1,
+      "message": "We use an extension to implement WebGL state tracking and validation. Look in the test suites - you\u0027ll see WebGLCompatiblityTest, WebGL2ValidationStateChangeTest, etc. All the tests that you\u0027re moving from defined -\u003e UB need to stay defined in WebGL. So we should move these negative tests to WebGL-specific checks. The ValidationStateChangeTest you can move to one I mentioned above. The UniformBufferTest ones you can either move to WebGLCompatibilityTest.cpp or you can make a new WebGL2-only version of UniformBufferTest.",
+      "parentUuid": "0e07b706_b375defd",
+      "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e92134b5_c59e26de",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T20:04:54Z",
+      "side": 1,
+      "message": "nit: you can put a single check for buffer access validation around these two checks.",
+      "range": {
+        "startLine": 577,
+        "startChar": 0,
+        "endLine": 589,
+        "endChar": 9
+      },
+      "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
