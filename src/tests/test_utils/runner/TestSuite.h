@@ -193,6 +193,8 @@ class TestSuite
     int mBatchTimeout;
     int mBatchId;
     int mFlakyRetries;
+    int mMaxFailures;
+    int mFailureCount;
     std::vector<std::string> mChildProcessArgs;
     std::map<TestIdentifier, FileLine> mTestFileLines;
     std::vector<ProcessInfo> mCurrentProcesses;

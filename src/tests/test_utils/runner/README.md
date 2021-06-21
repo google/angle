@@ -27,6 +27,7 @@ following additional command-line arguments:
  * `--flaky-retries` allows for tests to fail a fixed number of times and still pass
  * `--disable-crash-handler` forces off OS-level crash handling
  * `--isolated-outdir` specifies a test artifacts directory
+ * `--max-failures` specifies a count of failures after which the harness early exits.
 
 `--isolated-script-test-output` and `--isolated-script-perf-test-output` mirror `--results-file`
 and `--histogram-json-file` respectively.
