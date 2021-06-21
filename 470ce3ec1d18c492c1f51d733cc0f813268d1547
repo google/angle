@@ -511,6 +511,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a76c325a_9471d47c",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 778,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Ack, we can still expose it for now.",
+      "parentUuid": "eb9f56c2_1c98bdce",
+      "range": {
+        "startLine": 773,
+        "startChar": 4,
+        "endLine": 778,
+        "endChar": 5
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fefaa893_4bdcc38d",
@@ -524,6 +548,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "these sampler\u0027s compare mode \u0026 gradient limitations are for spirv-cross work-arounds which are not feasible on upstream ANGLE since we cannot modify spirv-cross.",
+      "range": {
+        "startLine": 909,
+        "startChar": 4,
+        "endLine": 913,
+        "endChar": 97
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fcbc847_121604a5",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 913,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "I removed the first workaround but left the other two. Will revisit.",
+      "parentUuid": "fefaa893_4bdcc38d",
       "range": {
         "startLine": 909,
         "startChar": 4,
@@ -551,6 +599,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c469989_fb22a709",
+        "filename": "src/libANGLE/renderer/metal/FrameBufferMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfb10829_4dfad55f",
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "03a373b1_6719563b",
@@ -568,6 +634,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbb0193f_c960c7e8",
+        "filename": "src/libANGLE/renderer/metal/FrameBufferMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03a373b1_6719563b",
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "95e35862_c7e7aa53",
@@ -581,6 +665,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "shadow compare mode work-arounds are not possible due to spriv-cross\u0027s overrides are not maintainable on upstream.",
+      "range": {
+        "startLine": 278,
+        "startChar": 13,
+        "endLine": 278,
+        "endChar": 32
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a26dfac2_3fd34a30",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95e35862_c7e7aa53",
       "range": {
         "startLine": 278,
         "startChar": 13,
@@ -614,6 +722,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "85a6bfc6_b25d68e7",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 1321,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Removed this",
+      "parentUuid": "f5185d8f_784e6fec",
+      "range": {
+        "startLine": 1321,
+        "startChar": 20,
+        "endLine": 1321,
+        "endChar": 39
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "76ec16d1_866e7b01",
@@ -627,6 +759,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "as above, unsupported shadow compare modes\u0027 work-arounds are not possible due to spriv-cross\u0027s overrides are not maintainable on upstream.",
+      "range": {
+        "startLine": 1330,
+        "startChar": 8,
+        "endLine": 1334,
+        "endChar": 9
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4714dbd0_56b1134c",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76ec16d1_866e7b01",
       "range": {
         "startLine": 1330,
         "startChar": 8,
@@ -697,6 +853,30 @@
       "writtenOn": "2021-06-11T20:06:05Z",
       "side": 1,
       "message": "Bad name",
+      "range": {
+        "startLine": 27,
+        "startChar": 8,
+        "endLine": 27,
+        "endChar": 24
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce671351_0a4aef1f",
+        "filename": "src/libANGLE/renderer/metal/SurfaceMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "600f7bb4_a33e62b4",
       "range": {
         "startLine": 27,
         "startChar": 8,
@@ -824,6 +1004,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbe559d5_e89aa5bc",
+        "filename": "src/libANGLE/renderer/metal/VertexArrayMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a97db18b_feee5781",
+      "range": {
+        "startLine": 72,
+        "startChar": 9,
+        "endLine": 72,
+        "endChar": 32
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c832597c_8d93930b",
@@ -837,6 +1041,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "this code is out of date. It didn\u0027t take into account the matrix attributes which occupy multiple slots.",
+      "range": {
+        "startLine": 403,
+        "startChar": 16,
+        "endLine": 427,
+        "endChar": 17
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25ca786b_79e96698",
+        "filename": "src/libANGLE/renderer/metal/VertexArrayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c832597c_8d93930b",
       "range": {
         "startLine": 403,
         "startChar": 16,
@@ -870,6 +1098,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c467df5f_505ed782",
+        "filename": "src/libANGLE/renderer/metal/VertexArrayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a852e4c_5259b79d",
+      "range": {
+        "startLine": 455,
+        "startChar": 23,
+        "endLine": 455,
+        "endChar": 49
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5ce372e_320204fa",
@@ -883,6 +1135,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "think this was renamed to hasCheapRenderPass",
+      "range": {
+        "startLine": 776,
+        "startChar": 50,
+        "endLine": 776,
+        "endChar": 72
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c15270cc_1b63f909",
+        "filename": "src/libANGLE/renderer/metal/VertexArrayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5ce372e_320204fa",
       "range": {
         "startLine": 776,
         "startChar": 50,
@@ -1304,6 +1580,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "803ba485_59933c2a",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "785362f7_44b74b05",
+      "range": {
+        "startLine": 432,
+        "startChar": 4,
+        "endLine": 439,
+        "endChar": 70
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f48f4e73_ec65c88e",
@@ -1317,6 +1617,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "this depth sampler\u0027s compare mode work-around is not possible on upstream ANGLE because it requires spirv-cross\u0027s protected methods override to insert custom code.\nspirv-cross\u0027s protected methods keep changing their signatures after each new version roll thus rendering this work-around unmaintainable.",
+      "range": {
+        "startLine": 259,
+        "startChar": 4,
+        "endLine": 269,
+        "endChar": 5
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96511b27_e0ead4a5",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f48f4e73_ec65c88e",
       "range": {
         "startLine": 259,
         "startChar": 4,
@@ -1387,6 +1711,30 @@
       "writtenOn": "2021-05-05T18:13:17Z",
       "side": 1,
       "message": "this depth sampler\u0027s compare mode work-around is not possible on upstream ANGLE because it requires spirv-cross\u0027s protected methods override to insert custom code.\nspirv-cross\u0027s protected methods keep changing their signatures after each new version roll thus rendering this work-around unmaintainable.",
+      "range": {
+        "startLine": 376,
+        "startChar": 4,
+        "endLine": 377,
+        "endChar": 31
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3860eecc_925d9511",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-21T19:25:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c86756d_643766dc",
       "range": {
         "startLine": 376,
         "startChar": 4,
