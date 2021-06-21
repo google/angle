@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28e12000_4d61a8b3",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T16:56:41Z",
+      "side": 0,
+      "message": "can we remove this class now? Where are the remaining usages?",
+      "range": {
+        "startLine": 448,
+        "startChar": 0,
+        "endLine": 458,
+        "endChar": 2
+      },
+      "revId": "24155b13671f09fe66ab8ebc5944b1c19a34549c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

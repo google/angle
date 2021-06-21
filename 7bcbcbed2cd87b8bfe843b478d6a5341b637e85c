@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "30f9f203_8cfa8058",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T16:56:41Z",
+      "side": 1,
+      "message": "when does this happen? (same question as elsewhere)",
+      "range": {
+        "startLine": 16,
+        "startChar": 1,
+        "endLine": 17,
+        "endChar": 67
+      },
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ecafe2c8_12e958c0",
@@ -14,6 +37,23 @@
       "writtenOn": "2021-06-18T23:21:03Z",
       "side": 1,
       "message": "PTAL - Jamie, Tim",
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c02147a_e74d9244",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T16:56:41Z",
+      "side": 1,
+      "message": "Looks much better now that we\u0027re not using HasAttachedShaders - still have a few questions.",
       "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -36,6 +76,29 @@
         "startChar": 38,
         "endLine": 903,
         "endChar": 39
+      },
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2339c9f1_96a3e871",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T16:56:41Z",
+      "side": 1,
+      "message": "what\u0027s a pending link operation again? can\u0027t we resolve any linking operations before committing a program to be serialized?",
+      "range": {
+        "startLine": 918,
+        "startChar": 24,
+        "endLine": 918,
+        "endChar": 43
       },
       "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
