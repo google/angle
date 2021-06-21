@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9d11c70_f6a0fbcc",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T19:55:40Z",
+      "side": 1,
+      "message": "what\u0027s the need for this? can you make this a differently named function?",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 44
+      },
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74d2e5de_c871c6b6",
+        "filename": "src/libANGLE/renderer/driver_utils_ios.mm",
+        "patchSetId": 17
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T19:55:40Z",
+      "side": 1,
+      "message": "nit: dates",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec235aa5_5cbdc113",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 17
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T19:55:40Z",
+      "side": 1,
+      "message": "nit: no need for this, just use the gn.",
+      "range": {
+        "startLine": 519,
+        "startChar": 0,
+        "endLine": 520,
+        "endChar": 70
+      },
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a55bad37_21f8013c",
+        "filename": "util/ios/IOSPixmap.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T19:55:40Z",
+      "side": 1,
+      "message": "nit: dates",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "c937228c6a7bb00021b936fc5896c746a1b648ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
