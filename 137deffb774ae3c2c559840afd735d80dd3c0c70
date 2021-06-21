@@ -16,6 +16,29 @@
       "message": "LGTM - what do we need to do to use this in ANGLE libGLESv2 without the test harness? It would be useful for applications like GfxBench that don\u0027t use an ANGLE test front-end.",
       "revId": "137deffb774ae3c2c559840afd735d80dd3c0c70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8542a26_a97307e6",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T12:47:23Z",
+      "side": 1,
+      "message": "use {angle_root} as a base here, this is going to screw up in chrome.",
+      "range": {
+        "startLine": 107,
+        "startChar": 9,
+        "endLine": 107,
+        "endChar": 20
+      },
+      "revId": "137deffb774ae3c2c559840afd735d80dd3c0c70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
