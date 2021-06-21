@@ -52,6 +52,24 @@
       "parentUuid": "680267a4_d0ea9abc",
       "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f61c8a63_0c8482ac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-21T15:14:57Z",
+      "side": 1,
+      "message": "Ok. I have a feeling there must be something already here for this purpose. Take a look at PackPixels in renderer_utils.cpp. There\u0027s this bit towards the end:\n\n            pixelReadFunction(src, temp);\n            pixelWriteFunction(temp, dest);\n\nIt looks like that reads from any src format to RGBA and writes to any dst format. Could those functions be the answer here? You might just be able to call PackPixels directly even!",
+      "parentUuid": "efae28eb_1652f2a8",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
