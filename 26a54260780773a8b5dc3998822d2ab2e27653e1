@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a353f11_654f942b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-21T12:38:04Z",
+      "side": 1,
+      "message": "Mohan: we no longer test on Pixel 2, so the skips have no effect.",
+      "revId": "26a54260780773a8b5dc3998822d2ab2e27653e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
