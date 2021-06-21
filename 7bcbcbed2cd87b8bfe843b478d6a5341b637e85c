@@ -60,6 +60,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cff7d5f2_5cf2e66c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1607,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-21T18:36:58Z",
+      "side": 1,
+      "message": "ref1",
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b422b7d6_67ad8f42",
         "filename": "src/libANGLE/ProgramExecutable.cpp",
         "patchSetId": 2
@@ -83,6 +100,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d80eab08_40f3fd00",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-21T18:36:58Z",
+      "side": 1,
+      "message": "Why getActiveAttributes() here, rather than getAllAttributes()?   Looking at linkAttributes() which is called before this (ref1), it seems we normally need to differentiate between getActiveAttributes() and getAllAttributes():\n\n    bool Program::linkAttributes(const Context *context, InfoLog \u0026infoLog)\n    {\n    ...\n        shaderVersion \u003d vertexShader-\u003egetShaderVersion();\n        if (shaderVersion \u003e\u003d 300)\n        {\n            // In GLSL ES 3.00.6, aliasing checks should be done with all declared attributes -\n            // see GLSL ES 3.00.6 section 12.46. Inactive attributes will be pruned after\n            // aliasing checks.\n            mState.mExecutable-\u003emProgramInputs \u003d vertexShader-\u003egetAllAttributes();\n        }\n        else\n        {\n            // In GLSL ES 1.00.17 we only do aliasing checks for active attributes.\n            mState.mExecutable-\u003emProgramInputs \u003d vertexShader-\u003egetActiveAttributes();\n        }\n        \nHowever, it also seems we already have this information saved in the ProgramExecutable to begin with, so why do we need it again here (since only VS have attributes)?",
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2339c9f1_96a3e871",
         "filename": "src/libANGLE/ProgramExecutable.cpp",
         "patchSetId": 2
@@ -99,6 +133,29 @@
         "startChar": 24,
         "endLine": 918,
         "endChar": 43
+      },
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9e8fdef_cc43a9e6",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-21T18:36:58Z",
+      "side": 1,
+      "message": "nit: Have the function names match the member names: getPendingLinkUniforms()",
+      "range": {
+        "startLine": 336,
+        "startChar": 43,
+        "endLine": 336,
+        "endChar": 68
       },
       "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
