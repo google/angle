@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "e9c71c41db7f79cd38b47d046c1e575fa2cb5fbf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4637331d_0950d27e",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1741,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-22T15:42:40Z",
+      "side": 1,
+      "message": "Does this output any error message so we know what happened?",
+      "revId": "e9c71c41db7f79cd38b47d046c1e575fa2cb5fbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
