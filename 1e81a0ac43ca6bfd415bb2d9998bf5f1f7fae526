@@ -87,6 +87,24 @@
       "message": "Thanks for fixing this, I appreciate it.",
       "revId": "1e81a0ac43ca6bfd415bb2d9998bf5f1f7fae526",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc582421_e6778d2f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-22T16:00:52Z",
+      "side": 1,
+      "message": "\u003e Do you have access to a Linux build?\n\nNo, but I was able to enable UBSAN on a Mac/AArch64 with the following steps:\n\n- is_ubsan \u003d true\n- angle_has_histograms \u003d false (otherwise it won\u0027t build)\n\n\nBefore running, the sanitizer library has to be re-signed:\n\n % codesign --force --sign - third_party/llvm-build/Release+Asserts/lib/clang/13.0.0/lib/darwin/libclang_rt.ubsan_osx_dynamic.dylib\n\n\nI\u0027ll upload a new PS with the test soon.",
+      "parentUuid": "b09192c9_4424d0c7",
+      "revId": "1e81a0ac43ca6bfd415bb2d9998bf5f1f7fae526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
