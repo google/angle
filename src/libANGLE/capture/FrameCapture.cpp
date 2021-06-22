@@ -3710,13 +3710,25 @@ void FrameCapture::copyCompressedTextureData(const gl::Context *context, const C
     // cached texture entry for use during mid-execution capture, rather than reading it back with
     // ANGLE_get_image.
 
-    GLuint srcName = call.params.getParam("srcName", ParamType::TGLuint, 0).value.GLuintVal;
+    GLenum srcTarget = call.params.getParam("srcTarget", ParamType::TGLenum, 1).value.GLenumVal;
+    GLenum dstTarget = call.params.getParam("dstTarget", ParamType::TGLenum, 7).value.GLenumVal;
+
+    // TODO(anglebug.com/6104): Type of incoming ID varies based on target type, but we're only
+    // handling textures for now. If either of these asserts fire, then we need to add renderbuffer
+    // support.
+    ASSERT(srcTarget == GL_TEXTURE_2D || srcTarget == GL_TEXTURE_2D_ARRAY ||
+           srcTarget == GL_TEXTURE_3D || srcTarget == GL_TEXTURE_CUBE_MAP);
+    ASSERT(dstTarget == GL_TEXTURE_2D || dstTarget == GL_TEXTURE_2D_ARRAY ||
+           dstTarget == GL_TEXTURE_3D || dstTarget == GL_TEXTURE_CUBE_MAP);
+
+    gl::TextureID srcName =
+        call.params.getParam("srcName", ParamType::TTextureID, 0).value.TextureIDVal;
     GLint srcLevel = call.params.getParam("srcLevel", ParamType::TGLint, 2).value.GLintVal;
-    GLuint dstName = call.params.getParam("dstName", ParamType::TGLuint, 6).value.GLuintVal;
+    gl::TextureID dstName =
+        call.params.getParam("dstName", ParamType::TTextureID, 6).value.TextureIDVal;
     GLint dstLevel = call.params.getParam("dstLevel", ParamType::TGLint, 8).value.GLintVal;
 
     // Look up the texture type
-    GLenum dstTarget = call.params.getParam("dstTarget", ParamType::TGLenum, 7).value.GLenumVal;
     gl::TextureTarget dstTargetPacked = gl::PackParam<gl::TextureTarget>(dstTarget);
     gl::TextureType dstTextureType    = gl::TextureTargetToType(dstTargetPacked);
 
@@ -3729,7 +3741,7 @@ void FrameCapture::copyCompressedTextureData(const gl::Context *context, const C
     if (dstFormat.compressed)
     {
         context->getShareGroup()->getFrameCaptureShared()->copyCachedTextureLevel(
-            context, {srcName}, srcLevel, {dstName}, dstLevel, call);
+            context, srcName, srcLevel, dstName, dstLevel, call);
     }
 }
 
@@ -3948,6 +3960,69 @@ void FrameCapture::trackBufferMapping(CallCapture *call,
     }
 }
 
+void FrameCapture::updateCopyImageSubData(CallCapture &call)
+{
+    // This call modifies srcName and dstName to no longer be object IDs (GLuint), but actual
+    // packed types that can remapped using gTextureMap and gRenderbufferMap
+
+    GLint srcName    = call.params.getParam("srcName", ParamType::TGLuint, 0).value.GLuintVal;
+    GLenum srcTarget = call.params.getParam("srcTarget", ParamType::TGLenum, 1).value.GLenumVal;
+    switch (srcTarget)
+    {
+        case GL_RENDERBUFFER:
+        {
+            // Convert the GLuint to RenderbufferID
+            gl::RenderbufferID srcRenderbufferID = {static_cast<GLuint>(srcName)};
+            call.params.setValueParamAtIndex("srcName", ParamType::TRenderbufferID,
+                                             srcRenderbufferID, 0);
+            break;
+        }
+        case GL_TEXTURE_2D:
+        case GL_TEXTURE_2D_ARRAY:
+        case GL_TEXTURE_3D:
+        case GL_TEXTURE_CUBE_MAP:
+        {
+            // Convert the GLuint to TextureID
+            gl::TextureID srcTextureID = {static_cast<GLuint>(srcName)};
+            call.params.setValueParamAtIndex("srcName", ParamType::TTextureID, srcTextureID, 0);
+            break;
+        }
+        default:
+            ERR() << "Unhandled srcTarget = " << srcTarget;
+            UNREACHABLE();
+            break;
+    }
+
+    // Change dstName to the appropriate type based on dstTarget
+    GLint dstName    = call.params.getParam("dstName", ParamType::TGLuint, 6).value.GLuintVal;
+    GLenum dstTarget = call.params.getParam("dstTarget", ParamType::TGLenum, 7).value.GLenumVal;
+    switch (dstTarget)
+    {
+        case GL_RENDERBUFFER:
+        {
+            // Convert the GLuint to RenderbufferID
+            gl::RenderbufferID dstRenderbufferID = {static_cast<GLuint>(dstName)};
+            call.params.setValueParamAtIndex("dstName", ParamType::TRenderbufferID,
+                                             dstRenderbufferID, 6);
+            break;
+        }
+        case GL_TEXTURE_2D:
+        case GL_TEXTURE_2D_ARRAY:
+        case GL_TEXTURE_3D:
+        case GL_TEXTURE_CUBE_MAP:
+        {
+            // Convert the GLuint to TextureID
+            gl::TextureID dstTextureID = {static_cast<GLuint>(dstName)};
+            call.params.setValueParamAtIndex("dstName", ParamType::TTextureID, dstTextureID, 6);
+            break;
+        }
+        default:
+            ERR() << "Unhandled dstTarget = " << dstTarget;
+            UNREACHABLE();
+            break;
+    }
+}
+
 void FrameCapture::maybeOverrideEntryPoint(const gl::Context *context, CallCapture &call)
 {
     switch (call.entryPoint)
@@ -3964,6 +4039,14 @@ void FrameCapture::maybeOverrideEntryPoint(const gl::Context *context, CallCaptu
         case EntryPoint::GLEGLImageTargetRenderbufferStorageOES:
         {
             UNIMPLEMENTED();
+            break;
+        }
+        case EntryPoint::GLCopyImageSubData:
+        case EntryPoint::GLCopyImageSubDataEXT:
+        case EntryPoint::GLCopyImageSubDataOES:
+        {
+            // We must look at the src and dst target types to determine which remap table to use
+            updateCopyImageSubData(call);
             break;
         }
         default:

@@ -55,6 +55,8 @@ class ParamBuffer final : angle::NonCopyable
     template <typename T>
     void addValueParam(const char *paramName, ParamType paramType, T paramValue);
     template <typename T>
+    void setValueParamAtIndex(const char *paramName, ParamType paramType, T paramValue, int index);
+    template <typename T>
     void addEnumParam(const char *paramName,
                       gl::GLenumGroup enumGroup,
                       ParamType paramType,
@@ -390,6 +392,7 @@ class FrameCapture final : angle::NonCopyable
     void maybeCaptureDrawElementsClientData(const gl::Context *context,
                                             CallCapture &call,
                                             size_t instanceCount);
+    void updateCopyImageSubData(CallCapture &call);
 
     static void ReplayCall(gl::Context *context,
                            ReplayContext *replayContext,
@@ -501,6 +504,19 @@ void ParamBuffer::addValueParam(const char *paramName, ParamType paramType, T pa
     ParamCapture capture(paramName, paramType);
     InitParamValue(paramType, paramValue, &capture.value);
     mParamCaptures.emplace_back(std::move(capture));
+}
+
+template <typename T>
+void ParamBuffer::setValueParamAtIndex(const char *paramName,
+                                       ParamType paramType,
+                                       T paramValue,
+                                       int index)
+{
+    ASSERT(mParamCaptures.size() > static_cast<size_t>(index));
+
+    ParamCapture capture(paramName, paramType);
+    InitParamValue(paramType, paramValue, &capture.value);
+    mParamCaptures[index] = std::move(capture);
 }
 
 template <typename T>
