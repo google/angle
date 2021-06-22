@@ -39,6 +39,30 @@
       },
       "revId": "ef355ece4c7f81d346db5ac9031eb7a9f442fee0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c56b4b0_cc5a2c04",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-22T15:06:19Z",
+      "side": 1,
+      "message": "For textures there is https://chromium-review.googlesource.com/c/angle/angle/+/2944954/10 \nfor buffers I\u0027d like to see whether there are tests to be fixed.",
+      "parentUuid": "f69c3d3c_56c409cd",
+      "range": {
+        "startLine": 402,
+        "startChar": 0,
+        "endLine": 412,
+        "endChar": 9
+      },
+      "revId": "ef355ece4c7f81d346db5ac9031eb7a9f442fee0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
