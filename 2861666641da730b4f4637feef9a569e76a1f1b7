@@ -74,6 +74,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "a71dc496_32a815ba",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-06-22T09:54:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46bdb2a1_9f5921a5",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 2
+      },
+      "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "26f009ea_bc65c1a7",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -209,6 +233,24 @@
       "writtenOn": "2021-04-06T13:38:53Z",
       "side": 1,
       "message": "LGTM - would prefer if you enable image_format_list on Mali in this CL instead.",
+      "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08633300_5c24f92b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-06-22T09:54:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e84923b3_fc8b584b",
       "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
