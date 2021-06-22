@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d24a67b_772f80d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T02:51:25Z",
+      "side": 1,
+      "message": "We would need some way to deliminate frames. Either an extension (like we talked about for the sake of chromium and webgl) or automatically do it on present ... which is what RenderDoc already does. With gfxbench I never had an issue, because it presents to the screen so the RenderDoc UI works just fine. Could be useful with its offscreen mode though maybe, but then again we can\u0027t ask it to use an ANGLE extension to deliminate its frames.",
+      "parentUuid": "a56b4c76_4be2b20e",
+      "revId": "137deffb774ae3c2c559840afd735d80dd3c0c70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f8542a26_a97307e6",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-06-21T12:47:23Z",
       "side": 1,
       "message": "use {angle_root} as a base here, this is going to screw up in chrome.",
+      "range": {
+        "startLine": 107,
+        "startChar": 9,
+        "endLine": 107,
+        "endChar": 20
+      },
+      "revId": "137deffb774ae3c2c559840afd735d80dd3c0c70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c0cd643_7795e175",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T02:51:25Z",
+      "side": 1,
+      "message": "Yes it did! Done.",
+      "parentUuid": "f8542a26_a97307e6",
       "range": {
         "startLine": 107,
         "startChar": 9,
