@@ -69,6 +69,24 @@
       "message": "Thanks for detail. Working",
       "revId": "85ca0039b08ca2676ae9cfab8dc618f3e82d35fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1337c7bd_44874371",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T03:35:18Z",
+      "side": 1,
+      "message": "\u003e If that doesn\u0027t help, you could try logging the pNext chain of createInfo.pRasterizationState (i.e. after it\u0027s all set) (by printing the sTypes) and we can see if ANGLE is truly correct.\n\nIf you have this log, it would be useful!",
+      "parentUuid": "9f1ae676_08c308cb",
+      "revId": "85ca0039b08ca2676ae9cfab8dc618f3e82d35fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
