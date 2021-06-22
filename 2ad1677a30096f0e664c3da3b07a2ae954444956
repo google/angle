@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e552f27d_43ba1dbe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-06-22T20:36:21Z",
+      "side": 1,
+      "message": "Thanks for the quick implementation. Looks good to me with Jamie\u0027s comment addressed.",
+      "revId": "2ad1677a30096f0e664c3da3b07a2ae954444956",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4f3a99a9_9515f9b1",
