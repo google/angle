@@ -252,6 +252,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8c546d8_b9fbf61c",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T15:36:37Z",
+      "side": 1,
+      "message": "OCD",
+      "parentUuid": "98d1b082_664da1d0",
+      "range": {
+        "startLine": 443,
+        "startChar": 29,
+        "endLine": 443,
+        "endChar": 32
+      },
+      "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3d9851fa_617a7069",
@@ -289,6 +313,30 @@
       "side": 1,
       "message": "Ack, left it as is to avoid using a 4k stack. Don\u0027t want to use a static (code size) or allocation (because we shouldn\u0027t really be calling new in the crash handler). Changed to a constant. Is that OK?",
       "parentUuid": "3d9851fa_617a7069",
+      "range": {
+        "startLine": 565,
+        "startChar": 21,
+        "endLine": 565,
+        "endChar": 25
+      },
+      "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a65f43e_723b13fb",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T15:36:37Z",
+      "side": 1,
+      "message": "Ack. It\u0027s fine, we can always fix it if necessary.\n\nFYI, uninitialized static arrays don\u0027t contribute to binary size.",
+      "parentUuid": "39e4574a_047da15f",
       "range": {
         "startLine": 565,
         "startChar": 21,
