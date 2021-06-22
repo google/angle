@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f153ea6_47ca9727",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T12:49:53Z",
+      "side": 1,
+      "message": "Thanks, could you please add a regression angle_end2end_test that can trigger this error on sanitizers, so we can catch this without relying on clusterfuzz?",
+      "revId": "1e81a0ac43ca6bfd415bb2d9998bf5f1f7fae526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
