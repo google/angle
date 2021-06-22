@@ -964,8 +964,8 @@ bool ValidateES2TexImageParametersBase(const Context *context,
         return false;
     }
 
-    if (xoffset < 0 || std::numeric_limits<GLsizei>::max() - xoffset < width ||
-        std::numeric_limits<GLsizei>::max() - yoffset < height)
+    if ((xoffset < 0 || std::numeric_limits<GLsizei>::max() - xoffset < width) ||
+        (yoffset < 0 || std::numeric_limits<GLsizei>::max() - yoffset < height))
     {
         context->validationError(GL_INVALID_VALUE, kResourceMaxTextureSize);
         return false;
