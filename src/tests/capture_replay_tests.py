@@ -286,6 +286,9 @@ class ChildProcessesManager():
                 j_value = min(j_value, 500)
 
             cmd.append('%d' % j_value)
+        else:
+            cmd.append('-l')
+            cmd.append('%d' % os.cpu_count())
 
         cmd += ['-C', build_dir, target]
         return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
