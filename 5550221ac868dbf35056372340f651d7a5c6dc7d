@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "420ce735_1a81395b",
+        "filename": "src/tests/test_utils/RenderDoc.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T04:18:35Z",
+      "side": 1,
+      "message": "I settled for silence if `--renderdoc` is specified outside RenderDoc. We can tune this if we ever hit a case where RenderDoc is attached but this flag somehow doesn\u0027t work!",
+      "parentUuid": "49390c42_74d79bc9",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 14
+      },
+      "revId": "5550221ac868dbf35056372340f651d7a5c6dc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eff4ad5d_4d7f6cbb",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70e7a112_039141e7",
+        "filename": "src/tests/test_utils/RenderDoc.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T04:18:35Z",
+      "side": 1,
+      "message": "Done. This is untested on Android at the moment, I recall having trouble passing multiple arguments (i.e. --gtest_filter and --renderdoc).",
+      "parentUuid": "eff4ad5d_4d7f6cbb",
+      "range": {
+        "startLine": 46,
+        "startChar": 8,
+        "endLine": 46,
+        "endChar": 14
+      },
+      "revId": "5550221ac868dbf35056372340f651d7a5c6dc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d8bc785f_d10842aa",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-06-22T03:04:19Z",
       "side": 1,
       "message": "Is there a reason you chose 1.1?  1.4 is the most recent relesae:\nhttps://raw.githubusercontent.com/baldurk/renderdoc/v1.4/renderdoc/api/app/renderdoc_app.h",
+      "range": {
+        "startLine": 2,
+        "startChar": 5,
+        "endLine": 2,
+        "endChar": 95
+      },
+      "revId": "5550221ac868dbf35056372340f651d7a5c6dc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b9f4140_69e88da7",
+        "filename": "third_party/renderdoc/README.chromium",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T04:18:35Z",
+      "side": 1,
+      "message": "With an old API version, this will support a wide range of RenderDoc versions. With 1.4 we would be forcing users to have a new version of RenderDoc installed.\n\nThe _real_ reason is that I copied this out of dEQP. Anyway, we don\u0027t need anything from the newer versions of the API (and newer RenderDoc always understands the older versions).",
+      "parentUuid": "d8bc785f_d10842aa",
       "range": {
         "startLine": 2,
         "startChar": 5,
