@@ -105,6 +105,24 @@
       "parentUuid": "1337c7bd_44874371",
       "revId": "85ca0039b08ca2676ae9cfab8dc618f3e82d35fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19847018_461eb84d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T19:16:30Z",
+      "side": 1,
+      "message": "Really odd. The fact that it didn\u0027t trigger before makes me think that it must be some ANGLE bug, potentially a memory corruption.\n\n\u003e However, between patch 11 and 12 is when this issue manifested. Unfortunately its when I changed everything from \"isProtected\" to \"hasProtectedContent\" so a lot of places were touched. I identified about 20 lines across 7 files that had added code. I can revisit that.\n\nOne idea would be too create a separate CL (for experimenting) based on PS11, and see if the bot is still green. Maybe it\u0027s a bug in VVL that was introduced around the same time and it has nothing to do with the PS11 to PS12 transition. If the run is green on PS11 again, then there\u0027s definitely some bug in PS12!",
+      "parentUuid": "3776da54_30796569",
+      "revId": "85ca0039b08ca2676ae9cfab8dc618f3e82d35fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
