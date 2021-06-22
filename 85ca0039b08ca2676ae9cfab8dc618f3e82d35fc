@@ -123,6 +123,24 @@
       "parentUuid": "3776da54_30796569",
       "revId": "85ca0039b08ca2676ae9cfab8dc618f3e82d35fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "637f7d51_ff3d714f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-22T21:19:09Z",
+      "side": 1,
+      "message": "3 changes in patchset 12 -\n1. ContextVk.cpp getTimeStamp(), submitOneOff.  was using false, changed to hasProtectedContent. Even though the getTimeStamp doesn\u0027t need a protected submit, the context make be protected, and there may be other commands in batch? so protected submit matches context.\n2. SurfaceVk.cpp initImageHelper, change false to hasProtectedContent + flag. and createSwapchain, initMSAASwapchain also changing to use hasProtectedContent.\n3.TextureVk.cpp, TextureVk::initImage add flag and mState.hasProtectedContent to initialization.\n\nAll these seem valid. Does seem more like a coincidental change with other changes.\n\nI could pull patchset 11, and run it to see if it passes or fails this test set, and better determine if its the patch or the tests.",
+      "parentUuid": "19847018_461eb84d",
+      "revId": "85ca0039b08ca2676ae9cfab8dc618f3e82d35fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
