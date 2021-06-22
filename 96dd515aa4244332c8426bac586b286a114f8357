@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "209b1fcd_eb31f086",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-22T19:06:43Z",
+      "side": 1,
+      "message": "\"EGL_KHR_gl_colorspace\" extension allows for the creation of sRGB pbuffer surfaces.\n\nIf you look at the test -\n PbufferTest.ClearAndBindTexImageSrgbSkipDecode\n\nwe create a pbuffer surface with sRGB format, bind it to a texture and override the texture\u0027s \"GL_TEXTURE_SRGB_DECODE_EXT\" state to \"GL_SKIP_DECODE_EXT\". This functionality is achieved with no-respecification of the texture because \"VK_KHR_image_format_list\" is available (without relying on the less desirable emulation path).\n \nFor vendors that support \"VK_KHR_image_format_list\", we now have \"EGL_KHR_gl_colorspace\" implicitly rely on \"VK_KHR_image_format_list\" instead of having it be explicit.\n\nIf ARM supported \"VK_KHR_image_format_list\" extension, was there another reason to remove this explicit dependency?",
+      "range": {
+        "startLine": 10,
+        "startChar": 11,
+        "endLine": 10,
+        "endChar": 56
+      },
+      "revId": "96dd515aa4244332c8426bac586b286a114f8357",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "21327311_b40ee721",
