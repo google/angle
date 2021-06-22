@@ -16,6 +16,23 @@
       "message": "Was waiting to do this before I put the rest of the changes for review.",
       "revId": "f0ea47260939bda1b7345d892dc0795c44ec2fd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45511163_40399b78",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1860,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-22T17:31:50Z",
+      "side": 1,
+      "message": "remove",
+      "revId": "f0ea47260939bda1b7345d892dc0795c44ec2fd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
