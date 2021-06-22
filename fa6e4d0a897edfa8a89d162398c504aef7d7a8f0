@@ -3,6 +3,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c3c8641a_94ed9d02",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T19:25:43Z",
+      "side": 1,
+      "message": "lgtm if it passes bots!",
+      "revId": "fa6e4d0a897edfa8a89d162398c504aef7d7a8f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "3ccac945_fcbf9228",
         "filename": "util/test_utils.h",
         "patchSetId": 4
