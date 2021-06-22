@@ -16,6 +16,24 @@
       "message": "Thanks, could you please add a regression angle_end2end_test that can trigger this error on sanitizers, so we can catch this without relying on clusterfuzz?",
       "revId": "1e81a0ac43ca6bfd415bb2d9998bf5f1f7fae526",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e79d9dd2_01cb229b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-06-22T14:04:31Z",
+      "side": 1,
+      "message": "I made a regression test case but I don\u0027t know how to trigger a sanitizer error in a local build to check it.",
+      "parentUuid": "7f153ea6_47ca9727",
+      "revId": "1e81a0ac43ca6bfd415bb2d9998bf5f1f7fae526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
