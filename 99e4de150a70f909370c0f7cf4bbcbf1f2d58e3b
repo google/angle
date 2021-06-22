@@ -16,6 +16,29 @@
       "message": "LGTM, I thought Ninja already did this?",
       "revId": "99e4de150a70f909370c0f7cf4bbcbf1f2d58e3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e528a5e8_87a2a896",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T12:56:44Z",
+      "side": 1,
+      "message": "This is what autoninja.py does here:\n\nnum_cores \u003d multiprocessing.cpu_count()\n\n  else:\n    j_value \u003d num_cores\n    # Ninja defaults to |num_cores + 2|\n    j_value +\u003d int(os.environ.get(\u0027NINJA_CORE_ADDITION\u0027, \u00272\u0027))\n    args.append(\u0027-j\u0027)\n    args.append(\u0027%d\u0027 % j_value)\n\nhttps://source.chromium.org/chromium/chromium/tools/depot_tools/+/main:autoninja.py;l\u003d1?q\u003dautoninja.py\u0026sq\u003d\u0026ss\u003dchromium\n\nSo if you preferred having fewer cores in use you could set NINJA_CORE_ADDITION locally.",
+      "range": {
+        "startLine": 301,
+        "startChar": 0,
+        "endLine": 303,
+        "endChar": 0
+      },
+      "revId": "99e4de150a70f909370c0f7cf4bbcbf1f2d58e3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
