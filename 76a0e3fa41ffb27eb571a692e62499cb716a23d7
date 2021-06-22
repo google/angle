@@ -70,6 +70,24 @@
       "parentUuid": "efae28eb_1652f2a8",
       "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87a8e5e1_c1aa5881",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1446209
+      },
+      "writtenOn": "2021-06-22T11:52:16Z",
+      "side": 1,
+      "message": "Those functions seems not work as well.For example,ANGLE implements A8_UNORM as R8_UNOR,if border is (0,0,0,0.5),after reading as A8,tmp format is (0,0,0,0.5), then writing to R8,dest format still is (0,0,0,0.5).Those two function just like \u0027implements A8_UNORM as R8_UNOR\u0027 but what we need is the opposite operation.",
+      "parentUuid": "f61c8a63_0c8482ac",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
