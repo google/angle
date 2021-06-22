@@ -16,6 +16,23 @@
       "message": "Jamie, PTAL",
       "revId": "bc887a42bc145162574c0a025a597526597e4015",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9aa08b7c_c707703c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T17:16:24Z",
+      "side": 1,
+      "message": "Thanks for the test! LGTM.",
+      "revId": "bc887a42bc145162574c0a025a597526597e4015",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
