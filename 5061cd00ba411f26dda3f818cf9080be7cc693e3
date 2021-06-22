@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e2c11f0_4b312a16",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T18:45:17Z",
+      "side": 1,
+      "message": "PTAL Gert and Cody, Lubosz FYI.",
+      "revId": "5061cd00ba411f26dda3f818cf9080be7cc693e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
