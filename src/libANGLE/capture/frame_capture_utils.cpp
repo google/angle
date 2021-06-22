@@ -398,10 +398,18 @@ Result SerializeFramebufferAttachment(const gl::Context *context,
             framebuffer->setReadBuffer(framebufferAttachment.getBinding());
             ANGLE_TRY(framebuffer->syncState(context, GL_FRAMEBUFFER, gl::Command::Other));
         }
-        MemoryBuffer *pixelsPtr = nullptr;
-        ANGLE_TRY(ReadPixelsFromAttachment(context, framebuffer, framebufferAttachment,
-                                           scratchBuffer, &pixelsPtr));
-        json->addBlob("Data", pixelsPtr->data(), pixelsPtr->size());
+
+        if (framebufferAttachment.initState() == gl::InitState::Initialized)
+        {
+            MemoryBuffer *pixelsPtr = nullptr;
+            ANGLE_TRY(ReadPixelsFromAttachment(context, framebuffer, framebufferAttachment,
+                                               scratchBuffer, &pixelsPtr));
+            json->addBlob("Data", pixelsPtr->data(), pixelsPtr->size());
+        }
+        else
+        {
+            json->addCString("Data", "Not initialized");
+        }
         // Reset framebuffer state
         framebuffer->setReadBuffer(prevReadBufferState);
     }
