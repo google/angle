@@ -611,6 +611,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d80bcf55_2c945f9d",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-06-22T10:26:01Z",
+      "side": 1,
+      "message": "I didn\u0027t see GetBoolEnvironmentVar is removed. GetBoolEnvironmentVar are in several places as well.",
+      "parentUuid": "5d91b621_e67b2de7",
+      "range": {
+        "startLine": 461,
+        "startChar": 4,
+        "endLine": 461,
+        "endChar": 65
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f282304f_8b505b67",
@@ -1070,6 +1094,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "Wow. These code are used by spirv-to-msl translator path to work-around https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d5107.\nThey are originated from my local fork but I didn\u0027t merge them to upstream since they require overriding spirv-cross\u0027s protected methods which could be changed at any time.\n\nSeems Apple already updated them to be compatible with latest spirv-cross\u0027s protected methods (but I\u0027m not sure this compatibility will last since spirv-cross is constantly pulled by auto roller).",
+      "range": {
+        "startLine": 374,
+        "startChar": 4,
+        "endLine": 375,
+        "endChar": 31
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f44ea4e9_411e414a",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-06-22T10:26:01Z",
+      "side": 1,
+      "message": "Checked again. Looks like it\u0027s jonar that changed the code to make it compatible with latest spirv-cross.",
+      "parentUuid": "68df8f82_9f8e4229",
       "range": {
         "startLine": 374,
         "startChar": 4,

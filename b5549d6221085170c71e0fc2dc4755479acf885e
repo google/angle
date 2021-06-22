@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd785787_0e09f4f8",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-06-22T10:26:01Z",
+      "side": 1,
+      "message": "It\u0027s strange I never saw email notifications about comments made on https://chromium-review.googlesource.com/c/angle/angle/+/2857366.\n\nI did comment that shadow sampler compare mode\u0027s uniform value is not needed by current upstream\u0027s spirv-cross based translator because overriding spirv-cross is undesired.\n\nBut Apple\u0027s direct msl translator might need this to work properly once it becomes default in future. I assume their translator also does similar shadow sampler\u0027s work-arounds. So not sure this should be removed here and re-added in future.\n\nOr we can keep both this and spriv-cross\u0027s shadow sampler\u0027s overriding code. The latter inserts a custom \"ANGLEShadowCompareModes\" uniform variable to shaders. So they both need to be kept or removed together.",
+      "range": {
+        "startLine": 1330,
+        "startChar": 8,
+        "endLine": 1334,
+        "endChar": 9
+      },
+      "revId": "b5549d6221085170c71e0fc2dc4755479acf885e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
