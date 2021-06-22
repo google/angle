@@ -61,10 +61,10 @@ During normal mode:
 During bot mode:
 
  * Tests are run in multiple processes depending on the system processor count.
- * A server process records the child processes' stdout.
+ * A server process records the child processes' stdout and stderr.
  * The server terminates a child process if there's no progress after a timeout.
  * The server sorts work into batches according to the back-end configuration.
- * This prevents driver errors from using mulitple back-ends in the same process.
+ * This prevents driver errors from using multiple back-ends in the same process.
  * Batches are striped to help split up slow groups of tests.
  * The server passes test batches to child processes via a `gtest_filter` file.
  * Bot mode does not work on Android or Fuchsia.

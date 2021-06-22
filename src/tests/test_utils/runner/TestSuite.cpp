@@ -1433,7 +1433,7 @@ bool TestSuite::launchChildTestProcess(uint32_t batchId,
     }
 
     // Launch child process and wait for completion.
-    processInfo.process = LaunchProcess(args, ProcessOutputCapture::StdoutAndStderrSeparately);
+    processInfo.process = LaunchProcess(args, ProcessOutputCapture::StdoutAndStderrInterleaved);
 
     if (!processInfo.process->started())
     {
