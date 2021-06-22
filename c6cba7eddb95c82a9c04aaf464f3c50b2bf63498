@@ -799,6 +799,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "590f233c_f2f9d650",
+        "filename": "src/libANGLE/renderer/metal/TextureMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 1142,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-22T17:21:28Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "451a2fa5_4375d7f2",
+      "range": {
+        "startLine": 1142,
+        "startChar": 48,
+        "endLine": 1142,
+        "endChar": 78
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b8773016_f2858129",
@@ -1118,6 +1142,30 @@
       "side": 1,
       "message": "Checked again. Looks like it\u0027s jonar that changed the code to make it compatible with latest spirv-cross.",
       "parentUuid": "68df8f82_9f8e4229",
+      "range": {
+        "startLine": 374,
+        "startChar": 4,
+        "endLine": 375,
+        "endChar": 31
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58bf37dd_dd509141",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-22T17:21:28Z",
+      "side": 1,
+      "message": "We\u0027ll leave it for now and deal with it if it becomes an issue.",
+      "parentUuid": "f44ea4e9_411e414a",
       "range": {
         "startLine": 374,
         "startChar": 4,

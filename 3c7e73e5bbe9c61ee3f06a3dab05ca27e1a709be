@@ -135,6 +135,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f0e685e_e69b5182",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-22T17:21:28Z",
+      "side": 1,
+      "message": "Filed anglebug.com/6082",
+      "parentUuid": "7b95092d_27b35470",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fad43239_e0985053",
@@ -148,6 +166,24 @@
       "writtenOn": "2021-06-10T03:43:59Z",
       "side": 1,
       "message": "ditto",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1488684e_a4df6bc2",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-22T17:21:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fad43239_e0985053",
       "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -282,6 +318,24 @@
       "writtenOn": "2021-06-10T03:43:59Z",
       "side": 1,
       "message": "This is used inside mtl_glslang_mtl_utils.mm only, maybe we could have the metal-internal flags passed separately.\n\nBy the way, I haven\u0027t renamed the files/variables yet, but there\u0027s nothing about glslang here anymore.",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ae8e36c_09fb72ee",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-22T17:21:28Z",
+      "side": 1,
+      "message": "Filed anglebug.com/6083",
+      "parentUuid": "2edd7f44_7fc05463",
       "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -423,6 +477,24 @@
       "writtenOn": "2021-06-10T03:43:59Z",
       "side": 1,
       "message": "Please revert this file. Repos containing ANGLE may not have libjpeg_turbo in the same path as ANGLE and chromium.",
+      "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6388b63a_fc783709",
+        "filename": "third_party/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-22T17:21:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9cb9f3d5_f9049c5a",
       "revId": "3c7e73e5bbe9c61ee3f06a3dab05ca27e1a709be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
