@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f80d521_06a83fed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:26:07Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "ef355ece4c7f81d346db5ac9031eb7a9f442fee0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f69c3d3c_56c409cd",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:26:07Z",
+      "side": 1,
+      "message": "can we do this for textures/buffers as well?",
+      "range": {
+        "startLine": 402,
+        "startChar": 0,
+        "endLine": 412,
+        "endChar": 9
+      },
+      "revId": "ef355ece4c7f81d346db5ac9031eb7a9f442fee0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
