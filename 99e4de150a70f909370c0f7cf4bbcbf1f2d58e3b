@@ -39,6 +39,30 @@
       },
       "revId": "99e4de150a70f909370c0f7cf4bbcbf1f2d58e3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "479059c9_33fcadde",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-22T13:29:50Z",
+      "side": 1,
+      "message": "OOH the capture_replay script does call ninja directly (one could change this), and, OTOH and more importantly, the scrip spawns a number of ninja processes that all use the same limit which is currently the number of cores, and since they don\u0027t know anything about each other, one can get e.g. eight batches on an eight core machine which leads to 64 compile processes. \n\nNow even if there was a value like NINJA_CORE_ADDITION, one wouldn\u0027t know what would be a sensible value, because it is not clear from the start how many batches will be created, and hence, how many ninja processes are started.\n\nBy using the \"-l\" parameter ninja only spawns new processes if the load is not higher than the given value, with that one can keep the number of compile processes on a manageable level without knowing how many batches might be created.",
+      "parentUuid": "e528a5e8_87a2a896",
+      "range": {
+        "startLine": 301,
+        "startChar": 0,
+        "endLine": 303,
+        "endChar": 0
+      },
+      "revId": "99e4de150a70f909370c0f7cf4bbcbf1f2d58e3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
