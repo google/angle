@@ -614,10 +614,9 @@ class TestBatch():
                     passes.append(self.FindTestByLabel(words[1]))
                 else:
                     fails.append(self.FindTestByLabel(words[1]))
-                    if self.verbose:
-                        print("Context comparison failed: {}".format(
-                            self.FindTestByLabel(words[1])))
-                        self.PrintContextDiff(replay_build_dir, words[1])
+                    logging.info("Context comparison failed: {}".format(
+                        self.FindTestByLabel(words[1])))
+                    self.PrintContextDiff(replay_build_dir, words[1])
 
                 count += 1
         if len(passes) > 0:
