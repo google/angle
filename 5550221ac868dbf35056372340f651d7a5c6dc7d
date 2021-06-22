@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "615113b7_eb13bb6d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-22T03:04:19Z",
+      "side": 1,
+      "message": "Some questions and comments, but overall this looks like a great addition.",
+      "revId": "5550221ac868dbf35056372340f651d7a5c6dc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49390c42_74d79bc9",
+        "filename": "src/tests/test_utils/RenderDoc.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-22T03:04:19Z",
+      "side": 1,
+      "message": "Should these be logged as errors?",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 14
+      },
+      "revId": "5550221ac868dbf35056372340f651d7a5c6dc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eff4ad5d_4d7f6cbb",
+        "filename": "src/tests/test_utils/RenderDoc.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-22T03:04:19Z",
+      "side": 1,
+      "message": "If ERROR is available, these can become visible on Android.",
+      "range": {
+        "startLine": 46,
+        "startChar": 8,
+        "endLine": 46,
+        "endChar": 14
+      },
+      "revId": "5550221ac868dbf35056372340f651d7a5c6dc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8bc785f_d10842aa",
+        "filename": "third_party/renderdoc/README.chromium",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-22T03:04:19Z",
+      "side": 1,
+      "message": "Is there a reason you chose 1.1?  1.4 is the most recent relesae:\nhttps://raw.githubusercontent.com/baldurk/renderdoc/v1.4/renderdoc/api/app/renderdoc_app.h",
+      "range": {
+        "startLine": 2,
+        "startChar": 5,
+        "endLine": 2,
+        "endChar": 95
+      },
+      "revId": "5550221ac868dbf35056372340f651d7a5c6dc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
