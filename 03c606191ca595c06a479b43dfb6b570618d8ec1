@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a141614_7f755066",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1665,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T20:00:24Z",
+      "side": 1,
+      "message": "nit: can you check if it\u0027s an empty size?",
+      "range": {
+        "startLine": 1665,
+        "startChar": 22,
+        "endLine": 1665,
+        "endChar": 26
+      },
+      "revId": "03c606191ca595c06a479b43dfb6b570618d8ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
