@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3f775fff_c4aedeb4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3384,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-22T19:02:10Z",
+      "side": 1,
+      "message": "Why can\u0027t we just set the bit here also, which will get processed during the next draw command?",
+      "range": {
+        "startLine": 3379,
+        "startChar": 0,
+        "endLine": 3384,
+        "endChar": 5
+      },
+      "revId": "19854ed69f22ff19bcfd98f11ec93502d7b64024",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6221bcd_540efcf8",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4616,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-22T19:02:10Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 4616,
+        "startChar": 9,
+        "endLine": 4616,
+        "endChar": 11
+      },
+      "revId": "19854ed69f22ff19bcfd98f11ec93502d7b64024",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "310c1dfb_15e5b85c",
         "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
         "patchSetId": 1
