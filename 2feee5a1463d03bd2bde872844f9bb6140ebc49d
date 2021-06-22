@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5217c13_87eb4bf1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-06-22T07:00:30Z",
+      "side": 1,
+      "message": "Hi all,\n\nThis CL is ready for review after 84b31c03bb12c16e979b044c037e0f00f102f69a, please help to review, thanks in advance!",
+      "revId": "2feee5a1463d03bd2bde872844f9bb6140ebc49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
