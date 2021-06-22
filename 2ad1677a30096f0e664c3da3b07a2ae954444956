@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f3a99a9_9515f9b1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1206,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T20:08:40Z",
+      "side": 1,
+      "message": "maybe add a helper to this.. I think we do actually use this pattern a fair amount",
+      "range": {
+        "startLine": 1206,
+        "startChar": 38,
+        "endLine": 1206,
+        "endChar": 80
+      },
+      "revId": "2ad1677a30096f0e664c3da3b07a2ae954444956",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88aa7129_257fa47f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T20:08:40Z",
+      "side": 1,
+      "message": "nit: suggest you defined it out of the class to keep this a technically simple struct.",
+      "range": {
+        "startLine": 1031,
+        "startChar": 0,
+        "endLine": 1035,
+        "endChar": 9
+      },
+      "revId": "2ad1677a30096f0e664c3da3b07a2ae954444956",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f5cc1a6_16d1208c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 2374,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T20:08:40Z",
+      "side": 1,
+      "message": "is this only used for multiview or for everything? at some point we could consider moving (almost) everything into the hash map and making it sparse.",
+      "range": {
+        "startLine": 2374,
+        "startChar": 11,
+        "endLine": 2374,
+        "endChar": 18
+      },
+      "revId": "2ad1677a30096f0e664c3da3b07a2ae954444956",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
