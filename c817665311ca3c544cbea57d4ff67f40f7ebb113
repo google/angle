@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "158c1275_94836732",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T19:08:38Z",
+      "side": 1,
+      "message": "Verified locally that stderr is now included when failing in --bot-mode.",
+      "revId": "c817665311ca3c544cbea57d4ff67f40f7ebb113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
