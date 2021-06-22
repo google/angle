@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "895c8a52_66f8714d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:20:58Z",
+      "side": 1,
+      "message": "PTAL.. feel free to take over this approach and re-implement any parts of it as you like.",
+      "revId": "14ab93a668e0763586ec4b4b36ad8428adcdc1f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

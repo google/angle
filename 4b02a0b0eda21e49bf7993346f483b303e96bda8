@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "60b97962_b632511e",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:20:58Z",
+      "side": 1,
+      "message": "Ack, I copied this from Chromium and would like to leave it unmodified if that\u0027s OK. Added a comment.",
+      "parentUuid": "000ed568_8a3efe33",
+      "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "266d1ef2_28360edb",
@@ -48,6 +66,24 @@
       "writtenOn": "2021-06-22T02:50:34Z",
       "side": 1,
       "message": "nit: Delete this comment?",
+      "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29528cab_86609637",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:20:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "266d1ef2_28360edb",
       "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -75,6 +111,53 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9868d177_880de17f",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:20:58Z",
+      "side": 1,
+      "message": "Ack, it cannot.",
+      "parentUuid": "04aa8818_85d899de",
+      "range": {
+        "startLine": 324,
+        "startChar": 9,
+        "endLine": 324,
+        "endChar": 10
+      },
+      "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "76ed776e_8a4101e4",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:20:58Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 366,
+        "startChar": 9,
+        "endLine": 366,
+        "endChar": 10
+      },
+      "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4c8dd603_831470ce",
@@ -88,6 +171,30 @@
       "writtenOn": "2021-06-22T02:50:34Z",
       "side": 1,
       "message": "nit: check that return value is 1.",
+      "range": {
+        "startLine": 441,
+        "startChar": 12,
+        "endLine": 441,
+        "endChar": 18
+      },
+      "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7ca0911_8b394da2",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:20:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c8dd603_831470ce",
       "range": {
         "startLine": 441,
         "startChar": 12,
@@ -123,6 +230,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "98d1b082_664da1d0",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:20:58Z",
+      "side": 1,
+      "message": "Ack, there\u0027s no cost to this - can you clarify what you\u0027re worried about?",
+      "parentUuid": "59e1f54c_7327f3d7",
+      "range": {
+        "startLine": 443,
+        "startChar": 29,
+        "endLine": 443,
+        "endChar": 32
+      },
+      "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3d9851fa_617a7069",
         "filename": "util/posix/crash_handler_posix.cpp",
         "patchSetId": 3
@@ -134,6 +265,30 @@
       "writtenOn": "2021-06-22T02:50:34Z",
       "side": 1,
       "message": "Please use PATH_MAX.  Might want to take it off the stack too because it\u0027s big.",
+      "range": {
+        "startLine": 565,
+        "startChar": 21,
+        "endLine": 565,
+        "endChar": 25
+      },
+      "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39e4574a_047da15f",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:20:58Z",
+      "side": 1,
+      "message": "Ack, left it as is to avoid using a 4k stack. Don\u0027t want to use a static (code size) or allocation (because we shouldn\u0027t really be calling new in the crash handler). Changed to a constant. Is that OK?",
+      "parentUuid": "3d9851fa_617a7069",
       "range": {
         "startLine": 565,
         "startChar": 21,
@@ -157,6 +312,30 @@
       "writtenOn": "2021-06-22T02:50:34Z",
       "side": 1,
       "message": "Could you add a comment here? What happens if linkBuf has an absolute path? You might want to at least do something like:\n\n    if (linkBuf[0] \u003d\u003d \u0027/\u0027)\n        resolvedModule \u003d linkBuf;\n    else\n        resolvedModule \u003d resolvedModule.substr(0, lastSlash + 1) + linkBuf;",
+      "range": {
+        "startLine": 572,
+        "startChar": 12,
+        "endLine": 572,
+        "endChar": 79
+      },
+      "revId": "4b02a0b0eda21e49bf7993346f483b303e96bda8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d16adf9_e7c1af52",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:20:58Z",
+      "side": 1,
+      "message": "Ack, feel free to clean this up or change it however you like after it lands. Left a comment above.",
+      "parentUuid": "6116f3a3_0a7dc11c",
       "range": {
         "startLine": 572,
         "startChar": 12,
