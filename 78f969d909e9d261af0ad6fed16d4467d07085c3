@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "738b5d72_c455f0ee",
+        "filename": "src/libANGLE/capture/capture_gles_ext_params.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 3112,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-22T13:29:09Z",
+      "side": 1,
+      "message": "I think we should be calling CaptureGenHandles for the gen functions. See the GLES 2.0 methods for examples.",
+      "range": {
+        "startLine": 3112,
+        "startChar": 4,
+        "endLine": 3112,
+        "endChar": 17
+      },
+      "revId": "78f969d909e9d261af0ad6fed16d4467d07085c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
