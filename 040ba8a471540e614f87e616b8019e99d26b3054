@@ -34,6 +34,23 @@
       "parentUuid": "a1f329e9_825e695e",
       "revId": "040ba8a471540e614f87e616b8019e99d26b3054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ab85ea5_6c605f36",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-22T15:12:16Z",
+      "side": 1,
+      "message": "Response. Just providing results from suggestions. Two minds are better than one. Thanks for the suggestions.",
+      "revId": "040ba8a471540e614f87e616b8019e99d26b3054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

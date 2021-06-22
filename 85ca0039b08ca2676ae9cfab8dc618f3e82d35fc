@@ -87,6 +87,24 @@
       "parentUuid": "9f1ae676_08c308cb",
       "revId": "85ca0039b08ca2676ae9cfab8dc618f3e82d35fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3776da54_30796569",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-22T15:12:16Z",
+      "side": 1,
+      "message": "I logged pNext chain on previous run. I printed whether feature was enabled or not, and when linked, I printed the address of the structure. Then at the end I looped through the pNext chain and printed each address. See vk_cache_utils.cpp\n\nThere were 4 potential structures, 2 were enabled, bresenhamLineRasterization and provokingVertex.\n\nThe pNext link print out showed these just two addresses. I was looking for a non-null link termination or something odd linked in. I do not see it. See first 8 lines below. \n\nNote at end, vkCreateGraphicsPipelines() still returns success. So it seems driver is not seeing an issue. \n\nHowever, between patch 11 and 12 is when this issue manifested. Unfortunately its when I changed everything from \"isProtected\" to \"hasProtectedContent\" so a lot of places were touched. I identified about 20 lines across 7 files that had added code. I can revisit that.\n\n\nLog from version 23:\n contextVk-\u003egetFeatures().bresenhamLineRasterization.enabled 1\n Link rasterLineState MODE_BRESENHAM : 0x7c5dfd8d50\n contextVk-\u003egetFeatures().provokingVertex.enabled 1\n Link provokingVertextState  MODE_LAST_VERTEX : 0x7c5dfd8d38\n contextVk-\u003egetFeatures().depthClamping.enabled 0\n contextVk-\u003egetFeatures().supportsTransformFeedbackExtension.enabled 0\n Link: 0x7c5dfd8d50\n Link: 0x7c5dfd8d38\n Start multisampleState \n Start depthStencilState \n Start blendState \n Start dynamicState \n Start createInfo \n Calling initGraphics \n ../../src/tests/deqp_support/angle_deqp_gtest.cpp:51: Failure\n Failed\n RendererVk.cpp:362 (DebugUtilsMessenger): [ VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02769 ] Validation Error: [ VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02769 ] Object 0: handle \u003d 0xb400007cdc26b530, type \u003d VK_OBJECT_TYPE_DEVICE; | MessageID \u003d 0xbf433601 | vkCreateGraphicsPipelines(): pCreateInfos[0] lineRasterizationMode \u003d VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT requires the bresenhamLines feature. The Vulkan spec states: If lineRasterizationMode is VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT, then the bresenhamLines feature must be enabled (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02769)\n                             Object: 0xb400007cdc26b530 (type \u003d Device(3))\n \n ../../src/tests/deqp_support/angle_deqp_gtest.cpp:51: Failure\n Failed\n RendererVk.cpp:362 (DebugUtilsMessenger): [ VUID-VkPipelineRasterizationProvokingVertexStateCreateInfoEXT-provokingVertexMode-04883 ] Validation Error: [ VUID-VkPipelineRasterizationProvokingVertexStateCreateInfoEXT-provokingVertexMode-04883 ] Object 0: handle \u003d 0xb400007cdc26b530, type \u003d VK_OBJECT_TYPE_DEVICE; | MessageID \u003d 0x6af4fb0 | provokingVertexLast feature is not enabled. The Vulkan spec states: If provokingVertexMode is VK_PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT, then the provokingVertexLast feature must be enabled (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-VkPipelineRasterizationProvokingVertexStateCreateInfoEXT-provokingVertexMode-04883)\n                             Object: 0xb400007cdc26b530 (type \u003d Device(3))\n \n vkCreateGraphicsPipelines Result: 0\n returned from initGraphics",
+      "parentUuid": "1337c7bd_44874371",
+      "revId": "85ca0039b08ca2676ae9cfab8dc618f3e82d35fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
