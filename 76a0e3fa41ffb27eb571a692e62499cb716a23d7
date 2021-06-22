@@ -88,6 +88,98 @@
       "parentUuid": "f61c8a63_0c8482ac",
       "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47708141_817a4a4e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T19:07:00Z",
+      "side": 1,
+      "message": "Ok I see. I don\u0027t believe I have come across a function that does that, so this seems the right way.",
+      "parentUuid": "87a8e5e1_c1aa5881",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "abd7c0b6_2891b762",
+        "filename": "src/image_util/loadtextureborder.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T19:07:00Z",
+      "side": 1,
+      "message": "Needs to also set alpha to 0.",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e6e888e_bf723550",
+        "filename": "src/image_util/loadtextureborder.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T19:07:00Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51511895_912ce127",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T19:07:00Z",
+      "side": 1,
+      "message": "Should this instead default to a no-op function? Isn\u0027t there a crash right now when setting border color on a non-LUMA texture at REF?",
+      "range": {
+        "startLine": 166,
+        "startChar": 51,
+        "endLine": 166,
+        "endChar": 58
+      },
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ca97799_f12ed9c2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3334,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-22T19:07:00Z",
+      "side": 1,
+      "message": "REF",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
