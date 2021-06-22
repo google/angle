@@ -1609,10 +1609,7 @@ angle::Result TextureVk::redefineLevel(const gl::Context *context,
     // is still valid and we shouldn't redefine it to use the new format.  In that case,
     // ensureImageAllocated will only use the format to update the staging buffer's alignment to
     // support both the previous and the new formats.
-    if (!size.empty())
-    {
-        ANGLE_TRY(ensureImageAllocated(contextVk, format));
-    }
+    ANGLE_TRY(ensureImageAllocated(contextVk, format));
 
     return angle::Result::Continue;
 }

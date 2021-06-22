@@ -1657,6 +1657,16 @@ angle::Result Texture::generateMipmap(Context *context)
         return angle::Result::Continue;
     }
 
+    // If any dimension is zero, this is a no-op:
+    //
+    // > Otherwise, if level_base is not defined, or if any dimension is zero, all mipmap levels are
+    // > left unchanged. This is not an error.
+    const ImageDesc &baseImageInfo = mState.getImageDesc(mState.getBaseImageTarget(), baseLevel);
+    if (baseImageInfo.size.empty())
+    {
+        return angle::Result::Continue;
+    }
+
     ANGLE_TRY(syncState(context, Command::GenerateMipmap));
 
     // Clear the base image(s) immediately if needed
@@ -1681,7 +1691,6 @@ angle::Result Texture::generateMipmap(Context *context)
 
     // Propagate the format and size of the base mip to the smaller ones. Cube maps are guaranteed
     // to have faces of the same size and format so any faces can be picked.
-    const ImageDesc &baseImageInfo = mState.getImageDesc(mState.getBaseImageTarget(), baseLevel);
     mState.setImageDescChain(baseLevel, maxLevel, baseImageInfo.size, baseImageInfo.format,
                              InitState::Initialized);
 
