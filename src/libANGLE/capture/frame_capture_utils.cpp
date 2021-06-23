@@ -287,6 +287,13 @@ void SerializeColorUI(JsonSerializer *json, const ColorUI &color)
     json->addScalar("Alpha", color.alpha);
 }
 
+void SerializeExtents(JsonSerializer *json, const gl::Extents &extents)
+{
+    json->addScalar("Width", extents.width);
+    json->addScalar("Height", extents.height);
+    json->addScalar("Depth", extents.depth);
+}
+
 template <class ObjectType>
 void SerializeOffsetBindingPointerVector(
     JsonSerializer *json,
@@ -386,6 +393,11 @@ Result SerializeFramebufferAttachment(const gl::Context *context,
     json->addScalar("Multiview", framebufferAttachment.isMultiview());
     json->addScalar("ViewIndex", framebufferAttachment.getBaseViewIndex());
     json->addScalar("Samples", framebufferAttachment.getRenderToTextureSamples());
+
+    {
+        GroupScope extentsGroup(json, "Extents");
+        SerializeExtents(json, framebufferAttachment.getSize());
+    }
 
     if (framebufferAttachment.type() != GL_TEXTURE &&
         framebufferAttachment.type() != GL_RENDERBUFFER)
@@ -812,13 +824,6 @@ void SerializeSwizzleState(JsonSerializer *json, const gl::SwizzleState &swizzle
     json->addScalar("SwizzleGreen", swizzleState.swizzleGreen);
     json->addScalar("SwizzleBlue", swizzleState.swizzleBlue);
     json->addScalar("SwizzleAlpha", swizzleState.swizzleAlpha);
-}
-
-void SerializeExtents(JsonSerializer *json, const gl::Extents &extents)
-{
-    json->addScalar("Width", extents.width);
-    json->addScalar("Height", extents.height);
-    json->addScalar("Depth", extents.depth);
 }
 
 void SerializeInternalFormat(JsonSerializer *json, const gl::InternalFormat *internalFormat)
