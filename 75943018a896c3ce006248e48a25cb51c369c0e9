@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15d41dd6_2ce13d73",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2021-06-23T20:24:40Z",
+      "side": 1,
+      "message": "Nit: I think a more representative description would be \"Move Objectlabel from Texture object to TextureState object\"",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 38
+      },
+      "revId": "75943018a896c3ce006248e48a25cb51c369c0e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0acbed2_77e6af4f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2021-06-23T20:24:40Z",
+      "side": 1,
+      "message": "Nit: Please adjust the description so that each line is 70 characters wide.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 27
+      },
+      "revId": "75943018a896c3ce006248e48a25cb51c369c0e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6be15b40_49820e40",
+        "filename": "src/libANGLE/renderer/d3d/TextureStorage.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2021-06-23T20:24:40Z",
+      "side": 1,
+      "message": "I see that only a fraction of the texture storage classes set this mTextureLabel pointer. If you make it be a const reference, then the compiler will force you to initialize the member in the initializer list of the constructor.  That should help you better catch all of the instances. My understanding is we know the label a storage creation time.",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 41
+      },
+      "revId": "75943018a896c3ce006248e48a25cb51c369c0e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
