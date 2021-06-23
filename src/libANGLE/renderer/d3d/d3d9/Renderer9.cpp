@@ -2868,21 +2868,24 @@ angle::Result Renderer9::copyImage(const gl::Context *context,
                              unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 }
 
-TextureStorage *Renderer9::createTextureStorage2D(SwapChainD3D *swapChain)
+TextureStorage *Renderer9::createTextureStorage2D(SwapChainD3D *swapChain, const std::string &label)
 {
     SwapChain9 *swapChain9 = GetAs<SwapChain9>(swapChain);
-    return new TextureStorage9_2D(this, swapChain9);
+    return new TextureStorage9_2D(this, swapChain9, label);
 }
 
 TextureStorage *Renderer9::createTextureStorageEGLImage(EGLImageD3D *eglImage,
-                                                        RenderTargetD3D *renderTargetD3D)
+                                                        RenderTargetD3D *renderTargetD3D,
+                                                        const std::string &label)
 {
-    return new TextureStorage9_EGLImage(this, eglImage, GetAs<RenderTarget9>(renderTargetD3D));
+    return new TextureStorage9_EGLImage(this, eglImage, GetAs<RenderTarget9>(renderTargetD3D),
+                                        label);
 }
 
 TextureStorage *Renderer9::createTextureStorageExternal(
     egl::Stream *stream,
-    const egl::Stream::GLTextureDescription &desc)
+    const egl::Stream::GLTextureDescription &desc,
+    const std::string &label)
 {
     UNIMPLEMENTED();
     return nullptr;
@@ -2893,19 +2896,21 @@ TextureStorage *Renderer9::createTextureStorage2D(GLenum internalformat,
                                                   GLsizei width,
                                                   GLsizei height,
                                                   int levels,
+                                                  const std::string &label,
                                                   bool hintLevelZeroOnly)
 {
-    return new TextureStorage9_2D(this, internalformat, renderTarget, width, height, levels);
+    return new TextureStorage9_2D(this, internalformat, renderTarget, width, height, levels, label);
 }
 
 TextureStorage *Renderer9::createTextureStorageCube(GLenum internalformat,
                                                     bool renderTarget,
                                                     int size,
                                                     int levels,
-                                                    bool hintLevelZeroOnly)
+                                                    bool hintLevelZeroOnly,
+                                                    const std::string &label)
 {
     return new TextureStorage9_Cube(this, internalformat, renderTarget, size, levels,
-                                    hintLevelZeroOnly);
+                                    hintLevelZeroOnly, label);
 }
 
 TextureStorage *Renderer9::createTextureStorage3D(GLenum internalformat,
@@ -2913,7 +2918,8 @@ TextureStorage *Renderer9::createTextureStorage3D(GLenum internalformat,
                                                   GLsizei width,
                                                   GLsizei height,
                                                   GLsizei depth,
-                                                  int levels)
+                                                  int levels,
+                                                  const std::string &label)
 {
     // 3D textures are not supported by the D3D9 backend.
     UNREACHABLE();
@@ -2926,7 +2932,8 @@ TextureStorage *Renderer9::createTextureStorage2DArray(GLenum internalformat,
                                                        GLsizei width,
                                                        GLsizei height,
                                                        GLsizei depth,
-                                                       int levels)
+                                                       int levels,
+                                                       const std::string &label)
 {
     // 2D array textures are not supported by the D3D9 backend.
     UNREACHABLE();
@@ -2939,7 +2946,8 @@ TextureStorage *Renderer9::createTextureStorage2DMultisample(GLenum internalform
                                                              GLsizei height,
                                                              int levels,
                                                              int samples,
-                                                             bool fixedSampleLocations)
+                                                             bool fixedSampleLocations,
+                                                             const std::string &label)
 {
     // 2D multisampled textures are not supported by the D3D9 backend.
     UNREACHABLE();
@@ -2953,7 +2961,8 @@ TextureStorage *Renderer9::createTextureStorage2DMultisampleArray(GLenum interna
                                                                   GLsizei depth,
                                                                   int levels,
                                                                   int samples,
-                                                                  bool fixedSampleLocations)
+                                                                  bool fixedSampleLocations,
+                                                                  const std::string &label)
 {
     // 2D multisampled textures are not supported by the D3D9 backend.
     UNREACHABLE();

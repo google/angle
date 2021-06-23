@@ -744,7 +744,6 @@ Texture::Texture(rx::GLImplFactory *factory, TextureID id, TextureType type)
       mTexture(factory->createTexture(mState)),
       mImplObserver(this, rx::kTextureImageImplObserverMessageIndex),
       mBufferObserver(this, kBufferSubjectIndex),
-      mLabel(),
       mBoundSurface(nullptr),
       mBoundStream(nullptr)
 {
@@ -784,13 +783,13 @@ Texture::~Texture()
 
 void Texture::setLabel(const Context *context, const std::string &label)
 {
-    mLabel = label;
+    mState.mLabel = label;
     signalDirtyState(DIRTY_BIT_LABEL);
 }
 
 const std::string &Texture::getLabel() const
 {
-    return mLabel;
+    return mState.mLabel;
 }
 
 void Texture::setSwizzleRed(const Context *context, GLenum swizzleRed)

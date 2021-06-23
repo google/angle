@@ -78,8 +78,10 @@ MultisampledRenderToTextureInfo::~MultisampledRenderToTextureInfo() {}
 TextureStorage11::TextureStorage11(Renderer11 *renderer,
                                    UINT bindFlags,
                                    UINT miscFlags,
-                                   GLenum internalFormat)
-    : mRenderer(renderer),
+                                   GLenum internalFormat,
+                                   const std::string &label)
+    : TextureStorage(label),
+      mRenderer(renderer),
       mTopLevel(0),
       mMipLevels(0),
       mFormatInfo(d3d11::Format::Get(internalFormat, mRenderer->getRenderer11DeviceCaps())),
@@ -939,7 +941,7 @@ angle::Result TextureStorage11::getMultisampledRenderTarget(const gl::Context *c
         GLenum internalFormat = mFormatInfo.internalFormat;
         std::unique_ptr<TextureStorage11_2DMultisample> texMS(
             GetAs<TextureStorage11_2DMultisample>(mRenderer->createTextureStorage2DMultisample(
-                internalFormat, width, height, level, samples, true)));
+                internalFormat, width, height, level, samples, true, "")));
 
         // make sure multisample object has the blitted information.
         gl::Rectangle area(0, 0, width, height);
@@ -968,11 +970,14 @@ angle::Result TextureStorage11::getMultisampledRenderTarget(const gl::Context *c
     return angle::Result::Continue;
 }
 
-TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swapchain)
+TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer,
+                                         SwapChain11 *swapchain,
+                                         const std::string &label)
     : TextureStorage11(renderer,
                        D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
                        0,
-                       swapchain->getRenderTargetInternalFormat()),
+                       swapchain->getRenderTargetInternalFormat(),
+                       label),
       mTexture(swapchain->getOffscreenTexture()),
       mLevelZeroTexture(),
       mLevelZeroRenderTarget(nullptr),
@@ -1000,6 +1005,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer,
                                          GLsizei width,
                                          GLsizei height,
                                          int levels,
+                                         const std::string &label,
                                          bool hintLevelZeroOnly)
     : TextureStorage11(
           renderer,
@@ -1008,7 +1014,8 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer,
                               renderer->getRenderer11DeviceCaps(),
                               renderTarget,
                               levels),
-          internalformat),
+          internalformat,
+          label),
       mTexture(),
       mHasKeyedMutex(false),
       mLevelZeroTexture(),
@@ -1609,8 +1616,9 @@ angle::Result TextureStorage11_2D::resolveTexture(const gl::Context *context)
 TextureStorage11_External::TextureStorage11_External(
     Renderer11 *renderer,
     egl::Stream *stream,
-    const egl::Stream::GLTextureDescription &glDesc)
-    : TextureStorage11(renderer, D3D11_BIND_SHADER_RESOURCE, 0, glDesc.internalFormat)
+    const egl::Stream::GLTextureDescription &glDesc,
+    const std::string &label)
+    : TextureStorage11(renderer, D3D11_BIND_SHADER_RESOURCE, 0, glDesc.internalFormat, label)
 {
     ASSERT(stream->getProducerType() == egl::Stream::ProducerType::D3D11Texture);
     auto *producer = static_cast<StreamProducerD3DTexture *>(stream->getImplementation());
@@ -1785,8 +1793,9 @@ angle::Result TextureStorage11_External::getSwizzleRenderTarget(
 TextureStorage11ImmutableBase::TextureStorage11ImmutableBase(Renderer11 *renderer,
                                                              UINT bindFlags,
                                                              UINT miscFlags,
-                                                             GLenum internalFormat)
-    : TextureStorage11(renderer, bindFlags, miscFlags, internalFormat)
+                                                             GLenum internalFormat,
+                                                             const std::string &label)
+    : TextureStorage11(renderer, bindFlags, miscFlags, internalFormat, label)
 {}
 
 void TextureStorage11ImmutableBase::associateImage(Image11 *, const gl::ImageIndex &) {}
@@ -1824,11 +1833,13 @@ angle::Result TextureStorage11ImmutableBase::createUAVForImage(const gl::Context
 
 TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer,
                                                      EGLImageD3D *eglImage,
-                                                     RenderTarget11 *renderTarget11)
+                                                     RenderTarget11 *renderTarget11,
+                                                     const std::string &label)
     : TextureStorage11ImmutableBase(renderer,
                                     D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
                                     0,
-                                    renderTarget11->getInternalFormat()),
+                                    renderTarget11->getInternalFormat(),
+                                    label),
       mImage(eglImage),
       mCurrentRenderTarget(0),
       mSwizzleTexture(),
@@ -2061,7 +2072,8 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer11 *renderer,
                                              bool renderTarget,
                                              int size,
                                              int levels,
-                                             bool hintLevelZeroOnly)
+                                             bool hintLevelZeroOnly,
+                                             const std::string &label)
     : TextureStorage11(
           renderer,
           GetTextureBindFlags(internalformat, renderer->getRenderer11DeviceCaps(), renderTarget),
@@ -2069,7 +2081,8 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer11 *renderer,
                               renderer->getRenderer11DeviceCaps(),
                               renderTarget,
                               levels),
-          internalformat),
+          internalformat,
+          label),
       mTexture(),
       mLevelZeroTexture(),
       mUseLevelZeroTexture(hintLevelZeroOnly && levels > 1),
@@ -2773,7 +2786,8 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer11 *renderer,
                                          GLsizei width,
                                          GLsizei height,
                                          GLsizei depth,
-                                         int levels)
+                                         int levels,
+                                         const std::string &label)
     : TextureStorage11(
           renderer,
           GetTextureBindFlags(internalformat, renderer->getRenderer11DeviceCaps(), renderTarget),
@@ -2781,7 +2795,8 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer11 *renderer,
                               renderer->getRenderer11DeviceCaps(),
                               renderTarget,
                               levels),
-          internalformat)
+          internalformat,
+          label)
 {
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
@@ -3140,7 +3155,8 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer11 *renderer,
                                                    GLsizei width,
                                                    GLsizei height,
                                                    GLsizei depth,
-                                                   int levels)
+                                                   int levels,
+                                                   const std::string &label)
     : TextureStorage11(
           renderer,
           GetTextureBindFlags(internalformat, renderer->getRenderer11DeviceCaps(), renderTarget),
@@ -3148,7 +3164,8 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer11 *renderer,
                               renderer->getRenderer11DeviceCaps(),
                               renderTarget,
                               levels),
-          internalformat)
+          internalformat,
+          label)
 {
     // adjust size if needed for compressed textures
     d3d11::MakeValidSize(false, mFormatInfo.texFormat, &width, &height, &mTopLevel);
@@ -3573,12 +3590,14 @@ TextureStorage11_2DMultisample::TextureStorage11_2DMultisample(Renderer11 *rende
                                                                GLsizei height,
                                                                int levels,
                                                                int samples,
-                                                               bool fixedSampleLocations)
+                                                               bool fixedSampleLocations,
+                                                               const std::string &label)
     : TextureStorage11ImmutableBase(
           renderer,
           GetTextureBindFlags(internalformat, renderer->getRenderer11DeviceCaps(), true),
           GetTextureMiscFlags(internalformat, renderer->getRenderer11DeviceCaps(), true, levels),
-          internalformat),
+          internalformat,
+          label),
       mTexture(),
       mRenderTarget(nullptr)
 {
@@ -3782,12 +3801,14 @@ TextureStorage11_2DMultisampleArray::TextureStorage11_2DMultisampleArray(Rendere
                                                                          GLsizei depth,
                                                                          int levels,
                                                                          int samples,
-                                                                         bool fixedSampleLocations)
+                                                                         bool fixedSampleLocations,
+                                                                         const std::string &label)
     : TextureStorage11ImmutableBase(
           renderer,
           GetTextureBindFlags(internalformat, renderer->getRenderer11DeviceCaps(), true),
           GetTextureMiscFlags(internalformat, renderer->getRenderer11DeviceCaps(), true, levels),
-          internalformat),
+          internalformat,
+          label),
       mTexture()
 {
     // There are no multisampled compressed formats, so there's no need to adjust texture size
