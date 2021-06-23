@@ -603,7 +603,7 @@ uint8_t GetContentDefinedLayerRangeBits(uint32_t layerStart,
                                         uint32_t maxLayerCount)
 {
     uint8_t layerRangeBits = layerCount >= maxLayerCount ? static_cast<uint8_t>(~0u)
-                                                         : angle::Bit<uint8_t>(layerCount) - 1;
+                                                         : angle::BitMask<uint8_t>(layerCount);
     layerRangeBits <<= layerStart;
 
     return layerRangeBits;
@@ -6005,7 +6005,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(ContextVk *contextVk,
 
 {
     // Nothing to do if every level must be skipped
-    if ((~skipLevelsMask & gl::TexLevelMask(angle::Bit<uint32_t>(levelCount) - 1)).none())
+    if ((~skipLevelsMask & gl::TexLevelMask(angle::BitMask<uint32_t>(levelCount))).none())
     {
         return;
     }
@@ -6260,7 +6260,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             }
             else
             {
-                const uint64_t subresourceHashRange = angle::Bit<uint64_t>(updateLayerCount) - 1;
+                const uint64_t subresourceHashRange = angle::BitMask<uint64_t>(updateLayerCount);
                 const uint32_t subresourceHashOffset =
                     updateBaseLayer % kMaxParallelSubresourceUpload;
                 const uint64_t subresourceHash =
@@ -6497,7 +6497,7 @@ void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask
         ASSERT(updateLayerCount <= 64);
         uint64_t updateLayersMask = updateLayerCount >= 64
                                         ? ~static_cast<uint64_t>(0)
-                                        : angle::Bit<uint64_t>(updateLayerCount) - 1;
+                                        : angle::BitMask<uint64_t>(updateLayerCount);
         updateLayersMask <<= updateBaseLayer;
 
         const bool isColorOrDepthSuperseded =

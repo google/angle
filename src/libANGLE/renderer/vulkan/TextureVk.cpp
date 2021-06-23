@@ -2393,7 +2393,7 @@ void TextureVk::prepareForGenerateMipmap(ContextVk *contextVk)
     // different.
     static_assert(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS < 32,
                   "levels mask assumes 32-bits is enough");
-    gl::TexLevelMask::value_type levelsMask = angle::Bit<uint32_t>(maxLevel + 1 - baseLevel) - 1;
+    gl::TexLevelMask::value_type levelsMask = angle::BitMask<uint32_t>(maxLevel + 1 - baseLevel);
 
     gl::LevelIndex imageAllocatedLevel = mImage->getFirstAllocatedLevel();
     if (imageAllocatedLevel > baseLevel)

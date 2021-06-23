@@ -575,4 +575,27 @@ TYPED_TEST(BitSetArrayTest, BasicTest)
         EXPECT_TRUE(testBitSet.test(bit));
     }
 }
+
+// Unit test for angle::Bit
+TEST(Bit, Test)
+{
+    EXPECT_EQ(Bit<uint32_t>(0), 1u);
+    EXPECT_EQ(Bit<uint32_t>(1), 2u);
+    EXPECT_EQ(Bit<uint32_t>(2), 4u);
+    EXPECT_EQ(Bit<uint32_t>(3), 8u);
+    EXPECT_EQ(Bit<uint32_t>(31), 0x8000'0000u);
+    EXPECT_EQ(Bit<uint64_t>(63), static_cast<uint64_t>(0x8000'0000'0000'0000llu));
+}
+
+// Unit test for angle::BitMask
+TEST(BitMask, Test)
+{
+    EXPECT_EQ(BitMask<uint32_t>(1), 1u);
+    EXPECT_EQ(BitMask<uint32_t>(2), 3u);
+    EXPECT_EQ(BitMask<uint32_t>(3), 7u);
+    EXPECT_EQ(BitMask<uint32_t>(31), 0x7FFF'FFFFu);
+    EXPECT_EQ(BitMask<uint32_t>(32), 0xFFFF'FFFFu);
+    EXPECT_EQ(BitMask<uint64_t>(63), static_cast<uint64_t>(0x7FFF'FFFF'FFFF'FFFFllu));
+    EXPECT_EQ(BitMask<uint64_t>(64), static_cast<uint64_t>(0xFFFF'FFFF'FFFF'FFFFllu));
+}
 }  // anonymous namespace

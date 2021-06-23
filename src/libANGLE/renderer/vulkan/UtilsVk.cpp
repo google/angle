@@ -1823,7 +1823,7 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
     // See GLES3.0 section 2.9.1 Transferring Array Elements
     const uint32_t srcValueBits = shaderParams.isSrcHDR ? 2 : shaderParams.Bs * 8;
     const uint32_t srcValueMask =
-        srcValueBits == 32 ? 0xFFFFFFFFu : angle::Bit<uint32_t>(srcValueBits) - 1;
+        srcValueBits == 32 ? 0xFFFFFFFFu : angle::BitMask<uint32_t>(srcValueBits);
     switch (flags)
     {
         case ConvertVertex_comp::kSintToSint:

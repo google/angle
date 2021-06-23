@@ -21,6 +21,7 @@
 
 namespace angle
 {
+// Given x, create 1 << x.
 template <typename BitsT, typename ParamT>
 constexpr static BitsT Bit(ParamT x)
 {
@@ -28,6 +29,17 @@ constexpr static BitsT Bit(ParamT x)
     ASSERT(static_cast<size_t>(x) < sizeof(BitsT) * 8);
 
     return (static_cast<BitsT>(1) << static_cast<size_t>(x));
+}
+
+// Given x, create (1 << x) - 1, i.e. a mask with x bits set.
+template <typename BitsT, typename ParamT>
+constexpr static BitsT BitMask(ParamT x)
+{
+    if (static_cast<size_t>(x) == 0)
+    {
+        return 0;
+    }
+    return ((Bit<BitsT>(static_cast<ParamT>(static_cast<size_t>(x) - 1)) - 1) << 1) | 1;
 }
 
 template <size_t N, typename BitsT, typename ParamT = std::size_t>
@@ -151,10 +163,7 @@ class BitSetT final
     constexpr ParamT last() const;
 
     // Produces a mask of ones up to the "x"th bit.
-    constexpr static BitsT Mask(std::size_t x)
-    {
-        return ((Bit<BitsT>(static_cast<ParamT>(x - 1)) - 1) << 1) + 1;
-    }
+    constexpr static BitsT Mask(std::size_t x) { return BitMask<BitsT>(static_cast<ParamT>(x)); }
 
   private:
     BitsT mBits;

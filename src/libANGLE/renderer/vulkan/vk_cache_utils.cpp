@@ -1203,7 +1203,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
     }
 
     SubpassVector<uint32_t> viewMasks(subpassDesc.size(),
-                                      angle::Bit<uint32_t>(desc.viewCount()) - 1);
+                                      angle::BitMask<uint32_t>(desc.viewCount()));
     VkRenderPassMultiviewCreateInfo multiviewInfo = {};
     multiviewInfo.sType        = VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO;
     multiviewInfo.subpassCount = createInfo.subpassCount;
