@@ -16,6 +16,24 @@
       "message": "I\u0027m quite wary about swap buffer preserved, AFAIK we don\u0027t support this properly. I\u0027d be more inclined to fix the test to not readpixels after swap at all. Can you instead just change the swap to a glFlush call? ",
       "revId": "f563a304a8cd6eea7aab347399949579d8ddab30",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c61144f5_5a6844af",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-23T13:08:21Z",
+      "side": 1,
+      "message": "Afaik glReadPixels already does a glFinish, the question is, should we keep the loop?",
+      "parentUuid": "29bc14bb_41728084",
+      "revId": "f563a304a8cd6eea7aab347399949579d8ddab30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
