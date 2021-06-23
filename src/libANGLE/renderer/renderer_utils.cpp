@@ -968,10 +968,6 @@ void LogFeatureStatus(const angle::FeatureSetBase &features,
         {
             INFO() << "Feature: " << name << (enabled ? " enabled" : " disabled");
         }
-        else
-        {
-            WARN() << "Feature: " << name << " is not a valid feature name.";
-        }
     }
 }
 
