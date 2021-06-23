@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1937559f_2aedc4f3",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 18
+      },
+      "lineNbr": 2094,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-06-23T11:59:25Z",
+      "side": 1,
+      "message": "I think all changes to XFB functionalities should be separated to another CL. As mentioned above.",
+      "parentUuid": "cd6b1fd5_e62d6832",
+      "revId": "a541c43a5c23647ad6e64d55787ee928c017c78a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "667b7ca7_19e62bbe",
         "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
         "patchSetId": 18
