@@ -68,6 +68,30 @@
       },
       "revId": "75943018a896c3ce006248e48a25cb51c369c0e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f70404c2_59e6c534",
+        "filename": "src/libANGLE/renderer/d3d/TextureStorage.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-23T20:49:34Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "6be15b40_49820e40",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 41
+      },
+      "revId": "75943018a896c3ce006248e48a25cb51c369c0e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f5954bb_7380157a",
+        "filename": "src/libANGLE/renderer/d3d/TextureStorage.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-23T20:49:34Z",
+      "side": 1,
+      "message": "I don\u0027t see this overridden anywhere, did I miss it?",
+      "range": {
+        "startLine": 88,
+        "startChar": 17,
+        "endLine": 88,
+        "endChar": 30
+      },
+      "revId": "504ec827a3a022cb8046ab524af58bc399824bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
