@@ -16,6 +16,63 @@
       "message": "PTAL",
       "revId": "b4d4bb186e93593cbdda6dc9278995d5e1475a32",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3edb6e3e_3a6e159a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-23T02:14:03Z",
+      "side": 1,
+      "message": "A much smaller change than I thought!",
+      "revId": "b4d4bb186e93593cbdda6dc9278995d5e1475a32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce1edc41_b660ce63",
+        "filename": "src/compiler/translator/HashNames.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-23T02:14:03Z",
+      "side": 1,
+      "message": "Should this be every gl_*? Why isn\u0027t gl_PointSize here?",
+      "revId": "b4d4bb186e93593cbdda6dc9278995d5e1475a32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4490040d_b94104bf",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5577,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-23T02:14:03Z",
+      "side": 1,
+      "message": "What\u0027s special about gl_Position? Why not gl_PointSize, gl_ClipDistance or gl_CullDistance?\n\nAlso, isn\u0027t gl_PerVertex redeclaration possible in tessellation shaders?",
+      "range": {
+        "startLine": 5577,
+        "startChar": 64,
+        "endLine": 5577,
+        "endChar": 75
+      },
+      "revId": "b4d4bb186e93593cbdda6dc9278995d5e1475a32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
