@@ -149,7 +149,8 @@ def flattened_target(target_name: str, descs: dict, stop_at_lib: bool =True) -> 
             return ((),)
 
         if dep_type == 'copy':
-            assert not deps, (target_name, dep['deps'])
+            # Note that the original script blocked deps in copy rules.
+            pass
         else:
             assert dep_type in EXPECTED_TYPES, (k, dep_type)
             for (k,v) in dep.items():

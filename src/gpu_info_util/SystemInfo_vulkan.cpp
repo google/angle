@@ -18,9 +18,9 @@
 #include "common/system_utils.h"
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
-const char *kLibVulkanNames[] = {"vulkan-1.dll"};
+const char *kLibVulkanNames[] = {"vkloader.dll"};
 #else
-const char *kLibVulkanNames[] = {"libvulkan.so", "libvulkan.so.1"};
+const char *kLibVulkanNames[] = {"vkloader.so", "libvulkan.so", "libvulkan.so.1"};
 #endif
 
 namespace angle
