@@ -38,6 +38,42 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a27fcff1_4d05cbb8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-23T06:25:16Z",
+      "side": 1,
+      "message": "It\u0027s a crash (see below)",
+      "parentUuid": "98cdfed3_0536a7df",
+      "revId": "d3a8252ec8f1097a8de603fa40d77327b9a766b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b71aa05_f64f8d8c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-23T06:25:16Z",
+      "side": 1,
+      "message": "INFO: Enabling validation to prevent invalid calls from being captured. This effectively disables GL_KHR_no_error and enables GL_ANGLE_robust_client_memory.\n../../../src/tests/test_utils/ANGLETest.cpp(64): error: Config.cpp:376 (filter): \t! Unreachable reached: filter(../../../src/libANGLE/Config.cpp:376)\nFATAL: Config.cpp:376 (filter): \t! Unreachable reached: filter(../../../src/libANGLE/Config.cpp:376)\n(See comment above)",
+      "parentUuid": "98cdfed3_0536a7df",
+      "revId": "d3a8252ec8f1097a8de603fa40d77327b9a766b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6dd82b15_076dce56",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 4
@@ -49,6 +85,30 @@
       "writtenOn": "2021-06-22T13:25:11Z",
       "side": 1,
       "message": "Can you remove this now that you added the boolean to the surface constructor? It shouldn\u0027t be necessary any more.",
+      "range": {
+        "startLine": 1010,
+        "startChar": 0,
+        "endLine": 1013,
+        "endChar": 5
+      },
+      "revId": "d3a8252ec8f1097a8de603fa40d77327b9a766b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8143e880_4be926f2",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1013,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-23T06:25:16Z",
+      "side": 1,
+      "message": "This seems to be the reason for the win-trace-rel failure, because \nEGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE is not handled within the filter function. Strange is only that it is not triggered in other builds.",
+      "parentUuid": "6dd82b15_076dce56",
       "range": {
         "startLine": 1010,
         "startChar": 0,
@@ -72,6 +132,30 @@
       "writtenOn": "2021-06-22T13:25:11Z",
       "side": 1,
       "message": "nit: you should also be able to remove this method.",
+      "range": {
+        "startLine": 460,
+        "startChar": 0,
+        "endLine": 460,
+        "endChar": 39
+      },
+      "revId": "d3a8252ec8f1097a8de603fa40d77327b9a766b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "280dfae3_cfb791b1",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-23T06:25:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca64b334_3cac37b4",
       "range": {
         "startLine": 460,
         "startChar": 0,
