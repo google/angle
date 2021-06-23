@@ -401,6 +401,29 @@
       },
       "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "057f707e_162d9752",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-06-23T12:09:50Z",
+      "side": 1,
+      "message": "should always flush (dstTriangle * 3) element sized bytes instead of zero when no pointer is passed.",
+      "range": {
+        "startLine": 312,
+        "startChar": 36,
+        "endLine": 312,
+        "endChar": 78
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
