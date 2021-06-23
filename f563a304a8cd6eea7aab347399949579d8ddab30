@@ -52,6 +52,24 @@
       "parentUuid": "c61144f5_5a6844af",
       "revId": "f563a304a8cd6eea7aab347399949579d8ddab30",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55529b3f_c94eca9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-23T13:37:18Z",
+      "side": 1,
+      "message": "I\u0027ve went with substituting the swapBuffer with glFinish",
+      "parentUuid": "af3ae853_9ad7bd8b",
+      "revId": "f563a304a8cd6eea7aab347399949579d8ddab30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
