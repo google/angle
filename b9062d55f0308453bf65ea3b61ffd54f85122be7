@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1019fefd_1cc0090a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-23T11:38:06Z",
+      "side": 1,
+      "message": "LGTM! Nice work getting this to the final form.",
+      "revId": "b9062d55f0308453bf65ea3b61ffd54f85122be7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32ddd6ea_512699dd",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-23T11:38:06Z",
+      "side": 1,
+      "message": "nit: prefer an explicit type here to make the type more readable.",
+      "range": {
+        "startLine": 216,
+        "startChar": 10,
+        "endLine": 216,
+        "endChar": 14
+      },
+      "revId": "b9062d55f0308453bf65ea3b61ffd54f85122be7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
