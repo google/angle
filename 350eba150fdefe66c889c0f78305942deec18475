@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8dd7df96_eed8f982",
+        "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-23T19:06:00Z",
+      "side": 1,
+      "message": "Nice use of a helper!",
+      "range": {
+        "startLine": 141,
+        "startChar": 16,
+        "endLine": 141,
+        "endChar": 43
+      },
+      "revId": "350eba150fdefe66c889c0f78305942deec18475",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
