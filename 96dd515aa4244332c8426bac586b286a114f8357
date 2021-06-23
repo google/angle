@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "de0ed5f3_b418fc6e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-06-23T03:02:23Z",
+      "side": 1,
+      "message": "Aha, I see, maybe I misunderstood this dependency logic.\n\nOriginally, it\u0027s \n\n```\nimageGlColorspace --\u003e glColorspace --\u003e (supportsSwapchainColorspace + supportsImageFormatList)\n```\n\nWhat I\u0027m thinking is:\n\n```\nglColorspace --\u003e supportsSwapchainColorspace\nimageGlColorspace --\u003e supportsImageFormatList\n```\n\nIf I misunderstood this please correct me, then I can create a follow up CL, thanks in advance!",
+      "parentUuid": "209b1fcd_eb31f086",
+      "range": {
+        "startLine": 10,
+        "startChar": 11,
+        "endLine": 10,
+        "endChar": 56
+      },
+      "revId": "96dd515aa4244332c8426bac586b286a114f8357",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "21327311_b40ee721",
