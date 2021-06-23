@@ -22,6 +22,30 @@
       },
       "revId": "504ec827a3a022cb8046ab524af58bc399824bbe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e109c43_bfdd902c",
+        "filename": "src/libANGLE/renderer/d3d/TextureStorage.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2021-06-23T21:51:46Z",
+      "side": 1,
+      "message": "@Jamie, the plan is to add implementations for those as separate CLs.",
+      "parentUuid": "8f5954bb_7380157a",
+      "range": {
+        "startLine": 88,
+        "startChar": 17,
+        "endLine": 88,
+        "endChar": 30
+      },
+      "revId": "504ec827a3a022cb8046ab524af58bc399824bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
