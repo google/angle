@@ -27,8 +27,6 @@ void TIntermTraverser::traverse(T *node)
 
     bool visit = true;
 
-    mCurrentChildIndex = 0;
-
     // Visit the node before children if pre-visiting.
     if (preVisit)
         visit = node->visit(PreVisit, this);
@@ -426,8 +424,6 @@ void TIntermTraverser::traverseFunctionDefinition(TIntermFunctionDefinition *nod
 
     bool visit = true;
 
-    mCurrentChildIndex = 0;
-
     if (preVisit)
         visit = node->visit(PreVisit, this);
 
@@ -464,7 +460,6 @@ void TIntermTraverser::traverseBlock(TIntermBlock *node)
 
     bool visit = true;
 
-    mCurrentChildIndex        = 0;
     TIntermSequence *sequence = node->getSequence();
 
     if (preVisit)

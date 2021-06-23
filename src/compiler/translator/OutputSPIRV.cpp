@@ -3128,17 +3128,197 @@ bool OutputSPIRVTraverser::visitIfElse(Visit visit, TIntermIfElse *node)
 
 bool OutputSPIRVTraverser::visitSwitch(Visit visit, TIntermSwitch *node)
 {
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
+    // Take the following switch:
+    //
+    //     switch (c)
+    //     {
+    //     case A:
+    //         ABlock;
+    //         break;
+    //     case B:
+    //     default:
+    //         BBlock;
+    //         break;
+    //     case C:
+    //         CBlock;
+    //         // fallthrough
+    //     case D:
+    //         DBlock;
+    //     }
+    //
+    // In SPIR-V, this is implemented similarly to the following pseudo-code:
+    //
+    //     switch c:
+    //         A       -> jump %A
+    //         B       -> jump %B
+    //         C       -> jump %C
+    //         D       -> jump %D
+    //         default -> jump %B
+    //
+    //     %A:
+    //         ABlock
+    //         jump %merge
+    //
+    //     %B:
+    //         BBlock
+    //         jump %merge
+    //
+    //     %C:
+    //         CBlock
+    //         jump %D
+    //
+    //     %D:
+    //         DBlock
+    //         jump %merge
+    //
+    // The OpSwitch instruction contains the jump labels for the default and other cases.  Each
+    // block either terminates with a jump to the merge block or the next block as fallthrough.
+    //
+    //               // pre-switch block
+    //               OpSelectionMerge %merge None
+    //               OpSwitch %cond %C A %A B %B C %C D %D
+    //
+    //          %A = OpLabel
+    //               ABlock
+    //               OpBranch %merge
+    //
+    //          %B = OpLabel
+    //               BBlock
+    //               OpBranch %merge
+    //
+    //          %C = OpLabel
+    //               CBlock
+    //               OpBranch %D
+    //
+    //          %D = OpLabel
+    //               DBlock
+    //               OpBranch %merge
+
+    if (visit == PreVisit)
+    {
+        // Don't add an entry to the stack.  The condition will create one, which we won't pop.
+        return true;
+    }
+
+    // If the condition was just visited, evaluate it and create the switch instruction.
+    if (visit == InVisit)
+    {
+        ASSERT(getLastTraversedChildIndex(visit) == 0);
+
+        const spirv::IdRef conditionValue =
+            accessChainLoad(&mNodeData.back(), mBuilder.getDecorations(node->getInit()->getType()));
+
+        // First, need to find out how many blocks are there in the switch.
+        const TIntermSequence &statements = *node->getStatementList()->getSequence();
+        bool lastWasCase                  = true;
+        size_t blockIndex                 = 0;
+
+        size_t defaultBlockIndex = std::numeric_limits<size_t>::max();
+        TVector<uint32_t> caseValues;
+        TVector<size_t> caseBlockIndices;
+
+        for (TIntermNode *statement : statements)
+        {
+            TIntermCase *caseLabel = statement->getAsCaseNode();
+            const bool isCaseLabel = caseLabel != nullptr;
+
+            if (isCaseLabel)
+            {
+                // For every case label, remember its block index.  This is used later to generate
+                // the OpSwitch instruction.
+                if (caseLabel->hasCondition())
+                {
+                    // All switch conditions are literals.
+                    TIntermConstantUnion *condition =
+                        caseLabel->getCondition()->getAsConstantUnion();
+                    ASSERT(condition != nullptr);
+
+                    TConstantUnion caseValue;
+                    caseValue.cast(EbtUInt, *condition->getConstantValue());
+
+                    caseValues.push_back(caseValue.getUConst());
+                    caseBlockIndices.push_back(blockIndex);
+                }
+                else
+                {
+                    // Remember the block index of the default case.
+                    defaultBlockIndex = blockIndex;
+                }
+                lastWasCase = true;
+            }
+            else if (lastWasCase)
+            {
+                // Every time a non-case node is visited and the previous statement was a case node,
+                // it's a new block.
+                ++blockIndex;
+                lastWasCase = false;
+            }
+        }
+
+        // Block count is the number of blocks based on cases + 1 for the merge block.
+        const size_t blockCount = blockIndex + 1;
+        mBuilder.startConditional(blockCount, false, true);
+
+        // Generate the switch instructions.
+        const SpirvConditional *conditional = mBuilder.getCurrentConditional();
+
+        // Generate the list of caseValue->blockIndex mapping used by the OpSwitch instruction.  If
+        // the switch ends in a number of cases with no statements following them, they will
+        // naturally jump to the merge block!
+        spirv::PairLiteralIntegerIdRefList switchTargets;
+
+        for (size_t caseIndex = 0; caseIndex < caseValues.size(); ++caseIndex)
+        {
+            uint32_t value        = caseValues[caseIndex];
+            size_t caseBlockIndex = caseBlockIndices[caseIndex];
+
+            switchTargets.push_back(
+                {spirv::LiteralInteger(value), conditional->blockIds[caseBlockIndex]});
+        }
+
+        const spirv::IdRef mergeBlock   = conditional->blockIds.back();
+        const spirv::IdRef defaultBlock = defaultBlockIndex < caseValues.size()
+                                              ? conditional->blockIds[defaultBlockIndex]
+                                              : mergeBlock;
+
+        mBuilder.writeSwitch(conditionValue, defaultBlock, switchTargets, mergeBlock);
+        return true;
+    }
+
+    // Terminate the last block if not already and end the conditional.
+    mBuilder.writeSwitchCaseBlockEnd();
+    mBuilder.endConditional();
 
     return true;
 }
 
 bool OutputSPIRVTraverser::visitCase(Visit visit, TIntermCase *node)
 {
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
+    ASSERT(visit == PreVisit);
 
+    mNodeData.emplace_back();
+
+    TIntermBlock *parent    = getParentNode()->getAsBlock();
+    const size_t childIndex = getParentChildIndex(PreVisit);
+
+    ASSERT(parent);
+    const TIntermSequence &parentStatements = *parent->getSequence();
+
+    // Check the previous statement.  If it was not a |case|, then a new block is being started so
+    // handle fallthrough:
+    //
+    //     ...
+    //        statement;
+    //     case X:         <--- end the previous block here
+    //     case Y:
+    //
+    //
+    if (childIndex > 0 && parentStatements[childIndex - 1]->getAsCaseNode() == nullptr)
+    {
+        mBuilder.writeSwitchCaseBlockEnd();
+    }
+
+    // Don't traverse the condition, as it was processed in visitSwitch.
     return false;
 }
 
@@ -3161,7 +3341,24 @@ bool OutputSPIRVTraverser::visitBlock(Visit visit, TIntermBlock *node)
     // Any node that needed to generate code has already done so, just clean up its data.  If
     // the child node has no effect, it's automatically discarded (such as variable.field[n].x,
     // side effects of n already having generated code).
-    mNodeData.pop_back();
+    //
+    // Blocks inside blocks like:
+    //
+    //     {
+    //         statement;
+    //         {
+    //             statement2;
+    //         }
+    //     }
+    //
+    // don't generate nodes.
+    const size_t childIndex           = getLastTraversedChildIndex(visit);
+    const TIntermSequence &statements = *node->getSequence();
+
+    if (statements[childIndex]->getAsBlock() == nullptr)
+    {
+        mNodeData.pop_back();
+    }
 
     return true;
 }

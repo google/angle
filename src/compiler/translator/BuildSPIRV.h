@@ -313,6 +313,11 @@ class SPIRVBuilder : angle::NonCopyable
                                spirv::IdRef mergeBlock);
     void writeLoopContinueEnd(spirv::IdRef headerBlock);
     void writeLoopBodyEnd(spirv::IdRef continueBlock);
+    void writeSwitch(spirv::IdRef conditionValue,
+                     spirv::IdRef defaultBlock,
+                     const spirv::PairLiteralIntegerIdRefList &targetPairList,
+                     spirv::IdRef mergeBlock);
+    void writeSwitchCaseBlockEnd();
 
     spirv::IdRef getBoolConstant(bool value);
     spirv::IdRef getUintConstant(uint32_t value);

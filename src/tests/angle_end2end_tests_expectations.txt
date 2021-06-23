@@ -19,6 +19,8 @@
 4092 WIN OPENGL : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 4092 WIN GLES : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 6064 WIN D3D11 : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
+6101 WIN OPENGL INTEL : BlitFramebufferTest.OOBWrite/* = SKIP
+6123 WIN AMD VULKAN : GLSLTestLoops.DoWhileContinueInSwitch/* = SKIP
 
 // Linux
 6065 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
@@ -28,9 +30,11 @@
 // Nvidia
 6115 NVIDIA OPENGL : GLSLTestLoops.DoWhileContinue/* = SKIP
 6115 NVIDIA OPENGL : GLSLTestLoops.DoWhileUnconditionalContinue/* = SKIP
+6115 NVIDIA OPENGL : GLSLTestLoops.DoWhileContinueInSwitch/* = SKIP
 6115 NVIDIA OPENGL : GLSLTestLoops.WhileBreak/* = SKIP
 6115 NVIDIA GLES : GLSLTestLoops.DoWhileContinue/* = SKIP
 6115 NVIDIA GLES : GLSLTestLoops.DoWhileUnconditionalContinue/* = SKIP
+6115 NVIDIA GLES : GLSLTestLoops.DoWhileContinueInSwitch/* = SKIP
 6115 NVIDIA GLES : GLSLTestLoops.WhileBreak/* = SKIP
 
 // Intel Vulkan
@@ -53,10 +57,11 @@
 6025 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8IndexSmallUpdates/* = SKIP
 6096 MAC METAL : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 6060 MAC METAL : BlitFramebufferTest.OOBWrite/* = SKIP
-6101 WIN OPENGL INTEL : BlitFramebufferTest.OOBWrite/* = SKIP
+6124 MAC OPENGL : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 
 // D3D
 6091 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
+6122 WIN D3D11 : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/ES3_OpenGLES = SKIP

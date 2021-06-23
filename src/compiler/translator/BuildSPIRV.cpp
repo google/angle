@@ -976,7 +976,7 @@ void SPIRVBuilder::nextConditionalBlock()
     SpirvConditional &conditional = mConditionalStack.back();
 
     ASSERT(conditional.nextBlockToWrite < conditional.blockIds.size());
-    spirv::IdRef blockId = conditional.blockIds[conditional.nextBlockToWrite++];
+    const spirv::IdRef blockId = conditional.blockIds[conditional.nextBlockToWrite++];
 
     // The previous block must have properly terminated.
     ASSERT(isCurrentFunctionBlockTerminated());
@@ -1287,6 +1287,44 @@ void SPIRVBuilder::writeLoopBodyEnd(spirv::IdRef continueBlock)
     }
 
     // Start the next block, which is %merge or if while, %continue.
+    nextConditionalBlock();
+}
+
+void SPIRVBuilder::writeSwitch(spirv::IdRef conditionValue,
+                               spirv::IdRef defaultBlock,
+                               const spirv::PairLiteralIntegerIdRefList &targetPairList,
+                               spirv::IdRef mergeBlock)
+{
+    // Generate the following:
+    //
+    //     OpSelectionMerge %mergeBlock None
+    //     OpSwitch %conditionValue %defaultBlock A %ABlock B %BBlock ...
+    //
+    spirv::WriteSelectionMerge(getSpirvCurrentFunctionBlock(), mergeBlock,
+                               spv::SelectionControlMaskNone);
+    spirv::WriteSwitch(getSpirvCurrentFunctionBlock(), conditionValue, defaultBlock,
+                       targetPairList);
+    terminateCurrentFunctionBlock();
+
+    // Start the next case block.
+    nextConditionalBlock();
+}
+
+void SPIRVBuilder::writeSwitchCaseBlockEnd()
+{
+    if (!isCurrentFunctionBlockTerminated())
+    {
+        // If a case does not end in branch, insert a branch to the next block, implementing
+        // fallthrough.  For the last block, the branch target would automatically be the merge
+        // block.
+        const SpirvConditional *conditional = getCurrentConditional();
+        const spirv::IdRef nextBlock        = conditional->blockIds[conditional->nextBlockToWrite];
+
+        spirv::WriteBranch(getSpirvCurrentFunctionBlock(), nextBlock);
+        terminateCurrentFunctionBlock();
+    }
+
+    // Move on to the next block.
     nextConditionalBlock();
 }
 
