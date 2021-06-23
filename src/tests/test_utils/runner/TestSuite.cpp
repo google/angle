@@ -1736,7 +1736,7 @@ int TestSuite::run()
         }
 
         // Early exit if we passed the maximum failure threshold. Still wait for current tests.
-        if (mFailureCount > mMaxFailures)
+        if (mFailureCount > mMaxFailures && !mTestQueue.empty())
         {
             printf("Reached maximum failure count (%d), clearing test queue.\n", mMaxFailures);
             TestQueue emptyTestQueue;
@@ -1748,8 +1748,18 @@ int TestSuite::run()
     }
 
     // Dump combined results.
-    WriteOutputFiles(false, mTestResults, mResultsFile, mHistogramWriter, mHistogramJsonFile,
-                     mTestSuiteName.c_str());
+    if (mFailureCount > mMaxFailures)
+    {
+        printf(
+            "Omitted results files because the failure count (%d) exceeded the maximum number of "
+            "failures (%d).\n",
+            mFailureCount, mMaxFailures);
+    }
+    else
+    {
+        WriteOutputFiles(false, mTestResults, mResultsFile, mHistogramWriter, mHistogramJsonFile,
+                         mTestSuiteName.c_str());
+    }
 
     totalRunTime.stop();
     printf("Tests completed in %lf seconds\n", totalRunTime.getElapsedTime());
