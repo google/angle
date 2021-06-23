@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbc5852b_32f5c697",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-23T20:55:26Z",
+      "side": 1,
+      "message": "Thanks Shabi, one comment.",
+      "revId": "3a8b68ae492db552ade25f357d9fc9681e72f51e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1361d7b_e6f8a39d",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-23T20:55:26Z",
+      "side": 1,
+      "message": "can you share code with this guy? Also I notice it\u0027s a bit more particular with the shifting and +1/-1, IIRC it\u0027s an edge-case thing for the maximum bit.",
+      "range": {
+        "startLine": 162,
+        "startChar": 0,
+        "endLine": 165,
+        "endChar": 5
+      },
+      "revId": "3a8b68ae492db552ade25f357d9fc9681e72f51e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
