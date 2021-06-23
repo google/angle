@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "23a22b4d_88436f3c",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-06-23T12:02:50Z",
+      "side": 1,
+      "message": "Apple added this flag to spirv based translator, but they have moved on to their own direct msl translator so this flag is no longer needed.",
+      "range": {
+        "startLine": 53,
+        "startChar": 9,
+        "endLine": 53,
+        "endChar": 38
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f004da3f_12feaf88",
         "filename": "src/libANGLE/renderer/metal/ContextMtl.h",
         "patchSetId": 21
