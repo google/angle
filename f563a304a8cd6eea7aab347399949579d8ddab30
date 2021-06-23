@@ -34,6 +34,24 @@
       "parentUuid": "29bc14bb_41728084",
       "revId": "f563a304a8cd6eea7aab347399949579d8ddab30",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af3ae853_9ad7bd8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-23T13:15:49Z",
+      "side": 1,
+      "message": "IIRC there was a reason for it originally. It\u0027s a bit hard to reconstruct the original bug, but probably it only failed with the loop like it was written. I\u0027m fine with removing it, or replacing the swap with flush or finish. Note it\u0027s different to flush or finish within the loop, and to enqueue 10 draws and flush or finish after the loop.",
+      "parentUuid": "c61144f5_5a6844af",
+      "revId": "f563a304a8cd6eea7aab347399949579d8ddab30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
