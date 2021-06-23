@@ -39,6 +39,30 @@
       },
       "revId": "b9062d55f0308453bf65ea3b61ffd54f85122be7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d44e122e_b65948ef",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-23T13:45:09Z",
+      "side": 1,
+      "message": "Changed, I made it a bit different to avoid yet another line break.",
+      "parentUuid": "32ddd6ea_512699dd",
+      "range": {
+        "startLine": 216,
+        "startChar": 10,
+        "endLine": 216,
+        "endChar": 14
+      },
+      "revId": "b9062d55f0308453bf65ea3b61ffd54f85122be7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
