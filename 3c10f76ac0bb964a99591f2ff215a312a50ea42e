@@ -51,6 +51,46 @@
       "parentUuid": "74fdc3e8_9462a7d2",
       "revId": "3c10f76ac0bb964a99591f2ff215a312a50ea42e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3da9d467_c99589ea",
+        "filename": "scripts/export_targets.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-23T17:02:55Z",
+      "side": 1,
+      "message": "Probably cleaner to fully remove this line",
+      "revId": "3c10f76ac0bb964a99591f2ff215a312a50ea42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "265f123f_60fab351",
+        "filename": "src/common/vulkan/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-23T17:02:55Z",
+      "side": 1,
+      "message": "Isn\u0027t that what this CL does?",
+      "range": {
+        "startLine": 67,
+        "startChar": 6,
+        "endLine": 67,
+        "endChar": 74
+      },
+      "revId": "3c10f76ac0bb964a99591f2ff215a312a50ea42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
