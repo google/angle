@@ -188,7 +188,7 @@ def get_os_from_name(name):
     return os.MAC
 
 # Adds both the CI and Try standalone builders.
-def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False, trace_tests = False):
+def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode = "compile_and_test"):
     properties = {
         "builder_group": "angle",
     }
@@ -210,14 +210,12 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
     properties["platform"] = config_os.console_name
     properties["toolchain"] = toolchain
 
-    if trace_tests:
-        properties["test_mode"] = "trace_tests"
-    elif toolchain == "gcc":
+    if toolchain == "gcc":
         properties["test_mode"] = "checkout_only"
     elif debug or toolchain == "msvc" or (config_os.category == os_category.ANDROID and cpu == "arm"):
         properties["test_mode"] = "compile_only"
     else:
-        properties["test_mode"] = "compile_and_test"
+        properties["test_mode"] = test_mode
 
     luci.builder(
         name = name,
@@ -230,23 +228,17 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
         build_numbers = True,
     )
 
-    luci.builder(
-        name = name,
-        bucket = "try",
-        executable = "recipe:angle",
-        service_account = "angle-try-builder@chops-service-accounts.iam.gserviceaccount.com",
-        properties = properties,
-        dimensions = dimensions,
-        build_numbers = True,
-    )
+    is_perf = "-perf" in name
 
     # Trace tests are only included automatically if files in the capture folder change.
-    if trace_tests:
+    if test_mode == "trace_tests":
         config = "trace"
         location_regexp = [
             ".+/[+]/src/libANGLE/capture/.+",
             ".+/[+]/src/tests/capture.+",
         ]
+    elif is_perf:
+        config = "perf"
     else:
         config = "angle"
         location_regexp = None
@@ -265,18 +257,30 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
         short_name = short_name,
     )
 
-    luci.list_view_entry(
-        list_view = "try",
-        builder = "try/" + name,
-    )
-
-    # Include all bots in the CQ by default except GCC and Android configs.
-    if toolchain != "gcc":
-        luci.cq_tryjob_verifier(
-            cq_group = "master",
-            builder = "angle:try/" + name,
-            location_regexp = location_regexp,
+    # Do not include perf tests in "try".
+    if not is_perf:
+        luci.list_view_entry(
+            list_view = "try",
+            builder = "try/" + name,
         )
+
+        luci.builder(
+            name = name,
+            bucket = "try",
+            executable = "recipe:angle",
+            service_account = "angle-try-builder@chops-service-accounts.iam.gserviceaccount.com",
+            properties = properties,
+            dimensions = dimensions,
+            build_numbers = True,
+        )
+
+        # Include all other bots in the CQ by default except the placeholder GCC configs.
+        if toolchain != "gcc":
+            luci.cq_tryjob_verifier(
+                cq_group = "master",
+                builder = "angle:try/" + name,
+                location_regexp = location_regexp,
+            )
 
 luci.bucket(
     name = "ci",
@@ -329,28 +333,33 @@ luci.gitiles_poller(
 )
 
 # name, clang, debug, cpu, uwp, trace_tests
-angle_standalone_builder("android-arm-dbg", debug = True, cpu = "arm")
-angle_standalone_builder("android-arm-rel", debug = False, cpu = "arm")
-angle_standalone_builder("android-arm64-dbg", debug = True, cpu = "arm64")
-angle_standalone_builder("android-arm64-rel", debug = False, cpu = "arm64")
-angle_standalone_builder("linux-clang-dbg", debug = True, cpu = "x64")
-angle_standalone_builder("linux-clang-rel", debug = False, cpu = "x64")
-angle_standalone_builder("linux-gcc-dbg", debug = True, cpu = "x64", toolchain = "gcc")
-angle_standalone_builder("linux-gcc-rel", debug = False, cpu = "x64", toolchain = "gcc")
-angle_standalone_builder("linux-trace-rel", debug = False, cpu = "x64", trace_tests = True)
-angle_standalone_builder("mac-dbg", debug = True, cpu = "x64")
-angle_standalone_builder("mac-rel", debug = False, cpu = "x64")
-angle_standalone_builder("win-clang-x86-dbg", debug = True, cpu = "x86")
-angle_standalone_builder("win-clang-x86-rel", debug = False, cpu = "x86")
-angle_standalone_builder("win-clang-x64-dbg", debug = True, cpu = "x64")
-angle_standalone_builder("win-clang-x64-rel", debug = False, cpu = "x64")
-angle_standalone_builder("win-msvc-x86-dbg", debug = True, cpu = "x86", toolchain = "msvc")
-angle_standalone_builder("win-msvc-x86-rel", debug = False, cpu = "x86", toolchain = "msvc")
-angle_standalone_builder("win-msvc-x64-dbg", debug = True, cpu = "x64", toolchain = "msvc")
-angle_standalone_builder("win-msvc-x64-rel", debug = False, cpu = "x64", toolchain = "msvc")
-angle_standalone_builder("win-trace-rel", debug = False, cpu = "x64", trace_tests = True)
-angle_standalone_builder("winuwp-x64-dbg", debug = True, cpu = "x64", toolchain = "msvc", uwp = True)
-angle_standalone_builder("winuwp-x64-rel", debug = False, cpu = "x64", toolchain = "msvc", uwp = True)
+angle_builder("android-arm-dbg", debug = True, cpu = "arm")
+angle_builder("android-arm-rel", debug = False, cpu = "arm")
+angle_builder("android-arm64-dbg", debug = True, cpu = "arm64")
+angle_builder("android-arm64-rel", debug = False, cpu = "arm64")
+angle_builder("linux-clang-dbg", debug = True, cpu = "x64")
+angle_builder("linux-clang-rel", debug = False, cpu = "x64")
+angle_builder("linux-gcc-dbg", debug = True, cpu = "x64", toolchain = "gcc")
+angle_builder("linux-gcc-rel", debug = False, cpu = "x64", toolchain = "gcc")
+angle_builder("mac-dbg", debug = True, cpu = "x64")
+angle_builder("mac-rel", debug = False, cpu = "x64")
+angle_builder("win-clang-x86-dbg", debug = True, cpu = "x86")
+angle_builder("win-clang-x86-rel", debug = False, cpu = "x86")
+angle_builder("win-clang-x64-dbg", debug = True, cpu = "x64")
+angle_builder("win-clang-x64-rel", debug = False, cpu = "x64")
+angle_builder("win-msvc-x86-dbg", debug = True, cpu = "x86", toolchain = "msvc")
+angle_builder("win-msvc-x86-rel", debug = False, cpu = "x86", toolchain = "msvc")
+angle_builder("win-msvc-x64-dbg", debug = True, cpu = "x64", toolchain = "msvc")
+angle_builder("win-msvc-x64-rel", debug = False, cpu = "x64", toolchain = "msvc")
+angle_builder("winuwp-x64-dbg", debug = True, cpu = "x64", toolchain = "msvc", uwp = True)
+angle_builder("winuwp-x64-rel", debug = False, cpu = "x64", toolchain = "msvc", uwp = True)
+
+angle_builder("linux-trace-rel", debug = False, cpu = "x64", test_mode = "trace_tests")
+angle_builder("win-trace-rel", debug = False, cpu = "x64", test_mode = "trace_tests")
+
+angle_builder("android-perf", debug = False, cpu = "arm64")
+angle_builder("linux-perf", debug = False, cpu = "x64")
+angle_builder("win-perf", debug = False, cpu = "x64")
 
 # Views
 
