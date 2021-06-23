@@ -188,6 +188,30 @@
       },
       "revId": "19854ed69f22ff19bcfd98f11ec93502d7b64024",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c8701b1_af0e7eae",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-23T15:15:59Z",
+      "side": 1,
+      "message": "Right well, this function isn\u0027t juggling or anything like that is all.",
+      "parentUuid": "4935974d_de1ccc64",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 1
+      },
+      "revId": "19854ed69f22ff19bcfd98f11ec93502d7b64024",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
