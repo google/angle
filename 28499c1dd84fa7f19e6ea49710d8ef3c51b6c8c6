@@ -113,6 +113,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "93f4f2aa_54de54ec",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-23T23:27:26Z",
+      "side": 1,
+      "message": "\u003e What does this extension do exactly?\n\nseeing as how references to GL_OES_EGL_image_external causes more confusion than i expected, i have simplified the spec to just introducing new sized internal formats.\n\n\u003e I would also avoid using the term \"non-standard\"\n\nDone",
+      "parentUuid": "1eb59895_370abd88",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 75
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bf81ea01_fafba91e",
@@ -136,6 +160,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1dcae98_a1df32a0",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-23T23:27:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf81ea01_fafba91e",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 47
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c8848044_0b0f9f9f",
@@ -149,6 +197,30 @@
       "writtenOn": "2021-06-10T13:31:48Z",
       "side": 1,
       "message": "suggest you spell out which enums are valid in this case specifically.",
+      "range": {
+        "startLine": 56,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 62
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9854af1f_5a5d5848",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-23T23:27:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8848044_0b0f9f9f",
       "range": {
         "startLine": 56,
         "startChar": 2,
@@ -302,6 +374,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f41cbdca_706af62f",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-23T23:27:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de7490de_fbeb767e",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 62
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "138f2c88_37b1521e",
@@ -373,6 +469,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fed76ab4_962accf8",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-23T23:27:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "baf295c3_2a88e9d5",
+      "range": {
+        "startLine": 108,
+        "startChar": 48,
+        "endLine": 108,
+        "endChar": 57
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0df8e1e7_c2062d05",
@@ -422,6 +542,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b4984f41_49d8ca85",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-23T23:27:26Z",
+      "side": 1,
+      "message": "jamie, need clarification here",
+      "parentUuid": "bbd1994a_588021e5",
+      "range": {
+        "startLine": 297,
+        "startChar": 0,
+        "endLine": 308,
+        "endChar": 52
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e39ad9c6_12fe2212",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 6
@@ -433,6 +577,30 @@
       "writtenOn": "2021-06-09T20:32:06Z",
       "side": 1,
       "message": "nit: comment before test.",
+      "range": {
+        "startLine": 1643,
+        "startChar": 0,
+        "endLine": 1643,
+        "endChar": 6
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "195ff014_94c26faa",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1643,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-23T23:27:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e39ad9c6_12fe2212",
       "range": {
         "startLine": 1643,
         "startChar": 0,
