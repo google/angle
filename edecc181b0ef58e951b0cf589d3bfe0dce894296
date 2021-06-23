@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30564f3e_cbde53fc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-23T19:10:25Z",
+      "side": 1,
+      "message": "LGTM, verified by looking at https://www.khronos.org/registry/OpenGL/extensions/OES/OES_draw_texture.txt\n\nAny tests that come along with it?\n\n+Lubosz for GLES 1 change.",
+      "revId": "edecc181b0ef58e951b0cf589d3bfe0dce894296",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
