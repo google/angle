@@ -50,6 +50,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d6b1df00_d48665ce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-23T16:44:21Z",
+      "side": 1,
+      "message": "Ah, failures are triggered only **after** the change is made to flush descriptor set updates to happen during flush*Commands()",
+      "parentUuid": "307a5180_a097243b",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 61
+      },
+      "revId": "edd5c3fab85434e041680ee587e4bfa1d8e16d56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "fe509263_b532a6ff",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 12
