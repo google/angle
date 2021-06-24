@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "ac19f3c6aa24d92b82f0dd55487d44517d33bb84",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02f3194d_6c20f9a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-24T21:49:27Z",
+      "side": 1,
+      "message": "jamie, i have seen such errors popping up recently -\n\n Dry run: Failed builds:\n  luci.angle.try/presubmit JOB_FAILED https://cr-buildbucket.appspot.com/build/8843507681479086672\n    There are 1 error, 0 warnings, and 1 notification.    \n    Here are the errors:    \n    **ERROR**    \n    The angle directory requires source formatting\\. Please run: git cl format \n    To see notifications and warnings, look at the stdout of the presubmit step.\n    \nbut my local tree is clean and has no formatting errors. Is there a known issue with presubmit?",
+      "revId": "ac19f3c6aa24d92b82f0dd55487d44517d33bb84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
