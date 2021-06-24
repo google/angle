@@ -51,6 +51,24 @@
       "message": "Thanks!",
       "revId": "3030f962e832c12a436ac3d2acd13e9a6a042f70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0243d720_69378eb1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-24T08:34:42Z",
+      "side": 1,
+      "message": "I don\u0027t think that this is really needed, it was triggered by the half-finished robust resource init patch, but now the failure doesn\u0027t show up anymore.",
+      "parentUuid": "153f1e0a_b96fde91",
+      "revId": "3030f962e832c12a436ac3d2acd13e9a6a042f70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
