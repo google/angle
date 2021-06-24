@@ -108,6 +108,16 @@ TEST_P(BufferDataTest, MAYBE_NULLData)
     }
 }
 
+// If glBufferData was not called yet the capturing must not try to
+// read the data. http://anglebug.com/6093
+TEST_P(BufferDataTest, Uninitialized)
+{
+    // Trigger frame capture to try capturing the
+    // generated but uninitialized buffer
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    swapBuffers();
+}
+
 TEST_P(BufferDataTest, ZeroNonNULLData)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);

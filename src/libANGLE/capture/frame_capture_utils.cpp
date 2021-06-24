@@ -762,12 +762,19 @@ Result SerializeBuffer(const gl::Context *context,
 {
     GroupScope group(json, "Buffer");
     SerializeBufferState(json, buffer->getState());
-    MemoryBuffer *dataPtr = nullptr;
-    ANGLE_CHECK_GL_ALLOC(
-        const_cast<gl::Context *>(context),
-        scratchBuffer->getInitialized(static_cast<size_t>(buffer->getSize()), &dataPtr, 0));
-    ANGLE_TRY(buffer->getSubData(context, 0, dataPtr->size(), dataPtr->data()));
-    json->addBlob("data", dataPtr->data(), dataPtr->size());
+    if (buffer->getSize())
+    {
+        MemoryBuffer *dataPtr = nullptr;
+        ANGLE_CHECK_GL_ALLOC(
+            const_cast<gl::Context *>(context),
+            scratchBuffer->getInitialized(static_cast<size_t>(buffer->getSize()), &dataPtr, 0));
+        ANGLE_TRY(buffer->getSubData(context, 0, dataPtr->size(), dataPtr->data()));
+        json->addBlob("data", dataPtr->data(), dataPtr->size());
+    }
+    else
+    {
+        json->addCString("data", "null");
+    }
     return Result::Continue;
 }
 void SerializeColorGeneric(JsonSerializer *json,
