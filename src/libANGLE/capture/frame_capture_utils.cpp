@@ -866,12 +866,20 @@ Result SerializeRenderbuffer(const gl::Context *context,
     ANGLE_CHECK_GL_ALLOC(
         const_cast<gl::Context *>(context),
         scratchBuffer->getInitialized(renderbuffer->getMemorySize(), &pixelsPtr, 0));
-    gl::PixelPackState packState;
-    packState.alignment = 1;
-    ANGLE_TRY(renderbuffer->getImplementation()->getRenderbufferImage(
-        context, packState, nullptr, renderbuffer->getImplementationColorReadFormat(context),
-        renderbuffer->getImplementationColorReadType(context), pixelsPtr->data()));
-    json->addBlob("pixel", pixelsPtr->data(), pixelsPtr->size());
+
+    if (renderbuffer->initState(gl::ImageIndex()) == gl::InitState::Initialized)
+    {
+        gl::PixelPackState packState;
+        packState.alignment = 1;
+        ANGLE_TRY(renderbuffer->getImplementation()->getRenderbufferImage(
+            context, packState, nullptr, renderbuffer->getImplementationColorReadFormat(context),
+            renderbuffer->getImplementationColorReadType(context), pixelsPtr->data()));
+        json->addBlob("pixel", pixelsPtr->data(), pixelsPtr->size());
+    }
+    else
+    {
+        json->addCString("pixel", "Not initialized");
+    }
     return Result::Continue;
 }
 

@@ -31,7 +31,6 @@ ClipDistanceTest.*
 CopyCompressedTextureTest.InternalFormat/*
 DebugMarkerTest.*
 DebugTest.*
-DepthStencilTest.*
 EGLPrintEGLinfoTest.PrintGLESCapabilities/*
 EGLStreamTest.*
 ExternalWrapTest.*
