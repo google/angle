@@ -5613,7 +5613,8 @@ void WriteParamValueReplay<ParamType::TGLeglImageOES>(std::ostream &os,
                                                       const CallCapture &call,
                                                       GLeglImageOES value)
 {
-    os << "reinterpret_cast<EGLImageKHR>(" << value << ")";
+    uint64_t pointerValue = reinterpret_cast<uint64_t>(value);
+    os << "reinterpret_cast<EGLImageKHR>(" << pointerValue << "ul)";
 }
 
 template <>
