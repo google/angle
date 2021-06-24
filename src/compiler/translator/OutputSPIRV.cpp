@@ -240,12 +240,11 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef visitOperator(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createIncrementDecrement(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createAtomicBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
-    spirv::IdRef createTextureBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
-    spirv::IdRef createImageBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
+    spirv::IdRef createImageTextureBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
 
     spirv::IdRef createFunctionCall(TIntermAggregate *node, spirv::IdRef resultTypeId);
 
-    ANGLE_MAYBE_UNUSED TCompiler *mCompiler;
+    TCompiler *mCompiler;
     ShCompileOptions mCompileOptions;
 
     SPIRVBuilder mBuilder;
@@ -1693,13 +1692,9 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     {
         return createAtomicBuiltIn(node, resultTypeId);
     }
-    if (BuiltInGroup::IsTexture(op))
+    if (BuiltInGroup::IsImage(op) || BuiltInGroup::IsTexture(op))
     {
-        return createTextureBuiltIn(node, resultTypeId);
-    }
-    if (BuiltInGroup::IsImage(op))
-    {
-        return createImageBuiltIn(node, resultTypeId);
+        return createImageTextureBuiltIn(node, resultTypeId);
     }
 
     const size_t childCount  = node->getChildCount();
@@ -2588,20 +2583,776 @@ spirv::IdRef OutputSPIRVTraverser::createAtomicBuiltIn(TIntermOperator *node,
     return result;
 }
 
-spirv::IdRef OutputSPIRVTraverser::createTextureBuiltIn(TIntermOperator *node,
-                                                        spirv::IdRef resultTypeId)
+spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *node,
+                                                             spirv::IdRef resultTypeId)
 {
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
-    return spirv::IdRef{};
-}
+    const TOperator op                = node->getOp();
+    const TFunction *function         = node->getAsAggregate()->getFunction();
+    const TType &samplerType          = function->getParam(0)->getType();
+    const TBasicType samplerBasicType = samplerType.getBasicType();
 
-spirv::IdRef OutputSPIRVTraverser::createImageBuiltIn(TIntermOperator *node,
-                                                      spirv::IdRef resultTypeId)
-{
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
-    return spirv::IdRef{};
+    // Load the parameters.
+    spirv::IdRefList parameters = loadAllParams(node);
+
+    // GLSL texture* and image* built-ins map to the following SPIR-V instructions.  Some of these
+    // instructions take a "sampled image" while the others take the image itself.  In these
+    // functions, the image, coordinates and Dref (for shadow sampling) are specified as positional
+    // parameters while the rest are bundled in a list of image operands.
+    //
+    // Image operations that query:
+    //
+    // - OpImageQuerySizeLod
+    // - OpImageQuerySize
+    // - OpImageQueryLod <-- sampled image
+    // - OpImageQueryLevels
+    // - OpImageQuerySamples
+    //
+    // Image operations that read/write:
+    //
+    // - OpImageSampleImplicitLod <-- sampled image
+    // - OpImageSampleExplicitLod <-- sampled image
+    // - OpImageSampleDrefImplicitLod <-- sampled image
+    // - OpImageSampleDrefExplicitLod <-- sampled image
+    // - OpImageSampleProjImplicitLod <-- sampled image
+    // - OpImageSampleProjExplicitLod <-- sampled image
+    // - OpImageSampleProjDrefImplicitLod <-- sampled image
+    // - OpImageSampleProjDrefExplicitLod <-- sampled image
+    // - OpImageFetch
+    // - OpImageGather <-- sampled image
+    // - OpImageDrefGather <-- sampled image
+    // - OpImageRead
+    // - OpImageWrite
+    //
+    // The additional image parameters are:
+    //
+    // - Bias: Only used with ImplicitLod.
+    // - Lod: Only used with ExplicitLod.
+    // - Grad: 2x operands; dx and dy.  Only used with ExplicitLod.
+    // - ConstOffset: Constant offset added to coordinates of OpImage*Gather.
+    // - Offset: Non-constant offset added to coordinates of OpImage*Gather.
+    // - ConstOffsets: Constant offsets added to coordinates of OpImage*Gather.
+    // - Sample: Only used with OpImageFetch, OpImageRead and OpImageWrite.
+    //
+    // Where GLSL's built-in takes a sampler but SPIR-V expects an image, OpImage can be used to get
+    // the SPIR-V image out of a SPIR-V sampled image.
+
+    // The first parameter, which is either a sampled image or an image.  Some GLSL built-ins
+    // receive a sampled image but their SPIR-V equivalent expects an image.  OpImage is used in
+    // that case.
+    spirv::IdRef image                = parameters[0];
+    bool extractImageFromSampledImage = false;
+
+    // The argument index for different possible parameters.  0 indicates that the argument is
+    // unused.  Coordinates are usually at index 1, so it's pre-initialized.
+    size_t coordinatesIndex     = 1;
+    size_t biasIndex            = 0;
+    size_t lodIndex             = 0;
+    size_t compareIndex         = 0;
+    size_t dPdxIndex            = 0;
+    size_t dPdyIndex            = 0;
+    size_t offsetIndex          = 0;
+    size_t offsetsIndex         = 0;
+    size_t gatherComponentIndex = 0;
+    size_t sampleIndex          = 0;
+    size_t dataIndex            = 0;
+
+    // Whether this is a Dref variant of a sample call.
+    bool isDref = IsShadowSampler(samplerBasicType);
+    // Whether this is a Proj variant of a sample call.
+    bool isProj = false;
+
+    // The SPIR-V op used to implement the built-in.  For OpImageSample* instructions,
+    // OpImageSampleImplicitLod is initially specified, which is later corrected based on |isDref|
+    // and |isProj|.
+    spv::Op spirvOp = BuiltInGroup::IsTexture(op) ? spv::OpImageSampleImplicitLod : spv::OpNop;
+
+    // Organize the parameters and decide the SPIR-V Op to use.
+    switch (op)
+    {
+        case EOpTexture2D:
+        case EOpTextureCube:
+        case EOpTexture1D:
+        case EOpTexture3D:
+        case EOpShadow1D:
+        case EOpShadow2D:
+        case EOpShadow2DEXT:
+        case EOpTexture2DRect:
+        case EOpTextureVideoWEBGL:
+        case EOpTexture:
+
+        case EOpTexture2DBias:
+        case EOpTextureCubeBias:
+        case EOpTexture3DBias:
+        case EOpTexture1DBias:
+        case EOpShadow1DBias:
+        case EOpShadow2DBias:
+        case EOpTextureBias:
+
+            // For shadow cube arrays, the compare value is specified through an additional
+            // parameter, while for the rest is taken out of the coordinates.
+            if (function->getParamCount() == 3)
+            {
+                if (samplerBasicType == EbtSamplerCubeArrayShadow)
+                {
+                    compareIndex = 2;
+                }
+                else
+                {
+                    biasIndex = 2;
+                }
+            }
+            break;
+
+        case EOpTexture2DProj:
+        case EOpTexture1DProj:
+        case EOpTexture3DProj:
+        case EOpShadow1DProj:
+        case EOpShadow2DProj:
+        case EOpShadow2DProjEXT:
+        case EOpTexture2DRectProj:
+        case EOpTextureProj:
+
+        case EOpTexture2DProjBias:
+        case EOpTexture3DProjBias:
+        case EOpTexture1DProjBias:
+        case EOpShadow1DProjBias:
+        case EOpShadow2DProjBias:
+        case EOpTextureProjBias:
+
+            isProj = true;
+            if (function->getParamCount() == 3)
+            {
+                biasIndex = 2;
+            }
+            break;
+
+        case EOpTexture2DLod:
+        case EOpTextureCubeLod:
+        case EOpTexture1DLod:
+        case EOpShadow1DLod:
+        case EOpShadow2DLod:
+        case EOpTexture3DLod:
+
+        case EOpTexture2DLodVS:
+        case EOpTextureCubeLodVS:
+
+        case EOpTexture2DLodEXTFS:
+        case EOpTextureCubeLodEXTFS:
+        case EOpTextureLod:
+
+            ASSERT(function->getParamCount() == 3);
+            lodIndex = 2;
+            break;
+
+        case EOpTexture2DProjLod:
+        case EOpTexture1DProjLod:
+        case EOpShadow1DProjLod:
+        case EOpShadow2DProjLod:
+        case EOpTexture3DProjLod:
+
+        case EOpTexture2DProjLodVS:
+
+        case EOpTexture2DProjLodEXTFS:
+        case EOpTextureProjLod:
+
+            ASSERT(function->getParamCount() == 3);
+            isProj   = true;
+            lodIndex = 2;
+            break;
+
+        case EOpTexelFetch:
+        case EOpTexelFetchOffset:
+            // texelFetch has the following forms:
+            //
+            // - texelFetch(sampler, P);
+            // - texelFetch(sampler, P, lod);
+            // - texelFetch(samplerMS, P, sample);
+            //
+            // texelFetchOffset has an additional offset parameter at the end.
+            //
+            // In SPIR-V, OpImageFetch is used which operates on the image itself.
+            spirvOp                      = spv::OpImageFetch;
+            extractImageFromSampledImage = true;
+
+            if (IsSamplerMS(samplerBasicType))
+            {
+                ASSERT(function->getParamCount() == 3);
+                sampleIndex = 2;
+            }
+            else if (function->getParamCount() >= 3)
+            {
+                lodIndex = 2;
+            }
+            if (op == EOpTexelFetchOffset)
+            {
+                offsetIndex = function->getParamCount() - 1;
+            }
+            break;
+
+        case EOpTexture2DGradEXT:
+        case EOpTextureCubeGradEXT:
+        case EOpTextureGrad:
+
+            ASSERT(function->getParamCount() == 4);
+            dPdxIndex = 2;
+            dPdyIndex = 3;
+            break;
+
+        case EOpTexture2DProjGradEXT:
+        case EOpTextureProjGrad:
+
+            ASSERT(function->getParamCount() == 4);
+            isProj    = true;
+            dPdxIndex = 2;
+            dPdyIndex = 3;
+            break;
+
+        case EOpTextureOffset:
+        case EOpTextureOffsetBias:
+
+            ASSERT(function->getParamCount() >= 3);
+            offsetIndex = 2;
+            if (function->getParamCount() == 4)
+            {
+                biasIndex = 3;
+            }
+            break;
+
+        case EOpTextureProjOffset:
+        case EOpTextureProjOffsetBias:
+
+            ASSERT(function->getParamCount() >= 3);
+            isProj      = true;
+            offsetIndex = 2;
+            if (function->getParamCount() == 4)
+            {
+                biasIndex = 3;
+            }
+            break;
+
+        case EOpTextureLodOffset:
+
+            ASSERT(function->getParamCount() == 4);
+            lodIndex    = 2;
+            offsetIndex = 3;
+            break;
+
+        case EOpTextureProjLodOffset:
+
+            ASSERT(function->getParamCount() == 4);
+            isProj      = true;
+            lodIndex    = 2;
+            offsetIndex = 3;
+            break;
+
+        case EOpTextureGradOffset:
+
+            ASSERT(function->getParamCount() == 5);
+            dPdxIndex   = 2;
+            dPdyIndex   = 3;
+            offsetIndex = 4;
+            break;
+
+        case EOpTextureProjGradOffset:
+
+            ASSERT(function->getParamCount() == 5);
+            isProj      = true;
+            dPdxIndex   = 2;
+            dPdyIndex   = 3;
+            offsetIndex = 4;
+            break;
+
+        case EOpTextureGather:
+
+            // For shadow textures, refZ (same as Dref) is specified as the last argument.
+            // Otherwise a component may be specified which defaults to 0 if not specified.
+            spirvOp = spv::OpImageGather;
+            if (isDref)
+            {
+                ASSERT(function->getParamCount() == 3);
+                compareIndex = 2;
+            }
+            else if (function->getParamCount() == 3)
+            {
+                gatherComponentIndex = 2;
+            }
+            break;
+
+        case EOpTextureGatherOffset:
+        case EOpTextureGatherOffsetComp:
+
+        case EOpTextureGatherOffsets:
+        case EOpTextureGatherOffsetsComp:
+
+            // textureGatherOffset and textureGatherOffsets have the following forms:
+            //
+            // - texelGatherOffset*(sampler, P, offset*);
+            // - texelGatherOffset*(sampler, P, offset*, component);
+            // - texelGatherOffset*(sampler, P, refZ, offset*);
+            //
+            spirvOp = spv::OpImageGather;
+            if (isDref)
+            {
+                ASSERT(function->getParamCount() == 4);
+                compareIndex = 2;
+            }
+            else if (function->getParamCount() == 4)
+            {
+                gatherComponentIndex = 3;
+            }
+
+            ASSERT(function->getParamCount() >= 3);
+            if (BuiltInGroup::IsTextureGatherOffset(op))
+            {
+                offsetIndex = isDref ? 3 : 2;
+            }
+            else
+            {
+                offsetsIndex = isDref ? 3 : 2;
+            }
+            break;
+
+        case EOpImageStore:
+            // imageStore has the following forms:
+            //
+            // - imageStore(image, P, data);
+            // - imageStore(imageMS, P, sample, data);
+            //
+            spirvOp = spv::OpImageWrite;
+            if (IsSamplerMS(samplerBasicType))
+            {
+                ASSERT(function->getParamCount() == 4);
+                sampleIndex = 2;
+                dataIndex   = 3;
+            }
+            else
+            {
+                ASSERT(function->getParamCount() == 3);
+                dataIndex = 2;
+            }
+            break;
+
+        case EOpImageLoad:
+            // imageStore has the following forms:
+            //
+            // - imageLoad(image, P);
+            // - imageLoad(imageMS, P, sample);
+            //
+            spirvOp = spv::OpImageRead;
+            if (IsSamplerMS(samplerBasicType))
+            {
+                ASSERT(function->getParamCount() == 3);
+                sampleIndex = 2;
+            }
+            else
+            {
+                ASSERT(function->getParamCount() == 2);
+            }
+            break;
+
+            // Queries:
+        case EOpTextureSize:
+        case EOpImageSize:
+            // textureSize has the following forms:
+            //
+            // - textureSize(sampler);
+            // - textureSize(sampler, lod);
+            //
+            // while imageSize has only one form:
+            //
+            // - imageSize(image);
+            //
+            extractImageFromSampledImage = true;
+            if (function->getParamCount() == 2)
+            {
+                spirvOp  = spv::OpImageQuerySizeLod;
+                lodIndex = 1;
+            }
+            else
+            {
+                spirvOp = spv::OpImageQuerySize;
+            }
+            // No coordinates parameter.
+            coordinatesIndex = 0;
+            break;
+
+        case EOpTextureSamples:
+        case EOpImageSamples:
+            extractImageFromSampledImage = true;
+            spirvOp                      = spv::OpImageQuerySamples;
+            // No coordinates parameter.
+            coordinatesIndex = 0;
+            break;
+
+        case EOpTextureQueryLevels:
+            extractImageFromSampledImage = true;
+            spirvOp                      = spv::OpImageQueryLevels;
+            // No coordinates parameter.
+            coordinatesIndex = 0;
+            break;
+
+        case EOpTextureQueryLod:
+            spirvOp = spv::OpImageQueryLod;
+            break;
+
+        default:
+            UNREACHABLE();
+    }
+
+    // If an implicit-lod instruction is used outside a fragment shader, change that to an explicit
+    // one as they are not allowed in SPIR-V outside fragment shaders.
+    bool makeLodExplicit =
+        mCompiler->getShaderType() != GL_FRAGMENT_SHADER && lodIndex == 0 &&
+        (spirvOp == spv::OpImageSampleImplicitLod || spirvOp == spv::OpImageFetch);
+
+    // Apply any necessary fix up.
+
+    if (extractImageFromSampledImage && IsSampler(samplerBasicType))
+    {
+        // Get the (non-sampled) image type.
+        SpirvType imageType = mBuilder.getSpirvType(samplerType, EbsUnspecified);
+        ASSERT(!imageType.isSamplerBaseImage);
+        imageType.isSamplerBaseImage            = true;
+        const spirv::IdRef extractedImageTypeId = mBuilder.getSpirvTypeData(imageType, nullptr).id;
+
+        // Use OpImage to get the image out of the sampled image.
+        const spirv::IdRef extractedImage = mBuilder.getNewId({});
+        spirv::WriteImage(mBuilder.getSpirvCurrentFunctionBlock(), extractedImageTypeId,
+                          extractedImage, image);
+        image = extractedImage;
+    }
+
+    // Gather operands as necessary.
+
+    // - Coordinates
+    int coordinatesChannelCount = 0;
+    spirv::IdRef coordinatesId;
+    const TType *coordinatesType = nullptr;
+    if (coordinatesIndex > 0)
+    {
+        coordinatesId           = parameters[coordinatesIndex];
+        coordinatesType         = &function->getParam(coordinatesIndex)->getType();
+        coordinatesChannelCount = coordinatesType->getNominalSize();
+    }
+
+    // - Dref; either specified as a compare/refz argument (cube array, gather), or:
+    //   * coordinates.z for proj variants
+    //   * coordinates.<last> for others
+    spirv::IdRef drefId;
+    if (compareIndex > 0)
+    {
+        drefId = parameters[compareIndex];
+    }
+    else if (isDref)
+    {
+        // Get the component index
+        ASSERT(coordinatesChannelCount > 0);
+        int drefComponent = isProj ? 2 : coordinatesChannelCount - 1;
+
+        // Get the component type
+        SpirvType drefSpirvType       = mBuilder.getSpirvType(*coordinatesType, EbsUnspecified);
+        drefSpirvType.primarySize     = 1;
+        const spirv::IdRef drefTypeId = mBuilder.getSpirvTypeData(drefSpirvType, nullptr).id;
+
+        // Extract the dref component out of coordinates.
+        drefId = mBuilder.getNewId(mBuilder.getDecorations(*coordinatesType));
+        spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), drefTypeId, drefId,
+                                     coordinatesId, {spirv::LiteralInteger(drefComponent)});
+    }
+
+    // - Gather component
+    spirv::IdRef gatherComponentId;
+    if (gatherComponentIndex > 0)
+    {
+        gatherComponentId = parameters[gatherComponentIndex];
+    }
+    else if (spirvOp == spv::OpImageGather)
+    {
+        // If comp is not specified, component 0 is taken as default.
+        gatherComponentId = mBuilder.getIntConstant(0);
+    }
+
+    // - Image write data
+    spirv::IdRef dataId;
+    if (dataIndex > 0)
+    {
+        dataId = parameters[dataIndex];
+    }
+
+    // - Other operands
+    spv::ImageOperandsMask operandsMask = spv::ImageOperandsMaskNone;
+    spirv::IdRefList imageOperandsList;
+
+    if (biasIndex > 0)
+    {
+        operandsMask = operandsMask | spv::ImageOperandsBiasMask;
+        imageOperandsList.push_back(parameters[biasIndex]);
+    }
+    if (lodIndex > 0)
+    {
+        operandsMask = operandsMask | spv::ImageOperandsLodMask;
+        imageOperandsList.push_back(parameters[lodIndex]);
+    }
+    else if (makeLodExplicit)
+    {
+        // If the implicit-lod variant is used outside fragment shaders, switch to explicit and use
+        // lod 0.
+        operandsMask = operandsMask | spv::ImageOperandsLodMask;
+        imageOperandsList.push_back(spirvOp == spv::OpImageFetch ? mBuilder.getUintConstant(0)
+                                                                 : mBuilder.getFloatConstant(0));
+    }
+    if (dPdxIndex > 0)
+    {
+        ASSERT(dPdyIndex > 0);
+        operandsMask = operandsMask | spv::ImageOperandsGradMask;
+        imageOperandsList.push_back(parameters[dPdxIndex]);
+        imageOperandsList.push_back(parameters[dPdyIndex]);
+    }
+    if (offsetIndex > 0)
+    {
+        // Non-const offsets require the ImageGatherExtended feature.
+        if (node->getChildNode(offsetIndex)->getAsTyped()->hasConstantValue())
+        {
+            operandsMask = operandsMask | spv::ImageOperandsConstOffsetMask;
+        }
+        else
+        {
+            ASSERT(spirvOp == spv::OpImageGather);
+
+            operandsMask = operandsMask | spv::ImageOperandsOffsetMask;
+            mBuilder.addCapability(spv::CapabilityImageGatherExtended);
+        }
+        imageOperandsList.push_back(parameters[offsetIndex]);
+    }
+    if (offsetsIndex > 0)
+    {
+        ASSERT(node->getChildNode(offsetsIndex)->getAsTyped()->hasConstantValue());
+
+        operandsMask = operandsMask | spv::ImageOperandsConstOffsetsMask;
+        mBuilder.addCapability(spv::CapabilityImageGatherExtended);
+        imageOperandsList.push_back(parameters[offsetsIndex]);
+    }
+    if (sampleIndex > 0)
+    {
+        operandsMask = operandsMask | spv::ImageOperandsSampleMask;
+        imageOperandsList.push_back(parameters[sampleIndex]);
+    }
+
+    const spv::ImageOperandsMask *imageOperands =
+        imageOperandsList.empty() ? nullptr : &operandsMask;
+
+    // GLSL and SPIR-V are different in the way the projective component is specified:
+    //
+    // In GLSL:
+    //
+    // > The texture coordinates consumed from P, not including the last component of P, are divided
+    // > by the last component of P.
+    //
+    // In SPIR-V, there's a similar language (division by last element), but with the following
+    // added:
+    //
+    // > ... all unused components will appear after all used components.
+    //
+    // So for example for textureProj(sampler, vec4 P), the projective coordinates are P.xy/P.w,
+    // where P.z is ignored.  In SPIR-V instead that would be P.xy/P.z and P.w is ignored.
+    //
+    if (isProj)
+    {
+        int requiredChannelCount = coordinatesChannelCount;
+        // texture*Proj* operate on the following parameters:
+        //
+        // - sampler1D, vec2 P
+        // - sampler1D, vec4 P
+        // - sampler2D, vec3 P
+        // - sampler2D, vec4 P
+        // - sampler2DRect, vec3 P
+        // - sampler2DRect, vec4 P
+        // - sampler3D, vec4 P
+        // - sampler1DShadow, vec4 P
+        // - sampler2DShadow, vec4 P
+        // - sampler2DRectShadow, vec4 P
+        //
+        // Of these cases, only (sampler1D*, vec4 P) and (sampler2D*, vec4 P) require moving the
+        // proj channel from .w to the appropriate location (.y for 1D and .z for 2D).
+        if (IsSampler2D(samplerBasicType))
+        {
+            requiredChannelCount = 3;
+        }
+        else if (IsSampler1D(samplerBasicType))
+        {
+            requiredChannelCount = 2;
+        }
+        if (requiredChannelCount != coordinatesChannelCount)
+        {
+            ASSERT(coordinatesChannelCount == 4);
+
+            // Get the component type
+            SpirvType spirvType = mBuilder.getSpirvType(*coordinatesType, EbsUnspecified);
+            const spirv::IdRef coordinatesTypeId = mBuilder.getSpirvTypeData(spirvType, nullptr).id;
+            spirvType.primarySize                = 1;
+            const spirv::IdRef channelTypeId     = mBuilder.getSpirvTypeData(spirvType, nullptr).id;
+
+            // Extract the last component out of coordinates.
+            const spirv::IdRef projChannelId =
+                mBuilder.getNewId(mBuilder.getDecorations(*coordinatesType));
+            spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), channelTypeId,
+                                         projChannelId, coordinatesId,
+                                         {spirv::LiteralInteger(coordinatesChannelCount - 1)});
+
+            // Insert it after the channels that are consumed.  The extra channels are ignored per
+            // the SPIR-V spec.
+            const spirv::IdRef newCoordinatesId =
+                mBuilder.getNewId(mBuilder.getDecorations(*coordinatesType));
+            spirv::WriteCompositeInsert(mBuilder.getSpirvCurrentFunctionBlock(), coordinatesTypeId,
+                                        newCoordinatesId, coordinatesId, projChannelId,
+                                        {spirv::LiteralInteger(requiredChannelCount - 1)});
+            coordinatesId = newCoordinatesId;
+        }
+    }
+
+    // Select the correct sample Op based on whether the Proj, Dref or Explicit variants are used.
+    if (spirvOp == spv::OpImageSampleImplicitLod)
+    {
+        const bool isExplicitLod = lodIndex != 0 || makeLodExplicit || dPdxIndex != 0;
+        if (isDref)
+        {
+            if (isProj)
+            {
+                spirvOp = isExplicitLod ? spv::OpImageSampleProjDrefExplicitLod
+                                        : spv::OpImageSampleProjDrefImplicitLod;
+            }
+            else
+            {
+                spirvOp = isExplicitLod ? spv::OpImageSampleDrefExplicitLod
+                                        : spv::OpImageSampleDrefImplicitLod;
+            }
+        }
+        else
+        {
+            if (isProj)
+            {
+                spirvOp = isExplicitLod ? spv::OpImageSampleProjExplicitLod
+                                        : spv::OpImageSampleProjImplicitLod;
+            }
+            else
+            {
+                spirvOp =
+                    isExplicitLod ? spv::OpImageSampleExplicitLod : spv::OpImageSampleImplicitLod;
+            }
+        }
+    }
+    if (spirvOp == spv::OpImageGather && isDref)
+    {
+        spirvOp = spv::OpImageDrefGather;
+    }
+
+    spirv::IdRef result;
+    if (spirvOp != spv::OpImageWrite)
+    {
+        result = mBuilder.getNewId(mBuilder.getDecorations(node->getType()));
+    }
+
+    switch (spirvOp)
+    {
+        case spv::OpImageQuerySizeLod:
+            mBuilder.addCapability(spv::CapabilityImageQuery);
+            ASSERT(imageOperandsList.size() == 1);
+            spirv::WriteImageQuerySizeLod(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                          result, image, imageOperandsList[0]);
+            break;
+        case spv::OpImageQuerySize:
+            mBuilder.addCapability(spv::CapabilityImageQuery);
+            spirv::WriteImageQuerySize(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                       result, image);
+            break;
+        case spv::OpImageQueryLod:
+            mBuilder.addCapability(spv::CapabilityImageQuery);
+            spirv::WriteImageQueryLod(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result,
+                                      image, coordinatesId);
+            break;
+        case spv::OpImageQueryLevels:
+            mBuilder.addCapability(spv::CapabilityImageQuery);
+            spirv::WriteImageQueryLevels(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                         result, image);
+            break;
+        case spv::OpImageQuerySamples:
+            mBuilder.addCapability(spv::CapabilityImageQuery);
+            spirv::WriteImageQuerySamples(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                          result, image);
+            break;
+        case spv::OpImageSampleImplicitLod:
+            spirv::WriteImageSampleImplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                               resultTypeId, result, image, coordinatesId,
+                                               imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleExplicitLod:
+            spirv::WriteImageSampleExplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                               resultTypeId, result, image, coordinatesId,
+                                               *imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleDrefImplicitLod:
+            spirv::WriteImageSampleDrefImplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                   resultTypeId, result, image, coordinatesId,
+                                                   drefId, imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleDrefExplicitLod:
+            spirv::WriteImageSampleDrefExplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                   resultTypeId, result, image, coordinatesId,
+                                                   drefId, *imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleProjImplicitLod:
+            spirv::WriteImageSampleProjImplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                   resultTypeId, result, image, coordinatesId,
+                                                   imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleProjExplicitLod:
+            spirv::WriteImageSampleProjExplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                   resultTypeId, result, image, coordinatesId,
+                                                   *imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleProjDrefImplicitLod:
+            spirv::WriteImageSampleProjDrefImplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                       resultTypeId, result, image, coordinatesId,
+                                                       drefId, imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleProjDrefExplicitLod:
+            spirv::WriteImageSampleProjDrefExplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                       resultTypeId, result, image, coordinatesId,
+                                                       drefId, *imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageFetch:
+            spirv::WriteImageFetch(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result,
+                                   image, coordinatesId, imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageGather:
+            spirv::WriteImageGather(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result,
+                                    image, coordinatesId, gatherComponentId, imageOperands,
+                                    imageOperandsList);
+            break;
+        case spv::OpImageDrefGather:
+            spirv::WriteImageDrefGather(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                        result, image, coordinatesId, drefId, imageOperands,
+                                        imageOperandsList);
+            break;
+        case spv::OpImageRead:
+            spirv::WriteImageRead(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result,
+                                  image, coordinatesId, imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageWrite:
+            spirv::WriteImageWrite(mBuilder.getSpirvCurrentFunctionBlock(), image, coordinatesId,
+                                   dataId, imageOperands, imageOperandsList);
+            break;
+        default:
+            UNREACHABLE();
+    }
+
+    // In Desktop GLSL, the legacy shadow* built-ins produce a vec4, while SPIR-V
+    // OpImageSample*Dref* instructions produce a scalar.  EXT_shadow_samplers in ESSL introduces
+    // similar functions but which return a scalar.
+    //
+    // TODO: For desktop GLSL, the result must be turned into a vec4.  http://anglebug.com/4889.
+
+    return result;
 }
 
 void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)

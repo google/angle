@@ -179,7 +179,7 @@ class Writer:
         # If an instruction has a parameter of these types, the instruction is ignored
         self.unsupported_kinds = set(['LiteralSpecConstantOpInteger'])
         # If an instruction requires a capability of these kinds, the instruction is ignored
-        self.unsupported_capabilities = set(['Kernel'])
+        self.unsupported_capabilities = set(['Kernel', 'Addresses'])
         # If an instruction requires an extension other than these, the instruction is ignored
         self.supported_extensions = set([])
         # List of bit masks.  These have 'Mask' added to their typename in SPIR-V headers.
@@ -245,7 +245,9 @@ class Writer:
 
     def requires_unsupported_capability(self, item):
         depends = item.get('capabilities', [])
-        return any([dep in self.unsupported_capabilities for dep in depends])
+        if len(depends) == 0:
+            return False
+        return all([dep in self.unsupported_capabilities for dep in depends])
 
     def requires_unsupported_extension(self, item):
         extensions = item.get('extensions', [])

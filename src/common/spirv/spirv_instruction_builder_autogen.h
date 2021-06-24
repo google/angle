@@ -84,7 +84,6 @@ void WriteTypeFunction(Blob *blob,
                        IdResult idResult,
                        IdRef returnType,
                        const IdRefList &parameterList);
-void WriteTypeForwardPointer(Blob *blob, IdRef pointerType, spv::StorageClass storageClass);
 void WriteConstantTrue(Blob *blob, IdResultType idResultType, IdResult idResult);
 void WriteConstantFalse(Blob *blob, IdResultType idResultType, IdResult idResult);
 void WriteConstant(Blob *blob,
@@ -139,11 +138,6 @@ void WriteCopyMemory(Blob *blob,
                      IdRef target,
                      IdRef source,
                      const spv::MemoryAccessMask *memoryAccess);
-void WriteCopyMemorySized(Blob *blob,
-                          IdRef target,
-                          IdRef source,
-                          IdRef size,
-                          const spv::MemoryAccessMask *memoryAccess);
 void WriteAccessChain(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
@@ -159,12 +153,6 @@ void WriteArrayLength(Blob *blob,
                       IdResult idResult,
                       IdRef structure,
                       LiteralInteger arraymember);
-void WriteInBoundsPtrAccessChain(Blob *blob,
-                                 IdResultType idResultType,
-                                 IdResult idResult,
-                                 IdRef base,
-                                 IdRef element,
-                                 const IdRefList &indexesList);
 void WriteDecorate(Blob *blob,
                    IdRef target,
                    spv::Decoration decoration,
@@ -315,11 +303,19 @@ void WriteImageWrite(Blob *blob,
                      const spv::ImageOperandsMask *imageOperands,
                      const IdRefList &imageOperandIdsList);
 void WriteImage(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef sampledImage);
+void WriteImageQuerySizeLod(Blob *blob,
+                            IdResultType idResultType,
+                            IdResult idResult,
+                            IdRef image,
+                            IdRef levelofDetail);
+void WriteImageQuerySize(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef image);
 void WriteImageQueryLod(Blob *blob,
                         IdResultType idResultType,
                         IdResult idResult,
                         IdRef sampledImage,
                         IdRef coordinate);
+void WriteImageQueryLevels(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef image);
+void WriteImageQuerySamples(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef image);
 void WriteConvertFToU(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef floatValue);
 void WriteConvertFToS(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef floatValue);
 void WriteConvertSToF(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef signedValue);
@@ -331,11 +327,6 @@ void WriteUConvert(Blob *blob, IdResultType idResultType, IdResult idResult, IdR
 void WriteSConvert(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef signedValue);
 void WriteFConvert(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef floatValue);
 void WriteQuantizeToF16(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef value);
-void WriteConvertPtrToU(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef pointer);
-void WriteConvertUToPtr(Blob *blob,
-                        IdResultType idResultType,
-                        IdResult idResult,
-                        IdRef integerValue);
 void WriteBitcast(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand);
 void WriteSNegate(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand);
 void WriteFNegate(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand);

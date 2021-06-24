@@ -178,5 +178,5 @@ void main()
 // Samplers are only supported on ES3.
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(SamplersTest);
 ANGLE_INSTANTIATE_TEST_ES3(SamplersTest);
-ANGLE_INSTANTIATE_TEST_ES31(SamplersTest31);
+ANGLE_INSTANTIATE_TEST_ES31_AND(SamplersTest31, WithDirectSPIRVGeneration(ES31_VULKAN()));
 }  // namespace angle

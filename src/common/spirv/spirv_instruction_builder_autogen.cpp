@@ -408,14 +408,6 @@ void WriteTypeFunction(Blob *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeFunction);
 }
-void WriteTypeForwardPointer(Blob *blob, IdRef pointerType, spv::StorageClass storageClass)
-{
-    const size_t startSize = blob->size();
-    blob->push_back(0);
-    blob->push_back(pointerType);
-    blob->push_back(storageClass);
-    (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeForwardPointer);
-}
 void WriteConstantTrue(Blob *blob, IdResultType idResultType, IdResult idResult)
 {
     const size_t startSize = blob->size();
@@ -633,23 +625,6 @@ void WriteCopyMemory(Blob *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpCopyMemory);
 }
-void WriteCopyMemorySized(Blob *blob,
-                          IdRef target,
-                          IdRef source,
-                          IdRef size,
-                          const spv::MemoryAccessMask *memoryAccess)
-{
-    const size_t startSize = blob->size();
-    blob->push_back(0);
-    blob->push_back(target);
-    blob->push_back(source);
-    blob->push_back(size);
-    if (memoryAccess)
-    {
-        blob->push_back(*memoryAccess);
-    }
-    (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpCopyMemorySized);
-}
 void WriteAccessChain(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
@@ -697,25 +672,6 @@ void WriteArrayLength(Blob *blob,
     blob->push_back(structure);
     blob->push_back(arraymember);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpArrayLength);
-}
-void WriteInBoundsPtrAccessChain(Blob *blob,
-                                 IdResultType idResultType,
-                                 IdResult idResult,
-                                 IdRef base,
-                                 IdRef element,
-                                 const IdRefList &indexesList)
-{
-    const size_t startSize = blob->size();
-    blob->push_back(0);
-    blob->push_back(idResultType);
-    blob->push_back(idResult);
-    blob->push_back(base);
-    blob->push_back(element);
-    for (const auto &operand : indexesList)
-    {
-        blob->push_back(operand);
-    }
-    (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpInBoundsPtrAccessChain);
 }
 void WriteDecorate(Blob *blob,
                    IdRef target,
@@ -1234,6 +1190,29 @@ void WriteImage(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef 
     blob->push_back(sampledImage);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImage);
 }
+void WriteImageQuerySizeLod(Blob *blob,
+                            IdResultType idResultType,
+                            IdResult idResult,
+                            IdRef image,
+                            IdRef levelofDetail)
+{
+    const size_t startSize = blob->size();
+    blob->push_back(0);
+    blob->push_back(idResultType);
+    blob->push_back(idResult);
+    blob->push_back(image);
+    blob->push_back(levelofDetail);
+    (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageQuerySizeLod);
+}
+void WriteImageQuerySize(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef image)
+{
+    const size_t startSize = blob->size();
+    blob->push_back(0);
+    blob->push_back(idResultType);
+    blob->push_back(idResult);
+    blob->push_back(image);
+    (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageQuerySize);
+}
 void WriteImageQueryLod(Blob *blob,
                         IdResultType idResultType,
                         IdResult idResult,
@@ -1247,6 +1226,24 @@ void WriteImageQueryLod(Blob *blob,
     blob->push_back(sampledImage);
     blob->push_back(coordinate);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageQueryLod);
+}
+void WriteImageQueryLevels(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef image)
+{
+    const size_t startSize = blob->size();
+    blob->push_back(0);
+    blob->push_back(idResultType);
+    blob->push_back(idResult);
+    blob->push_back(image);
+    (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageQueryLevels);
+}
+void WriteImageQuerySamples(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef image)
+{
+    const size_t startSize = blob->size();
+    blob->push_back(0);
+    blob->push_back(idResultType);
+    blob->push_back(idResult);
+    blob->push_back(image);
+    (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageQuerySamples);
 }
 void WriteConvertFToU(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef floatValue)
 {
@@ -1319,27 +1316,6 @@ void WriteQuantizeToF16(Blob *blob, IdResultType idResultType, IdResult idResult
     blob->push_back(idResult);
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpQuantizeToF16);
-}
-void WriteConvertPtrToU(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef pointer)
-{
-    const size_t startSize = blob->size();
-    blob->push_back(0);
-    blob->push_back(idResultType);
-    blob->push_back(idResult);
-    blob->push_back(pointer);
-    (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConvertPtrToU);
-}
-void WriteConvertUToPtr(Blob *blob,
-                        IdResultType idResultType,
-                        IdResult idResult,
-                        IdRef integerValue)
-{
-    const size_t startSize = blob->size();
-    blob->push_back(0);
-    blob->push_back(idResultType);
-    blob->push_back(idResult);
-    blob->push_back(integerValue);
-    (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConvertUToPtr);
 }
 void WriteBitcast(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand)
 {

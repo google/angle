@@ -60,8 +60,8 @@ struct SpirvType
     TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified;
 
     // For sampled images (i.e. GLSL samplers), there are two type ids; one is the OpTypeImage that
-    // declares the image itself, and one OpTypeSampledImage.  `imageOnly` distinguishes between
-    // these two types.  Note that for the former, the basic type is still Ebt*Sampler* to
+    // declares the image itself, and one OpTypeSampledImage.  `isSamplerBaseImage` distinguishes
+    // between these two types.  Note that for the former, the basic type is still Ebt*Sampler* to
     // distinguish it from storage images (which have a basic type of Ebt*Image*).
     bool isSamplerBaseImage = false;
 };
