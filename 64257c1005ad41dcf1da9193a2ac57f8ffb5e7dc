@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "64257c1005ad41dcf1da9193a2ac57f8ffb5e7dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0db72554_f6f36677",
+        "filename": "extensions/ANGLE_yuv_internal_format.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-24T12:04:27Z",
+      "side": 1,
+      "message": "please remove the ANGLEX suffix and replace with normal \"ANGLE\" suffix since these enums are no longer hidden. The ANGLEX suffix is for stuff we don\u0027t expose via an extension.",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 35
+      },
+      "revId": "64257c1005ad41dcf1da9193a2ac57f8ffb5e7dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

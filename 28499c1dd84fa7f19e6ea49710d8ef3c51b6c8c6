@@ -566,6 +566,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8d31a3ca_15ebb77a",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-24T12:04:27Z",
+      "side": 1,
+      "message": "Because you\u0027re adding a new extension with new formats, it will be modifying glext.h if the extension is ever upstreamed. So these enums all become \"official\" enums that are registered in GL and follow all the patterns in that file. Ping me in chat if you have a more specific confusion and I\u0027m happy to try and figure it out.",
+      "parentUuid": "b4984f41_49d8ca85",
+      "range": {
+        "startLine": 297,
+        "startChar": 0,
+        "endLine": 308,
+        "endChar": 52
+      },
+      "revId": "28499c1dd84fa7f19e6ea49710d8ef3c51b6c8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e39ad9c6_12fe2212",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 6
