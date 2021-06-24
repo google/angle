@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3fb7e80_b889525e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-24T21:51:18Z",
+      "side": 1,
+      "message": "PTAL\n\nThis passes win-trace-rel as well as captures:\n- World War Doh\n- Magic Tiles 3\n- C\u0026C Rivals",
+      "revId": "76100fa4febe83a36fe8c20bd2b0471d838c564f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
