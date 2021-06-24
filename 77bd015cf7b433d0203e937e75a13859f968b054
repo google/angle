@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59e4d0f7_035baabe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-24T19:43:35Z",
+      "side": 1,
+      "message": "This could probably be refactored a bit more to remove duplicate code.  It also defers a bit of work in copyCompressedTextureData.  But wanted to get your thoughts on the approach.  This is for PUBG Mobile MEC.",
+      "revId": "77bd015cf7b433d0203e937e75a13859f968b054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
