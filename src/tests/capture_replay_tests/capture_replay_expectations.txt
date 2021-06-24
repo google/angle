@@ -36,7 +36,6 @@ ColorMaskTest.AMDZeroColorMaskBug/ES3_OpenGL
 
 # Crashed tests
 BlitFramebufferANGLETest.*
-BufferDataTest.*
 ClipDistanceTest.*
 CopyCompressedTextureTest.InternalFormat/*
 DebugMarkerTest.*
