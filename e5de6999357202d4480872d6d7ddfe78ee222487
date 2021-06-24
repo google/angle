@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7428b42_732151b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-06-24T00:15:23Z",
+      "side": 1,
+      "message": "Just a heads up that Apple\u0027s still making transform feedback related fixes upstream in WebKit; see https://bugs.webkit.org/show_bug.cgi?id\u003d227272 for example. Agree with moving the XFB changes to a separate CL, and we\u0027ll need to eventually pull all of these changes upstream to ANGLE (carefully, to make sure we don\u0027t miss any) before we can pull ANGLE back down to WebKit.\n",
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "23a22b4d_88436f3c",
