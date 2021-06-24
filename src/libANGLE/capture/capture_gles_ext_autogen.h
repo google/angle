@@ -1304,6 +1304,8 @@ angle::CallCapture CaptureReadnPixelsEXT(const State &glState,
 
 // GL_EXT_sRGB
 
+// GL_EXT_sRGB_write_control
+
 // GL_EXT_semaphore
 angle::CallCapture CaptureDeleteSemaphoresEXT(const State &glState,
                                               bool isCallValid,

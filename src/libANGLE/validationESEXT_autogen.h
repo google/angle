@@ -1078,6 +1078,8 @@ bool ValidateReadnPixelsEXT(const Context *context,
 
 // GL_EXT_sRGB
 
+// GL_EXT_sRGB_write_control
+
 // GL_EXT_semaphore
 bool ValidateDeleteSemaphoresEXT(const Context *context,
                                  GLsizei n,

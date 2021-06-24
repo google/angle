@@ -4262,6 +4262,8 @@ void GL_APIENTRY glReadnPixelsEXT(GLint x,
 
 // GL_EXT_sRGB
 
+// GL_EXT_sRGB_write_control
+
 // GL_EXT_semaphore
 void GL_APIENTRY glDeleteSemaphoresEXT(GLsizei n, const GLuint *semaphores)
 {

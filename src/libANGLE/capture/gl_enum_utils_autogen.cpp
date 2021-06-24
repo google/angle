@@ -1973,6 +1973,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_POLYGON_OFFSET_FILL";
                 case 0x8074:
                     return "GL_VERTEX_ARRAY";
+                case 0x8DB9:
+                    return "GL_FRAMEBUFFER_SRGB_EXT";
                 default:
                     return UnknownGLenumToString(value);
             }

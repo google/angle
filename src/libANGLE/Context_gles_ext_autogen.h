@@ -187,6 +187,7 @@
     /* GL_EXT_read_format_bgra */                                                                  \
     /* GL_EXT_robustness */                                                                        \
     /* GL_EXT_sRGB */                                                                              \
+    /* GL_EXT_sRGB_write_control */                                                                \
     /* GL_EXT_semaphore */                                                                         \
     void deleteSemaphores(GLsizei n, const SemaphoreID *semaphoresPacked);                         \
     void genSemaphores(GLsizei n, SemaphoreID *semaphoresPacked);                                  \

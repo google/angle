@@ -5613,6 +5613,8 @@ void GL_APIENTRY GL_ReadnPixelsEXT(GLint x,
 
 // GL_EXT_sRGB
 
+// GL_EXT_sRGB_write_control
+
 // GL_EXT_semaphore
 void GL_APIENTRY GL_DeleteSemaphoresEXT(GLsizei n, const GLuint *semaphores)
 {

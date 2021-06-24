@@ -501,6 +501,7 @@ typedef unsigned int GLhandleARB;
             <enum name="GL_FRAGMENT_LIGHT6_SGIX"/>
             <enum name="GL_FRAGMENT_LIGHT7_SGIX"/>
             <enum name="GL_FRAGMENT_LIGHTING_SGIX"/>
+            <enum name="GL_FRAMEBUFFER_SRGB_EXT"/>
             <enum name="GL_FRAMEZOOM_SGIX"/>
             <enum name="GL_HISTOGRAM_EXT"/>
             <enum name="GL_INDEX_ARRAY"/>
