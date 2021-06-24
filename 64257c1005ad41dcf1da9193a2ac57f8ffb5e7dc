@@ -39,6 +39,30 @@
       },
       "revId": "64257c1005ad41dcf1da9193a2ac57f8ffb5e7dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c347bcc6_dd1e4bdc",
+        "filename": "extensions/ANGLE_yuv_internal_format.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-24T21:41:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0db72554_f6f36677",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 35
+      },
+      "revId": "64257c1005ad41dcf1da9193a2ac57f8ffb5e7dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
