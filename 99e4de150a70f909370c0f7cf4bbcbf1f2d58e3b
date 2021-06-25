@@ -63,6 +63,30 @@
       },
       "revId": "99e4de150a70f909370c0f7cf4bbcbf1f2d58e3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85fb97ef_46297992",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T21:14:22Z",
+      "side": 1,
+      "message": "I also found this:\n\n# A large build (with or without goma) tends to hog all system resources.\n# Launching the ninja process with \u0027nice\u0027 priorities improves this situation.\nprefix_args \u003d []\nif (sys.platform.startswith(\u0027linux\u0027)\n    and os.environ.get(\u0027NINJA_BUILD_IN_BACKGROUND\u0027, \u00270\u0027) \u003d\u003d \u00271\u0027):\n  # nice -10 is process priority 10 lower than default 0\n  # ionice -c 3 is IO priority IDLE\n  prefix_args \u003d [\u0027nice\u0027] + [\u0027-10\u0027]\n\nMaybe we should add a parameter for \"nice\" builds.",
+      "parentUuid": "479059c9_33fcadde",
+      "range": {
+        "startLine": 301,
+        "startChar": 0,
+        "endLine": 303,
+        "endChar": 0
+      },
+      "revId": "99e4de150a70f909370c0f7cf4bbcbf1f2d58e3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
