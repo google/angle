@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b85e92f_bc5523c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:12:30Z",
+      "side": 1,
+      "message": "Geoff/Shabi PTAL. I split this off from my CL because it\u0027s a separate concern, and is necessary for both mine and Geoff\u0027s CLs (I believe).",
+      "revId": "b187f84b2c4466c5387f789bc91b4bb03eefdb45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
