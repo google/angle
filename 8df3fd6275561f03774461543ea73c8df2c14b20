@@ -1,0 +1,222 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d767d64e_4bab337f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:56:16Z",
+      "side": 1,
+      "message": "All the ANGLE-side stuff looks good to me. I\u0027d like to work with you to pull the EGLWindow and friends out of the trace fixture and replay.",
+      "revId": "8df3fd6275561f03774461543ea73c8df2c14b20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a406e1b3_a1f09299",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:56:16Z",
+      "side": 1,
+      "message": "nit: we already have \"    typedef std::set\u003cgl::Context *\u003e ContextSet;\" in Display.h, just make this a public type and use it in both places. This is just a pointer set so there\u0027s nothing special about the shared-ness.",
+      "range": {
+        "startLine": 75,
+        "startChar": 6,
+        "endLine": 75,
+        "endChar": 22
+      },
+      "revId": "8df3fd6275561f03774461543ea73c8df2c14b20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4bf695c_71731045",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:56:16Z",
+      "side": 1,
+      "message": "I\u0027d just call this mSharedContexts or mContexts, as we know it\u0027s shared because we\u0027re in a share group.",
+      "range": {
+        "startLine": 106,
+        "startChar": 20,
+        "endLine": 106,
+        "endChar": 36
+      },
+      "revId": "8df3fd6275561f03774461543ea73c8df2c14b20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4c92ee6_cd608458",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:56:16Z",
+      "side": 1,
+      "message": "Didn\u0027t look that closely at this file.",
+      "revId": "8df3fd6275561f03774461543ea73c8df2c14b20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a046b480_8e5c2672",
+        "filename": "src/libANGLE/capture/trace_fixture.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:56:16Z",
+      "side": 1,
+      "message": "we\u0027ll need to clean all this out before landing.",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 23
+      },
+      "revId": "8df3fd6275561f03774461543ea73c8df2c14b20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d101ce7_4ff4cd6d",
+        "filename": "src/libANGLE/capture/trace_fixture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:56:16Z",
+      "side": 1,
+      "message": "we\u0027ll need to clean this out before landing.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 27
+      },
+      "revId": "8df3fd6275561f03774461543ea73c8df2c14b20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41c85f94_ef2c0d7c",
+        "filename": "src/libANGLE/capture/trace_fixture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:56:16Z",
+      "side": 1,
+      "message": "same with all these..",
+      "range": {
+        "startLine": 45,
+        "startChar": 38,
+        "endLine": 45,
+        "endChar": 55
+      },
+      "revId": "8df3fd6275561f03774461543ea73c8df2c14b20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb8ce478_de0f58e5",
+        "filename": "src/libANGLE/capture/trace_fixture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:56:16Z",
+      "side": 1,
+      "message": "and these.",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 35
+      },
+      "revId": "8df3fd6275561f03774461543ea73c8df2c14b20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b966cee3_0e03b9a9",
+        "filename": "src/libANGLE/renderer/vulkan/ResourceVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:56:16Z",
+      "side": 1,
+      "message": "this looks like something we\u0027d like to remove before landing.",
+      "range": {
+        "startLine": 45,
+        "startChar": 7,
+        "endLine": 45,
+        "endChar": 52
+      },
+      "revId": "8df3fd6275561f03774461543ea73c8df2c14b20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19b16b65_6c675e7a",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:56:16Z",
+      "side": 1,
+      "message": "We\u0027ll need to fix this before landing.",
+      "range": {
+        "startLine": 1015,
+        "startChar": 0,
+        "endLine": 1022,
+        "endChar": 0
+      },
+      "revId": "8df3fd6275561f03774461543ea73c8df2c14b20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
