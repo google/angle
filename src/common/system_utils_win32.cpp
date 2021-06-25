@@ -96,8 +96,8 @@ Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
     }
 }
 
-Library *OpenSharedLibraryWithExtension(const char *libraryName)
+Library *OpenSharedLibraryWithExtension(const char *libraryName, SearchType searchType)
 {
-    return new Win32Library(libraryName, SearchType::SystemDir);
+    return new Win32Library(libraryName, searchType);
 }
 }  // namespace angle
