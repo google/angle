@@ -103,6 +103,24 @@
       "message": "Actually, the flake wasn\u0027t related to the capture, so I wonder if this flake happens more than once.",
       "revId": "3030f962e832c12a436ac3d2acd13e9a6a042f70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66a2d085_8b5f1a58",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T12:00:12Z",
+      "side": 1,
+      "message": "Nevermind, I see what you mean, it was related to your CL. Feel free to abandon.",
+      "parentUuid": "6950c7cc_46dcef7f",
+      "revId": "3030f962e832c12a436ac3d2acd13e9a6a042f70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
