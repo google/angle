@@ -404,6 +404,12 @@ GROUP BEGIN Texture {"queryFunction": true}
       vec4 shadow1DProj(sampler1DShadow, vec4);
       vec4 shadow2D(sampler2DShadow, vec3);
       vec4 shadow2DProj(sampler2DShadow, vec4);
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
+      vec4 texture3D(sampler3D, vec3);
+      vec4 texture3DProj(sampler3D, vec4);
+    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_shadow_samplers"}
+      float shadow2DEXT(sampler2DShadow, vec3);
+      float shadow2DProjEXT(sampler2DShadow, vec4);
     DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "essl_extension": "OES_EGL_image_external, NV_EGL_stream_consumer_external", "hasSideEffects": "true"}
       vec4 texture2D(samplerExternalOES, vec2);
       vec4 texture2DProj(samplerExternalOES, vec3);
@@ -421,63 +427,80 @@ GROUP BEGIN Texture {"queryFunction": true}
       vec4 textureCubeGradEXT(samplerCube, vec3, vec3, vec3);
     DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true", "extension": "WEBGL_video_texture"}
         vec4 textureVideoWEBGL(samplerVideoWEBGL, vec2);
+
+    // Variants with bias are limited to fragment shaders
+    GROUP BEGIN Bias {"shader_type": "FRAGMENT", "opSuffix": "Bias"}
+      DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+        vec4 texture2D(sampler2D, vec2, float);
+        vec4 texture2DProj(sampler2D, vec3, float);
+        vec4 texture2DProj(sampler2D, vec4, float);
+        vec4 textureCube(samplerCube, vec3, float);
+      DEFAULT METADATA {"glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+        vec4 texture3D(sampler3D, vec3, float);
+        vec4 texture3DProj(sampler3D, vec4, float);
+        vec4 texture1D(sampler1D, float, float);
+        vec4 texture1DProj(sampler1D, vec2, float);
+        vec4 texture1DProj(sampler1D, vec4, float);
+        vec4 shadow1D(sampler1DShadow, vec3, float);
+        vec4 shadow1DProj(sampler1DShadow, vec4, float);
+        vec4 shadow2D(sampler2DShadow, vec3, float);
+        vec4 shadow2DProj(sampler2DShadow, vec4, float);
+      DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
+        vec4 texture3D(sampler3D, vec3, float);
+        vec4 texture3DProj(sampler3D, vec4, float);
+    GROUP END Bias
+
+    // Variants with lod are accessible to all shader stages in desktop GL
+    GROUP BEGIN Lod
+      DEFAULT METADATA {"glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
+        vec4 texture2DLod(sampler2D, vec2, float);
+        vec4 texture2DProjLod(sampler2D, vec3, float);
+        vec4 texture2DProjLod(sampler2D, vec4, float);
+        vec4 textureCubeLod(samplerCube, vec3, float);
+        vec4 texture1DLod(sampler1D, float, float);
+        vec4 texture1DProjLod(sampler1D, vec2, float);
+        vec4 texture1DProjLod(sampler1D, vec4, float);
+        vec4 shadow1DLod(sampler1DShadow, vec3, float);
+        vec4 shadow1DProjLod(sampler1DShadow, vec4, float);
+        vec4 shadow2DLod(sampler2DShadow, vec3, float);
+        vec4 shadow2DProjLod(sampler2DShadow, vec4, float);
+        vec4 texture3DLod(sampler3D, vec3, float);
+        vec4 texture3DProjLod(sampler3D, vec4, float);
+      // The GLES spec mentioning that lod variants are limited to vertex shaders, and the
+      // OES_texture_3D spec doesn't mention otherwise.  However, these functions are used in tests
+      // and seem to be expected to be available in fragment shaders too.
+      DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
+        vec4 texture3DLod(sampler3D, vec3, float);
+        vec4 texture3DProjLod(sampler3D, vec4, float);
+    GROUP END Lod
+
+    // Variants with lod are limited to vertex shaders in GLES
+    GROUP BEGIN LodVS {"shader_type": "VERTEX", "opSuffix": "VS"}
+      DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true"}
+        vec4 texture2DLod(sampler2D, vec2, float);
+        vec4 texture2DProjLod(sampler2D, vec3, float);
+        vec4 texture2DProjLod(sampler2D, vec4, float);
+        vec4 textureCubeLod(samplerCube, vec3, float);
+      DEFAULT METADATA {"hasSideEffects": "true"}
+        vec4 texture1DLod(sampler1D, float, float);
+        vec4 texture1DProjLod(sampler1D, vec2, float);
+        vec4 texture1DProjLod(sampler1D, vec4, float);
+        vec4 shadow1DLod(sampler1DShadow, vec3, float);
+        vec4 shadow1DProjLod(sampler1DShadow, vec4, float);
+        vec4 shadow2DLod(sampler2DShadow, vec3, float);
+        vec4 shadow2DProjLod(sampler2DShadow, vec4, float);
+    GROUP END LodVS
+
+    // EXT_shader_texture_lod brings some lod variants to fragment shaders
+    GROUP BEGIN LodFS {"shader_type": "FRAGMENT", "opSuffix": "FS"}
+      DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_shader_texture_lod"}
+        vec4 texture2DLodEXT(sampler2D, vec2, float);
+        vec4 texture2DProjLodEXT(sampler2D, vec3, float);
+        vec4 texture2DProjLodEXT(sampler2D, vec4, float);
+        vec4 textureCubeLodEXT(samplerCube, vec3, float);
+    GROUP END LodFS
+
   GROUP END FirstVersions
-
-  GROUP BEGIN FirstVersionsFS {"shader_type": "FRAGMENT", "opSuffix": "FS"}
-    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
-      vec4 texture2D(sampler2D, vec2, float);
-      vec4 texture2DProj(sampler2D, vec3, float);
-      vec4 texture2DProj(sampler2D, vec4, float);
-      vec4 textureCube(samplerCube, vec3, float);
-    DEFAULT METADATA {"glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
-      vec4 texture3D(sampler3D, vec3, float);
-      vec4 texture3DProj(sampler3D, vec4, float);
-      vec4 texture3DLod(sampler3D, vec3, float);
-      vec4 texture3DProjLod(sampler3D, vec4, float);
-      vec4 texture1D(sampler1D, float, float);
-      vec4 texture1DProj(sampler1D, vec2, float);
-      vec4 texture1DProj(sampler1D, vec4, float);
-      vec4 shadow1D(sampler1DShadow, vec3, float);
-      vec4 shadow1DProj(sampler1DShadow, vec4, float);
-      vec4 shadow2D(sampler2DShadow, vec3, float);
-      vec4 shadow2DProj(sampler2DShadow, vec4, float);
-  GROUP END FirstVersionsFS
-
-  GROUP BEGIN FirstVersionsFSExt {"shader_type": "FRAGMENT", "opSuffix": "FSExt"}
-    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_shader_texture_lod"}
-      vec4 texture2DLodEXT(sampler2D, vec2, float);
-      vec4 texture2DProjLodEXT(sampler2D, vec3, float);
-      vec4 texture2DProjLodEXT(sampler2D, vec4, float);
-      vec4 textureCubeLodEXT(samplerCube, vec3, float);
-    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_shadow_samplers"}
-      float shadow2DEXT(sampler2DShadow, vec3);
-      float shadow2DProjEXT(sampler2DShadow, vec4);
-    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
-      vec4 texture3D(sampler3D, vec3);
-      vec4 texture3DProj(sampler3D, vec4);
-    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
-      vec4 texture3D(sampler3D, vec3, float);
-      vec4 texture3DProj(sampler3D, vec4, float);
-    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_3D"}
-      vec4 texture3DLod(sampler3D, vec3, float);
-      vec4 texture3DProjLod(sampler3D, vec4, float);
-  GROUP END FirstVersionsFSExt
-
-  GROUP BEGIN FirstVersionsVS {"shader_type": "VERTEX"}
-    DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
-      vec4 texture2DLod(sampler2D, vec2, float);
-      vec4 texture2DProjLod(sampler2D, vec3, float);
-      vec4 texture2DProjLod(sampler2D, vec4, float);
-      vec4 textureCubeLod(samplerCube, vec3, float);
-    DEFAULT METADATA {"glsl_level": "COMMON_BUILTINS", "hasSideEffects": "true"}
-      vec4 texture1DLod(sampler1D, float, float);
-      vec4 texture1DProjLod(sampler1D, vec2, float);
-      vec4 texture1DProjLod(sampler1D, vec4, float);
-      vec4 shadow1DLod(sampler1DShadow, vec3, float);
-      vec4 shadow1DProjLod(sampler1DShadow, vec4, float);
-      vec4 shadow2DLod(sampler2DShadow, vec3, float);
-      vec4 shadow2DProjLod(sampler2DShadow, vec4, float);
-  GROUP END FirstVersionsVS
 
   GROUP BEGIN NoBias
     DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
@@ -498,17 +521,15 @@ GROUP BEGIN Texture {"queryFunction": true}
       float texture(sampler2DRectShadow, vec3);
     DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
       gvec4 texture(gsamplerCubeArray, vec4);
-      gvec4 texture(gsamplerCubeArray, vec4, float);
       float texture(samplerCubeArrayShadow, vec4, float);
     DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
       gvec4 texture(gsamplerCubeArray, vec4);
-      gvec4 texture(gsamplerCubeArray, vec4, float);
       float texture(samplerCubeArrayShadow, vec4, float);
     DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
       vec4 texture(samplerExternalOES, vec2);
     DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
       vec4 texture(samplerExternal2DY2YEXT, vec2);
-    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "opSuffix": "Rect", "hasSideEffects": "true", "essl_extension": "ARB_texture_rectangle"}
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "ARB_texture_rectangle"}
       // We don't have a rectangle texture essl_extension for OpenGL ES however based on the behavior of
       // rectangle texture in desktop OpenGL, they should be sampled with a "texture" overload in
       // GLSL version that have such an overload. This is the case for ESSL3 and above.
@@ -534,7 +555,7 @@ GROUP BEGIN Texture {"queryFunction": true}
     DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "EXT_YUV_target"}
       vec4 textureProj(samplerExternal2DY2YEXT, vec3);
       vec4 textureProj(samplerExternal2DY2YEXT, vec4);
-    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "opSuffix": "Rect", "hasSideEffects": "true", "essl_extension": "ARB_texture_rectangle"}
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "ARB_texture_rectangle"}
       vec4 textureProj(sampler2DRect, vec3);
       vec4 textureProj(sampler2DRect, vec4);
     DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "hasSideEffects": "true"}
@@ -701,6 +722,10 @@ GROUP BEGIN Texture {"queryFunction": true}
       gvec4 textureProj(gsampler1D, vec2, float);
       gvec4 textureProj(gsampler1D, vec4, float);
       float textureProj(sampler1DShadow, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "hasSideEffects": "true"}
+      gvec4 texture(gsamplerCubeArray, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
+      gvec4 texture(gsamplerCubeArray, vec4, float);
     DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "hasSideEffects": "true", "essl_extension": "OES_EGL_image_external_essl3"}
       vec4 texture(samplerExternalOES, vec2, float);
       vec4 textureProj(samplerExternalOES, vec3, float);

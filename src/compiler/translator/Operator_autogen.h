@@ -258,6 +258,8 @@ enum TOperator : uint16_t
     EOpShadow1DProj,
     EOpShadow2D,
     EOpShadow2DProj,
+    EOpShadow2DEXT,
+    EOpShadow2DProjEXT,
     EOpTexture2DRect,
     EOpTexture2DRectProj,
     EOpTexture2DGradEXT,
@@ -265,33 +267,20 @@ enum TOperator : uint16_t
     EOpTextureCubeGradEXT,
     EOpTextureVideoWEBGL,
 
-    // Group TextureFirstVersionsFS
-    EOpTexture2DFS,
-    EOpTexture2DProjFS,
-    EOpTextureCubeFS,
-    EOpTexture3DFS,
-    EOpTexture3DProjFS,
-    EOpTexture3DLodFS,
-    EOpTexture3DProjLodFS,
-    EOpTexture1DFS,
-    EOpTexture1DProjFS,
-    EOpShadow1DFS,
-    EOpShadow1DProjFS,
-    EOpShadow2DFS,
-    EOpShadow2DProjFS,
+    // Group TextureFirstVersionsBias
+    EOpTexture2DBias,
+    EOpTexture2DProjBias,
+    EOpTextureCubeBias,
+    EOpTexture3DBias,
+    EOpTexture3DProjBias,
+    EOpTexture1DBias,
+    EOpTexture1DProjBias,
+    EOpShadow1DBias,
+    EOpShadow1DProjBias,
+    EOpShadow2DBias,
+    EOpShadow2DProjBias,
 
-    // Group TextureFirstVersionsFSExt
-    EOpTexture2DLodEXTFSExt,
-    EOpTexture2DProjLodEXTFSExt,
-    EOpTextureCubeLodEXTFSExt,
-    EOpShadow2DEXTFSExt,
-    EOpShadow2DProjEXTFSExt,
-    EOpTexture3DFSExt,
-    EOpTexture3DProjFSExt,
-    EOpTexture3DLodFSExt,
-    EOpTexture3DProjLodFSExt,
-
-    // Group TextureFirstVersionsVS
+    // Group TextureFirstVersionsLod
     EOpTexture2DLod,
     EOpTexture2DProjLod,
     EOpTextureCubeLod,
@@ -301,12 +290,28 @@ enum TOperator : uint16_t
     EOpShadow1DProjLod,
     EOpShadow2DLod,
     EOpShadow2DProjLod,
+    EOpTexture3DLod,
+    EOpTexture3DProjLod,
+
+    // Group TextureFirstVersionsLodVS
+    EOpTexture2DLodVS,
+    EOpTexture2DProjLodVS,
+    EOpTextureCubeLodVS,
+    EOpTexture1DLodVS,
+    EOpTexture1DProjLodVS,
+    EOpShadow1DLodVS,
+    EOpShadow1DProjLodVS,
+    EOpShadow2DLodVS,
+    EOpShadow2DProjLodVS,
+
+    // Group TextureFirstVersionsLodFS
+    EOpTexture2DLodEXTFS,
+    EOpTexture2DProjLodEXTFS,
+    EOpTextureCubeLodEXTFS,
 
     // Group TextureNoBias
     EOpTexture,
-    EOpTextureRect,
     EOpTextureProj,
-    EOpTextureProjRect,
     EOpTextureLod,
     EOpTextureSize,
     EOpTextureProjLod,
