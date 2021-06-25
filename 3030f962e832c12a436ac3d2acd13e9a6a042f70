@@ -86,6 +86,23 @@
       "message": "OK, you can abandon this if it\u0027s no longer necessary.",
       "revId": "3030f962e832c12a436ac3d2acd13e9a6a042f70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6950c7cc_46dcef7f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T11:59:14Z",
+      "side": 1,
+      "message": "Actually, the flake wasn\u0027t related to the capture, so I wonder if this flake happens more than once.",
+      "revId": "3030f962e832c12a436ac3d2acd13e9a6a042f70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
