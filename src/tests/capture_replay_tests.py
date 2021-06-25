@@ -188,32 +188,21 @@ class SubProcess():
 class ChildProcessesManager():
 
     @classmethod
-    def _GetGnAndNinjaAbsolutePaths(self, depot_tools_path):
-
-        def find_depot_tools_from_env():
-            depot_tools_name = "depot_tools"
-            if platform == "win32":
-                paths = os.environ["PATH"].split(";")
-            else:
-                paths = os.environ["PATH"].split(":")
-            for path in paths:
-                if path.endswith(depot_tools_name):
-                    return path
-            logging.exception("No gn or ninja found on system")
+    def _GetGnAndNinjaAbsolutePaths(self):
 
         def winext(name, ext):
             return ("%s.%s" % (name, ext)) if platform == "win32" else name
 
-        path = depot_tools_path if depot_tools_path else find_depot_tools_from_env()
+        path = os.path.join('third_party', 'depot_tools')
         return os.path.join(path, winext('gn', 'bat')), os.path.join(path, winext('ninja', 'exe'))
 
-    def __init__(self, depot_tools_path):
+    def __init__(self):
         # a dictionary of Subprocess, with pid as key
         self.subprocesses = {}
         # list of Python multiprocess.Process handles
         self.workers = []
 
-        self._gn_path, self._ninja_path = self._GetGnAndNinjaAbsolutePaths(depot_tools_path)
+        self._gn_path, self._ninja_path = self._GetGnAndNinjaAbsolutePaths()
 
     def RunSubprocess(self, command, env=None, pipe_stdout=True, timeout=None):
         proc = SubProcess(command, env, pipe_stdout)
@@ -730,7 +719,7 @@ def RunTests(args, worker_id, job_queue, result_list, message_queue):
     replay_build_dir = os.path.join(args.out_dir, 'Replay%d' % worker_id)
     replay_exec_path = os.path.join(replay_build_dir, REPLAY_BINARY)
 
-    child_processes_manager = ChildProcessesManager(args.depot_tools_path)
+    child_processes_manager = ChildProcessesManager()
     # used to differentiate between multiple composite files when there are multiple test batchs
     # running on the same worker and --deleted_trace is set to False
     composite_file_id = 1
@@ -812,7 +801,7 @@ def DeleteTraceFolders(folder_num):
 
 
 def main(args):
-    child_processes_manager = ChildProcessesManager(args.depot_tools_path)
+    child_processes_manager = ChildProcessesManager()
     try:
         start_time = time.time()
         # set the number of workers to be cpu_count - 1 (since the main process already takes up a
@@ -1036,6 +1025,7 @@ if __name__ == "__main__":
         default=DEFAULT_MAX_JOBS,
         type=int,
         help='Maximum number of test processes. Default is %d.' % DEFAULT_MAX_JOBS)
+    # TODO(jmadill): Remove this argument. http://anglebug.com/6102
     parser.add_argument('--depot-tools-path', default=None, help='Path to depot tools')
     parser.add_argument('--xvfb', action='store_true', help='Run with xvfb.')
     args = parser.parse_args()
