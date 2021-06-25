@@ -141,6 +141,30 @@
       },
       "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c111503_2a033f04",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:32:32Z",
+      "side": 1,
+      "message": "Changed to destArea. I was able to reproduce the div0 using ubsan. Since it\u0027s a separate problem we can tackle that in a follow-up, I left a TODO and opened a bug.",
+      "parentUuid": "cfd01c11_83709343",
+      "range": {
+        "startLine": 69,
+        "startChar": 45,
+        "endLine": 69,
+        "endChar": 82
+      },
+      "revId": "299612b7352c95d82a7b5f624d13ddf6b8f6f9a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
