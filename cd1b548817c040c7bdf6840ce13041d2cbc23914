@@ -34,6 +34,24 @@
       "parentUuid": "0a172673_372024a3",
       "revId": "cd1b548817c040c7bdf6840ce13041d2cbc23914",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16fbaa84_f2e214d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T13:47:21Z",
+      "side": 1,
+      "message": "I\u0027m fine with removing the swap.\n\nI thought we changed capture to ignore undefined FB attachment contents?",
+      "parentUuid": "76b49f61_989912f4",
+      "revId": "cd1b548817c040c7bdf6840ce13041d2cbc23914",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
