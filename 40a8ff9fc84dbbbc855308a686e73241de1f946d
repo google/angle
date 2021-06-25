@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fff5c1da_d43dd9fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-06-25T15:12:10Z",
+      "side": 1,
+      "message": "I\u0027m still on vacation, but wanted to stop the double-testing.",
+      "revId": "40a8ff9fc84dbbbc855308a686e73241de1f946d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
