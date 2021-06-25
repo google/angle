@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1485dbba_84fc1eb4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T12:25:31Z",
+      "side": 1,
+      "message": "I was unable to reproduce the problem on NVIDIA linux, re-running CI.",
+      "revId": "847eb65b9f09d0ba9daa0bde49d981008d982945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5f9ab317_36499ec0",
@@ -14,6 +31,24 @@
       "writtenOn": "2021-06-24T02:01:54Z",
       "side": 1,
       "message": "Drive by: This is ignoring searchType. How about making `OpenSharedLibrary` fixup the extension then call OpenSharedLibraryWithExtension() and move the logic here?",
+      "revId": "847eb65b9f09d0ba9daa0bde49d981008d982945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9fc5457f_73f901ec",
+        "filename": "src/common/system_utils_posix.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T12:25:31Z",
+      "side": 1,
+      "message": "I\u0027m in a bit of a rush to land this as it\u0027s a fix for Chrome and not strictly related to this CL. I agree it would be a good change.",
+      "parentUuid": "5f9ab317_36499ec0",
       "revId": "847eb65b9f09d0ba9daa0bde49d981008d982945",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
