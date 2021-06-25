@@ -16,6 +16,23 @@
       "message": "I\u0027m still on vacation, but wanted to stop the double-testing.",
       "revId": "40a8ff9fc84dbbbc855308a686e73241de1f946d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9fff2eb_e9e08dab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T15:44:10Z",
+      "side": 1,
+      "message": "👍 👍",
+      "revId": "40a8ff9fc84dbbbc855308a686e73241de1f946d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
