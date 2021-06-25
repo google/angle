@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2d54e33_cbb0790b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-25T17:48:03Z",
+      "side": 1,
+      "message": "Split from a change where I\u0027m implementing support for texture/image builtins.",
+      "revId": "7672e289dad133a830dcc0e69a7c64d7081119a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
