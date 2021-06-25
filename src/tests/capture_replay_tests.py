@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env vpython3
 #
 # Copyright 2020 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -29,6 +29,7 @@ import logging
 import math
 import multiprocessing
 import os
+import psutil
 import queue
 import re
 import shutil
@@ -154,6 +155,14 @@ def info(str):
     logging.info('%s: %s' % (multiprocessing.current_process().name, str))
 
 
+def winext(name, ext):
+    return ("%s.%s" % (name, ext)) if platform == "win32" else name
+
+
+def AutodetectGoma():
+    return winext('compiler_proxy', 'exe') in (p.name() for p in psutil.process_iter())
+
+
 class SubProcess():
 
     def __init__(self, command, env=os.environ, pipe_stdout=PIPE_STDOUT):
@@ -189,10 +198,6 @@ class ChildProcessesManager():
 
     @classmethod
     def _GetGnAndNinjaAbsolutePaths(self):
-
-        def winext(name, ext):
-            return ("%s.%s" % (name, ext)) if platform == "win32" else name
-
         path = os.path.join('third_party', 'depot_tools')
         return os.path.join(path, winext('gn', 'bat')), os.path.join(path, winext('ninja', 'exe'))
 
@@ -203,6 +208,7 @@ class ChildProcessesManager():
         self.workers = []
 
         self._gn_path, self._ninja_path = self._GetGnAndNinjaAbsolutePaths()
+        self._use_goma = AutodetectGoma()
 
     def RunSubprocess(self, command, env=None, pipe_stdout=True, timeout=None):
         proc = SubProcess(command, env, pipe_stdout)
@@ -258,14 +264,15 @@ class ChildProcessesManager():
         return count
 
     def RunGNGen(self, args, build_dir, pipe_stdout, extra_gn_args=[]):
-        gn_args = [('use_goma', str(args.use_goma).lower()),
-                   ('angle_with_capture_by_default', 'true')] + extra_gn_args
+        gn_args = [('angle_with_capture_by_default', 'true')] + extra_gn_args
+        if self._use_goma:
+            gn_args.append(('use_goma', 'true'))
+            if args.goma_dir:
+                gn_args.append(('goma_dir', '"%s"' % args.goma_dir))
         if not args.debug:
             gn_args.append(('is_debug', 'false'))
             gn_args.append(('symbol_level', '1'))
             gn_args.append(('angle_assert_always_on', 'true'))
-        if args.goma_dir:
-            gn_args.append(('goma_dir', '"%s"' % args.goma_dir))
         if args.asan:
             gn_args.append(('is_asan', 'true'))
         debug('Calling GN gen with %s' % str(gn_args))
@@ -277,7 +284,7 @@ class ChildProcessesManager():
         cmd = [self._ninja_path]
 
         # This code is taken from depot_tools/autoninja.py
-        if args.use_goma:
+        if self._use_goma:
             num_cores = multiprocessing.cpu_count()
             cmd.append('-j')
             core_multiplier = 40
@@ -993,6 +1000,7 @@ if __name__ == "__main__":
         default=DEFAULT_OUT_DIR,
         help='Where to build ANGLE for capture and replay. Relative to the ANGLE folder. Default is "%s".'
         % DEFAULT_OUT_DIR)
+    # TODO(jmadill): Remove this argument. http://anglebug.com/6102
     parser.add_argument(
         '--use-goma',
         action='store_true',

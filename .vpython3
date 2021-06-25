@@ -30,3 +30,8 @@ wheel: <
   name: "infra/python/wheels/six-py2_py3"
   version: "version:1.10.0"
 >
+
+wheel: <
+  name: "infra/python/wheels/psutil/${vpython_platform}"
+  version: "version:5.7.2"
+>
