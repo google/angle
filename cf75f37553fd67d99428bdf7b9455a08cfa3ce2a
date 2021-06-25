@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6dd5fbd_2cf43f36",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-25T15:28:39Z",
+      "side": 1,
+      "message": "LGTM!  Does it also need to be upstreamed to https://github.com/KhronosGroup/OpenGL-Registry/blob/master/xml/gl.xml ?  Curious what our policy there is.",
+      "revId": "cf75f37553fd67d99428bdf7b9455a08cfa3ce2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
