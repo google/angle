@@ -64,6 +64,7 @@
 #include "magic_tiles_3/magic_tiles_3_capture_context1.h"
 #include "manhattan_10/manhattan_10_capture_context1.h"
 #include "manhattan_31/manhattan_31_capture_context1.h"
+#include "mario_kart_tour/mario_kart_tour_capture_context1.h"
 #include "marvel_contest_of_champions/marvel_contest_of_champions_capture_context1.h"
 #include "messenger_lite/messenger_lite_capture_context1.h"
 #include "minecraft/minecraft_capture_context1.h"
@@ -354,6 +355,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       manhattan_31::kReplayContextClientMinorVersion, manhattan_31::kReplayFrameStart,
       manhattan_31::kReplayFrameEnd, manhattan_31::kReplayDrawSurfaceWidth,
       manhattan_31::kReplayDrawSurfaceHeight, "manhattan_31"}},
+    {RestrictedTraceID::mario_kart_tour,
+     {mario_kart_tour::kReplayContextClientMajorVersion,
+      mario_kart_tour::kReplayContextClientMinorVersion, mario_kart_tour::kReplayFrameStart,
+      mario_kart_tour::kReplayFrameEnd, mario_kart_tour::kReplayDrawSurfaceWidth,
+      mario_kart_tour::kReplayDrawSurfaceHeight, "mario_kart_tour"}},
     {RestrictedTraceID::marvel_contest_of_champions,
      {marvel_contest_of_champions::kReplayContextClientMajorVersion,
       marvel_contest_of_champions::kReplayContextClientMinorVersion,

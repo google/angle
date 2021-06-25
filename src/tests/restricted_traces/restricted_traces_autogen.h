@@ -106,6 +106,7 @@ enum class RestrictedTraceID
     magic_tiles_3,
     manhattan_10,
     manhattan_31,
+    mario_kart_tour,
     marvel_contest_of_champions,
     messenger_lite,
     minecraft,
