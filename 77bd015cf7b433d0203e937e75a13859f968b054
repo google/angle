@@ -33,6 +33,52 @@
       "message": "LGTM, a strange API.",
       "revId": "77bd015cf7b433d0203e937e75a13859f968b054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe503faa_086f617e",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3713,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-25T18:17:06Z",
+      "side": 1,
+      "message": "Needs a bug number.",
+      "range": {
+        "startLine": 3713,
+        "startChar": 13,
+        "endLine": 3713,
+        "endChar": 15
+      },
+      "revId": "77bd015cf7b433d0203e937e75a13859f968b054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f525acb2_6a9cfa75",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-25T18:17:06Z",
+      "side": 1,
+      "message": "It looks like this can be simplified to:\n\n    InitParamValue(paramType, paramValue, \u0026mParamCaptures[index]);",
+      "range": {
+        "startLine": 517,
+        "startChar": 0,
+        "endLine": 519,
+        "endChar": 47
+      },
+      "revId": "77bd015cf7b433d0203e937e75a13859f968b054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
