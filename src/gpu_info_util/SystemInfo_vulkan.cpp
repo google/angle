@@ -47,7 +47,7 @@ class VulkanLibrary final : NonCopyable
     {
         for (const char *libraryName : kLibVulkanNames)
         {
-            mLibVulkan = OpenSharedLibraryWithExtension(libraryName);
+            mLibVulkan = OpenSharedLibraryWithExtension(libraryName, SearchType::ApplicationDir);
             if (mLibVulkan)
             {
                 if (mLibVulkan->getNative())
