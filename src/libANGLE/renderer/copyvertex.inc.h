@@ -204,12 +204,12 @@ inline void CopyToFloatVertexData(const uint8_t *input,
             {
                 if (NL::is_signed)
                 {
-                    result = static_cast<float>(offsetInput[j]) / NL::max();
+                    result = static_cast<float>(offsetInput[j]) / static_cast<float>(NL::max());
                     result = result >= -1.0f ? result : -1.0f;
                 }
                 else
                 {
-                    result = static_cast<float>(offsetInput[j]) / NL::max();
+                    result = static_cast<float>(offsetInput[j]) / static_cast<float>(NL::max());
                 }
             }
             else

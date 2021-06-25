@@ -102,7 +102,8 @@ struct TexFormat final
 template <const uint8_t bits>
 constexpr uint32_t EncodeNormUint(const float val)
 {
-    return static_cast<uint32_t>(val * (UINT32_MAX >> (32 - bits)) + 0.5);  // round-half-up
+    return static_cast<uint32_t>(val * static_cast<float>(UINT32_MAX >> (32 - bits)) +
+                                 0.5f);  // round-half-up
 }
 
 }  // anonymous namespace
