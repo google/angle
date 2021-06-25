@@ -16,6 +16,23 @@
       "message": "This could probably be refactored a bit more to remove duplicate code.  It also defers a bit of work in copyCompressedTextureData.  But wanted to get your thoughts on the approach.  This is for PUBG Mobile MEC.",
       "revId": "77bd015cf7b433d0203e937e75a13859f968b054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a52aea2a_07d808b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-25T12:01:27Z",
+      "side": 1,
+      "message": "LGTM, a strange API.",
+      "revId": "77bd015cf7b433d0203e937e75a13859f968b054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
