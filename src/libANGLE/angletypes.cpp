@@ -355,11 +355,9 @@ BlendStateExt::BlendStateExt(const size_t drawBuffers)
       mMaxDrawBuffers(drawBuffers)
 {}
 
-BlendStateExt &BlendStateExt::operator=(const BlendStateExt &other)
-{
-    memcpy(this, &other, sizeof(BlendStateExt));
-    return *this;
-}
+BlendStateExt::BlendStateExt(const BlendStateExt &other) = default;
+
+BlendStateExt &BlendStateExt::operator=(const BlendStateExt &other) = default;
 
 void BlendStateExt::setEnabled(const bool enabled)
 {

@@ -579,6 +579,7 @@ class BlendStateExt final
 
     BlendStateExt(const size_t drawBuffers = 1);
 
+    BlendStateExt(const BlendStateExt &other);
     BlendStateExt &operator=(const BlendStateExt &other);
 
     ///////// Blending Toggle /////////
@@ -671,23 +672,23 @@ class BlendStateExt final
 
     ///////// Data Members /////////
 
-    const FactorStorage::Type mMaxFactorMask;
+    FactorStorage::Type mMaxFactorMask;
     FactorStorage::Type mSrcColor;
     FactorStorage::Type mDstColor;
     FactorStorage::Type mSrcAlpha;
     FactorStorage::Type mDstAlpha;
 
-    const EquationStorage::Type mMaxEquationMask;
+    EquationStorage::Type mMaxEquationMask;
     EquationStorage::Type mEquationColor;
     EquationStorage::Type mEquationAlpha;
 
-    const ColorMaskStorage::Type mMaxColorMask;
+    ColorMaskStorage::Type mMaxColorMask;
     ColorMaskStorage::Type mColorMask;
 
-    const DrawBufferMask mMaxEnabledMask;
+    DrawBufferMask mMaxEnabledMask;
     DrawBufferMask mEnabledMask;
 
-    const size_t mMaxDrawBuffers;
+    size_t mMaxDrawBuffers;
 };
 
 // Used in StateCache
