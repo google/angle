@@ -192,6 +192,8 @@ class ProgramExecutableVk
         return mUniformBufferDescriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
     }
 
+    bool usesImmutableSamplers() const { return mUsesImmutableSamplers; }
+
     void accumulateCacheStats(VulkanCacheType cacheType, const CacheStats &cacheStats);
     ProgramExecutablePerfCounters getAndResetObjectPerfCounters();
 
@@ -275,6 +277,7 @@ class ProgramExecutableVk
 
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get
     // deleted while this program is in use.
+    bool mUsesImmutableSamplers;
     vk::BindingPointer<vk::PipelineLayout> mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts;
 

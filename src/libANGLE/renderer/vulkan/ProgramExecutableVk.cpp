@@ -248,6 +248,7 @@ void ProgramInfo::release(ContextVk *contextVk)
 ProgramExecutableVk::ProgramExecutableVk()
     : mEmptyDescriptorSets{},
       mNumDefaultUniformDescriptors(0),
+      mUsesImmutableSamplers(false),
       mUniformBufferDescriptorType(VK_DESCRIPTOR_TYPE_MAX_ENUM),
       mProgram(nullptr),
       mProgramPipeline(nullptr),
@@ -266,6 +267,7 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
     {
         descriptorSetLayout.reset();
     }
+    mUsesImmutableSamplers = false;
     mPipelineLayout.reset();
 
     mDescriptorSets.fill(VK_NULL_HANDLE);
@@ -703,6 +705,7 @@ void ProgramExecutableVk::addTextureDescriptorSetDesc(
                     (*activeTextures)[textureUnit].texture->getSampler().get();
                 descOut->update(info.binding, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
                                 activeStages, &immutableSampler);
+                mUsesImmutableSamplers = true;
             }
             else
             {
