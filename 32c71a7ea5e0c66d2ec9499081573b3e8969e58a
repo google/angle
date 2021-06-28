@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "01a9a43a_462424e2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-28T17:08:41Z",
+      "side": 1,
+      "message": "The actual issue is that in src/common/utilities.cpp:33 it is asserted that the \"count \u003e 0\"",
+      "parentUuid": "5a9e2909_9c3e54b0",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 63
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "443eb7e5_4590dec2",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2021-06-28T15:44:36Z",
       "side": 1,
       "message": "this will miss other no-op draws, e.g. count 1 or 2 for triangles, etc. Can we re-use the facility in Context to check if it\u0027s a no-op draw?",
+      "range": {
+        "startLine": 4001,
+        "startChar": 0,
+        "endLine": 4004,
+        "endChar": 5
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "705bbe2c_a83a90f2",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4004,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-28T17:08:41Z",
+      "side": 1,
+      "message": "I\u0027ll see whether this can be handled to include these cases. Maybe I should have been more explicit about what is commented in the linked bug.",
+      "parentUuid": "443eb7e5_4590dec2",
       "range": {
         "startLine": 4001,
         "startChar": 0,
