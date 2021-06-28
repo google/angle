@@ -16,6 +16,29 @@
       "message": "Nice fix.",
       "revId": "c65b6b3618fbf8d1d2af5e09634bbc9ddbdf7d23",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "059a97bd_363b80cc",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5527,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-28T14:46:53Z",
+      "side": 1,
+      "message": "Good catch!",
+      "range": {
+        "startLine": 5527,
+        "startChar": 11,
+        "endLine": 5527,
+        "endChar": 24
+      },
+      "revId": "c65b6b3618fbf8d1d2af5e09634bbc9ddbdf7d23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
