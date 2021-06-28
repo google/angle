@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9890e31d_42aff6cd",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T16:41:40Z",
+      "side": 1,
+      "message": "t",
+      "range": {
+        "startLine": 553,
+        "startChar": 34,
+        "endLine": 553,
+        "endChar": 35
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dec4054f_03934ae8",
         "filename": "scripts/gl.xml",
         "patchSetId": 6
@@ -49,6 +72,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "82a2a702_4976dde0",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4717,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T16:41:40Z",
+      "side": 1,
+      "message": "nit: please static_assert that sizeof(mState.mBlendEquation.enabledBlendEquation) \u003d\u003d sizeof(uint16_t). It\u0027s defined far enough apart that makes it hard to verify when making changes.",
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b17928d6_555a25da",
         "filename": "src/libANGLE/angletypes.cpp",
         "patchSetId": 6
@@ -66,6 +106,23 @@
         "endLine": 507,
         "endChar": 47
       },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38f35f8b_7451e82f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3515,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T16:41:40Z",
+      "side": 1,
+      "message": "nit: unnecessary braces",
       "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -164,6 +221,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "62b27a65_1db76e48",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T16:41:40Z",
+      "side": 1,
+      "message": "Should check if the GL extension is advertised, which should also document why you added this.",
+      "parentUuid": "3400dad4_7f691abe",
+      "range": {
+        "startLine": 99,
+        "startChar": 59,
+        "endLine": 99,
+        "endChar": 79
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3e1f6530_a9df1ab1",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 6
@@ -180,6 +261,29 @@
         "startChar": 40,
         "endLine": 2516,
         "endChar": 76
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de309b39_3bbb0abc",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1783,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T16:41:40Z",
+      "side": 1,
+      "message": "Probably need to detect this outside of SurfaceVk, and ask it to invalidate its framebuffer when switching modes (similarly to how framebuffer fetch does this sort of thing)",
+      "range": {
+        "startLine": 1783,
+        "startChar": 38,
+        "endLine": 1783,
+        "endChar": 98
       },
       "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -295,6 +399,29 @@
         "startChar": 19,
         "endLine": 3853,
         "endChar": 43
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d6182be_ab020a99",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T16:41:40Z",
+      "side": 1,
+      "message": "Is this because the input attachment is declared as subpassInput, but needs to be subpassInputMS? If that\u0027s all, you should be able to fix that up while transforming SPIR-V likely quite easily.",
+      "range": {
+        "startLine": 188,
+        "startChar": 61,
+        "endLine": 188,
+        "endChar": 65
       },
       "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
