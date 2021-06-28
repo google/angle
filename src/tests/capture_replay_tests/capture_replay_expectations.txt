@@ -44,11 +44,7 @@ GLSLTest.ZeroShaderLength/*
 GPUTestConfigTest.GPUTestConfigConditions_D3D11/*
 ImageTest.SourceCubeTargetExternal/*
 PBOExtensionTest.*
-PixmapTest.Clearing/*
 SRGBFramebufferTest.Validation/*
-StateChangeRenderTest.GenerateMipmap/*
-SyncQueriesTest.*
-TextureLimitsTest.MaxCombinedTextures/*
 TimerQueriesTest.*
 UnpackAlignmentTest.*
 UnpackRowLengthTest.*
