@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc6e66e9_3b5466ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T12:22:42Z",
+      "side": 1,
+      "message": "LGTM but maybe a bug? SwiftShader build failed.",
+      "revId": "a727673ab2c8d6834b95de869d33427caa4d4a34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a82340df_17c554d4",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T12:22:42Z",
+      "side": 1,
+      "message": "nit: it\u0027s not clear what that | 1 does unless you look up operator precedence rules. Can you add brackets?",
+      "range": {
+        "startLine": 39,
+        "startChar": 11,
+        "endLine": 39,
+        "endChar": 86
+      },
+      "revId": "a727673ab2c8d6834b95de869d33427caa4d4a34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
