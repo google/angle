@@ -16,6 +16,46 @@
       "message": "Rebased on top of a separate CL for the new tests.\n\nFrom my testing on Windows and Android, the coherent extension is not seen by the tests.  Will look into that next.",
       "revId": "4b61bd4200ee0693ee634ca5f439a4866dd3f51c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c5d8bbf_82cd8703",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T14:04:49Z",
+      "side": 1,
+      "message": "What\u0027s the status of this, Ian?",
+      "revId": "4b61bd4200ee0693ee634ca5f439a4866dd3f51c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce82c786_318bdee0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T14:04:49Z",
+      "side": 1,
+      "message": "nit: this comment belongs up with the \"if\".. but it needs a bit more info.",
+      "range": {
+        "startLine": 891,
+        "startChar": 0,
+        "endLine": 891,
+        "endChar": 88
+      },
+      "revId": "4b61bd4200ee0693ee634ca5f439a4866dd3f51c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
