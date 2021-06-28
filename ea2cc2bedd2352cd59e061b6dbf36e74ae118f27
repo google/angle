@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43723903_ada61dd5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:04:19Z",
+      "side": 1,
+      "message": "Thanks Shabi for doing a detailed review.",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2c12d82b_0a558fae",
@@ -232,6 +249,29 @@
       "writtenOn": "2021-06-28T11:44:03Z",
       "side": 1,
       "message": "Example?\n\nDidn\u0027t look too closely, but beware that if divisor and dividend have side effects (like an expression like var[atomicCounterIncrement(n)] then you are duplicating the side effect here)",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0df3c1e_c20da9ac",
+        "filename": "src/tests/compiler_tests/KHR_blend_equation_advanced_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:04:19Z",
+      "side": 1,
+      "message": "nit: please comment before new tests.",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 298,
+        "endChar": 6
+      },
       "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
