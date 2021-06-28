@@ -4076,7 +4076,14 @@ void FrameCapture::maybeCaptureDrawElementsClientData(const gl::Context *context
         return;
     }
 
+    // if the count is zero then the index evaluation is not valid and we wouldn't be drawing
+    // anything anyway, so skip capturing
     GLsizei count = call.params.getParam("count", ParamType::TGLsizei, 1).value.GLsizeiVal;
+    if (count == 0)
+    {
+        return;
+    }
+
     gl::DrawElementsType drawElementsType =
         call.params.getParam("typePacked", ParamType::TDrawElementsType, 2)
             .value.DrawElementsTypeVal;
