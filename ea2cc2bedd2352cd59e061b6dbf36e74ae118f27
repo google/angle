@@ -83,6 +83,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1301a905_37ae464b",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T16:26:07Z",
+      "side": 1,
+      "message": "Please don\u0027t generate text and do proper tree transformations. I realize it\u0027s not as convenient to generate code that way, but we are moving away from generating text and towards generating SPIR-V directly, so this sort of output is no longer acceptable.",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e05e4dd5_e3828bb0",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T16:26:07Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b4585e52_64539c93",
         "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
         "patchSetId": 6
@@ -249,6 +283,29 @@
       "writtenOn": "2021-06-28T11:44:03Z",
       "side": 1,
       "message": "Example?\n\nDidn\u0027t look too closely, but beware that if divisor and dividend have side effects (like an expression like var[atomicCounterIncrement(n)] then you are duplicating the side effect here)",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d63a9c15_11160fa4",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1009,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T16:26:07Z",
+      "side": 1,
+      "message": "Once every transformation is an AST transformation, you should be able to remove this parameter.",
+      "range": {
+        "startLine": 1009,
+        "startChar": 41,
+        "endLine": 1009,
+        "endChar": 60
+      },
       "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
