@@ -53,9 +53,6 @@ GLSLTest.MixedShaderLengths/*
 GLSLTest.ZeroShaderLength/*
 GPUTestConfigTest.GPUTestConfigConditions_D3D11/*
 ImageTest.SourceCubeTargetExternal/*
-IndexedPointsTestUByte.*
-IndexedPointsTestUInt.*
-IndexedPointsTestUShort.*
 OcclusionQueriesTest.*
 PBOExtensionTest.*
 PixmapTest.Clearing/*
