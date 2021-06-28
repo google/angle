@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5a9e2909_9c3e54b0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-28T16:42:08Z",
+      "side": 1,
+      "message": "What\u0027s the difference between a replay issuing the draw call vs the original caller issuing it?   ANGLE should be no-op\u0027ing the draw call the same way regardless.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 63
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "443eb7e5_4590dec2",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 1
