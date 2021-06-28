@@ -52,6 +52,24 @@
       "parentUuid": "76b49f61_989912f4",
       "revId": "cd1b548817c040c7bdf6840ce13041d2cbc23914",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2383fca0_722bf82d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-28T07:28:11Z",
+      "side": 1,
+      "message": "The patch was submitted before the robustResourceInit stuff was in place. I\u0027ve updated the patch accordingly removing glClear",
+      "parentUuid": "16fbaa84_f2e214d7",
+      "revId": "cd1b548817c040c7bdf6840ce13041d2cbc23914",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
