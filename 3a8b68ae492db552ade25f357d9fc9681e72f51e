@@ -39,6 +39,30 @@
       },
       "revId": "3a8b68ae492db552ade25f357d9fc9681e72f51e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c79c95d6_4931a7fe",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T12:13:20Z",
+      "side": 1,
+      "message": "Done. Good catch.",
+      "parentUuid": "f1361d7b_e6f8a39d",
+      "range": {
+        "startLine": 162,
+        "startChar": 0,
+        "endLine": 165,
+        "endChar": 5
+      },
+      "revId": "3a8b68ae492db552ade25f357d9fc9681e72f51e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
