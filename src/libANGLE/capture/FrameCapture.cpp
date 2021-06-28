@@ -5524,7 +5524,7 @@ void WriteParamValueReplay<ParamType::TSemaphoreID>(std::ostream &os,
                                                     const CallCapture &call,
                                                     gl::SemaphoreID value)
 {
-    os << "gSempahoreMap[" << value.value << "]";
+    os << "gSemaphoreMap[" << value.value << "]";
 }
 
 template <>

@@ -2558,7 +2558,7 @@ void CaptureDeleteSemaphoresEXT_semaphoresPacked(const State &glState,
                                                  const SemaphoreID *semaphores,
                                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(semaphores, sizeof(SemaphoreID) * n, paramCapture);
 }
 
 void CaptureGenSemaphoresEXT_semaphoresPacked(const State &glState,
@@ -2567,7 +2567,7 @@ void CaptureGenSemaphoresEXT_semaphoresPacked(const State &glState,
                                               SemaphoreID *semaphores,
                                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureGenHandles(n, semaphores, paramCapture);
 }
 
 void CaptureGetSemaphoreParameterui64vEXT_params(const State &glState,

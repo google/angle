@@ -60,7 +60,6 @@ OcclusionQueriesTest.*
 PBOExtensionTest.*
 PixmapTest.Clearing/*
 RobustClientMemoryTest.*
-SemaphoreTest.*
 SRGBFramebufferTest.Validation/*
 StateChangeRenderTest.GenerateMipmap/*
 SyncQueriesTest.*
