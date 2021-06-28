@@ -4103,6 +4103,7 @@ void FrameCapture::maybeCaptureDrawElementsClientData(const gl::Context *context
     }
     else
     {
+        ASSERT(indices);
         indexRange = gl::ComputeIndexRange(drawElementsType, indices, count, restart);
     }
 

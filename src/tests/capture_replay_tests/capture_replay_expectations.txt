@@ -47,7 +47,6 @@ GPUTestConfigTest.GPUTestConfigConditions_D3D11/*
 ImageTest.SourceCubeTargetExternal/*
 PBOExtensionTest.*
 SRGBFramebufferTest.Validation/*
-VertexAttributeOORTest.*
 VertexAttributeTest.*
 VulkanExternalImageTest.*
 
