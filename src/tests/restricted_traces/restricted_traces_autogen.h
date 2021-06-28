@@ -62,6 +62,7 @@ enum class RestrictedTraceID
     avakin_life,
     aztec_ruins,
     brawl_stars,
+    bricks_breaker_quest,
     bubble_shooter,
     bus_simulator_indonesia,
     call_break_offline_card_game,

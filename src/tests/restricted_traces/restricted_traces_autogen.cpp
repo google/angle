@@ -20,6 +20,7 @@
 #include "avakin_life/avakin_life_capture_context1.h"
 #include "aztec_ruins/aztec_ruins_capture_context1.h"
 #include "brawl_stars/brawl_stars_capture_context1.h"
+#include "bricks_breaker_quest/bricks_breaker_quest_capture_context2.h"
 #include "bubble_shooter/bubble_shooter_capture_context5.h"
 #include "bus_simulator_indonesia/bus_simulator_indonesia_capture_context1.h"
 #include "call_break_offline_card_game/call_break_offline_card_game_capture_context2.h"
@@ -141,6 +142,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {brawl_stars::kReplayContextClientMajorVersion, brawl_stars::kReplayContextClientMinorVersion,
       brawl_stars::kReplayFrameStart, brawl_stars::kReplayFrameEnd,
       brawl_stars::kReplayDrawSurfaceWidth, brawl_stars::kReplayDrawSurfaceHeight, "brawl_stars"}},
+    {RestrictedTraceID::bricks_breaker_quest,
+     {bricks_breaker_quest::kReplayContextClientMajorVersion,
+      bricks_breaker_quest::kReplayContextClientMinorVersion,
+      bricks_breaker_quest::kReplayFrameStart, bricks_breaker_quest::kReplayFrameEnd,
+      bricks_breaker_quest::kReplayDrawSurfaceWidth, bricks_breaker_quest::kReplayDrawSurfaceHeight,
+      "bricks_breaker_quest"}},
     {RestrictedTraceID::bubble_shooter,
      {bubble_shooter::kReplayContextClientMajorVersion,
       bubble_shooter::kReplayContextClientMinorVersion, bubble_shooter::kReplayFrameStart,
