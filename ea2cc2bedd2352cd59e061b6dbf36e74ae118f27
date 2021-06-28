@@ -155,6 +155,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b965ec27_d4dcb101",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T12:12:45Z",
+      "side": 1,
+      "message": "Actually ignore this comment for now. I realized that subpassLoad is defined for desktop GLSL only at the moment, so you can\u0027t use CreateBuiltInFunctionCallNode until I can find a way to make it work.",
+      "parentUuid": "67836f60_291e0572",
+      "range": {
+        "startLine": 436,
+        "startChar": 45,
+        "endLine": 438,
+        "endChar": 83
+      },
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf5b4fdd_bc1f83a1",
