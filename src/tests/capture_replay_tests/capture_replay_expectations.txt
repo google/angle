@@ -24,6 +24,7 @@ WebGLReadOutsideFramebufferTest.*
 GLSLTest.InactiveVaryingInVertexActiveInFragment/*
 # Flanky tests, pass standalone, but fail in a group
 ColorMaskTest.AMDZeroColorMaskBug/ES3_OpenGL
+WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/ES2_Vulkan_SwiftShader
 
 # Crashed tests
 BlitFramebufferANGLETest.*
@@ -44,7 +45,6 @@ GPUTestConfigTest.GPUTestConfigConditions_D3D11/*
 ImageTest.SourceCubeTargetExternal/*
 PBOExtensionTest.*
 SRGBFramebufferTest.Validation/*
-TimerQueriesTest.*
 UnpackAlignmentTest.*
 UnpackRowLengthTest.*
 VertexAttributeCachingTest.*

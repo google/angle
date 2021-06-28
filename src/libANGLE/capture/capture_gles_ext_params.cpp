@@ -2443,7 +2443,7 @@ void CaptureGetQueryivEXT_params(const State &glState,
                                  GLint *params,
                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLint), paramCapture);
 }
 
 void CaptureDrawBuffersEXT_bufs(const State &glState,
