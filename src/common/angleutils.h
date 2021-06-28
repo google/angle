@@ -319,6 +319,13 @@ inline bool IsLittleEndian()
 #    define ANGLE_NO_SANITIZE_MEMORY
 #endif
 
+// Similar to the above, but for thread sanitization.
+#ifdef __clang__
+#    define ANGLE_NO_SANITIZE_THREAD __attribute__((no_sanitize_thread))
+#else
+#    define ANGLE_NO_SANITIZE_THREAD
+#endif
+
 // The below inlining code lifted from V8.
 #if defined(__clang__) || (defined(__GNUC__) && defined(__has_attribute))
 #    define ANGLE_HAS_ATTRIBUTE_ALWAYS_INLINE (__has_attribute(always_inline))
