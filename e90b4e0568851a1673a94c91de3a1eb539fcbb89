@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b001d00_1ad63165",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1515347
+      },
+      "writtenOn": "2021-06-28T19:13:51Z",
+      "side": 1,
+      "message": "2965780: Capture/Replay: Refactor shared context handling | https://chromium-review.googlesource.com/c/angle/angle/+/2965780",
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
