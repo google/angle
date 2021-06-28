@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc096aef_1212a344",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:22:44Z",
+      "side": 1,
+      "message": "Still looking into the presubmit issue.",
+      "revId": "46079e9b2c3ad6941f4b3625b7803ff4d8768f9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdd9f790_5a7f5294",
+        "filename": "include/GLES/glext_angle.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:22:44Z",
+      "side": 1,
+      "message": "please follow this pattern like for the other extensions.",
+      "range": {
+        "startLine": 15,
+        "startChar": 8,
+        "endLine": 15,
+        "endChar": 39
+      },
+      "revId": "46079e9b2c3ad6941f4b3625b7803ff4d8768f9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1e894bf_96e3cb37",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2878,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:22:44Z",
+      "side": 1,
+      "message": "nit: comment before new tests.",
+      "range": {
+        "startLine": 2878,
+        "startChar": 0,
+        "endLine": 2878,
+        "endChar": 6
+      },
+      "revId": "46079e9b2c3ad6941f4b3625b7803ff4d8768f9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
