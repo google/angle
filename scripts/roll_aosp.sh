@@ -148,6 +148,11 @@ find third_party/ -maxdepth 2 -type d ! -path third_party/ \
     ! -path 'third_party/vulkan_memory_allocator*' \
     ! -path 'third_party/zlib*' \
     -print0 | xargs --null rm -rf
+# Special handling for zlib's contrib/ (third_party) folder, since there are some
+# missing license files.
+find third_party/zlib/contrib/ -maxdepth 1 -type d ! -path third_party/zlib/contrib/ \
+    ! -path 'third_party/zlib/contrib/optimizations*' \
+    -print0 | xargs --null rm -rf
 
 git add Android.bp
 
@@ -173,9 +178,8 @@ for removal_file in "${extra_removal_files[@]}"; do
    rm -f "$removal_file"
 done
 
-for dep in "${third_party_deps[@]}"; do
-   git add -f "$dep"
-done
+# Add all changes to third_party/ so we delete everything not explicitly allowed.
+git add -f "third_party/*"
 
 # Done with depot_tools
 rm -rf $DEPOT_TOOLS_DIR
