@@ -1963,7 +1963,7 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
         transformFeedbackVk->getBufferSizes();
 
     mRenderPassCommandBuffer->bindTransformFeedbackBuffers(
-        static_cast<uint32_t>(bufferCount), bufferHandles.data(), bufferOffsets.data(),
+        0, static_cast<uint32_t>(bufferCount), bufferHandles.data(), bufferOffsets.data(),
         bufferSizes.data());
 
     if (!mState.isTransformFeedbackActiveUnpaused())

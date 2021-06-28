@@ -17,8 +17,6 @@
 
 namespace rx
 {
-enum class DescriptorSetIndex : uint32_t;
-
 namespace vk
 {
 namespace priv
@@ -482,9 +480,12 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     // Add commands
     void beginDebugUtilsLabelEXT(const VkDebugUtilsLabelEXT &label);
 
-    void beginQuery(VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags);
+    void beginQuery(const QueryPool &queryPool, uint32_t query, VkQueryControlFlags flags);
 
-    void beginTransformFeedback(uint32_t counterBufferCount, const VkBuffer *pCounterBuffers);
+    void beginTransformFeedback(uint32_t firstCounterBuffer,
+                                uint32_t bufferCount,
+                                const VkBuffer *counterBuffers,
+                                const VkDeviceSize *counterBufferOffsets);
 
     void bindComputePipeline(const Pipeline &pipeline);
 
@@ -500,7 +501,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     void bindIndexBuffer(const Buffer &buffer, VkDeviceSize offset, VkIndexType indexType);
 
-    void bindTransformFeedbackBuffers(uint32_t bindingCount,
+    void bindTransformFeedbackBuffers(uint32_t firstBinding,
+                                      uint32_t bindingCount,
                                       const VkBuffer *buffers,
                                       const VkDeviceSize *offsets,
                                       const VkDeviceSize *sizes);
@@ -598,9 +600,12 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     void endDebugUtilsLabelEXT();
 
-    void endQuery(VkQueryPool queryPool, uint32_t query);
+    void endQuery(const QueryPool &queryPool, uint32_t query);
 
-    void endTransformFeedback(uint32_t counterBufferCount, const VkBuffer *pCounterBuffers);
+    void endTransformFeedback(uint32_t firstCounterBuffer,
+                              uint32_t counterBufferCount,
+                              const VkBuffer *counterBuffers,
+                              const VkDeviceSize *counterBufferOffsets);
 
     void executionBarrier(VkPipelineStageFlags stageMask);
 
@@ -639,10 +644,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     void resetEvent(VkEvent event, VkPipelineStageFlags stageMask);
 
-    // Store up resetQueryPool command and prepend to commands when executing
-    void queueResetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount);
-
-    void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount);
+    void resetQueryPool(const QueryPool &queryPool, uint32_t firstQuery, uint32_t queryCount);
 
     void resolveImage(const Image &srcImage,
                       VkImageLayout srcImageLayout,
@@ -669,7 +671,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                     const VkImageMemoryBarrier *imageMemoryBarriers);
 
     void writeTimestamp(VkPipelineStageFlagBits pipelineStage,
-                        VkQueryPool queryPool,
+                        const QueryPool &queryPool,
                         uint32_t query);
 
     // No-op for compatibility
@@ -853,19 +855,24 @@ ANGLE_INLINE void SecondaryCommandBuffer::beginDebugUtilsLabelEXT(const VkDebugU
     commonDebugUtilsLabel(CommandID::BeginDebugUtilsLabel, label);
 }
 
-ANGLE_INLINE void SecondaryCommandBuffer::beginQuery(VkQueryPool queryPool,
+ANGLE_INLINE void SecondaryCommandBuffer::beginQuery(const QueryPool &queryPool,
                                                      uint32_t query,
                                                      VkQueryControlFlags flags)
 {
     BeginQueryParams *paramStruct = initCommand<BeginQueryParams>(CommandID::BeginQuery);
-    paramStruct->queryPool        = queryPool;
+    paramStruct->queryPool        = queryPool.getHandle();
     paramStruct->query            = query;
     paramStruct->flags            = flags;
 }
 
-ANGLE_INLINE void SecondaryCommandBuffer::beginTransformFeedback(uint32_t bufferCount,
-                                                                 const VkBuffer *counterBuffers)
+ANGLE_INLINE void SecondaryCommandBuffer::beginTransformFeedback(
+    uint32_t firstCounterBuffer,
+    uint32_t bufferCount,
+    const VkBuffer *counterBuffers,
+    const VkDeviceSize *counterBufferOffsets)
 {
+    ASSERT(firstCounterBuffer == 0);
+    ASSERT(counterBufferOffsets == nullptr);
     uint8_t *writePtr;
     size_t bufferSize                         = bufferCount * sizeof(VkBuffer);
     BeginTransformFeedbackParams *paramStruct = initCommand<BeginTransformFeedbackParams>(
@@ -923,11 +930,13 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindIndexBuffer(const Buffer &buffer,
     paramStruct->indexType = indexType;
 }
 
-ANGLE_INLINE void SecondaryCommandBuffer::bindTransformFeedbackBuffers(uint32_t bindingCount,
+ANGLE_INLINE void SecondaryCommandBuffer::bindTransformFeedbackBuffers(uint32_t firstBinding,
+                                                                       uint32_t bindingCount,
                                                                        const VkBuffer *buffers,
                                                                        const VkDeviceSize *offsets,
                                                                        const VkDeviceSize *sizes)
 {
+    ASSERT(firstBinding == 0);
     uint8_t *writePtr;
     size_t buffersSize = bindingCount * sizeof(VkBuffer);
     size_t offsetsSize = bindingCount * sizeof(VkDeviceSize);
@@ -1232,21 +1241,26 @@ ANGLE_INLINE void SecondaryCommandBuffer::endDebugUtilsLabelEXT()
     initCommand<EmptyParams>(CommandID::EndDebugUtilsLabel);
 }
 
-ANGLE_INLINE void SecondaryCommandBuffer::endQuery(VkQueryPool queryPool, uint32_t query)
+ANGLE_INLINE void SecondaryCommandBuffer::endQuery(const QueryPool &queryPool, uint32_t query)
 {
     EndQueryParams *paramStruct = initCommand<EndQueryParams>(CommandID::EndQuery);
-    paramStruct->queryPool      = queryPool;
+    paramStruct->queryPool      = queryPool.getHandle();
     paramStruct->query          = query;
 }
 
-ANGLE_INLINE void SecondaryCommandBuffer::endTransformFeedback(uint32_t bufferCount,
-                                                               const VkBuffer *counterBuffers)
+ANGLE_INLINE void SecondaryCommandBuffer::endTransformFeedback(
+    uint32_t firstCounterBuffer,
+    uint32_t counterBufferCount,
+    const VkBuffer *counterBuffers,
+    const VkDeviceSize *counterBufferOffsets)
 {
+    ASSERT(firstCounterBuffer == 0);
+    ASSERT(counterBufferOffsets == nullptr);
     uint8_t *writePtr;
-    size_t bufferSize                       = bufferCount * sizeof(VkBuffer);
+    size_t bufferSize                       = counterBufferCount * sizeof(VkBuffer);
     EndTransformFeedbackParams *paramStruct = initCommand<EndTransformFeedbackParams>(
         CommandID::EndTransformFeedback, bufferSize, &writePtr);
-    paramStruct->bufferCount = bufferCount;
+    paramStruct->bufferCount = counterBufferCount;
     storePointerParameter(writePtr, counterBuffers, bufferSize);
 }
 
@@ -1357,13 +1371,13 @@ ANGLE_INLINE void SecondaryCommandBuffer::resetEvent(VkEvent event, VkPipelineSt
     paramStruct->stageMask        = stageMask;
 }
 
-ANGLE_INLINE void SecondaryCommandBuffer::resetQueryPool(VkQueryPool queryPool,
+ANGLE_INLINE void SecondaryCommandBuffer::resetQueryPool(const QueryPool &queryPool,
                                                          uint32_t firstQuery,
                                                          uint32_t queryCount)
 {
     ResetQueryPoolParams *paramStruct =
         initCommand<ResetQueryPoolParams>(CommandID::ResetQueryPool);
-    paramStruct->queryPool  = queryPool;
+    paramStruct->queryPool  = queryPool.getHandle();
     paramStruct->firstQuery = firstQuery;
     paramStruct->queryCount = queryCount;
 }
@@ -1448,13 +1462,13 @@ ANGLE_INLINE void SecondaryCommandBuffer::waitEvents(
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::writeTimestamp(VkPipelineStageFlagBits pipelineStage,
-                                                         VkQueryPool queryPool,
+                                                         const QueryPool &queryPool,
                                                          uint32_t query)
 {
     WriteTimestampParams *paramStruct =
         initCommand<WriteTimestampParams>(CommandID::WriteTimestamp);
     paramStruct->pipelineStage = pipelineStage;
-    paramStruct->queryPool     = queryPool;
+    paramStruct->queryPool     = queryPool.getHandle();
     paramStruct->query         = query;
 }
 }  // namespace priv

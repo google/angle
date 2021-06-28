@@ -1866,8 +1866,8 @@ void CommandBufferHelper::resumeTransformFeedback()
     mRebindTransformFeedbackBuffers    = false;
     mIsTransformFeedbackActiveUnpaused = true;
 
-    mCommandBuffer.beginTransformFeedback(numCounterBuffers,
-                                          mTransformFeedbackCounterBuffers.data());
+    mCommandBuffer.beginTransformFeedback(0, numCounterBuffers,
+                                          mTransformFeedbackCounterBuffers.data(), nullptr);
 }
 
 void CommandBufferHelper::pauseTransformFeedback()
@@ -1875,8 +1875,8 @@ void CommandBufferHelper::pauseTransformFeedback()
     ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(isTransformFeedbackStarted() && isTransformFeedbackActiveUnpaused());
     mIsTransformFeedbackActiveUnpaused = false;
-    mCommandBuffer.endTransformFeedback(mValidTransformFeedbackBufferCount,
-                                        mTransformFeedbackCounterBuffers.data());
+    mCommandBuffer.endTransformFeedback(0, mValidTransformFeedbackBufferCount,
+                                        mTransformFeedbackCounterBuffers.data(), nullptr);
 }
 
 void CommandBufferHelper::updateRenderPassColorClear(PackedAttachmentIndex colorIndexVk,
@@ -2814,13 +2814,13 @@ void QueryHelper::beginQueryImpl(ContextVk *contextVk,
                                  CommandBuffer *commandBuffer)
 {
     const QueryPool &queryPool = getQueryPool();
-    resetCommandBuffer->resetQueryPool(queryPool.getHandle(), mQuery, mQueryCount);
-    commandBuffer->beginQuery(queryPool.getHandle(), mQuery, 0);
+    resetCommandBuffer->resetQueryPool(queryPool, mQuery, mQueryCount);
+    commandBuffer->beginQuery(queryPool, mQuery, 0);
 }
 
 void QueryHelper::endQueryImpl(ContextVk *contextVk, CommandBuffer *commandBuffer)
 {
-    commandBuffer->endQuery(getQueryPool().getHandle(), mQuery);
+    commandBuffer->endQuery(getQueryPool(), mQuery);
 
     // Query results are available after endQuery, retain this query so that we get its serial
     // updated which is used to indicate that query results are (or will be) available.
@@ -2904,9 +2904,8 @@ void QueryHelper::writeTimestampToPrimary(ContextVk *contextVk, PrimaryCommandBu
 void QueryHelper::writeTimestamp(ContextVk *contextVk, CommandBuffer *commandBuffer)
 {
     const QueryPool &queryPool = getQueryPool();
-    commandBuffer->resetQueryPool(queryPool.getHandle(), mQuery, mQueryCount);
-    commandBuffer->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool.getHandle(),
-                                  mQuery);
+    commandBuffer->resetQueryPool(queryPool, mQuery, mQueryCount);
+    commandBuffer->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool, mQuery);
     // timestamp results are available immediately, retain this query so that we get its serial
     // updated which is used to indicate that query results are (or will be) available.
     retain(&contextVk->getResourceUseList());
