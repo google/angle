@@ -3810,6 +3810,10 @@ void Context::initCaps()
         mSkipValidation                       = false;
         mState.mExtensions.noError            = mSkipValidation;
         mState.mExtensions.robustClientMemory = !mSkipValidation;
+
+        INFO() << "Disabling GL_OES_depth32 during capture, which is not widely supported on "
+                  "mobile";
+        mState.mExtensions.depth32OES = false;
     }
 
     // Disable support for OES_get_program_binary
