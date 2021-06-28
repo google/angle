@@ -19,6 +19,7 @@
 #include "asphalt_8/asphalt_8_capture_context1.h"
 #include "avakin_life/avakin_life_capture_context1.h"
 #include "aztec_ruins/aztec_ruins_capture_context1.h"
+#include "beach_buggy_racing/beach_buggy_racing_capture_context1.h"
 #include "brawl_stars/brawl_stars_capture_context1.h"
 #include "bricks_breaker_quest/bricks_breaker_quest_capture_context2.h"
 #include "bubble_shooter/bubble_shooter_capture_context5.h"
@@ -138,6 +139,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {aztec_ruins::kReplayContextClientMajorVersion, aztec_ruins::kReplayContextClientMinorVersion,
       aztec_ruins::kReplayFrameStart, aztec_ruins::kReplayFrameEnd,
       aztec_ruins::kReplayDrawSurfaceWidth, aztec_ruins::kReplayDrawSurfaceHeight, "aztec_ruins"}},
+    {RestrictedTraceID::beach_buggy_racing,
+     {beach_buggy_racing::kReplayContextClientMajorVersion,
+      beach_buggy_racing::kReplayContextClientMinorVersion, beach_buggy_racing::kReplayFrameStart,
+      beach_buggy_racing::kReplayFrameEnd, beach_buggy_racing::kReplayDrawSurfaceWidth,
+      beach_buggy_racing::kReplayDrawSurfaceHeight, "beach_buggy_racing"}},
     {RestrictedTraceID::brawl_stars,
      {brawl_stars::kReplayContextClientMajorVersion, brawl_stars::kReplayContextClientMinorVersion,
       brawl_stars::kReplayFrameStart, brawl_stars::kReplayFrameEnd,

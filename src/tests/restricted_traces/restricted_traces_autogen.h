@@ -61,6 +61,7 @@ enum class RestrictedTraceID
     asphalt_8,
     avakin_life,
     aztec_ruins,
+    beach_buggy_racing,
     brawl_stars,
     bricks_breaker_quest,
     bubble_shooter,
