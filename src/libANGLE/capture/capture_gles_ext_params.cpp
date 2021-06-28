@@ -949,7 +949,17 @@ void CaptureTexSubImage2DRobustANGLE_pixels(const State &glState,
                                             const void *pixels,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    if (glState.getTargetBuffer(gl::BufferBinding::PixelUnpack))
+    {
+        return;
+    }
+
+    if (!pixels)
+    {
+        return;
+    }
+
+    CaptureMemory(pixels, bufSize, paramCapture);
 }
 
 void CaptureTexImage3DRobustANGLE_pixels(const State &glState,
