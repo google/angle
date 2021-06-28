@@ -60,7 +60,6 @@ StateChangeRenderTest.GenerateMipmap/*
 SyncQueriesTest.*
 TextureLimitsTest.MaxCombinedTextures/*
 TimerQueriesTest.*
-UniformTest.Sampler/*
 UnpackAlignmentTest.*
 UnpackRowLengthTest.*
 VertexAttributeCachingTest.*
