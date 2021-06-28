@@ -1,0 +1,303 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dec4054f_03934ae8",
+        "filename": "scripts/gl.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "can you file an issue at https://github.com/KhronosGroup/OpenGL-Registry/issues to track upstreaming this info? Note that our gl.xml is pretty highly diverged from the upstream at this point.",
+      "range": {
+        "startLine": 212,
+        "startChar": 12,
+        "endLine": 240,
+        "endChar": 47
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "001a5235_3dbfaa39",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "very small nit: I\u0027d suggest phrasing these positively, e.g. Active fragment shader must include a layout qualifier for the advanced blend equation, etc. It can be easier to read that way.",
+      "range": {
+        "startLine": 21,
+        "startChar": 37,
+        "endLine": 21,
+        "endChar": 131
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b17928d6_555a25da",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "nit: usesAdvancedBlendEquation",
+      "range": {
+        "startLine": 507,
+        "startChar": 20,
+        "endLine": 507,
+        "endChar": 47
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07d1ec04_464e36c8",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4619,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "suggest you rename this barrier to make it clear it\u0027s not just for fetch.",
+      "range": {
+        "startLine": 4619,
+        "startChar": 27,
+        "endLine": 4619,
+        "endChar": 62
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8afdcdf6_63b015e6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4784,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "suggest you store this as gl::BlendEquationType instead of GLenum.",
+      "range": {
+        "startLine": 4784,
+        "startChar": 42,
+        "endLine": 4784,
+        "endChar": 65
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aff24c9a_d679b256",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 822,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "nit: don\u0027t need to use a const int \u0026 ever.",
+      "range": {
+        "startLine": 822,
+        "startChar": 10,
+        "endLine": 822,
+        "endChar": 18
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3400dad4_7f691abe",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "what\u0027s up with this? Separate fix?",
+      "range": {
+        "startLine": 99,
+        "startChar": 59,
+        "endLine": 99,
+        "endChar": 79
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e1f6530_a9df1ab1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2516,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "you should be able the query this information somehow from Vulkan, I would think. Can you instead handle this dynamically instead of by encoding it here?",
+      "range": {
+        "startLine": 2516,
+        "startChar": 40,
+        "endLine": 2516,
+        "endChar": 76
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70d5684e_24fae784",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1821,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "These \u0027addGarbage\u0027 calls stand out. Why are they needed now when they weren\u0027t before?",
+      "range": {
+        "startLine": 1817,
+        "startChar": 0,
+        "endLine": 1821,
+        "endChar": 9
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d2b83b89_8c7aa551",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "We avoid this kind of design in ANGLE, maybe there\u0027s some other way to get this effect.",
+      "range": {
+        "startLine": 350,
+        "startChar": 0,
+        "endLine": 351,
+        "endChar": 42
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "813b568a_bfbb2281",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "can\u0027t you use range-for here?",
+      "range": {
+        "startLine": 603,
+        "startChar": 12,
+        "endLine": 605,
+        "endChar": 49
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4b7ef11_c4836506",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "can this not be out of the if?",
+      "range": {
+        "startLine": 614,
+        "startChar": 0,
+        "endLine": 618,
+        "endChar": 0
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0eaf3578_765118f6",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3853,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T13:21:00Z",
+      "side": 1,
+      "message": "can you put this behind a check that any advanced blend is used?",
+      "range": {
+        "startLine": 3853,
+        "startChar": 19,
+        "endLine": 3853,
+        "endChar": 43
+      },
+      "revId": "f13c1d0e45be38cfb24c13830bada237d79e790b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
