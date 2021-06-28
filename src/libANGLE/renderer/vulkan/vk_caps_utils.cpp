@@ -305,13 +305,11 @@ void RendererVk::ensureCapsInitialized() const
     // Vulkan doesn't support ASTC 3D block textures, which are required by
     // GL_OES_texture_compression_astc.
     mNativeExtensions.textureCompressionASTCOES = false;
+    // Vulkan does not support sliced 3D ASTC textures either.
+    mNativeExtensions.textureCompressionSliced3dASTCKHR = false;
 
     // Vulkan doesn't guarantee HDR blocks decoding without VK_EXT_texture_compression_astc_hdr.
     mNativeExtensions.textureCompressionASTCHDRKHR = false;
-
-    // Vulkan supports sliced 3D ASTC texture uploads when ASTC is supported.
-    mNativeExtensions.textureCompressionSliced3dASTCKHR =
-        mNativeExtensions.textureCompressionASTCLDRKHR;
 
     // Enable EXT_compressed_ETC1_RGB8_sub_texture
     mNativeExtensions.compressedETC1RGB8SubTexture = mNativeExtensions.compressedETC1RGB8TextureOES;
