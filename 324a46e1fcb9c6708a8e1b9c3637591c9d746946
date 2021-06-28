@@ -16,6 +16,23 @@
       "message": "Tested MEC locally and it still works with this patch.",
       "revId": "324a46e1fcb9c6708a8e1b9c3637591c9d746946",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab3302db_aa41c15b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-28T16:52:51Z",
+      "side": 1,
+      "message": "Can this CL wait until the multi-context capture/replay refactor is landed?   This is all changing due to that work:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2965780\n\nSpecifically, the readBuffer is sized for each init/replay/reset function, rather than a single global size for the entire replay.",
+      "revId": "324a46e1fcb9c6708a8e1b9c3637591c9d746946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
