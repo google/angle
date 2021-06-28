@@ -606,7 +606,7 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name,
 #if defined(ANGLE_USE_UTIL_LOADER) && !defined(ANGLE_PLATFORM_WINDOWS)
             mGLWindow = EGLWindow::New(testParams.majorVersion, testParams.minorVersion);
             mEntryPointsLib.reset(angle::OpenSharedLibraryWithExtension(
-                GetNativeEGLLibraryNameWithExtension(), angle::SearchType::ApplicationDir));
+                GetNativeEGLLibraryNameWithExtension(), SearchType::SystemDir));
 #else
             std::cerr << "Not implemented." << std::endl;
             mSkipTest = true;
