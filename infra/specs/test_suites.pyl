@@ -647,6 +647,37 @@
       },
     },
 
+    # Actually uploads results to the perf dashboard
+    'angle_perf_isolated_scripts': {
+      'angle_perftests': {
+        'args': [
+          'angle_perftests',
+          '--non-telemetry=true',
+          '--gtest-benchmark-name=angle_perftests',
+          '-v',
+          '--test-timeout=100',
+        ],
+        'android_args': [
+          '--test-launcher-batch-limit=1',
+        ],
+        'desktop_args': [
+          '--batch-size=1',
+          '--bot-mode',
+          '--max-processes=1',
+          '--print-test-stdout',
+        ],
+        'merge': {
+          'script': '//tools/perf/process_perf_results.py',
+        },
+        'android_swarming': {
+          'shards': 12,
+        },
+        'swarming': {
+          'shards': 10,
+        },
+      },
+    },
+
     # The angle perf tests should eventually be run on every platform
     # ANGLE supports. Currently they run on Windows, Linux and Android.
     'angle_perf_smoke_isolated_scripts': {

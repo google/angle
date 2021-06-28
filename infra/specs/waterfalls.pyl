@@ -19,8 +19,6 @@
       'swarming_containment_auto',
     ],
     'machines': {
-      'android-arm-builder': {},
-      'android-arm64-builder': {},
       'android-arm64-pixel4': {
         'os_type': 'android',
         'mixins': [
@@ -33,7 +31,17 @@
           'isolated_scripts': 'common_isolated_scripts',
         },
       },
-      'linux-builder': {},
+      'android-arm64-pixel4-perf': {
+        'os_type': 'android',
+        'mixins': [
+          'android_r',
+          'flame',
+          'gpu-swarming-pool',
+        ],
+        'test_suites': {
+          'isolated_scripts': 'angle_perf_isolated_scripts',
+        },
+      },
       'linux-intel': {
         'os_type': 'linux',
         'mixins': [
@@ -42,6 +50,15 @@
         'test_suites': {
           'gtest_tests': 'linux_intel_gtests',
           'isolated_scripts': 'common_isolated_scripts',
+        },
+      },
+      'linux-intel-perf': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_intel_hd_630_stable',
+        ],
+        'test_suites': {
+          'isolated_scripts': 'angle_perf_isolated_scripts',
         },
       },
       'linux-nvidia': {
@@ -54,6 +71,15 @@
           'isolated_scripts': 'common_isolated_scripts',
         },
       },
+      'linux-nvidia-perf': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_nvidia_quadro_p400_stable',
+        ],
+        'test_suites': {
+          'isolated_scripts': 'angle_perf_isolated_scripts',
+        },
+      },
       'mac-amd': {
         'os_type': 'mac',
         'mixins': [
@@ -63,7 +89,6 @@
           'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
-      'mac-builder': {},
       'mac-intel': {
         'os_type': 'mac',
         'mixins': [
@@ -83,8 +108,6 @@
           'gtest_tests': 'mac_nvidia_gtests',
         },
       },
-      'win-x64-builder': {},
-      'win-x86-builder': {},
       'win10-x64-intel': {
         'os_type': 'win',
         'mixins': [
@@ -95,6 +118,15 @@
           'isolated_scripts': 'common_isolated_scripts',
         },
       },
+      'win10-x64-intel-perf': {
+        'os_type': 'win',
+        'mixins': [
+          'win10_intel_hd_630_stable',
+        ],
+        'test_suites': {
+          'isolated_scripts': 'angle_perf_isolated_scripts',
+        },
+      },
       'win10-x64-nvidia': {
         'os_type': 'win',
         'mixins': [
@@ -103,6 +135,15 @@
         'test_suites': {
           'gtest_tests': 'win10_nvidia_gtests',
           'isolated_scripts': 'common_isolated_scripts',
+        },
+      },
+      'win10-x64-nvidia-perf': {
+        'os_type': 'win',
+        'mixins': [
+          'win10_nvidia_quadro_p400_stable',
+        ],
+        'test_suites': {
+          'isolated_scripts': 'angle_perf_isolated_scripts',
         },
       },
       'win7-x64-nvidia': {
