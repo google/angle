@@ -87,6 +87,30 @@
       },
       "revId": "99e4de150a70f909370c0f7cf4bbcbf1f2d58e3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a5689bb_481d4786",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-28T07:14:19Z",
+      "side": 1,
+      "message": "I don\u0027t think \"nice\" is the solution. It seems that by default MAX_JOBS is eight, that is by default at most eight ninja jobs are started, and each of these might spawn \"40 * number_of_cores\" compile processes (capped by some number on win an Darwin). On my work laptop  (8-core) this results in a maximum of 2560 compile processes that could be started (the number is probably much lower because of the actual number of files to be compiled, I\u0027ve seen 40+ compile jobs at once). In any case add to that limits in RAM (16GB), then no value of \"nice\" can make this behave nicely on this system, because the nice value doesn\u0027t change the number of processes started, only their priority, and if it starts to swap the bye-bye performance*. \n\nWith the \"-l\" parameter, ninja takes the actual system load into account, and simply doesn\u0027t fire up new compile processes if the system load is above the given limit, so one can optimize the number if active compile processes across ninja instance. Here one could probably tune a bit, and AFAIK the rule of thump is that one should use not more than \"nproc + 1\" compile processes.\n\n* With that discussion it would seem to make sense to limit the number of jobs simply to one on a lower spec machine, but if the replay tests don\u0027t need to compile many files (like only the trace files), then one wouldn\u0027t want to  limit the number of jobs like this, because one could still run some tests in parallel.",
+      "parentUuid": "85fb97ef_46297992",
+      "range": {
+        "startLine": 301,
+        "startChar": 0,
+        "endLine": 303,
+        "endChar": 0
+      },
+      "revId": "99e4de150a70f909370c0f7cf4bbcbf1f2d58e3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
