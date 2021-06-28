@@ -1,0 +1,215 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ad66354_3704c9df",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "Haven\u0027t gotten through the whole thing yet. Some initial feedback.",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c12d82b_0a558fae",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "nit: needs another bump after this lands: https://chromium-review.googlesource.com/c/angle/angle/+/2957809",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39411bb6_7e5821d5",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "Note: use angle::BitMask once this lands: https://chromium-review.googlesource.com/c/angle/angle/+/2984099",
+      "range": {
+        "startLine": 626,
+        "startChar": 13,
+        "endLine": 626,
+        "endChar": 16
+      },
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4585e52_64539c93",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "Please ASSERT this instead. We make sure declarations are separated, and the AST is validated to enforce this.\n\nAlso, hint that you can use this to skip declarations local to functions:\n\n        if (!mInGlobalScope)\n        {\n            return true;\n        }",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d50e107_9a088402",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "nit: suggest removing nesting by inverting this if and returning early.",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a6968b2_d48501ae",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "Same with this if.",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7aaf7a2a_bd1ee533",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "And this if.",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67836f60_291e0572",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "This is new: You should do this instead now: `node-\u003egetOp() \u003d\u003d EOpSubpassLoad`. Also the subpassLoad calls should be fixed to use CreateBuiltInFunctionCallNode with the correct op.\n\nSee this change for context: https://chromium-review.googlesource.com/c/angle/angle/+/2958869 and this file for examples: https://chromium-review.googlesource.com/c/angle/angle/+/2958869/13/src/compiler/translator/TranslatorVulkan.cpp#342",
+      "range": {
+        "startLine": 436,
+        "startChar": 45,
+        "endLine": 438,
+        "endChar": 83
+      },
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf5b4fdd_bc1f83a1",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "I suggest making the framebuffer fetch code do this for both framebuffer fetch and blend eq, instead of duplicating the code.\n\nThen this file can assume input attachments / subpassLoad is already set up.",
+      "range": {
+        "startLine": 455,
+        "startChar": 0,
+        "endLine": 503,
+        "endChar": 1
+      },
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c9519af_18234a89",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "Wasn\u0027t subpassLoad already called and cached in a global variable for framebuffer fetch?",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5570c7fe_06926635",
+        "filename": "src/compiler/translator/tree_ops/vulkan/ReplaceForAdvancedBlendEquation.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-28T11:44:03Z",
+      "side": 1,
+      "message": "Example?\n\nDidn\u0027t look too closely, but beware that if divisor and dividend have side effects (like an expression like var[atomicCounterIncrement(n)] then you are duplicating the side effect here)",
+      "revId": "ea2cc2bedd2352cd59e061b6dbf36e74ae118f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
