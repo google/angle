@@ -16,6 +16,24 @@
       "message": "Nice, is this due to the standalone work?",
       "revId": "533b48847cb04a6faffe85a5502ec0f88e2ab619",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "642bfcd7_eb5539c8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T11:46:19Z",
+      "side": 1,
+      "message": "Yeah pretty much. If we ever wanted to do a sharded tests setup, where we archive a build to the cloud then downloaded it on the testers, this helps.",
+      "parentUuid": "f0758fd1_e105f035",
+      "revId": "533b48847cb04a6faffe85a5502ec0f88e2ab619",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
