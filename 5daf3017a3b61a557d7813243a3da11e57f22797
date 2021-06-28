@@ -34,6 +34,24 @@
       "parentUuid": "318b333e_a29cc01c",
       "revId": "5daf3017a3b61a557d7813243a3da11e57f22797",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f27db054_a45cd6b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-28T16:48:40Z",
+      "side": 1,
+      "message": "Difference in capabilities between native Vulkan and GL drivers.",
+      "parentUuid": "77ffaab6_5c6b0183",
+      "revId": "5daf3017a3b61a557d7813243a3da11e57f22797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
