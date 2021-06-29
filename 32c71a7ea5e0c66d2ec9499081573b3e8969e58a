@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fbedb0ac_bbd88634",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T11:53:37Z",
+      "side": 1,
+      "message": "Is that called from \"maybeCaptureDrawElementsClientData\"?",
+      "parentUuid": "01a9a43a_462424e2",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 63
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "443eb7e5_4590dec2",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 1
@@ -109,6 +133,30 @@
       "side": 1,
       "message": "I\u0027m not quite sure what facility do you mean? The call validation?",
       "parentUuid": "705bbe2c_a83a90f2",
+      "range": {
+        "startLine": 4001,
+        "startChar": 0,
+        "endLine": 4004,
+        "endChar": 5
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a945268_df1a4853",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4004,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T11:53:37Z",
+      "side": 1,
+      "message": "bool Context::noopDraw",
+      "parentUuid": "d44c9640_3a90ba75",
       "range": {
         "startLine": 4001,
         "startChar": 0,
