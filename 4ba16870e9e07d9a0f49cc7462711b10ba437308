@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c03b1878_c99356f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T15:12:02Z",
+      "side": 1,
+      "message": "LGTM, please submit directly. CQ won\u0027t work.",
+      "revId": "4ba16870e9e07d9a0f49cc7462711b10ba437308",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
