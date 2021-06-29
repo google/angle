@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "851053c4_3db7a820",
+        "filename": "src/common/system_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-29T21:23:39Z",
+      "side": 1,
+      "message": "When is this useful? It looks unused, so I suggest removing it.",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 12
+      },
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
