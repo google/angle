@@ -16,6 +16,138 @@
       "message": "2965780: Capture/Replay: Refactor shared context handling | https://chromium-review.googlesource.com/c/angle/angle/+/2965780",
       "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0114a04_a8f55bd4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-29T03:19:45Z",
+      "side": 1,
+      "message": "First round of feedback.  Tested with an app locally.  I was able to capture on Android and replay on Linux.  Generally the changes look good.  Android replay needs an update to handle pushing the shared gzip binary:\n\n  File or directory no longer found: \n  angle/src/tests/restricted_traces/test_app/test_app_capture_context2.angledata.gz",
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8d81dd6_020364f0",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1231,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-29T03:19:45Z",
+      "side": 1,
+      "message": "I don\u0027t quite follow this comment. It doesn\u0027t look like this is happening first.  Does it mean setup the context before any of the frame calls?",
+      "range": {
+        "startLine": 1231,
+        "startChar": 49,
+        "endLine": 1231,
+        "endChar": 54
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb73f7aa_d4e322d0",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2332,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-29T03:19:45Z",
+      "side": 1,
+      "message": "I believe this contains setup for all state that is considered \"shared\".  It would be worth a comment or spec link to help enumerate/remember which states those are.",
+      "range": {
+        "startLine": 2332,
+        "startChar": 5,
+        "endLine": 2332,
+        "endChar": 42
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0db829b4_eeca6da3",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4449,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-29T03:19:45Z",
+      "side": 1,
+      "message": "This gets repeated a lot, might be worth adding context-\u003egetFrameCaptureResourceTracker() that encapsulates it.",
+      "range": {
+        "startLine": 4447,
+        "startChar": 0,
+        "endLine": 4449,
+        "endChar": 88
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07488853_c6e02c35",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 5087,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-29T03:19:45Z",
+      "side": 1,
+      "message": "This is a bit confusing.  The first frame handling used to be guarded by isCaptureActive, but this seems unguarded.  How is mFrameIndex not \"1\" on first frame?",
+      "range": {
+        "startLine": 5078,
+        "startChar": 0,
+        "endLine": 5087,
+        "endChar": 5
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06b274b7_787d3e6c",
+        "filename": "src/libANGLE/capture/trace_fixture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-29T03:19:45Z",
+      "side": 1,
+      "message": "It looks like this is called in every frame now:\n\n $ grep -r AllocateGlobalMemory | sort\n ..._capture_context2_frame001.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame001.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame002.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame003.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame004.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame005.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame006.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame007.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame008.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame009.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame010.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context_shared_frame001.cpp:    AllocateGlobalMemory(0, 276);\n\n\nIs there a reason for that?",
+      "range": {
+        "startLine": 127,
+        "startChar": 5,
+        "endLine": 127,
+        "endChar": 25
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
