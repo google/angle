@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8777d02b_17be6567",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-29T14:08:10Z",
+      "side": 1,
+      "message": "Yes. that was somewhere in the call chain.",
+      "parentUuid": "fbedb0ac_bbd88634",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 63
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "443eb7e5_4590dec2",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 1
@@ -157,6 +181,30 @@
       "side": 1,
       "message": "bool Context::noopDraw",
       "parentUuid": "d44c9640_3a90ba75",
+      "range": {
+        "startLine": 4001,
+        "startChar": 0,
+        "endLine": 4004,
+        "endChar": 5
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a38b1ce9_8d03bbc7",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4004,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-29T14:08:10Z",
+      "side": 1,
+      "message": "From the looks of it, noopDraw should already handle this case ...",
+      "parentUuid": "2a945268_df1a4853",
       "range": {
         "startLine": 4001,
         "startChar": 0,
