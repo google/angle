@@ -16,6 +16,24 @@
       "message": "I think all changes to XFB functionalities in this file should be separated to another CL. XFB tests are failing.",
       "revId": "44a5c913bd1e8126272c871970370aecf0a7fa62",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f596efc9_9b335723",
+        "filename": "src/libANGLE/renderer/metal/TransformFeedbackMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "dec0490f_8b75ce57",
+      "revId": "44a5c913bd1e8126272c871970370aecf0a7fa62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

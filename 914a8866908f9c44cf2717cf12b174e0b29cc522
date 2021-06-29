@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c6addd2_104a6ce3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Can\u0027t seem to reproduce the dEQP or TransformFeedback failures locally (AMD).\n\nNote that I ended up reverting all of Apple\u0027s changes to mtl_glslang_utils given that we are moving away from that backend.",
+      "revId": "914a8866908f9c44cf2717cf12b174e0b29cc522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

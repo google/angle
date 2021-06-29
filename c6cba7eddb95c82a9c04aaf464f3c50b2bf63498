@@ -188,6 +188,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0961239b_1c0f180b",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 1271,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66810b3f_af4a9834",
+      "range": {
+        "startLine": 1271,
+        "startChar": 8,
+        "endLine": 1271,
+        "endChar": 39
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a41c213d_04e44de7",
@@ -201,6 +225,30 @@
       "writtenOn": "2021-06-20T08:49:25Z",
       "side": 1,
       "message": "Will it work properly if user pauses XFB and issues a draw calls using XFB buffers as vertex attribute inputs? Previously I would end the current render pass (implicit memory barrier) to make the XFB writing visible to subsequent draw calls.\n\nIn this CL, it is changed to just invalidating driver uniforms. No memory barrier or render command encoder\u0027s ending.\n\n@kpiddington, correct me if I\u0027m wrong.",
+      "range": {
+        "startLine": 1275,
+        "startChar": 26,
+        "endLine": 1275,
+        "endChar": 50
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c51743d3_0fda612b",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 1275,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a41c213d_04e44de7",
       "range": {
         "startLine": 1275,
         "startChar": 26,
@@ -719,6 +767,30 @@
       "side": 1,
       "message": "Noted. I removed this block for now. If we run into issues I\u0027ll come back to this. Does anyone else have thoughts?",
       "parentUuid": "26f8a490_cdf1f011",
+      "range": {
+        "startLine": 1220,
+        "startChar": 8,
+        "endLine": 1220,
+        "endChar": 75
+      },
+      "revId": "c6cba7eddb95c82a9c04aaf464f3c50b2bf63498",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96bdb742_47828fbc",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 15
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f700ba5_b2b0f24b",
       "range": {
         "startLine": 1220,
         "startChar": 8,

@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e70e3b3e_2127b3f4",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23a22b4d_88436f3c",
+      "range": {
+        "startLine": 53,
+        "startChar": 9,
+        "endLine": 53,
+        "endChar": 38
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f004da3f_12feaf88",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-06-23T11:59:25Z",
       "side": 1,
       "message": "I think all changes to XFB functionalities should be separated to another CL. XFB tests are failing in this CL.\nBesides I have some doubts about these changes that would need to be addressed.",
+      "range": {
+        "startLine": 256,
+        "startChar": 4,
+        "endLine": 267,
+        "endChar": 71
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2ac0a85_5a538ed8",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f004da3f_12feaf88",
       "range": {
         "startLine": 256,
         "startChar": 4,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4285480e_de82d75b",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e37ebec2_e646f137",
+      "range": {
+        "startLine": 462,
+        "startChar": 18,
+        "endLine": 462,
+        "endChar": 70
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "16569445_69551c06",
@@ -117,6 +189,30 @@
       "writtenOn": "2021-06-23T11:59:25Z",
       "side": 1,
       "message": "I think all changes to XFB functionalities should be separated to another CL. As mentioned above.",
+      "range": {
+        "startLine": 491,
+        "startChar": 7,
+        "endLine": 494,
+        "endChar": 42
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c32782d7_0c7be870",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16569445_69551c06",
       "range": {
         "startLine": 491,
         "startChar": 7,
@@ -150,6 +246,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d647f4fb_7709bb2e",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b24ee21_9cae35d1",
+      "range": {
+        "startLine": 535,
+        "startChar": 4,
+        "endLine": 541,
+        "endChar": 38
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7de5ebfe_26d404ce",
@@ -163,6 +283,30 @@
       "writtenOn": "2021-06-23T11:59:25Z",
       "side": 1,
       "message": "I think all changes to XFB functionalities should be separated to another CL. XFB tests are failing in this CL.",
+      "range": {
+        "startLine": 583,
+        "startChar": 4,
+        "endLine": 584,
+        "endChar": 75
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "caaef6f5_4962e674",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7de5ebfe_26d404ce",
       "range": {
         "startLine": 583,
         "startChar": 4,
@@ -196,6 +340,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "788ed6c8_4c1453d8",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fee674af_8343d813",
+      "range": {
+        "startLine": 195,
+        "startChar": 6,
+        "endLine": 195,
+        "endChar": 35
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5d4779e2_6ca777a2",
@@ -209,6 +377,30 @@
       "writtenOn": "2021-06-23T11:59:25Z",
       "side": 1,
       "message": "Apple changed generateTriFanBufferFromElementsArray() to generate variable number of indices instead of fixed number. Could you pass \u0026genIndicesCount instead of nullptr to see if it fixes failed triangle fan\u0027s test cases on bots.",
+      "range": {
+        "startLine": 492,
+        "startChar": 12,
+        "endLine": 492,
+        "endChar": 19
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e6f4d75_6c1dbc9f",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done, but doesn\u0027t seem to fix the test cases.",
+      "parentUuid": "5d4779e2_6ca777a2",
       "range": {
         "startLine": 492,
         "startChar": 12,
@@ -242,6 +434,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1db99499_b5680dc6",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6afa50cb_88899174",
+      "range": {
+        "startLine": 1221,
+        "startChar": 17,
+        "endLine": 1221,
+        "endChar": 58
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0cb4d4a5_22e7d8aa",
@@ -255,6 +471,30 @@
       "writtenOn": "2021-06-23T11:59:25Z",
       "side": 1,
       "message": "I think all changes to XFB functionalities should be separated to another CL. As mentioned above.",
+      "range": {
+        "startLine": 2285,
+        "startChar": 0,
+        "endLine": 2289,
+        "endChar": 35
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc9b4186_c5dea460",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 2289,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0cb4d4a5_22e7d8aa",
       "range": {
         "startLine": 2285,
         "startChar": 0,
@@ -282,6 +522,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "acc5c5b9_eb0caf4a",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c696ba2_985a02a9",
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d5f512b6_6c27d7bd",
@@ -295,6 +553,30 @@
       "writtenOn": "2021-06-23T11:59:25Z",
       "side": 1,
       "message": "I think all changes to XFB functionalities should be separated to another CL. XFB tests are failing in this CL.",
+      "range": {
+        "startLine": 18,
+        "startChar": 14,
+        "endLine": 20,
+        "endChar": 31
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d12babf2_cd607961",
+        "filename": "src/libANGLE/renderer/metal/QueryMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5f512b6_6c27d7bd",
       "range": {
         "startLine": 18,
         "startChar": 14,
@@ -328,6 +610,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d161ff62_bc4fca01",
+        "filename": "src/libANGLE/renderer/metal/QueryMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5726937_56da3275",
+      "range": {
+        "startLine": 78,
+        "startChar": 8,
+        "endLine": 91,
+        "endChar": 8
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b7bb0a19_d60d14fc",
@@ -341,6 +647,30 @@
       "writtenOn": "2021-06-23T11:59:25Z",
       "side": 1,
       "message": "I think all changes to XFB functionalities should be separated to another CL. As mentioned above.",
+      "range": {
+        "startLine": 129,
+        "startChar": 12,
+        "endLine": 129,
+        "endChar": 52
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62dd5e3d_62bd626b",
+        "filename": "src/libANGLE/renderer/metal/QueryMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7bb0a19_d60d14fc",
       "range": {
         "startLine": 129,
         "startChar": 12,
@@ -374,6 +704,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c4fb9da_4e9a8bd9",
+        "filename": "src/libANGLE/renderer/metal/QueryMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eafe184a_1e078010",
+      "range": {
+        "startLine": 156,
+        "startChar": 25,
+        "endLine": 156,
+        "endChar": 43
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eabbb7ed_796f2095",
@@ -387,6 +741,30 @@
       "writtenOn": "2021-06-23T11:59:25Z",
       "side": 1,
       "message": "I think all changes to XFB functionalities should be separated to another CL. XFB tests are failing.",
+      "range": {
+        "startLine": 194,
+        "startChar": 20,
+        "endLine": 196,
+        "endChar": 57
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1856e197_cb0a8ecc",
+        "filename": "src/libANGLE/renderer/metal/QueryMtl.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eabbb7ed_796f2095",
       "range": {
         "startLine": 194,
         "startChar": 20,
@@ -420,6 +798,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b4af580_239375c3",
+        "filename": "src/libANGLE/renderer/metal/TransformFeedbackMtl.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a36a2966_36bd4eed",
+      "range": {
+        "startLine": 28,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 27
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "057f707e_162d9752",
@@ -433,6 +835,30 @@
       "writtenOn": "2021-06-23T12:09:50Z",
       "side": 1,
       "message": "should always flush (dstTriangle * 3) element sized bytes instead of zero when no pointer is passed.",
+      "range": {
+        "startLine": 312,
+        "startChar": 36,
+        "endLine": 312,
+        "endChar": 78
+      },
+      "revId": "e5de6999357202d4480872d6d7ddfe78ee222487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bc55a56_7572c4eb",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 21
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-06-29T17:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "057f707e_162d9752",
       "range": {
         "startLine": 312,
         "startChar": 36,
