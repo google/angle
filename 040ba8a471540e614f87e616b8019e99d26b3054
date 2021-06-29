@@ -85,6 +85,23 @@
       "message": "Response",
       "revId": "040ba8a471540e614f87e616b8019e99d26b3054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34e22c7a_6dd41942",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-29T20:59:52Z",
+      "side": 1,
+      "message": "Data point from testing",
+      "revId": "040ba8a471540e614f87e616b8019e99d26b3054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

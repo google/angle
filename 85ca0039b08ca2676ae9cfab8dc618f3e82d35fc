@@ -159,6 +159,24 @@
       "parentUuid": "637f7d51_ff3d714f",
       "revId": "85ca0039b08ca2676ae9cfab8dc618f3e82d35fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e10b43d4_4f7d59ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-06-29T20:59:52Z",
+      "side": 1,
+      "message": "FYI - I took patch #11 (no validation error) and rebased to tip and re-ran the test. Got the same Validation error. So I am inclined to think that something else was introduced at the same time (after patch#11). Note that failures are ONLY with dEQP.KHR_GLES32/*\n\nI have a run being uploaded with protected bit off, should remove protected structs from pNext chains and no protected bits. If protected features are cause then we should not see error.",
+      "parentUuid": "0280a90e_9d6cc38e",
+      "revId": "85ca0039b08ca2676ae9cfab8dc618f3e82d35fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
