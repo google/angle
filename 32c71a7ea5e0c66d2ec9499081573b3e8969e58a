@@ -122,6 +122,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d9eb3818_f62e4cef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-29T15:27:35Z",
+      "side": 1,
+      "message": "Is that ASSERT() necessary?   I haven\u0027t tried it, but can ComputeTypedIndexRange() be updated to the following instead?\n\n    gl::IndexRange ComputeTypedIndexRange(const IndexType *indices,\n                                          size_t count,\n                                          bool primitiveRestartEnabled,\n                                          GLuint primitiveRestartIndex)\n    {\n        IndexType minIndex                \u003d 0;\n        IndexType maxIndex                \u003d 0;\n        size_t nonPrimitiveRestartIndices \u003d 0;\n\n        if (count \u003d\u003d 0)\n        {\n            return gl::IndexRange(static_cast\u003csize_t\u003e(minIndex), static_cast\u003csize_t\u003e(maxIndex),\n                          nonPrimitiveRestartIndices);\n        }\n    \nThe IndexRange ctor seems to support that case:\n        \n    IndexRange(size_t start_, size_t end_, size_t vertexIndexCount_)\n        : start(start_), end(end_), vertexIndexCount(vertexIndexCount_)\n    {\n        ASSERT(start \u003c\u003d end);\n    }",
+      "parentUuid": "9cc022bb_25bd4d27",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 63
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "443eb7e5_4590dec2",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 1
