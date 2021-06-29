@@ -192,6 +192,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2bdb3bf_edf99b66",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T16:10:57Z",
+      "side": 1,
+      "message": "Sorry for the back-and-forth. I like your original solution best. Index Ranges don\u0027t make sense when there are no values. 0 is not the correct min index, the correct min index is undefined. Same for max, etc. Just please add a comment that it\u0027s a special case for zero indices to work around the undefined index range with exactly zero indexes.",
+      "parentUuid": "e6595cc5_d5723d6b",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 63
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "443eb7e5_4590dec2",
