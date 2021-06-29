@@ -72,6 +72,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "76e7e2c8_9f84c9a2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-06-29T06:32:01Z",
+      "side": 1,
+      "message": "Thanks for clarifying! Now it looks more clear to me.\n\nOne more thing: it looks both glColorspace and imageGlColorspace need the same vulkan backend support (supportsSwapchainColorspace + supportsImageFormatList), rather than the imageGlColorspace rely on glColorspace?",
+      "parentUuid": "690a9b20_bf3a0262",
+      "range": {
+        "startLine": 10,
+        "startChar": 11,
+        "endLine": 10,
+        "endChar": 56
+      },
+      "revId": "96dd515aa4244332c8426bac586b286a114f8357",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "21327311_b40ee721",
