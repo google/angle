@@ -85,6 +85,7 @@ enum class RestrictedTraceID
     eight_ball_pool,
     extreme_car_driving_simulator,
     fallout_shelter_online,
+    farm_heroes_saga,
     fate_grand_order,
     fifa_mobile,
     free_fire,

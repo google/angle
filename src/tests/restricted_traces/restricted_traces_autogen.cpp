@@ -43,6 +43,7 @@
 #include "eight_ball_pool/eight_ball_pool_capture_context1.h"
 #include "extreme_car_driving_simulator/extreme_car_driving_simulator_capture_context1.h"
 #include "fallout_shelter_online/fallout_shelter_online_capture_context1.h"
+#include "farm_heroes_saga/farm_heroes_saga_capture_context2.h"
 #include "fate_grand_order/fate_grand_order_capture_context1.h"
 #include "fifa_mobile/fifa_mobile_capture_context1.h"
 #include "free_fire/free_fire_capture_context1.h"
@@ -263,6 +264,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       fallout_shelter_online::kReplayFrameStart, fallout_shelter_online::kReplayFrameEnd,
       fallout_shelter_online::kReplayDrawSurfaceWidth,
       fallout_shelter_online::kReplayDrawSurfaceHeight, "fallout_shelter_online"}},
+    {RestrictedTraceID::farm_heroes_saga,
+     {farm_heroes_saga::kReplayContextClientMajorVersion,
+      farm_heroes_saga::kReplayContextClientMinorVersion, farm_heroes_saga::kReplayFrameStart,
+      farm_heroes_saga::kReplayFrameEnd, farm_heroes_saga::kReplayDrawSurfaceWidth,
+      farm_heroes_saga::kReplayDrawSurfaceHeight, "farm_heroes_saga"}},
     {RestrictedTraceID::fate_grand_order,
      {fate_grand_order::kReplayContextClientMajorVersion,
       fate_grand_order::kReplayContextClientMinorVersion, fate_grand_order::kReplayFrameStart,
