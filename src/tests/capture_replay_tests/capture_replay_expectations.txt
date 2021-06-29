@@ -60,7 +60,6 @@ LineLoopTest.DISABLED_DrawArraysWithLargeCount/*
 MipmapTest.DISABLED_ThreeLevelsInitData/*
 
 # Compile failed tests
-RobustResourceInitTest.SurfaceInitializedAfterSwap/*
 
 # ES1 comparison failed tests
 BootAnimationTest.DefaultBootAnimation/*

@@ -434,6 +434,7 @@ class FrameCapture final : angle::NonCopyable
     uint32_t mCaptureTrigger;
 
     bool mCaptureActive = false;
+    std::vector<uint32_t> mActiveFrameIndices;
 };
 
 // Shared class for any items that need to be tracked by FrameCapture across shared contexts
