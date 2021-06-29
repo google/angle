@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca9612b6_913dac3b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-29T17:28:17Z",
+      "side": 1,
+      "message": "LGTM\n\nOnly nit is to add a test with both a \u0027continue\u0027 and a \u0027break\u0027 in it.",
+      "revId": "ed6a7dbc6d738143f24fff0f1a1a4ce3462d194f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
