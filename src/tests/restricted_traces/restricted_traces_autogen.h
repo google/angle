@@ -141,6 +141,7 @@ enum class RestrictedTraceID
     talking_tom_hero_dash,
     temple_run_2,
     temple_run_300,
+    township,
     trex_200,
     whatsapp,
     world_of_tanks_blitz,

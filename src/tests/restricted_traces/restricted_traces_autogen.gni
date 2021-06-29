@@ -4328,6 +4328,22 @@ angle_restricted_traces = [
     ],
   ],
   [
+    "township",
+    2,
+    [
+      "township/township_capture_context2_frame001.cpp",
+      "township/township_capture_context2_frame002.cpp",
+      "township/township_capture_context2_frame003.cpp",
+      "township/township_capture_context2_frame004.cpp",
+      "township/township_capture_context2_frame005.cpp",
+      "township/township_capture_context2_frame006.cpp",
+      "township/township_capture_context2_frame007.cpp",
+      "township/township_capture_context2_frame008.cpp",
+      "township/township_capture_context2_frame009.cpp",
+      "township/township_capture_context2_frame010.cpp",
+    ],
+  ],
+  [
     "trex_200",
     1,
     [
