@@ -168,6 +168,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6595cc5_d5723d6b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-29T16:02:37Z",
+      "side": 1,
+      "message": "I\u0027ve removed the assert instead, and the capture/replay test still runs fine.",
+      "parentUuid": "1fc464b3_70c87fed",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 63
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "443eb7e5_4590dec2",
@@ -301,6 +325,30 @@
       "side": 1,
       "message": "For sure. I\u0027m suggesting you reuse noopDraw here instead of trying to replicate it partially.",
       "parentUuid": "a38b1ce9_8d03bbc7",
+      "range": {
+        "startLine": 4001,
+        "startChar": 0,
+        "endLine": 4004,
+        "endChar": 5
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "300b490e_317cb85e",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4004,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-29T16:02:37Z",
+      "side": 1,
+      "message": "As commented below, I removed the assertion, and now the capture works, and it also doesn\u0027t capture this no-op draw call, so I guess the assert came before the no-op check.",
+      "parentUuid": "5a1b5059_7fee03de",
       "range": {
         "startLine": 4001,
         "startChar": 0,
