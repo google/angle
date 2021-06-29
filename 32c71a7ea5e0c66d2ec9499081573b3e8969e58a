@@ -98,6 +98,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9cc022bb_25bd4d27",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T15:01:54Z",
+      "side": 1,
+      "message": "Maybe as an action on Tim\u0027s comment you can document this reasoning somewhere so it\u0027s clearer to the reviewers and in the code.",
+      "parentUuid": "8777d02b_17be6567",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 63
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "443eb7e5_4590dec2",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 1
@@ -205,6 +229,30 @@
       "side": 1,
       "message": "From the looks of it, noopDraw should already handle this case ...",
       "parentUuid": "2a945268_df1a4853",
+      "range": {
+        "startLine": 4001,
+        "startChar": 0,
+        "endLine": 4004,
+        "endChar": 5
+      },
+      "revId": "32c71a7ea5e0c66d2ec9499081573b3e8969e58a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a1b5059_7fee03de",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4004,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T15:01:54Z",
+      "side": 1,
+      "message": "For sure. I\u0027m suggesting you reuse noopDraw here instead of trying to replicate it partially.",
+      "parentUuid": "a38b1ce9_8d03bbc7",
       "range": {
         "startLine": 4001,
         "startChar": 0,
