@@ -16,6 +16,23 @@
       "message": "geofflang: Can you re-submit?  I made the members of BlendStateExt non-const, since the assignment operator does write to them (so the const that was on them was a lie, and the memcpy was working around the compiler).",
       "revId": "d8eba7e675f7003c2edd02a15807df7a424587c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fab288d8_eb79343b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-29T16:25:55Z",
+      "side": 1,
+      "message": "Going to commit on your behalf Geoff.",
+      "revId": "d8eba7e675f7003c2edd02a15807df7a424587c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
