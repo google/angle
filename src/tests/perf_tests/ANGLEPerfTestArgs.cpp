@@ -53,8 +53,6 @@ using namespace angle;
 
 void ANGLEProcessPerfTestArgs(int *argc, char **argv)
 {
-    int argcOutCount = 0;
-
     for (int argIndex = 0; argIndex < *argc; argIndex++)
     {
         if (strcmp("--one-frame-only", argv[argIndex]) == 0)
@@ -159,11 +157,5 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         {
             gMinimizeGPUWork = true;
         }
-        else
-        {
-            argv[argcOutCount++] = argv[argIndex];
-        }
     }
-
-    *argc = argcOutCount;
 }
