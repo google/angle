@@ -22,6 +22,30 @@
       },
       "revId": "40f226a257de10445ebff07ad767b6d3906574b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb9764f6_7a8edec2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_wrapper.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-29T14:28:12Z",
+      "side": 1,
+      "message": "It\u0027s a forward declaration duplicated from SecondaryCommandBuffer.h. I could deduplicate, but that would mean adding a header with just this in it. I\u0027ll look around to see if I can pull more forward declaration stuff into that header.",
+      "parentUuid": "6d991e96_69860648",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 5
+      },
+      "revId": "40f226a257de10445ebff07ad767b6d3906574b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
