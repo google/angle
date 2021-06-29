@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ef3af5f_9cf3be9b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T21:21:22Z",
+      "side": 1,
+      "message": "Yuly please review when you\u0027re back from vacation.",
+      "revId": "a0d873c4f79def3bf4c0b005994c8b2130526731",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
