@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8f811d6_48d0f8e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T21:32:59Z",
+      "side": 1,
+      "message": "Looks like my change will conflict with this and it has some stuff you might want to integrate:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2994722\n\n+2 to (hopefully) unblock Alexis",
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63be9720_6e783553",
+        "filename": "BUILD.gn",
+        "patchSetId": 12
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T21:32:59Z",
+      "side": 1,
+      "message": "I believe I called this angle_libvulkan, probably best to keep referring to this thing as libvulkan instead of vulkan_library.",
+      "range": {
+        "startLine": 448,
+        "startChar": 30,
+        "endLine": 448,
+        "endChar": 57
+      },
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "851053c4_3db7a820",
@@ -19,6 +59,76 @@
         "startChar": 0,
         "endLine": 75,
         "endChar": 12
+      },
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23a2db7d_4ee83614",
+        "filename": "src/common/system_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T21:32:59Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "851053c4_3db7a820",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 12
+      },
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5244f37_6fbb8646",
+        "filename": "src/common/system_utils_posix.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T21:32:59Z",
+      "side": 1,
+      "message": "should be fullPath",
+      "range": {
+        "startLine": 164,
+        "startChar": 28,
+        "endLine": 164,
+        "endChar": 39
+      },
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82344b64_50c19445",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-29T21:32:59Z",
+      "side": 1,
+      "message": "nit: closing namespace comment.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 1
       },
       "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
