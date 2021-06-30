@@ -142,6 +142,24 @@
       "parentUuid": "6887febf_c72ea45f",
       "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eae1c314_27c7734c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-30T23:33:37Z",
+      "side": 1,
+      "message": "Admittedly, I don\u0027t understand how immutable samplers fit into the descriptor set allocations or layout stuff.   With that said...\n\nDescriptor pools contain descriptor sets (which contain descriptor), not individual descriptors.   Descriptor set layouts describe what the descriptor sets look like (how many and which type of each descriptor).   Descriptor pools are just memory, so allocating a descriptor set pool with layout A and then later allocating descriptor sets from that pool with layout B will (likely) work just fine, assuming there\u0027s enough memory in the pool to handle the allocation.\n\nWhere you run into trouble (like you\u0027re describing) is when descriptor set layout A and B have different memory requirements, so they don\u0027t consume descriptor pool memory at the same rate.   When that happens, ANGLE will think there\u0027s enough memory left to satisfy the allocation (using descriptor sets as the unit to track), but the driver will return VK_ERROR_OUT_OF_POOL_MEMORY because the pool doesn\u0027t have enough memory to return as the descriptor set described by the passed in descriptor set layout.\n\nIf immutable samplers are changing the descriptor set layout from what the descriptor pools were initially allocated with, then the pools need to be destroyed and reallocated with the new layout, so ANGLE\u0027s internal tracking can be correct.   My suspicion is that this is what\u0027s occurring, but that assert should have caught that case which is why some more debug is necessary to track down where the disconnect between ANGLE\u0027s tracking and the actual descriptor sets being allocated.",
+      "parentUuid": "f90afbcd_e4082bbd",
+      "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
