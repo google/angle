@@ -70,6 +70,30 @@
       },
       "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d5bc778_287d4bc8",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4106,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-06-30T13:48:23Z",
+      "side": 1,
+      "message": "The log says: \nGL error: HIGH: Must have element array buffer bound.\n\nIt seems the test is wrong, because it passes the index data as pointer, but enabled WebGL compatibility, so it is expected that the data must passed by using a buffer. The call is tagged as invalid, but it still runs `maybeCapturePreCallUpdates`, maybe not calling this function for invalid  calls would be the right solution?\n\nIn any case, the code still shouldn\u0027t crash. it should simply report an error.",
+      "parentUuid": "69473d36_5bd566b6",
+      "range": {
+        "startLine": 4106,
+        "startChar": 13,
+        "endLine": 4106,
+        "endChar": 20
+      },
+      "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
