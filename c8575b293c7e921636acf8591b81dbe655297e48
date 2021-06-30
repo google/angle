@@ -26,6 +26,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "64690f28_a19b9e65",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4717,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-30T15:36:53Z",
+      "side": 1,
+      "message": "Needs braces: {}",
+      "revId": "c8575b293c7e921636acf8591b81dbe655297e48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b9cecbe3_9bafe7c0",
         "filename": "src/libANGLE/capture/FrameCapture.h",
         "patchSetId": 11
