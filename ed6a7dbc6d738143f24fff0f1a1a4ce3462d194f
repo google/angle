@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42ea061a_53646685",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-30T01:44:00Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "ca9612b6_913dac3b",
+      "revId": "ed6a7dbc6d738143f24fff0f1a1a4ce3462d194f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "063d6b62_25724178",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-06-29T17:34:05Z",
       "side": 1,
       "message": "nit: replace all the suffixes with * - is there a platform here?",
+      "range": {
+        "startLine": 29,
+        "startChar": 51,
+        "endLine": 29,
+        "endChar": 62
+      },
+      "revId": "ed6a7dbc6d738143f24fff0f1a1a4ce3462d194f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d25f630_937dc0b7",
+        "filename": "src/tests/angle_end2end_tests_expectations.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-30T01:44:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "063d6b62_25724178",
       "range": {
         "startLine": 29,
         "startChar": 51,
