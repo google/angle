@@ -94,6 +94,30 @@
       },
       "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e26f3ed4_10a75d72",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4106,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-30T15:39:48Z",
+      "side": 1,
+      "message": "\u003e The call is tagged as invalid, but it still runs `maybeCapturePreCallUpdates`, maybe not calling this function for invalid  calls would be the right solution?\n\nWe need to perform that work for every call, regardless of whether the call is valid.   See the CL description here for an explanation:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2673068",
+      "parentUuid": "4d5bc778_287d4bc8",
+      "range": {
+        "startLine": 4106,
+        "startChar": 13,
+        "endLine": 4106,
+        "endChar": 20
+      },
+      "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
