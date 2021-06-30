@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c17b46d4_f35a3b20",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1000805
+      },
+      "writtenOn": "2021-06-30T04:24:17Z",
+      "side": 1,
+      "message": "No, UNREACHABLE terminates execution (FATAL() or ASSERT(false)).",
+      "parentUuid": "b0f8edcc_7754ed0f",
+      "revId": "bd0bfbf6ed5738b179719d026c239329a7081475",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "119537c1_99414af6",
