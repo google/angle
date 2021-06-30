@@ -124,6 +124,24 @@
       "parentUuid": "3c20637e_3e53d197",
       "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f90afbcd_e4082bbd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-30T23:17:03Z",
+      "side": 1,
+      "message": "\u003e Instead, the root cause for why DescriptorPoolHelper::hasCapacity() is inaccurate should be debugged.\n\nas i mentioned earlier, ANGLE tracks descriptor **set** count, not the descriptor count. These are 2 very different things when it comes to immutable samplers\n\n\u003e since we\u0027ll just keep getting back VK_ERROR_OUT_OF_POOL_MEMORY every time the pool is exhausted\n\nnot sure i understand this, \"VK_ERROR_OUT_OF_POOL_MEMORY\" just says the current pool cannot allocate the set being requested. It says nothing about a new pool. Can you elaborate a bit more?",
+      "parentUuid": "6887febf_c72ea45f",
+      "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
