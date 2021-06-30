@@ -106,6 +106,24 @@
       "parentUuid": "7892e73b_dd159b57",
       "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6887febf_c72ea45f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-30T23:13:16Z",
+      "side": 1,
+      "message": "I agree with Jamie that this is covering up another issue.\n\nANGLE keeps track of how many descriptors it creates the pool with and then how many have been allocated from it throughout the descriptor pool\u0027s lifetime.   This means the DescriptorPoolHelper::hasCapacity() should always be accurate and we should never get back VK_ERROR_OUT_OF_POOL_MEMORY if we attempt to allocate descriptor sets from a pool we believe has enough free descriptor sets.\n\nIf we are getting back VK_ERROR_OUT_OF_POOL_MEMORY, then DescriptorPoolHelper::mFreeDescriptorSets is not being updated correctly.   The likeliest cause for this is that the descriptor set layout doesn\u0027t match what the pool was allocated with, so more descriptors are being allocated than the DescriptorPoolHelper thinks.   However, there is an assert in DynamicDescriptorPool::allocateSetsAndGetInfo to catch this: \n\n    ASSERT(*descriptorSetLayout \u003d\u003d mCachedDescriptorSetLayout)\n\nSo maybe that\u0027s not it (assuming you have asserts enabled).\n\nRegardless, reallocating the pool doesn\u0027t fix the issue, since we\u0027ll just keep getting back VK_ERROR_OUT_OF_POOL_MEMORY every time the pool is exhausted, wasting cycles by issuing multiple vkAllocateDescriptorSets(), rather than a single one we know will succeed.   Instead, the root cause for why DescriptorPoolHelper::hasCapacity() is inaccurate should be debugged.",
+      "parentUuid": "3c20637e_3e53d197",
+      "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
