@@ -34,6 +34,24 @@
       "parentUuid": "85c00133_1ed19923",
       "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "407d4356_14847ab2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-30T18:57:02Z",
+      "side": 1,
+      "message": "\u003e If the allocation fails due to no more space in the descriptor pool, and not because of system or device memory exhaustion, then VK_ERROR_OUT_OF_POOL_MEMORY must be returned.\n\nThis reads to me as an ANGLE internal error where we try to allocate too many descriptor sets from a pool. We shouldn\u0027t code ANGLE to be robust to internal errors, if this is the case. We should track down and fix the ANGLE code that\u0027s allocating too many - we\u0027re supposed to be doing bookkeeping to know how many sets are in a pool. It\u0027s possible YUV descriptor set accounting is borked.",
+      "parentUuid": "b257c25a_ed3b6202",
+      "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
