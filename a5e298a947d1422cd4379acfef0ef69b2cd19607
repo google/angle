@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae4accea_54b01987",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-30T13:48:54Z",
+      "side": 1,
+      "message": "+2\u0027d. I\u0027ll rebase if the other patch lands first.",
+      "parentUuid": "b8f811d6_48d0f8e3",
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "63be9720_6e783553",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-06-29T21:32:59Z",
       "side": 1,
       "message": "I believe I called this angle_libvulkan, probably best to keep referring to this thing as libvulkan instead of vulkan_library.",
+      "range": {
+        "startLine": 448,
+        "startChar": 30,
+        "endLine": 448,
+        "endChar": 57
+      },
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62795a86_1780b363",
+        "filename": "BUILD.gn",
+        "patchSetId": 12
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-30T13:48:54Z",
+      "side": 1,
+      "message": "Done. Used angle_libvulkan_loader",
+      "parentUuid": "63be9720_6e783553",
       "range": {
         "startLine": 448,
         "startChar": 30,
@@ -88,6 +130,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d47b3284_51c1495d",
+        "filename": "src/common/system_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-30T13:48:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23a2db7d_4ee83614",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 12
+      },
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c5244f37_6fbb8646",
@@ -111,6 +177,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fd8a9d9_010bfafb",
+        "filename": "src/common/system_utils_posix.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-30T13:48:54Z",
+      "side": 1,
+      "message": "Oh geez, bad merge",
+      "parentUuid": "c5244f37_6fbb8646",
+      "range": {
+        "startLine": 164,
+        "startChar": 28,
+        "endLine": 164,
+        "endChar": 39
+      },
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "82344b64_50c19445",
@@ -124,6 +214,30 @@
       "writtenOn": "2021-06-29T21:32:59Z",
       "side": 1,
       "message": "nit: closing namespace comment.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 1
+      },
+      "revId": "a5e298a947d1422cd4379acfef0ef69b2cd19607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7db1d828_3b2c513e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-06-30T13:48:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82344b64_50c19445",
       "range": {
         "startLine": 41,
         "startChar": 0,
