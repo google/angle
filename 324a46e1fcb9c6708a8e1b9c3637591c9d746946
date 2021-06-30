@@ -69,6 +69,24 @@
       "parentUuid": "0e7ebe56_37431b28",
       "revId": "324a46e1fcb9c6708a8e1b9c3637591c9d746946",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "554f3506_30153402",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-06-30T23:00:21Z",
+      "side": 1,
+      "message": "That\u0027s fine.",
+      "parentUuid": "735189f7_516b5bfd",
+      "revId": "324a46e1fcb9c6708a8e1b9c3637591c9d746946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
