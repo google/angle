@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "85c00133_1ed19923",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-30T18:39:44Z",
+      "side": 1,
+      "message": "This seems like an ANGLE or driver implementation error. Without a reproduction case it\u0027s unclear how this happens or who is responsible for the allocation failure.",
+      "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
