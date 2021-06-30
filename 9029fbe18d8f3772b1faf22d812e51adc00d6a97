@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dedaf46a_c7d8e03f",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4106,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-30T11:36:19Z",
+      "side": 1,
+      "message": "nit: can you explicitly convert this to bool by using \u003e 0? a stylistic convention we use.",
+      "range": {
+        "startLine": 4106,
+        "startChar": 13,
+        "endLine": 4106,
+        "endChar": 20
+      },
+      "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
