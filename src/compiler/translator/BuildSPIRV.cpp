@@ -55,6 +55,12 @@ uint32_t GetTotalArrayElements(const SpirvType &type)
     return arraySizeProduct;
 }
 
+uint32_t GetOutermostArraySize(const SpirvType &type)
+{
+    uint32_t size = type.arraySizes.back();
+    return size ? size : 1;
+}
+
 spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
 {
     spirv::IdRef newId = mNextAvailableId;
@@ -70,14 +76,20 @@ spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
 
 TLayoutBlockStorage SPIRVBuilder::getBlockStorage(const TType &type) const
 {
-    // Default to std140.
+    // Default to std140 for uniform and std430 for buffer blocks.
     TLayoutBlockStorage blockStorage = type.getLayoutQualifier().blockStorage;
-    if (!IsShaderIoBlock(type.getQualifier()) && blockStorage != EbsStd430)
+    if (IsShaderIoBlock(type.getQualifier()) || blockStorage == EbsStd140 ||
+        blockStorage == EbsStd430)
     {
-        blockStorage = EbsStd140;
+        return blockStorage;
     }
 
-    return blockStorage;
+    if (type.getQualifier() == EvqBuffer)
+    {
+        return EbsStd430;
+    }
+
+    return EbsStd140;
 }
 
 SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const
@@ -418,12 +430,12 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
     // Write decorations for interface block fields.
     if (type.blockStorage != EbsUnspecified)
     {
-        if (!isOpaqueType && !type.arraySizes.empty())
+        if (!isOpaqueType && !type.arraySizes.empty() && type.block == nullptr)
         {
             // Write the ArrayStride decoration for arrays inside interface blocks.
             spirv::WriteDecorate(
                 &mSpirvDecorations, typeId, spv::DecorationArrayStride,
-                {spirv::LiteralInteger(sizeInStorageBlock / GetTotalArrayElements(type))});
+                {spirv::LiteralInteger(sizeInStorageBlock / GetOutermostArraySize(type))});
         }
         else if (type.arraySizes.empty() && type.block != nullptr)
         {
@@ -1425,6 +1437,7 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
 
         const SpirvTypeData &baseTypeData = getSpirvTypeData(baseType, nullptr);
         uint32_t baseAlignment            = baseTypeData.baseAlignment;
+        uint32_t baseSizeInStorageBlock   = baseTypeData.sizeInStorageBlock;
 
         // For std140 only:
         // > Rule 4. ... and rounded up to the base alignment of a vec4.
@@ -1432,16 +1445,16 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
         // of the structure is vec4.
         if (type.blockStorage != EbsStd430)
         {
-            baseAlignment = std::max(baseAlignment, 16u);
+            baseAlignment          = std::max(baseAlignment, 16u);
+            baseSizeInStorageBlock = std::max(baseSizeInStorageBlock, 16u);
         }
-
         // Note that matrix arrays follow a similar rule (rules 6 and 8).  The matrix base alignment
         // is the same as its column or row base alignment, and arrays of that matrix don't change
         // the base alignment.
 
         // The size occupied by the array is simply the size of each element (which is already
         // aligned to baseAlignment) multiplied by the number of elements.
-        *sizeInStorageBlockOut = baseTypeData.sizeInStorageBlock * GetTotalArrayElements(type);
+        *sizeInStorageBlockOut = baseSizeInStorageBlock * GetTotalArrayElements(type);
 
         return baseAlignment;
     }

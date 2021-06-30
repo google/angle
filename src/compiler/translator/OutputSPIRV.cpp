@@ -310,7 +310,7 @@ spv::StorageClass GetStorageClass(const TType &type)
 
     // Uniform and storage buffers have the Uniform storage class.  Default uniforms are gathered in
     // a uniform block as well.
-    if (type.isInterfaceBlock() || qualifier == EvqUniform)
+    if (type.getInterfaceBlock() != nullptr || qualifier == EvqUniform)
     {
         // I/O blocks must have already been classified as input or output above.
         ASSERT(!IsShaderIoBlock(qualifier));
