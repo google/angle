@@ -22,6 +22,30 @@
       },
       "revId": "2bc43d19f179d6fa5af39ed0c9187aa0ebd30ff3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f42c0c2_0fbb0d06",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-06-30T16:41:30Z",
+      "side": 1,
+      "message": "My fault, I suggested Bug: None to get through the filters.  Didn\u0027t realize there was already a documentation bug, or that you\u0027d edited it through the gerrit interface.",
+      "parentUuid": "4584b1c9_dc46b6ec",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "2bc43d19f179d6fa5af39ed0c9187aa0ebd30ff3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
