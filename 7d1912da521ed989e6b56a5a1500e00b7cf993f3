@@ -52,6 +52,24 @@
       "parentUuid": "b257c25a_ed3b6202",
       "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c85d4c53_0accb7a8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-30T20:02:39Z",
+      "side": 1,
+      "message": "\u003e where we try to allocate too many descriptor sets from a pool\n\nthat is not whats happening. We are undercounting descriptor counts not descriptor sets. ANGLE does descriptor set book keeping not descriptor count. The issue is we could run out of descriptor counts before running out of descriptor sets when immutable samplers are involved",
+      "parentUuid": "407d4356_14847ab2",
+      "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
