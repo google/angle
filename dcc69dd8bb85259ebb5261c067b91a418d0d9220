@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ed589d74_688af936",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4082,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-30T11:52:06Z",
+      "side": 1,
+      "message": "please update this comment- it\u0027s not that there\u0027s nothing to draw (there\u0027s also nothing to draw if count is 1 or 2 and we\u0027re drawing triangles, 1 if we\u0027re drawing lines, etc) it\u0027s that the index range computation is not valid when count is exactly zero.",
+      "range": {
+        "startLine": 4082,
+        "startChar": 34,
+        "endLine": 4082,
+        "endChar": 80
+      },
+      "revId": "dcc69dd8bb85259ebb5261c067b91a418d0d9220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ee781df0_86413278",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 10
