@@ -16,6 +16,24 @@
       "message": "This seems like an ANGLE or driver implementation error. Without a reproduction case it\u0027s unclear how this happens or who is responsible for the allocation failure.",
       "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b257c25a_ed3b6202",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-30T18:50:23Z",
+      "side": 1,
+      "message": "It is the variability between ICDs on how many descriptors are needed for an immutable sampler that results in such errors.\n\n\u003e who is responsible for the allocation failure\n\nVulkan spec allows for failures, ANGLE needs to be updated to handle this error code. Repro case would need specific configs in bots that have certain descriptor count requirements for immutable samplers.\n\nThis is not invalid code according to Vulkan spec, so what am i missing?",
+      "parentUuid": "85c00133_1ed19923",
+      "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
