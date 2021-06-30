@@ -46,6 +46,30 @@
       },
       "revId": "2bc43d19f179d6fa5af39ed0c9187aa0ebd30ff3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "557db910_cb32bd77",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1515517
+      },
+      "writtenOn": "2021-06-30T16:44:56Z",
+      "side": 1,
+      "message": "Oh, I didn\u0027t notice that you added a bug! I uploaded with `git push` first and Cody mentioned afterwards that I should use `git cl upload` to trigger presubmit checks. At that point I had to fix the presubmit error of the missing bug and overwrote your change.",
+      "parentUuid": "6f42c0c2_0fbb0d06",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "2bc43d19f179d6fa5af39ed0c9187aa0ebd30ff3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
