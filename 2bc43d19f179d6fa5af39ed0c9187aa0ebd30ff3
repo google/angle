@@ -70,6 +70,30 @@
       },
       "revId": "2bc43d19f179d6fa5af39ed0c9187aa0ebd30ff3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf61b20e_e565b7e3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-30T16:45:01Z",
+      "side": 1,
+      "message": "No problem, I was just curious what was going on.",
+      "parentUuid": "6f42c0c2_0fbb0d06",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "2bc43d19f179d6fa5af39ed0c9187aa0ebd30ff3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
