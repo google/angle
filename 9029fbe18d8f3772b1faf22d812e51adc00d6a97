@@ -118,6 +118,30 @@
       },
       "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50a1244e_d904a2ae",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4106,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-30T15:48:56Z",
+      "side": 1,
+      "message": "We should skip \u0027maybeCaptureDrawElementsClientData\u0027 if the call is invalid. There won\u0027t be any data pulled by the GPU so we shouldn\u0027t pull any client data into memory.\n\nRegarding nullptr - ANGLE has no real way of telling if a pointer is valid. \"0\" is kinda special in that it\u0027s a common programming error so we sometimes make an exception for nullptr. In reality it\u0027s the same class of behaviour as a pointer value of 0xDEADBEEF, etc.",
+      "parentUuid": "e26f3ed4_10a75d72",
+      "range": {
+        "startLine": 4106,
+        "startChar": 13,
+        "endLine": 4106,
+        "endChar": 20
+      },
+      "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
