@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01831a62_b57e715a",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3709,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-30T11:58:49Z",
+      "side": 1,
+      "message": "nit: this isn\u0027t necessary - set should clean up after itself.",
+      "range": {
+        "startLine": 3706,
+        "startChar": 0,
+        "endLine": 3709,
+        "endChar": 1
+      },
+      "revId": "c8575b293c7e921636acf8591b81dbe655297e48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9cecbe3_9bafe7c0",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-06-30T11:58:49Z",
+      "side": 1,
+      "message": "nit: I\u0027d suggest just using a vector, it\u0027s not practically possible for us to insert duplicates.",
+      "range": {
+        "startLine": 437,
+        "startChar": 9,
+        "endLine": 437,
+        "endChar": 12
+      },
+      "revId": "c8575b293c7e921636acf8591b81dbe655297e48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
