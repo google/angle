@@ -3010,7 +3010,6 @@ const InternalFormat &GetTargetFormatInfo(const Context *context,
         {
             Renderbuffer *buffer = context->getRenderbuffer(PackParam<RenderbufferID>(name));
             return *buffer->getFormat().info;
-            break;
         }
         case GL_TEXTURE_2D:
         case GL_TEXTURE_3D:
@@ -3113,7 +3112,6 @@ bool ValidateCopyMixedFormatCompatible(GLenum uncompressedFormat, GLenum compres
                 default:
                     return false;
             }
-            break;
         }
         case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
         case GL_COMPRESSED_SRGB_S3TC_DXT1_EXT:
@@ -3140,7 +3138,6 @@ bool ValidateCopyMixedFormatCompatible(GLenum uncompressedFormat, GLenum compres
                 default:
                     return false;
             }
-            break;
         }
         default:
             break;

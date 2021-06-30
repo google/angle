@@ -285,8 +285,17 @@ angle_source_set("includes") {
   }
 }
 
+config("disable_unreachable_code_break_warning") {
+  if (is_clang) {
+    cflags = [ "-Wno-unreachable-code-break" ]
+  }
+}
+
 angle_static_library("preprocessor") {
   sources = angle_preprocessor_sources
+
+  # preprocessor_tab_autogen.cpp contains an instance of this.
+  configs += [ ":disable_unreachable_code_break_warning" ]
 
   public_deps = [
     ":angle_common",

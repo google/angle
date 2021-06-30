@@ -581,7 +581,6 @@ void ANGLETestBase::ANGLETestSetUp()
     if (testExpectation == GPUTestExpectationsParser::kGpuTestSkip)
     {
         GTEST_SKIP() << "Test skipped on this config";
-        return;
     }
 
     if (IsWindows())

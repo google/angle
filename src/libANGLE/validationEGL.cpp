@@ -2052,7 +2052,6 @@ bool ValidateCreateContext(const ValidationContext *val,
         default:
             val->setError(EGL_BAD_ATTRIBUTE);
             return false;
-            break;
     }
 
     // Note: EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR does not apply to ES

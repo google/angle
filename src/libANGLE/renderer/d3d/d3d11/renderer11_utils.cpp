@@ -849,7 +849,6 @@ std::array<GLint, 3> GetMaxComputeWorkGroupCount(D3D_FEATURE_LEVEL featureLevel)
             return {{D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION,
                      D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION,
                      D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION}};
-            break;
         default:
             return {{0, 0, 0}};
     }
@@ -863,7 +862,6 @@ std::array<GLint, 3> GetMaxComputeWorkGroupSize(D3D_FEATURE_LEVEL featureLevel)
         case D3D_FEATURE_LEVEL_11_0:
             return {{D3D11_CS_THREAD_GROUP_MAX_X, D3D11_CS_THREAD_GROUP_MAX_Y,
                      D3D11_CS_THREAD_GROUP_MAX_Z}};
-            break;
         default:
             return {{0, 0, 0}};
     }

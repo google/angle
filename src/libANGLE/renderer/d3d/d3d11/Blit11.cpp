@@ -1418,11 +1418,7 @@ Blit11::BlitShaderOperation Blit11::getBlitShaderOperation(GLenum destinationFor
                 {
                     return RGBAF_TOI;
                 }
-                else
-                {
-                    return unpackPremultiplyAlpha ? RGBAF_TOI_PREMULTIPLY : RGBAF_TOI_UNMULTIPLY;
-                }
-                break;
+                return unpackPremultiplyAlpha ? RGBAF_TOI_PREMULTIPLY : RGBAF_TOI_UNMULTIPLY;
             case GL_RGB_INTEGER:
             case GL_RG_INTEGER:
             case GL_RED_INTEGER:
@@ -1430,11 +1426,7 @@ Blit11::BlitShaderOperation Blit11::getBlitShaderOperation(GLenum destinationFor
                 {
                     return RGBF_TOI;
                 }
-                else
-                {
-                    return unpackPremultiplyAlpha ? RGBF_TOI_PREMULTIPLY : RGBF_TOI_UNMULTIPLY;
-                }
-                break;
+                return unpackPremultiplyAlpha ? RGBF_TOI_PREMULTIPLY : RGBF_TOI_UNMULTIPLY;
             default:
                 UNREACHABLE();
                 return OPERATION_INVALID;
