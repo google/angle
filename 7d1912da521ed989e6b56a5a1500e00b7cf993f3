@@ -88,6 +88,24 @@
       "parentUuid": "c85d4c53_0accb7a8",
       "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c20637e_3e53d197",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-06-30T20:09:34Z",
+      "side": 1,
+      "message": "\u003e this is a complex part of the spec\n\ncomplex and also the part where they messed up a bit\n\n\u003e ANGLE can book-keep everything\napparently vulkan 1.0 left descriptor count book keeping to apps but in 1.1 they moved that responsibility over to ICD and gave a introduced a new error code for cases where pool runs out of descriptors. (h/t internal vulkan team for this info)\n\nDescriptor sets are just incidental to this conversation.",
+      "parentUuid": "7892e73b_dd159b57",
+      "revId": "7d1912da521ed989e6b56a5a1500e00b7cf993f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
