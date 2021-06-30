@@ -216,9 +216,12 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef createConstructorVectorFromScalar(const TType &type,
                                                    spirv::IdRef typeId,
                                                    const spirv::IdRefList &parameters);
-    spirv::IdRef createConstructorVectorFromNonScalar(TIntermAggregate *node,
-                                                      spirv::IdRef typeId,
-                                                      const spirv::IdRefList &parameters);
+    spirv::IdRef createConstructorVectorFromMatrix(TIntermAggregate *node,
+                                                   spirv::IdRef typeId,
+                                                   const spirv::IdRefList &parameters);
+    spirv::IdRef createConstructorVectorFromScalarsAndVectors(TIntermAggregate *node,
+                                                              spirv::IdRef typeId,
+                                                              const spirv::IdRefList &parameters);
     spirv::IdRef createConstructorMatrixFromScalar(TIntermAggregate *node,
                                                    spirv::IdRef typeId,
                                                    const spirv::IdRefList &parameters);
@@ -243,6 +246,21 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef createImageTextureBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
 
     spirv::IdRef createFunctionCall(TIntermAggregate *node, spirv::IdRef resultTypeId);
+
+    // Cast between types.  There are two kinds of casts:
+    //
+    // - A constructor can cast between basic types, for example vec4(someInt).
+    // - Assignments, constructors, function calls etc may copy an array or struct between different
+    //   block storages or invariance (which due to their decorations generate different SPIR-V
+    //   types).  For example:
+    //
+    //       layout(std140) uniform U { invariant Struct s; } u; ... Struct s2 = u.s;
+    //
+    // TODO: implement casts due to block storage and invariance differences.
+    // http://anglebug.com/4889
+    spirv::IdRef castBasicType(spirv::IdRef value,
+                               const TType &valueType,
+                               TBasicType expectedBasicType);
 
     TCompiler *mCompiler;
     ShCompileOptions mCompileOptions;
@@ -1009,24 +1027,28 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
 
     if (type.isScalar())
     {
-        // TODO: handle casting.  http://anglebug.com/4889.
-        return parameters[0];
+        return castBasicType(parameters[0], arg0Type, type.getBasicType());
     }
 
     if (type.isVector())
     {
         if (arguments.size() == 1 && arg0Type.isScalar())
         {
+            parameters[0] = castBasicType(parameters[0], arg0Type, type.getBasicType());
             return createConstructorVectorFromScalar(node->getType(), typeId, parameters);
         }
-
-        return createConstructorVectorFromNonScalar(node, typeId, parameters);
+        if (arguments.size() == 1 && arg0Type.isMatrix())
+        {
+            return createConstructorVectorFromMatrix(node, typeId, parameters);
+        }
+        return createConstructorVectorFromScalarsAndVectors(node, typeId, parameters);
     }
 
     ASSERT(type.isMatrix());
 
     if (arg0Type.isScalar())
     {
+        parameters[0] = castBasicType(parameters[0], arg0Type, type.getBasicType());
         return createConstructorMatrixFromScalar(node, typeId, parameters);
     }
     if (arg0Type.isMatrix())
@@ -1062,13 +1084,48 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromScalar(
     return result;
 }
 
-spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromNonScalar(
+spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromMatrix(
+    TIntermAggregate *node,
+    spirv::IdRef typeId,
+    const spirv::IdRefList &parameters)
+{
+    // vecN(m) translates to OpCompositeConstruct %vecN %m[0][0] %m[0][1] ...
+    spirv::IdRefList extractedComponents;
+    extractComponents(node, node->getType().getNominalSize(), parameters, &extractedComponents);
+
+    // Construct the vector with the basic type of the argument, and cast it at end if needed.
+    ASSERT(parameters.size() == 1);
+    const TType &arg0Type              = node->getChildNode(0)->getAsTyped()->getType();
+    const TBasicType expectedBasicType = node->getType().getBasicType();
+
+    spirv::IdRef argumentTypeId = typeId;
+    TType arg0TypeAsVector(arg0Type);
+    arg0TypeAsVector.setPrimarySize(static_cast<unsigned char>(node->getType().getNominalSize()));
+    arg0TypeAsVector.setSecondarySize(1);
+
+    if (arg0Type.getBasicType() != expectedBasicType)
+    {
+        argumentTypeId = mBuilder.getTypeData(arg0TypeAsVector, EbsUnspecified).id;
+    }
+
+    spirv::IdRef result = mBuilder.getNewId(mBuilder.getDecorations(node->getType()));
+    spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), argumentTypeId, result,
+                                   extractedComponents);
+
+    if (arg0Type.getBasicType() != expectedBasicType)
+    {
+        result = castBasicType(result, arg0TypeAsVector, expectedBasicType);
+    }
+
+    return result;
+}
+
+spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromScalarsAndVectors(
     TIntermAggregate *node,
     spirv::IdRef typeId,
     const spirv::IdRefList &parameters)
 {
     // vecN(v1.zy, v2.x) translates to OpCompositeConstruct %vecN %v1.z %v1.y %v2.x
-    // vecN(m) translates to OpCompositeConstruct %vecN %m[0][0] %m[0][1] ...
     spirv::IdRefList extractedComponents;
     extractComponents(node, node->getType().getNominalSize(), parameters, &extractedComponents);
 
@@ -1091,8 +1148,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromScalar(
     //     ...
     //     %m  = OpCompositeConstruct %matNxM %c0 %c1 %c2 ...
 
-    const TType &type = node->getType();
-    // TODO: handle casting.  http://anglebug.com/4889.
+    const TType &type           = node->getType();
     const spirv::IdRef scalarId = parameters[0];
     spirv::IdRef zeroId;
 
@@ -1129,8 +1185,11 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromScalar(
         columnIds.push_back(mBuilder.getNewId(decorations));
 
         // Place the scalar at the correct index (diagonal of the matrix, i.e. row == col).
-        componentIds[columnIndex] = scalarId;
-        if (columnIndex > 0)
+        if (columnIndex < type.getRows())
+        {
+            componentIds[columnIndex] = scalarId;
+        }
+        if (columnIndex > 0 && columnIndex <= type.getRows())
         {
             componentIds[columnIndex - 1] = zeroId;
         }
@@ -1219,8 +1278,6 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
     const TType &parameterType = (*node->getSequence())[0]->getAsTyped()->getType();
 
     SpirvDecorations decorations = mBuilder.getDecorations(type);
-
-    // TODO: handle casting.  http://anglebug.com/4889.
 
     ASSERT(parameters.size() == 1);
 
@@ -1361,9 +1418,8 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
     // more components than necessary) and extracts the first componentCount components.
     const TIntermSequence &arguments = *node->getSequence();
 
-    SpirvDecorations decorations = mBuilder.getDecorations(node->getType());
-
-    // TODO: handle casting.  http://anglebug.com/4889.
+    const SpirvDecorations decorations = mBuilder.getDecorations(node->getType());
+    const TBasicType expectedBasicType = node->getType().getBasicType();
 
     ASSERT(arguments.size() == parameters.size());
 
@@ -1371,21 +1427,33 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
          argumentIndex < arguments.size() && extractedComponentsOut->size() < componentCount;
          ++argumentIndex)
     {
-        const TType &argumentType      = arguments[argumentIndex]->getAsTyped()->getType();
+        TIntermNode *argument          = arguments[argumentIndex];
+        const TType &argumentType      = argument->getAsTyped()->getType();
         const spirv::IdRef parameterId = parameters[argumentIndex];
 
         if (argumentType.isScalar())
         {
-            // For scalar parameters, there's nothing to do.
-            extractedComponentsOut->push_back(parameterId);
+            // For scalar parameters, there's nothing to do other than a potential cast.
+            const spirv::IdRef castParameterId =
+                argument->getAsConstantUnion()
+                    ? parameterId
+                    : castBasicType(parameterId, argumentType, expectedBasicType);
+            extractedComponentsOut->push_back(castParameterId);
             continue;
         }
         if (argumentType.isVector())
         {
             SpirvType componentType   = mBuilder.getSpirvType(argumentType, EbsUnspecified);
+            componentType.type        = expectedBasicType;
             componentType.primarySize = 1;
             const spirv::IdRef componentTypeId =
                 mBuilder.getSpirvTypeData(componentType, nullptr).id;
+
+            // Cast the whole vector parameter in one go.
+            const spirv::IdRef castParameterId =
+                argument->getAsConstantUnion()
+                    ? parameterId
+                    : castBasicType(parameterId, argumentType, expectedBasicType);
 
             // For vector parameters, take components out of the vector one by one.
             for (int componentIndex = 0; componentIndex < argumentType.getNominalSize() &&
@@ -1394,7 +1462,7 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
             {
                 const spirv::IdRef componentId = mBuilder.getNewId(decorations);
                 spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(),
-                                             componentTypeId, componentId, parameterId,
+                                             componentTypeId, componentId, castParameterId,
                                              {spirv::LiteralInteger(componentIndex)});
 
                 extractedComponentsOut->push_back(componentId);
@@ -1410,7 +1478,8 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
         const spirv::IdRef componentTypeId = mBuilder.getSpirvTypeData(componentType, nullptr).id;
 
         // For matrix parameters, take components out of the matrix one by one in column-major
-        // order.
+        // order.  No cast is done here; it would only be required for vector constructors with
+        // matrix parameters, in which case the resulting vector is cast in the end.
         for (int columnIndex = 0; columnIndex < argumentType.getCols() &&
                                   extractedComponentsOut->size() < componentCount;
              ++columnIndex)
@@ -1547,20 +1616,17 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
         spirv::IdRef paramValue;
         SpirvDecorations decorations = mBuilder.getDecorations(paramType);
 
-        if (IsOpaqueType(paramType.getBasicType()) || paramQualifier == EvqConst)
+        if (paramQualifier == EvqConst)
         {
-            // The following parameters are passed as rvalue:
-            //
-            // - Opaque uniforms,
-            // - const parameters,
+            // |const| parameters are passed as rvalue.
             paramValue = accessChainLoad(&param, decorations);
         }
         else if (IsAccessChainUnindexedLValue(param) &&
-                 (mCompileOptions & SH_GENERATE_SPIRV_WORKAROUNDS) == 0)
+                 (IsOpaqueType(paramType.getBasicType()) ||
+                  (param.accessChain.storageClass == spv::StorageClassFunction &&
+                   (mCompileOptions & SH_GENERATE_SPIRV_WORKAROUNDS) == 0)))
         {
-            // The following parameters are passed directly:
-            //
-            // - unindexed lvalues.
+            // Unindexed lvalues are passed directly.
             //
             // This optimization is not applied on buggy drivers.  http://anglebug.com/6110.
             paramValue = param.baseId;
@@ -3355,6 +3421,122 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
     return result;
 }
 
+spirv::IdRef OutputSPIRVTraverser::castBasicType(spirv::IdRef value,
+                                                 const TType &valueType,
+                                                 TBasicType expectedBasicType)
+{
+    if (valueType.getBasicType() == expectedBasicType)
+    {
+        return value;
+    }
+
+    SpirvType valueSpirvType      = mBuilder.getSpirvType(valueType, EbsUnspecified);
+    valueSpirvType.type           = expectedBasicType;
+    const spirv::IdRef castTypeId = mBuilder.getSpirvTypeData(valueSpirvType, nullptr).id;
+
+    const spirv::IdRef castValue = mBuilder.getNewId(mBuilder.getDecorations(valueType));
+
+    // Write the instruction that casts between types.  Different instructions are used based on the
+    // types being converted.
+    //
+    // - int/uint <-> float: OpConvert*To*
+    // - int <-> uint: OpBitcast
+    // - bool --> int/uint/float: OpSelect with 0 and 1
+    // - int/uint --> bool: OPINotEqual 0
+    // - float --> bool: OpFUnordNotEqual 0
+
+    WriteUnaryOp writeUnaryOp     = nullptr;
+    WriteBinaryOp writeBinaryOp   = nullptr;
+    WriteTernaryOp writeTernaryOp = nullptr;
+
+    spirv::IdRef zero;
+    spirv::IdRef one;
+
+    switch (valueType.getBasicType())
+    {
+        case EbtFloat:
+            switch (expectedBasicType)
+            {
+                case EbtInt:
+                    writeUnaryOp = spirv::WriteConvertFToS;
+                    break;
+                case EbtUInt:
+                    writeUnaryOp = spirv::WriteConvertFToU;
+                    break;
+                case EbtBool:
+                    zero          = mBuilder.getVecConstant(0, valueType.getNominalSize());
+                    writeBinaryOp = spirv::WriteFUnordNotEqual;
+                    break;
+                default:
+                    UNREACHABLE();
+            }
+            break;
+
+        case EbtInt:
+        case EbtUInt:
+            switch (expectedBasicType)
+            {
+                case EbtFloat:
+                    writeUnaryOp = valueType.getBasicType() == EbtInt ? spirv::WriteConvertSToF
+                                                                      : spirv::WriteConvertUToF;
+                    break;
+                case EbtInt:
+                case EbtUInt:
+                    writeUnaryOp = spirv::WriteBitcast;
+                    break;
+                case EbtBool:
+                    zero          = mBuilder.getUvecConstant(0, valueType.getNominalSize());
+                    writeBinaryOp = spirv::WriteINotEqual;
+                    break;
+                default:
+                    UNREACHABLE();
+            }
+            break;
+
+        case EbtBool:
+            writeTernaryOp = spirv::WriteSelect;
+            switch (expectedBasicType)
+            {
+                case EbtFloat:
+                    zero = mBuilder.getVecConstant(0, valueType.getNominalSize());
+                    one  = mBuilder.getVecConstant(1, valueType.getNominalSize());
+                    break;
+                case EbtInt:
+                    zero = mBuilder.getIvecConstant(0, valueType.getNominalSize());
+                    one  = mBuilder.getIvecConstant(1, valueType.getNominalSize());
+                    break;
+                case EbtUInt:
+                    zero = mBuilder.getUvecConstant(0, valueType.getNominalSize());
+                    one  = mBuilder.getUvecConstant(1, valueType.getNominalSize());
+                    break;
+                default:
+                    UNREACHABLE();
+            }
+            break;
+
+        default:
+            // TODO: support desktop GLSL.  http://anglebug.com/4889.
+            UNIMPLEMENTED();
+    }
+
+    if (writeUnaryOp)
+    {
+        writeUnaryOp(mBuilder.getSpirvCurrentFunctionBlock(), castTypeId, castValue, value);
+    }
+    else if (writeBinaryOp)
+    {
+        writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), castTypeId, castValue, value, zero);
+    }
+    else
+    {
+        ASSERT(writeTernaryOp);
+        writeTernaryOp(mBuilder.getSpirvCurrentFunctionBlock(), castTypeId, castValue, value, one,
+                       zero);
+    }
+
+    return castValue;
+}
+
 void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
 {
     // Constants are expected to be folded.
@@ -4225,7 +4407,10 @@ void OutputSPIRVTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node
         // with the Function storage class.
         if (paramType.getQualifier() != EvqConst)
         {
-            paramId = mBuilder.getTypePointerId(paramId, spv::StorageClassFunction);
+            const spv::StorageClass storageClass = IsOpaqueType(paramType.getBasicType())
+                                                       ? spv::StorageClassUniformConstant
+                                                       : spv::StorageClassFunction;
+            paramId = mBuilder.getTypePointerId(paramId, storageClass);
         }
 
         ids.parameterTypeIds.push_back(paramId);

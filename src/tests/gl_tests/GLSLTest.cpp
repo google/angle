@@ -2585,6 +2585,83 @@ TEST_P(GLSLTest_ES3, AmbiguousFunctionCall2x2)
     EXPECT_NE(0u, program);
 }
 
+// Test that constructing matrices from non-float types works.
+TEST_P(GLSLTest_ES3, ConstructMatrixFromNonFloat)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+
+uniform int i;
+uniform uint u;
+
+void main()
+{
+    bool b = i > 10;
+
+    mat3x2 mi = mat3x2(i);
+    mat4 mu = mat4(u);
+    mat2x4 mb = mat2x4(b);
+
+    mat3x2 m = mat3x2(ivec2(i), uvec2(u), bvec2(b));
+
+    color = vec4(mi[0][0] == float(i) ? 1 : 0,
+                 mu[2][2] == float(u) ? 1 : 0,
+                 mb[1][1] == float(b) ? 1 : 0,
+                 m[0][1] == float(i) && m[1][0] == float(u) && m[2][0] == float(b) ? 1 : 0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint iloc = glGetUniformLocation(program, "i");
+    GLint uloc = glGetUniformLocation(program, "u");
+    ASSERT_NE(iloc, -1);
+    ASSERT_NE(uloc, -1);
+    glUniform1i(iloc, -123);
+    glUniform1ui(uloc, 456);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Test that constructing non-float vectors from matrix types works.
+TEST_P(GLSLTest_ES3, ConstructNonFloatVectorFromMatrix)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+
+uniform float f;
+
+void main()
+{
+    mat4 m = mat4(f);
+    ivec3 vi = ivec3(m);
+    uvec2 vu = uvec2(m);
+    bvec4 vb = bvec4(m);
+
+    color = vec4(vi.x == int(f) ? 1 : 0,
+                 vu.x == uint(f) ? 1 : 0,
+                 vb.x == bool(f) ? 1 : 0,
+                 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint floc = glGetUniformLocation(program, "f");
+    ASSERT_NE(floc, -1);
+    glUniform1f(floc, 123);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
 // Test that an user-defined function with a large number of float4 parameters doesn't fail due to
 // the function name being too long.
 TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)

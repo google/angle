@@ -362,6 +362,23 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
                                     spirv::LiteralInteger(0));
                 break;
             case EbtBool:
+                // TODO: In SPIR-V, it's invalid to have a bool type in an interface block.  An AST
+                // transformation should be written to rewrite the blocks to use a uint type with
+                // appropriate casts where used.  Need to handle:
+                //
+                // - Store: cast the rhs of assignment
+                // - Non-array load: cast the expression
+                // - Array load (for example to use in a struct constructor): reconstruct the array
+                //   with elements cast.
+                // - Pass to function as out parameter: Use
+                //   MonomorphizeUnsupportedFunctionsInVulkanGLSL to avoid it, as there's no easy
+                //   way to handle such function calls inside if conditions and such.
+                //
+                // It might be simplest to do this for bools in structs as well, to avoid having to
+                // convert between an old and new struct type if the struct is used both inside and
+                // outside an interface block.
+                //
+                // http://anglebug.com/4889.
                 spirv::WriteTypeBool(&mSpirvTypeAndConstantDecls, typeId);
                 break;
             default:
@@ -834,6 +851,41 @@ spirv::IdRef SPIRVBuilder::getFloatConstant(float value)
     } asUint;
     asUint.f = value;
     return getBasicConstantHelper(asUint.u, EbtFloat, &mFloatConstants);
+}
+
+spirv::IdRef SPIRVBuilder::getVectorConstantHelper(spirv::IdRef valueId, TBasicType type, int size)
+{
+    if (size == 1)
+    {
+        return valueId;
+    }
+
+    SpirvType vecType;
+    vecType.type        = type;
+    vecType.primarySize = static_cast<uint8_t>(size);
+
+    const spirv::IdRef typeId = getSpirvTypeData(vecType, nullptr).id;
+    const spirv::IdRefList valueIds(size, valueId);
+
+    return getCompositeConstant(typeId, valueIds);
+}
+
+spirv::IdRef SPIRVBuilder::getUvecConstant(uint32_t value, int size)
+{
+    const spirv::IdRef valueId = getUintConstant(value);
+    return getVectorConstantHelper(valueId, EbtUInt, size);
+}
+
+spirv::IdRef SPIRVBuilder::getIvecConstant(int32_t value, int size)
+{
+    const spirv::IdRef valueId = getIntConstant(value);
+    return getVectorConstantHelper(valueId, EbtInt, size);
+}
+
+spirv::IdRef SPIRVBuilder::getVecConstant(float value, int size)
+{
+    const spirv::IdRef valueId = getFloatConstant(value);
+    return getVectorConstantHelper(valueId, EbtFloat, size);
 }
 
 spirv::IdRef SPIRVBuilder::getCompositeConstant(spirv::IdRef typeId, const spirv::IdRefList &values)
