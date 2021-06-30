@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0f8edcc_7754ed0f",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-30T02:15:44Z",
+      "side": 1,
+      "message": "Don\u0027t we need a break after `UNREACHABLE()` too? Otherwise it\u0027s falling through to the next case.",
+      "revId": "bd0bfbf6ed5738b179719d026c239329a7081475",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "119537c1_99414af6",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1275,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-06-30T02:15:44Z",
+      "side": 1,
+      "message": "In this instance, the explicit return was actually helpful IMO. It\u0027s not obvious that FAIL() makes the function return. But it is what it is...",
+      "range": {
+        "startLine": 1275,
+        "startChar": 8,
+        "endLine": 1275,
+        "endChar": 12
+      },
+      "revId": "bd0bfbf6ed5738b179719d026c239329a7081475",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
