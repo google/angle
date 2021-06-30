@@ -1,7 +1,12 @@
 #!/usr/bin/env vpython
-# Copyright 2018 The Chromium Authors. All rights reserved.
+#
+# Copyright 2021 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
+#
+# process_angle_perf_results.py:
+#   Perf result merging and upload. Adapted from the Chromium script:
+#   https://chromium.googlesource.com/chromium/src/+/main/tools/perf/process_perf_results.py
 
 from __future__ import print_function
 
@@ -22,79 +27,59 @@ logging.basicConfig(
     format='(%(levelname)s) %(asctime)s pid=%(process)d'
     '  %(module)s.%(funcName)s:%(lineno)d  %(message)s')
 
+d = os.path.dirname
+ANGLE_DIR = d(d(os.path.realpath(__file__)))
+sys.path.append(os.path.join(ANGLE_DIR, 'tools', 'perf'))
 import cross_device_test_config
 
 from core import path_util
-path_util.AddTelemetryToPath()
 
+path_util.AddTelemetryToPath()
 from core import upload_results_to_perf_dashboard
-from core import results_merger
 from core import bot_platforms
+from core import results_merger
 
 path_util.AddAndroidPylibToPath()
-
 try:
     from pylib.utils import logdog_helper
 except ImportError:
     pass
 
+path_util.AddTracingToPath()
+from tracing.value import histogram
+from tracing.value import histogram_set
+from tracing.value.diagnostics import generic_set
+from tracing.value.diagnostics import reserved_infos
+
 RESULTS_URL = 'https://chromeperf.appspot.com'
-
-# Until we are migrated to LUCI, we will be utilizing a hard
-# coded master name based on what is passed in in the build properties.
-# See crbug.com/801289 for more details.
-MACHINE_GROUP_JSON_FILE = os.path.join(path_util.GetChromiumSrcDir(), 'tools', 'perf', 'core',
-                                       'perf_dashboard_machine_group_mapping.json')
-
 JSON_CONTENT_TYPE = 'application/json'
-
-# Cache of what data format (ChartJSON, Histograms, etc.) each results file is
-# in so that only one disk read is required when checking the format multiple
-# times.
-_data_format_cache = {}
-DATA_FORMAT_GTEST = 'gtest'
-DATA_FORMAT_CHARTJSON = 'chartjson'
-DATA_FORMAT_HISTOGRAMS = 'histograms'
-DATA_FORMAT_UNKNOWN = 'unknown'
-
-
-def _GetMachineGroup(build_properties):
-    machine_group = None
-    if build_properties.get('perf_dashboard_machine_group', False):
-        # Once luci migration is complete this will exist as a property
-        # in the build properties
-        machine_group = build_properties['perf_dashboard_machine_group']
-    else:
-        builder_group_mapping = {}
-        with open(MACHINE_GROUP_JSON_FILE) as fp:
-            builder_group_mapping = json.load(fp)
-            if build_properties.get('builder_group', False):
-                legacy_builder_group = build_properties['builder_group']
-            else:
-                # TODO(crbug.com/1153958): remove reference to mastername.
-                legacy_builder_group = build_properties['mastername']
-            if builder_group_mapping.get(legacy_builder_group):
-                machine_group = builder_group_mapping[legacy_builder_group]
-    if not machine_group:
-        raise ValueError('Must set perf_dashboard_machine_group or have a valid '
-                         'mapping in '
-                         'src/tools/perf/core/perf_dashboard_machine_group_mapping.json'
-                         'See bit.ly/perf-dashboard-machine-group for more details')
-    return machine_group
+MACHINE_GROUP = 'ANGLE'
+BUILD_URL = 'https://ci.chromium.org/ui/p/angle/builders/ci/%s/%d'
 
 
 def _upload_perf_results(json_to_upload, name, configuration_name, build_properties,
                          output_json_file):
     """Upload the contents of result JSON(s) to the perf dashboard."""
     args = [
-        '--buildername', build_properties['buildername'], '--buildnumber',
-        build_properties['buildnumber'], '--name', name, '--configuration-name',
-        configuration_name, '--results-file', json_to_upload, '--results-url', RESULTS_URL,
-        '--got-revision-cp', build_properties['got_revision_cp'], '--got-v8-revision',
-        build_properties['got_v8_revision'], '--got-webrtc-revision',
-        build_properties['got_webrtc_revision'], '--output-json-file', output_json_file,
+        '--buildername',
+        build_properties['buildername'],
+        '--buildnumber',
+        build_properties['buildnumber'],
+        '--name',
+        name,
+        '--configuration-name',
+        configuration_name,
+        '--results-file',
+        json_to_upload,
+        '--results-url',
+        RESULTS_URL,
+        '--output-json-file',
+        output_json_file,
         '--perf-dashboard-machine-group',
-        _GetMachineGroup(build_properties)
+        MACHINE_GROUP,
+        '--got-angle-revision',
+        build_properties['got_angle_revision'],
+        '--send-as-histograms',
     ]
     buildbucket = build_properties.get('buildbucket', {})
     if isinstance(buildbucket, basestring):
@@ -111,39 +96,11 @@ def _upload_perf_results(json_to_upload, name, configuration_name, build_propert
     if build_properties.get('git_revision'):
         args.append('--git-revision')
         args.append(build_properties['git_revision'])
-    if _is_histogram(json_to_upload):
-        args.append('--send-as-histograms')
 
     #TODO(crbug.com/1072729): log this in top level
     logging.info('upload_results_to_perf_dashboard: %s.' % args)
 
     return upload_results_to_perf_dashboard.main(args)
-
-
-def _is_histogram(json_file):
-    return _determine_data_format(json_file) == DATA_FORMAT_HISTOGRAMS
-
-
-def _is_gtest(json_file):
-    return _determine_data_format(json_file) == DATA_FORMAT_GTEST
-
-
-def _determine_data_format(json_file):
-    if json_file not in _data_format_cache:
-        with open(json_file) as f:
-            data = json.load(f)
-            if isinstance(data, list):
-                _data_format_cache[json_file] = DATA_FORMAT_HISTOGRAMS
-            elif isinstance(data, dict):
-                if 'charts' in data:
-                    _data_format_cache[json_file] = DATA_FORMAT_CHARTJSON
-                else:
-                    _data_format_cache[json_file] = DATA_FORMAT_GTEST
-            else:
-                _data_format_cache[json_file] = DATA_FORMAT_UNKNOWN
-            return _data_format_cache[json_file]
-        _data_format_cache[json_file] = DATA_FORMAT_UNKNOWN
-    return _data_format_cache[json_file]
 
 
 def _merge_json_output(output_json, jsons_to_merge, extra_links, test_cross_device=False):
@@ -303,14 +260,14 @@ def process_perf_results(output_json,
     """Process perf results.
 
   Consists of merging the json-test-format output, uploading the perf test
-  output (chartjson and histogram), and store the benchmark logs in logdog.
+  output (histogram), and store the benchmark logs in logdog.
 
   Each directory in the task_output_dir represents one benchmark
   that was run. Within this directory, there is a subdirectory with the name
   of the benchmark that was run. In that subdirectory, there is a
   perftest-output.json file containing the performance results in histogram
-  or dashboard json format and an output.json file containing the json test
-  results for the benchmark.
+  format and an output.json file containing the json test results for the
+  benchmark.
 
   Returns:
     (return_code, upload_results_map):
@@ -377,16 +334,6 @@ def process_perf_results(output_json,
     return return_code, benchmark_upload_result_map
 
 
-def _merge_chartjson_results(chartjson_dicts):
-    merged_results = chartjson_dicts[0]
-    for chartjson_dict in chartjson_dicts[1:]:
-        for key in chartjson_dict:
-            if key == 'charts':
-                for add_key in chartjson_dict[key]:
-                    merged_results[key][add_key] = chartjson_dict[key][add_key]
-    return merged_results
-
-
 def _merge_histogram_results(histogram_lists):
     merged_results = []
     for histogram_list in histogram_lists:
@@ -395,7 +342,37 @@ def _merge_histogram_results(histogram_lists):
     return merged_results
 
 
-def _merge_perf_results(benchmark_name, results_filename, directories):
+def _load_histogram_set_from_dict(data):
+    histograms = histogram_set.HistogramSet()
+    histograms.ImportDicts(data)
+    return histograms
+
+
+def _add_build_info(results, benchmark_name, build_properties):
+    histograms = _load_histogram_set_from_dict(results)
+
+    common_diagnostics = {
+        reserved_infos.MASTERS:
+            build_properties['builder_group'],
+        reserved_infos.BOTS:
+            build_properties['buildername'],
+        reserved_infos.POINT_ID:
+            build_properties['angle_commit_pos'],
+        reserved_infos.BENCHMARKS:
+            benchmark_name,
+        reserved_infos.ANGLE_REVISIONS:
+            build_properties['got_angle_revision'],
+        reserved_infos.BUILD_URLS:
+            BUILD_URL % (build_properties['buildername'], build_properties['buildnumber']),
+    }
+
+    for k, v in common_diagnostics.items():
+        histograms.AddSharedDiagnosticToAllHistograms(k.name, generic_set.GenericSet([v]))
+
+    return histograms.AsDicts()
+
+
+def _merge_perf_results(benchmark_name, results_filename, directories, build_properties):
     begin_time = time.time()
     collected_results = []
     for directory in directories:
@@ -411,13 +388,14 @@ def _merge_perf_results(benchmark_name, results_filename, directories):
         logging.error('Failed to obtain any perf results from %s.', benchmark_name)
         return
 
-    # Assuming that multiple shards will only be chartjson or histogram set
+    # Assuming that multiple shards will be histogram set
     # Non-telemetry benchmarks only ever run on one shard
     merged_results = []
-    if isinstance(collected_results[0], dict):
-        merged_results = _merge_chartjson_results(collected_results)
-    elif isinstance(collected_results[0], list):
-        merged_results = _merge_histogram_results(collected_results)
+    assert (isinstance(collected_results[0], list))
+    merged_results = _merge_histogram_results(collected_results)
+
+    # Write additional histogram build info.
+    merged_results = _add_build_info(merged_results, benchmark_name, build_properties)
 
     with open(results_filename, 'w') as rf:
         json.dump(merged_results, rf)
@@ -439,7 +417,7 @@ def _upload_individual(benchmark_name, directories, configuration_name, build_pr
             if not os.path.exists(merge_perf_dir):
                 os.makedirs(merge_perf_dir)
             results_filename = os.path.join(merge_perf_dir, 'merged_perf_results.json')
-            _merge_perf_results(benchmark_name, results_filename, directories)
+            _merge_perf_results(benchmark_name, results_filename, directories, build_properties)
         else:
             # It was only written to one shard, use that shards data
             results_filename = os.path.join(directories[0], 'perf_results.json')
@@ -671,7 +649,8 @@ def _write_perf_data_to_logfile(benchmark_name, output_file, configuration_name,
                 logging.error('Error parsing perf results JSON for benchmark  %s' % benchmark_name)
         if results:
             try:
-                output_json_file = logdog_helper.open_text(benchmark_name)
+                json_fname = _generate_unique_logdog_filename(benchmark_name)
+                output_json_file = logdog_helper.open_text(json_fname)
                 json.dump(results, output_json_file, indent=4, separators=(',', ': '))
             except ValueError as e:
                 logging.error('ValueError: "%s" while dumping output to logdog' % e)
@@ -694,11 +673,12 @@ def _write_perf_data_to_logfile(benchmark_name, output_file, configuration_name,
         if upload_failure:
             logdog_dict[base_benchmark_name]['ref_upload_failed'] = 'True'
     else:
-        logdog_dict[base_benchmark_name]['dashboard_url'] = (
-            upload_results_to_perf_dashboard.GetDashboardUrl(benchmark_name, configuration_name,
-                                                             RESULTS_URL,
-                                                             build_properties['got_revision_cp'],
-                                                             _GetMachineGroup(build_properties)))
+        # TODO(jmadill): Figure out if we can get a dashboard URL here. http://anglebug.com/6090
+        # logdog_dict[base_benchmark_name]['dashboard_url'] = (
+        #     upload_results_to_perf_dashboard.GetDashboardUrl(benchmark_name, configuration_name,
+        #                                                      RESULTS_URL,
+        #                                                      build_properties['got_revision_cp'],
+        #                                                      _GetMachineGroup(build_properties)))
         if viewer_url:
             logdog_dict[base_benchmark_name]['perf_results'] = viewer_url
         if upload_failure:

@@ -386,7 +386,7 @@
           "args": [
             "--smoke-test-mode"
           ],
-          "script": "//tools/perf/process_perf_results.py"
+          "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
         "swarming": {
@@ -470,7 +470,7 @@
         ],
         "isolate_name": "angle_perftests",
         "merge": {
-          "script": "//tools/perf/process_perf_results.py"
+          "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
         "swarming": {
@@ -627,7 +627,7 @@
           "args": [
             "--smoke-test-mode"
           ],
-          "script": "//tools/perf/process_perf_results.py"
+          "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
         "swarming": {
@@ -695,7 +695,7 @@
         ],
         "isolate_name": "angle_perftests",
         "merge": {
-          "script": "//tools/perf/process_perf_results.py"
+          "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
         "swarming": {
@@ -1292,7 +1292,7 @@
           "args": [
             "--smoke-test-mode"
           ],
-          "script": "//tools/perf/process_perf_results.py"
+          "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
         "swarming": {
@@ -1359,7 +1359,7 @@
         ],
         "isolate_name": "angle_perftests",
         "merge": {
-          "script": "//tools/perf/process_perf_results.py"
+          "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
         "swarming": {
@@ -2055,7 +2055,7 @@
           "args": [
             "--smoke-test-mode"
           ],
-          "script": "//tools/perf/process_perf_results.py"
+          "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
         "swarming": {
@@ -2123,7 +2123,7 @@
         ],
         "isolate_name": "angle_perftests",
         "merge": {
-          "script": "//tools/perf/process_perf_results.py"
+          "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
         "swarming": {
@@ -2851,7 +2851,7 @@
           "args": [
             "--smoke-test-mode"
           ],
-          "script": "//tools/perf/process_perf_results.py"
+          "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
         "swarming": {
@@ -2918,7 +2918,7 @@
         ],
         "isolate_name": "angle_perftests",
         "merge": {
-          "script": "//tools/perf/process_perf_results.py"
+          "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
         "swarming": {

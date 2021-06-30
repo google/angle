@@ -667,7 +667,7 @@
           '--print-test-stdout',
         ],
         'merge': {
-          'script': '//tools/perf/process_perf_results.py',
+          'script': '//scripts/process_angle_perf_results.py',
         },
         'android_swarming': {
           'shards': 12,
@@ -703,7 +703,7 @@
           '--print-test-stdout',
         ],
         'merge': {
-          'script': '//tools/perf/process_perf_results.py',
+          'script': '//scripts/process_angle_perf_results.py',
           # Does not upload to the perf dashboard
           'args': [
             '--smoke-test-mode',
