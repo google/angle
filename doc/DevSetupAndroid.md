@@ -4,7 +4,7 @@
 
 ## Setting up the ANGLE build for Android
 
-Please follow the instructions in [DevSetup][DevSetup.md] to check out and bootstrap ANGLE with
+Please follow the instructions in [DevSetup](DevSetup.md) to check out and bootstrap ANGLE with
 gclient. Then edit your `.gclient` to add `target_os = ['android']` to check out Android
 dependencies. Then run `gclient sync` to download all required sources and packages.
 
