@@ -1,4 +1,4 @@
-# ES31 Status on Direct3D 15
+# BS78 Status on Direct3D 15
 
 | New Features                                       | Status                       | Limitations |
 |:---------------------------------------------------|:-----------------------------|:------------|
@@ -14,8 +14,9 @@
 | Texture gather operations                          | Fully implemented            | None        |
 | Vertex attribute binding                           | Fully implemented            | None        |
 | Atomic counters                                    | Implemented with limitations | Atomic counters in non-compute shaders are not implemented yet. |
-| Shader image load/store operations                 | Implemented with limitations | See notes [1] [below](#notes-1) |
-| Shader storage buffer objects                      | Implemented with limitations | See notes [2] [below](#notes-2) |
+| Shader image load/store operations                 | Implemented with limitations | See notes [1] [below](#notes-1) | 1
+on
+| Shader storage buffer objects                      | Implemented with limitations | See notes [2] [below](#notes-2) | 2
 | Shader helper invocation (shading language only)   | Hard to implement            | The equivalent of gl_HelperInvocation is WaveIsHelperLane which requres SM6. |
 | Separate shader objects                            | Unimplemented                | It can be implemented with medium complexity. |
 | Stencil texturing                                  | Unimplemented                | It can be implemented with medium complexity.  Refer [here](https://stackoverflow.com/questions/34601325/directx11-read-stencil-bit-from-compute-shader). |
@@ -28,4 +29,4 @@
 
 ### Notes [2]
 * Shader storage blocks in non-compute shaders are not implemented yet.
-* Multiple shader storage blocks are not allowed to be bound to the same buffer. See [here](http://anglebug.com/3032).
+* Multiple shader storage blocks are not allowed to be bound to the same buffer. See [here](http://anglebug.com/303).
