@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a862fc5d_8faf05b0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1512662
+      },
+      "writtenOn": "2021-07-01T15:30:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15d41dd6_2ce13d73",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 38
+      },
+      "revId": "75943018a896c3ce006248e48a25cb51c369c0e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d0acbed2_77e6af4f",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-06-23T20:24:40Z",
       "side": 1,
       "message": "Nit: Please adjust the description so that each line is 70 characters wide.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 27
+      },
+      "revId": "75943018a896c3ce006248e48a25cb51c369c0e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c371ee2d_ca2b8712",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1512662
+      },
+      "writtenOn": "2021-07-01T15:30:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0acbed2_77e6af4f",
       "range": {
         "startLine": 9,
         "startChar": 0,
@@ -84,6 +132,30 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "6be15b40_49820e40",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 41
+      },
+      "revId": "75943018a896c3ce006248e48a25cb51c369c0e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a42231a8_03b1ae98",
+        "filename": "src/libANGLE/renderer/d3d/TextureStorage.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1512662
+      },
+      "writtenOn": "2021-07-01T15:30:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f70404c2_59e6c534",
       "range": {
         "startLine": 92,
         "startChar": 4,
