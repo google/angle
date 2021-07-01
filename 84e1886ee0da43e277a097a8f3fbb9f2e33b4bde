@@ -33,6 +33,24 @@
       "message": "Hmm, I cannot +1 for this repo..",
       "revId": "84e1886ee0da43e277a097a8f3fbb9f2e33b4bde",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a44e10d_f7e3ee39",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1153420
+      },
+      "writtenOn": "2021-07-01T21:25:57Z",
+      "side": 1,
+      "message": "Okay, I think this might actually just be copied from https://chromium-review.googlesource.com/c/chromium/src/+/3002265/1/third_party/jdk/OWNERS , so I think we\u0027re fine. Abandoning this CL.",
+      "parentUuid": "974a88b0_f1c2ed8f",
+      "revId": "84e1886ee0da43e277a097a8f3fbb9f2e33b4bde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
