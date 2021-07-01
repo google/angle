@@ -142,6 +142,30 @@
       },
       "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4afc4d51_f8aaa6a2",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4106,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-01T08:34:48Z",
+      "side": 1,
+      "message": "TBH, I\u0027m not sure how to continue given these two opposite points of view. However, the test implementation was also not correct, i.e. the tests VertexAttributeOORTest.* have WebGL compatibility enabled, but ANGLETest doesn\u0027t forward the drawQuad calls to use index buffers. Therefore I created https://chromium-review.googlesource.com/c/angle/angle/+/2999523 to correct this, and this also fixes the capture/replay of the given tests. \n\nI think the right approach is to add a test that explicitly passes data as pointer to glDrawElements and then go from there to fix the bug. \nWebGLCompatibilityTest.NullIndexBuffer actually passes (now), but also because \"count\" is zero there.",
+      "parentUuid": "50a1244e_d904a2ae",
+      "range": {
+        "startLine": 4106,
+        "startChar": 13,
+        "endLine": 4106,
+        "endChar": 20
+      },
+      "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
