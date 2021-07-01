@@ -145,6 +145,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "65e9767a_87358675",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1452687
+      },
+      "writtenOn": "2021-07-01T21:50:00Z",
+      "side": 1,
+      "message": "I can now confirm that\n\nUniformBufferTest.ANGLEUnboundUniformBuffer/ES3_.*\nsrc/tests/gl_tests/UnifromBufferTest.cpp::197\n\ntests also fail because of a similar check:\n- ::204 EXPECT_GL_ERROR(GL_INVALID_OPERATION);\n\nThe `err` at that point in the test is 0.",
+      "parentUuid": "0e07b706_b375defd",
+      "revId": "0c61cba8117ae4b6cf42a571d42e5574f8b03178",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e92134b5_c59e26de",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 1
