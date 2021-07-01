@@ -16,6 +16,24 @@
       "message": "LGTM, but win-trace-rel failing.",
       "revId": "98b7c1f75253f8dcc24914e9a6052d3205dd956e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "611566df_fa6720eb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-01T09:16:33Z",
+      "side": 1,
+      "message": "Yes, I\u0027ve seen it, and the failing test seems completely unrelated. win-trace-rel starts failing with the previous CL, but with only one test failing. All I can see is that in the CL before that the composition of the test batches is different, so I\u0027d suspect a state leak that triggers a failure depending on the order the tests are run in. I was not able to reproduce this failure on Linux though. \n\nAnother thing I noted: win-trace-rel has 10 execution steps (9. being the trace capture/replay tests) and a run-time of about 15 min, linux-trace-rel has only 9 steps and a run-time of ~2 min, i.e. it doesn\u0027t seem to run the capture/replay step. (I wanted to compare whether the batches are the same there)",
+      "parentUuid": "11235047_eea0e511",
+      "revId": "98b7c1f75253f8dcc24914e9a6052d3205dd956e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
