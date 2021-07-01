@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e85926a2_87274770",
+        "filename": "src/libANGLE/renderer/load_texture_border_functions_data.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-01T15:33:27Z",
+      "side": 1,
+      "message": "Should these (and similar ones) be LoadToNative? The border color specified in GL is not compressed, so as long as the channels match there shouldn\u0027t need to be a need for conversion, am I right? Does the channel size matter at all?",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 52
+      },
+      "revId": "b1a703b6b8277799bdebd9095e1a050c0ad8679a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
