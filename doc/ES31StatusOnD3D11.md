@@ -1,4 +1,4 @@
-# ES31 Status on Direct3D 11
+# ES31 Status on Direct3D 15
 
 | New Features                                       | Status                       | Limitations |
 |:---------------------------------------------------|:-----------------------------|:------------|
