@@ -34,6 +34,24 @@
       "parentUuid": "11235047_eea0e511",
       "revId": "98b7c1f75253f8dcc24914e9a6052d3205dd956e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ffcc1d7_13b0ddc2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-01T17:54:17Z",
+      "side": 1,
+      "message": "I couldn\u0027t get linux-trace working.. it kept flaking due to the test resize event not propagating to the framebuffer. 😞\n\nI made some progress but eventually gave up. I tried a bunch of different approaches.",
+      "parentUuid": "611566df_fa6720eb",
+      "revId": "98b7c1f75253f8dcc24914e9a6052d3205dd956e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
