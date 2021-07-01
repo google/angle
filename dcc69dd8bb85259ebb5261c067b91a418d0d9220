@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86758a40_a0c22f81",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4082,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-01T07:42:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed589d74_688af936",
+      "range": {
+        "startLine": 4082,
+        "startChar": 34,
+        "endLine": 4082,
+        "endChar": 80
+      },
+      "revId": "dcc69dd8bb85259ebb5261c067b91a418d0d9220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee781df0_86413278",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-06-30T11:51:12Z",
       "side": 1,
       "message": "nit: can you please compare with zero to explicitly convert to bool? an angle style convention.",
+      "range": {
+        "startLine": 4084,
+        "startChar": 9,
+        "endLine": 4084,
+        "endChar": 14
+      },
+      "revId": "dcc69dd8bb85259ebb5261c067b91a418d0d9220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b200b5c1_b29ba13c",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4084,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-01T07:42:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee781df0_86413278",
       "range": {
         "startLine": 4084,
         "startChar": 9,
