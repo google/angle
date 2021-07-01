@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "93202d03_5ea7d33a",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-01T20:06:01Z",
+      "side": 1,
+      "message": "ASSERT(false) doesn\u0027t terminate execution on a non-dcheck build.\n\nSee how UNREACHABLE_IS_NORETURN is used elsewhere.",
+      "parentUuid": "c17b46d4_f35a3b20",
+      "revId": "bd0bfbf6ed5738b179719d026c239329a7081475",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "119537c1_99414af6",
