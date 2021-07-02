@@ -166,6 +166,30 @@
       },
       "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "232beb1e_9230090f",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 4106,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-02T10:58:06Z",
+      "side": 1,
+      "message": "Gert: I don\u0027t think mine and Tim\u0027s pointers of view are in conflict. Tim says we should always run maybeCapturePreCallUpdates, and I think we should skip maybeCaptureDrawElementsClientData if the call is invalid.\n\nDon\u0027t quite follow what you mean by creating a test to explicitly pass data as a pointer. Do we not have this kind of test already?",
+      "parentUuid": "4afc4d51_f8aaa6a2",
+      "range": {
+        "startLine": 4106,
+        "startChar": 13,
+        "endLine": 4106,
+        "endChar": 20
+      },
+      "revId": "9029fbe18d8f3772b1faf22d812e51adc00d6a97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
