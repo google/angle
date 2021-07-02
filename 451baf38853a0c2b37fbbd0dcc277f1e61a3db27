@@ -22,6 +22,53 @@
       },
       "revId": "451baf38853a0c2b37fbbd0dcc277f1e61a3db27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56fb42d3_698d9eb7",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4106,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-02T10:56:12Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "47bd4b66_c2d43c3e",
+      "range": {
+        "startLine": 4106,
+        "startChar": 8,
+        "endLine": 4106,
+        "endChar": 14
+      },
+      "revId": "451baf38853a0c2b37fbbd0dcc277f1e61a3db27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c389dd7_ca11c75a",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 999,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-02T10:56:12Z",
+      "side": 1,
+      "message": "Rather than implicitly fixing calls as they come in to drawIndexedQuad, can you update the problematic WebGL tests to explicitly enable (or disable if they\u0027re negative tests) index buffers?\n\nAlso feel free to change this check to an ASSERT here that this isn\u0027t a WebGL compatibility context. That will force the caller to explicitly pick.",
+      "range": {
+        "startLine": 995,
+        "startChar": 0,
+        "endLine": 999,
+        "endChar": 36
+      },
+      "revId": "451baf38853a0c2b37fbbd0dcc277f1e61a3db27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
