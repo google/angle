@@ -4113,14 +4113,8 @@ bool OutputSPIRVTraverser::visitUnary(Visit visit, TIntermUnary *node)
     {
         // The access chain must only include the base ssbo + one literal field index.
         ASSERT(mNodeData.back().idList.size() == 1 && !mNodeData.back().idList.back().id.valid());
+        const spirv::IdRef baseId              = mNodeData.back().baseId;
         const spirv::LiteralInteger fieldIndex = mNodeData.back().idList.back().literal;
-
-        // Get the interface block type from the operand, which is either a symbol or a binary
-        // operator based on whether the interface block is nameless or not.
-        TIntermTyped *operand = node->getOperand();
-        TIntermTyped *ssbo =
-            operand->getAsBinaryNode() ? operand->getAsBinaryNode()->getLeft() : operand;
-        const spirv::IdRef typeId = mBuilder.getTypeData(ssbo->getType(), EbsUnspecified).id;
 
         // Get the int and uint type ids.
         const spirv::IdRef intTypeId  = mBuilder.getBasicTypeId(EbtInt, 1);
@@ -4129,7 +4123,7 @@ bool OutputSPIRVTraverser::visitUnary(Visit visit, TIntermUnary *node)
         // Generate the instruction.
         const spirv::IdRef resultId = mBuilder.getNewId({});
         spirv::WriteArrayLength(mBuilder.getSpirvCurrentFunctionBlock(), uintTypeId, resultId,
-                                typeId, fieldIndex);
+                                baseId, fieldIndex);
 
         // Cast to int.
         const spirv::IdRef castResultId = mBuilder.getNewId({});
@@ -4724,16 +4718,58 @@ bool OutputSPIRVTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
             result = createFunctionCall(node, resultTypeId);
             break;
 
-        case EOpMemoryBarrier:
-        case EOpMemoryBarrierAtomicCounter:
-        case EOpMemoryBarrierBuffer:
-        case EOpMemoryBarrierImage:
+            // For barrier functions the scope is device, or with the Vulkan memory model, the queue
+            // family.  We don't use the Vulkan memory model.
         case EOpBarrier:
-        case EOpMemoryBarrierShared:
-        case EOpGroupMemoryBarrier:
+            spirv::WriteControlBarrier(
+                mBuilder.getSpirvCurrentFunctionBlock(),
+                mBuilder.getUintConstant(spv::ScopeWorkgroup),
+                mBuilder.getUintConstant(spv::ScopeWorkgroup),
+                mBuilder.getUintConstant(spv::MemorySemanticsWorkgroupMemoryMask |
+                                         spv::MemorySemanticsAcquireReleaseMask));
+            break;
         case EOpBarrierTCS:
-            // TODO: support barriers.  http://anglebug.com/4889
-            UNIMPLEMENTED();
+            // Note: The memory scope and semantics are different with the Vulkan memory model,
+            // which is not supported.
+            spirv::WriteControlBarrier(mBuilder.getSpirvCurrentFunctionBlock(),
+                                       mBuilder.getUintConstant(spv::ScopeWorkgroup),
+                                       mBuilder.getUintConstant(spv::ScopeInvocation),
+                                       mBuilder.getUintConstant(spv::MemorySemanticsMaskNone));
+            break;
+        case EOpMemoryBarrier:
+        case EOpGroupMemoryBarrier:
+        {
+            const spv::Scope scope =
+                node->getOp() == EOpMemoryBarrier ? spv::ScopeDevice : spv::ScopeWorkgroup;
+            spirv::WriteMemoryBarrier(
+                mBuilder.getSpirvCurrentFunctionBlock(), mBuilder.getUintConstant(scope),
+                mBuilder.getUintConstant(spv::MemorySemanticsUniformMemoryMask |
+                                         spv::MemorySemanticsWorkgroupMemoryMask |
+                                         spv::MemorySemanticsImageMemoryMask |
+                                         spv::MemorySemanticsAcquireReleaseMask));
+            break;
+        }
+        case EOpMemoryBarrierBuffer:
+            spirv::WriteMemoryBarrier(
+                mBuilder.getSpirvCurrentFunctionBlock(), mBuilder.getUintConstant(spv::ScopeDevice),
+                mBuilder.getUintConstant(spv::MemorySemanticsUniformMemoryMask |
+                                         spv::MemorySemanticsAcquireReleaseMask));
+            break;
+        case EOpMemoryBarrierImage:
+            spirv::WriteMemoryBarrier(
+                mBuilder.getSpirvCurrentFunctionBlock(), mBuilder.getUintConstant(spv::ScopeDevice),
+                mBuilder.getUintConstant(spv::MemorySemanticsImageMemoryMask |
+                                         spv::MemorySemanticsAcquireReleaseMask));
+            break;
+        case EOpMemoryBarrierShared:
+            spirv::WriteMemoryBarrier(
+                mBuilder.getSpirvCurrentFunctionBlock(), mBuilder.getUintConstant(spv::ScopeDevice),
+                mBuilder.getUintConstant(spv::MemorySemanticsWorkgroupMemoryMask |
+                                         spv::MemorySemanticsAcquireReleaseMask));
+            break;
+        case EOpMemoryBarrierAtomicCounter:
+            // Atomic counters are emulated.
+            UNREACHABLE();
             break;
 
         case EOpEmitVertex:
