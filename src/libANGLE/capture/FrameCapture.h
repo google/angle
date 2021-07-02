@@ -516,6 +516,7 @@ class FrameCaptureShared final : angle::NonCopyable
     void overrideProgramBinary(const gl::Context *context,
                                CallCapture &call,
                                std::vector<CallCapture> &outCalls);
+    void updatePreCallResourceCounts(const CallCapture &call);
 
     void runMidExecutionCapture(const gl::Context *context);
 
@@ -547,6 +548,7 @@ class FrameCaptureShared final : angle::NonCopyable
     HasResourceTypeMap mHasResourceType;
     BufferDataMap mBufferDataMap;
     bool mValidateSerializedState = false;
+    PackedEnumMap<ResourceIDType, uint32_t> mMaxAccessedResourceIDs;
 
     ResourceTracker mResourceTracker;
 

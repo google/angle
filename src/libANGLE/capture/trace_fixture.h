@@ -83,6 +83,23 @@ void InitializeReplay(const char *binaryDataFileName,
                       size_t maxClientArraySize,
                       size_t readBufferSize);
 
+void InitializeReplay2(const char *binaryDataFileName,
+                       size_t maxClientArraySize,
+                       size_t readBufferSize,
+                       uint32_t maxBuffer,
+                       uint32_t maxFenceNV,
+                       uint32_t maxFramebuffer,
+                       uint32_t maxMemoryObject,
+                       uint32_t maxProgramPipeline,
+                       uint32_t maxQuery,
+                       uint32_t maxRenderbuffer,
+                       uint32_t maxSampler,
+                       uint32_t maxSemaphore,
+                       uint32_t maxShaderProgram,
+                       uint32_t maxTexture,
+                       uint32_t maxTransformFeedback,
+                       uint32_t maxVertexArray);
+
 // Global state
 
 constexpr size_t kMaxClientArrays = 16;
@@ -103,6 +120,21 @@ extern ResourceMap gShaderProgramMap;
 extern ResourceMap gTextureMap;
 extern ResourceMap gTransformFeedbackMap;
 extern ResourceMap gVertexArrayMap;
+
+extern GLuint *gBufferMap2;
+extern GLuint *gFenceNVMap2;
+extern GLuint *gFramebufferMap2;
+extern GLuint *gMemoryObjectMap2;
+extern GLuint *gProgramPipelineMap2;
+extern GLuint *gQueryMap2;
+extern GLuint *gRenderbufferMap2;
+extern GLuint *gSamplerMap2;
+extern GLuint *gSemaphoreMap2;
+extern GLuint *gShaderProgramMap2;
+extern GLuint *gTextureMap2;
+extern GLuint *gTransformFeedbackMap2;
+extern GLuint *gVertexArrayMap2;
+
 // TODO(http://www.anglebug.com/5878): avoid std::unordered_map, it's slow
 using SyncResourceMap = std::unordered_map<uintptr_t, GLsync>;
 extern SyncResourceMap gSyncMap;
@@ -113,6 +145,7 @@ void UpdateClientArrayPointer(int arrayIndex, const void *data, uint64_t size);
 using BufferHandleMap = std::unordered_map<GLuint, void *>;
 extern BufferHandleMap gMappedBufferData;
 void UpdateClientBufferData(GLuint bufferID, const void *source, GLsizei size);
+void UpdateClientBufferData2(GLuint bufferID, const void *source, GLsizei size);
 void UpdateBufferID(GLuint id, GLsizei readBufferOffset);
 void UpdateFenceNVID(GLuint id, GLsizei readBufferOffset);
 void UpdateFramebufferID(GLuint id, GLsizei readBufferOffset);
@@ -126,6 +159,19 @@ void UpdateShaderProgramID(GLuint id, GLsizei readBufferOffset);
 void UpdateTextureID(GLuint id, GLsizei readBufferOffset);
 void UpdateTransformFeedbackID(GLuint id, GLsizei readBufferOffset);
 void UpdateVertexArrayID(GLuint id, GLsizei readBufferOffset);
+void UpdateBufferID2(GLuint id, GLsizei readBufferOffset);
+void UpdateFenceNVID2(GLuint id, GLsizei readBufferOffset);
+void UpdateFramebufferID2(GLuint id, GLsizei readBufferOffset);
+void UpdateMemoryObjectID2(GLuint id, GLsizei readBufferOffset);
+void UpdateProgramPipelineID2(GLuint id, GLsizei readBufferOffset);
+void UpdateQueryID2(GLuint id, GLsizei readBufferOffset);
+void UpdateRenderbufferID2(GLuint id, GLsizei readBufferOffset);
+void UpdateSamplerID2(GLuint id, GLsizei readBufferOffset);
+void UpdateSemaphoreID2(GLuint id, GLsizei readBufferOffset);
+void UpdateShaderProgramID2(GLuint id, GLsizei readBufferOffset);
+void UpdateTextureID2(GLuint id, GLsizei readBufferOffset);
+void UpdateTransformFeedbackID2(GLuint id, GLsizei readBufferOffset);
+void UpdateVertexArrayID2(GLuint id, GLsizei readBufferOffset);
 
 void ValidateSerializedState(const char *serializedState, const char *fileName, uint32_t line);
 #define VALIDATE_CHECKPOINT(STATE) ValidateSerializedState(STATE, __FILE__, __LINE__)

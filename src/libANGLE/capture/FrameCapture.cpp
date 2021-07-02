@@ -579,7 +579,7 @@ void WriteResourceIDPointerParamReplay(DataTracker *dataTracker,
         {
             header << ", ";
         }
-        header << "g" << name << "Map[" << id.value << "]";
+        header << "g" << name << "Map2[" << id.value << "]";
     }
 
     header << " };\n    ";
@@ -653,7 +653,7 @@ void WriteCppReplayForCall(const CallCapture &call,
         call.entryPoint == EntryPoint::GLCreateShaderProgramv)
     {
         GLuint id = call.params.getReturnValue().value.GLuintVal;
-        callOut << "gShaderProgramMap[" << id << "] = ";
+        callOut << "gShaderProgramMap2[" << id << "] = ";
     }
 
     if (call.entryPoint == EntryPoint::GLFenceSync)
@@ -932,11 +932,25 @@ void WriteInitReplayCall(bool compression,
                          gl::ContextID contextId,
                          const std::string &captureLabel,
                          size_t maxClientArraySize,
-                         size_t readBufferSize)
+                         size_t readBufferSize,
+                         const PackedEnumMap<ResourceIDType, uint32_t> &maxIDs)
 {
+    for (ResourceIDType resourceID : AllEnums<ResourceIDType>())
+    {
+        const char *name = GetResourceIDTypeName(resourceID);
+        out << "    uint32_t kMax" << name << " = " << maxIDs[resourceID] << ";\n";
+    }
+
     std::string binaryDataFileName = GetBinaryDataFilePath(compression, captureLabel);
-    out << "    InitializeReplay(\"" << binaryDataFileName << "\", " << maxClientArraySize << ", "
-        << readBufferSize << ");\n";
+    out << "    InitializeReplay2(\"" << binaryDataFileName << "\", " << maxClientArraySize << ", "
+        << readBufferSize;
+
+    for (ResourceIDType resourceID : AllEnums<ResourceIDType>())
+    {
+        out << ", kMax" << GetResourceIDTypeName(resourceID);
+    }
+
+    out << ");\n";
 }
 
 // TODO (http://anglebug.com/4599): Reset more state on frame loop
@@ -1072,7 +1086,7 @@ void MaybeResetResources(std::stringstream &out,
             // If we have any new programs created and not deleted during the run, delete them now
             for (const auto &newProgram : newPrograms)
             {
-                out << "    glDeleteProgram(gShaderProgramMap[" << newProgram << "]);\n";
+                out << "    glDeleteProgram(gShaderProgramMap2[" << newProgram << "]);\n";
             }
 
             // TODO (http://anglebug.com/5968): Handle programs that need regen
@@ -1404,7 +1418,7 @@ void CaptureUpdateResourceIDs(const CallCapture &call,
     const char *resourceName = GetResourceIDTypeName(resourceIDType);
 
     std::stringstream updateFuncNameStr;
-    updateFuncNameStr << "Update" << resourceName << "ID";
+    updateFuncNameStr << "Update" << resourceName << "ID2";
     std::string updateFuncName = updateFuncNameStr.str();
 
     const IDType *returnedIDs = reinterpret_cast<const IDType *>(param.data[0].data());
@@ -4164,6 +4178,7 @@ FrameCaptureShared::FrameCaptureShared()
       mClientArraySizes{},
       mReadBufferSize(0),
       mHasResourceType{},
+      mMaxAccessedResourceIDs{},
       mCaptureTrigger(0),
       mCaptureActive(false),
       mWindowSurfaceContextID({0})
@@ -5170,6 +5185,41 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
     {
         mResourceTracker.onShaderProgramAccess(shaderProgramID);
     }
+
+    updatePreCallResourceCounts(call);
+}
+
+void FrameCaptureShared::updatePreCallResourceCounts(const CallCapture &call)
+{
+    for (const ParamCapture &param : call.params.getParamCaptures())
+    {
+        ResourceIDType idType = GetResourceIDTypeFromParamType(param.type);
+        if (idType != ResourceIDType::InvalidEnum)
+        {
+            mHasResourceType.set(idType);
+
+            // Capture resource IDs for non-pointer types.
+            if (strcmp(ParamTypeToString(param.type), "GLuint") == 0)
+            {
+                mMaxAccessedResourceIDs[idType] =
+                    std::max(mMaxAccessedResourceIDs[idType], param.value.GLuintVal);
+            }
+            // Capture resource IDs for pointer types.
+            if (strstr(ParamTypeToString(param.type), "GLuint *") != nullptr)
+            {
+                if (param.data.size() == 1u)
+                {
+                    const GLuint *dataPtr = reinterpret_cast<const GLuint *>(param.data[0].data());
+                    size_t numHandles     = param.data[0].size() / sizeof(GLuint);
+                    for (size_t handleIndex = 0; handleIndex < numHandles; ++handleIndex)
+                    {
+                        mMaxAccessedResourceIDs[idType] =
+                            std::max(mMaxAccessedResourceIDs[idType], dataPtr[handleIndex]);
+                    }
+                }
+            }
+        }
+    }
 }
 
 void FrameCaptureShared::captureCall(const gl::Context *context,
@@ -5331,8 +5381,8 @@ void FrameCaptureShared::captureClientArraySnapshot(const gl::Context *context,
 void FrameCaptureShared::captureMappedBufferSnapshot(const gl::Context *context,
                                                      const CallCapture &call)
 {
-    // If the buffer was mapped writable, we need to restore its data, since we have no visibility
-    // into what the client did to the buffer while mapped
+    // If the buffer was mapped writable, we need to restore its data, since we have no
+    // visibility into what the client did to the buffer while mapped.
     // This sequence will result in replay calls like this:
     //   ...
     //   gMappedBufferData[gBufferMap[42]] = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, 65536,
@@ -5383,7 +5433,7 @@ void FrameCaptureShared::captureMappedBufferSnapshot(const gl::Context *context,
     dataParamBuffer.addValueParam<GLsizeiptr>("size", ParamType::TGLsizeiptr, length);
 
     // Call the helper that populates the buffer with captured data
-    mFrameCalls.emplace_back("UpdateClientBufferData", std::move(dataParamBuffer));
+    mFrameCalls.emplace_back("UpdateClientBufferData2", std::move(dataParamBuffer));
 
     // Unmap the buffer and move on
     GLboolean dontCare;
@@ -5906,7 +5956,8 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
     source << "void " << mCaptureLabel << "::InitReplay()\n";
     source << "{\n";
     WriteInitReplayCall(mCompression, source, kSharedContextId, mCaptureLabel,
-                        MaxClientArraySize(mClientArraySizes), mReadBufferSize);
+                        MaxClientArraySize(mClientArraySizes), mReadBufferSize,
+                        mMaxAccessedResourceIDs);
     source << "}\n";
 
     source << "extern \"C\" {\n";
@@ -6580,7 +6631,7 @@ void WriteParamValueReplay<ParamType::TBufferID>(std::ostream &os,
                                                  const CallCapture &call,
                                                  gl::BufferID value)
 {
-    os << "gBufferMap[" << value.value << "]";
+    os << "gBufferMap2[" << value.value << "]";
 }
 
 template <>
@@ -6588,7 +6639,7 @@ void WriteParamValueReplay<ParamType::TFenceNVID>(std::ostream &os,
                                                   const CallCapture &call,
                                                   gl::FenceNVID value)
 {
-    os << "gFenceNVMap[" << value.value << "]";
+    os << "gFenceNVMap2[" << value.value << "]";
 }
 
 template <>
@@ -6596,7 +6647,7 @@ void WriteParamValueReplay<ParamType::TFramebufferID>(std::ostream &os,
                                                       const CallCapture &call,
                                                       gl::FramebufferID value)
 {
-    os << "gFramebufferMap[" << value.value << "]";
+    os << "gFramebufferMap2[" << value.value << "]";
 }
 
 template <>
@@ -6604,7 +6655,7 @@ void WriteParamValueReplay<ParamType::TMemoryObjectID>(std::ostream &os,
                                                        const CallCapture &call,
                                                        gl::MemoryObjectID value)
 {
-    os << "gMemoryObjectMap[" << value.value << "]";
+    os << "gMemoryObjectMap2[" << value.value << "]";
 }
 
 template <>
@@ -6612,7 +6663,7 @@ void WriteParamValueReplay<ParamType::TProgramPipelineID>(std::ostream &os,
                                                           const CallCapture &call,
                                                           gl::ProgramPipelineID value)
 {
-    os << "gProgramPipelineMap[" << value.value << "]";
+    os << "gProgramPipelineMap2[" << value.value << "]";
 }
 
 template <>
@@ -6620,7 +6671,7 @@ void WriteParamValueReplay<ParamType::TQueryID>(std::ostream &os,
                                                 const CallCapture &call,
                                                 gl::QueryID value)
 {
-    os << "gQueryMap[" << value.value << "]";
+    os << "gQueryMap2[" << value.value << "]";
 }
 
 template <>
@@ -6628,7 +6679,7 @@ void WriteParamValueReplay<ParamType::TRenderbufferID>(std::ostream &os,
                                                        const CallCapture &call,
                                                        gl::RenderbufferID value)
 {
-    os << "gRenderbufferMap[" << value.value << "]";
+    os << "gRenderbufferMap2[" << value.value << "]";
 }
 
 template <>
@@ -6636,7 +6687,7 @@ void WriteParamValueReplay<ParamType::TSamplerID>(std::ostream &os,
                                                   const CallCapture &call,
                                                   gl::SamplerID value)
 {
-    os << "gSamplerMap[" << value.value << "]";
+    os << "gSamplerMap2[" << value.value << "]";
 }
 
 template <>
@@ -6644,7 +6695,7 @@ void WriteParamValueReplay<ParamType::TSemaphoreID>(std::ostream &os,
                                                     const CallCapture &call,
                                                     gl::SemaphoreID value)
 {
-    os << "gSemaphoreMap[" << value.value << "]";
+    os << "gSemaphoreMap2[" << value.value << "]";
 }
 
 template <>
@@ -6652,7 +6703,7 @@ void WriteParamValueReplay<ParamType::TShaderProgramID>(std::ostream &os,
                                                         const CallCapture &call,
                                                         gl::ShaderProgramID value)
 {
-    os << "gShaderProgramMap[" << value.value << "]";
+    os << "gShaderProgramMap2[" << value.value << "]";
 }
 
 template <>
@@ -6668,7 +6719,7 @@ void WriteParamValueReplay<ParamType::TTextureID>(std::ostream &os,
                                                   const CallCapture &call,
                                                   gl::TextureID value)
 {
-    os << "gTextureMap[" << value.value << "]";
+    os << "gTextureMap2[" << value.value << "]";
 }
 
 template <>
@@ -6676,7 +6727,7 @@ void WriteParamValueReplay<ParamType::TTransformFeedbackID>(std::ostream &os,
                                                             const CallCapture &call,
                                                             gl::TransformFeedbackID value)
 {
-    os << "gTransformFeedbackMap[" << value.value << "]";
+    os << "gTransformFeedbackMap2[" << value.value << "]";
 }
 
 template <>
@@ -6684,7 +6735,7 @@ void WriteParamValueReplay<ParamType::TVertexArrayID>(std::ostream &os,
                                                       const CallCapture &call,
                                                       gl::VertexArrayID value)
 {
-    os << "gVertexArrayMap[" << value.value << "]";
+    os << "gVertexArrayMap2[" << value.value << "]";
 }
 
 template <>
@@ -6704,7 +6755,7 @@ void WriteParamValueReplay<ParamType::TUniformLocation>(std::ostream &os,
     gl::ShaderProgramID programID;
     if (FindShaderProgramIDInCall(call, &programID))
     {
-        os << "gShaderProgramMap[" << programID.value << "]";
+        os << "gShaderProgramMap2[" << programID.value << "]";
     }
     else
     {
@@ -6724,7 +6775,7 @@ void WriteParamValueReplay<ParamType::TUniformBlockIndex>(std::ostream &os,
     bool foundProgram = FindShaderProgramIDInCall(call, &programID);
     ASSERT(foundProgram);
 
-    os << "gUniformBlockIndexes[gShaderProgramMap[" << programID.value << "]][" << value.value
+    os << "gUniformBlockIndexes[gShaderProgramMap2[" << programID.value << "]][" << value.value
        << "]";
 }
 
