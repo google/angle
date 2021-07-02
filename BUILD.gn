@@ -658,7 +658,17 @@ action("angle_commit_id") {
     branch = read_file(".git/HEAD", "string")
     result = string_split(branch)
     if (result[0] == "ref:") {
-      inputs += [ ".git/" + result[1] ]
+      _ref_file = result[1]
+
+      # If git has packed the contents of .git/refs/heads/ in .git/packed-refs,
+      # unpack the head before depending on it.
+      exec_script("src/commit_id.py",
+                  [
+                    "unpack",
+                    _ref_file,
+                  ],
+                  "")
+      inputs += [ ".git/" + _ref_file ]
     }
   }
 
