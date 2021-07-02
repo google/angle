@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af519f38_0af17b0d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-02T22:32:21Z",
+      "side": 1,
+      "message": "marking this as WIP. Will get back to it when i have some bandwidth and will look into updating descriptor count assumptions in ANGLE instead of current approach",
+      "revId": "446c7ff51f9ddd9c82b7891bb71eafd8bf882ef4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
