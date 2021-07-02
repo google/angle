@@ -137,6 +137,7 @@ class TCompiler : public TShHandleBase
     const std::string &getBuiltInResourcesString() const { return mBuiltInResourcesString; }
 
     bool shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptions) const;
+    bool shouldLimitTypeSizes() const;
 
     // Get the resources set by InitBuiltInSymbolTable
     const ShBuiltInResources &getResources() const;

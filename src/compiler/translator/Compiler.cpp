@@ -21,6 +21,7 @@
 #include "compiler/translator/ValidateLimitations.h"
 #include "compiler/translator/ValidateMaxParameters.h"
 #include "compiler/translator/ValidateOutputs.h"
+#include "compiler/translator/ValidateTypeSizeLimitations.h"
 #include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/VariablePacker.h"
 #include "compiler/translator/tree_ops/ClampIndirectIndices.h"
@@ -324,6 +325,13 @@ bool TCompiler::shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptio
            (compileOptions & SH_VALIDATE_LOOP_INDEXING) != 0;
 }
 
+bool TCompiler::shouldLimitTypeSizes() const
+{
+    // WebGL shaders limit the size of variables' types in shaders,
+    // including arrays, structs and interface blocks.
+    return IsWebGLBasedSpec(mShaderSpec);
+}
+
 bool TCompiler::Init(const ShBuiltInResources &resources)
 {
     SetGlobalPoolAllocator(&allocator);
@@ -581,6 +589,11 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     if (shouldRunLoopAndIndexingValidation(compileOptions) &&
         !ValidateLimitations(root, mShaderType, &mSymbolTable, &mDiagnostics))
+    {
+        return false;
+    }
+
+    if (shouldLimitTypeSizes() && !ValidateTypeSizeLimitations(root, &mSymbolTable, &mDiagnostics))
     {
         return false;
     }

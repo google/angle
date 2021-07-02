@@ -5012,6 +5012,98 @@ TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionLossyDecode)
                                               "GL_ANGLE_lossy_etc_decode", true);
 }
 
+// Reject attempts to allocate too-large arrays in shaders.
+// This is an implementation-defined limit - crbug.com/1220237 .
+TEST_P(WebGLCompatibilityTest, ValidateArraySizes)
+{
+    // Note: on macOS with ANGLE's OpenGL backend, getting anywhere
+    // close to this limit causes pathologically slow shader
+    // compilation in the driver. For the "ok" case, therefore, use a
+    // fairly small array.
+    constexpr char kVSArrayOK[] =
+        R"(varying vec4 color;
+const int array_size = 1000;
+void main()
+{
+    mat2 array[array_size];
+    if (array[0][0][0] == 2.0)
+        color = vec4(0.0, 1.0, 0.0, 1.0);
+    else
+        color = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kVSArrayTooLarge[] =
+        R"(varying vec4 color;
+// 2 GB / 32 aligned bytes per mat2 = 67108864
+const int array_size = 67108865;
+void main()
+{
+    mat2 array[array_size];
+    if (array[0][0][0] == 2.0)
+        color = vec4(0.0, 1.0, 0.0, 1.0);
+    else
+        color = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kVSArrayMuchTooLarge[] =
+        R"(varying vec4 color;
+const int array_size = 795418649;
+void main()
+{
+    mat2 array[array_size];
+    if (array[0][0][0] == 2.0)
+        color = vec4(0.0, 1.0, 0.0, 1.0);
+    else
+        color = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] =
+        R"(precision mediump float;
+varying vec4 color;
+void main()
+{
+    gl_FragColor = vec4(color.r - 0.5, 0.0, 0.0, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVSArrayOK, kFS);
+    EXPECT_NE(0u, program);
+
+    program = CompileProgram(kVSArrayTooLarge, kFS);
+    EXPECT_EQ(0u, program);
+
+    program = CompileProgram(kVSArrayMuchTooLarge, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Reject attempts to allocate too-large structs in shaders.
+// This is an implementation-defined limit - crbug.com/1220237 .
+TEST_P(WebGLCompatibilityTest, ValidateStructSizes)
+{
+    // Note: on macOS with ANGLE's OpenGL backend, getting anywhere
+    // close to this limit causes pathologically slow shader
+    // compilation in the driver. For this reason, only perform a
+    // negative test.
+    constexpr char kFSStructTooLarge[] =
+        R"(precision mediump float;
+struct Light {
+// 2 GB / 32 aligned bytes per mat2 = 67108864
+mat2 array[67108865];
+};
+
+uniform Light light;
+
+void main()
+{
+    if (light.array[0][0][0] == 2.0)
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    else
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    GLuint program = CompileProgram(essl1_shaders::vs::Simple(), kFSStructTooLarge);
+    EXPECT_EQ(0u, program);
+}
+
 // Linking should fail when corresponding vertex/fragment uniform blocks have different precision
 // qualifiers.
 TEST_P(WebGL2CompatibilityTest, UniformBlockPrecisionMismatch)
@@ -5191,6 +5283,98 @@ TEST_P(WebGL2CompatibilityTest, RenderToLevelsOfSampledTexture)
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Reject attempts to allocate too-large variables in shaders.
+// This is an implementation-defined limit - crbug.com/1220237 .
+TEST_P(WebGL2CompatibilityTest, ValidateTypeSizes)
+{
+    constexpr char kFSArrayBlockTooLarge[] = R"(#version 300 es
+precision mediump float;
+// 1 + the maximum size this implementation allows.
+uniform LargeArrayBlock {
+    vec4 large_array[134217729];
+};
+
+out vec4 out_FragColor;
+
+void main()
+{
+    if (large_array[1].x == 2.0)
+        out_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    else
+        out_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+}
+)";
+
+    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFSArrayBlockTooLarge);
+    EXPECT_EQ(0u, program);
+}
+
+// Ensure that new type size validation code added for
+// crbug.com/1220237 does not crash.
+TEST_P(WebGL2CompatibilityTest, ValidatingTypeSizesShouldNotCrash)
+{
+    constexpr char kFS1[] = R"(#version 300 es
+precision mediump float;
+out vec4 my_FragColor;
+
+const vec4 constants[2] = vec4[] (
+    vec4(0.6, 0.3, 0.0, 3.0),
+    vec4(-0.6, 0.7, 0.0, -2.0)
+);
+
+void main()
+{
+    my_FragColor = constants[0] + constants[1];
+    return;
+})";
+
+    constexpr char kFS2[] = R"(#version 300 es
+precision mediump float;
+out vec4 my_FragColor;
+
+const vec4 constants[2] = vec4[] (
+    vec4(0.6, 0.3, 0.0, 3.0),
+    vec4(-0.6, 0.7, 0.0, -2.0)
+);
+
+const vec4 constants2[2] = vec4[] (
+    constants[1],
+    constants[0]
+);
+
+void main()
+{
+    my_FragColor = constants2[0] + constants2[1];
+    return;
+})";
+
+    constexpr char kFS3[] = R"(#version 300 es
+precision mediump float;
+out vec4 my_FragColor;
+
+const vec4 constants[2] = vec4[] (
+    vec4(0.6, 0.3, 0.0, 3.0),
+    vec4(-0.6, 0.7, 0.0, -2.0)
+);
+
+const vec4 constants2[2] = constants;
+
+void main()
+{
+    my_FragColor = constants2[0] + constants2[1];
+    return;
+})";
+
+    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFS1);
+    EXPECT_NE(0u, program);
+
+    program = CompileProgram(essl3_shaders::vs::Simple(), kFS2);
+    EXPECT_NE(0u, program);
+
+    program = CompileProgram(essl3_shaders::vs::Simple(), kFS3);
+    EXPECT_NE(0u, program);
 }
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLCompatibilityTest);
