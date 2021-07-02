@@ -73,9 +73,11 @@ void LoadBinaryData(const char *fileName)
 }
 
 ValidateSerializedStateCallback gValidateSerializedStateCallback;
+std::unordered_map<GLuint, std::vector<GLint>> gInternalUniformLocationsMap;
 }  // namespace
 
 LocationsMap gUniformLocations;
+GLint **gUniformLocations2;
 BlockIndexesMap gUniformBlockIndexes;
 GLuint gCurrentProgram = 0;
 
@@ -84,6 +86,7 @@ void UpdateUniformLocation(GLuint program, const char *name, GLint location)
 {
     gUniformLocations[program][location] = glGetUniformLocation(program, name);
 }
+
 void UpdateUniformLocation(GLuint program, const char *name, GLint location, GLint count)
 {
     for (GLint i = 0; i < count; i++)
@@ -91,10 +94,31 @@ void UpdateUniformLocation(GLuint program, const char *name, GLint location, GLi
         gUniformLocations[program][location + i] = glGetUniformLocation(program, name) + i;
     }
 }
+
+void UpdateUniformLocation2(GLuint program, const char *name, GLint location, GLint count)
+{
+    std::vector<GLint> &programLocations = gInternalUniformLocationsMap[program];
+    if (static_cast<GLint>(programLocations.size()) < location + count)
+    {
+        programLocations.resize(location + count, 0);
+    }
+    for (GLint arrayIndex = 0; arrayIndex < count; ++arrayIndex)
+    {
+        programLocations[location + arrayIndex] = glGetUniformLocation(program, name) + arrayIndex;
+    }
+    gUniformLocations2[program] = programLocations.data();
+}
+
 void DeleteUniformLocations(GLuint program)
 {
     gUniformLocations.erase(program);
 }
+
+void DeleteUniformLocations2(GLuint program)
+{
+    // No-op. We leave uniform locations around so deleted current programs can still use them.
+}
+
 void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index)
 {
     gUniformBlockIndexes[program][index] = glGetUniformBlockIndex(program, name);
@@ -200,6 +224,9 @@ void InitializeReplay2(const char *binaryDataFileName,
     gTextureMap2           = AllocateZeroedUints(maxTexture);
     gTransformFeedbackMap2 = AllocateZeroedUints(maxTransformFeedback);
     gVertexArrayMap2       = AllocateZeroedUints(maxVertexArray);
+
+    gUniformLocations2 = new GLint *[maxShaderProgram + 1];
+    memset(gUniformLocations2, 0, sizeof(GLint *) * (maxShaderProgram + 1));
 }
 
 void FinishReplay()
