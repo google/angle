@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "545b6bdc_375d87e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 32
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-02T22:41:52Z",
+      "side": 1,
+      "message": "PTAL.\nI found and fixed the linked structure that caused the Validation error.",
+      "revId": "cff4116c8d78f7c145cba621b5f9af01f5adcc02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
