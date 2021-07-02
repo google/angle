@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7d49198_c10109d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-02T03:40:35Z",
+      "side": 1,
+      "message": "Finally reached a point where I have too many branches. Most of them are chromium version tags though, so I suspect this issue will sooner or later start hitting other devs too.",
+      "revId": "70fda7219a3ce4328e89bc453427db163b6c33f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
