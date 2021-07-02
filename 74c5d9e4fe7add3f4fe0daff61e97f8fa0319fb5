@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51ce0ae8_b58762cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 23
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-02T22:30:53Z",
+      "side": 1,
+      "message": "My copy of this CL that removes the shader cache hooking is:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/3002944\n\nUnfortunately it doesn\u0027t solve the problem of the failed tryjobs. The angle_end2end_tests invocations on the slightly older MacBook Pros running 10.14.6 are actually killing the bots. See https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d6127#c8 .\n\nLet\u0027s not send any more dry runs of this CL until we make more progress figuring out what is going on.\n",
+      "revId": "74c5d9e4fe7add3f4fe0daff61e97f8fa0319fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
