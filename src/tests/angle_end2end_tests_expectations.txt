@@ -65,10 +65,14 @@
 // D3D
 6091 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 6122 WIN D3D11 : GLSLTestLoops.*ContinueInSwitch/* = SKIP
+6150 WIN D3D11 : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/ES3_OpenGLES = SKIP
 6116 ANDROID GLES : GLSLTestLoops.ForNoCondition/ES3_OpenGLES = SKIP
+
+// Nexus 5X expectations.
+6149 NEXUS5X GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 
 // Pixel 4 expectations.
 5981 PIXEL4ORXL GLES : BlitFramebufferTest.BlitSRGBToRGBOversizedDestArea/* = SKIP

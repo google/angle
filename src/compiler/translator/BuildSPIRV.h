@@ -253,6 +253,7 @@ class SPIRVBuilder : angle::NonCopyable
     SpirvType getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const;
     const SpirvTypeData &getTypeData(const TType &type, TLayoutBlockStorage blockStorage);
     const SpirvTypeData &getSpirvTypeData(const SpirvType &type, const TSymbol *block);
+    spirv::IdRef getBasicTypeId(TBasicType basicType, size_t size);
     spirv::IdRef getTypePointerId(spirv::IdRef typeId, spv::StorageClass storageClass);
     spirv::IdRef getFunctionTypeId(spirv::IdRef returnTypeId, const spirv::IdRefList &paramTypeIds);
 

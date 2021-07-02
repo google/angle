@@ -157,6 +157,14 @@ const SpirvTypeData &SPIRVBuilder::getSpirvTypeData(const SpirvType &type, const
     return iter->second;
 }
 
+spirv::IdRef SPIRVBuilder::getBasicTypeId(TBasicType basicType, size_t size)
+{
+    SpirvType type;
+    type.type        = basicType;
+    type.primarySize = static_cast<uint8_t>(size);
+    return getSpirvTypeData(type, nullptr).id;
+}
+
 spirv::IdRef SPIRVBuilder::getTypePointerId(spirv::IdRef typeId, spv::StorageClass storageClass)
 {
     SpirvIdAndStorageClass key{typeId, storageClass};

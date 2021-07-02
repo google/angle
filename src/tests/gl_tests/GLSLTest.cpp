@@ -2662,6 +2662,145 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
 }
 
+// Test that == and != for vector and matrix types work.
+TEST_P(GLSLTest_ES3, NonScalarEqualOperator)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+
+uniform float f;
+uniform int i;
+uniform uint u;
+
+void main()
+{
+    mat3x2 m32_1 = mat3x2(vec2(f), vec2(i), vec2(u));
+    mat3x2 m32_2 = mat3x2(m32_1);
+    mat3x2 m32_3 = mat3x2(vec2(i), vec2(u), vec2(f));
+    mat2x3 m23_1 = mat2x3(vec3(f), vec3(i));
+    mat2x3 m23_2 = mat2x3(m23_1);
+    mat2x3 m23_3 = mat2x3(vec3(i), vec3(u));
+    vec2 v2_1 = m32_1[0];
+    vec2 v2_2 = m32_2[0];
+    ivec3 v3_1 = ivec3(transpose(m32_1)[0]);
+    ivec3 v3_2 = ivec3(transpose(m32_2)[0]);
+    uvec4 v4_1 = uvec4(m32_1[1], m32_1[2]);
+    uvec4 v4_2 = uvec4(m32_2[1], m32_2[2]);
+
+    color = vec4((m32_1 == m32_2 ? 0.5 : 0.0) + (m23_1 == m23_2 ? 0.5 : 0.0),
+                 v2_1 == v2_2 ? 1 : 0,
+                 (v3_1 == v3_2 ? 0.5 : 0.0) +
+                    (v4_1 == v4_2 ? 0.5 : 0.0),
+                 (m32_1 != m32_3 ? 0.125 : 0.0) +
+                    (m23_1 != m23_3 ? 0.125 : 0.0) +
+                    (v2_1 != vec2(v3_2) ? 0.25 : 0.0) +
+                    (v3_1 != ivec3(v4_2) ? 0.25 : 0.0) +
+                    (v4_1 != uvec4(v2_1, v2_2) ? 0.25 : 0.0));
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint floc = glGetUniformLocation(program, "f");
+    GLint iloc = glGetUniformLocation(program, "i");
+    GLint uloc = glGetUniformLocation(program, "u");
+    ASSERT_NE(floc, -1);
+    ASSERT_NE(iloc, -1);
+    ASSERT_NE(uloc, -1);
+    glUniform1f(floc, 1.5);
+    glUniform1i(iloc, -123);
+    glUniform1ui(uloc, 456);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Test that == and != for structs and array types work.
+TEST_P(GLSLTest_ES31, StructAndArrayEqualOperator)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+out vec4 color;
+
+uniform float f;
+uniform int i;
+uniform uint u;
+
+struct S
+{
+    float f;
+    int i;
+    uint u;
+    vec4 v;
+    ivec3 iv;
+    uvec2 uv;
+    mat3x2 m32;
+    mat2x3 m23;
+    float fa[3][4][5];
+    int ia[4];
+    uint ua[6][2];
+};
+
+struct T
+{
+    S s1;
+    S s2[3][2];
+};
+
+void main()
+{
+    float fa[5] = float[5](f, f, f, f, f);
+    int ia[4] = int[4](i, i, i, i);
+    uint ua[2] = uint[2](u, u);
+
+    S s1 = S(f, i, u, vec4(f), ivec3(i), uvec2(u),
+             mat3x2(vec2(f), vec2(i), vec2(u)),
+             mat2x3(vec3(f), vec3(i)),
+             float[3][4][5](
+                            float[4][5](fa, fa, fa, fa),
+                            float[4][5](fa, fa, fa, fa),
+                            float[4][5](fa, fa, fa, fa)),
+             ia,
+             uint[6][2](ua, ua, ua, ua, ua, ua));
+
+    S s2[2] = S[2](s1, s1);
+    s2[1].fa[0][1][2] = float(i);
+
+    T t1 = T(s1, S[3][2](s2, s2, s2));
+    T t2 = T(s2[1], S[3][2](s2, s2, s2));
+
+    T ta1[2] = T[2](t1, t2);
+    T ta2[2] = T[2](t1, t2);
+    T ta3[2] = T[2](t2, t1);
+
+    color = vec4((s1 == s2[0] ? 0.5 : 0.0) + (s1 != s2[1] ? 0.5 : 0.0),
+                 (s1.fa[0] == s2[0].fa[0] ? 0.5 : 0.0) + (s1.fa[0] != s2[1].fa[0] ? 0.5 : 0.0),
+                 (ta1[0] == t1 ? 0.5 : 0.0) + (ta1[1] != t1 ? 0.5 : 0.0),
+                 (ta1 == ta2 ? 0.5 : 0.0) + (ta1 != ta3 ? 0.5 : 0.0));
+})";
+
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint floc = glGetUniformLocation(program, "f");
+    GLint iloc = glGetUniformLocation(program, "i");
+    GLint uloc = glGetUniformLocation(program, "u");
+    ASSERT_NE(floc, -1);
+    ASSERT_NE(iloc, -1);
+    ASSERT_NE(uloc, -1);
+    glUniform1f(floc, 1.5);
+    glUniform1i(iloc, -123);
+    glUniform1ui(uloc, 456);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
 // Test that an user-defined function with a large number of float4 parameters doesn't fail due to
 // the function name being too long.
 TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)

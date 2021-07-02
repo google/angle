@@ -242,6 +242,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
 
     spirv::IdRef visitOperator(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createIncrementDecrement(TIntermOperator *node, spirv::IdRef resultTypeId);
+    spirv::IdRef createCompare(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createAtomicBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createImageTextureBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
 
@@ -261,6 +262,24 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef castBasicType(spirv::IdRef value,
                                const TType &valueType,
                                TBasicType expectedBasicType);
+
+    // Helper to reduce vector == and != with OpAll and OpAny respectively.  If multiple ids are
+    // given, either OpLogicalAnd or OpLogicalOr is used (if two operands) or a bool vector is
+    // constructed and OpAll and OpAny used.
+    spirv::IdRef reduceBoolVector(TOperator op,
+                                  const spirv::IdRefList &valueIds,
+                                  spirv::IdRef typeId,
+                                  const SpirvDecorations &decorations);
+    // Helper to implement == and !=, supporting vectors, matrices, structs and arrays.
+    void createCompareImpl(TOperator op,
+                           const TType &operandType,
+                           spirv::IdRef resultTypeId,
+                           spirv::IdRef leftId,
+                           spirv::IdRef rightId,
+                           const SpirvDecorations &operandDecorations,
+                           const SpirvDecorations &resultDecorations,
+                           spirv::LiteralIntegerList *currentAccessChain,
+                           spirv::IdRefList *intermediateResultsOut);
 
     TCompiler *mCompiler;
     ShCompileOptions mCompileOptions;
@@ -570,12 +589,8 @@ void OutputSPIRVTraverser::accessChainPushDynamicComponent(NodeData *data,
             swizzleIds.push_back(mBuilder.getUintConstant(component));
         }
 
-        SpirvType type;
-        type.type                     = EbtUInt;
-        const spirv::IdRef uintTypeId = mBuilder.getSpirvTypeData(type, nullptr).id;
-
-        type.primarySize              = static_cast<uint8_t>(swizzleIds.size());
-        const spirv::IdRef uvecTypeId = mBuilder.getSpirvTypeData(type, nullptr).id;
+        const spirv::IdRef uintTypeId = mBuilder.getBasicTypeId(EbtUInt, 1);
+        const spirv::IdRef uvecTypeId = mBuilder.getBasicTypeId(EbtUInt, swizzleIds.size());
 
         const spirv::IdRef swizzlesId = mBuilder.getNewId({});
         spirv::WriteConstantComposite(mBuilder.getSpirvTypeAndConstantDecls(), uvecTypeId,
@@ -954,10 +969,8 @@ spirv::IdRef OutputSPIRVTraverser::createComplexConstant(const TType &type,
         // Matrices are constructed from its columns.
         spirv::IdRefList columnIds;
 
-        SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
-        columnType.primarySize          = columnType.secondarySize;
-        columnType.secondarySize        = 1;
-        const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+        const spirv::IdRef columnTypeId =
+            mBuilder.getBasicTypeId(type.getBasicType(), type.getRows());
 
         for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
         {
@@ -1025,7 +1038,20 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
         return createArrayOrStructConstructor(node, typeId, parameters);
     }
 
-    if (type.isScalar())
+    // The following are simple casts:
+    //
+    // - basic(s) (where basic is int, uint, float or bool, and s is scalar).
+    // - gvecN(vN) (where the argument is a single vector with the same number of components).
+    // - matNxM(mNxM) (where the argument is a single matrix with the same dimensions).  Note that
+    //   matrices are always float, so there's no actual cast and this would be a no-op.
+    //
+    const bool isSingleVectorCast = arguments.size() == 1 && type.isVector() &&
+                                    arg0Type.isVector() &&
+                                    type.getNominalSize() == arg0Type.getNominalSize();
+    const bool isSingleMatrixCast = arguments.size() == 1 && type.isMatrix() &&
+                                    arg0Type.isMatrix() && type.getCols() == arg0Type.getCols() &&
+                                    type.getRows() == arg0Type.getRows();
+    if (type.isScalar() || isSingleVectorCast || isSingleMatrixCast)
     {
         return castBasicType(parameters[0], arg0Type, type.getBasicType());
     }
@@ -1175,10 +1201,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromScalar(
     spirv::IdRefList componentIds(type.getRows(), zeroId);
     spirv::IdRefList columnIds;
 
-    SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
-    columnType.primarySize          = columnType.secondarySize;
-    columnType.secondarySize        = 1;
-    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+    const spirv::IdRef columnTypeId = mBuilder.getBasicTypeId(type.getBasicType(), type.getRows());
 
     for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
     {
@@ -1226,10 +1249,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromVectors(
 
     spirv::IdRefList columnIds;
 
-    SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
-    columnType.primarySize          = columnType.secondarySize;
-    columnType.secondarySize        = 1;
-    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+    const spirv::IdRef columnTypeId = mBuilder.getBasicTypeId(type.getBasicType(), type.getRows());
 
     // Chunk up the extracted components by column and construct intermediary vectors.
     for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
@@ -1283,10 +1303,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
 
     spirv::IdRefList columnIds;
 
-    SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
-    columnType.primarySize          = columnType.secondarySize;
-    columnType.secondarySize        = 1;
-    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+    const spirv::IdRef columnTypeId = mBuilder.getBasicTypeId(type.getBasicType(), type.getRows());
 
     if (parameterType.getCols() >= type.getCols() && parameterType.getRows() >= type.getRows())
     {
@@ -1754,6 +1771,10 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     {
         return createIncrementDecrement(node, resultTypeId);
     }
+    if (op == EOpEqual || op == EOpNotEqual)
+    {
+        return createCompare(node, resultTypeId);
+    }
     if (BuiltInGroup::IsAtomicMemory(op) || BuiltInGroup::IsImageAtomic(op))
     {
         return createAtomicBuiltIn(node, resultTypeId);
@@ -1850,10 +1871,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
                 writeBinaryOp = spirv::WriteSMod;
             break;
 
-        case EOpEqual:
         case EOpEqualComponentWise:
-            // TODO: handle vector, matrix and other complex comparisons.  EOpEqual must use OpAll
-            // to reduce to a bool.  http://anglebug.com/4889.
             if (isFloat)
                 writeBinaryOp = spirv::WriteFOrdEqual;
             else if (isBool)
@@ -1861,10 +1879,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             else
                 writeBinaryOp = spirv::WriteIEqual;
             break;
-        case EOpNotEqual:
         case EOpNotEqualComponentWise:
-            // TODO: handle vector, matrix and other complex comparisons.  EOpNotEqual must use
-            // OpAny to reduce to a bool.  http://anglebug.com/4889.
             if (isFloat)
                 writeBinaryOp = spirv::WriteFUnordNotEqual;
             else if (isBool)
@@ -2370,15 +2385,13 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
 
     if (operateOnColumns)
     {
-        // If negating a matrix or multiplying them, do that column by column.
+        // If negating a matrix, multiplying or comparing them, do that column by column.
         spirv::IdRefList columnIds;
 
         const SpirvDecorations operandDecorations = mBuilder.getDecorations(firstOperandType);
 
-        SpirvType columnType            = mBuilder.getSpirvType(firstOperandType, EbsUnspecified);
-        columnType.primarySize          = columnType.secondarySize;
-        columnType.secondarySize        = 1;
-        const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+        const spirv::IdRef columnTypeId =
+            mBuilder.getBasicTypeId(firstOperandType.getBasicType(), firstOperandType.getRows());
 
         if (binarySwapOperands)
         {
@@ -2548,6 +2561,78 @@ spirv::IdRef OutputSPIRVTraverser::createIncrementDecrement(TIntermOperator *nod
     }
 
     return result;
+}
+
+spirv::IdRef OutputSPIRVTraverser::createCompare(TIntermOperator *node, spirv::IdRef resultTypeId)
+{
+    const TOperator op       = node->getOp();
+    TIntermTyped *operand    = node->getChildNode(0)->getAsTyped();
+    const TType &operandType = operand->getType();
+
+    const SpirvDecorations resultDecorations  = mBuilder.getDecorations(node->getType());
+    const SpirvDecorations operandDecorations = mBuilder.getDecorations(operandType);
+
+    // Load the left and right values.
+    spirv::IdRefList parameters = loadAllParams(node);
+    ASSERT(parameters.size() == 2);
+
+    // In GLSL, operators == and != can operate on the following:
+    //
+    // - scalars: There's a SPIR-V instruction for this,
+    // - vectors: The same SPIR-V instruction as scalars is used here, but the result is reduced
+    //   with OpAll/OpAny for == and != respectively,
+    // - matrices: Comparison must be done column by column and the result reduced,
+    // - arrays: Comparison must be done on every array element and the result reduced,
+    // - structs: Comparison must be done on each field and the result reduced.
+    //
+    // For the latter 3 cases, OpCompositeExtract is used to extract scalars and vectors out of the
+    // more complex type, which is recursively traversed.  The results are accumulated in a list
+    // that is then reduced 4 by 4 elements until a single boolean is produced.
+
+    spirv::LiteralIntegerList currentAccessChain;
+    spirv::IdRefList intermediateResults;
+
+    createCompareImpl(op, operandType, resultTypeId, parameters[0], parameters[1],
+                      operandDecorations, resultDecorations, &currentAccessChain,
+                      &intermediateResults);
+
+    // Make sure the function correctly pushes and pops access chain indices.
+    ASSERT(currentAccessChain.empty());
+
+    // Reduce the intermediate results.
+    ASSERT(!intermediateResults.empty());
+
+    // The following code implements this algorithm, assuming N bools are to be reduced:
+    //
+    //    Reduced           To Reduce
+    //     {b1}           {b2, b3, ..., bN}      Initial state
+    //                                           Loop
+    //  {b1, b2, b3, b4}  {b5, b6, ..., bN}        Take up to 3 new bools
+    //     {r1}           {b5, b6, ..., bN}        Reduce it
+    //                                             Repeat
+    //
+    // In the end, a single value is left.
+    size_t reducedCount       = 0;
+    spirv::IdRefList toReduce = {intermediateResults[reducedCount++]};
+    while (reducedCount < intermediateResults.size())
+    {
+        // Take up to 3 new bools.
+        size_t toTakeCount = std::min<size_t>(3, intermediateResults.size() - reducedCount);
+        for (size_t i = 0; i < toTakeCount; ++i)
+        {
+            toReduce.push_back(intermediateResults[reducedCount++]);
+        }
+
+        // Reduce them to one bool.
+        const spirv::IdRef result = reduceBoolVector(op, toReduce, resultTypeId, resultDecorations);
+
+        // Replace the list of bools to reduce with the reduced one.
+        toReduce.clear();
+        toReduce.push_back(result);
+    }
+
+    ASSERT(toReduce.size() == 1 && reducedCount == intermediateResults.size());
+    return toReduce[0];
 }
 
 spirv::IdRef OutputSPIRVTraverser::createAtomicBuiltIn(TIntermOperator *node,
@@ -3537,6 +3622,181 @@ spirv::IdRef OutputSPIRVTraverser::castBasicType(spirv::IdRef value,
     return castValue;
 }
 
+spirv::IdRef OutputSPIRVTraverser::reduceBoolVector(TOperator op,
+                                                    const spirv::IdRefList &valueIds,
+                                                    spirv::IdRef typeId,
+                                                    const SpirvDecorations &decorations)
+{
+    if (valueIds.size() == 2)
+    {
+        // If two values are given, and/or them directly.
+        WriteBinaryOp writeBinaryOp =
+            op == EOpEqual ? spirv::WriteLogicalAnd : spirv::WriteLogicalOr;
+        const spirv::IdRef result = mBuilder.getNewId(decorations);
+
+        writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result, valueIds[0],
+                      valueIds[1]);
+        return result;
+    }
+
+    WriteUnaryOp writeUnaryOp = op == EOpEqual ? spirv::WriteAll : spirv::WriteAny;
+    spirv::IdRef valueId      = valueIds[0];
+
+    if (valueIds.size() > 2)
+    {
+        // If multiple values are given, construct a bool vector out of them first.
+        const spirv::IdRef bvecTypeId = mBuilder.getBasicTypeId(EbtBool, valueIds.size());
+        valueId                       = {mBuilder.getNewId(decorations)};
+
+        spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), bvecTypeId, valueId,
+                                       valueIds);
+    }
+
+    const spirv::IdRef result = mBuilder.getNewId(decorations);
+    writeUnaryOp(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result, valueId);
+
+    return result;
+}
+
+void OutputSPIRVTraverser::createCompareImpl(TOperator op,
+                                             const TType &operandType,
+                                             spirv::IdRef resultTypeId,
+                                             spirv::IdRef leftId,
+                                             spirv::IdRef rightId,
+                                             const SpirvDecorations &operandDecorations,
+                                             const SpirvDecorations &resultDecorations,
+                                             spirv::LiteralIntegerList *currentAccessChain,
+                                             spirv::IdRefList *intermediateResultsOut)
+{
+    const TBasicType basicType = operandType.getBasicType();
+    const bool isFloat         = basicType == EbtFloat || basicType == EbtDouble;
+    const bool isBool          = basicType == EbtBool;
+
+    WriteBinaryOp writeBinaryOp = nullptr;
+
+    // For arrays, compare them element by element.
+    if (operandType.isArray())
+    {
+        TType elementType(operandType);
+        elementType.toArrayElementType();
+
+        currentAccessChain->emplace_back();
+        for (unsigned int elementIndex = 0; elementIndex < operandType.getOutermostArraySize();
+             ++elementIndex)
+        {
+            // Select the current element.
+            currentAccessChain->back() = spirv::LiteralInteger(elementIndex);
+
+            // Compare and accumulate the results.
+            createCompareImpl(op, elementType, resultTypeId, leftId, rightId, operandDecorations,
+                              resultDecorations, currentAccessChain, intermediateResultsOut);
+        }
+        currentAccessChain->pop_back();
+
+        return;
+    }
+
+    // For structs, compare them field by field.
+    if (operandType.getStruct() != nullptr)
+    {
+        uint32_t fieldIndex = 0;
+
+        currentAccessChain->emplace_back();
+        for (const TField *field : operandType.getStruct()->fields())
+        {
+            // Select the current field.
+            currentAccessChain->back() = spirv::LiteralInteger(fieldIndex++);
+
+            // Compare and accumulate the results.
+            createCompareImpl(op, *field->type(), resultTypeId, leftId, rightId, operandDecorations,
+                              resultDecorations, currentAccessChain, intermediateResultsOut);
+        }
+        currentAccessChain->pop_back();
+
+        return;
+    }
+
+    // For matrices, compare them column by column.
+    if (operandType.isMatrix())
+    {
+        TType columnType(operandType);
+        columnType.toMatrixColumnType();
+
+        currentAccessChain->emplace_back();
+        for (int columnIndex = 0; columnIndex < operandType.getCols(); ++columnIndex)
+        {
+            // Select the current column.
+            currentAccessChain->back() = spirv::LiteralInteger(columnIndex);
+
+            // Compare and accumulate the results.
+            createCompareImpl(op, columnType, resultTypeId, leftId, rightId, operandDecorations,
+                              resultDecorations, currentAccessChain, intermediateResultsOut);
+        }
+        currentAccessChain->pop_back();
+
+        return;
+    }
+
+    // For scalars and vectors generate a single instruction for comparison.
+    if (op == EOpEqual)
+    {
+        if (isFloat)
+            writeBinaryOp = spirv::WriteFOrdEqual;
+        else if (isBool)
+            writeBinaryOp = spirv::WriteLogicalEqual;
+        else
+            writeBinaryOp = spirv::WriteIEqual;
+    }
+    else
+    {
+        ASSERT(op == EOpNotEqual);
+
+        if (isFloat)
+            writeBinaryOp = spirv::WriteFUnordNotEqual;
+        else if (isBool)
+            writeBinaryOp = spirv::WriteLogicalNotEqual;
+        else
+            writeBinaryOp = spirv::WriteINotEqual;
+    }
+
+    // Extract the scalar and vector from composite types, if any.
+    spirv::IdRef leftComponentId  = leftId;
+    spirv::IdRef rightComponentId = rightId;
+    if (!currentAccessChain->empty())
+    {
+        leftComponentId  = mBuilder.getNewId(operandDecorations);
+        rightComponentId = mBuilder.getNewId(operandDecorations);
+
+        const spirv::IdRef componentTypeId =
+            mBuilder.getBasicTypeId(operandType.getBasicType(), operandType.getNominalSize());
+
+        spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), componentTypeId,
+                                     leftComponentId, leftId, *currentAccessChain);
+        spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), componentTypeId,
+                                     rightComponentId, rightId, *currentAccessChain);
+    }
+
+    const bool reduceResult     = !operandType.isScalar();
+    spirv::IdRef result         = mBuilder.getNewId({});
+    spirv::IdRef opResultTypeId = resultTypeId;
+    if (reduceResult)
+    {
+        opResultTypeId = mBuilder.getBasicTypeId(EbtBool, operandType.getNominalSize());
+    }
+
+    // Write the comparison operation itself.
+    writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), opResultTypeId, result, leftComponentId,
+                  rightComponentId);
+
+    // If it's a vector, reduce the result.
+    if (reduceResult)
+    {
+        result = reduceBoolVector(op, {result}, resultTypeId, resultDecorations);
+    }
+
+    intermediateResultsOut->push_back(result);
+}
+
 void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
 {
     // Constants are expected to be folded.
@@ -3863,11 +4123,8 @@ bool OutputSPIRVTraverser::visitUnary(Visit visit, TIntermUnary *node)
         const spirv::IdRef typeId = mBuilder.getTypeData(ssbo->getType(), EbsUnspecified).id;
 
         // Get the int and uint type ids.
-        SpirvType intType;
-        intType.type                  = EbtInt;
-        const spirv::IdRef intTypeId  = mBuilder.getSpirvTypeData(intType, nullptr).id;
-        intType.type                  = EbtUInt;
-        const spirv::IdRef uintTypeId = mBuilder.getSpirvTypeData(intType, nullptr).id;
+        const spirv::IdRef intTypeId  = mBuilder.getBasicTypeId(EbtInt, 1);
+        const spirv::IdRef uintTypeId = mBuilder.getBasicTypeId(EbtUInt, 1);
 
         // Generate the instruction.
         const spirv::IdRef resultId = mBuilder.getNewId({});
@@ -3925,11 +4182,8 @@ bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
             // So when selecting between vectors, we must replicate the condition scalar.
             if (type.isVector())
             {
-                SpirvType spirvType;
-                spirvType.type        = node->getCondition()->getType().getBasicType();
-                spirvType.primarySize = static_cast<uint8_t>(type.getNominalSize());
-
-                typeId = mBuilder.getSpirvTypeData(spirvType, nullptr).id;
+                typeId = mBuilder.getBasicTypeId(node->getCondition()->getType().getBasicType(),
+                                                 type.getNominalSize());
                 conditionValue =
                     createConstructorVectorFromScalar(type, typeId, {{conditionValue}});
             }
