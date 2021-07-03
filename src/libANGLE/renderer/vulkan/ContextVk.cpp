@@ -5005,8 +5005,9 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
     const gl::ActiveTextureMask &activeTextures    = executable->getActiveSamplersMask();
     const gl::ActiveTextureTypeArray &textureTypes = executable->getActiveSamplerTypes();
 
-    bool anyTextureHasImmutableSampler = false;
-    bool recreatePipelineLayout        = false;
+    bool anyTextureHasImmutableSampler            = false;
+    bool recreatePipelineLayout                   = false;
+    ImmutableSamplerFormatIndexMap formatIndexMap = {};
     for (size_t textureUnit : activeTextures)
     {
         gl::Texture *texture        = textures[textureUnit];
@@ -5084,13 +5085,23 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
             textureVk->getImageViewSubresourceSerial(samplerState);
         mActiveTexturesDesc.update(textureUnit, imageViewSerial, samplerHelper.getSamplerSerial());
 
-        anyTextureHasImmutableSampler =
-            textureVk->getImage().hasImmutableSampler() || anyTextureHasImmutableSampler;
+        if (textureVk->getImage().hasImmutableSampler())
+        {
+            anyTextureHasImmutableSampler = true;
+            formatIndexMap[textureVk->getImage().getExternalFormat()] =
+                static_cast<uint32_t>(textureUnit);
+        }
         recreatePipelineLayout =
             textureVk->getAndResetImmutableSamplerDirtyState() || recreatePipelineLayout;
     }
 
     if (anyTextureHasImmutableSampler != mExecutable->usesImmutableSamplers())
+    {
+        recreatePipelineLayout = true;
+    }
+
+    if (mExecutable->usesImmutableSamplers() &&
+        !mExecutable->isImmutableSamplerFormatCompatible(formatIndexMap))
     {
         recreatePipelineLayout = true;
     }
