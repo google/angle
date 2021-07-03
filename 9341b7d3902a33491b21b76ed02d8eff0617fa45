@@ -16,6 +16,24 @@
       "message": "rename SamplerDesc::mExternalFormat -\u003e SamplerDesc::mImmutableSamplerFormat and update the comment above it",
       "revId": "9341b7d3902a33491b21b76ed02d8eff0617fa45",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a754f846_cb8acdb1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-03T01:55:57Z",
+      "side": 1,
+      "message": "update comment to reflect it is no longer confined to just external formats",
+      "parentUuid": "beea4f29_39c20fef",
+      "revId": "9341b7d3902a33491b21b76ed02d8eff0617fa45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
