@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d249aa7a_dbd1485c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-03T02:28:40Z",
+      "side": 1,
+      "message": "Going to land this.\n\nThe use of UNREACHABLE_IS_NORETURN is not ideal, I opened anglebug.com/6134 to clean this up.",
+      "revId": "c33fd64354022e75380fab69f780b7b8c6db790c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
