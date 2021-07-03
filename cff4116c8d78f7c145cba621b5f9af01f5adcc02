@@ -16,6 +16,24 @@
       "message": "PTAL.\nI found and fixed the linked structure that caused the Validation error.",
       "revId": "cff4116c8d78f7c145cba621b5f9af01f5adcc02",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58f0d172_945235ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 32
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-03T02:35:53Z",
+      "side": 1,
+      "message": "Out of curiosity, what was the bug? I didn\u0027t notice anything significant in the last few patchsets.",
+      "parentUuid": "545b6bdc_375d87e4",
+      "revId": "cff4116c8d78f7c145cba621b5f9af01f5adcc02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
