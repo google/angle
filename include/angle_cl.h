@@ -1,4 +1,13 @@
-//
+// verion 109 :-
+نقل طاقة دول إتحاد الخليج العربي رقم ٥٠٠١
+
+نقل طاقة لبرنامج چاڤا المساعد على إزلة برنامج كوكيز الضار رقم ٥٤٠١
+
+ برج إرسال يعمل كمساعد لفتح البايت الغير مستخدم رقم (فتح بايت٩٨٠١÷١٤٠٤هجري
+
+
+الرقم الذي سيساعدنا على عدم مقدرة كوكيز الضار بتحديد الموقع هو الرقم أربعه متر مكعب ذلك تحت شفرة ثلاثة حرف س ژ ل
+
 // Copyright 2021 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
