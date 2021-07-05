@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0a927364_00cb33b9",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-05T21:06:55Z",
+      "side": 1,
+      "message": "\u003e Are setw and setfill stateful? The C API seems easier to work with, and clearly does not allocate memory in the heap. Done on snprintf. Since this is test-only code so there are very minimal security requirements.\n\nAll that code uses std::stream and siblings, which makes this C construct look a bit out of place, but well, snprintf can be simpler at times.",
+      "parentUuid": "6cedc8e7_e04d9785",
+      "revId": "e654d69df3dedf040f45a2a38bf0284de571908f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9ebded5c_07f40205",
         "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
         "patchSetId": 5
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "I\u0027d prefer to avoid using std::for_each and std::bind if that\u0027s OK with you. That\u0027s too much functional programming for ANGLE.",
       "parentUuid": "9ebded5c_07f40205",
+      "revId": "e654d69df3dedf040f45a2a38bf0284de571908f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c7b9acc_05523ccd",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1392,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-05T21:06:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "06d4ea6e_a78e6f1f",
       "revId": "e654d69df3dedf040f45a2a38bf0284de571908f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
