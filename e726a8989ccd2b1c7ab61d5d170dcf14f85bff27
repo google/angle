@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "01853160_36164606",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T16:34:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a537f07_4619d4d5",
+      "revId": "e726a8989ccd2b1c7ab61d5d170dcf14f85bff27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f8d9d06a_7b80401d",
@@ -52,6 +70,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "655af337_cfaa3678",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4519,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T16:34:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8d9d06a_7b80401d",
+      "revId": "e726a8989ccd2b1c7ab61d5d170dcf14f85bff27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bceece16_fd41e4c3",
@@ -65,6 +101,24 @@
       "writtenOn": "2021-07-05T14:18:08Z",
       "side": 1,
       "message": "Why not `std::vector`?",
+      "revId": "e726a8989ccd2b1c7ab61d5d170dcf14f85bff27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf99c9c0_3bb90c2f",
+        "filename": "src/libANGLE/capture/trace_fixture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T16:34:21Z",
+      "side": 1,
+      "message": "See comments on other CL - the traces are compiled with optimization off so std::vector::operator[] will not be inlined.",
+      "parentUuid": "bceece16_fd41e4c3",
       "revId": "e726a8989ccd2b1c7ab61d5d170dcf14f85bff27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
