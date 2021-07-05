@@ -16,6 +16,29 @@
       "message": "My copy of this CL that removes the shader cache hooking is:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/3002944\n\nUnfortunately it doesn\u0027t solve the problem of the failed tryjobs. The angle_end2end_tests invocations on the slightly older MacBook Pros running 10.14.6 are actually killing the bots. See https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d6127#c8 .\n\nLet\u0027s not send any more dry runs of this CL until we make more progress figuring out what is going on.\n",
       "revId": "74c5d9e4fe7add3f4fe0daff61e97f8fa0319fb5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3fd3d07_32801124",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 23
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-07-05T20:10:57Z",
+      "side": 1,
+      "message": "EGL_POWER_PREFERENCE_ANGLE has the same value as EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX.\n\nI don\u0027t think the usage of EGL_POWER_PREFERENCE_ANGLE is correct here. Based on spec, it is context\u0027s attribute not display\u0027s attribute. Here is it used as if it is display\u0027s attribute :)\n\nAnd because end2end test\u0027s EGLWindow utility class always inserts EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX attribute to display, it leads to low power device being chosen by accident. https://github.com/google/angle/blob/955b4620db389ff8a44059853cc28991f2114339/util/EGLWindow.cpp#L188\n\nI did try to run this CL\u0027s tests with ASAN enabled on mac 10.14 and it crashed (one specific test is BlitSameBufferOriginal). High chance it is low power device\u0027s 10.14 specific bug. This might be related to the kernel panic issues on 10.14 bots with dual GPUs (AMD \u0026 NVIDIA).\n\nI suggest removing this EGL_POWER_PREFERENCE_ANGLE selection from DisplayMtl for now (it is not correct anw). Because the way end2end tests are written (the high level layer always assumes default device is active), it will lead to many wrong IsIntel(), IsAMD(), etc detections. Removing this might also fix the kernel panic issues. Even if it might not, it is still worth to try out imo :)",
+      "range": {
+        "startLine": 272,
+        "startChar": 20,
+        "endLine": 272,
+        "endChar": 46
+      },
+      "revId": "74c5d9e4fe7add3f4fe0daff61e97f8fa0319fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
