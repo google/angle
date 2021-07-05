@@ -51,6 +51,24 @@
       "parentUuid": "586382cc_2a9262a7",
       "revId": "0a2fcc9da5955be0e33c451566a18daae5d7c265",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d135ec2_77938652",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-05T20:54:54Z",
+      "side": 1,
+      "message": "Well, working on mesa taught me that it is better to have small changes in case one has to bisect or blame and wants to understand what a change is about. But since Angle uses a bit of a different style, it\u0027s probably fine to keep this in here, but a comment in the commit message would be helpful.",
+      "parentUuid": "f8dd7760_08fc754f",
+      "revId": "0a2fcc9da5955be0e33c451566a18daae5d7c265",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
