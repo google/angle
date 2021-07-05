@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78735251_805a7e07",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T11:54:24Z",
+      "side": 1,
+      "message": "if we have two instances of two immutable samplers, in swapped orders, e.g. red_8 + rg_16, and rg_16 + red_8, is this compatible? Seems to me like you should be also storing the index if no.\n\nAlso can you store the typed format instead of uint64_t?",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 53
+      },
+      "revId": "a91934ad4bc157903858c07393260def6750a9cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5769e090_3a59cd21",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T11:54:24Z",
+      "side": 1,
+      "message": "this whole function just looks like operator\u003d\u003d.",
+      "range": {
+        "startLine": 200,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 28
+      },
+      "revId": "a91934ad4bc157903858c07393260def6750a9cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c351ac2_4f901a6b",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T11:54:24Z",
+      "side": 1,
+      "message": "this is no longer necessary, you can just check the format list !empty.",
+      "range": {
+        "startLine": 303,
+        "startChar": 9,
+        "endLine": 303,
+        "endChar": 31
+      },
+      "revId": "a91934ad4bc157903858c07393260def6750a9cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
