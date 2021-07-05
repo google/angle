@@ -33,6 +33,24 @@
       "message": "Hacky, but I guess it works. As long as mipmapping is disabled in the view when necessary, I guess it doesn\u0027t hurt for the image itself to potentially unnecessarily have more mips. I\u0027m thinking of a situation where the mips are correctly sized, but the min filter disables mipmapping.",
       "revId": "2963c6b638cc4f078737eef4dec37fd95afe74eb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f178847_79c25e90",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T21:45:31Z",
+      "side": 1,
+      "message": "Yeah, realistically those edge case scenarios don\u0027t come about very often.",
+      "parentUuid": "de72428f_9c544f16",
+      "revId": "2963c6b638cc4f078737eef4dec37fd95afe74eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
