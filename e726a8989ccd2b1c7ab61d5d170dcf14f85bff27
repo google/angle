@@ -16,6 +16,57 @@
       "message": "Lubosz/Gert, feel free to review this before Tim/Cody return from vacation. Otherwise they can review when they get back.",
       "revId": "e726a8989ccd2b1c7ab61d5d170dcf14f85bff27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a537f07_4619d4d5",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-05T14:18:08Z",
+      "side": 1,
+      "message": "Why not write directly to out?",
+      "revId": "e726a8989ccd2b1c7ab61d5d170dcf14f85bff27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8d9d06a_7b80401d",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4519,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-05T14:18:08Z",
+      "side": 1,
+      "message": "My suggestion would be to factor out this loop into another method, e.g. \"countResourceIDs\", and call it below within the \"isCallValid\" IF branch, and not add the boolen parameter to \"maybeCapturePreCallUpdates\"",
+      "revId": "e726a8989ccd2b1c7ab61d5d170dcf14f85bff27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bceece16_fd41e4c3",
+        "filename": "src/libANGLE/capture/trace_fixture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-05T14:18:08Z",
+      "side": 1,
+      "message": "Why not `std::vector`?",
+      "revId": "e726a8989ccd2b1c7ab61d5d170dcf14f85bff27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
