@@ -39,6 +39,30 @@
       },
       "revId": "9903f67ff6613a00a54e993cd629d150c1d89e6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8e915dd_04a60dfd",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1452687
+      },
+      "writtenOn": "2021-07-05T22:09:58Z",
+      "side": 1,
+      "message": "Patchset 8:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2929352/8\nFailed at `chromium/src/third_party/webgl/src/sdk/tests/conformance2/rendering/uniform-block-buffer-size.html::106`\n```\n    wtu.glErrorShouldBe(gl, gl.INVALID_OPERATION, \"drawArrays: UniformBlock is backed by a buffer with no data store\");\n```\nError log dump:\nhttps://ci.chromium.org/ui/p/chromium/builders/try/linux-angle-chromium-try/2024/overview",
+      "parentUuid": "8ba1ff9d_1a2a52d1",
+      "range": {
+        "startLine": 585,
+        "startChar": 7,
+        "endLine": 586,
+        "endChar": 79
+      },
+      "revId": "9903f67ff6613a00a54e993cd629d150c1d89e6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
