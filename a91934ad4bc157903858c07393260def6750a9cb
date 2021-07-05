@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a0db8773_eb892dca",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T16:31:14Z",
+      "side": 1,
+      "message": "Since the number of samplers is probably pretty small I was just thinking you store {index,format} in a small array. You could use FixedVector or std::vector depending on how they\u0027re used.",
+      "parentUuid": "41728626_1c068259",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 53
+      },
+      "revId": "a91934ad4bc157903858c07393260def6750a9cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5769e090_3a59cd21",
         "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
         "patchSetId": 9
