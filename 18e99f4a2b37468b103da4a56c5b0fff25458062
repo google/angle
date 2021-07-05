@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5907dd30_b6f4085a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-07-05T21:07:59Z",
+      "side": 1,
+      "message": "Per the comment in https://chromium-review.googlesource.com/c/angle/angle/+/3007136, I\u0027d like to revert this.",
+      "revId": "18e99f4a2b37468b103da4a56c5b0fff25458062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1c0793c4_01b64d3e",
@@ -91,6 +108,52 @@
         "startChar": 28,
         "endLine": 139,
         "endChar": 39
+      },
+      "revId": "18e99f4a2b37468b103da4a56c5b0fff25458062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbaa8e3c_5b844f4e",
+        "filename": "src/gpu_info_util/SystemInfo_vulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-07-05T21:07:59Z",
+      "side": 1,
+      "message": "I believe that we want to load the system\u0027s libvulkan to get the system info, actually.\nSee below.",
+      "range": {
+        "startLine": 50,
+        "startChar": 69,
+        "endLine": 50,
+        "endChar": 95
+      },
+      "revId": "18e99f4a2b37468b103da4a56c5b0fff25458062",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc7ed10d_37a010e0",
+        "filename": "src/gpu_info_util/SystemInfo_vulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-07-05T21:07:59Z",
+      "side": 1,
+      "message": "Loading is expected to fail if there is no system\u0027s Vulkan.\nWhich wouldn\u0027t happen if we load ANGLE\u0027s or SwiftShader\u0027s Vulkan.",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 21
       },
       "revId": "18e99f4a2b37468b103da4a56c5b0fff25458062",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
