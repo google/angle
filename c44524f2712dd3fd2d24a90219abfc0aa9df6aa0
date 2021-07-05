@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c59f3c36_0313237b",
+        "filename": "src/libANGLE/capture/trace_fixture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-05T14:56:30Z",
+      "side": 1,
+      "message": "Why not std::vector?",
+      "revId": "c44524f2712dd3fd2d24a90219abfc0aa9df6aa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
