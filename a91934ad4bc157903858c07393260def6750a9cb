@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "41728626_1c068259",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-05T14:51:55Z",
+      "side": 1,
+      "message": "+1. This should maybe be an angle::FastVector, (or std::FixedVector if there\u0027s a reasonable limit.) and then the index becomes implicit.\n\nA test based on Jamie\u0027s scenario would be appreciated.",
+      "parentUuid": "78735251_805a7e07",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 53
+      },
+      "revId": "a91934ad4bc157903858c07393260def6750a9cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5769e090_3a59cd21",
         "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
         "patchSetId": 9
