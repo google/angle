@@ -8091,9 +8091,6 @@ TEST_P(Texture2DTestES3, GenerateMipmapAndBaseLevelLUMA)
 // Incompatible levels with non-mipmap filtering should work.
 TEST_P(Texture2DTestES3, IncompatibleMipsButNoMipmapFiltering)
 {
-    // http://anglebug.com/4780
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // http://anglebug.com/4782
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && (IsAMD() || IsIntel()));
 
