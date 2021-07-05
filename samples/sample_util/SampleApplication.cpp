@@ -120,8 +120,8 @@ SampleApplication::SampleApplication(std::string name,
         mDriverType = angle::GLESDriverType::SystemWGL;
 #else
         mGLWindow = EGLWindow::New(glesMajorVersion, glesMinorVersion);
-        mEntryPointsLib.reset(angle::OpenSharedLibraryWithExtension(
-            angle::GetNativeEGLLibraryNameWithExtension(), angle::SearchType::SystemDir));
+        mEntryPointsLib.reset(
+            angle::OpenSharedLibraryWithExtension(angle::GetNativeEGLLibraryNameWithExtension()));
         mDriverType = angle::GLESDriverType::SystemEGL;
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
     }
