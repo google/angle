@@ -16,6 +16,24 @@
       "message": "What I meant was that you call updatePreCallResourceCounts here and not add that \"isCallValid\" to maybeCapturePreCallUpdates. With that it is clear that the ResourceCounts are updated when a call is valid without having to follow the call maybeCapturePreCallUpdates.",
       "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b9d19f6_c70c109b",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4534,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T21:51:52Z",
+      "side": 1,
+      "message": "Ah, yeah. I\u0027ll leave it like it is now because I believe in another CL we will need to pass isCallValid to the function above. If that\u0027s OK with you.",
+      "parentUuid": "ee670626_7b2796f4",
+      "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
