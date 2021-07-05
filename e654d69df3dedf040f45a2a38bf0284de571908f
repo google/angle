@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6cedc8e7_e04d9785",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T16:34:51Z",
+      "side": 1,
+      "message": "Are setw and setfill stateful? The C API seems easier to work with, and clearly does not allocate memory in the heap. Done on snprintf. Since this is test-only code so there are very minimal security requirements.",
+      "parentUuid": "663ff99b_ae2b0eb3",
+      "revId": "e654d69df3dedf040f45a2a38bf0284de571908f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9ebded5c_07f40205",
         "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
         "patchSetId": 5
@@ -48,6 +66,24 @@
       "writtenOn": "2021-07-05T14:44:22Z",
       "side": 1,
       "message": "When touching these function(s) I\u0027d probably suggest to accept the resource iterator directly as parameter in SerializeProgram and use for_each: \n\n  std::for_each(programManager.begin(), programManager.end(),\n                std::bind(SerializeProgram, \u0026json, _1));\n\nlikewise for the other loops.",
+      "revId": "e654d69df3dedf040f45a2a38bf0284de571908f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06d4ea6e_a78e6f1f",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1392,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T16:34:51Z",
+      "side": 1,
+      "message": "I\u0027d prefer to avoid using std::for_each and std::bind if that\u0027s OK with you. That\u0027s too much functional programming for ANGLE.",
+      "parentUuid": "9ebded5c_07f40205",
       "revId": "e654d69df3dedf040f45a2a38bf0284de571908f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
