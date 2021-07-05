@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cea977d_379d658f",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4080,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T11:46:20Z",
+      "side": 1,
+      "message": "nit: capturing",
+      "range": {
+        "startLine": 4080,
+        "startChar": 32,
+        "endLine": 4080,
+        "endChar": 42
+      },
+      "revId": "c7a93a7baf8aab93c73588040c68842a09e75119",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cf7ea11_480118da",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4080,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T11:46:20Z",
+      "side": 1,
+      "message": "nit: and we wouldn\u0027t be drawing anything anyway",
+      "range": {
+        "startLine": 4079,
+        "startChar": 71,
+        "endLine": 4080,
+        "endChar": 22
+      },
+      "revId": "c7a93a7baf8aab93c73588040c68842a09e75119",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
