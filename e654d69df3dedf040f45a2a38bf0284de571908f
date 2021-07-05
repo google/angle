@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c2c155c_734efdcc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T11:36:42Z",
+      "side": 1,
+      "message": "Gert: PTAL. Can you let me know if this looks alright to you?",
+      "revId": "e654d69df3dedf040f45a2a38bf0284de571908f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
