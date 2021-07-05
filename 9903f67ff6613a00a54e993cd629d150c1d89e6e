@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f98ebdcd_83dfdc32",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T21:48:49Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "9903f67ff6613a00a54e993cd629d150c1d89e6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ba1ff9d_1a2a52d1",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T21:48:49Z",
+      "side": 1,
+      "message": "did this fail with just buffer access validation? Let me know which test and I\u0027ll follow up with the working group - that\u0027s a bug in the WebGL spec/test.",
+      "range": {
+        "startLine": 585,
+        "startChar": 7,
+        "endLine": 586,
+        "endChar": 79
+      },
+      "revId": "9903f67ff6613a00a54e993cd629d150c1d89e6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
