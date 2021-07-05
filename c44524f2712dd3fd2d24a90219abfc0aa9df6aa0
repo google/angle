@@ -16,6 +16,24 @@
       "message": "Why not std::vector?",
       "revId": "c44524f2712dd3fd2d24a90219abfc0aa9df6aa0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84bb1ca4_a77bc80d",
+        "filename": "src/libANGLE/capture/trace_fixture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-05T16:09:04Z",
+      "side": 1,
+      "message": "Because we disable optimization when compiling the traces, a std::vector accessor will not be inlined into a flat lookup. This raw pointer ensures our traces use the fewest instructions possible.",
+      "parentUuid": "c59f3c36_0313237b",
+      "revId": "c44524f2712dd3fd2d24a90219abfc0aa9df6aa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
