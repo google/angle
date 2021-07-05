@@ -16,6 +16,24 @@
       "message": "Hm, a bit worrisome that it failed on arm64.",
       "revId": "e783312fc4f3bef05abb4e51679fbbe6d4ac5560",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8248d00a_9ef5e108",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-07-05T20:26:02Z",
+      "side": 1,
+      "message": "Yeah, Geoff\u0027s CL also encountered issues with system info on another bot\nhttps://ci.chromium.org/ui/p/angle/builders/try/linux-clang-rel/22750/overview",
+      "parentUuid": "f187615a_f5cfac2c",
+      "revId": "e783312fc4f3bef05abb4e51679fbbe6d4ac5560",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
