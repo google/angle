@@ -122,6 +122,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2d41cb5a_10856360",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-06T22:01:18Z",
+      "side": 1,
+      "message": "\u003e if we have two instances of two immutable samplers, in swapped orders, e.g. red_8 + rg_16, and rg_16 + red_8, is this compatible?\n\nfair point. This could be implementation dependent, some vendors have no issues with swizzled component order. External formats dont have this issue since YCbCr and YCrCb formats will have different values (on Android at least) but we will need to handle this when we support native YUV VkFormats.\n\n\u003e Seems to me like you should be also storing the index\n\ndid you mean component swizzel? if not, can you elaborate?\n\n\u003e but doesn\u0027t the order of samplers in VkDescriptorSetLayoutBinding::pImmutableSamplers matter?\n\nfrom my reading of the code, each binding index gets its own \"pImmutableSamplers\" array, which means only 1 entry in that array. Please let me know if this is not the case.\n\n\u003e Is the index into that array what you are referring to Jamie?\n\ni thought jamie\u0027s comment was talking about component swizzle, is that not the case?",
+      "parentUuid": "c96dd846_5df7d76e",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 53
+      },
+      "revId": "a91934ad4bc157903858c07393260def6750a9cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5769e090_3a59cd21",
         "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
         "patchSetId": 9
