@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "780d36c7_c6e5d0bf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-06T00:22:10Z",
+      "side": 1,
+      "message": "FYI - shabi, i already have a patch using VkSamplerYcbcrConversionImageFormatProperties::combinedImageSamplerDescriptorCount\n\nHaven\u0027t started the review since i am waiting on verification internally",
+      "revId": "e44364c14e3219a724fc5f7aa91e4aa43e8eb78e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
