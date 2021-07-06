@@ -328,6 +328,7 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getIvecConstant(int32_t value, int size);
     spirv::IdRef getVecConstant(float value, int size);
     spirv::IdRef getCompositeConstant(spirv::IdRef typeId, const spirv::IdRefList &values);
+    spirv::IdRef getNullConstant(spirv::IdRef typeId);
 
     // Helpers to start and end a function.
     void startNewFunction(spirv::IdRef functionId, const TFunction *func);
@@ -385,6 +386,7 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getBasicConstantHelper(uint32_t value,
                                         TBasicType type,
                                         angle::HashMap<uint32_t, spirv::IdRef> *constants);
+    spirv::IdRef getNullVectorConstantHelper(TBasicType type, int size);
     spirv::IdRef getVectorConstantHelper(spirv::IdRef valueId, TBasicType type, int size);
 
     uint32_t nextUnusedBinding();
@@ -442,8 +444,8 @@ class SPIRVBuilder : angle::NonCopyable
     angle::HashMap<uint32_t, spirv::IdRef> mIntConstants;
     angle::HashMap<uint32_t, spirv::IdRef> mFloatConstants;
     angle::HashMap<SpirvIdAndIdList, spirv::IdRef, SpirvIdAndIdListHash> mCompositeConstants;
-    // TODO: Use null constants as optimization for when complex types are initialized with all
-    // zeros.  http://anglebug.com/4889
+    // Keyed by typeId, returns the null constant corresponding to that type.
+    std::vector<spirv::IdRef> mNullConstants;
 
     // List of type pointers that are already defined.
     // TODO: if all users call getTypeData(), move to SpirvTypeData.  http://anglebug.com/4889

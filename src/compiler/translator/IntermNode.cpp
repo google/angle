@@ -769,6 +769,22 @@ bool TIntermAggregate::hasConstantValue() const
     return true;
 }
 
+bool TIntermAggregate::isConstantNullValue() const
+{
+    if (!isConstructor())
+    {
+        return false;
+    }
+    for (TIntermNode *constructorArg : mArguments)
+    {
+        if (!constructorArg->getAsTyped()->isConstantNullValue())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 const TConstantUnion *TIntermAggregate::getConstantValue() const
 {
     if (!hasConstantValue())
@@ -1054,6 +1070,11 @@ TIntermTyped::TIntermTyped(const TIntermTyped &node) : TIntermNode()
 }
 
 bool TIntermTyped::hasConstantValue() const
+{
+    return false;
+}
+
+bool TIntermTyped::isConstantNullValue() const
 {
     return false;
 }
@@ -1799,6 +1820,19 @@ void TIntermBinary::promote()
 
 bool TIntermConstantUnion::hasConstantValue() const
 {
+    return true;
+}
+
+bool TIntermConstantUnion::isConstantNullValue() const
+{
+    const size_t size = mType.getObjectSize();
+    for (size_t index = 0; index < size; ++index)
+    {
+        if (!mUnionArrayPointer[index].isZero())
+        {
+            return false;
+        }
+    }
     return true;
 }
 
