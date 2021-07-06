@@ -63,6 +63,30 @@
       },
       "revId": "74c5d9e4fe7add3f4fe0daff61e97f8fa0319fb5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e4a8110_f47bf5a8",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 23
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-06T20:42:34Z",
+      "side": 1,
+      "message": "Thank you so much Quyen for tracking this down!\n\nApple also found the collision between EGL_POWER_PREFERENCE_ANGLE and EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX and recently fixed it in https://bugs.webkit.org/show_bug.cgi?id\u003d227408 . However, it wasn\u0027t obvious that the GPU selection, and defaulting to the low-power GPU, could be the cause of the kernel panics. Thank you for figuring that out!\n\nThe use of EGL_POWER_PREFERENCE_ANGLE as a display creation attribute is actually the most compatible way to use the idea. As specified in EGL_ANGLE_power_preference as a context creation attribute, it\u0027s only compatible with the OpenGL backend on macOS. We\u0027ll update the extension specification to allow this use and deprecate the OpenGL-specific semantics.\n\nWill remove the default low-power GPU selection in my copy of this CL:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/3002944\n\nand try to figure out the remaining test failures.",
+      "parentUuid": "424856d2_ee95c7c7",
+      "range": {
+        "startLine": 272,
+        "startChar": 20,
+        "endLine": 272,
+        "endChar": 46
+      },
+      "revId": "74c5d9e4fe7add3f4fe0daff61e97f8fa0319fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
