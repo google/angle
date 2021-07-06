@@ -129,6 +129,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc3efc68_33d5fba2",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2615,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-06T21:27:17Z",
+      "side": 1,
+      "message": "Thank you, I made a few corrections and simplifications (untested code):\n\n    // Verify that the destination is now red\n    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);\n    EXPECT_PIXEL_RECT_EQ(64, 0, 128, 1, GLColor::red);\n\n    // Verify depth\n    ANGLE_GL_PROGRAM(drawBlue, essl3_shaders::vs::Simple(), essl3_shaders::fs::Blue());\n    glEnable(GL_DEPTH_TEST);\n    glDepthMask(false);\n\n    // Draw blue with depth smaller than expected, but with GL_GREATER.  This should fail rendering.\n    glDepthFunc(GL_GREATER);\n    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), -0.01f, 0.5f);\n    EXPECT_PIXEL_RECT_EQ(64, 0, 128, 1, GLColor::red);\n\n    // Draw blue again but with depth greater than expected.  This should pass rendering.\n    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 0.01f, 0.5f);\n    EXPECT_PIXEL_RECT_EQ(64, 0, 128, 1, GLColor::blue);",
+      "parentUuid": "a84c5d49_113b4b62",
+      "range": {
+        "startLine": 2610,
+        "startChar": 0,
+        "endLine": 2615,
+        "endChar": 61
+      },
+      "revId": "bf16d538d19a6280eaad128d50a5770cdcde39cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a93e47d8_9c6932ac",
