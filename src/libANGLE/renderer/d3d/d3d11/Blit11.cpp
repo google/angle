@@ -114,7 +114,7 @@ void StretchedBlitNearest_PixelByPixel(const gl::Box &sourceArea,
             float xPerc    = static_cast<float>(writeColumn - destArea.x) / (destArea.width - 1);
             float xRounded = floor(xPerc * (sourceArea.width - 1) + 0.5f);
             unsigned int readColumn = static_cast<unsigned int>(
-                gl::clamp(sourceArea.x + xRounded, 0, sourceSize.height - 1));
+                gl::clamp(sourceArea.x + xRounded, 0, sourceSize.width - 1));
 
             const uint8_t *sourcePixel =
                 sourceData + readRow * sourceRowPitch + readColumn * srcPixelStride + readOffset;
