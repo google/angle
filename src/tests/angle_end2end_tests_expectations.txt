@@ -105,6 +105,7 @@
 6415 MAC INTEL METAL : CompressedTextureBPTCTest.Test/RGB_BPTC_SIGNED_FLOAT__ES3_Metal_DirectMetalGen = SKIP
 
 6389 MAC METAL : RobustResourceInitTestES3.BlitDepthStencilAfterClearBuffer/ES3_Metal = SKIP
+6389 MAC METAL : RobustResourceInitTestES3.BlitDepthStencilAfterClearBuffer/ES3_Metal_DirectMetalGen = SKIP
 
 // Direct Metal does not yet implement vertex attribute aliasing
 // Attribute aliasing is only allowed in GLSL ES 1.0 but disallowed by WebGL

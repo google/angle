@@ -157,6 +157,8 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
         return mMslShaderTranslateInfo[shaderType].metalShaderSource;
     }
 
+    bool hasFlatAttribute() const { return programHasFlatAttributes(); }
+
   private:
     template <int cols, int rows>
     void setUniformMatrixfv(GLint location,
@@ -228,6 +230,8 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
                                         gl::InfoLog &infoLog);
 
     mtl::BufferPool *getBufferPool(ContextMtl *context);
+
+    bool programHasFlatAttributes() const;
 
     // State for the default uniform blocks.
     struct DefaultUniformBlock final : private angle::NonCopyable

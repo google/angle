@@ -53,12 +53,19 @@ class VertexArrayMtl : public VertexArrayImpl
 
     angle::Result getIndexBuffer(const gl::Context *glContext,
                                  gl::DrawElementsType indexType,
-                                 gl::PrimitiveMode primitiveMode,
                                  size_t indexCount,
                                  const void *sourcePointer,
                                  mtl::BufferRef *idxBufferOut,
                                  size_t *idxBufferOffsetOut,
                                  gl::DrawElementsType *indexTypeOut);
+
+    std::vector<DrawCommandRange> getDrawIndices(const gl::Context *glContext,
+                                                 gl::DrawElementsType originalIndexType,
+                                                 gl::DrawElementsType indexType,
+                                                 gl::PrimitiveMode primitiveMode,
+                                                 mtl::BufferRef idxBuffer,
+                                                 uint32_t indexCount,
+                                                 size_t offset);
 
   private:
     void reset(ContextMtl *context);
@@ -74,13 +81,11 @@ class VertexArrayMtl : public VertexArrayImpl
 
     angle::Result convertIndexBuffer(const gl::Context *glContext,
                                      gl::DrawElementsType indexType,
-                                     gl::PrimitiveMode mode,
                                      size_t offset,
                                      mtl::BufferRef *idxBufferOut,
                                      size_t *idxBufferOffsetOut);
     angle::Result streamIndexBufferFromClient(const gl::Context *glContext,
                                               gl::DrawElementsType indexType,
-                                              gl::PrimitiveMode primitiveType,
                                               size_t indexCount,
                                               const void *sourcePointer,
                                               mtl::BufferRef *idxBufferOut,

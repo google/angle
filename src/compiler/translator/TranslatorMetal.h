@@ -15,6 +15,7 @@
 #ifndef LIBANGLE_RENDERER_METAL_TRANSLATORMETAL_H_
 #define LIBANGLE_RENDERER_METAL_TRANSLATORMETAL_H_
 
+#include "compiler/translator/DriverUniformMetal.h"
 #include "compiler/translator/TranslatorVulkan.h"
 #include "compiler/translator/tree_util/DriverUniform.h"
 #include "compiler/translator/tree_util/SpecializationConstant.h"
@@ -33,22 +34,6 @@ class SpecConstMetal : public SpecConst
     ~SpecConstMetal() override {}
 
   private:
-};
-
-class DriverUniformMetal : public DriverUniform
-{
-  public:
-    DriverUniformMetal() : DriverUniform(DriverUniformMode::InterfaceBlock) {}
-    ~DriverUniformMetal() override {}
-
-    TIntermBinary *getHalfRenderAreaRef() const override;
-    TIntermBinary *getFlipXYRef() const override;
-    TIntermBinary *getNegFlipXYRef() const override;
-    TIntermSwizzle *getNegFlipYRef() const override;
-    TIntermBinary *getCoverageMaskFieldRef() const;
-
-  protected:
-    TFieldList *createUniformFields(TSymbolTable *symbolTable) override;
 };
 
 class TranslatorMetal : public TranslatorVulkan

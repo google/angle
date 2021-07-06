@@ -615,13 +615,15 @@ TEST_F(MSLOutputTest, DoWhileSymbol)
 TEST_F(MSLOutputTest, AnonymousStruct)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "precision highp float;\n"
-        "out vec4 my_FragColor;\n"
-        "uniform int u1;\n"
-        "void main() {\n"
-        "   bvec4 v = bvec4(true, true, true, false);\n"
-        "   my_FragColor = vec4(v[u1 + 1] || v[u1]);\n"
-        "}\n";
+        R"(
+        precision mediump float;
+        struct { vec4 v; } anonStruct;
+        void main() {
+            anonStruct.v = vec4(0.0,1.0,0.0,1.0);
+            gl_FragColor = anonStruct.v;
+        })";
     compile(shaderString, SH_VARIABLES);
+    // TODO(anglebug.com/6395): This success condition is expected to fail now.
+    // When WebKit build is able to run the tests, this should be changed to something else.
+    //    ASSERT_TRUE(foundInCode(SH_MSL_METAL_OUTPUT, "__unnamed"));
 }

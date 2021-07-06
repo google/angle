@@ -15,13 +15,13 @@
 #include "common/Optional.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/metal/ProvokingVertexHelper.h"
 #include "libANGLE/renderer/metal/mtl_buffer_pool.h"
 #include "libANGLE/renderer/metal/mtl_command_buffer.h"
 #include "libANGLE/renderer/metal/mtl_occlusion_query_pool.h"
 #include "libANGLE/renderer/metal/mtl_resources.h"
 #include "libANGLE/renderer/metal/mtl_state_cache.h"
 #include "libANGLE/renderer/metal/mtl_utils.h"
-
 namespace rx
 {
 class DisplayMtl;
@@ -157,13 +157,6 @@ class ContextMtl : public ContextImpl, public mtl::Context
                                                                    const GLint *baseVertices,
                                                                    const GLuint *baseInstances,
                                                                    GLsizei drawcount) override;
-    angle::Result drawElementsSimpleTypesPrimitiveRestart(const gl::Context *context,
-                                                          gl::PrimitiveMode mode,
-                                                          GLsizei count,
-                                                          gl::DrawElementsType type,
-                                                          const void *indices,
-                                                          GLsizei instances);
-
     // Device loss
     gl::GraphicsResetStatus getResetStatus() override;
 
@@ -325,7 +318,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     // Ends any active command encoder
     void endEncoding(bool forceSaveRenderPassContent);
 
-    void flushCommandBufer();
+    void flushCommandBuffer(mtl::CommandBufferFinishOperation operation);
     void present(const gl::Context *context, id<CAMetalDrawable> presentationDrawable);
     angle::Result finishCommandBuffer();
 
@@ -436,7 +429,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     void updateDrawFrameBufferBinding(const gl::Context *context);
     void updateProgramExecutable(const gl::Context *context);
     void updateVertexArray(const gl::Context *context);
-
+    bool requiresIndexRewrite(const gl::State &state);
     angle::Result updateDefaultAttribute(size_t attribIndex);
     void filterOutXFBOnlyDirtyBits(const gl::Context *context);
     angle::Result handleDirtyActiveTextures(const gl::Context *context);
@@ -506,8 +499,6 @@ class ContextMtl : public ContextImpl, public mtl::Context
         float negFlipXY[2];
         uint32_t emulatedInstanceID;
         uint32_t coverageMask;
-        float fragRotation[4];
-        float preRotation[4];
     };
 
     struct DefaultAttribute
@@ -564,6 +555,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
 
     IncompleteTextureSet mIncompleteTextures;
     bool mIncompleteTexturesInitialized = false;
+    ProvokingVertexHelper mProvokingVertexHelper;
 };
 
 }  // namespace rx

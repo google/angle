@@ -57,9 +57,8 @@ class Rewriter : public TIntermRebuild
 
     const TField *createRenamed(const TField &field)
     {
-        auto *renamed =
-            new TField(const_cast<TType *>(&getRenamedOrOriginal(*field.type())),
-                       maybeCreateNewName(field), field.line(), SymbolType::AngleInternal);
+        auto *renamed = new TField(const_cast<TType *>(&getRenamedOrOriginal(*field.type())),
+                                   maybeCreateNewName(field), field.line(), field.symbolType());
 
         return renamed;
     }
@@ -77,7 +76,7 @@ class Rewriter : public TIntermRebuild
     const TFunction *createRenamed(const TFunction &function)
     {
         auto *renamed =
-            new TFunction(&mSymbolTable, maybeCreateNewName(function), SymbolType::AngleInternal,
+            new TFunction(&mSymbolTable, maybeCreateNewName(function), function.symbolType(),
                           &getRenamedOrOriginal(function.getReturnType()),
                           function.isKnownToNotHaveSideEffects());
 
@@ -110,7 +109,7 @@ class Rewriter : public TIntermRebuild
         auto *renamed =
             new TInterfaceBlock(&mSymbolTable, maybeCreateNewName(interfaceBlock),
                                 &getRenamedOrOriginal(interfaceBlock.fields()), layoutQualifier,
-                                SymbolType::AngleInternal, interfaceBlock.extensions());
+                                interfaceBlock.symbolType(), interfaceBlock.extensions());
 
         return renamed;
     }
@@ -119,7 +118,7 @@ class Rewriter : public TIntermRebuild
     {
         auto *renamed =
             new TStructure(&mSymbolTable, maybeCreateNewName(structure),
-                           &getRenamedOrOriginal(structure.fields()), SymbolType::AngleInternal);
+                           &getRenamedOrOriginal(structure.fields()), structure.symbolType());
 
         renamed->setAtGlobalScope(structure.atGlobalScope());
 
@@ -133,6 +132,7 @@ class Rewriter : public TIntermRebuild
         if (const TStructure *structure = type.getStruct())
         {
             renamed = new TType(&getRenamedOrOriginal(*structure), type.isStructSpecifier());
+            renamed->setQualifier(type.getQualifier());
         }
         else if (const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock())
         {
@@ -161,7 +161,7 @@ class Rewriter : public TIntermRebuild
     {
         auto *renamed = new TVariable(&mSymbolTable, maybeCreateNewName(variable),
                                       &getRenamedOrOriginal(variable.getType()),
-                                      SymbolType::AngleInternal, variable.extensions());
+                                      variable.symbolType(), variable.extensions());
 
         return renamed;
     }

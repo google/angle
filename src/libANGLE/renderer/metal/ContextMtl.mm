@@ -192,7 +192,8 @@ ContextMtl::ContextMtl(const gl::State &state, gl::ErrorSet *errorSet, DisplayMt
       mCmdBuffer(&display->cmdQueue()),
       mRenderEncoder(&mCmdBuffer, mOcclusionQueryPool),
       mBlitEncoder(&mCmdBuffer),
-      mComputeEncoder(&mCmdBuffer)
+      mComputeEncoder(&mCmdBuffer),
+      mProvokingVertexHelper(this, &display->cmdQueue(), display)
 {}
 
 ContextMtl::~ContextMtl() {}
@@ -228,7 +229,7 @@ void ContextMtl::onDestroy(const gl::Context *context)
 
     mIncompleteTextures.onDestroy(context);
     mIncompleteTexturesInitialized = false;
-
+    mProvokingVertexHelper.onDestroy(this);
     mDummyXFBRenderTexture = nullptr;
 }
 
@@ -258,7 +259,7 @@ angle::Result ContextMtl::ensureIncompleteTexturesCreated(const gl::Context *con
 // Flush and finish.
 angle::Result ContextMtl::flush(const gl::Context *context)
 {
-    flushCommandBufer();
+    flushCommandBuffer(mtl::WaitUntilScheduled);
     return angle::Result::Continue;
 }
 angle::Result ContextMtl::finish(const gl::Context *context)
@@ -588,14 +589,43 @@ angle::Result ContextMtl::drawElementsImpl(const gl::Context *context,
     }
 
     mtl::BufferRef idxBuffer;
+    mtl::BufferRef drawIdxBuffer;
     size_t convertedOffset             = 0;
     gl::DrawElementsType convertedType = type;
 
-    ANGLE_TRY(mVertexArray->getIndexBuffer(context, type, mode, count, indices, &idxBuffer,
+    ANGLE_TRY(mVertexArray->getIndexBuffer(context, type, count, indices, &idxBuffer,
                                            &convertedOffset, &convertedType));
 
     ASSERT(idxBuffer);
     ASSERT((convertedOffset % mtl::kIndexBufferOffsetAlignment) == 0);
+    uint32_t convertedCounti32 = (uint32_t)count;
+
+    if (requiresIndexRewrite(context->getState()))
+    {
+        size_t outIndexCount      = 0;
+        gl::PrimitiveMode newMode = gl::PrimitiveMode::InvalidEnum;
+        drawIdxBuffer             = mProvokingVertexHelper.preconditionIndexBuffer(
+            mtl::GetImpl(context), idxBuffer, count, convertedOffset,
+            mState.isPrimitiveRestartEnabled(), mode, convertedType, outIndexCount, newMode);
+        if (!drawIdxBuffer)
+        {
+            return angle::Result::Stop;
+        }
+        // Line strips and triangle strips are rewritten to flat line arrays and tri arrays.
+        convertedCounti32 = (uint32_t)outIndexCount;
+        mode              = newMode;
+    }
+    else
+    {
+        drawIdxBuffer = idxBuffer;
+    }
+    // Draw commands will only be broken up if transform feedback is enabled,
+    // if the mode is a simple type, and if the buffer contained any restart
+    // indices.
+    // It's safe to use idxBuffer in this case, as it will contain the same count and restart ranges
+    // as drawIdxBuffer.
+    const std::vector<DrawCommandRange> drawCommands = mVertexArray->getDrawIndices(
+        context, type, convertedType, mode, idxBuffer, convertedCounti32, convertedOffset);
 
     ANGLE_TRY(setupDraw(context, mode, 0, count, instances, type, indices, false));
 
@@ -606,13 +636,20 @@ angle::Result ContextMtl::drawElementsImpl(const gl::Context *context,
     if (instances == 0)
     {
         // Normal draw
-        mRenderEncoder.drawIndexed(mtlType, count, mtlIdxType, idxBuffer, convertedOffset);
+        for (auto &command : drawCommands)
+        {
+            mRenderEncoder.drawIndexed(mtlType, command.count, mtlIdxType, drawIdxBuffer,
+                                       command.offset);
+        }
     }
     else
     {
         // Instanced draw
-        mRenderEncoder.drawIndexedInstanced(mtlType, count, mtlIdxType, idxBuffer, convertedOffset,
-                                            instanceCount);
+        for (auto &command : drawCommands)
+        {
+            mRenderEncoder.drawIndexedInstanced(mtlType, command.count, mtlIdxType, drawIdxBuffer,
+                                                command.offset, instanceCount);
+        }
     }
 
     return angle::Result::Continue;
@@ -1097,7 +1134,7 @@ angle::Result ContextMtl::onMakeCurrent(const gl::Context *context)
 }
 angle::Result ContextMtl::onUnMakeCurrent(const gl::Context *context)
 {
-    flushCommandBufer();
+    flushCommandBuffer(mtl::WaitUntilScheduled);
     return angle::Result::Continue;
 }
 
@@ -1298,6 +1335,30 @@ void ContextMtl::invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask
         mDirtyDefaultAttribsMask |= dirtyMask;
         mDirtyBits.set(DIRTY_BIT_DEFAULT_ATTRIBS);
     }
+
+    // TODO(anglebug.com/5505): determine how to merge this.
+#if 0
+    if (getDisplay()->getFeatures().hasExplicitMemBarrier.enabled)
+    {
+        const gl::ProgramExecutable *executable = mState.getProgramExecutable();
+        ASSERT(executable);
+        ASSERT(executable->hasTransformFeedbackOutput() || mState.isTransformFeedbackActive());
+        TransformFeedbackMtl *transformFeedbackMtl = mtl::GetImpl(mState.getCurrentTransformFeedback());
+        size_t bufferCount                         = executable->getTransformFeedbackBufferCount();
+        const gl::TransformFeedbackBuffersArray<BufferMtl *> &bufferHandles =
+            transformFeedbackMtl->getBufferHandles();
+        for (size_t i = 0; i < bufferCount; i++)
+        {
+            const mtl::BufferRef & constBufferRef = bufferHandles[i]->getCurrentBuffer();
+            mRenderEncoder.memoryBarrierWithResource(constBufferRef, mtl::kRenderStageVertex, mtl::kRenderStageVertex);
+        }
+    }
+    else
+    {
+        //End the command encoder, so any Transform Feedback changes are available to subsequent draw calls.
+        endEncoding(false);
+    }
+#endif
 }
 
 void ContextMtl::invalidateCurrentTextures()
@@ -1404,20 +1465,22 @@ void ContextMtl::endEncoding(bool forceSaveRenderPassContent)
     }
 }
 
-void ContextMtl::flushCommandBufer()
+void ContextMtl::flushCommandBuffer(mtl::CommandBufferFinishOperation operation)
 {
+    mProvokingVertexHelper.commitPreconditionCommandBuffer(this);
     if (!mCmdBuffer.ready())
     {
         return;
     }
 
     endEncoding(true);
-    mCmdBuffer.commit();
+    mCmdBuffer.commit(operation);
 }
 
 void ContextMtl::present(const gl::Context *context, id<CAMetalDrawable> presentationDrawable)
 {
     ensureCommandBufferReady();
+    mProvokingVertexHelper.commitPreconditionCommandBuffer(this);
 
     FramebufferMtl *currentframebuffer = mtl::GetImpl(getState().getDrawFramebuffer());
     if (currentframebuffer)
@@ -1427,15 +1490,12 @@ void ContextMtl::present(const gl::Context *context, id<CAMetalDrawable> present
 
     endEncoding(false);
     mCmdBuffer.present(presentationDrawable);
-    mCmdBuffer.commit();
+    mCmdBuffer.commit(mtl::NoWait);
 }
 
 angle::Result ContextMtl::finishCommandBuffer()
 {
-    flushCommandBufer();
-
-    mCmdBuffer.finish();
-
+    flushCommandBuffer(mtl::WaitUntilFinished);
     return angle::Result::Continue;
 }
 
@@ -1574,6 +1634,7 @@ mtl::ComputeCommandEncoder *ContextMtl::getComputeCommandEncoder()
 
 void ContextMtl::ensureCommandBufferReady()
 {
+    mProvokingVertexHelper.ensureCommandBufferReady();
     if (!mCmdBuffer.ready())
     {
         mCmdBuffer.restart();
@@ -1710,6 +1771,15 @@ void ContextMtl::updateFrontFace(const gl::State &glState)
 void ContextMtl::updateDepthBias(const gl::State &glState)
 {
     mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
+}
+
+// Index rewrite is required if:
+// Provkoing vertex mode is 'last'
+// Program has at least one 'flat' attribute
+bool ContextMtl::requiresIndexRewrite(const gl::State &state)
+{
+    return mProgram->hasFlatAttribute() &&
+           (state.getProvokingVertex() == gl::ProvokingVertexConvention::LastVertexConvention);
 }
 
 void ContextMtl::updateDrawFrameBufferBinding(const gl::Context *context)
@@ -2177,8 +2247,6 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context,
     mDriverUniforms.depthRange[1] = depthRangeFar;
     mDriverUniforms.depthRange[2] = depthRangeDiff;
     mDriverUniforms.depthRange[3] = NeedToInvertDepthRange(depthRangeNear, depthRangeFar) ? -1 : 1;
-
-    // NOTE(hqle): preRotation & fragRotation are unused.
 
     // Emulated gl_InstanceID
     // TODO(anglebug.com/5505): these code paths differ significantly from

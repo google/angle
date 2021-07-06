@@ -15,6 +15,7 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/glslang_wrapper_utils.h"
+#include "libANGLE/renderer/metal/CompilerMtl.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DeviceMtl.h"
 #include "libANGLE/renderer/metal/IOSurfaceSurfaceMtl.h"
@@ -360,12 +361,13 @@ ExternalImageSiblingImpl *DisplayMtl::createExternalImageSibling(const gl::Conte
 
 gl::Version DisplayMtl::getMaxSupportedESVersion() const
 {
-    // NOTE(hqle): Supports GLES 3.0 on iOS GPU Family 4+ for now.
-#if TARGET_OS_SIMULATOR  // Simulator should be able to support ES3, despite not supporting iOS GPU
-                         // Family 4 in its entirety.
+#if TARGET_OS_SIMULATOR
+    // Simulator should be able to support ES3, despite not supporting iOS GPU
+    // Family 3 in its entirety.
+    // FIXME: None of the feature conditions are checked for simulator support.
     return gl::Version(3, 0);
 #else
-    if (supportsEitherGPUFamily(4, 1))
+    if (supportsEitherGPUFamily(3, 1))
     {
         return mtl::kMaxSupportedGLVersion;
     }
@@ -431,6 +433,16 @@ void DisplayMtl::populateFeatureList(angle::FeatureList *features)
     mFeatures.populateFeatureList(features);
 }
 
+EGLenum DisplayMtl::EGLDrawingBufferTextureTarget()
+{
+    // TODO(anglebug.com/6395): Apple's implementation conditionalized this on
+    // MacCatalyst and whether it was running on ARM64 or X64, preferring
+    // EGL_TEXTURE_RECTANGLE_ANGLE. Metal can bind IOSurfaces to regular 2D
+    // textures, and rectangular textures don't work in the SPIR-V Metal
+    // backend, so for the time being use EGL_TEXTURE_2D on all platforms.
+    return EGL_TEXTURE_2D;
+}
+
 egl::ConfigSet DisplayMtl::generateConfigs()
 {
     // NOTE(hqle): generate more config permutations
@@ -454,7 +466,7 @@ egl::ConfigSet DisplayMtl::generateConfigs()
     config.transparentType = EGL_NONE;
 
     // Pbuffer
-    config.bindToTextureTarget = EGL_TEXTURE_2D;
+    config.bindToTextureTarget = EGLDrawingBufferTextureTarget();
     config.maxPBufferWidth     = 4096;
     config.maxPBufferHeight    = 4096;
     config.maxPBufferPixels    = 4096 * 4096;
@@ -647,8 +659,16 @@ void DisplayMtl::ensureCapsInitialized() const
     // NOTE(hqle): Metal has some problems drawing big point size even though
     // Metal-Feature-Set-Tables.pdf says that max supported point size is 511. We limit it to 64
     // for now. http://anglebug.com/4816
-    mNativeCaps.maxAliasedPointSize = 64;
 
+    // NOTE(kpiddington): This seems to be fixed in macOS Monterey
+    if (ANGLE_APPLE_AVAILABLE_XCI(12.0, 15.0, 15.0))
+    {
+        mNativeCaps.maxAliasedPointSize = 511;
+    }
+    else
+    {
+        mNativeCaps.maxAliasedPointSize = 64;
+    }
     mNativeCaps.minAliasedLineWidth = 1.0f;
     mNativeCaps.maxAliasedLineWidth = 1.0f;
 
@@ -724,7 +744,17 @@ void DisplayMtl::ensureCapsInitialized() const
     // Fill in additional limits for UBOs and SSBOs.
     mNativeCaps.maxUniformBufferBindings = mNativeCaps.maxCombinedUniformBlocks;
     mNativeCaps.maxUniformBlockSize      = mtl::kMaxUBOSize;  // Default according to GLES 3.0 spec.
-    mNativeCaps.uniformBufferOffsetAlignment = 1;
+    if (supportsAppleGPUFamily(1))
+    {
+        mNativeCaps.uniformBufferOffsetAlignment =
+            16;  // on Apple based GPU's We can ignore data types when setting constant buffer
+                 // alignment at 16.
+    }
+    else
+    {
+        mNativeCaps.uniformBufferOffsetAlignment =
+            256;  // constant buffers on all other GPUs must be aligned to 256.
+    }
 
     mNativeCaps.maxShaderStorageBufferBindings     = 0;
     mNativeCaps.maxShaderStorageBlockSize          = 0;
@@ -803,8 +833,14 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.textureBorderClampOES       = false;  // not implemented yet
     mNativeExtensions.translatedShaderSourceANGLE = true;
     mNativeExtensions.discardFramebufferEXT       = true;
+    // TODO(anglebug.com/6395): Apple's implementation exposed
+    // mNativeExtensions.textureRectangle = true here and
+    // EGL_TEXTURE_RECTANGLE_ANGLE as the eglBindTexImage texture target on
+    // macOS. This no longer seems necessary as IOSurfaces can be bound to
+    // regular 2D textures with Metal, and causes other problems such as
+    // breaking the SPIR-V Metal compiler.
 
-    // TODO(anglebug.com/5505): figure out why WebGL drawing buffer
+    // TODO(anglebug.com/6395): figure out why WebGL drawing buffer
     // creation fails on macOS when the Metal backend advertises the
     // EXT_multisampled_render_to_texture extension.
 #if !defined(ANGLE_PLATFORM_MACOS)
@@ -987,6 +1023,9 @@ void DisplayMtl::initializeFeatures()
                             !isOSX && !isCatalyst && !isSimulator);
     ANGLE_FEATURE_CONDITION((&mFeatures), rewriteRowMajorMatrices, true);
     ANGLE_FEATURE_CONDITION((&mFeatures), emulateTransformFeedback, true);
+
+    ANGLE_FEATURE_CONDITION((&mFeatures), intelExplicitBoolCastWorkaround,
+                            isIntel() && GetMacOSVersion() < OSVersion(11, 0, 0));
 
     ANGLE_FEATURE_CONDITION((&mFeatures), forceNonCSBaseMipmapGeneration, isIntel());
 
@@ -1268,13 +1307,14 @@ mtl::AutoObjCObj<MTLSharedEventListener> DisplayMtl::getOrCreateSharedEventListe
         ANGLE_MTL_OBJC_SCOPE
         {
             mSharedEventListener = [[[MTLSharedEventListener alloc] init] ANGLE_MTL_AUTORELEASE];
+            ASSERT(mSharedEventListener);  // Failure here most probably means a sandbox issue.
         }
     }
     return mSharedEventListener;
 }
 #endif
 
-bool DisplayMtl::useDirectToMetalCompiler()
+bool DisplayMtl::useDirectToMetalCompiler() const
 {
     return mFeatures.directMetalGeneration.enabled;
 }

@@ -9,9 +9,11 @@
 #include "angle_gl.h"
 #include "common/utilities.h"
 #include "compiler/translator/BuiltinsWorkaroundGLSL.h"
+#include "compiler/translator/DriverUniformMetal.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/OutputGLSLBase.h"
 #include "compiler/translator/StaticType.h"
+#include "compiler/translator/TranslatorMetalDirect/AddExplicitTypeCasts.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
 #include "compiler/translator/TranslatorMetalDirect/EmitMetal.h"
 #include "compiler/translator/TranslatorMetalDirect/FixTypeConstructors.h"
@@ -194,7 +196,7 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
 // Declares a new variable to replace gl_DepthRange, its values are fed from a driver uniform.
 ANGLE_NO_DISCARD bool ReplaceGLDepthRangeWithDriverUniform(TCompiler *compiler,
                                                            TIntermBlock *root,
-                                                           const DriverUniform *driverUniforms,
+                                                           const DriverUniformMetal *driverUniforms,
                                                            TSymbolTable *symbolTable)
 {
     // Create a symbol reference to "gl_DepthRange"
@@ -212,39 +214,6 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
 {
     TIntermFunctionDefinition *main = FindMain(root);
     return main->getBody()->getSequence();
-}
-
-// This operation performs Android pre-rotation and y-flip.  For Android (and potentially other
-// platforms), the device may rotate, such that the orientation of the application is rotated
-// relative to the native orientation of the device.  This is corrected in part by multiplying
-// gl_Position by a mat2.
-// The equations reduce to an expression:
-//
-//     gl_Position.xy = gl_Position.xy * preRotation
-ANGLE_NO_DISCARD bool AppendPreRotation(TCompiler *compiler,
-                                        TIntermBlock *root,
-                                        TSymbolTable *symbolTable,
-                                        SpecConst *specConst,
-                                        const DriverUniform *driverUniforms)
-{
-    TIntermTyped *preRotationRef = specConst->getPreRotationMatrix();
-    if (!preRotationRef)
-    {
-        preRotationRef = driverUniforms->getPreRotationMatrixRef();
-    }
-    TIntermSymbol *glPos         = new TIntermSymbol(BuiltInVariable::gl_Position());
-    TVector<int> swizzleOffsetXY = {0, 1};
-    TIntermSwizzle *glPosXY      = new TIntermSwizzle(glPos, swizzleOffsetXY);
-
-    // Create the expression "(gl_Position.xy * preRotation)"
-    TIntermBinary *zRotated = new TIntermBinary(EOpMatrixTimesVector, preRotationRef, glPosXY);
-
-    // Create the assignment "gl_Position.xy = (gl_Position.xy * preRotation)"
-    TIntermBinary *assignment =
-        new TIntermBinary(TOperator::EOpAssign, glPosXY->deepCopy(), zRotated);
-
-    // Append the assignment as a statement at the end of the shader.
-    return RunAtTheEndOfShader(compiler, root, assignment, symbolTable);
 }
 
 // Replaces a builtin variable with a version that is rotated and corrects the X and Y coordinates.
@@ -321,7 +290,7 @@ ANGLE_NO_DISCARD bool InsertFragCoordCorrection(TCompiler *compiler,
                                                 TIntermSequence *insertSequence,
                                                 TSymbolTable *symbolTable,
                                                 SpecConst *specConst,
-                                                const DriverUniform *driverUniforms)
+                                                const DriverUniformMetal *driverUniforms)
 {
     TIntermTyped *flipXY = specConst->getFlipXY();
     if (!flipXY)
@@ -504,7 +473,7 @@ TranslatorMetalDirect::TranslatorMetalDirect(sh::GLenum type,
 // kCoverageMaskEnabledName
 ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertSampleMaskWritingLogic(
     TIntermBlock &root,
-    DriverUniform &driverUniforms)
+    DriverUniformMetal &driverUniforms)
 {
     // This transformation leaves the tree in an inconsistent state by using a variable that's
     // defined in text, outside of the knowledge of the AST.
@@ -541,7 +510,7 @@ ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertSampleMaskWritingLogic(
     //      ANGLE_fragmentOut.gl_SampleMask);
     // }
     TIntermSequence *args       = new TIntermSequence;
-    TIntermBinary *coverageMask = driverUniforms.getCoverageMask();
+    TIntermBinary *coverageMask = driverUniforms.getCoverageMaskFieldRef();
     args->push_back(coverageMask);
     const TIntermSymbol *gl_SampleMask = FindSymbolNode(&root, ImmutableString("gl_SampleMask"));
     args->push_back(gl_SampleMask->deepCopy());
@@ -600,7 +569,7 @@ ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertRasterizationDiscardLogic(TIn
 // This is achieved by multiply the depth value with scale value stored in
 // driver uniform's depthRange.reserved
 bool TranslatorMetalDirect::transformDepthBeforeCorrection(TIntermBlock *root,
-                                                           const DriverUniform *driverUniforms)
+                                                           const DriverUniformMetal *driverUniforms)
 {
     // Create a symbol reference to "gl_Position"
     const TVariable *position  = BuiltInVariable::gl_Position();
@@ -737,7 +706,7 @@ static std::set<ImmutableString> GetMslKeywords()
     keywords.emplace("virtual");
     keywords.emplace("volatile");
     keywords.emplace("wchar_t");
-
+    keywords.emplace("NAN");
     return keywords;
 }
 
@@ -763,7 +732,7 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
                                           ShCompileOptions compileOptions,
                                           PerformanceDiagnostics * /*perfDiagnostics*/,
                                           SpecConst *specConst,
-                                          DriverUniform *driverUniforms)
+                                          DriverUniformMetal *driverUniforms)
 {
     TSymbolTable &symbolTable = getSymbolTable();
     IdGen idGen;
@@ -1017,8 +986,6 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
             AddSampleMaskDeclaration(*root, symbolTable);
         }
 
-        bool usePreRotation = compileOptions & SH_ADD_PRE_ROTATION;
-
         if (usesPointCoord)
         {
             TIntermTyped *flipNegXY = specConst->getNegFlipXY();
@@ -1028,14 +995,6 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
             }
             TIntermConstantUnion *pivot = CreateFloatNode(0.5f, EbpMedium);
             TIntermTyped *fragRotation  = nullptr;
-            if (usePreRotation)
-            {
-                fragRotation = specConst->getFragRotationMatrix();
-                if (!fragRotation)
-                {
-                    fragRotation = driverUniforms->getFragRotationMatrixRef();
-                }
-            }
             if (!RotateAndFlipBuiltinVariable(this, root, GetMainSequence(root), flipNegXY,
                                               &getSymbolTable(), BuiltInVariable::gl_PointCoord(),
                                               kFlippedPointCoordName, pivot, fragRotation))
@@ -1123,12 +1082,6 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         {
             return false;
         }
-
-        if ((compileOptions & SH_ADD_PRE_ROTATION) != 0 &&
-            !AppendPreRotation(this, root, &getSymbolTable(), specConst, driverUniforms))
-        {
-            return false;
-        }
     }
     else if (getShaderType() == GL_GEOMETRY_SHADER)
     {
@@ -1158,7 +1111,6 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         {
             return false;
         }
-
         if (!insertRasterizationDiscardLogic(*root))
         {
             return false;
@@ -1198,6 +1150,12 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
     }
 
     if (!ConvertUnsupportedConstructorsToFunctionCalls(*this, *root))
+    {
+        return false;
+    }
+
+    const bool needsExplicitBoolCasts = (compileOptions & SH_ADD_EXPLICIT_BOOL_CASTS) != 0;
+    if (!AddExplicitTypeCasts(*this, *root, symbolEnv, needsExplicitBoolCasts))
     {
         return false;
     }
@@ -1312,7 +1270,7 @@ bool TranslatorMetalDirect::translate(TIntermBlock *root,
 
     TInfoSinkBase &sink = getInfoSink().obj;
     SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
-    DriverUniformExtended driverUniforms(DriverUniformMode::Structure);
+    DriverUniformMetal driverUniforms(DriverUniformMode::Structure);
     if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst, &driverUniforms))
     {
         return false;

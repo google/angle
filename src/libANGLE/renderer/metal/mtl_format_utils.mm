@@ -20,6 +20,79 @@ namespace rx
 namespace mtl
 {
 
+namespace priv
+{
+
+template <typename T>
+inline T *OffsetDataPointer(uint8_t *data, size_t y, size_t z, size_t rowPitch, size_t depthPitch)
+{
+    return reinterpret_cast<T *>(data + (y * rowPitch) + (z * depthPitch));
+}
+
+template <typename T>
+inline const T *OffsetDataPointer(const uint8_t *data,
+                                  size_t y,
+                                  size_t z,
+                                  size_t rowPitch,
+                                  size_t depthPitch)
+{
+    return reinterpret_cast<const T *>(data + (y * rowPitch) + (z * depthPitch));
+}
+
+}  // namespace priv
+
+void LoadS8D24S8ToD32FX24S8(size_t width,
+                            size_t height,
+                            size_t depth,
+                            const uint8_t *input,
+                            size_t inputRowPitch,
+                            size_t inputDepthPitch,
+                            uint8_t *output,
+                            size_t outputRowPitch,
+                            size_t outputDepthPitch)
+{
+    for (size_t z = 0; z < depth; z++)
+    {
+        for (size_t y = 0; y < height; y++)
+        {
+            const uint32_t *source =
+                priv::OffsetDataPointer<uint32_t>(input, y, z, inputRowPitch, inputDepthPitch);
+            float *destDepth =
+                priv::OffsetDataPointer<float>(output, y, z, outputRowPitch, outputDepthPitch);
+            uint32_t *destStencil =
+                priv::OffsetDataPointer<uint32_t>(output, y, z, outputRowPitch, outputDepthPitch) +
+                1;
+            for (size_t x = 0; x < width; x++)
+            {
+                destDepth[x * 2]   = ((source[x] >> 8) & 0xFFFFFF) / static_cast<float>(0xFFFFFF);
+                destStencil[x * 2] = (source[x] & 0xFF);
+            }
+        }
+    }
+}
+
+static LoadImageFunctionInfo DEPTH24_STENCIL8_to_D32_FLOAT_X24S8_UINT(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_INT_24_8:
+            return LoadImageFunctionInfo(LoadS8D24S8ToD32FX24S8, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(nullptr, true);
+    }
+}
+
+LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, angle::FormatID angleFormat)
+{
+    if (internalFormat == GL_DEPTH24_STENCIL8 &&
+        angleFormat == angle::FormatID::D32_FLOAT_S8X24_UINT)
+    {
+        return DEPTH24_STENCIL8_to_D32_FLOAT_X24S8_UINT;
+    }
+    return angle::GetLoadFunctionsMap(internalFormat, angleFormat);
+}
+
 namespace
 {
 
@@ -189,7 +262,7 @@ angle::Result FormatTable::initialize(const DisplayMtl *display)
 
         if (mPixelFormatTable[i].actualFormatId != mPixelFormatTable[i].intendedFormatId)
         {
-            mPixelFormatTable[i].textureLoadFunctions = angle::GetLoadFunctionsMap(
+            mPixelFormatTable[i].textureLoadFunctions = mtl::GetLoadFunctionsMap(
                 mPixelFormatTable[i].intendedAngleFormat().glInternalFormat,
                 mPixelFormatTable[i].actualFormatId);
         }
@@ -197,6 +270,9 @@ angle::Result FormatTable::initialize(const DisplayMtl *display)
         mVertexFormatTables[0][i].init(formatId, false);
         mVertexFormatTables[1][i].init(formatId, true);
     }
+
+    // TODO(anglebug.com/5505): unmerged change from WebKit was here -
+    // D24S8 fallback to D32_FLOAT_S8X24_UINT, since removed.
 
     return angle::Result::Continue;
 }

@@ -292,6 +292,23 @@ struct alignas(4) RenderPipelineDesc
     bool emulateCoverageMask : 1;
 };
 
+struct alignas(4) ProvokingVertexComputePipelineDesc
+{
+    ProvokingVertexComputePipelineDesc();
+    ProvokingVertexComputePipelineDesc(const ProvokingVertexComputePipelineDesc &src);
+    ProvokingVertexComputePipelineDesc(const ProvokingVertexComputePipelineDesc &&src);
+
+    ProvokingVertexComputePipelineDesc &operator=(const ProvokingVertexComputePipelineDesc &src);
+
+    bool operator==(const ProvokingVertexComputePipelineDesc &rhs) const;
+    bool operator!=(const ProvokingVertexComputePipelineDesc &rhs) const;
+    size_t hash() const;
+
+    gl::PrimitiveMode primitiveMode;
+    uint8_t elementType;
+    bool primitiveRestartEnabled;
+};
+
 struct RenderPassAttachmentDesc
 {
     RenderPassAttachmentDesc();
@@ -413,6 +430,14 @@ struct hash<rx::mtl::RenderPipelineDesc>
     size_t operator()(const rx::mtl::RenderPipelineDesc &key) const { return key.hash(); }
 };
 
+template <>
+struct hash<rx::mtl::ProvokingVertexComputePipelineDesc>
+{
+    size_t operator()(const rx::mtl::ProvokingVertexComputePipelineDesc &key) const
+    {
+        return key.hash();
+    }
+};
 }  // namespace std
 
 namespace rx
@@ -434,6 +459,26 @@ class RenderPipelineCacheSpecializeShaderFactory
     // If not, the render pipeline cache will use the supplied non-specialized shaders.
     virtual bool hasSpecializedShader(gl::ShaderType shaderType,
                                       const RenderPipelineDesc &renderPipelineDesc) = 0;
+};
+
+// Abstract factory to create specialized provoking vertex compute shaders based off of
+// compute shader pipeline descs
+
+class ProvokingVertexCacheSpecializeShaderFactory
+{
+  public:
+    virtual ~ProvokingVertexCacheSpecializeShaderFactory() = default;
+    // Get specialized shader for the render pipeline cache.
+    virtual angle::Result getSpecializedShader(
+        Context *context,
+        gl::ShaderType shaderType,
+        const ProvokingVertexComputePipelineDesc &renderPipelineDesc,
+        id<MTLFunction> *shaderOut) = 0;
+    // Check whether specialized shaders is required for the specified RenderPipelineDesc.
+    // If not, the render pipeline cache will use the supplied non-specialized shaders.
+    virtual bool hasSpecializedShader(
+        gl::ShaderType shaderType,
+        const ProvokingVertexComputePipelineDesc &renderPipelineDesc) = 0;
 };
 
 // Render pipeline state cache per shader program.
@@ -485,6 +530,52 @@ class RenderPipelineCache final : angle::NonCopyable
     angle::HashMap<RenderPipelineDesc, AutoObjCPtr<id<MTLRenderPipelineState>>>
         mRenderPipelineStates[2];
     RenderPipelineCacheSpecializeShaderFactory *mSpecializedShaderFactory;
+};
+
+// render pipeline state cache per shader program
+class ProvokingVertexComputePipelineCache final : angle::NonCopyable
+{
+  public:
+    ProvokingVertexComputePipelineCache();
+    ProvokingVertexComputePipelineCache(
+        ProvokingVertexCacheSpecializeShaderFactory *specializedShaderFactory);
+    ~ProvokingVertexComputePipelineCache();
+
+    // Set non-specialized vertex/fragment shader to be used by render pipeline cache to create
+    // render pipeline state. If the internal
+    // RenderPipelineCacheSpecializeShaderFactory.hasSpecializedShader() returns false for a
+    // particular RenderPipelineDesc, the render pipeline cache will use the non-specialized
+    // shaders.
+    void setComputeShader(Context *context, id<MTLFunction> shader);
+    id<MTLFunction> getComputeShader() { return mComputeShader; }
+
+    AutoObjCPtr<id<MTLComputePipelineState>> getComputePipelineState(
+        ContextMtl *context,
+        const ProvokingVertexComputePipelineDesc &desc);
+
+    void clear();
+
+  protected:
+    // Non-specialized compute shader
+    AutoObjCPtr<id<MTLFunction>> mComputeShader;
+
+  private:
+    void clearPipelineStates();
+    void recreatePipelineStates(Context *context);
+    AutoObjCPtr<id<MTLComputePipelineState>> insertComputePipelineState(
+        Context *context,
+        const ProvokingVertexComputePipelineDesc &desc);
+
+    AutoObjCPtr<id<MTLComputePipelineState>> createComputePipelineState(
+        Context *context,
+        const ProvokingVertexComputePipelineDesc &desc);
+
+    bool hasDefaultAttribs(const RenderPipelineDesc &desc) const;
+
+    // One table with default attrib and one table without.
+    std::unordered_map<ProvokingVertexComputePipelineDesc, AutoObjCPtr<id<MTLComputePipelineState>>>
+        mComputePipelineStates;
+    ProvokingVertexCacheSpecializeShaderFactory *mSpecializedShaderFactory;
 };
 
 class StateCache final : angle::NonCopyable

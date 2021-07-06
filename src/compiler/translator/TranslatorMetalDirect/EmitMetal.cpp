@@ -264,7 +264,8 @@ void GenMetalTraverser::emitClosingPointerParen()
 static const char *GetOperatorString(TOperator op,
                                      const TType &resultType,
                                      const TType *argType0,
-                                     const TType *argType1 = nullptr)
+                                     const TType *argType1,
+                                     const TType *argType2)
 {
     switch (op)
     {
@@ -519,6 +520,8 @@ static const char *GetOperatorString(TOperator op,
         case TOperator::EOpClamp:
             return "metal::clamp";  // TODO fast vs precise namespace
         case TOperator::EOpMix:
+            if (argType2 && argType2->getBasicType() == EbtBool)
+                return "ANGLE_mix_bool";
             return "metal::mix";
         case TOperator::EOpStep:
             return "metal::step";
@@ -679,9 +682,9 @@ static const char *GetOperatorString(TOperator op,
 static bool IsSymbolicOperator(TOperator op,
                                const TType &resultType,
                                const TType *argType0,
-                               const TType *argType1 = nullptr)
+                               const TType *argType1)
 {
-    const char *operatorString = GetOperatorString(op, resultType, argType0, argType1);
+    const char *operatorString = GetOperatorString(op, resultType, argType0, argType1, nullptr);
     if (operatorString == nullptr)
     {
         return false;
@@ -723,7 +726,7 @@ static bool Parenthesize(TIntermNode &node)
         // TODO: Use a precedence and associativity rules instead of this ad-hoc impl.
         const TType &resultType = unaryNode->getType();
         const TType &argType    = unaryNode->getOperand()->getType();
-        return IsSymbolicOperator(unaryNode->getOp(), resultType, &argType);
+        return IsSymbolicOperator(unaryNode->getOp(), resultType, &argType, nullptr);
     }
 
     if (TIntermBinary *binaryNode = node.getAsBinaryNode())
@@ -1567,13 +1570,13 @@ bool GenMetalTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
                 {
                     emitClosingPointerParen();
                 }
-                mOut << GetOperatorString(op, resultType, &leftType, &rightType) << " ";
+                mOut << GetOperatorString(op, resultType, &leftType, &rightType, nullptr) << " ";
                 groupedTraverse(rightNode);
             }
             else
             {
                 emitClosingPointerParen();
-                mOut << GetOperatorString(op, resultType, &leftType, &rightType) << "(";
+                mOut << GetOperatorString(op, resultType, &leftType, &rightType, nullptr) << "(";
                 leftNode.traverse(this);
                 mOut << ", ";
                 rightNode.traverse(this);
@@ -1606,9 +1609,9 @@ bool GenMetalTraverser::visitUnary(Visit, TIntermUnary *unaryNode)
     TIntermTyped &arg    = *unaryNode->getOperand();
     const TType &argType = arg.getType();
 
-    const char *name = GetOperatorString(op, resultType, &argType);
+    const char *name = GetOperatorString(op, resultType, &argType, nullptr, nullptr);
 
-    if (IsSymbolicOperator(op, resultType, &argType))
+    if (IsSymbolicOperator(op, resultType, &argType, nullptr))
     {
         const bool postfix = IsPostfix(op);
         if (!postfix)
@@ -2017,9 +2020,10 @@ bool GenMetalTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                 ASSERT(!args.empty());
                 const TType *argType0 = getArgType(0);
                 const TType *argType1 = getArgType(1);
+                const TType *argType2 = getArgType(2);
                 ASSERT(argType0);
 
-                const char *opName = GetOperatorString(op, retType, argType0, argType1);
+                const char *opName = GetOperatorString(op, retType, argType0, argType1, argType2);
 
                 if (IsSymbolicOperator(op, retType, argType0, argType1))
                 {

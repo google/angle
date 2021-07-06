@@ -41,6 +41,7 @@ angle_translator_sources = [
   "src/compiler/translator/Diagnostics.h",
   "src/compiler/translator/DirectiveHandler.cpp",
   "src/compiler/translator/DirectiveHandler.h",
+  "src/compiler/translator/DriverUniformMetal.h",
   "src/compiler/translator/ExtensionBehavior.cpp",
   "src/compiler/translator/ExtensionBehavior.h",
   "src/compiler/translator/FlagStd140Structs.cpp",
@@ -366,8 +367,11 @@ angle_translator_glsl_symbol_table_sources = [
 ]
 
 angle_translator_lib_metal_sources = [
+  "src/compiler/translator/DriverUniformMetal.cpp",
   "src/compiler/translator/TranslatorMetal.cpp",
   "src/compiler/translator/TranslatorMetalDirect.cpp",
+  "src/compiler/translator/TranslatorMetalDirect/AddExplicitTypeCasts.cpp",
+  "src/compiler/translator/TranslatorMetalDirect/AddExplicitTypeCasts.h",
   "src/compiler/translator/TranslatorMetalDirect/AstHelpers.cpp",
   "src/compiler/translator/TranslatorMetalDirect/AstHelpers.h",
   "src/compiler/translator/TranslatorMetalDirect/DebugSink.h",

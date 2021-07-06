@@ -56,16 +56,13 @@ ConversionBufferMtl::~ConversionBufferMtl() = default;
 IndexConversionBufferMtl::IndexConversionBufferMtl(ContextMtl *context,
                                                    gl::DrawElementsType elemTypeIn,
                                                    bool primitiveRestartEnabledIn,
-                                                   size_t offsetIn,
-                                                   std::vector<IndexRange> restartRangesIn)
+                                                   size_t offsetIn)
     : ConversionBufferMtl(context,
                           kConvertedElementArrayBufferInitialSize,
                           mtl::kIndexBufferOffsetAlignment),
       elemType(elemTypeIn),
       offset(offsetIn),
-      primitiveRestartEnabled(primitiveRestartEnabledIn),
-      restartRanges(restartRangesIn)
-
+      primitiveRestartEnabled(primitiveRestartEnabledIn)
 {}
 
 IndexRange IndexConversionBufferMtl::getRangeForConvertedBuffer(size_t count)
@@ -397,6 +394,7 @@ void BufferMtl::markConversionBuffersDirty()
         buffer.convertedBuffer = nullptr;
         buffer.convertedOffset = 0;
     }
+    mRestartIndicesDirty = true;
 }
 
 void BufferMtl::clearConversionBuffers()
@@ -404,6 +402,78 @@ void BufferMtl::clearConversionBuffers()
     mVertexConversionBuffers.clear();
     mIndexConversionBuffers.clear();
     mUniformConversionBuffers.clear();
+}
+
+template <typename T>
+static std::vector<IndexRange> calculateRestartRanges(ContextMtl *ctx, mtl::BufferRef idxBuffer)
+{
+    std::vector<IndexRange> result;
+    const T *bufferData       = reinterpret_cast<const T *>(idxBuffer->mapReadOnly(ctx));
+    const size_t numIndices   = idxBuffer->size() / sizeof(T);
+    constexpr T restartMarker = std::numeric_limits<T>::max();
+    for (size_t i = 0; i < numIndices; ++i)
+    {
+        // Find the start of the restart range, i.e. first index with value of restart marker.
+        if (bufferData[i] != restartMarker)
+            continue;
+        size_t restartBegin = i;
+        // Find the end of the restart range, i.e. last index with value of restart marker.
+        do
+        {
+            ++i;
+        } while (i < numIndices && bufferData[i] == restartMarker);
+        result.emplace_back(restartBegin, i - 1);
+    }
+    idxBuffer->unmap(ctx);
+    return result;
+}
+
+const std::vector<IndexRange> &BufferMtl::getRestartIndices(ContextMtl *ctx,
+                                                            gl::DrawElementsType indexType)
+{
+    if (mRestartIndicesDirty)
+    {
+        std::vector<IndexRange>().swap(mRestartIndices);
+        switch (indexType)
+        {
+            case gl::DrawElementsType::UnsignedByte:
+                mRestartIndices = calculateRestartRanges<uint8_t>(ctx, getCurrentBuffer());
+                break;
+            case gl::DrawElementsType::UnsignedShort:
+                mRestartIndices = calculateRestartRanges<uint16_t>(ctx, getCurrentBuffer());
+                break;
+            case gl::DrawElementsType::UnsignedInt:
+                mRestartIndices = calculateRestartRanges<uint32_t>(ctx, getCurrentBuffer());
+                break;
+            default:
+                ASSERT(false);
+        }
+        mRestartIndicesDirty = false;
+    }
+    return mRestartIndices;
+}
+
+const std::vector<IndexRange> BufferMtl::getRestartIndicesFromClientData(
+    ContextMtl *ctx,
+    gl::DrawElementsType indexType,
+    mtl::BufferRef idxBuffer)
+{
+    std::vector<IndexRange> restartIndices;
+    switch (indexType)
+    {
+        case gl::DrawElementsType::UnsignedByte:
+            restartIndices = calculateRestartRanges<uint8_t>(ctx, idxBuffer);
+            break;
+        case gl::DrawElementsType::UnsignedShort:
+            restartIndices = calculateRestartRanges<uint16_t>(ctx, idxBuffer);
+            break;
+        case gl::DrawElementsType::UnsignedInt:
+            restartIndices = calculateRestartRanges<uint32_t>(ctx, idxBuffer);
+            break;
+        default:
+            ASSERT(false);
+    }
+    return restartIndices;
 }
 
 angle::Result BufferMtl::setDataImpl(const gl::Context *context,

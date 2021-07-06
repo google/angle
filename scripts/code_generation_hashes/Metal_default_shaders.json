@@ -22,9 +22,11 @@
   "src/libANGLE/renderer/metal/shaders/gen_mipmap.metal":
     "fab35deec42fd89ae7a11d2f87b6e0b4",
   "src/libANGLE/renderer/metal/shaders/gen_mtl_internal_shaders.py":
-    "ba74ebbfa2ceb825f36e84f2985b3d3d",
+    "783e31d342cfc50aa41fad1cfdb53de4",
   "src/libANGLE/renderer/metal/shaders/mtl_default_shaders_src_autogen.inc":
-    "141bd6d533cbdef5dc34263b73586f8f",
+    "ca7a7ecfab09e017f40dd8b51d95ecb8",
+  "src/libANGLE/renderer/metal/shaders/rewrite_indices.metal":
+    "f8998cc5c4b078e3f7a995edf7026f13",
   "src/libANGLE/renderer/metal/shaders/visibility.metal":
     "b82aa740cf4b0aed606aacef1024beea"
 }

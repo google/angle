@@ -77,10 +77,19 @@ class ProgramPrelude : public TIntermTraverser
 
     static FuncToEmitter BuildFuncToEmitter();
 
+    void visitOperator(TOperator op, const TFunction *func, const TType *argType0);
+
     void visitOperator(TOperator op,
                        const TFunction *func,
                        const TType *argType0,
-                       const TType *argType1 = nullptr);
+                       const TType *argType1);
+
+    void visitOperator(TOperator op,
+                       const TFunction *func,
+                       const TType *argType0,
+                       const TType *argType1,
+                       const TType *argType2);
+
     void visitVariable(const Name &name, const TType &type);
     void visitVariable(const TVariable &var);
     void visitStructure(const TStructure &s);
@@ -121,6 +130,7 @@ class ProgramPrelude : public TIntermTraverser
     void degrees();
     void radians();
     void mod();
+    void mixBool();
     void postIncrementMatrix();
     void preIncrementMatrix();
     void postDecrementMatrix();
@@ -722,6 +732,16 @@ ANGLE_ALWAYS_INLINE X ANGLE_mod(X x, Y y)
 )",
                         include_metal_math())
 
+PROGRAM_PRELUDE_DECLARE(mixBool,
+                        R"(
+template <typename T, int N>
+ANGLE_ALWAYS_INLINE metal::vec<T,N> ANGLE_mix_bool(metal::vec<T, N> a, metal::vec<T, N> b, metal::vec<bool, N> c)
+{
+    return metal::mix(a, b, static_cast<metal::vec<T,N>>(c));
+}
+)",
+                        include_metal_common())
+
 PROGRAM_PRELUDE_DECLARE(pack_half_2x16,
                         R"(
 ANGLE_ALWAYS_INLINE uint ANGLE_pack_half_2x16(float2 v)
@@ -1311,7 +1331,7 @@ struct ANGLE_castVector {};
 template <typename T, int N>
 struct ANGLE_castVector<T, N, N>
 {
-    static ANGLE_ALWAYS_INLINE metal::vec<T, N> exec(thread metal::vec<T, N> const &v)
+    static ANGLE_ALWAYS_INLINE metal::vec<T, N> exec(metal::vec<T, N> const v)
     {
         return v;
     }
@@ -1319,7 +1339,7 @@ struct ANGLE_castVector<T, N, N>
 template <typename T>
 struct ANGLE_castVector<T, 2, 3>
 {
-    static ANGLE_ALWAYS_INLINE metal::vec<T, 2> exec(thread metal::vec<T, 3> const &v)
+    static ANGLE_ALWAYS_INLINE metal::vec<T, 2> exec(metal::vec<T, 3> const v)
     {
         return v.xy;
     }
@@ -1327,7 +1347,7 @@ struct ANGLE_castVector<T, 2, 3>
 template <typename T>
 struct ANGLE_castVector<T, 2, 4>
 {
-    static ANGLE_ALWAYS_INLINE metal::vec<T, 2> exec(thread metal::vec<T, 4> const &v)
+    static ANGLE_ALWAYS_INLINE metal::vec<T, 2> exec(metal::vec<T, 4> const v)
     {
         return v.xy;
     }
@@ -1335,13 +1355,13 @@ struct ANGLE_castVector<T, 2, 4>
 template <typename T>
 struct ANGLE_castVector<T, 3, 4>
 {
-    static ANGLE_ALWAYS_INLINE metal::vec<T, 3> exec(thread metal::vec<T, 4> const &v)
+    static ANGLE_ALWAYS_INLINE metal::vec<T, 3> exec(metal::vec<T, 4> const v)
     {
         return as_type<metal::vec<T, 3>>(v);
     }
 };
 template <int N1, int N2, typename T>
-ANGLE_ALWAYS_INLINE metal::vec<T, N1> ANGLE_cast(thread metal::vec<T, N2> const &v)
+ANGLE_ALWAYS_INLINE metal::vec<T, N1> ANGLE_cast(metal::vec<T, N2> const v)
 {
     return ANGLE_castVector<T, N1, N2>::exec(v);
 }
@@ -1352,7 +1372,7 @@ PROGRAM_PRELUDE_DECLARE(castMatrix,
 template <typename T, int C1, int R1, int C2, int R2, typename Enable = void>
 struct ANGLE_castMatrix
 {
-    static ANGLE_ALWAYS_INLINE metal::matrix<T, C1, R1> exec(thread metal::matrix<T, C2, R2> const &m2)
+    static ANGLE_ALWAYS_INLINE metal::matrix<T, C1, R1> exec(metal::matrix<T, C2, R2> const m2)
     {
         metal::matrix<T, C1, R1> m1;
         const int MinC = C1 <= C2 ? C1 : C2;
@@ -1381,7 +1401,7 @@ struct ANGLE_castMatrix
 template <typename T, int C1, int R1, int C2, int R2>
 struct ANGLE_castMatrix<T, C1, R1, C2, R2, ANGLE_enable_if_t<(C1 <= C2 && R1 <= R2)>>
 {
-    static ANGLE_ALWAYS_INLINE metal::matrix<T, C1, R1> exec(thread metal::matrix<T, C2, R2> const &m2)
+    static ANGLE_ALWAYS_INLINE metal::matrix<T, C1, R1> exec(metal::matrix<T, C2, R2> const m2)
     {
         metal::matrix<T, C1, R1> m1;
         for (size_t c = 0; c < C1; ++c)
@@ -1392,7 +1412,7 @@ struct ANGLE_castMatrix<T, C1, R1, C2, R2, ANGLE_enable_if_t<(C1 <= C2 && R1 <= 
     }
 };
 template <int C1, int R1, int C2, int R2, typename T>
-ANGLE_ALWAYS_INLINE metal::matrix<T, C1, R1> ANGLE_cast(thread metal::matrix<T, C2, R2> const &m)
+ANGLE_ALWAYS_INLINE metal::matrix<T, C1, R1> ANGLE_cast(metal::matrix<T, C2, R2> const m)
 {
     return ANGLE_castMatrix<T, C1, R1, C2, R2>::exec(m);
 };
@@ -3391,10 +3411,23 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
 #undef EMIT_METHOD
 }
 
+void ProgramPrelude::visitOperator(TOperator op, const TFunction *func, const TType *argType0)
+{
+    visitOperator(op, func, argType0, nullptr, nullptr);
+}
+
 void ProgramPrelude::visitOperator(TOperator op,
                                    const TFunction *func,
                                    const TType *argType0,
                                    const TType *argType1)
+{
+    visitOperator(op, func, argType0, argType1, nullptr);
+}
+void ProgramPrelude::visitOperator(TOperator op,
+                                   const TFunction *func,
+                                   const TType *argType0,
+                                   const TType *argType1,
+                                   const TType *argType2)
 {
     switch (op)
     {
@@ -3521,10 +3554,16 @@ void ProgramPrelude::visitOperator(TOperator op,
         case TOperator::EOpClamp:
         case TOperator::EOpMin:
         case TOperator::EOpMax:
-        case TOperator::EOpMix:
         case TOperator::EOpStep:
         case TOperator::EOpSmoothstep:
             include_metal_common();
+            break;
+        case TOperator::EOpMix:
+            include_metal_common();
+            if (argType2->getBasicType() == TBasicType::EbtBool)
+            {
+                mixBool();
+            }
             break;
 
         case TOperator::EOpAll:
@@ -3893,6 +3932,15 @@ bool ProgramPrelude::visitAggregate(Visit visit, TIntermAggregate *node)
             const TType &argType0 = getArgType(0);
             const TType &argType1 = getArgType(1);
             visitOperator(node->getOp(), func, &argType0, &argType1);
+        }
+        break;
+
+        case 3:
+        {
+            const TType &argType0 = getArgType(0);
+            const TType &argType1 = getArgType(1);
+            const TType &argType2 = getArgType(2);
+            visitOperator(node->getOp(), func, &argType0, &argType1, &argType2);
         }
         break;
 

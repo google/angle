@@ -29,6 +29,8 @@ _metal_backend_sources = [
   "ImageMtl.mm",
   "ProgramMtl.h",
   "ProgramMtl.mm",
+  "ProvokingVertexHelper.h",
+  "ProvokingVertexHelper.mm",
   "QueryMtl.h",
   "QueryMtl.mm",
   "RenderBufferMtl.h",
@@ -75,6 +77,7 @@ _metal_backend_sources = [
   "shaders/constants.h",
   "shaders/format_autogen.h",
   "shaders/mtl_default_shaders_src_autogen.inc",
+  "shaders/rewrite_indices_shared.h",
 ]
 
 config("angle_metal_backend_config") {

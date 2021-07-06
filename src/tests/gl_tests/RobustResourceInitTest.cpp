@@ -2306,12 +2306,6 @@ TEST_P(RobustResourceInitTestES3, BlitDepthStencilAfterClearBuffer)
     // http://anglebug.com/5300
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    // http://anglebug.com/4919
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsMetal());
-
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
-
     constexpr GLsizei kSize = 16;
     glViewport(0, 0, kSize, kSize);
 

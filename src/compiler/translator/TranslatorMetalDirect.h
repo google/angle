@@ -23,11 +23,10 @@ constexpr const char kXfbVerticesPerDraw[]        = "xfbVerticesPerDraw";
 constexpr const char kXfbBufferOffsets[]          = "xfbBufferOffsets";
 constexpr const char kAcbBufferOffsets[]          = "acbBufferOffsets";
 constexpr const char kDepthRange[]                = "depthRange";
-constexpr const char kPreRotation[]               = "preRotation";
-constexpr const char kFragRotation[]              = "fragRotation";
 constexpr const char kUnassignedAttributeString[] = " __unassigned_attribute__";
 
 class DriverUniform;
+class DriverUniformMetal;
 class SpecConst;
 class TOutputMSL;
 
@@ -165,22 +164,25 @@ class TranslatorMetalDirect : public TCompiler
                    ShCompileOptions compileOptions,
                    PerformanceDiagnostics *perfDiagnostics) override;
 
+    // Need to collect variables so that RemoveInactiveInterfaceVariables works.
+    bool shouldCollectVariables(ShCompileOptions compileOptions) override { return true; }
+
     ANGLE_NO_DISCARD bool translateImpl(TInfoSinkBase &sink,
                                         TIntermBlock *root,
                                         ShCompileOptions compileOptions,
                                         PerformanceDiagnostics *perfDiagnostics,
                                         SpecConst *specConst,
-                                        DriverUniform *driverUniforms);
+                                        DriverUniformMetal *driverUniforms);
 
     ANGLE_NO_DISCARD bool shouldFlattenPragmaStdglInvariantAll() override;
 
     ANGLE_NO_DISCARD bool transformDepthBeforeCorrection(TIntermBlock *root,
-                                                         const DriverUniform *driverUniforms);
+                                                         const DriverUniformMetal *driverUniforms);
 
     ANGLE_NO_DISCARD bool appendVertexShaderDepthCorrectionToMain(TIntermBlock *root);
 
     ANGLE_NO_DISCARD bool insertSampleMaskWritingLogic(TIntermBlock &root,
-                                                       DriverUniform &driverUniforms);
+                                                       DriverUniformMetal &driverUniforms);
     ANGLE_NO_DISCARD bool insertRasterizationDiscardLogic(TIntermBlock &root);
 
     ANGLE_NO_DISCARD TIntermSwizzle *getDriverUniformNegFlipYRef(

@@ -84,7 +84,9 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compileImplMtl(
     const std::string &source,
     ShCompileOptions compileOptions)
 {
-#if defined(ANGLE_ENABLE_ASSERTS)
+// TODO(jcunningham): Remove this workaround once correct fix to move validation to the very end is
+// in place. See: https://bugs.webkit.org/show_bug.cgi?id=224991
+#if defined(ANGLE_ENABLE_ASSERTS) && 0
     compileOptions |= SH_VALIDATE_AST;
 #endif
 
@@ -125,6 +127,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
     if (context->isWebGL() && mState.getShaderType() != gl::ShaderType::Compute)
     {
         compileOptions |= SH_INIT_OUTPUT_VARIABLES;
+    }
+
+    if (contextMtl->getDisplay()->getFeatures().intelExplicitBoolCastWorkaround.enabled)
+    {
+        compileOptions |= SH_ADD_EXPLICIT_BOOL_CASTS;
     }
 
     compileOptions |= SH_CLAMP_POINT_SIZE;

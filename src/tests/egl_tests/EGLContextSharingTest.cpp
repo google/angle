@@ -188,11 +188,16 @@ TEST_P(EGLContextSharingTest, DisplayShareGroupContextCreation)
     const EGLint inShareGroupContextAttribs[] = {
         EGL_CONTEXT_CLIENT_VERSION, 2, EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_TRUE, EGL_NONE};
 
+    // Check whether extension's supported to avoid clearing the EGL error state
+    // after failed context creation.
+    bool extensionEnabled =
+        IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_display_texture_share_group");
+
     // Test creating two contexts in the global share group
     mContexts[0] = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
     mContexts[1] = eglCreateContext(display, config, mContexts[1], inShareGroupContextAttribs);
 
-    if (!IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_display_texture_share_group"))
+    if (!extensionEnabled)
     {
         // Make sure an error is generated and early-exit
         ASSERT_EGL_ERROR(EGL_BAD_ATTRIBUTE);

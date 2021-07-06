@@ -135,7 +135,7 @@ TType *DriverUniform::createEmulatedDepthRangeType(TSymbolTable *symbolTable)
     TStructure *emulatedDepthRangeParams = new TStructure(
         symbolTable, kEmulatedDepthRangeParams, depthRangeParamsFields, SymbolType::AngleInternal);
 
-    mEmulatedDepthRangeType = new TType(emulatedDepthRangeParams, true);
+    mEmulatedDepthRangeType = new TType(emulatedDepthRangeParams, false);
 
     // Note: this should really return a const TType *, but one of its uses is with TField who takes
     // a non-const TType.  See comment on that class.

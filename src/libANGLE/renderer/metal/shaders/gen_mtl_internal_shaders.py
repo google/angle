@@ -72,7 +72,7 @@ def main():
     ]
     src_files = [
         'blit.metal', 'clear.metal', 'gen_indices.metal', 'gen_mipmap.metal', 'copy_buffer.metal',
-        'visibility.metal'
+        'visibility.metal', 'rewrite_indices.metal'
     ]
 
     # auto_script parameters.

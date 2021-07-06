@@ -129,6 +129,12 @@ struct FeaturesMtl : FeatureSetBase
     Feature rewriteRowMajorMatrices = {"rewrite_row_major_matrices", FeatureCategory::MetalFeatures,
                                        "Rewrite row major matrices in shaders as column major.",
                                        &members};
+
+    Feature intelExplicitBoolCastWorkaround = {
+        "intel_explicit_bool_cast_workaround", FeatureCategory::MetalWorkarounds,
+        "Insert explicit casts for float/double/unsigned/signed int on macOS 10.15 with Intel "
+        "driver",
+        &members};
 };
 
 }  // namespace angle
