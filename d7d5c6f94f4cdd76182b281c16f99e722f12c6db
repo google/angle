@@ -33,6 +33,23 @@
       "message": "What changed in the reland:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/3007265/1..3\n\nGeoff FYI",
       "revId": "d7d5c6f94f4cdd76182b281c16f99e722f12c6db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef8a9bb3_7ab44145",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-06T14:45:33Z",
+      "side": 1,
+      "message": "\u003e Patch Set 3:\n\u003e \n\u003e You can use gpu-fyi-try-mac-asan to see if this works.\n\u003e \n\u003e However, I don\u0027t understand why would we want to use ANGLE\u0027s loader instead of system\u0027s for SystemInfo on any platform.\n\u003e \n\u003e IMO, the current behavior is the correct one.\n\nThe same reason we use it anywhere - for consistency and for systems which may have bugs. Can we proceed with this CL as it is? I\u0027ll add the asan try.",
+      "revId": "d7d5c6f94f4cdd76182b281c16f99e722f12c6db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
