@@ -68,6 +68,23 @@
       "parentUuid": "baffef70_5ddd7560",
       "revId": "d7d5c6f94f4cdd76182b281c16f99e722f12c6db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a00e39dc_1f5cda79",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-06T15:02:00Z",
+      "side": 1,
+      "message": "\u003e Patch Set 3:\n\u003e \n\u003e The consistent behavior would be to always use the system libvulkan for SystemInfo. If there is anything to fix, this would be to ensure that SystemInfo can\u0027t load ANGLE\u0027s libvulkan by accident, like via RPATH.\n\u003e \n\u003e We want to use ANGLE\u0027s libvulkan in RendererVk so that we can load SwS on systems that don\u0027t have system libvulkan.\n\u003e \n\u003e However, for SystemInfo we want the opposite - we want it to NOT use Vulkan for gathering system info on platforms which don\u0027t have native Vulkan support.\n\nHm, what\u0027s your logic? Seems like there\u0027s nothing different about libvulkan from any other piece of code. We\u0027d like to have as much under our control as possible. Maybe we can move forward with this and you can bring up your concerns outside this review?",
+      "revId": "d7d5c6f94f4cdd76182b281c16f99e722f12c6db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
