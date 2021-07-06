@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a71fbe3_d26d7564",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-06T22:40:58Z",
+      "side": 1,
+      "message": "Patchset 3 removes the GPU selection code from DisplayMtl.mm as diagnosed by Quyen Le as causing the kernel panics on macOS 10.14:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2950067/23/src/libANGLE/renderer/metal/DisplayMtl.mm#272\n\nand prototyped by Quyen here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/3006563/1..2\n",
+      "revId": "b1a8d408ceee722e37ae379f2231e7b9f769192c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
