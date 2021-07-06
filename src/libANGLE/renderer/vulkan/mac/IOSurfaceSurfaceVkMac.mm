@@ -41,8 +41,8 @@ constexpr std::array<IOSurfaceFormatInfo, 9> kIOSurfaceFormats = {{
     {GL_R16UI,    GL_UNSIGNED_SHORT,               2, GL_R16UI    },
     {GL_RG,       GL_UNSIGNED_BYTE,                2, GL_RG8      },
     {GL_RG,       GL_UNSIGNED_SHORT,               4, GL_RG16_EXT },
-    {GL_RGB,      GL_UNSIGNED_BYTE,                4, GL_BGRA8_EXT},
-    {GL_BGRA_EXT, GL_UNSIGNED_BYTE,                4, GL_BGRA8_EXT},
+    {GL_RGB,      GL_UNSIGNED_BYTE,                4, GL_BGRX8_ANGLEX },
+    {GL_BGRA_EXT, GL_UNSIGNED_BYTE,                4, GL_BGRA8_EXT },
     {GL_RGB10_A2, GL_UNSIGNED_INT_2_10_10_10_REV,  4, GL_BGR10_A2_ANGLEX },
     {GL_RGBA,     GL_HALF_FLOAT,                   8, GL_RGBA16F  },
 }};
