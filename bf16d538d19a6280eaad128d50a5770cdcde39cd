@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fcdabe0_2f0fbdd2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-06T19:24:05Z",
+      "side": 1,
+      "message": "Thanks for the contribution!",
+      "revId": "bf16d538d19a6280eaad128d50a5770cdcde39cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0edfbe84_b3bae7da",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2574,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-06T19:24:05Z",
+      "side": 1,
+      "message": "could you add a comment before the test?\n\nAlso it looks like your test uncovered a bug in the Vulkan back-end. Can you please open a new bug to track this failure (anglebug.com/new) then add a skip to angle_end2end_tests_expectations?",
+      "range": {
+        "startLine": 2574,
+        "startChar": 0,
+        "endLine": 2574,
+        "endChar": 6
+      },
+      "revId": "bf16d538d19a6280eaad128d50a5770cdcde39cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a93e47d8_9c6932ac",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2616,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-06T19:24:05Z",
+      "side": 1,
+      "message": "nit: EXPECT_PIXEL_COLOR_EQ(GLColor::green)",
+      "range": {
+        "startLine": 2616,
+        "startChar": 4,
+        "endLine": 2616,
+        "endChar": 19
+      },
+      "revId": "bf16d538d19a6280eaad128d50a5770cdcde39cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
