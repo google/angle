@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1671c2ea_7cf57552",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-06T14:37:52Z",
+      "side": 1,
+      "message": "PTAL Yuly. Can you trigger the right mac tests?",
+      "revId": "d7d5c6f94f4cdd76182b281c16f99e722f12c6db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
