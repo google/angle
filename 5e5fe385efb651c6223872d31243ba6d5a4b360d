@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9be6f6eb_289984e6",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-06T21:49:19Z",
+      "side": 1,
+      "message": "yes for now.\n\nLook here for when YUV VkFormat support gets added -\u003e https://chromium-review.googlesource.com/c/angle/angle/+/2947767/24/src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp#716",
+      "parentUuid": "182fca7b_a0ac9507",
+      "range": {
+        "startLine": 719,
+        "startChar": 76,
+        "endLine": 719,
+        "endChar": 80
+      },
+      "revId": "5e5fe385efb651c6223872d31243ba6d5a4b360d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "24a7f9fa_1a146035",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 5
@@ -37,6 +61,30 @@
       "writtenOn": "2021-07-06T21:09:27Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 2515,
+        "startChar": 7,
+        "endLine": 2515,
+        "endChar": 14
+      },
+      "revId": "5e5fe385efb651c6223872d31243ba6d5a4b360d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9aeff6ab_05cafa3c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2515,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-06T21:49:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24a7f9fa_1a146035",
       "range": {
         "startLine": 2515,
         "startChar": 7,
