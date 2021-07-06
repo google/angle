@@ -87,6 +87,30 @@
       },
       "revId": "74c5d9e4fe7add3f4fe0daff61e97f8fa0319fb5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93281842_8fbf1b82",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 23
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-06T22:41:58Z",
+      "side": 1,
+      "message": "Removed in the latest patch set of:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/3002944",
+      "parentUuid": "7e4a8110_f47bf5a8",
+      "range": {
+        "startLine": 272,
+        "startChar": 20,
+        "endLine": 272,
+        "endChar": 46
+      },
+      "revId": "74c5d9e4fe7add3f4fe0daff61e97f8fa0319fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
