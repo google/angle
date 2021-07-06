@@ -16,6 +16,24 @@
       "message": "jmadill@, could you CQ+2 again?",
       "revId": "802581079a8a5ed64847934c44a95bd055f6bb11",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1726b796_2af10f88",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1161379
+      },
+      "writtenOn": "2021-07-06T12:33:56Z",
+      "side": 1,
+      "message": "thanks!",
+      "parentUuid": "ac7491e8_0ccf4206",
+      "revId": "802581079a8a5ed64847934c44a95bd055f6bb11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
