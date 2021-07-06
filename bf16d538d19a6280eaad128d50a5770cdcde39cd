@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2d5a381_886d1df1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-06T19:32:07Z",
+      "side": 1,
+      "message": "A drive by comment. Not a blocking request, but would be nice to do.",
+      "revId": "bf16d538d19a6280eaad128d50a5770cdcde39cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0edfbe84_b3bae7da",
@@ -36,6 +53,29 @@
         "startChar": 0,
         "endLine": 2574,
         "endChar": 6
+      },
+      "revId": "bf16d538d19a6280eaad128d50a5770cdcde39cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4989e1f3_f4f35be0",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2615,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-06T19:32:07Z",
+      "side": 1,
+      "message": "Thank you for the test, and your contribution!\n\nThe result verification in this test is somewhat unrelated. You are trumping the result of the blit and verifying the clear. The depth buffer is also not verified. If you don\u0027t mind going the extra mile, you can make two changes here:\n\n1. Don\u0027t clear color, and verify that the color buffer is red (the result of blit). You can verify the whole framebuffer with EXPECT_PIXEL_RECT_EQ (not just one pixel).\n2. See how BlitFramebufferTest.MultisampleDepth is verifying the depth buffer. Basically glDepthFunc(GL_LESS) is used and verified that expectedDepth-epsilon fails rendering, but expectedDepth+epsilon passes.",
+      "range": {
+        "startLine": 2610,
+        "startChar": 0,
+        "endLine": 2615,
+        "endChar": 61
       },
       "revId": "bf16d538d19a6280eaad128d50a5770cdcde39cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
