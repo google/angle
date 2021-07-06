@@ -153,6 +153,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "24a2cf63_8f08936b",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2615,
+      "author": {
+        "id": 1515738
+      },
+      "writtenOn": "2021-07-06T21:39:28Z",
+      "side": 1,
+      "message": "Sorry, but what do you think of the code for patchset 3?",
+      "parentUuid": "bc3efc68_33d5fba2",
+      "range": {
+        "startLine": 2610,
+        "startChar": 0,
+        "endLine": 2615,
+        "endChar": 61
+      },
+      "revId": "bf16d538d19a6280eaad128d50a5770cdcde39cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a93e47d8_9c6932ac",
