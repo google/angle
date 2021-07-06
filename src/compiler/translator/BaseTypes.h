@@ -111,39 +111,41 @@ enum TBasicType
     // images
     EbtGuardImageBegin,
     EbtImage2D = EbtGuardImageBegin,
-    EbtIImage2D,
-    EbtUImage2D,
     EbtImage3D,
-    EbtIImage3D,
-    EbtUImage3D,
     EbtImage2DArray,
-    EbtIImage2DArray,
-    EbtUImage2DArray,
     EbtImageCube,
-    EbtIImageCube,
-    EbtUImageCube,
-    EbtImage1D,  // Desktop GLSL image types
-    EbtIImage1D,
-    EbtUImage1D,
+    EbtImage1D,
     EbtImage1DArray,
-    EbtIImage1DArray,
-    EbtUImage1DArray,
     EbtImage2DMS,
-    EbtIImage2DMS,
-    EbtUImage2DMS,
     EbtImage2DMSArray,
-    EbtIImage2DMSArray,
-    EbtUImage2DMSArray,
     EbtImageCubeArray,
-    EbtIImageCubeArray,
-    EbtUImageCubeArray,
     EbtImageRect,
-    EbtIImageRect,
-    EbtUImageRect,
     EbtImageBuffer,
+    EbtIImage2D,
+    EbtIImage3D,
+    EbtIImage2DArray,
+    EbtIImageCube,
+    EbtIImage1D,
+    EbtIImage1DArray,
+    EbtIImage2DMS,
+    EbtIImage2DMSArray,
+    EbtIImageCubeArray,
+    EbtIImageRect,
     EbtIImageBuffer,
+    EbtGuardUIntImageBegin,
+    EbtUImage2D = EbtGuardUIntImageBegin,
+    EbtUImage3D,
+    EbtUImage2DArray,
+    EbtUImageCube,
+    EbtUImage1D,
+    EbtUImage1DArray,
+    EbtUImage2DMS,
+    EbtUImage2DMSArray,
+    EbtUImageCubeArray,
+    EbtUImageRect,
     EbtUImageBuffer,
-    EbtGuardImageEnd = EbtUImageBuffer,
+    EbtGuardUIntImageEnd = EbtUImageBuffer,
+    EbtGuardImageEnd     = EbtGuardUIntImageEnd,
 
     // Subpass Input
     EbtGuardSubpassInputBegin,
@@ -214,6 +216,11 @@ inline bool IsSampler(TBasicType type)
 inline bool IsImage(TBasicType type)
 {
     return type >= EbtGuardImageBegin && type <= EbtGuardImageEnd;
+}
+
+inline bool IsUIntImage(TBasicType type)
+{
+    return type >= EbtGuardUIntImageBegin && type <= EbtGuardUIntImageEnd;
 }
 
 inline bool IsAtomicCounter(TBasicType type)
@@ -351,6 +358,22 @@ inline bool IsSampler2DMSArray(TBasicType type)
 inline bool IsSamplerMS(TBasicType type)
 {
     return IsSampler2DMS(type) || IsSampler2DMSArray(type);
+}
+
+inline bool IsImageMS(TBasicType type)
+{
+    switch (type)
+    {
+        case EbtImage2DMS:
+        case EbtImage2DMSArray:
+        case EbtIImage2DMS:
+        case EbtIImage2DMSArray:
+        case EbtUImage2DMS:
+        case EbtUImage2DMSArray:
+            return true;
+        default:
+            return false;
+    }
 }
 
 inline bool IsFloatImage(TBasicType type)
