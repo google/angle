@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "c52b5a44d96bf111407a4ed19ebbcc06817d5821",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0de62a5f_ff5191bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-06T02:34:25Z",
+      "side": 1,
+      "message": "I\u0027m afraid I\u0027m not familiar with this part of the spec at all.",
+      "revId": "c52b5a44d96bf111407a4ed19ebbcc06817d5821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
