@@ -112,6 +112,12 @@ int getMaliGNumber(const FunctionsGL *functions)
     return number;
 }
 
+bool IsAdreno418(const FunctionsGL *functions)
+{
+    int number = getAdrenoNumber(functions);
+    return number != 0 && getAdrenoNumber(functions) == 418;
+}
+
 bool IsAdreno42xOr3xx(const FunctionsGL *functions)
 {
     int number = getAdrenoNumber(functions);
@@ -1981,7 +1987,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             IsAndroid() || (IsApple() && (isIntel || isAMD || isNvidia)));
     ANGLE_FEATURE_CONDITION(features, limitMax3dArrayTextureSizeTo1024, limitMaxTextureSize);
 
-    ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, IsApple());
+    ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit,
+                            IsApple() || (IsAndroid() && !IsAdreno418(functions)));
 
     // The WebGL conformance/uniforms/out-of-bounds-uniform-array-access test has been seen to fail
     // on AMD and Android devices.
