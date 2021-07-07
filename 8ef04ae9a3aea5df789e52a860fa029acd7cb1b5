@@ -16,6 +16,23 @@
       "message": "re-lgtm",
       "revId": "8ef04ae9a3aea5df789e52a860fa029acd7cb1b5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc8567b6_c2f1b20b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-07T19:19:02Z",
+      "side": 1,
+      "message": "LGTM, but I\u0027ll leave it to Jamie to +2 (as there\u0027s an unresolved comment)",
+      "revId": "8ef04ae9a3aea5df789e52a860fa029acd7cb1b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
