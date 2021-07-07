@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d53ca22_d1df4ff8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-07T14:13:38Z",
+      "side": 1,
+      "message": "Thanks again for your contribution.",
+      "revId": "c8635b7ae8fc72581ce689e701d5cf6f007b42d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2d6453c_92c65daf",
@@ -55,6 +72,30 @@
       "side": 1,
       "message": "Oh I see. sorry.\nCan I ask a question about something I don\u0027t quite understand?\n\n1. In the first line, the dstFramebuffer is not initialized to red because the colorBuffer has not been blitted. Do I need to add initialization code?\n\n2. Would you mind telling me why example code you made is better than the code in patchset 3?\n\nSorry to bother you.",
       "parentUuid": "b2d6453c_92c65daf",
+      "range": {
+        "startLine": 2612,
+        "startChar": 0,
+        "endLine": 2623,
+        "endChar": 55
+      },
+      "revId": "c8635b7ae8fc72581ce689e701d5cf6f007b42d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9467b91_0c320e2e",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2623,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-07T14:13:38Z",
+      "side": 1,
+      "message": "Looks like I misread the test and thought color was also being blitted. I see now that the color buffer is uninitialized, and the way you test depth is perfectly fine. Sorry for the noise!",
+      "parentUuid": "9d6e3fa2_1da9bdf1",
       "range": {
         "startLine": 2612,
         "startChar": 0,
