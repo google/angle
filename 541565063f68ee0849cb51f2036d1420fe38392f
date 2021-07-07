@@ -16,6 +16,23 @@
       "message": "Please review the change to extend Intel graphics driver build number to 2 fields. Thanks!",
       "revId": "541565063f68ee0849cb51f2036d1420fe38392f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a23f5b4c_4ca10584",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2021-07-07T05:49:47Z",
+      "side": 1,
+      "message": "All related comments are consolidated here.",
+      "revId": "541565063f68ee0849cb51f2036d1420fe38392f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
