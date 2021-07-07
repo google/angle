@@ -37,6 +37,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1bcfa520_56c19c85",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2616,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-07T14:27:55Z",
+      "side": 1,
+      "message": "Apparently you also uncovered a bug in Mac/OpenGL! Please file a bug + add a suppression like you did with Vulkan.\n\nAlso, I suggest clearing the color buffer (say to green) at line 2607 above. The failure says the color buffer contained blue, which is likely left-over from another test. We got lucky the bug was caught, otherwise it would have turned into a flaky test.",
+      "revId": "c8635b7ae8fc72581ce689e701d5cf6f007b42d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b2d6453c_92c65daf",
         "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
         "patchSetId": 3
