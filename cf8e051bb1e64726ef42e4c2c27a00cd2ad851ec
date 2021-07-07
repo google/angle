@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "2fbc78ec_476e2f5b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-07T02:53:57Z",
+      "side": 1,
+      "message": "Correct. I\u0027ve updated the commit message to reflect this.",
+      "parentUuid": "2732c335_bad4c313",
+      "range": {
+        "startLine": 7,
+        "startChar": 17,
+        "endLine": 7,
+        "endChar": 37
+      },
+      "revId": "cf8e051bb1e64726ef42e4c2c27a00cd2ad851ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "172cca41_dc4d1ef3",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
@@ -76,6 +100,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5219a6e_5b1f36a4",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-07T02:53:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71980563_0514ea83",
+      "revId": "cf8e051bb1e64726ef42e4c2c27a00cd2ad851ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f1917273_cbe01374",
@@ -93,6 +135,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "caa3fc8f_3e2b77fe",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-07T02:53:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1917273_cbe01374",
+      "revId": "cf8e051bb1e64726ef42e4c2c27a00cd2ad851ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a1d92925_3e0d85bd",
@@ -106,6 +166,30 @@
       "writtenOn": "2021-06-19T02:35:54Z",
       "side": 1,
       "message": "Why is this necessary? It\u0027s fine if the program is VS only.",
+      "range": {
+        "startLine": 674,
+        "startChar": 34,
+        "endLine": 674,
+        "endChar": 83
+      },
+      "revId": "cf8e051bb1e64726ef42e4c2c27a00cd2ad851ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d051d86_15cda860",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 674,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-07T02:53:57Z",
+      "side": 1,
+      "message": "I\u0027ve updated the condition with `!mState.verifyProgramStagesUsage()` in order to satisfy this spec requirement (invalid if below is true):\n`A  program  object  is  active  for  at  least  one,  but  not  all  of  the  shader stages that were present when the program was linked.`",
+      "parentUuid": "a1d92925_3e0d85bd",
       "range": {
         "startLine": 674,
         "startChar": 34,
