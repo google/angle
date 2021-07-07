@@ -1885,7 +1885,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
         isIntel && IsApple() && IsSkylake(device) && GetMacOSVersion() < OSVersion(10, 13, 2));
 
     ANGLE_FEATURE_CONDITION(features, doesSRGBClearsOnLinearFramebufferAttachments,
-                            functions->standard == STANDARD_GL_DESKTOP && (isIntel || isAMD));
+                            isIntel || isAMD);
 
     ANGLE_FEATURE_CONDITION(features, emulateMaxVertexAttribStride,
                             IsLinux() && functions->standard == STANDARD_GL_DESKTOP && isAMD);

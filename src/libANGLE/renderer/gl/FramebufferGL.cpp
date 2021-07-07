@@ -1379,32 +1379,27 @@ bool FramebufferGL::hasEmulatedAlphaChannelTextureAttachment() const
 
 void FramebufferGL::syncClearState(const gl::Context *context, GLbitfield mask)
 {
-    const FunctionsGL *functions = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
-    if (functions->standard == STANDARD_GL_DESKTOP)
+    if (features.doesSRGBClearsOnLinearFramebufferAttachments.enabled &&
+        (mask & GL_COLOR_BUFFER_BIT) != 0 && !mIsDefault)
     {
-        StateManagerGL *stateManager      = GetStateManagerGL(context);
-        const angle::FeaturesGL &features = GetFeaturesGL(context);
-
-        if (features.doesSRGBClearsOnLinearFramebufferAttachments.enabled &&
-            (mask & GL_COLOR_BUFFER_BIT) != 0 && !mIsDefault)
+        bool hasSRGBAttachment = false;
+        for (const auto &attachment : mState.getColorAttachments())
         {
-            bool hasSRGBAttachment = false;
-            for (const auto &attachment : mState.getColorAttachments())
+            if (attachment.isAttached() && attachment.getColorEncoding() == GL_SRGB)
             {
-                if (attachment.isAttached() && attachment.getColorEncoding() == GL_SRGB)
-                {
-                    hasSRGBAttachment = true;
-                    break;
-                }
+                hasSRGBAttachment = true;
+                break;
             }
+        }
 
-            stateManager->setFramebufferSRGBEnabled(context, hasSRGBAttachment);
-        }
-        else
-        {
-            stateManager->setFramebufferSRGBEnabled(context, !mIsDefault);
-        }
+        stateManager->setFramebufferSRGBEnabled(context, hasSRGBAttachment);
+    }
+    else
+    {
+        stateManager->setFramebufferSRGBEnabled(context, !mIsDefault);
     }
 }
 
@@ -1412,40 +1407,35 @@ void FramebufferGL::syncClearBufferState(const gl::Context *context,
                                          GLenum buffer,
                                          GLint drawBuffer)
 {
-    const FunctionsGL *functions = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
-    if (functions->standard == STANDARD_GL_DESKTOP)
+    if (features.doesSRGBClearsOnLinearFramebufferAttachments.enabled && buffer == GL_COLOR &&
+        !mIsDefault)
     {
-        StateManagerGL *stateManager      = GetStateManagerGL(context);
-        const angle::FeaturesGL &features = GetFeaturesGL(context);
+        // If doing a clear on a color buffer, set SRGB blend enabled only if the color buffer
+        // is an SRGB format.
+        const auto &drawbufferState  = mState.getDrawBufferStates();
+        const auto &colorAttachments = mState.getColorAttachments();
 
-        if (features.doesSRGBClearsOnLinearFramebufferAttachments.enabled && buffer == GL_COLOR &&
-            !mIsDefault)
+        const FramebufferAttachment *attachment = nullptr;
+        if (drawbufferState[drawBuffer] >= GL_COLOR_ATTACHMENT0 &&
+            drawbufferState[drawBuffer] < GL_COLOR_ATTACHMENT0 + colorAttachments.size())
         {
-            // If doing a clear on a color buffer, set SRGB blend enabled only if the color buffer
-            // is an SRGB format.
-            const auto &drawbufferState  = mState.getDrawBufferStates();
-            const auto &colorAttachments = mState.getColorAttachments();
-
-            const FramebufferAttachment *attachment = nullptr;
-            if (drawbufferState[drawBuffer] >= GL_COLOR_ATTACHMENT0 &&
-                drawbufferState[drawBuffer] < GL_COLOR_ATTACHMENT0 + colorAttachments.size())
-            {
-                size_t attachmentIdx =
-                    static_cast<size_t>(drawbufferState[drawBuffer] - GL_COLOR_ATTACHMENT0);
-                attachment = &colorAttachments[attachmentIdx];
-            }
-
-            if (attachment != nullptr)
-            {
-                stateManager->setFramebufferSRGBEnabled(context,
-                                                        attachment->getColorEncoding() == GL_SRGB);
-            }
+            size_t attachmentIdx =
+                static_cast<size_t>(drawbufferState[drawBuffer] - GL_COLOR_ATTACHMENT0);
+            attachment = &colorAttachments[attachmentIdx];
         }
-        else
+
+        if (attachment != nullptr)
         {
-            stateManager->setFramebufferSRGBEnabled(context, !mIsDefault);
+            stateManager->setFramebufferSRGBEnabled(context,
+                                                    attachment->getColorEncoding() == GL_SRGB);
         }
+    }
+    else
+    {
+        stateManager->setFramebufferSRGBEnabled(context, !mIsDefault);
     }
 }
 

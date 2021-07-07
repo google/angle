@@ -2005,10 +2005,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 }
 
                 // Changing the draw framebuffer binding sometimes requires resetting srgb blending.
-                if (mFunctions->standard == STANDARD_GL_DESKTOP)
-                {
-                    iter.setLaterBit(gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE);
-                }
+                iter.setLaterBit(gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE);
 
                 // If the framebuffer is emulating RGB on top of RGBA, the color mask has to be
                 // updated
@@ -2225,10 +2222,10 @@ void StateManagerGL::setFramebufferSRGBEnabledForFramebuffer(const gl::Context *
                                                              bool enabled,
                                                              const FramebufferGL *framebuffer)
 {
-    if (mFunctions->standard == STANDARD_GL_DESKTOP && framebuffer->isDefault())
+    if (framebuffer->isDefault())
     {
         // Obey the framebuffer sRGB state for blending on all framebuffers except the default
-        // framebuffer on Desktop OpenGL.
+        // framebuffer.
         // When SRGB blending is enabled, only SRGB capable formats will use it but the default
         // framebuffer will always use it if it is enabled.
         // TODO(geofflang): Update this when the framebuffer binding dirty changes, when it exists.
