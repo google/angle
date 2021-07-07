@@ -63,6 +63,30 @@
       },
       "revId": "9903f67ff6613a00a54e993cd629d150c1d89e6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62fab7c6_4cf21e0c",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1452687
+      },
+      "writtenOn": "2021-07-07T19:28:46Z",
+      "side": 1,
+      "message": "Issue created on the webgl github:\nhttps://github.com/KhronosGroup/WebGL/issues/3297",
+      "parentUuid": "e8e915dd_04a60dfd",
+      "range": {
+        "startLine": 585,
+        "startChar": 7,
+        "endLine": 586,
+        "endChar": 79
+      },
+      "revId": "9903f67ff6613a00a54e993cd629d150c1d89e6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
