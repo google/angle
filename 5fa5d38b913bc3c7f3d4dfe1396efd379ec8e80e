@@ -196,6 +196,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0aa657d_87a04923",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-07T17:21:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd060e3c_2b727e81",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "03c00fb8_cbc3c0ad",
