@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d4d4270_9435916f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-07T21:02:47Z",
+      "side": 1,
+      "message": "+2 assuming the CQ test failures get cleaned up.",
+      "revId": "f6c89986cc42946a8de1fc9a82d0aa88f30f2506",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
