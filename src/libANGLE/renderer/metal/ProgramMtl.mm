@@ -18,6 +18,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/ProgramLinkedResources.h"
 #include "libANGLE/renderer/metal/BufferMtl.h"
+#include "libANGLE/renderer/metal/CompilerMtl.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include "libANGLE/renderer/metal/TextureMtl.h"
@@ -442,7 +443,18 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext,
                                    const gl::ProgramLinkedResources &resources,
                                    gl::InfoLog &infoLog)
 {
-    return linkImplSpirv(glContext, resources, infoLog);
+#if ANGLE_ENABLE_METAL_SPIRV
+    if (CompilerMtl::useDirectToMSLCompiler())
+    {
+        return linkImplDirect(glContext, resources, infoLog);
+    }
+    else
+    {
+        return linkImplSpirv(glContext, resources, infoLog);
+    }
+#else
+    return linkImplDirect(glContext, resources, infoLog);
+#endif
 }
 
 angle::Result ProgramMtl::linkTranslatedShaders(const gl::Context *glContext,
@@ -582,6 +594,9 @@ angle::Result ProgramMtl::getSpecializedShader(mtl::Context *context,
                                                id<MTLFunction> *shaderOut)
 {
     static_assert(YES == 1, "YES should have value of 1");
+#if ANGLE_ENABLE_METAL_SPIRV
+    static const bool useSpirv = !CompilerMtl::useDirectToMSLCompiler();
+#endif
 
     mtl::TranslatedShaderInfo *translatedMslInfo = &mMslShaderTranslateInfo[shaderType];
     ProgramShaderObjVariantMtl *shaderVariant;
@@ -620,9 +635,19 @@ angle::Result ProgramMtl::getSpecializedShader(mtl::Context *context,
                                   mtl::RenderPipelineRasterization::EmulatedDiscard;
 
             NSString *discardEnabledStr;
-            discardEnabledStr =
-                [NSString stringWithFormat:@"%s%s", sh::mtl::kRasterizerDiscardEnabledConstName,
-                                           kSpirvCrossSpecConstSuffix];
+#if ANGLE_ENABLE_METAL_SPIRV
+            if (useSpirv)
+            {
+                discardEnabledStr =
+                    [NSString stringWithFormat:@"%s%s", sh::mtl::kRasterizerDiscardEnabledConstName,
+                                               kSpirvCrossSpecConstSuffix];
+            }
+            else
+#endif
+            {
+                discardEnabledStr =
+                    [NSString stringWithUTF8String:sh::mtl::kRasterizerDiscardEnabledConstName];
+            }
 
             funcConstants = [[MTLFunctionConstantValues alloc] init];
             [funcConstants setConstantValue:&emulateDiscard
@@ -646,9 +671,19 @@ angle::Result ProgramMtl::getSpecializedShader(mtl::Context *context,
         ANGLE_MTL_OBJC_SCOPE
         {
             NSString *coverageMaskEnabledStr;
-            coverageMaskEnabledStr =
-                [NSString stringWithFormat:@"%s%s", sh::mtl::kCoverageMaskEnabledConstName,
-                                           kSpirvCrossSpecConstSuffix];
+#if ANGLE_ENABLE_METAL_SPIRV
+            if (useSpirv)
+            {
+                coverageMaskEnabledStr =
+                    [NSString stringWithFormat:@"%s%s", sh::mtl::kCoverageMaskEnabledConstName,
+                                               kSpirvCrossSpecConstSuffix];
+            }
+            else
+#endif
+            {
+                coverageMaskEnabledStr =
+                    [NSString stringWithUTF8String:sh::mtl::kCoverageMaskEnabledConstName];
+            }
 
             funcConstants = [[MTLFunctionConstantValues alloc] init];
             [funcConstants setConstantValue:&emulateCoverageMask
@@ -722,6 +757,9 @@ angle::Result ProgramMtl::createMslShaderLib(
             ss << "Internal error compiling shader with Metal backend.\n";
 #if !defined(NDEBUG)
             ss << err.get().localizedDescription.UTF8String << "\n";
+            ss << "-----\n";
+            ss << translatedMslInfo->metalShaderSource;
+            ss << "-----\n";
 #else
             ss << "Please submit this shader, or website as a bug to https://bugs.webkit.org\n";
 #endif

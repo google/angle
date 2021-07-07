@@ -54,7 +54,7 @@ class MTLWaitableCompileEventImpl final : public WaitableCompileEvent
     MTLWaitableCompileEventImpl(ShaderMtl *shader,
                                 std::shared_ptr<angle::WaitableEvent> waitableEvent,
                                 std::shared_ptr<TranslateTask> translateTask)
-        : WaitableCompileEvent(waitableEvent), mTranslateTask(translateTask)  //, mShader(shader)
+        : WaitableCompileEvent(waitableEvent), mTranslateTask(translateTask), mShader(shader)
     {}
 
     bool getResult() override { return mTranslateTask->getResult(); }

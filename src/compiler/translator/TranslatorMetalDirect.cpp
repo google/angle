@@ -488,6 +488,10 @@ ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertSampleMaskWritingLogic(
     TIntermBlock &root,
     DriverUniform &driverUniforms)
 {
+    // This transformation leaves the tree in an inconsistent state by using a variable that's
+    // defined in text, outside of the knowledge of the AST.
+    mValidateASTOptions.validateVariableReferences = false;
+
     TSymbolTable *symbolTable = &getSymbolTable();
 
     // Create kCoverageMaskEnabled and kSampleMaskWriteFuncName variable references.
@@ -534,6 +538,10 @@ ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertSampleMaskWritingLogic(
 
 ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertRasterizationDiscardLogic(TIntermBlock &root)
 {
+    // This transformation leaves the tree in an inconsistent state by using a variable that's
+    // defined in text, outside of the knowledge of the AST.
+    mValidateASTOptions.validateVariableReferences = false;
+
     TSymbolTable *symbolTable = &getSymbolTable();
 
     TType *boolType = new TType(EbtBool);
@@ -1110,6 +1118,11 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
+    // The RewritePipelines phase leaves the tree in an inconsistent state by inserting
+    // references to structures like "ANGLE_TextureEnv<metal::texture2d<float>>" which are
+    // defined in text (in ProgramPrelude), outside of the knowledge of the AST.
+    mValidateASTOptions.validateStructUsage = false;
+
     PipelineStructs pipelineStructs;
     if (!RewritePipelines(*this, *root, idGen, *driverUniforms, symbolEnv, invariants,
                           pipelineStructs))
@@ -1196,7 +1209,7 @@ bool TranslatorMetalDirect::translate(TIntermBlock *root,
     }
 
     SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
-    DriverUniformExtended driverUniforms;
+    DriverUniformExtended driverUniforms(DriverUniformMode::Structure);
     if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst, &driverUniforms))
     {
         return false;

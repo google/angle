@@ -1458,6 +1458,7 @@ struct ANGLE_TextureEnv
 };
 )")
 
+// Note: for the time being, names must match those in TranslatorMetal.
 PROGRAM_PRELUDE_DECLARE(functionConstants,
                         R"(
 #define ANGLE_SAMPLE_COMPARE_GRADIENT_INDEX 0
@@ -1467,7 +1468,7 @@ PROGRAM_PRELUDE_DECLARE(functionConstants,
 
 constant bool ANGLEUseSampleCompareGradient [[function_constant(ANGLE_SAMPLE_COMPARE_GRADIENT_INDEX)]];
 constant bool ANGLEUseSampleCompareLod      [[function_constant(ANGLE_SAMPLE_COMPARE_LOD_INDEX)]];
-constant bool ANGLERasterizationDiscard     [[function_constant(ANGLE_RASTERIZATION_DISCARD_INDEX)]];
+constant bool ANGLERasterizerDisabled       [[function_constant(ANGLE_RASTERIZATION_DISCARD_INDEX)]];
 constant bool ANGLECoverageMaskEnabled      [[function_constant(ANGLE_COVERAGE_MASK_ENABLED_INDEX)]];
 )")
 

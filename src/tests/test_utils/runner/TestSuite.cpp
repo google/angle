@@ -1071,7 +1071,10 @@ TestSuite::TestSuite(int *argc, char **argv)
 #if defined(ANGLE_PLATFORM_MACOS)
     // By default, we should hook file API functions on macOS to avoid slow Metal shader caching
     // file access.
-    angle::InitMetalFileAPIHooking(*argc, argv);
+    // TODO(anglebug.com/5505): in the angle_end2end_tests suite,
+    // disabling the shader cache makes the tests run more slowly than
+    // leaving it enabled.
+    // angle::InitMetalFileAPIHooking(*argc, argv);
 #endif
 
 #if defined(ANGLE_PLATFORM_WINDOWS)

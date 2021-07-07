@@ -1324,7 +1324,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
 
     if ((compileOptions & SH_USE_SPECIALIZATION_CONSTANT) != 0)
     {
-        DriverUniform driverUniforms;
+        DriverUniform driverUniforms(DriverUniformMode::InterfaceBlock);
         if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst,
                            &driverUniforms))
         {
@@ -1333,7 +1333,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
     }
     else
     {
-        DriverUniformExtended driverUniformsExt;
+        DriverUniformExtended driverUniformsExt(DriverUniformMode::InterfaceBlock);
         if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst,
                            &driverUniformsExt))
         {

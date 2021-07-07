@@ -38,7 +38,7 @@ class SpecConstMetal : public SpecConst
 class DriverUniformMetal : public DriverUniform
 {
   public:
-    DriverUniformMetal() : DriverUniform() {}
+    DriverUniformMetal() : DriverUniform(DriverUniformMode::InterfaceBlock) {}
     ~DriverUniformMetal() override {}
 
     TIntermBinary *getHalfRenderAreaRef() const override;

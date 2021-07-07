@@ -161,26 +161,53 @@ bool DriverUniform::addGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbo
     DeclareGlobalVariable(root, depthRangeVar);
 
     TFieldList *driverFieldList = createUniformFields(symbolTable);
-    // Define a driver uniform block "ANGLEUniformBlock" with instance name "ANGLEUniforms".
-    mDriverUniforms = DeclareInterfaceBlock(root, symbolTable, driverFieldList, EvqUniform,
-                                            TLayoutQualifier::Create(), TMemoryQualifier::Create(),
-                                            0, ImmutableString(vk::kDriverUniformsBlockName),
-                                            ImmutableString(vk::kDriverUniformsVarName));
+    if (mMode == DriverUniformMode::InterfaceBlock)
+    {
+        // Define a driver uniform block "ANGLEUniformBlock" with instance name "ANGLEUniforms".
+        mDriverUniforms = DeclareInterfaceBlock(
+            root, symbolTable, driverFieldList, EvqUniform, TLayoutQualifier::Create(),
+            TMemoryQualifier::Create(), 0, ImmutableString(vk::kDriverUniformsBlockName),
+            ImmutableString(vk::kDriverUniformsVarName));
+    }
+    else
+    {
+        // Declare a structure "ANGLEUniformBlock" with instance name "ANGLE_angleUniforms".
+        // This code path is taken only by the direct-to-Metal backend, and the assumptions
+        // about the naming conventions of ANGLE-internal variables run too deeply to rename
+        // this one.
+        auto varName    = ImmutableString("ANGLE_angleUniforms");
+        auto result     = DeclareStructure(root, symbolTable, driverFieldList, EvqUniform,
+                                       TMemoryQualifier::Create(), 0,
+                                       ImmutableString(vk::kDriverUniformsBlockName), &varName);
+        mDriverUniforms = result.second;
+    }
 
     return mDriverUniforms != nullptr;
 }
 
 TIntermBinary *DriverUniform::createDriverUniformRef(const char *fieldName) const
 {
-    size_t fieldIndex =
-        FindFieldIndex(mDriverUniforms->getType().getInterfaceBlock()->fields(), fieldName);
+    size_t fieldIndex = 0;
+    if (mMode == DriverUniformMode::InterfaceBlock)
+    {
+        fieldIndex =
+            FindFieldIndex(mDriverUniforms->getType().getInterfaceBlock()->fields(), fieldName);
+    }
+    else
+    {
+        fieldIndex = FindFieldIndex(mDriverUniforms->getType().getStruct()->fields(), fieldName);
+    }
 
     TIntermSymbol *angleUniformsRef = new TIntermSymbol(mDriverUniforms);
     TConstantUnion *uniformIndex    = new TConstantUnion;
     uniformIndex->setIConst(static_cast<int>(fieldIndex));
     TIntermConstantUnion *indexRef =
         new TIntermConstantUnion(uniformIndex, *StaticType::GetBasic<EbtInt>());
-    return new TIntermBinary(EOpIndexDirectInterfaceBlock, angleUniformsRef, indexRef);
+    if (mMode == DriverUniformMode::InterfaceBlock)
+    {
+        return new TIntermBinary(EOpIndexDirectInterfaceBlock, angleUniformsRef, indexRef);
+    }
+    return new TIntermBinary(EOpIndexDirectStruct, angleUniformsRef, indexRef);
 }
 
 TIntermBinary *DriverUniform::getViewportRef() const

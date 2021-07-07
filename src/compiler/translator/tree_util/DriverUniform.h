@@ -23,10 +23,23 @@ class TIntermTyped;
 class TIntermSwizzle;
 class TIntermBinary;
 
+enum class DriverUniformMode
+{
+    // Define the driver uniforms as an interface block. Used by the
+    // Vulkan and Metal/SPIR-V backends.
+    InterfaceBlock,
+
+    // Define the driver uniforms as a structure. Used by the
+    // direct-to-MSL Metal backend.
+    Structure
+};
+
 class DriverUniform
 {
   public:
-    DriverUniform() : mDriverUniforms(nullptr), mEmulatedDepthRangeType(nullptr) {}
+    DriverUniform(DriverUniformMode mode)
+        : mMode(mode), mDriverUniforms(nullptr), mEmulatedDepthRangeType(nullptr)
+    {}
     virtual ~DriverUniform() = default;
 
     bool addComputeDriverUniformsToShader(TIntermBlock *root, TSymbolTable *symbolTable);
@@ -58,6 +71,7 @@ class DriverUniform
     virtual TFieldList *createUniformFields(TSymbolTable *symbolTable);
     TType *createEmulatedDepthRangeType(TSymbolTable *symbolTable);
 
+    const DriverUniformMode mMode;
     const TVariable *mDriverUniforms;
     TType *mEmulatedDepthRangeType;
 };
@@ -65,7 +79,7 @@ class DriverUniform
 class DriverUniformExtended : public DriverUniform
 {
   public:
-    DriverUniformExtended() : DriverUniform() {}
+    DriverUniformExtended(DriverUniformMode mode) : DriverUniform(mode) {}
     virtual ~DriverUniformExtended() override {}
 
     TIntermBinary *getFlipXYRef() const override;
