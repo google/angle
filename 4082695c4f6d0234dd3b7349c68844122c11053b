@@ -16,6 +16,46 @@
       "message": "Cody/Tim PTAL. Going to make this the baseline script we use to generate perf results.",
       "revId": "4082695c4f6d0234dd3b7349c68844122c11053b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52bea427_f1b17649",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-07T21:36:07Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "4082695c4f6d0234dd3b7349c68844122c11053b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a024529_814e474b",
+        "filename": "src/tests/run_perf_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-07T21:36:07Z",
+      "side": 1,
+      "message": "What\u0027s special about the value \u00277\u0027 if samples-per-test can be set to anything?",
+      "range": {
+        "startLine": 205,
+        "startChar": 29,
+        "endLine": 205,
+        "endChar": 30
+      },
+      "revId": "4082695c4f6d0234dd3b7349c68844122c11053b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
