@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9dc57d9b_256f36d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-07T14:06:57Z",
+      "side": 1,
+      "message": "Generally LGTM, but looks like dEQP expects validation to be done differently in some cases.",
+      "revId": "18f8a36f962c6fd4198e6083b70118e40af6d02f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
