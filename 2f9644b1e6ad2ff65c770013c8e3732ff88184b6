@@ -16,6 +16,24 @@
       "message": "I think these features should only be applied to new driver. Do you want me to add capsVersion \u003e\u003d IntelDriverVersion(1000000) at the same time? I didn\u0027t include this change to keep the logic same as before.",
       "revId": "2f9644b1e6ad2ff65c770013c8e3732ff88184b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "090f2645_fe4b463c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2445,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-07T12:07:23Z",
+      "side": 1,
+      "message": "Sure, sounds good. Please go ahead and add the minimum range.",
+      "parentUuid": "1401ee03_13e10435",
+      "revId": "2f9644b1e6ad2ff65c770013c8e3732ff88184b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
