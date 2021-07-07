@@ -107,21 +107,14 @@
     "type": "script",
   },
   "angle_perftests": {
-    "args": [
-      "angle_perftests",
-      "--non-telemetry=true",
-      "--test-launcher-print-test-stdio=always",
-      "--test-launcher-jobs=1",
-      "--test-launcher-retry-limit=0",
-    ],
     "label": "//src/tests:angle_perftests",
-    "script": "//testing/scripts/run_performance_tests.py",
+    "script": "//src/tests/run_perf_tests.py",
     "type": "script",
   },
   "angle_restricted_trace_gold_tests": {
-    "type": "script",
     "label": "//src/tests/restricted_traces:angle_restricted_trace_gold_tests",
     "script": "//src/tests/restricted_traces/restricted_trace_gold_tests.py",
+    "type": "script",
   },
   "angle_unittests": {
     "label": "//src/tests:angle_unittests",
@@ -130,7 +123,7 @@
   },
   "angle_white_box_perftests": {
     "label": "//src/tests:angle_white_box_tests",
-    "script": "//scripts/run_gtest_angle_test.py",
+    "script": "//src/tests/run_perf_tests.py",
     "type": "script",
   },
   "angle_white_box_tests": {

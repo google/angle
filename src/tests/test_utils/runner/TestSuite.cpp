@@ -1328,7 +1328,9 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseStringArg("--isolated-script-test-output=", argument, &mResultsFile) ||
             ParseStringArg(kFilterFileArg, argument, &mFilterFile) ||
             ParseStringArg(kHistogramJsonFileArg, argument, &mHistogramJsonFile) ||
+            // We need these overloads to work around technical debt in the Android test runner.
             ParseStringArg("--isolated-script-test-perf-output=", argument, &mHistogramJsonFile) ||
+            ParseStringArg("--isolated_script_test_perf_output=", argument, &mHistogramJsonFile) ||
             ParseStringArg(kIsolatedOutDir, argument, &mTestArtifactDirectory) ||
             ParseFlag("--bot-mode", argument, &mBotMode) ||
             ParseFlag("--debug-test-groups", argument, &mDebugTestGroups) ||

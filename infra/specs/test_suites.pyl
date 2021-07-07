@@ -804,26 +804,13 @@
     'angle_perf_isolated_scripts': {
       'angle_perftests': {
         'args': [
-          'angle_perftests',
-          '--non-telemetry=true',
-          '--gtest-benchmark-name=angle_perftests',
-          '-v',
-          '--test-timeout=100',
-        ],
-        'android_args': [
-          '--test-launcher-batch-limit=1',
-        ],
-        'desktop_args': [
-          '--batch-size=1',
-          '--bot-mode',
-          '--max-processes=1',
-          '--print-test-stdout',
+          '--log=debug',
         ],
         'merge': {
           'script': '//scripts/process_angle_perf_results.py',
         },
         'android_swarming': {
-          'shards': 12,
+          'shards': 20,
         },
         'swarming': {
           'shards': 10,
@@ -836,24 +823,8 @@
     'angle_perf_smoke_isolated_scripts': {
       'angle_perftests': {
         'args': [
-          'angle_perftests',
-          '--non-telemetry=true',
-          '--gtest-benchmark-name=angle_perftests',
-          '-v',
-          # Tell the tests to exit after one frame for faster iteration.
-          '--one-frame-only',
-          '--test-timeout=100',
-          # Do not run trace tests because they're already run in Gold tests.
-          '--gtest_filter=-TracePerfTest.*',
-        ],
-        'android_args': [
-          '--test-launcher-batch-limit=1',
-        ],
-        'desktop_args': [
-          '--batch-size=1',
-          '--bot-mode',
-          '--max-processes=1',
-          '--print-test-stdout',
+          '--log=debug',
+          '--smoke-test-mode',
         ],
         'merge': {
           'script': '//scripts/process_angle_perf_results.py',
@@ -866,7 +837,7 @@
           'shards': 2,
         },
         'android_swarming': {
-          'shards': 6,
+          'shards': 20,
         },
       },
     },

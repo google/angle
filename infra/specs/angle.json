@@ -599,14 +599,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "angle_perftests",
-          "--non-telemetry=true",
-          "--gtest-benchmark-name=angle_perftests",
-          "-v",
-          "--one-frame-only",
-          "--test-timeout=100",
-          "--gtest_filter=-TracePerfTest.*",
-          "--test-launcher-batch-limit=1"
+          "--log=debug",
+          "--smoke-test-mode"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -636,7 +630,7 @@
             }
           ],
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 6
+          "shards": 20
         },
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       },
@@ -688,12 +682,7 @@
     "isolated_scripts": [
       {
         "args": [
-          "angle_perftests",
-          "--non-telemetry=true",
-          "--gtest-benchmark-name=angle_perftests",
-          "-v",
-          "--test-timeout=100",
-          "--test-launcher-batch-limit=1"
+          "--log=debug"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -720,7 +709,7 @@
             }
           ],
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 12
+          "shards": 20
         },
         "test_id_prefix": "ninja://src/tests:angle_perftests/"
       }
@@ -837,17 +826,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "angle_perftests",
-          "--non-telemetry=true",
-          "--gtest-benchmark-name=angle_perftests",
-          "-v",
-          "--one-frame-only",
-          "--test-timeout=100",
-          "--gtest_filter=-TracePerfTest.*",
-          "--batch-size=1",
-          "--bot-mode",
-          "--max-processes=1",
-          "--print-test-stdout"
+          "--log=debug",
+          "--smoke-test-mode"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -910,15 +890,7 @@
     "isolated_scripts": [
       {
         "args": [
-          "angle_perftests",
-          "--non-telemetry=true",
-          "--gtest-benchmark-name=angle_perftests",
-          "-v",
-          "--test-timeout=100",
-          "--batch-size=1",
-          "--bot-mode",
-          "--max-processes=1",
-          "--print-test-stdout"
+          "--log=debug"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -1666,17 +1638,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "angle_perftests",
-          "--non-telemetry=true",
-          "--gtest-benchmark-name=angle_perftests",
-          "-v",
-          "--one-frame-only",
-          "--test-timeout=100",
-          "--gtest_filter=-TracePerfTest.*",
-          "--batch-size=1",
-          "--bot-mode",
-          "--max-processes=1",
-          "--print-test-stdout"
+          "--log=debug",
+          "--smoke-test-mode"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -1738,15 +1701,7 @@
     "isolated_scripts": [
       {
         "args": [
-          "angle_perftests",
-          "--non-telemetry=true",
-          "--gtest-benchmark-name=angle_perftests",
-          "-v",
-          "--test-timeout=100",
-          "--batch-size=1",
-          "--bot-mode",
-          "--max-processes=1",
-          "--print-test-stdout"
+          "--log=debug"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -2429,17 +2384,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "angle_perftests",
-          "--non-telemetry=true",
-          "--gtest-benchmark-name=angle_perftests",
-          "-v",
-          "--one-frame-only",
-          "--test-timeout=100",
-          "--gtest_filter=-TracePerfTest.*",
-          "--batch-size=1",
-          "--bot-mode",
-          "--max-processes=1",
-          "--print-test-stdout"
+          "--log=debug",
+          "--smoke-test-mode"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -2502,15 +2448,7 @@
     "isolated_scripts": [
       {
         "args": [
-          "angle_perftests",
-          "--non-telemetry=true",
-          "--gtest-benchmark-name=angle_perftests",
-          "-v",
-          "--test-timeout=100",
-          "--batch-size=1",
-          "--bot-mode",
-          "--max-processes=1",
-          "--print-test-stdout"
+          "--log=debug"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -3389,17 +3327,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "angle_perftests",
-          "--non-telemetry=true",
-          "--gtest-benchmark-name=angle_perftests",
-          "-v",
-          "--one-frame-only",
-          "--test-timeout=100",
-          "--gtest_filter=-TracePerfTest.*",
-          "--batch-size=1",
-          "--bot-mode",
-          "--max-processes=1",
-          "--print-test-stdout"
+          "--log=debug",
+          "--smoke-test-mode"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -3461,15 +3390,7 @@
     "isolated_scripts": [
       {
         "args": [
-          "angle_perftests",
-          "--non-telemetry=true",
-          "--gtest-benchmark-name=angle_perftests",
-          "-v",
-          "--test-timeout=100",
-          "--batch-size=1",
-          "--bot-mode",
-          "--max-processes=1",
-          "--print-test-stdout"
+          "--log=debug"
         ],
         "isolate_name": "angle_perftests",
         "merge": {

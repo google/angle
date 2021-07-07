@@ -384,6 +384,9 @@ if (is_win || is_linux || is_chromeos || is_android || is_apple) {
       "$angle_root:libGLESv2_static",
     ]
 
+    data = [ "$angle_root/src/tests/run_perf_tests.py" ]
+    data_deps = [ "//testing:run_perf_test" ]
+
     # These tests depend on vulkan_command_buffer_utils, which is
     # not yet compatible with mac and vulkan display/headless backend.
     if (angle_enable_vulkan && !angle_use_vulkan_display && !is_apple) {
@@ -441,12 +444,13 @@ if (build_angle_perftests) {
       "$angle_spirv_tools_dir:spvtools_val",
     ]
 
+    data = [ "$angle_root/src/tests/run_perf_tests.py" ]
+
     data_deps = [
       "${angle_root}:libEGL",
       "${angle_root}:libGLESv2",
+      "//testing:run_perf_test",
     ]
-
-    data_deps += [ "//testing:run_perf_test" ]
 
     if (is_win || is_linux || is_chromeos) {
       data_deps += [ "${angle_root}/third_party/glmark2:glmark2_angle" ]
