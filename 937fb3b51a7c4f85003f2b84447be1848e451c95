@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd27fb5f_5902c322",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-07T20:46:22Z",
+      "side": 1,
+      "message": "LGTM, although changing this code always makes me nervous.  I did verify locally that MEC still works.",
+      "revId": "937fb3b51a7c4f85003f2b84447be1848e451c95",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
