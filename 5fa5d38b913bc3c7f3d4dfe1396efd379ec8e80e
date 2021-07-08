@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e91b67ab_e0942339",
+        "filename": "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-08T18:27:02Z",
+      "side": 1,
+      "message": "Memory objects have a protected attribute (see PROTECTED_MEMORY_OBJECT_EXT in https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_external_objects.txt) when EXT_protected_textures is exposed (any plans for that?). If we\u0027re not exposing EXT_protected_textures then \u0027false\u0027 is appropriate here. Maybe add a comment about it though.",
+      "parentUuid": "620bb381_bc5af460",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7debf0a2_457947d6",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
         "patchSetId": 15
