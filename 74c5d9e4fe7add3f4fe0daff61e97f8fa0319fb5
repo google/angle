@@ -135,6 +135,30 @@
       },
       "revId": "74c5d9e4fe7add3f4fe0daff61e97f8fa0319fb5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "709f6d43_c9c67d2d",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 23
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-07-08T12:35:50Z",
+      "side": 1,
+      "message": "Thanks Quyen for this excellent catch!",
+      "parentUuid": "93281842_8fbf1b82",
+      "range": {
+        "startLine": 272,
+        "startChar": 20,
+        "endLine": 272,
+        "endChar": 46
+      },
+      "revId": "74c5d9e4fe7add3f4fe0daff61e97f8fa0319fb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
