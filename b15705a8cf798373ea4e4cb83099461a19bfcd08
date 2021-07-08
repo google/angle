@@ -56,6 +56,30 @@
       },
       "revId": "b15705a8cf798373ea4e4cb83099461a19bfcd08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "821aa767_bd6ee4e7",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-08T21:22:47Z",
+      "side": 1,
+      "message": "Ack. Want to keep it this way for now but will change to std::pairs\u003c\u003e if there are perf regressions.",
+      "parentUuid": "ab115fd7_97954aea",
+      "range": {
+        "startLine": 290,
+        "startChar": 35,
+        "endLine": 290,
+        "endChar": 75
+      },
+      "revId": "b15705a8cf798373ea4e4cb83099461a19bfcd08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
