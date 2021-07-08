@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "956c1869_db275d60",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-08T16:56:32Z",
+      "side": 1,
+      "message": "templated",
+      "range": {
+        "startLine": 9,
+        "startChar": 21,
+        "endLine": 9,
+        "endChar": 30
+      },
+      "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "73dc0299_dd462273",
@@ -14,6 +37,29 @@
       "writtenOn": "2021-07-08T12:12:21Z",
       "side": 1,
       "message": "Cody or Tim, PTAL. Need to get some approvals on this so I can land it.",
+      "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5aec1dca_c6f2b296",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-08T16:56:32Z",
+      "side": 1,
+      "message": "What\u0027s the motivation for versioning this?  Can we just replace the existing map?  Or is that a planned later transition?",
+      "range": {
+        "startLine": 461,
+        "startChar": 34,
+        "endLine": 461,
+        "endChar": 38
+      },
       "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -121,6 +167,47 @@
       "side": 1,
       "message": "I\u0027ll see what the other reviewers think. It makes the code better as it is now from my reading because it\u0027s a pre-call update. In general we don\u0027t worry about adding extra arguments in the frame capture code.",
       "parentUuid": "099a631d_d51d55c9",
+      "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3ed4afe_8f8c44a1",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4534,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-08T16:56:32Z",
+      "side": 1,
+      "message": "I\u0027m fine with it either way.  Adding it as a parameter that could be checked outside the function looks weird, but encapsulating `updatePreCallResourceCounts` inside `maybeCapturePreCallUpdates` also makes sense.  I\u0027d probably lean toward the encapsulation to maintain readability.",
+      "parentUuid": "0cf79b46_dc529dd3",
+      "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "401fc560_ffc20d58",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4640,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-08T16:56:32Z",
+      "side": 1,
+      "message": ".",
+      "range": {
+        "startLine": 4640,
+        "startChar": 69,
+        "endLine": 4640,
+        "endChar": 70
+      },
       "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
