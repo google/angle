@@ -1538,11 +1538,21 @@ void TracePerfTest::onReplayDiscardFramebufferEXT(GLenum target,
 void TracePerfTest::swap()
 {
     // Capture a screenshot if enabled.
-    if (gScreenShotDir != nullptr && !mScreenshotSaved)
+    if (gScreenShotDir != nullptr && !mScreenshotSaved &&
+        static_cast<uint32_t>(gScreenShotFrame) == mCurrentFrame)
     {
         std::stringstream screenshotNameStr;
         screenshotNameStr << gScreenShotDir << GetPathSeparator() << "angle" << mBackend << "_"
-                          << mStory << ".png";
+                          << mStory;
+
+        // Add a marker to the name for any screenshot that isn't start frame
+        if (mStartFrame != static_cast<uint32_t>(gScreenShotFrame))
+        {
+            screenshotNameStr << "_frame" << gScreenShotFrame;
+        }
+
+        screenshotNameStr << ".png";
+
         std::string screenshotName = screenshotNameStr.str();
         saveScreenshot(screenshotName);
         mScreenshotSaved = true;

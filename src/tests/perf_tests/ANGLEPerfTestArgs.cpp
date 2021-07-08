@@ -19,6 +19,7 @@ int gMaxStepsPerformed         = 0;
 bool gEnableTrace              = false;
 const char *gTraceFile         = "ANGLETrace.json";
 const char *gScreenShotDir     = nullptr;
+int gScreenShotFrame           = 1;
 bool gVerboseLogging           = false;
 double gCalibrationTimeSeconds = 1.0;
 double gMaxTrialTimeSeconds    = 10.0;
@@ -102,6 +103,11 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         else if (strcmp("--screenshot-dir", argv[argIndex]) == 0 && argIndex < *argc - 1)
         {
             gScreenShotDir = argv[argIndex + 1];
+            argIndex++;
+        }
+        else if (strcmp("--screenshot-frame", argv[argIndex]) == 0 && argIndex < *argc - 1)
+        {
+            gScreenShotFrame = ReadIntArgument(argv[argIndex + 1]);
             argIndex++;
         }
         else if (strcmp("--verbose-logging", argv[argIndex]) == 0 ||

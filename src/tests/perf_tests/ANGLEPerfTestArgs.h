@@ -20,6 +20,7 @@ extern int gMaxStepsPerformed;
 extern bool gEnableTrace;
 extern const char *gTraceFile;
 extern const char *gScreenShotDir;
+extern int gScreenShotFrame;
 extern bool gVerboseLogging;
 extern int gWarmupLoops;
 extern double gCalibrationTimeSeconds;
