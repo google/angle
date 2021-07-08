@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9cf59b9_73728f89",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1541,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T20:27:11Z",
+      "side": 1,
+      "message": "does mCurrentFrame loop around? seems like you can get rid of this.",
+      "range": {
+        "startLine": 1541,
+        "startChar": 75,
+        "endLine": 1541,
+        "endChar": 91
+      },
+      "revId": "d1a162aa01c46d3777c1657d9ca38f2ba413119a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
