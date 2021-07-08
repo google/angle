@@ -22,6 +22,30 @@
       },
       "revId": "d1a162aa01c46d3777c1657d9ca38f2ba413119a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13419f62_d0724b76",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1541,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-08T21:09:02Z",
+      "side": 1,
+      "message": "Looks like it does:\n\n    void TracePerfTest::drawBenchmark()\n    {\n    ...\n        if (mCurrentFrame \u003d\u003d mEndFrame)\n        {\n            mTraceLibrary-\u003eresetReplay();\n            mCurrentFrame \u003d mStartFrame;   \u003c\u003c--- here\n        }\n        else\n        {\n            mCurrentFrame++;\n        }",
+      "parentUuid": "b9cf59b9_73728f89",
+      "range": {
+        "startLine": 1541,
+        "startChar": 75,
+        "endLine": 1541,
+        "endChar": 91
+      },
+      "revId": "d1a162aa01c46d3777c1657d9ca38f2ba413119a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
