@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "b15705a8cf798373ea4e4cb83099461a19bfcd08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8fee7ad_dba00054",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T20:40:00Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "b15705a8cf798373ea4e4cb83099461a19bfcd08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab115fd7_97954aea",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T20:40:00Z",
+      "side": 1,
+      "message": "If I were doing this I\u0027d probably just store a flat list of {index, format} pairs instead of using a heavy hash map. As long as this won\u0027t usually affect performance though it shouldn\u0027t matter.",
+      "range": {
+        "startLine": 290,
+        "startChar": 35,
+        "endLine": 290,
+        "endChar": 75
+      },
+      "revId": "b15705a8cf798373ea4e4cb83099461a19bfcd08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
