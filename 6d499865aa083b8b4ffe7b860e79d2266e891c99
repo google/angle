@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc8f32f2_708e202b",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-08T20:33:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7b2b3de_85add2ed",
+      "range": {
+        "startLine": 881,
+        "startChar": 48,
+        "endLine": 881,
+        "endChar": 84
+      },
+      "revId": "6d499865aa083b8b4ffe7b860e79d2266e891c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eb2e78f3_d19bd701",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-07-08T13:47:05Z",
       "side": 1,
       "message": "nit: getExternalFormatDescriptorCount, uint64_t externalFormat\n\nOtherwise I\u0027m not sure why you\u0027re calling this function with a uin64_t. It could be two functions for two different types, but I only see you call this for external formats.",
+      "range": {
+        "startLine": 3228,
+        "startChar": 21,
+        "endLine": 3228,
+        "endChar": 45
+      },
+      "revId": "6d499865aa083b8b4ffe7b860e79d2266e891c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b74efb42_db04057c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3228,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-08T20:33:00Z",
+      "side": 1,
+      "message": "\u003e I only see you call this for external formats\n\nsee here for when it is called on VkFormats instead -\u003e https://chromium-review.googlesource.com/c/angle/angle/+/2947767/25/src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp#716",
+      "parentUuid": "eb2e78f3_d19bd701",
       "range": {
         "startLine": 3228,
         "startChar": 21,

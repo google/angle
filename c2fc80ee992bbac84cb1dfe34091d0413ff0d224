@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b35d62f3_11cea8fc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2517,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-08T20:33:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6a1db47_48fa8055",
+      "range": {
+        "startLine": 2517,
+        "startChar": 40,
+        "endLine": 2517,
+        "endChar": 76
+      },
+      "revId": "c2fc80ee992bbac84cb1dfe34091d0413ff0d224",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "27551bbb_302fed83",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-07-08T13:47:05Z",
       "side": 1,
       "message": "could you make this a proper Result returning function if it can potentially generate an error?",
+      "range": {
+        "startLine": 3266,
+        "startChar": 0,
+        "endLine": 3267,
+        "endChar": 37
+      },
+      "revId": "c2fc80ee992bbac84cb1dfe34091d0413ff0d224",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89db2d1a_f4f44dbb",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3267,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-08T20:33:00Z",
+      "side": 1,
+      "message": "ok, will make a minimal change but will need to defer modifying callers to a follow up change.",
+      "parentUuid": "27551bbb_302fed83",
       "range": {
         "startLine": 3266,
         "startChar": 0,
