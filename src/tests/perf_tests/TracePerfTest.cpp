@@ -1605,11 +1605,6 @@ TracePerfParams CombineTestID(const TracePerfParams &in, RestrictedTraceID id)
     return out;
 }
 
-bool NoAndroidMockICD(const TracePerfParams &in)
-{
-    return in.eglParameters.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE || !IsAndroid();
-}
-
 TracePerfParams CombineWithSurfaceType(const TracePerfParams &in, SurfaceType surfaceType)
 {
     TracePerfParams out = in;
@@ -1645,15 +1640,17 @@ void RegisterTraceTests()
     std::vector<ModifierFunc<P>> renderers = {Vulkan<P>, Native<P>};
     if (gEnableAllTraceTests)
     {
-        renderers.push_back(VulkanMockICD<P>);
+        if (!IsAndroid())
+        {
+            renderers.push_back(VulkanMockICD<P>);
+        }
         renderers.push_back(VulkanSwiftShader<P>);
     }
 
     PV testsWithID = CombineWithValues({P()}, AllEnums<RestrictedTraceID>(), CombineTestID);
     PV testsWithSurfaceType = CombineWithValues(testsWithID, surfaceTypes, CombineWithSurfaceType);
     PV testsWithRenderer    = CombineWithFuncs(testsWithSurfaceType, renderers);
-    PV testsWithoutMockICD  = FilterWithFunc(testsWithRenderer, NoAndroidMockICD);
-    PV filteredTests        = angle::FilterTestParams(testsWithoutMockICD);
+    PV filteredTests        = FilterTestParams(testsWithRenderer);
 
     for (const TracePerfParams &params : filteredTests)
     {
