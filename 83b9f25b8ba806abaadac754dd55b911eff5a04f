@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43b6a825_5993f87e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116023
+      },
+      "writtenOn": "2021-07-08T02:27:10Z",
+      "side": 1,
+      "message": "This is a reland of https://chromium-review.googlesource.com/c/angle/angle/+/2861313 .\nPatch set 1 is the original version rebased on main.\nPatch set 2 is the updated version that keeps the feature disabled.\n\nAFAICT the issue that was caused the original fix to be reverted was fixed in https://chromium-review.googlesource.com/c/chromium/src/+/2979485 . To be safe I updated this change to keep the new feature disabled, which ensures that it won\u0027t block roll to chromium. I will enabled it in chromium separately.",
+      "revId": "83b9f25b8ba806abaadac754dd55b911eff5a04f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
