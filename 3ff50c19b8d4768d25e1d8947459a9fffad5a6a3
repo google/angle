@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4eb430f_2ebb4a4d",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 29
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-08T22:40:53Z",
+      "side": 1,
+      "message": "Change this block to:\n\n    // TODO(anglebug.com/5505): figure out why WebGL drawing buffer\n    // creation fails on macOS when the Metal backend advertises the\n    // EXT_multisampled_render_to_texture extension.\n#if !defined(ANGLE_PLATFORM_MACOS)\n    // EXT_multisampled_render_to_texture\n    if (mFeatures.allowMultisampleStoreAndResolve.enabled \u0026\u0026\n        mFeatures.hasDepthAutoResolve.enabled \u0026\u0026 mFeatures.hasStencilAutoResolve.enabled)\n    {\n        mNativeExtensions.multisampledRenderToTexture \u003d true;\n    }\n#endif",
+      "range": {
+        "startLine": 794,
+        "startChar": 0,
+        "endLine": 794,
+        "endChar": 4
+      },
+      "revId": "3ff50c19b8d4768d25e1d8947459a9fffad5a6a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
