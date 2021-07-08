@@ -51,6 +51,24 @@
       "parentUuid": "17cffc2e_d046e37c",
       "revId": "37c5d36fef783406c30a8ed8b8b4455f35374834",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2b73fdd_0184b917",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-08T22:53:05Z",
+      "side": 1,
+      "message": "Yuly,\n\nThanks for the CQ run.   I was trying to recreate this locally, but it always passed on my Pixel 4:\n    $ autoninja -C out/CQ chrome_public_apk\n    $ content/test/gpu/run_gpu_integration_test.py webgl_conformance --show-stdout --browser\u003dandroid-chromium --passthrough -v --extra-browser-args\u003d\"--enable-logging\u003dstderr --use-gl\u003dangle --use-angle\u003dgles --use-cmd-decoder\u003dpassthrough --force_high_performance_gpu\" --test-filter\u003d*texturefiltering* --webgl-conformance-version\u003d2.0.1\n\nI\u0027m not sure if this has to do with a difference in Android versions or what.\n\nI also manually created a CL similar to yours which was also able to show the failure (yours was earlier and finished sooner though):\nhttps://chromium-review.googlesource.com/c/chromium/src/+/3016242",
+      "parentUuid": "e60a0733_c59c9a1a",
+      "revId": "37c5d36fef783406c30a8ed8b8b4455f35374834",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
