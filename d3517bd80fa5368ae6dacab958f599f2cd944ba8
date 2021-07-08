@@ -16,6 +16,46 @@
       "message": "Cody or Tim PTAL, would like to get a second reviewer before landing.",
       "revId": "d3517bd80fa5368ae6dacab958f599f2cd944ba8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc8db7ec_66c279b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-08T17:49:33Z",
+      "side": 1,
+      "message": "Tested locally with a couple of games.",
+      "revId": "d3517bd80fa5368ae6dacab958f599f2cd944ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23fcb0ad_cdee2cf5",
+        "filename": "src/libANGLE/capture/trace_fixture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-08T17:49:33Z",
+      "side": 1,
+      "message": "deleted",
+      "range": {
+        "startLine": 106,
+        "startChar": 51,
+        "endLine": 106,
+        "endChar": 57
+      },
+      "revId": "d3517bd80fa5368ae6dacab958f599f2cd944ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
