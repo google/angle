@@ -1660,10 +1660,14 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
             // |const| parameters are passed as rvalue.
             paramValue = accessChainLoad(&param, decorations);
         }
+        else if (IsOpaqueType(paramType.getBasicType()))
+        {
+            // Opaque uniforms are passed by pointer.
+            paramValue = accessChainCollapse(&param);
+        }
         else if (IsAccessChainUnindexedLValue(param) &&
-                 (IsOpaqueType(paramType.getBasicType()) ||
-                  (param.accessChain.storageClass == spv::StorageClassFunction &&
-                   (mCompileOptions & SH_GENERATE_SPIRV_WORKAROUNDS) == 0)))
+                 (param.accessChain.storageClass == spv::StorageClassFunction &&
+                  (mCompileOptions & SH_GENERATE_SPIRV_WORKAROUNDS) == 0))
         {
             // Unindexed lvalues are passed directly.
             //
@@ -2039,7 +2043,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             extendedInst = spv::GLSLstd450Acos;
             break;
         case EOpAtan:
-            extendedInst = spv::GLSLstd450Atan;
+            extendedInst = childCount == 1 ? spv::GLSLstd450Atan : spv::GLSLstd450Atan2;
             break;
         case EOpSinh:
             extendedInst = spv::GLSLstd450Sinh;

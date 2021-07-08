@@ -370,8 +370,11 @@ class SPIRVBuilder : angle::NonCopyable
     const SpirvTypeData &getFieldTypeDataForAlignmentAndSize(const TType &type,
                                                              TLayoutBlockStorage blockStorage);
     uint32_t calculateBaseAlignmentAndSize(const SpirvType &type, uint32_t *sizeInStorageBlockOut);
-    uint32_t calculateSizeAndWriteOffsetDecorations(const SpirvType &type, spirv::IdRef typeId);
+    uint32_t calculateSizeAndWriteOffsetDecorations(const SpirvType &type,
+                                                    spirv::IdRef typeId,
+                                                    uint32_t blockBaseAlignment);
     void writeMemberDecorations(const SpirvType &type, spirv::IdRef typeId);
+    void writeInterpolationDecoration(TQualifier qualifier, spirv::IdRef id, uint32_t fieldIndex);
 
     // Helpers for type declaration.
     void getImageTypeParameters(TBasicType type,

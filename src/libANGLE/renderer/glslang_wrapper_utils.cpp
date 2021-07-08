@@ -1401,8 +1401,12 @@ TransformationState SpirvPerVertexTrimmer::transformMemberDecorate(const SpirvID
                                                                    spirv::LiteralInteger member,
                                                                    spv::Decoration decoration)
 {
-    // Transform only OpMemberDecorate %gl_PerVertex N BuiltIn B
-    if (!ids.isPerVertex(typeId) || decoration != spv::DecorationBuiltIn)
+    // Transform the following:
+    //
+    // - OpMemberDecorate %gl_PerVertex N BuiltIn B
+    // - OpMemberDecorate %gl_PerVertex N Invariant
+    if (!ids.isPerVertex(typeId) ||
+        (decoration != spv::DecorationBuiltIn && decoration != spv::DecorationInvariant))
     {
         return TransformationState::Unchanged;
     }

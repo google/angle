@@ -785,6 +785,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
 
     sink << "#version 450 core\n";
     writeExtensionBehavior(compileOptions, sink);
+    WritePragma(sink, compileOptions, getPragma());
 
     // Write out default uniforms into a uniform block assigned to a specific set/binding.
     int defaultUniformCount           = 0;

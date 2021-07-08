@@ -76,20 +76,24 @@ spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
 
 TLayoutBlockStorage SPIRVBuilder::getBlockStorage(const TType &type) const
 {
-    // Default to std140 for uniform and std430 for buffer blocks.
+    // If the type specifies the layout, take it from that.
     TLayoutBlockStorage blockStorage = type.getLayoutQualifier().blockStorage;
+
+    // For user-defined interface blocks, the block storage is specified on the symbol itself and
+    // not the type.
+    if (blockStorage == EbsUnspecified && type.getInterfaceBlock() != nullptr)
+    {
+        blockStorage = type.getInterfaceBlock()->blockStorage();
+    }
+
     if (IsShaderIoBlock(type.getQualifier()) || blockStorage == EbsStd140 ||
         blockStorage == EbsStd430)
     {
         return blockStorage;
     }
 
-    if (type.getQualifier() == EvqBuffer)
-    {
-        return EbsStd430;
-    }
-
-    return EbsStd140;
+    // Default to std140 for uniform and std430 for buffer blocks.
+    return type.getQualifier() == EvqBuffer ? EbsStd430 : EbsStd140;
 }
 
 SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const
@@ -101,6 +105,19 @@ SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage bloc
     spirvType.arraySizes          = type.getArraySizes();
     spirvType.imageInternalFormat = type.getLayoutQualifier().imageInternalFormat;
     spirvType.blockStorage        = blockStorage;
+
+    switch (spirvType.type)
+    {
+        // External textures are treated as 2D textures in the vulkan back-end.
+        case EbtSamplerExternalOES:
+        case EbtSamplerExternal2DY2YEXT:
+        // WEBGL video textures too.
+        case EbtSamplerVideoWEBGL:
+            spirvType.type = EbtSampler2D;
+            break;
+        default:
+            break;
+    }
 
     if (type.getStruct() != nullptr)
     {
@@ -278,7 +295,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
             // Propagate invariant to struct members.
             if (structure != nullptr)
             {
-                fieldSpirvType.isInvariant = type.isInvariant;
+                fieldSpirvType.isInvariant = type.isInvariant || fieldType.isInvariant();
             }
 
             spirv::IdRef fieldTypeId = getSpirvTypeData(fieldSpirvType, structure).id;
@@ -412,7 +429,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
     // unconditionally and having the SPIR-V transformer remove them, it's better to avoid
     // generating them in the first place.  This both simplifies the transformer and reduces SPIR-V
     // binary size that gets written to disk cache.  http://anglebug.com/4889
-    if (type.block != nullptr && type.arraySizes.empty())
+    if (block != nullptr && type.arraySizes.empty())
     {
         spirv::WriteName(&mSpirvDebug, typeId, hashName(block).data());
 
@@ -454,12 +471,13 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
         else if (type.arraySizes.empty() && type.block != nullptr)
         {
             // Write the Offset decoration for interface blocks and structs in them.
-            sizeInStorageBlock = calculateSizeAndWriteOffsetDecorations(type, typeId);
+            sizeInStorageBlock =
+                calculateSizeAndWriteOffsetDecorations(type, typeId, baseAlignment);
         }
     }
 
     // Write other member decorations.
-    if (type.block != nullptr && type.arraySizes.empty())
+    if (block != nullptr && type.arraySizes.empty())
     {
         writeMemberDecorations(type, typeId);
     }
@@ -487,9 +505,12 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
         // Float 2D Images
         case EbtSampler2D:
         case EbtImage2D:
+            break;
         case EbtSamplerExternalOES:
         case EbtSamplerExternal2DY2YEXT:
         case EbtSamplerVideoWEBGL:
+            // These must have already been converted to EbtSampler2D.
+            UNREACHABLE();
             break;
         case EbtSampler2DArray:
         case EbtImage2DArray:
@@ -1245,14 +1266,15 @@ void SPIRVBuilder::writeInterfaceVariableDecorations(const TType &type, spirv::I
 {
     const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
 
+    const bool isVarying = IsVarying(type.getQualifier());
     const bool needsSetBinding =
         IsSampler(type.getBasicType()) ||
         (type.isInterfaceBlock() &&
          (type.getQualifier() == EvqUniform || type.getQualifier() == EvqBuffer)) ||
         IsImage(type.getBasicType()) || IsSubpassInputType(type.getBasicType());
-    const bool needsLocation =
-        type.getQualifier() == EvqAttribute || type.getQualifier() == EvqVertexIn ||
-        type.getQualifier() == EvqFragmentOut || IsVarying(type.getQualifier());
+    const bool needsLocation = type.getQualifier() == EvqAttribute ||
+                               type.getQualifier() == EvqVertexIn ||
+                               type.getQualifier() == EvqFragmentOut || isVarying;
     const bool needsInputAttachmentIndex = IsSubpassInputType(type.getBasicType());
     const bool needsBlendIndex =
         type.getQualifier() == EvqFragmentOut && layoutQualifier.index >= 0;
@@ -1293,6 +1315,13 @@ void SPIRVBuilder::writeInterfaceVariableDecorations(const TType &type, spirv::I
     {
         spirv::WriteDecorate(&mSpirvDecorations, variableId, spv::DecorationIndex,
                              {spirv::LiteralInteger(layoutQualifier.index)});
+    }
+
+    // Handle interpolation and auxiliary decorations on varyings
+    if (isVarying)
+    {
+        writeInterpolationDecoration(type.getQualifier(), variableId,
+                                     std::numeric_limits<uint32_t>::max());
     }
 }
 
@@ -1617,7 +1646,8 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
 }
 
 uint32_t SPIRVBuilder::calculateSizeAndWriteOffsetDecorations(const SpirvType &type,
-                                                              spirv::IdRef typeId)
+                                                              spirv::IdRef typeId,
+                                                              uint32_t blockBaseAlignment)
 {
     ASSERT(type.block != nullptr);
 
@@ -1660,7 +1690,17 @@ uint32_t SPIRVBuilder::calculateSizeAndWriteOffsetDecorations(const SpirvType &t
         ++fieldIndex;
     }
 
-    return nextOffset;
+    uint32_t blockSize = nextOffset;
+
+    // Round up the size to the base alignment of the block.  Additionally, for std140 round it up
+    // to the size of vec4.  This is so that arrays of the block have the right stride.
+    blockSize = rx::roundUp(blockSize, blockBaseAlignment);
+    if (type.blockStorage != EbsStd430)
+    {
+        blockSize = std::max(blockSize, 16u);
+    }
+
+    return blockSize;
 }
 
 void SPIRVBuilder::writeMemberDecorations(const SpirvType &type, spirv::IdRef typeId)
@@ -1701,6 +1741,9 @@ void SPIRVBuilder::writeMemberDecorations(const SpirvType &type, spirv::IdRef ty
                 isRowMajor ? spv::DecorationRowMajor : spv::DecorationColMajor, {});
         }
 
+        // Add interpolation and auxiliary decorations
+        writeInterpolationDecoration(fieldType.getQualifier(), typeId, fieldIndex);
+
         // Add other decorations.
         SpirvDecorations decorations = getDecorations(fieldType);
         for (const spv::Decoration decoration : decorations)
@@ -1710,6 +1753,59 @@ void SPIRVBuilder::writeMemberDecorations(const SpirvType &type, spirv::IdRef ty
         }
 
         ++fieldIndex;
+    }
+}
+
+void SPIRVBuilder::writeInterpolationDecoration(TQualifier qualifier,
+                                                spirv::IdRef id,
+                                                uint32_t fieldIndex)
+{
+    spv::Decoration decoration = spv::DecorationMax;
+
+    switch (qualifier)
+    {
+        case EvqSmooth:
+        case EvqSmoothOut:
+        case EvqSmoothIn:
+            // No decoration in SPIR-V for smooth, this is the default interpolation.
+            return;
+
+        case EvqFlat:
+        case EvqFlatOut:
+        case EvqFlatIn:
+            decoration = spv::DecorationFlat;
+            break;
+
+        case EvqNoPerspective:
+        case EvqNoPerspectiveOut:
+        case EvqNoPerspectiveIn:
+            decoration = spv::DecorationNoPerspective;
+            break;
+
+        case EvqCentroid:
+        case EvqCentroidOut:
+        case EvqCentroidIn:
+            decoration = spv::DecorationCentroid;
+            break;
+
+        case EvqSample:
+        case EvqSampleOut:
+        case EvqSampleIn:
+            decoration = spv::DecorationSample;
+            break;
+
+        default:
+            return;
+    }
+
+    if (fieldIndex != std::numeric_limits<uint32_t>::max())
+    {
+        spirv::WriteMemberDecorate(&mSpirvDecorations, id, spirv::LiteralInteger(fieldIndex),
+                                   decoration, {});
+    }
+    else
+    {
+        spirv::WriteDecorate(&mSpirvDecorations, id, decoration, {});
     }
 }
 
@@ -1827,6 +1923,14 @@ void SPIRVBuilder::generateExecutionModes(spirv::Blob *blob)
     {
         case gl::ShaderType::Fragment:
             spirv::WriteExecutionMode(blob, mEntryPointId, spv::ExecutionModeOriginUpperLeft, {});
+
+            if (mCompiler->isEarlyFragmentTestsSpecified() ||
+                mCompiler->isEarlyFragmentTestsOptimized())
+            {
+                spirv::WriteExecutionMode(blob, mEntryPointId, spv::ExecutionModeEarlyFragmentTests,
+                                          {});
+            }
+
             break;
 
         case gl::ShaderType::Compute:
