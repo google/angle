@@ -70,6 +70,24 @@
       "parentUuid": "bf9c1014_45915c81",
       "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "099a631d_d51d55c9",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4534,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-08T08:13:53Z",
+      "side": 1,
+      "message": "TBH, I think that\u0027s bad design. You pass in a new parameter to decide whether to call an extra function, and this extra function could be perfectly well called right after the call site where you even already check the according flag.\n\nI could understand it if isCallValid would be a property of CallCapture that can be queried, so you don\u0027t have to change the interface, but even then having these checks for isCallValid distributed over the code when it could be handled in one place seem inefficient and makes the code more difficult to understand.",
+      "parentUuid": "60d88796_66333708",
+      "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
