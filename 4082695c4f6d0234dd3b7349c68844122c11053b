@@ -35,6 +35,46 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "329bc402_f49135c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-08T03:29:10Z",
+      "side": 1,
+      "message": "Approach looks good to me, but I\u0027d like to test it out.\n\nWhat\u0027s the right way to invoke this script?  I couldn\u0027t get it to provide results from several different attempts. i.e.:\n\n# Android test errors out\n cd out/AndroidPerformance\n ../../src/tests/run_perf_tests.py --filter\u003d\"*native*among_us*\"\n CommandFailedError: Failed to list tests on any device\n\n# Linux test returns immediately without results\n cd out/Release\n ../../src/tests/run_perf_tests.py --filter\u003d\"*native*among_us*\"\n Command [\u0027./angle_perftests\u0027, \u0027--list-tests\u0027, \u0027--gtest_filter\u003d*native*among_us*\u0027] returned exit code 0\n",
+      "revId": "4082695c4f6d0234dd3b7349c68844122c11053b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77d12d5c_c3d0515f",
+        "filename": "src/tests/run_perf_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-08T03:29:10Z",
+      "side": 1,
+      "message": "Does this work for Android too?  I think it does since the Android build includes an exe called angle_perftests, but I\u0027m getting:\n\n  \u0027Failed to list tests on any device\u0027",
+      "range": {
+        "startLine": 172,
+        "startChar": 11,
+        "endLine": 172,
+        "endChar": 26
+      },
+      "revId": "4082695c4f6d0234dd3b7349c68844122c11053b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3a024529_814e474b",
