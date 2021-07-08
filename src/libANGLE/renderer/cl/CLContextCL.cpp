@@ -324,9 +324,9 @@ CLProgramImpl::Ptr CLContextCL::linkProgram(const cl::Program &program,
         !nativeDevices.empty() ? nativeDevices.data() : nullptr;
 
     std::vector<cl_program> nativePrograms;
-    for (const cl::ProgramPtr &program : inputPrograms)
+    for (const cl::ProgramPtr &inputProgram : inputPrograms)
     {
-        nativePrograms.emplace_back(program->getImpl<CLProgramCL>().getNative());
+        nativePrograms.emplace_back(inputProgram->getImpl<CLProgramCL>().getNative());
     }
     const cl_uint numInputHeaders = static_cast<cl_uint>(nativePrograms.size());
 

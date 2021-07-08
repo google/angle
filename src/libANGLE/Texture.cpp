@@ -653,9 +653,9 @@ void TextureState::setImageDesc(TextureTarget target, size_t level, const ImageD
         // initialization which is already very expensive.
         bool allImagesInitialized = true;
 
-        for (const ImageDesc &desc : mImageDescs)
+        for (const ImageDesc &initDesc : mImageDescs)
         {
-            if (desc.initState == InitState::MayNeedInit)
+            if (initDesc.initState == InitState::MayNeedInit)
             {
                 allImagesInitialized = false;
                 break;

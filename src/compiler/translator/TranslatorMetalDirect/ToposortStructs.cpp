@@ -217,9 +217,9 @@ bool GetAsDeclaredStructure(SymbolEnv &symbolEnv,
     if (TIntermDeclaration *declNode = node.getAsDeclarationNode())
     {
         ASSERT(declNode->getChildCount() == 1);
-        TIntermNode &node = *declNode->getChildNode(0);
+        TIntermNode &childNode = *declNode->getChildNode(0);
 
-        if (TIntermSymbol *symbolNode = node.getAsSymbolNode())
+        if (TIntermSymbol *symbolNode = childNode.getAsSymbolNode())
         {
             const TVariable &var = symbolNode->variable();
             const TType &type    = var.getType();
@@ -306,11 +306,11 @@ bool sh::ToposortStructs(TCompiler &compiler,
     root.traverse(&finder);
     ppc.hasStructEq = !finder.mUsedStructs.empty();
 
-    DeclaredStructure declaredStruct;
     std::vector<DeclaredStructure> declaredStructs;
     std::vector<TIntermNode *> nonStructStmtNodes;
 
     {
+        DeclaredStructure declaredStruct;
         const size_t stmtCount = root.getChildCount();
         for (size_t i = 0; i < stmtCount; ++i)
         {

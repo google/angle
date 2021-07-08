@@ -198,6 +198,7 @@ config("extra_warnings") {
       "-Wnon-virtual-dtor",
       "-Wredundant-parens",
       "-Wreturn-std-move",
+      "-Wshadow",
       "-Wshadow-field",
       "-Wtautological-type-limit-compare",
       "-Wundefined-reinterpret-cast",

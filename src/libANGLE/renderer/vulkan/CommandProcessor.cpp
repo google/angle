@@ -46,13 +46,13 @@ void InitializeSubmitInfo(VkSubmitInfo *submitInfo,
 bool CommandsHaveValidOrdering(const std::vector<vk::CommandBatch> &commands)
 {
     Serial currentSerial;
-    for (const vk::CommandBatch &commands : commands)
+    for (const vk::CommandBatch &commandBatch : commands)
     {
-        if (commands.serial <= currentSerial)
+        if (commandBatch.serial <= currentSerial)
         {
             return false;
         }
-        currentSerial = commands.serial;
+        currentSerial = commandBatch.serial;
     }
 
     return true;
