@@ -66,6 +66,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "712c3ed7_9bf7f168",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-08T20:43:30Z",
+      "side": 1,
+      "message": "+1 to this concern.\n\nI\u0027m worried about all of the \"2\" versions of the functions and data structures and how long they\u0027ll need to stick around, since this will impact readability and maintenance.",
+      "parentUuid": "5aec1dca_c6f2b296",
+      "range": {
+        "startLine": 461,
+        "startChar": 34,
+        "endLine": 461,
+        "endChar": 38
+      },
+      "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ee670626_7b2796f4",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 7
