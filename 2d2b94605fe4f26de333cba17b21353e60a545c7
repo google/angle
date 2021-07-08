@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ae95dfd_521fbd0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T12:33:19Z",
+      "side": 1,
+      "message": "Filed http://anglebug.com/6148 to enable -Wshadow on Clang so I\u0027ll detect this shadowing error on Linux as well.",
+      "revId": "2d2b94605fe4f26de333cba17b21353e60a545c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
