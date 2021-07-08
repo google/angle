@@ -16,6 +16,23 @@
       "message": "This is a reland of https://chromium-review.googlesource.com/c/angle/angle/+/2861313 .\nPatch set 1 is the original version rebased on main.\nPatch set 2 is the updated version that keeps the feature disabled.\n\nAFAICT the issue that was caused the original fix to be reverted was fixed in https://chromium-review.googlesource.com/c/chromium/src/+/2979485 . To be safe I updated this change to keep the new feature disabled, which ensures that it won\u0027t block roll to chromium. I will enabled it in chromium separately.",
       "revId": "83b9f25b8ba806abaadac754dd55b911eff5a04f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea8f8980_aa0766ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T12:07:23Z",
+      "side": 1,
+      "message": "Is there a better way to enable this feature rather than using build_overrides? I don\u0027t like that it\u0027ll make an inconsistent behaviour between ANGLE in Chrome and in standalone. If you\u0027re just worried about breaking a bot, can you instead run your tryjob in Chromium against this ANGLE CL by specifying the ref for this CL as ANGLE\u0027s DEP?",
+      "revId": "83b9f25b8ba806abaadac754dd55b911eff5a04f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
