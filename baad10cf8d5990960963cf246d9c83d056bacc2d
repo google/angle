@@ -105,6 +105,24 @@
       "parentUuid": "60d88796_66333708",
       "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cf79b46_dc529dd3",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4534,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T12:16:21Z",
+      "side": 1,
+      "message": "I\u0027ll see what the other reviewers think. It makes the code better as it is now from my reading because it\u0027s a pre-call update. In general we don\u0027t worry about adding extra arguments in the frame capture code.",
+      "parentUuid": "099a631d_d51d55c9",
+      "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
