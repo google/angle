@@ -93,6 +93,30 @@
       },
       "revId": "6d499865aa083b8b4ffe7b860e79d2266e891c99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecb5f440_45878774",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3228,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T20:37:39Z",
+      "side": 1,
+      "message": "Thanks for the pointer. I think we should refactor this a bit to make it easier to read/maintain. Having an implied common uint64_t type for VkFormat and external formats could lead to some confusion.",
+      "parentUuid": "b74efb42_db04057c",
+      "range": {
+        "startLine": 3228,
+        "startChar": 21,
+        "endLine": 3228,
+        "endChar": 45
+      },
+      "revId": "6d499865aa083b8b4ffe7b860e79d2266e891c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
