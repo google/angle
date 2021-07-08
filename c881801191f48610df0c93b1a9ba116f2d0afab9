@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60a3d04f_c07b062a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-08T21:45:15Z",
+      "side": 1,
+      "message": "Working towards enabling GLSLTest*, done in two commits.",
+      "revId": "c881801191f48610df0c93b1a9ba116f2d0afab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
