@@ -73,6 +73,30 @@
       },
       "revId": "38389e5f400a309b5d247ff9593805d709b8105c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b31cd4b6_db2a8de6",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1385,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2021-07-08T09:20:45Z",
+      "side": 1,
+      "message": "I think the two clear-srgb cts cases work well using the else branch even without this workaround on my chromebook. But it makes sense to remove `functions-\u003estandard \u003d\u003d STANDARD_GL_DESKTOP` in doesSRGBClearsOnLinearFramebufferAttachments. I also removes the other two places\u0027 `functions-\u003estandard \u003d\u003d STANDARD_GL_DESKTOP`, which related with srgb. Please take another look. Thanks.",
+      "parentUuid": "8d574d87_ac8cb768",
+      "range": {
+        "startLine": 1385,
+        "startChar": 17,
+        "endLine": 1385,
+        "endChar": 61
+      },
+      "revId": "38389e5f400a309b5d247ff9593805d709b8105c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
