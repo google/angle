@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fd3d16d_93b77cb7",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T20:36:43Z",
+      "side": 1,
+      "message": "the overloading of two types here is going to lead to confusion down the road. Can we design this such that the \"external format\" (uint64_t, maybe should be a strongly typed wrapper class) is treated as an entirely different type from a VkFormat? i.e. don\u0027t assume they are interchangeable.",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 288,
+        "endChar": 5
+      },
+      "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
