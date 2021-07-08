@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "955d55ee_fae804cb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2021-07-08T01:07:36Z",
+      "side": 1,
+      "message": "I think a more accurate description would be to say that the derived storage class will pass the label reference to the base storage class in the constructor. Future changes will use this label reference to update the label string with D3D.",
+      "range": {
+        "startLine": 10,
+        "startChar": 7,
+        "endLine": 11,
+        "endChar": 68
+      },
+      "revId": "56cf5089bfcd53112b0a11ab0d8590a697aa6317",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "a801cdc2_6ddaeb03",
