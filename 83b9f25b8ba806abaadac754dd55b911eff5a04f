@@ -51,6 +51,24 @@
       "parentUuid": "ea8f8980_aa0766ca",
       "revId": "83b9f25b8ba806abaadac754dd55b911eff5a04f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a5dca6c_355b43b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T18:00:29Z",
+      "side": 1,
+      "message": "In Chrome\u0027s DEPS for ANGLE you can put the ref for this CL. I think it\u0027s refs/changes/68/3012368/3 - you can see the name in the \"Download\" dialog in Gerrit.",
+      "parentUuid": "85ccb471_c11fab01",
+      "revId": "83b9f25b8ba806abaadac754dd55b911eff5a04f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
