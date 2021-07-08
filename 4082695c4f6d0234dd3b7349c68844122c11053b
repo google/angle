@@ -101,6 +101,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7b0007c2_63316709",
+        "filename": "src/tests/run_perf_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-08T16:30:23Z",
+      "side": 1,
+      "message": "/sheepish\nOops, yeah, wrong directory.  Switching to one used for trace tests and it worked.\n\nOkay, when I run it with native on Linux, it works:\n\n  Command [\u0027./angle_perftests\u0027, \u0027--gtest_filter\u003dTracePerfTest.Run/native_among_us\u0027, \u0027--steps-per-trial\u003d790\u0027, \u0027--trials\u003d3\u0027] returned exit code 0\nINFO:root:Sample 4 wall_time results: [1.1597328473, 1.1428766884, 1.1428115066]\nINFO:root:Truncation: Removing the 1 highest and lowest times from wall_times.\nINFO:root:Mean wall_time for TracePerfTest.Run/native_among_us is 1.14, with coefficient of variation 3.53%\n\nBut when I run it against a test that is skipped, I get:\n\n  ../../src/tests/run_perf_tests.py --filter\u003d\"*vulkan*among_us*\"\n  Test skipped due to missing extension: GL_KHR_texture_compression_astc_ldr\n  Exception: Did not find the result \"steps_to_run\" in the test output",
+      "parentUuid": "54f5ef8e_f101fb50",
+      "range": {
+        "startLine": 172,
+        "startChar": 11,
+        "endLine": 172,
+        "endChar": 26
+      },
+      "revId": "4082695c4f6d0234dd3b7349c68844122c11053b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3a024529_814e474b",
         "filename": "src/tests/run_perf_tests.py",
         "patchSetId": 1
