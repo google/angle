@@ -22,6 +22,30 @@
       },
       "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af925724_35c2cd86",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-08T21:31:49Z",
+      "side": 1,
+      "message": "The program and context modules dont need to know the distinction between an immutable sampler tied to an external format vs. a VkFormat. In fact i would go as far as to say they **should** not know there exists such a distinction. All they need to know if is the pipeline or texture needs an immutable sampler and if so some key to uniquely identify such a sampler.\n\n\u003e is treated as an entirely different type from a VkFormat?\n\ncan you provide some info on what value is added by making such a distinction when all the functionality (except descriptor count query) is common to both?",
+      "parentUuid": "1fd3d16d_93b77cb7",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 288,
+        "endChar": 5
+      },
+      "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
