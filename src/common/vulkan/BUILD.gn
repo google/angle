@@ -54,9 +54,11 @@ group("angle_vulkan_entry_points") {
   if (is_fuchsia) {
     public_deps += [
       "$angle_root/src/common/fuchsia_egl",
-      "//third_party/fuchsia-sdk:vulkan_base",
       "//third_party/fuchsia-sdk/sdk/pkg/vulkan",
     ]
+    if (!angle_use_vulkan_null_display) {
+      public_deps += [ "//third_party/fuchsia-sdk/sdk/pkg/vulkan_layers:VkLayer_image_pipe_swapchain" ]
+    }
   } else if (!is_android && !is_ggp) {
     if (angle_shared_libvulkan) {
       data_deps = [ "$angle_vulkan_loader_dir:libvulkan" ]
