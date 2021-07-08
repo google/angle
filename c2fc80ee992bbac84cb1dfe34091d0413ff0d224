@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6a1db47_48fa8055",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2517,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T13:47:05Z",
+      "side": 1,
+      "message": "I\u0027d call this something like useMultipleDescriptorsForExternalFormats, makes it a verb and clearly a condition rather than a number.",
+      "range": {
+        "startLine": 2517,
+        "startChar": 40,
+        "endLine": 2517,
+        "endChar": 76
+      },
+      "revId": "c2fc80ee992bbac84cb1dfe34091d0413ff0d224",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27551bbb_302fed83",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3267,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T13:47:05Z",
+      "side": 1,
+      "message": "could you make this a proper Result returning function if it can potentially generate an error?",
+      "range": {
+        "startLine": 3266,
+        "startChar": 0,
+        "endLine": 3267,
+        "endChar": 37
+      },
+      "revId": "c2fc80ee992bbac84cb1dfe34091d0413ff0d224",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
