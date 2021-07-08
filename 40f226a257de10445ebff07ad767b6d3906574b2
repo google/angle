@@ -105,6 +105,30 @@
       },
       "revId": "40f226a257de10445ebff07ad767b6d3906574b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70883300_15229f55",
+        "filename": "src/libANGLE/renderer/vulkan/vk_wrapper.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-07-08T23:29:34Z",
+      "side": 1,
+      "message": "[I\u0027m un-resolving this.]\n\n\"SecondaryCommandBuffer.h\" #include\u0027s this file.  Seems like you can add it here and remove it there.",
+      "parentUuid": "255a7b16_e6d1d973",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 5
+      },
+      "revId": "40f226a257de10445ebff07ad767b6d3906574b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
