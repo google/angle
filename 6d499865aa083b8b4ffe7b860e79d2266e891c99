@@ -117,6 +117,30 @@
       },
       "revId": "6d499865aa083b8b4ffe7b860e79d2266e891c99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "81babd8a_e4d5ee52",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3228,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-08T21:33:04Z",
+      "side": 1,
+      "message": "jamie, can we move this refactor / redesign discussion over to https://chromium-review.googlesource.com/c/angle/angle/+/2947767/ and land this change for now?",
+      "parentUuid": "ecb5f440_45878774",
+      "range": {
+        "startLine": 3228,
+        "startChar": 21,
+        "endLine": 3228,
+        "endChar": 45
+      },
+      "revId": "6d499865aa083b8b4ffe7b860e79d2266e891c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
