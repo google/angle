@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "236cb515_dde641b1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2021-07-08T05:55:01Z",
+      "side": 1,
+      "message": "I found some logic issue in current assumption, and I\u0027m talking with our driver team to understand more details. According to the feedback so far, we need to further change some implementation. Please allow me a few days until I can finally review my design with our driver expert. ",
+      "revId": "0c8b56f33b4f334a4f3d2452ae1c4e4864865528",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
