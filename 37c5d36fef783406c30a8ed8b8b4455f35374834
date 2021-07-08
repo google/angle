@@ -33,6 +33,24 @@
       "message": "Can we revert this to get the roll going?",
       "revId": "37c5d36fef783406c30a8ed8b8b4455f35374834",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e60a0733_c59c9a1a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-07-08T21:44:41Z",
+      "side": 1,
+      "message": "I\u0027ve confirmed that this is indeed the cause in https://chromium-review.googlesource.com/c/chromium/src/+/3016164\nReverting.",
+      "parentUuid": "17cffc2e_d046e37c",
+      "revId": "37c5d36fef783406c30a8ed8b8b4455f35374834",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
