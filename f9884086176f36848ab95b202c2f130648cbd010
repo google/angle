@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0848458e_5e27f4f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 32
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-08T22:47:35Z",
+      "side": 1,
+      "message": "comment for Geoff.",
+      "revId": "f9884086176f36848ab95b202c2f130648cbd010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57b6a579_26c54a6c",
+        "filename": "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-08T22:47:35Z",
+      "side": 1,
+      "message": "Added this line based off of comment line above. and createFlags is passed directly as VkCreateImageFlags.",
+      "revId": "f9884086176f36848ab95b202c2f130648cbd010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
