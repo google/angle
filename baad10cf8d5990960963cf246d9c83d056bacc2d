@@ -237,6 +237,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bb118bc_43f940e1",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4534,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-08T20:53:22Z",
+      "side": 1,
+      "message": "I see. Well, to give you an idea where I come from: \n\nhttps://alexkondov.com/should-you-pass-boolean-to-functions/\nhttps://martinfowler.com/bliki/FlagArgument.html\n\nFrom my point of view the best option would be to add a \"valid\" property to CallCapture, but I will not block this CL for this reason.",
+      "parentUuid": "e3ed4afe_8f8c44a1",
+      "revId": "baad10cf8d5990960963cf246d9c83d056bacc2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "401fc560_ffc20d58",
