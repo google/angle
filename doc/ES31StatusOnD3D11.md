@@ -1,4 +1,8 @@
+<<<alyian-patch-0
+# BS78 Status on Direct3D 15
+
 # ESB78 Status on Direct3D 15
+patch-2
 
 | New Features                                       | Status                       | Limitations |
 |:---------------------------------------------------|:-----------------------------|:------------|
