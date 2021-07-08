@@ -16,6 +16,23 @@
       "message": "PTAL?",
       "revId": "2cc2b2dc2f84bfcf5d76c75cd2f0b47555f9f066",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7677fc6_56d105e8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T16:07:24Z",
+      "side": 1,
+      "message": "This seems backwards. The \"-Wno\" means we\u0027re specifically disabling this warning. I think you should be adding this flag in more places instead of removing it, right?",
+      "revId": "2cc2b2dc2f84bfcf5d76c75cd2f0b47555f9f066",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
