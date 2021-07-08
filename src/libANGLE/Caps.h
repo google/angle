@@ -591,12 +591,6 @@ struct Extensions
     // GL_OES_framebuffer_object
     bool framebufferObjectOES = false;
 
-    // EGL_ANGLE_explicit_context GL subextensions
-    // GL_ANGLE_explicit_context_gles1
-    bool explicitContextGles1 = false;
-    // GL_ANGLE_explicit_context
-    bool explicitContext = false;
-
     // GL_KHR_parallel_shader_compile
     bool parallelShaderCompile = false;
 
@@ -1350,9 +1344,6 @@ struct ClientExtensions
 
     // EGL_KHR_debug
     bool debug = false;
-
-    // EGL_ANGLE_explicit_context
-    bool explicitContext = false;
 
     // EGL_ANGLE_feature_control
     bool featureControlANGLE = false;

@@ -1756,7 +1756,6 @@ static ClientExtensions GenerateClientExtensions()
 
     extensions.clientGetAllProcAddresses = true;
     extensions.debug                     = true;
-    extensions.explicitContext           = true;
     extensions.featureControlANGLE       = true;
     extensions.deviceQueryEXT            = true;
 

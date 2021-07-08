@@ -347,7 +347,6 @@ Context::Context(egl::Display *display,
       mResetStrategy(GetResetStrategy(attribs)),
       mRobustAccess(GetRobustAccess(attribs)),
       mSurfacelessSupported(displayExtensions.surfacelessContext),
-      mExplicitContextAvailable(clientExtensions.explicitContext),
       mCurrentDrawSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
       mCurrentReadSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
       mDisplay(display),
@@ -3512,15 +3511,6 @@ Extensions Context::generateSupportedExtensions() const
 
     // Enable the cache control query unconditionally.
     supportedExtensions.programCacheControl = true;
-
-    // Enable EGL_ANGLE_explicit_context subextensions
-    if (mExplicitContextAvailable)
-    {
-        // GL_ANGLE_explicit_context_gles1
-        supportedExtensions.explicitContextGles1 = true;
-        // GL_ANGLE_explicit_context
-        supportedExtensions.explicitContext = true;
-    }
 
     // If EGL_KHR_fence_sync is not enabled, don't expose GL_OES_EGL_sync.
     ASSERT(mDisplay);

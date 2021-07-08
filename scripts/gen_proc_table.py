@@ -15,11 +15,6 @@ out_file_name_gl = "../src/libGL/proc_table_wgl_autogen.cpp"
 out_file_name_cl = "../src/libGLESv2/proc_table_cl_autogen.cpp"
 out_file_name_cl_map = "../src/libOpenCL/libOpenCL_autogen.map"
 
-# The EGL_ANGLE_explicit_context extension is generated differently from other extensions.
-# Toggle generation here.
-# Only for GLES
-support_egl_ANGLE_explicit_context = True
-
 strip_suffixes = ["ANGLE", "EXT", "KHR", "OES", "CHROMIUM", "OVR"]
 
 template_cpp = """// GENERATED FILE - DO NOT EDIT.
@@ -183,9 +178,6 @@ def main():
     for function in gles_data:
         if function.startswith("gl"):
             all_functions[function] = "GL_" + function[2:]
-            # Special handling for EGL_ANGLE_explicit_context extension
-            if support_egl_ANGLE_explicit_context:
-                all_functions[function + "ContextANGLE"] = "GL_" + function[2:] + "ContextANGLE"
         elif function.startswith("egl"):
             all_functions[function] = "EGL_" + function[3:]
         else:
