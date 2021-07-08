@@ -127,6 +127,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1dee3efb_c4702855",
+        "filename": "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-08T21:57:23Z",
+      "side": 1,
+      "message": "I\u0027m not sure if the createFlags has enough information, you may need to add new state and pipe it down. Our frontend may not be aware of that enum yet.",
+      "parentUuid": "eb4c099e_2b367f09",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7debf0a2_457947d6",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
         "patchSetId": 15
