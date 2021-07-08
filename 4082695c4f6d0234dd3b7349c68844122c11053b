@@ -77,6 +77,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "54f5ef8e_f101fb50",
+        "filename": "src/tests/run_perf_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T12:11:25Z",
+      "side": 1,
+      "message": "It\u0027s supposed work on Android but I haven\u0027t tried it. (Need to find my Android device)\n\nNot sure why your Linux run didn\u0027t work. That command worked for me. Make sure angle_perftests exists in that dir and the GN arg is set to build the trace tests",
+      "parentUuid": "77d12d5c_c3d0515f",
+      "range": {
+        "startLine": 172,
+        "startChar": 11,
+        "endLine": 172,
+        "endChar": 26
+      },
+      "revId": "4082695c4f6d0234dd3b7349c68844122c11053b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3a024529_814e474b",
         "filename": "src/tests/run_perf_tests.py",
         "patchSetId": 1
@@ -88,6 +112,30 @@
       "writtenOn": "2021-07-07T21:36:07Z",
       "side": 1,
       "message": "What\u0027s special about the value \u00277\u0027 if samples-per-test can be set to anything?",
+      "range": {
+        "startLine": 205,
+        "startChar": 29,
+        "endLine": 205,
+        "endChar": 30
+      },
+      "revId": "4082695c4f6d0234dd3b7349c68844122c11053b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5220c790_8b081eea",
+        "filename": "src/tests/run_perf_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-08T12:11:25Z",
+      "side": 1,
+      "message": "Below 7 values it doesn\u0027t make sense to do truncation, because you don\u0027t have enough samples. I\u0027ll make it a constant so it\u0027s more readable.",
+      "parentUuid": "3a024529_814e474b",
       "range": {
         "startLine": 205,
         "startChar": 29,
