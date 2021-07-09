@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e22b903_30579706",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 907,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-09T19:21:23Z",
+      "side": 1,
+      "message": "Is it worth opening a Khronos bug to check this out?",
+      "range": {
+        "startLine": 907,
+        "startChar": 38,
+        "endLine": 907,
+        "endChar": 55
+      },
+      "revId": "648a71b0fd243ef35d5c88f180e39a21313533c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
