@@ -1569,17 +1569,19 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
 
         const SpirvTypeData &vectorTypeData = getSpirvTypeData(vectorType, nullptr);
         uint32_t baseAlignment              = vectorTypeData.baseAlignment;
+        uint32_t baseSizeInStorageBlock     = vectorTypeData.sizeInStorageBlock;
 
         // For std140 only:
         // > Rule 4. ... and rounded up to the base alignment of a vec4.
         if (type.blockStorage != EbsStd430)
         {
-            baseAlignment = std::max(baseAlignment, 16u);
+            baseAlignment          = std::max(baseAlignment, 16u);
+            baseSizeInStorageBlock = std::max(baseSizeInStorageBlock, 16u);
         }
 
         // The size occupied by the matrix is the size of each vector multiplied by the number of
         // vectors.
-        *sizeInStorageBlockOut = vectorTypeData.sizeInStorageBlock * vectorType.primarySize;
+        *sizeInStorageBlockOut = baseSizeInStorageBlock * vectorType.primarySize;
 
         return baseAlignment;
     }
