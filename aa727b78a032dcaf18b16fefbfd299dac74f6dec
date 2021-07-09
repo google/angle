@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea596645_1644194a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-09T18:29:25Z",
+      "side": 1,
+      "message": "tim, you are going to perform the VVL roll right away or is there going to be some delay?",
+      "revId": "aa727b78a032dcaf18b16fefbfd299dac74f6dec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
