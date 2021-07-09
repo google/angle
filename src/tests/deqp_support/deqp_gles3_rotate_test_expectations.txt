@@ -21,16 +21,3 @@
 
 // Fixed in later driver versions.
 2727 VULKAN ANDROID : dEQP-GLES3.functional.shaders.builtin_variable.pointcoord = FAIL
-
-// Prerotation failures
-
-// Line raster emulation failures
-5348 VULKAN PREROTATION180 : dEQP-GLES3.functional.rasterization.primitives.line* = FAIL
-
-// dfdx
-5349 VULKAN PREROTATION180 : dEQP-GLES3.functional.shaders.derivate.dfdx.texture.basic.*_mediump = FAIL
-5349 VULKAN PREROTATION180 : dEQP-GLES3.functional.shaders.derivate.dfdx.*_highp = FAIL
-
-// gl_FragCoord and gl_PointCOord
-5350 VULKAN PREROTATION180 : dEQP-GLES3.functional.shaders.builtin_variable.fragcoord_xyz = FAIL
-5350 VULKAN PREROTATION180 : dEQP-GLES3.functional.shaders.builtin_variable.pointcoord = FAIL

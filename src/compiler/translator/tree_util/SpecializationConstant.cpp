@@ -112,7 +112,7 @@ constexpr Vec2EnumMap kFlipXYValue = {
      {vk::SurfaceRotation::Rotated270Degrees, {{-1.0f, -1.0f}}},
      {vk::SurfaceRotation::FlippedIdentity, {{1.0f, -1.0f}}},
      {vk::SurfaceRotation::FlippedRotated90Degrees, {{1.0f, 1.0f}}},
-     {vk::SurfaceRotation::FlippedRotated180Degrees, {{1.0f, 1.0f}}},
+     {vk::SurfaceRotation::FlippedRotated180Degrees, {{-1.0f, 1.0f}}},
      {vk::SurfaceRotation::FlippedRotated270Degrees, {{-1.0f, -1.0f}}}}};
 
 // Returns [[flipX*m0+flipY*m1]  [flipX*m2+flipY*m3]] where [m0 m1] is the first column of
