@@ -33,6 +33,24 @@
       "message": "Added this line based off of comment line above. and createFlags is passed directly as VkCreateImageFlags.",
       "revId": "f9884086176f36848ab95b202c2f130648cbd010",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62401b83_dc2a61ca",
+        "filename": "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-09T01:47:27Z",
+      "side": 1,
+      "message": "nit: \u003e 0 is a little unusual here. Suggest:\n\n    bool hasProtectedContent \u003d (createFlags \u0026 VK_IMAGE_CREATE_PROTECTED_BIT) !\u003d 0;",
+      "parentUuid": "57b6a579_26c54a6c",
+      "revId": "f9884086176f36848ab95b202c2f130648cbd010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
