@@ -16,6 +16,23 @@
       "message": "Switching to Ian since he\u0027s done a lot of the pre-rotation work.",
       "revId": "840f01e4c86ccb8b88643e82c7dd1433a8913726",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9e7b67f_d5394545",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-07-09T00:23:12Z",
+      "side": 1,
+      "message": "If just nvidia and swiftsahder, you should try to disable just on the platform (and versions) that failed. That way at least this is still tested on other config.\n\nAlso could you file a separate bug for swiftshader to take a look?",
+      "revId": "840f01e4c86ccb8b88643e82c7dd1433a8913726",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
