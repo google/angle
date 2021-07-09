@@ -22,6 +22,30 @@
       },
       "revId": "179e3560cbcd983115318265cb60e9bee062bdfa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98afa330_a54001f3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2421,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-09T02:02:55Z",
+      "side": 1,
+      "message": "Ok I see, the test is marked as failing for the bots (see deqp_gles3_rotate_test_expectations.txt).\n\nI wasn\u0027t aware that the failures only manifest themselves with spec consts (and I can confirm that all the 180degree suppressions run fine with driver uniforms). I think it\u0027s warranted to actually the fix issue here.",
+      "parentUuid": "de0cea08_f87c7ba9",
+      "range": {
+        "startLine": 2420,
+        "startChar": 7,
+        "endLine": 2421,
+        "endChar": 19
+      },
+      "revId": "179e3560cbcd983115318265cb60e9bee062bdfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
