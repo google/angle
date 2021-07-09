@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de0cea08_f87c7ba9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2421,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-09T01:55:16Z",
+      "side": 1,
+      "message": "Is this something we broke recently? How is it not caught by the bots?\n\nI\u0027ve been planning to change this workaround and make the translator code simpler by removing this fallback path and generating spec consts unconditionally. Then the SPIR-V transformer can trivially switch the OpSpecConstant N SomeValue to OpConstant N DesiredValue. That way we also get the performance benefit of actually having constants in the shader, and have smaller uniform allocations too.\n\nI\u0027ll allocate some time to that tomorrow and give you a patch you can try to see if it solves whatever issue it is you are having.",
+      "range": {
+        "startLine": 2420,
+        "startChar": 7,
+        "endLine": 2421,
+        "endChar": 19
+      },
+      "revId": "179e3560cbcd983115318265cb60e9bee062bdfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
