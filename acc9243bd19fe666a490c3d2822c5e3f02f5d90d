@@ -34,6 +34,24 @@
       "parentUuid": "c28d9b26_8972943f",
       "revId": "acc9243bd19fe666a490c3d2822c5e3f02f5d90d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3d9ccc2_3d5ada3a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 31
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-09T22:27:31Z",
+      "side": 1,
+      "message": "Thanks for clarifying. This is an important testing scenario that needs to be restored. Filed http://anglebug.com/6156 .",
+      "parentUuid": "ce1d9317_5f5ca56c",
+      "revId": "acc9243bd19fe666a490c3d2822c5e3f02f5d90d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
