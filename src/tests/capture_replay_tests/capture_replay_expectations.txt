@@ -41,7 +41,7 @@
 5822 : ExternalWrapTest.NoWrap/* = CRASH
 5822 : ExternalWrapTest.Repeat/* = CRASH
 
-6267 : FramebufferTest.MultiContextNoRenderingFeedbackLoops/* = COMPILE_FAIL
+6267 : FramebufferTest.MultiContextNoRenderingFeedbackLoops/* = SKIP_FOR_CAPTURE
 
 6286 : ImageTest.Deletion/* = FAIL
 6286 : ImageTest.MipLevels/* = FAIL

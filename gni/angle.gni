@@ -541,10 +541,7 @@ template("angle_trace") {
     testonly = true
 
     # Similar to capture replay sample, use the file index for sources
-    sources = [
-                "${_trace_prefix}.cpp",
-                "${_trace_prefix}.h",
-              ] + invoker.sources
+    sources = invoker.sources
 
     # TODO(http://anglebug.com/5133): Revert back to non-autogen'ed data.
     data = invoker.data
