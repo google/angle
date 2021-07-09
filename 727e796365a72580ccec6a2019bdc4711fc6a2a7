@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac5ec20f_5b767afd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-07-09T13:22:03Z",
+      "side": 1,
+      "message": "We\u0027ll also need to follow up with this change once the transform feedback changes are landed: https://chromium-review.googlesource.com/c/angle/angle/+/2950067/18/src/libANGLE/renderer/metal/ProgramMtl.mm#102",
+      "revId": "727e796365a72580ccec6a2019bdc4711fc6a2a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
