@@ -16,6 +16,23 @@
       "message": "I was going to diagnose the limits problem, but it might have to wait until we can use the DevSim layer to properly audit ANGLE\u0027s Vk requirements.",
       "revId": "8a48e15fcade90599887d3c0a3db0253d618b609",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a7c6393_bfb6c1c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-09T17:14:17Z",
+      "side": 1,
+      "message": "Looks like the limit issue is resolved for swiftshader already (like maybe they raised the limit).",
+      "revId": "8a48e15fcade90599887d3c0a3db0253d618b609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
