@@ -46,6 +46,30 @@
       },
       "revId": "179e3560cbcd983115318265cb60e9bee062bdfa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a03690c_1788970d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2421,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-09T02:15:57Z",
+      "side": 1,
+      "message": "Found a discrepancy between the flipXY value passed to driver uniforms vs the array the spec const indexes to. I\u0027ll put up a change to fix that.",
+      "parentUuid": "98afa330_a54001f3",
+      "range": {
+        "startLine": 2420,
+        "startChar": 7,
+        "endLine": 2421,
+        "endChar": 19
+      },
+      "revId": "179e3560cbcd983115318265cb60e9bee062bdfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
