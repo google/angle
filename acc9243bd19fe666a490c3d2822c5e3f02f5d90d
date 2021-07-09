@@ -16,6 +16,24 @@
       "message": "Yuly, could you help with the mac_optional_gpu_tests_rel failures? They\u0027re reporting conflicts in files this patch doesn\u0027t touch.\n",
       "revId": "acc9243bd19fe666a490c3d2822c5e3f02f5d90d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce1d9317_5f5ca56c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 31
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-07-09T22:08:29Z",
+      "side": 1,
+      "message": "In general, testing ANGLE CLs on non-ToT ANGLE bots like mac_optional_gpu_tests_rel is not supported. You\u0027d need to wait for this CL to roll into Chromium.\nIf you want to pre-test this before the roll, I use test CLs like crrev.com/c/2937030. You\u0027d need to do the reverse of what that CL does - modify Chromium\u0027s DEPS to specify refs/changes/67/2950067/31 for ANGLE\u0027s revision.",
+      "parentUuid": "c28d9b26_8972943f",
+      "revId": "acc9243bd19fe666a490c3d2822c5e3f02f5d90d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
