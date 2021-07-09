@@ -181,8 +181,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexedIndirectCount-None-04584",
     // https://anglebug.com/5912
     "VUID-VkImageViewCreateInfo-pNext-01585",
-    // http://crbug.com/1226682
-    "VUID-VkSpecializationMapEntry-constantID-00776",
     // http://anglebug.com/6155
     "VUID-vkCmdDraw-None-02699",
     // http://anglebug.com/6168
