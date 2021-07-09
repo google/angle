@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c28d9b26_8972943f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 31
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-09T21:56:33Z",
+      "side": 1,
+      "message": "Yuly, could you help with the mac_optional_gpu_tests_rel failures? They\u0027re reporting conflicts in files this patch doesn\u0027t touch.\n",
+      "revId": "acc9243bd19fe666a490c3d2822c5e3f02f5d90d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
