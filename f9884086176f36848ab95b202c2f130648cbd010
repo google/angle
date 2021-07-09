@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "852a0926_df55aad7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 32
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-09T14:41:40Z",
+      "side": 1,
+      "message": "Fix in next upload.\nI want to be sure that I resolve the createFlags issue per Geoff for next upload.",
+      "revId": "f9884086176f36848ab95b202c2f130648cbd010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "57b6a579_26c54a6c",
@@ -49,6 +66,24 @@
       "side": 1,
       "message": "nit: \u003e 0 is a little unusual here. Suggest:\n\n    bool hasProtectedContent \u003d (createFlags \u0026 VK_IMAGE_CREATE_PROTECTED_BIT) !\u003d 0;",
       "parentUuid": "57b6a579_26c54a6c",
+      "revId": "f9884086176f36848ab95b202c2f130648cbd010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74d278b7_cf8fadd1",
+        "filename": "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-09T14:41:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62401b83_dc2a61ca",
       "revId": "f9884086176f36848ab95b202c2f130648cbd010",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
