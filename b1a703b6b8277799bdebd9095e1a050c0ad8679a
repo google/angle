@@ -22,6 +22,30 @@
       },
       "revId": "b1a703b6b8277799bdebd9095e1a050c0ad8679a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d234a433_d5428cc1",
+        "filename": "src/libANGLE/renderer/load_texture_border_functions_data.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1446209
+      },
+      "writtenOn": "2021-07-09T09:28:50Z",
+      "side": 1,
+      "message": "Hi Shahbaz,\n\nYes,you are right,channel size doesn\u0027t matter at all,and I just implement LoadA8ToR8 and LoadLA8ToR8G8 two formats translation,which are used by those failed tests in angleproject:6046,and I have no plan to do all other formats translation.Thus,this is just a part of function implemention,the remaining will be leaved to later development.\n\nThanks,\nCheryl",
+      "parentUuid": "e85926a2_87274770",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 52
+      },
+      "revId": "b1a703b6b8277799bdebd9095e1a050c0ad8679a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
