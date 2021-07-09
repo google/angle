@@ -163,6 +163,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bb3922f7_423fc577",
+        "filename": "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-09T19:26:31Z",
+      "side": 1,
+      "message": "EXT_external_objects says that PROTECTED_MEMORY_OBJECT_EXT is set through the glMemoryObjectParameterivEXT function so I don\u0027t think it makes it\u0027s way to MemoryObjectVk yet. See how the dedicated memory flag is forwarded: https://source.chromium.org/chromium/chromium/src/+/main:third_party/angle/src/libANGLE/renderer/vulkan/MemoryObjectVk.h;l\u003d26;drc\u003dfc4bd898117806b461bc522266deede77421b518\n\nThis CL looks fine though.",
+      "parentUuid": "599e17fd_bf8ee896",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7debf0a2_457947d6",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
         "patchSetId": 15
