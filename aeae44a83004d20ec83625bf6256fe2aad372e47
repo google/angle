@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6e9364b_1d4c4883",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T11:52:34Z",
+      "side": 1,
+      "message": "I\u0027m trying to understand this check - what error is it catching? I\u0027m thinking it\u0027s not really necessary. Is there a test that covers this check?",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 9
+      },
+      "revId": "aeae44a83004d20ec83625bf6256fe2aad372e47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52a8145f_d35695c3",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T11:52:34Z",
+      "side": 1,
+      "message": "nit: can be outside the class",
+      "range": {
+        "startLine": 209,
+        "startChar": 25,
+        "endLine": 209,
+        "endChar": 46
+      },
+      "revId": "aeae44a83004d20ec83625bf6256fe2aad372e47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
