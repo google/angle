@@ -33,6 +33,29 @@
       "message": "LGTM",
       "revId": "901da46522bc271639e6dbfd87603de5eca367f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "555688b0_34bbd5fb",
+        "filename": "src/tests/restricted_traces/retrace_restricted_traces.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-09T17:32:46Z",
+      "side": 1,
+      "message": "Why does this look for just header files, rather than any files in the directory?",
+      "range": {
+        "startLine": 142,
+        "startChar": 35,
+        "endLine": 142,
+        "endChar": 67
+      },
+      "revId": "901da46522bc271639e6dbfd87603de5eca367f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
