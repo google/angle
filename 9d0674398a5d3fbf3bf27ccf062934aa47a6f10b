@@ -56,6 +56,30 @@
       },
       "revId": "9d0674398a5d3fbf3bf27ccf062934aa47a6f10b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "702fd512_1a78eeaf",
+        "filename": "src/tests/gl_tests/VulkanExternalImageTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-09T17:09:25Z",
+      "side": 1,
+      "message": "+1 for bug tag, no idea why such a common format (VK_FORMAT_R8G8B8A8_UNORM) could have issues with image format list extension",
+      "parentUuid": "b64e4ec8_9591649a",
+      "range": {
+        "startLine": 479,
+        "startChar": 33,
+        "endLine": 479,
+        "endChar": 81
+      },
+      "revId": "9d0674398a5d3fbf3bf27ccf062934aa47a6f10b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
