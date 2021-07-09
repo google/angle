@@ -16,6 +16,46 @@
       "message": "Before this patch the VulkanExternalImageTest fails on Pixel 4 / QC when the VK_KHR_image_format_list is enabled.\n\nThis is due to the following assert being hit when calling createImage in src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp.\n```\nASSERT(externalMemoryRequirements.size \u003d\u003d mSize);\n```\n\nThis is due to a size mismatch given from  createImage2DExternal in src/tests/test_utils/VulkanExternalHelper.cpp when creating the Image.\n\nThis only happens when VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT is set on the VkImageCreateFlags and for 2 formats.\n\nThe formats in question are:\nVK_FORMAT_R8G8B8A8_UNORM\nVK_FORMAT_R8G8_UNORM\n\nOmmiting the formats for the mutable tests on Pixel 4 fixes the CI.\n\nSince the VK_FORMAT_R8G8B8A8_UNORM is a very common one, the question remains if enabling the extension will have any other implications.\n",
       "revId": "9d0674398a5d3fbf3bf27ccf062934aa47a6f10b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8f2cddf_3d23ab2b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-09T16:00:21Z",
+      "side": 1,
+      "message": "Drive by!\n\nAre the other formats fine? Or these two are skipped simply because they are the only ones tested?",
+      "revId": "9d0674398a5d3fbf3bf27ccf062934aa47a6f10b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b64e4ec8_9591649a",
+        "filename": "src/tests/gl_tests/VulkanExternalImageTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-09T16:00:21Z",
+      "side": 1,
+      "message": "nit: we explicitly turn these to bool:\n\n    (createFlags \u0026 VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) !\u003d 0 \u0026\u0026 ...\n\nAlso, this in the very least requires a comment with a bug tag.",
+      "range": {
+        "startLine": 479,
+        "startChar": 33,
+        "endLine": 479,
+        "endChar": 81
+      },
+      "revId": "9d0674398a5d3fbf3bf27ccf062934aa47a6f10b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
