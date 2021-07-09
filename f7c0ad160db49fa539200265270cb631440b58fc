@@ -50,6 +50,40 @@
       "message": "Yuly, Brian, could you help us understand the SPIR-V validation assertion failures in the Android Pixel 4 runs? There are very few changes to the shared code in this CL and I don\u0027t think they could have introduced them. Thanks.\n",
       "revId": "f7c0ad160db49fa539200265270cb631440b58fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8806b5c7_8771af78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 30
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-09T20:05:43Z",
+      "side": 1,
+      "message": "Oops, this failed mac_optional_gpu_tests_rel with a patch conflict in DEPS. Can you try rebasing?\n",
+      "revId": "f7c0ad160db49fa539200265270cb631440b58fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fb5abe5_7d601267",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-09T20:05:43Z",
+      "side": 1,
+      "message": "Looking through the shared code changes, this change to the header has no effect (adds an argument that\u0027s not referenced in the code) and should be undone.",
+      "revId": "f7c0ad160db49fa539200265270cb631440b58fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
