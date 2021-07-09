@@ -52,6 +52,23 @@
       "parentUuid": "ce1d9317_5f5ca56c",
       "revId": "acc9243bd19fe666a490c3d2822c5e3f02f5d90d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ff9656d_02b0d91e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 31
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-09T22:31:16Z",
+      "side": 1,
+      "message": "Jonah: Shabi just fixed the Android Pixel 4 test failures with this patch in https://chromium-review.googlesource.com/c/angle/angle/+/3018641 .\n",
+      "revId": "acc9243bd19fe666a490c3d2822c5e3f02f5d90d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
