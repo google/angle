@@ -33,6 +33,23 @@
       "message": "Still LGTM\n",
       "revId": "f7c0ad160db49fa539200265270cb631440b58fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "418b3f62_f107e569",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 30
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-09T19:58:41Z",
+      "side": 1,
+      "message": "Yuly, Brian, could you help us understand the SPIR-V validation assertion failures in the Android Pixel 4 runs? There are very few changes to the shared code in this CL and I don\u0027t think they could have introduced them. Thanks.\n",
+      "revId": "f7c0ad160db49fa539200265270cb631440b58fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
