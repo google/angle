@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c2e0c0b_993d2939",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T19:48:39Z",
+      "side": 1,
+      "message": "suggest something that indicates you\u0027re combining descriptors for the same resource in multiple shader stages.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 31
+      },
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60a47b0d_8bf528fc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T19:48:39Z",
+      "side": 1,
+      "message": "are you referring to GL \"default\" uniforms or uniform blocks? Vulkan SPIR/V doesn\u0027t have a notion of default uniforms and everything is UBOs, or other descriptor types like images, etc. could you clarify for future readers (and my own understanding)",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 0
+      },
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a2d16de_01a7a60b",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T19:48:39Z",
+      "side": 1,
+      "message": "nit: style",
+      "range": {
+        "startLine": 691,
+        "startChar": 5,
+        "endLine": 691,
+        "endChar": 19
+      },
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d426b24_1cf9e6bf",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T19:48:39Z",
+      "side": 1,
+      "message": "This approach updates information from the ShaderInterfaceVariableInfo as the resources are de-duplicated. Can you instead process the de-duplication in AssignInterfaceBlockBindings and AssignAtomicCounterBufferBindings to resolve the TODOs:\n\n// TODO: http://anglebug.com/4512: Need to combine descriptor set bindings across\n// shader stages.\n\nYou could store a flag that certain bindings are de-duplicated if necessary, or store other additional info as necessary.",
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67da5257_4049839a",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T19:48:39Z",
+      "side": 1,
+      "message": "nit: factor out repeated code",
+      "range": {
+        "startLine": 542,
+        "startChar": 0,
+        "endLine": 547,
+        "endChar": 9
+      },
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf3d6749_66091acc",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T19:48:39Z",
+      "side": 1,
+      "message": "We likely won\u0027t need sets / maps during update if we implement the de-duplication in the resource binding assignment stage (glslangwrapper)",
+      "range": {
+        "startLine": 244,
+        "startChar": 13,
+        "endLine": 244,
+        "endChar": 26
+      },
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
