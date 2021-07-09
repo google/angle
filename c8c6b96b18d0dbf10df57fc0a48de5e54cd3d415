@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d4a8635_3982cf3d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-09T01:38:06Z",
+      "side": 1,
+      "message": "I still see this with ToT:\n\ntimvp@timvp-glaptop:~/code/chromium/src/third_party/angle$ autoninja -C out/LinuxDebug/ angle_deqp_gles3_tests \u0026\u0026 ./out/LinuxDebug/angle_deqp_gles3_tests --gtest_filter\u003ddEQP.GLES3/functional_shaders_builtin_variable_fragcoord_xyz --use-angle\u003dvulkan --single-process-tests  --verbose --local-output --emulated-pre-rotation\u003d180\nninja: Entering directory `out/LinuxDebug/\u0027\n[0/1] Regenerating ninja files\n[145/145] SOLINK ./libGLESv2.so\nUsing test config with:\n  linux\n  nvidia\n  debug\n  vulkan\n  prerotation\n  prerotation180\nNote: Google Test filter \u003d dEQP.GLES3/functional_shaders_builtin_variable_fragcoord_xyz\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\n[----------] Global test environment set-up.\n[----------] 1 test from dEQP\nWriting test log into TestResults.qpa\n[ RUN      ] dEQP.GLES3/functional_shaders_builtin_variable_fragcoord_xyz\ndEQP-GLES3.functional.shaders.builtin_variable.fragcoord_xyz\n../../src/tests/deqp_support/angle_deqp_gtest.cpp:51: Failure\nFailed\nRendererVk.cpp:362 (DebugUtilsMessenger): [ VUID-VkSpecializationMapEntry-constantID-00776 ] Validation Error: [ VUID-VkSpecializationMapEntry-constantID-00776 ] Object 0: handle \u003d 0x559c6893a148, type \u003d VK_OBJECT_TYPE_DEVICE; | MessageID \u003d 0x474f4e7f | Specialization constant (ID \u003d 0, entry \u003d 0) has invalid size 4 in shader module VkShaderModule 0x510000000051[]. Expected size is 4294967295 from shader definition. The Vulkan spec states: For a constantID specialization constant declared in a shader, size must match the byte size of the constantID. If the specialization constant is of type boolean, size must be the byte size of VkBool32 (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-VkSpecializationMapEntry-constantID-00776)\n                            Object: 0x559c6893a148 (type \u003d Device(3))\n\nERR: RendererVk.cpp:362 (DebugUtilsMessenger): [ VUID-VkSpecializationMapEntry-constantID-00776 ] Validation Error: [ VUID-VkSpecializationMapEntry-constantID-00776 ] Object 0: handle \u003d 0x559c6893a148, type \u003d VK_OBJECT_TYPE_DEVICE; | MessageID \u003d 0x474f4e7f | Specialization constant (ID \u003d 0, entry \u003d 0) has invalid size 4 in shader module VkShaderModule 0x510000000051[]. Expected size is 4294967295 from shader definition. The Vulkan spec states: For a constantID specialization constant declared in a shader, size must match the byte size of the constantID. If the specialization constant is of type boolean, size must be the byte size of VkBool32 (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-VkSpecializationMapEntry-constantID-00776)\n                            Object: 0x559c6893a148 (type \u003d Device(3))\n\nINFO: GL performance: HIGH: GPU stall due to ReadPixels\n../../src/tests/deqp_support/angle_deqp_gtest.cpp:399: Failure\nValue of: testSucceeded\n  Actual: false\nExpected: true\n[  FAILED  ] dEQP.GLES3/functional_shaders_builtin_variable_fragcoord_xyz, where GetParam() \u003d 16828 (1207 ms)\n",
+      "revId": "c8c6b96b18d0dbf10df57fc0a48de5e54cd3d415",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
