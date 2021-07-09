@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7a73561_e4ceda7f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T16:57:11Z",
+      "side": 1,
+      "message": "I was going to diagnose the limits problem, but it might have to wait until we can use the DevSim layer to properly audit ANGLE\u0027s Vk requirements.",
+      "revId": "8a48e15fcade90599887d3c0a3db0253d618b609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
