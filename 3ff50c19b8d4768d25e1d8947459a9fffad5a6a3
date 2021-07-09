@@ -22,6 +22,30 @@
       },
       "revId": "3ff50c19b8d4768d25e1d8947459a9fffad5a6a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bc8f805_7697a1cf",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 29
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-07-09T13:27:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4eb430f_2ebb4a4d",
+      "range": {
+        "startLine": 794,
+        "startChar": 0,
+        "endLine": 794,
+        "endChar": 4
+      },
+      "revId": "3ff50c19b8d4768d25e1d8947459a9fffad5a6a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
