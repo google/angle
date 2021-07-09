@@ -46,6 +46,30 @@
       },
       "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efd03b05_9c80c445",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T18:49:13Z",
+      "side": 1,
+      "message": "it\u0027s like storing a blend state or a depth state as a uint32_t. what exactly is the external format? It\u0027s an AHB format or something? I think you should keep the two types distinct. There\u0027s a theoretical risk that there could be a value collision if my understanding is correct.",
+      "parentUuid": "af925724_35c2cd86",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 288,
+        "endChar": 5
+      },
+      "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
