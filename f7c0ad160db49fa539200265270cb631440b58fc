@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5831120_fca8e036",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 30
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-07-09T17:46:50Z",
+      "side": 1,
+      "message": "Suppressions for arm macs here: https://chromium-review.googlesource.com/c/chromium/src/+/3016118, which should land before the next ANGLE roll.",
+      "revId": "f7c0ad160db49fa539200265270cb631440b58fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
