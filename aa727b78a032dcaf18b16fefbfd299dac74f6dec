@@ -16,6 +16,24 @@
       "message": "tim, you are going to perform the VVL roll right away or is there going to be some delay?",
       "revId": "aa727b78a032dcaf18b16fefbfd299dac74f6dec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d014c8a4_9307a140",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-09T18:34:48Z",
+      "side": 1,
+      "message": "I kicked off a manual roll here (I\u0027m not sure if that\u0027s externally visible):\nhttps://autoroll.skia.org/r/vulkan-deps-angle-autoroll\n\nThe CL for it is available here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/3016113\n\nYou can always try things manually by updating the DEPS file locally and running `gclient sync -D` to pick up the updated repos.",
+      "parentUuid": "ea596645_1644194a",
+      "revId": "aa727b78a032dcaf18b16fefbfd299dac74f6dec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
