@@ -41,7 +41,6 @@ def context_header(trace, trace_path):
 
 
 def get_num_frames(trace):
-
     trace_path = src_trace_path(trace)
 
     lo = 99999999
@@ -93,6 +92,13 @@ def replace_metadata(header_file, metadata):
         f.writelines(lines)
 
 
+def path_contains_header(path):
+    for file in os.listdir(path):
+        if fnmatch.fnmatch(file, '*.h'):
+            return True
+    return False
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('gn_path', help='GN build path')
@@ -104,6 +110,11 @@ def main():
         help='Trace against native Vulkan.',
         action='store_true',
         default=False)
+    parser.add_argument(
+        '-n',
+        '--no-overwrite',
+        help='Skip traces which already exist in the out directory.',
+        action='store_true')
     args, extra_flags = parser.parse_known_args()
 
     logging.basicConfig(level=args.log.upper())
@@ -128,6 +139,9 @@ def main():
         trace_path = os.path.abspath(os.path.join(args.out_path, trace))
         if not os.path.isdir(trace_path):
             os.makedirs(trace_path)
+        elif args.no_overwrite and path_contains_header(trace_path):
+            logging.info('Skipping "%s" because the out folder already exists' % trace)
+            continue
 
         num_frames = get_num_frames(trace)
         metadata = get_trace_metadata(trace)
@@ -151,21 +165,27 @@ def main():
             '--enable-all-trace-tests',
         ]
 
-        print('Capturing %s (%d frames)...' % (trace, num_frames))
-        logging.debug('Running %s with capture environment' % ' '.join(run_args))
-        subprocess.check_call(run_args, env=env)
+        print('Capturing "%s" (%d frames)...' % (trace, num_frames))
+        logging.debug('Running "%s" with capture environment' % ' '.join(run_args))
+        try:
+            subprocess.check_call(run_args, env=env)
 
-        header_file = context_header(trace, trace_path)
+            header_file = context_header(trace, trace_path)
 
-        if not os.path.exists(header_file):
-            logging.warning('There was a problem tracing %s, could not find header file' % trace)
+            if not os.path.exists(header_file):
+                logging.error('There was a problem tracing "%s", could not find header file: %s' %
+                              (trace, header_file))
+                failures += [trace]
+            else:
+                replace_metadata(header_file, metadata)
+        except:
+            logging.exception('There was an exception running "%s":' % trace)
             failures += [trace]
-        else:
-            replace_metadata(header_file, metadata)
 
     if failures:
         print('The following traces failed to re-trace:\n')
         print('\n'.join(['  ' + trace for trace in failures]))
+        return 1
 
     return 0
 
