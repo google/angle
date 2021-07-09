@@ -319,6 +319,15 @@ void LoadEntryPointsWithUtilLoader(angle::GLESDriverType driver);
 #define EXPECT_PIXEL_COLOR32F_NEAR(x, y, angleColor, abs_error) \
     EXPECT_PIXEL32F_NEAR(x, y, angleColor.R, angleColor.G, angleColor.B, angleColor.A, abs_error)
 
+#define EXPECT_PIXEL_STENCIL_EQ(x, y, expected)                                    \
+    do                                                                             \
+    {                                                                              \
+        GLubyte actual;                                                            \
+        glReadPixels((x), (y), 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &actual); \
+        EXPECT_GL_NO_ERROR();                                                      \
+        EXPECT_EQ((expected), actual);                                             \
+    } while (0)
+
 class ANGLETestBase;
 class EGLWindow;
 class GLWindowBase;

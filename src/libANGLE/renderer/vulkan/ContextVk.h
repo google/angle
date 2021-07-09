@@ -455,6 +455,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void updateScissor(const gl::State &glState);
 
+    void updateDepthStencil(const gl::State &glState);
+
     bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
 
     const gl::Debug &getDebug() const { return mState.getDebug(); }

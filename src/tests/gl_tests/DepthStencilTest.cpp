@@ -393,6 +393,147 @@ TEST_P(DepthStencilTestES3, ReadPixelsDepth24)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that the stencil test is correctly handled when a framebuffer is cleared before that
+// framebuffer's stencil attachment has been configured.
+TEST_P(DepthStencilTestES3, FramebufferClearThenStencilAttachedThenStencilTestState)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_read_stencil"));
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer colorRbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorRbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, getWindowWidth(), getWindowHeight());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRbo);
+    glClearColor(0.f, 0.f, 0.f, 0.f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLRenderbuffer stencilRbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, stencilRbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, getWindowWidth(), getWindowHeight());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilRbo);
+    glClearStencil(2);
+    glClear(GL_STENCIL_BUFFER_BIT);
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_STENCIL_EQ(0, 0, 2);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+
+    GLint colorLocation = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(-1, colorLocation);
+
+    glUseProgram(program);
+    glUniform4f(colorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0, 0xFF);
+    glStencilOp(GL_KEEP, GL_INCR, GL_INCR);
+    drawQuad(program, "a_position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_STENCIL_EQ(0, 0, 3);
+}
+
+// Tests that the stencil test is correctly handled when both the stencil test state is configured
+// and a framebuffer is cleared before that framebuffer's stencil attachment has been configured.
+TEST_P(DepthStencilTestES3, StencilTestStateThenFramebufferClearThenStencilAttached)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_read_stencil"));
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0, 0xFF);
+    glStencilOp(GL_KEEP, GL_INCR, GL_INCR);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer colorRbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorRbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, getWindowWidth(), getWindowHeight());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRbo);
+    glClearColor(0.f, 0.f, 0.f, 0.f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLRenderbuffer stencilRbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, stencilRbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, getWindowWidth(), getWindowHeight());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilRbo);
+    glClearStencil(2);
+    glClear(GL_STENCIL_BUFFER_BIT);
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_STENCIL_EQ(0, 0, 2);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+
+    GLint colorLocation = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(-1, colorLocation);
+
+    glUseProgram(program);
+    glUniform4f(colorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+
+    drawQuad(program, "a_position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_STENCIL_EQ(0, 0, 3);
+}
+
+// Tests that the stencil test is correctly handled when a framebuffer is cleared before that
+// framebuffer's stencil attachment has been configured and the stencil test state is configured
+// during framebuffer setup.
+TEST_P(DepthStencilTestES3, FramebufferClearThenStencilTestStateThenStencilAttached)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_read_stencil"));
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer colorRbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorRbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, getWindowWidth(), getWindowHeight());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRbo);
+    glClearColor(0.f, 0.f, 0.f, 0.f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0, 0xFF);
+    glStencilOp(GL_KEEP, GL_INCR, GL_INCR);
+
+    GLRenderbuffer stencilRbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, stencilRbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, getWindowWidth(), getWindowHeight());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilRbo);
+    glClearStencil(2);
+    glClear(GL_STENCIL_BUFFER_BIT);
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_STENCIL_EQ(0, 0, 2);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+
+    GLint colorLocation = glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(-1, colorLocation);
+
+    glUseProgram(program);
+    glUniform4f(colorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+
+    drawQuad(program, "a_position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_STENCIL_EQ(0, 0, 3);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(DepthStencilTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DepthStencilTestES3);
