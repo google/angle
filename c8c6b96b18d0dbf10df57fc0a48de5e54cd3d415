@@ -34,6 +34,23 @@
       "parentUuid": "2d4a8635_3982cf3d",
       "revId": "c8c6b96b18d0dbf10df57fc0a48de5e54cd3d415",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b64a14c_8326f6db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T18:50:03Z",
+      "side": 1,
+      "message": "Pre-approving for when the fix rolls in.",
+      "revId": "c8c6b96b18d0dbf10df57fc0a48de5e54cd3d415",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
