@@ -56,6 +56,30 @@
       },
       "revId": "901da46522bc271639e6dbfd87603de5eca367f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b41d4750_e729644e",
+        "filename": "src/tests/restricted_traces/retrace_restricted_traces.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-09T17:37:34Z",
+      "side": 1,
+      "message": "No specific reason. Don\u0027t know if there\u0027s a definitive best way to do it. I was just copying the way get_context works.",
+      "parentUuid": "555688b0_34bbd5fb",
+      "range": {
+        "startLine": 142,
+        "startChar": 35,
+        "endLine": 142,
+        "endChar": 67
+      },
+      "revId": "901da46522bc271639e6dbfd87603de5eca367f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
