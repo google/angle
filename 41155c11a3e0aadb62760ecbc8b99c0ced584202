@@ -16,6 +16,23 @@
       "message": "TBR. Submitting to unblock Jonah\u0027s CL",
       "revId": "41155c11a3e0aadb62760ecbc8b99c0ced584202",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21d9902f_aebaa110",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-09T20:54:55Z",
+      "side": 1,
+      "message": "Thanks for the quick fix Shabi!\n\nCC\u0027ing jonahr@ - this affects the landing of https://chromium-review.googlesource.com/c/angle/angle/+/2950067 .\n",
+      "revId": "41155c11a3e0aadb62760ecbc8b99c0ced584202",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
