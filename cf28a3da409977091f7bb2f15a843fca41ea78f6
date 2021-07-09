@@ -33,6 +33,23 @@
       "message": "Great work Jiajia tracking this down!\n",
       "revId": "cf28a3da409977091f7bb2f15a843fca41ea78f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d02fa49_711aa6dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-09T00:29:27Z",
+      "side": 1,
+      "message": "Note: hoping there\u0027s enough testing on the CQ to make sure that these new code paths work properly on Android as well. Not sure we have WebGL 2.0 conformance tests running on passthrough on any of the optional Android trybots.\n",
+      "revId": "cf28a3da409977091f7bb2f15a843fca41ea78f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
