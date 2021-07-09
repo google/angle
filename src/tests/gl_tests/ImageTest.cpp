@@ -1887,6 +1887,8 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughYuvSourcesNoData)
 {
     // http://issuetracker.google.com/175021871
     ANGLE_SKIP_TEST_IF(IsPixel2() || IsPixel2XL());
+    // TODO(http://anglebug.com/6155): VUID-vkCmdDraw-None-02699
+    ANGLE_SKIP_TEST_IF(IsPixel4());
 
     ANGLE_SKIP_TEST_IF(!IsAndroid());
 
@@ -1965,6 +1967,8 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughRgbAndYuvSources)
 {
     // http://issuetracker.google.com/175021871
     ANGLE_SKIP_TEST_IF(IsPixel2() || IsPixel2XL());
+    // TODO(http://anglebug.com/6155): VUID-vkCmdDraw-None-02699
+    ANGLE_SKIP_TEST_IF(IsPixel4());
 
     ANGLE_SKIP_TEST_IF(!IsAndroid());
 
@@ -2035,6 +2039,8 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughRgbAndYuvTargets)
 {
     // http://issuetracker.google.com/175021871
     ANGLE_SKIP_TEST_IF(IsPixel2() || IsPixel2XL());
+    // TODO(http://anglebug.com/6155): VUID-vkCmdDraw-None-02699
+    ANGLE_SKIP_TEST_IF(IsPixel4());
 
     ANGLE_SKIP_TEST_IF(!IsAndroid());
 
