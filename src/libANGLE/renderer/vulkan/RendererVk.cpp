@@ -2472,7 +2472,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // - Qualcomm: http://anglebug.com/5143
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsImageCubeArray,
-        mPhysicalDeviceFeatures.imageCubeArray == VK_TRUE && !isSwiftShader &&
+        mPhysicalDeviceFeatures.imageCubeArray == VK_TRUE &&
             !IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
 
     // TODO: Only enable if VK_EXT_primitives_generated_query is not present.
