@@ -33,6 +33,29 @@
       "message": "Also, it looks like CQ is failing the new tests, so there may be some more work required for that.",
       "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "620ceb5f_ce846f1b",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 964,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2021-07-10T03:37:34Z",
+      "side": 1,
+      "message": "Note that there are two masks (per polygon orientation), that affect stencil operations. The mask parameter set by glStencilFunc() is essentially a read mask, while the one set by glStencilMask() is a write mask.\n\nThis flag indicates that the write mask is dirty, but this function is part of the glStencilFunc() state tracking, which only affects the read mask.\n\nI suspect there\u0027s a bug deeper down instead.",
+      "range": {
+        "startLine": 964,
+        "startChar": 23,
+        "endLine": 964,
+        "endChar": 56
+      },
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
