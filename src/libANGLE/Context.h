@@ -797,6 +797,28 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool mIsCurrent;
 };
 
+class ScopedContextRef
+{
+  public:
+    ScopedContextRef(Context *context) : mContext(context)
+    {
+        if (mContext)
+        {
+            mContext->addRef();
+        }
+    }
+    ~ScopedContextRef()
+    {
+        if (mContext)
+        {
+            mContext->release();
+        }
+    }
+
+  private:
+    Context *const mContext;
+};
+
 // Thread-local current valid context bound to the thread.
 extern thread_local Context *gCurrentValidContext;
 

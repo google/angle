@@ -599,6 +599,12 @@ void Context::initializeDefaultResources()
 
 egl::Error Context::onDestroy(const egl::Display *display)
 {
+    if (!mHasBeenCurrent)
+    {
+        // The context is never current, so default resources are not allocated.
+        return egl::NoError();
+    }
+
     // Dump frame capture if enabled.
     mFrameCapture->onDestroyContext(this);
 
@@ -759,6 +765,7 @@ egl::Error Context::makeCurrent(egl::Display *display,
 egl::Error Context::unMakeCurrent(const egl::Display *display)
 {
     ASSERT(mIsCurrent);
+    mIsCurrent = false;
 
     ANGLE_TRY(angle::ResultToEGL(mImplementation->onUnMakeCurrent(this)));
 
@@ -774,8 +781,6 @@ egl::Error Context::unMakeCurrent(const egl::Display *display)
     {
         mDisplay->returnZeroFilledBuffer(mZeroFilledBuffer.release());
     }
-
-    mIsCurrent = false;
 
     return egl::NoError();
 }

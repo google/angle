@@ -222,10 +222,16 @@ TEST_P(EGLContextSharingTest, DisplayShareGroupReleasedWithLastContext)
 
     // Destroy both contexts, the texture should be cleaned up automatically
     ASSERT_EGL_TRUE(eglDestroyContext(display, mContexts[0]));
+    mContexts[0] = EGL_NO_CONTEXT;
     ASSERT_EGL_TRUE(eglDestroyContext(display, mContexts[1]));
+    mContexts[1] = EGL_NO_CONTEXT;
+
+    // Unmake current, so the context can be released.
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
 
     // Create a new context and verify it cannot access the texture previously created
     mContexts[0] = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, mContexts[0]));
 
     ASSERT_GL_FALSE(glIsTexture(textureFromCtx0));
 }

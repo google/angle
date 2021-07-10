@@ -147,6 +147,9 @@ TEST_P(EGLX11VisualHintTest, ValidVisualIDAndClear)
 
         eglDestroyContext(display, context);
         ASSERT_EGL_SUCCESS();
+
+        eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+        ASSERT_EGL_SUCCESS();
     }
 
     OSWindow::Delete(&osWindow);
