@@ -47,6 +47,63 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dae10633_7a890e4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-10T00:19:56Z",
+      "side": 1,
+      "message": "Since this should reduce the number of used bindings, please try enabling the following test:\n\nTextureLimitsTest.MaxCombinedTextures",
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdb905d5_3400f928",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-10T00:19:56Z",
+      "side": 1,
+      "message": "Should be a reference to avoid the copy.",
+      "range": {
+        "startLine": 775,
+        "startChar": 36,
+        "endLine": 775,
+        "endChar": 49
+      },
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74a92ff0_0f1179e5",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-10T00:19:56Z",
+      "side": 1,
+      "message": "It would be cleaner if this was \u0027gl::ShaderBitSet stages\u0027 and rather than callers passing in \u0027nullptr\u0027, they passed in their own gl::ShaderBitSet(), to remove the pointer checking.",
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7a2d16de_01a7a60b",
@@ -65,6 +122,46 @@
         "startChar": 5,
         "endLine": 691,
         "endChar": 19
+      },
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1827939_89b6b7ce",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-10T00:19:56Z",
+      "side": 1,
+      "message": "Unnecessary, since we trust the conditional above.",
+      "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f991add8_974907c7",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 772,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-10T00:19:56Z",
+      "side": 1,
+      "message": "Please refactor these std::get calls into local variables that name what they actually are (bindingIndex, shaderBitSet) and their types.",
+      "range": {
+        "startLine": 772,
+        "startChar": 32,
+        "endLine": 772,
+        "endChar": 92
       },
       "revId": "34f47fe7b1d22c0b5d53d46f128b1785a6964a90",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
