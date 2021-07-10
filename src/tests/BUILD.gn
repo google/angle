@@ -485,6 +485,7 @@ if (build_angle_gles1_conform_tests) {
       # Remove when crbug.com/428099 is resolved.
       cflags += [
         "-Wno-implicit-function-declaration",
+        "-Wno-implicit-int-float-conversion",
         "-Wno-int-to-pointer-cast",
         "-Wno-self-assign",
         "-Wno-sign-compare",
