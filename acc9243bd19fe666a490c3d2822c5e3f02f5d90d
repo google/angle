@@ -69,6 +69,23 @@
       "message": "Jonah: Shabi just fixed the Android Pixel 4 test failures with this patch in https://chromium-review.googlesource.com/c/angle/angle/+/3018641 .\n",
       "revId": "acc9243bd19fe666a490c3d2822c5e3f02f5d90d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2372137c_b8919d5f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 31
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-10T00:24:30Z",
+      "side": 1,
+      "message": "To the best of my understanding this CL should pass ANGLE\u0027s CQ now. Setting CQ+1.\n",
+      "revId": "acc9243bd19fe666a490c3d2822c5e3f02f5d90d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
