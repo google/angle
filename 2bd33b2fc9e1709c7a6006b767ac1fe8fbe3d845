@@ -56,6 +56,103 @@
       },
       "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3d467c7_48dc53d4",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-11T01:33:14Z",
+      "side": 1,
+      "message": "Please use `GLFramebuffer fbo;` instead, from gl_raii. Same below which can use GLRenderbuffer. No need to glDelete* anything (including the program) as they all have destructors.",
+      "range": {
+        "startLine": 398,
+        "startChar": 0,
+        "endLine": 399,
+        "endChar": 31
+      },
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00ae6bc5_ac1e60eb",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-11T01:33:14Z",
+      "side": 1,
+      "message": "EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);",
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6a9de54_c439fefb",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-11T01:33:14Z",
+      "side": 1,
+      "message": "Use `angle::essl1_shaders::ColorUniform()` instead",
+      "range": {
+        "startLine": 426,
+        "startChar": 57,
+        "endLine": 426,
+        "endChar": 66
+      },
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77bc9b69_4acdd394",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-11T01:33:14Z",
+      "side": 1,
+      "message": "EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);",
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ef5da78_5e5eebb7",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-11T01:33:14Z",
+      "side": 1,
+      "message": "This is generating errors on some backends. Probably needs an extension on ES3?",
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
