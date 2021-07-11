@@ -481,14 +481,6 @@ GROUP BEGIN Texture {"queryFunction": true}
         vec4 texture2DProjLod(sampler2D, vec3, float);
         vec4 texture2DProjLod(sampler2D, vec4, float);
         vec4 textureCubeLod(samplerCube, vec3, float);
-      DEFAULT METADATA {"hasSideEffects": "true"}
-        vec4 texture1DLod(sampler1D, float, float);
-        vec4 texture1DProjLod(sampler1D, vec2, float);
-        vec4 texture1DProjLod(sampler1D, vec4, float);
-        vec4 shadow1DLod(sampler1DShadow, vec3, float);
-        vec4 shadow1DProjLod(sampler1DShadow, vec4, float);
-        vec4 shadow2DLod(sampler2DShadow, vec3, float);
-        vec4 shadow2DProjLod(sampler2DShadow, vec4, float);
     GROUP END LodVS
 
     // EXT_shader_texture_lod brings some lod variants to fragment shaders

@@ -385,7 +385,6 @@ bool ValidateFogCommon(const Context *context, GLenum pname, const GLfloat *para
                     return false;
             }
         }
-        break;
         case GL_FOG_START:
         case GL_FOG_END:
         case GL_FOG_COLOR:

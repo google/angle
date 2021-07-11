@@ -516,7 +516,7 @@ void DrawCallPerfBenchmark::drawBenchmark()
                                   getWindow()->getHeight());
             break;
         case StateChange::InvalidEnum:
-            FAIL() << "Invalid state change.";
+            ADD_FAILURE() << "Invalid state change.";
             break;
     }
 

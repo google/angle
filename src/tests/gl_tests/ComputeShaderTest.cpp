@@ -1028,11 +1028,11 @@ TEST_P(ComputeShaderTest, TexelFetchFunction)
     // http://anglebug.com/4092
     ANGLE_SKIP_TEST_IF(isSwiftshader());
     constexpr char kCS[] = R"(#version 310 es
-layout(local_size_x=16, local_size_y=16) in;
+layout(local_size_x=16, local_size_y=12) in;
 precision highp usampler2D;
 uniform usampler2D tex;
 layout(std140, binding = 0) buffer buf {
-    uint outData[16][16];
+    uint outData[12][16];
 };
 
 void main()
@@ -1043,7 +1043,7 @@ void main()
 })";
 
     constexpr unsigned int kWidth  = 16;
-    constexpr unsigned int kHeight = 16;
+    constexpr unsigned int kHeight = 12;
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -4580,7 +4580,7 @@ void main()
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ComputeShaderTest);
-ANGLE_INSTANTIATE_TEST_ES31(ComputeShaderTest);
+ANGLE_INSTANTIATE_TEST_ES31_AND(ComputeShaderTest, WithDirectSPIRVGeneration(ES31_VULKAN()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ComputeShaderTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(ComputeShaderTestES3);

@@ -136,7 +136,7 @@ Library *OpenSharedLibraryWithExtension(const char *libraryName, SearchType sear
     // On iOS, dlopen needs a suffix on the framework name to work.
     fullPath = fullPath + "/" + libraryName;
 #endif
-    return new PosixLibrary(libraryName, extraFlags);
+    return new PosixLibrary(fullPath, extraFlags);
 }
 
 bool IsDirectory(const char *filename)

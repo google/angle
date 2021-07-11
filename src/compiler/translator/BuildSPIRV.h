@@ -60,8 +60,8 @@ struct SpirvType
     TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified;
 
     // For sampled images (i.e. GLSL samplers), there are two type ids; one is the OpTypeImage that
-    // declares the image itself, and one OpTypeSampledImage.  `imageOnly` distinguishes between
-    // these two types.  Note that for the former, the basic type is still Ebt*Sampler* to
+    // declares the image itself, and one OpTypeSampledImage.  `isSamplerBaseImage` distinguishes
+    // between these two types.  Note that for the former, the basic type is still Ebt*Sampler* to
     // distinguish it from storage images (which have a basic type of Ebt*Image*).
     bool isSamplerBaseImage = false;
 };
@@ -253,6 +253,7 @@ class SPIRVBuilder : angle::NonCopyable
     SpirvType getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const;
     const SpirvTypeData &getTypeData(const TType &type, TLayoutBlockStorage blockStorage);
     const SpirvTypeData &getSpirvTypeData(const SpirvType &type, const TSymbol *block);
+    spirv::IdRef getBasicTypeId(TBasicType basicType, size_t size);
     spirv::IdRef getTypePointerId(spirv::IdRef typeId, spv::StorageClass storageClass);
     spirv::IdRef getFunctionTypeId(spirv::IdRef returnTypeId, const spirv::IdRefList &paramTypeIds);
 
@@ -323,6 +324,9 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getUintConstant(uint32_t value);
     spirv::IdRef getIntConstant(int32_t value);
     spirv::IdRef getFloatConstant(float value);
+    spirv::IdRef getUvecConstant(uint32_t value, int size);
+    spirv::IdRef getIvecConstant(int32_t value, int size);
+    spirv::IdRef getVecConstant(float value, int size);
     spirv::IdRef getCompositeConstant(spirv::IdRef typeId, const spirv::IdRefList &values);
 
     // Helpers to start and end a function.
@@ -381,6 +385,7 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getBasicConstantHelper(uint32_t value,
                                         TBasicType type,
                                         angle::HashMap<uint32_t, spirv::IdRef> *constants);
+    spirv::IdRef getVectorConstantHelper(spirv::IdRef valueId, TBasicType type, int size);
 
     uint32_t nextUnusedBinding();
     uint32_t nextUnusedInputLocation(uint32_t consumedCount);

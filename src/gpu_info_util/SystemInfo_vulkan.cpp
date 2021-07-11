@@ -20,11 +20,18 @@
 #if defined(ANGLE_PLATFORM_WINDOWS)
 const char *kLibVulkanNames[] = {"vulkan-1.dll"};
 #else
-const char *kLibVulkanNames[] = {"libvulkan.so", "libvulkan.so.1"};
+const char *kLibVulkanNames[]             = {"libvulkan.so", "libvulkan.so.1"};
 #endif
 
 namespace angle
 {
+// On Android, Fuchsia and GGP we use the system libvulkan.
+#if defined(ANGLE_USE_CUSTOM_LIBVULKAN)
+constexpr SearchType kLibVulkanSearchType = SearchType::ApplicationDir;
+#else
+constexpr SearchType kLibVulkanSearchType = SearchType::SystemDir;
+#endif  // defined(ANGLE_USE_CUSTOM_LIBVULKAN)
+
 class VulkanLibrary final : NonCopyable
 {
   public:
@@ -47,7 +54,7 @@ class VulkanLibrary final : NonCopyable
     {
         for (const char *libraryName : kLibVulkanNames)
         {
-            mLibVulkan = OpenSharedLibraryWithExtension(libraryName, SearchType::ApplicationDir);
+            mLibVulkan = OpenSharedLibraryWithExtension(libraryName, kLibVulkanSearchType);
             if (mLibVulkan)
             {
                 if (mLibVulkan->getNative())

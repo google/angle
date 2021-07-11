@@ -1122,6 +1122,7 @@ void WriteCppReplay(bool compression,
         out << "{\n";
     }
 
+    if (!frameCalls.empty())
     {
         std::stringstream callStream;
 
@@ -4076,7 +4077,14 @@ void FrameCapture::maybeCaptureDrawElementsClientData(const gl::Context *context
         return;
     }
 
+    // if the count is zero then the index evaluation is not valid and we wouldn't be drawing
+    // anything anyway, so skip capturing
     GLsizei count = call.params.getParam("count", ParamType::TGLsizei, 1).value.GLsizeiVal;
+    if (count == 0)
+    {
+        return;
+    }
+
     gl::DrawElementsType drawElementsType =
         call.params.getParam("typePacked", ParamType::TDrawElementsType, 2)
             .value.DrawElementsTypeVal;
@@ -4096,6 +4104,7 @@ void FrameCapture::maybeCaptureDrawElementsClientData(const gl::Context *context
     }
     else
     {
+        ASSERT(indices);
         indexRange = gl::ComputeIndexRange(drawElementsType, indices, count, restart);
     }
 
@@ -4688,12 +4697,17 @@ void FrameCapture::onEndFrame(const gl::Context *context)
     }
 
     // Note that we currently capture before the start frame to collect shader and program sources.
-    if (!mFrameCalls.empty() && isCaptureActive())
+    if (isCaptureActive())
     {
         if (mIsFirstFrame)
         {
             mCaptureStartFrame = mFrameIndex;
             mIsFirstFrame      = false;
+        }
+
+        if (!mFrameCalls.empty())
+        {
+            mActiveFrameIndices.push_back(getReplayFrameIndex());
         }
         WriteCppReplay(mCompression, mOutDirectory, context, mCaptureLabel, getReplayFrameIndex(),
                        getFrameCount(), mFrameCalls, mSetupCalls, &mResourceTracker, &mBinaryData,
@@ -5090,7 +5104,7 @@ void FrameCapture::writeCppReplayIndexFiles(const gl::Context *context, bool wri
     source << "{\n";
     source << "    switch (frameIndex)\n";
     source << "    {\n";
-    for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
+    for (uint32_t frameIndex : mActiveFrameIndices)
     {
         source << "        case " << frameIndex << ":\n";
         source << "            " << FmtReplayFunction(contextId, frameIndex) << ";\n";

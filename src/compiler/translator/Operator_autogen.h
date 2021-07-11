@@ -297,12 +297,6 @@ enum TOperator : uint16_t
     EOpTexture2DLodVS,
     EOpTexture2DProjLodVS,
     EOpTextureCubeLodVS,
-    EOpTexture1DLodVS,
-    EOpTexture1DProjLodVS,
-    EOpShadow1DLodVS,
-    EOpShadow1DProjLodVS,
-    EOpShadow2DLodVS,
-    EOpShadow2DProjLodVS,
 
     // Group TextureFirstVersionsLodFS
     EOpTexture2DLodEXTFS,

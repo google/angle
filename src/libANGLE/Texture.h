@@ -174,6 +174,8 @@ class TextureState final : private angle::NonCopyable
 
     const OffsetBindingPointer<Buffer> &getBuffer() const { return mBuffer; }
 
+    const std::string &getLabel() const { return mLabel; }
+
   private:
     // Texture needs access to the ImageDesc functions.
     friend class Texture;
@@ -239,6 +241,7 @@ class TextureState final : private angle::NonCopyable
     mutable SamplerFormat mCachedSamplerFormat;
     mutable GLenum mCachedSamplerCompareMode;
     mutable bool mCachedSamplerFormatValid;
+    std::string mLabel;
 };
 
 bool operator==(const TextureState &a, const TextureState &b);
@@ -643,8 +646,6 @@ class Texture final : public RefCountObject<TextureID>,
     angle::ObserverBinding mImplObserver;
     // For EXT_texture_buffer, observes buffer changes.
     angle::ObserverBinding mBufferObserver;
-
-    std::string mLabel;
 
     egl::Surface *mBoundSurface;
     egl::Stream *mBoundStream;

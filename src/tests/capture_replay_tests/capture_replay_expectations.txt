@@ -24,14 +24,17 @@ WebGLReadOutsideFramebufferTest.*
 GLSLTest.InactiveVaryingInVertexActiveInFragment/*
 # Flanky tests, pass standalone, but fail in a group
 ColorMaskTest.AMDZeroColorMaskBug/ES3_OpenGL
+WebGLCompatibilityTest.DrawArraysBufferOutOfBoundsNonInstanced/ES2_Vulkan_SwiftShader
+WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInIndexBuffer/ES2_Vulkan_SwiftShader
+WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/ES2_Vulkan_SwiftShader
 
 # Crashed tests
-BlitFramebufferANGLETest.*
+BlitFramebufferANGLETest.Reverse*/*
+BlitFramebufferANGLETest.Scissored*/*
 ClipDistanceTest.*
 CopyCompressedTextureTest.InternalFormat/*
 DebugMarkerTest.*
 DebugTest.*
-DepthStencilTest.*
 EGLPrintEGLinfoTest.PrintGLESCapabilities/*
 EGLStreamTest.*
 ExternalWrapTest.*
@@ -44,18 +47,9 @@ GLSLTest.ZeroShaderLength/*
 GPUTestConfigTest.GPUTestConfigConditions_D3D11/*
 ImageTest.SourceCubeTargetExternal/*
 PBOExtensionTest.*
-SRGBFramebufferTest.Validation/*
-TimerQueriesTest.*
-UnpackAlignmentTest.*
-UnpackRowLengthTest.*
-VertexAttributeCachingTest.*
-VertexAttributeOORTest.*
 VertexAttributeTest.*
-ViewportTest.*
 VulkanExternalImageTest.*
 
-WebGLCompatibilityTest.NullIndexBuffer/*
-WebGLCompatibilityTest.EnableProgramBinaryExtension/*
 WebGLCompatibilityTest.MultiContextNoRenderingFeedbackLoops/*
 WebGLFramebufferTest.*
 
@@ -66,7 +60,6 @@ LineLoopTest.DISABLED_DrawArraysWithLargeCount/*
 MipmapTest.DISABLED_ThreeLevelsInitData/*
 
 # Compile failed tests
-RobustResourceInitTest.SurfaceInitializedAfterSwap/*
 
 # ES1 comparison failed tests
 BootAnimationTest.DefaultBootAnimation/*

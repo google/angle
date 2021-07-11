@@ -258,10 +258,13 @@ class ChildProcessesManager():
         return count
 
     def RunGNGen(self, args, build_dir, pipe_stdout, extra_gn_args=[]):
-        gn_args = [("use_goma", str(args.use_goma).lower()),
-                   ("angle_with_capture_by_default", "true")] + extra_gn_args
+        gn_args = [('use_goma', str(args.use_goma).lower()),
+                   ('angle_with_capture_by_default', 'true'),
+                   ('is_debug', 'false')] + extra_gn_args
         if args.goma_dir:
             gn_args.append(('goma_dir', '"%s"' % args.goma_dir))
+        if args.asan:
+            gn_args.append(('is_asan', 'true'))
         debug('Calling GN gen with %s' % str(gn_args))
         args_str = ' '.join(['%s=%s' % (k, v) for (k, v) in gn_args])
         cmd = [self._gn_path, 'gen', '--args=%s' % args_str, build_dir]
@@ -552,9 +555,9 @@ class TestBatch():
         # CaptureReplayTests.cpp
         self.CreateTestsCompositeFiles(composite_file_id, tests)
 
-        gn_args = [("angle_build_capture_replay_tests", "true"), ("symbol_level", "1"),
-                   ("angle_capture_replay_test_trace_dir", '"%s"' % self.trace_dir),
-                   ("angle_capture_replay_composite_file_id", str(composite_file_id))]
+        gn_args = [('angle_build_capture_replay_tests', 'true'), ('symbol_level', '1'),
+                   ('angle_capture_replay_test_trace_dir', '"%s"' % self.trace_dir),
+                   ('angle_capture_replay_composite_file_id', str(composite_file_id))]
         returncode, output = child_processes_manager.RunGNGen(self.args, replay_build_dir, True,
                                                               gn_args)
         if returncode != 0:
@@ -1031,6 +1034,7 @@ if __name__ == "__main__":
     # TODO(jmadill): Remove this argument. http://anglebug.com/6102
     parser.add_argument('--depot-tools-path', default=None, help='Path to depot tools')
     parser.add_argument('--xvfb', action='store_true', help='Run with xvfb.')
+    parser.add_argument('--asan', action='store_true', help='Build with ASAN.')
     args = parser.parse_args()
     if platform == "win32":
         args.test_suite += ".exe"

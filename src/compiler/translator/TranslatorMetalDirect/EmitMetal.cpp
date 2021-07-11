@@ -2214,9 +2214,9 @@ bool GenMetalTraverser::visitDeclaration(Visit, TIntermDeclaration *declNode)
     else if (TIntermBinary *initNode = node.getAsBinaryNode())
     {
         ASSERT(initNode->getOp() == TOperator::EOpInitialize);
-        TIntermSymbol *symbolNode = initNode->getLeft()->getAsSymbolNode();
-        TIntermTyped *valueNode   = initNode->getRight()->getAsTyped();
-        ASSERT(symbolNode && valueNode);
+        TIntermSymbol *leftSymbolNode = initNode->getLeft()->getAsSymbolNode();
+        TIntermTyped *valueNode       = initNode->getRight()->getAsTyped();
+        ASSERT(leftSymbolNode && valueNode);
 
         if (getRootNode() == getParentBlock())
         {
@@ -2228,7 +2228,7 @@ bool GenMetalTraverser::visitDeclaration(Visit, TIntermDeclaration *declNode)
             mOut << "constant ";
         }
 
-        const TVariable &var = symbolNode->variable();
+        const TVariable &var = leftSymbolNode->variable();
         const Name varName(var);
 
         if (ExpressionContainsName(varName, *valueNode))

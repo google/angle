@@ -78,36 +78,6 @@ void main()
     GLint mAttribLocation;
 };
 
-// Disabled in debug because it's way too slow.
-#if !defined(NDEBUG)
-#    define MAYBE_NULLData DISABLED_NULLData
-#else
-#    define MAYBE_NULLData NULLData
-#endif  // !defined(NDEBUG)
-
-TEST_P(BufferDataTest, MAYBE_NULLData)
-{
-    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-    EXPECT_GL_NO_ERROR();
-
-    const int numIterations = 128;
-    for (int i = 0; i < numIterations; ++i)
-    {
-        GLsizei bufferSize = sizeof(GLfloat) * (i + 1);
-        glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_STATIC_DRAW);
-        EXPECT_GL_NO_ERROR();
-
-        for (int j = 0; j < bufferSize; j++)
-        {
-            for (int k = 0; k < bufferSize - j; k++)
-            {
-                glBufferSubData(GL_ARRAY_BUFFER, k, j, nullptr);
-                ASSERT_GL_NO_ERROR();
-            }
-        }
-    }
-}
-
 // If glBufferData was not called yet the capturing must not try to
 // read the data. http://anglebug.com/6093
 TEST_P(BufferDataTest, Uninitialized)

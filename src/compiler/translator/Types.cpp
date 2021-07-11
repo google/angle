@@ -700,6 +700,14 @@ void TType::toArrayBaseType()
     onArrayDimensionsChange(TSpan<const unsigned int>());
 }
 
+void TType::toMatrixColumnType()
+{
+    ASSERT(isMatrix());
+    primarySize   = secondarySize;
+    secondarySize = 1;
+    invalidateMangledName();
+}
+
 void TType::setInterfaceBlock(const TInterfaceBlock *interfaceBlockIn)
 {
     if (mInterfaceBlock != interfaceBlockIn)

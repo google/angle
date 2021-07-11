@@ -216,9 +216,12 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef createConstructorVectorFromScalar(const TType &type,
                                                    spirv::IdRef typeId,
                                                    const spirv::IdRefList &parameters);
-    spirv::IdRef createConstructorVectorFromNonScalar(TIntermAggregate *node,
-                                                      spirv::IdRef typeId,
-                                                      const spirv::IdRefList &parameters);
+    spirv::IdRef createConstructorVectorFromMatrix(TIntermAggregate *node,
+                                                   spirv::IdRef typeId,
+                                                   const spirv::IdRefList &parameters);
+    spirv::IdRef createConstructorVectorFromScalarsAndVectors(TIntermAggregate *node,
+                                                              spirv::IdRef typeId,
+                                                              const spirv::IdRefList &parameters);
     spirv::IdRef createConstructorMatrixFromScalar(TIntermAggregate *node,
                                                    spirv::IdRef typeId,
                                                    const spirv::IdRefList &parameters);
@@ -239,13 +242,46 @@ class OutputSPIRVTraverser : public TIntermTraverser
 
     spirv::IdRef visitOperator(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createIncrementDecrement(TIntermOperator *node, spirv::IdRef resultTypeId);
+    spirv::IdRef createCompare(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createAtomicBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
-    spirv::IdRef createTextureBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
-    spirv::IdRef createImageBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
+    spirv::IdRef createImageTextureBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
 
     spirv::IdRef createFunctionCall(TIntermAggregate *node, spirv::IdRef resultTypeId);
 
-    ANGLE_MAYBE_UNUSED TCompiler *mCompiler;
+    // Cast between types.  There are two kinds of casts:
+    //
+    // - A constructor can cast between basic types, for example vec4(someInt).
+    // - Assignments, constructors, function calls etc may copy an array or struct between different
+    //   block storages or invariance (which due to their decorations generate different SPIR-V
+    //   types).  For example:
+    //
+    //       layout(std140) uniform U { invariant Struct s; } u; ... Struct s2 = u.s;
+    //
+    // TODO: implement casts due to block storage and invariance differences.
+    // http://anglebug.com/4889
+    spirv::IdRef castBasicType(spirv::IdRef value,
+                               const TType &valueType,
+                               TBasicType expectedBasicType);
+
+    // Helper to reduce vector == and != with OpAll and OpAny respectively.  If multiple ids are
+    // given, either OpLogicalAnd or OpLogicalOr is used (if two operands) or a bool vector is
+    // constructed and OpAll and OpAny used.
+    spirv::IdRef reduceBoolVector(TOperator op,
+                                  const spirv::IdRefList &valueIds,
+                                  spirv::IdRef typeId,
+                                  const SpirvDecorations &decorations);
+    // Helper to implement == and !=, supporting vectors, matrices, structs and arrays.
+    void createCompareImpl(TOperator op,
+                           const TType &operandType,
+                           spirv::IdRef resultTypeId,
+                           spirv::IdRef leftId,
+                           spirv::IdRef rightId,
+                           const SpirvDecorations &operandDecorations,
+                           const SpirvDecorations &resultDecorations,
+                           spirv::LiteralIntegerList *currentAccessChain,
+                           spirv::IdRefList *intermediateResultsOut);
+
+    TCompiler *mCompiler;
     ShCompileOptions mCompileOptions;
 
     SPIRVBuilder mBuilder;
@@ -293,7 +329,7 @@ spv::StorageClass GetStorageClass(const TType &type)
 
     // Uniform and storage buffers have the Uniform storage class.  Default uniforms are gathered in
     // a uniform block as well.
-    if (type.isInterfaceBlock() || qualifier == EvqUniform)
+    if (type.getInterfaceBlock() != nullptr || qualifier == EvqUniform)
     {
         // I/O blocks must have already been classified as input or output above.
         ASSERT(!IsShaderIoBlock(qualifier));
@@ -553,12 +589,8 @@ void OutputSPIRVTraverser::accessChainPushDynamicComponent(NodeData *data,
             swizzleIds.push_back(mBuilder.getUintConstant(component));
         }
 
-        SpirvType type;
-        type.type                     = EbtUInt;
-        const spirv::IdRef uintTypeId = mBuilder.getSpirvTypeData(type, nullptr).id;
-
-        type.primarySize              = static_cast<uint8_t>(swizzleIds.size());
-        const spirv::IdRef uvecTypeId = mBuilder.getSpirvTypeData(type, nullptr).id;
+        const spirv::IdRef uintTypeId = mBuilder.getBasicTypeId(EbtUInt, 1);
+        const spirv::IdRef uvecTypeId = mBuilder.getBasicTypeId(EbtUInt, swizzleIds.size());
 
         const spirv::IdRef swizzlesId = mBuilder.getNewId({});
         spirv::WriteConstantComposite(mBuilder.getSpirvTypeAndConstantDecls(), uvecTypeId,
@@ -937,10 +969,8 @@ spirv::IdRef OutputSPIRVTraverser::createComplexConstant(const TType &type,
         // Matrices are constructed from its columns.
         spirv::IdRefList columnIds;
 
-        SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
-        columnType.primarySize          = columnType.secondarySize;
-        columnType.secondarySize        = 1;
-        const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+        const spirv::IdRef columnTypeId =
+            mBuilder.getBasicTypeId(type.getBasicType(), type.getRows());
 
         for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
         {
@@ -1008,26 +1038,43 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
         return createArrayOrStructConstructor(node, typeId, parameters);
     }
 
-    if (type.isScalar())
+    // The following are simple casts:
+    //
+    // - basic(s) (where basic is int, uint, float or bool, and s is scalar).
+    // - gvecN(vN) (where the argument is a single vector with the same number of components).
+    // - matNxM(mNxM) (where the argument is a single matrix with the same dimensions).  Note that
+    //   matrices are always float, so there's no actual cast and this would be a no-op.
+    //
+    const bool isSingleVectorCast = arguments.size() == 1 && type.isVector() &&
+                                    arg0Type.isVector() &&
+                                    type.getNominalSize() == arg0Type.getNominalSize();
+    const bool isSingleMatrixCast = arguments.size() == 1 && type.isMatrix() &&
+                                    arg0Type.isMatrix() && type.getCols() == arg0Type.getCols() &&
+                                    type.getRows() == arg0Type.getRows();
+    if (type.isScalar() || isSingleVectorCast || isSingleMatrixCast)
     {
-        // TODO: handle casting.  http://anglebug.com/4889.
-        return parameters[0];
+        return castBasicType(parameters[0], arg0Type, type.getBasicType());
     }
 
     if (type.isVector())
     {
         if (arguments.size() == 1 && arg0Type.isScalar())
         {
+            parameters[0] = castBasicType(parameters[0], arg0Type, type.getBasicType());
             return createConstructorVectorFromScalar(node->getType(), typeId, parameters);
         }
-
-        return createConstructorVectorFromNonScalar(node, typeId, parameters);
+        if (arguments.size() == 1 && arg0Type.isMatrix())
+        {
+            return createConstructorVectorFromMatrix(node, typeId, parameters);
+        }
+        return createConstructorVectorFromScalarsAndVectors(node, typeId, parameters);
     }
 
     ASSERT(type.isMatrix());
 
     if (arg0Type.isScalar())
     {
+        parameters[0] = castBasicType(parameters[0], arg0Type, type.getBasicType());
         return createConstructorMatrixFromScalar(node, typeId, parameters);
     }
     if (arg0Type.isMatrix())
@@ -1063,13 +1110,48 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromScalar(
     return result;
 }
 
-spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromNonScalar(
+spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromMatrix(
+    TIntermAggregate *node,
+    spirv::IdRef typeId,
+    const spirv::IdRefList &parameters)
+{
+    // vecN(m) translates to OpCompositeConstruct %vecN %m[0][0] %m[0][1] ...
+    spirv::IdRefList extractedComponents;
+    extractComponents(node, node->getType().getNominalSize(), parameters, &extractedComponents);
+
+    // Construct the vector with the basic type of the argument, and cast it at end if needed.
+    ASSERT(parameters.size() == 1);
+    const TType &arg0Type              = node->getChildNode(0)->getAsTyped()->getType();
+    const TBasicType expectedBasicType = node->getType().getBasicType();
+
+    spirv::IdRef argumentTypeId = typeId;
+    TType arg0TypeAsVector(arg0Type);
+    arg0TypeAsVector.setPrimarySize(static_cast<unsigned char>(node->getType().getNominalSize()));
+    arg0TypeAsVector.setSecondarySize(1);
+
+    if (arg0Type.getBasicType() != expectedBasicType)
+    {
+        argumentTypeId = mBuilder.getTypeData(arg0TypeAsVector, EbsUnspecified).id;
+    }
+
+    spirv::IdRef result = mBuilder.getNewId(mBuilder.getDecorations(node->getType()));
+    spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), argumentTypeId, result,
+                                   extractedComponents);
+
+    if (arg0Type.getBasicType() != expectedBasicType)
+    {
+        result = castBasicType(result, arg0TypeAsVector, expectedBasicType);
+    }
+
+    return result;
+}
+
+spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromScalarsAndVectors(
     TIntermAggregate *node,
     spirv::IdRef typeId,
     const spirv::IdRefList &parameters)
 {
     // vecN(v1.zy, v2.x) translates to OpCompositeConstruct %vecN %v1.z %v1.y %v2.x
-    // vecN(m) translates to OpCompositeConstruct %vecN %m[0][0] %m[0][1] ...
     spirv::IdRefList extractedComponents;
     extractComponents(node, node->getType().getNominalSize(), parameters, &extractedComponents);
 
@@ -1092,8 +1174,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromScalar(
     //     ...
     //     %m  = OpCompositeConstruct %matNxM %c0 %c1 %c2 ...
 
-    const TType &type = node->getType();
-    // TODO: handle casting.  http://anglebug.com/4889.
+    const TType &type           = node->getType();
     const spirv::IdRef scalarId = parameters[0];
     spirv::IdRef zeroId;
 
@@ -1120,18 +1201,18 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromScalar(
     spirv::IdRefList componentIds(type.getRows(), zeroId);
     spirv::IdRefList columnIds;
 
-    SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
-    columnType.primarySize          = columnType.secondarySize;
-    columnType.secondarySize        = 1;
-    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+    const spirv::IdRef columnTypeId = mBuilder.getBasicTypeId(type.getBasicType(), type.getRows());
 
     for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
     {
         columnIds.push_back(mBuilder.getNewId(decorations));
 
         // Place the scalar at the correct index (diagonal of the matrix, i.e. row == col).
-        componentIds[columnIndex] = scalarId;
-        if (columnIndex > 0)
+        if (columnIndex < type.getRows())
+        {
+            componentIds[columnIndex] = scalarId;
+        }
+        if (columnIndex > 0 && columnIndex <= type.getRows())
         {
             componentIds[columnIndex - 1] = zeroId;
         }
@@ -1168,10 +1249,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromVectors(
 
     spirv::IdRefList columnIds;
 
-    SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
-    columnType.primarySize          = columnType.secondarySize;
-    columnType.secondarySize        = 1;
-    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+    const spirv::IdRef columnTypeId = mBuilder.getBasicTypeId(type.getBasicType(), type.getRows());
 
     // Chunk up the extracted components by column and construct intermediary vectors.
     for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
@@ -1221,16 +1299,11 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
 
     SpirvDecorations decorations = mBuilder.getDecorations(type);
 
-    // TODO: handle casting.  http://anglebug.com/4889.
-
     ASSERT(parameters.size() == 1);
 
     spirv::IdRefList columnIds;
 
-    SpirvType columnType            = mBuilder.getSpirvType(type, EbsUnspecified);
-    columnType.primarySize          = columnType.secondarySize;
-    columnType.secondarySize        = 1;
-    const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+    const spirv::IdRef columnTypeId = mBuilder.getBasicTypeId(type.getBasicType(), type.getRows());
 
     if (parameterType.getCols() >= type.getCols() && parameterType.getRows() >= type.getRows())
     {
@@ -1362,9 +1435,8 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
     // more components than necessary) and extracts the first componentCount components.
     const TIntermSequence &arguments = *node->getSequence();
 
-    SpirvDecorations decorations = mBuilder.getDecorations(node->getType());
-
-    // TODO: handle casting.  http://anglebug.com/4889.
+    const SpirvDecorations decorations = mBuilder.getDecorations(node->getType());
+    const TBasicType expectedBasicType = node->getType().getBasicType();
 
     ASSERT(arguments.size() == parameters.size());
 
@@ -1372,21 +1444,33 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
          argumentIndex < arguments.size() && extractedComponentsOut->size() < componentCount;
          ++argumentIndex)
     {
-        const TType &argumentType      = arguments[argumentIndex]->getAsTyped()->getType();
+        TIntermNode *argument          = arguments[argumentIndex];
+        const TType &argumentType      = argument->getAsTyped()->getType();
         const spirv::IdRef parameterId = parameters[argumentIndex];
 
         if (argumentType.isScalar())
         {
-            // For scalar parameters, there's nothing to do.
-            extractedComponentsOut->push_back(parameterId);
+            // For scalar parameters, there's nothing to do other than a potential cast.
+            const spirv::IdRef castParameterId =
+                argument->getAsConstantUnion()
+                    ? parameterId
+                    : castBasicType(parameterId, argumentType, expectedBasicType);
+            extractedComponentsOut->push_back(castParameterId);
             continue;
         }
         if (argumentType.isVector())
         {
             SpirvType componentType   = mBuilder.getSpirvType(argumentType, EbsUnspecified);
+            componentType.type        = expectedBasicType;
             componentType.primarySize = 1;
             const spirv::IdRef componentTypeId =
                 mBuilder.getSpirvTypeData(componentType, nullptr).id;
+
+            // Cast the whole vector parameter in one go.
+            const spirv::IdRef castParameterId =
+                argument->getAsConstantUnion()
+                    ? parameterId
+                    : castBasicType(parameterId, argumentType, expectedBasicType);
 
             // For vector parameters, take components out of the vector one by one.
             for (int componentIndex = 0; componentIndex < argumentType.getNominalSize() &&
@@ -1395,7 +1479,7 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
             {
                 const spirv::IdRef componentId = mBuilder.getNewId(decorations);
                 spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(),
-                                             componentTypeId, componentId, parameterId,
+                                             componentTypeId, componentId, castParameterId,
                                              {spirv::LiteralInteger(componentIndex)});
 
                 extractedComponentsOut->push_back(componentId);
@@ -1411,7 +1495,8 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
         const spirv::IdRef componentTypeId = mBuilder.getSpirvTypeData(componentType, nullptr).id;
 
         // For matrix parameters, take components out of the matrix one by one in column-major
-        // order.
+        // order.  No cast is done here; it would only be required for vector constructors with
+        // matrix parameters, in which case the resulting vector is cast in the end.
         for (int columnIndex = 0; columnIndex < argumentType.getCols() &&
                                   extractedComponentsOut->size() < componentCount;
              ++columnIndex)
@@ -1548,20 +1633,17 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
         spirv::IdRef paramValue;
         SpirvDecorations decorations = mBuilder.getDecorations(paramType);
 
-        if (IsOpaqueType(paramType.getBasicType()) || paramQualifier == EvqConst)
+        if (paramQualifier == EvqConst)
         {
-            // The following parameters are passed as rvalue:
-            //
-            // - Opaque uniforms,
-            // - const parameters,
+            // |const| parameters are passed as rvalue.
             paramValue = accessChainLoad(&param, decorations);
         }
         else if (IsAccessChainUnindexedLValue(param) &&
-                 (mCompileOptions & SH_GENERATE_SPIRV_WORKAROUNDS) == 0)
+                 (IsOpaqueType(paramType.getBasicType()) ||
+                  (param.accessChain.storageClass == spv::StorageClassFunction &&
+                   (mCompileOptions & SH_GENERATE_SPIRV_WORKAROUNDS) == 0)))
         {
-            // The following parameters are passed directly:
-            //
-            // - unindexed lvalues.
+            // Unindexed lvalues are passed directly.
             //
             // This optimization is not applied on buggy drivers.  http://anglebug.com/6110.
             paramValue = param.baseId;
@@ -1689,17 +1771,17 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     {
         return createIncrementDecrement(node, resultTypeId);
     }
+    if (op == EOpEqual || op == EOpNotEqual)
+    {
+        return createCompare(node, resultTypeId);
+    }
     if (BuiltInGroup::IsAtomicMemory(op) || BuiltInGroup::IsImageAtomic(op))
     {
         return createAtomicBuiltIn(node, resultTypeId);
     }
-    if (BuiltInGroup::IsTexture(op))
+    if (BuiltInGroup::IsImage(op) || BuiltInGroup::IsTexture(op))
     {
-        return createTextureBuiltIn(node, resultTypeId);
-    }
-    if (BuiltInGroup::IsImage(op))
-    {
-        return createImageBuiltIn(node, resultTypeId);
+        return createImageTextureBuiltIn(node, resultTypeId);
     }
 
     const size_t childCount  = node->getChildCount();
@@ -1789,10 +1871,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
                 writeBinaryOp = spirv::WriteSMod;
             break;
 
-        case EOpEqual:
         case EOpEqualComponentWise:
-            // TODO: handle vector, matrix and other complex comparisons.  EOpEqual must use OpAll
-            // to reduce to a bool.  http://anglebug.com/4889.
             if (isFloat)
                 writeBinaryOp = spirv::WriteFOrdEqual;
             else if (isBool)
@@ -1800,10 +1879,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             else
                 writeBinaryOp = spirv::WriteIEqual;
             break;
-        case EOpNotEqual:
         case EOpNotEqualComponentWise:
-            // TODO: handle vector, matrix and other complex comparisons.  EOpNotEqual must use
-            // OpAny to reduce to a bool.  http://anglebug.com/4889.
             if (isFloat)
                 writeBinaryOp = spirv::WriteFUnordNotEqual;
             else if (isBool)
@@ -2309,15 +2385,13 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
 
     if (operateOnColumns)
     {
-        // If negating a matrix or multiplying them, do that column by column.
+        // If negating a matrix, multiplying or comparing them, do that column by column.
         spirv::IdRefList columnIds;
 
         const SpirvDecorations operandDecorations = mBuilder.getDecorations(firstOperandType);
 
-        SpirvType columnType            = mBuilder.getSpirvType(firstOperandType, EbsUnspecified);
-        columnType.primarySize          = columnType.secondarySize;
-        columnType.secondarySize        = 1;
-        const spirv::IdRef columnTypeId = mBuilder.getSpirvTypeData(columnType, nullptr).id;
+        const spirv::IdRef columnTypeId =
+            mBuilder.getBasicTypeId(firstOperandType.getBasicType(), firstOperandType.getRows());
 
         if (binarySwapOperands)
         {
@@ -2489,6 +2563,78 @@ spirv::IdRef OutputSPIRVTraverser::createIncrementDecrement(TIntermOperator *nod
     return result;
 }
 
+spirv::IdRef OutputSPIRVTraverser::createCompare(TIntermOperator *node, spirv::IdRef resultTypeId)
+{
+    const TOperator op       = node->getOp();
+    TIntermTyped *operand    = node->getChildNode(0)->getAsTyped();
+    const TType &operandType = operand->getType();
+
+    const SpirvDecorations resultDecorations  = mBuilder.getDecorations(node->getType());
+    const SpirvDecorations operandDecorations = mBuilder.getDecorations(operandType);
+
+    // Load the left and right values.
+    spirv::IdRefList parameters = loadAllParams(node);
+    ASSERT(parameters.size() == 2);
+
+    // In GLSL, operators == and != can operate on the following:
+    //
+    // - scalars: There's a SPIR-V instruction for this,
+    // - vectors: The same SPIR-V instruction as scalars is used here, but the result is reduced
+    //   with OpAll/OpAny for == and != respectively,
+    // - matrices: Comparison must be done column by column and the result reduced,
+    // - arrays: Comparison must be done on every array element and the result reduced,
+    // - structs: Comparison must be done on each field and the result reduced.
+    //
+    // For the latter 3 cases, OpCompositeExtract is used to extract scalars and vectors out of the
+    // more complex type, which is recursively traversed.  The results are accumulated in a list
+    // that is then reduced 4 by 4 elements until a single boolean is produced.
+
+    spirv::LiteralIntegerList currentAccessChain;
+    spirv::IdRefList intermediateResults;
+
+    createCompareImpl(op, operandType, resultTypeId, parameters[0], parameters[1],
+                      operandDecorations, resultDecorations, &currentAccessChain,
+                      &intermediateResults);
+
+    // Make sure the function correctly pushes and pops access chain indices.
+    ASSERT(currentAccessChain.empty());
+
+    // Reduce the intermediate results.
+    ASSERT(!intermediateResults.empty());
+
+    // The following code implements this algorithm, assuming N bools are to be reduced:
+    //
+    //    Reduced           To Reduce
+    //     {b1}           {b2, b3, ..., bN}      Initial state
+    //                                           Loop
+    //  {b1, b2, b3, b4}  {b5, b6, ..., bN}        Take up to 3 new bools
+    //     {r1}           {b5, b6, ..., bN}        Reduce it
+    //                                             Repeat
+    //
+    // In the end, a single value is left.
+    size_t reducedCount       = 0;
+    spirv::IdRefList toReduce = {intermediateResults[reducedCount++]};
+    while (reducedCount < intermediateResults.size())
+    {
+        // Take up to 3 new bools.
+        size_t toTakeCount = std::min<size_t>(3, intermediateResults.size() - reducedCount);
+        for (size_t i = 0; i < toTakeCount; ++i)
+        {
+            toReduce.push_back(intermediateResults[reducedCount++]);
+        }
+
+        // Reduce them to one bool.
+        const spirv::IdRef result = reduceBoolVector(op, toReduce, resultTypeId, resultDecorations);
+
+        // Replace the list of bools to reduce with the reduced one.
+        toReduce.clear();
+        toReduce.push_back(result);
+    }
+
+    ASSERT(toReduce.size() == 1 && reducedCount == intermediateResults.size());
+    return toReduce[0];
+}
+
 spirv::IdRef OutputSPIRVTraverser::createAtomicBuiltIn(TIntermOperator *node,
                                                        spirv::IdRef resultTypeId)
 {
@@ -2588,20 +2734,1067 @@ spirv::IdRef OutputSPIRVTraverser::createAtomicBuiltIn(TIntermOperator *node,
     return result;
 }
 
-spirv::IdRef OutputSPIRVTraverser::createTextureBuiltIn(TIntermOperator *node,
-                                                        spirv::IdRef resultTypeId)
+spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *node,
+                                                             spirv::IdRef resultTypeId)
 {
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
-    return spirv::IdRef{};
+    const TOperator op                = node->getOp();
+    const TFunction *function         = node->getAsAggregate()->getFunction();
+    const TType &samplerType          = function->getParam(0)->getType();
+    const TBasicType samplerBasicType = samplerType.getBasicType();
+
+    // Load the parameters.
+    spirv::IdRefList parameters = loadAllParams(node);
+
+    // GLSL texture* and image* built-ins map to the following SPIR-V instructions.  Some of these
+    // instructions take a "sampled image" while the others take the image itself.  In these
+    // functions, the image, coordinates and Dref (for shadow sampling) are specified as positional
+    // parameters while the rest are bundled in a list of image operands.
+    //
+    // Image operations that query:
+    //
+    // - OpImageQuerySizeLod
+    // - OpImageQuerySize
+    // - OpImageQueryLod <-- sampled image
+    // - OpImageQueryLevels
+    // - OpImageQuerySamples
+    //
+    // Image operations that read/write:
+    //
+    // - OpImageSampleImplicitLod <-- sampled image
+    // - OpImageSampleExplicitLod <-- sampled image
+    // - OpImageSampleDrefImplicitLod <-- sampled image
+    // - OpImageSampleDrefExplicitLod <-- sampled image
+    // - OpImageSampleProjImplicitLod <-- sampled image
+    // - OpImageSampleProjExplicitLod <-- sampled image
+    // - OpImageSampleProjDrefImplicitLod <-- sampled image
+    // - OpImageSampleProjDrefExplicitLod <-- sampled image
+    // - OpImageFetch
+    // - OpImageGather <-- sampled image
+    // - OpImageDrefGather <-- sampled image
+    // - OpImageRead
+    // - OpImageWrite
+    //
+    // The additional image parameters are:
+    //
+    // - Bias: Only used with ImplicitLod.
+    // - Lod: Only used with ExplicitLod.
+    // - Grad: 2x operands; dx and dy.  Only used with ExplicitLod.
+    // - ConstOffset: Constant offset added to coordinates of OpImage*Gather.
+    // - Offset: Non-constant offset added to coordinates of OpImage*Gather.
+    // - ConstOffsets: Constant offsets added to coordinates of OpImage*Gather.
+    // - Sample: Only used with OpImageFetch, OpImageRead and OpImageWrite.
+    //
+    // Where GLSL's built-in takes a sampler but SPIR-V expects an image, OpImage can be used to get
+    // the SPIR-V image out of a SPIR-V sampled image.
+
+    // The first parameter, which is either a sampled image or an image.  Some GLSL built-ins
+    // receive a sampled image but their SPIR-V equivalent expects an image.  OpImage is used in
+    // that case.
+    spirv::IdRef image                = parameters[0];
+    bool extractImageFromSampledImage = false;
+
+    // The argument index for different possible parameters.  0 indicates that the argument is
+    // unused.  Coordinates are usually at index 1, so it's pre-initialized.
+    size_t coordinatesIndex     = 1;
+    size_t biasIndex            = 0;
+    size_t lodIndex             = 0;
+    size_t compareIndex         = 0;
+    size_t dPdxIndex            = 0;
+    size_t dPdyIndex            = 0;
+    size_t offsetIndex          = 0;
+    size_t offsetsIndex         = 0;
+    size_t gatherComponentIndex = 0;
+    size_t sampleIndex          = 0;
+    size_t dataIndex            = 0;
+
+    // Whether this is a Dref variant of a sample call.
+    bool isDref = IsShadowSampler(samplerBasicType);
+    // Whether this is a Proj variant of a sample call.
+    bool isProj = false;
+
+    // The SPIR-V op used to implement the built-in.  For OpImageSample* instructions,
+    // OpImageSampleImplicitLod is initially specified, which is later corrected based on |isDref|
+    // and |isProj|.
+    spv::Op spirvOp = BuiltInGroup::IsTexture(op) ? spv::OpImageSampleImplicitLod : spv::OpNop;
+
+    // Organize the parameters and decide the SPIR-V Op to use.
+    switch (op)
+    {
+        case EOpTexture2D:
+        case EOpTextureCube:
+        case EOpTexture1D:
+        case EOpTexture3D:
+        case EOpShadow1D:
+        case EOpShadow2D:
+        case EOpShadow2DEXT:
+        case EOpTexture2DRect:
+        case EOpTextureVideoWEBGL:
+        case EOpTexture:
+
+        case EOpTexture2DBias:
+        case EOpTextureCubeBias:
+        case EOpTexture3DBias:
+        case EOpTexture1DBias:
+        case EOpShadow1DBias:
+        case EOpShadow2DBias:
+        case EOpTextureBias:
+
+            // For shadow cube arrays, the compare value is specified through an additional
+            // parameter, while for the rest is taken out of the coordinates.
+            if (function->getParamCount() == 3)
+            {
+                if (samplerBasicType == EbtSamplerCubeArrayShadow)
+                {
+                    compareIndex = 2;
+                }
+                else
+                {
+                    biasIndex = 2;
+                }
+            }
+            break;
+
+        case EOpTexture2DProj:
+        case EOpTexture1DProj:
+        case EOpTexture3DProj:
+        case EOpShadow1DProj:
+        case EOpShadow2DProj:
+        case EOpShadow2DProjEXT:
+        case EOpTexture2DRectProj:
+        case EOpTextureProj:
+
+        case EOpTexture2DProjBias:
+        case EOpTexture3DProjBias:
+        case EOpTexture1DProjBias:
+        case EOpShadow1DProjBias:
+        case EOpShadow2DProjBias:
+        case EOpTextureProjBias:
+
+            isProj = true;
+            if (function->getParamCount() == 3)
+            {
+                biasIndex = 2;
+            }
+            break;
+
+        case EOpTexture2DLod:
+        case EOpTextureCubeLod:
+        case EOpTexture1DLod:
+        case EOpShadow1DLod:
+        case EOpShadow2DLod:
+        case EOpTexture3DLod:
+
+        case EOpTexture2DLodVS:
+        case EOpTextureCubeLodVS:
+
+        case EOpTexture2DLodEXTFS:
+        case EOpTextureCubeLodEXTFS:
+        case EOpTextureLod:
+
+            ASSERT(function->getParamCount() == 3);
+            lodIndex = 2;
+            break;
+
+        case EOpTexture2DProjLod:
+        case EOpTexture1DProjLod:
+        case EOpShadow1DProjLod:
+        case EOpShadow2DProjLod:
+        case EOpTexture3DProjLod:
+
+        case EOpTexture2DProjLodVS:
+
+        case EOpTexture2DProjLodEXTFS:
+        case EOpTextureProjLod:
+
+            ASSERT(function->getParamCount() == 3);
+            isProj   = true;
+            lodIndex = 2;
+            break;
+
+        case EOpTexelFetch:
+        case EOpTexelFetchOffset:
+            // texelFetch has the following forms:
+            //
+            // - texelFetch(sampler, P);
+            // - texelFetch(sampler, P, lod);
+            // - texelFetch(samplerMS, P, sample);
+            //
+            // texelFetchOffset has an additional offset parameter at the end.
+            //
+            // In SPIR-V, OpImageFetch is used which operates on the image itself.
+            spirvOp                      = spv::OpImageFetch;
+            extractImageFromSampledImage = true;
+
+            if (IsSamplerMS(samplerBasicType))
+            {
+                ASSERT(function->getParamCount() == 3);
+                sampleIndex = 2;
+            }
+            else if (function->getParamCount() >= 3)
+            {
+                lodIndex = 2;
+            }
+            if (op == EOpTexelFetchOffset)
+            {
+                offsetIndex = function->getParamCount() - 1;
+            }
+            break;
+
+        case EOpTexture2DGradEXT:
+        case EOpTextureCubeGradEXT:
+        case EOpTextureGrad:
+
+            ASSERT(function->getParamCount() == 4);
+            dPdxIndex = 2;
+            dPdyIndex = 3;
+            break;
+
+        case EOpTexture2DProjGradEXT:
+        case EOpTextureProjGrad:
+
+            ASSERT(function->getParamCount() == 4);
+            isProj    = true;
+            dPdxIndex = 2;
+            dPdyIndex = 3;
+            break;
+
+        case EOpTextureOffset:
+        case EOpTextureOffsetBias:
+
+            ASSERT(function->getParamCount() >= 3);
+            offsetIndex = 2;
+            if (function->getParamCount() == 4)
+            {
+                biasIndex = 3;
+            }
+            break;
+
+        case EOpTextureProjOffset:
+        case EOpTextureProjOffsetBias:
+
+            ASSERT(function->getParamCount() >= 3);
+            isProj      = true;
+            offsetIndex = 2;
+            if (function->getParamCount() == 4)
+            {
+                biasIndex = 3;
+            }
+            break;
+
+        case EOpTextureLodOffset:
+
+            ASSERT(function->getParamCount() == 4);
+            lodIndex    = 2;
+            offsetIndex = 3;
+            break;
+
+        case EOpTextureProjLodOffset:
+
+            ASSERT(function->getParamCount() == 4);
+            isProj      = true;
+            lodIndex    = 2;
+            offsetIndex = 3;
+            break;
+
+        case EOpTextureGradOffset:
+
+            ASSERT(function->getParamCount() == 5);
+            dPdxIndex   = 2;
+            dPdyIndex   = 3;
+            offsetIndex = 4;
+            break;
+
+        case EOpTextureProjGradOffset:
+
+            ASSERT(function->getParamCount() == 5);
+            isProj      = true;
+            dPdxIndex   = 2;
+            dPdyIndex   = 3;
+            offsetIndex = 4;
+            break;
+
+        case EOpTextureGather:
+
+            // For shadow textures, refZ (same as Dref) is specified as the last argument.
+            // Otherwise a component may be specified which defaults to 0 if not specified.
+            spirvOp = spv::OpImageGather;
+            if (isDref)
+            {
+                ASSERT(function->getParamCount() == 3);
+                compareIndex = 2;
+            }
+            else if (function->getParamCount() == 3)
+            {
+                gatherComponentIndex = 2;
+            }
+            break;
+
+        case EOpTextureGatherOffset:
+        case EOpTextureGatherOffsetComp:
+
+        case EOpTextureGatherOffsets:
+        case EOpTextureGatherOffsetsComp:
+
+            // textureGatherOffset and textureGatherOffsets have the following forms:
+            //
+            // - texelGatherOffset*(sampler, P, offset*);
+            // - texelGatherOffset*(sampler, P, offset*, component);
+            // - texelGatherOffset*(sampler, P, refZ, offset*);
+            //
+            spirvOp = spv::OpImageGather;
+            if (isDref)
+            {
+                ASSERT(function->getParamCount() == 4);
+                compareIndex = 2;
+            }
+            else if (function->getParamCount() == 4)
+            {
+                gatherComponentIndex = 3;
+            }
+
+            ASSERT(function->getParamCount() >= 3);
+            if (BuiltInGroup::IsTextureGatherOffset(op))
+            {
+                offsetIndex = isDref ? 3 : 2;
+            }
+            else
+            {
+                offsetsIndex = isDref ? 3 : 2;
+            }
+            break;
+
+        case EOpImageStore:
+            // imageStore has the following forms:
+            //
+            // - imageStore(image, P, data);
+            // - imageStore(imageMS, P, sample, data);
+            //
+            spirvOp = spv::OpImageWrite;
+            if (IsSamplerMS(samplerBasicType))
+            {
+                ASSERT(function->getParamCount() == 4);
+                sampleIndex = 2;
+                dataIndex   = 3;
+            }
+            else
+            {
+                ASSERT(function->getParamCount() == 3);
+                dataIndex = 2;
+            }
+            break;
+
+        case EOpImageLoad:
+            // imageStore has the following forms:
+            //
+            // - imageLoad(image, P);
+            // - imageLoad(imageMS, P, sample);
+            //
+            spirvOp = spv::OpImageRead;
+            if (IsSamplerMS(samplerBasicType))
+            {
+                ASSERT(function->getParamCount() == 3);
+                sampleIndex = 2;
+            }
+            else
+            {
+                ASSERT(function->getParamCount() == 2);
+            }
+            break;
+
+            // Queries:
+        case EOpTextureSize:
+        case EOpImageSize:
+            // textureSize has the following forms:
+            //
+            // - textureSize(sampler);
+            // - textureSize(sampler, lod);
+            //
+            // while imageSize has only one form:
+            //
+            // - imageSize(image);
+            //
+            extractImageFromSampledImage = true;
+            if (function->getParamCount() == 2)
+            {
+                spirvOp  = spv::OpImageQuerySizeLod;
+                lodIndex = 1;
+            }
+            else
+            {
+                spirvOp = spv::OpImageQuerySize;
+            }
+            // No coordinates parameter.
+            coordinatesIndex = 0;
+            break;
+
+        case EOpTextureSamples:
+        case EOpImageSamples:
+            extractImageFromSampledImage = true;
+            spirvOp                      = spv::OpImageQuerySamples;
+            // No coordinates parameter.
+            coordinatesIndex = 0;
+            break;
+
+        case EOpTextureQueryLevels:
+            extractImageFromSampledImage = true;
+            spirvOp                      = spv::OpImageQueryLevels;
+            // No coordinates parameter.
+            coordinatesIndex = 0;
+            break;
+
+        case EOpTextureQueryLod:
+            spirvOp = spv::OpImageQueryLod;
+            break;
+
+        default:
+            UNREACHABLE();
+    }
+
+    // If an implicit-lod instruction is used outside a fragment shader, change that to an explicit
+    // one as they are not allowed in SPIR-V outside fragment shaders.
+    bool makeLodExplicit =
+        mCompiler->getShaderType() != GL_FRAGMENT_SHADER && lodIndex == 0 &&
+        (spirvOp == spv::OpImageSampleImplicitLod || spirvOp == spv::OpImageFetch);
+
+    // Apply any necessary fix up.
+
+    if (extractImageFromSampledImage && IsSampler(samplerBasicType))
+    {
+        // Get the (non-sampled) image type.
+        SpirvType imageType = mBuilder.getSpirvType(samplerType, EbsUnspecified);
+        ASSERT(!imageType.isSamplerBaseImage);
+        imageType.isSamplerBaseImage            = true;
+        const spirv::IdRef extractedImageTypeId = mBuilder.getSpirvTypeData(imageType, nullptr).id;
+
+        // Use OpImage to get the image out of the sampled image.
+        const spirv::IdRef extractedImage = mBuilder.getNewId({});
+        spirv::WriteImage(mBuilder.getSpirvCurrentFunctionBlock(), extractedImageTypeId,
+                          extractedImage, image);
+        image = extractedImage;
+    }
+
+    // Gather operands as necessary.
+
+    // - Coordinates
+    int coordinatesChannelCount = 0;
+    spirv::IdRef coordinatesId;
+    const TType *coordinatesType = nullptr;
+    if (coordinatesIndex > 0)
+    {
+        coordinatesId           = parameters[coordinatesIndex];
+        coordinatesType         = &function->getParam(coordinatesIndex)->getType();
+        coordinatesChannelCount = coordinatesType->getNominalSize();
+    }
+
+    // - Dref; either specified as a compare/refz argument (cube array, gather), or:
+    //   * coordinates.z for proj variants
+    //   * coordinates.<last> for others
+    spirv::IdRef drefId;
+    if (compareIndex > 0)
+    {
+        drefId = parameters[compareIndex];
+    }
+    else if (isDref)
+    {
+        // Get the component index
+        ASSERT(coordinatesChannelCount > 0);
+        int drefComponent = isProj ? 2 : coordinatesChannelCount - 1;
+
+        // Get the component type
+        SpirvType drefSpirvType       = mBuilder.getSpirvType(*coordinatesType, EbsUnspecified);
+        drefSpirvType.primarySize     = 1;
+        const spirv::IdRef drefTypeId = mBuilder.getSpirvTypeData(drefSpirvType, nullptr).id;
+
+        // Extract the dref component out of coordinates.
+        drefId = mBuilder.getNewId(mBuilder.getDecorations(*coordinatesType));
+        spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), drefTypeId, drefId,
+                                     coordinatesId, {spirv::LiteralInteger(drefComponent)});
+    }
+
+    // - Gather component
+    spirv::IdRef gatherComponentId;
+    if (gatherComponentIndex > 0)
+    {
+        gatherComponentId = parameters[gatherComponentIndex];
+    }
+    else if (spirvOp == spv::OpImageGather)
+    {
+        // If comp is not specified, component 0 is taken as default.
+        gatherComponentId = mBuilder.getIntConstant(0);
+    }
+
+    // - Image write data
+    spirv::IdRef dataId;
+    if (dataIndex > 0)
+    {
+        dataId = parameters[dataIndex];
+    }
+
+    // - Other operands
+    spv::ImageOperandsMask operandsMask = spv::ImageOperandsMaskNone;
+    spirv::IdRefList imageOperandsList;
+
+    if (biasIndex > 0)
+    {
+        operandsMask = operandsMask | spv::ImageOperandsBiasMask;
+        imageOperandsList.push_back(parameters[biasIndex]);
+    }
+    if (lodIndex > 0)
+    {
+        operandsMask = operandsMask | spv::ImageOperandsLodMask;
+        imageOperandsList.push_back(parameters[lodIndex]);
+    }
+    else if (makeLodExplicit)
+    {
+        // If the implicit-lod variant is used outside fragment shaders, switch to explicit and use
+        // lod 0.
+        operandsMask = operandsMask | spv::ImageOperandsLodMask;
+        imageOperandsList.push_back(spirvOp == spv::OpImageFetch ? mBuilder.getUintConstant(0)
+                                                                 : mBuilder.getFloatConstant(0));
+    }
+    if (dPdxIndex > 0)
+    {
+        ASSERT(dPdyIndex > 0);
+        operandsMask = operandsMask | spv::ImageOperandsGradMask;
+        imageOperandsList.push_back(parameters[dPdxIndex]);
+        imageOperandsList.push_back(parameters[dPdyIndex]);
+    }
+    if (offsetIndex > 0)
+    {
+        // Non-const offsets require the ImageGatherExtended feature.
+        if (node->getChildNode(offsetIndex)->getAsTyped()->hasConstantValue())
+        {
+            operandsMask = operandsMask | spv::ImageOperandsConstOffsetMask;
+        }
+        else
+        {
+            ASSERT(spirvOp == spv::OpImageGather);
+
+            operandsMask = operandsMask | spv::ImageOperandsOffsetMask;
+            mBuilder.addCapability(spv::CapabilityImageGatherExtended);
+        }
+        imageOperandsList.push_back(parameters[offsetIndex]);
+    }
+    if (offsetsIndex > 0)
+    {
+        ASSERT(node->getChildNode(offsetsIndex)->getAsTyped()->hasConstantValue());
+
+        operandsMask = operandsMask | spv::ImageOperandsConstOffsetsMask;
+        mBuilder.addCapability(spv::CapabilityImageGatherExtended);
+        imageOperandsList.push_back(parameters[offsetsIndex]);
+    }
+    if (sampleIndex > 0)
+    {
+        operandsMask = operandsMask | spv::ImageOperandsSampleMask;
+        imageOperandsList.push_back(parameters[sampleIndex]);
+    }
+
+    const spv::ImageOperandsMask *imageOperands =
+        imageOperandsList.empty() ? nullptr : &operandsMask;
+
+    // GLSL and SPIR-V are different in the way the projective component is specified:
+    //
+    // In GLSL:
+    //
+    // > The texture coordinates consumed from P, not including the last component of P, are divided
+    // > by the last component of P.
+    //
+    // In SPIR-V, there's a similar language (division by last element), but with the following
+    // added:
+    //
+    // > ... all unused components will appear after all used components.
+    //
+    // So for example for textureProj(sampler, vec4 P), the projective coordinates are P.xy/P.w,
+    // where P.z is ignored.  In SPIR-V instead that would be P.xy/P.z and P.w is ignored.
+    //
+    if (isProj)
+    {
+        int requiredChannelCount = coordinatesChannelCount;
+        // texture*Proj* operate on the following parameters:
+        //
+        // - sampler1D, vec2 P
+        // - sampler1D, vec4 P
+        // - sampler2D, vec3 P
+        // - sampler2D, vec4 P
+        // - sampler2DRect, vec3 P
+        // - sampler2DRect, vec4 P
+        // - sampler3D, vec4 P
+        // - sampler1DShadow, vec4 P
+        // - sampler2DShadow, vec4 P
+        // - sampler2DRectShadow, vec4 P
+        //
+        // Of these cases, only (sampler1D*, vec4 P) and (sampler2D*, vec4 P) require moving the
+        // proj channel from .w to the appropriate location (.y for 1D and .z for 2D).
+        if (IsSampler2D(samplerBasicType))
+        {
+            requiredChannelCount = 3;
+        }
+        else if (IsSampler1D(samplerBasicType))
+        {
+            requiredChannelCount = 2;
+        }
+        if (requiredChannelCount != coordinatesChannelCount)
+        {
+            ASSERT(coordinatesChannelCount == 4);
+
+            // Get the component type
+            SpirvType spirvType = mBuilder.getSpirvType(*coordinatesType, EbsUnspecified);
+            const spirv::IdRef coordinatesTypeId = mBuilder.getSpirvTypeData(spirvType, nullptr).id;
+            spirvType.primarySize                = 1;
+            const spirv::IdRef channelTypeId     = mBuilder.getSpirvTypeData(spirvType, nullptr).id;
+
+            // Extract the last component out of coordinates.
+            const spirv::IdRef projChannelId =
+                mBuilder.getNewId(mBuilder.getDecorations(*coordinatesType));
+            spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), channelTypeId,
+                                         projChannelId, coordinatesId,
+                                         {spirv::LiteralInteger(coordinatesChannelCount - 1)});
+
+            // Insert it after the channels that are consumed.  The extra channels are ignored per
+            // the SPIR-V spec.
+            const spirv::IdRef newCoordinatesId =
+                mBuilder.getNewId(mBuilder.getDecorations(*coordinatesType));
+            spirv::WriteCompositeInsert(mBuilder.getSpirvCurrentFunctionBlock(), coordinatesTypeId,
+                                        newCoordinatesId, coordinatesId, projChannelId,
+                                        {spirv::LiteralInteger(requiredChannelCount - 1)});
+            coordinatesId = newCoordinatesId;
+        }
+    }
+
+    // Select the correct sample Op based on whether the Proj, Dref or Explicit variants are used.
+    if (spirvOp == spv::OpImageSampleImplicitLod)
+    {
+        const bool isExplicitLod = lodIndex != 0 || makeLodExplicit || dPdxIndex != 0;
+        if (isDref)
+        {
+            if (isProj)
+            {
+                spirvOp = isExplicitLod ? spv::OpImageSampleProjDrefExplicitLod
+                                        : spv::OpImageSampleProjDrefImplicitLod;
+            }
+            else
+            {
+                spirvOp = isExplicitLod ? spv::OpImageSampleDrefExplicitLod
+                                        : spv::OpImageSampleDrefImplicitLod;
+            }
+        }
+        else
+        {
+            if (isProj)
+            {
+                spirvOp = isExplicitLod ? spv::OpImageSampleProjExplicitLod
+                                        : spv::OpImageSampleProjImplicitLod;
+            }
+            else
+            {
+                spirvOp =
+                    isExplicitLod ? spv::OpImageSampleExplicitLod : spv::OpImageSampleImplicitLod;
+            }
+        }
+    }
+    if (spirvOp == spv::OpImageGather && isDref)
+    {
+        spirvOp = spv::OpImageDrefGather;
+    }
+
+    spirv::IdRef result;
+    if (spirvOp != spv::OpImageWrite)
+    {
+        result = mBuilder.getNewId(mBuilder.getDecorations(node->getType()));
+    }
+
+    switch (spirvOp)
+    {
+        case spv::OpImageQuerySizeLod:
+            mBuilder.addCapability(spv::CapabilityImageQuery);
+            ASSERT(imageOperandsList.size() == 1);
+            spirv::WriteImageQuerySizeLod(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                          result, image, imageOperandsList[0]);
+            break;
+        case spv::OpImageQuerySize:
+            mBuilder.addCapability(spv::CapabilityImageQuery);
+            spirv::WriteImageQuerySize(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                       result, image);
+            break;
+        case spv::OpImageQueryLod:
+            mBuilder.addCapability(spv::CapabilityImageQuery);
+            spirv::WriteImageQueryLod(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result,
+                                      image, coordinatesId);
+            break;
+        case spv::OpImageQueryLevels:
+            mBuilder.addCapability(spv::CapabilityImageQuery);
+            spirv::WriteImageQueryLevels(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                         result, image);
+            break;
+        case spv::OpImageQuerySamples:
+            mBuilder.addCapability(spv::CapabilityImageQuery);
+            spirv::WriteImageQuerySamples(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                          result, image);
+            break;
+        case spv::OpImageSampleImplicitLod:
+            spirv::WriteImageSampleImplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                               resultTypeId, result, image, coordinatesId,
+                                               imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleExplicitLod:
+            spirv::WriteImageSampleExplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                               resultTypeId, result, image, coordinatesId,
+                                               *imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleDrefImplicitLod:
+            spirv::WriteImageSampleDrefImplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                   resultTypeId, result, image, coordinatesId,
+                                                   drefId, imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleDrefExplicitLod:
+            spirv::WriteImageSampleDrefExplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                   resultTypeId, result, image, coordinatesId,
+                                                   drefId, *imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleProjImplicitLod:
+            spirv::WriteImageSampleProjImplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                   resultTypeId, result, image, coordinatesId,
+                                                   imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleProjExplicitLod:
+            spirv::WriteImageSampleProjExplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                   resultTypeId, result, image, coordinatesId,
+                                                   *imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleProjDrefImplicitLod:
+            spirv::WriteImageSampleProjDrefImplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                       resultTypeId, result, image, coordinatesId,
+                                                       drefId, imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageSampleProjDrefExplicitLod:
+            spirv::WriteImageSampleProjDrefExplicitLod(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                       resultTypeId, result, image, coordinatesId,
+                                                       drefId, *imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageFetch:
+            spirv::WriteImageFetch(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result,
+                                   image, coordinatesId, imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageGather:
+            spirv::WriteImageGather(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result,
+                                    image, coordinatesId, gatherComponentId, imageOperands,
+                                    imageOperandsList);
+            break;
+        case spv::OpImageDrefGather:
+            spirv::WriteImageDrefGather(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId,
+                                        result, image, coordinatesId, drefId, imageOperands,
+                                        imageOperandsList);
+            break;
+        case spv::OpImageRead:
+            spirv::WriteImageRead(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result,
+                                  image, coordinatesId, imageOperands, imageOperandsList);
+            break;
+        case spv::OpImageWrite:
+            spirv::WriteImageWrite(mBuilder.getSpirvCurrentFunctionBlock(), image, coordinatesId,
+                                   dataId, imageOperands, imageOperandsList);
+            break;
+        default:
+            UNREACHABLE();
+    }
+
+    // In Desktop GLSL, the legacy shadow* built-ins produce a vec4, while SPIR-V
+    // OpImageSample*Dref* instructions produce a scalar.  EXT_shadow_samplers in ESSL introduces
+    // similar functions but which return a scalar.
+    //
+    // TODO: For desktop GLSL, the result must be turned into a vec4.  http://anglebug.com/4889.
+
+    return result;
 }
 
-spirv::IdRef OutputSPIRVTraverser::createImageBuiltIn(TIntermOperator *node,
-                                                      spirv::IdRef resultTypeId)
+spirv::IdRef OutputSPIRVTraverser::castBasicType(spirv::IdRef value,
+                                                 const TType &valueType,
+                                                 TBasicType expectedBasicType)
 {
-    // TODO: http://anglebug.com/4889
-    UNIMPLEMENTED();
-    return spirv::IdRef{};
+    if (valueType.getBasicType() == expectedBasicType)
+    {
+        return value;
+    }
+
+    SpirvType valueSpirvType      = mBuilder.getSpirvType(valueType, EbsUnspecified);
+    valueSpirvType.type           = expectedBasicType;
+    const spirv::IdRef castTypeId = mBuilder.getSpirvTypeData(valueSpirvType, nullptr).id;
+
+    const spirv::IdRef castValue = mBuilder.getNewId(mBuilder.getDecorations(valueType));
+
+    // Write the instruction that casts between types.  Different instructions are used based on the
+    // types being converted.
+    //
+    // - int/uint <-> float: OpConvert*To*
+    // - int <-> uint: OpBitcast
+    // - bool --> int/uint/float: OpSelect with 0 and 1
+    // - int/uint --> bool: OPINotEqual 0
+    // - float --> bool: OpFUnordNotEqual 0
+
+    WriteUnaryOp writeUnaryOp     = nullptr;
+    WriteBinaryOp writeBinaryOp   = nullptr;
+    WriteTernaryOp writeTernaryOp = nullptr;
+
+    spirv::IdRef zero;
+    spirv::IdRef one;
+
+    switch (valueType.getBasicType())
+    {
+        case EbtFloat:
+            switch (expectedBasicType)
+            {
+                case EbtInt:
+                    writeUnaryOp = spirv::WriteConvertFToS;
+                    break;
+                case EbtUInt:
+                    writeUnaryOp = spirv::WriteConvertFToU;
+                    break;
+                case EbtBool:
+                    zero          = mBuilder.getVecConstant(0, valueType.getNominalSize());
+                    writeBinaryOp = spirv::WriteFUnordNotEqual;
+                    break;
+                default:
+                    UNREACHABLE();
+            }
+            break;
+
+        case EbtInt:
+        case EbtUInt:
+            switch (expectedBasicType)
+            {
+                case EbtFloat:
+                    writeUnaryOp = valueType.getBasicType() == EbtInt ? spirv::WriteConvertSToF
+                                                                      : spirv::WriteConvertUToF;
+                    break;
+                case EbtInt:
+                case EbtUInt:
+                    writeUnaryOp = spirv::WriteBitcast;
+                    break;
+                case EbtBool:
+                    zero          = mBuilder.getUvecConstant(0, valueType.getNominalSize());
+                    writeBinaryOp = spirv::WriteINotEqual;
+                    break;
+                default:
+                    UNREACHABLE();
+            }
+            break;
+
+        case EbtBool:
+            writeTernaryOp = spirv::WriteSelect;
+            switch (expectedBasicType)
+            {
+                case EbtFloat:
+                    zero = mBuilder.getVecConstant(0, valueType.getNominalSize());
+                    one  = mBuilder.getVecConstant(1, valueType.getNominalSize());
+                    break;
+                case EbtInt:
+                    zero = mBuilder.getIvecConstant(0, valueType.getNominalSize());
+                    one  = mBuilder.getIvecConstant(1, valueType.getNominalSize());
+                    break;
+                case EbtUInt:
+                    zero = mBuilder.getUvecConstant(0, valueType.getNominalSize());
+                    one  = mBuilder.getUvecConstant(1, valueType.getNominalSize());
+                    break;
+                default:
+                    UNREACHABLE();
+            }
+            break;
+
+        default:
+            // TODO: support desktop GLSL.  http://anglebug.com/4889.
+            UNIMPLEMENTED();
+    }
+
+    if (writeUnaryOp)
+    {
+        writeUnaryOp(mBuilder.getSpirvCurrentFunctionBlock(), castTypeId, castValue, value);
+    }
+    else if (writeBinaryOp)
+    {
+        writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), castTypeId, castValue, value, zero);
+    }
+    else
+    {
+        ASSERT(writeTernaryOp);
+        writeTernaryOp(mBuilder.getSpirvCurrentFunctionBlock(), castTypeId, castValue, value, one,
+                       zero);
+    }
+
+    return castValue;
+}
+
+spirv::IdRef OutputSPIRVTraverser::reduceBoolVector(TOperator op,
+                                                    const spirv::IdRefList &valueIds,
+                                                    spirv::IdRef typeId,
+                                                    const SpirvDecorations &decorations)
+{
+    if (valueIds.size() == 2)
+    {
+        // If two values are given, and/or them directly.
+        WriteBinaryOp writeBinaryOp =
+            op == EOpEqual ? spirv::WriteLogicalAnd : spirv::WriteLogicalOr;
+        const spirv::IdRef result = mBuilder.getNewId(decorations);
+
+        writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result, valueIds[0],
+                      valueIds[1]);
+        return result;
+    }
+
+    WriteUnaryOp writeUnaryOp = op == EOpEqual ? spirv::WriteAll : spirv::WriteAny;
+    spirv::IdRef valueId      = valueIds[0];
+
+    if (valueIds.size() > 2)
+    {
+        // If multiple values are given, construct a bool vector out of them first.
+        const spirv::IdRef bvecTypeId = mBuilder.getBasicTypeId(EbtBool, valueIds.size());
+        valueId                       = {mBuilder.getNewId(decorations)};
+
+        spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), bvecTypeId, valueId,
+                                       valueIds);
+    }
+
+    const spirv::IdRef result = mBuilder.getNewId(decorations);
+    writeUnaryOp(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result, valueId);
+
+    return result;
+}
+
+void OutputSPIRVTraverser::createCompareImpl(TOperator op,
+                                             const TType &operandType,
+                                             spirv::IdRef resultTypeId,
+                                             spirv::IdRef leftId,
+                                             spirv::IdRef rightId,
+                                             const SpirvDecorations &operandDecorations,
+                                             const SpirvDecorations &resultDecorations,
+                                             spirv::LiteralIntegerList *currentAccessChain,
+                                             spirv::IdRefList *intermediateResultsOut)
+{
+    const TBasicType basicType = operandType.getBasicType();
+    const bool isFloat         = basicType == EbtFloat || basicType == EbtDouble;
+    const bool isBool          = basicType == EbtBool;
+
+    WriteBinaryOp writeBinaryOp = nullptr;
+
+    // For arrays, compare them element by element.
+    if (operandType.isArray())
+    {
+        TType elementType(operandType);
+        elementType.toArrayElementType();
+
+        currentAccessChain->emplace_back();
+        for (unsigned int elementIndex = 0; elementIndex < operandType.getOutermostArraySize();
+             ++elementIndex)
+        {
+            // Select the current element.
+            currentAccessChain->back() = spirv::LiteralInteger(elementIndex);
+
+            // Compare and accumulate the results.
+            createCompareImpl(op, elementType, resultTypeId, leftId, rightId, operandDecorations,
+                              resultDecorations, currentAccessChain, intermediateResultsOut);
+        }
+        currentAccessChain->pop_back();
+
+        return;
+    }
+
+    // For structs, compare them field by field.
+    if (operandType.getStruct() != nullptr)
+    {
+        uint32_t fieldIndex = 0;
+
+        currentAccessChain->emplace_back();
+        for (const TField *field : operandType.getStruct()->fields())
+        {
+            // Select the current field.
+            currentAccessChain->back() = spirv::LiteralInteger(fieldIndex++);
+
+            // Compare and accumulate the results.
+            createCompareImpl(op, *field->type(), resultTypeId, leftId, rightId, operandDecorations,
+                              resultDecorations, currentAccessChain, intermediateResultsOut);
+        }
+        currentAccessChain->pop_back();
+
+        return;
+    }
+
+    // For matrices, compare them column by column.
+    if (operandType.isMatrix())
+    {
+        TType columnType(operandType);
+        columnType.toMatrixColumnType();
+
+        currentAccessChain->emplace_back();
+        for (int columnIndex = 0; columnIndex < operandType.getCols(); ++columnIndex)
+        {
+            // Select the current column.
+            currentAccessChain->back() = spirv::LiteralInteger(columnIndex);
+
+            // Compare and accumulate the results.
+            createCompareImpl(op, columnType, resultTypeId, leftId, rightId, operandDecorations,
+                              resultDecorations, currentAccessChain, intermediateResultsOut);
+        }
+        currentAccessChain->pop_back();
+
+        return;
+    }
+
+    // For scalars and vectors generate a single instruction for comparison.
+    if (op == EOpEqual)
+    {
+        if (isFloat)
+            writeBinaryOp = spirv::WriteFOrdEqual;
+        else if (isBool)
+            writeBinaryOp = spirv::WriteLogicalEqual;
+        else
+            writeBinaryOp = spirv::WriteIEqual;
+    }
+    else
+    {
+        ASSERT(op == EOpNotEqual);
+
+        if (isFloat)
+            writeBinaryOp = spirv::WriteFUnordNotEqual;
+        else if (isBool)
+            writeBinaryOp = spirv::WriteLogicalNotEqual;
+        else
+            writeBinaryOp = spirv::WriteINotEqual;
+    }
+
+    // Extract the scalar and vector from composite types, if any.
+    spirv::IdRef leftComponentId  = leftId;
+    spirv::IdRef rightComponentId = rightId;
+    if (!currentAccessChain->empty())
+    {
+        leftComponentId  = mBuilder.getNewId(operandDecorations);
+        rightComponentId = mBuilder.getNewId(operandDecorations);
+
+        const spirv::IdRef componentTypeId =
+            mBuilder.getBasicTypeId(operandType.getBasicType(), operandType.getNominalSize());
+
+        spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), componentTypeId,
+                                     leftComponentId, leftId, *currentAccessChain);
+        spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), componentTypeId,
+                                     rightComponentId, rightId, *currentAccessChain);
+    }
+
+    const bool reduceResult     = !operandType.isScalar();
+    spirv::IdRef result         = mBuilder.getNewId({});
+    spirv::IdRef opResultTypeId = resultTypeId;
+    if (reduceResult)
+    {
+        opResultTypeId = mBuilder.getBasicTypeId(EbtBool, operandType.getNominalSize());
+    }
+
+    // Write the comparison operation itself.
+    writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), opResultTypeId, result, leftComponentId,
+                  rightComponentId);
+
+    // If it's a vector, reduce the result.
+    if (reduceResult)
+    {
+        result = reduceBoolVector(op, {result}, resultTypeId, resultDecorations);
+    }
+
+    intermediateResultsOut->push_back(result);
 }
 
 void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
@@ -2920,26 +4113,17 @@ bool OutputSPIRVTraverser::visitUnary(Visit visit, TIntermUnary *node)
     {
         // The access chain must only include the base ssbo + one literal field index.
         ASSERT(mNodeData.back().idList.size() == 1 && !mNodeData.back().idList.back().id.valid());
+        const spirv::IdRef baseId              = mNodeData.back().baseId;
         const spirv::LiteralInteger fieldIndex = mNodeData.back().idList.back().literal;
 
-        // Get the interface block type from the operand, which is either a symbol or a binary
-        // operator based on whether the interface block is nameless or not.
-        TIntermTyped *operand = node->getOperand();
-        TIntermTyped *ssbo =
-            operand->getAsBinaryNode() ? operand->getAsBinaryNode()->getLeft() : operand;
-        const spirv::IdRef typeId = mBuilder.getTypeData(ssbo->getType(), EbsUnspecified).id;
-
         // Get the int and uint type ids.
-        SpirvType intType;
-        intType.type                  = EbtInt;
-        const spirv::IdRef intTypeId  = mBuilder.getSpirvTypeData(intType, nullptr).id;
-        intType.type                  = EbtUInt;
-        const spirv::IdRef uintTypeId = mBuilder.getSpirvTypeData(intType, nullptr).id;
+        const spirv::IdRef intTypeId  = mBuilder.getBasicTypeId(EbtInt, 1);
+        const spirv::IdRef uintTypeId = mBuilder.getBasicTypeId(EbtUInt, 1);
 
         // Generate the instruction.
         const spirv::IdRef resultId = mBuilder.getNewId({});
         spirv::WriteArrayLength(mBuilder.getSpirvCurrentFunctionBlock(), uintTypeId, resultId,
-                                typeId, fieldIndex);
+                                baseId, fieldIndex);
 
         // Cast to int.
         const spirv::IdRef castResultId = mBuilder.getNewId({});
@@ -2992,11 +4176,8 @@ bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
             // So when selecting between vectors, we must replicate the condition scalar.
             if (type.isVector())
             {
-                SpirvType spirvType;
-                spirvType.type        = node->getCondition()->getType().getBasicType();
-                spirvType.primarySize = static_cast<uint8_t>(type.getNominalSize());
-
-                typeId = mBuilder.getSpirvTypeData(spirvType, nullptr).id;
+                typeId = mBuilder.getBasicTypeId(node->getCondition()->getType().getBasicType(),
+                                                 type.getNominalSize());
                 conditionValue =
                     createConstructorVectorFromScalar(type, typeId, {{conditionValue}});
             }
@@ -3474,7 +4655,10 @@ void OutputSPIRVTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node
         // with the Function storage class.
         if (paramType.getQualifier() != EvqConst)
         {
-            paramId = mBuilder.getTypePointerId(paramId, spv::StorageClassFunction);
+            const spv::StorageClass storageClass = IsOpaqueType(paramType.getBasicType())
+                                                       ? spv::StorageClassUniformConstant
+                                                       : spv::StorageClassFunction;
+            paramId = mBuilder.getTypePointerId(paramId, storageClass);
         }
 
         ids.parameterTypeIds.push_back(paramId);
@@ -3534,16 +4718,58 @@ bool OutputSPIRVTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
             result = createFunctionCall(node, resultTypeId);
             break;
 
-        case EOpMemoryBarrier:
-        case EOpMemoryBarrierAtomicCounter:
-        case EOpMemoryBarrierBuffer:
-        case EOpMemoryBarrierImage:
+            // For barrier functions the scope is device, or with the Vulkan memory model, the queue
+            // family.  We don't use the Vulkan memory model.
         case EOpBarrier:
-        case EOpMemoryBarrierShared:
-        case EOpGroupMemoryBarrier:
+            spirv::WriteControlBarrier(
+                mBuilder.getSpirvCurrentFunctionBlock(),
+                mBuilder.getUintConstant(spv::ScopeWorkgroup),
+                mBuilder.getUintConstant(spv::ScopeWorkgroup),
+                mBuilder.getUintConstant(spv::MemorySemanticsWorkgroupMemoryMask |
+                                         spv::MemorySemanticsAcquireReleaseMask));
+            break;
         case EOpBarrierTCS:
-            // TODO: support barriers.  http://anglebug.com/4889
-            UNIMPLEMENTED();
+            // Note: The memory scope and semantics are different with the Vulkan memory model,
+            // which is not supported.
+            spirv::WriteControlBarrier(mBuilder.getSpirvCurrentFunctionBlock(),
+                                       mBuilder.getUintConstant(spv::ScopeWorkgroup),
+                                       mBuilder.getUintConstant(spv::ScopeInvocation),
+                                       mBuilder.getUintConstant(spv::MemorySemanticsMaskNone));
+            break;
+        case EOpMemoryBarrier:
+        case EOpGroupMemoryBarrier:
+        {
+            const spv::Scope scope =
+                node->getOp() == EOpMemoryBarrier ? spv::ScopeDevice : spv::ScopeWorkgroup;
+            spirv::WriteMemoryBarrier(
+                mBuilder.getSpirvCurrentFunctionBlock(), mBuilder.getUintConstant(scope),
+                mBuilder.getUintConstant(spv::MemorySemanticsUniformMemoryMask |
+                                         spv::MemorySemanticsWorkgroupMemoryMask |
+                                         spv::MemorySemanticsImageMemoryMask |
+                                         spv::MemorySemanticsAcquireReleaseMask));
+            break;
+        }
+        case EOpMemoryBarrierBuffer:
+            spirv::WriteMemoryBarrier(
+                mBuilder.getSpirvCurrentFunctionBlock(), mBuilder.getUintConstant(spv::ScopeDevice),
+                mBuilder.getUintConstant(spv::MemorySemanticsUniformMemoryMask |
+                                         spv::MemorySemanticsAcquireReleaseMask));
+            break;
+        case EOpMemoryBarrierImage:
+            spirv::WriteMemoryBarrier(
+                mBuilder.getSpirvCurrentFunctionBlock(), mBuilder.getUintConstant(spv::ScopeDevice),
+                mBuilder.getUintConstant(spv::MemorySemanticsImageMemoryMask |
+                                         spv::MemorySemanticsAcquireReleaseMask));
+            break;
+        case EOpMemoryBarrierShared:
+            spirv::WriteMemoryBarrier(
+                mBuilder.getSpirvCurrentFunctionBlock(), mBuilder.getUintConstant(spv::ScopeDevice),
+                mBuilder.getUintConstant(spv::MemorySemanticsWorkgroupMemoryMask |
+                                         spv::MemorySemanticsAcquireReleaseMask));
+            break;
+        case EOpMemoryBarrierAtomicCounter:
+            // Atomic counters are emulated.
+            UNREACHABLE();
             break;
 
         case EOpEmitVertex:

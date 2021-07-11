@@ -404,9 +404,9 @@ bool TIntermAggregate::replaceChildNode(TIntermNode *original, TIntermNode *repl
 
 TIntermBlock::TIntermBlock(const TIntermBlock &node)
 {
-    for (TIntermNode *node : node.mStatements)
+    for (TIntermNode *intermNode : node.mStatements)
     {
-        mStatements.push_back(node->deepCopy());
+        mStatements.push_back(intermNode->deepCopy());
     }
 
     ASSERT(!node.mIsTreeRoot);
@@ -506,9 +506,9 @@ bool TIntermDeclaration::replaceChildNode(TIntermNode *original, TIntermNode *re
 
 TIntermDeclaration::TIntermDeclaration(const TIntermDeclaration &node)
 {
-    for (TIntermNode *node : node.mDeclarators)
+    for (TIntermNode *intermNode : node.mDeclarators)
     {
-        mDeclarators.push_back(node->deepCopy());
+        mDeclarators.push_back(intermNode->deepCopy());
     }
 }
 
