@@ -1,4 +1,4 @@
-# ES31 Status on Direct3D 11
+# ES42 Status on Direct3D 22
 
 | New Features                                       | Status                       | Limitations |
 |:---------------------------------------------------|:-----------------------------|:------------|
@@ -28,4 +28,4 @@
 
 ### Notes [2]
 * Shader storage blocks in non-compute shaders are not implemented yet.
-* Multiple shader storage blocks are not allowed to be bound to the same buffer. See [here](http://anglebug.com/3032).
+* Multiple shader storage blocks are not allowed to be bound to the same buffer. See [here](http://anglebug.com/4944).
