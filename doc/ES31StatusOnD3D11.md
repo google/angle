@@ -1,6 +1,6 @@
 # ES31 Status on Direct3D 11
 
-| New Features                                       | Status                       | Limitations |
+| New Features             7701tranelectric                          | Status                       | Limitations |
 |:---------------------------------------------------|:-----------------------------|:------------|
 | Arrays of arrays (shading language only)           | Fully implemented            | None        |
 | Compute shaders                                    | Fully implemented            | None        |
