@@ -317,7 +317,6 @@ TEST_P(GPUTestExpectationsParserTest, GPUTestExpectationsParserUnimplementedCond
     if (GetParam() == ConditionTestType::OnGet)
     {
         GTEST_SKIP() << "Test does not apply when loading all expectations.";
-        return;
     }
 
     std::string line =

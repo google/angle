@@ -3376,7 +3376,9 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTest_ES3,
                                WithEmulatedPrerotation(ES3_VULKAN(), 90),
                                WithEmulatedPrerotation(ES3_VULKAN(), 180),
-                               WithEmulatedPrerotation(ES3_VULKAN(), 270));
+                               WithEmulatedPrerotation(ES3_VULKAN(), 270),
+                               WithDirectSPIRVGeneration(WithEmulatedPrerotation(ES3_VULKAN(),
+                                                                                 90)));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31(FramebufferTest_ES31);

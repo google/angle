@@ -227,6 +227,8 @@ class TType
     void toArrayElementType();
     // Removes all array sizes.
     void toArrayBaseType();
+    // Turns a matrix into a column of it.
+    void toMatrixColumnType();
 
     const TInterfaceBlock *getInterfaceBlock() const { return mInterfaceBlock; }
     void setInterfaceBlock(const TInterfaceBlock *interfaceBlockIn);

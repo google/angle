@@ -562,7 +562,6 @@ TIntermTyped *ShaderStorageBlockOutputHLSL::traverseNode(TInfoSinkBase &out,
                 // We do not currently support indirect references to interface blocks
                 ASSERT(binaryNode->getLeft()->getBasicType() != EbtInterfaceBlock);
                 return writeEOpIndexDirectOrIndirectOutput(out, binaryNode, blockMemberInfo);
-                break;
             }
             case EOpIndexDirectStruct:
             {
@@ -573,7 +572,6 @@ TIntermTyped *ShaderStorageBlockOutputHLSL::traverseNode(TInfoSinkBase &out,
                 const TIntermConstantUnion *index = binaryNode->getRight()->getAsConstantUnion();
                 const TField *field               = structure->fields()[index->getIConst(0)];
                 return Add(createFieldOffset(field, blockMemberInfo), left);
-                break;
             }
             case EOpIndexDirectInterfaceBlock:
             {
@@ -584,7 +582,6 @@ TIntermTyped *ShaderStorageBlockOutputHLSL::traverseNode(TInfoSinkBase &out,
                 const TIntermConstantUnion *index = binaryNode->getRight()->getAsConstantUnion();
                 const TField *field               = interfaceBlock->fields()[index->getIConst(0)];
                 return createFieldOffset(field, blockMemberInfo);
-                break;
             }
             default:
                 return nullptr;

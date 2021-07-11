@@ -348,6 +348,11 @@ inline bool IsSampler2DMSArray(TBasicType type)
     }
 }
 
+inline bool IsSamplerMS(TBasicType type)
+{
+    return IsSampler2DMS(type) || IsSampler2DMSArray(type);
+}
+
 inline bool IsFloatImage(TBasicType type)
 {
     switch (type)
@@ -636,6 +641,62 @@ inline bool IsSamplerArray(TBasicType type)
         case EbtUSampler1D:
         case EbtUSampler2DRect:
         case EbtUSamplerBuffer:
+        case EbtSamplerVideoWEBGL:
+            return false;
+        default:
+            ASSERT(!IsSampler(type));
+    }
+
+    return false;
+}
+
+inline bool IsSampler1D(TBasicType type)
+{
+    switch (type)
+    {
+        case EbtSampler1D:
+        case EbtISampler1D:
+        case EbtUSampler1D:
+        case EbtSampler1DShadow:
+            return true;
+        case EbtSampler2D:
+        case EbtSamplerCube:
+        case EbtSampler3D:
+        case EbtISampler3D:
+        case EbtUSampler3D:
+        case EbtSamplerExternalOES:
+        case EbtSamplerExternal2DY2YEXT:
+        case EbtSampler2DRect:
+        case EbtSampler2DArray:
+        case EbtSampler2DMS:
+        case EbtSampler2DMSArray:
+        case EbtISampler2D:
+        case EbtISamplerCube:
+        case EbtISampler2DArray:
+        case EbtISampler2DMS:
+        case EbtISampler2DMSArray:
+        case EbtUSampler2D:
+        case EbtUSamplerCube:
+        case EbtUSampler2DArray:
+        case EbtUSampler2DMS:
+        case EbtUSampler2DMSArray:
+        case EbtSampler2DShadow:
+        case EbtSamplerCubeShadow:
+        case EbtSampler2DArrayShadow:
+        case EbtSampler1DArray:
+        case EbtSampler1DArrayShadow:
+        case EbtSamplerBuffer:
+        case EbtSamplerCubeArray:
+        case EbtSamplerCubeArrayShadow:
+        case EbtSampler2DRectShadow:
+        case EbtISampler1DArray:
+        case EbtISampler2DRect:
+        case EbtISamplerBuffer:
+        case EbtISamplerCubeArray:
+        case EbtUSampler1DArray:
+        case EbtUSampler2DRect:
+        case EbtUSamplerBuffer:
+        case EbtUSamplerCubeArray:
         case EbtSamplerVideoWEBGL:
             return false;
         default:

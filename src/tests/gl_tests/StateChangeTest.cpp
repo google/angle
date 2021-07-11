@@ -5213,7 +5213,7 @@ TEST_P(WebGLComputeValidationStateChangeTest, DrawPastEndOfBufferWithDivisor)
 }
 
 // Tests state changes with uniform block validation.
-TEST_P(ValidationStateChangeTest, UniformBlockNegativeAPI)
+TEST_P(WebGL2ValidationStateChangeTest, UniformBlockNegativeAPI)
 {
     constexpr char kVS[] = R"(#version 300 es
 in vec2 position;

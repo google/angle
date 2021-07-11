@@ -55,6 +55,12 @@ uint32_t GetTotalArrayElements(const SpirvType &type)
     return arraySizeProduct;
 }
 
+uint32_t GetOutermostArraySize(const SpirvType &type)
+{
+    uint32_t size = type.arraySizes.back();
+    return size ? size : 1;
+}
+
 spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
 {
     spirv::IdRef newId = mNextAvailableId;
@@ -70,14 +76,20 @@ spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
 
 TLayoutBlockStorage SPIRVBuilder::getBlockStorage(const TType &type) const
 {
-    // Default to std140.
+    // Default to std140 for uniform and std430 for buffer blocks.
     TLayoutBlockStorage blockStorage = type.getLayoutQualifier().blockStorage;
-    if (!IsShaderIoBlock(type.getQualifier()) && blockStorage != EbsStd430)
+    if (IsShaderIoBlock(type.getQualifier()) || blockStorage == EbsStd140 ||
+        blockStorage == EbsStd430)
     {
-        blockStorage = EbsStd140;
+        return blockStorage;
     }
 
-    return blockStorage;
+    if (type.getQualifier() == EvqBuffer)
+    {
+        return EbsStd430;
+    }
+
+    return EbsStd140;
 }
 
 SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const
@@ -143,6 +155,14 @@ const SpirvTypeData &SPIRVBuilder::getSpirvTypeData(const SpirvType &type, const
     }
 
     return iter->second;
+}
+
+spirv::IdRef SPIRVBuilder::getBasicTypeId(TBasicType basicType, size_t size)
+{
+    SpirvType type;
+    type.type        = basicType;
+    type.primarySize = static_cast<uint8_t>(size);
+    return getSpirvTypeData(type, nullptr).id;
 }
 
 spirv::IdRef SPIRVBuilder::getTypePointerId(spirv::IdRef typeId, spv::StorageClass storageClass)
@@ -362,6 +382,23 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
                                     spirv::LiteralInteger(0));
                 break;
             case EbtBool:
+                // TODO: In SPIR-V, it's invalid to have a bool type in an interface block.  An AST
+                // transformation should be written to rewrite the blocks to use a uint type with
+                // appropriate casts where used.  Need to handle:
+                //
+                // - Store: cast the rhs of assignment
+                // - Non-array load: cast the expression
+                // - Array load (for example to use in a struct constructor): reconstruct the array
+                //   with elements cast.
+                // - Pass to function as out parameter: Use
+                //   MonomorphizeUnsupportedFunctionsInVulkanGLSL to avoid it, as there's no easy
+                //   way to handle such function calls inside if conditions and such.
+                //
+                // It might be simplest to do this for bools in structs as well, to avoid having to
+                // convert between an old and new struct type if the struct is used both inside and
+                // outside an interface block.
+                //
+                // http://anglebug.com/4889.
                 spirv::WriteTypeBool(&mSpirvTypeAndConstantDecls, typeId);
                 break;
             default:
@@ -401,12 +438,18 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
     // Write decorations for interface block fields.
     if (type.blockStorage != EbsUnspecified)
     {
-        if (!isOpaqueType && !type.arraySizes.empty())
+        // Cannot have opaque uniforms inside interface blocks.
+        ASSERT(!isOpaqueType);
+
+        const bool isInterfaceBlock = block != nullptr && block->isInterfaceBlock();
+
+        if (!type.arraySizes.empty() && !isInterfaceBlock)
         {
-            // Write the ArrayStride decoration for arrays inside interface blocks.
+            // Write the ArrayStride decoration for arrays inside interface blocks.  An array of
+            // interface blocks doesn't need a stride.
             spirv::WriteDecorate(
                 &mSpirvDecorations, typeId, spv::DecorationArrayStride,
-                {spirv::LiteralInteger(sizeInStorageBlock / GetTotalArrayElements(type))});
+                {spirv::LiteralInteger(sizeInStorageBlock / GetOutermostArraySize(type))});
         }
         else if (type.arraySizes.empty() && type.block != nullptr)
         {
@@ -834,6 +877,41 @@ spirv::IdRef SPIRVBuilder::getFloatConstant(float value)
     } asUint;
     asUint.f = value;
     return getBasicConstantHelper(asUint.u, EbtFloat, &mFloatConstants);
+}
+
+spirv::IdRef SPIRVBuilder::getVectorConstantHelper(spirv::IdRef valueId, TBasicType type, int size)
+{
+    if (size == 1)
+    {
+        return valueId;
+    }
+
+    SpirvType vecType;
+    vecType.type        = type;
+    vecType.primarySize = static_cast<uint8_t>(size);
+
+    const spirv::IdRef typeId = getSpirvTypeData(vecType, nullptr).id;
+    const spirv::IdRefList valueIds(size, valueId);
+
+    return getCompositeConstant(typeId, valueIds);
+}
+
+spirv::IdRef SPIRVBuilder::getUvecConstant(uint32_t value, int size)
+{
+    const spirv::IdRef valueId = getUintConstant(value);
+    return getVectorConstantHelper(valueId, EbtUInt, size);
+}
+
+spirv::IdRef SPIRVBuilder::getIvecConstant(int32_t value, int size)
+{
+    const spirv::IdRef valueId = getIntConstant(value);
+    return getVectorConstantHelper(valueId, EbtInt, size);
+}
+
+spirv::IdRef SPIRVBuilder::getVecConstant(float value, int size)
+{
+    const spirv::IdRef valueId = getFloatConstant(value);
+    return getVectorConstantHelper(valueId, EbtFloat, size);
 }
 
 spirv::IdRef SPIRVBuilder::getCompositeConstant(spirv::IdRef typeId, const spirv::IdRefList &values)
@@ -1373,6 +1451,7 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
 
         const SpirvTypeData &baseTypeData = getSpirvTypeData(baseType, nullptr);
         uint32_t baseAlignment            = baseTypeData.baseAlignment;
+        uint32_t baseSizeInStorageBlock   = baseTypeData.sizeInStorageBlock;
 
         // For std140 only:
         // > Rule 4. ... and rounded up to the base alignment of a vec4.
@@ -1380,16 +1459,16 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
         // of the structure is vec4.
         if (type.blockStorage != EbsStd430)
         {
-            baseAlignment = std::max(baseAlignment, 16u);
+            baseAlignment          = std::max(baseAlignment, 16u);
+            baseSizeInStorageBlock = std::max(baseSizeInStorageBlock, 16u);
         }
-
         // Note that matrix arrays follow a similar rule (rules 6 and 8).  The matrix base alignment
         // is the same as its column or row base alignment, and arrays of that matrix don't change
         // the base alignment.
 
         // The size occupied by the array is simply the size of each element (which is already
         // aligned to baseAlignment) multiplied by the number of elements.
-        *sizeInStorageBlockOut = baseTypeData.sizeInStorageBlock * GetTotalArrayElements(type);
+        *sizeInStorageBlockOut = baseSizeInStorageBlock * GetTotalArrayElements(type);
 
         return baseAlignment;
     }

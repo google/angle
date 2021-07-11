@@ -357,7 +357,7 @@ class ConvertStructState : angle::NonCopyable
 
     bool recurse(const TStructure &structure,
                  ModifiedStructMachinery &outMachinery,
-                 const bool isUBO)
+                 const bool isUBORecurse)
     {
         const ModifiedStructMachinery *m = outMachineries.find(structure);
         if (m == nullptr)
@@ -367,7 +367,7 @@ class ConvertStructState : angle::NonCopyable
             reflection->addOriginalName(structure.uniqueId().get(), structure.name().data());
             const Name name = idGen.createNewName(structure.name().data());
             if (!TryCreateModifiedStruct(mCompiler, symbolEnv, idGen, config, structure, name,
-                                         outMachineries, isUBO, true))
+                                         outMachineries, isUBORecurse, true))
             {
                 return false;
             }

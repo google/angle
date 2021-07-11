@@ -1147,8 +1147,9 @@ TEST_P(WebGLCompatibilityTest, EnableProgramBinaryExtension)
     // This extensions become core in in ES3/WebGL2.
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
-    GLint result = 0;
-    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &result);
+    GLint result           = 0;
+    GLint numBinaryFormats = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &numBinaryFormats);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     glGetIntegerv(GL_PROGRAM_BINARY_FORMATS, &result);
@@ -1182,7 +1183,10 @@ void main()
         glRequestExtensionANGLE("GL_OES_get_program_binary");
         EXPECT_GL_NO_ERROR();
 
-        glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &result);
+        glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &numBinaryFormats);
+        // No use to test further if no binary formats are supported
+        ANGLE_SKIP_TEST_IF(numBinaryFormats < 1);
+
         glGetIntegerv(GL_PROGRAM_BINARY_FORMATS, &result);
         EXPECT_GL_NO_ERROR();
 

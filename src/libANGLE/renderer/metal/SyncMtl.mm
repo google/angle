@@ -93,7 +93,7 @@ angle::Result Sync::clientWait(ContextMtl *contextMtl,
     [mMetalSharedEvent.get() notifyListener:eventListener
                                     atValue:mSetCounter
                                       block:^(id<MTLSharedEvent> sharedEvent, uint64_t value) {
-                                        std::unique_lock<std::mutex> lg(*lockRef);
+                                        std::unique_lock<std::mutex> localLock(*lockRef);
                                         cvRef->notify_one();
                                       }];
 

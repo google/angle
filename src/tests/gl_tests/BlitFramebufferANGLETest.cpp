@@ -2571,6 +2571,60 @@ TEST_P(BlitFramebufferTest, OOBWrite)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test blitting a depthStencil buffer with multiple depth values to a larger size.
+TEST_P(BlitFramebufferTest, BlitDepthStencilPixelByPixel)
+{
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+
+    glViewport(0, 0, 128, 1);
+    glEnable(GL_DEPTH_TEST);
+
+    GLFramebuffer srcFramebuffer;
+    GLRenderbuffer srcRenderbuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFramebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, srcRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 128, 1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              srcRenderbuffer);
+    glClearDepthf(1.0f);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f, 0.5f);
+    glViewport(0, 0, 256, 2);
+
+    GLFramebuffer dstFramebuffer;
+    GLRenderbuffer dstRenderbuffer;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFramebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, dstRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 256, 2);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              dstRenderbuffer);
+
+    GLTexture dstColor;
+    glBindTexture(GL_TEXTURE_2D, dstColor);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 256, 2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstColor, 0);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFramebuffer);
+    glBlitFramebuffer(0, 0, 128, 1, 0, 0, 256, 2, GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+                      GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDepthMask(false);
+    glDepthFunc(GL_LESS);
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), -0.01f, 0.5f);
+    EXPECT_PIXEL_RECT_EQ(64, 0, 128, 1, GLColor::red);
+
+    ANGLE_GL_PROGRAM(drawBlue, essl3_shaders::vs::Simple(), essl3_shaders::fs::Blue());
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(false);
+    glDepthFunc(GL_GREATER);
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 0.01f, 0.5f);
+    EXPECT_PIXEL_RECT_EQ(64, 0, 128, 1, GLColor::blue);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BlitFramebufferANGLETest);

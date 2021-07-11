@@ -581,7 +581,6 @@ void ANGLETestBase::ANGLETestSetUp()
     if (testExpectation == GPUTestExpectationsParser::kGpuTestSkip)
     {
         GTEST_SKIP() << "Test skipped on this config";
-        return;
     }
 
     if (IsWindows())
@@ -992,6 +991,8 @@ void ANGLETestBase::drawIndexedQuad(GLuint program,
                                     GLfloat positionAttribZ,
                                     GLfloat positionAttribXYScale)
 {
+    ASSERT(!mFixture->configParams.webGLCompatibility.valid() ||
+           !mFixture->configParams.webGLCompatibility.value());
     drawIndexedQuad(program, positionAttribName, positionAttribZ, positionAttribXYScale, false);
 }
 

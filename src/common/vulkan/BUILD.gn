@@ -7,6 +7,29 @@ import("../../../gni/angle.gni")
 
 assert(angle_enable_vulkan)
 
+declare_args() {
+  angle_use_custom_libvulkan = !is_android && !is_fuchsia && !is_ggp
+}
+
+config("angle_libvulkan_config") {
+  if (angle_use_custom_libvulkan) {
+    defines = [ "ANGLE_USE_CUSTOM_LIBVULKAN" ]
+  }
+}
+
+group("angle_libvulkan") {
+  public_configs = [ ":angle_libvulkan_config" ]
+  data_deps = []
+  if (angle_use_custom_libvulkan) {
+    if (angle_shared_libvulkan) {
+      data_deps += [ "$angle_vulkan_loader_dir:libvulkan" ]
+    } else {
+      public_deps = [ "$angle_vulkan_loader_dir:libvulkan" ]
+    }
+    data_deps += [ "$angle_vulkan_tools_dir:VkICD_mock_icd" ]
+  }
+}
+
 config("angle_vulkan_headers_config") {
   if (angle_shared_libvulkan) {
     defines = [ "ANGLE_SHARED_LIBVULKAN=1" ]
@@ -50,6 +73,7 @@ angle_source_set("vulkan") {
   ]
 
   public_deps = [
+    ":angle_libvulkan",
     ":angle_vulkan_entry_points",
     "$angle_root:angle_common",
   ]
@@ -63,15 +87,6 @@ angle_source_set("vulkan") {
 
   deps = []
   data_deps = []
-
-  if (!is_android && !is_fuchsia && !is_ggp) {
-    if (angle_shared_libvulkan) {
-      data_deps += [ "$angle_vulkan_loader_dir:libvulkan" ]
-    } else {
-      deps += [ "$angle_vulkan_loader_dir:libvulkan" ]
-    }
-    data_deps += [ "$angle_vulkan_tools_dir:VkICD_mock_icd" ]
-  }
 
   if (angle_enable_swiftshader) {
     import("$swiftshader_dir/src/Vulkan/vulkan.gni")

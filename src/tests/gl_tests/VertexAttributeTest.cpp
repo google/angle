@@ -1244,7 +1244,7 @@ TEST_P(VertexAttributeOORTest, ANGLEDrawElementsBufferTooSmall)
     data.bufferOffset = (kVertexCount - 3) * TypeStride(GL_FLOAT);
 
     setupTest(data, 1);
-    drawIndexedQuad(mProgram, "position", 0.5f);
+    drawIndexedQuad(mProgram, "position", 0.5f, 1.0f, true);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
@@ -1266,7 +1266,7 @@ TEST_P(VertexAttributeOORTest, ANGLEDrawArraysOutOfBoundsCases)
     glEnableVertexAttribArray(mTestAttrib);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    drawIndexedQuad(mProgram, "position", 0.5f);
+    drawIndexedQuad(mProgram, "position", 0.5f, 1.0f, true);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
