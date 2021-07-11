@@ -89,6 +89,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0749bdc1_f64659ed",
+        "filename": "src/compiler/translator/tree_util/DriverUniform.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-11T01:22:19Z",
+      "side": 1,
+      "message": "nit: please pack these in the gap mentioned above!",
+      "revId": "f7c0ad160db49fa539200265270cb631440b58fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2fb5abe5_7d601267",
         "filename": "src/libANGLE/validationES.h",
         "patchSetId": 30
