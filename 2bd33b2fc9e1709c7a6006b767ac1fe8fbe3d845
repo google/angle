@@ -166,6 +166,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6e5e322a_803fb29f",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 964,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-12T15:54:52Z",
+      "side": 1,
+      "message": "\u003e The fact that this change makes the test pass is somewhat coincidental. If the test set up the stencil function and ops and even write mask, before adding the stencil attachment, it would still fail after this change.\n\nAck, added that test and switched this change to WIP.",
+      "parentUuid": "1197f86e_35de975b",
+      "range": {
+        "startLine": 964,
+        "startChar": 23,
+        "endLine": 964,
+        "endChar": 56
+      },
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c3d467c7_48dc53d4",
         "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
         "patchSetId": 5
@@ -177,6 +201,30 @@
       "writtenOn": "2021-07-11T01:33:14Z",
       "side": 1,
       "message": "Please use `GLFramebuffer fbo;` instead, from gl_raii. Same below which can use GLRenderbuffer. No need to glDelete* anything (including the program) as they all have destructors.",
+      "range": {
+        "startLine": 398,
+        "startChar": 0,
+        "endLine": 399,
+        "endChar": 31
+      },
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d88e1abc_03f5697f",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-12T15:54:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3d467c7_48dc53d4",
       "range": {
         "startLine": 398,
         "startChar": 0,
@@ -204,6 +252,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "597bcf53_dff0f64e",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-12T15:54:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00ae6bc5_ac1e60eb",
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d6a9de54_c439fefb",
@@ -227,6 +293,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2ae45b3_6fe5bd56",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-12T15:54:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6a9de54_c439fefb",
+      "range": {
+        "startLine": 426,
+        "startChar": 57,
+        "endLine": 426,
+        "endChar": 66
+      },
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "77bc9b69_4acdd394",
@@ -240,6 +330,24 @@
       "writtenOn": "2021-07-11T01:33:14Z",
       "side": 1,
       "message": "EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);",
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86b17f5c_b13db0f8",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-12T15:54:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77bc9b69_4acdd394",
       "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
