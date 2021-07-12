@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5da23e1_a6d7ea90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T14:42:19Z",
+      "side": 1,
+      "message": "PTAL. Note we do not support the Pixel 2 any longer.",
+      "revId": "a65149dd07dbf6d142a7879540f86ced1e115093",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
