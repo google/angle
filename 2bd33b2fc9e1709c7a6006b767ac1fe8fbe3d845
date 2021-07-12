@@ -238,6 +238,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "277a4dc2_95954d1f",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 964,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-12T16:19:45Z",
+      "side": 1,
+      "message": "GL dirty bits. We noop changes to D/S state if there\u0027s no depth/stencil attachment. See [1] and functions around it (this affects both depth and stencil). So in the test added in this change, in the first ContextVk::syncState, we process the GL dirty bits and no-op the depth/stencil changes because there\u0027s no depth/stencil attachment. When we then add the stencil attachment, there\u0027s no GL dirty bit set to make the D/S state actually effective.\n\n[1]: https://source.chromium.org/chromium/chromium/src/+/main:third_party/angle/src/libANGLE/renderer/vulkan/vk_cache_utils.cpp;l\u003d2467",
+      "parentUuid": "626b90a9_38619626",
+      "range": {
+        "startLine": 964,
+        "startChar": 23,
+        "endLine": 964,
+        "endChar": 56
+      },
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c3d467c7_48dc53d4",
         "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
         "patchSetId": 5
