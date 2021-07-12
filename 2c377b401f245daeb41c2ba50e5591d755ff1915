@@ -87,6 +87,30 @@
       },
       "revId": "2c377b401f245daeb41c2ba50e5591d755ff1915",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c474ae52_ab3c1236",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3247,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-12T17:01:55Z",
+      "side": 1,
+      "message": "\u003e Actually, if count !\u003d 0, you seem to not set descriptorCountOut, that looks like a bug.\n\nindeed, was fixing it while your comment came in, adding an assert as well to catch such bugs",
+      "parentUuid": "438e0107_245cadfb",
+      "range": {
+        "startLine": 3244,
+        "startChar": 0,
+        "endLine": 3247,
+        "endChar": 5
+      },
+      "revId": "2c377b401f245daeb41c2ba50e5591d755ff1915",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
