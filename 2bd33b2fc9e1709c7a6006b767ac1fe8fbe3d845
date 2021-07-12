@@ -214,6 +214,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "626b90a9_38619626",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 964,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T16:15:16Z",
+      "side": 1,
+      "message": "Jason, feel free to leave this as started so we can have a place to discuss the design. Or alternately start a small one page design doc.",
+      "parentUuid": "21181c58_dec5b669",
+      "range": {
+        "startLine": 964,
+        "startChar": 23,
+        "endLine": 964,
+        "endChar": 56
+      },
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c3d467c7_48dc53d4",
         "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
         "patchSetId": 5
