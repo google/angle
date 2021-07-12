@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97dbc7a3_fdb3e7b2",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1231,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-12T20:05:20Z",
+      "side": 1,
+      "message": "I\u0027ve updated it to say:\n\n    Setup the presentation (this) context before any other contexts in the share group.",
+      "parentUuid": "d8d81dd6_020364f0",
+      "range": {
+        "startLine": 1231,
+        "startChar": 49,
+        "endLine": 1231,
+        "endChar": 54
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fb73f7aa_d4e322d0",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-06-29T03:19:45Z",
       "side": 1,
       "message": "I believe this contains setup for all state that is considered \"shared\".  It would be worth a comment or spec link to help enumerate/remember which states those are.",
+      "range": {
+        "startLine": 2332,
+        "startChar": 5,
+        "endLine": 2332,
+        "endChar": 42
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13941d55_db3f0e2d",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2332,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-12T20:05:20Z",
+      "side": 1,
+      "message": "Done.\n\nI added a the description from Chapter 5 of the GLES 3.2 spec.",
+      "parentUuid": "fb73f7aa_d4e322d0",
       "range": {
         "startLine": 2332,
         "startChar": 5,
@@ -104,6 +152,53 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "33fde9c5_25af2158",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4449,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-12T20:05:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0db829b4_eeca6da3",
+      "range": {
+        "startLine": 4447,
+        "startChar": 0,
+        "endLine": 4449,
+        "endChar": 88
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81a5067a_551566d8",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 5076,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-12T20:05:20Z",
+      "side": 1,
+      "message": "ref1",
+      "range": {
+        "startLine": 5053,
+        "startChar": 0,
+        "endLine": 5076,
+        "endChar": 5
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "07488853_c6e02c35",
@@ -129,6 +224,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "81cce8a0_f16936b5",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 5087,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-12T20:05:20Z",
+      "side": 1,
+      "message": "Note ref1 above.\n\n1.) If we\u0027ve made it this far into the function, then capture must be active, so the isCaptureActive() check is not necessary.\n\n2.) mFrameIndex is incremented with every call to onEndFrame(), so it will only be \u00271\u0027 when capture starts with the first frame, and not when performing a MEC.\n- The Capture/Replay code requires that the setup for MEC is performed with the mCaptureStartFrame-1 frame\u0027s calls.   However, that doesn\u0027t exist when starting the capture with the first frame, so we need special handling for that.",
+      "parentUuid": "07488853_c6e02c35",
+      "range": {
+        "startLine": 5078,
+        "startChar": 0,
+        "endLine": 5087,
+        "endChar": 5
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "06b274b7_787d3e6c",
         "filename": "src/libANGLE/capture/trace_fixture.cpp",
         "patchSetId": 8
@@ -140,6 +259,30 @@
       "writtenOn": "2021-06-29T03:19:45Z",
       "side": 1,
       "message": "It looks like this is called in every frame now:\n\n $ grep -r AllocateGlobalMemory | sort\n ..._capture_context2_frame001.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame001.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame002.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame003.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame004.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame005.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame006.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame007.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame008.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame009.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context2_frame010.cpp:    AllocateGlobalMemory(0, 276);\n ..._capture_context_shared_frame001.cpp:    AllocateGlobalMemory(0, 276);\n\n\nIs there a reason for that?",
+      "range": {
+        "startLine": 127,
+        "startChar": 5,
+        "endLine": 127,
+        "endChar": 25
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb4b2dfd_db92623b",
+        "filename": "src/libANGLE/capture/trace_fixture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-12T20:05:20Z",
+      "side": 1,
+      "message": "Yes.   This is similar to Gert\u0027s CL:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2940841\n\nThe issue is that we don\u0027t always know what size gReadBuffer needs to be when InitializeReplay() is called by the shared context setup.   In particular, if there is no setup code required because we start capturing with the first frame, then there are no commands to size gReadBuffer with (so it ends up size 0).\n\nTo handle this, gReadBuffer is sized based on the commands for each setup/frame function.   Typically this means that it\u0027s resized to the same value each time, since frames are usually very similar.   However, it also allows for the setup and replay functions to have different values (like 0 vs 276) when *not* doing MEC.",
+      "parentUuid": "06b274b7_787d3e6c",
       "range": {
         "startLine": 127,
         "startChar": 5,

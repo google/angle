@@ -69,6 +69,24 @@
       "parentUuid": "a8635388_a13dd7a3",
       "revId": "76100fa4febe83a36fe8c20bd2b0471d838c564f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe4a8210_bf18a543",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-12T20:05:20Z",
+      "side": 1,
+      "message": "I don\u0027t know what you mean by \"full capture\".\n\nI did MEC for apps while capture_replay_tests.py captures starting with the first frame.   This should cover both cases.",
+      "parentUuid": "515272d9_bfac4350",
+      "revId": "76100fa4febe83a36fe8c20bd2b0471d838c564f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
