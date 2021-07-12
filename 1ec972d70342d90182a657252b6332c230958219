@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "83dc62ed_1bac5608",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3333,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-12T21:18:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94969f6d_08f748e9",
+      "revId": "1ec972d70342d90182a657252b6332c230958219",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3be98d7_a1b518fb",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-07-12T20:57:34Z",
       "side": 1,
       "message": "Could you please move this to line 461? (Or rather duplicate the test and make this change in that new test).\n\nThe glBindFramebuffer call below sets some state dirty, so that would be testing another path.",
+      "range": {
+        "startLine": 448,
+        "startChar": 0,
+        "endLine": 450,
+        "endChar": 43
+      },
+      "revId": "1ec972d70342d90182a657252b6332c230958219",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc08a6e9_c787997f",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-12T21:18:05Z",
+      "side": 1,
+      "message": "Added new test which has that ordering.",
+      "parentUuid": "e3be98d7_a1b518fb",
       "range": {
         "startLine": 448,
         "startChar": 0,
