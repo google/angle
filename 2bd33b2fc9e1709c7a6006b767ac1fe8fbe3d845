@@ -286,6 +286,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6665781b_bbf172f8",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 964,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-12T19:49:29Z",
+      "side": 1,
+      "message": "It should, yeah. @Jason, could you please make sure ContextVk::onFramebufferChange updates the D/S state? All the following depend on the draw framebuffer\u0027s attachments:\n\n    const gl::DepthStencilState depthStencilState \u003d glState.getDepthStencilState();\n    mGraphicsPipelineDesc-\u003eupdateDepthTestEnabled(\u0026mGraphicsPipelineTransition,\n                                                  depthStencilState, drawFramebuffer);\n    mGraphicsPipelineDesc-\u003eupdateDepthWriteEnabled(\u0026mGraphicsPipelineTransition,\n                                                   depthStencilState, drawFramebuffer);\n    mGraphicsPipelineDesc-\u003eupdateStencilTestEnabled(\u0026mGraphicsPipelineTransition,\n                                                    depthStencilState, drawFramebuffer);\n    mGraphicsPipelineDesc-\u003eupdateStencilFrontWriteMask(\n        \u0026mGraphicsPipelineTransition, depthStencilState, drawFramebuffer);\n    mGraphicsPipelineDesc-\u003eupdateStencilBackWriteMask(\n        \u0026mGraphicsPipelineTransition, depthStencilState, drawFramebuffer);\n\n(I copied the above from ContextVk::syncState where DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING is processed)",
+      "parentUuid": "0d3150c6_4f1dd2d7",
+      "range": {
+        "startLine": 964,
+        "startChar": 23,
+        "endLine": 964,
+        "endChar": 56
+      },
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c3d467c7_48dc53d4",
         "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
         "patchSetId": 5
