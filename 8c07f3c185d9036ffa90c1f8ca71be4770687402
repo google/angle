@@ -22,6 +22,30 @@
       },
       "revId": "8c07f3c185d9036ffa90c1f8ca71be4770687402",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af1b05e2_425ba357",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2471,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T14:43:29Z",
+      "side": 1,
+      "message": "http://crrev.com/c/3021283",
+      "parentUuid": "c043dacb_3ab08132",
+      "range": {
+        "startLine": 2471,
+        "startChar": 4,
+        "endLine": 2471,
+        "endChar": 46
+      },
+      "revId": "8c07f3c185d9036ffa90c1f8ca71be4770687402",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
