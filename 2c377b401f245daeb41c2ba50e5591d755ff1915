@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "2c377b401f245daeb41c2ba50e5591d755ff1915",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86613c14_b9f56575",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3247,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T12:36:36Z",
+      "side": 1,
+      "message": "Non-blocking, but it would be helpful if there was a short-circuit fast path for non-YCBCR VkFormats. Maybe in a follow-up can tag VkFormats in the format table with a bit indicating if they may have multiple descriptors/are YCBCR",
+      "range": {
+        "startLine": 3244,
+        "startChar": 0,
+        "endLine": 3247,
+        "endChar": 5
+      },
+      "revId": "2c377b401f245daeb41c2ba50e5591d755ff1915",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
