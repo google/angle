@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "651d930b_0d6d6a93",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T17:30:07Z",
+      "side": 1,
+      "message": "LGTM with nits.",
+      "revId": "25b418d0161605d62edaf3f9fa0ae87c1c8fd016",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d6acc35_3660e7a8",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T17:30:07Z",
+      "side": 1,
+      "message": "nit: instead of using DISABLED_, can you add this test to the appropriate skip lists in angle_end2end_tests_expectations? same for the below.",
+      "range": {
+        "startLine": 400,
+        "startChar": 28,
+        "endLine": 400,
+        "endChar": 93
+      },
+      "revId": "25b418d0161605d62edaf3f9fa0ae87c1c8fd016",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7de87c17_e38105cb",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T17:30:07Z",
+      "side": 1,
+      "message": "nit: ASSERT_NE(-1, colorLocation), same below",
+      "range": {
+        "startLine": 429,
+        "startChar": 11,
+        "endLine": 429,
+        "endChar": 24
+      },
+      "revId": "25b418d0161605d62edaf3f9fa0ae87c1c8fd016",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a78e3e45_f435ed4f",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T17:30:07Z",
+      "side": 1,
+      "message": "nit: same as below",
+      "range": {
+        "startLine": 442,
+        "startChar": 4,
+        "endLine": 442,
+        "endChar": 19
+      },
+      "revId": "25b418d0161605d62edaf3f9fa0ae87c1c8fd016",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac3a3747_e6713562",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T17:30:07Z",
+      "side": 1,
+      "message": "nit: you can omit this, ANGLE_GL_PROGRAM uses RAII",
+      "range": {
+        "startLine": 492,
+        "startChar": 4,
+        "endLine": 492,
+        "endChar": 19
+      },
+      "revId": "25b418d0161605d62edaf3f9fa0ae87c1c8fd016",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
