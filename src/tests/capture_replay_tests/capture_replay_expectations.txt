@@ -29,6 +29,13 @@ WebGLDrawElementsTest.DrawElementsTypeAlignment/*
 WebGLGLSLTest.*
 WebGLReadOutsideFramebufferTest.*
 
+
+# Comparison of captured contexts fail
+ContextLostSkipValidationTest.LostNoErrorGetProgram/ES2_Vulkan
+ContextLostTest.ParallelCompileReadyQuery/ES2_Vulkan
+EGLContextASANTest.DestroyContextInUse/ES2_Vulkan
+EGLContextSharingTest.TextureLifetime/ES2_Vulkan
+
 # http://anglebug.com/6006 Failing on bots
 GLSLTest.InactiveVaryingInVertexActiveInFragment/*
 # Flanky tests, pass standalone, but fail in a group

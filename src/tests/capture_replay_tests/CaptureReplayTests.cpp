@@ -149,9 +149,15 @@ class CaptureReplayTests
         {
             mTraceLibrary->replayFrame(frame);
 
-            const GLubyte *bytes = glGetString(GL_SERIALIZED_CONTEXT_STRING_ANGLE);
+            const char *capturedSerializedState =
+                reinterpret_cast<const char *>(glGetString(GL_SERIALIZED_CONTEXT_STRING_ANGLE));
+            const char *replayedSerializedState = mTraceLibrary->getSerializedContextState(frame);
+
             bool isEqual =
-                compareSerializedContexts(testIndex, frame, reinterpret_cast<const char *>(bytes));
+                (capturedSerializedState && replayedSerializedState)
+                    ? compareSerializedContexts(replayedSerializedState, capturedSerializedState)
+                    : (capturedSerializedState == replayedSerializedState);
+
             // Swap always to allow RenderDoc/other tools to capture frames.
             swap();
             if (!isEqual)
@@ -159,13 +165,13 @@ class CaptureReplayTests
                 std::ostringstream replayName;
                 replayName << testTraceInfo.testName << "_ContextReplayed" << frame << ".json";
                 std::ofstream debugReplay(replayName.str());
-                debugReplay << reinterpret_cast<const char *>(bytes) << "\n";
+                debugReplay << (replayedSerializedState ? replayedSerializedState : "") << "\n";
 
                 std::ostringstream captureName;
                 captureName << testTraceInfo.testName << "_ContextCaptured" << frame << ".json";
                 std::ofstream debugCapture(captureName.str());
 
-                debugCapture << mTraceLibrary->getSerializedContextState(frame) << "\n";
+                debugCapture << (capturedSerializedState ? capturedSerializedState : "") << "\n";
 
                 cleanupTest();
                 return -1;
@@ -186,13 +192,11 @@ class CaptureReplayTests
     }
 
   private:
-    bool compareSerializedContexts(uint32_t testIndex,
-                                   uint32_t frame,
+    bool compareSerializedContexts(const char *capturedSerializedContextState,
                                    const char *replaySerializedContextState)
     {
 
-        return !strcmp(replaySerializedContextState,
-                       mTraceLibrary->getSerializedContextState(frame));
+        return !strcmp(replaySerializedContextState, capturedSerializedContextState);
     }
 
     std::string mStartingDirectory;
