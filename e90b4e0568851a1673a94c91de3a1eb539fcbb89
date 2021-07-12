@@ -315,6 +315,30 @@
       },
       "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a8b258b_3eec64dc",
+        "filename": "src/libANGLE/capture/trace_fixture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-12T23:56:27Z",
+      "side": 1,
+      "message": "I was actually able to merge in Gert\u0027s changes pretty smoothly and get things basically back to how they were with his changes:\n\n    void SetupReplay()\n    {\n        magic_tiles_3::InitReplay();\n        magic_tiles_3::SetupReplayContextShared();\n        SetupReplayContext2();\n\n    }\n    \n    void magic_tiles_3::InitReplay()\n    {\n        InitializeReplay(\"magic_tiles_3_capture_context_shared.angledata.gz\", 0, 276);\n    }",
+      "parentUuid": "683ead37_a29fdcc0",
+      "range": {
+        "startLine": 127,
+        "startChar": 5,
+        "endLine": 127,
+        "endChar": 25
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

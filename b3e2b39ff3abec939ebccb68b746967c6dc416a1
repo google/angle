@@ -33,6 +33,24 @@
       "message": "Tim, how would we handle multiple share groups?",
       "revId": "b3e2b39ff3abec939ebccb68b746967c6dc416a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2814fb37_1bb26b79",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-12T23:56:27Z",
+      "side": 1,
+      "message": "I don\u0027t think that\u0027s something we need to worry about (at least not yet anyway), since each context can only be in a single share group at a time.\n\nIf we come across something that requires multiple share groups, we can look at how to expand this, but I don\u0027t think that should block supporting multiple contexts in a single share group.",
+      "parentUuid": "2a90cce6_f9cf4aa8",
+      "revId": "b3e2b39ff3abec939ebccb68b746967c6dc416a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
