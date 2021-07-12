@@ -39,6 +39,30 @@
       },
       "revId": "2c377b401f245daeb41c2ba50e5591d755ff1915",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af658abf_7963a367",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3247,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-12T16:47:25Z",
+      "side": 1,
+      "message": "we query descriptor count ONLY if texture has immutable sampler which is true only for YUV formats",
+      "parentUuid": "86613c14_b9f56575",
+      "range": {
+        "startLine": 3244,
+        "startChar": 0,
+        "endLine": 3247,
+        "endChar": 5
+      },
+      "revId": "2c377b401f245daeb41c2ba50e5591d755ff1915",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
