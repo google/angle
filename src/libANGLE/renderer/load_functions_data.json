@@ -1182,12 +1182,12 @@
       "GL_UNSIGNED_BYTE": "LoadCompressedToNative<6, 6, 6, 16>"
     }
   },
-  "GL_G8_B8_R8_3PLANE_420_UNORM_ANGLEX": {
+  "GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE": {
     "NONE": {
       "GL_UNSIGNED_BYTE": "UnimplementedLoadFunction"
     }
   },
-  "GL_G8_B8R8_2PLANE_420_UNORM_ANGLEX": {
+  "GL_G8_B8R8_2PLANE_420_UNORM_ANGLE": {
     "NONE": {
       "GL_UNSIGNED_BYTE": "UnimplementedLoadFunction"
     }

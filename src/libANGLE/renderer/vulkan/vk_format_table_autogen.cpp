@@ -961,7 +961,7 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::G8_B8R8_2PLANE_420_UNORM:
-            intendedGLFormat             = GL_G8_B8R8_2PLANE_420_UNORM_ANGLEX;
+            intendedGLFormat             = GL_G8_B8R8_2PLANE_420_UNORM_ANGLE;
             actualImageFormatID          = angle::FormatID::G8_B8R8_2PLANE_420_UNORM;
             imageInitializerFunction     = nullptr;
             actualBufferFormatID         = angle::FormatID::G8_B8R8_2PLANE_420_UNORM;
@@ -971,7 +971,7 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::G8_B8_R8_3PLANE_420_UNORM:
-            intendedGLFormat             = GL_G8_B8_R8_3PLANE_420_UNORM_ANGLEX;
+            intendedGLFormat             = GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE;
             actualImageFormatID          = angle::FormatID::G8_B8_R8_3PLANE_420_UNORM;
             imageInitializerFunction     = nullptr;
             actualBufferFormatID         = angle::FormatID::G8_B8_R8_3PLANE_420_UNORM;

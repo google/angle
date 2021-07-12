@@ -412,6 +412,47 @@ class Texture2DTestES3 : public Texture2DTest
         Texture2DTest::testSetUp();
         setUpProgram();
     }
+
+    void createImmutableTexture2D(GLuint texture,
+                                  size_t width,
+                                  size_t height,
+                                  GLenum format,
+                                  GLenum internalFormat,
+                                  GLenum type,
+                                  GLsizei levels,
+                                  GLubyte data[4])
+    {
+        // Support only 1 level for now
+        ASSERT(levels == 1);
+
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        glTexStorage2D(GL_TEXTURE_2D, levels, internalFormat, width, height);
+        ASSERT_GL_NO_ERROR();
+
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, type, data);
+        ASSERT_GL_NO_ERROR();
+
+        // Disable mipmapping
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void verifyResults2D(GLuint texture, GLubyte referenceColor[4])
+    {
+        // Draw a quad with the target texture
+        glUseProgram(mProgram);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glUniform1i(mTexture2DUniformLocation, 0);
+
+        drawQuad(mProgram, "position", 0.5f);
+
+        // Expect that the rendered quad's color is the same as the reference color with a tolerance
+        // of 1
+        EXPECT_PIXEL_NEAR(0, 0, referenceColor[0], referenceColor[1], referenceColor[2],
+                          referenceColor[3], 1);
+    }
 };
 
 class Texture2DBaseMaxTestES3 : public ANGLETest
@@ -2832,6 +2873,37 @@ TEST_P(Texture2DTestES3, TexImageWithDepthStencilPBO)
     ASSERT_GL_NO_ERROR();
 
     EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::red);
+}
+
+// Test functionality of GL_ANGLE_yuv_internal_format while cycling through RGB and YUV sources
+TEST_P(Texture2DTestES3, TexStorage2DCycleThroughYuvAndRgbSources)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_yuv_internal_format"));
+
+    // Create YUV texture
+    GLTexture yuvTexture;
+    GLubyte yuvColor[6]         = {40, 40, 40, 40, 240, 109};
+    GLubyte expectedRgbColor[4] = {0, 0, 255, 255};
+    createImmutableTexture2D(yuvTexture, 2, 2, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,
+                             GL_G8_B8R8_2PLANE_420_UNORM_ANGLE, GL_UNSIGNED_BYTE, 1, yuvColor);
+
+    // Create RGBA texture
+    GLTexture rgbaTexture;
+    GLubyte rgbaColor[4] = {0, 0, 255, 255};
+    createImmutableTexture2D(rgbaTexture, 1, 1, GL_RGBA, GL_RGBA8, GL_UNSIGNED_BYTE, 1, rgbaColor);
+
+    // Cycle through source textures
+    // RGBA source
+    verifyResults2D(rgbaTexture, rgbaColor);
+    ASSERT_GL_NO_ERROR();
+
+    // YUV source
+    verifyResults2D(yuvTexture, expectedRgbColor);
+    ASSERT_GL_NO_ERROR();
+
+    // RGBA source
+    verifyResults2D(rgbaTexture, rgbaColor);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Tests CopySubImage for float formats
