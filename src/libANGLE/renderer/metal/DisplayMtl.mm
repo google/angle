@@ -427,7 +427,10 @@ void DisplayMtl::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
 void DisplayMtl::generateCaps(egl::Caps *outCaps) const {}
 
-void DisplayMtl::populateFeatureList(angle::FeatureList *features) {}
+void DisplayMtl::populateFeatureList(angle::FeatureList *features)
+{
+    mFeatures.populateFeatureList(features);
+}
 
 egl::ConfigSet DisplayMtl::generateConfigs()
 {
