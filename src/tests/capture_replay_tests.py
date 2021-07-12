@@ -313,30 +313,84 @@ def GetTestsListForFilter(args, test_path, filter):
     return subprocess.check_output(cmd, text=True)
 
 
-def GetSkippedTestPatterns():
-    skipped_test_patterns = []
-    test_expectations_filename = "capture_replay_expectations.txt"
-    test_expectations_path = os.path.join(REPLAY_SAMPLE_FOLDER, test_expectations_filename)
-    with open(test_expectations_path, "rt") as f:
-        for line in f:
-            l = line.strip()
-            if l != "" and not l.startswith("#"):
-                skipped_test_patterns.append(l)
-    return skipped_test_patterns
+class TestExpectation():
+    # tests that must not be run as list
+    disabled_tests = []
 
+    # test expectations for tests that do not pass
+    non_pass_results = {}
 
-def ParseTestNamesFromTestList(output):
-    def SkipTest(skipped_test_patterns, test):
-        for skipped_test_pattern in skipped_test_patterns:
-            if fnmatch.fnmatch(test, skipped_test_pattern):
+    flaky_tests = []
+
+    non_pass_re = {}
+
+    # yapf: disable
+    # we want each pair on one line
+    result_map = { "FAIL" : "Fail",
+                   "TIMEOUT" : "Timeout",
+                   "CRASHED" : "Crashed",
+                   "COMPILE_FAILED" : "CompileFailed",
+                   "SKIPPED_BY_GTEST" : "Skipped",
+                   "PASS" : "Pass"}
+    # yapf: enable
+
+    def __init__(self, platform):
+        expected_results_filename = "capture_replay_expectations.txt"
+        expected_results_path = os.path.join(REPLAY_SAMPLE_FOLDER, expected_results_filename)
+        with open(expected_results_path, "rt") as f:
+            for line in f:
+                l = line.strip()
+                if l != "" and not l.startswith("#"):
+                    self.ReadOneExpectation(l, platform)
+
+    def ReadOneExpectation(self, line, platform):
+        (testpattern, result) = line.split('=')
+        (test_info_string, test_name_string) = testpattern.split(':')
+        test_name = test_name_string.strip()
+        test_info = test_info_string.strip().split()
+        result_stripped = result.strip()
+
+        platforms = [platform]
+        if len(test_info) > 1:
+            platforms = test_info[1:]
+
+        if platform in platforms:
+            test_name_regex = re.compile('^' + test_name.replace('*', '.*') + '$')
+            if result_stripped == 'SKIP_FOR_CAPTURE':
+                self.disabled_tests.append(test_name_regex)
+            elif result_stripped == 'FLAKY':
+                self.flaky_tests.append(test_name_regex)
+            else:
+                self.non_pass_results[test_name] = self.result_map[result_stripped]
+                self.non_pass_re[test_name] = test_name_regex
+
+    def TestIsDisabled(self, test_name):
+        for p in self.disabled_tests:
+            m = p.match(test_name)
+            if m is not None:
                 return True
         return False
 
+    def Filter(self, test_list):
+        result = {}
+        for t in test_list:
+            for key in self.non_pass_results.keys():
+                if self.non_pass_re[key].match(t) is not None:
+                    result[t] = self.non_pass_results[key]
+        return result
+
+    def IsFlaky(self, test_name):
+        for flaky in self.flaky_tests:
+            if flaky.match(test_name) is not None:
+                return True
+        return False
+
+
+def ParseTestNamesFromTestList(output, test_expectation):
     output_lines = output.splitlines()
     tests = []
-    skipped_test_patterns = GetSkippedTestPatterns()
     seen_start_of_tests = False
-    skips = 0
+    disabled = 0
     for line in output_lines:
         l = line.strip()
         if l == 'Tests list:':
@@ -345,12 +399,12 @@ def ParseTestNamesFromTestList(output):
             break
         elif not seen_start_of_tests:
             pass
-        elif not SkipTest(skipped_test_patterns, l):
+        elif not test_expectation.TestIsDisabled(l):
             tests.append(l)
         else:
-            skips += 1
+            disabled += 1
 
-    info('Found %s tests and %d skipped tests.' % (len(tests), skips))
+    info('Found %s tests and %d disabled tests.' % (len(tests), disabled))
     return tests
 
 
@@ -824,7 +878,16 @@ def DeleteTraceFolders(folder_num):
             SafeDeleteFolder(folder_path)
 
 
-def main(args):
+def GetPlatformForSkip(platform):
+    # yapf: disable
+    # we want each pair on one line
+    platform_map = { "win32" : "WIN",
+                     "linux" : "LINUX" }
+    # yapf: enable
+    return platform_map.get(platform, "UNKNOWN")
+
+
+def main(args, platform):
     child_processes_manager = ChildProcessesManager()
     try:
         start_time = time.time()
@@ -851,7 +914,9 @@ def main(args):
         # get a list of tests
         test_path = os.path.join(capture_build_dir, args.test_suite)
         test_list = GetTestsListForFilter(args, test_path, args.gtest_filter)
-        test_names = ParseTestNamesFromTestList(test_list)
+        test_expectation = TestExpectation(platform)
+        test_names = ParseTestNamesFromTestList(test_list, test_expectation)
+        test_expectation_for_list = test_expectation.Filter(test_names)
         # objects created by manager can be shared by multiple processes. We use it to create
         # collections that are shared by multiple processes such as job queue or result list.
         manager = multiprocessing.Manager()
@@ -924,6 +989,10 @@ def main(args):
         # print out results
         logging.info("\n\n\n")
         logging.info("Results:")
+
+        test_results = {}
+        flaky_results = []
+
         for test_batch_result in result_list:
             debug(str(test_batch_result))
             passed_count += len(test_batch_result.passes)
@@ -935,14 +1004,45 @@ def main(args):
 
             for failed_test in test_batch_result.fails:
                 failed_tests.append(failed_test)
+                test_results[failed_test] = "Fail"
+
             for timeout_test in test_batch_result.timeouts:
                 timed_out_tests.append(timeout_test)
+                test_results[timeout_test] = "Timeout"
+
             for crashed_test in test_batch_result.crashes:
                 crashed_tests.append(crashed_test)
+                test_results[crashed_test] = "Crashed"
+
             for compile_failed_test in test_batch_result.compile_fails:
                 compile_failed_tests.append(compile_failed_test)
+                test_results[compile_failed_test] = "CompileFailed"
+
             for skipped_test in test_batch_result.skips:
                 skipped_tests.append(skipped_test)
+                test_results[skipped_test] = "Skipped"
+
+            for passed_test in test_batch_result.passes:
+                if test_expectation.IsFlaky(passed_test):
+                    flaky_results.append("  {} (Pass)".format(passed_test))
+
+        test_result = []
+        for test, result in sorted(test_results.items()):
+            if not test_expectation.IsFlaky(test):
+                test_result.append("{} {}\n".format(test, result))
+            else:
+                flaky_results.append("  {} ({})".format(test, result))
+
+        expected_result = []
+        expected_result_map = sorted(test_expectation_for_list.items())
+        for test, result in expected_result_map:
+            if test in test_names:
+                expected_result.append("{} {}\n".format(test, result))
+
+        if len(flaky_results):
+            logging.info("\n\nFlaky test(s):")
+            for line in flaky_results:
+                logging.info(line)
 
         logging.info("\n\n")
         logging.info("Elapsed time: %.2lf seconds" % (end_time - start_time))
@@ -951,31 +1051,23 @@ def main(args):
             % (passed_count, failed_count, crashed_count, compile_failed_count, skipped_count,
                timedout_count))
 
-        retval = EXIT_SUCCESS
+        result_diff = difflib.unified_diff(
+            expected_result,
+            test_result,
+            fromfile="expected result",
+            tofile="obtained result",
+            n=0)
 
-        if len(failed_tests):
-            logging.info("Comparison Failed tests:")
-            for failed_test in sorted(failed_tests):
-                logging.info("  " + failed_test)
-            retval = EXIT_FAILURE
-        if len(crashed_tests):
-            logging.info("Crashed tests:")
-            for crashed_test in sorted(crashed_tests):
-                logging.info("  " + crashed_test)
-            retval = EXIT_FAILURE
-        if len(compile_failed_tests):
-            logging.info("Compile failed tests:")
-            for compile_failed_test in sorted(compile_failed_tests):
-                logging.info("  " + compile_failed_test)
-            retval = EXIT_FAILURE
-        if len(skipped_tests):
-            logging.info("Skipped tests:")
-            for skipped_test in sorted(skipped_tests):
-                logging.info("  " + skipped_test)
-        if len(timed_out_tests):
-            logging.info("Timeout tests:")
-            for timeout_test in sorted(timed_out_tests):
-                logging.info("  " + timeout_test)
+        diff_lines = 0
+        for line in result_diff:
+            if line is not None:
+                logging.info(line.rstrip("\n"))
+                diff_lines = diff_lines + 1
+
+        if diff_lines == 0:
+            retval = EXIT_SUCCESS
+        else:
+            logging.info("\nFailure: Obtained results differed from expectation")
             retval = EXIT_FAILURE
 
         # delete generated folders if --keep_temp_files flag is set to false
@@ -1050,6 +1142,7 @@ if __name__ == "__main__":
         default=DEFAULT_MAX_JOBS,
         type=int,
         help='Maximum number of test processes. Default is %d.' % DEFAULT_MAX_JOBS)
+
     # TODO(jmadill): Remove this argument. http://anglebug.com/6102
     parser.add_argument('--depot-tools-path', default=None, help='Path to depot tools')
     parser.add_argument('--xvfb', action='store_true', help='Run with xvfb.')
@@ -1064,4 +1157,5 @@ if __name__ == "__main__":
         logging.basicConfig(level=args.log.upper(), filename=args.result_file)
     else:
         logging.basicConfig(level=args.log.upper())
-    sys.exit(main(args))
+
+    sys.exit(main(args, GetPlatformForSkip(platform)))
