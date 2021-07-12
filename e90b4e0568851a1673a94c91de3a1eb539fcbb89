@@ -291,6 +291,30 @@
       },
       "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "683ead37_a29fdcc0",
+        "filename": "src/libANGLE/capture/trace_fixture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T20:18:19Z",
+      "side": 1,
+      "message": "Because we control the whole capture from beginning to end we should be able to size all the buffers to maximum sizes. Could we update the design to capture proper maximums for the read buffer? Similarly for the logic for the resource IDs.",
+      "parentUuid": "eb4b2dfd_db92623b",
+      "range": {
+        "startLine": 127,
+        "startChar": 5,
+        "endLine": 127,
+        "endChar": 25
+      },
+      "revId": "e90b4e0568851a1673a94c91de3a1eb539fcbb89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
