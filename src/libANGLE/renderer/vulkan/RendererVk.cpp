@@ -2466,14 +2466,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         mFeatures.supportsMultisampledRenderToSingleSampled.enabled ||
             !(IsApple() && isSwiftShader) && !(IsWindows() && (isIntel || isAMD)));
 
-    // Feature disabled due to driver bugs:
-    //
-    // - Swiftshader: http://anglebug.com/5142
-    // - Qualcomm: http://anglebug.com/5143
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsImageCubeArray,
-        mPhysicalDeviceFeatures.imageCubeArray == VK_TRUE &&
-            !IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
+    // Currently we enable cube map arrays based on the imageCubeArray Vk feature.
+    // TODO: Check device caps for full cube map array support. http://anglebug.com/5143
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsImageCubeArray,
+                            mPhysicalDeviceFeatures.imageCubeArray == VK_TRUE);
 
     // TODO: Only enable if VK_EXT_primitives_generated_query is not present.
     // http://anglebug.com/5430
