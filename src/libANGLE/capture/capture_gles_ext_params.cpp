@@ -3032,7 +3032,7 @@ void CaptureDeleteFencesNV_fencesPacked(const State &glState,
                                         const FenceNVID *fences,
                                         ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(fences, n * sizeof(FenceNVID), paramCapture);
 }
 
 void CaptureGenFencesNV_fencesPacked(const State &glState,
@@ -3041,7 +3041,7 @@ void CaptureGenFencesNV_fencesPacked(const State &glState,
                                      FenceNVID *fences,
                                      ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureGenHandles(n, fences, paramCapture);
 }
 
 void CaptureGetFenceivNV_params(const State &glState,
@@ -3051,7 +3051,7 @@ void CaptureGetFenceivNV_params(const State &glState,
                                 GLint *params,
                                 ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLint), paramCapture);
 }
 
 void CaptureDrawTexfvOES_coords(const State &glState,
