@@ -547,20 +547,21 @@ def main():
         'default_applicable_licenses': ['external_angle_license'],
     }))
     blueprint_targets.append(('license', {
-        'name': 'external_angle_license',
+        'name':
+            'external_angle_license',
         'visibility': [':__subpackages__'],
         'license_kinds': [
             'SPDX-license-identifier-Apache-2.0',
             'SPDX-license-identifier-BSD',
-            'SPDX-license-identifier-GPL',
-            'SPDX-license-identifier-GPL-2.0',
-            'SPDX-license-identifier-GPL-3.0',
             'SPDX-license-identifier-LGPL',
             'SPDX-license-identifier-MIT',
             'SPDX-license-identifier-Zlib',
             'legacy_unencumbered',
         ],
-        'license_text': ['LICENSE'],
+        'license_text': [
+            'LICENSE', 'third_party/abseil-cpp/LICENSE', 'third_party/vulkan-deps/LICENSE',
+            'third_party/vulkan_memory_allocator/LICENSE.txt', 'third_party/zlib/LICENSE'
+        ],
     }))
 
     # Add APKs with all of the root libraries

@@ -172,6 +172,13 @@ extra_removal_files=(
    "third_party/zlib/contrib/tests/OWNERS"
    "third_party/zlib/contrib/bench/OWNERS"
    "third_party/zlib/contrib/tests/fuzzers/OWNERS"
+   # Remove Android.mk files to prevent automated CLs:
+   #   "[LSC] Add LOCAL_LICENSE_KINDS to external/angle"
+   "Android.mk"
+   "third_party/vulkan-deps/glslang/src/Android.mk"
+   "third_party/vulkan-deps/glslang/src/ndk_test/Android.mk"
+   "third_party/vulkan-deps/spirv-tools/src/Android.mk"
+   "third_party/vulkan-deps/spirv-tools/src/android_test/Android.mk"
 )
 
 for removal_file in "${extra_removal_files[@]}"; do
