@@ -63,6 +63,30 @@
       },
       "revId": "2c377b401f245daeb41c2ba50e5591d755ff1915",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "438e0107_245cadfb",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3247,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T17:00:13Z",
+      "side": 1,
+      "message": "I see, OK. So the map should be pretty sparse.\n\nActually, if count !\u003d 0, you seem to not set descriptorCountOut, that looks like a bug.",
+      "parentUuid": "af658abf_7963a367",
+      "range": {
+        "startLine": 3244,
+        "startChar": 0,
+        "endLine": 3247,
+        "endChar": 5
+      },
+      "revId": "2c377b401f245daeb41c2ba50e5591d755ff1915",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
