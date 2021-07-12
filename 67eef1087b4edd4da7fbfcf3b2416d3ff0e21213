@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c69583b_3171dd4c",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2122,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-12T22:13:54Z",
+      "side": 1,
+      "message": "tim, did the VVL roll happen? im wondering if i need to skip this test as well?",
+      "revId": "67eef1087b4edd4da7fbfcf3b2416d3ff0e21213",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
