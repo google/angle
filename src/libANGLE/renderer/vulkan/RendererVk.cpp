@@ -2519,6 +2519,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // improves 7%.
     ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitAtFBOBoundary, isARM);
 
+    // In order to support immutable samplers tied to external formats, we need to overallocate
+    // descriptor counts for such immutable samplers
+    ANGLE_FEATURE_CONDITION(&mFeatures, useMultipleDescriptorsForExternalFormats, true);
+
     // When generating SPIR-V, the following workarounds are applied on buggy drivers:
     //
     // - AMD/Windows: Function parameters are passed in temporary variables even if they are already
@@ -3230,6 +3234,25 @@ void RendererVk::logCacheStats() const
     {
         INFO() << "    CacheType " << cacheType++ << ": " << stats.getHitRatio();
     }
+}
+
+angle::Result RendererVk::getFormatDescriptorCountForExternalFormats(ContextVk *contextVk,
+                                                                     uint64_t format,
+                                                                     uint32_t *descriptorCountOut)
+{
+    // TODO: need to query for external formats as well once spec is fixed. http://anglebug.com/6141
+    if (getFeatures().useMultipleDescriptorsForExternalFormats.enabled)
+    {
+        // Vulkan spec has a gap in that there is no mechanism available to query the immutable
+        // sampler descriptor count of an external format. For now, return a default value.
+        constexpr uint32_t kExternalFormatDefaultDescriptorCount = 4;
+        ASSERT(descriptorCountOut);
+        *descriptorCountOut = kExternalFormatDefaultDescriptorCount;
+        return angle::Result::Continue;
+    }
+
+    ANGLE_VK_UNREACHABLE(contextVk);
+    return angle::Result::Stop;
 }
 
 vk::MemoryReport::MemoryReport()

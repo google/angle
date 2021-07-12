@@ -249,6 +249,7 @@ ProgramExecutableVk::ProgramExecutableVk()
     : mEmptyDescriptorSets{},
       mNumDefaultUniformDescriptors(0),
       mUsesImmutableSamplers(false),
+      mImmutableSamplersMaxDescriptorCount(1),
       mUniformBufferDescriptorType(VK_DESCRIPTOR_TYPE_MAX_ENUM),
       mProgram(nullptr),
       mProgramPipeline(nullptr),
@@ -267,7 +268,8 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
     {
         descriptorSetLayout.reset();
     }
-    mUsesImmutableSamplers = false;
+    mUsesImmutableSamplers               = false;
+    mImmutableSamplersMaxDescriptorCount = 1;
     mPipelineLayout.reset();
 
     mDescriptorSets.fill(VK_NULL_HANDLE);
@@ -650,6 +652,7 @@ void ProgramExecutableVk::addInputAttachmentDescriptorSetDesc(
 }
 
 void ProgramExecutableVk::addTextureDescriptorSetDesc(
+    ContextVk *contextVk,
     const gl::ProgramState &programState,
     const gl::ActiveTextureArray<vk::TextureUnit> *activeTextures,
     vk::DescriptorSetLayoutDesc *descOut)
@@ -701,11 +704,29 @@ void ProgramExecutableVk::addTextureDescriptorSetDesc(
                 ASSERT(samplerBinding.boundTextureUnits.size() == 1);
                 // Always take the texture's sampler, that's only way to get to yuv conversion for
                 // externalFormat
-                const vk::Sampler &immutableSampler =
-                    (*activeTextures)[textureUnit].texture->getSampler().get();
+                const TextureVk *textureVk          = (*activeTextures)[textureUnit].texture;
+                const vk::Sampler &immutableSampler = textureVk->getSampler().get();
+                uint64_t externalFormat             = textureVk->getImage().getExternalFormat();
                 descOut->update(info.binding, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
                                 activeStages, &immutableSampler);
                 mUsesImmutableSamplers = true;
+                // The Vulkan spec has the following note -
+                // All descriptors in a binding use the same maximum
+                // combinedImageSamplerDescriptorCount descriptors to allow implementations to use a
+                // uniform stride for dynamic indexing of the descriptors in the binding.
+                uint32_t formatDescriptorCount = 0;
+                angle::Result result =
+                    contextVk->getRenderer()->getFormatDescriptorCountForExternalFormats(
+                        contextVk, externalFormat, &formatDescriptorCount);
+                if (result != angle::Result::Continue)
+                {
+                    // There was an error querying the descriptor count for this format, treat it as
+                    // a non-fatal error and move on.
+                    formatDescriptorCount = 1;
+                }
+                ASSERT(formatDescriptorCount > 0);
+                mImmutableSamplersMaxDescriptorCount =
+                    std::max(mImmutableSamplersMaxDescriptorCount, formatDescriptorCount);
             }
             else
             {
@@ -863,9 +884,9 @@ angle::Result ProgramExecutableVk::initDynamicDescriptorPools(
         if (binding.descriptorCount > 0)
         {
             VkDescriptorPoolSize poolSize = {};
-
-            poolSize.type            = binding.descriptorType;
-            poolSize.descriptorCount = binding.descriptorCount;
+            poolSize.type                 = binding.descriptorType;
+            poolSize.descriptorCount =
+                binding.descriptorCount * mImmutableSamplersMaxDescriptorCount;
             descriptorPoolSizes.emplace_back(poolSize);
         }
     }
@@ -1018,7 +1039,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     {
         const gl::ProgramState *programState = programStates[shaderType];
         ASSERT(programState);
-        addTextureDescriptorSetDesc(*programState, activeTextures, &texturesSetDesc);
+        addTextureDescriptorSetDesc(contextVk, *programState, activeTextures, &texturesSetDesc);
     }
 
     ANGLE_TRY(contextVk->getDescriptorSetLayoutCache().getDescriptorSetLayout(

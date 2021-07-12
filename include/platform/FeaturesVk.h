@@ -551,6 +551,13 @@ struct FeaturesVk : FeatureSetBase
         "preferSubmitAtFBOBoundary", FeatureCategory::VulkanWorkarounds,
         "Submit commands to driver at each FBO boundary for performance improvements.", &members,
         "https://issuetracker.google.com/187425444"};
+
+    // Workaround for gap in Vulkan spec related to querying descriptor count for immutable samplers
+    // tied to an external format.
+    Feature useMultipleDescriptorsForExternalFormats = {
+        "useMultipleDescriptorsForExternalFormats", FeatureCategory::VulkanWorkarounds,
+        "Return a default descriptor count for external formats.", &members,
+        "http://anglebug.com/6141"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

@@ -224,7 +224,8 @@ class ProgramExecutableVk
     void addInputAttachmentDescriptorSetDesc(const gl::ProgramExecutable &executable,
                                              const gl::ShaderType shaderType,
                                              vk::DescriptorSetLayoutDesc *descOut);
-    void addTextureDescriptorSetDesc(const gl::ProgramState &programState,
+    void addTextureDescriptorSetDesc(ContextVk *contextVk,
+                                     const gl::ProgramState &programState,
                                      const gl::ActiveTextureArray<vk::TextureUnit> *activeTextures,
                                      vk::DescriptorSetLayoutDesc *descOut);
 
@@ -278,6 +279,7 @@ class ProgramExecutableVk
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get
     // deleted while this program is in use.
     bool mUsesImmutableSamplers;
+    uint32_t mImmutableSamplersMaxDescriptorCount;
     vk::BindingPointer<vk::PipelineLayout> mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts;
 
