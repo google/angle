@@ -158,7 +158,6 @@ static void LogGles2Capabilities(std::ostream &stream)
     constexpr int kMaxViewPortDimsReturnValuesSize = 2;
     QUERY_AND_LOG_CAPABILITY_ARRAY(GL_MAX_VIEWPORT_DIMS, kMaxViewPortDimsReturnValuesSize, stream);
     QUERY_AND_LOG_CAPABILITY(GL_NUM_COMPRESSED_TEXTURE_FORMATS, stream);
-    QUERY_AND_LOG_CAPABILITY(GL_NUM_PROGRAM_BINARY_FORMATS, stream);
     QUERY_AND_LOG_CAPABILITY(GL_NUM_SHADER_BINARY_FORMATS, stream);
 }
 
@@ -191,7 +190,7 @@ static void LogGles3Capabilities(std::ostream &stream)
     QUERY_AND_LOG_CAPABILITY(GL_MAX_VERTEX_UNIFORM_BLOCKS, stream);
     QUERY_AND_LOG_CAPABILITY(GL_MAX_VERTEX_UNIFORM_COMPONENTS, stream);
     QUERY_AND_LOG_CAPABILITY(GL_MIN_PROGRAM_TEXEL_OFFSET, stream);
-
+    QUERY_AND_LOG_CAPABILITY(GL_NUM_PROGRAM_BINARY_FORMATS, stream);
     // GLES3 capabilities are a superset of GLES2
     LogGles2Capabilities(stream);
 }
