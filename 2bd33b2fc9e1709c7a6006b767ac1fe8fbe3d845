@@ -481,6 +481,24 @@
       "parentUuid": "6ef5da78_5e5eebb7",
       "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d37086d_cff2193e",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-12T17:05:18Z",
+      "side": 1,
+      "message": "Added `ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(\"GL_NV_read_stencil\"));` to the new tests.",
+      "parentUuid": "5875727f_93151599",
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
