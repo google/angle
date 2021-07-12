@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "60737c83_228e5c6c",
+        "filename": "src/tests/angle_end2end_tests_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-12T19:10:37Z",
+      "side": 1,
+      "message": "Sorry, done!",
+      "parentUuid": "3346c85d_fbd4238e",
+      "range": {
+        "startLine": 16,
+        "startChar": 34,
+        "endLine": 16,
+        "endChar": 70
+      },
+      "revId": "7fbc8cfacc94d1484f31c21fe1266f8c3f88de43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6700288a_8b0c4e2c",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-07-12T19:06:46Z",
       "side": 1,
       "message": "and this should be StencilTestStateAndFramebufferClearBeforeStencilAttached",
+      "range": {
+        "startLine": 17,
+        "startChar": 34,
+        "endLine": 17,
+        "endChar": 83
+      },
+      "revId": "7fbc8cfacc94d1484f31c21fe1266f8c3f88de43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dca7d4e0_bca10c3e",
+        "filename": "src/tests/angle_end2end_tests_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-12T19:10:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6700288a_8b0c4e2c",
       "range": {
         "startLine": 17,
         "startChar": 34,
