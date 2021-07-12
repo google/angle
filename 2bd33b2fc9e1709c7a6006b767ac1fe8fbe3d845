@@ -190,6 +190,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "21181c58_dec5b669",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 964,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T16:14:39Z",
+      "side": 1,
+      "message": "Shabi do you mean it clears the \"Vulkan\" ContextVk stencil dirty bits, or \"GL\" dirty bits? The GL dirty bits seem to just update pipeline states, I\u0027m not sure why they\u0027d need to be re-run.\n\nFor the Vulkan dirty bits, the \"dirtyBitMask\" mechanism is meant to prevent syncing dirty bits that are not relevant for a particular action command. Shabi can you look at the various masks and make a suggestion if that\u0027s the case? Still need some clarity on this.",
+      "parentUuid": "6e5e322a_803fb29f",
+      "range": {
+        "startLine": 964,
+        "startChar": 23,
+        "endLine": 964,
+        "endChar": 56
+      },
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c3d467c7_48dc53d4",
         "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
         "patchSetId": 5

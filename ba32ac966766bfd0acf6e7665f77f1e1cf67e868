@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49399494_2eb241b1",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-12T16:14:39Z",
+      "side": 1,
+      "message": "nit: please add a small comment before each new ANGLE test.",
+      "range": {
+        "startLine": 396,
+        "startChar": 6,
+        "endLine": 396,
+        "endChar": 7
+      },
+      "revId": "ba32ac966766bfd0acf6e7665f77f1e1cf67e868",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
