@@ -16,6 +16,24 @@
       "message": "tim, did the VVL roll happen? im wondering if i need to skip this test as well?",
       "revId": "67eef1087b4edd4da7fbfcf3b2416d3ff0e21213",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7250517f_545ca2f1",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2122,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-12T23:23:19Z",
+      "side": 1,
+      "message": "The last successful roll was 4 days ago (there is a separate JSON issue that Cody is working through), but I didn\u0027t dive in to see if it has the offending CL.\n\nIf this CL passes on CQ, then you\u0027re fine to land it and we can skip the test later if the next roll fails.",
+      "parentUuid": "5c69583b_3171dd4c",
+      "revId": "67eef1087b4edd4da7fbfcf3b2416d3ff0e21213",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
