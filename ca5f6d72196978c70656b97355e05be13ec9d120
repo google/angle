@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "500cd991_249e2d10",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-13T14:45:25Z",
+      "side": 1,
+      "message": "If I follow the suggestion above, this will become irrelevant. Apart from that, may I suggest that we consider switching to C++17? Then we can captures the values like \"auto\u0026 [name, index]\" and never have to think about the actual names of the structure members? I\u0027ve seen a number of places where this would really help to clean up the code, and compiler support should be there",
+      "parentUuid": "c3c95fb8_d6396fdf",
+      "range": {
+        "startLine": 28,
+        "startChar": 37,
+        "endLine": 28,
+        "endChar": 66
+      },
+      "revId": "ca5f6d72196978c70656b97355e05be13ec9d120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c44e313_5cc1bf61",
         "filename": "src/libANGLE/capture/capture_gles_ext_params.cpp",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2021-07-13T14:04:06Z",
       "side": 1,
       "message": "rather than capturing the indices, why not just capture the counts directly in the ParamCapture? This layouts capture is a bit confusing.",
+      "range": {
+        "startLine": 2687,
+        "startChar": 0,
+        "endLine": 2688,
+        "endChar": 81
+      },
+      "revId": "ca5f6d72196978c70656b97355e05be13ec9d120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9f60c5f_0f4195f5",
+        "filename": "src/libANGLE/capture/capture_gles_ext_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2688,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-13T14:45:25Z",
+      "side": 1,
+      "message": "In WriteResourceIDPointerParamReplay you go though all the trouble to check the parameter names in getParamFlexName, so I thought it would be important to keep doing that.\n\nNow if we start to capture the counts directly, then we should probably redesign all the calls that capture a count plus an array, otherwise the code would look a bit strange sometimes using getParamFlexName, and sometimes just using the number that is stored in the ParamCapture.",
+      "parentUuid": "1c44e313_5cc1bf61",
       "range": {
         "startLine": 2687,
         "startChar": 0,
