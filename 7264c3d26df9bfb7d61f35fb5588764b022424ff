@@ -22,6 +22,30 @@
       },
       "revId": "7264c3d26df9bfb7d61f35fb5588764b022424ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59830d8a_37b864a2",
+        "filename": "gni/angle.gni",
+        "patchSetId": 14
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-13T16:28:56Z",
+      "side": 1,
+      "message": "I\u0027m not sure what you mean here.   There is still only a single data file, it\u0027s just now being specified in restricted_traces_autogen.gni (also included in this review).   gen_restricted_traces.py was updated to find the data file and asserts that there is only 1 (get_angledata_filename()).   This solves the issue of the old traces having \"contextX.angledata.gz\" while the new traces will have \"context_shared.angledata.gz\".",
+      "parentUuid": "c831c19e_7929adf9",
+      "range": {
+        "startLine": 528,
+        "startChar": 21,
+        "endLine": 528,
+        "endChar": 30
+      },
+      "revId": "7264c3d26df9bfb7d61f35fb5588764b022424ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
