@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "675235d9_ff17f488",
+        "filename": "src/compiler/translator/BuildSPIRV.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-13T14:58:05Z",
+      "side": 1,
+      "message": "Open to naming suggestions both for the type and variable. To me, these are \"type differentiators\", i.e. things that differentiate the SPIR-V type. Not sure if there\u0027s a better word.",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 37
+      },
+      "revId": "85e05135c5b759eca9dc40d30a0d874e0682dfd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
