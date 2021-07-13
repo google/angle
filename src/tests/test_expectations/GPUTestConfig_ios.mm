@@ -10,6 +10,8 @@
 
 #include "common/apple_platform_utils.h"
 
+#import <Foundation/Foundation.h>
+
 namespace angle
 {
 
