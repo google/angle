@@ -1541,9 +1541,6 @@ void SPIRVBuilder::writeInterfaceVariableDecorations(const TType &type, spirv::I
     const bool needsBlendIndex =
         type.getQualifier() == EvqFragmentOut && layoutQualifier.index >= 0;
 
-    // TODO: handle row-major matrixes.  http://anglebug.com/4889.
-    // TODO: handle invariant (spv::DecorationInvariant).
-
     // If the resource declaration requires set & binding, add the DescriptorSet and Binding
     // decorations.
     if (needsSetBinding)

@@ -22,10 +22,6 @@
 4889 VULKAN : GLSLTest.MoreNestedCompoundStructsWithSamplersAsFunctionArg/ES2_Vulkan_DirectSPIRVGen = SKIP
 4889 VULKAN : GLSLTest.NestedCompoundStructsWithSamplersAsFunctionArg/ES2_Vulkan_DirectSPIRVGen = SKIP
 4889 VULKAN : GLSLTest.SamplerInStructMemberIndexing/ES2_Vulkan_DirectSPIRVGen = SKIP
-// SPIR-V generation doesn't yet handle copy between different SPIR-V types generated from the same GLSL type
-4889 VULKAN : GLSLTest_ES31.MixedRowAndColumnMajorMatrices/ES3_1_Vulkan_DirectSPIRVGen = SKIP
-4889 VULKAN : GLSLTest_ES31.BasicTypeArrayAndArrayOfSampler/ES3_1_Vulkan_DirectSPIRVGen = SKIP
-4889 VULKAN : GLSLTest_ES31.StructBothInvariantAndNot/ES3_1_Vulkan_DirectSPIRVGen = SKIP
 
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
@@ -41,6 +37,8 @@
 6065 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
 // Fails in older mesa
 6109 LINUX INTEL : GLSLTestLoops.*While*/* = SKIP
+// Crashes when compiling the shader
+6173 LINUX INTEL OPENGL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 
 // Nvidia
 6115 NVIDIA OPENGL : GLSLTestLoops.DoWhileContinue/* = SKIP
@@ -51,6 +49,9 @@
 6115 NVIDIA GLES : GLSLTestLoops.DoWhileUnconditionalContinue/* = SKIP
 6115 NVIDIA GLES : GLSLTestLoops.DoWhileContinueInSwitch/* = SKIP
 6115 NVIDIA GLES : GLSLTestLoops.WhileBreak/* = SKIP
+// Generates invalid errors when compiling the shader in the GL backend
+6172 NVIDIA OpenGL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
+6172 NVIDIA GLES : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 
 // Intel Vulkan
 
@@ -80,6 +81,8 @@
 6091 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 6122 WIN D3D11 : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 6150 WIN D3D11 : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
+// Fails on assertion in translation to D3D
+3841 WIN D3D11 : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/ES3_OpenGLES = SKIP
@@ -181,9 +184,14 @@
 6167 PIXEL4ORXL GLES : DepthStencilTestES3.FramebufferClearThenStencilTestStateThenStencilAttached/* = SKIP
 6167 PIXEL4ORXL GLES : DepthStencilTestES3.StencilTestStateThenFramebufferClearThenStencilAttached/* = SKIP
 
+// Internal driver failures on both GLES and Vulkan
+3839 NEXUS5X : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
+3839 PIXEL4ORXL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
+
 // AMD windows failures.  The GPU and driver on our bots are very old and buggy.
 // http://crbug.com/1224996
 4889 WIN AMD VULKAN : GLSLTest.StructWithInitializer/ES2_Vulkan_DirectSPIRVGen = SKIP
 4889 WIN AMD VULKAN : GLSLTest.StructWithUniformInitializer/ES2_Vulkan_DirectSPIRVGen = SKIP
 4889 WIN AMD VULKAN : GLSLTest_ES3.ValidIndexClampES300/ES3_Vulkan_DirectSPIRVGen = SKIP
 4889 WIN AMD VULKAN : GLSLTest_ES3.InitGlobalComplexConstant/ES3_Vulkan_DirectSPIRVGen = SKIP
+4889 WIN AMD VULKAN : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
