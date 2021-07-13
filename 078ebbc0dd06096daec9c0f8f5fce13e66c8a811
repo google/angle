@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d19821a0_5a0e1194",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T14:13:09Z",
+      "side": 1,
+      "message": "I\u0027ve confirmed this fixes the failures in the SwiftShader CL Nicolas mentioned. Shabi and Cheryl can I get your help in landing this? It\u0027s a very valuable fix.",
+      "revId": "078ebbc0dd06096daec9c0f8f5fce13e66c8a811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30bcbdb3_27860029",
+        "filename": "src/image_util/loadtextureborder.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T14:13:09Z",
+      "side": 1,
+      "message": "please add a file-level comment.",
+      "revId": "078ebbc0dd06096daec9c0f8f5fce13e66c8a811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2fbde4a_60397ac7",
+        "filename": "src/image_util/loadtextureborder.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T14:13:09Z",
+      "side": 1,
+      "message": "nit: suggest you make these return the Color instead of taking a parameter.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 44
+      },
+      "revId": "078ebbc0dd06096daec9c0f8f5fce13e66c8a811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bae489d_b7391767",
+        "filename": "src/libANGLE/renderer/load_texture_border_functions_data.json",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T14:13:09Z",
+      "side": 1,
+      "message": "can you include an entry for a copyright/comment? See vk_format_map.json.",
+      "revId": "078ebbc0dd06096daec9c0f8f5fce13e66c8a811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
