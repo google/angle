@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "8b3d1dba_4d7baa14",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-13T03:20:41Z",
+      "side": 1,
+      "message": "Rewrote the commit message to be more accurate about what\u0027s going on with the change",
+      "parentUuid": "30f9f203_8cfa8058",
+      "range": {
+        "startLine": 16,
+        "startChar": 1,
+        "endLine": 17,
+        "endChar": 67
+      },
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "ecafe2c8_12e958c0",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -75,6 +99,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d3f9ba3_f29ee9ab",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1607,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-13T03:20:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cff7d5f2_5cf2e66c",
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b422b7d6_67ad8f42",
@@ -98,6 +140,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5ab886a_1a296ebe",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 903,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-13T03:20:41Z",
+      "side": 1,
+      "message": "Removed the comment. This was self made comment during implementation.",
+      "parentUuid": "b422b7d6_67ad8f42",
+      "range": {
+        "startLine": 903,
+        "startChar": 38,
+        "endLine": 903,
+        "endChar": 39
+      },
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d80eab08_40f3fd00",
@@ -111,6 +177,24 @@
       "writtenOn": "2021-06-21T18:36:58Z",
       "side": 1,
       "message": "Why getActiveAttributes() here, rather than getAllAttributes()?   Looking at linkAttributes() which is called before this (ref1), it seems we normally need to differentiate between getActiveAttributes() and getAllAttributes():\n\n    bool Program::linkAttributes(const Context *context, InfoLog \u0026infoLog)\n    {\n    ...\n        shaderVersion \u003d vertexShader-\u003egetShaderVersion();\n        if (shaderVersion \u003e\u003d 300)\n        {\n            // In GLSL ES 3.00.6, aliasing checks should be done with all declared attributes -\n            // see GLSL ES 3.00.6 section 12.46. Inactive attributes will be pruned after\n            // aliasing checks.\n            mState.mExecutable-\u003emProgramInputs \u003d vertexShader-\u003egetAllAttributes();\n        }\n        else\n        {\n            // In GLSL ES 1.00.17 we only do aliasing checks for active attributes.\n            mState.mExecutable-\u003emProgramInputs \u003d vertexShader-\u003egetActiveAttributes();\n        }\n        \nHowever, it also seems we already have this information saved in the ProgramExecutable to begin with, so why do we need it again here (since only VS have attributes)?",
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "838dab0d_8e650b18",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-13T03:20:41Z",
+      "side": 1,
+      "message": "You\u0027re right. It\u0027s already being handled. I\u0027ve removed this.",
+      "parentUuid": "d80eab08_40f3fd00",
       "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -140,6 +224,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2038208e_4dbadd24",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-13T03:20:41Z",
+      "side": 1,
+      "message": "The pending variables were introduced as it looked like we need to save off the uniforms from either ProgramState or ProgramPipelineState for use in LinkValidateProgramGlobalNames. The ProgramExecutable\u0027ss don\u0027t seem to have a reference to Program or Pipeline State",
+      "parentUuid": "2339c9f1_96a3e871",
+      "range": {
+        "startLine": 918,
+        "startChar": 24,
+        "endLine": 918,
+        "endChar": 43
+      },
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b9e8fdef_cc43a9e6",
         "filename": "src/libANGLE/ProgramExecutable.h",
         "patchSetId": 2
@@ -151,6 +259,30 @@
       "writtenOn": "2021-06-21T18:36:58Z",
       "side": 1,
       "message": "nit: Have the function names match the member names: getPendingLinkUniforms()",
+      "range": {
+        "startLine": 336,
+        "startChar": 43,
+        "endLine": 336,
+        "endChar": 68
+      },
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04e9d2e9_1f0cce9a",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-13T03:20:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9e8fdef_cc43a9e6",
       "range": {
         "startLine": 336,
         "startChar": 43,
