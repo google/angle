@@ -56,6 +56,30 @@
       },
       "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6001172_d2eecf67",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3252,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-13T16:31:40Z",
+      "side": 1,
+      "message": "\u003e is this a implementation error to get here?\n\nnope, it is a feature configuration error in that someone is using ANGLE on an platform that supports external formats but has not enabled the feature that allows for multiple descriptor counts for those external formats.\n\nNote that all of this code will be replaced with a proper query to the ICD when the vulkan spec is fixed",
+      "parentUuid": "ec16ce4d_55fad187",
+      "range": {
+        "startLine": 3252,
+        "startChar": 4,
+        "endLine": 3252,
+        "endChar": 31
+      },
+      "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
