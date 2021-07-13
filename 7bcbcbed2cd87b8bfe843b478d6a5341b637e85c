@@ -248,6 +248,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d013fa65_aae55f64",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T12:50:21Z",
+      "side": 1,
+      "message": "What errors pop up when you merge Pending and Linked variables?\n\nIf something fails storing these variables as the \"Linked\" version, maybe you could store these in little struct in the link call by-value, then on a successful link copy this into the executable. And otherwise pass it by const \u0026 into the validate call.",
+      "parentUuid": "2038208e_4dbadd24",
+      "range": {
+        "startLine": 918,
+        "startChar": 24,
+        "endLine": 918,
+        "endChar": 43
+      },
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b9e8fdef_cc43a9e6",
         "filename": "src/libANGLE/ProgramExecutable.h",
         "patchSetId": 2
