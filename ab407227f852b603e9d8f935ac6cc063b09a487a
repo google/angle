@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8d99f46_c6a13339",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-13T02:26:19Z",
+      "side": 1,
+      "message": "Awesome, thanks for working through the issues. Looks like the GL backend is exposing the read stencil extension incorrectly? I\u0027m fine with a suppression, if the test is not at fault here.",
+      "revId": "ab407227f852b603e9d8f935ac6cc063b09a487a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
