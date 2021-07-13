@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c831c19e_7929adf9",
+        "filename": "gni/angle.gni",
+        "patchSetId": 14
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T12:56:49Z",
+      "side": 1,
+      "message": "Can we restore the one-datafile approach? What gets tricky about using a single file?\n\nI\u0027m don\u0027t see it here but you need to specific all data files in the runtime deps for the traces for them to work on the bots.",
+      "range": {
+        "startLine": 528,
+        "startChar": 21,
+        "endLine": 528,
+        "endChar": 30
+      },
+      "revId": "7264c3d26df9bfb7d61f35fb5588764b022424ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
