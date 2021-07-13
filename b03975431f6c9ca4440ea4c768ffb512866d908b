@@ -1,6 +1,69 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b3dd61e_63593b41",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-13T21:32:00Z",
+      "side": 1,
+      "message": "If this type of change is helpful, I think the expectations files should be updated to match the already existing files which contain the backend and expectations (skip/fail/etc.) instead.   Otherwise, having so many different expectations files will be difficult to maintain and scale whenever new tests are added/modified.",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00f20fe6_e61e8632",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-13T21:32:00Z",
+      "side": 1,
+      "message": "Why are per-backend expectations files necessary when the test name itself already specifies the backend.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 37
+      },
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85b1fe9f_76b58ee4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-13T21:32:00Z",
+      "side": 1,
+      "message": "Why is a separate file required for this, rather than marking the test as \"skip\" in the expectations file?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 16
+      },
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9e455e50_5dc9b21d",
@@ -14,6 +77,23 @@
       "writtenOn": "2021-07-13T15:25:46Z",
       "side": 1,
       "message": "This is my take at replacing the current requirement that all enabled capture/replay tests pass by a combination of the current \"Skip\" feature and an expectation files that holds test outcomes on a per backend base.\n\nFor the expectation to be correct the series requires the fence, semaphore, context serialization, and the ES2/ES3 feature correction patch to be landed, for that reason I also didn\u0027t try to run the CQ.",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f90bdda_8312862e",
+        "filename": "src/tests/capture_replay_tests/capture_replay_expectation_ES2_Vulkan.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-13T21:32:00Z",
+      "side": 1,
+      "message": "Are these \"Pass\" values necessary?   It would be much nicer to default to passing rather than having to update expectations files every time a new test is added.",
       "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
