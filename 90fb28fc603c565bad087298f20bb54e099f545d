@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7b2e84e_2a59149f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-13T05:45:27Z",
+      "side": 1,
+      "message": "This CL builds upon the resource tracking infrastructure.  Very similar to buffer support, but not similar enough to refactor yet, I don\u0027t think.  Most notable addition is tracking the reset calls at the same time as setup calls, building two call sets per texture id.",
+      "revId": "90fb28fc603c565bad087298f20bb54e099f545d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
