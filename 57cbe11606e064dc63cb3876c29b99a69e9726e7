@@ -16,6 +16,86 @@
       "message": "Shabi: please review.\n\nAll others: any comments welcome. Have CC\u0027d you on the associated bug.\n\nNote: it is probably necessary to upgrade BlockLayoutEncoder::mCurrentOffset from size_t to uint64_t for correctness on 32-bit platforms. Let me know if you\u0027d like me to make that change in this CL. Also happy to do it separately either before or after this one.\n",
       "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e78cded_db62ffce",
+        "filename": "src/compiler/translator/ValidateArraySizeLimitations.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-13T02:39:06Z",
+      "side": 1,
+      "message": "It does, but really no big deal if the limit is completely arbitrary.",
+      "range": {
+        "startLine": 81,
+        "startChar": 15,
+        "endLine": 81,
+        "endChar": 57
+      },
+      "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4a8d925_1736f50c",
+        "filename": "src/compiler/translator/ValidateArraySizeLimitations.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-13T02:39:06Z",
+      "side": 1,
+      "message": "Not sure if you need to bother with names anywhere.",
+      "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47f26c0f_684bb172",
+        "filename": "src/compiler/translator/ValidateArraySizeLimitations.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-13T02:39:06Z",
+      "side": 1,
+      "message": "nit: date",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9981f81a_eb84d3e9",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5038,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-13T02:39:06Z",
+      "side": 1,
+      "message": "Nice to have: Could also add variants where the array is in an interface block.",
+      "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
