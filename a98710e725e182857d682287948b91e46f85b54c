@@ -80,6 +80,30 @@
       },
       "revId": "a98710e725e182857d682287948b91e46f85b54c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ff249cc_8879cd75",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 710,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T14:29:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "51e3b2aa_00c97b0d",
+      "range": {
+        "startLine": 710,
+        "startChar": 8,
+        "endLine": 710,
+        "endChar": 29
+      },
+      "revId": "a98710e725e182857d682287948b91e46f85b54c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
