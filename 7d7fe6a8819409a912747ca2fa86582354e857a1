@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53cb1361_46185ef5",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T12:46:31Z",
+      "side": 1,
+      "message": "is there any way to reuse the resource tracking code here? You have some duplicated stuff between buffers and textures. Can you use a similar struct that is indexed by resource type?",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 294,
+        "endChar": 0
+      },
+      "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
