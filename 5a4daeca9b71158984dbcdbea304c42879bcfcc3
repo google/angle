@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6493b5b5_dec411f9",
+        "filename": "src/tests/perf_tests/ANGLEPerfTestArgs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-13T16:34:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0a856d4_52b452d0",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 35
+      },
+      "revId": "5a4daeca9b71158984dbcdbea304c42879bcfcc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "db3ca71a_2e428ab3",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-07-12T23:42:42Z",
       "side": 1,
       "message": "I added an indicator that a non-default frame has been captured, i.e:\n\n  angle_native_among_us.png          # no option specified, this is frame 1\n  angle_native_among_us_frame5.png   # frame 5 specified\n  \nThis could be applied to all images but I left default alone for bot consistency.  Might be as simple as updating png_file_name in restricted_trace_gold_tests.py if we want all screenshots to be labelled.",
+      "range": {
+        "startLine": 1547,
+        "startChar": 0,
+        "endLine": 1552,
+        "endChar": 9
+      },
+      "revId": "5a4daeca9b71158984dbcdbea304c42879bcfcc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e8b03a9_b9099406",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1552,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-13T16:34:34Z",
+      "side": 1,
+      "message": "Moving forward with this.  We can come back and update this if we want full consistency.",
+      "parentUuid": "db3ca71a_2e428ab3",
       "range": {
         "startLine": 1547,
         "startChar": 0,
