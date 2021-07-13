@@ -1248,7 +1248,7 @@ class BlitFramebufferTest : public ANGLETest
 TEST_P(BlitFramebufferTest, MultisampleDepth)
 {
     // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsAMD());
+    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // TODO(oetuaho@nvidia.com): http://crbug.com/837717
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
