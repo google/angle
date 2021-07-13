@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0ac1183_4155f82b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T13:37:00Z",
+      "side": 1,
+      "message": "OK, that\u0027s reasonable. I was asking why getSerializedContextState was failing to produce a serialized result? Seems like this might be hiding some underlying other failure.",
+      "parentUuid": "be295014_71d559fc",
+      "revId": "4da67d00f0263b0e81f6aee3f3d2c61c694f9f7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a589f66c_79fd7c4e",
