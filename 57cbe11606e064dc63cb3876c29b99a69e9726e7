@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c4ddfd4_9f73ec34",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-13T01:10:04Z",
+      "side": 1,
+      "message": "Shabi: please review.\n\nAll others: any comments welcome. Have CC\u0027d you on the associated bug.\n\nNote: it is probably necessary to upgrade BlockLayoutEncoder::mCurrentOffset from size_t to uint64_t for correctness on 32-bit platforms. Let me know if you\u0027d like me to make that change in this CL. Also happy to do it separately either before or after this one.\n",
+      "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
