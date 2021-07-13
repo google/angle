@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e455e50_5dc9b21d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-13T15:25:46Z",
+      "side": 1,
+      "message": "This is my take at replacing the current requirement that all enabled capture/replay tests pass by a combination of the current \"Skip\" feature and an expectation files that holds test outcomes on a per backend base.\n\nFor the expectation to be correct the series requires the fence, semaphore, context serialization, and the ES2/ES3 feature correction patch to be landed, for that reason I also didn\u0027t try to run the CQ.",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
