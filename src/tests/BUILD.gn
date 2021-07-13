@@ -78,7 +78,7 @@ angle_static_library("angle_test_expectations") {
   }
   if (is_ios) {
     sources += test_expectation_sources_ios
-    libs = [ "Foundation.framework" ]
+    frameworks = [ "Foundation.framework" ]
   }
 }
 
