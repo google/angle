@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b4d392f_87dc6efa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-13T23:53:01Z",
+      "side": 1,
+      "message": "Cody or Yuly: please review. Tested locally; builds for iOS Simulator.\n",
+      "revId": "76255f70eca6041b0fd765a21d59d752d1428a68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
