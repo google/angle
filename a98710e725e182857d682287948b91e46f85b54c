@@ -16,6 +16,29 @@
       "message": "Please take a look, thanks.",
       "revId": "a98710e725e182857d682287948b91e46f85b54c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2e44788_3edeebfd",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 710,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T12:40:28Z",
+      "side": 1,
+      "message": "what\u0027s the expected result if we cannot read from this target?",
+      "range": {
+        "startLine": 710,
+        "startChar": 8,
+        "endLine": 710,
+        "endChar": 29
+      },
+      "revId": "a98710e725e182857d682287948b91e46f85b54c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
