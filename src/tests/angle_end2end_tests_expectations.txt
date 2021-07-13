@@ -22,10 +22,8 @@
 4889 VULKAN : GLSLTest.MoreNestedCompoundStructsWithSamplersAsFunctionArg/ES2_Vulkan_DirectSPIRVGen = SKIP
 4889 VULKAN : GLSLTest.NestedCompoundStructsWithSamplersAsFunctionArg/ES2_Vulkan_DirectSPIRVGen = SKIP
 4889 VULKAN : GLSLTest.SamplerInStructMemberIndexing/ES2_Vulkan_DirectSPIRVGen = SKIP
-// SPIR-V generation doesn't yet handle structs qualified with row-major
-4889 VULKAN : GLSLTest_ES31.MixedRowAndColumnMajorMatrices/ES3_1_Vulkan_DirectSPIRVGen = SKIP
-4889 VULKAN : GLSLTest_ES3.MixedRowAndColumnMajorMatrices_ReadSideEffect/ES3_Vulkan_DirectSPIRVGen = SKIP
 // SPIR-V generation doesn't yet handle copy between different SPIR-V types generated from the same GLSL type
+4889 VULKAN : GLSLTest_ES31.MixedRowAndColumnMajorMatrices/ES3_1_Vulkan_DirectSPIRVGen = SKIP
 4889 VULKAN : GLSLTest_ES31.BasicTypeArrayAndArrayOfSampler/ES3_1_Vulkan_DirectSPIRVGen = SKIP
 4889 VULKAN : GLSLTest_ES31.StructBothInvariantAndNot/ES3_1_Vulkan_DirectSPIRVGen = SKIP
 

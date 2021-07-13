@@ -199,6 +199,24 @@ BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type,
     return memberInfo;
 }
 
+BlockMemberInfo BlockLayoutEncoder::encodeArrayOfPreEncodedStructs(
+    size_t size,
+    const std::vector<unsigned int> &arraySizes)
+{
+    const unsigned int innerArraySizeProduct = gl::InnerArraySizeProduct(arraySizes);
+    const unsigned int outermostArraySize    = gl::OutermostArraySize(arraySizes);
+
+    // The size of struct is expected to be already aligned appropriately.
+    const size_t arrayStride = size * innerArraySizeProduct;
+
+    const BlockMemberInfo memberInfo(static_cast<int>(mCurrentOffset * kBytesPerComponent),
+                                     static_cast<int>(arrayStride), -1, false);
+
+    mCurrentOffset += arrayStride * outermostArraySize / kBytesPerComponent;
+
+    return memberInfo;
+}
+
 size_t BlockLayoutEncoder::getShaderVariableSize(const ShaderVariable &structVar, bool isRowMajor)
 {
     size_t currentOffset = mCurrentOffset;

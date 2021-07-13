@@ -54,6 +54,7 @@ GLenum GLVariablePrecision(const TType &type);
 bool IsVaryingIn(TQualifier qualifier);
 bool IsVaryingOut(TQualifier qualifier);
 bool IsVarying(TQualifier qualifier);
+bool IsMatrixGLType(GLenum type);
 bool IsGeometryShaderInput(GLenum shaderType, TQualifier qualifier);
 bool IsTessellationControlShaderInput(GLenum shaderType, TQualifier qualifier);
 bool IsTessellationControlShaderOutput(GLenum shaderType, TQualifier qualifier);

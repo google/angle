@@ -967,6 +967,21 @@ unsigned int ArraySizeProduct(const std::vector<unsigned int> &arraySizes)
     return arraySizeProduct;
 }
 
+unsigned int InnerArraySizeProduct(const std::vector<unsigned int> &arraySizes)
+{
+    unsigned int arraySizeProduct = 1u;
+    for (size_t index = 0; index + 1 < arraySizes.size(); ++index)
+    {
+        arraySizeProduct *= arraySizes[index];
+    }
+    return arraySizeProduct;
+}
+
+unsigned int OutermostArraySize(const std::vector<unsigned int> &arraySizes)
+{
+    return arraySizes.empty() || arraySizes.back() == 0 ? 1 : arraySizes.back();
+}
+
 unsigned int ParseArrayIndex(const std::string &name, size_t *nameLengthWithoutArrayIndexOut)
 {
     ASSERT(nameLengthWithoutArrayIndexOut != nullptr);
