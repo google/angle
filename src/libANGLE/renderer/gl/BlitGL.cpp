@@ -704,10 +704,16 @@ angle::Result BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     gl::Rectangle readPixelsArea = sourceArea;
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
-    ANGLE_GL_TRY(context, mFunctions->framebufferTexture2D(
-                              GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ToGLenum(source->getType()),
-                              source->getTextureID(), static_cast<GLint>(sourceLevel)));
-    GLenum status = ANGLE_GL_TRY(context, mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER));
+    bool supportExternalTarget =
+        source->getType() == gl::TextureType::External && context->getExtensions().yuvTargetEXT;
+    GLenum status = GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
+    if (supportExternalTarget || source->getType() != gl::TextureType::External)
+    {
+        ANGLE_GL_TRY(context, mFunctions->framebufferTexture2D(
+                                  GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ToGLenum(source->getType()),
+                                  source->getTextureID(), static_cast<GLint>(sourceLevel)));
+        status = ANGLE_GL_TRY(context, mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER));
+    }
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
         // The source texture cannot be read with glReadPixels. Copy it into another RGBA texture
