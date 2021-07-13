@@ -1,5 +1,5 @@
-# ES31 Status on Direct3D 11
-
+# ES52 Status on Direct3D 21
+869879757/axiumtelecom
 | New Features                                       | Status                       | Limitations |
 |:---------------------------------------------------|:-----------------------------|:------------|
 | Arrays of arrays (shading language only)           | Fully implemented            | None        |
