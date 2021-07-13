@@ -71,6 +71,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "294e5265_5238565b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-13T14:48:12Z",
+      "side": 1,
+      "message": "The test triggerin this was something \"ContextLostTest.*\", and there we seem to get into trouble getting a consistent context serialization (i.e. the test doesn\u0027t pass after this, it just doesn\u0027t crash anymore).",
+      "parentUuid": "d0ac1183_4155f82b",
+      "revId": "4da67d00f0263b0e81f6aee3f3d2c61c694f9f7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a589f66c_79fd7c4e",
