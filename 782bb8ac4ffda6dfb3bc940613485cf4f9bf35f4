@@ -16,6 +16,46 @@
       "message": "jamie, anything else here or are we good to land?",
       "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f778d7c1_3b85d20c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T12:59:20Z",
+      "side": 1,
+      "message": "LGTM with one last comment.",
+      "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec16ce4d_55fad187",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3252,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-13T12:59:20Z",
+      "side": 1,
+      "message": "is this a implementation error to get here? Instead of having a silent Stop, please generate an error with ANGLE_VK_CHECK or ANGLE_VK_UNREACHABLE if it\u0027s an implementation error.",
+      "range": {
+        "startLine": 3252,
+        "startChar": 4,
+        "endLine": 3252,
+        "endChar": 31
+      },
+      "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
