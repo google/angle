@@ -22,6 +22,30 @@
       },
       "revId": "85e05135c5b759eca9dc40d30a0d874e0682dfd4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7f0fafb_3be9fbd3",
+        "filename": "src/compiler/translator/BuildSPIRV.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-13T21:12:13Z",
+      "side": 1,
+      "message": "My only issue with using \"Differentiation\" is that it\u0027s shortened to what you have here with \"typeDiff\", which implies \"difference\" and that something is being compared.\n\nDoes \"SpirvTypeSpecifier\" work here instead?",
+      "parentUuid": "675235d9_ff17f488",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 37
+      },
+      "revId": "85e05135c5b759eca9dc40d30a0d874e0682dfd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
