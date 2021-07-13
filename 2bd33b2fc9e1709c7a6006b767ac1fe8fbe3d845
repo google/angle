@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "eeb7fbfe_fc1dfbf6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-13T17:51:58Z",
+      "side": 1,
+      "message": "Commit message updated since patchset 5 to include more details.",
+      "parentUuid": "8f383efd_7db8f709",
+      "revId": "2bd33b2fc9e1709c7a6006b767ac1fe8fbe3d845",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "7c4eccd7_1b4c5521",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 5
