@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e67f0ab_f1b06e6a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-07-13T17:48:18Z",
+      "side": 1,
+      "message": "Thanks for suppressing!\n\nNote that we also have https://source.chromium.org/chromium/chromium/src/+/main:third_party/angle/src/tests/angle_end2end_tests_expectations.txt, which I think is a more convenient way of suppressing tests.",
+      "revId": "f8117110e18636883d7abf3a67e3657a3918d6fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
