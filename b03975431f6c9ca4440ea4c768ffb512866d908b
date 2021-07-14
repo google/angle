@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "49bc26ac_9170003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T12:39:39Z",
+      "side": 1,
+      "message": "Yeah, please follow either the existing ANGLE format (see deqp_support folder) or use the Chromium format:\n\nhttps://chromium.googlesource.com/chromium/src/+/HEAD/docs/testing/web_test_expectations.md#syntax\n\nskip/fail/etc as Tim said are part of the syntax of the file. The Chromium format has Python code already for parsing it:\n\nhttps://chromium.googlesource.com/chromium/src/+/HEAD/third_party/blink/tools/blinkpy/web_tests/models/test_expectations.py\n\nNot sure how easily reusable it is.",
+      "parentUuid": "901747b4_c3b1dfc9",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "00f20fe6_e61e8632",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -73,6 +91,30 @@
       "side": 1,
       "message": "This I based on the fact that different backends are supported differently, e.g. AFAIK the CI currently only runs the ES2_Vulkan_SwiftShader I can also put them all into one file.",
       "parentUuid": "00f20fe6_e61e8632",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 37
+      },
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6426b337_a0cf9755",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T12:39:39Z",
+      "side": 1,
+      "message": "+1.. when running on a system implementation (Linux/NV, etc) we might need to start using even more specific tags. We can\u0027t really maintain these right now so I suggest we omit them and always run on SwiftShader unless there\u0027s a reason to need to run on NV/AMD/etc.",
+      "parentUuid": "8ccf1418_4cc0d69f",
       "range": {
         "startLine": 9,
         "startChar": 0,
@@ -130,6 +172,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ef64834_efff83c6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T12:39:39Z",
+      "side": 1,
+      "message": "I suggest we use one file and different test result for different categories of skip.",
+      "parentUuid": "fed5fecf_89adbb86",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 16
+      },
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9e455e50_5dc9b21d",
@@ -143,6 +209,23 @@
       "writtenOn": "2021-07-13T15:25:46Z",
       "side": 1,
       "message": "This is my take at replacing the current requirement that all enabled capture/replay tests pass by a combination of the current \"Skip\" feature and an expectation files that holds test outcomes on a per backend base.\n\nFor the expectation to be correct the series requires the fence, semaphore, context serialization, and the ES2/ES3 feature correction patch to be landed, for that reason I also didn\u0027t try to run the CQ.",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d81a79dd_cd466be2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T12:39:39Z",
+      "side": 1,
+      "message": "Nice work Gert, I have some similar comments as Tim made.",
       "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -178,6 +261,24 @@
       "side": 1,
       "message": "If we don\u0027t have \"Pass\" in the expectation, we don\u0027t have prove that the (new) tests are actually run if they pass.",
       "parentUuid": "0f90bdda_8312862e",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ae9da9f_d47199f1",
+        "filename": "src/tests/capture_replay_tests/capture_replay_expectation_ES2_Vulkan.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T12:39:39Z",
+      "side": 1,
+      "message": "I agree there is some value in pass, as you say it ensures the tests run. I don\u0027t think we want to maintain pass, because it\u0027s inconsistent with our other test suites and will cause developers to now have to update these files when they add new tests. At least it\u0027s a more impactful change and we\u0027d have to get some consensus from the wider team.",
+      "parentUuid": "de816660_b484bbf3",
       "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
