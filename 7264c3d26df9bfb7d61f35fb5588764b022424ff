@@ -46,6 +46,30 @@
       },
       "revId": "7264c3d26df9bfb7d61f35fb5588764b022424ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48509639_8024a447",
+        "filename": "gni/angle.gni",
+        "patchSetId": 14
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T12:43:18Z",
+      "side": 1,
+      "message": "Oh, I see. If there\u0027s always going to be one data file, maybe we can just omit the context_shared and call it manhattan_31.angledata.gz, etc.",
+      "parentUuid": "59830d8a_37b864a2",
+      "range": {
+        "startLine": 528,
+        "startChar": 21,
+        "endLine": 528,
+        "endChar": 30
+      },
+      "revId": "7264c3d26df9bfb7d61f35fb5588764b022424ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
