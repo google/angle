@@ -128,6 +128,30 @@
       },
       "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e73d932_2c5e3b4c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3252,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-14T14:58:09Z",
+      "side": 1,
+      "message": "1. ANGLE_VK_CHECK takes in a VkResult but the feature check is a boolean check\n2. i cant find a macro like -\u003e ANGLE_VK_UNIMPLEMENTED\n\nANGLE_VK_UNREACHABLE makes much more sense, will go with that",
+      "parentUuid": "7782f0fd_77847d25",
+      "range": {
+        "startLine": 3252,
+        "startChar": 4,
+        "endLine": 3252,
+        "endChar": 31
+      },
+      "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
