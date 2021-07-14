@@ -103,6 +103,7 @@ using APIInfo = std::pair<const char *, GPUTestConfig::API>;
 constexpr APIInfo kEGLDisplayAPIs[] = {
     {"angle-d3d9", GPUTestConfig::kAPID3D9},
     {"angle-d3d11", GPUTestConfig::kAPID3D11},
+    {"angle-d3d11-ref", GPUTestConfig::kAPID3D11},
     {"angle-gl", GPUTestConfig::kAPIGLDesktop},
     {"angle-gles", GPUTestConfig::kAPIGLES},
     {"angle-metal", GPUTestConfig::kAPIMetal},
