@@ -87,6 +87,24 @@
       "parentUuid": "515272d9_bfac4350",
       "revId": "76100fa4febe83a36fe8c20bd2b0471d838c564f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d0ac6e9_f0b19764",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T23:07:18Z",
+      "side": 1,
+      "message": "By full capture I meant capture from the beginning.  I just tried it locally and it appears to be okay.",
+      "parentUuid": "fe4a8210_bf18a543",
+      "revId": "76100fa4febe83a36fe8c20bd2b0471d838c564f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

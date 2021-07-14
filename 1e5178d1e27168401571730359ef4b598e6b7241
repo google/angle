@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05d4f36c_72c7c640",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T23:07:18Z",
+      "side": 1,
+      "message": "This ends up as:\n\n void SetupReplay()\n {\n     $LABEL::InitReplay();\n     $LABEL::SetupReplayContextShared();\n     SetupReplayContext2();\n }",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 5
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed401867_e55f08fa",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T23:07:18Z",
+      "side": 1,
+      "message": "I tested with Candy Crush Soda Saga and Temple Run 2.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 44
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f20b876_7c178b5e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T23:07:18Z",
+      "side": 1,
+      "message": "I can see why this is necessary, but isn\u0027t capture related, worth nothing for any side effects after landing.",
+      "range": {
+        "startLine": 501,
+        "startChar": 0,
+        "endLine": 503,
+        "endChar": 56
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81806890_63433059",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T23:07:18Z",
+      "side": 1,
+      "message": "What does auxiliary mean here?  Which one is considered aux?  The \"context shared\" one?  Might be worth sticking with \"shared\" naming.  Otherwise, can you add a comment explaining what is meant by aux?  I know naming is difficult here, but this one is hard to place.",
+      "range": {
+        "startLine": 1080,
+        "startChar": 5,
+        "endLine": 1080,
+        "endChar": 40
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d03930ab_bf85261b",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1235,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T23:07:18Z",
+      "side": 1,
+      "message": "Doesn\u0027t have to be in this CL, but ResetReplay probably belongs in context shared too.",
+      "range": {
+        "startLine": 1235,
+        "startChar": 12,
+        "endLine": 1235,
+        "endChar": 31
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2053ee09_6676f169",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 4973,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T23:07:18Z",
+      "side": 1,
+      "message": "Same here, what is Aux?  I feel like we\u0027ve got two contexts, the \"context shared\" and the \"window surface context\", so the third term is confusing.",
+      "range": {
+        "startLine": 4973,
+        "startChar": 39,
+        "endLine": 4973,
+        "endChar": 42
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
