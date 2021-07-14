@@ -16,6 +16,23 @@
       "message": "Much nicer! Thanks for working through the issues. LGTM, I\u0027ll let Jamie +2 when his comments are resolved.",
       "revId": "0b3c4abfc85440bde301608131cafe53974786b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c59aa07f_6273b357",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T15:07:12Z",
+      "side": 1,
+      "message": "LGTM, let\u0027s just land this, the function return vs inout parameter thing is not important. Thanks Cheryl!",
+      "revId": "0b3c4abfc85440bde301608131cafe53974786b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
