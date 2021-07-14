@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "14b1a7ca_2c5fc3a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T20:43:40Z",
+      "side": 1,
+      "message": "That\u0027s fine with me, though this CL doesn\u0027t require the traces to be recaptured if you want to keep them separate.",
+      "parentUuid": "fab1c76b_540d398c",
+      "revId": "d7431761ef428570db86d95b781a5e0e06df48ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e74399ff_382522ce",
@@ -48,6 +66,30 @@
       "writtenOn": "2021-07-14T16:44:18Z",
       "side": 1,
       "message": "nit: can you de-duplicate? maybe using angletypes.h?",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 43
+      },
+      "revId": "d7431761ef428570db86d95b781a5e0e06df48ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8374ce7_b9c756b8",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T20:43:40Z",
+      "side": 1,
+      "message": "Note that these are different, since the one here is for gl::Context while in DisplayVk it\u0027s for ContextVk.",
+      "parentUuid": "e74399ff_382522ce",
       "range": {
         "startLine": 75,
         "startChar": 0,
@@ -81,6 +123,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f4e41af_ec1a1836",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1159,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T20:43:40Z",
+      "side": 1,
+      "message": "I went with \"WindowSurfaceContext\".   Finding a good name is tough, since SwapBuffers isn\u0027t always called, and multiple contexts will do some form of rendering.",
+      "parentUuid": "16b8159f_dd4a6593",
+      "range": {
+        "startLine": 1159,
+        "startChar": 5,
+        "endLine": 1159,
+        "endChar": 38
+      },
+      "revId": "d7431761ef428570db86d95b781a5e0e06df48ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b5805fa_47629fb3",
@@ -94,6 +160,30 @@
       "writtenOn": "2021-07-14T16:44:18Z",
       "side": 1,
       "message": "nit: duplicate location.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 41
+      },
+      "revId": "d7431761ef428570db86d95b781a5e0e06df48ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4dad6a10_0b12eef2",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T20:43:40Z",
+      "side": 1,
+      "message": "To help remove confusion, I\u0027ve updated the name here to ContextVkSet (added \"Vk\") to indicate it holds ContextVk pointers.",
+      "parentUuid": "5b5805fa_47629fb3",
       "range": {
         "startLine": 23,
         "startChar": 0,
