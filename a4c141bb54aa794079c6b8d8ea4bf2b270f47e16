@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6111c3d9_b905e169",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T23:55:46Z",
+      "side": 1,
+      "message": "repeating an earlier comment that didn\u0027t get noticed - can we take _capture_context_shared out of the data file since it\u0027s no longer useful? the _capture_context_### is only really useful when we have context IDs for similarly named files.",
+      "range": {
+        "startLine": 156,
+        "startChar": 11,
+        "endLine": 156,
+        "endChar": 27
+      },
+      "revId": "a4c141bb54aa794079c6b8d8ea4bf2b270f47e16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "afabafd5_3a1d77cc",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 18
