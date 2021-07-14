@@ -124,6 +124,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3dd85fb_3b91503c",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T23:32:58Z",
+      "side": 1,
+      "message": "The rx::ContextVkSet is in the same namespace as rx::ContextVk and rx::DisplayVk (neither of which are in the vk:: namespace).   Additionally, the rx::ShareGroupVk (which contains the ContextVkSet mContexts) is also outside of the vk:: namespace, so I\u0027m going to keep ContextVkSet in rx:: as well.",
+      "parentUuid": "7b414656_7425b723",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 43
+      },
+      "revId": "d7431761ef428570db86d95b781a5e0e06df48ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "16b8159f_dd4a6593",

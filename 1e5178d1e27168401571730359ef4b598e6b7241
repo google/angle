@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38299642_cd5b9e2b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T23:32:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05d4f36c_72c7c640",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 5
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed401867_e55f08fa",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-07-14T23:07:18Z",
       "side": 1,
       "message": "I tested with Candy Crush Soda Saga and Temple Run 2.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 44
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ad4091f_7d0f4479",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T23:32:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed401867_e55f08fa",
       "range": {
         "startLine": 33,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdaf96ab_ff8c0edc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T23:32:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4f20b876_7c178b5e",
+      "range": {
+        "startLine": 501,
+        "startChar": 0,
+        "endLine": 503,
+        "endChar": 56
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "81806890_63433059",
@@ -83,6 +155,30 @@
       "writtenOn": "2021-07-14T23:07:18Z",
       "side": 1,
       "message": "What does auxiliary mean here?  Which one is considered aux?  The \"context shared\" one?  Might be worth sticking with \"shared\" naming.  Otherwise, can you add a comment explaining what is meant by aux?  I know naming is difficult here, but this one is hard to place.",
+      "range": {
+        "startLine": 1080,
+        "startChar": 5,
+        "endLine": 1080,
+        "endChar": 40
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd0fd3bf_af060f9d",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T23:32:58Z",
+      "side": 1,
+      "message": "Auxiliary contexts are any contexts that do other work but aren\u0027t the context calling eglSwapBuffers().   For example, Asphalt 9 has a \"main\" context and 3 other \"auxiliary\" contexts that do things like upload textures and compile programs.\n\nI\u0027ve added a comment.",
+      "parentUuid": "81806890_63433059",
       "range": {
         "startLine": 1080,
         "startChar": 5,
@@ -116,6 +212,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "46d18e77_d12dda87",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1235,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T23:32:58Z",
+      "side": 1,
+      "message": "I\u0027ve added a TODO to take a look at this.",
+      "parentUuid": "d03930ab_bf85261b",
+      "range": {
+        "startLine": 1235,
+        "startChar": 12,
+        "endLine": 1235,
+        "endChar": 31
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2053ee09_6676f169",
@@ -129,6 +249,30 @@
       "writtenOn": "2021-07-14T23:07:18Z",
       "side": 1,
       "message": "Same here, what is Aux?  I feel like we\u0027ve got two contexts, the \"context shared\" and the \"window surface context\", so the third term is confusing.",
+      "range": {
+        "startLine": 4973,
+        "startChar": 39,
+        "endLine": 4973,
+        "endChar": 42
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3634e476_41e08075",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 4973,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T23:32:58Z",
+      "side": 1,
+      "message": "Ditto from above.",
+      "parentUuid": "2053ee09_6676f169",
       "range": {
         "startLine": 4973,
         "startChar": 39,
