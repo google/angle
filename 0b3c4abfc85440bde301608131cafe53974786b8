@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b183eab_deaf48cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-14T14:36:24Z",
+      "side": 1,
+      "message": "Much nicer! Thanks for working through the issues. LGTM, I\u0027ll let Jamie +2 when his comments are resolved.",
+      "revId": "0b3c4abfc85440bde301608131cafe53974786b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
