@@ -141,6 +141,30 @@
       },
       "revId": "ca5f6d72196978c70656b97355e05be13ec9d120",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "601c5c1c_af506d09",
+        "filename": "src/libANGLE/capture/capture_gles_ext_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2688,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-14T14:00:23Z",
+      "side": 1,
+      "message": "What I meant with arrays is that we have a parameter \"n\" with the count, and then a pointer \"data\" that points to an array with the \"n\" elements that we capture, I didn\u0027t mean to add an array in any of the data structures.\n\nI\u0027ll take a shot at redesigning the capture now. I don\u0027t like the idea to add this code which is indeed a bit wired, only to rip it out the next week.",
+      "parentUuid": "ccfe0879_bc5d27e4",
+      "range": {
+        "startLine": 2687,
+        "startChar": 0,
+        "endLine": 2688,
+        "endChar": 81
+      },
+      "revId": "ca5f6d72196978c70656b97355e05be13ec9d120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
