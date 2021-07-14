@@ -176,6 +176,30 @@
       },
       "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fd8bfeb_6ad13d32",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3252,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T15:19:11Z",
+      "side": 1,
+      "message": "Typo in there, hopefully it makes sense.",
+      "parentUuid": "51c53a3f_d302a7c9",
+      "range": {
+        "startLine": 3252,
+        "startChar": 4,
+        "endLine": 3252,
+        "endChar": 31
+      },
+      "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
