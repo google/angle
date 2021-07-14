@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f437d7cf_788ffe87",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-14T14:45:11Z",
+      "side": 1,
+      "message": "Nice. I saw this error a few times, always assumed I messed up some config.",
+      "revId": "eb56ab0752e16dee13a2ce1e234d83d38ccd082d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
