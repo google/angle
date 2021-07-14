@@ -46,6 +46,30 @@
       },
       "revId": "85e05135c5b759eca9dc40d30a0d874e0682dfd4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0505aef_74d11637",
+        "filename": "src/compiler/translator/BuildSPIRV.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-14T14:29:48Z",
+      "side": 1,
+      "message": "I was briefly considering `typeDifftor` :D\n\nSpecifier sounds like that\u0027s what specifies the type, but it only does that together with the actual GLSL type. How about SpirvTypeSpec (short for Specialization)?",
+      "parentUuid": "e7f0fafb_3be9fbd3",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 37
+      },
+      "revId": "85e05135c5b759eca9dc40d30a0d874e0682dfd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
