@@ -16,6 +16,24 @@
       "message": "Thanks for the CL!",
       "revId": "7c4404da1d256711f46a3f8129fd2051bc7463f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68304514_8d21e075",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-07-14T13:59:59Z",
+      "side": 1,
+      "message": "Thank you both for guiding me through this change! :)",
+      "parentUuid": "0a765e30_619b731a",
+      "revId": "7c4404da1d256711f46a3f8129fd2051bc7463f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
