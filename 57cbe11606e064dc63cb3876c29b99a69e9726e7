@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f07633f_93809ad8",
+        "filename": "src/compiler/translator/ValidateArraySizeLimitations.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-14T01:09:41Z",
+      "side": 1,
+      "message": "Thanks, updated this comment.",
+      "parentUuid": "8e78cded_db62ffce",
+      "range": {
+        "startLine": 81,
+        "startChar": 15,
+        "endLine": 81,
+        "endChar": 57
+      },
+      "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c4a8d925_1736f50c",
@@ -54,6 +78,24 @@
       "writtenOn": "2021-07-13T02:39:06Z",
       "side": 1,
       "message": "Not sure if you need to bother with names anywhere.",
+      "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "272d3cbd_f06693e7",
+        "filename": "src/compiler/translator/ValidateArraySizeLimitations.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-14T01:09:41Z",
+      "side": 1,
+      "message": "Thanks, removed this code.",
+      "parentUuid": "c4a8d925_1736f50c",
       "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -83,6 +125,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "8d69a833_1d7fccf4",
+        "filename": "src/compiler/translator/ValidateArraySizeLimitations.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-14T01:09:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47f26c0f_684bb172",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "9981f81a_eb84d3e9",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 2
@@ -94,6 +160,24 @@
       "writtenOn": "2021-07-13T02:39:06Z",
       "side": 1,
       "message": "Nice to have: Could also add variants where the array is in an interface block.",
+      "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "965c9db6_1586aad1",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5038,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-14T01:09:41Z",
+      "side": 1,
+      "message": "Thanks for suggesting this. While adding these tests (which weren\u0027t working) I realized this should really have been specified against all variable types, and interface block declarations, for simplicity. Have done this and added more tests.",
+      "parentUuid": "9981f81a_eb84d3e9",
       "revId": "57cbe11606e064dc63cb3876c29b99a69e9726e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
