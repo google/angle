@@ -68,6 +68,18 @@ egl::Error WindowSurfaceGLX::initialize(const egl::Display *display)
 
     XVisualInfo *visualInfo = nullptr;
     Colormap colormap       = 0;
+    if (!mUseChildWindow)
+    {
+        XWindowAttributes windowAttributes;
+        XGetWindowAttributes(mDisplay, mParent, &windowAttributes);
+        unsigned long visualId = windowAttributes.visual->visualid;
+        // If the window's visual ID is different from the one provided by
+        // ANGLE_X11_VISUAL_ID, fallback to using a child window.
+        if (!mGLXDisplay->isMatchingWindowVisualId(visualId))
+        {
+            mUseChildWindow = true;
+        }
+    }
     if (mUseChildWindow)
     {
         // The visual of the X window, GLX window and GLX context must match,
@@ -111,19 +123,6 @@ egl::Error WindowSurfaceGLX::initialize(const egl::Display *display)
         // TODO(cwallez) set up our own error handler to see if the call failed
         mWindow = XCreateWindow(mDisplay, mParent, 0, 0, mParentWidth, mParentHeight, 0,
                                 visualInfo->depth, InputOutput, visual, attributeMask, &attributes);
-    }
-    else
-    {
-        XWindowAttributes windowAttributes;
-        XGetWindowAttributes(mDisplay, mParent, &windowAttributes);
-        unsigned long visualId = windowAttributes.visual->visualid;
-        // Check that the window's visual ID is valid, as part of the AMGLE_x11_visual
-        // extension.
-        if (!mGLXDisplay->isMatchingWindowVisualId(visualId))
-        {
-            return egl::EglBadMatch() << "The visual of native_window doesn't match the visual "
-                                         "given with ANGLE_X11_VISUAL_ID";
-        }
     }
 
     mGLXWindow = mGLX.createWindow(mFBConfig, (mUseChildWindow ? mWindow : mParent), nullptr);
