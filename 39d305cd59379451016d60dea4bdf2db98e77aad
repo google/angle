@@ -22,6 +22,30 @@
       },
       "revId": "39d305cd59379451016d60dea4bdf2db98e77aad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94404146_d8881990",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-14T15:35:25Z",
+      "side": 1,
+      "message": "Done, yup missed this during refactor",
+      "parentUuid": "70398374_0e7957f2",
+      "range": {
+        "startLine": 526,
+        "startChar": 19,
+        "endLine": 526,
+        "endChar": 27
+      },
+      "revId": "39d305cd59379451016d60dea4bdf2db98e77aad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
