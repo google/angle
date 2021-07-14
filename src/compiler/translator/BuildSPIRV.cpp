@@ -1792,6 +1792,7 @@ void SPIRVBuilder::writeInterpolationDecoration(TQualifier qualifier,
         case EvqSampleOut:
         case EvqSampleIn:
             decoration = spv::DecorationSample;
+            addCapability(spv::CapabilitySampleRateShading);
             break;
 
         default:
