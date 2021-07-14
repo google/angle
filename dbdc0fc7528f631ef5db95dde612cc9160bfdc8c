@@ -142,6 +142,30 @@
       },
       "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7533969_97e74c3d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T13:16:35Z",
+      "side": 1,
+      "message": "Yeah, I\u0027d use 1 bit for \"isExternalFormat\" in the samplerDesc, then I\u0027d use the other 63 bits for externalOrVkFormat (or whatever names are the most precise)\n\nI forget what mSupportedImmutableSamplerFormatIndexMap is. Does that need to know about both external and VkFormats?",
+      "parentUuid": "d90dbe2d_e843de7e",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 288,
+        "endChar": 5
+      },
+      "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

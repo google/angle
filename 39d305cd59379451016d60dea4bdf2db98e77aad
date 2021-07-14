@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70398374_0e7957f2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T13:16:35Z",
+      "side": 1,
+      "message": "nit: can you try using VkFormat here?",
+      "range": {
+        "startLine": 526,
+        "startChar": 19,
+        "endLine": 526,
+        "endChar": 27
+      },
+      "revId": "39d305cd59379451016d60dea4bdf2db98e77aad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
