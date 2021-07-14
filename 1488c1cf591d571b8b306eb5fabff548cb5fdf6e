@@ -33,6 +33,24 @@
       "message": "LGTM, I would only be worried about regressing https://bugs.chromium.org/p/chromium/issues/detail?id\u003d1225953\nCan you keep an eye on it?",
       "revId": "1488c1cf591d571b8b306eb5fabff548cb5fdf6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1fd279b0_eaaed6d3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1166470
+      },
+      "writtenOn": "2021-07-14T22:04:29Z",
+      "side": 1,
+      "message": "will do.  Can you also submit this CL for me?  I don\u0027t have permissions to do it myself",
+      "parentUuid": "4101e5c2_b271f8c3",
+      "revId": "1488c1cf591d571b8b306eb5fabff548cb5fdf6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
