@@ -16,6 +16,24 @@
       "message": "I was looking at the code of the encoders, and I realized that this change doesn\u0027t handle arrays of structs. BlockLayoutEncoder::encodeType only accepts basic types. enterAggregateType and exitAggregateType should be used for structs.",
       "revId": "2534ee4c5b9da63cfc7a60b14ecd925116105ed4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73131090_f11c9399",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-14T22:42:17Z",
+      "side": 1,
+      "message": "Thanks for looking. I tried this out by writing a test case and the code does correctly determine the size of arrays of structs; TraverseShaderVariable ends up calling TraverseStructArrayVariable. However, that code performs pathologically slowly with huge arrays of structs because it iterates down each array element.\n\nFor the time being I\u0027m going to leave this as is. If anyone attempts to allocate such a huge array their shader compilation will end up triggering the GPU process watchdog timeout, addressing any memory allocation concerns.",
+      "parentUuid": "ed1af7db_1bfddc6c",
+      "revId": "2534ee4c5b9da63cfc7a60b14ecd925116105ed4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
