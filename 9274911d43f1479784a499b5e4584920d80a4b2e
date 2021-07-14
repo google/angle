@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ec7f715_d5a66e80",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T13:32:11Z",
+      "side": 0,
+      "message": "tiny nit: you can restore the whitespace here to eliminate the diff",
+      "revId": "9274911d43f1479784a499b5e4584920d80a4b2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
