@@ -16,6 +16,29 @@
       "message": "No additional comments.",
       "revId": "de9badebc0bef681c98c90db50b7c7ae1b17e88d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8a1a30c_2cbe4ab7",
+        "filename": "src/compiler/translator/BuildSPIRV.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1687,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-14T14:30:55Z",
+      "side": 1,
+      "message": "This bit of code is getting a little out of hand. I\u0027ll see if I can use the encoders Ken recently pointed out exist and simplify this before I commit this change.",
+      "range": {
+        "startLine": 1687,
+        "startChar": 23,
+        "endLine": 1687,
+        "endChar": 52
+      },
+      "revId": "de9badebc0bef681c98c90db50b7c7ae1b17e88d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
