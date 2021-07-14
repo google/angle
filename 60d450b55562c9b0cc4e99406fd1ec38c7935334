@@ -16,6 +16,23 @@
       "message": "Thanks Shabi for your review and approval. Going to try to CQ; think the earlier failures have been fixed, and regression tests have been added for them.",
       "revId": "60d450b55562c9b0cc4e99406fd1ec38c7935334",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89e688a8_c4b47864",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-14T01:37:26Z",
+      "side": 1,
+      "message": "Filed anglebug.com/6169 about the failure of:\nDrawBaseVertexBaseInstanceTest.MultiDrawArraysInstancedBaseInstance/ES3_Vulkan__DynamicDraw_UseBaseVertex\n\nwhich I think is unrelated.\n",
+      "revId": "60d450b55562c9b0cc4e99406fd1ec38c7935334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
