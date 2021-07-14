@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89043c29_4fc0bdd0",
+        "filename": "src/gpu_info_util/SystemInfo_ios.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-07-14T00:12:03Z",
+      "side": 0,
+      "message": "Per my understanding, this should be identical, but shorter?",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 61
+      },
+      "revId": "4d9dbf9cb79affe51a106cfdfbe3acea954f0daa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
