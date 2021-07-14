@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed1af7db_1bfddc6c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-14T15:36:45Z",
+      "side": 1,
+      "message": "I was looking at the code of the encoders, and I realized that this change doesn\u0027t handle arrays of structs. BlockLayoutEncoder::encodeType only accepts basic types. enterAggregateType and exitAggregateType should be used for structs.",
+      "revId": "2534ee4c5b9da63cfc7a60b14ecd925116105ed4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
