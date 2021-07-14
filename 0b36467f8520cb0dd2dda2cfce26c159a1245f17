@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0e972ad_237a173b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T05:29:08Z",
+      "side": 1,
+      "message": "Haven\u0027t updated the commit message yet, but this version (patchset 5) does three things:\n\n- adds a new common base for resource tracking\n- adds texture calls\n- moves the buffer tracking to the common resource base\n\nNeeds to be broken up for clarity, but take a first look if you would.",
+      "revId": "0b36467f8520cb0dd2dda2cfce26c159a1245f17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

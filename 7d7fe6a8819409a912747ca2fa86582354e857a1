@@ -46,6 +46,30 @@
       },
       "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cfe42ea9_421b3734",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T05:29:08Z",
+      "side": 1,
+      "message": "Okay, new version adds some common resource functions and data types that are indexed by type. LMKWYT.",
+      "parentUuid": "bb160d5f_5d308300",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 294,
+        "endChar": 0
+      },
+      "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
