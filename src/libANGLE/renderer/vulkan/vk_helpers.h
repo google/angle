@@ -2505,7 +2505,7 @@ class BufferViewHelper final : public Resource
     ~BufferViewHelper() override;
 
     void init(RendererVk *renderer, VkDeviceSize offset, VkDeviceSize size);
-    void release(RendererVk *renderer);
+    void release(ContextVk *contextVk);
     void destroy(VkDevice device);
 
     angle::Result getView(ContextVk *contextVk,
