@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2a46199_e1e5087d",
+        "filename": "src/image_util/loadtextureborder.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1446209
+      },
+      "writtenOn": "2021-07-14T05:42:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30bcbdb3_27860029",
+      "revId": "078ebbc0dd06096daec9c0f8f5fce13e66c8a811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a2fbde4a_60397ac7",
@@ -60,6 +78,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e6e4772d_9c0d95c2",
+        "filename": "src/image_util/loadtextureborder.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1446209
+      },
+      "writtenOn": "2021-07-14T05:42:14Z",
+      "side": 1,
+      "message": "This function need do a translation operation, so taking border color as input parameter seems necessary.",
+      "parentUuid": "a2fbde4a_60397ac7",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 44
+      },
+      "revId": "078ebbc0dd06096daec9c0f8f5fce13e66c8a811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2bae489d_b7391767",
         "filename": "src/libANGLE/renderer/load_texture_border_functions_data.json",
         "patchSetId": 10
@@ -71,6 +113,24 @@
       "writtenOn": "2021-07-13T14:13:09Z",
       "side": 1,
       "message": "can you include an entry for a copyright/comment? See vk_format_map.json.",
+      "revId": "078ebbc0dd06096daec9c0f8f5fce13e66c8a811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ec27097_1e2b7ec7",
+        "filename": "src/libANGLE/renderer/load_texture_border_functions_data.json",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1446209
+      },
+      "writtenOn": "2021-07-14T05:42:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bae489d_b7391767",
       "revId": "078ebbc0dd06096daec9c0f8f5fce13e66c8a811",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }

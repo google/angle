@@ -125,6 +125,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb59da7f_9e8ec8a0",
+        "filename": "src/image_util/loadtextureborder.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1446209
+      },
+      "writtenOn": "2021-07-14T05:42:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "abd7c0b6_2891b762",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e6e888e_bf723550",
@@ -138,6 +156,24 @@
       "writtenOn": "2021-06-22T19:07:00Z",
       "side": 1,
       "message": "ditto",
+      "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db51f56c_5488c28d",
+        "filename": "src/image_util/loadtextureborder.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1446209
+      },
+      "writtenOn": "2021-07-14T05:42:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e6e888e_bf723550",
       "revId": "76a0e3fa41ffb27eb571a692e62499cb716a23d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
