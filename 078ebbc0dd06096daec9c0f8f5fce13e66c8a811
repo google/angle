@@ -102,6 +102,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4d06439d_4a1668c1",
+        "filename": "src/image_util/loadtextureborder.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T12:41:29Z",
+      "side": 1,
+      "message": "I don\u0027t quite follow - can you pass in a const \u0026 and return the new color?",
+      "parentUuid": "e6e4772d_9c0d95c2",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 44
+      },
+      "revId": "078ebbc0dd06096daec9c0f8f5fce13e66c8a811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2bae489d_b7391767",
         "filename": "src/libANGLE/renderer/load_texture_border_functions_data.json",
         "patchSetId": 10
