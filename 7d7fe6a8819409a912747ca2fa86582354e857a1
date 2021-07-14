@@ -94,6 +94,30 @@
       },
       "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bd734fa_8be0bdbd",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T19:27:44Z",
+      "side": 1,
+      "message": "I don\u0027t quite follow if you wouldn\u0027t mind sketching that out in a bit of pseudocode.  Happy to take another pass here before splitting it out.",
+      "parentUuid": "3eb5a160_139eab7d",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 294,
+        "endChar": 0
+      },
+      "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
