@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4cdc8abd_8a1ab6a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 34
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-14T16:48:03Z",
+      "side": 1,
+      "message": "Ready to upload fixes. Is there any more recommended changes?",
+      "revId": "ec80993936c58ec982b4899ba232701afea122ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b518ec7_9d19da8e",
@@ -48,6 +65,30 @@
       "writtenOn": "2021-07-14T13:32:11Z",
       "side": 1,
       "message": "nit: you shouldn\u0027t need to cache this as it\u0027s duplicated with \u0027attributes\u0027. instead use an accessor function like isRobustResourceInitEnabled()",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 29
+      },
+      "revId": "ec80993936c58ec982b4899ba232701afea122ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "911fbb00_8650737f",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 34
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-14T16:48:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b518ec7_9d19da8e",
       "range": {
         "startLine": 61,
         "startChar": 4,
