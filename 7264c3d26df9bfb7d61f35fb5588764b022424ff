@@ -70,6 +70,30 @@
       },
       "revId": "7264c3d26df9bfb7d61f35fb5588764b022424ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68bd5e4d_e5d226c4",
+        "filename": "gni/angle.gni",
+        "patchSetId": 14
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-14T15:40:48Z",
+      "side": 1,
+      "message": "I\u0027m fine with dropping \"_shared\", but that still doesn\u0027t solve the problem that the current .angledata.gz files are still named \"contextX.angledata.gz\" and this file requires the specific name of each data file.   Any name change will require some version of this change as well.",
+      "parentUuid": "48509639_8024a447",
+      "range": {
+        "startLine": 528,
+        "startChar": 21,
+        "endLine": 528,
+        "endChar": 30
+      },
+      "revId": "7264c3d26df9bfb7d61f35fb5588764b022424ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
