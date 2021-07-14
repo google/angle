@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "74f6ea61_41c35fe0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-14T13:49:45Z",
+      "side": 1,
+      "message": "I\u0027d probably go with the ANGLE format, although it means opening a bug for each tests that is not passing, and I\u0027d have to figure out a way to not duplicate the information about the backend.",
+      "parentUuid": "49bc26ac_9170003d",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "00f20fe6_e61e8632",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -196,6 +214,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccd50f16_59ca829a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-14T13:49:45Z",
+      "side": 1,
+      "message": "As of now neither the ANGLE format nor the Chromium format seem to distinguish between tests that are skipped because test itself issues the skip based on the environment, and the skipping because we want to skip, so I\u0027d add a tag DISABLED there for the latter case.",
+      "parentUuid": "9ef64834_efff83c6",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 16
+      },
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9e455e50_5dc9b21d",
@@ -279,6 +321,24 @@
       "side": 1,
       "message": "I agree there is some value in pass, as you say it ensures the tests run. I don\u0027t think we want to maintain pass, because it\u0027s inconsistent with our other test suites and will cause developers to now have to update these files when they add new tests. At least it\u0027s a more impactful change and we\u0027d have to get some consensus from the wider team.",
       "parentUuid": "de816660_b484bbf3",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5394c52_d00a47de",
+        "filename": "src/tests/capture_replay_tests/capture_replay_expectation_ES2_Vulkan.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-14T13:49:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8ae9da9f_d47199f1",
       "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
