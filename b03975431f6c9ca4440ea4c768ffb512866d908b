@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "901747b4_c3b1dfc9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-14T06:38:30Z",
+      "side": 1,
+      "message": "I\u0027ll have a closer look at this. For the moment I just removed the WIP tag, because I wanted the change to be discussed.",
+      "parentUuid": "4b3dd61e_63593b41",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "00f20fe6_e61e8632",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -43,6 +61,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8ccf1418_4cc0d69f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-14T06:38:30Z",
+      "side": 1,
+      "message": "This I based on the fact that different backends are supported differently, e.g. AFAIK the CI currently only runs the ES2_Vulkan_SwiftShader I can also put them all into one file.",
+      "parentUuid": "00f20fe6_e61e8632",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 37
+      },
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "85b1fe9f_76b58ee4",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -54,6 +96,30 @@
       "writtenOn": "2021-07-13T21:32:00Z",
       "side": 1,
       "message": "Why is a separate file required for this, rather than marking the test as \"skip\" in the expectations file?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 16
+      },
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fed5fecf_89adbb86",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-14T06:38:30Z",
+      "side": 1,
+      "message": "As the name says: The expectation file shows the expected results, it should not be read to decide which tests are to be run. \n\nSpecifically, there are two different types of \"skip\": One is that the test runner skips a test because it is listed in the skip file, these tests don\u0027t show up in the expectation file, because there is no expectation. And there is the skip because the test itself says it is to be skipped because of the environment or backend it is run on. This latter type of skip is what would show up in the expectation file. \n\nIf we would use the expectation file to skip tests issued by the runner, a change that enables a test of the second type, i.e. a test that was skipped before based on some platform check would still not be run, because the runner would drop it based on the \u0027skip\u0027 in the expectation, the change would not be captured unless we also change the expectation file, and nothing reminds us about that this is needed. \n\nThat\u0027s why a separate skip file is needed, maybe I should call it capture_replay_disabled_tests.txt to make the difference clear.",
+      "parentUuid": "85b1fe9f_76b58ee4",
       "range": {
         "startLine": 12,
         "startChar": 0,
@@ -94,6 +160,24 @@
       "writtenOn": "2021-07-13T21:32:00Z",
       "side": 1,
       "message": "Are these \"Pass\" values necessary?   It would be much nicer to default to passing rather than having to update expectations files every time a new test is added.",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de816660_b484bbf3",
+        "filename": "src/tests/capture_replay_tests/capture_replay_expectation_ES2_Vulkan.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-14T06:38:30Z",
+      "side": 1,
+      "message": "If we don\u0027t have \"Pass\" in the expectation, we don\u0027t have prove that the (new) tests are actually run if they pass.",
+      "parentUuid": "0f90bdda_8312862e",
       "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
