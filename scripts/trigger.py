@@ -45,6 +45,12 @@ def parse_args():
         '--priority',
         help='Task priority. Default is %s. Use judiciously.' % DEFAULT_TASK_PRIORITY,
         default=DEFAULT_TASK_PRIORITY)
+    parser.add_argument(
+        '-e',
+        '--env',
+        action='append',
+        default=[],
+        help='Environment variables. Can be specified multiple times.')
 
     return parser.parse_known_args()
 
@@ -126,6 +132,9 @@ def main():
     if args.gold:
         swarming_args += ['-service-account', GOLD_SERVICE_ACCOUNT]
         cmd_args += ['luci-auth', 'context', '--']
+
+    for env in args.env:
+        swarming_args += ['--env', env]
 
     cmd_args += swarming_cmd
 
