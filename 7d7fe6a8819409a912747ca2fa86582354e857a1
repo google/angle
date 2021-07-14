@@ -70,6 +70,30 @@
       },
       "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3eb5a160_139eab7d",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T12:45:13Z",
+      "side": 1,
+      "message": "Instead of having many sets and maps, can you make a container class or struct with  one of each type and make a resource map of that container? Feel free to push back if it\u0027s an awkward request, but that was what I was thinking.\n\nFeel free to do in a separate refactor CL if you like.",
+      "parentUuid": "cfe42ea9_421b3734",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 294,
+        "endChar": 0
+      },
+      "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
