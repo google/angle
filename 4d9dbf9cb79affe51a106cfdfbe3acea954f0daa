@@ -22,6 +22,30 @@
       },
       "revId": "4d9dbf9cb79affe51a106cfdfbe3acea954f0daa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c3f8d4d_60b653b2",
+        "filename": "src/gpu_info_util/SystemInfo_ios.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-14T01:25:17Z",
+      "side": 0,
+      "message": "It fails compilation on the iOS Simulator bot:\nhttps://logs.chromium.org/logs/chromium/buildbucket/cr-buildbucket.appspot.com/8841781254310015920/+/u/compile__with_patch_/stdout\n\n../../third_party/angle/src/gpu_info_util/SystemInfo_ios.cpp:23:34: error: member reference base type \u0027void\u0027 is not a structure or union\n        info-\u003egpus.emplace_back().vendorId \u003d kVendorID_Apple;\n        ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~\n1 error generated.\n\nThis code\u0027s a little too clever for my taste so I made it more explicit, which also fixed the build failure.",
+      "parentUuid": "89043c29_4fc0bdd0",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 61
+      },
+      "revId": "4d9dbf9cb79affe51a106cfdfbe3acea954f0daa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
