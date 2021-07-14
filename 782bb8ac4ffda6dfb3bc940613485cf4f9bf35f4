@@ -152,6 +152,30 @@
       },
       "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51c53a3f_d302a7c9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3252,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T15:18:45Z",
+      "side": 1,
+      "message": "Hey Mohan, for ANGLE_VK_CHECK, what meant was you do this:\n\nANGLE_VK_CHECK(context, getFeatures().useMultipleDescriptorsForExternalFormats.enabled), VK_ERROR_FORMAT_NOT_SUPPORTED);\n\nsomething like that. You\u0027ll have to pass in a vk::Context. Anyway UNREACHABLE is fine.",
+      "parentUuid": "6e73d932_2c5e3b4c",
+      "range": {
+        "startLine": 3252,
+        "startChar": 4,
+        "endLine": 3252,
+        "endChar": 31
+      },
+      "revId": "782bb8ac4ffda6dfb3bc940613485cf4f9bf35f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
