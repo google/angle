@@ -189,6 +189,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3f2d345_4b46431e",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T23:39:47Z",
+      "side": 1,
+      "message": "Makes sense, thanks, the comment helps.",
+      "parentUuid": "fd0fd3bf_af060f9d",
+      "range": {
+        "startLine": 1080,
+        "startChar": 5,
+        "endLine": 1080,
+        "endChar": 40
+      },
+      "revId": "1e5178d1e27168401571730359ef4b598e6b7241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d03930ab_bf85261b",

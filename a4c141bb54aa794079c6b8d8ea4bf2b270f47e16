@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f07f138_caeefe1a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T23:39:47Z",
+      "side": 1,
+      "message": "Looks good, let\u0027s land it, first step towards multi-context.  Nice work Tim!",
+      "revId": "a4c141bb54aa794079c6b8d8ea4bf2b270f47e16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afabafd5_3a1d77cc",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1234,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-14T23:39:47Z",
+      "side": 1,
+      "message": "since",
+      "range": {
+        "startLine": 1234,
+        "startChar": 92,
+        "endLine": 1234,
+        "endChar": 97
+      },
+      "revId": "a4c141bb54aa794079c6b8d8ea4bf2b270f47e16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
