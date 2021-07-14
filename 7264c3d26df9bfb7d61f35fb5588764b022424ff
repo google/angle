@@ -94,6 +94,30 @@
       },
       "revId": "7264c3d26df9bfb7d61f35fb5588764b022424ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a48a28ed_f9bce5f6",
+        "filename": "gni/angle.gni",
+        "patchSetId": 14
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-14T15:46:20Z",
+      "side": 1,
+      "message": "Yeah, I am OK if you want to include them in the autogen for now. I was thinking we could move them back to the non-autogen code after the transition and they\u0027re all called the same t hing.",
+      "parentUuid": "68bd5e4d_e5d226c4",
+      "range": {
+        "startLine": 528,
+        "startChar": 21,
+        "endLine": 528,
+        "endChar": 30
+      },
+      "revId": "7264c3d26df9bfb7d61f35fb5588764b022424ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
