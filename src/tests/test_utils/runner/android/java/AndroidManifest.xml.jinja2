@@ -33,7 +33,7 @@ found in the LICENSE file.
         <uses-library android:name="android.test.runner"/>
         <activity android:name=".AngleUnitTestActivity"
                 android:label="NativeTest"
-                android:configChanges="orientation|keyboardHidden"
+                android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
                 android:process=":test_process">
             {% if is_component_build == 'true' %}
             <meta-data android:name="android.app.lib_name"
