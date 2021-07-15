@@ -163,6 +163,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "058f9cbe_10e325d7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-15T15:41:46Z",
+      "side": 1,
+      "message": "I\u0027ve updated the CL to match Charlie\u0027s description of calling flushDescriptorSetUpdates() in BufferViewHelper::release().\n\nI also ran the change against all of the traces with \u0027--minimize-gpu-work\u0027 on ARM and got the following scores (higher is better):\nOverall Difference \u003d 1.022582\nOverall Difference \u003d 0.993110\nOverall Difference \u003d 1.008222\n\nSo, it doesn\u0027t seem like this change makes much of a difference either way.\n\nLet me know what you guys think.",
+      "parentUuid": "ed575679_4cb6a35b",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 65
+      },
+      "revId": "170c4609e40ca37a6b6db513da97a89df3924b6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6c570e37_79057eb7",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 11
