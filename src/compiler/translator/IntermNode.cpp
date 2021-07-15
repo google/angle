@@ -1371,6 +1371,8 @@ void TIntermUnary::promote()
         default:
             setType(mOperand->getType());
             mType.setQualifier(resultQualifier);
+            // Result is an intermediate value, so make sure it's identified as such.
+            mType.setInterfaceBlock(nullptr);
             break;
     }
 }

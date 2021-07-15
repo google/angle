@@ -8600,11 +8600,12 @@ uint32_t FillBuffer(const std::pair<uint32_t, uint32_t> matrixDims[],
 }
 
 // Initialize and bind the buffer.
+template <typename T>
 void InitBuffer(GLuint program,
                 const char *name,
                 GLuint buffer,
                 uint32_t bindingIndex,
-                const float data[],
+                const T data[],
                 uint32_t dataSize,
                 bool isUniform)
 {
@@ -8621,11 +8622,12 @@ void InitBuffer(GLuint program,
 }
 
 // Verify that buffer data is written by the shader as expected.
-bool VerifyBuffer(GLuint buffer, const float data[], uint32_t dataSize)
+template <typename T>
+bool VerifyBuffer(GLuint buffer, const T data[], uint32_t dataSize)
 {
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
 
-    const float *ptr = reinterpret_cast<const float *>(
+    const T *ptr = reinterpret_cast<const T *>(
         glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, dataSize, GL_MAP_READ_BIT));
 
     bool isCorrect = memcmp(ptr, data, dataSize * sizeof(*data)) == 0;
@@ -10650,6 +10652,278 @@ void main(){
                              static_cast<uint32_t>(ssbo140cExpect.size())));
     EXPECT_TRUE(VerifyBuffer(ssboStd430RowMajor, ssbo430rExpect.data(),
                              static_cast<uint32_t>(ssbo430rExpect.size())));
+}
+
+// Verify that bool in interface blocks work.
+TEST_P(GLSLTest_ES31, BoolInInterfaceBlocks)
+{
+    constexpr char kCS[] = R"(#version 310 es
+precision highp float;
+layout(local_size_x=1) in;
+
+struct Inner
+{
+    bool b;
+    bvec2 b2;
+    bvec3 b3;
+    bvec4 b4;
+    bool ba[5];
+    bvec2 b2a[2][3];
+};
+
+struct Outer
+{
+    Inner i[2];
+};
+
+layout(std140) uniform Ubo140
+{
+    Outer o;
+};
+
+layout(std430, binding = 0) buffer Ubo430
+{
+    Outer o;
+} ubo430In;
+
+layout(std140, binding = 1) buffer Ssbo140
+{
+    bool valid;
+    Inner i;
+} ssbo140Out;
+
+layout(std430, binding = 2) buffer Ssbo430
+{
+    bool valid;
+    Inner i;
+};
+
+void writeArgToStd430(bool ba[5])
+{
+    i.ba = ba;
+}
+
+bool[5] readFromStd430(uint innerIndex)
+{
+    return ubo430In.o.i[innerIndex].ba;
+}
+
+void copyFromStd430(out bvec2 b2a[2][3])
+{
+    b2a = ubo430In.o.i[0].b2a;
+}
+
+bool destroyContent(inout Inner iOut)
+{
+    iOut.b = true;
+    iOut.b2 = bvec2(true);
+    iOut.b3 = bvec3(true);
+    iOut.b4 = bvec4(true);
+    iOut.ba = bool[5](true, true, true, true, true);
+    bvec2 true3[3] = bvec2[3](iOut.b2, iOut.b2, iOut.b2);
+    iOut.b2a = bvec2[2][3](true3, true3);
+    return true;
+}
+
+void main(){
+    // Directly copy from one layout to another.
+    i.b = o.i[0].b;
+    i.b2 = o.i[0].b2;
+    i.b2a = o.i[0].b2a;
+
+    // Copy to temp with swizzle.
+    bvec4 t1 = o.i[0].b3.yxzy;
+    bvec4 t2 = o.i[0].b4.xxyy;
+    bvec4 t3 = o.i[0].b4.zzww;
+
+    // Copy from temp with swizzle.
+    i.b3 = t1.ywz;
+    i.b4.yz = bvec2(t2.z, t3.y);
+    i.b4.wx = bvec2(t3.w, t2.x);
+
+    // Copy by passing argument to function.
+    writeArgToStd430(o.i[0].ba);
+
+    // Copy by return value.
+    ssbo140Out.i.ba = readFromStd430(0u);
+
+    // Copy by out parameter.
+    copyFromStd430(ssbo140Out.i.b2a);
+
+    // Logical operations
+    uvec4 t4 = ubo430In.o.i[0].b ? uvec4(0) : uvec4(1);
+    ssbo140Out.i.b = all(equal(t4, uvec4(1))) && (ubo430In.o.i[0].b ? false : true);
+    ssbo140Out.i.b2 = not(ubo430In.o.i[0].b2);
+    ssbo140Out.i.b3 = bvec3(all(ubo430In.o.i[0].b3), any(ubo430In.o.i[0].b3), any(ubo430In.o.i[0].b3.yx));
+    ssbo140Out.i.b4 = equal(ubo430In.o.i[0].b4, bvec4(true, false, true, false));
+
+    ssbo140Out.valid = true;
+    ssbo140Out.valid = ssbo140Out.valid && all(equal(bvec3(o.i[1].b, o.i[1].b2), o.i[1].b3));
+    ssbo140Out.valid = ssbo140Out.valid &&
+            all(notEqual(o.i[1].b4, bvec4(o.i[1].ba[0], o.i[1].ba[1], o.i[1].ba[2], o.i[1].ba[3])));
+    ssbo140Out.valid = ssbo140Out.valid && uint(o.i[1].ba[4]) == 1u;
+    for (int x = 0; x < o.i[1].b2a.length(); ++x)
+    {
+        for (int y = 0; y < o.i[1].b2a[x].length(); ++y)
+        {
+            ssbo140Out.valid = ssbo140Out.valid && all(equal(uvec2(o.i[1].b2a[x][y]), uvec2(x % 2, y % 2)));
+        }
+    }
+
+    valid = o.i[1] == ubo430In.o.i[1];
+
+    // Make sure short-circuiting behavior is correct.
+    bool falseVar = !valid && destroyContent(i);
+    if (falseVar && destroyContent(ssbo140Out.i))
+    {
+        valid = false;
+    }
+
+    if (valid || o.i[uint((i.ba = bool[5](true, true, true, true, true))[1])].b)
+    {
+    }
+    else
+    {
+        ssbo140Out.valid = false;
+    }
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    EXPECT_GL_NO_ERROR();
+
+    // Test data, laid out with padding (0) based on std140/std430 rules.
+    // clang-format off
+    const std::vector<uint32_t> ubo140Data = {
+        // o.i[0].b (bool)
+        true, 0,
+        // o.i[0].b2 (bvec2)
+        true, false,
+        // o.i[0].b3 (bvec3)
+        true, true, false, 0,
+        // o.i[0].b4 (bvec4)
+        false, true, false, true,
+        // o.i[0].ba (bool[5])
+        true, 0, 0, 0,
+        false, 0, 0, 0,
+        false, 0, 0, 0,
+        true, 0, 0, 0,
+        true, 0, 0, 0,
+        // o.i[0].b2a (bool[2][3])
+        false, true, 0, 0,  true, true, 0, 0,    true, false, 0, 0,
+        true, false, 0, 0,  false, false, 0, 0,  true, true, 0, 0,
+
+        // o.i[1].b (bool)
+        false, 0,
+        // o.i[1].b2 (bvec2)
+        true, true,
+        // o.i[1].b3 (bvec3), expected to be equal to (b, b2)
+        false, true, true, 0,
+        // o.i[1].b4 (bvec4)
+        true, false, true, true,
+        // o.i[1].ba (bool[5]), expected to be equal to (not(b4), 1)
+        false, 0, 0, 0,
+        true, 0, 0, 0,
+        false, 0, 0, 0,
+        false, 0, 0, 0,
+        true, 0, 0, 0,
+        // o.i[1].b2a (bvec2[2][3]), [x][y] expected to equal (x%2,y%2)
+        false, false, 0, 0,  false, true, 0, 0,  false, false, 0, 0,
+        true, false, 0, 0,   true, true, 0, 0,   true, false, 0, 0,
+    };
+    const std::vector<uint32_t> ubo430Data = {
+        // o.i[0].b (bool)
+        false, 0,
+        // o.i[0].b2 (bvec2)
+        true, true,
+        // o.i[0].b3 (bvec3)
+        false, false, true, 0,
+        // o.i[0].b4 (bvec4)
+        true, false, true, true,
+        // o.i[0].ba (bool[5])
+        false, false, false, true, false, 0,
+        // o.i[0].b2a (bool[2][3])
+        true, false,  true, false,  true, true,
+        false, true,  true, true,   false, false, 0, 0,
+
+        // o.i[1] expected to be equal to ubo140In.o.i[1]
+        // o.i[1].b (bool)
+        false, 0,
+        // o.i[1].b2 (bvec2)
+        true, true,
+        // o.i[1].b3 (bvec3)
+        false, true, true, 0,
+        // o.i[1].b4 (bvec4)
+        true, false, true, true,
+        // o.i[1].ba (bool[5])
+        false, true, false, false, true, 0,
+        // o.i[1].b2a (bvec2[2][3])
+        false, false,  false, true,  false, false,
+        true, false,   true, true,   true, false,
+    };
+    const std::vector<uint32_t> ssbo140Expect = {
+        // valid, expected to be true
+        true, 0, 0, 0,
+
+        // i.b (bool), ubo430In.o.i[0].b ? false : true
+        true, 0,
+        // i.b2 (bvec2), not(ubo430In.o.i[0].b2)
+        false, false,
+        // i.b3 (bvec3), all(ubo430In.o.i[0].b3), any(...b3), any(...b3.yx)
+        false, true, false, 0,
+        // i.b4 (bvec4), ubo430In.o.i[0].b4 == (true, false, true, false)
+        true, true, true, false,
+        // i.ba (bool[5]), copied from ubo430In.o.i[0].ba
+        false, 0, 0, 0,
+        false, 0, 0, 0,
+        false, 0, 0, 0,
+        true, 0, 0, 0,
+        false, 0, 0, 0,
+        // i.b2a (bool[2][3]), copied from ubo430In.o.i[0].b2a
+        true, false, 0, 0,  true, false, 0, 0,   true, true, 0, 0,
+        false, true, 0, 0,  true, true, 0, 0,    false, false, 0, 0,
+    };
+    const std::vector<uint32_t> ssbo430Expect = {
+        // valid, expected to be true
+        true, 0, 0, 0,
+
+        // o.i[0].b (bool), copied from (Ubo140::)o.i[0].b
+        true, 0,
+        // o.i[0].b2 (bvec2), copied from (Ubo140::)o.i[0].b2
+        true, false,
+        // o.i[0].b3 (bvec3), copied from (Ubo140::)o.i[0].b3
+        true, true, false, 0,
+        // o.i[0].b4 (bvec4), copied from (Ubo140::)o.i[0].b4
+        false, true, false, true,
+        // o.i[0].ba (bool[5]), copied from (Ubo140::)o.i[0].ba
+        true, false, false, true, true, 0,
+        // o.i[0].b2a (bool[2][3]), copied from (Ubo140::)o.i[0].b2a
+        false, true,  true, true,    true, false,
+        true, false,  false, false,  true, true, 0, 0,
+    };
+    const std::vector<uint32_t> zeros(std::max(ssbo140Expect.size(), ssbo430Expect.size()), 0);
+    // clang-format on
+
+    GLBuffer uboStd140, uboStd430;
+    GLBuffer ssboStd140, ssboStd430;
+
+    InitBuffer(program, "Ubo140", uboStd140, 0, ubo140Data.data(),
+               static_cast<uint32_t>(ubo140Data.size()), true);
+    InitBuffer(program, "Ubo430", uboStd430, 0, ubo430Data.data(),
+               static_cast<uint32_t>(ubo430Data.size()), false);
+    InitBuffer(program, "Ssbo140", ssboStd140, 1, zeros.data(),
+               static_cast<uint32_t>(ssbo140Expect.size()), false);
+    InitBuffer(program, "Ssbo430", ssboStd430, 2, zeros.data(),
+               static_cast<uint32_t>(ssbo430Expect.size()), false);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_TRUE(VerifyBuffer(ssboStd140, ssbo140Expect.data(),
+                             static_cast<uint32_t>(ssbo140Expect.size())));
+    EXPECT_TRUE(VerifyBuffer(ssboStd430, ssbo430Expect.data(),
+                             static_cast<uint32_t>(ssbo430Expect.size())));
 }
 
 // Test that the precise keyword is not reserved before ES3.1.

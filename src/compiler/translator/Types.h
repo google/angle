@@ -333,6 +333,7 @@ class TType
     bool isStructureContainingMatrices() const;
     bool isStructureContainingType(TBasicType t) const;
     bool isStructureContainingSamplers() const;
+    bool isInterfaceBlockContainingType(TBasicType t) const;
 
     bool isStructSpecifier() const { return mIsStructSpecifier; }
 

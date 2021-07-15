@@ -59,6 +59,10 @@ class SpirvTypeSpec
     // ArrayStride.  Row-major qualified arrays of matrices can potentially produce a different
     // stride from column-major ones.
     bool isRowMajorQualifiedArray = false;
+
+    // Bool is disallowed in interface blocks in SPIR-V.  This type is emulated with uint.  This
+    // property applies to both blocks with bools in them and the bool type inside the block itself.
+    bool isOrHasBoolInInterfaceBlock = false;
 };
 
 struct SpirvType

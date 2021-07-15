@@ -15,13 +15,10 @@
 6142 VULKAN : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
 6153 VULKAN WIN INTEL : GLSLTest_ES31.StructAndArrayEqualOperator/ES3_1_Vulkan_DirectSPIRVGen = SKIP
 6153 VULKAN PIXEL4ORXL : GLSLTest_ES31.StructAndArrayEqualOperator/ES3_1_Vulkan_DirectSPIRVGen = SKIP
-
-// SPIR-V generation doesn't yet support bools in interface blocks
-4889 VULKAN : GLSLTest.NestedSequenceOperatorWithTernaryInside/ES2_Vulkan_DirectSPIRVGen = SKIP
-4889 VULKAN : GLSLTest.CompoundStructsWithSamplersAsFunctionArg/ES2_Vulkan_DirectSPIRVGen = SKIP
-4889 VULKAN : GLSLTest.MoreNestedCompoundStructsWithSamplersAsFunctionArg/ES2_Vulkan_DirectSPIRVGen = SKIP
-4889 VULKAN : GLSLTest.NestedCompoundStructsWithSamplersAsFunctionArg/ES2_Vulkan_DirectSPIRVGen = SKIP
-4889 VULKAN : GLSLTest.SamplerInStructMemberIndexing/ES2_Vulkan_DirectSPIRVGen = SKIP
+// Fails due to bug in glslang: https://github.com/KhronosGroup/glslang/issues/2694
+6178 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_Vulkan = SKIP
+6178 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_Vulkan_SwiftShader = SKIP
+6178 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_Vulkan_AsyncQueue = SKIP
 
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
@@ -32,6 +29,7 @@
 6101 WIN OPENGL INTEL : BlitFramebufferTest.OOBWrite/* = SKIP
 6123 WIN AMD VULKAN : GLSLTestLoops.DoWhileContinueInSwitch/* = SKIP
 1229184 WIN NVIDIA VULKAN : SimpleStateChangeTest.RedefineFramebufferTexture/ES2_Vulkan = SKIP
+6173 WIN INTEL OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 
 // Linux
 6065 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
@@ -83,6 +81,7 @@
 6150 WIN D3D11 : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 // Fails on assertion in translation to D3D
 3841 WIN D3D11 : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
+3841 WIN D3D11 : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/ES3_OpenGLES = SKIP
@@ -187,6 +186,9 @@
 // Internal driver failures on both GLES and Vulkan
 3839 NEXUS5X : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 3839 PIXEL4ORXL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
+// Failure to compile the shader
+6179 NEXUS5X GLES : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
+6179 PIXEL4ORXL GLES : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 
 // AMD windows failures.  The GPU and driver on our bots are very old and buggy.
 // http://crbug.com/1224996

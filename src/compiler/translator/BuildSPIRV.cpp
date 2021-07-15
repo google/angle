@@ -35,7 +35,8 @@ bool operator==(const SpirvType &a, const SpirvType &b)
     {
         return a.typeSpec.blockStorage == b.typeSpec.blockStorage &&
                a.typeSpec.isInvariantBlock == b.typeSpec.isInvariantBlock &&
-               a.typeSpec.isRowMajorQualifiedBlock == b.typeSpec.isRowMajorQualifiedBlock;
+               a.typeSpec.isRowMajorQualifiedBlock == b.typeSpec.isRowMajorQualifiedBlock &&
+               a.typeSpec.isOrHasBoolInInterfaceBlock == b.typeSpec.isOrHasBoolInInterfaceBlock;
     }
 
     // Otherwise, match by the type contents.  The AST transformations sometimes recreate types that
@@ -44,7 +45,8 @@ bool operator==(const SpirvType &a, const SpirvType &b)
            a.secondarySize == b.secondarySize && a.imageInternalFormat == b.imageInternalFormat &&
            a.isSamplerBaseImage == b.isSamplerBaseImage &&
            a.typeSpec.blockStorage == b.typeSpec.blockStorage &&
-           a.typeSpec.isRowMajorQualifiedArray == b.typeSpec.isRowMajorQualifiedArray;
+           a.typeSpec.isRowMajorQualifiedArray == b.typeSpec.isRowMajorQualifiedArray &&
+           a.typeSpec.isOrHasBoolInInterfaceBlock == b.typeSpec.isOrHasBoolInInterfaceBlock;
 }
 
 uint32_t GetTotalArrayElements(const TSpan<const unsigned int> &arraySizes)
@@ -288,6 +290,15 @@ void SpirvTypeSpec::inferDefaults(const TType &type, TCompiler *compiler)
         {
             isRowMajorQualifiedArray = IsNonSquareRowMajorArrayInBlock(type, *this);
         }
+
+        // Structs with bools, bool arrays, bool vectors and bools themselves are replaced with uint
+        // when used in an interface block.
+        if (!isOrHasBoolInInterfaceBlock)
+        {
+            isOrHasBoolInInterfaceBlock = type.isInterfaceBlockContainingType(EbtBool) ||
+                                          type.isStructureContainingType(EbtBool) ||
+                                          type.getBasicType() == EbtBool;
+        }
     }
 
     // |invariant| is significant for structs as the fields of the type are decorated with Invariant
@@ -296,20 +307,6 @@ void SpirvTypeSpec::inferDefaults(const TType &type, TCompiler *compiler)
     if (type.getStruct() != nullptr)
     {
         isInvariantBlock = isInvariantBlock || IsInvariant(type, compiler);
-    }
-
-    if (!type.isInterfaceBlock() && type.getStruct() == nullptr)
-    {
-        // No difference w.r.t to invariant for non-block types.
-        isInvariantBlock = false;
-
-        if (!type.isArray())
-        {
-            // No difference in type for non-block non-array types in std140 and std430 block
-            // storage.
-            blockStorage             = EbsUnspecified;
-            isRowMajorQualifiedBlock = false;
-        }
     }
 }
 
@@ -343,6 +340,11 @@ void SpirvTypeSpec::onBlockFieldSelection(const TType &fieldType)
         {
             blockStorage = EbsUnspecified;
         }
+
+        if (fieldType.getBasicType() != EbtBool)
+        {
+            isOrHasBoolInInterfaceBlock = false;
+        }
     }
     else
     {
@@ -350,6 +352,12 @@ void SpirvTypeSpec::onBlockFieldSelection(const TType &fieldType)
         isRowMajorQualifiedBlock =
             IsBlockFieldRowMajorQualified(fieldType, isRowMajorQualifiedBlock) &&
             fieldType.isStructureContainingMatrices();
+
+        // Structs without bools aren't affected by |isOrHasBoolInInterfaceBlock|.
+        if (isOrHasBoolInInterfaceBlock)
+        {
+            isOrHasBoolInInterfaceBlock = fieldType.isStructureContainingType(EbtBool);
+        }
     }
 }
 
@@ -357,14 +365,14 @@ void SpirvTypeSpec::onMatrixColumnSelection()
 {
     // The matrix types are never differentiated, so neither would be their columns.
     ASSERT(!isInvariantBlock && !isRowMajorQualifiedBlock && !isRowMajorQualifiedArray &&
-           blockStorage == EbsUnspecified);
+           !isOrHasBoolInInterfaceBlock && blockStorage == EbsUnspecified);
 }
 
 void SpirvTypeSpec::onVectorComponentSelection()
 {
-    // The vector types are never differentiated, so neither would be their components.
-    // TODO: Update comment regarding bool in an interface block, in which case it is
-    // differentiated, but the function implementation does not change.  http://anglebug.com/4889.
+    // The vector types are never differentiated, so neither would be their components.  The only
+    // exception is bools in interface blocks, in which case the component and the vector are
+    // similarly differentiated.
     ASSERT(!isInvariantBlock && !isRowMajorQualifiedBlock && !isRowMajorQualifiedArray &&
            blockStorage == EbsUnspecified);
 }
@@ -439,6 +447,22 @@ const SpirvTypeData &SPIRVBuilder::getTypeData(const TType &type, const SpirvTyp
 
 const SpirvTypeData &SPIRVBuilder::getSpirvTypeData(const SpirvType &type, const TSymbol *block)
 {
+    // Structs with bools generate a different type when used in an interface block (where the bool
+    // is replaced with a uint).  The bool, bool vector and bool arrays too generate a different
+    // type when nested in an interface block, but that type is the same as the equivalent uint
+    // type.  To avoid defining duplicate uint types, we switch the basic type here to uint.  From
+    // the outside, therefore bool in an interface block and uint look like different types, but
+    // under the hood will be the same uint.
+    if (type.block == nullptr && type.typeSpec.isOrHasBoolInInterfaceBlock)
+    {
+        ASSERT(type.type == EbtBool);
+
+        SpirvType uintType                            = type;
+        uintType.type                                 = EbtUInt;
+        uintType.typeSpec.isOrHasBoolInInterfaceBlock = false;
+        return getSpirvTypeData(uintType, block);
+    }
+
     auto iter = mTypeMap.find(type);
     if (iter == mTypeMap.end())
     {
@@ -671,23 +695,6 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
                                     spirv::LiteralInteger(0));
                 break;
             case EbtBool:
-                // TODO: In SPIR-V, it's invalid to have a bool type in an interface block.  An AST
-                // transformation should be written to rewrite the blocks to use a uint type with
-                // appropriate casts where used.  Need to handle:
-                //
-                // - Store: cast the rhs of assignment
-                // - Non-array load: cast the expression
-                // - Array load (for example to use in a struct constructor): reconstruct the array
-                //   with elements cast.
-                // - Pass to function as out parameter: Use
-                //   MonomorphizeUnsupportedFunctionsInVulkanGLSL to avoid it, as there's no easy
-                //   way to handle such function calls inside if conditions and such.
-                //
-                // It might be simplest to do this for bools in structs as well, to avoid having to
-                // convert between an old and new struct type if the struct is used both inside and
-                // outside an interface block.
-                //
-                // http://anglebug.com/4889.
                 spirv::WriteTypeBool(&mSpirvTypeAndConstantDecls, typeId);
                 break;
             default:

@@ -416,6 +416,11 @@ bool TType::isStructureContainingSamplers() const
     return mStructure ? mStructure->containsSamplers() : false;
 }
 
+bool TType::isInterfaceBlockContainingType(TBasicType t) const
+{
+    return isInterfaceBlock() ? mInterfaceBlock->containsType(t) : false;
+}
+
 bool TType::canReplaceWithConstantUnion() const
 {
     if (isArray())
