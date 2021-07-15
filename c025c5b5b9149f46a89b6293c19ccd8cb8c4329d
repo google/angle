@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0eacbe01_2e029c3a",
+        "filename": "src/compiler/translator/BuildSPIRV.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-15T13:15:20Z",
+      "side": 1,
+      "message": "Ref",
+      "revId": "c025c5b5b9149f46a89b6293c19ccd8cb8c4329d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "023c740e_a5314db8",
@@ -31,6 +48,30 @@
       "writtenOn": "2021-07-15T10:59:18Z",
       "side": 1,
       "message": "Usually structs use enter/exitAggregateType. This new function could be misleading for other users who should be using the existing code path. Can you name it something that indicates the context it is to be used in? e.g. encodeStructForSPIRVGen or something like that.",
+      "range": {
+        "startLine": 84,
+        "startChar": 20,
+        "endLine": 84,
+        "endChar": 32
+      },
+      "revId": "c025c5b5b9149f46a89b6293c19ccd8cb8c4329d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e092dc8_dba8c405",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-15T13:15:20Z",
+      "side": 1,
+      "message": "enter/exitAggregateType is still used with this. See ref.\n\nHow about `encodeArrayOfPreEncodedStructs`?",
+      "parentUuid": "023c740e_a5314db8",
       "range": {
         "startLine": 84,
         "startChar": 20,
