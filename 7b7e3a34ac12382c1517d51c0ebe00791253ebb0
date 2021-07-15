@@ -16,6 +16,24 @@
       "message": "Gert/Cody PTAL. Will likely require expectations updates even if the change has no bugs, because of new coverage.",
       "revId": "7b7e3a34ac12382c1517d51c0ebe00791253ebb0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03e1e03a_9c6e47e5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-15T15:13:57Z",
+      "side": 1,
+      "message": "BTW the context is I discovered a bug serializing compressed textures, and was curious why the tests didn\u0027t catch it. This change makes it so the tests do catch the crash.",
+      "parentUuid": "e54521e2_917573d1",
+      "revId": "7b7e3a34ac12382c1517d51c0ebe00791253ebb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
