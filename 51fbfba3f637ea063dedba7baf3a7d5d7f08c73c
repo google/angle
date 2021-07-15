@@ -16,6 +16,29 @@
       "message": "I originally planned to do this with an AST transformation and was having nightmares about the complexity of corner cases it would have to deal with.\n\nI was amazed myself at how simple it turned out to be in SPIR-V.\n\nThe change is good for review, though I\u0027m writing another uber-test in the meantime.",
       "revId": "51fbfba3f637ea063dedba7baf3a7d5d7f08c73c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c688005_4b6ce737",
+        "filename": "src/compiler/translator/BuildSPIRV.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-15T23:52:23Z",
+      "side": 1,
+      "message": "typo?",
+      "range": {
+        "startLine": 454,
+        "startChar": 19,
+        "endLine": 454,
+        "endChar": 23
+      },
+      "revId": "51fbfba3f637ea063dedba7baf3a7d5d7f08c73c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
