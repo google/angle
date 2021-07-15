@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad27943b_ec0b31be",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-15T01:33:15Z",
+      "side": 1,
+      "message": "Done.\n\nNote that this affects all of the files that are \"shared\", but I think it looks fine:\n\n    AttributeLayoutBufferIndexed_Test_ES2_Vulkan.angledata.gz\n    AttributeLayoutBufferIndexed_Test_ES2_Vulkan_capture_context1.cpp\n    AttributeLayoutBufferIndexed_Test_ES2_Vulkan_capture_context1_files.txt\n    AttributeLayoutBufferIndexed_Test_ES2_Vulkan_capture_context1_frame001.cpp\n    AttributeLayoutBufferIndexed_Test_ES2_Vulkan_capture_context1.h\n    AttributeLayoutBufferIndexed_Test_ES2_Vulkan_frame001.cpp\n    AttributeLayoutBufferIndexed_Test_ES2_Vulkan.h\n    \nI retested this with MEC of Magic Tiles 3 and replaying on Android and linux.",
+      "parentUuid": "6111c3d9_b905e169",
+      "range": {
+        "startLine": 156,
+        "startChar": 11,
+        "endLine": 156,
+        "endChar": 27
+      },
+      "revId": "a4c141bb54aa794079c6b8d8ea4bf2b270f47e16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "afabafd5_3a1d77cc",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-07-14T23:39:47Z",
       "side": 1,
       "message": "since",
+      "range": {
+        "startLine": 1234,
+        "startChar": 92,
+        "endLine": 1234,
+        "endChar": 97
+      },
+      "revId": "a4c141bb54aa794079c6b8d8ea4bf2b270f47e16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "229acb4f_7bbe1641",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1234,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-15T01:33:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "afabafd5_3a1d77cc",
       "range": {
         "startLine": 1234,
         "startChar": 92,
