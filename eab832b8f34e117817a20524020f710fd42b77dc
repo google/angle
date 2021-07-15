@@ -16,6 +16,23 @@
       "message": "PTAL. Still working through expectations in the prior patch.",
       "revId": "eab832b8f34e117817a20524020f710fd42b77dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45df4229_c0996798",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-15T17:20:21Z",
+      "side": 1,
+      "message": "To try and catch FrameCapture errors sooner, I think this should also include the same information we currently pass to retrieveCachedTextureLevel() to try and catch differences sooner (and with easier to debug unit tests):\n\n    // For compressed images, we\u0027ve tracked a copy of the incoming data, so we can\n    // use that rather than try to read data back that may have been converted.\n    const std::vector\u003cuint8_t\u003e \u0026capturedTextureLevel \u003d\n        context-\u003egetShareGroup()-\u003egetFrameCaptureShared()-\u003eretrieveCachedTextureLevel(\n            texture-\u003eid(), index.getTarget(), index.getLevelIndex());",
+      "revId": "eab832b8f34e117817a20524020f710fd42b77dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
