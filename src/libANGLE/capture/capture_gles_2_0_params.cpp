@@ -101,7 +101,7 @@ void CaptureDeleteBuffers_buffersPacked(const State &glState,
                                         const BufferID *buffers,
                                         ParamCapture *paramCapture)
 {
-    CaptureMemory(buffers, sizeof(BufferID) * n, paramCapture);
+    CaptureArray(buffers, n, paramCapture);
 }
 
 void CaptureDeleteFramebuffers_framebuffersPacked(const State &glState,
@@ -110,7 +110,7 @@ void CaptureDeleteFramebuffers_framebuffersPacked(const State &glState,
                                                   const FramebufferID *framebuffers,
                                                   ParamCapture *paramCapture)
 {
-    CaptureMemory(framebuffers, sizeof(FramebufferID) * n, paramCapture);
+    CaptureArray(framebuffers, n, paramCapture);
 }
 
 void CaptureDeleteRenderbuffers_renderbuffersPacked(const State &glState,
@@ -119,7 +119,7 @@ void CaptureDeleteRenderbuffers_renderbuffersPacked(const State &glState,
                                                     const RenderbufferID *renderbuffers,
                                                     ParamCapture *paramCapture)
 {
-    CaptureMemory(renderbuffers, sizeof(RenderbufferID) * n, paramCapture);
+    CaptureArray(renderbuffers, n, paramCapture);
 }
 
 void CaptureDeleteTextures_texturesPacked(const State &glState,
@@ -128,7 +128,7 @@ void CaptureDeleteTextures_texturesPacked(const State &glState,
                                           const TextureID *textures,
                                           ParamCapture *paramCapture)
 {
-    CaptureMemory(textures, sizeof(TextureID) * n, paramCapture);
+    CaptureArray(textures, n, paramCapture);
 }
 
 void CaptureDrawElements_indices(const State &glState,

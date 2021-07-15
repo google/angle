@@ -29,7 +29,7 @@ void CaptureDeleteProgramPipelines_pipelinesPacked(const State &glState,
                                                    const ProgramPipelineID *pipelines,
                                                    ParamCapture *paramCapture)
 {
-    CaptureMemory(pipelines, sizeof(ProgramPipelineID) * n, paramCapture);
+    CaptureArray(pipelines, n, paramCapture);
 }
 
 void CaptureDrawArraysIndirect_indirect(const State &glState,

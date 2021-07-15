@@ -2346,7 +2346,7 @@ void CaptureDiscardFramebufferEXT_attachments(const State &glState,
                                               const GLenum *attachments,
                                               ParamCapture *paramCapture)
 {
-    CaptureMemory(attachments, sizeof(GLenum) * numAttachments, paramCapture);
+    CaptureArray(attachments, numAttachments, paramCapture);
 }
 
 void CaptureDeleteQueriesEXT_idsPacked(const State &glState,
@@ -2355,7 +2355,7 @@ void CaptureDeleteQueriesEXT_idsPacked(const State &glState,
                                        const QueryID *ids,
                                        ParamCapture *paramCapture)
 {
-    CaptureMemory(ids, sizeof(QueryID) * n, paramCapture);
+    CaptureArray(ids, n, paramCapture);
 }
 
 void CaptureGenQueriesEXT_idsPacked(const State &glState,
@@ -2483,7 +2483,7 @@ void CaptureDeleteMemoryObjectsEXT_memoryObjectsPacked(const State &glState,
                                                        const MemoryObjectID *memoryObjects,
                                                        ParamCapture *paramCapture)
 {
-    CaptureMemory(memoryObjects, sizeof(MemoryObjectID) * n, paramCapture);
+    CaptureArray(memoryObjects, n, paramCapture);
 }
 
 void CaptureGetMemoryObjectParameterivEXT_params(const State &glState,
@@ -2568,7 +2568,7 @@ void CaptureDeleteSemaphoresEXT_semaphoresPacked(const State &glState,
                                                  const SemaphoreID *semaphores,
                                                  ParamCapture *paramCapture)
 {
-    CaptureMemory(semaphores, sizeof(SemaphoreID) * n, paramCapture);
+    CaptureArray(semaphores, n, paramCapture);
 }
 
 void CaptureGenSemaphoresEXT_semaphoresPacked(const State &glState,
@@ -3092,7 +3092,7 @@ void CaptureDeleteFramebuffersOES_framebuffersPacked(const State &glState,
                                                      const FramebufferID *framebuffers,
                                                      ParamCapture *paramCapture)
 {
-    CaptureMemory(framebuffers, n * sizeof(GLuint), paramCapture);
+    CaptureArray(framebuffers, n, paramCapture);
 }
 
 void CaptureDeleteRenderbuffersOES_renderbuffersPacked(const State &glState,
@@ -3101,7 +3101,7 @@ void CaptureDeleteRenderbuffersOES_renderbuffersPacked(const State &glState,
                                                        const RenderbufferID *renderbuffers,
                                                        ParamCapture *paramCapture)
 {
-    CaptureMemory(renderbuffers, n * sizeof(GLuint), paramCapture);
+    CaptureArray(renderbuffers, n, paramCapture);
 }
 
 void CaptureGenFramebuffersOES_framebuffersPacked(const State &glState,

@@ -39,6 +39,7 @@ struct ParamCapture : angle::NonCopyable
     ParamValue value;
     gl::GLenumGroup enumGroup;  // only used for param type GLenum, GLboolean and GLbitfield
     ParamData data;
+    int dataNElements           = 0;
     int arrayClientPointerIndex = -1;
     size_t readBufferSizeBytes  = 0;
 };
@@ -616,7 +617,15 @@ void CaptureGenHandlesImpl(GLsizei n, GLuint *handles, ParamCapture *paramCaptur
 template <typename T>
 void CaptureGenHandles(GLsizei n, T *handles, ParamCapture *paramCapture)
 {
+    paramCapture->dataNElements = n;
     CaptureGenHandlesImpl(n, reinterpret_cast<GLuint *>(handles), paramCapture);
+}
+
+template <typename T>
+void CaptureArray(T *elements, GLsizei n, ParamCapture *paramCapture)
+{
+    paramCapture->dataNElements = n;
+    CaptureMemory(elements, n * sizeof(T), paramCapture);
 }
 
 void CaptureShaderStrings(GLsizei count,
