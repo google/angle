@@ -190,6 +190,30 @@
       },
       "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a35ab4d4_2bce910e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-15T21:40:52Z",
+      "side": 1,
+      "message": "If you need all 64 bits for the external format, you don\u0027t have a choice except to try and get the 1 bit somewhere else. Maybe there\u0027s another place you could squeeze it in. I\u0027m fine though if you want to use 63 bits and catch errors on an assert-type check. Will leave that to you, I\u0027m fine with any error-free solution. Fewer bits just means less CPU overhead.\n\nI guess technically for the index caching you should add a bit indicating if the 64-bits are VkFormats or uint64_t external formats, to ensure there are no collisions. In general it would be great to pass around VkFormats or external formats as truly separate types and only share bits when it\u0027s provably safe.",
+      "parentUuid": "e62ec6e0_097cfbf3",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 288,
+        "endChar": 5
+      },
+      "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
