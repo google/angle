@@ -353,6 +353,8 @@ class MemoryProperties final : angle::NonCopyable
         return mMemoryProperties.memoryHeaps[heapIndex].size;
     }
 
+    uint32_t getMemoryTypeCount() const { return mMemoryProperties.memoryTypeCount; }
+
   private:
     VkPhysicalDeviceMemoryProperties mMemoryProperties;
 };

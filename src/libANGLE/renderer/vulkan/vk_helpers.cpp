@@ -3646,24 +3646,25 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
     VkMemoryPropertyFlags preferredFlags =
         (memoryPropertyFlags & (~VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
 
-    const Allocator &allocator = renderer->getAllocator();
-    bool persistentlyMapped    = renderer->getFeatures().persistentlyMappedBuffers.enabled;
+    BufferMemoryAllocator &bufferMemoryAllocator = renderer->getBufferMemoryAllocator();
+    bool persistentlyMapped = renderer->getFeatures().persistentlyMappedBuffers.enabled;
 
     // Check that the allocation is not too large.
     uint32_t memoryTypeIndex = 0;
-    ANGLE_VK_TRY(contextVk, allocator.findMemoryTypeIndexForBufferInfo(
-                                *createInfo, requiredFlags, preferredFlags, persistentlyMapped,
-                                &memoryTypeIndex));
+    ANGLE_VK_TRY(contextVk, bufferMemoryAllocator.findMemoryTypeIndexForBufferInfo(
+                                renderer, *createInfo, requiredFlags, preferredFlags,
+                                persistentlyMapped, &memoryTypeIndex));
 
     VkDeviceSize heapSize =
         renderer->getMemoryProperties().getHeapSizeForMemoryType(memoryTypeIndex);
 
     ANGLE_VK_CHECK(contextVk, createInfo->size <= heapSize, VK_ERROR_OUT_OF_DEVICE_MEMORY);
 
-    ANGLE_VK_TRY(contextVk, allocator.createBuffer(*createInfo, requiredFlags, preferredFlags,
-                                                   persistentlyMapped, &memoryTypeIndex, &mBuffer,
-                                                   mMemory.getMemoryObject()));
-    allocator.getMemoryTypeProperties(memoryTypeIndex, &mMemoryPropertyFlags);
+    ANGLE_VK_TRY(contextVk, bufferMemoryAllocator.createBuffer(renderer, *createInfo, requiredFlags,
+                                                               preferredFlags, persistentlyMapped,
+                                                               &memoryTypeIndex, &mBuffer,
+                                                               mMemory.getMemoryObject()));
+    bufferMemoryAllocator.getMemoryTypeProperties(renderer, memoryTypeIndex, &mMemoryPropertyFlags);
     mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
 
     if (renderer->getFeatures().allocateNonZeroMemory.enabled)
@@ -3678,6 +3679,7 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
         }
         else if ((mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0)
         {
+            const Allocator &allocator = renderer->getAllocator();
             // Can map the memory.
             // Pick an arbitrary value to initialize non-zero memory for sanitization.
             constexpr int kNonZeroInitValue = 55;
