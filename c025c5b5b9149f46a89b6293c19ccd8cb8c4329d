@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d656eeb9_a8432959",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-15T05:08:20Z",
+      "side": 1,
+      "message": "The change is 50% rewritten, so PTAL again.",
+      "revId": "c025c5b5b9149f46a89b6293c19ccd8cb8c4329d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

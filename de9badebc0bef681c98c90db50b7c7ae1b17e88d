@@ -39,6 +39,30 @@
       },
       "revId": "de9badebc0bef681c98c90db50b7c7ae1b17e88d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd5df125_cefe1bd4",
+        "filename": "src/compiler/translator/BuildSPIRV.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1687,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-15T05:08:20Z",
+      "side": 1,
+      "message": "Done. The convenience code in blocklayout.cpp is really inefficient, but I managed to take advantage of the encoders with some juggling.",
+      "parentUuid": "b8a1a30c_2cbe4ab7",
+      "range": {
+        "startLine": 1687,
+        "startChar": 23,
+        "endLine": 1687,
+        "endChar": 52
+      },
+      "revId": "de9badebc0bef681c98c90db50b7c7ae1b17e88d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
