@@ -46,7 +46,14 @@ GPUTestConfigTest.GPUTestConfigConditions_D3D11/*
 ImageTest.SourceCubeTargetExternal/*
 PBOExtensionTest.*
 VertexAttributeTest.*
-VulkanExternalImageTest.*
+
+# Crashes because closing the FD fails and this raises an assertion
+VulkanExternalImageTest.ShouldImportSemaphoreOpaqueFd/ES2_Vulkan_SwiftShader
+
+# Replay times out
+VulkanExternalImageTest.WaitSemaphoresRetainsContentOpaqueFd/ES2_Vulkan_SwiftShader
+VulkanExternalImageTest.ShouldClearOpaqueFdWithSema*/ES2_Vulkan_SwiftShader
+VulkanExternalImageTest.ShouldDrawOpaqueFdWithSemaphores/ES2_Vulkan_SwiftShader
 
 WebGLCompatibilityTest.MultiContextNoRenderingFeedbackLoops/*
 WebGLFramebufferTest.*

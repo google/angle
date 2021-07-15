@@ -2610,7 +2610,7 @@ void CaptureSignalSemaphoreEXT_buffersPacked(const State &glState,
                                              const GLenum *dstLayouts,
                                              ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(buffers, numBufferBarriers, paramCapture);
 }
 
 void CaptureSignalSemaphoreEXT_texturesPacked(const State &glState,
@@ -2623,7 +2623,7 @@ void CaptureSignalSemaphoreEXT_texturesPacked(const State &glState,
                                               const GLenum *dstLayouts,
                                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(textures, numTextureBarriers, paramCapture);
 }
 
 void CaptureSignalSemaphoreEXT_dstLayouts(const State &glState,
@@ -2636,7 +2636,8 @@ void CaptureSignalSemaphoreEXT_dstLayouts(const State &glState,
                                           const GLenum *dstLayouts,
                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(dstLayouts, (numBufferBarriers + numTextureBarriers) * sizeof(GLenum),
+                 paramCapture);
 }
 
 void CaptureWaitSemaphoreEXT_buffersPacked(const State &glState,
@@ -2649,7 +2650,7 @@ void CaptureWaitSemaphoreEXT_buffersPacked(const State &glState,
                                            const GLenum *srcLayouts,
                                            ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(buffers, numBufferBarriers, paramCapture);
 }
 
 void CaptureWaitSemaphoreEXT_texturesPacked(const State &glState,
@@ -2662,7 +2663,7 @@ void CaptureWaitSemaphoreEXT_texturesPacked(const State &glState,
                                             const GLenum *srcLayouts,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(textures, numTextureBarriers, paramCapture);
 }
 
 void CaptureWaitSemaphoreEXT_srcLayouts(const State &glState,
@@ -2675,7 +2676,7 @@ void CaptureWaitSemaphoreEXT_srcLayouts(const State &glState,
                                         const GLenum *srcLayouts,
                                         ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(srcLayouts, (numBufferBarriers + numTextureBarriers), paramCapture);
 }
 
 void CaptureGetSamplerParameterIivEXT_params(const State &glState,
