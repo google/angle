@@ -166,6 +166,30 @@
       },
       "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e62ec6e0_097cfbf3",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-15T19:31:05Z",
+      "side": 1,
+      "message": "\u003e I\u0027d use 1 bit for \"isExternalFormat\" in the samplerDesc, then I\u0027d use the other 63 bits for externalOrVkFormat\n\nany reason we cant do 64bits dedicated to format and 1bit for \"isExternalFormat\" and leave the other 63bits reserved?\n\n\u003e I forget what mSupportedImmutableSamplerFormatIndexMap is. Does that need to know about both external and VkFormats?\n\nif an immutable sampler bound to an index changes across draws we need to recreate the pipeline layout. So, yes it will need to know about both external and VkFormats",
+      "parentUuid": "b7533969_97e74c3d",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 288,
+        "endChar": 5
+      },
+      "revId": "dbdc0fc7528f631ef5db95dde612cc9160bfdc8c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
