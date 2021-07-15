@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5ab0551_6b45a4b6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-15T16:26:29Z",
+      "side": 1,
+      "message": "LGTM.\n\nThat\u0027s quite a test!",
+      "revId": "99672361c5eaa1761327c17b8aa7e2378107a1cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdef5ecf_ab7c6eae",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3755,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-15T16:26:29Z",
+      "side": 1,
+      "message": "typo: differentiation",
+      "range": {
+        "startLine": 3755,
+        "startChar": 50,
+        "endLine": 3755,
+        "endChar": 64
+      },
+      "revId": "99672361c5eaa1761327c17b8aa7e2378107a1cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "747baa75_98dda0c1",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3755,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-15T16:26:29Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 3755,
+        "startChar": 28,
+        "endLine": 3755,
+        "endChar": 37
+      },
+      "revId": "99672361c5eaa1761327c17b8aa7e2378107a1cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8ce5b16_1703692f",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3758,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-15T16:26:29Z",
+      "side": 1,
+      "message": "nit: until it",
+      "range": {
+        "startLine": 3758,
+        "startChar": 81,
+        "endLine": 3758,
+        "endChar": 86
+      },
+      "revId": "99672361c5eaa1761327c17b8aa7e2378107a1cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
