@@ -16,6 +16,47 @@
       "message": "Looks good. This design looks better to me.",
       "revId": "054642b0e76106a2fd80a044d43da380c884fb70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bc301b1_31e36254",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-15T15:53:01Z",
+      "side": 1,
+      "message": "+1, very clean.",
+      "parentUuid": "e8f089a8_967a2406",
+      "revId": "054642b0e76106a2fd80a044d43da380c884fb70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b525c50_bed8d103",
+        "filename": "src/tests/capture_replay_tests/capture_replay_expectations.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-15T15:53:01Z",
+      "side": 1,
+      "message": "Crashes",
+      "range": {
+        "startLine": 52,
+        "startChar": 2,
+        "endLine": 52,
+        "endChar": 10
+      },
+      "revId": "054642b0e76106a2fd80a044d43da380c884fb70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
