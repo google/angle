@@ -165,6 +165,30 @@
       },
       "revId": "ca5f6d72196978c70656b97355e05be13ec9d120",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebdcfe19_ffdc5986",
+        "filename": "src/libANGLE/capture/capture_gles_ext_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2688,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-15T12:48:04Z",
+      "side": 1,
+      "message": "I\u0027ve done the redesign (CL 3031543), and changed the code accordingly in this CL.",
+      "parentUuid": "601c5c1c_af506d09",
+      "range": {
+        "startLine": 2687,
+        "startChar": 0,
+        "endLine": 2688,
+        "endChar": 81
+      },
+      "revId": "ca5f6d72196978c70656b97355e05be13ec9d120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
