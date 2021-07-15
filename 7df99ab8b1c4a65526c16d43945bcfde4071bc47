@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51cce53d_b4aa49f8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-15T05:15:49Z",
+      "side": 1,
+      "message": "For the test added in this change, ANGLE generates SPIR-V that\u0027s 20% smaller than glslang\u0027s :)",
+      "revId": "7df99ab8b1c4a65526c16d43945bcfde4071bc47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
