@@ -80,6 +80,30 @@
       },
       "revId": "c025c5b5b9149f46a89b6293c19ccd8cb8c4329d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c0485af_3328e439",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-15T13:49:27Z",
+      "side": 1,
+      "message": "SGTM",
+      "parentUuid": "9e092dc8_dba8c405",
+      "range": {
+        "startLine": 84,
+        "startChar": 20,
+        "endLine": 84,
+        "endChar": 32
+      },
+      "revId": "c025c5b5b9149f46a89b6293c19ccd8cb8c4329d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
