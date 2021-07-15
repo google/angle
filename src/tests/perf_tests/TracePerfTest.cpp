@@ -102,6 +102,8 @@ class TracePerfTest : public ANGLERenderTest
                                        GLsizei numAttachments,
                                        const GLenum *attachments);
 
+    void validateSerializedState(const char *serializedState, const char *fileName, uint32_t line);
+
     bool isDefaultFramebuffer(GLenum target) const;
 
     double getHostTimeFromGLTime(GLint64 glTime);
@@ -624,6 +626,11 @@ angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
     return gCurrentTracePerfTest->getGLWindow()->getProcAddress(procName);
 }
 
+void ValidateSerializedState(const char *serializedState, const char *fileName, uint32_t line)
+{
+    gCurrentTracePerfTest->validateSerializedState(serializedState, fileName, line);
+}
+
 TracePerfTest::TracePerfTest(const TracePerfParams &params)
     : ANGLERenderTest("TracePerf", params, "ms"), mParams(params), mStartFrame(0), mEndFrame(0)
 {
@@ -1067,6 +1074,12 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
     disableTestHarnessSwap();
 
     gCurrentTracePerfTest = this;
+
+    if (gTraceTestValidation)
+    {
+        const TraceInfo &traceInfo = GetTraceInfo(mParams.testID);
+        mStepsToRun                = (traceInfo.endFrame - traceInfo.startFrame + 1);
+    }
 }
 
 void TracePerfTest::initializeBenchmark()
@@ -1101,6 +1114,8 @@ void TracePerfTest::initializeBenchmark()
     mEndFrame   = traceInfo.endFrame;
     mTraceLibrary->setBinaryDataDecompressCallback(DecompressBinaryData);
 
+    mTraceLibrary->setValidateSerializedStateCallback(ValidateSerializedState);
+
     std::string relativeTestDataDir = std::string("src/tests/restricted_traces/") + traceInfo.name;
 
     constexpr size_t kMaxDataDirLen = 1000;
@@ -1133,7 +1148,7 @@ void TracePerfTest::initializeBenchmark()
         getWindow()->setOrientation(mTestParams.windowWidth, mTestParams.windowHeight);
     }
 
-    // If we're rendering offscreen we set up a default backbuffer.
+    // If we're rendering offscreen we set up a default back buffer.
     if (mParams.surfaceType == SurfaceType::Offscreen)
     {
         if (!IsAndroid())
@@ -1173,16 +1188,15 @@ void TracePerfTest::initializeBenchmark()
 
     glFinish();
 
-    ASSERT_TRUE(mEndFrame > mStartFrame);
+    ASSERT_GE(mEndFrame, mStartFrame);
 
     getWindow()->ignoreSizeEvents();
     getWindow()->setVisible(true);
 
     // If we're re-tracing, trigger capture start after setup. This ensures the Setup function gets
     // recaptured into another Setup function and not merged with the first frame.
-    if (angle::gRetraceMode)
+    if (gRetraceMode)
     {
-        angle::SetEnvironmentVar("ANGLE_CAPTURE_TRIGGER", "0");
         getGLWindow()->swap();
     }
 }
@@ -1505,6 +1519,95 @@ void TracePerfTest::onReplayFramebufferChange(GLenum target, GLuint framebuffer)
     mCurrentQuery.framebuffer = framebuffer;
 }
 
+std::string GetDiffPath()
+{
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    std::array<char, MAX_PATH> filenameBuffer = {};
+    char *filenamePtr                         = nullptr;
+    if (SearchPathA(NULL, "diff", ".exe", MAX_PATH, filenameBuffer.data(), &filenamePtr) == 0)
+    {
+        return "";
+    }
+    return std::string(filenameBuffer.data());
+#else
+    return "/usr/bin/diff";
+#endif  // defined(ANGLE_PLATFORM_WINDOWS)
+}
+
+void PrintFileDiff(const char *aFilePath, const char *bFilePath)
+{
+    std::string pathToDiff = GetDiffPath();
+    if (pathToDiff.empty())
+    {
+        printf("Could not find diff in the path.\n");
+        return;
+    }
+
+    std::vector<const char *> args;
+    args.push_back(pathToDiff.c_str());
+    args.push_back(aFilePath);
+    args.push_back(bFilePath);
+    args.push_back("-u3");
+
+    printf("Calling");
+    for (const char *arg : args)
+    {
+        printf(" %s", arg);
+    }
+    printf("\n");
+
+    ProcessHandle proc(LaunchProcess(args, ProcessOutputCapture::StdoutOnly));
+    if (proc && proc->finish())
+    {
+        printf("\n%s\n", proc->getStdout().c_str());
+    }
+}
+
+void TracePerfTest::validateSerializedState(const char *expectedCapturedSerializedState,
+                                            const char *fileName,
+                                            uint32_t line)
+{
+    if (!gTraceTestValidation)
+    {
+        return;
+    }
+
+    printf("Serialization checkpoint %s:%u...\n", fileName, line);
+
+    const GLubyte *bytes                      = glGetString(GL_SERIALIZED_CONTEXT_STRING_ANGLE);
+    const char *actualReplayedSerializedState = reinterpret_cast<const char *>(bytes);
+    if (strcmp(expectedCapturedSerializedState, actualReplayedSerializedState) == 0)
+    {
+        printf("Serialization match.\n");
+        return;
+    }
+
+    printf("Serialization mismatch!\n");
+
+    constexpr size_t kMaxPath = 1024;
+    char aFilePath[kMaxPath]  = {};
+    if (CreateTemporaryFile(aFilePath, kMaxPath))
+    {
+        printf("Saving \"expected\" capture serialization to \"%s\".\n", aFilePath);
+        FILE *fpA = fopen(aFilePath, "wt");
+        ASSERT(fpA);
+        fprintf(fpA, "%s", expectedCapturedSerializedState);
+        fclose(fpA);
+    }
+
+    char bFilePath[kMaxPath] = {};
+    if (CreateTemporaryFile(bFilePath, kMaxPath))
+    {
+        printf("Saving \"actual\" replay serialization to \"%s\".\n", bFilePath);
+        FILE *fpB = fopen(bFilePath, "wt");
+        ASSERT(fpB);
+        fprintf(fpB, "%s", actualReplayedSerializedState);
+        fclose(fpB);
+    }
+
+    PrintFileDiff(aFilePath, bFilePath);
+}
+
 bool TracePerfTest::isDefaultFramebuffer(GLenum target) const
 {
     switch (target)
@@ -1765,7 +1868,18 @@ void RegisterTraceTests()
 
     for (const TracePerfParams &params : filteredTests)
     {
-        auto factory          = [params]() { return new TracePerfTest(params); };
+        // Force on features if we're validating serialization.
+        TracePerfParams overrideParams = params;
+        if (gTraceTestValidation)
+        {
+            // Enable limits when validating traces because we usually turn off capture.
+            overrideParams.eglParameters.captureLimits = EGL_TRUE;
+
+            // This feature should also be enabled in capture to mirror the replay.
+            overrideParams.eglParameters.forceInitShaderOutputVariables = EGL_TRUE;
+        }
+
+        auto factory          = [overrideParams]() { return new TracePerfTest(overrideParams); };
         std::string paramName = testing::PrintToString(params);
         std::stringstream testNameStr;
         testNameStr << "Run/" << paramName;

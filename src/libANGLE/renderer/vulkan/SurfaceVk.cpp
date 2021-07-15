@@ -1075,7 +1075,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     mSwapchain            = newSwapChain;
     mSwapchainPresentMode = mDesiredSwapchainPresentMode;
 
-    // Intialize the swapchain image views.
+    // Initialize the swapchain image views.
     uint32_t imageCount = 0;
     ANGLE_VK_TRY(context, vkGetSwapchainImagesKHR(device, mSwapchain, &imageCount, nullptr));
 

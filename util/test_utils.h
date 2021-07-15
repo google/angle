@@ -44,7 +44,7 @@ void PrintStackBacktrace();
 // Get temporary directory.
 bool GetTempDir(char *tempDirOut, uint32_t maxDirNameLen);
 
-// Creates a temporary file. The full path is placed in |path|, and the
+// Creates a temporary file. The full path is placed in |tempFileNameOut|, and the
 // function returns true if was successful in creating the file. The file will
 // be empty and all handles closed after this function returns.
 bool CreateTemporaryFile(char *tempFileNameOut, uint32_t maxFileNameLen);

@@ -41,6 +41,7 @@ Several command-line arguments control how the tests run:
 * `--no-finish`: Don't call glFinish after each test trial.
 * `--enable-all-trace-tests`: Offscreen and vsync-limited trace tests are disabled by default to reduce test time.
 * `--minimize-gpu-work`: Modify API calls so that GPU work is reduced to minimum.
+* `--validation`: Enable serialization validation in the trace tests. Normally used with SwiftShader and retracing.
 
 For example, for an endless run with no warmup, run:
 

@@ -115,6 +115,13 @@ def main():
         '--no-overwrite',
         help='Skip traces which already exist in the out directory.',
         action='store_true')
+    parser.add_argument(
+        '--validation', help='Enable state serialization validation calls.', action='store_true')
+    parser.add_argument(
+        '--limit',
+        '--frame-limit',
+        type=int,
+        help='Limits the number of captured frames to produce a shorter trace than the original.')
     args, extra_flags = parser.parse_known_args()
 
     logging.basicConfig(level=args.log.upper())
@@ -148,12 +155,23 @@ def main():
 
         logging.debug('Read metadata: %s' % str(metadata))
 
-        env = os.environ.copy()
-        additional_env = {}
-        additional_env['ANGLE_CAPTURE_OUT_DIR'] = trace_path
-        additional_env['ANGLE_CAPTURE_LABEL'] = trace
-        additional_env['ANGLE_CAPTURE_TRIGGER'] = str(num_frames)
-        env = {**env, **additional_env}
+        max_steps = min(args.limit, num_frames) if args.limit else num_frames
+
+        # We start tracing from frame 2. --retrace-mode issues a Swap() after Setup() so we can
+        # accurately re-trace the MEC.
+        additional_env = {
+            'ANGLE_CAPTURE_LABEL': trace,
+            'ANGLE_CAPTURE_OUT_DIR': trace_path,
+            'ANGLE_CAPTURE_FRAME_START': '2',
+            'ANGLE_CAPTURE_FRAME_END': str(num_frames + 1),
+        }
+        if args.validation:
+            additional_env['ANGLE_CAPTURE_VALIDATION'] = '1'
+            # Also turn on shader output init to ensure we have no undefined values.
+            # This feature is also enabled in replay when using --validation.
+            additional_env['ANGLE_FEATURE_OVERRIDES_ENABLED'] = 'forceInitShaderOutputVariables'
+
+        env = {**os.environ.copy(), **additional_env}
 
         renderer = 'vulkan' if args.no_swiftshader else 'vulkan_swiftshader'
 
@@ -163,7 +181,7 @@ def main():
             trace_filter,
             '--retrace-mode',
             '--max-steps-performed',
-            str(num_frames),
+            str(max_steps),
             '--enable-all-trace-tests',
         ]
 

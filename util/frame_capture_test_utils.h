@@ -50,15 +50,17 @@ inline uint8_t *DecompressBinaryData(const std::vector<uint8_t> &compressedData)
     return uncompressedData.release();
 }
 
-using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);
+using DecompressCallback              = uint8_t *(*)(const std::vector<uint8_t> &);
+using ValidateSerializedStateCallback = void (*)(const char *, const char *, uint32_t);
 
-using SetBinaryDataDecompressCallbackFunc = void (*)(DecompressCallback);
-using SetBinaryDataDirFunc                = void (*)(const char *);
-using SetupReplayFunc                     = void (*)();
-using ReplayFrameFunc                     = void (*)(uint32_t);
-using ResetReplayFunc                     = void (*)();
-using FinishReplayFunc                    = void (*)();
-using GetSerializedContextStateFunc       = const char *(*)(uint32_t);
+using SetBinaryDataDecompressCallbackFunc    = void (*)(DecompressCallback);
+using SetBinaryDataDirFunc                   = void (*)(const char *);
+using SetupReplayFunc                        = void (*)();
+using ReplayFrameFunc                        = void (*)(uint32_t);
+using ResetReplayFunc                        = void (*)();
+using FinishReplayFunc                       = void (*)();
+using GetSerializedContextStateFunc          = const char *(*)(uint32_t);
+using SetValidateSerializedStateCallbackFunc = void (*)(ValidateSerializedStateCallback);
 
 class TraceLibrary
 {
@@ -102,6 +104,12 @@ class TraceLibrary
     const char *getSerializedContextState(uint32_t frameIndex)
     {
         return callFunc<GetSerializedContextStateFunc>("GetSerializedContextState", frameIndex);
+    }
+
+    void setValidateSerializedStateCallback(ValidateSerializedStateCallback callback)
+    {
+        return callFunc<SetValidateSerializedStateCallbackFunc>(
+            "SetValidateSerializedStateCallback", callback);
     }
 
   private:

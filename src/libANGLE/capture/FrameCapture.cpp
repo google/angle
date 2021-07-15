@@ -63,6 +63,7 @@ constexpr char kCaptureTriggerVarName[] = "ANGLE_CAPTURE_TRIGGER";
 constexpr char kCaptureLabelVarName[]   = "ANGLE_CAPTURE_LABEL";
 constexpr char kCompressionVarName[]    = "ANGLE_CAPTURE_COMPRESSION";
 constexpr char kSerializeStateVarName[] = "ANGLE_CAPTURE_SERIALIZE_STATE";
+constexpr char kValidationVarName[]     = "ANGLE_CAPTURE_VALIDATION";
 
 constexpr size_t kBinaryAlignment   = 16;
 constexpr size_t kFunctionSizeLimit = 5000;
@@ -78,6 +79,7 @@ constexpr char kAndroidFrameEnd[]       = "debug.angle.capture.frame_end";
 constexpr char kAndroidCaptureTrigger[] = "debug.angle.capture.trigger";
 constexpr char kAndroidCaptureLabel[]   = "debug.angle.capture.label";
 constexpr char kAndroidCompression[]    = "debug.angle.capture.compression";
+constexpr char kAndroidValidation[]     = "debug.angle.capture.validation";
 
 struct FramebufferCaptureFuncs
 {
@@ -455,13 +457,43 @@ void WriteInlineData<GLchar>(const std::vector<uint8_t> &vec, std::ostream &out)
     out << "\"";
 }
 
-void WriteStringParamReplay(std::ostream &out, const ParamCapture &param)
+void WriteStringParamReplay(DataTracker *dataTracker,
+                            std::ostream &out,
+                            std::ostream &header,
+                            const CallCapture &call,
+                            const ParamCapture &param,
+                            std::vector<uint8_t> *binaryData)
 {
     const std::vector<uint8_t> &data = param.data[0];
     // null terminate C style string
     ASSERT(data.size() > 0 && data.back() == '\0');
     std::string str(data.begin(), data.end() - 1);
-    out << "\"" << str << "\"";
+
+    constexpr size_t kMaxInlineStringLength = 20000;
+    if (str.size() > kMaxInlineStringLength)
+    {
+        // Store in binary file if the string is too long.
+        // Round up to 16-byte boundary for cross ABI safety.
+        size_t offset = rx::roundUpPow2(binaryData->size(), kBinaryAlignment);
+        binaryData->resize(offset + str.size() + 1);
+        memcpy(binaryData->data() + offset, str.data(), str.size() + 1);
+        out << "reinterpret_cast<const char *>(&gBinaryData[" << offset << "])";
+    }
+    else if (str.find('\n') != std::string::npos)
+    {
+        // Move multi-line strings into the header.
+        int counter = dataTracker->getCounters().getAndIncrement(call.entryPoint, param.name);
+
+        header << "const char ";
+        WriteParamStaticVarName(call, param, counter, header);
+        header << "[] = R\"(" << str << ")\";\n";
+
+        WriteParamStaticVarName(call, param, counter, out);
+    }
+    else
+    {
+        out << "\"" << str << "\"";
+    }
 }
 
 void WriteStringPointerParamReplay(DataTracker *dataTracker,
@@ -716,7 +748,7 @@ void WriteCppReplayForCall(const CallCapture &call,
             switch (param.type)
             {
                 case ParamType::TGLcharConstPointer:
-                    WriteStringParamReplay(callOut, param);
+                    WriteStringParamReplay(dataTracker, callOut, header, call, param, binaryData);
                     break;
                 case ParamType::TGLcharConstPointerPointer:
                     WriteStringPointerParamReplay(dataTracker, callOut, header, call, param);
@@ -1444,6 +1476,28 @@ void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallC
         params.addValueParam("count", ParamType::TGLint, static_cast<GLint>(count));
         callsOut->emplace_back("UpdateUniformLocation", std::move(params));
     }
+}
+
+void CaptureValidateSerializedState(const gl::Context *context, std::vector<CallCapture> *callsOut)
+{
+    INFO() << "Capturing validation checkpoint at position " << callsOut->size();
+
+    context->finishImmutable();
+
+    std::string serializedState;
+    angle::Result result = angle::SerializeContextToString(context, &serializedState);
+    if (result != angle::Result::Continue)
+    {
+        ERR() << "Internal error serializing context state.";
+        return;
+    }
+    ParamCapture serializedStateParam("serializedState", ParamType::TGLcharConstPointer);
+    CaptureString(serializedState.c_str(), &serializedStateParam);
+
+    ParamBuffer params;
+    params.addParam(std::move(serializedStateParam));
+
+    callsOut->emplace_back("VALIDATE_CHECKPOINT", std::move(params));
 }
 
 void CaptureUpdateUniformBlockIndexes(const gl::Program *program,
@@ -3060,7 +3114,8 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
 void CaptureMidExecutionSetup(const gl::Context *context,
                               std::vector<CallCapture> *setupCalls,
                               ResourceTracker *resourceTracker,
-                              gl::State &replayState)
+                              gl::State &replayState,
+                              bool validationEnabled)
 {
     const gl::State &apiState = context->getState();
 
@@ -3484,7 +3539,6 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     }
 
     // Capture GL Context states.
-    // TODO(http://anglebug.com/3662): Complete state capture.
     auto capCap = [cap, &replayState](GLenum capEnum, bool capValue) {
         if (capValue)
         {
@@ -3856,6 +3910,11 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     // Clean up the replay state.
     replayState.reset(context);
+
+    if (validationEnabled)
+    {
+        CaptureValidateSerializedState(context, setupCalls);
+    }
 }
 
 bool SkipCall(EntryPoint entryPoint)
@@ -4184,6 +4243,13 @@ FrameCaptureShared::FrameCaptureShared()
     if (serializeStateFromEnv == "1")
     {
         mSerializeStateEnabled = true;
+    }
+
+    std::string validateSerialiedStateFromEnv =
+        GetEnvironmentVarOrUnCachedAndroidProperty(kValidationVarName, kAndroidValidation);
+    if (validateSerialiedStateFromEnv == "1")
+    {
+        mValidateSerializedState = true;
     }
 
     if (mFrameIndex == mCaptureStartFrame)
@@ -5390,7 +5456,8 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
         if (shareContext->id() == mainContext->id())
         {
             CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
-                                     &mResourceTracker, mainContextReplayState);
+                                     &mResourceTracker, mainContextReplayState,
+                                     mValidateSerializedState);
         }
         else
         {
@@ -5401,7 +5468,8 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
             auxContextReplayState.initializeForCapture(shareContext);
 
             CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
-                                     &mResourceTracker, auxContextReplayState);
+                                     &mResourceTracker, auxContextReplayState,
+                                     mValidateSerializedState);
 
             WriteAuxiliaryContextCppSetupReplay(mCompression, mOutDirectory, shareContext,
                                                 mCaptureLabel, 1, frameCapture->getSetupCalls(),
@@ -5468,6 +5536,12 @@ void FrameCaptureShared::onEndFrame(const gl::Context *context)
     // (buffers, textures, etc.) has been updated and no resources are in use.
     egl::ShareGroup *shareGroup = context->getShareGroup();
     shareGroup->finishAllContexts();
+
+    // Only validate the first frame for now to save on retracing time.
+    if (mValidateSerializedState && mFrameIndex == mCaptureStartFrame)
+    {
+        CaptureValidateSerializedState(context, &mFrameCalls);
+    }
 
     writeMainContextCppReplay(context, frameCapture->getSetupCalls());
 

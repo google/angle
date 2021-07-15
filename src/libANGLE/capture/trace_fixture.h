@@ -34,7 +34,8 @@
 #    endif
 #endif  // !defined(ANGLE_REPLAY_EXPORT)
 
-using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);
+using DecompressCallback              = uint8_t *(*)(const std::vector<uint8_t> &);
+using ValidateSerializedStateCallback = void (*)(const char *, const char *, uint32_t);
 
 extern "C" {
 ANGLE_REPLAY_EXPORT void SetBinaryDataDecompressCallback(DecompressCallback callback);
@@ -43,6 +44,8 @@ ANGLE_REPLAY_EXPORT void SetupReplay();
 ANGLE_REPLAY_EXPORT void ReplayFrame(uint32_t frameIndex);
 ANGLE_REPLAY_EXPORT void ResetReplay();
 ANGLE_REPLAY_EXPORT void FinishReplay();
+ANGLE_REPLAY_EXPORT void SetValidateSerializedStateCallback(
+    ValidateSerializedStateCallback callback);
 
 // Only defined if serialization is enabled.
 ANGLE_REPLAY_EXPORT const char *GetSerializedContextState(uint32_t frameIndex);
@@ -123,5 +126,8 @@ void UpdateShaderProgramID(GLuint id, GLsizei readBufferOffset);
 void UpdateTextureID(GLuint id, GLsizei readBufferOffset);
 void UpdateTransformFeedbackID(GLuint id, GLsizei readBufferOffset);
 void UpdateVertexArrayID(GLuint id, GLsizei readBufferOffset);
+
+void ValidateSerializedState(const char *serializedState, const char *fileName, uint32_t line);
+#define VALIDATE_CHECKPOINT(STATE) ValidateSerializedState(STATE, __FILE__, __LINE__)
 
 #endif  // ANGLE_TRACE_FIXTURE_H_

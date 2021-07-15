@@ -546,7 +546,7 @@ class FrameCaptureShared final : angle::NonCopyable
     size_t mReadBufferSize;
     HasResourceTypeMap mHasResourceType;
     BufferDataMap mBufferDataMap;
-    gl::ContextID mPresentationContextID;
+    bool mValidateSerializedState = false;
 
     ResourceTracker mResourceTracker;
 

@@ -64,6 +64,8 @@ void LoadBinaryData(const char *fileName)
     }
     fclose(fp);
 }
+
+ValidateSerializedStateCallback gValidateSerializedStateCallback;
 }  // namespace
 
 LocationsMap gUniformLocations;
@@ -147,6 +149,11 @@ void FinishReplay()
     delete[] gReadBuffer;
 }
 
+void SetValidateSerializedStateCallback(ValidateSerializedStateCallback callback)
+{
+    gValidateSerializedStateCallback = callback;
+}
+
 void UpdateClientArrayPointer(int arrayIndex, const void *data, uint64_t size)
 {
     memcpy(gClientArrays[arrayIndex], data, static_cast<size_t>(size));
@@ -221,4 +228,12 @@ void UpdateTransformFeedbackID(GLuint id, GLsizei readBufferOffset)
 void UpdateVertexArrayID(GLuint id, GLsizei readBufferOffset)
 {
     UpdateResourceMap(&gVertexArrayMap, id, readBufferOffset);
+}
+
+void ValidateSerializedState(const char *serializedState, const char *fileName, uint32_t line)
+{
+    if (gValidateSerializedStateCallback)
+    {
+        gValidateSerializedStateCallback(serializedState, fileName, line);
+    }
 }
