@@ -526,6 +526,8 @@ class TestBatch():
 
         returncode, output = child_processes_manager.RunSubprocess(
             cmd, env, timeout=SUBPROCESS_TIMEOUT)
+        if args.show_capture_stdout:
+            info("Capture stdout: %s" % output)
         if returncode == -1:
             self.results.append(GroupedResult(GroupedResult.Crashed, "", output, self.tests))
             return False
@@ -1039,6 +1041,8 @@ if __name__ == "__main__":
     parser.add_argument('--depot-tools-path', default=None, help='Path to depot tools')
     parser.add_argument('--xvfb', action='store_true', help='Run with xvfb.')
     parser.add_argument('--asan', action='store_true', help='Build with ASAN.')
+    parser.add_argument(
+        '--show-capture-stdout', action='store_true', help='Print test stdout during capture.')
     args = parser.parse_args()
     if platform == "win32":
         args.test_suite += ".exe"

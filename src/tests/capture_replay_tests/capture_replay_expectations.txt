@@ -9,7 +9,16 @@
 
 # Failed tests
 D3DImageFormatConversionTest.*
+DrawBuffersTest.UnwrittenOutputVariablesShouldNotCrash/*
 FramebufferTest.MultiContextNoRenderingFeedbackLoops/*
+ImageTest.Deletion/*
+ImageTest.MipLevels/*
+ImageTest.Source2DTarget2D/*
+ImageTest.Source2DTargetExternal/*
+ImageTest.SourceCubeTarget2D/*
+ImageTest.SourceRenderbufferTargetTexture/*
+ImageTest.SourceRenderbufferTargetTextureExternal/*
+ImageTest.UpdatedData/*
 PbufferTest.BindTexImage/*
 PbufferTest.Clearing/*
 PbufferTest.TextureSizeReset/*
@@ -32,10 +41,11 @@ WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/ES2_Vulkan_Sw
 BlitFramebufferANGLETest.Reverse*/*
 BlitFramebufferANGLETest.Scissored*/*
 ClipDistanceTest.*
-CopyCompressedTextureTest.InternalFormat/*
+CopyCompressedTextureTest.*
 DebugMarkerTest.*
 DebugTest.*
 EGLStreamTest.*
+ETC1CompressedTextureTest.ETC1CompressedSubImage/*
 ExternalWrapTest.*
 GetImageTestNoExtensions.EntryPointsInactive/*
 GLSLTest.ArrayOfStructContainingArrayOfSamplers/*
@@ -44,7 +54,9 @@ GLSLTest.MixedShaderLengths/*
 GLSLTest.ZeroShaderLength/*
 GPUTestConfigTest.GPUTestConfigConditions_D3D11/*
 ImageTest.SourceCubeTargetExternal/*
+PBOCompressedTextureTest.PBOCompressedSubImage/*
 PBOExtensionTest.*
+Texture2DTest.DefineMultipleLevelsWithoutMipmapping/*
 VertexAttributeTest.*
 
 # Crashes because closing the FD fails and this raises an assertion

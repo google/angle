@@ -368,6 +368,7 @@ class ANGLETestBase
 
   protected:
     void ANGLETestSetUp();
+    void ANGLETestPreTearDown();
     void ANGLETestTearDown();
 
     virtual void swapBuffers();
@@ -628,6 +629,7 @@ class ANGLETestWithParam : public ANGLETestBase, public ::testing::TestWithParam
 
     void TearDown() final
     {
+        ANGLETestBase::ANGLETestPreTearDown();
         if (mIsSetUp)
         {
             testTearDown();

@@ -695,6 +695,15 @@ void ANGLETestBase::ANGLETestSetUp()
     mRenderDoc.startFrame();
 }
 
+void ANGLETestBase::ANGLETestPreTearDown()
+{
+    // We swap an extra time before we call "tearDown" to capture resources before they're freed.
+    if (gEnableANGLEPerTestCaptureLabel)
+    {
+        swapBuffers();
+    }
+}
+
 void ANGLETestBase::ANGLETestTearDown()
 {
     mTearDownCalled              = true;
