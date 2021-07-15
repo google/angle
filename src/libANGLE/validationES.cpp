@@ -2881,7 +2881,41 @@ bool ValidateCopyImageSubDataTarget(const Context *context, GLuint name, GLenum 
             Texture *textureObject = context->getTexture(texture);
             if (textureObject && textureObject->getType() != PackParam<TextureType>(target))
             {
-                context->validationError(GL_INVALID_VALUE, err::kTextureTypeMismatch);
+                context->validationError(GL_INVALID_ENUM, err::kTextureTypeMismatch);
+                return false;
+            }
+            break;
+        }
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidTarget);
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateCopyImageSubDataLevel(const Context *context, GLenum target, GLint level)
+{
+    switch (target)
+    {
+        case GL_RENDERBUFFER:
+        {
+            if (level != 0)
+            {
+                context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
+                return false;
+            }
+            break;
+        }
+        case GL_TEXTURE_2D:
+        case GL_TEXTURE_3D:
+        case GL_TEXTURE_2D_ARRAY:
+        case GL_TEXTURE_CUBE_MAP:
+        case GL_TEXTURE_CUBE_MAP_ARRAY_EXT:
+        {
+            if (!ValidMipLevel(context, PackParam<TextureType>(target), level))
+            {
+                context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
                 return false;
             }
             break;
@@ -2915,14 +2949,6 @@ bool ValidateCopyImageSubDataTargetRegion(const Context *context,
 
     if (target == GL_RENDERBUFFER)
     {
-        // For renderbuffers, this value must be zero. INVALID_VALUE is generated if the specified
-        // level is not a valid level for the image.
-        if (level != 0)
-        {
-            context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
-            return false;
-        }
-
         // INVALID_VALUE is generated if the dimensions of the either subregion exceeds the
         // boundaries of the corresponding image object
         Renderbuffer *buffer = context->getRenderbuffer(PackParam<RenderbufferID>(name));
@@ -2934,13 +2960,6 @@ bool ValidateCopyImageSubDataTargetRegion(const Context *context,
     }
     else
     {
-        // INVALID_VALUE is generated if the specified level is not a valid level for the image
-        if (!ValidMipLevel(context, PackParam<TextureType>(target), level))
-        {
-            context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
-            return false;
-        }
-
         Texture *texture = context->getTexture(PackParam<TextureID>(name));
 
         // INVALID_OPERATION is generated if either object is a texture and the texture is not
@@ -3330,6 +3349,15 @@ bool ValidateCopyImageSubDataBase(const Context *context,
         return false;
     }
 
+    if (!ValidateCopyImageSubDataLevel(context, srcTarget, srcLevel))
+    {
+        return false;
+    }
+    if (!ValidateCopyImageSubDataLevel(context, dstTarget, dstLevel))
+    {
+        return false;
+    }
+
     const InternalFormat &srcFormatInfo =
         GetTargetFormatInfo(context, srcName, srcTarget, srcLevel);
     const InternalFormat &dstFormatInfo =
@@ -3338,6 +3366,12 @@ bool ValidateCopyImageSubDataBase(const Context *context,
     GLsizei dstHeight  = srcHeight;
     GLsizei srcSamples = 1;
     GLsizei dstSamples = 1;
+
+    if (srcFormatInfo.internalFormat == GL_NONE || dstFormatInfo.internalFormat == GL_NONE)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidTextureLevel);
+        return false;
+    }
 
     if (!ValidateCopyImageSubDataTargetRegion(context, srcName, srcTarget, srcLevel, srcX, srcY,
                                               srcZ, srcWidth, srcHeight, &srcSamples))
