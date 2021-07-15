@@ -182,6 +182,10 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkImageViewCreateInfo-pNext-01585",
     // http://crbug.com/1226682
     "VUID-VkSpecializationMapEntry-constantID-00776",
+    // http://anglebug.com/6155
+    "VUID-vkCmdDraw-None-02699",
+    // http://anglebug.com/6168
+    "VUID-VkImageViewCreateInfo-None-02273",
 };
 
 // Suppress validation errors that are known
