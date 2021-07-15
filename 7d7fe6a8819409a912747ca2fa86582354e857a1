@@ -118,6 +118,30 @@
       },
       "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5b6b36c_eb830603",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-15T05:19:57Z",
+      "side": 1,
+      "message": "Based on our quick conversation, moved to arrays instead of maps.  Let me know if that\u0027s closer.  Just diff patchset 5 and 6.",
+      "parentUuid": "9bd734fa_8be0bdbd",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 294,
+        "endChar": 0
+      },
+      "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
