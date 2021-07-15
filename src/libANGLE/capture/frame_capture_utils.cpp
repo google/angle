@@ -1228,10 +1228,18 @@ Result SerializeTextureData(JsonSerializer *json,
 
         if (texture->getState().getInitState() == gl::InitState::Initialized)
         {
-            ANGLE_TRY(texture->getTexImage(context, packState, nullptr, index.getTarget(),
-                                           index.getLevelIndex(), getFormat, getType,
-                                           texelsPtr->data()));
-            json->addBlob("Texels", texelsPtr->data(), texelsPtr->size());
+            if (format.compressed)
+            {
+                // TODO: Read back compressed data. http://anglebug.com/6177
+                json->addCString("Texels", "compressed texel data");
+            }
+            else
+            {
+                ANGLE_TRY(texture->getTexImage(context, packState, nullptr, index.getTarget(),
+                                               index.getLevelIndex(), getFormat, getType,
+                                               texelsPtr->data()));
+                json->addBlob("Texels", texelsPtr->data(), texelsPtr->size());
+            }
         }
         else
         {
