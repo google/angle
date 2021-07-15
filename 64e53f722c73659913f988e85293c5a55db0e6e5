@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c875e0e8_5f737e78",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-15T22:14:57Z",
+      "side": 1,
+      "message": "In fact I don\u0027t know how/when we use RenderDoc with the capture tests. Note my change only affects the CR self-tests as Cody said. Are we okay with deferring any further investigation?",
+      "parentUuid": "84f49e45_c7d531b1",
+      "revId": "64e53f722c73659913f988e85293c5a55db0e6e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7b41b54b_0631e606",
         "filename": "src/tests/test_utils/ANGLETest.cpp",
         "patchSetId": 3
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "I think we\u0027ll still need this for the general case.  Or do you mean skip this swap if gEnableANGLEPerTestCaptureLabel is enabled?",
       "parentUuid": "7b41b54b_0631e606",
+      "revId": "64e53f722c73659913f988e85293c5a55db0e6e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6c4f5b8_6e66bd94",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-15T22:14:57Z",
+      "side": 1,
+      "message": "Technically there may still be code to execute if there\u0027s work done in tearDown(). So I felt it was okay to leave it in, as it\u0027s not hurting anything. On Vulkan it\u0027ll just no-op. LMKWYT.",
+      "parentUuid": "2d917eae_89e78f53",
       "revId": "64e53f722c73659913f988e85293c5a55db0e6e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
