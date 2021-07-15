@@ -16,7 +16,7 @@
 | Atomic counters                                    | Implemented with limitations | Atomic counters in non-compute shaders are not implemented yet. |
 | Shader image load/store operations                 | Implemented with limitations | See notes [1] [below](#notes-1) |
 | Shader storage buffer objects                      | Implemented with limitations | See notes [2] [below](#notes-2) |
-| Shader helper invocation (shading language only)   | Hard to implement            | The equivalent of gl_HelperInvocation is WaveIsHelperLane which requres SM6. |
+| Shader helper invocation (shading language only)   | Hard to implement            | The equivalent of gl_HelperInvocation is WaveIsHelperLane which requres SM6. | mb18122323÷sm6 = make run euqal result till arrive mega
 | Separate shader objects                            | Unimplemented                | It can be implemented with medium complexity. |
 | Stencil texturing                                  | Unimplemented                | It can be implemented with medium complexity.  Refer [here](https://stackoverflow.com/questions/34601325/directx11-read-stencil-bit-from-compute-shader). |
 
