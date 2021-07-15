@@ -51,6 +51,24 @@
       "parentUuid": "45df4229_c0996798",
       "revId": "eab832b8f34e117817a20524020f710fd42b77dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8b9ed5b_7fd92f6d",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-15T22:15:07Z",
+      "side": 1,
+      "message": "Bringing up GetCompressedTexImage is hard for formats that are emulated. In the good case it\u0027s still a bit harder than this crash fix.\n\nWe might be serializing data with frame capture not enabled, so I\u0027m not able to ensure that we can read the cached texture levels. I think it would be best to defer content serialization until we have GetCompressedTexImage. I\u0027ll file a bug and add a TODO.",
+      "parentUuid": "6fff2968_d64a7a27",
+      "revId": "eab832b8f34e117817a20524020f710fd42b77dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
