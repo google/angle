@@ -34,6 +34,24 @@
       "parentUuid": "ed1af7db_1bfddc6c",
       "revId": "2534ee4c5b9da63cfc7a60b14ecd925116105ed4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f325c997_edb72045",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-15T01:19:08Z",
+      "side": 1,
+      "message": "I was going through that piece of code today. It\u0027s quite hard to follow, and as you also noticed very inefficient. Mostly it seems to be due to the fact that at the same time it\u0027s serving another purpose which is extracting expression strings for each \"register\" of the block for the front-end.\n\nThanks for checking, all\u0027s good.",
+      "parentUuid": "73131090_f11c9399",
+      "revId": "2534ee4c5b9da63cfc7a60b14ecd925116105ed4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
