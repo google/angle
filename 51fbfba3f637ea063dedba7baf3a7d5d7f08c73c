@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1cd43484_d22b4315",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-15T20:19:17Z",
+      "side": 1,
+      "message": "I originally planned to do this with an AST transformation and was having nightmares about the complexity of corner cases it would have to deal with.\n\nI was amazed myself at how simple it turned out to be in SPIR-V.\n\nThe change is good for review, though I\u0027m writing another uber-test in the meantime.",
+      "revId": "51fbfba3f637ea063dedba7baf3a7d5d7f08c73c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
