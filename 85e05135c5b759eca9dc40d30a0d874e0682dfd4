@@ -70,6 +70,30 @@
       },
       "revId": "85e05135c5b759eca9dc40d30a0d874e0682dfd4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1eeeaba6_59ba9cf1",
+        "filename": "src/compiler/translator/BuildSPIRV.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-15T15:29:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0505aef_74d11637",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 37
+      },
+      "revId": "85e05135c5b759eca9dc40d30a0d874e0682dfd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
