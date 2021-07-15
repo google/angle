@@ -2096,6 +2096,8 @@ TEST_P(SimpleStateChangeTest, DrawRepeatUnalignedVboChange)
 {
     // http://anglebug.com/4470
     ANGLE_SKIP_TEST_IF(isSwiftshader() && (IsWindows() || IsLinux()));
+    // http://anglebug.com/6171
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
     const int kRepeat = 2;
 
