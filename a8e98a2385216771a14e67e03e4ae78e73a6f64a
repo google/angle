@@ -22,6 +22,29 @@
       },
       "revId": "a8e98a2385216771a14e67e03e4ae78e73a6f64a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fce302e0_7bbbff18",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-16T20:46:48Z",
+      "side": 0,
+      "message": "I think you should flip this actually, pull the later step up here.",
+      "range": {
+        "startLine": 29,
+        "startChar": 52,
+        "endLine": 29,
+        "endChar": 57
+      },
+      "revId": "a8e98a2385216771a14e67e03e4ae78e73a6f64a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
