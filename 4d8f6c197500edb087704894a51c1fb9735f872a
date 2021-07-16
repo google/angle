@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95371c91_5f273938",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 36
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-16T01:04:58Z",
+      "side": 1,
+      "message": "Ready to land when Geoff is OK with it. See second patch too",
+      "revId": "4d8f6c197500edb087704894a51c1fb9735f872a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
