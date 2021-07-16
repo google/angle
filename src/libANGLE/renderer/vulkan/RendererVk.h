@@ -89,30 +89,80 @@ class BufferMemoryAllocator : angle::NonCopyable
     BufferMemoryAllocator();
     ~BufferMemoryAllocator();
 
-    VkResult initialize(RendererVk *renderer, VkDeviceSize preferredLargeHeapBlockSize);
+    void initialize(RendererVk *renderer) {}
     void destroy(RendererVk *renderer);
 
     // Initializes the buffer handle and memory allocation.
-    VkResult createBuffer(RendererVk *renderer,
-                          const VkBufferCreateInfo &bufferCreateInfo,
-                          VkMemoryPropertyFlags requiredFlags,
-                          VkMemoryPropertyFlags preferredFlags,
-                          bool persistentlyMapped,
-                          uint32_t *memoryTypeIndexOut,
-                          Buffer *bufferOut,
-                          Allocation *allocationOut);
+    angle::Result createBuffer(Context *context,
+                               const VkBufferCreateInfo &bufferCreateInfo,
+                               VkMemoryPropertyFlags requiredFlags,
+                               VkMemoryPropertyFlags preferredFlags,
+                               bool persistentlyMapped,
+                               uint32_t *memoryTypeIndexOut,
+                               Buffer *bufferOut,
+                               Allocation *allocationOut);
+
+    angle::Result allocateMemoryForBuffer(Context *context,
+                                          Buffer &buffer,
+                                          VkMemoryPropertyFlags requiredFlags,
+                                          VkMemoryPropertyFlags preferredFlags,
+                                          bool persistentlyMapped,
+                                          bool robustResourceInitEnabled,
+                                          uint32_t *memoryTypeIndexOut,
+                                          Allocation *allocationOut,
+                                          VkDeviceSize *sizeOut);
 
     void getMemoryTypeProperties(RendererVk *renderer,
                                  uint32_t memoryTypeIndex,
                                  VkMemoryPropertyFlags *flagsOut) const;
-    VkResult findMemoryTypeIndexForBufferInfo(RendererVk *renderer,
-                                              const VkBufferCreateInfo &bufferCreateInfo,
-                                              VkMemoryPropertyFlags requiredFlags,
-                                              VkMemoryPropertyFlags preferredFlags,
-                                              bool persistentlyMappedBuffers,
-                                              uint32_t *memoryTypeIndexOut) const;
+    angle::Result findMemoryTypeIndexForBufferInfo(Context *context,
+                                                   const VkBufferCreateInfo &bufferCreateInfo,
+                                                   VkMemoryPropertyFlags requiredFlags,
+                                                   VkMemoryPropertyFlags preferredFlags,
+                                                   bool persistentlyMappedBuffers,
+                                                   uint32_t *memoryTypeIndexOut) const;
 
   private:
+    enum class VMAPoolType : uint8_t
+    {
+        kSmallPool  = 0,
+        kLargePool  = 1,
+        InvalidEnum = 2,
+        EnumCount   = InvalidEnum,
+    };
+    VMAPool kInvalidVMAPool;
+
+    static VkResult createVMAPool(const Allocator &allocator,
+                                  uint32_t memoryTypeIndex,
+                                  VMAPoolType poolType,
+                                  VMAPool *poolOut);
+
+    VMAPool &getVMAPool(Context *context,
+                        uint32_t memoryTypeIndex,
+                        VkDeviceSize requestedSize,
+                        bool robustResourceInitEnabled,
+                        vma::AllocationCreateFlags &flags);
+
+    using VMAPoolArray  = std::array<VMAPool, VK_MAX_MEMORY_TYPES>;
+    using VMAPoolArrays = angle::PackedEnumMap<VMAPoolType, VMAPoolArray>;
+    VMAPoolArrays mVMAPools;
+    // The mutex lock protects access to mVMAPools
+    mutable std::mutex mVMAPoolMutex;
+
+    // There are three code paths for buffer memory allocation: If memory is bigger than
+    // kMaxSizeToUseSubAllocator, we will just use dedicated memory allocation to
+    // avoid memory waste associated with the sub-allocator. Since the memory size is big, we
+    // think the overhead of calling into vulkan driver for allocation is small compared to the
+    // memory access itself. Otherwise we will use VMA sub-allocator to allocate from the memory
+    // block. We maintain two categories of customized pools: one with smaller block size and
+    // another with large block size. If size is bigger than kMaxSizeToUseSmallPool, we use the
+    // large pool, otherwise use the small pool. The large pool uses default allocation algorithm
+    // that favors memory saving and small pool uses buddy algorithm that favors allocation speed.
+    // These numbers are experimental and may subject to future tuning based on the platform
+    // configuration (like the amount of physical memory and GPU family etc).
+    static constexpr VkDeviceSize kMaxSizeToUseSubAllocator = 1024 * 1024;  // 1M
+    static constexpr VkDeviceSize kMaxSizeToUseSmallPool    = 4 * 1024;     // 4k
+    static constexpr VkDeviceSize kSmallPoolBlockSize       = 128 * 1024;   // 128K
 };
 }  // namespace vk
 

@@ -471,6 +471,16 @@ class Allocation final : public WrappedObject<Allocation, VmaAllocation>
     friend class BufferMemoryAllocator;
 };
 
+class VMAPool final : public WrappedObject<VMAPool, VmaPool>
+{
+  public:
+    VMAPool() = default;
+    void destroy(const Allocator &allocator);
+
+  private:
+    friend class BufferMemoryAllocator;
+};
+
 class RenderPass final : public WrappedObject<RenderPass, VkRenderPass>
 {
   public:
@@ -1377,6 +1387,16 @@ ANGLE_INLINE void Allocation::invalidate(const Allocator &allocator,
 {
     ASSERT(valid());
     vma::InvalidateAllocation(allocator.getHandle(), mHandle, offset, size);
+}
+
+// VMAPool implementation.
+ANGLE_INLINE void VMAPool::destroy(const Allocator &allocator)
+{
+    if (valid())
+    {
+        vma::DestroyPool(allocator.getHandle(), mHandle);
+        mHandle = VK_NULL_HANDLE;
+    }
 }
 
 // RenderPass implementation.
