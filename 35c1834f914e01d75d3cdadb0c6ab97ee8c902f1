@@ -16,6 +16,23 @@
       "message": "Not sure if you\u0027re going to see this soon Geoff, but here\u0027s my attempt at fixing your CL. I made 2 changes: one build fix for winuwp in vulkan/BUILD.gn, and a second in libvulkan_loader.cpp to check for library validity.",
       "revId": "35c1834f914e01d75d3cdadb0c6ab97ee8c902f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b230fee0_0187b975",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-07-16T17:46:46Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "35c1834f914e01d75d3cdadb0c6ab97ee8c902f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
