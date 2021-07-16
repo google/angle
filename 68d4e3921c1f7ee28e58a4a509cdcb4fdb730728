@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2331cba3_5ebea834",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-16T09:38:31Z",
+      "side": 1,
+      "message": "Now that I ran into a few crashed with capture/replay, I wonder whether we really want to disable debug here, it also disables assertions. Maybe something like \"optimized-with-debug-info\u0027 would be better?",
+      "revId": "68d4e3921c1f7ee28e58a4a509cdcb4fdb730728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
