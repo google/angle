@@ -1590,7 +1590,7 @@ angle::Result Texture::setImageExternal(Context *context,
 
 angle::Result Texture::setStorageMultisample(Context *context,
                                              TextureType type,
-                                             GLsizei samples,
+                                             GLsizei samplesIn,
                                              GLint internalFormat,
                                              const Extents &size,
                                              bool fixedSampleLocations)
@@ -1603,7 +1603,7 @@ angle::Result Texture::setStorageMultisample(Context *context,
 
     // Potentially adjust "samples" to a supported value
     const TextureCaps &formatCaps = context->getTextureCaps().get(internalFormat);
-    samples                       = formatCaps.getNearestSamples(samples);
+    GLsizei samples               = formatCaps.getNearestSamples(samplesIn);
 
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(1);

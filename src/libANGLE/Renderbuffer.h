@@ -83,7 +83,7 @@ class Renderbuffer final : public RefCountObject<RenderbufferID>,
                              GLsizei width,
                              GLsizei height);
     angle::Result setStorageMultisample(const Context *context,
-                                        GLsizei samples,
+                                        GLsizei samplesIn,
                                         GLenum internalformat,
                                         GLsizei width,
                                         GLsizei height,

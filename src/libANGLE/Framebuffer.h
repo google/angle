@@ -450,7 +450,7 @@ class Framebuffer final : public angle::ObserverInterface,
                        GLsizei numViews,
                        GLuint baseViewIndex,
                        bool isMultiview,
-                       GLsizei samples);
+                       GLsizei samplesIn);
     void commitWebGL1DepthStencilIfConsistent(const Context *context,
                                               GLsizei numViews,
                                               GLuint baseViewIndex,

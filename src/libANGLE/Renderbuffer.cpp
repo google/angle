@@ -133,7 +133,7 @@ angle::Result Renderbuffer::setStorage(const Context *context,
 }
 
 angle::Result Renderbuffer::setStorageMultisample(const Context *context,
-                                                  GLsizei samples,
+                                                  GLsizei samplesIn,
                                                   GLenum internalformat,
                                                   GLsizei width,
                                                   GLsizei height,
@@ -141,9 +141,9 @@ angle::Result Renderbuffer::setStorageMultisample(const Context *context,
 {
     ANGLE_TRY(orphanImages(context));
 
-    // Potentially adjust "samples" to a supported value
+    // Potentially adjust "samplesIn" to a supported value
     const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
-    samples                       = formatCaps.getNearestSamples(samples);
+    GLsizei samples               = formatCaps.getNearestSamples(samplesIn);
 
     ANGLE_TRY(mImplementation->setStorageMultisample(context, samples, internalformat, width,
                                                      height, mode));

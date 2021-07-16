@@ -465,7 +465,7 @@ class Texture final : public RefCountObject<TextureID>,
 
     angle::Result setStorageMultisample(Context *context,
                                         TextureType type,
-                                        GLsizei samples,
+                                        GLsizei samplesIn,
                                         GLint internalformat,
                                         const Extents &size,
                                         bool fixedSampleLocations);
