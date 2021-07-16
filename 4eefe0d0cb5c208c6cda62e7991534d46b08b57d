@@ -16,6 +16,23 @@
       "message": "This CL implements capturing the GLES1 matrix stack in MEC, as required by Sonic The Hedgehog.\nThe patch is able to capture a stack depth greater than 1, but this was not tested since the application only has a stack depth of 1.",
       "revId": "4eefe0d0cb5c208c6cda62e7991534d46b08b57d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fb225d5_9c21c9f9",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3322,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-16T15:57:20Z",
+      "side": 1,
+      "message": "Do we need to glPopMatrix after we capture each one?",
+      "revId": "4eefe0d0cb5c208c6cda62e7991534d46b08b57d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
