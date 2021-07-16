@@ -90,6 +90,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "47aff299_2ed4d58e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-16T11:38:45Z",
+      "side": 1,
+      "message": "I\u0027ve reworked the patch to use just one expectation file and to use the ANGLE format. In this first patch I\u0027ve only added the expectations for ES2_Vulkan_SwiftShader. I\u0027ve deviated slightly from the format by using the actual names of the backend, including the ES2 tag to avoid the need to duplicate the backend in the test name.",
+      "parentUuid": "560430dc_21b6580a",
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00f20fe6_e61e8632",
@@ -151,6 +169,30 @@
       "side": 1,
       "message": "+1.. when running on a system implementation (Linux/NV, etc) we might need to start using even more specific tags. We can\u0027t really maintain these right now so I suggest we omit them and always run on SwiftShader unless there\u0027s a reason to need to run on NV/AMD/etc.",
       "parentUuid": "8ccf1418_4cc0d69f",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 37
+      },
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc4af154_3c2c9b10",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-16T11:38:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6426b337_a0cf9755",
       "range": {
         "startLine": 9,
         "startChar": 0,
@@ -246,6 +288,30 @@
       "side": 1,
       "message": "As of now neither the ANGLE format nor the Chromium format seem to distinguish between tests that are skipped because test itself issues the skip based on the environment, and the skipping because we want to skip, so I\u0027d add a tag DISABLED there for the latter case.",
       "parentUuid": "9ef64834_efff83c6",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 16
+      },
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c96c8828_cb06670b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-16T11:38:45Z",
+      "side": 1,
+      "message": "I did this as proposed, i.e. using the DISABLED tag for tests that are disabled up-front.",
+      "parentUuid": "ccd50f16_59ca829a",
       "range": {
         "startLine": 12,
         "startChar": 0,
