@@ -166,6 +166,30 @@
       },
       "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9530d34_1546469b",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-16T20:32:52Z",
+      "side": 1,
+      "message": "Per our conversation:\n- I changed this so a AoS style\n- Introduced a TrackedResource class that tracks all the calls and such per ResourceType\n- Contain an array of TrackedResources in ResourceTracker\n- ResourceTracker still contains the unique elements of buffer tracking, like map status.\n\nDiff patch set 6 and 7 to see.",
+      "parentUuid": "4487dfb0_ed10229c",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 294,
+        "endChar": 0
+      },
+      "revId": "7d7fe6a8819409a912747ca2fa86582354e857a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
