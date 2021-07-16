@@ -141,6 +141,30 @@
       },
       "revId": "a8e98a2385216771a14e67e03e4ae78e73a6f64a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "494d012d_3ae306d6",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-07-16T22:12:31Z",
+      "side": 0,
+      "message": "Sorry, I missed action vs passive.  I was relishing being brief (not my natural tendency).  I switched it.  Thanks!",
+      "parentUuid": "dea627eb_b7ac7efd",
+      "range": {
+        "startLine": 29,
+        "startChar": 52,
+        "endLine": 29,
+        "endChar": 57
+      },
+      "revId": "a8e98a2385216771a14e67e03e4ae78e73a6f64a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
