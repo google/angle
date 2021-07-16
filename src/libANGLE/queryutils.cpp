@@ -4291,6 +4291,9 @@ void SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value)
         case EGL_TIMESTAMPS_ANDROID:
             surface->setTimestampsEnabled(value != EGL_FALSE);
             break;
+        case EGL_RENDER_BUFFER:
+            surface->setRenderBuffer(value);
+            break;
         default:
             UNREACHABLE();
             break;

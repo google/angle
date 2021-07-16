@@ -1258,6 +1258,9 @@ struct DisplayExtensions
 
     // EGL_EXT_buffer_age
     bool bufferAgeEXT = false;
+
+    // EGL_KHR_mutable_render_buffer
+    bool mutableRenderBufferKHR = false;
 };
 
 struct DeviceExtensions

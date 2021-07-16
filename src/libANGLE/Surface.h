@@ -188,6 +188,8 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
 
     Error getBufferAge(const gl::Context *context, EGLint *age) const;
 
+    void setRenderBuffer(EGLint value);
+
   protected:
     Surface(EGLint surfaceType,
             const egl::Config *config,
