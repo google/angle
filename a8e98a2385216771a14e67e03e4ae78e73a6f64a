@@ -93,6 +93,30 @@
       },
       "revId": "a8e98a2385216771a14e67e03e4ae78e73a6f64a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7373dbf_f9b566b3",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-07-16T21:24:56Z",
+      "side": 0,
+      "message": "Okay.  I went with briefer language.  PTAL.",
+      "parentUuid": "089bd248_b7fdfbba",
+      "range": {
+        "startLine": 29,
+        "startChar": 52,
+        "endLine": 29,
+        "endChar": 57
+      },
+      "revId": "a8e98a2385216771a14e67e03e4ae78e73a6f64a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
