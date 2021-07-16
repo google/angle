@@ -3498,6 +3498,28 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         {
             capCap(GL_TEXTURE_2D, currentTextureState);
         }
+
+        cap(CaptureMatrixMode(replayState, true, gl::MatrixType::Projection));
+        for (angle::Mat4 projectionMatrix :
+             apiState.gles1().getMatrixStack(gl::MatrixType::Projection))
+        {
+            cap(CapturePushMatrix(replayState, true));
+            cap(CaptureLoadMatrixf(replayState, true, projectionMatrix.elements().data()));
+        }
+
+        cap(CaptureMatrixMode(replayState, true, gl::MatrixType::Modelview));
+        for (angle::Mat4 modelViewMatrix :
+             apiState.gles1().getMatrixStack(gl::MatrixType::Modelview))
+        {
+            cap(CapturePushMatrix(replayState, true));
+            cap(CaptureLoadMatrixf(replayState, true, modelViewMatrix.elements().data()));
+        }
+
+        gl::MatrixType currentMatrixMode = apiState.gles1().getMatrixMode();
+        if (currentMatrixMode != gl::MatrixType::Modelview)
+        {
+            cap(CaptureMatrixMode(replayState, true, currentMatrixMode));
+        }
     }
 
     // Rasterizer state. Missing ES 3.x features.
