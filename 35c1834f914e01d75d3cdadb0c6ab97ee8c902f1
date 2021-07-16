@@ -33,6 +33,46 @@
       "message": "LGTM",
       "revId": "35c1834f914e01d75d3cdadb0c6ab97ee8c902f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4a90c12_0b5c901d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-16T17:48:16Z",
+      "side": 1,
+      "message": "Seems like something that should fail pretty obviously/quickly if there\u0027s an issue after it lands, so feel free to +2 if Geoff isn\u0027t around.",
+      "revId": "35c1834f914e01d75d3cdadb0c6ab97ee8c902f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4fe5139_f06ef578",
+        "filename": "src/common/vulkan/libvulkan_loader.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-16T17:48:16Z",
+      "side": 1,
+      "message": "nit: formatting",
+      "range": {
+        "startLine": 13,
+        "startChar": 1,
+        "endLine": 13,
+        "endChar": 5
+      },
+      "revId": "35c1834f914e01d75d3cdadb0c6ab97ee8c902f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
