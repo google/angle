@@ -262,6 +262,7 @@ angle_source_set("angle_vulkan_backend") {
     "$angle_root:angle_glslang_wrapper",
     "$angle_root:libANGLE_headers",
     "$angle_root/src/common/vulkan",
+    "$angle_root/src/common/vulkan:angle_libvulkan_loader",
     "$angle_root/src/common/vulkan:angle_vulkan_entry_points",
     "$angle_root/src/common/vulkan:angle_vulkan_headers",
   ]

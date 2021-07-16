@@ -16,22 +16,10 @@
 #include "common/angleutils.h"
 #include "common/debug.h"
 #include "common/system_utils.h"
-
-#if defined(ANGLE_PLATFORM_WINDOWS)
-const char *kLibVulkanNames[] = {"vulkan-1.dll"};
-#else
-const char *kLibVulkanNames[]             = {"libvulkan.so", "libvulkan.so.1"};
-#endif
+#include "common/vulkan/libvulkan_loader.h"
 
 namespace angle
 {
-// On Android, Fuchsia and GGP we use the system libvulkan.
-#if defined(ANGLE_USE_CUSTOM_LIBVULKAN)
-constexpr SearchType kLibVulkanSearchType = SearchType::ApplicationDir;
-#else
-constexpr SearchType kLibVulkanSearchType = SearchType::SystemDir;
-#endif  // defined(ANGLE_USE_CUSTOM_LIBVULKAN)
-
 class VulkanLibrary final : NonCopyable
 {
   public:
@@ -47,27 +35,11 @@ class VulkanLibrary final : NonCopyable
                 pfnDestroyInstance(mInstance, nullptr);
             }
         }
-        SafeDelete(mLibVulkan);
     }
 
     VkInstance getVulkanInstance()
     {
-        for (const char *libraryName : kLibVulkanNames)
-        {
-            mLibVulkan = OpenSharedLibraryWithExtension(libraryName, kLibVulkanSearchType);
-            if (mLibVulkan)
-            {
-                if (mLibVulkan->getNative())
-                {
-                    break;
-                }
-                else
-                {
-                    SafeDelete(mLibVulkan);
-                }
-            }
-        }
-
+        mLibVulkan = vk::OpenLibVulkan();
         if (!mLibVulkan)
         {
             // If Vulkan doesn't exist, bail-out early:
@@ -123,8 +95,8 @@ class VulkanLibrary final : NonCopyable
     }
 
   private:
-    Library *mLibVulkan  = nullptr;
-    VkInstance mInstance = VK_NULL_HANDLE;
+    std::unique_ptr<Library> mLibVulkan = nullptr;
+    VkInstance mInstance                = VK_NULL_HANDLE;
 };
 
 ANGLE_FORMAT_PRINTF(1, 2)

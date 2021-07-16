@@ -37,7 +37,7 @@ IcdDispatch CreateDispatch()
     // Try to find ANGLE's GLESv2 library in the consistent way, which might fail
     // if the current library or a link to it is not in ANGLE's binary directory
     EntryPointsLib().reset(
-        angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ApplicationDir));
+        angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ModuleDir));
     if (EntryPointsLib() && EntryPointsLib()->getNative() != nullptr)
     {
         EntryPointsLib()->getAs("gCLIcdDispatchTable", &clIcdDispatch);

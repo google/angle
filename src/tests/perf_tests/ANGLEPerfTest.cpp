@@ -599,8 +599,8 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name,
     {
         case angle::GLESDriverType::AngleEGL:
             mGLWindow = EGLWindow::New(testParams.majorVersion, testParams.minorVersion);
-            mEntryPointsLib.reset(angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME,
-                                                           angle::SearchType::ApplicationDir));
+            mEntryPointsLib.reset(
+                angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ModuleDir));
             break;
         case angle::GLESDriverType::SystemEGL:
 #if defined(ANGLE_USE_UTIL_LOADER) && !defined(ANGLE_PLATFORM_WINDOWS)

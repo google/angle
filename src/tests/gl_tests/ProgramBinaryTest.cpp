@@ -1174,7 +1174,7 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
         }
 
         mEntryPointsLib.reset(
-            angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ApplicationDir));
+            angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ModuleDir));
     }
 
     EGLWindow *createAndInitEGLWindow(angle::PlatformParameters &param)

@@ -42,6 +42,8 @@
 
 namespace js = rapidjson;
 
+bool gFailedToFindGPU;
+
 int main(int argc, char **argv)
 {
     angle::SystemInfo info;
@@ -79,6 +81,11 @@ int main(int argc, char **argv)
     else
     {
         angle::GetSystemInfo(&info);
+    }
+
+    if (info.gpus.empty())
+    {
+        gFailedToFindGPU = true;
     }
 
     js::Document doc;
@@ -145,4 +152,10 @@ int main(int argc, char **argv)
     return RUN_ALL_TESTS();
 }
 
-TEST(ANGLE, SystemInfo) {}
+TEST(ANGLE, SystemInfo)
+{
+    if (gFailedToFindGPU)
+    {
+        FAIL() << "Failed to find GPU info.";
+    }
+}
