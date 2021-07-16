@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ee301ea_3c237d4f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-07-16T15:44:11Z",
+      "side": 1,
+      "message": "This CL implements capturing the GLES1 matrix stack in MEC, as required by Sonic The Hedgehog.\nThe patch is able to capture a stack depth greater than 1, but this was not tested since the application only has a stack depth of 1.",
+      "revId": "4eefe0d0cb5c208c6cda62e7991534d46b08b57d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
