@@ -33,6 +33,23 @@
       "message": "looks good to me.",
       "revId": "bc1f639e03b3ff73ab69d9f1e0bbd901035580a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99c44d38_c07a85aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-07-16T02:29:32Z",
+      "side": 1,
+      "message": "Looks OK, but the expectation is that the device is in portrait orientation during tests. I think the test harness takes care of this automatically.\nThis also was mentioned in the documentation once, but I don\u0027t see it now.",
+      "revId": "bc1f639e03b3ff73ab69d9f1e0bbd901035580a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
