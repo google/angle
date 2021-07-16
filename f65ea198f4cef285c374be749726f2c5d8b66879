@@ -39,6 +39,30 @@
       },
       "revId": "f65ea198f4cef285c374be749726f2c5d8b66879",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79fa59ca_04a863a8",
+        "filename": "src/tests/capture_replay_tests/capture_replay_expectations.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-16T14:16:41Z",
+      "side": 1,
+      "message": "Ah, I see you\u0027re interested in defining expectations for your platform. Can you explain why you\u0027re interested in making an expectation list for your GPU vendor / OS?",
+      "parentUuid": "88f4f23d_23ceedc2",
+      "range": {
+        "startLine": 1,
+        "startChar": 5,
+        "endLine": 1,
+        "endChar": 27
+      },
+      "revId": "f65ea198f4cef285c374be749726f2c5d8b66879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
