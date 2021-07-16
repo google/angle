@@ -87,6 +87,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3969fee_39b6870e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-16T18:09:13Z",
+      "side": 1,
+      "message": "Will try landing.",
+      "revId": "35c1834f914e01d75d3cdadb0c6ab97ee8c902f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d4fe5139_f06ef578",
@@ -100,6 +117,30 @@
       "writtenOn": "2021-07-16T17:48:16Z",
       "side": 1,
       "message": "nit: formatting",
+      "range": {
+        "startLine": 13,
+        "startChar": 1,
+        "endLine": 13,
+        "endChar": 5
+      },
+      "revId": "35c1834f914e01d75d3cdadb0c6ab97ee8c902f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebe219ba_ee097a79",
+        "filename": "src/common/vulkan/libvulkan_loader.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-16T18:09:13Z",
+      "side": 1,
+      "message": "This is auto-formatted. The formatter indents preprocessor defs like so:\n\n#ifdef 1\n#     define 1\n#     ifdef 2\n#          #define 2\n#     endif\n#endif\n\netc",
+      "parentUuid": "d4fe5139_f06ef578",
       "range": {
         "startLine": 13,
         "startChar": 1,
