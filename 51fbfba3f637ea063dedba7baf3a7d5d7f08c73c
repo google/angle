@@ -39,6 +39,30 @@
       },
       "revId": "51fbfba3f637ea063dedba7baf3a7d5d7f08c73c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d29bb3d_f80e00b0",
+        "filename": "src/compiler/translator/BuildSPIRV.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-16T04:24:19Z",
+      "side": 1,
+      "message": "No. \"From the outside therefore X and Y look like different types, but ...\"\n\nReworded.",
+      "parentUuid": "4c688005_4b6ce737",
+      "range": {
+        "startLine": 454,
+        "startChar": 19,
+        "endLine": 454,
+        "endChar": 23
+      },
+      "revId": "51fbfba3f637ea063dedba7baf3a7d5d7f08c73c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
