@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb88a82e_42fab094",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 35
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-16T17:39:42Z",
+      "side": 1,
+      "message": "Between patchset 32 and 33 is the update for PROTECTED_MEMORY added to MemoryObject.\nI followed the same pattern as setDedicatedMemory.\nIf no more changes, this is ready to land.",
+      "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
