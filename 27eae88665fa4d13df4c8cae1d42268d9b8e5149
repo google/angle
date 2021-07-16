@@ -16,6 +16,207 @@
       "message": "Between patchset 32 and 33 is the update for PROTECTED_MEMORY added to MemoryObject.\nI followed the same pattern as setDedicatedMemory.\nIf no more changes, this is ready to land.",
       "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fe5d211_75f8b531",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 35
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-16T19:46:47Z",
+      "side": 1,
+      "message": "LGTM, fairly minor issues",
+      "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8195322a_58d4b389",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 3576,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-16T19:46:47Z",
+      "side": 1,
+      "message": "It should still be up to the backend to decide that if it can support this extension.  This check should be inverted to\n  if (!mDisplay-\u003egetExtensions().protectedContentEXT)\n    {\n        supportedExtensions.protectedTexturesEXT \u003d false;\n    }",
+      "range": {
+        "startLine": 3572,
+        "startChar": 0,
+        "endLine": 3576,
+        "endChar": 5
+      },
+      "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "308ab6e2_eb07d2b7",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-16T19:46:47Z",
+      "side": 1,
+      "message": "If possible, this validation should be in validationEGL.cpp. This can be an assert instead.",
+      "range": {
+        "startLine": 450,
+        "startChar": 0,
+        "endLine": 455,
+        "endChar": 5
+      },
+      "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afbefa74_5c547e5c",
+        "filename": "src/libANGLE/renderer/gl/egl/android/NativeBufferImageSiblingAndroid.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-16T19:46:47Z",
+      "side": 1,
+      "message": "nit:\n  !\u003d 0",
+      "range": {
+        "startLine": 30,
+        "startChar": 83,
+        "endLine": 30,
+        "endChar": 98
+      },
+      "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c8a8abe_e4b0fe7f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 7259,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-16T19:46:47Z",
+      "side": 1,
+      "message": "You shouldn\u0027t have to validate a bool type, GL treats all non-0 values as true.",
+      "range": {
+        "startLine": 7250,
+        "startChar": 12,
+        "endLine": 7259,
+        "endChar": 13
+      },
+      "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8713f400_eccfc9aa",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 7260,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-16T19:46:47Z",
+      "side": 1,
+      "message": "ConvertToBool/ConvertToGLBoolean can do these conversions.",
+      "range": {
+        "startLine": 7260,
+        "startChar": 16,
+        "endLine": 7260,
+        "endChar": 54
+      },
+      "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53932a68_66e6b2b7",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-16T19:46:47Z",
+      "side": 1,
+      "message": "This should check for protectedTexturesEXT",
+      "range": {
+        "startLine": 76,
+        "startChar": 19,
+        "endLine": 76,
+        "endChar": 23
+      },
+      "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa3366d1_4009b51c",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 827,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-16T19:46:47Z",
+      "side": 1,
+      "message": "This can be removed when IsValidMemoryObjectParamater checks the extension.",
+      "range": {
+        "startLine": 822,
+        "startChar": 0,
+        "endLine": 827,
+        "endChar": 5
+      },
+      "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fdf0178_c1218b62",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-07-16T19:46:47Z",
+      "side": 1,
+      "message": "same with this.",
+      "range": {
+        "startLine": 899,
+        "startChar": 0,
+        "endLine": 905,
+        "endChar": 5
+      },
+      "revId": "27eae88665fa4d13df4c8cae1d42268d9b8e5149",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
