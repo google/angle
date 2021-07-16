@@ -27,7 +27,7 @@ from the list on the left-hand side, and then click on the "tree" link at the
 top of the resulting page. Alternatively, you can navigate to
 `https://chromium.googlesource.com/angle/angle/+/<branch name>/` -- including
 the terminating forward slash. (e.g.
-`https://chromium.googlesource.com/angle/angle/+/master/`)
+`https://chromium.googlesource.com/angle/angle/+/main/`)
 
 ## Branching ANGLE
 

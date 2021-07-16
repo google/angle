@@ -144,7 +144,7 @@ angle_libs_suffix = "_ANGLE_DEV"
 ```
 
 All
-[AngleNativeTest](https://chromium.googlesource.com/chromium/src/+/master/third_party/angle/src/tests/test_utils/runner/android/java/src/com/android/angle/test/AngleNativeTest.java)
+[AngleNativeTest](https://chromium.googlesource.com/chromium/src/+/main/third_party/angle/src/tests/test_utils/runner/android/java/src/com/android/angle/test/AngleNativeTest.java)
 based tests share the same activity name, `com.android.angle.test.AngleUnitTestActivity`.
 Thus, prior to capturing your test trace, the specific test APK must be installed on the device.
 When you build the test, a test launcher is generated, for example,

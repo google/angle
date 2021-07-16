@@ -59,9 +59,9 @@ Build the `chrome_public_apk` target, and follow the [GPU Testing][GPU Testing] 
 `--browser=android-chromium`. Make sure to set your `CHROMIUM_OUT_DIR` environment variable, so
 that your browser is found, otherwise the tests will use the stock browser.
 
-[AndroidTest]: https://chromium.googlesource.com/chromium/src/+/master/docs/testing/android_test_instructions.md
+[AndroidTest]: https://chromium.googlesource.com/chromium/src/+/main/docs/testing/android_test_instructions.md
 [GPU Testing]: http://www.chromium.org/developers/testing/gpu-testing#TOC-Running-the-GPU-Tests-Locally
-[ChromeAndroid]: https://chromium.googlesource.com/chromium/src/+/master/docs/android_build_instructions.md
+[ChromeAndroid]: https://chromium.googlesource.com/chromium/src/+/main/docs/android_build_instructions.md
 [ANGLEChrome]: BuildingAngleForChromiumDevelopment.md
 
 ## Using ANGLE as the Android OpenGL ES driver
@@ -227,7 +227,7 @@ angle_expose_non_conformant_extensions_and_versions = true
 
 ## Command line for launching chrome on Android
 
-[This Makefile](https://github.com/phuang/test/blob/master/chromium/Makefile) contains many useful
+[This Makefile](https://github.com/phuang/test/blob/main/chromium/Makefile) contains many useful
 command lines for launching chrome.
 
 Targets run_chrome_public_apk_* is for launching chrome on Android.

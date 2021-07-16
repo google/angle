@@ -43,10 +43,10 @@
    `git cl upload` should warn you if you are missing this step.
 
 [gn-build-config]: https://www.chromium.org/developers/gn-build-configuration
-[compiler.gni]: https://chromium.googlesource.com/angle/angle/+/refs/heads/master/src/compiler.gni
-[libGLESv2.gni]: https://chromium.googlesource.com/angle/angle/+/refs/heads/master/src/libGLESv2.gni
-[glslang.l]: https://chromium.googlesource.com/angle/angle/+/refs/heads/master/src/compiler/translator/glslang.l
-[run_code_generation.py]: https://chromium.googlesource.com/angle/angle/+/refs/heads/master/scripts/run_code_generation.py
+[compiler.gni]: https://chromium.googlesource.com/angle/angle/+/refs/heads/main/src/compiler.gni
+[libGLESv2.gni]: https://chromium.googlesource.com/angle/angle/+/refs/heads/main/src/libGLESv2.gni
+[glslang.l]: https://chromium.googlesource.com/angle/angle/+/refs/heads/main/src/compiler/translator/glslang.l
+[run_code_generation.py]: https://chromium.googlesource.com/angle/angle/+/refs/heads/main/scripts/run_code_generation.py
 
 ### Testing
 
@@ -198,7 +198,7 @@ about the process.
    See [the Chromium docs][TBR] for more info.
  * There are exceptions to these rules. Use your best judgement.
 
-[TBR]: https://chromium.googlesource.com/chromium/src/+/master/docs/code_reviews.md#tbr-to-be-reviewed
+[TBR]: https://chromium.googlesource.com/chromium/src/+/main/docs/code_reviews.md#tbr-to-be-reviewed
 
 ### Reverting a CL
 
@@ -268,4 +268,4 @@ See also:
 [Contributing-code]: http://www.chromium.org/developers/contributing-code/
 [depot-tools-tutorial]: http://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html
 [Perftest-README]: ../src/tests/perf_tests/README.md
-[Owners]: https://chromium.googlesource.com/chromium/src/+/master/docs/code_reviews.md#expectations-of-owners
+[Owners]: https://chromium.googlesource.com/chromium/src/+/main/docs/code_reviews.md#expectations-of-owners

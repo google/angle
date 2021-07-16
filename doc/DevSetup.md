@@ -22,11 +22,11 @@ On Windows:
  * Install the [Windows 10 SDK, latest version](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk).
    * You can install it through Visual Studio Installer if available.
    * Required for GN-generated Visual Studio projects, the Debug runtime for D3D11, and the D3D Compiler DLL.
- * (optional) See the [Chromium Windows build instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/windows_build_instructions.md) for more info.
+ * (optional) See the [Chromium Windows build instructions](https://chromium.googlesource.com/chromium/src/+/main/docs/windows_build_instructions.md) for more info.
 
 On Linux:
 
- * Install package dependencies by running `install-build-deps.sh` later on.
+ * Dependencies will be handled later (see `install-build-deps.sh` below).
 
 On MacOS:
 
@@ -39,7 +39,7 @@ git clone https://chromium.googlesource.com/angle/angle
 cd angle
 python scripts/bootstrap.py
 gclient sync
-git checkout master
+git checkout main
 ```
 
 On Linux only, you need to install all the necessary dependencies before going further by running this command:
