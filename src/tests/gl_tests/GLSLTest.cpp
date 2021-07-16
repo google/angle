@@ -11903,6 +11903,95 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that built-ins with out parameters work
+TEST_P(GLSLTest_ES31, BuiltInsWithOutParameters)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+precision highp int;
+
+out vec4 color;
+
+uniform float f;    // = 3.41
+uniform uvec4 u1;   // = 0xFEDCBA98, 0x13579BDF, 0xFEDCBA98, 0x13579BDF
+uniform uvec4 u2;   // = 0xECA86420, 0x12345678, 0x12345678, 0xECA86420
+
+struct S
+{
+    float fvalue;
+    int ivalues[2];
+    uvec4 uvalues[3];
+};
+
+struct T
+{
+    S s[2];
+};
+
+void main()
+{
+    float integer;
+    float fraction = modf(f, integer);
+
+    T t;
+
+    t.s[0].fvalue     = frexp(f, t.s[0].ivalues[0]);
+    float significand = t.s[0].fvalue;
+    int exponent      = t.s[0].ivalues[0];
+
+    t.s[0].uvalues[0] = uaddCarry(u1, u2, t.s[0].uvalues[1].yxwz);
+    uvec4 addResult   = t.s[0].uvalues[0];
+    uvec4 addCarry    = t.s[0].uvalues[1].yxwz;
+
+    t.s[0].uvalues[2].wx = usubBorrow(u1.wx, u2.wx, t.s[1].uvalues[0].wx);
+    uvec2 subResult      = t.s[0].uvalues[2].wx;
+    uvec2 subBorrow      = t.s[1].uvalues[0].wx;
+
+    umulExtended(u1, u2, t.s[1].uvalues[1], t.s[1].uvalues[2]);
+    uvec4 mulMsb = t.s[1].uvalues[1];
+    uvec4 mulLsb = t.s[1].uvalues[2];
+
+    ivec2 imulMsb, imulLsb;
+    imulExtended(ivec2(u1.wz), ivec2(u2.wz), imulMsb.yx, imulLsb.yx);
+
+    bool modfPassed = abs(fraction - 0.41) < 0.0001 && integer == 3.0;
+    bool frexpPassed = abs(significand - 0.8525) < 0.0001 && exponent == 2;
+    bool addPassed =
+        addResult == uvec4(0xEB851EB8, 0x258BF257, 0x11111110, 0xFFFFFFFF) &&
+        addCarry == uvec4(1, 0, 1, 0);
+    bool subPassed = subResult == uvec2(0x26AF37BF, 0x12345678) && subBorrow == uvec2(1, 0);
+    bool mulPassed =
+        mulMsb == uvec4(0xEB9B208C, 0x01601D49, 0x121FA00A, 0x11E17CC0) &&
+        mulLsb == uvec4(0xA83AB300, 0xD6B9FA88, 0x35068740, 0x822E97E0);
+    bool imulPassed =
+        imulMsb == ivec2(0xFFEB4992, 0xFE89E0E1) &&
+        imulLsb == ivec2(0x35068740, 0x822E97E0);
+
+    color = vec4(modfPassed ? 1 : 0,
+                 frexpPassed ? 1 : 0,
+                 (addPassed ? 0.4 : 0.0) + (subPassed ? 0.6 : 0.0),
+                 (mulPassed ? 0.4 : 0.0) + (imulPassed ? 0.6 : 0.0));
+})";
+
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint floc  = glGetUniformLocation(program, "f");
+    GLint u1loc = glGetUniformLocation(program, "u1");
+    GLint u2loc = glGetUniformLocation(program, "u2");
+    ASSERT_NE(floc, -1);
+    ASSERT_NE(u1loc, -1);
+    ASSERT_NE(u2loc, -1);
+    glUniform1f(floc, 3.41);
+    glUniform4ui(u1loc, 0xFEDCBA98u, 0x13579BDFu, 0xFEDCBA98u, 0x13579BDFu);
+    glUniform4ui(u2loc, 0xECA86420u, 0x12345678u, 0x12345678u, 0xECA86420u);
+
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
 class GLSLTestLoops : public GLSLTest
 {
   protected:
