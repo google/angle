@@ -300,9 +300,9 @@ const angle::Mat4 &GLES1State::getModelviewMatrix() const
     return mModelviewMatrices.back();
 }
 
-const GLES1State::MatrixStack &GLES1State::currentMatrixStack() const
+const GLES1State::MatrixStack &GLES1State::getMatrixStack(MatrixType mode) const
 {
-    switch (mMatrixMode)
+    switch (mode)
     {
         case MatrixType::Modelview:
             return mModelviewMatrices;
@@ -314,6 +314,11 @@ const GLES1State::MatrixStack &GLES1State::currentMatrixStack() const
             UNREACHABLE();
             return mModelviewMatrices;
     }
+}
+
+const GLES1State::MatrixStack &GLES1State::currentMatrixStack() const
+{
+    return getMatrixStack(mMatrixMode);
 }
 
 void GLES1State::loadMatrix(const angle::Mat4 &m)
