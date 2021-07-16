@@ -324,6 +324,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "980f3e0a_4d549298",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-16T14:15:45Z",
+      "side": 1,
+      "message": "Request: I find DISABLED and SKIP a bit confusing, maybe SKIPPED_BY_SCRIPT and SKIPPED_BY_TEST_SUITE or something like that? Does the script understand when tests are skipped because of the test suite?",
+      "parentUuid": "c96c8828_cb06670b",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 16
+      },
+      "revId": "b03975431f6c9ca4440ea4c768ffb512866d908b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "9e455e50_5dc9b21d",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1

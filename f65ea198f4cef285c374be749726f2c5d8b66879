@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b41b672_bd4b2634",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-16T14:15:45Z",
+      "side": 1,
+      "message": "Nice progress Gert.",
+      "revId": "f65ea198f4cef285c374be749726f2c5d8b66879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88f4f23d_23ceedc2",
+        "filename": "src/tests/capture_replay_tests/capture_replay_expectations.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-07-16T14:15:45Z",
+      "side": 1,
+      "message": "I suggest you omit this tag. For consistency, the tags are separate identifiers that describe properties of the test config - e.g. VULKAN SWIFTSHADER WINDOWS RELEASE etc. These are all unnecessary since we use one test config. ES2_Vulkan_SwiftShader is part of the test name, so ideally we\u0027d use /* to indicate anything after the / is accepted.",
+      "range": {
+        "startLine": 1,
+        "startChar": 5,
+        "endLine": 1,
+        "endChar": 27
+      },
+      "revId": "f65ea198f4cef285c374be749726f2c5d8b66879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
