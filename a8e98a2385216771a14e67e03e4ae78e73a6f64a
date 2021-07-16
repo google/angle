@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac02b258_b0e7f880",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-07-16T20:42:34Z",
+      "side": 0,
+      "message": "This is redundant and premature.  It\u0027s properly included on lines 45-47 (new lines 41-43) below.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 76
+      },
+      "revId": "a8e98a2385216771a14e67e03e4ae78e73a6f64a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

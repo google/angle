@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23533150_fdcbf39a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-07-16T20:42:34Z",
+      "side": 1,
+      "message": "While reviewing the instructions for a future Noogler, I fixed a couple of problems.  I then updated many of the obvious links (also master-\u003emain)",
+      "revId": "3cb86d383d2b1cc8e41ceb1624605d3e2853c098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
