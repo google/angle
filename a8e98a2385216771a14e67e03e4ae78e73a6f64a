@@ -69,6 +69,30 @@
       },
       "revId": "a8e98a2385216771a14e67e03e4ae78e73a6f64a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "089bd248_b7fdfbba",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-07-16T21:00:16Z",
+      "side": 0,
+      "message": "Got it, in that case, I think you should leave the Linux block in place, otherwise it looks like an accidental omission.  I agree the verbiage is confusing, it has action orientated language \"Do this thing\", but you can\u0027t yet.  Perhaps something like \"Dependencies will be handled in later steps. See install-build-deps.sh below\".",
+      "parentUuid": "6bac5b02_30971d82",
+      "range": {
+        "startLine": 29,
+        "startChar": 52,
+        "endLine": 29,
+        "endChar": 57
+      },
+      "revId": "a8e98a2385216771a14e67e03e4ae78e73a6f64a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
