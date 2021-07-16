@@ -5040,21 +5040,18 @@ void FrameCaptureShared::captureCall(const gl::Context *context,
         return;
     }
 
-    maybeOverrideEntryPoint(context, call);
-
-    maybeCapturePreCallUpdates(context, call);
-
     if (isCallValid)
     {
+        maybeOverrideEntryPoint(context, call);
+        maybeCapturePreCallUpdates(context, call);
         mFrameCalls.emplace_back(std::move(call));
+        maybeCapturePostCallUpdates(context);
     }
     else
     {
         INFO() << "FrameCapture: Not capturing invalid call to "
                << GetEntryPointName(call.entryPoint);
     }
-
-    maybeCapturePostCallUpdates(context);
 }
 
 void FrameCaptureShared::maybeCapturePostCallUpdates(const gl::Context *context)

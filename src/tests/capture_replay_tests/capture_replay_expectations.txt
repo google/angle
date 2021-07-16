@@ -60,7 +60,6 @@ GLSLTest.ZeroShaderLength/*
 GPUTestConfigTest.GPUTestConfigConditions_D3D11/*
 ImageTest.SourceCubeTargetExternal/*
 PBOExtensionTest.*
-RobustBufferAccessBehaviorTest.*
 Texture2DTest.DefineMultipleLevelsWithoutMipmapping/*
 VertexAttributeTest.*
 
