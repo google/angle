@@ -81,7 +81,7 @@ def temporary_dir(prefix=''):
     try:
         yield path
     finally:
-        logging.info("Removing temporary directory: %s" + path)
+        logging.info("Removing temporary directory: %s" % path)
         shutil.rmtree(path)
 
 

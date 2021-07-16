@@ -1485,8 +1485,7 @@ Library *ANGLETestEnvironment::GetAngleEGLLibrary()
 #if defined(ANGLE_USE_UTIL_LOADER)
     if (!gAngleEGLLibrary)
     {
-        gAngleEGLLibrary.reset(
-            OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, SearchType::ApplicationDir));
+        gAngleEGLLibrary.reset(OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, SearchType::ModuleDir));
     }
 #endif  // defined(ANGLE_USE_UTIL_LOADER)
     return gAngleEGLLibrary.get();

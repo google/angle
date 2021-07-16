@@ -35,6 +35,11 @@
 #include "libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h"
 #include "libANGLE/renderer/vulkan/vk_mem_alloc_wrapper.h"
 
+namespace angle
+{
+class Library;
+}  // namespace angle
+
 namespace egl
 {
 class Display;
@@ -413,6 +418,8 @@ class RendererVk : angle::NonCopyable
                               const VkFormatFeatureFlags featureBits) const;
 
     egl::Display *mDisplay;
+
+    std::unique_ptr<angle::Library> mLibVulkanLibrary;
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;

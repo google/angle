@@ -129,7 +129,7 @@ SampleApplication::SampleApplication(std::string name,
     {
         mGLWindow = mEGLWindow = EGLWindow::New(glesMajorVersion, glesMinorVersion);
         mEntryPointsLib.reset(
-            angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ApplicationDir));
+            angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ModuleDir));
     }
 }
 
