@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e8e4ace_7d5b4116",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-07-16T16:13:06Z",
+      "side": 1,
+      "message": "Is there a way to also have debug info? Because when I ran into crashes, I did see a backtrace, but it didn\u0027t have line numbers.",
+      "revId": "8ef044fc31a79f77622ebb7d2d66e30c46ce08c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
