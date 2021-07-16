@@ -29,7 +29,7 @@ struct LibPCI : private angle::NonCopyable
 {
     LibPCI()
     {
-        if (access("/sys/bus/pci/", F_OK) != 0 && access("/sys/bs/pci_express/", F_OK) != 0)
+        if (access("/sys/bus/pci/", F_OK) != 0 && access("/sys/bus/pci_express/", F_OK) != 0)
         {
             return;
         }
