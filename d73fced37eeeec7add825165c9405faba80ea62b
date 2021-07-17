@@ -16,6 +16,24 @@
       "message": "Thanks for the fix! Also, hurray, there\u0027s finally a user for this extension other than Chrome!",
       "revId": "d73fced37eeeec7add825165c9405faba80ea62b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "036f5e68_96527288",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-17T03:08:25Z",
+      "side": 1,
+      "message": "2 games actually.   Turns out \"Scrabble GO\" hits the same issue.",
+      "parentUuid": "238597c2_6f0a3fab",
+      "revId": "d73fced37eeeec7add825165c9405faba80ea62b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
