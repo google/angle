@@ -34,6 +34,24 @@
       "parentUuid": "f3e52ad3_843c5024",
       "revId": "95fd3590edbd0e440f9f0c522cef0a1da74d979f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "785cdee9_98a59f42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-07-17T00:28:05Z",
+      "side": 1,
+      "message": "the tests listed in the test tag -\n Test: dEQP-GLES31.functional.debug.\n        negative_coverage.callbacks.buffer.copy_image_sub_data\n        negative_coverage.log.buffer.copy_image_sub_data\n        negative_coverage.get_error.buffer.copy_image_sub_data\n        error_filters.case_24\n        \nall of them crash / fail on our platform without this change and i do not know why these failures doesn\u0027t show up on pixel4 bots. Do you have some ideas?",
+      "parentUuid": "07aa08f1_735382d9",
+      "revId": "95fd3590edbd0e440f9f0c522cef0a1da74d979f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
