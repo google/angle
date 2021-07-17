@@ -683,7 +683,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
                                       spirv::LiteralInteger(32));
                 break;
             case EbtDouble:
-                // TODO: support desktop GLSL.  http://anglebug.com/4889
+                // TODO: support desktop GLSL.  http://anglebug.com/6197
                 UNIMPLEMENTED();
                 break;
             case EbtInt:

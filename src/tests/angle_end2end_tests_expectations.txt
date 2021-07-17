@@ -201,3 +201,6 @@
 4889 WIN AMD VULKAN : GLSLTest_ES3.ValidIndexClampES300/ES3_Vulkan_DirectSPIRVGen = SKIP
 4889 WIN AMD VULKAN : GLSLTest_ES3.InitGlobalComplexConstant/ES3_Vulkan_DirectSPIRVGen = SKIP
 4889 WIN AMD VULKAN : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
+
+// Test is disabled as it only pertains to desktop GLSL
+6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
