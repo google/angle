@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afcfe49a_b8485cb1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-17T02:25:45Z",
+      "side": 1,
+      "message": "Drive-by: How is what you changed here different from handling build system logic for these that makes it so hard?\n\n    angle_translator_glsl_base_sources\n    angle_translator_glsl_and_vulkan_base_sources\n    angle_translator_essl_sources\n    angle_translator_glsl_sources\n    angle_translator_glsl_mac_sources\n    angle_translator_hlsl_sources\n    angle_translator_lib_vulkan_sources\n    angle_translator_lib_metal_sources",
+      "revId": "c6820a51870dde1772816693be127dfea2ce62af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9141102_3a4f216e",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1422,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-17T02:25:45Z",
+      "side": 1,
+      "message": "Drive-by: you need to place this in whatever target is building `angle_translator_sources`.",
+      "range": {
+        "startLine": 1422,
+        "startChar": 2,
+        "endLine": 1422,
+        "endChar": 44
+      },
+      "revId": "c6820a51870dde1772816693be127dfea2ce62af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
