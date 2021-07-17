@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3cfd5fa_bf40932b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-17T07:14:57Z",
+      "side": 1,
+      "message": "Jonah, Shabi: please review. Thanks.",
+      "revId": "bfa9d42f5d141c687d715e5c930392d6ecf66f19",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "637d2df7_2765256f",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-07-17T07:14:57Z",
+      "side": 1,
+      "message": "In debug mode, this dumps the entire source of the Metal shader failing compilation. It was essential for debugging and I\u0027d like to leave it in.",
+      "revId": "bfa9d42f5d141c687d715e5c930392d6ecf66f19",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
