@@ -22,6 +22,30 @@
       },
       "revId": "d5e0d87e6d869171e782d308a3c313893810dcd9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e8556ab_1be52b0e",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1805,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-07-17T00:24:20Z",
+      "side": 1,
+      "message": "Done\n\nI\u0027ve also gone ahead and cleaned up the other callers of getNearestSamples() too.",
+      "parentUuid": "923dbf04_61c78f99",
+      "range": {
+        "startLine": 1805,
+        "startChar": 8,
+        "endLine": 1805,
+        "endChar": 15
+      },
+      "revId": "d5e0d87e6d869171e782d308a3c313893810dcd9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
