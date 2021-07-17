@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a3cfe69_dff07450",
+        "filename": "src/compiler.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-17T02:19:04Z",
+      "side": 1,
+      "message": "Drive-by: Suggest moving this to `angle_translator_sources` instead.",
+      "range": {
+        "startLine": 255,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 42
+      },
+      "revId": "3a704fa7f3e8620e4de9f76d60df104d874d0de5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
