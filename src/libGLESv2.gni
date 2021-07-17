@@ -295,6 +295,7 @@ libangle_headers = [
   "src/libANGLE/renderer/FramebufferAttachmentObjectImpl.h",
   "src/libANGLE/renderer/FramebufferImpl.h",
   "src/libANGLE/renderer/GLImplFactory.h",
+  "src/libANGLE/renderer/gl/functionsgl_enums.h",
   "src/libANGLE/renderer/ImageImpl.h",
   "src/libANGLE/renderer/MemoryObjectImpl.h",
   "src/libANGLE/renderer/OverlayImpl.h",

@@ -7,6 +7,10 @@
 //   always have to be re-compiled. Can be used in conjunction with the platform
 //   layer to warm up the cache from disk.
 
+// Include zlib first, otherwise FAR gets defined elsewhere.
+#define USE_SYSTEM_ZLIB
+#include "compression_utils_portable.h"
+
 #include "libANGLE/MemoryProgramCache.h"
 
 #include <GLSLANG/ShaderVars.h>
