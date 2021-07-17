@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e29fcce5_7659a7d3",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-17T02:19:08Z",
+      "side": 1,
+      "message": "I think its just leftover debug code.",
+      "parentUuid": "d1215d95_db5208ad",
+      "range": {
+        "startLine": 1247,
+        "startChar": 0,
+        "endLine": 1250,
+        "endChar": 59
+      },
+      "revId": "4d8f6c197500edb087704894a51c1fb9735f872a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cb1d6d30_c7d009a6",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-07-16T19:34:56Z",
       "side": 1,
       "message": "You can call \n   angle::PackedEnumMap\u003cegl::ContextPriority, VkQueue\u003e::operator \u003d(other);",
+      "range": {
+        "startLine": 1263,
+        "startChar": 0,
+        "endLine": 1265,
+        "endChar": 86
+      },
+      "revId": "4d8f6c197500edb087704894a51c1fb9735f872a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bea7e6e8_0de2408f",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 1265,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-07-17T02:19:08Z",
+      "side": 1,
+      "message": "I had tried:\n*this \u003d other;\nwhich just calls itself - infinite loop.\nNow I added case to get the right operator.",
+      "parentUuid": "cb1d6d30_c7d009a6",
       "range": {
         "startLine": 1263,
         "startChar": 0,
