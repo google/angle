@@ -272,6 +272,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6223275b_4246d4d4",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-07-17T01:49:51Z",
+      "side": 1,
+      "message": "The current change has merged the pending and linked variables, and bots are passing. The initial concern for introducing the pending variables was that there\u0027d be issues with a separable program that failed a relink, but that seems to be alright since there\u0027s a check for that when linking the pipeline.",
+      "parentUuid": "d013fa65_aae55f64",
+      "range": {
+        "startLine": 918,
+        "startChar": 24,
+        "endLine": 918,
+        "endChar": 43
+      },
+      "revId": "7bcbcbed2cd87b8bfe843b478d6a5341b637e85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b9e8fdef_cc43a9e6",
         "filename": "src/libANGLE/ProgramExecutable.h",
         "patchSetId": 2
