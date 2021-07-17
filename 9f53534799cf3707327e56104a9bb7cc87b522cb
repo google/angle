@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57badd4c_87291417",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-07-17T02:08:21Z",
+      "side": 1,
+      "message": "Drive-by: Instead of replicating this, I suggest defining `ANGLE_IS_64_BIT_CPU` in common.h based on this expression.",
+      "range": {
+        "startLine": 473,
+        "startChar": 4,
+        "endLine": 473,
+        "endChar": 27
+      },
+      "revId": "9f53534799cf3707327e56104a9bb7cc87b522cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
