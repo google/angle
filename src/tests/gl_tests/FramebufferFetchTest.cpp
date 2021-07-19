@@ -1606,5 +1606,5 @@ void main (void)
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferFetchES31);
-ANGLE_INSTANTIATE_TEST_ES31(FramebufferFetchES31);
+ANGLE_INSTANTIATE_TEST_ES31_AND(FramebufferFetchES31, WithDirectSPIRVGeneration(ES31_VULKAN()));
 }  // namespace angle
