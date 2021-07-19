@@ -284,6 +284,50 @@ angle::Result BufferGL::getIndexRange(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result BufferGL::initializeContents(const gl::Context *context,
+                                           gl::BufferBinding target,
+                                           GLintptr offset,
+                                           GLsizeiptr length)
+{
+    ContextGL *contextGL              = GetImplAs<ContextGL>(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
+
+    stateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
+
+    if (features.keepBufferShadowCopy.enabled)
+    {
+        // Avoid an allocation by updating the shadow buffer and then glBufferSubData to copy it to
+        // the buffer
+        memset(mShadowCopy.data() + offset, 0, length);
+        ANGLE_GL_TRY(context,
+                     functions->bufferSubData(gl::ToGLenum(DestBufferOperationTarget), offset,
+                                              length, mShadowCopy.data() + offset));
+    }
+    else if (functions->mapBufferRange)
+    {
+        // Optimal path: Map the buffer and memset
+        void *mapPtr =
+            ANGLE_GL_TRY(context, functions->mapBufferRange(gl::ToGLenum(DestBufferOperationTarget),
+                                                            offset, length, GL_MAP_WRITE_BIT));
+        memset(mapPtr, 0, length);
+        ANGLE_GL_TRY(context, functions->unmapBuffer(gl::ToGLenum(DestBufferOperationTarget)));
+    }
+    else
+    {
+        // Fallback: allocate a zero-filled buffer and use glBufferSubData to upload it
+        angle::MemoryBuffer *scratchBuffer = nullptr;
+        ANGLE_CHECK_GL_ALLOC(contextGL, context->getZeroFilledBuffer(length, &scratchBuffer));
+        ANGLE_GL_TRY(context, functions->bufferSubData(gl::ToGLenum(DestBufferOperationTarget),
+                                                       offset, length, scratchBuffer->data()));
+    }
+
+    contextGL->markWorkSubmitted();
+
+    return angle::Result::Continue;
+}
+
 GLuint BufferGL::getBufferID() const
 {
     return mBufferID;

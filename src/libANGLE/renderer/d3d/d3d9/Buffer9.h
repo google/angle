@@ -53,6 +53,11 @@ class Buffer9 : public BufferD3D
     angle::Result unmap(const gl::Context *context, GLboolean *result) override;
     angle::Result markTransformFeedbackUsage(const gl::Context *context) override;
 
+    angle::Result initializeContents(const gl::Context *context,
+                                     gl::BufferBinding target,
+                                     GLintptr offset,
+                                     GLsizeiptr length) override;
+
   private:
     angle::MemoryBuffer mMemory;
     size_t mSize;

@@ -60,6 +60,11 @@ class BufferNULL : public BufferImpl
                                 bool primitiveRestartEnabled,
                                 gl::IndexRange *outRange) override;
 
+    angle::Result initializeContents(const gl::Context *context,
+                                     gl::BufferBinding target,
+                                     GLintptr offset,
+                                     GLsizeiptr length) override;
+
     uint8_t *getDataPtr();
     const uint8_t *getDataPtr() const;
 

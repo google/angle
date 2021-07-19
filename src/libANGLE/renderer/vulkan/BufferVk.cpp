@@ -794,6 +794,20 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result BufferVk::initializeContents(const gl::Context *context,
+                                           gl::BufferBinding target,
+                                           GLintptr offset,
+                                           GLsizeiptr length)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+
+    angle::MemoryBuffer *scratchBuffer = nullptr;
+    ANGLE_VK_CHECK_ALLOC(contextVk, context->getZeroFilledBuffer(length, &scratchBuffer));
+
+    return setDataImpl(contextVk, scratchBuffer->data(), length, offset,
+                       BufferUpdateType::ContentsUpdate);
+}
+
 angle::Result BufferVk::updateBuffer(ContextVk *contextVk,
                                      const uint8_t *data,
                                      size_t size,

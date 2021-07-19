@@ -126,6 +126,15 @@ angle::Result BufferNULL::getIndexRange(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result BufferNULL::initializeContents(const gl::Context *context,
+                                             gl::BufferBinding target,
+                                             GLintptr offset,
+                                             GLsizeiptr length)
+{
+    memset(mData.data() + offset, 0, length);
+    return angle::Result::Continue;
+}
+
 uint8_t *BufferNULL::getDataPtr()
 {
     return mData.data();

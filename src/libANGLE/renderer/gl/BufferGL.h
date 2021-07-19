@@ -56,6 +56,11 @@ class BufferGL : public BufferImpl
                                 bool primitiveRestartEnabled,
                                 gl::IndexRange *outRange) override;
 
+    angle::Result initializeContents(const gl::Context *context,
+                                     gl::BufferBinding target,
+                                     GLintptr offset,
+                                     GLsizeiptr length) override;
+
     GLuint getBufferID() const;
 
   private:
