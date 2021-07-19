@@ -772,7 +772,7 @@ angle::Result SwapChain11::initPassThroughResources(DisplayD3D *displayD3D)
     rasterizerDesc.AntialiasedLineEnable = FALSE;
 
     ANGLE_TRY(mRenderer->allocateResource(displayD3D, rasterizerDesc, &mPassThroughRS));
-    mPassThroughRS.setDebugName("Swap chain pass through rasterizer state");
+    mPassThroughRS.setDebugName("SwapChainPassThroughRasterizerState");
 
     mPassThroughResourcesInit = true;
     return angle::Result::Continue;
