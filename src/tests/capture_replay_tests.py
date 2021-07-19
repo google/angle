@@ -263,7 +263,7 @@ class ChildProcessesManager():
         if not args.debug:
             gn_args.append(('is_debug', 'false'))
             gn_args.append(('symbol_level', '1'))
-            gn_args.append(('dcheck_always_on', 'true'))
+            gn_args.append(('angle_assert_always_on', 'true'))
         if args.goma_dir:
             gn_args.append(('goma_dir', '"%s"' % args.goma_dir))
         if args.asan:

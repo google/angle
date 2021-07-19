@@ -56,10 +56,10 @@ On Windows only, ensure you **set `DEPOT_TOOLS_WIN_TOOLCHAIN=0` in your environm
 
 GN will generate ninja files. To change the default build options run `gn args out/Debug`.  Some commonly used options are:
 ```
-target_cpu = "x86"        (default is "x64")
-is_clang = false          (to use system default compiler instead of clang)
-is_debug = true           (enable debugging, true is the default)
-dcheck_always_on = true   (enable release asserts and debug layers)
+target_cpu = "x86"              (default is "x64")
+is_clang = false                (to use system default compiler instead of clang)
+is_debug = false                (for release builds. is_debug = true is the default)
+angle_assert_always_on = true   (enable release asserts and debug layers)
 ```
 
 For a release build run `gn args out/Release` and set `is_debug = false`.

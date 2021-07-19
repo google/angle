@@ -19,8 +19,8 @@ target_os = "android"
 target_cpu = "arm64"
 is_component_build = false
 is_debug = false
-dcheck_always_on = true   # Recommended for debugging. Turn off for performance.
-use_goma = true           # Googlers-only! If you're not a Googler remove this.
+angle_assert_always_on = true   # Recommended for debugging. Turn off for performance.
+use_goma = true                 # Googlers-only! If you're not a Googler remove this.
 ```
 
 More targeted GN arg combinations can be found [below](#android-gn-args-combinations).

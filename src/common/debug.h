@@ -244,7 +244,7 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #    define ANGLE_TRACE_ENABLED
 #endif
 
-#if !defined(NDEBUG) || defined(ANGLE_ENABLE_RELEASE_ASSERTS)
+#if !defined(NDEBUG) || defined(ANGLE_ASSERT_ALWAYS_ON)
 #    define ANGLE_ENABLE_ASSERTS
 #endif
 

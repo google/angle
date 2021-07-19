@@ -338,7 +338,7 @@ const ShCompileOptions SH_ADD_VULKAN_XFB_EXTENSION_SUPPORT_CODE = UINT64_C(1) <<
 const ShCompileOptions SH_INIT_FRAGMENT_OUTPUT_VARIABLES = UINT64_C(1) << 57;
 
 // Transitory flag to select between producing SPIR-V directly vs using glslang.  Ignored in
-// non-dcheck-enabled builds to avoid increasing ANGLE's binary size while both generators coexist.
+// non-assert-enabled builds to avoid increasing ANGLE's binary size while both generators coexist.
 const ShCompileOptions SH_GENERATE_SPIRV_DIRECTLY = UINT64_C(1) << 58;
 
 // Generate workarounds in SPIR-V for buggy code.
