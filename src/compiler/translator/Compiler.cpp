@@ -571,6 +571,19 @@ bool TCompiler::validateAST(TIntermNode *root)
     return true;
 }
 
+bool TCompiler::disableValidateFunctionCall()
+{
+    bool wasEnabled                          = mValidateASTOptions.validateFunctionCall;
+    mValidateASTOptions.validateFunctionCall = false;
+    return wasEnabled;
+}
+
+void TCompiler::enableValidateFunctionCall(bool enable)
+{
+    ASSERT(!mValidateASTOptions.validateFunctionCall);
+    mValidateASTOptions.validateFunctionCall = enable;
+}
+
 bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                                     const TParseContext &parseContext,
                                     ShCompileOptions compileOptions)
@@ -1271,6 +1284,9 @@ bool TCompiler::emulatePrecisionIfNeeded(TIntermBlock *root,
 
     if (*isNeeded)
     {
+        // TODO: remove this transformation.  http://anglebug.com/6059
+        mValidateASTOptions.validateNoRawFunctionCalls = false;
+
         EmulatePrecision emulatePrecision(&getSymbolTable());
         root->traverse(&emulatePrecision);
         if (!emulatePrecision.updateTree(this, root))

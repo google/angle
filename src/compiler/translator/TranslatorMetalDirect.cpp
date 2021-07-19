@@ -1183,6 +1183,10 @@ bool TranslatorMetalDirect::translate(TIntermBlock *root,
         return false;
     }
 
+    // TODO: refactor the code in TranslatorMetalDirect to not issue raw function calls.
+    // http://anglebug.com/6059#c2
+    mValidateASTOptions.validateNoRawFunctionCalls = false;
+
     TInfoSinkBase &sink = getInfoSink().obj;
 
     if ((compileOptions & SH_REWRITE_ROW_MAJOR_MATRICES) != 0 && getShaderVersion() >= 300)

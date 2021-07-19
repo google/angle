@@ -958,6 +958,8 @@ bool RewriteCubeMapSamplersAs2DArray(TCompiler *compiler,
                                      TSymbolTable *symbolTable,
                                      bool isFragmentShader)
 {
+    bool enableValidateFunctionCall = compiler->disableValidateFunctionCall();
+
     RewriteCubeMapSamplersAs2DArrayTraverser traverser(symbolTable, isFragmentShader);
     root->traverse(&traverser);
     if (!traverser.updateTree(compiler, root))
@@ -980,6 +982,7 @@ bool RewriteCubeMapSamplersAs2DArray(TCompiler *compiler,
                                TIntermSequence({coordTranslationFunctionDeclImplicit}));
     }
 
+    compiler->enableValidateFunctionCall(enableValidateFunctionCall);
     return compiler->validateAST(root);
 }
 

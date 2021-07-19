@@ -1266,6 +1266,10 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
+    // Make sure function call validation is not accidentally left off anywhere.
+    ASSERT(mValidateASTOptions.validateFunctionCall);
+    ASSERT(mValidateASTOptions.validateNoRawFunctionCalls);
+
     return true;
 }
 

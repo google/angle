@@ -179,7 +179,12 @@ class TCompiler : public TShHandleBase
 
     sh::GLenum getShaderType() const { return mShaderType; }
 
+    // Validate the AST and produce errors if it is inconsistent.
     bool validateAST(TIntermNode *root);
+    // Some transformations may need to temporarily disable validation until they are complete.  A
+    // set of disable/enable helpers are used for this purpose.
+    bool disableValidateFunctionCall();
+    void enableValidateFunctionCall(bool enable);
 
   protected:
     // Add emulated functions to the built-in function emulator.

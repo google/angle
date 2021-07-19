@@ -515,6 +515,10 @@ bool MonomorphizeUnsupportedFunctionsInVulkanGLSL(TCompiler *compiler,
     // declarations (i.e. uniforms), the uniform declaration is already present above it.
     SortDeclarations(root);
 
+    // This function actually applies multiple transformation, and the AST may not be valid until
+    // the transformations are entirely done.  Some validation is momentarily disabled.
+    bool enableValidateFunctionCall = compiler->disableValidateFunctionCall();
+
     while (true)
     {
         FunctionMap functionMap;
@@ -542,6 +546,7 @@ bool MonomorphizeUnsupportedFunctionsInVulkanGLSL(TCompiler *compiler,
         }
     }
 
-    return true;
+    compiler->enableValidateFunctionCall(enableValidateFunctionCall);
+    return compiler->validateAST(root);
 }
 }  // namespace sh

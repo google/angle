@@ -284,8 +284,10 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(
     const DriverUniformMetal *driverUniforms)
 {
     // This transformation leaves the tree in an inconsistent state by using a variable that's
-    // defined in text, outside of the knowledge of the AST.
+    // defined in text, outside of the knowledge of the AST.  Same with defining the function in
+    // text.
     mValidateASTOptions.validateVariableReferences = false;
+    mValidateASTOptions.validateFunctionCall       = false;
 
     TSymbolTable *symbolTable = &getSymbolTable();
 

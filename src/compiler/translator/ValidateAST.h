@@ -34,7 +34,10 @@ struct ValidateASTOptions
     // Check that all EOpCallFunctionInAST have their corresponding function definitions in the AST,
     // with matching symbol ids. There should also be at least a prototype declaration before the
     // function is called.
-    bool validateFunctionCall = true;  // TODO
+    bool validateFunctionCall = true;
+    // Check that EOpCallInternalRawFunction is not used.  This OP is deprecated and needs to be
+    // removed.  http://anglebug.com/6059
+    bool validateNoRawFunctionCalls = true;
     // Check that there are no null nodes where they are not allowed, for example as children of
     // TIntermDeclaration or TIntermBlock.
     bool validateNullNodes = true;
