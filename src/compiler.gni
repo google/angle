@@ -115,6 +115,7 @@ angle_translator_sources = [
   "src/compiler/translator/ValidateVaryingLocations.h",
   "src/compiler/translator/VariablePacker.cpp",
   "src/compiler/translator/VariablePacker.h",
+  "src/compiler/translator/VersionGLSL.h",
   "src/compiler/translator/blocklayout.cpp",
   "src/compiler/translator/glslang.h",
   "src/compiler/translator/glslang_lex_autogen.cpp",
