@@ -846,7 +846,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 #if defined(ANGLE_SHARED_LIBVULKAN)
     mLibVulkanLibrary = angle::vk::OpenLibVulkan();
     ANGLE_VK_CHECK(displayVk, mLibVulkanLibrary, VK_ERROR_INITIALIZATION_FAILED);
-    INFO() << "Using Vulkan loader: " << mLibVulkanLibrary->getPath();
 
     PFN_vkGetInstanceProcAddr vulkanLoaderGetInstanceProcAddr = nullptr;
     mLibVulkanLibrary->getAs("vkGetInstanceProcAddr", &vulkanLoaderGetInstanceProcAddr);
