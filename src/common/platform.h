@@ -159,4 +159,11 @@
 #    endif
 #endif
 
+#include <cstdint>
+#if INTPTR_MAX == INT64_MAX
+#    define ANGLE_IS_64_BIT_CPU 1
+#else
+#    define ANGLE_IS_32_BIT_CPU 1
+#endif
+
 #endif  // COMMON_PLATFORM_H_

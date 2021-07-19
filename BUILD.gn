@@ -102,12 +102,6 @@ config("internal_config") {
 
   defines = []
 
-  if (angle_64bit_current_cpu) {
-    defines += [ "ANGLE_IS_64_BIT_CPU" ]
-  } else {
-    defines += [ "ANGLE_IS_32_BIT_CPU" ]
-  }
-
   if (is_win) {
     defines += [ "ANGLE_IS_WIN" ]
     if (angle_is_winuwp) {

@@ -269,9 +269,6 @@ def escape_quotes(string):
     return string.replace("\"", "\\\"").replace("\'", "\\\'")
 
 
-angle_cpu_bits_define = r'^ANGLE_IS_[0-9]+_BIT_CPU$'
-
-
 def gn_cflags_to_blueprint_cflags(target_info):
     result = []
 
