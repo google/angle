@@ -660,7 +660,8 @@ def get_basic_mangled_name(basic):
 
 
 essl_levels = [
-    'ESSL3_2_BUILTINS', 'ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS'
+    'ESSL3_2_BUILTINS', 'ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS',
+    'ESSL_VULKAN_BUILTINS'
 ]
 
 glsl_levels = [
@@ -682,6 +683,8 @@ def generate_suffix_from_level(level):
 def get_essl_shader_version_for_level(level):
     if level == None:
         return '-1'
+    elif level == 'ESSL_VULKAN_BUILTINS':
+        return 'kESSLVulkanOnly'
     elif level == 'ESSL3_2_BUILTINS':
         return '320'
     elif level == 'ESSL3_1_BUILTINS':

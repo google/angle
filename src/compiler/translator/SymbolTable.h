@@ -75,6 +75,13 @@ enum class Spec : uint8_t
 };
 
 constexpr uint16_t kESSL1Only = 100;
+// Some built-ins from Vulkan GLSL are made available to ESSL for use in tree transformations.  This
+// (invalid) shader version is used to select those built-ins.  This value needs to be larger than
+// all other shader versions.
+constexpr uint16_t kESSLVulkanOnly = 0x3FFF;
+
+// The version assigned to |kESSLVulkanOnly| should be good until OpenGL 20.0!
+static_assert(kESSLVulkanOnly > 2000, "Accidentally exposing Vulkan built-ins in OpenGL");
 
 static_assert(offsetof(ShBuiltInResources, OES_standard_derivatives) != 0,
               "Update SymbolTable extension logic");

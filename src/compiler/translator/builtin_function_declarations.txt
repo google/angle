@@ -1188,7 +1188,7 @@ GROUP BEGIN GS {"shader_type": "GEOMETRY"}
 GROUP END GS
 
 GROUP BEGIN SubpassInput
-  DEFAULT METADATA {"glsl_level": "GLSL4_6_BUILTINS", "hasSideEffects": "true"}
+  DEFAULT METADATA {"glsl_level": "GLSL4_6_BUILTINS", "essl_level": "ESSL_VULKAN_BUILTINS", "hasSideEffects": "true"}
     gvec4 subpassLoad(gsubpassInput);
     gvec4 subpassLoad(gsubpassInputMS, int);
 GROUP END SubpassInput

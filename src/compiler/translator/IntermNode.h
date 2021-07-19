@@ -590,7 +590,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     static TIntermAggregate *CreateRawFunctionCall(const TFunction &func,
                                                    TIntermSequence *arguments);
 
-    // This covers all built-in function calls - whether they are associated with an op or not.
+    // This covers all built-in function calls.
     static TIntermAggregate *CreateBuiltInFunctionCall(const TFunction &func,
                                                        TIntermSequence *arguments);
     static TIntermAggregate *CreateConstructor(const TType &type, TIntermSequence *arguments);

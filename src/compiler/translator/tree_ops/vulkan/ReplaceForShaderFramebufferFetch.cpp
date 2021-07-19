@@ -26,23 +26,9 @@ namespace
 {
 
 using InputAttachmentIdxSet = angle::BitSet<32>;
-using MapForReplacement     = const std::map<const TVariable *, const TIntermTyped *>;
 
 constexpr unsigned int kInputAttachmentZero = 0;
 constexpr unsigned int kArraySizeZero       = 0;
-
-enum class InputType
-{
-    SubpassInput = 0,
-    SubpassInputMS,
-    ISubpassInput,
-    ISubpassInputMS,
-    USubpassInput,
-    USubpassInputMS,
-
-    InvalidEnum,
-    EnumCount = InvalidEnum,
-};
 
 class InputAttachmentReferenceTraverser : public TIntermTraverser
 {
@@ -238,51 +224,7 @@ void ReplaceVariableTraverser::visitSymbol(TIntermSymbol *node)
     }
 }
 
-InputType GetInputTypeOfSubpassInput(const TBasicType &basicType)
-{
-    switch (basicType)
-    {
-        case TBasicType::EbtSubpassInput:
-            return InputType::SubpassInput;
-        case TBasicType::EbtSubpassInputMS:
-            return InputType::SubpassInputMS;
-        case TBasicType::EbtISubpassInput:
-            return InputType::ISubpassInput;
-        case TBasicType::EbtISubpassInputMS:
-            return InputType::ISubpassInputMS;
-        case TBasicType::EbtUSubpassInput:
-            return InputType::USubpassInput;
-        case TBasicType::EbtUSubpassInputMS:
-            return InputType::USubpassInputMS;
-        default:
-            UNREACHABLE();
-            return InputType::InvalidEnum;
-    }
-}
-
-TBasicType GetBasicTypeOfSubpassInput(const InputType &inputType)
-{
-    switch (inputType)
-    {
-        case InputType::SubpassInput:
-            return EbtSubpassInput;
-        case InputType::SubpassInputMS:
-            return EbtSubpassInputMS;
-        case InputType::ISubpassInput:
-            return EbtISubpassInput;
-        case InputType::ISubpassInputMS:
-            return EbtISubpassInputMS;
-        case InputType::USubpassInput:
-            return EbtUSubpassInput;
-        case InputType::USubpassInputMS:
-            return EbtUSubpassInputMS;
-        default:
-            UNREACHABLE();
-            return TBasicType::EbtVoid;
-    }
-}
-
-TBasicType GetBasicTypeForSubpassInput(const TBasicType &inputType)
+TBasicType GetBasicTypeForSubpassInput(TBasicType inputType)
 {
     switch (inputType)
     {
@@ -308,67 +250,11 @@ TBasicType GetBasicTypeForSubpassInput(const TIntermSymbol *originSymbol)
     return GetBasicTypeForSubpassInput(originSymbol->getBasicType());
 }
 
-ImmutableString GetTypeNameOfSubpassInput(const InputType &inputType)
+TIntermTyped *CreateSubpassLoadFuncCall(TSymbolTable *symbolTable,
+                                        TBasicType inputType,
+                                        TIntermSequence *arguments)
 {
-    switch (inputType)
-    {
-        case InputType::SubpassInput:
-            return ImmutableString("subpassInput");
-        case InputType::SubpassInputMS:
-            return ImmutableString("subpassInputMS");
-        case InputType::ISubpassInput:
-            return ImmutableString("isubpassInput");
-        case InputType::ISubpassInputMS:
-            return ImmutableString("isubpassInputMS");
-        case InputType::USubpassInput:
-            return ImmutableString("usubpassInput");
-        case InputType::USubpassInputMS:
-            return ImmutableString("usubpassInputMS");
-        default:
-            UNREACHABLE();
-            return kEmptyImmutableString;
-    }
-}
-
-ImmutableString GetFunctionNameOfSubpassLoad(const InputType &inputType)
-{
-    switch (inputType)
-    {
-        case InputType::SubpassInput:
-        case InputType::ISubpassInput:
-        case InputType::USubpassInput:
-            return ImmutableString("subpassLoad");
-        case InputType::SubpassInputMS:
-        case InputType::ISubpassInputMS:
-        case InputType::USubpassInputMS:
-            return ImmutableString("subpassLoadMS");
-        default:
-            UNREACHABLE();
-            return kEmptyImmutableString;
-    }
-}
-
-TIntermAggregate *CreateSubpassLoadFuncCall(TSymbolTable *symbolTable,
-                                            std::map<InputType, TFunction *> *functionMap,
-                                            const InputType &inputType,
-                                            TIntermSequence *arguments)
-{
-    TBasicType subpassInputType = GetBasicTypeOfSubpassInput(inputType);
-    ASSERT(subpassInputType != TBasicType::EbtVoid);
-
-    TFunction **currentFunc = &(*functionMap)[inputType];
-    if (*currentFunc == nullptr)
-    {
-        TType *inputAttachmentType = new TType(subpassInputType, EbpUndefined, EvqUniform, 1);
-        *currentFunc = new TFunction(symbolTable, GetFunctionNameOfSubpassLoad(inputType),
-                                     SymbolType::AngleInternal,
-                                     new TType(EbtFloat, EbpUndefined, EvqGlobal, 4, 1), true);
-        (*currentFunc)
-            ->addParameter(new TVariable(symbolTable, GetTypeNameOfSubpassInput(inputType),
-                                         inputAttachmentType, SymbolType::AngleInternal));
-    }
-
-    return TIntermAggregate::CreateFunctionCall(**currentFunc, arguments);
+    return CreateBuiltInFunctionCallNode("subpassLoad", arguments, *symbolTable, kESSLVulkanOnly);
 }
 
 class ReplaceSubpassInputUtils
@@ -393,7 +279,6 @@ class ReplaceSubpassInputUtils
         mInputAttachmentArrayIdSeq = 0;
         mInputAttachmentVarList.clear();
         mDataLoadVarList.clear();
-        mFunctionMap.clear();
     }
     virtual ~ReplaceSubpassInputUtils() = default;
 
@@ -447,7 +332,6 @@ class ReplaceSubpassInputUtils
 
     TIntermSequence mDeclareVariables;
     unsigned int mInputAttachmentArrayIdSeq;
-    std::map<InputType, TFunction *> mFunctionMap;
     std::map<unsigned int, TVariable *> mInputAttachmentVarList;
     std::map<unsigned int, const TVariable *> mDataLoadVarList;
 };
@@ -519,19 +403,25 @@ TIntermNode *ReplaceSubpassInputUtils::assignSubpassLoad(TIntermTyped *resultVar
     TIntermSequence *subpassArguments = new TIntermSequence();
     subpassArguments->push_back(inputAttachmentSymbol);
 
-    TIntermAggregate *subpassLoadFuncCall = CreateSubpassLoadFuncCall(
-        mSymbolTable, &mFunctionMap,
-        GetInputTypeOfSubpassInput(inputAttachmentSymbol->getBasicType()), subpassArguments);
+    // TODO: support interaction with multisampled framebuffers.  For example, the sample ID needs
+    // to be provided to the built-in call here.  http://anglebug.com/6195
 
-    TVector<int> fieldOffsets(targetVecSize);
-    for (int i = 0; i < targetVecSize; i++)
+    TIntermTyped *subpassLoadFuncCall = CreateSubpassLoadFuncCall(
+        mSymbolTable, inputAttachmentSymbol->getBasicType(), subpassArguments);
+
+    TIntermTyped *result = subpassLoadFuncCall;
+    if (targetVecSize < 4)
     {
-        fieldOffsets[i] = i;
+        TVector<int> fieldOffsets(targetVecSize);
+        for (int i = 0; i < targetVecSize; i++)
+        {
+            fieldOffsets[i] = i;
+        }
+
+        result = new TIntermSwizzle(subpassLoadFuncCall, fieldOffsets);
     }
 
-    TIntermTyped *right = new TIntermSwizzle(subpassLoadFuncCall, fieldOffsets);
-
-    return new TIntermBinary(EOpAssign, resultVar, right);
+    return new TIntermBinary(EOpAssign, resultVar, result);
 }
 
 TIntermNode *ReplaceSubpassInputUtils::loadInputAttachmentDataImpl(
