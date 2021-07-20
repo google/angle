@@ -210,16 +210,54 @@ class DataTracker final : angle::NonCopyable
     StringCounters mStringCounters;
 };
 
-using BufferSet   = std::set<gl::BufferID>;
-using BufferCalls = std::map<gl::BufferID, std::vector<CallCapture>>;
+using BufferCalls = std::map<GLuint, std::vector<CallCapture>>;
 
 // true means mapped, false means unmapped
-using BufferMapStatusMap = std::map<gl::BufferID, bool>;
+using BufferMapStatusMap = std::map<GLuint, bool>;
 
 using FenceSyncSet   = std::set<GLsync>;
 using FenceSyncCalls = std::map<GLsync, std::vector<CallCapture>>;
 
-using ProgramSet = std::set<gl::ShaderProgramID>;
+using ResourceSet   = std::set<GLuint>;
+using ResourceCalls = std::map<GLuint, std::vector<CallCapture>>;
+
+class TrackedResource final : angle::NonCopyable
+{
+  public:
+    TrackedResource();
+    ~TrackedResource();
+
+    ResourceSet &getStartingResources() { return mStartingResources; }
+    ResourceSet &getNewResources() { return mNewResources; }
+    ResourceSet &getResourcesToRegen() { return mResourcesToRegen; }
+    ResourceSet &getResourcesToRestore() { return mResourcesToRestore; }
+
+    void setGennedResource(GLuint id);
+    void setDeletedResource(GLuint id);
+    void setModifiedResource(GLuint id);
+
+    ResourceCalls &getResourceRegenCalls() { return mResourceRegenCalls; }
+    ResourceCalls &getResourceRestoreCalls() { return mResourceRestoreCalls; }
+
+  private:
+    // Resource regen calls will delete and gen a resource
+    ResourceCalls mResourceRegenCalls;
+    // Resource restore calls will restore the contents of a resource
+    ResourceCalls mResourceRestoreCalls;
+
+    // Resources created during startup
+    ResourceSet mStartingResources;
+
+    // Resources created during the run that need to be deleted
+    ResourceSet mNewResources;
+    // Resources deleted during the run that need to be recreated
+    ResourceSet mResourcesToRegen;
+    // Resources modified during the run that need to be restored
+    ResourceSet mResourcesToRestore;
+};
+
+using TrackedResourceArray =
+    std::array<TrackedResource, static_cast<uint32_t>(ResourceIDType::EnumCount)>;
 
 // Helper to track resource changes during the capture
 class ResourceTracker final : angle::NonCopyable
@@ -228,33 +266,18 @@ class ResourceTracker final : angle::NonCopyable
     ResourceTracker();
     ~ResourceTracker();
 
-    BufferCalls &getBufferRegenCalls() { return mBufferRegenCalls; }
-    BufferCalls &getBufferRestoreCalls() { return mBufferRestoreCalls; }
     BufferCalls &getBufferMapCalls() { return mBufferMapCalls; }
     BufferCalls &getBufferUnmapCalls() { return mBufferUnmapCalls; }
 
     std::vector<CallCapture> &getBufferBindingCalls() { return mBufferBindingCalls; }
 
-    BufferSet &getStartingBuffers() { return mStartingBuffers; }
-    BufferSet &getNewBuffers() { return mNewBuffers; }
-    BufferSet &getBuffersToRegen() { return mBuffersToRegen; }
-    BufferSet &getBuffersToRestore() { return mBuffersToRestore; }
+    void setBufferMapped(GLuint id);
+    void setBufferUnmapped(GLuint id);
 
-    void setGennedBuffer(gl::BufferID id);
-    void setDeletedBuffer(gl::BufferID id);
-    void setBufferModified(gl::BufferID id);
-    void setBufferMapped(gl::BufferID id);
-    void setBufferUnmapped(gl::BufferID id);
+    bool getStartingBuffersMappedCurrent(GLuint id) const;
+    bool getStartingBuffersMappedInitial(GLuint id) const;
 
-    const bool &getStartingBuffersMappedCurrent(gl::BufferID id)
-    {
-        return mStartingBuffersMappedCurrent[id];
-    }
-    const bool &getStartingBuffersMappedInitial(gl::BufferID id)
-    {
-        return mStartingBuffersMappedInitial[id];
-    }
-    void setStartingBufferMapped(gl::BufferID id, bool mapped)
+    void setStartingBufferMapped(GLuint id, bool mapped)
     {
         // Track the current state (which will change throughout the trace)
         mStartingBuffersMappedCurrent[id] = mapped;
@@ -271,18 +294,12 @@ class ResourceTracker final : angle::NonCopyable
     FenceSyncSet &getFenceSyncsToRegen() { return mFenceSyncsToRegen; }
     void setDeletedFenceSync(GLsync sync);
 
-    ProgramSet &getStartingPrograms() { return mStartingPrograms; }
-    ProgramSet &getNewPrograms() { return mNewPrograms; }
-    ProgramSet &getProgramsToRegen() { return mProgramsToRegen; }
-
-    void setCreatedProgram(gl::ShaderProgramID id);
-    void setDeletedProgram(gl::ShaderProgramID id);
+    TrackedResource &getTrackedResource(ResourceIDType type)
+    {
+        return mTrackedResources[static_cast<uint32_t>(type)];
+    }
 
   private:
-    // Buffer regen calls will delete and gen a buffer
-    BufferCalls mBufferRegenCalls;
-    // Buffer restore calls will restore the contents of a buffer
-    BufferCalls mBufferRestoreCalls;
     // Buffer map calls will map a buffer with correct offset, length, and access flags
     BufferCalls mBufferMapCalls;
     // Buffer unmap calls will bind and unmap a given buffer
@@ -290,15 +307,6 @@ class ResourceTracker final : angle::NonCopyable
 
     // Buffer binding calls to restore bindings recorded during MEC
     std::vector<CallCapture> mBufferBindingCalls;
-
-    // Starting buffers include all the buffers created during setup for MEC
-    BufferSet mStartingBuffers;
-    // New buffers are those generated while capturing
-    BufferSet mNewBuffers;
-    // Buffers to regen are a list of starting buffers that need to be deleted and genned
-    BufferSet mBuffersToRegen;
-    // Buffers to restore include any starting buffers with contents modified during the run
-    BufferSet mBuffersToRestore;
 
     // Whether a given buffer was mapped at the start of the trace
     BufferMapStatusMap mStartingBuffersMappedInitial;
@@ -308,13 +316,6 @@ class ResourceTracker final : angle::NonCopyable
     // Maximum accessed shader program ID.
     uint32_t mMaxShaderPrograms = 0;
 
-    // Programs created during startup
-    ProgramSet mStartingPrograms;
-    // Programs created during the run that need to be deleted
-    ProgramSet mNewPrograms;
-    // Programs deleted during the run that need to be recreated
-    ProgramSet mProgramsToRegen;
-
     // Fence sync objects created during MEC setup
     FenceSyncSet mStartingFenceSyncs;
     // Fence sync regen calls will create a fence sync objects
@@ -322,6 +323,8 @@ class ResourceTracker final : angle::NonCopyable
     // Fence syncs to regen are a list of starting fence sync objects that were deleted and need to
     // be regen'ed.
     FenceSyncSet mFenceSyncsToRegen;
+
+    TrackedResourceArray mTrackedResources;
 };
 
 // Used by the CPP replay to filter out unnecessary code.
@@ -343,6 +346,8 @@ using TextureLevelDataMap = std::map<gl::TextureID, TextureLevels>;
 
 // Map from ContextID to surface dimensions
 using SurfaceDimensions = std::map<gl::ContextID, gl::Extents>;
+
+using CallVector = std::vector<std::vector<CallCapture> *>;
 
 class FrameCapture final : angle::NonCopyable
 {
@@ -388,6 +393,8 @@ class FrameCaptureShared final : angle::NonCopyable
                             GLintptr offset,
                             GLsizeiptr length,
                             bool writable);
+
+    void trackTextureUpdate(const gl::Context *context, const CallCapture &call);
 
     const std::string &getShaderSource(gl::ShaderProgramID id) const;
     void setShaderSource(gl::ShaderProgramID id, std::string sources);

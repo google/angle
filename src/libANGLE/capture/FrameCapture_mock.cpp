@@ -20,6 +20,8 @@ ParamBuffer::~ParamBuffer() {}
 ParamCapture::~ParamCapture() {}
 ResourceTracker::ResourceTracker() {}
 ResourceTracker::~ResourceTracker() {}
+TrackedResource::TrackedResource() {}
+TrackedResource::~TrackedResource() {}
 
 FrameCapture::FrameCapture() {}
 FrameCapture::~FrameCapture() {}
