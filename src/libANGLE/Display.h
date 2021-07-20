@@ -322,7 +322,6 @@ class Display final : public LabeledObject,
 
     ConfigSet mConfigSet;
 
-    typedef std::set<gl::Context *> ContextSet;
     ContextSet mContextSet;
 
     typedef std::set<Image *> ImageSet;
