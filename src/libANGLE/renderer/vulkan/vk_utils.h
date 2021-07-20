@@ -359,6 +359,51 @@ class MemoryProperties final : angle::NonCopyable
     VkPhysicalDeviceMemoryProperties mMemoryProperties;
 };
 
+class BufferMemory : angle::NonCopyable
+{
+  public:
+    BufferMemory();
+    ~BufferMemory();
+    angle::Result initExternal(void *clientBuffer);
+    angle::Result init();
+
+    void destroy(RendererVk *renderer);
+
+    angle::Result map(ContextVk *contextVk, VkDeviceSize size, uint8_t **ptrOut)
+    {
+        if (mMappedMemory == nullptr)
+        {
+            ANGLE_TRY(mapImpl(contextVk, size));
+        }
+        *ptrOut = mMappedMemory;
+        return angle::Result::Continue;
+    }
+    void unmap(RendererVk *renderer);
+    void flush(RendererVk *renderer,
+               VkMemoryMapFlags memoryPropertyFlags,
+               VkDeviceSize offset,
+               VkDeviceSize size);
+    void invalidate(RendererVk *renderer,
+                    VkMemoryMapFlags memoryPropertyFlags,
+                    VkDeviceSize offset,
+                    VkDeviceSize size);
+
+    bool isExternalBuffer() const { return mClientBuffer != nullptr; }
+
+    uint8_t *getMappedMemory() const { return mMappedMemory; }
+    DeviceMemory *getExternalMemoryObject() { return &mExternalMemory; }
+    Allocation *getMemoryObject() { return &mAllocation; }
+
+  private:
+    angle::Result mapImpl(ContextVk *contextVk, VkDeviceSize size);
+
+    Allocation mAllocation;        // use mAllocation if isExternalBuffer() is false
+    DeviceMemory mExternalMemory;  // use mExternalMemory if isExternalBuffer() is true
+
+    void *mClientBuffer;
+    uint8_t *mMappedMemory;
+};
+
 // Similar to StagingImage, for Buffers.
 class StagingBuffer final : angle::NonCopyable
 {

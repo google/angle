@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/ResourceVk.h"
+#include "libANGLE/renderer/vulkan/android/vk_android_utils.h"
 #include "libANGLE/renderer/vulkan/vk_mem_alloc_wrapper.h"
 
 namespace angle
@@ -473,6 +474,118 @@ angle::Result MemoryProperties::findCompatibleMemoryIndex(
     // TODO(jmadill): Add error message to error.
     context->handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, ANGLE_FUNCTION, __LINE__);
     return angle::Result::Stop;
+}
+
+// BufferMemory implementation.
+BufferMemory::BufferMemory() : mClientBuffer(nullptr), mMappedMemory(nullptr) {}
+
+BufferMemory::~BufferMemory() = default;
+
+angle::Result BufferMemory::initExternal(void *clientBuffer)
+{
+    ASSERT(clientBuffer != nullptr);
+    mClientBuffer = clientBuffer;
+    return angle::Result::Continue;
+}
+
+angle::Result BufferMemory::init()
+{
+    ASSERT(mClientBuffer == nullptr);
+    return angle::Result::Continue;
+}
+
+void BufferMemory::unmap(RendererVk *renderer)
+{
+    if (mMappedMemory != nullptr)
+    {
+        if (isExternalBuffer())
+        {
+            mExternalMemory.unmap(renderer->getDevice());
+        }
+        else
+        {
+            mAllocation.unmap(renderer->getAllocator());
+        }
+
+        mMappedMemory = nullptr;
+    }
+}
+
+void BufferMemory::destroy(RendererVk *renderer)
+{
+    if (isExternalBuffer())
+    {
+        mExternalMemory.destroy(renderer->getDevice());
+        ReleaseAndroidExternalMemory(renderer, mClientBuffer);
+    }
+    else
+    {
+        mAllocation.destroy(renderer->getAllocator());
+    }
+}
+
+void BufferMemory::flush(RendererVk *renderer,
+                         VkMemoryMapFlags memoryPropertyFlags,
+                         VkDeviceSize offset,
+                         VkDeviceSize size)
+{
+    if (isExternalBuffer())
+    {
+        // if the memory type is not host coherent, we perform an explicit flush
+        if ((memoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) == 0)
+        {
+            VkMappedMemoryRange mappedRange = {};
+            mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+            mappedRange.memory              = mExternalMemory.getHandle();
+            mappedRange.offset              = offset;
+            mappedRange.size                = size;
+            mExternalMemory.flush(renderer->getDevice(), mappedRange);
+        }
+    }
+    else
+    {
+        mAllocation.flush(renderer->getAllocator(), offset, size);
+    }
+}
+
+void BufferMemory::invalidate(RendererVk *renderer,
+                              VkMemoryMapFlags memoryPropertyFlags,
+                              VkDeviceSize offset,
+                              VkDeviceSize size)
+{
+    if (isExternalBuffer())
+    {
+        // if the memory type is not device coherent, we perform an explicit invalidate
+        if ((memoryPropertyFlags & VK_MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD) == 0)
+        {
+            VkMappedMemoryRange memoryRanges = {};
+            memoryRanges.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+            memoryRanges.memory              = mExternalMemory.getHandle();
+            memoryRanges.offset              = offset;
+            memoryRanges.size                = size;
+            mExternalMemory.invalidate(renderer->getDevice(), memoryRanges);
+        }
+    }
+    else
+    {
+        mAllocation.invalidate(renderer->getAllocator(), offset, size);
+    }
+}
+
+angle::Result BufferMemory::mapImpl(ContextVk *contextVk, VkDeviceSize size)
+{
+    if (isExternalBuffer())
+    {
+        ANGLE_VK_TRY(contextVk, mExternalMemory.map(contextVk->getRenderer()->getDevice(), 0, size,
+                                                    0, &mMappedMemory));
+    }
+    else
+    {
+        ANGLE_VK_TRY(contextVk,
+                     mAllocation.map(contextVk->getRenderer()->getAllocator(), &mMappedMemory));
+    }
+
+    return angle::Result::Continue;
 }
 
 // StagingBuffer implementation.
