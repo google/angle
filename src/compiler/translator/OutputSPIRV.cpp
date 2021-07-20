@@ -378,7 +378,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
     bool mIsSymbolBeingDeclared = false;
 };
 
-spv::StorageClass GetStorageClass(const TType &type)
+spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
 {
     // Opaque uniforms (samplers, images and subpass inputs) have the UniformConstant storage class
     if (IsOpaqueType(type.getBasicType()))
@@ -416,7 +416,9 @@ spv::StorageClass GetStorageClass(const TType &type)
             return spv::StorageClassWorkgroup;
 
         case EvqGlobal:
-            // Global variables have the Private class.
+        case EvqConst:
+            // Global variables have the Private class.  Complex constant variables that are not
+            // folded are also defined globally.
             return spv::StorageClassPrivate;
 
         case EvqTemporary:
@@ -431,6 +433,8 @@ spv::StorageClass GetStorageClass(const TType &type)
         case EvqFragCoord:
         case EvqFrontFacing:
         case EvqPointCoord:
+        case EvqPrimitiveIDIn:
+        case EvqInvocationID:
         case EvqHelperInvocation:
         case EvqNumWorkGroups:
         case EvqWorkGroupID:
@@ -440,7 +444,13 @@ spv::StorageClass GetStorageClass(const TType &type)
             return spv::StorageClassInput;
 
         case EvqFragDepth:
+        case EvqPrimitiveID:
             return spv::StorageClassOutput;
+
+        case EvqLayer:
+            // gl_Layer is output in GS and input in FS.
+            return shaderType == GL_GEOMETRY_SHADER ? spv::StorageClassOutput
+                                                    : spv::StorageClassInput;
 
         default:
             // TODO: http://anglebug.com/4889
@@ -473,7 +483,7 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
                                                               const TType &type,
                                                               spv::StorageClass *storageClass)
 {
-    *storageClass = GetStorageClass(type);
+    *storageClass = GetStorageClass(type, mCompiler->getShaderType());
     auto iter     = mSymbolIdMap.find(symbol);
     if (iter != mSymbolIdMap.end())
     {
@@ -486,6 +496,7 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
 
     switch (type.getQualifier())
     {
+        // Vertex shader built-ins
         case EvqVertexID:
             name              = "gl_VertexIndex";
             builtInDecoration = spv::BuiltInVertexIndex;
@@ -515,6 +526,28 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
         case EvqHelperInvocation:
             name              = "gl_HelperInvocation";
             builtInDecoration = spv::BuiltInHelperInvocation;
+            break;
+
+        // Geometry shader built-ins
+        case EvqPrimitiveIDIn:
+            name              = "gl_PrimitiveIDIn";
+            builtInDecoration = spv::BuiltInPrimitiveId;
+            break;
+        case EvqInvocationID:
+            name              = "gl_InvocationID";
+            builtInDecoration = spv::BuiltInInvocationId;
+            break;
+        case EvqPrimitiveID:
+            name              = "gl_PrimitiveID";
+            builtInDecoration = spv::BuiltInPrimitiveId;
+            break;
+        case EvqLayer:
+            name              = "gl_Layer";
+            builtInDecoration = spv::BuiltInLayer;
+
+            // gl_Layer requires the Geometry capability, even in fragment shaders.
+            mBuilder.addCapability(spv::CapabilityGeometry);
+
             break;
 
         // Compute shader built-ins
@@ -4328,9 +4361,6 @@ void OutputSPIRVTraverser::storeBuiltInStructOutputInParamHelper(NodeData *data,
 
 void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
 {
-    // Constants are expected to be folded.
-    ASSERT(!node->hasConstantValue());
-
     // No-op visits to symbols that are being declared.  They are handled in visitDeclaration.
     if (mIsSymbolBeingDeclared)
     {
@@ -5339,10 +5369,15 @@ bool OutputSPIRVTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
             break;
 
         case EOpEmitVertex:
+            spirv::WriteEmitVertex(mBuilder.getSpirvCurrentFunctionBlock());
+            break;
         case EOpEndPrimitive:
+            spirv::WriteEndPrimitive(mBuilder.getSpirvCurrentFunctionBlock());
+            break;
+
         case EOpEmitStreamVertex:
         case EOpEndStreamPrimitive:
-            // TODO: support geometry shaders.  http://anglebug.com/4889
+            // TODO: support desktop GLSL.  http://anglebug.com/6197
             UNIMPLEMENTED();
             break;
 
@@ -5458,7 +5493,7 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
 
     const spirv::IdRef typeId = mBuilder.getTypeData(type, {}).id;
 
-    spv::StorageClass storageClass = GetStorageClass(type);
+    spv::StorageClass storageClass = GetStorageClass(type, mCompiler->getShaderType());
 
     SpirvDecorations decorations = mBuilder.getDecorations(type);
     if (mBuilder.isInvariantOutput(type))

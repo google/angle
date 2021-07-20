@@ -49,24 +49,8 @@ bool operator==(const SpirvType &a, const SpirvType &b)
            a.typeSpec.isOrHasBoolInInterfaceBlock == b.typeSpec.isOrHasBoolInInterfaceBlock;
 }
 
-uint32_t GetTotalArrayElements(const TSpan<const unsigned int> &arraySizes)
+namespace
 {
-    uint32_t arraySizeProduct = 1;
-    for (uint32_t arraySize : arraySizes)
-    {
-        // For runtime arrays, arraySize will be 0 and should be excluded.
-        arraySizeProduct *= arraySize > 0 ? arraySize : 1;
-    }
-
-    return arraySizeProduct;
-}
-
-uint32_t GetOutermostArraySize(const SpirvType &type)
-{
-    uint32_t size = type.arraySizes.back();
-    return size ? size : 1;
-}
-
 bool IsBlockFieldRowMajorQualified(const TType &fieldType, bool isParentBlockRowMajorQualified)
 {
     // If the field is specifically qualified as row-major, it will be row-major.  Otherwise unless
@@ -256,6 +240,61 @@ uint32_t GetArrayStrideInBlock(const ShaderVariable &var, bool isStd140)
     return memberInfo.arrayStride * var.getInnerArraySizeProduct();
 }
 
+spv::ExecutionMode GetGeometryInputExecutionMode(TLayoutPrimitiveType primitiveType)
+{
+    // Default input primitive type for geometry shaders is points
+    if (primitiveType == EptUndefined)
+    {
+        primitiveType = EptPoints;
+    }
+
+    switch (primitiveType)
+    {
+        case EptPoints:
+            return spv::ExecutionModeInputPoints;
+        case EptLines:
+            return spv::ExecutionModeInputLines;
+        case EptLinesAdjacency:
+            return spv::ExecutionModeInputLinesAdjacency;
+        case EptTriangles:
+            return spv::ExecutionModeTriangles;
+        case EptTrianglesAdjacency:
+            return spv::ExecutionModeInputTrianglesAdjacency;
+        case EptLineStrip:
+        case EptTriangleStrip:
+        default:
+            UNREACHABLE();
+            return {};
+    }
+}
+
+spv::ExecutionMode GetGeometryOutputExecutionMode(TLayoutPrimitiveType primitiveType)
+{
+    // Default output primitive type for geometry shaders is points
+    if (primitiveType == EptUndefined)
+    {
+        primitiveType = EptPoints;
+    }
+
+    switch (primitiveType)
+    {
+        case EptPoints:
+            return spv::ExecutionModeOutputPoints;
+        case EptLineStrip:
+            return spv::ExecutionModeOutputLineStrip;
+        case EptTriangleStrip:
+            return spv::ExecutionModeOutputTriangleStrip;
+        case EptLines:
+        case EptLinesAdjacency:
+        case EptTriangles:
+        case EptTrianglesAdjacency:
+        default:
+            UNREACHABLE();
+            return {};
+    }
+}
+}  // anonymous namespace
+
 void SpirvTypeSpec::inferDefaults(const TType &type, TCompiler *compiler)
 {
     // Infer some defaults based on type.  If necessary, this overrides some fields (if not already
@@ -372,6 +411,37 @@ void SpirvTypeSpec::onVectorComponentSelection()
     // similarly differentiated.
     ASSERT(!isInvariantBlock && !isRowMajorQualifiedBlock && !isRowMajorQualifiedArray &&
            blockStorage == EbsUnspecified);
+}
+
+SPIRVBuilder::SPIRVBuilder(TCompiler *compiler,
+                           ShCompileOptions compileOptions,
+                           bool forceHighp,
+                           ShHashFunction64 hashFunction,
+                           NameMap &nameMap)
+    : mCompiler(compiler),
+      mCompileOptions(compileOptions),
+      mShaderType(gl::FromGLenum<gl::ShaderType>(compiler->getShaderType())),
+      mDisableRelaxedPrecision(forceHighp),
+      mNextAvailableId(1),
+      mHashFunction(hashFunction),
+      mNameMap(nameMap),
+      mNextUnusedBinding(0),
+      mNextUnusedInputLocation(0),
+      mNextUnusedOutputLocation(0)
+{
+    // The Shader capability is always defined.
+    addCapability(spv::CapabilityShader);
+
+    // Add Geometry or Tessellation capabilities based on shader type.
+    if (mCompiler->getShaderType() == GL_GEOMETRY_SHADER)
+    {
+        addCapability(spv::CapabilityGeometry);
+    }
+    else if (mCompiler->getShaderType() == GL_TESS_CONTROL_SHADER_EXT ||
+             mCompiler->getShaderType() == GL_TESS_EVALUATION_SHADER_EXT)
+    {
+        addCapability(spv::CapabilityTessellation);
+    }
 }
 
 spirv::IdRef SPIRVBuilder::getNewId(const SpirvDecorations &decorations)
@@ -1897,8 +1967,7 @@ spirv::Blob SPIRVBuilder::getSpirv()
 
     // Generate metadata in the following order:
     //
-    // - OpCapability instructions.  The Shader capability is always defined.
-    spirv::WriteCapability(&result, spv::CapabilityShader);
+    // - OpCapability instructions.
     for (spv::Capability capability : mCapabilities)
     {
         spirv::WriteCapability(&result, capability);
@@ -1965,6 +2034,25 @@ void SPIRVBuilder::generateExecutionModes(spirv::Blob *blob)
             }
 
             break;
+
+        case gl::ShaderType::Geometry:
+        {
+            const spv::ExecutionMode inputExecutionMode =
+                GetGeometryInputExecutionMode(mCompiler->getGeometryShaderInputPrimitiveType());
+            const spv::ExecutionMode outputExecutionMode =
+                GetGeometryOutputExecutionMode(mCompiler->getGeometryShaderOutputPrimitiveType());
+
+            spirv::WriteExecutionMode(blob, mEntryPointId, inputExecutionMode, {});
+            spirv::WriteExecutionMode(blob, mEntryPointId, outputExecutionMode, {});
+            spirv::WriteExecutionMode(
+                blob, mEntryPointId, spv::ExecutionModeOutputVertices,
+                {spirv::LiteralInteger(mCompiler->getGeometryShaderMaxVertices())});
+            spirv::WriteExecutionMode(
+                blob, mEntryPointId, spv::ExecutionModeInvocations,
+                {spirv::LiteralInteger(mCompiler->getGeometryShaderInvocations())});
+
+            break;
+        }
 
         case gl::ShaderType::Compute:
         {

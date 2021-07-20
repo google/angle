@@ -53,10 +53,12 @@ class ValidateAST : public TIntermTraverser
     // Visit a structure or interface block, and recursively visit its fields of structure type.
     void visitStructOrInterfaceBlockDeclaration(const TType &type, const TSourceLoc &location);
     void visitStructInDeclarationUsage(const TType &type, const TSourceLoc &location);
-    // Visit a unary or aggregate node and validate it's built-in op against it's built-in function.
+    // Visit a unary or aggregate node and validate its built-in op against its built-in function.
     void visitBuiltIn(TIntermOperator *op, const TFunction *function);
     // Visit an aggregate node and validate its function call is to one that's already defined.
     void visitFunctionCall(TIntermAggregate *node);
+    // Visit a binary node and validate its type against its operands.
+    void validateExpressionTypeBinary(TIntermBinary *node);
 
     void scope(Visit visit);
     bool isVariableDeclared(const TVariable *variable);
@@ -100,9 +102,20 @@ class ValidateAST : public TIntermTraverser
     std::vector<std::map<ImmutableString, const TFieldListCollection *>> mStructsAndBlocksByName;
     bool mStructUsageFailed = false;
 
+    // For validateExpressionTypes:
+    bool mExpressionTypesFailed = false;
+
     // For validateMultiDeclarations:
     bool mMultiDeclarationsFailed = false;
 };
+
+bool IsSameType(const TType &a, const TType &b)
+{
+    return a.getBasicType() == b.getBasicType() && a.getNominalSize() == b.getNominalSize() &&
+           a.getSecondarySize() == b.getSecondarySize() && a.getArraySizes() == b.getArraySizes() &&
+           a.getStruct() == b.getStruct() &&
+           (!a.isInterfaceBlock() || a.getInterfaceBlock() == b.getInterfaceBlock());
+}
 
 bool ValidateAST::validate(TIntermNode *root,
                            TDiagnostics *diagnostics,
@@ -173,6 +186,20 @@ void ValidateAST::visitStructOrInterfaceBlockDeclaration(const TType &type,
     if (structOrBlock)
     {
         ASSERT(!typeName.empty());
+
+        // Allow gl_PerVertex to be doubly-defined.
+        if (typeName == "gl_PerVertex")
+        {
+            if (IsShaderIn(type.getQualifier()))
+            {
+                typeName = ImmutableString("gl_PerVertex<input>");
+            }
+            else
+            {
+                ASSERT(IsShaderOut(type.getQualifier()));
+                typeName = ImmutableString("gl_PerVertex<output>");
+            }
+        }
 
         if (mStructsAndBlocksByName.back().find(typeName) != mStructsAndBlocksByName.back().end())
         {
@@ -303,6 +330,64 @@ void ValidateAST::visitFunctionCall(TIntermAggregate *node)
                             "<validateFunctionCall>",
                             function->name().data());
         mFunctionCallFailed = true;
+    }
+}
+
+void ValidateAST::validateExpressionTypeBinary(TIntermBinary *node)
+{
+    switch (node->getOp())
+    {
+        case EOpIndexDirect:
+        case EOpIndexIndirect:
+        {
+            TType expectedType(node->getLeft()->getType());
+            if (!expectedType.isArray())
+            {
+                // TODO: Validate matrix column selection and vector component selection.
+                // http://anglebug.com/2733
+                break;
+            }
+
+            expectedType.toArrayElementType();
+
+            if (!IsSameType(node->getType(), expectedType))
+            {
+                const TSymbol *symbol = expectedType.getStruct();
+                if (symbol == nullptr)
+                {
+                    symbol = expectedType.getInterfaceBlock();
+                }
+                const char *name = nullptr;
+                if (symbol)
+                {
+                    name = symbol->name().data();
+                }
+                else if (expectedType.isScalar())
+                {
+                    name = "<scalar array>";
+                }
+                else if (expectedType.isVector())
+                {
+                    name = "<vector array>";
+                }
+                else
+                {
+                    ASSERT(expectedType.isMatrix());
+                    name = "<matrix array>";
+                }
+
+                mDiagnostics->error(
+                    node->getLine(),
+                    "Found index node with type that is inconsistent with the array being indexed "
+                    "<validateExpressionTypes>",
+                    name);
+                mExpressionTypesFailed = true;
+            }
+        }
+        break;
+        default:
+            // TODO: Validate other expressions. http://anglebug.com/2733
+            break;
     }
 }
 
@@ -477,6 +562,12 @@ bool ValidateAST::visitSwizzle(Visit visit, TIntermSwizzle *node)
 bool ValidateAST::visitBinary(Visit visit, TIntermBinary *node)
 {
     visitNode(visit, node);
+
+    if (mOptions.validateExpressionTypes && visit == PreVisit)
+    {
+        validateExpressionTypeBinary(node);
+    }
+
     return true;
 }
 
@@ -730,7 +821,8 @@ bool ValidateAST::validateInternal()
 {
     return !mSingleParentFailed && !mVariableReferencesFailed && !mBuiltInOpsFailed &&
            !mFunctionCallFailed && !mNoRawFunctionCallsFailed && !mNullNodesFailed &&
-           !mQualifiersFailed && !mStructUsageFailed && !mMultiDeclarationsFailed;
+           !mQualifiersFailed && !mStructUsageFailed && !mExpressionTypesFailed &&
+           !mMultiDeclarationsFailed;
 }
 
 }  // anonymous namespace

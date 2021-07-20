@@ -4525,6 +4525,10 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     if (arraySizes)
     {
         interfaceBlockType->makeArrays(*arraySizes);
+
+        checkGeometryShaderInputAndSetArraySize(instanceLine, instanceName, interfaceBlockType);
+        checkTessellationShaderUnsizedArraysAndSetSize(instanceLine, instanceName,
+                                                       interfaceBlockType);
     }
 
     // The instance variable gets created to refer to the interface block type from the AST

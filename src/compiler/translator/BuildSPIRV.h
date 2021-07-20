@@ -281,18 +281,7 @@ class SPIRVBuilder : angle::NonCopyable
                  ShCompileOptions compileOptions,
                  bool forceHighp,
                  ShHashFunction64 hashFunction,
-                 NameMap &nameMap)
-        : mCompiler(compiler),
-          mCompileOptions(compileOptions),
-          mShaderType(gl::FromGLenum<gl::ShaderType>(compiler->getShaderType())),
-          mDisableRelaxedPrecision(forceHighp),
-          mNextAvailableId(1),
-          mHashFunction(hashFunction),
-          mNameMap(nameMap),
-          mNextUnusedBinding(0),
-          mNextUnusedInputLocation(0),
-          mNextUnusedOutputLocation(0)
-    {}
+                 NameMap &nameMap);
 
     spirv::IdRef getNewId(const SpirvDecorations &decorations);
     SpirvType getSpirvType(const TType &type, const SpirvTypeSpec &typeSpec) const;

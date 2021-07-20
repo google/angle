@@ -103,7 +103,9 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
 
             if (mPerVertexOutVarRedeclared)
             {
-                queueReplacement(new TIntermSymbol(mPerVertexOutVar), OriginalNode::IS_DROPPED);
+                // Traverse the parents and promote the new type.  Replace the root of
+                // EOpIndex[In]Direct chain.
+                replaceAccessChain(new TIntermSymbol(mPerVertexOutVar));
             }
 
             return;
@@ -124,7 +126,9 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
 
             if (mPerVertexInVarRedeclared)
             {
-                queueReplacement(new TIntermSymbol(mPerVertexInVar), OriginalNode::IS_DROPPED);
+                // Traverse the parents and promote the new type.  Replace the root of
+                // EOpIndex[In]Direct chain.
+                replaceAccessChain(new TIntermSymbol(mPerVertexInVar));
             }
 
             return;
@@ -145,7 +149,8 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
         if (variable->symbolType() != SymbolType::BuiltIn)
         {
             ASSERT(variable->name() != "gl_Position" && variable->name() != "gl_PointSize" &&
-                   variable->name() != "gl_ClipDistance" && variable->name() != "gl_CullDistance");
+                   variable->name() != "gl_ClipDistance" && variable->name() != "gl_CullDistance" &&
+                   variable->name() != "gl_in" && variable->name() != "gl_out");
 
             return;
         }
@@ -294,6 +299,39 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
 
         mPerVertexInVar           = declarePerVertex(EvqPerVertexIn, arraySize, varName);
         mPerVertexInVarRedeclared = true;
+    }
+
+    void replaceAccessChain(TIntermTyped *replacement)
+    {
+        uint32_t ancestorIndex  = 0;
+        TIntermTyped *toReplace = nullptr;
+        while (true)
+        {
+            TIntermNode *ancestor = getAncestorNode(ancestorIndex);
+            ASSERT(ancestor != nullptr);
+
+            TIntermBinary *asBinary = ancestor->getAsBinaryNode();
+            if (asBinary == nullptr ||
+                (asBinary->getOp() != EOpIndexDirect && asBinary->getOp() != EOpIndexIndirect))
+            {
+                break;
+            }
+
+            replacement = new TIntermBinary(asBinary->getOp(), replacement, asBinary->getRight());
+            toReplace   = asBinary;
+
+            ++ancestorIndex;
+        }
+
+        if (toReplace == nullptr)
+        {
+            queueReplacement(replacement, OriginalNode::IS_DROPPED);
+        }
+        else
+        {
+            queueReplacementWithParent(getAncestorNode(ancestorIndex), toReplace, replacement,
+                                       OriginalNode::IS_DROPPED);
+        }
     }
 
     GLenum mShaderType;
