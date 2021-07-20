@@ -344,6 +344,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.drawBuffers            = true;
     mNativeExtensions.fragDepth              = true;
     mNativeExtensions.framebufferBlitANGLE   = true;
+    mNativeExtensions.framebufferBlitNV      = true;
     mNativeExtensions.framebufferMultisample = true;
     mNativeExtensions.multisampledRenderToTexture =
         getFeatures().enableMultisampledRenderToTexture.enabled;
