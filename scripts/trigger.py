@@ -20,6 +20,7 @@ import sys
 DEFAULT_TASK_PRIORITY = 30
 DEFAULT_POOL = 'chromium.tests.gpu'
 DEFAULT_LOG_LEVEL = 'info'
+DEFAULT_REALM = 'chromium:try'
 GOLD_SERVICE_ACCOUNT = 'chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com'
 
 
@@ -107,7 +108,7 @@ def main():
     ]
 
     # Set priority. Don't abuse this!
-    swarming_args += ['-priority', str(args.priority)]
+    swarming_args += ['-priority', str(args.priority), '-realm', DEFAULT_REALM]
 
     # Define a user tag.
     try:
@@ -134,7 +135,7 @@ def main():
         cmd_args += ['luci-auth', 'context', '--']
 
     for env in args.env:
-        swarming_args += ['--env', env]
+        swarming_args += ['-env', env]
 
     cmd_args += swarming_cmd
 
