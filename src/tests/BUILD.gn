@@ -541,6 +541,10 @@ if (build_angle_gles1_conform_tests) {
       "$angle_root:gl_prototypes",
     ]
 
+    if (is_clang) {
+      cflags_c = [ "-Wno-implicit-fallthrough" ]
+    }
+
     testonly = true
 
     public_deps = [
