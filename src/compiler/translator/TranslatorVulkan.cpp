@@ -273,6 +273,36 @@ ANGLE_NO_DISCARD bool ReplaceGLDepthRangeWithDriverUniform(TCompiler *compiler,
     return ReplaceVariableWithTyped(compiler, root, depthRangeVar, angleEmulatedDepthRangeRef);
 }
 
+// Declares a new variable to replace gl_BoundingBoxEXT, its values are fed from a global temporary
+// variable.
+ANGLE_NO_DISCARD bool ReplaceGLBoundingBoxWithGlobal(TCompiler *compiler,
+                                                     TIntermBlock *root,
+                                                     TSymbolTable *symbolTable)
+{
+    // Create a symbol reference to "gl_BoundingBoxEXT"
+    const TVariable *builtinBoundingBoxVar = static_cast<const TVariable *>(
+        symbolTable->findBuiltIn(ImmutableString("gl_BoundingBoxEXT"), 310));
+
+    if (builtinBoundingBoxVar != nullptr)
+    {
+        // Declare the replacement bounding box variable type
+        TType *emulatedBoundingBoxDeclType = new TType(builtinBoundingBoxVar->getType());
+        emulatedBoundingBoxDeclType->setQualifier(EvqGlobal);
+
+        TVariable *ANGLEBoundingBoxVar =
+            new TVariable(symbolTable->nextUniqueId(), ImmutableString("ANGLEBoundingBox"),
+                          SymbolType::AngleInternal, TExtension::EXT_primitive_bounding_box,
+                          emulatedBoundingBoxDeclType);
+
+        DeclareGlobalVariable(root, ANGLEBoundingBoxVar);
+
+        // Use the replacement variable instead of builtin gl_BoundingBoxEXT everywhere.
+        return ReplaceVariable(compiler, root, builtinBoundingBoxVar, ANGLEBoundingBoxVar);
+    }
+
+    return true;
+}
+
 TVariable *AddANGLEPositionVaryingDeclaration(TIntermBlock *root,
                                               TSymbolTable *symbolTable,
                                               TQualifier qualifier)
@@ -1223,6 +1253,10 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
 
         case gl::ShaderType::TessControl:
         {
+            if (!ReplaceGLBoundingBoxWithGlobal(this, root, &getSymbolTable()))
+            {
+                return false;
+            }
             WriteTessControlShaderLayoutQualifiers(sink, getTessControlShaderOutputVertices());
             break;
         }

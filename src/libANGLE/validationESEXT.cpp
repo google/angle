@@ -1514,8 +1514,13 @@ bool ValidatePrimitiveBoundingBoxEXT(const Context *context,
                                      GLfloat maxZ,
                                      GLfloat maxW)
 {
-    context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
-    return false;
+    if (!context->getExtensions().primitiveBoundingBoxEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return true;
 }
 
 // GL_EXT_separate_shader_objects

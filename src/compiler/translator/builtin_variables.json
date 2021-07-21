@@ -1386,6 +1386,17 @@
                         "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqPosition, 4); {type_name}->setInterfaceBlock(gl_PerVertexOutTcsBlock{ext_or_core_suffix});"
                     }
                 }
+            },
+            "EXTPrimitiveBoundingBox":{
+                "variables":{
+                    "gl_BoundingBoxEXT":{
+                        "suffix":"TCS",
+                        "essl_level":"ESSL3_1_BUILTINS",
+                        "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
+                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqBoundingBoxEXT, 4); {type_name}->makeArray(4u);"
+                    }
+                }
             }
         }
     },

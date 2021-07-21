@@ -1072,6 +1072,9 @@ void RendererVk::ensureCapsInitialized() const
     // GL_ANGLE_yuv_internal_format
     mNativeExtensions.yuvInternalFormatANGLE =
         getFeatures().supportsYUVSamplerConversion.enabled && vk::CanSupportYuvInternalFormat(this);
+
+    // GL_EXT_primitive_bounding_box
+    mNativeExtensions.primitiveBoundingBoxEXT = true;
 }
 
 namespace vk

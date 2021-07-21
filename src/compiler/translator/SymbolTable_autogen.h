@@ -145,6 +145,8 @@ class TSymbolTableBase
     TSymbol *m_gl_outTCSES3_2                                = nullptr;
     TSymbol *m_gl_PositionTCS                                = nullptr;
     TSymbol *m_gl_PositionTCSES3_2                           = nullptr;
+    TSymbol *m_gl_BoundingBoxEXTTCS                          = nullptr;
+    TSymbol *m_gl_BoundingBoxEXTTCSES3_2                     = nullptr;
     TSymbol *m_gl_TessLevelOuterTES                          = nullptr;
     TSymbol *m_gl_TessLevelOuterTESES3_2                     = nullptr;
     TSymbol *m_gl_TessLevelInnerTES                          = nullptr;

@@ -6936,6 +6936,19 @@ void main()
     // Ensure correct rendering.
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
 }
+
+// Negative test for EXT_primitive_bounding_box
+TEST_P(SimpleStateChangeTestES31, PrimitiveBoundingBoxNegativeTest)
+{
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_primitive_bounding_box"));
+
+    glPrimitiveBoundingBoxEXT(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    GLfloat boundingBox[8] = {0};
+    glGetFloatv(GL_PRIMITIVE_BOUNDING_BOX_EXT, boundingBox);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);

@@ -2755,6 +2755,14 @@ bool ValidateStateQuery(const Context *context,
         }
         break;
 
+        case GL_PRIMITIVE_BOUNDING_BOX:
+            if (!context->getExtensions().primitiveBoundingBoxEXT)
+            {
+                context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
+                return false;
+            }
+            break;
+
         default:
             break;
     }

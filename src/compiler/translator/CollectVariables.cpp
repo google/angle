@@ -237,6 +237,7 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mPatchVerticesInAdded;
     bool mTessLevelOuterAdded;
     bool mTessLevelInnerAdded;
+    bool mBoundingBoxEXTAdded;
     bool mTessCoordAdded;
     const int mTessControlShaderOutputVertices;
 
@@ -309,6 +310,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mPatchVerticesInAdded(false),
       mTessLevelOuterAdded(false),
       mTessLevelInnerAdded(false),
+      mBoundingBoxEXTAdded(false),
       mTessCoordAdded(false),
       mTessControlShaderOutputVertices(tessControlShaderOutputVertices),
       mHashFunction(hashFunction),
@@ -332,8 +334,9 @@ void CollectVariablesTraverser::setBuiltInInfoFromSymbol(const TVariable &variab
 
     bool isShaderIOBlock =
         IsShaderIoBlock(type.getQualifier()) && type.getInterfaceBlock() != nullptr;
-    bool isPatch =
-        type.getQualifier() == EvqTessLevelInner || type.getQualifier() == EvqTessLevelOuter;
+    bool isPatch = type.getQualifier() == EvqTessLevelInner ||
+                   type.getQualifier() == EvqTessLevelOuter ||
+                   type.getQualifier() == EvqBoundingBoxEXT;
 
     setFieldOrVariableProperties(type, true, isShaderIOBlock, isPatch, info);
 }
@@ -714,6 +717,10 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                     recordBuiltInVaryingUsed(symbol->variable(), &mTessLevelInnerAdded,
                                              mInputVaryings);
                 }
+                break;
+            case EvqBoundingBoxEXT:
+                recordBuiltInVaryingUsed(symbol->variable(), &mBoundingBoxEXTAdded,
+                                         mOutputVaryings);
                 break;
             default:
                 break;

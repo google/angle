@@ -3292,6 +3292,14 @@ bool GetQueryParameterInfo(const State &glState,
             *type      = GL_INT;
             *numParams = 1;
             return true;
+        case GL_PRIMITIVE_BOUNDING_BOX:
+            if (!extensions.primitiveBoundingBoxEXT)
+            {
+                return false;
+            }
+            *type      = GL_FLOAT;
+            *numParams = 8;
+            return true;
     }
 
     if (glState.getClientType() == EGL_OPENGL_API)

@@ -360,7 +360,15 @@ State::State(const State *shareContextState,
       mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max()),
       mPatchVertices(3),
       mOverlay(overlay),
-      mNoSimultaneousConstantColorAndAlphaBlendFunc(false)
+      mNoSimultaneousConstantColorAndAlphaBlendFunc(false),
+      mBoundingBoxMinX(-1.0f),
+      mBoundingBoxMinY(-1.0f),
+      mBoundingBoxMinZ(-1.0f),
+      mBoundingBoxMinW(1.0f),
+      mBoundingBoxMaxX(1.0f),
+      mBoundingBoxMaxY(1.0f),
+      mBoundingBoxMaxZ(1.0f),
+      mBoundingBoxMaxW(1.0f)
 {}
 
 State::~State() {}
