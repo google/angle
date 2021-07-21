@@ -2835,6 +2835,11 @@ glGetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void 
     return GL_GetTexImageANGLE(target, level, format, type, pixels);
 }
 
+void GL_APIENTRY glGetCompressedTexImageANGLE(GLenum target, GLint level, void *pixels)
+{
+    return GL_GetCompressedTexImageANGLE(target, level, pixels);
+}
+
 void GL_APIENTRY glGetRenderbufferImageANGLE(GLenum target,
                                              GLenum format,
                                              GLenum type,

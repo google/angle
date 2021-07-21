@@ -1272,6 +1272,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetClipPlanex";
         case EntryPoint::GLGetCompressedTexImage:
             return "glGetCompressedTexImage";
+        case EntryPoint::GLGetCompressedTexImageANGLE:
+            return "glGetCompressedTexImageANGLE";
         case EntryPoint::GLGetCompressedTextureImage:
             return "glGetCompressedTextureImage";
         case EntryPoint::GLGetCompressedTextureSubImage:

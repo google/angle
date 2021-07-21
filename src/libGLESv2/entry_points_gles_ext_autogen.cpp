@@ -404,6 +404,32 @@ GL_GetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void
     }
 }
 
+void GL_APIENTRY GL_GetCompressedTexImageANGLE(GLenum target, GLint level, void *pixels)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLGetCompressedTexImageANGLE,
+          "context = %d, target = %s, level = %d, pixels = 0x%016" PRIxPTR "", CID(context),
+          GLenumToString(GLenumGroup::TextureTarget, target), level, (uintptr_t)pixels);
+
+    if (context)
+    {
+        TextureTarget targetPacked                            = PackParam<TextureTarget>(target);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateGetCompressedTexImageANGLE(
+                                                             context, targetPacked, level, pixels));
+        if (isCallValid)
+        {
+            context->getCompressedTexImage(targetPacked, level, pixels);
+        }
+        ANGLE_CAPTURE(GetCompressedTexImageANGLE, isCallValid, context, targetPacked, level,
+                      pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 void GL_APIENTRY GL_GetRenderbufferImageANGLE(GLenum target,
                                               GLenum format,
                                               GLenum type,

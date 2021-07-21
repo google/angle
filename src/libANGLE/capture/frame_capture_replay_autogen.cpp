@@ -1107,6 +1107,14 @@ void FrameCaptureShared::ReplayCall(gl::Context *context,
                                    replayContext->getReadBufferPointer<GLfixed *>(
                                        params.getParam("equation", ParamType::TGLfixedPointer, 1)));
             break;
+        case angle::EntryPoint::GLGetCompressedTexImage:
+            context->getCompressedTexImage(
+                params.getParam("targetPacked", ParamType::TTextureTarget, 0)
+                    .value.TextureTargetVal,
+                params.getParam("level", ParamType::TGLint, 1).value.GLintVal,
+                replayContext->getReadBufferPointer<void *>(
+                    params.getParam("img", ParamType::TvoidPointer, 2)));
+            break;
         case angle::EntryPoint::GLGetDebugMessageLog:
             context->getDebugMessageLog(
                 params.getParam("count", ParamType::TGLuint, 0).value.GLuintVal,

@@ -260,6 +260,13 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                               GLenum type,
                               void *pixels) override;
 
+    angle::Result getCompressedTexImage(const gl::Context *context,
+                                        const gl::PixelPackState &packState,
+                                        gl::Buffer *packBuffer,
+                                        gl::TextureTarget target,
+                                        GLint level,
+                                        void *pixels) override;
+
     ANGLE_INLINE bool hasBeenBoundAsImage() const { return mState.hasBeenBoundAsImage(); }
     ANGLE_INLINE const gl::OffsetBindingPointer<gl::Buffer> &getBuffer() const
     {

@@ -9090,6 +9090,14 @@ void Context::getTexImage(TextureTarget target,
                                            format, type, pixels));
 }
 
+void Context::getCompressedTexImage(TextureTarget target, GLint level, void *pixels)
+{
+    Texture *texture   = getTextureByTarget(target);
+    Buffer *packBuffer = mState.getTargetBuffer(BufferBinding::PixelPack);
+    ANGLE_CONTEXT_TRY(texture->getCompressedTexImage(this, mState.getPackState(), packBuffer,
+                                                     target, level, pixels));
+}
+
 void Context::getRenderbufferImage(GLenum target, GLenum format, GLenum type, void *pixels)
 {
     Renderbuffer *renderbuffer = mState.getCurrentRenderbuffer();

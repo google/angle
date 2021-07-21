@@ -430,7 +430,7 @@ bool ValidateCompressedTexSubImage1D(const Context *context,
                                      GLsizei imageSize,
                                      const void *data);
 bool ValidateGetCompressedTexImage(const Context *context,
-                                   GLenum target,
+                                   TextureTarget targetPacked,
                                    GLint level,
                                    const void *img);
 bool ValidateLoadTransposeMatrixd(const Context *context, const GLdouble *m);

@@ -2349,6 +2349,22 @@ angle::Result Texture::getTexImage(const Context *context,
                                  pixels);
 }
 
+angle::Result Texture::getCompressedTexImage(const Context *context,
+                                             const PixelPackState &packState,
+                                             Buffer *packBuffer,
+                                             TextureTarget target,
+                                             GLint level,
+                                             void *pixels)
+{
+    // No-op if the image level is empty.
+    if (getExtents(target, level).empty())
+    {
+        return angle::Result::Continue;
+    }
+
+    return mTexture->getCompressedTexImage(context, packState, packBuffer, target, level, pixels);
+}
+
 void Texture::onBindAsImageTexture()
 {
     if (!mState.mHasBeenBoundAsImage)

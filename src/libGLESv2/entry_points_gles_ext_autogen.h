@@ -104,6 +104,9 @@ ANGLE_EXPORT void GL_APIENTRY GL_RenderbufferStorageMultisampleANGLE(GLenum targ
 // GL_ANGLE_get_image
 ANGLE_EXPORT void GL_APIENTRY
 GL_GetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
+ANGLE_EXPORT void GL_APIENTRY GL_GetCompressedTexImageANGLE(GLenum target,
+                                                            GLint level,
+                                                            void *pixels);
 ANGLE_EXPORT void GL_APIENTRY GL_GetRenderbufferImageANGLE(GLenum target,
                                                            GLenum format,
                                                            GLenum type,

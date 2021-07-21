@@ -526,6 +526,13 @@ class Texture final : public RefCountObject<TextureID>,
                               GLenum type,
                               void *pixels);
 
+    angle::Result getCompressedTexImage(const Context *context,
+                                        const PixelPackState &packState,
+                                        Buffer *packBuffer,
+                                        TextureTarget target,
+                                        GLint level,
+                                        void *pixels);
+
     rx::TextureImpl *getImplementation() const { return mTexture; }
 
     // FramebufferAttachmentObject implementation

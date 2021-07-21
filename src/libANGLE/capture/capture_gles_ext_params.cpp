@@ -3511,6 +3511,16 @@ void CaptureGetTexImageANGLE_pixels(const State &glState,
     paramCapture->readBufferSizeBytes      = kMaxPixelSize * width * height * depth;
 }
 
+void CaptureGetCompressedTexImageANGLE_pixels(const State &glState,
+                                              bool isCallValid,
+                                              TextureTarget targetPacked,
+                                              GLint level,
+                                              void *pixels,
+                                              angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
 void CaptureGetRenderbufferImageANGLE_pixels(const State &glState,
                                              bool isCallValid,
                                              GLenum target,

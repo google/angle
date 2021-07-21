@@ -110,6 +110,10 @@ bool ValidateGetTexImageANGLE(const Context *context,
                               GLenum format,
                               GLenum type,
                               const void *pixels);
+bool ValidateGetCompressedTexImageANGLE(const Context *context,
+                                        TextureTarget targetPacked,
+                                        GLint level,
+                                        const void *pixels);
 bool ValidateGetRenderbufferImageANGLE(const Context *context,
                                        GLenum target,
                                        GLenum format,

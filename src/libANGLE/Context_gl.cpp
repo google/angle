@@ -35,11 +35,6 @@ void Context::compressedTexSubImage1D(GLenum target,
     UNIMPLEMENTED();
 }
 
-void Context::getCompressedTexImage(GLenum target, GLint level, void *img)
-{
-    UNIMPLEMENTED();
-}
-
 void Context::loadTransposeMatrixd(const GLdouble *m)
 {
     UNIMPLEMENTED();

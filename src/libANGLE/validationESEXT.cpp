@@ -269,7 +269,28 @@ bool ValidateGetTexImageANGLE(const Context *context,
         return false;
     }
 
+    if (texture->getFormat(target, level).info->compressed)
+    {
+        context->validationError(GL_INVALID_OPERATION, kGetImageCompressed);
+        return false;
+    }
+
     return true;
+}
+
+bool ValidateGetCompressedTexImageANGLE(const Context *context,
+                                        TextureTarget target,
+                                        GLint level,
+                                        const void *pixels)
+{
+    if (!context->getExtensions().getImageANGLE)
+    {
+        context->validationError(GL_INVALID_OPERATION, kGetImageExtensionNotEnabled);
+        return false;
+    }
+
+    // TODO: Validate all the things. http://anglebug.com/6177
+    return false;
 }
 
 bool ValidateGetRenderbufferImageANGLE(const Context *context,

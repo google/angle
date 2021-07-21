@@ -533,8 +533,11 @@
     "glGetBufferPointerv": {
         "target": "BufferBinding"
     },
-    "glGetBufferPointervRobust": {
-        "target": "BufferBinding"
+     "glGetBufferPointervRobust": {
+       "target": "BufferBinding"
+    },
+     "glGetCompressedTexImage": {
+       "target": "TextureTarget"
     },
     "glGetCompressedTextureImage": {
         "texture": "TextureID"

@@ -1395,7 +1395,7 @@ bool ValidateCompressedTexSubImage1D(const Context *context,
 }
 
 bool ValidateGetCompressedTexImage(const Context *context,
-                                   GLenum target,
+                                   TextureTarget targetPacked,
                                    GLint level,
                                    const void *img)
 {

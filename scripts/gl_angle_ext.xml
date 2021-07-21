@@ -841,6 +841,12 @@
             <param len="COMPSIZE(target,level,format,type)">void *<name>pixels</name></param>
         </command>
         <command>
+            <proto>void <name>glGetCompressedTexImageANGLE</name></proto>
+            <param group="TextureTarget"><ptype>GLenum</ptype> <name>target</name></param>
+            <param group="CheckedInt32"><ptype>GLint</ptype> <name>level</name></param>
+            <param len="COMPSIZE(target,level)">void *<name>pixels</name></param>
+        </command>
+        <command>
             <proto>void <name>glGetRenderbufferImageANGLE</name></proto>
             <param group="RenderbufferTarget"><ptype>GLenum</ptype> <name>target</name></param>
             <param group="PixelFormat"><ptype>GLenum</ptype> <name>format</name></param>
@@ -1067,6 +1073,7 @@
         <extension name ="GL_ANGLE_get_image" supported='gles2'>
             <require>
                 <command name="glGetTexImageANGLE"/>
+                <command name="glGetCompressedTexImageANGLE"/>
                 <command name="glGetRenderbufferImageANGLE"/>
             </require>
         </extension>

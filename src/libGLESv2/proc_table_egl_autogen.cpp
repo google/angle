@@ -394,6 +394,7 @@ const ProcEntry g_procTable[] = {
     {"glGetBufferPointervRobustANGLE", P(GL_GetBufferPointervRobustANGLE)},
     {"glGetClipPlanef", P(GL_GetClipPlanef)},
     {"glGetClipPlanex", P(GL_GetClipPlanex)},
+    {"glGetCompressedTexImageANGLE", P(GL_GetCompressedTexImageANGLE)},
     {"glGetDebugMessageLog", P(GL_GetDebugMessageLog)},
     {"glGetDebugMessageLogKHR", P(GL_GetDebugMessageLogKHR)},
     {"glGetError", P(GL_GetError)},
@@ -918,5 +919,5 @@ const ProcEntry g_procTable[] = {
     {"glWaitSync", P(GL_WaitSync)},
     {"glWeightPointerOES", P(GL_WeightPointerOES)}};
 
-const size_t g_numProcs = 885;
+const size_t g_numProcs = 886;
 }  // namespace egl

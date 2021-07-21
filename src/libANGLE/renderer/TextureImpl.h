@@ -236,6 +236,13 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                       GLenum type,
                                       void *pixels);
 
+    virtual angle::Result getCompressedTexImage(const gl::Context *context,
+                                                const gl::PixelPackState &packState,
+                                                gl::Buffer *packBuffer,
+                                                gl::TextureTarget target,
+                                                GLint level,
+                                                void *pixels);
+
     virtual GLint getRequiredExternalTextureImageUnits(const gl::Context *context);
 
   protected:

@@ -437,6 +437,35 @@ CallCapture CaptureGetTexImageANGLE(const State &glState,
     return CallCapture(angle::EntryPoint::GLGetTexImageANGLE, std::move(paramBuffer));
 }
 
+CallCapture CaptureGetCompressedTexImageANGLE(const State &glState,
+                                              bool isCallValid,
+                                              TextureTarget targetPacked,
+                                              GLint level,
+                                              void *pixels)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
+    paramBuffer.addValueParam("level", ParamType::TGLint, level);
+
+    if (isCallValid)
+    {
+        ParamCapture pixelsParam("pixels", ParamType::TvoidPointer);
+        InitParamValue(ParamType::TvoidPointer, pixels, &pixelsParam.value);
+        CaptureGetCompressedTexImageANGLE_pixels(glState, isCallValid, targetPacked, level, pixels,
+                                                 &pixelsParam);
+        paramBuffer.addParam(std::move(pixelsParam));
+    }
+    else
+    {
+        ParamCapture pixelsParam("pixels", ParamType::TvoidPointer);
+        InitParamValue(ParamType::TvoidPointer, static_cast<void *>(nullptr), &pixelsParam.value);
+        paramBuffer.addParam(std::move(pixelsParam));
+    }
+
+    return CallCapture(angle::EntryPoint::GLGetCompressedTexImageANGLE, std::move(paramBuffer));
+}
+
 CallCapture CaptureGetRenderbufferImageANGLE(const State &glState,
                                              bool isCallValid,
                                              GLenum target,

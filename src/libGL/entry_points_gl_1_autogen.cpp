@@ -8239,14 +8239,15 @@ void GL_APIENTRY GL_GetCompressedTexImage(GLenum target, GLint level, void *img)
 
     if (context)
     {
+        TextureTarget targetPacked                            = PackParam<TextureTarget>(target);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetCompressedTexImage(context, target, level, img));
+                            ValidateGetCompressedTexImage(context, targetPacked, level, img));
         if (isCallValid)
         {
-            context->getCompressedTexImage(target, level, img);
+            context->getCompressedTexImage(targetPacked, level, img);
         }
-        ANGLE_CAPTURE(GetCompressedTexImage, isCallValid, context, target, level, img);
+        ANGLE_CAPTURE(GetCompressedTexImage, isCallValid, context, targetPacked, level, img);
     }
     else
     {
