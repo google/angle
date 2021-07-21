@@ -1349,9 +1349,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
     }
 
 #if defined(ANGLE_ENABLE_DIRECT_SPIRV_GENERATION)
-    if ((compileOptions & SH_GENERATE_SPIRV_DIRECTLY) != 0 &&
-        getShaderType() != GL_TESS_CONTROL_SHADER_EXT &&
-        getShaderType() != GL_TESS_EVALUATION_SHADER_EXT)
+    if ((compileOptions & SH_GENERATE_SPIRV_DIRECTLY) != 0)
     {
         // Declare the implicitly defined gl_PerVertex I/O blocks if not already.  This will help
         // SPIR-V generation treat them mostly like usual I/O blocks.

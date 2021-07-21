@@ -1419,7 +1419,8 @@
                 "type":{
                     "basic":"Float",
                     "precision":"High",
-                    "primarySize":3
+                    "primarySize":3,
+                    "qualifier":"TessCoord"
                 }
             },
             "gl_TessLevelOuter":{

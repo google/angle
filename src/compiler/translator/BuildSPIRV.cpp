@@ -293,6 +293,54 @@ spv::ExecutionMode GetGeometryOutputExecutionMode(TLayoutPrimitiveType primitive
             return {};
     }
 }
+
+spv::ExecutionMode GetTessEvalInputExecutionMode(TLayoutTessEvaluationType inputType)
+{
+    switch (inputType)
+    {
+        case EtetTriangles:
+            return spv::ExecutionModeTriangles;
+        case EtetQuads:
+            return spv::ExecutionModeQuads;
+        case EtetIsolines:
+            return spv::ExecutionModeIsolines;
+        default:
+            UNREACHABLE();
+            return {};
+    }
+}
+
+spv::ExecutionMode GetTessEvalSpacingExecutionMode(TLayoutTessEvaluationType spacing)
+{
+    switch (spacing)
+    {
+        case EtetEqualSpacing:
+        case EtetUndefined:
+            return spv::ExecutionModeSpacingEqual;
+        case EtetFractionalEvenSpacing:
+            return spv::ExecutionModeSpacingFractionalEven;
+        case EtetFractionalOddSpacing:
+            return spv::ExecutionModeSpacingFractionalOdd;
+        default:
+            UNREACHABLE();
+            return {};
+    }
+}
+
+spv::ExecutionMode GetTessEvalOrderingExecutionMode(TLayoutTessEvaluationType ordering)
+{
+    switch (ordering)
+    {
+        case EtetCw:
+            return spv::ExecutionModeVertexOrderCw;
+        case EtetCcw:
+        case EtetUndefined:
+            return spv::ExecutionModeVertexOrderCcw;
+        default:
+            UNREACHABLE();
+            return {};
+    }
+}
 }  // anonymous namespace
 
 void SpirvTypeSpec::inferDefaults(const TType &type, TCompiler *compiler)
@@ -2034,6 +2082,31 @@ void SPIRVBuilder::generateExecutionModes(spirv::Blob *blob)
             }
 
             break;
+
+        case gl::ShaderType::TessControl:
+            spirv::WriteExecutionMode(
+                blob, mEntryPointId, spv::ExecutionModeOutputVertices,
+                {spirv::LiteralInteger(mCompiler->getTessControlShaderOutputVertices())});
+            break;
+
+        case gl::ShaderType::TessEvaluation:
+        {
+            const spv::ExecutionMode inputExecutionMode = GetTessEvalInputExecutionMode(
+                mCompiler->getTessEvaluationShaderInputPrimitiveType());
+            const spv::ExecutionMode spacingExecutionMode = GetTessEvalSpacingExecutionMode(
+                mCompiler->getTessEvaluationShaderInputVertexSpacingType());
+            const spv::ExecutionMode orderingExecutionMode = GetTessEvalOrderingExecutionMode(
+                mCompiler->getTessEvaluationShaderInputOrderingType());
+
+            spirv::WriteExecutionMode(blob, mEntryPointId, inputExecutionMode, {});
+            spirv::WriteExecutionMode(blob, mEntryPointId, spacingExecutionMode, {});
+            spirv::WriteExecutionMode(blob, mEntryPointId, orderingExecutionMode, {});
+            if (mCompiler->getTessEvaluationShaderInputPointType() == EtetPointMode)
+            {
+                spirv::WriteExecutionMode(blob, mEntryPointId, spv::ExecutionModePointMode, {});
+            }
+            break;
+        }
 
         case gl::ShaderType::Geometry:
         {

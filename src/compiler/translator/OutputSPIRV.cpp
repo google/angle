@@ -433,6 +433,8 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
         case EvqFragCoord:
         case EvqFrontFacing:
         case EvqPointCoord:
+        case EvqPatchVerticesIn:
+        case EvqTessCoord:
         case EvqPrimitiveIDIn:
         case EvqInvocationID:
         case EvqHelperInvocation:
@@ -447,18 +449,21 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
         case EvqPrimitiveID:
             return spv::StorageClassOutput;
 
+        case EvqTessLevelOuter:
+        case EvqTessLevelInner:
+            // gl_TessLevelOuter/Inner are outputs in TCS and inputs in TES.
+            return shaderType == GL_TESS_CONTROL_SHADER_EXT ? spv::StorageClassOutput
+                                                            : spv::StorageClassInput;
+
         case EvqLayer:
             // gl_Layer is output in GS and input in FS.
             return shaderType == GL_GEOMETRY_SHADER ? spv::StorageClassOutput
                                                     : spv::StorageClassInput;
 
         default:
-            // TODO: http://anglebug.com/4889
-            UNIMPLEMENTED();
+            UNREACHABLE();
+            return spv::StorageClassPrivate;
     }
-
-    UNREACHABLE();
-    return spv::StorageClassPrivate;
 }
 
 OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler,
@@ -528,17 +533,37 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
             builtInDecoration = spv::BuiltInHelperInvocation;
             break;
 
-        // Geometry shader built-ins
-        case EvqPrimitiveIDIn:
-            name              = "gl_PrimitiveIDIn";
-            builtInDecoration = spv::BuiltInPrimitiveId;
+        // Tessellation built-ins
+        case EvqPatchVerticesIn:
+            name              = "gl_PatchVerticesIn";
+            builtInDecoration = spv::BuiltInPatchVertices;
             break;
+        case EvqTessLevelOuter:
+            name              = "gl_TessLevelOuter";
+            builtInDecoration = spv::BuiltInTessLevelOuter;
+            break;
+        case EvqTessLevelInner:
+            name              = "gl_TessLevelInner";
+            builtInDecoration = spv::BuiltInTessLevelInner;
+            break;
+        case EvqTessCoord:
+            name              = "gl_TessCoord";
+            builtInDecoration = spv::BuiltInTessCoord;
+            break;
+
+        // Shared geometry and tessellation built-ins
         case EvqInvocationID:
             name              = "gl_InvocationID";
             builtInDecoration = spv::BuiltInInvocationId;
             break;
         case EvqPrimitiveID:
             name              = "gl_PrimitiveID";
+            builtInDecoration = spv::BuiltInPrimitiveId;
+            break;
+
+        // Geometry shader built-ins
+        case EvqPrimitiveIDIn:
+            name              = "gl_PrimitiveIDIn";
             builtInDecoration = spv::BuiltInPrimitiveId;
             break;
         case EvqLayer:
@@ -571,9 +596,9 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
             name              = "gl_LocalInvocationIndex";
             builtInDecoration = spv::BuiltInLocalInvocationIndex;
             break;
+
         default:
-            // TODO: more built-ins.  http://anglebug.com/4889
-            UNIMPLEMENTED();
+            UNREACHABLE();
     }
 
     const spirv::IdRef typeId = mBuilder.getTypeData(type, {}).id;
