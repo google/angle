@@ -553,7 +553,7 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         case EvqConst:
             message = "can't modify a const";
             break;
-        case EvqConstReadOnly:
+        case EvqParamConst:
             message = "can't modify a const";
             break;
         case EvqAttribute:
@@ -1031,7 +1031,7 @@ void TParseContext::checkOutParameterIsNotOpaqueType(const TSourceLoc &line,
                                                      TQualifier qualifier,
                                                      const TType &type)
 {
-    ASSERT(qualifier == EvqOut || qualifier == EvqInOut);
+    ASSERT(qualifier == EvqParamOut || qualifier == EvqParamInOut);
     if (IsOpaqueType(type.getBasicType()))
     {
         error(line, "opaque types cannot be output parameters", type.getBasicString());
@@ -1392,7 +1392,7 @@ void TParseContext::checkIsParameterQualifierValid(
     // The only parameter qualifiers a parameter can have are in, out, inout or const.
     TTypeQualifier typeQualifier = typeQualifierBuilder.getParameterTypeQualifier(mDiagnostics);
 
-    if (typeQualifier.qualifier == EvqOut || typeQualifier.qualifier == EvqInOut)
+    if (typeQualifier.qualifier == EvqParamOut || typeQualifier.qualifier == EvqParamInOut)
     {
         checkOutParameterIsNotOpaqueType(line, typeQualifier.qualifier, *type);
     }
@@ -2032,8 +2032,8 @@ void TParseContext::functionCallRValueLValueErrorCheck(const TFunction *fnCandid
     {
         TQualifier qual        = fnCandidate->getParam(i)->getType().getQualifier();
         TIntermTyped *argument = (*(fnCall->getSequence()))[i]->getAsTyped();
-        bool argumentIsRead = (IsQualifierUnspecified(qual) || qual == EvqIn || qual == EvqInOut ||
-                               qual == EvqConstReadOnly);
+        bool argumentIsRead    = (IsQualifierUnspecified(qual) || qual == EvqParamIn ||
+                               qual == EvqParamInOut || qual == EvqParamConst);
         if (argumentIsRead)
         {
             markStaticReadIfSymbol(argument);
@@ -2048,7 +2048,7 @@ void TParseContext::functionCallRValueLValueErrorCheck(const TFunction *fnCandid
                 }
             }
         }
-        if (qual == EvqOut || qual == EvqInOut)
+        if (qual == EvqParamOut || qual == EvqParamInOut)
         {
             if (!checkCanBeLValue(argument->getLine(), "assign", argument))
             {
@@ -5446,7 +5446,7 @@ TStorageQualifierWrapper *TParseContext::parseInQualifier(const TSourceLoc &loc)
 {
     if (declaringFunction())
     {
-        return new TStorageQualifierWrapper(EvqIn, loc);
+        return new TStorageQualifierWrapper(EvqParamIn, loc);
     }
 
     switch (getShaderType())
@@ -5496,7 +5496,7 @@ TStorageQualifierWrapper *TParseContext::parseOutQualifier(const TSourceLoc &loc
 {
     if (declaringFunction())
     {
-        return new TStorageQualifierWrapper(EvqOut, loc);
+        return new TStorageQualifierWrapper(EvqParamOut, loc);
     }
     switch (getShaderType())
     {
@@ -5519,7 +5519,7 @@ TStorageQualifierWrapper *TParseContext::parseOutQualifier(const TSourceLoc &loc
         case GL_COMPUTE_SHADER:
         {
             error(loc, "storage qualifier isn't supported in compute shaders", "out");
-            return new TStorageQualifierWrapper(EvqOut, loc);
+            return new TStorageQualifierWrapper(EvqParamOut, loc);
         }
         case GL_GEOMETRY_SHADER_EXT:
         {
@@ -5556,7 +5556,7 @@ TStorageQualifierWrapper *TParseContext::parseInOutQualifier(const TSourceLoc &l
               "fetching input attachment data",
               "inout");
     }
-    return new TStorageQualifierWrapper(EvqInOut, loc);
+    return new TStorageQualifierWrapper(EvqParamInOut, loc);
 }
 
 TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualifier,

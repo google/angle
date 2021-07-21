@@ -295,7 +295,7 @@ bool RewriteExpressionsWithShaderStorageBlockTraverser::visitAggregate(Visit vis
             if (node->getFunction() != nullptr)
             {
                 TQualifier qual = node->getFunction()->getParam(i)->getType().getQualifier();
-                if (qual == EvqInOut || qual == EvqOut)
+                if (qual == EvqParamInOut || qual == EvqParamOut)
                 {
                     TIntermBinary *readBackToSSBO = new TIntermBinary(
                         EOpAssign, ssboArgument->deepCopy(), argumentCopy->deepCopy());

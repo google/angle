@@ -219,7 +219,7 @@ const TFunction *MonomorphizeFunction(TSymbolTable *symbolTable,
                 {
                     TIntermTyped *index = asBinary->getRight();
                     TType *indexType    = new TType(index->getType());
-                    indexType->setQualifier(EvqIn);
+                    indexType->setQualifier(EvqParamIn);
 
                     TVariable *param = new TVariable(symbolTable, kEmptyImmutableString, indexType,
                                                      SymbolType::AngleInternal);

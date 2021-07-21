@@ -93,6 +93,9 @@ class ValidateAST : public TIntermTraverser
     // For validateNullNodes:
     bool mNullNodesFailed = false;
 
+    // For validateQualifiers:
+    bool mQualifiersFailed = false;
+
     // For validateStructUsage:
     std::vector<std::map<ImmutableString, const TFieldListCollection *>> mStructsAndBlocksByName;
     bool mStructUsageFailed = false;
@@ -522,6 +525,26 @@ void ValidateAST::visitFunctionPrototype(TIntermFunctionPrototype *node)
         const TFunction *function = node->getFunction();
         mDeclaredFunctions.insert(function);
     }
+
+    if (mOptions.validateQualifiers)
+    {
+        const TFunction *function = node->getFunction();
+        for (size_t paramIndex = 0; paramIndex < function->getParamCount(); ++paramIndex)
+        {
+            const TVariable *param = function->getParam(paramIndex);
+            TQualifier qualifier   = param->getType().getQualifier();
+
+            if (qualifier != EvqParamIn && qualifier != EvqParamOut && qualifier != EvqParamInOut &&
+                qualifier != EvqParamConst)
+            {
+                mDiagnostics->error(node->getLine(),
+                                    "Found function prototype with an invalid qualifier "
+                                    "<validateQualifiers>",
+                                    param->name().data());
+                mQualifiersFailed = true;
+            }
+        }
+    }
 }
 
 bool ValidateAST::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
@@ -707,7 +730,7 @@ bool ValidateAST::validateInternal()
 {
     return !mSingleParentFailed && !mVariableReferencesFailed && !mBuiltInOpsFailed &&
            !mFunctionCallFailed && !mNoRawFunctionCallsFailed && !mNullNodesFailed &&
-           !mStructUsageFailed && !mMultiDeclarationsFailed;
+           !mQualifiersFailed && !mStructUsageFailed && !mMultiDeclarationsFailed;
 }
 
 }  // anonymous namespace

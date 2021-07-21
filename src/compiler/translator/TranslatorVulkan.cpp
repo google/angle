@@ -390,7 +390,7 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
 
     const TType *ivec4Type = StaticType::GetBasic<EbtInt, kMaxXfbBuffers>();
     TType *stridesType     = new TType(*ivec4Type);
-    stridesType->setQualifier(EvqConst);
+    stridesType->setQualifier(EvqParamConst);
 
     // Create the parameter variable.
     TVariable *stridesVar = new TVariable(symbolTable, ImmutableString("strides"), stridesType,

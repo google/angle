@@ -1076,14 +1076,14 @@ const char *QualifierString(TQualifier qualifier)
 {
     switch (qualifier)
     {
-        case EvqIn:
+        case EvqParamIn:
             return "in";
-        case EvqOut:
+        case EvqParamOut:
             return "inout";  // 'out' results in an HLSL error if not all fields are written, for
                              // GLSL it's undefined
-        case EvqInOut:
+        case EvqParamInOut:
             return "inout";
-        case EvqConstReadOnly:
+        case EvqParamConst:
             return "const";
         case EvqSampleOut:
             return "sample";

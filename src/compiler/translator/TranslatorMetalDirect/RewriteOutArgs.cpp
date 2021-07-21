@@ -124,8 +124,8 @@ class Rewriter : public TIntermRebuild
             const TQualifier paramQual = paramType.getQualifier();
             switch (paramQual)
             {
-                case TQualifier::EvqOut:
-                case TQualifier::EvqInOut:
+                case TQualifier::EvqParamOut:
+                case TQualifier::EvqParamInOut:
                     if (!mSymbolEnv.isReference(param))
                     {
                         mSymbolEnv.markAsReference(param, AddressSpace::Thread);
@@ -145,8 +145,8 @@ class Rewriter : public TIntermRebuild
 
             switch (paramQual)
             {
-                case TQualifier::EvqOut:
-                case TQualifier::EvqInOut:
+                case TQualifier::EvqParamOut:
+                case TQualifier::EvqParamInOut:
                 {
                     const TVariable *var = GetVariable(*args[i]);
                     if (mVarBuffer.insert(var).count > 1)
@@ -184,12 +184,12 @@ class Rewriter : public TIntermRebuild
                     {
                         switch (paramQual)
                         {
-                            case TQualifier::EvqOut:
+                            case TQualifier::EvqParamOut:
                                 args[i] = &mSymbolEnv.callFunctionOverload(
                                     Name("out"), arg->getType(), *new TIntermSequence{arg});
                                 break;
 
-                            case TQualifier::EvqInOut:
+                            case TQualifier::EvqParamInOut:
                                 args[i] = &mSymbolEnv.callFunctionOverload(
                                     Name("inout"), arg->getType(), *new TIntermSequence{arg});
                                 break;

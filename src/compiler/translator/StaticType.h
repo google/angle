@@ -279,8 +279,8 @@ constexpr const TType *GetForVec(TQualifier qualifier, unsigned char size)
     {
         case EvqGlobal:
             return Helpers::GetForVecMatHelper<basicType, precision, EvqGlobal, 1>(size);
-        case EvqOut:
-            return Helpers::GetForVecMatHelper<basicType, precision, EvqOut, 1>(size);
+        case EvqParamOut:
+            return Helpers::GetForVecMatHelper<basicType, precision, EvqParamOut, 1>(size);
         default:
             UNREACHABLE();
             return GetBasic<EbtVoid>();

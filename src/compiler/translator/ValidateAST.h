@@ -42,9 +42,17 @@ struct ValidateASTOptions
     // TIntermDeclaration or TIntermBlock.
     bool validateNullNodes = true;
     // Check that symbols that reference variables have consistent qualifiers and symbol ids with
-    // the variable declaration. For example, references to function out parameters should be
-    // EvqOut.
-    bool validateQualifiers = true;  // TODO
+    // the variable declaration.  The following needs to be validated:
+    //
+    // Implemented:
+    //
+    //  - Function parameters having one of EvqParam* qualifiers.
+    //
+    // TODO:
+    //
+    //  - Function-local variables must have the EvqTemporary qualifier.
+    //  - Symbol references and declarations have identical qualifiers.
+    bool validateQualifiers = true;
     // Check that variable declarations that can't have initializers don't have initializers
     // (varyings, uniforms for example).
     bool validateInitializers = true;  // TODO

@@ -730,7 +730,7 @@ TIntermAggregate *EmulatePrecision::createRoundingFunctionCallNode(TIntermTyped 
     TVector<const TVariable *> parameters;
     TType *paramType = new TType(roundedChild->getType());
     paramType->setPrecision(EbpHigh);
-    paramType->setQualifier(EvqIn);
+    paramType->setQualifier(EvqParamIn);
     parameters.push_back(new TVariable(mSymbolTable, kParamXName,
                                        static_cast<const TType *>(paramType),
                                        SymbolType::AngleInternal));
@@ -758,13 +758,13 @@ TIntermAggregate *EmulatePrecision::createCompoundAssignmentFunctionCallNode(TIn
     TVector<const TVariable *> parameters;
     TType *leftParamType = new TType(left->getType());
     leftParamType->setPrecision(EbpHigh);
-    leftParamType->setQualifier(EvqOut);
+    leftParamType->setQualifier(EvqParamOut);
     parameters.push_back(new TVariable(mSymbolTable, kParamXName,
                                        static_cast<const TType *>(leftParamType),
                                        SymbolType::AngleInternal));
     TType *rightParamType = new TType(right->getType());
     rightParamType->setPrecision(EbpHigh);
-    rightParamType->setQualifier(EvqIn);
+    rightParamType->setQualifier(EvqParamIn);
     parameters.push_back(new TVariable(mSymbolTable, kParamYName,
                                        static_cast<const TType *>(rightParamType),
                                        SymbolType::AngleInternal));

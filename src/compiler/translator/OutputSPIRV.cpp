@@ -420,9 +420,9 @@ spv::StorageClass GetStorageClass(const TType &type)
             return spv::StorageClassPrivate;
 
         case EvqTemporary:
-        case EvqIn:
-        case EvqOut:
-        case EvqInOut:
+        case EvqParamIn:
+        case EvqParamOut:
+        case EvqParamInOut:
             // Function-local variables have the Function class
             return spv::StorageClassFunction;
 
@@ -1775,7 +1775,7 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
 
         spirv::IdRef paramValue;
 
-        if (paramQualifier == EvqConst)
+        if (paramQualifier == EvqParamConst)
         {
             // |const| parameters are passed as rvalue.
             paramValue = accessChainLoad(&param, paramType, nullptr);
@@ -1796,8 +1796,8 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
         }
         else
         {
-            ASSERT(paramQualifier == EvqIn || paramQualifier == EvqOut ||
-                   paramQualifier == EvqInOut);
+            ASSERT(paramQualifier == EvqParamIn || paramQualifier == EvqParamOut ||
+                   paramQualifier == EvqParamInOut);
 
             // Need to create a temp variable and pass that.
             tempVarTypeIds[paramIndex] = mBuilder.getTypeData(paramType, {}).id;
@@ -1807,7 +1807,7 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
 
             // If it's an in or inout parameter, the temp variable needs to be initialized with the
             // value of the parameter first.
-            if (paramQualifier == EvqIn || paramQualifier == EvqInOut)
+            if (paramQualifier == EvqParamIn || paramQualifier == EvqParamInOut)
             {
                 paramValue = accessChainLoad(&param, paramType, nullptr);
                 spirv::WriteStore(mBuilder.getSpirvCurrentFunctionBlock(), tempVarIds[paramIndex],
@@ -1837,7 +1837,7 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
         const TQualifier &paramQualifier = paramType.getQualifier();
         NodeData &param = mNodeData[mNodeData.size() - parameterCount + paramIndex];
 
-        if (paramQualifier == EvqIn)
+        if (paramQualifier == EvqParamIn)
         {
             continue;
         }
@@ -4369,7 +4369,7 @@ void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
 
     // If the symbol is a const variable, such as a const function parameter or specialization
     // constant, create an rvalue.
-    if (type.getQualifier() == EvqConst || type.getQualifier() == EvqSpecConst)
+    if (type.getQualifier() == EvqParamConst || type.getQualifier() == EvqSpecConst)
     {
         ASSERT(interfaceBlock == nullptr);
         ASSERT(mSymbolIdMap.count(symbol) > 0);
@@ -5219,7 +5219,7 @@ void OutputSPIRVTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node
 
         // const function parameters are intermediate values, while the rest are "variables"
         // with the Function storage class.
-        if (paramType.getQualifier() != EvqConst)
+        if (paramType.getQualifier() != EvqParamConst)
         {
             const spv::StorageClass storageClass = IsOpaqueType(paramType.getBasicType())
                                                        ? spv::StorageClassUniformConstant

@@ -700,7 +700,7 @@ parameter_declaration
     }
     | parameter_declarator {
         $$ = $1;
-        $$.type->setQualifier(EvqIn);
+        $$.type->setQualifier(EvqParamIn);
     }
     | type_qualifier parameter_type_specifier {
         $$ = $2;
@@ -708,7 +708,7 @@ parameter_declaration
     }
     | parameter_type_specifier {
         $$ = $1;
-        $$.type->setQualifier(EvqIn);
+        $$.type->setQualifier(EvqParamIn);
     }
     ;
 

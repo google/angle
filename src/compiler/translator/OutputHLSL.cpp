@@ -3228,7 +3228,7 @@ void OutputHLSL::writeParameter(const TVariable *param, TInfoSinkBase &out)
         if (mOutputType == SH_HLSL_4_1_OUTPUT)
         {
             // Samplers are passed as indices to the sampler array.
-            ASSERT(qualifier != EvqOut && qualifier != EvqInOut);
+            ASSERT(qualifier != EvqParamOut && qualifier != EvqParamInOut);
             out << "const uint " << nameStr << ArrayString(type);
             return;
         }
@@ -3259,7 +3259,7 @@ void OutputHLSL::writeParameter(const TVariable *param, TInfoSinkBase &out)
     // separate parameters. HLSL doesn't natively support samplers in structs.
     if (type.isStructureContainingSamplers())
     {
-        ASSERT(qualifier != EvqOut && qualifier != EvqInOut);
+        ASSERT(qualifier != EvqParamOut && qualifier != EvqParamInOut);
         TVector<const TVariable *> samplerSymbols;
         std::string namePrefix = "angle";
         namePrefix += nameStr.c_str();

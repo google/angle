@@ -785,7 +785,7 @@ class RewriteRowMajorMatricesTraverser : public TIntermTraverser
             {
                 if ((*arguments)[argIndex] == expression)
                 {
-                    TQualifier qualifier = EvqIn;
+                    TQualifier qualifier = EvqParamIn;
 
                     // If the aggregate is not a function call, it's a constructor, and so every
                     // argument is an input.
@@ -796,8 +796,8 @@ class RewriteRowMajorMatricesTraverser : public TIntermTraverser
                         qualifier              = param->getType().getQualifier();
                     }
 
-                    *isReadOut  = qualifier != EvqOut;
-                    *isWriteOut = qualifier == EvqOut || qualifier == EvqInOut;
+                    *isReadOut  = qualifier != EvqParamOut;
+                    *isWriteOut = qualifier == EvqParamOut || qualifier == EvqParamInOut;
                     break;
                 }
             }

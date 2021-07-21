@@ -628,7 +628,8 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
                     ASSERT(paramIndex < node->getFunction()->getParamCount());
                     TQualifier qualifier =
                         node->getFunction()->getParam(paramIndex)->getType().getQualifier();
-                    setInFunctionCallOutParameter(qualifier == EvqOut || qualifier == EvqInOut);
+                    setInFunctionCallOutParameter(qualifier == EvqParamOut ||
+                                                  qualifier == EvqParamInOut);
                     ++paramIndex;
                 }
                 else

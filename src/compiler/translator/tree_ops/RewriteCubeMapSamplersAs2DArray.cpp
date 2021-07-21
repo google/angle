@@ -396,7 +396,7 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
         //                                 out vec2 dUVdx, out vec2 dUVdy
         const TType *vec3Type = StaticType::GetBasic<EbtFloat, 3>();
         TType *inVec3Type     = new TType(*vec3Type);
-        inVec3Type->setQualifier(EvqIn);
+        inVec3Type->setQualifier(EvqParamIn);
 
         TVariable *pVar    = new TVariable(mSymbolTable, ImmutableString("P"), inVec3Type,
                                         SymbolType::AngleInternal);
@@ -407,7 +407,7 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
 
         const TType *vec2Type = StaticType::GetBasic<EbtFloat, 2>();
         TType *outVec2Type    = new TType(*vec2Type);
-        outVec2Type->setQualifier(EvqOut);
+        outVec2Type->setQualifier(EvqParamOut);
 
         TVariable *dUVdxVar = new TVariable(mSymbolTable, ImmutableString("dUVdx"), outVec2Type,
                                             SymbolType::AngleInternal);

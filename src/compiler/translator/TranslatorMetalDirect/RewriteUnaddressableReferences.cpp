@@ -19,8 +19,8 @@ bool IsOutParam(const TType &paramType)
     const TQualifier qual = paramType.getQualifier();
     switch (qual)
     {
-        case TQualifier::EvqInOut:
-        case TQualifier::EvqOut:
+        case TQualifier::EvqParamInOut:
+        case TQualifier::EvqParamOut:
             return true;
 
         default:

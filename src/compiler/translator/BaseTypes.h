@@ -989,7 +989,7 @@ enum TQualifier
 {
     EvqTemporary,   // For temporaries (within a function), read/write
     EvqGlobal,      // For globals read/write
-    EvqConst,       // User defined constants and non-output parameters in functions
+    EvqConst,       // User defined constants
     EvqAttribute,   // Readonly
     EvqVaryingIn,   // readonly, fragment shaders only
     EvqVaryingOut,  // vertex shaders only  read/write
@@ -1005,10 +1005,10 @@ enum TQualifier
     EvqFragmentInOut,  // EXT_shader_framebuffer_fetch qualifier
 
     // parameters
-    EvqIn,
-    EvqOut,
-    EvqInOut,
-    EvqConstReadOnly,
+    EvqParamIn,
+    EvqParamOut,
+    EvqParamInOut,
+    EvqParamConst,
 
     // built-ins read by vertex shader
     EvqInstanceID,
@@ -1464,10 +1464,10 @@ inline const char *getQualifierString(TQualifier q)
     case EvqFragmentOut:            return "out";
     case EvqVertexOut:              return "out";
     case EvqFragmentIn:             return "in";
-    case EvqIn:                     return "in";
-    case EvqOut:                    return "out";
-    case EvqInOut:                  return "inout";
-    case EvqConstReadOnly:          return "const";
+    case EvqParamIn:                return "in";
+    case EvqParamOut:               return "out";
+    case EvqParamInOut:             return "inout";
+    case EvqParamConst:             return "const";
     case EvqInstanceID:             return "InstanceID";
     case EvqVertexID:               return "VertexID";
     case EvqPosition:               return "Position";

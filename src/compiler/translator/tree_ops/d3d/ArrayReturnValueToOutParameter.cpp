@@ -114,7 +114,7 @@ void ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(TIntermFunc
         if (mChangedFunctions.find(functionId.get()) == mChangedFunctions.end())
         {
             TType *returnValueVariableType = new TType(node->getType());
-            returnValueVariableType->setQualifier(EvqOut);
+            returnValueVariableType->setQualifier(EvqParamOut);
             ChangedFunction changedFunction;
             changedFunction.returnValueVariable =
                 new TVariable(mSymbolTable, kReturnValueVariableName, returnValueVariableType,
