@@ -531,7 +531,10 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
         varName << vk::kXfbEmulationBufferName;
         varName.appendDecimal(bufferIndex);
 
-        DeclareInterfaceBlock(root, symbolTable, fieldList, EvqBuffer, TLayoutQualifier::Create(),
+        TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
+        layoutQualifier.blockStorage     = EbsStd430;
+
+        DeclareInterfaceBlock(root, symbolTable, fieldList, EvqBuffer, layoutQualifier,
                               TMemoryQualifier::Create(), 0, blockName, varName);
     }
 

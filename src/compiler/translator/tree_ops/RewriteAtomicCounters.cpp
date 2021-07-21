@@ -44,10 +44,13 @@ const TVariable *DeclareAtomicCountersBuffers(TIntermBlock *root, TSymbolTable *
     constexpr uint32_t kMaxAtomicCounterBuffers = 8;
 
     // Define a storage block "ANGLEAtomicCounters" with instance name "atomicCounters".
-    return DeclareInterfaceBlock(
-        root, symbolTable, fieldList, EvqBuffer, TLayoutQualifier::Create(), coherentMemory,
-        kMaxAtomicCounterBuffers, ImmutableString(vk::kAtomicCountersBlockName),
-        kAtomicCountersVarName);
+    TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
+    layoutQualifier.blockStorage     = EbsStd430;
+
+    return DeclareInterfaceBlock(root, symbolTable, fieldList, EvqBuffer, layoutQualifier,
+                                 coherentMemory, kMaxAtomicCounterBuffers,
+                                 ImmutableString(vk::kAtomicCountersBlockName),
+                                 kAtomicCountersVarName);
 }
 
 TIntermTyped *CreateUniformBufferOffset(const TIntermTyped *uniformBufferOffsets, int binding)

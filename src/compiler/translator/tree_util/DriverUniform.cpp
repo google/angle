@@ -67,9 +67,12 @@ bool DriverUniform::addComputeDriverUniformsToShader(TIntermBlock *root, TSymbol
     }
 
     // Define a driver uniform block "ANGLEUniformBlock" with instance name "ANGLEUniforms".
+    TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
+    layoutQualifier.blockStorage     = EbsStd140;
+
     mDriverUniforms = DeclareInterfaceBlock(root, symbolTable, driverFieldList, EvqUniform,
-                                            TLayoutQualifier::Create(), TMemoryQualifier::Create(),
-                                            0, ImmutableString(vk::kDriverUniformsBlockName),
+                                            layoutQualifier, TMemoryQualifier::Create(), 0,
+                                            ImmutableString(vk::kDriverUniformsBlockName),
                                             ImmutableString(vk::kDriverUniformsVarName));
     return mDriverUniforms != nullptr;
 }
@@ -164,10 +167,13 @@ bool DriverUniform::addGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbo
     if (mMode == DriverUniformMode::InterfaceBlock)
     {
         // Define a driver uniform block "ANGLEUniformBlock" with instance name "ANGLEUniforms".
-        mDriverUniforms = DeclareInterfaceBlock(
-            root, symbolTable, driverFieldList, EvqUniform, TLayoutQualifier::Create(),
-            TMemoryQualifier::Create(), 0, ImmutableString(vk::kDriverUniformsBlockName),
-            ImmutableString(vk::kDriverUniformsVarName));
+        TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
+        layoutQualifier.blockStorage     = EbsStd140;
+
+        mDriverUniforms = DeclareInterfaceBlock(root, symbolTable, driverFieldList, EvqUniform,
+                                                layoutQualifier, TMemoryQualifier::Create(), 0,
+                                                ImmutableString(vk::kDriverUniformsBlockName),
+                                                ImmutableString(vk::kDriverUniformsVarName));
     }
     else
     {
