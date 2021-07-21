@@ -259,6 +259,9 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef createArrayOrStructConstructor(TIntermAggregate *node,
                                                 spirv::IdRef typeId,
                                                 const spirv::IdRefList &parameters);
+    spirv::IdRef createConstructorScalarFromNonScalar(TIntermAggregate *node,
+                                                      spirv::IdRef typeId,
+                                                      const spirv::IdRefList &parameters);
     spirv::IdRef createConstructorVectorFromScalar(const TType &type,
                                                    spirv::IdRef typeId,
                                                    const spirv::IdRefList &parameters);
@@ -1204,6 +1207,8 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
     // (in each case, if the parameter doesn't match the type being constructed, it must be cast):
     //
     // - float(f): This should translate to just f
+    // - float(v): This should translate to OpCompositeExtract %scalar %v 0
+    // - float(m): This should translate to OpCompositeExtract %scalar %m 0 0
     // - vecN(f): This should translate to OpCompositeConstruct %vecN %f %f .. %f
     // - vecN(v1.zy, v2.x): This can technically translate to OpCompositeConstruct with two ids; the
     //   results of v1.zy and v2.x.  However, for simplicity it's easier to generate that
@@ -1249,15 +1254,22 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
     // - matNxM(mNxM) (where the argument is a single matrix with the same dimensions).  Note that
     //   matrices are always float, so there's no actual cast and this would be a no-op.
     //
+    const bool isSingleScalarCast = arguments.size() == 1 && type.isScalar() && arg0Type.isScalar();
     const bool isSingleVectorCast = arguments.size() == 1 && type.isVector() &&
                                     arg0Type.isVector() &&
                                     type.getNominalSize() == arg0Type.getNominalSize();
     const bool isSingleMatrixCast = arguments.size() == 1 && type.isMatrix() &&
                                     arg0Type.isMatrix() && type.getCols() == arg0Type.getCols() &&
                                     type.getRows() == arg0Type.getRows();
-    if (type.isScalar() || isSingleVectorCast || isSingleMatrixCast)
+    if (isSingleScalarCast || isSingleVectorCast || isSingleMatrixCast)
     {
         return castBasicType(parameters[0], arg0Type, type.getBasicType(), nullptr);
+    }
+
+    if (type.isScalar())
+    {
+        ASSERT(arguments.size() == 1);
+        return createConstructorScalarFromNonScalar(node, typeId, parameters);
     }
 
     if (type.isVector())
@@ -1297,6 +1309,34 @@ spirv::IdRef OutputSPIRVTraverser::createArrayOrStructConstructor(
     spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result,
                                    parameters);
     return result;
+}
+
+spirv::IdRef OutputSPIRVTraverser::createConstructorScalarFromNonScalar(
+    TIntermAggregate *node,
+    spirv::IdRef typeId,
+    const spirv::IdRefList &parameters)
+{
+    ASSERT(parameters.size() == 1);
+    const TType &type     = node->getType();
+    const TType &arg0Type = node->getChildNode(0)->getAsTyped()->getType();
+
+    const spirv::IdRef result = mBuilder.getNewId(mBuilder.getDecorations(type));
+
+    spirv::LiteralIntegerList indices = {spirv::LiteralInteger(0)};
+    if (arg0Type.isMatrix())
+    {
+        indices.push_back(spirv::LiteralInteger(0));
+    }
+
+    spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(),
+                                 mBuilder.getBasicTypeId(arg0Type.getBasicType(), 1), result,
+                                 parameters[0], indices);
+
+    TType arg0TypeAsScalar(arg0Type);
+    arg0TypeAsScalar.setPrimarySize(1);
+    arg0TypeAsScalar.setSecondarySize(1);
+
+    return castBasicType(result, arg0TypeAsScalar, type.getBasicType(), nullptr);
 }
 
 spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromScalar(

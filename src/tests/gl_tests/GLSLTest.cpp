@@ -11892,6 +11892,34 @@ void main()
     glDeleteShader(shader);
 }
 
+// Test that scalar(nonScalar) constructors work.
+TEST_P(GLSLTest_ES3, ScalarConstructor)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform vec4 u;
+out vec4 color;
+void main()
+{
+    float f1 = float(u);
+    mat3 m = mat3(u, u, u);
+    int i = int(m);
+    color = vec4(f1, float(i), 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint uloc = glGetUniformLocation(program, "u");
+    ASSERT_NE(uloc, -1);
+    glUniform4f(uloc, 1.0, 0.4, 0.2, 0.7);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
 // Test that initializing global variables with non-constant values work
 TEST_P(GLSLTest_ES3, InitGlobalNonConstant)
 {
