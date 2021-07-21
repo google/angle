@@ -2418,6 +2418,15 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
         }
     }
 
+    // Set a unpack alignment of 1. Otherwise, computeRowPitch() will compute the wrong value,
+    // leading to a crash in memcpy() when capturing the texture contents.
+    gl::PixelUnpackState &currentUnpackState = replayState.getUnpackState();
+    if (currentUnpackState.alignment != 1)
+    {
+        cap(CapturePixelStorei(replayState, true, GL_UNPACK_ALIGNMENT, 1));
+        currentUnpackState.alignment = 1;
+    }
+
     // Capture Texture setup and data.
     const gl::TextureManager &textures = apiState.getTextureManagerForCapture();
 
@@ -2982,7 +2991,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         }
     }
 
-    // Set a unpack alignment of 1.
+    // Set a unpack alignment of 1. Otherwise, computeRowPitch() will compute the wrong value,
+    // leading to a crash in memcpy() when capturing the texture contents.
     gl::PixelUnpackState &currentUnpackState = replayState.getUnpackState();
     if (currentUnpackState.alignment != 1)
     {
