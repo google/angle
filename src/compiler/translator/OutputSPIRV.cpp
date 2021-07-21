@@ -282,7 +282,9 @@ class OutputSPIRVTraverser : public TIntermTraverser
                                                    const spirv::IdRefList &parameters);
     // Load N values where N is the number of node's children.  In some cases, the last M values are
     // lvalues which should be skipped.
-    spirv::IdRefList loadAllParams(TIntermOperator *node, size_t skipCount);
+    spirv::IdRefList loadAllParams(TIntermOperator *node,
+                                   size_t skipCount,
+                                   spirv::IdRefList *paramTypeIds);
     void extractComponents(TIntermAggregate *node,
                            size_t componentCount,
                            const spirv::IdRefList &parameters,
@@ -292,7 +294,6 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef endShortCircuit(TIntermBinary *node, spirv::IdRef *typeId);
 
     spirv::IdRef visitOperator(TIntermOperator *node, spirv::IdRef resultTypeId);
-    spirv::IdRef createIncrementDecrement(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createCompare(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createAtomicBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createImageTextureBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
@@ -319,6 +320,13 @@ class OutputSPIRVTraverser : public TIntermTraverser
                       const SpirvTypeSpec &valueTypeSpec,
                       const SpirvTypeSpec &expectedTypeSpec,
                       spirv::IdRef *resultTypeIdOut);
+
+    // Given a list of parameters to an operator, extend the scalars to match the vectors.  GLSL
+    // frequently has operators that mix vectors and scalars, while SPIR-V usually applies the
+    // operations per component (requiring the scalars to turn into a vector).
+    void extendScalarParamsToVector(TIntermOperator *node,
+                                    spirv::IdRef resultTypeId,
+                                    spirv::IdRefList *parameters);
 
     // Helper to reduce vector == and != with OpAll and OpAny respectively.  If multiple ids are
     // given, either OpLogicalAnd or OpLogicalOr is used (if two operands) or a bool vector is
@@ -1201,7 +1209,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
     }
 
     // Take each constructor argument that is visited and evaluate it as rvalue
-    spirv::IdRefList parameters = loadAllParams(node, 0);
+    spirv::IdRefList parameters = loadAllParams(node, 0, nullptr);
 
     // Constructors in GLSL can take various shapes, resulting in different translations to SPIR-V
     // (in each case, if the parameter doesn't match the type being constructed, it must be cast):
@@ -1288,7 +1296,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
 
     ASSERT(type.isMatrix());
 
-    if (arg0Type.isScalar())
+    if (arg0Type.isScalar() && arguments.size() == 1)
     {
         parameters[0] = castBasicType(parameters[0], arg0Type, type.getBasicType(), nullptr);
         return createConstructorMatrixFromScalar(node, typeId, parameters);
@@ -1602,7 +1610,8 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
             {
                 // Take the component from the constructor parameter if possible.
                 spirv::IdRef componentId;
-                if (componentIndex < parameterType.getRows())
+                if (componentIndex < parameterType.getRows() &&
+                    columnIndex < parameterType.getCols())
                 {
                     componentId = mBuilder.getNewId(decorations);
                     spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(),
@@ -1616,13 +1625,13 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
                     switch (type.getBasicType())
                     {
                         case EbtFloat:
-                            componentId = mBuilder.getFloatConstant(isOnDiagonal ? 0.0f : 1.0f);
+                            componentId = mBuilder.getFloatConstant(isOnDiagonal ? 1.0f : 0.0f);
                             break;
                         case EbtInt:
-                            componentId = mBuilder.getIntConstant(isOnDiagonal ? 0 : 1);
+                            componentId = mBuilder.getIntConstant(isOnDiagonal ? 1 : 0);
                             break;
                         case EbtUInt:
-                            componentId = mBuilder.getUintConstant(isOnDiagonal ? 0 : 1);
+                            componentId = mBuilder.getUintConstant(isOnDiagonal ? 1 : 0);
                             break;
                         case EbtBool:
                             componentId = mBuilder.getBoolConstant(isOnDiagonal);
@@ -1648,7 +1657,9 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
     return result;
 }
 
-spirv::IdRefList OutputSPIRVTraverser::loadAllParams(TIntermOperator *node, size_t skipCount)
+spirv::IdRefList OutputSPIRVTraverser::loadAllParams(TIntermOperator *node,
+                                                     size_t skipCount,
+                                                     spirv::IdRefList *paramTypeIds)
 {
     const size_t parameterCount = node->getChildCount();
     spirv::IdRefList parameters;
@@ -1658,10 +1669,15 @@ spirv::IdRefList OutputSPIRVTraverser::loadAllParams(TIntermOperator *node, size
         // Take each parameter that is visited and evaluate it as rvalue
         NodeData &param = mNodeData[mNodeData.size() - parameterCount + paramIndex];
 
+        spirv::IdRef paramTypeId;
         const spirv::IdRef paramValue = accessChainLoad(
-            &param, node->getChildNode(paramIndex)->getAsTyped()->getType(), nullptr);
+            &param, node->getChildNode(paramIndex)->getAsTyped()->getType(), &paramTypeId);
 
         parameters.push_back(paramValue);
+        if (paramTypeIds)
+        {
+            paramTypeIds->push_back(paramTypeId);
+        }
     }
 
     return parameters;
@@ -2005,11 +2021,6 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
 {
     // Handle special groups.
     const TOperator op = node->getOp();
-    if (op == EOpPostIncrement || op == EOpPreIncrement || op == EOpPostDecrement ||
-        op == EOpPreDecrement)
-    {
-        return createIncrementDecrement(node, resultTypeId);
-    }
     if (op == EOpEqual || op == EOpNotEqual)
     {
         return createCompare(node, resultTypeId);
@@ -2031,23 +2042,27 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         return createInterpolate(node, resultTypeId);
     }
 
-    const size_t childCount  = node->getChildCount();
-    TIntermTyped *firstChild = node->getChildNode(0)->getAsTyped();
+    const size_t childCount   = node->getChildCount();
+    TIntermTyped *firstChild  = node->getChildNode(0)->getAsTyped();
+    TIntermTyped *secondChild = childCount > 1 ? node->getChildNode(1)->getAsTyped() : nullptr;
 
     const TType &firstOperandType = firstChild->getType();
     const TBasicType basicType    = firstOperandType.getBasicType();
     const bool isFloat            = basicType == EbtFloat || basicType == EbtDouble;
     const bool isUnsigned         = basicType == EbtUInt;
     const bool isBool             = basicType == EbtBool;
+    // Whether this is a pre/post increment/decrement operator.
+    bool isIncrementOrDecrement = false;
     // Whether the operation needs to be applied column by column.
-    TIntermBinary *asBinary = node->getAsBinaryNode();
-    bool operateOnColumns   = asBinary && (asBinary->getLeft()->getType().isMatrix() ||
-                                         asBinary->getRight()->getType().isMatrix());
+    bool operateOnColumns =
+        childCount == 2 && (firstChild->getType().isMatrix() || secondChild->getType().isMatrix());
     // Whether the operands need to be swapped in the (binary) instruction
     bool binarySwapOperands = false;
+    // Whether the instruction is matrix/scalar.  This is implemented with matrix*(1/scalar).
+    bool binaryInvertSecondParameter = false;
     // Whether the scalar operand needs to be extended to match the other operand which is a vector
-    // (in a binary operation).
-    bool binaryExtendScalarToVector = true;
+    // (in a binary or extended operation).
+    bool extendScalarToVector = true;
     // Some built-ins have out parameters at the end of the list of parameters.
     size_t lvalueCount = 0;
 
@@ -2062,6 +2077,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     switch (op)
     {
         case EOpNegative:
+            operateOnColumns = firstOperandType.isMatrix();
             if (isFloat)
                 writeUnaryOp = spirv::WriteFNegate;
             else
@@ -2077,6 +2093,25 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             break;
         case EOpBitwiseNot:
             writeUnaryOp = spirv::WriteNot;
+            break;
+
+        case EOpPostIncrement:
+        case EOpPreIncrement:
+            isIncrementOrDecrement = true;
+            operateOnColumns       = firstOperandType.isMatrix();
+            if (isFloat)
+                writeBinaryOp = spirv::WriteFAdd;
+            else
+                writeBinaryOp = spirv::WriteIAdd;
+            break;
+        case EOpPostDecrement:
+        case EOpPreDecrement:
+            isIncrementOrDecrement = true;
+            operateOnColumns       = firstOperandType.isMatrix();
+            if (isFloat)
+                writeBinaryOp = spirv::WriteFSub;
+            else
+                writeBinaryOp = spirv::WriteISub;
             break;
 
         case EOpAdd:
@@ -2104,7 +2139,19 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         case EOpDiv:
         case EOpDivAssign:
             if (isFloat)
-                writeBinaryOp = spirv::WriteFDiv;
+            {
+                if (firstOperandType.isMatrix() && secondChild->getType().isScalar())
+                {
+                    writeBinaryOp               = spirv::WriteMatrixTimesScalar;
+                    binaryInvertSecondParameter = true;
+                    operateOnColumns            = false;
+                    extendScalarToVector        = false;
+                }
+                else
+                {
+                    writeBinaryOp = spirv::WriteFDiv;
+                }
+            }
             else if (isUnsigned)
                 writeBinaryOp = spirv::WriteUDiv;
             else
@@ -2177,9 +2224,9 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         case EOpVectorTimesScalarAssign:
             if (isFloat)
             {
-                writeBinaryOp      = spirv::WriteVectorTimesScalar;
-                binarySwapOperands = node->getChildNode(1)->getAsTyped()->getType().isVector();
-                binaryExtendScalarToVector = false;
+                writeBinaryOp        = spirv::WriteVectorTimesScalar;
+                binarySwapOperands   = node->getChildNode(1)->getAsTyped()->getType().isVector();
+                extendScalarToVector = false;
             }
             else
                 writeBinaryOp = spirv::WriteIMul;
@@ -2195,9 +2242,10 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             break;
         case EOpMatrixTimesScalar:
         case EOpMatrixTimesScalarAssign:
-            writeBinaryOp      = spirv::WriteMatrixTimesScalar;
-            binarySwapOperands = asBinary->getRight()->getType().isMatrix();
-            operateOnColumns   = false;
+            writeBinaryOp        = spirv::WriteMatrixTimesScalar;
+            binarySwapOperands   = secondChild->getType().isMatrix();
+            operateOnColumns     = false;
+            extendScalarToVector = false;
             break;
         case EOpMatrixTimesMatrix:
         case EOpMatrixTimesMatrixAssign:
@@ -2207,17 +2255,17 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
 
         case EOpLogicalOr:
             ASSERT(!IsShortCircuitNeeded(node));
-            binaryExtendScalarToVector = false;
-            writeBinaryOp              = spirv::WriteLogicalOr;
+            extendScalarToVector = false;
+            writeBinaryOp        = spirv::WriteLogicalOr;
             break;
         case EOpLogicalXor:
-            binaryExtendScalarToVector = false;
-            writeBinaryOp              = spirv::WriteLogicalNotEqual;
+            extendScalarToVector = false;
+            writeBinaryOp        = spirv::WriteLogicalNotEqual;
             break;
         case EOpLogicalAnd:
             ASSERT(!IsShortCircuitNeeded(node));
-            binaryExtendScalarToVector = false;
-            writeBinaryOp              = spirv::WriteLogicalAnd;
+            extendScalarToVector = false;
+            writeBinaryOp        = spirv::WriteLogicalAnd;
             break;
 
         case EOpBitShiftLeft:
@@ -2484,7 +2532,8 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             extendedInst = spv::GLSLstd450Reflect;
             break;
         case EOpRefract:
-            extendedInst = spv::GLSLstd450Refract;
+            extendedInst         = spv::GLSLstd450Refract;
+            extendScalarToVector = false;
             break;
 
         case EOpFtransform:
@@ -2608,7 +2657,19 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     }
 
     // Load the parameters.
-    spirv::IdRefList parameters = loadAllParams(node, lvalueCount);
+    spirv::IdRefList parameterTypeIds;
+    spirv::IdRefList parameters = loadAllParams(node, lvalueCount, &parameterTypeIds);
+
+    if (isIncrementOrDecrement)
+    {
+        // ++ and -- are implemented with binary add and subtract, so add an implicit parameter with
+        // size vecN(1).
+        const int vecSize = firstOperandType.isMatrix() ? firstOperandType.getRows()
+                                                        : firstOperandType.getNominalSize();
+        const spirv::IdRef one =
+            isFloat ? mBuilder.getVecConstant(1, vecSize) : mBuilder.getIvecConstant(1, vecSize);
+        parameters.push_back(one);
+    }
 
     const SpirvDecorations decorations = mBuilder.getDecorations(node->getType());
     spirv::IdRef result;
@@ -2634,6 +2695,8 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     if (operateOnColumns)
     {
         // If negating a matrix, multiplying or comparing them, do that column by column.
+        // Matrix-scalar operations (add, sub, mod etc) turn the scalar into a vector before
+        // operating on the column.
         spirv::IdRefList columnIds;
 
         const SpirvDecorations operandDecorations = mBuilder.getDecorations(firstOperandType);
@@ -2646,13 +2709,22 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             std::swap(parameters[0], parameters[1]);
         }
 
+        if (extendScalarToVector)
+        {
+            extendScalarParamsToVector(node, columnTypeId, &parameters);
+        }
+
         // Extract and apply the operator to each column.
         for (int columnIndex = 0; columnIndex < firstOperandType.getCols(); ++columnIndex)
         {
-            const spirv::IdRef columnIdA = mBuilder.getNewId(operandDecorations);
-            spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), columnTypeId,
-                                         columnIdA, parameters[0],
-                                         {spirv::LiteralInteger(columnIndex)});
+            spirv::IdRef columnIdA = parameters[0];
+            if (firstOperandType.isMatrix())
+            {
+                columnIdA = mBuilder.getNewId(operandDecorations);
+                spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), columnTypeId,
+                                             columnIdA, parameters[0],
+                                             {spirv::LiteralInteger(columnIndex)});
+            }
 
             columnIds.push_back(mBuilder.getNewId(decorations));
 
@@ -2665,10 +2737,14 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             {
                 ASSERT(writeBinaryOp);
 
-                const spirv::IdRef columnIdB = mBuilder.getNewId(operandDecorations);
-                spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(), columnTypeId,
-                                             columnIdB, parameters[1],
-                                             {spirv::LiteralInteger(columnIndex)});
+                spirv::IdRef columnIdB = parameters[1];
+                if (secondChild != nullptr && secondChild->getType().isMatrix())
+                {
+                    columnIdB = mBuilder.getNewId(operandDecorations);
+                    spirv::WriteCompositeExtract(mBuilder.getSpirvCurrentFunctionBlock(),
+                                                 columnTypeId, columnIdB, parameters[1],
+                                                 {spirv::LiteralInteger(columnIndex)});
+                }
 
                 writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), columnTypeId,
                               columnIds.back(), columnIdA, columnIdB);
@@ -2689,28 +2765,24 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     {
         ASSERT(parameters.size() == 2);
 
-        // For vector<op>scalar operations that require it, turn the scalar into a vector of the
-        // same size.
-        if (binaryExtendScalarToVector)
+        if (extendScalarToVector)
         {
-            const TType &leftType  = node->getChildNode(0)->getAsTyped()->getType();
-            const TType &rightType = node->getChildNode(1)->getAsTyped()->getType();
-
-            if (leftType.isScalar() && rightType.isVector())
-            {
-                parameters[0] = createConstructorVectorFromScalar(rightType, builtInResultTypeId,
-                                                                  {{parameters[0]}});
-            }
-            else if (rightType.isScalar() && leftType.isVector())
-            {
-                parameters[1] = createConstructorVectorFromScalar(leftType, builtInResultTypeId,
-                                                                  {{parameters[1]}});
-            }
+            extendScalarParamsToVector(node, builtInResultTypeId, &parameters);
         }
 
         if (binarySwapOperands)
         {
             std::swap(parameters[0], parameters[1]);
+        }
+
+        if (binaryInvertSecondParameter)
+        {
+            const spirv::IdRef one = mBuilder.getFloatConstant(1);
+            const spirv::IdRef invertedParam =
+                mBuilder.getNewId(mBuilder.getDecorations(secondChild->getType()));
+            spirv::WriteFDiv(mBuilder.getSpirvCurrentFunctionBlock(), parameterTypeIds.back(),
+                             invertedParam, one, parameters[1]);
+            parameters[1] = invertedParam;
         }
 
         // Write the operation that combines the left and right values.
@@ -2743,6 +2815,11 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         // It's an extended instruction.
         ASSERT(extendedInst != spv::GLSLstd450Bad);
 
+        if (extendScalarToVector)
+        {
+            extendScalarParamsToVector(node, builtInResultTypeId, &parameters);
+        }
+
         spirv::WriteExtInst(mBuilder.getSpirvCurrentFunctionBlock(), builtInResultTypeId,
                             builtInResult, mBuilder.getExtInstImportIdStd(),
                             spirv::LiteralExtInstInteger(extendedInst), parameters);
@@ -2751,9 +2828,8 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     // If it's an assignment, store the calculated value.
     if (IsAssignment(node->getOp()))
     {
-        ASSERT(mNodeData.size() >= 2);
-        ASSERT(parameters.size() == 2);
-        accessChainStore(&mNodeData[mNodeData.size() - 2], builtInResult, firstOperandType);
+        accessChainStore(&mNodeData[mNodeData.size() - childCount], builtInResult,
+                         firstOperandType);
     }
 
     // If the operation returns a struct, load the lsb and msb and store them in result/out
@@ -2764,57 +2840,10 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
                                                        resultTypeId);
     }
 
-    return result;
-}
-
-spirv::IdRef OutputSPIRVTraverser::createIncrementDecrement(TIntermOperator *node,
-                                                            spirv::IdRef resultTypeId)
-{
-    TIntermTyped *operand = node->getChildNode(0)->getAsTyped();
-
-    const TType &operandType   = operand->getType();
-    const TBasicType basicType = operandType.getBasicType();
-    const bool isFloat         = basicType == EbtFloat || basicType == EbtDouble;
-
-    // ++ and -- are implemented with binary SPIR-V ops.
-    WriteBinaryOp writeBinaryOp = nullptr;
-
-    switch (node->getOp())
+    // For post increment/decrement, return the value of the parameter itself as the result.
+    if (op == EOpPostIncrement || op == EOpPostDecrement)
     {
-        case EOpPostIncrement:
-        case EOpPreIncrement:
-            if (isFloat)
-                writeBinaryOp = spirv::WriteFAdd;
-            else
-                writeBinaryOp = spirv::WriteIAdd;
-            break;
-        case EOpPostDecrement:
-        case EOpPreDecrement:
-            if (isFloat)
-                writeBinaryOp = spirv::WriteFSub;
-            else
-                writeBinaryOp = spirv::WriteISub;
-            break;
-        default:
-            UNREACHABLE();
-    }
-
-    // Load the operand.
-    spirv::IdRef value = accessChainLoad(&mNodeData.back(), operandType, nullptr);
-
-    spirv::IdRef result    = mBuilder.getNewId(mBuilder.getDecorations(operandType));
-    const spirv::IdRef one = isFloat ? mBuilder.getFloatConstant(1) : mBuilder.getIntConstant(1);
-
-    writeBinaryOp(mBuilder.getSpirvCurrentFunctionBlock(), resultTypeId, result, value, one);
-
-    // The result is always written back.
-    accessChainStore(&mNodeData.back(), result, operandType);
-
-    // Initialize the access chain with either the result or the value based on whether pre or
-    // post increment/decrement was used.  The result is always an rvalue.
-    if (node->getOp() == EOpPostIncrement || node->getOp() == EOpPostDecrement)
-    {
-        result = value;
+        result = parameters[0];
     }
 
     return result;
@@ -2830,7 +2859,7 @@ spirv::IdRef OutputSPIRVTraverser::createCompare(TIntermOperator *node, spirv::I
     const SpirvDecorations operandDecorations = mBuilder.getDecorations(operandType);
 
     // Load the left and right values.
-    spirv::IdRefList parameters = loadAllParams(node, 0);
+    spirv::IdRefList parameters = loadAllParams(node, 0, nullptr);
     ASSERT(parameters.size() == 2);
 
     // In GLSL, operators == and != can operate on the following:
@@ -3045,7 +3074,7 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
     const TBasicType samplerBasicType = samplerType.getBasicType();
 
     // Load the parameters.
-    spirv::IdRefList parameters = loadAllParams(node, 0);
+    spirv::IdRefList parameters = loadAllParams(node, 0, nullptr);
 
     // GLSL texture* and image* built-ins map to the following SPIR-V instructions.  Some of these
     // instructions take a "sampled image" while the others take the image itself.  In these
@@ -3812,7 +3841,7 @@ spirv::IdRef OutputSPIRVTraverser::createSubpassLoadBuiltIn(TIntermOperator *nod
                                                             spirv::IdRef resultTypeId)
 {
     // Load the parameters.
-    spirv::IdRefList parameters = loadAllParams(node, 0);
+    spirv::IdRefList parameters = loadAllParams(node, 0, nullptr);
     const spirv::IdRef image    = parameters[0];
 
     // If multisampled, an additional parameter specifies the sample.  This is passed through as an
@@ -4129,6 +4158,32 @@ spirv::IdRef OutputSPIRVTraverser::cast(spirv::IdRef value,
     }
 
     return expectedId;
+}
+
+void OutputSPIRVTraverser::extendScalarParamsToVector(TIntermOperator *node,
+                                                      spirv::IdRef resultTypeId,
+                                                      spirv::IdRefList *parameters)
+{
+    const TType &type = node->getType();
+    if (type.isScalar())
+    {
+        // Nothing to do if the operation is applied to scalars.
+        return;
+    }
+
+    const size_t childCount = node->getChildCount();
+
+    for (size_t childIndex = 0; childIndex < childCount; ++childIndex)
+    {
+        const TType &childType = node->getChildNode(childIndex)->getAsTyped()->getType();
+
+        // If the child is a scalar, replicate it to form a vector of the right size.
+        if (childType.isScalar())
+        {
+            (*parameters)[childIndex] = createConstructorVectorFromScalar(
+                type, resultTypeId, {{(*parameters)[childIndex]}});
+        }
+    }
 }
 
 spirv::IdRef OutputSPIRVTraverser::reduceBoolVector(TOperator op,
