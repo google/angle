@@ -56,6 +56,7 @@ On Windows only, ensure you **set `DEPOT_TOOLS_WIN_TOOLCHAIN=0` in your environm
 
 GN will generate ninja files. To change the default build options run `gn args out/Debug`.  Some commonly used options are:
 ```
+is_component_build = false      (links dependencies into the build targets)
 target_cpu = "x86"              (default is "x64")
 is_clang = false                (to use system default compiler instead of clang)
 is_debug = false                (for release builds. is_debug = true is the default)
@@ -65,6 +66,9 @@ angle_assert_always_on = true   (enable release asserts and debug layers)
 For a release build run `gn args out/Release` and set `is_debug = false`.
 
 On Windows, you can build for the Universal Windows Platform (UWP) by setting `target_os = "winuwp"` in the args.
+Setting `is_component_build = false` is highly recommended to support moving libEGL.dll and libGLESv2.dll to an
+application's directory and being self-contained, instead of depending on other DLLs (d3dcompiler_47.dll is still
+needed for the Direct3D backend).
 
 For more information on GN run `gn help`.
 
