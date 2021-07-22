@@ -3209,6 +3209,95 @@ TEST_P(GLSLTest, NestedSequenceOperatorWithTernaryInside)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that uniform bvecN passed to functions work.
+TEST_P(GLSLTest_ES3, UniformBoolVectorPassedToFunctions)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform bvec4 u;
+out vec4 color;
+
+bool f(bvec4 bv)
+{
+    return all(bv.xz) && !any(bv.yw);
+}
+
+void main() {
+    color = f(u) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(prog, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(prog);
+
+    GLint uloc = glGetUniformLocation(prog, "u");
+    ASSERT_NE(uloc, -1);
+    glUniform4ui(uloc, true, false, true, false);
+
+    drawQuad(prog.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that bvecN in storage buffer passed to functions work.
+TEST_P(GLSLTest_ES31, StorageBufferBoolVectorPassedToFunctions)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(binding = 0, std430) buffer Output {
+    bvec4 b;
+    bool valid;
+} outbuf;
+
+bool f_in(bvec4 bv)
+{
+    return all(bv.xz) && !any(bv.yw);
+}
+
+bool f_inout(inout bvec4 bv)
+{
+    bool ok = all(bv.xz) && !any(bv.yw);
+    bv.xw = bvec2(false, true);
+    return ok;
+}
+
+void f_out(out bvec4 bv)
+{
+    bv = bvec4(false, true, false, true);
+}
+
+void main() {
+    bool valid = f_in(outbuf.b);
+    valid = f_inout(outbuf.b) && valid;
+    f_out(outbuf.b);
+    outbuf.valid = valid;
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    constexpr std::array<GLuint, 5> kOutputInitData = {true, false, true, false, false};
+    GLBuffer outputBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kOutputInitData), kOutputInitData.data(),
+                 GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, outputBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kOutputInitData), GL_MAP_READ_BIT));
+    fprintf(stderr, "%d %d %d %d %d\n", ptr[0], ptr[1], ptr[2], ptr[3], ptr[4]);
+    EXPECT_FALSE(ptr[0]);
+    EXPECT_TRUE(ptr[1]);
+    EXPECT_FALSE(ptr[2]);
+    EXPECT_TRUE(ptr[3]);
+    EXPECT_TRUE(ptr[4]);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
 // Test that using a sampler2D and samplerExternalOES in the same shader works (anglebug.com/1534)
 TEST_P(GLSLTest, ExternalAnd2DSampler)
 {

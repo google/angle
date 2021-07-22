@@ -861,30 +861,3 @@
 5990 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.output_types.user_ptr_0_0_fixed4_vec3_dynamic_draw_quads_256 = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.output_types.user_ptr_0_0_float4_vec2_dynamic_draw_quads_256 = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_fixed2_vec2_static_draw_quads_256 = SKIP
-
-// Direct SPIR-V generation failures
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.array_arguments.copy_local_in_on_call_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.array_arguments.copy_local_in_on_call_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.array_arguments.copy_local_inout_on_call_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.array_arguments.copy_local_inout_on_call_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.array_arguments.local_in_bool_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.array_arguments.local_in_bool_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.array_arguments.local_in_float_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.array_arguments.local_in_float_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.array_arguments.local_in_int_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.array_arguments.local_in_int_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_bool_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_bool_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_float_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_float_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_highp_float_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_highp_float_vertex = FAIL
-4889 SPIRVGEN VULKAN LINUX : dEQP-GLES2.functional.shaders.functions.qualifiers.in_highp_int_fragment = FAIL
-4889 SPIRVGEN VULKAN WIN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_highp_int_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_highp_int_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_int_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_int_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_lowp_float_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_lowp_float_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_lowp_int_fragment = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_lowp_int_vertex = FAIL

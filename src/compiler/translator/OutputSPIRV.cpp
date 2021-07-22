@@ -362,7 +362,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
                                                uint32_t fieldIndex);
 
     TCompiler *mCompiler;
-    ShCompileOptions mCompileOptions;
+    ANGLE_MAYBE_UNUSED ShCompileOptions mCompileOptions;
 
     SPIRVBuilder mBuilder;
 
@@ -1900,11 +1900,14 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
             // Opaque uniforms are passed by pointer.
             paramValue = accessChainCollapse(&param);
         }
-        else if (IsAccessChainUnindexedLValue(param) &&
-                 (param.accessChain.storageClass == spv::StorageClassFunction &&
-                  (mCompileOptions & SH_GENERATE_SPIRV_WORKAROUNDS) == 0))
+        else if (IsAccessChainUnindexedLValue(param) && paramQualifier == EvqParamOut &&
+                 param.accessChain.storageClass == spv::StorageClassFunction)
         {
-            // Unindexed lvalues are passed directly.
+            // Unindexed lvalues are passed directly, but only when they are an out/inout.  In GLSL,
+            // in parameters are considered "copied" to the function.  In SPIR-V, every parameter is
+            // implicitly inout.  If a function takes an in parameter and modifies it, the caller
+            // has to ensure that it calls the function with a copy.  Currently, the functions don't
+            // track whether an in parameter is modified, so we conservatively assume it is.
             //
             // This optimization is not applied on buggy drivers.  http://anglebug.com/6110.
             paramValue = param.baseId;
@@ -3921,6 +3924,9 @@ spirv::IdRef OutputSPIRVTraverser::castBasicType(spirv::IdRef value,
     {
         return value;
     }
+
+    // Make sure no attempt is made to cast a matrix to int/uint.
+    ASSERT(!valueType.isMatrix() || expectedBasicType == EbtFloat);
 
     SpirvType valueSpirvType                            = mBuilder.getSpirvType(valueType, {});
     valueSpirvType.type                                 = expectedBasicType;

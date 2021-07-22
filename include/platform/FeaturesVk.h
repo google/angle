@@ -506,12 +506,6 @@ struct FeaturesVk : FeatureSetBase
                                      "Direct translation to SPIR-V.", &members,
                                      "http://anglebug.com/4889"};
 
-    // Whether SPIR-V should be generated with workarounds for buggy drivers.
-    Feature directSPIRVGenerationWorkarounds = {
-        "directSPIRVGenerationWorkarounds", FeatureCategory::VulkanWorkarounds,
-        "Work around driver bugs when translating to SPIR-V.", &members,
-        "http://anglebug.com/6110"};
-
     // Whether we should use driver uniforms over specialization constants for some shader
     // modifications like yflip and rotation.
     Feature forceDriverUniformOverSpecConst = {
