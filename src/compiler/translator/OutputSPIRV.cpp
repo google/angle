@@ -1884,6 +1884,7 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
     for (size_t paramIndex = 0; paramIndex < parameterCount; ++paramIndex)
     {
         const TType &paramType           = function->getParam(paramIndex)->getType();
+        const TType &argType             = node->getChildNode(paramIndex)->getAsTyped()->getType();
         const TQualifier &paramQualifier = paramType.getQualifier();
         NodeData &param = mNodeData[mNodeData.size() - parameterCount + paramIndex];
 
@@ -1892,7 +1893,7 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
         if (paramQualifier == EvqParamConst)
         {
             // |const| parameters are passed as rvalue.
-            paramValue = accessChainLoad(&param, paramType, nullptr);
+            paramValue = accessChainLoad(&param, argType, nullptr);
         }
         else if (IsOpaqueType(paramType.getBasicType()))
         {
@@ -1917,13 +1918,13 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
             tempVarTypeIds[paramIndex] = mBuilder.getTypeData(paramType, {}).id;
             tempVarIds[paramIndex] =
                 mBuilder.declareVariable(tempVarTypeIds[paramIndex], spv::StorageClassFunction,
-                                         mBuilder.getDecorations(paramType), nullptr, "param");
+                                         mBuilder.getDecorations(argType), nullptr, "param");
 
             // If it's an in or inout parameter, the temp variable needs to be initialized with the
             // value of the parameter first.
             if (paramQualifier == EvqParamIn || paramQualifier == EvqParamInOut)
             {
-                paramValue = accessChainLoad(&param, paramType, nullptr);
+                paramValue = accessChainLoad(&param, argType, nullptr);
                 spirv::WriteStore(mBuilder.getSpirvCurrentFunctionBlock(), tempVarIds[paramIndex],
                                   paramValue, nullptr);
             }
@@ -1948,6 +1949,7 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
         }
 
         const TType &paramType           = function->getParam(paramIndex)->getType();
+        const TType &argType             = node->getChildNode(paramIndex)->getAsTyped()->getType();
         const TQualifier &paramQualifier = paramType.getQualifier();
         NodeData &param = mNodeData[mNodeData.size() - parameterCount + paramIndex];
 
@@ -1960,7 +1962,7 @@ spirv::IdRef OutputSPIRVTraverser::createFunctionCall(TIntermAggregate *node,
         NodeData tempVarData;
         nodeDataInitLValue(&tempVarData, tempVarIds[paramIndex], tempVarTypeIds[paramIndex],
                            spv::StorageClassFunction, {});
-        const spirv::IdRef tempVarValue = accessChainLoad(&tempVarData, paramType, nullptr);
+        const spirv::IdRef tempVarValue = accessChainLoad(&tempVarData, argType, nullptr);
         accessChainStore(&param, tempVarValue, function->getParam(paramIndex)->getType());
     }
 
@@ -3513,7 +3515,7 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
     if (coordinatesIndex > 0)
     {
         coordinatesId           = parameters[coordinatesIndex];
-        coordinatesType         = &function->getParam(coordinatesIndex)->getType();
+        coordinatesType         = &node->getChildNode(coordinatesIndex)->getAsTyped()->getType();
         coordinatesChannelCount = coordinatesType->getNominalSize();
     }
 
@@ -3686,7 +3688,7 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
             const spirv::IdRef newCoordinatesId =
                 mBuilder.getNewId(mBuilder.getDecorations(*coordinatesType));
             spirv::WriteCompositeInsert(mBuilder.getSpirvCurrentFunctionBlock(), coordinatesTypeId,
-                                        newCoordinatesId, coordinatesId, projChannelId,
+                                        newCoordinatesId, projChannelId, coordinatesId,
                                         {spirv::LiteralInteger(requiredChannelCount - 1)});
             coordinatesId = newCoordinatesId;
         }
@@ -4080,7 +4082,7 @@ spirv::IdRef OutputSPIRVTraverser::cast(spirv::IdRef value,
         elementType.toArrayElementType();
 
         const spirv::IdRef elementTypeId =
-            mBuilder.getTypeData(elementType, valueElementTypeSpec).id;
+            mBuilder.getTypeDataOverrideTypeSpec(elementType, valueElementTypeSpec).id;
 
         const SpirvDecorations elementDecorations = mBuilder.getDecorations(elementType);
 
@@ -4113,7 +4115,8 @@ spirv::IdRef OutputSPIRVTraverser::cast(spirv::IdRef value,
             expectedFieldTypeSpec.onBlockFieldSelection(fieldType);
 
             // Get the field type id.
-            const spirv::IdRef fieldTypeId = mBuilder.getTypeData(fieldType, valueFieldTypeSpec).id;
+            const spirv::IdRef fieldTypeId =
+                mBuilder.getTypeDataOverrideTypeSpec(fieldType, valueFieldTypeSpec).id;
 
             // Extract the field.
             const spirv::IdRef fieldId = mBuilder.getNewId(mBuilder.getDecorations(fieldType));
@@ -4146,8 +4149,9 @@ spirv::IdRef OutputSPIRVTraverser::cast(spirv::IdRef value,
     }
 
     // Construct the value with the expected type from its cast constituents.
-    const spirv::IdRef expectedTypeId = mBuilder.getTypeData(valueType, expectedTypeSpec).id;
-    const spirv::IdRef expectedId     = mBuilder.getNewId(mBuilder.getDecorations(valueType));
+    const spirv::IdRef expectedTypeId =
+        mBuilder.getTypeDataOverrideTypeSpec(valueType, expectedTypeSpec).id;
+    const spirv::IdRef expectedId = mBuilder.getNewId(mBuilder.getDecorations(valueType));
 
     spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), expectedTypeId,
                                    expectedId, constituents);

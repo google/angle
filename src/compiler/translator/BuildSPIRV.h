@@ -286,6 +286,8 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getNewId(const SpirvDecorations &decorations);
     SpirvType getSpirvType(const TType &type, const SpirvTypeSpec &typeSpec) const;
     const SpirvTypeData &getTypeData(const TType &type, const SpirvTypeSpec &typeSpec);
+    const SpirvTypeData &getTypeDataOverrideTypeSpec(const TType &type,
+                                                     const SpirvTypeSpec &typeSpec);
     const SpirvTypeData &getSpirvTypeData(const SpirvType &type, const TSymbol *block);
     spirv::IdRef getBasicTypeId(TBasicType basicType, size_t size);
     spirv::IdRef getTypePointerId(spirv::IdRef typeId, spv::StorageClass storageClass);

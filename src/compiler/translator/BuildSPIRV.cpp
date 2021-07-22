@@ -560,6 +560,17 @@ const SpirvTypeData &SPIRVBuilder::getTypeData(const TType &type, const SpirvTyp
     return getSpirvTypeData(spirvType, block);
 }
 
+const SpirvTypeData &SPIRVBuilder::getTypeDataOverrideTypeSpec(const TType &type,
+                                                               const SpirvTypeSpec &typeSpec)
+{
+    // This is a variant of getTypeData() where type spec is not automatically derived.  It's useful
+    // in cast operations that specifically need to override the spec.
+    SpirvType spirvType = getSpirvType(type, typeSpec);
+    spirvType.typeSpec  = typeSpec;
+
+    return getSpirvTypeData(spirvType, nullptr);
+}
+
 const SpirvTypeData &SPIRVBuilder::getSpirvTypeData(const SpirvType &type, const TSymbol *block)
 {
     // Structs with bools generate a different type when used in an interface block (where the bool

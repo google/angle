@@ -888,7 +888,3 @@
 4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_lowp_float_vertex = FAIL
 4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_lowp_int_fragment = FAIL
 4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.functions.qualifiers.in_lowp_int_vertex = FAIL
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.texture_functions.fragment.texture2dproj_vec4 = SKIP
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.texture_functions.fragment.texture2dproj_vec4_bias = SKIP
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.texture_functions.vertex.texture2dproj_vec4 = SKIP
-4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.texture_functions.vertex.texture2dprojlod_vec4 = SKIP
