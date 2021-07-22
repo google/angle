@@ -262,7 +262,9 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef createConstructorScalarFromNonScalar(TIntermAggregate *node,
                                                       spirv::IdRef typeId,
                                                       const spirv::IdRefList &parameters);
-    spirv::IdRef createConstructorVectorFromScalar(const TType &type,
+    spirv::IdRef createConstructorVectorFromScalar(const TType &parameterType,
+                                                   TBasicType expectedType,
+                                                   int vectorSize,
                                                    spirv::IdRef typeId,
                                                    const spirv::IdRefList &parameters);
     spirv::IdRef createConstructorVectorFromMatrix(TIntermAggregate *node,
@@ -1284,8 +1286,8 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
     {
         if (arguments.size() == 1 && arg0Type.isScalar())
         {
-            parameters[0] = castBasicType(parameters[0], arg0Type, type.getBasicType(), nullptr);
-            return createConstructorVectorFromScalar(node->getType(), typeId, parameters);
+            return createConstructorVectorFromScalar(arg0Type, type.getBasicType(),
+                                                     type.getNominalSize(), typeId, parameters);
         }
         if (arguments.size() == 1 && arg0Type.isMatrix())
         {
@@ -1348,15 +1350,21 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorScalarFromNonScalar(
 }
 
 spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromScalar(
-    const TType &type,
+    const TType &parameterType,
+    TBasicType expectedType,
+    int vectorSize,
     spirv::IdRef typeId,
     const spirv::IdRefList &parameters)
 {
     // vecN(f) translates to OpCompositeConstruct %vecN %f ... %f
     ASSERT(parameters.size() == 1);
-    spirv::IdRefList replicatedParameter(type.getNominalSize(), parameters[0]);
 
-    const spirv::IdRef result = mBuilder.getNewId(mBuilder.getDecorations(type));
+    const spirv::IdRef castParameter =
+        castBasicType(parameters[0], parameterType, expectedType, nullptr);
+
+    spirv::IdRefList replicatedParameter(vectorSize, castParameter);
+
+    const spirv::IdRef result = mBuilder.getNewId(mBuilder.getDecorations(parameterType));
     spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result,
                                    replicatedParameter);
     return result;
@@ -1562,6 +1570,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
         // If the parameter is a larger matrix than the constructor type, extract the columns
         // directly and potentially swizzle them.
         SpirvType paramColumnType     = mBuilder.getSpirvType(parameterType, {});
+        paramColumnType.primarySize   = paramColumnType.secondarySize;
         paramColumnType.secondarySize = 1;
         const spirv::IdRef paramColumnTypeId =
             mBuilder.getSpirvTypeData(paramColumnType, nullptr).id;
@@ -4190,8 +4199,10 @@ void OutputSPIRVTraverser::extendScalarParamsToVector(TIntermOperator *node,
         // If the child is a scalar, replicate it to form a vector of the right size.
         if (childType.isScalar())
         {
-            (*parameters)[childIndex] = createConstructorVectorFromScalar(
-                type, resultTypeId, {{(*parameters)[childIndex]}});
+            const int vectorSize = type.isMatrix() ? type.getRows() : type.getNominalSize();
+            (*parameters)[childIndex] =
+                createConstructorVectorFromScalar(childType, type.getBasicType(), vectorSize,
+                                                  resultTypeId, {{(*parameters)[childIndex]}});
         }
     }
 }
@@ -4861,9 +4872,10 @@ bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
 
     if (lastChildIndex == 0)
     {
+        const TType &conditionType = node->getCondition()->getType();
+
         spirv::IdRef typeId;
-        spirv::IdRef conditionValue =
-            accessChainLoad(&mNodeData.back(), node->getCondition()->getType(), &typeId);
+        spirv::IdRef conditionValue = accessChainLoad(&mNodeData.back(), conditionType, &typeId);
 
         // If OpSelect can be used, keep the condition for later usage.
         if (canUseOpSelect)
@@ -4872,10 +4884,10 @@ bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
             // So when selecting between vectors, we must replicate the condition scalar.
             if (type.isVector())
             {
-                typeId = mBuilder.getBasicTypeId(node->getCondition()->getType().getBasicType(),
-                                                 type.getNominalSize());
-                conditionValue =
-                    createConstructorVectorFromScalar(type, typeId, {{conditionValue}});
+                typeId =
+                    mBuilder.getBasicTypeId(conditionType.getBasicType(), type.getNominalSize());
+                conditionValue = createConstructorVectorFromScalar(
+                    conditionType, EbtBool, type.getNominalSize(), typeId, {{conditionValue}});
             }
             nodeDataInitRValue(&mNodeData.back(), conditionValue, typeId);
             return true;
