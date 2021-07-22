@@ -19,7 +19,7 @@ We currently run pre-commit tests on:
  * Windows 32-bit AMD and Windows 64-bit Intel and NVIDIA GPUs
  * Linux 64-bit NVIDIA and Intel GPUs
  * Mac NVIDIA, Intel and AMD GPUs
- * Pixel 2 and Nexus 5X
+ * Pixel 4 and Nexus 5X
  * Fuchsia testing in a VM
 
 Looking at an example build shows how tests are split up between machines. See for example:

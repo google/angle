@@ -204,6 +204,31 @@
       },
     },
 
+    'angle_deqp_gles2_vulkan_spirvgen_gtests': {
+      'angle_deqp_gles2_vulkan_spirvgen_tests': {
+        'args': [
+          'angle_deqp_gles2_tests',
+          '--use-angle=vulkan',
+          '--direct-spirv-gen',
+        ],
+        'android_args': [
+          '-v',
+          '--shard-timeout=500',
+        ],
+        'android_swarming': {
+          'shards': 4,
+        },
+        'desktop_args': [
+          '--bot-mode',
+        ],
+        'merge': {
+          'script': '//scripts/angle_deqp_test_merge.py',
+        },
+        'test': 'angle_deqp_gles2_tests',
+        'use_isolated_scripts_api': True,
+      },
+    },
+
     'angle_deqp_gles31_d3d11_gtests': {
       'angle_deqp_gles31_d3d11_tests': {
         'args': [
@@ -770,6 +795,7 @@
     'android_gtests': [
       'angle_deqp_egl_vulkan_gtests',
       'angle_deqp_gles2_vulkan_gtests',
+      'angle_deqp_gles2_vulkan_spirvgen_gtests',
       'angle_deqp_gles31_vulkan_gtests',
       'angle_deqp_gles3_vulkan_gtests',
       'angle_deqp_khr_gles2_vulkan_gtests',
@@ -797,6 +823,7 @@
       'angle_deqp_egl_vulkan_gtests',
       'angle_deqp_gles2_gl_gtests',
       'angle_deqp_gles2_vulkan_gtests',
+      'angle_deqp_gles2_vulkan_spirvgen_gtests',
       'angle_deqp_gles31_gl_gtests',
       'angle_deqp_gles31_vulkan_gtests',
       'angle_deqp_gles31_vulkan_rotate180_gtests',
@@ -847,6 +874,7 @@
       'angle_deqp_gles2_d3d11_gtests',
       'angle_deqp_gles2_gl_gtests',
       'angle_deqp_gles2_vulkan_gtests',
+      'angle_deqp_gles2_vulkan_spirvgen_gtests',
       'angle_deqp_gles31_d3d11_gtests',
       'angle_deqp_gles31_gl_gtests',
       'angle_deqp_gles31_vulkan_gtests',

@@ -44,6 +44,44 @@
         "args": [
           "angle_deqp_gles2_tests",
           "--use-angle=vulkan",
+          "--direct-spirv-gen",
+          "-v",
+          "--shard-timeout=500"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "name": "angle_deqp_gles2_vulkan_spirvgen_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "cipd_packages": [
+            {
+              "cipd_package": "infra/tools/luci/logdog/butler/${platform}",
+              "location": "bin",
+              "revision": "git_revision:ff387eadf445b24c935f1cf7d6ddd279f8a6b04c"
+            }
+          ],
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "device_os": "R",
+              "device_os_type": "userdebug",
+              "device_type": "flame",
+              "os": "Android",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 4
+        },
+        "test": "angle_deqp_gles2_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles2_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "angle_deqp_gles2_tests",
+          "--use-angle=vulkan",
           "-v",
           "--shard-timeout=500"
         ],
@@ -781,6 +819,33 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_gl_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "10de:1cb3-418.56",
+              "os": "Ubuntu-19.04",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_gles2_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles2_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "angle_deqp_gles2_tests",
+          "--use-angle=vulkan",
+          "--direct-spirv-gen",
+          "--bot-mode"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "name": "angle_deqp_gles2_vulkan_spirvgen_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2261,6 +2326,33 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_gl_tests",
+        "swarming": {
+          "can_use_on_swarming_builders": true,
+          "containment_type": "AUTO",
+          "dimension_sets": [
+            {
+              "gpu": "10de:1cb3-27.21.14.5148",
+              "os": "Windows-10-18363",
+              "pool": "chromium.tests.gpu"
+            }
+          ],
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_gles2_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles2_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "angle_deqp_gles2_tests",
+          "--use-angle=vulkan",
+          "--direct-spirv-gen",
+          "--bot-mode"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "name": "angle_deqp_gles2_vulkan_spirvgen_tests",
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
