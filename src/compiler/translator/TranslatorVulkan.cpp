@@ -363,10 +363,7 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationVS(TCompiler *compiler,
         new TIntermIfElse(specConst->getLineRasterEmulation(), emulationBlock, nullptr);
 
     // Ensure the statements run at the end of the main() function.
-    TIntermFunctionDefinition *main = FindMain(root);
-    TIntermBlock *mainBody          = main->getBody();
-    mainBody->appendStatement(ifEmulation);
-    return compiler->validateAST(root);
+    return RunAtTheEndOfShader(compiler, root, ifEmulation, symbolTable);
 }
 
 ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,

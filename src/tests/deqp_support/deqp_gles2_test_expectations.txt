@@ -896,6 +896,3 @@
 4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.texture_functions.fragment.texture2dproj_vec4_bias = SKIP
 4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.texture_functions.vertex.texture2dproj_vec4 = SKIP
 4889 SPIRVGEN VULKAN : dEQP-GLES2.functional.shaders.texture_functions.vertex.texture2dprojlod_vec4 = SKIP
-4889 SPIRVGEN VULKAN LINUX NVIDIA : dEQP-GLES2.functional.shaders.return.last_statement_in_main_vertex = SKIP
-4889 SPIRVGEN VULKAN LINUX NVIDIA : dEQP-GLES2.functional.shaders.return.output_write_always_vertex = SKIP
-4889 SPIRVGEN VULKAN LINUX NVIDIA : dEQP-GLES2.functional.shaders.return.return_in_infinite_loop_vertex = SKIP
