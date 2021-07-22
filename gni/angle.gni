@@ -41,9 +41,7 @@ if (angle_has_build) {
   }
 
   angle_use_x11 = use_x11 && !is_ggp
-  angle_use_vulkan_display =
-      is_linux && !use_x11 && !is_ggp &&
-      (!use_ozone || is_chromecast || ozone_platform_headless)
+  angle_use_vulkan_display = is_linux && !use_x11 && !is_ggp
 } else {
   declare_args() {
     is_ubsan = false
