@@ -37,13 +37,19 @@ enum class dEQPTestResult
     Exception,
 };
 
+struct dEQPOptions
+{
+    uint32_t preRotation;
+    bool enableDirectSPIRVGen;  // TODO: remove when no longer needed.  http://anglebug.com/6210
+    bool enableRenderDocCapture;
+};
+
 // Exported to the tester app.
 ANGLE_LIBTESTER_EXPORT int deqp_libtester_main(int argc, const char *argv[]);
 ANGLE_LIBTESTER_EXPORT bool deqp_libtester_init_platform(int argc,
                                                          const char *argv[],
                                                          void *logErrorFunc,
-                                                         uint32_t preRotation,
-                                                         bool enableRenderDocCapture);
+                                                         const dEQPOptions &options);
 ANGLE_LIBTESTER_EXPORT void deqp_libtester_shutdown_platform();
 ANGLE_LIBTESTER_EXPORT dEQPTestResult deqp_libtester_run(const char *caseName);
 

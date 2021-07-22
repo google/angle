@@ -569,7 +569,7 @@ void ANGLETestBase::ANGLETestSetUp()
 
     angle::GPUTestConfig::API api = GetTestConfigAPIFromRenderer(mCurrentParams->getRenderer(),
                                                                  mCurrentParams->getDeviceType());
-    GPUTestConfig testConfig      = GPUTestConfig(api, 0);
+    GPUTestConfig testConfig      = GPUTestConfig(api, 0, false);
 
     std::stringstream fullTestNameStr;
     fullTestNameStr << testInfo->test_case_name() << "." << testInfo->name();

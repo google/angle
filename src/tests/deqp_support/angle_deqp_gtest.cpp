@@ -112,16 +112,17 @@ constexpr APIInfo kEGLDisplayAPIs[] = {
     {"angle-vulkan", GPUTestConfig::kAPIVulkan},
 };
 
-constexpr char kdEQPEGLString[]    = "--deqp-egl-display-type=";
-constexpr char kANGLEEGLString[]   = "--use-angle=";
-constexpr char kANGLEPreRotation[] = "--emulated-pre-rotation=";
-constexpr char kdEQPCaseString[]   = "--deqp-case=";
-constexpr char kVerboseString[]    = "--verbose";
-constexpr char kRenderDocString[]  = "--renderdoc";
+constexpr char kdEQPEGLString[]       = "--deqp-egl-display-type=";
+constexpr char kANGLEEGLString[]      = "--use-angle=";
+constexpr char kANGLEPreRotation[]    = "--emulated-pre-rotation=";
+constexpr char kANGLEDirectSPIRVGen[] = "--direct-spirv-gen";
+constexpr char kdEQPCaseString[]      = "--deqp-case=";
+constexpr char kVerboseString[]       = "--verbose";
+constexpr char kRenderDocString[]     = "--renderdoc";
 
 std::array<char, 500> gCaseStringBuffer;
 
-// For angle_deqp_gles3*_rotateN_tests, default gPreRotation to N.
+// For angle_deqp_gles3*_rotateN_tests, default gOptions.preRotation to N.
 #if defined(ANGLE_DEQP_GLES3_ROTATE90_TESTS) || defined(ANGLE_DEQP_GLES31_ROTATE90_TESTS)
 constexpr uint32_t kDefaultPreRotation = 90;
 #elif defined(ANGLE_DEQP_GLES3_ROTATE180_TESTS) || defined(ANGLE_DEQP_GLES31_ROTATE180_TESTS)
@@ -133,9 +134,11 @@ constexpr uint32_t kDefaultPreRotation = 0;
 #endif
 
 const APIInfo *gInitAPI = nullptr;
-uint32_t gPreRotation   = kDefaultPreRotation;
-
-bool gEnableRenderDocCapture = false;
+dEQPOptions gOptions    = {
+    kDefaultPreRotation,  // preRotation
+    false,                // enableDirectSPIRVGen
+    false,                // enableRenderDocCapture
+};
 
 constexpr const char gdEQPEGLConfigNameString[] = "--deqp-gl-config-name=";
 constexpr const char gdEQPLogImagesString[]     = "--deqp-log-images=";
@@ -282,7 +285,8 @@ void dEQPCaseList::initialize()
         api = gInitAPI->second;
     }
 
-    GPUTestConfig testConfig = GPUTestConfig(api, gPreRotation);
+    GPUTestConfig testConfig =
+        GPUTestConfig(api, gOptions.preRotation, gOptions.enableDirectSPIRVGen);
 
 #if !defined(ANGLE_PLATFORM_ANDROID)
     // Note: These prints mess up parsing of test list when running on Android.
@@ -559,8 +563,7 @@ void dEQPTest<TestModuleIndex>::SetUpTestCase()
 
     // Init the platform.
     if (!deqp_libtester_init_platform(static_cast<int>(argv.size()), argv.data(),
-                                      reinterpret_cast<void *>(&HandlePlatformError), gPreRotation,
-                                      gEnableRenderDocCapture))
+                                      reinterpret_cast<void *>(&HandlePlatformError), gOptions))
     {
         std::cout << "Aborting test due to dEQP initialization error." << std::endl;
         exit(1);
@@ -683,7 +686,7 @@ void HandlePreRotation(const char *preRotationString)
         exit(1);
     }
 
-    gPreRotation = preRotation;
+    gOptions.preRotation = preRotation;
 }
 
 void HandleEGLConfigName(const char *configNameString)
@@ -745,6 +748,10 @@ void InitTestHarness(int *argc, char **argv)
         {
             HandlePreRotation(argv[argIndex] + strlen(kANGLEPreRotation));
         }
+        else if (strncmp(argv[argIndex], kANGLEDirectSPIRVGen, strlen(kANGLEDirectSPIRVGen)) == 0)
+        {
+            gOptions.enableDirectSPIRVGen = true;
+        }
         else if (strncmp(argv[argIndex], gdEQPEGLConfigNameString,
                          strlen(gdEQPEGLConfigNameString)) == 0)
         {
@@ -765,7 +772,7 @@ void InitTestHarness(int *argc, char **argv)
         }
         else if (strncmp(argv[argIndex], kRenderDocString, strlen(kRenderDocString)) == 0)
         {
-            gEnableRenderDocCapture = true;
+            gOptions.enableRenderDocCapture = true;
         }
         argIndex++;
     }
@@ -775,10 +782,16 @@ void InitTestHarness(int *argc, char **argv)
     {
         api = gInitAPI->second;
     }
-    if (gPreRotation != 0 && api != GPUTestConfig::kAPIVulkan &&
+    if (gOptions.preRotation != 0 && api != GPUTestConfig::kAPIVulkan &&
         api != GPUTestConfig::kAPISwiftShader)
     {
         std::cout << "PreRotation is only supported on Vulkan" << std::endl;
+        exit(1);
+    }
+    if (gOptions.enableDirectSPIRVGen != 0 && api != GPUTestConfig::kAPIVulkan &&
+        api != GPUTestConfig::kAPISwiftShader)
+    {
+        std::cout << "SPIR-V generation is only relevant to Vulkan" << std::endl;
         exit(1);
     }
 }

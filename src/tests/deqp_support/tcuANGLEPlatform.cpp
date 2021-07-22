@@ -32,7 +32,9 @@ static_assert(EGL_DONT_CARE == -1, "Unexpected value for EGL_DONT_CARE");
 
 namespace tcu
 {
-ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc, uint32_t preRotation)
+ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc,
+                             uint32_t preRotation,
+                             bool enableDirectSPIRVGen)
 {
     angle::SetLowPriorityProcess();
 
@@ -56,6 +58,11 @@ ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc, uint32_t preRotat
             break;
         default:
             break;
+    }
+
+    if (enableDirectSPIRVGen)
+    {
+        mEnableFeatureOverrides.push_back("directSPIRVGeneration");
     }
 
     mEnableFeatureOverrides.push_back(nullptr);
@@ -218,12 +225,14 @@ std::vector<eglw::EGLAttrib> ANGLEPlatform::initAttribs(eglw::EGLAttrib type,
 }  // namespace tcu
 
 // Create platform
-tcu::Platform *CreateANGLEPlatform(angle::LogErrorFunc logErrorFunc, uint32_t preRotation)
+tcu::Platform *CreateANGLEPlatform(angle::LogErrorFunc logErrorFunc,
+                                   uint32_t preRotation,
+                                   bool enableDirectSPIRVGen)
 {
-    return new tcu::ANGLEPlatform(logErrorFunc, preRotation);
+    return new tcu::ANGLEPlatform(logErrorFunc, preRotation, enableDirectSPIRVGen);
 }
 
 tcu::Platform *createPlatform()
 {
-    return CreateANGLEPlatform(nullptr, 0);
+    return CreateANGLEPlatform(nullptr, 0, false);
 }

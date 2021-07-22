@@ -599,10 +599,12 @@ GPUTestConfig::GPUTestConfig(bool isSwiftShader)
     mConditions[kConditionPreRotation90]  = false;
     mConditions[kConditionPreRotation180] = false;
     mConditions[kConditionPreRotation270] = false;
+
+    mConditions[kConditionSPIRVGen] = false;
 }
 
 // If the constructor is passed an API, load those conditions as well
-GPUTestConfig::GPUTestConfig(const API &api, uint32_t preRotation)
+GPUTestConfig::GPUTestConfig(const API &api, uint32_t preRotation, bool enableDirectSPIRVGen)
     : GPUTestConfig(IsSwiftShader(api))
 {
     mConditions[kConditionD3D9]      = IsD3D9(api);
@@ -628,6 +630,11 @@ GPUTestConfig::GPUTestConfig(const API &api, uint32_t preRotation)
             break;
         default:
             break;
+    }
+
+    if (enableDirectSPIRVGen)
+    {
+        mConditions[kConditionSPIRVGen] = true;
     }
 }
 
