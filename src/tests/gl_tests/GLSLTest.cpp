@@ -7999,6 +7999,47 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that if-else blocks whose contents get pruned due to compile-time constant conditions work.
+TEST_P(GLSLTest, IfElsePrunedBlocks)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+uniform float u;
+void main()
+{
+    // if with only a pruned true block
+    if (u > 0.0)
+        if (false) discard;
+
+    // if with a pruned true block and a false block
+    if (u > 0.0)
+    {
+        if (false) discard;
+    }
+    else
+        ;
+
+    // if with a true block and a pruned false block
+    if (u > 0.0)
+        ;
+    else
+        if (false) discard;
+
+    // if with a pruned true block and a pruned false block
+    if (u > 0.0)
+    {
+        if (false) discard;
+    }
+    else
+        if (false) discard;
+
+    gl_FragColor = vec4(0, 1, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Tests that PointCoord behaves the same betweeen a user FBO and the back buffer.
 TEST_P(GLSLTest, PointCoordConsistency)
 {

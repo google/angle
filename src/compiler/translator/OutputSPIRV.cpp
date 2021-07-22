@@ -4940,57 +4940,88 @@ bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
 
 bool OutputSPIRVTraverser::visitIfElse(Visit visit, TIntermIfElse *node)
 {
-    if (visit == PreVisit)
+    // An if condition may or may not have an else block.  When both blocks are present, the
+    // translation is as follows:
+    //
+    // if (cond) { trueBody } else { falseBody }
+    //
+    //               // pre-if block
+    //       %cond = ...
+    //               OpSelectionMerge %merge None
+    //               OpBranchConditional %cond %true %false
+    //
+    //       %true = OpLabel
+    //               trueBody
+    //               OpBranch %merge
+    //
+    //      %false = OpLabel
+    //               falseBody
+    //               OpBranch %merge
+    //
+    //               // post-if block
+    //       %merge = OpLabel
+    //
+    // If the else block is missing, OpBranchConditional will simply jump to %merge on the false
+    // condition and the %false block is removed.  Due to the way ParseContext prunes compile-time
+    // constant conditionals, the if block itself may also be missing, which is treated similarly.
+
+    // It's simpler if this function performs the traversal.
+    ASSERT(visit == PreVisit);
+
+    // Visit the condition.
+    node->getCondition()->traverse(this);
+    const spirv::IdRef conditionValue =
+        accessChainLoad(&mNodeData.back(), node->getCondition()->getType(), nullptr);
+
+    // If both true and false blocks are missing, there's nothing to do.
+    if (node->getTrueBlock() == nullptr && node->getFalseBlock() == nullptr)
     {
-        // Don't add an entry to the stack.  The condition will create one, which we won't pop.
-        return true;
+        return false;
     }
 
-    const size_t lastChildIndex = getLastTraversedChildIndex(visit);
+    // Create a conditional with maximum 3 blocks, one for the true block (if any), one for the
+    // else block (if any), and one for the merge block.  getChildCount() works here as it
+    // produces an identical count.
+    mBuilder.startConditional(node->getChildCount(), false, false);
 
-    // If the condition was just visited, evaluate it and create the branch instructions.
-    if (lastChildIndex == 0)
+    // Generate the branch instructions.
+    const SpirvConditional *conditional = mBuilder.getCurrentConditional();
+
+    const spirv::IdRef mergeBlock = conditional->blockIds.back();
+    spirv::IdRef trueBlock        = mergeBlock;
+    spirv::IdRef falseBlock       = mergeBlock;
+
+    size_t nextBlockIndex = 0;
+    if (node->getTrueBlock())
     {
-        const spirv::IdRef conditionValue =
-            accessChainLoad(&mNodeData.back(), node->getCondition()->getType(), nullptr);
-
-        // Create a conditional with maximum 3 blocks, one for the true block (if any), one for the
-        // else block (if any), and one for the merge block.  getChildCount() works here as it
-        // produces an identical count.
-        mBuilder.startConditional(node->getChildCount(), false, false);
-
-        // Generate the branch instructions.
-        const SpirvConditional *conditional = mBuilder.getCurrentConditional();
-
-        const spirv::IdRef mergeBlock = conditional->blockIds.back();
-        spirv::IdRef trueBlock        = mergeBlock;
-        spirv::IdRef falseBlock       = mergeBlock;
-
-        size_t nextBlockIndex = 0;
-        if (node->getTrueBlock())
-        {
-            trueBlock = conditional->blockIds[nextBlockIndex++];
-        }
-        if (node->getFalseBlock())
-        {
-            falseBlock = conditional->blockIds[nextBlockIndex++];
-        }
-
-        mBuilder.writeBranchConditional(conditionValue, trueBlock, falseBlock, mergeBlock);
-        return true;
+        trueBlock = conditional->blockIds[nextBlockIndex++];
+    }
+    if (node->getFalseBlock())
+    {
+        falseBlock = conditional->blockIds[nextBlockIndex++];
     }
 
-    // Otherwise move on to the next block, inserting a branch to the merge block at the end of each
-    // block.
-    mBuilder.writeBranchConditionalBlockEnd();
+    mBuilder.writeBranchConditional(conditionValue, trueBlock, falseBlock, mergeBlock);
+
+    // Visit the true block, if any.
+    if (node->getTrueBlock())
+    {
+        node->getTrueBlock()->traverse(this);
+        mBuilder.writeBranchConditionalBlockEnd();
+    }
+
+    // Visit the false block, if any.
+    if (node->getFalseBlock())
+    {
+        node->getFalseBlock()->traverse(this);
+        mBuilder.writeBranchConditionalBlockEnd();
+    }
 
     // Pop from the conditional stack when done.
-    if (visit == PostVisit)
-    {
-        mBuilder.endConditional();
-    }
+    mBuilder.endConditional();
 
-    return true;
+    // Don't traverse the children, that's done already.
+    return false;
 }
 
 bool OutputSPIRVTraverser::visitSwitch(Visit visit, TIntermSwitch *node)
