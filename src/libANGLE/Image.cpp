@@ -135,11 +135,6 @@ bool ImageSibling::isYUV() const
     return mTargetOf.get() && mTargetOf->isYUV();
 }
 
-bool ImageSibling::hasProtectedContent() const
-{
-    return mTargetOf.get() && mTargetOf->hasProtectedContent();
-}
-
 void ImageSibling::notifySiblings(angle::SubjectMessage message)
 {
     if (mTargetOf.get())
@@ -208,11 +203,6 @@ bool ExternalImageSibling::isYUV() const
     return mImplementation->isYUV();
 }
 
-bool ExternalImageSibling::hasProtectedContent() const
-{
-    return mImplementation->hasProtectedContent();
-}
-
 void ExternalImageSibling::onAttach(const gl::Context *context, rx::Serial framebufferSerial) {}
 
 void ExternalImageSibling::onDetach(const gl::Context *context, rx::Serial framebufferSerial) {}
@@ -259,8 +249,7 @@ ImageState::ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap 
       samples(),
       sourceType(target),
       colorspace(
-          static_cast<EGLenum>(attribs.get(EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_DEFAULT_EXT))),
-      hasProtectedContent(static_cast<bool>(attribs.get(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE)))
+          static_cast<EGLenum>(attribs.get(EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_DEFAULT_EXT)))
 {}
 
 ImageState::~ImageState() {}
@@ -425,11 +414,6 @@ size_t Image::getSamples() const
     return mState.samples;
 }
 
-bool Image::hasProtectedContent() const
-{
-    return mState.hasProtectedContent;
-}
-
 rx::ImageImpl *Image::getImplementation() const
 {
     return mImplementation;
@@ -441,8 +425,6 @@ Error Image::initialize(const Display *display)
     {
         ExternalImageSibling *externalSibling = rx::GetAs<ExternalImageSibling>(mState.source);
         ANGLE_TRY(externalSibling->initialize(display));
-
-        mState.hasProtectedContent = externalSibling->hasProtectedContent();
 
         // Only external siblings can be YUV
         mState.yuv = externalSibling->isYUV();

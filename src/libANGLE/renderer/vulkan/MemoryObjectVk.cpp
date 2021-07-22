@@ -101,12 +101,6 @@ angle::Result MemoryObjectVk::setDedicatedMemory(const gl::Context *context, boo
     return angle::Result::Continue;
 }
 
-angle::Result MemoryObjectVk::setProtectedMemory(const gl::Context *context, bool protectedMemory)
-{
-    mProtectedMemory = protectedMemory;
-    return angle::Result::Continue;
-}
-
 angle::Result MemoryObjectVk::importFd(gl::Context *context,
                                        GLuint64 size,
                                        gl::HandleType handleType,
@@ -210,12 +204,11 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
     // ANGLE_external_objects_flags allows create flags to be specified by the application instead
     // of getting defaulted to zero.  Note that the GL enum values constituting the bits of
     // |createFlags| are identical to their corresponding Vulkan value.
-    bool hasProtectedContent = mProtectedMemory;
-    ANGLE_TRY(image->initExternal(
-        contextVk, type, vkExtents, vkFormat, 1, imageUsageFlags, createFlags,
-        vk::ImageLayout::Undefined, &externalMemoryImageCreateInfo, gl::LevelIndex(0),
-        static_cast<uint32_t>(levels), layerCount, contextVk->isRobustResourceInitEnabled(),
-        nullptr, hasProtectedContent));
+    ANGLE_TRY(image->initExternal(contextVk, type, vkExtents, vkFormat, 1, imageUsageFlags,
+                                  createFlags, vk::ImageLayout::Undefined,
+                                  &externalMemoryImageCreateInfo, gl::LevelIndex(0),
+                                  static_cast<uint32_t>(levels), layerCount,
+                                  contextVk->isRobustResourceInitEnabled(), nullptr, false));
 
     VkMemoryRequirements externalMemoryRequirements;
     image->getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);
@@ -259,7 +252,7 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
     ASSERT(offset == 0);
     ASSERT(externalMemoryRequirements.size == mSize);
 
-    VkMemoryPropertyFlags flags = hasProtectedContent ? VK_MEMORY_PROPERTY_PROTECTED_BIT : 0;
+    VkMemoryPropertyFlags flags = 0;
     ANGLE_TRY(image->initExternalMemory(contextVk, renderer->getMemoryProperties(),
                                         externalMemoryRequirements, nullptr, importMemoryInfo,
                                         renderer->getQueueFamilyIndex(), flags));

@@ -34,7 +34,6 @@ RenderbufferState::RenderbufferState()
       mFormat(GL_RGBA4),
       mSamples(0),
       mMultisamplingMode(MultisamplingMode::Regular),
-      mHasProtectedContent(false),
       mInitState(InitState::Initialized)
 {}
 
@@ -77,18 +76,12 @@ void RenderbufferState::update(GLsizei width,
                                MultisamplingMode multisamplingMode,
                                InitState initState)
 {
-    mWidth               = width;
-    mHeight              = height;
-    mFormat              = format;
-    mSamples             = samples;
-    mMultisamplingMode   = multisamplingMode;
-    mInitState           = InitState::MayNeedInit;
-    mHasProtectedContent = false;
-}
-
-void RenderbufferState::setProtectedContent(bool hasProtectedContent)
-{
-    mHasProtectedContent = hasProtectedContent;
+    mWidth             = width;
+    mHeight            = height;
+    mFormat            = format;
+    mSamples           = samples;
+    mMultisamplingMode = multisamplingMode;
+    mInitState         = InitState::MayNeedInit;
 }
 
 // Renderbuffer implementation.
@@ -171,8 +164,6 @@ angle::Result Renderbuffer::setStorageEGLImageTarget(const Context *context, egl
     mState.update(static_cast<GLsizei>(image->getWidth()), static_cast<GLsizei>(image->getHeight()),
                   Format(image->getFormat()), 0, MultisamplingMode::Regular,
                   image->sourceInitState());
-    mState.setProtectedContent(image->hasProtectedContent());
-
     onStateChange(angle::SubjectMessage::SubjectChanged);
 
     return angle::Result::Continue;

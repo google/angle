@@ -1052,8 +1052,6 @@ bool ValidatePrimitiveBoundingBoxEXT(const Context *context,
                                      GLfloat maxZ,
                                      GLfloat maxW);
 
-// GL_EXT_protected_textures
-
 // GL_EXT_read_format_bgra
 
 // GL_EXT_robustness

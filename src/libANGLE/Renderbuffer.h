@@ -44,7 +44,6 @@ class RenderbufferState final : angle::NonCopyable
     GLsizei getSamples() const;
     MultisamplingMode getMultisamplingMode() const;
     InitState getInitState() const;
-    void setProtectedContent(bool hasProtectedContent);
 
   private:
     friend class Renderbuffer;
@@ -61,7 +60,6 @@ class RenderbufferState final : angle::NonCopyable
     Format mFormat;
     GLsizei mSamples;
     MultisamplingMode mMultisamplingMode;
-    bool mHasProtectedContent;
 
     // For robust resource init.
     InitState mInitState;

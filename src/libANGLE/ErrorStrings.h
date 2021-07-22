@@ -567,7 +567,6 @@ MSG kProgramNotSeparable = "Program object was not linked with its PROGRAM_SEPAR
 MSG kProgramPipelineDoesNotExist = "Program pipeline does not exist.";
 MSG kNotAllStagesOfSeparableProgramUsed = "A program object is active for at least one, but not all of the shader stages that were present when the program was linked.";
 MSG kProgramPipelineLinkFailed = "Program pipeline link failed";
-MSG kProtectedTexturesExtensionRequired = "GL_EXT_protected_textures not enabled.";
 
 // clang-format on
 
