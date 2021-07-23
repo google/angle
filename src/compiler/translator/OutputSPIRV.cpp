@@ -463,7 +463,6 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
 
         case EvqFragDepth:
         case EvqSampleMask:
-        case EvqPrimitiveID:
             return spv::StorageClassOutput;
 
         case EvqTessLevelOuter:
@@ -473,7 +472,9 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
                                                             : spv::StorageClassInput;
 
         case EvqLayer:
+        case EvqPrimitiveID:
             // gl_Layer is output in GS and input in FS.
+            // gl_PrimitiveID is output in GS and input in TCS, TES and FS.
             return shaderType == GL_GEOMETRY_SHADER ? spv::StorageClassOutput
                                                     : spv::StorageClassInput;
 
@@ -644,6 +645,12 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
     mBuilder.addEntryPointInterfaceVariableId(varId);
     spirv::WriteDecorate(mBuilder.getSpirvDecorations(), varId, spv::DecorationBuiltIn,
                          {spirv::LiteralInteger(builtInDecoration)});
+
+    // Additionally, decorate gl_TessLevel* with Patch.
+    if (type.getQualifier() == EvqTessLevelInner || type.getQualifier() == EvqTessLevelOuter)
+    {
+        spirv::WriteDecorate(mBuilder.getSpirvDecorations(), varId, spv::DecorationPatch, {});
+    }
 
     mSymbolIdMap.insert({symbol, varId});
     return varId;
@@ -5755,6 +5762,13 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
             // I/O blocks are decorated with Block
             spirv::WriteDecorate(mBuilder.getSpirvDecorations(), nonArrayTypeId,
                                  spv::DecorationBlock, {});
+        }
+
+        // Tessellation shaders can have their input or output qualified with |patch|.
+        if (type.getQualifier() == EvqPatchIn || type.getQualifier() == EvqPatchOut)
+        {
+            spirv::WriteDecorate(mBuilder.getSpirvDecorations(), nonArrayTypeId,
+                                 spv::DecorationPatch, {});
         }
     }
     else if (isInterfaceBlock)
