@@ -1815,17 +1815,35 @@ bool GetSystemInfoVendorIDAndDeviceID(const FunctionsGL *functions,
                                       angle::VendorID *outVendor,
                                       angle::DeviceID *outDevice)
 {
+    // Get vendor from GL itself, so on multi-GPU systems the correct GPU is selected.
+    *outVendor = GetVendorID(functions);
+    *outDevice = 0;
+
+    // Gather additional information from the system to detect multi-GPU scenarios.
     bool isGetSystemInfoSuccess = angle::GetSystemInfo(outSystemInfo);
+
+    // Get the device id from system info, corresponding to the vendor of the active GPU.
     if (isGetSystemInfoSuccess && !outSystemInfo->gpus.empty())
     {
-        *outVendor = outSystemInfo->gpus[outSystemInfo->activeGPUIndex].vendorId;
-        *outDevice = outSystemInfo->gpus[outSystemInfo->activeGPUIndex].deviceId;
+        for (const angle::GPUDeviceInfo &gpu : outSystemInfo->gpus)
+        {
+            if (*outVendor == gpu.vendorId)
+            {
+                *outDevice = gpu.deviceId;
+                break;
+            }
+        }
+
+        // The system info should always include the GPU the GL is running on.
+        ASSERT(*outDevice != 0);
     }
-    else
+
+    // If system info is not available, attempt to deduce the device from GL itself.
+    if (*outDevice == 0)
     {
-        *outVendor = GetVendorID(functions);
         *outDevice = GetDeviceID(functions);
     }
+
     return isGetSystemInfoSuccess;
 }
 
