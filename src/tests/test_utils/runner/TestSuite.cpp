@@ -1277,11 +1277,7 @@ TestSuite::TestSuite(int *argc, char **argv)
 
     {
         std::stringstream fakeTestName;
-        fakeTestName << kArtifactsFakeTestName;
-        if (mShardIndex != -1)
-        {
-            fakeTestName << "-Shard" << std::setfill('0') << std::setw(2) << mShardIndex;
-        }
+        fakeTestName << kArtifactsFakeTestName << '-' << testSet[0].testName;
         mTestResults.testArtifactsFakeTestName = fakeTestName.str();
     }
 
