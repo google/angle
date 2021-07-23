@@ -37,6 +37,7 @@ function generate_Android_bp_file() {
             "target_os = \"android\""
             "is_component_build = false"
             "is_debug = false"
+            "dcheck_always_on = false"
             "symbol_level = 0"
             "angle_standalone = false"
             "angle_build_all = false"
