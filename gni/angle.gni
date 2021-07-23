@@ -68,7 +68,7 @@ if (angle_has_build) {
 angle_data_dir = "angledata"
 
 declare_args() {
-  angle_assert_always_on = build_with_chromium && dcheck_always_on
+  angle_assert_always_on = dcheck_always_on
 
   if (current_cpu == "arm64" || current_cpu == "x64" ||
       current_cpu == "mips64el" || current_cpu == "s390x" ||
