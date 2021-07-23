@@ -2487,13 +2487,16 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             extendedInst = spv::GLSLstd450PackHalf2x16;
             break;
         case EOpUnpackSnorm2x16:
-            extendedInst = spv::GLSLstd450UnpackSnorm2x16;
+            extendedInst         = spv::GLSLstd450UnpackSnorm2x16;
+            extendScalarToVector = false;
             break;
         case EOpUnpackUnorm2x16:
-            extendedInst = spv::GLSLstd450UnpackUnorm2x16;
+            extendedInst         = spv::GLSLstd450UnpackUnorm2x16;
+            extendScalarToVector = false;
             break;
         case EOpUnpackHalf2x16:
-            extendedInst = spv::GLSLstd450UnpackHalf2x16;
+            extendedInst         = spv::GLSLstd450UnpackHalf2x16;
+            extendScalarToVector = false;
             break;
         case EOpPackUnorm4x8:
             extendedInst = spv::GLSLstd450PackUnorm4x8;
@@ -2502,15 +2505,22 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
             extendedInst = spv::GLSLstd450PackSnorm4x8;
             break;
         case EOpUnpackUnorm4x8:
-            extendedInst = spv::GLSLstd450UnpackUnorm4x8;
+            extendedInst         = spv::GLSLstd450UnpackUnorm4x8;
+            extendScalarToVector = false;
             break;
         case EOpUnpackSnorm4x8:
-            extendedInst = spv::GLSLstd450UnpackSnorm4x8;
+            extendedInst         = spv::GLSLstd450UnpackSnorm4x8;
+            extendScalarToVector = false;
             break;
         case EOpPackDouble2x32:
+            // TODO: support desktop GLSL.  http://anglebug.com/6197
+            UNIMPLEMENTED();
+            break;
+
         case EOpUnpackDouble2x32:
             // TODO: support desktop GLSL.  http://anglebug.com/6197
             UNIMPLEMENTED();
+            extendScalarToVector = false;
             break;
 
         case EOpLength:
