@@ -446,6 +446,9 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
         case EvqFragCoord:
         case EvqFrontFacing:
         case EvqPointCoord:
+        case EvqSampleID:
+        case EvqSamplePosition:
+        case EvqSampleMaskIn:
         case EvqPatchVerticesIn:
         case EvqTessCoord:
         case EvqPrimitiveIDIn:
@@ -459,6 +462,7 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
             return spv::StorageClassInput;
 
         case EvqFragDepth:
+        case EvqSampleMask:
         case EvqPrimitiveID:
             return spv::StorageClassOutput;
 
@@ -540,6 +544,24 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
         case EvqFragDepth:
             name              = "gl_FragDepth";
             builtInDecoration = spv::BuiltInFragDepth;
+            break;
+        case EvqSampleMask:
+            name              = "gl_SampleMask";
+            builtInDecoration = spv::BuiltInSampleMask;
+            break;
+        case EvqSampleMaskIn:
+            name              = "gl_SampleMaskIn";
+            builtInDecoration = spv::BuiltInSampleMask;
+            break;
+        case EvqSampleID:
+            name              = "gl_SampleID";
+            builtInDecoration = spv::BuiltInSampleId;
+            mBuilder.addCapability(spv::CapabilitySampleRateShading);
+            break;
+        case EvqSamplePosition:
+            name              = "gl_SamplePosition";
+            builtInDecoration = spv::BuiltInSamplePosition;
+            mBuilder.addCapability(spv::CapabilitySampleRateShading);
             break;
         case EvqHelperInvocation:
             name              = "gl_HelperInvocation";
