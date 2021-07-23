@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/tree_ops/gl/mac/AddAndTrueToLoopCondition.h"
+#include "compiler/translator/tree_ops/apple/AddAndTrueToLoopCondition.h"
 
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"

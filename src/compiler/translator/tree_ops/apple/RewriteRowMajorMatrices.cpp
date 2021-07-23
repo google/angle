@@ -6,7 +6,7 @@
 // RewriteRowMajorMatrices: Rewrite row-major matrices as column-major.
 //
 
-#include "compiler/translator/tree_ops/RewriteRowMajorMatrices.h"
+#include "compiler/translator/tree_ops/apple/RewriteRowMajorMatrices.h"
 
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/ImmutableStringBuilder.h"

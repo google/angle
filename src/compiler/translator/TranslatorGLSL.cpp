@@ -11,9 +11,9 @@
 #include "compiler/translator/ExtensionGLSL.h"
 #include "compiler/translator/OutputGLSL.h"
 #include "compiler/translator/VersionGLSL.h"
-#include "compiler/translator/tree_ops/RewriteRowMajorMatrices.h"
 #include "compiler/translator/tree_ops/RewriteTexelFetchOffset.h"
-#include "compiler/translator/tree_ops/gl/mac/RewriteUnaryMinusOperatorFloat.h"
+#include "compiler/translator/tree_ops/apple/RewriteRowMajorMatrices.h"
+#include "compiler/translator/tree_ops/apple/RewriteUnaryMinusOperatorFloat.h"
 
 namespace sh
 {

@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/tree_ops/gl/mac/UnfoldShortCircuitAST.h"
+#include "compiler/translator/tree_ops/apple/UnfoldShortCircuitAST.h"
 
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"

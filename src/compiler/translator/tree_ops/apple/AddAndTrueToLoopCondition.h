@@ -6,8 +6,8 @@
 
 // Rewrite condition in for and while loops to work around driver bug on Intel Mac.
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_GL_MAC_ADDANDTRUETOLOOPCONDITION_H_
-#define COMPILER_TRANSLATOR_TREEOPS_GL_MAC_ADDANDTRUETOLOOPCONDITION_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_APPLE_ADDANDTRUETOLOOPCONDITION_H_
+#define COMPILER_TRANSLATOR_TREEOPS_APPLE_ADDANDTRUETOLOOPCONDITION_H_
 
 #include "common/angleutils.h"
 
@@ -16,7 +16,7 @@ namespace sh
 class TCompiler;
 class TIntermNode;
 
-#if defined(ANGLE_ENABLE_GLSL) && defined(ANGLE_PLATFORM_APPLE)
+#if defined(ANGLE_ENABLE_GLSL) && defined(ANGLE_ENABLE_APPLE_WORKAROUNDS)
 ANGLE_NO_DISCARD bool AddAndTrueToLoopCondition(TCompiler *compiler, TIntermNode *root);
 #else
 ANGLE_NO_DISCARD ANGLE_INLINE bool AddAndTrueToLoopCondition(TCompiler *compiler, TIntermNode *root)
@@ -28,4 +28,4 @@ ANGLE_NO_DISCARD ANGLE_INLINE bool AddAndTrueToLoopCondition(TCompiler *compiler
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_GL_MAC_ADDANDTRUETOLOOPCONDITION_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_APPLE_ADDANDTRUETOLOOPCONDITION_H_

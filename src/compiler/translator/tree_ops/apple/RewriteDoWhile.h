@@ -7,8 +7,8 @@
 // RewriteDoWhile.h: rewrite do-while loops as while loops to work around
 // driver bugs
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_GL_MAC_REWRITEDOWHILE_H_
-#define COMPILER_TRANSLATOR_TREEOPS_GL_MAC_REWRITEDOWHILE_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_APPLE_REWRITEDOWHILE_H_
+#define COMPILER_TRANSLATOR_TREEOPS_APPLE_REWRITEDOWHILE_H_
 
 #include "common/angleutils.h"
 
@@ -19,7 +19,7 @@ class TCompiler;
 class TIntermNode;
 class TSymbolTable;
 
-#if defined(ANGLE_ENABLE_GLSL) && defined(ANGLE_PLATFORM_APPLE)
+#if defined(ANGLE_ENABLE_GLSL) && defined(ANGLE_ENABLE_APPLE_WORKAROUNDS)
 ANGLE_NO_DISCARD bool RewriteDoWhile(TCompiler *compiler,
                                      TIntermNode *root,
                                      TSymbolTable *symbolTable);
@@ -35,4 +35,4 @@ ANGLE_NO_DISCARD ANGLE_INLINE bool RewriteDoWhile(TCompiler *compiler,
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_GL_MAC_REWRITEDOWHILE_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_APPLE_REWRITEDOWHILE_H_

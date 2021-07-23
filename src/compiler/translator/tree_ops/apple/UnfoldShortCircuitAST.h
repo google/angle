@@ -7,8 +7,8 @@
 // operations with ternary operations.
 //
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_GL_MAC_UNFOLDSHORTCIRCUITAST_H_
-#define COMPILER_TRANSLATOR_TREEOPS_GL_MAC_UNFOLDSHORTCIRCUITAST_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_APPLE_UNFOLDSHORTCIRCUITAST_H_
+#define COMPILER_TRANSLATOR_TREEOPS_APPLE_UNFOLDSHORTCIRCUITAST_H_
 
 #include "common/angleutils.h"
 
@@ -18,7 +18,7 @@ namespace sh
 class TCompiler;
 class TIntermBlock;
 
-#if defined(ANGLE_ENABLE_GLSL) && defined(ANGLE_PLATFORM_APPLE)
+#if defined(ANGLE_ENABLE_GLSL) && defined(ANGLE_ENABLE_APPLE_WORKAROUNDS)
 ANGLE_NO_DISCARD bool UnfoldShortCircuitAST(TCompiler *compiler, TIntermBlock *root);
 #else
 ANGLE_NO_DISCARD ANGLE_INLINE bool UnfoldShortCircuitAST(TCompiler *compiler, TIntermBlock *root)
@@ -30,4 +30,4 @@ ANGLE_NO_DISCARD ANGLE_INLINE bool UnfoldShortCircuitAST(TCompiler *compiler, TI
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_GL_MAC_UNFOLDSHORTCIRCUITAST_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_APPLE_UNFOLDSHORTCIRCUITAST_H_

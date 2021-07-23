@@ -7,7 +7,7 @@
 // RewriteDoWhile.cpp: rewrites do-while loops using another equivalent
 // construct.
 
-#include "compiler/translator/tree_ops/gl/mac/RewriteDoWhile.h"
+#include "compiler/translator/tree_ops/apple/RewriteDoWhile.h"
 
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/StaticType.h"
