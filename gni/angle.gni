@@ -41,7 +41,7 @@ if (angle_has_build) {
   }
 
   angle_use_x11 = use_x11 && !is_ggp
-  angle_use_vulkan_display = is_linux && !use_x11 && !is_ggp
+  angle_use_vulkan_display = is_linux && !is_ggp
 } else {
   declare_args() {
     is_ubsan = false
@@ -60,7 +60,7 @@ if (angle_has_build) {
   }
 
   declare_args() {
-    angle_use_vulkan_display = is_linux && !angle_use_x11 && !is_ggp
+    angle_use_vulkan_display = is_linux && !is_ggp
   }
 }
 

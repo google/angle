@@ -390,8 +390,8 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
                 impl = rx::CreateVulkanXcbDisplay(state);
                 break;
             }
-            break;
-#        elif defined(ANGLE_USE_VULKAN_DISPLAY)
+#        endif
+#        if defined(ANGLE_USE_VULKAN_DISPLAY)
             if (platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_SIMPLE_ANGLE &&
                 rx::IsVulkanSimpleDisplayAvailable())
             {
@@ -407,8 +407,8 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
                 // Not supported creation type on vulkan display, fail display creation.
                 impl = nullptr;
             }
-            break;
 #        endif
+            break;
 #    elif defined(ANGLE_PLATFORM_ANDROID)
             if (rx::IsVulkanAndroidDisplayAvailable())
             {
