@@ -21,6 +21,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// Undefined behaviour in the tests.
+6214 : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.lowp_uvec4_vertex = FAIL
+6214 : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.mediump_uvec4_vertex = FAIL
+
 // Failures related to using a depth/stencil enabled backbuffer on Windows / NVIDIA.
 2428 D3D11 NVIDIA : dEQP-GLES3.functional.shaders.invariance.highp.common_subexpression_1 = FAIL
 2428 D3D11 NVIDIA : dEQP-GLES3.functional.shaders.invariance.mediump.common_subexpression_1 = FAIL
