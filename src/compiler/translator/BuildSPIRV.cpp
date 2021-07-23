@@ -1617,6 +1617,12 @@ void SPIRVBuilder::addCapability(spv::Capability capability)
     mCapabilities.insert(capability);
 }
 
+void SPIRVBuilder::addExecutionMode(spv::ExecutionMode executionMode)
+{
+    ASSERT(static_cast<size_t>(executionMode) < mExecutionModes.size());
+    mExecutionModes.set(executionMode);
+}
+
 void SPIRVBuilder::setEntryPointId(spirv::IdRef id)
 {
     ASSERT(!mEntryPointId.valid());
@@ -2150,6 +2156,13 @@ void SPIRVBuilder::generateExecutionModes(spirv::Blob *blob)
 
         default:
             break;
+    }
+
+    // Add any execution modes that were added due to built-ins used in the shader.
+    for (uint32_t executionMode : mExecutionModes)
+    {
+        spirv::WriteExecutionMode(blob, mEntryPointId,
+                                  static_cast<spv::ExecutionMode>(executionMode), {});
     }
 }
 

@@ -10,6 +10,7 @@
 #define COMPILER_TRANSLATOR_BUILDSPIRV_H_
 
 #include "common/FixedVector.h"
+#include "common/bitset_utils.h"
 #include "common/hash_utils.h"
 #include "common/spirv/spirv_instruction_builder_autogen.h"
 #include "compiler/translator/Compiler.h"
@@ -333,6 +334,7 @@ class SPIRVBuilder : angle::NonCopyable
     bool isInvariantOutput(const TType &type) const;
 
     void addCapability(spv::Capability capability);
+    void addExecutionMode(spv::ExecutionMode executionMode);
     void setEntryPointId(spirv::IdRef id);
     void addEntryPointInterfaceVariableId(spirv::IdRef id);
     void writePerVertexBuiltIns(const TType &type, spirv::IdRef typeId);
@@ -440,6 +442,10 @@ class SPIRVBuilder : angle::NonCopyable
     // Capabilities the shader is using.  Accumulated as the instructions are generated.  The Shader
     // capability is unconditionally generated, so it's not tracked.
     std::set<spv::Capability> mCapabilities;
+    // Execution modes the shader is using.  Most execution modes are automatically derived from
+    // shader metadata, but some are only discovered while traversing the tree.  Only the latter
+    // execution modes are stored here.
+    angle::BitSet<32> mExecutionModes;
 
     // The list of interface variables and the id of main() populated as the instructions are
     // generated.  Used for the OpEntryPoint instruction.

@@ -544,6 +544,7 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
         case EvqFragDepth:
             name              = "gl_FragDepth";
             builtInDecoration = spv::BuiltInFragDepth;
+            mBuilder.addExecutionMode(spv::ExecutionModeDepthReplacing);
             break;
         case EvqSampleMask:
             name              = "gl_SampleMask";
