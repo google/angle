@@ -2,7 +2,7 @@
     "angle": {
         "exclusions": [
             "DEPS",
-            "infra/specs/*"
+            "infra/specs/.*"
         ]
     }
 }
