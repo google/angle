@@ -27,8 +27,18 @@ namespace sh
 namespace
 {
 
-bool isInitialized        = false;
-bool isGlslangInitialized = false;
+bool isInitialized = false;
+
+// glslang can only be initialized/finalized once per process. Otherwise, the following EGL commands
+// will call GlslangFinalize() without ever being able to GlslangInitialize() again, leading to
+// crashes since GlslangFinalize() cleans up glslang for the entire process.
+//   dpy1 = eglGetPlatformDisplay()   |
+//   eglInitialize(dpy1)              | GlslangInitialize()
+//   dpy2 = eglGetPlatformDisplay()   |
+//   eglInitialize(dpy2)              | GlslangInitialize()
+//   eglTerminate(dpy2)               | GlslangFinalize()
+//   eglInitialize(dpy1)              | Display::isInitialized() == true, no GlslangInitialize()
+int initializeGlslangRefCount = 0;
 
 //
 // This is the platform independent interface between an OGL driver
@@ -916,20 +926,22 @@ unsigned int GetShaderSharedMemorySize(const ShHandle handle)
 
 void InitializeGlslang()
 {
-    if (!isGlslangInitialized)
+    if (initializeGlslangRefCount == 0)
     {
         GlslangInitialize();
     }
-    isGlslangInitialized = true;
+    ++initializeGlslangRefCount;
+    ASSERT(initializeGlslangRefCount < std::numeric_limits<int>::max());
 }
 
 void FinalizeGlslang()
 {
-    if (isGlslangInitialized)
+    --initializeGlslangRefCount;
+    ASSERT(initializeGlslangRefCount >= 0);
+    if (initializeGlslangRefCount == 0)
     {
         GlslangFinalize();
     }
-    isGlslangInitialized = false;
 }
 
 // Can't prefix with just _ because then we might introduce a double underscore, which is not safe

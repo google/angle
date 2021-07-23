@@ -83,6 +83,7 @@ class EGLDeviceCreationTest : public ANGLETest
 
         if (mContext != EGL_NO_CONTEXT)
         {
+            eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
             eglDestroyContext(mDisplay, mContext);
             mContext = EGL_NO_CONTEXT;
         }
@@ -257,6 +258,7 @@ TEST_P(EGLDeviceCreationTest, RenderingUsingD3D11Device)
 
     // Note that we must call TearDown() before we release the EGL device, since the display
     // depends on the device
+    ASSERT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
     testTearDown();
 
     eglReleaseDeviceANGLE(eglDevice);

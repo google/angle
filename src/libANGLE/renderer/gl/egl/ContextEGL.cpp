@@ -23,7 +23,7 @@ ContextEGL::~ContextEGL() {}
 
 angle::Result ContextEGL::onMakeCurrent(const gl::Context *context)
 {
-    if (!context->isCurrent() && context->isExternal())
+    if (context->isExternal())
     {
         if (!mExtState)
         {

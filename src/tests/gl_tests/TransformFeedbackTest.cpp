@@ -1036,6 +1036,8 @@ TEST_P(TransformFeedbackTest, MultiContext)
 
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsOpenGL());
 
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
+
     // Flaky on Win Intel Vulkan. http://anglebug.com/4497
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 

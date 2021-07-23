@@ -69,6 +69,11 @@ TEST_P(EGLMultiContextTest, TestContextDestroySimple)
     EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, context1));
     EXPECT_EGL_TRUE(eglDestroyContext(dpy, context2));
     EXPECT_EGL_SUCCESS();
+
+    // Cleanup
+    EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    EXPECT_EGL_TRUE(eglDestroyContext(dpy, context1));
+    EXPECT_EGL_SUCCESS();
 }
 
 // Test that a compute shader running in one thread will still work when rendering is happening in
@@ -226,6 +231,7 @@ void main()
     ASSERT_NE(currentStep, Step::Abort);
 
     // Clean up
+    EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
     for (size_t t = 0; t < kThreadCount; ++t)
     {
         eglDestroySurface(dpy, surface[t]);

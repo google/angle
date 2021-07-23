@@ -785,6 +785,12 @@ GLint64 Context11::getTimestamp()
 
 angle::Result Context11::onMakeCurrent(const gl::Context *context)
 {
+    // Immediately return if the device has been lost.
+    if (!mRenderer->getDevice())
+    {
+        return angle::Result::Continue;
+    }
+
     return mRenderer->getStateManager()->onMakeCurrent(context);
 }
 

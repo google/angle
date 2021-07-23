@@ -879,6 +879,7 @@ angle::Result ContextGL::onMakeCurrent(const gl::Context *context)
 
 angle::Result ContextGL::onUnMakeCurrent(const gl::Context *context)
 {
+    ANGLE_TRY(flush(context));
     if (getFeaturesGL().unbindFBOOnContextSwitch.enabled)
     {
         mRenderer->getStateManager()->bindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -139,8 +139,15 @@ class EGLSurfaceTest : public ANGLETest
 
     void initializeContext()
     {
-        initializeSingleContext(&mContext);
-        initializeSingleContext(&mSecondContext);
+        // Only initialize the contexts once.
+        if (mContext == EGL_NO_CONTEXT)
+        {
+            initializeSingleContext(&mContext);
+        }
+        if (mSecondContext == EGL_NO_CONTEXT)
+        {
+            initializeSingleContext(&mSecondContext);
+        }
     }
 
     void initializeWindowSurfaceWithAttribs(EGLConfig config,
@@ -487,7 +494,6 @@ TEST_P(EGLSurfaceTest, ResizeWindow)
 
     initializeDisplay();
     initializeSurfaceWithDefaultConfig(true);
-    initializeContext();
     ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
 
     eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);

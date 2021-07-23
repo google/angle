@@ -200,7 +200,11 @@ class EGLDirectCompositionTest : public ANGLETest
         {
             return;
         }
-        ASSERT_EGL_TRUE(eglTerminate(mEglDisplay));
+        if (mEglDisplay != EGL_NO_DISPLAY)
+        {
+            ASSERT_EGL_TRUE(eglTerminate(mEglDisplay));
+            mEglDisplay = EGL_NO_DISPLAY;
+        }
 
         OSWindow::Delete(&mOSWindow);
     }
@@ -247,8 +251,11 @@ TEST_P(EGLDirectCompositionTest, SurfaceSizeFromSpriteSize)
     ASSERT_TRUE(surfacewidth == static_cast<int>(visualsize.X));
     ASSERT_TRUE(surfaceheight == static_cast<int>(visualsize.Y));
 
+    ASSERT_TRUE(eglMakeCurrent(mEglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT) !=
+                EGL_FALSE);
     ASSERT_EGL_TRUE(eglDestroySurface(mEglDisplay, s));
     ASSERT_EGL_TRUE(eglDestroyContext(mEglDisplay, mEglContext));
+    mEglContext = EGL_NO_CONTEXT;
 }
 
 // This tests that a WindowSurface can be created using a SpriteVisual as the containing window
@@ -291,8 +298,11 @@ TEST_P(EGLDirectCompositionTest, RenderSolidColor)
     ASSERT_EGL_TRUE(pixelBuffer[(50 * 50 * 4) + 2] == 0);
     ASSERT_EGL_TRUE(pixelBuffer[(50 * 50 * 4) + 3] == 255);
 
+    ASSERT_TRUE(eglMakeCurrent(mEglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT) !=
+                EGL_FALSE);
     ASSERT_EGL_TRUE(eglDestroySurface(mEglDisplay, s));
     ASSERT_EGL_TRUE(eglDestroyContext(mEglDisplay, mEglContext));
+    mEglContext = EGL_NO_CONTEXT;
 }
 
 ANGLE_INSTANTIATE_TEST(EGLDirectCompositionTest, WithNoFixture(ES2_D3D11()));
