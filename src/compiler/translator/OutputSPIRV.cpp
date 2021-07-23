@@ -3480,6 +3480,8 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
             }
             // No coordinates parameter.
             coordinatesIndex = 0;
+            // No dref parameter.
+            isDref = false;
             break;
 
         case EOpTextureSamples:
@@ -3488,6 +3490,8 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
             spirvOp                      = spv::OpImageQuerySamples;
             // No coordinates parameter.
             coordinatesIndex = 0;
+            // No dref parameter.
+            isDref = false;
             break;
 
         case EOpTextureQueryLevels:
@@ -3495,10 +3499,14 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
             spirvOp                      = spv::OpImageQueryLevels;
             // No coordinates parameter.
             coordinatesIndex = 0;
+            // No dref parameter.
+            isDref = false;
             break;
 
         case EOpTextureQueryLod:
             spirvOp = spv::OpImageQueryLod;
+            // No dref parameter.
+            isDref = false;
             break;
 
         default:
@@ -3508,7 +3516,7 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
     // If an implicit-lod instruction is used outside a fragment shader, change that to an explicit
     // one as they are not allowed in SPIR-V outside fragment shaders.
     bool makeLodExplicit =
-        mCompiler->getShaderType() != GL_FRAGMENT_SHADER && lodIndex == 0 &&
+        mCompiler->getShaderType() != GL_FRAGMENT_SHADER && lodIndex == 0 && dPdxIndex == 0 &&
         (spirvOp == spv::OpImageSampleImplicitLod || spirvOp == spv::OpImageFetch);
 
     // Apply any necessary fix up.
