@@ -6914,6 +6914,33 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test switch/case where default is last.
+TEST_P(GLSLTest_ES3, SwitchWithDefaultAtTheEnd)
+{
+    constexpr char kFS[] = R"(#version 300 es
+
+precision highp float;
+out vec4 my_FragColor;
+
+uniform int u_zero;
+
+void main()
+{
+    switch (u_zero)
+    {
+        case 1:
+            my_FragColor = vec4(1, 0, 0, 1);
+            break;
+        default:
+            my_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that a switch statement with an empty block inside as a final statement compiles.
 TEST_P(GLSLTest_ES3, SwitchFinalCaseHasEmptyBlock)
 {

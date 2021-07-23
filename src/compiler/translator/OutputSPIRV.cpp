@@ -5215,7 +5215,7 @@ bool OutputSPIRVTraverser::visitSwitch(Visit visit, TIntermSwitch *node)
         }
 
         const spirv::IdRef mergeBlock   = conditional->blockIds.back();
-        const spirv::IdRef defaultBlock = defaultBlockIndex < caseValues.size()
+        const spirv::IdRef defaultBlock = defaultBlockIndex <= caseValues.size()
                                               ? conditional->blockIds[defaultBlockIndex]
                                               : mergeBlock;
 
