@@ -15,10 +15,6 @@
 6142 VULKAN : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
 6153 VULKAN WIN INTEL : GLSLTest_ES31.StructAndArrayEqualOperator/ES3_1_Vulkan_DirectSPIRVGen = SKIP
 6153 VULKAN PIXEL4ORXL : GLSLTest_ES31.StructAndArrayEqualOperator/ES3_1_Vulkan_DirectSPIRVGen = SKIP
-// Fails due to bug in glslang: https://github.com/KhronosGroup/glslang/issues/2694
-6178 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_Vulkan = SKIP
-6178 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_Vulkan_SwiftShader = SKIP
-6178 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_Vulkan_AsyncQueue = SKIP
 
 // Direct SPIR-V generation.  The following tests pass on some platforms but not others.  Need to investigate.
 4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/ES3_1_Vulkan_DirectSPIRVGen = SKIP
