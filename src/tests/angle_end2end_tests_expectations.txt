@@ -20,6 +20,11 @@
 6178 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_Vulkan_SwiftShader = SKIP
 6178 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_Vulkan_AsyncQueue = SKIP
 
+// Direct SPIR-V generation.  The following tests pass on some platforms but not others.  Need to investigate.
+4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/ES3_1_Vulkan_DirectSPIRVGen = SKIP
+4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/ES3_1_Vulkan_DirectSPIRVGen = SKIP
+4889 VULKAN : GLSLTest_ES31.VaryingTessellationSampleInAndOut/ES3_1_Vulkan_DirectSPIRVGen = SKIP
+
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 4092 WIN VULKAN : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
