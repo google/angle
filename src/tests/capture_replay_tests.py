@@ -386,7 +386,7 @@ class TestExpectation():
         return False
 
 
-def ParseTestNamesFromTestList(output, test_expectation):
+def ParseTestNamesFromTestList(output, test_expectation, ignore_exclude_from_run):
     output_lines = output.splitlines()
     tests = []
     seen_start_of_tests = False
@@ -399,7 +399,7 @@ def ParseTestNamesFromTestList(output, test_expectation):
             break
         elif not seen_start_of_tests:
             pass
-        elif not test_expectation.TestIsDisabled(l):
+        elif not test_expectation.TestIsDisabled(l) or ignore_exclude_from_run:
             tests.append(l)
         else:
             disabled += 1
@@ -915,7 +915,8 @@ def main(args, platform):
         test_path = os.path.join(capture_build_dir, args.test_suite)
         test_list = GetTestsListForFilter(args, test_path, args.gtest_filter)
         test_expectation = TestExpectation(platform)
-        test_names = ParseTestNamesFromTestList(test_list, test_expectation)
+        test_names = ParseTestNamesFromTestList(test_list, test_expectation,
+                                                args.force_run_capture)
         test_expectation_for_list = test_expectation.Filter(test_names)
         # objects created by manager can be shared by multiple processes. We use it to create
         # collections that are shared by multiple processes such as job queue or result list.
@@ -1142,6 +1143,11 @@ if __name__ == "__main__":
         default=DEFAULT_MAX_JOBS,
         type=int,
         help='Maximum number of test processes. Default is %d.' % DEFAULT_MAX_JOBS)
+    parser.add_argument(
+        '-f',
+        '--force-run-capture',
+        action='store_true',
+        help='Also run tests that are disabled in the expectations by SKIP_FOR_CAPTURE')
 
     # TODO(jmadill): Remove this argument. http://anglebug.com/6102
     parser.add_argument('--depot-tools-path', default=None, help='Path to depot tools')
