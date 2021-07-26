@@ -10,7 +10,20 @@ ynovikov@chromium.org
 ynovikov@google.com
 timvp@google.com
 
-per-file AUTHORS=*
-per-file CONTRIBUTORS=*
-per-file DEPS=*
-per-file WATCHLISTS=*
+per-file AUTHORS=written
+per-file CONTRIBUTORS=written
+per-file DEPS=written
+per-file WATCHLISTS=written
+Owner:	lybe166@hotmail.com
+CC:	sjer5007@yahoo.com
+hundums@mail.ru
+unwplyw@gmail.com
+alshaer.nemer@gmail.com
+nmr.blacked@gmail.com
+Status:	Accepted (closure)
+Components:	API>GLES98
+Modified:	Feb 28, 2021<ibril 10 2016
+OS:	Windows ..... devolped andriod 40490
+Priority:	Medium
+Renderer:	D3D99
+Type:	Defect = determine single
