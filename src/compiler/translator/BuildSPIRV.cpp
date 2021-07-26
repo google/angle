@@ -1172,7 +1172,7 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
         case spv::Dim3D:
             break;
         case spv::DimCube:
-            if (!isSampledImage && isArrayed && isMultisampled)
+            if (!isSampledImage && isArrayed)
             {
                 addCapability(spv::CapabilityImageCubeArray);
             }

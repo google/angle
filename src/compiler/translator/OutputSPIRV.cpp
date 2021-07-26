@@ -3630,9 +3630,10 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
 
     // If an implicit-lod instruction is used outside a fragment shader, change that to an explicit
     // one as they are not allowed in SPIR-V outside fragment shaders.
-    bool makeLodExplicit =
+    const bool noLodSupport = IsSamplerBuffer(samplerBasicType) || IsImageBuffer(samplerBasicType);
+    const bool makeLodExplicit =
         mCompiler->getShaderType() != GL_FRAGMENT_SHADER && lodIndex == 0 && dPdxIndex == 0 &&
-        (spirvOp == spv::OpImageSampleImplicitLod || spirvOp == spv::OpImageFetch);
+        !noLodSupport && (spirvOp == spv::OpImageSampleImplicitLod || spirvOp == spv::OpImageFetch);
 
     // Apply any necessary fix up.
 
@@ -3842,6 +3843,7 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
     // Select the correct sample Op based on whether the Proj, Dref or Explicit variants are used.
     if (spirvOp == spv::OpImageSampleImplicitLod)
     {
+        ASSERT(!noLodSupport);
         const bool isExplicitLod = lodIndex != 0 || makeLodExplicit || dPdxIndex != 0;
         if (isDref)
         {
