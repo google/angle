@@ -855,7 +855,7 @@ class GroupedList:
     def get_offsets(self):
         return self.offsets
 
-    def update_arrays(self):
+    def update_arrays(self, essl_only):
 
         def add_rule(rules, spec, level, shaders, extension, symbol):
             var = ("&TableBase::%s" % symbol) if symbol.startswith("m_gl") else None
@@ -897,7 +897,7 @@ class GroupedList:
                     add_rule(rules, "ESSL", data['essl_level'], data['shader_type'], None,
                              data["symbol"])
 
-                if "symbol" in data and "glsl_level" in data:
+                if "symbol" in data and "glsl_level" in data and not essl_only:
                     add_rule(rules, "GLSL", data['glsl_level'], data['shader_type'], None,
                              data["symbol"])
 
@@ -905,7 +905,7 @@ class GroupedList:
                     add_rule(rules, "ESSL", data['essl_level2'], data['shader_type2'], None,
                              data["symbol2"])
 
-                if "symbol2" in data and "glsl_level2" in data:
+                if "symbol2" in data and "glsl_level2" in data and not essl_only:
                     add_rule(rules, "GLSL", data['glsl_level2'], data['shader_type2'], None,
                              data["symbol2"])
 
@@ -913,7 +913,7 @@ class GroupedList:
                     add_rule(rules, "ESSL", data['essl_level3'], data['shader_type3'], None,
                              data["symbol3"])
 
-                if "symbol3" in data and "glsl_level3" in data:
+                if "symbol3" in data and "glsl_level3" in data and not essl_only:
                     add_rule(rules, "GLSL", data['glsl_level3'], data['shader_type3'], None,
                              data["symbol3"])
 
@@ -921,7 +921,7 @@ class GroupedList:
                     add_rule(rules, "ESSL", data['essl_level4'], data['shader_type4'], None,
                              data["symbol4"])
 
-                if "symbol4" in data and "glsl_level4" in data:
+                if "symbol4" in data and "glsl_level4" in data and not essl_only:
                     add_rule(rules, "GLSL", data['glsl_level4'], data['shader_type4'], None,
                              data["symbol4"])
 
@@ -929,7 +929,7 @@ class GroupedList:
                     add_rule(rules, "ESSL", data["essl_ext_level"], data["essl_ext_shader_type"],
                              data["essl_extension"], data["essl_ext_symbol"])
 
-                if "glsl_ext_symbol" in data:
+                if "glsl_ext_symbol" in data and not essl_only:
                     add_rule(rules, "GLSL", data["glsl_ext_level"], data["glsl_ext_shader_type"],
                              data["glsl_extension"], data["glsl_ext_symbol"])
 
@@ -2119,7 +2119,7 @@ def generate_files(essl_only, args, functions_txt_filename, variables_json_filen
     for group_name, group in parsed_variables.items():
         process_variable_group('NONE', group_name, group, symbols, variables, mangled_builtins)
 
-    mangled_builtins.update_arrays()
+    mangled_builtins.update_arrays(essl_only)
 
     output_strings = {
         'script_name':
