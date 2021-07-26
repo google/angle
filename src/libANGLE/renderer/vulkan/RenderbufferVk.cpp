@@ -183,14 +183,6 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
                                      rendererQueueFamilyIndex, commandBuffer);
     }
 
-    gl::TextureType viewType = imageVk->getImageTextureType();
-
-    if (imageVk->getImageTextureType() == gl::TextureType::CubeMap)
-    {
-        viewType = vk::Get2DTextureType(imageVk->getImage()->getLayerCount(),
-                                        imageVk->getImage()->getSamples());
-    }
-
     mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, imageVk->getImageLevel(),
                        imageVk->getImageLayer(), 1, RenderTargetTransience::Default);
 

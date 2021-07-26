@@ -645,7 +645,6 @@ static inline unsigned int ComputeTypeIndex(GLenum type)
 
 const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, angle::FormatID vertexFormatID)
 {
-    static bool initialized           = false;
     static DWORD initializedDeclTypes = 0;
     static VertexFormat formatConverters[NUM_GL_VERTEX_ATTRIB_TYPES][2][4];
     if (initializedDeclTypes != supportedDeclTypes)
@@ -674,7 +673,6 @@ const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, angle::FormatI
                 }
             }
         }
-        initialized          = true;
         initializedDeclTypes = supportedDeclTypes;
     }
 

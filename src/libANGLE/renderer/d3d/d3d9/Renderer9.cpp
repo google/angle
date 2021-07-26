@@ -1270,9 +1270,8 @@ angle::Result Renderer9::applyRenderTarget(const gl::Context *context,
     }
     ASSERT(colorRenderTarget != nullptr);
 
-    size_t renderTargetWidth     = 0;
-    size_t renderTargetHeight    = 0;
-    D3DFORMAT renderTargetFormat = D3DFMT_UNKNOWN;
+    size_t renderTargetWidth  = 0;
+    size_t renderTargetHeight = 0;
 
     bool renderTargetChanged        = false;
     unsigned int renderTargetSerial = colorRenderTarget->getSerial();
@@ -1287,7 +1286,6 @@ angle::Result Renderer9::applyRenderTarget(const gl::Context *context,
 
         renderTargetWidth  = colorRenderTarget->getWidth();
         renderTargetHeight = colorRenderTarget->getHeight();
-        renderTargetFormat = colorRenderTarget->getD3DFormat();
 
         mAppliedRenderTargetSerial = renderTargetSerial;
         renderTargetChanged        = true;

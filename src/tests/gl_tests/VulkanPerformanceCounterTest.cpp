@@ -3024,6 +3024,9 @@ void main()
         }
     }
 
+    // TODO(syoussefi): Validate.
+    ANGLE_UNUSED_VARIABLE(descriptorSetAllocationsBefore);
+
     ASSERT_GL_NO_ERROR();
 
     // Verify correctness first.
