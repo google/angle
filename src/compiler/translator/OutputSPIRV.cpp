@@ -4196,7 +4196,8 @@ spirv::IdRef OutputSPIRVTraverser::cast(spirv::IdRef value,
         valueTypeSpec.isInvariantBlock == expectedTypeSpec.isInvariantBlock &&
         valueTypeSpec.isRowMajorQualifiedBlock == expectedTypeSpec.isRowMajorQualifiedBlock &&
         valueTypeSpec.isRowMajorQualifiedArray == expectedTypeSpec.isRowMajorQualifiedArray &&
-        valueTypeSpec.isOrHasBoolInInterfaceBlock == expectedTypeSpec.isOrHasBoolInInterfaceBlock)
+        valueTypeSpec.isOrHasBoolInInterfaceBlock == expectedTypeSpec.isOrHasBoolInInterfaceBlock &&
+        valueTypeSpec.isPatchIOBlock == expectedTypeSpec.isPatchIOBlock)
     {
         return value;
     }
@@ -5827,12 +5828,12 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
             spirv::WriteDecorate(mBuilder.getSpirvDecorations(), nonArrayTypeId,
                                  spv::DecorationBlock, {});
         }
-
-        // Tessellation shaders can have their input or output qualified with |patch|.
-        if (type.getQualifier() == EvqPatchIn || type.getQualifier() == EvqPatchOut)
+        else if (type.getQualifier() == EvqPatchIn || type.getQualifier() == EvqPatchOut)
         {
-            spirv::WriteDecorate(mBuilder.getSpirvDecorations(), nonArrayTypeId,
-                                 spv::DecorationPatch, {});
+            // Tessellation shaders can have their input or output qualified with |patch|.  For I/O
+            // blocks, the members are decorated instead.
+            spirv::WriteDecorate(mBuilder.getSpirvDecorations(), variableId, spv::DecorationPatch,
+                                 {});
         }
     }
     else if (isInterfaceBlock)

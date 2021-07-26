@@ -36,6 +36,7 @@ bool operator==(const SpirvType &a, const SpirvType &b)
         return a.typeSpec.blockStorage == b.typeSpec.blockStorage &&
                a.typeSpec.isInvariantBlock == b.typeSpec.isInvariantBlock &&
                a.typeSpec.isRowMajorQualifiedBlock == b.typeSpec.isRowMajorQualifiedBlock &&
+               a.typeSpec.isPatchIOBlock == b.typeSpec.isPatchIOBlock &&
                a.typeSpec.isOrHasBoolInInterfaceBlock == b.typeSpec.isOrHasBoolInInterfaceBlock;
     }
 
@@ -296,6 +297,13 @@ spv::ExecutionMode GetGeometryOutputExecutionMode(TLayoutPrimitiveType primitive
 
 spv::ExecutionMode GetTessEvalInputExecutionMode(TLayoutTessEvaluationType inputType)
 {
+    // It's invalid for input type to not be specified, but that's a link-time error.  Default to
+    // anything.
+    if (inputType == EtetUndefined)
+    {
+        inputType = EtetTriangles;
+    }
+
     switch (inputType)
     {
         case EtetTriangles:
@@ -383,6 +391,12 @@ void SpirvTypeSpec::inferDefaults(const TType &type, TCompiler *compiler)
                                           type.isStructureContainingType(EbtBool) ||
                                           type.getBasicType() == EbtBool;
         }
+
+        if (!isPatchIOBlock && type.isInterfaceBlock())
+        {
+            isPatchIOBlock =
+                type.getQualifier() == EvqPatchIn || type.getQualifier() == EvqPatchOut;
+        }
     }
 
     // |invariant| is significant for structs as the fields of the type are decorated with Invariant
@@ -411,6 +425,9 @@ void SpirvTypeSpec::onArrayElementSelection(bool isElementTypeBlock, bool isElem
 
 void SpirvTypeSpec::onBlockFieldSelection(const TType &fieldType)
 {
+    // Patch is never recursively applied.
+    isPatchIOBlock = false;
+
     if (fieldType.getStruct() == nullptr)
     {
         // If the field is not a block, no difference if the parent block was invariant or
@@ -1447,8 +1464,8 @@ spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
                                     ? &mSpirvCurrentFunctionBlocks.front().localVariables
                                     : &mSpirvVariableDecls;
 
-    const spirv::IdRef variableId    = getNewId(decorations);
     const spirv::IdRef typePointerId = getTypePointerId(typeId, storageClass);
+    const spirv::IdRef variableId    = getNewId(decorations);
 
     spirv::WriteVariable(spirvSection, typePointerId, variableId, storageClass, initializerId);
 
@@ -1915,6 +1932,13 @@ void SPIRVBuilder::writeMemberDecorations(const SpirvType &type, spirv::IdRef ty
 
         // Add interpolation and auxiliary decorations
         writeInterpolationDecoration(fieldType.getQualifier(), typeId, fieldIndex);
+
+        // Add patch decoration if any.
+        if (type.typeSpec.isPatchIOBlock)
+        {
+            spirv::WriteMemberDecorate(&mSpirvDecorations, typeId,
+                                       spirv::LiteralInteger(fieldIndex), spv::DecorationPatch, {});
+        }
 
         // Add other decorations.
         SpirvDecorations decorations = getDecorations(fieldType);

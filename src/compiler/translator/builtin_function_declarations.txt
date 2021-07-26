@@ -1171,7 +1171,7 @@ GROUP BEGIN ESSL310CS {"shader_type": "COMPUTE"}
 GROUP END ESSL310CS
 
 GROUP BEGIN ESSL310TCS {"shader_type": "TESS_CONTROL_EXT"}
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "EXT_tessellation_shader", "essl_extension_becomes_core_in": "ESSL3_2_BUILTINS", "opSuffix": "TCS", "hasSideEffects": true}
+  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "EXT_tessellation_shader", "essl_extension_becomes_core_in": "ESSL3_2_BUILTINS", "opSuffix": "TCS", "hasSideEffects": true, "suffix": "TCS"}
     void barrier();
 GROUP END ESSL310TCS
 

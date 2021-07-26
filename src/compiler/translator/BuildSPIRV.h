@@ -65,6 +65,11 @@ class SpirvTypeSpec
     // Bool is disallowed in interface blocks in SPIR-V.  This type is emulated with uint.  This
     // property applies to both blocks with bools in them and the bool type inside the block itself.
     bool isOrHasBoolInInterfaceBlock = false;
+
+    // When |patch| is specified on an I/O block, the members of the type itself are decorated with
+    // it.  This is not recursively applied, and since each I/O block has a unique type, this
+    // doesn't actually result in duplicated types even if it's specializing the type.
+    bool isPatchIOBlock = false;
 };
 
 struct SpirvType
@@ -141,6 +146,9 @@ struct SpirvTypeHash
         // Row-major block must only affect the type if it's a block type.
         ASSERT(!type.typeSpec.isRowMajorQualifiedBlock || type.block != nullptr);
 
+        // Patch must only affect the type if it's a block type.
+        ASSERT(!type.typeSpec.isPatchIOBlock || type.block != nullptr);
+
         // Row-major array must only affect the type if it's an array of non-square matrices in
         // an std140 or std430 block.
         ASSERT(!type.typeSpec.isRowMajorQualifiedArray ||
@@ -162,7 +170,8 @@ struct SpirvTypeHash
                    static_cast<size_t>(type.typeSpec.isInvariantBlock) ^
                    (static_cast<size_t>(type.typeSpec.isRowMajorQualifiedBlock) << 1) ^
                    (static_cast<size_t>(type.typeSpec.isRowMajorQualifiedArray) << 2) ^
-                   (type.typeSpec.blockStorage << 3);
+                   (static_cast<size_t>(type.typeSpec.isPatchIOBlock) << 3) ^
+                   (type.typeSpec.blockStorage << 4);
         }
 
         static_assert(sh::EbtLast < 256, "Basic type doesn't fit in uint8_t");
