@@ -2139,11 +2139,13 @@ void SPIRVBuilder::writeExecutionModes(spirv::Blob *blob)
             const spv::ExecutionMode outputExecutionMode =
                 GetGeometryOutputExecutionMode(mCompiler->getGeometryShaderOutputPrimitiveType());
 
+            // max_vertices=0 is not valid in Vulkan
+            const int maxVertices = std::max(1, mCompiler->getGeometryShaderMaxVertices());
+
             spirv::WriteExecutionMode(blob, mEntryPointId, inputExecutionMode, {});
             spirv::WriteExecutionMode(blob, mEntryPointId, outputExecutionMode, {});
-            spirv::WriteExecutionMode(
-                blob, mEntryPointId, spv::ExecutionModeOutputVertices,
-                {spirv::LiteralInteger(mCompiler->getGeometryShaderMaxVertices())});
+            spirv::WriteExecutionMode(blob, mEntryPointId, spv::ExecutionModeOutputVertices,
+                                      {spirv::LiteralInteger(maxVertices)});
             spirv::WriteExecutionMode(
                 blob, mEntryPointId, spv::ExecutionModeInvocations,
                 {spirv::LiteralInteger(mCompiler->getGeometryShaderInvocations())});

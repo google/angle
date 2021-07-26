@@ -34,19 +34,19 @@
 // Geometry shader support (conditioned to windows as that's our only bot capable of running these
 // tests)
 // Translator's lack of support for redefining gl_PerVertex
-5579 VULKAN WIN : KHR-GLES31.core.geometry_shader.api.getProgramiv3 = FAIL
+5579 VULKAN : KHR-GLES31.core.geometry_shader.api.getProgramiv3 = FAIL
 // Crash gathering transform feedback varyings on GS-only separable program
-5579 VULKAN WIN : KHR-GLES31.core.geometry_shader.api.program_pipeline_vs_gs_capture = SKIP
+5579 VULKAN : KHR-GLES31.core.geometry_shader.api.program_pipeline_vs_gs_capture = SKIP
 // Wrong results
-5579 VULKAN WIN : KHR-GLES31.core.geometry_shader.adjacency.adjacency_indiced_triangle_strip = FAIL
-5579 VULKAN WIN : KHR-GLES31.core.geometry_shader.adjacency.adjacency_non_indiced_triangle_strip = FAIL
-5579 VULKAN WIN : KHR-GLES31.core.geometry_shader.rendering.rendering.triangles_input_line_strip_output_triangle_*_drawcall = FAIL
-5579 VULKAN WIN : KHR-GLES31.core.geometry_shader.rendering.rendering.triangles_input_triangle_strip_output_triangle_*_drawcall = FAIL
-5579 VULKAN WIN : KHR-GLES31.core.geometry_shader.rendering.rendering.triangles_with_adjacency_input_*_strip_output_triangle_strip_adjacency_drawcall = FAIL
+5579 VULKAN : KHR-GLES31.core.geometry_shader.adjacency.adjacency_indiced_triangle_strip = FAIL
+5579 VULKAN : KHR-GLES31.core.geometry_shader.adjacency.adjacency_non_indiced_triangle_strip = FAIL
+5579 VULKAN : KHR-GLES31.core.geometry_shader.rendering.rendering.triangles_input_line_strip_output_triangle_*_drawcall = FAIL
+5579 VULKAN : KHR-GLES31.core.geometry_shader.rendering.rendering.triangles_input_triangle_strip_output_triangle_*_drawcall = FAIL
+5579 VULKAN : KHR-GLES31.core.geometry_shader.rendering.rendering.triangles_with_adjacency_input_*_strip_output_triangle_strip_adjacency_drawcall = FAIL
 // Crashes on ASSERT due to mismatch between shader resources and pipeline layout
-5579 VULKAN WIN : KHR-GLES31.core.geometry_shader.api.max_image_uniforms = SKIP
+5579 VULKAN : KHR-GLES31.core.geometry_shader.api.max_image_uniforms = SKIP
 // Failures on windows nvidia
-5579 VULKAN WIN NVIDIA : KHR-GLES31.core.geometry_shader.limits.max_invocations = FAIL
+5579 VULKAN NVIDIA : KHR-GLES31.core.geometry_shader.limits.max_invocations = FAIL
 
 // Dispatch indirect:
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.resource-ubo = FAIL

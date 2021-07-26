@@ -599,6 +599,13 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
         case EvqPrimitiveID:
             name              = "gl_PrimitiveID";
             builtInDecoration = spv::BuiltInPrimitiveId;
+
+            // In fragment shader, add the Geometry capability.
+            if (mCompiler->getShaderType() == GL_FRAGMENT_SHADER)
+            {
+                mBuilder.addCapability(spv::CapabilityGeometry);
+            }
+
             break;
 
         // Geometry shader built-ins
