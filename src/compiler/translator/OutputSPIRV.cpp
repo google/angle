@@ -459,6 +459,7 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
         case EvqLocalInvocationID:
         case EvqGlobalInvocationID:
         case EvqLocalInvocationIndex:
+        case EvqViewIDOVR:
             return spv::StorageClassInput;
 
         case EvqFragDepth:
@@ -632,6 +633,14 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
         case EvqLocalInvocationIndex:
             name              = "gl_LocalInvocationIndex";
             builtInDecoration = spv::BuiltInLocalInvocationIndex;
+            break;
+
+        // Extensions
+        case EvqViewIDOVR:
+            name              = "gl_ViewID_OVR";
+            builtInDecoration = spv::BuiltInViewIndex;
+            mBuilder.addCapability(spv::CapabilityMultiView);
+            mBuilder.addExtension(SPIRVExtensions::MultiviewOVR);
             break;
 
         default:

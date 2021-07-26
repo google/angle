@@ -1623,6 +1623,11 @@ void SPIRVBuilder::addExecutionMode(spv::ExecutionMode executionMode)
     mExecutionModes.set(executionMode);
 }
 
+void SPIRVBuilder::addExtension(SPIRVExtensions extension)
+{
+    mExtensions.set(extension);
+}
+
 void SPIRVBuilder::setEntryPointId(spirv::IdRef id)
 {
     ASSERT(!mEntryPointId.valid());
@@ -2038,7 +2043,8 @@ spirv::Blob SPIRVBuilder::getSpirv()
         spirv::WriteCapability(&result, capability);
     }
 
-    // - OpExtension instructions (TODO: http://anglebug.com/4889)
+    // - OpExtension instructions
+    writeExtensions(&result);
 
     // - OpExtInstImport
     if (mExtInstImportIdStd.valid())
@@ -2062,13 +2068,14 @@ spirv::Blob SPIRVBuilder::getSpirv()
                            mEntryPointInterfaceList);
 
     // - OpExecutionMode instructions
-    generateExecutionModes(&result);
+    writeExecutionModes(&result);
 
-    // - OpSource instruction.
+    // - OpSource and OpSourceExtension instructions.
     //
     // This is to support debuggers and capture/replay tools and isn't strictly necessary.
     spirv::WriteSource(&result, spv::SourceLanguageGLSL, spirv::LiteralInteger(450), nullptr,
                        nullptr);
+    writeSourceExtensions(&result);
 
     // Append the already generated sections in order
     result.insert(result.end(), mSpirvDebug.begin(), mSpirvDebug.end());
@@ -2084,7 +2091,7 @@ spirv::Blob SPIRVBuilder::getSpirv()
     return result;
 }
 
-void SPIRVBuilder::generateExecutionModes(spirv::Blob *blob)
+void SPIRVBuilder::writeExecutionModes(spirv::Blob *blob)
 {
     switch (mShaderType)
     {
@@ -2163,6 +2170,36 @@ void SPIRVBuilder::generateExecutionModes(spirv::Blob *blob)
     {
         spirv::WriteExecutionMode(blob, mEntryPointId,
                                   static_cast<spv::ExecutionMode>(executionMode), {});
+    }
+}
+
+void SPIRVBuilder::writeExtensions(spirv::Blob *blob)
+{
+    for (SPIRVExtensions extension : mExtensions)
+    {
+        switch (extension)
+        {
+            case SPIRVExtensions::MultiviewOVR:
+                spirv::WriteExtension(blob, "SPV_KHR_multiview");
+                break;
+            default:
+                UNREACHABLE();
+        }
+    }
+}
+
+void SPIRVBuilder::writeSourceExtensions(spirv::Blob *blob)
+{
+    for (SPIRVExtensions extension : mExtensions)
+    {
+        switch (extension)
+        {
+            case SPIRVExtensions::MultiviewOVR:
+                spirv::WriteSourceExtension(blob, "GL_OVR_multiview");
+                break;
+            default:
+                UNREACHABLE();
+        }
     }
 }
 

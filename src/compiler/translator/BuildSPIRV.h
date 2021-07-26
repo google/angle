@@ -10,6 +10,7 @@
 #define COMPILER_TRANSLATOR_BUILDSPIRV_H_
 
 #include "common/FixedVector.h"
+#include "common/PackedEnums.h"
 #include "common/bitset_utils.h"
 #include "common/hash_utils.h"
 #include "common/spirv/spirv_instruction_builder_autogen.h"
@@ -274,6 +275,16 @@ struct SpirvConditional
     bool isBreakable = false;
 };
 
+// List of known extensions
+enum class SPIRVExtensions
+{
+    // GL_OVR_multiview / SPV_KHR_multiview
+    MultiviewOVR = 0,
+
+    InvalidEnum = 1,
+    EnumCount   = 1,
+};
+
 // Helper class to construct SPIR-V
 class SPIRVBuilder : angle::NonCopyable
 {
@@ -335,6 +346,7 @@ class SPIRVBuilder : angle::NonCopyable
 
     void addCapability(spv::Capability capability);
     void addExecutionMode(spv::ExecutionMode executionMode);
+    void addExtension(SPIRVExtensions extension);
     void setEntryPointId(spirv::IdRef id);
     void addEntryPointInterfaceVariableId(spirv::IdRef id);
     void writePerVertexBuiltIns(const TType &type, spirv::IdRef typeId);
@@ -432,7 +444,9 @@ class SPIRVBuilder : angle::NonCopyable
     uint32_t nextUnusedInputLocation(uint32_t consumedCount);
     uint32_t nextUnusedOutputLocation(uint32_t consumedCount);
 
-    void generateExecutionModes(spirv::Blob *blob);
+    void writeExecutionModes(spirv::Blob *blob);
+    void writeExtensions(spirv::Blob *blob);
+    void writeSourceExtensions(spirv::Blob *blob);
 
     ANGLE_MAYBE_UNUSED TCompiler *mCompiler;
     ShCompileOptions mCompileOptions;
@@ -446,6 +460,8 @@ class SPIRVBuilder : angle::NonCopyable
     // shader metadata, but some are only discovered while traversing the tree.  Only the latter
     // execution modes are stored here.
     angle::BitSet<32> mExecutionModes;
+    // Extensions used by the shader.
+    angle::PackedEnumBitSet<SPIRVExtensions> mExtensions;
 
     // The list of interface variables and the id of main() populated as the instructions are
     // generated.  Used for the OpEntryPoint instruction.
