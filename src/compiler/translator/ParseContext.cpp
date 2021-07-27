@@ -2806,42 +2806,46 @@ void TParseContext::checkTessellationShaderUnsizedArraysAndSetSize(const TSource
             case EvqSmoothOut:
             case EvqSampleOut:
                 // Declaring an array size is optional. If no size is specified, it will be taken
-                // from output patch size declared in the shader.
-                type->sizeOutermostUnsizedArray(mTessControlShaderOutputVertices);
+                // from output patch size declared in the shader.  If the patch size is not yet
+                // declared, this is deferred until such time as it does.
+                if (mTessControlShaderOutputVertices == 0)
+                {
+                    mTessControlDeferredArrayTypesToSize.push_back(type);
+                }
+                else
+                {
+                    type->sizeOutermostUnsizedArray(mTessControlShaderOutputVertices);
+                }
                 break;
             default:
                 UNREACHABLE();
                 break;
         }
-    }
-    else
-    {
-        if (IsTessellationControlShaderInput(mShaderType, qualifier) ||
-            IsTessellationEvaluationShaderInput(mShaderType, qualifier))
-        {
-            if (outermostSize != static_cast<unsigned int>(mMaxPatchVertices))
-            {
-                error(
-                    location,
-                    "If a size is specified for a tessellation control or evaluation user-defined "
-                    "input variable, it must match the maximum patch size (gl_MaxPatchVertices).",
-                    token);
-            }
-        }
-        else if (IsTessellationControlShaderOutput(mShaderType, qualifier))
-        {
-            if (outermostSize != static_cast<unsigned int>(mTessControlShaderOutputVertices) &&
-                mTessControlShaderOutputVertices != 0)
-            {
-                error(location,
-                      "If a size is specified for a tessellation control user-defined per-vertex "
-                      "output variable, it must match the the number of vertices in the output "
-                      "patch.",
-                      token);
-            }
-        }
-
         return;
+    }
+
+    if (IsTessellationControlShaderInput(mShaderType, qualifier) ||
+        IsTessellationEvaluationShaderInput(mShaderType, qualifier))
+    {
+        if (outermostSize != static_cast<unsigned int>(mMaxPatchVertices))
+        {
+            error(location,
+                  "If a size is specified for a tessellation control or evaluation user-defined "
+                  "input variable, it must match the maximum patch size (gl_MaxPatchVertices).",
+                  token);
+        }
+    }
+    else if (IsTessellationControlShaderOutput(mShaderType, qualifier))
+    {
+        if (outermostSize != static_cast<unsigned int>(mTessControlShaderOutputVertices) &&
+            mTessControlShaderOutputVertices != 0)
+        {
+            error(location,
+                  "If a size is specified for a tessellation control user-defined per-vertex "
+                  "output variable, it must match the the number of vertices in the output "
+                  "patch.",
+                  token);
+        }
     }
 }
 
@@ -3456,6 +3460,12 @@ bool TParseContext::parseTessControlShaderOutputLayoutQualifier(const TTypeQuali
     if (mTessControlShaderOutputVertices == 0)
     {
         mTessControlShaderOutputVertices = layoutQualifier.vertices;
+
+        // Size any implicitly sized arrays that have already been declared.
+        for (TType *type : mTessControlDeferredArrayTypesToSize)
+        {
+            type->sizeOutermostUnsizedArray(mTessControlShaderOutputVertices);
+        }
     }
     else
     {
@@ -4261,7 +4271,12 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
                       getQualifierString(typeQualifier.qualifier));
             }
 
-            if (mShaderType == GL_TESS_CONTROL_SHADER && arraySizes == nullptr)
+            // Both inputs and outputs of tessellation control shaders must be arrays.
+            // For tessellation evaluation shaders, only inputs must necessarily be arrays.
+            const bool isTCS = mShaderType == GL_TESS_CONTROL_SHADER;
+            const bool isTESIn =
+                mShaderType == GL_TESS_EVALUATION_SHADER && IsShaderIn(typeQualifier.qualifier);
+            if (arraySizes == nullptr && (isTCS || isTESIn))
             {
                 error(typeQualifier.line, "type must be an array", blockName);
             }

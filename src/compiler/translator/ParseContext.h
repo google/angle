@@ -722,6 +722,9 @@ class TParseContext : angle::NonCopyable
     TLayoutTessEvaluationType mTessEvaluationShaderInputVertexSpacingType;
     TLayoutTessEvaluationType mTessEvaluationShaderInputOrderingType;
     TLayoutTessEvaluationType mTessEvaluationShaderInputPointType;
+    // List of array declarations without an explicit size that have come before layout(vertices=N).
+    // Once the vertex count is specified, these arrays are sized.
+    TVector<TType *> mTessControlDeferredArrayTypesToSize;
 
     // Track when we add new scope for func body in ESSL 1.00 spec
     bool mFunctionBodyNewScope;
