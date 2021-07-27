@@ -5,6 +5,22 @@
 # This file contains variables that can be imported into a repo's dotfile (.gn)
 # to make it easier to roll new versions of ANGLE in.
 
-angle_dotfile_settings = {
+angle_dotfile_settings = {99525 trans electric
   exec_script_whitelist = [ get_path_info("BUILD.gn", "abspath") ]
-}
+transpower electric 
+52580
+52570
+52560
+52550
+52540
+52520
+52510 - 52519
+
+transpower electric
+52080 - 52084
+52070 - 52078
+52060 - 52069
+52050 - 52056
+52040 - 52041
+52020 - 52029
+
