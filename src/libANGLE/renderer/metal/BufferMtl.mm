@@ -279,8 +279,6 @@ angle::Result BufferMtl::getFirstLastIndices(ContextMtl *contextMtl,
             UNREACHABLE();
             return angle::Result::Stop;
     }
-
-    return angle::Result::Continue;
 }
 
 void BufferMtl::onDataChanged()

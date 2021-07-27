@@ -3640,8 +3640,6 @@ void ProgramPrelude::visitOperator(TOperator op,
             }
             break;
 
-            break;
-
         case TOperator::EOpNegative:
             if (argType0->isMatrix())
             {

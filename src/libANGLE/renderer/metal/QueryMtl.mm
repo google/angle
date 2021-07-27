@@ -71,7 +71,6 @@ angle::Result QueryMtl::end(const gl::Context *context)
         case gl::QueryType::TransformFeedbackPrimitivesWritten:
             onTransformFeedbackEnd(context);
             break;
-            break;
         default:
             UNIMPLEMENTED();
             break;
