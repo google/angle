@@ -344,8 +344,14 @@ using ProgramSourceMap = std::map<gl::ShaderProgramID, ProgramSources>;
 using TextureLevels       = std::map<GLint, std::vector<uint8_t>>;
 using TextureLevelDataMap = std::map<gl::TextureID, TextureLevels>;
 
-// Map from ContextID to surface dimensions
-using SurfaceDimensions = std::map<gl::ContextID, gl::Extents>;
+struct SurfaceParams
+{
+    gl::Extents extents;
+    egl::ColorSpace colorSpace;
+};
+
+// Map from ContextID to SurfaceParams
+using SurfaceParamsMap = std::map<gl::ContextID, SurfaceParams>;
 
 using CallVector = std::vector<std::vector<CallCapture> *>;
 
@@ -509,7 +515,7 @@ class FrameCaptureShared final : angle::NonCopyable
     uint32_t mCaptureEndFrame;
     bool mIsFirstFrame   = true;
     bool mWroteIndexFile = false;
-    SurfaceDimensions mDrawSurfaceDimensions;
+    SurfaceParamsMap mDrawSurfaceParams;
     gl::AttribArray<size_t> mClientArraySizes;
     size_t mReadBufferSize;
     HasResourceTypeMap mHasResourceType;
