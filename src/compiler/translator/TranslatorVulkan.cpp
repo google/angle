@@ -1066,7 +1066,6 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
             }
 
             // Emulate gl_FragColor and gl_FragData with normal output variables.
-            mValidateASTOptions.validateVariableReferences = false;
             if (!EmulateFragColorData(this, root, &getSymbolTable()))
             {
                 return false;

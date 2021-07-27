@@ -12,6 +12,7 @@
 #include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "common/utilities.h"
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
@@ -494,8 +495,8 @@ ANGLE_NO_DISCARD bool ReplaceClipDistanceAssignments(TCompiler *compiler,
     else
     {
         // User defined not found, find in built-in table
-        glClipDistanceVar =
-            static_cast<const TVariable *>(symbolTable->findBuiltIn(glClipDistanceName, 300));
+        glClipDistanceVar = static_cast<const TVariable *>(
+            symbolTable->findBuiltIn(glClipDistanceName, compiler->getShaderVersion()));
     }
     if (!glClipDistanceVar)
     {
@@ -579,8 +580,8 @@ ANGLE_NO_DISCARD bool ReplaceCullDistanceAssignments(TCompiler *compiler,
     else
     {
         // User defined not found, find in built-in table
-        glCullDistanceVar =
-            static_cast<const TVariable *>(symbolTable->findBuiltIn(glCullDistanceName, 300));
+        glCullDistanceVar = static_cast<const TVariable *>(
+            symbolTable->findBuiltIn(glCullDistanceName, compiler->getShaderVersion()));
     }
     if (!glCullDistanceVar)
     {

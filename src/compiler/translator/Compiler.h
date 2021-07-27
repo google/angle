@@ -184,7 +184,9 @@ class TCompiler : public TShHandleBase
     // Some transformations may need to temporarily disable validation until they are complete.  A
     // set of disable/enable helpers are used for this purpose.
     bool disableValidateFunctionCall();
-    void enableValidateFunctionCall(bool enable);
+    void restoreValidateFunctionCall(bool enable);
+    bool disableValidateVariableReferences();
+    void restoreValidateVariableReferences(bool enable);
 
   protected:
     // Add emulated functions to the built-in function emulator.

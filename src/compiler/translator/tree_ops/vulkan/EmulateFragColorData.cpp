@@ -117,6 +117,19 @@ class EmulateFragColorDataTraverser : public TIntermTraverser
     // A map of already replaced built-in variables.
     VariableReplacementMap mVariableMap;
 };
+
+bool EmulateFragColorDataImpl(TCompiler *compiler, TIntermBlock *root, TSymbolTable *symbolTable)
+{
+    EmulateFragColorDataTraverser traverser(compiler, symbolTable);
+    root->traverse(&traverser);
+    if (!traverser.updateTree(compiler, root))
+    {
+        return false;
+    }
+
+    traverser.addDeclarations(root);
+    return true;
+}
 }  // anonymous namespace
 
 bool EmulateFragColorData(TCompiler *compiler, TIntermBlock *root, TSymbolTable *symbolTable)
@@ -126,14 +139,13 @@ bool EmulateFragColorData(TCompiler *compiler, TIntermBlock *root, TSymbolTable 
         return true;
     }
 
-    EmulateFragColorDataTraverser traverser(compiler, symbolTable);
-    root->traverse(&traverser);
-    if (!traverser.updateTree(compiler, root))
-    {
-        return false;
-    }
+    // This transformation adds variable declarations after the fact and so some validation is
+    // momentarily disabled.
+    bool enableValidateVariableReferences = compiler->disableValidateVariableReferences();
 
-    traverser.addDeclarations(root);
-    return compiler->validateAST(root);
+    bool result = EmulateFragColorDataImpl(compiler, root, symbolTable);
+
+    compiler->restoreValidateVariableReferences(enableValidateVariableReferences);
+    return result && compiler->validateAST(root);
 }
 }  // namespace sh

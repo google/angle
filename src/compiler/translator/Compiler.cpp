@@ -578,10 +578,23 @@ bool TCompiler::disableValidateFunctionCall()
     return wasEnabled;
 }
 
-void TCompiler::enableValidateFunctionCall(bool enable)
+void TCompiler::restoreValidateFunctionCall(bool enable)
 {
     ASSERT(!mValidateASTOptions.validateFunctionCall);
     mValidateASTOptions.validateFunctionCall = enable;
+}
+
+bool TCompiler::disableValidateVariableReferences()
+{
+    bool wasEnabled                                = mValidateASTOptions.validateVariableReferences;
+    mValidateASTOptions.validateVariableReferences = false;
+    return wasEnabled;
+}
+
+void TCompiler::restoreValidateVariableReferences(bool enable)
+{
+    ASSERT(!mValidateASTOptions.validateVariableReferences);
+    mValidateASTOptions.validateVariableReferences = enable;
 }
 
 bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
