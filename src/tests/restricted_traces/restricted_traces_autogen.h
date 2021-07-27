@@ -10,6 +10,7 @@
 #ifndef ANGLE_RESTRICTED_TRACES_H_
 #define ANGLE_RESTRICTED_TRACES_H_
 
+#include <EGL/egl.h>
 #include <KHR/khrplatform.h>
 #include <cstdint>
 #include <vector>
@@ -156,6 +157,7 @@ static constexpr size_t kTraceInfoMaxNameLen = 32;
 
 static constexpr uint32_t kDefaultReplayContextClientMajorVersion = 3;
 static constexpr uint32_t kDefaultReplayContextClientMinorVersion = 1;
+static constexpr uint32_t kDefaultReplayDrawSurfaceColorSpace     = EGL_COLORSPACE_LINEAR;
 
 struct TraceInfo
 {
@@ -165,6 +167,7 @@ struct TraceInfo
     uint32_t endFrame;
     uint32_t drawSurfaceWidth;
     uint32_t drawSurfaceHeight;
+    uint32_t drawSurfaceColorSpace;
     char name[kTraceInfoMaxNameLen];
 };
 
