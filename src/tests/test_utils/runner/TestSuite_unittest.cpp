@@ -89,8 +89,7 @@ class TestSuiteTest : public testing::Test
 
         if (validateStderr)
         {
-            // TODO: Uncomment when crbug.com/1233361 is resolved.
-            // EXPECT_EQ(process->getStderr(), "");
+            EXPECT_EQ(process->getStderr(), "");
         }
 
         if (gVerbose)

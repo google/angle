@@ -139,11 +139,10 @@ TEST(TestUtils, MAYBE_CreateAndDeleteFileInTempDir)
 #    define MAYBE_RunApp DISABLED_RunApp
 #    define MAYBE_RunAppAsync DISABLED_RunAppAsync
 #    define MAYBE_RunAppAsyncRedirectStderrToStdout DISABLED_RunAppAsyncRedirectStderrToStdout
-// TODO: flaky failures. http://crbug.com/1233361
 #else
-#    define MAYBE_RunApp DISABLED_RunApp
-#    define MAYBE_RunAppAsync DISABLED_RunAppAsync
-#    define MAYBE_RunAppAsyncRedirectStderrToStdout DISABLED_RunAppAsyncRedirectStderrToStdout
+#    define MAYBE_RunApp RunApp
+#    define MAYBE_RunAppAsync RunAppAsync
+#    define MAYBE_RunAppAsyncRedirectStderrToStdout RunAppAsyncRedirectStderrToStdout
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 
 // Test running an external application and receiving its output
