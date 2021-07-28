@@ -6,7 +6,7 @@
 // SeparateStructFromUniformDeclarations: Separate struct declarations from uniform declarations.
 //
 
-#include "compiler/translator/tree_ops/vulkan/SeparateStructFromUniformDeclarations.h"
+#include "compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.h"
 
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"

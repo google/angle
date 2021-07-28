@@ -118,7 +118,7 @@ TIntermTyped *RewriteBuiltinFunctionCall(TCompiler *compiler,
     if (!BuiltInGroup::IsBuiltIn(node->getOp()))
     {
         // AST functions don't require modification as r32f image function parameters are removed by
-        // MonomorphizeUnsupportedFunctionsInVulkanGLSL.
+        // MonomorphizeUnsupportedFunctions.
         return nullptr;
     }
 

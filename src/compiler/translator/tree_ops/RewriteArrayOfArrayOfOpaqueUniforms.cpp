@@ -6,7 +6,7 @@
 // RewriteAtomicCounters: Emulate atomic counter buffers with storage buffers.
 //
 
-#include "compiler/translator/tree_ops/vulkan/RewriteArrayOfArrayOfOpaqueUniforms.h"
+#include "compiler/translator/tree_ops/RewriteArrayOfArrayOfOpaqueUniforms.h"
 
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
@@ -236,7 +236,7 @@ TIntermTyped *RewriteArrayOfArraySubscriptExpression(TCompiler *compiler,
 //
 //     uniform sampler/image/atomic_uint u[N * M * ..]
 //
-// MonomorphizeUnsupportedFunctionsInVulkanGLSL makes it impossible for this array to be partially
+// MonomorphizeUnsupportedFunctions makes it impossible for this array to be partially
 // subscripted, or passed as argument to a function unsubscripted.  This means that every encounter
 // of this uniform can be expected to be fully subscripted.
 //

@@ -106,7 +106,7 @@ TIntermBinary *CreateAtomicCounterRef(TIntermTyped *atomicCounterExpression,
     //     atomicCounters[binding].counters[offset + index]
     //
     // In either case, an offset given through uniforms is also added to |offset|.  The binding is
-    // necessarily a constant thanks to MonomorphizeUnsupportedFunctionsInVulkanGLSL.
+    // necessarily a constant thanks to MonomorphizeUnsupportedFunctions.
 
     // First determine if there's an index, and extract the atomic counter symbol out of the
     // expression.
@@ -224,7 +224,7 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
         }
 
         // AST functions don't require modification as atomic counter function parameters are
-        // removed by MonomorphizeUnsupportedFunctionsInVulkanGLSL.
+        // removed by MonomorphizeUnsupportedFunctions.
         return true;
     }
 

@@ -3091,7 +3091,10 @@ TEST_P(GLSLTest_ES3, AtanVec2)
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorSignedInt)
 {
     // http://anglebug.com/5242
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel());
+    // Test times out on dual-GPU MacBook Pros that don't show up as
+    // IsIntel(); skip on all Metal for now.
+    // See also http://anglebug.com/6174 .
+    ANGLE_SKIP_TEST_IF(IsMetal());
 
     constexpr char kVS[] =
         "#version 300 es\n"
@@ -3141,7 +3144,10 @@ TEST_P(GLSLTest_ES3, UnaryMinusOperatorSignedInt)
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorUnsignedInt)
 {
     // http://anglebug.com/5242
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel());
+    // Test times out on dual-GPU MacBook Pros that don't show up as
+    // IsIntel(); skip on all Metal for now.
+    // See also http://anglebug.com/6174 .
+    ANGLE_SKIP_TEST_IF(IsMetal());
 
     constexpr char kVS[] =
         "#version 300 es\n"

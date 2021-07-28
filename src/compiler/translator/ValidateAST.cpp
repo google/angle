@@ -776,6 +776,19 @@ bool ValidateAST::visitDeclaration(Visit visit, TIntermDeclaration *node)
 
     if (mOptions.validateMultiDeclarations && sequence.size() > 1)
     {
+        TIntermSymbol *symbol = sequence[1]->getAsSymbolNode();
+        if (symbol == nullptr)
+        {
+            TIntermBinary *init = sequence[1]->getAsBinaryNode();
+            ASSERT(init && init->getOp() == EOpInitialize);
+            symbol = init->getLeft()->getAsSymbolNode();
+        }
+        ASSERT(symbol);
+
+        mDiagnostics->error(node->getLine(),
+                            "Found multiple declarations where SeparateDeclarations should have "
+                            "separated them <validateMultiDeclarations>",
+                            symbol->variable().name().data());
         mMultiDeclarationsFailed = true;
     }
 

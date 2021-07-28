@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 // RewriteArrayOfArrayOfOpaqueUniforms: Flatten array of array of opaque uniforms.  Requires
-// MonomorphizeUnsupportedFunctionsInVulkanGLSL and RewriteStructSamplers to have been run.
+// MonomorphizeUnsupportedFunctions and RewriteStructSamplers to have been run.
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_VULKAN_REWRITEARRAYOFARRAYOFOPAQUEUNIFORMS_H_
-#define COMPILER_TRANSLATOR_TREEOPS_VULKAN_REWRITEARRAYOFARRAYOFOPAQUEUNIFORMS_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_REWRITEARRAYOFARRAYOFOPAQUEUNIFORMS_H_
+#define COMPILER_TRANSLATOR_TREEOPS_REWRITEARRAYOFARRAYOFOPAQUEUNIFORMS_H_
 
 #include "common/angleutils.h"
 
@@ -22,4 +22,4 @@ ANGLE_NO_DISCARD bool RewriteArrayOfArrayOfOpaqueUniforms(TCompiler *compiler,
                                                           TSymbolTable *symbolTable);
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_VULKAN_REWRITEARRAYOFARRAYOFOPAQUEUNIFORMS_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_REWRITEARRAYOFARRAYOFOPAQUEUNIFORMS_H_

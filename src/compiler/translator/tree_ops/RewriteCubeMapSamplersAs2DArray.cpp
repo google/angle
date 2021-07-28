@@ -6,7 +6,7 @@
 // RewriteCubeMapSamplersAs2DArray: Change samplerCube samplers to sampler2DArray for seamful cube
 // map emulation.
 //
-// Relies on MonomorphizeUnsupportedFunctionsInVulkanGLSL to ensure samplerCube variables are not
+// Relies on MonomorphizeUnsupportedFunctions to ensure samplerCube variables are not
 // passed to functions (for simplicity).
 //
 
@@ -255,7 +255,7 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
         }
 
         // AST functions don't require modification as samplerCube function parameters are removed
-        // by MonomorphizeUnsupportedFunctionsInVulkanGLSL.
+        // by MonomorphizeUnsupportedFunctions.
         return true;
     }
 

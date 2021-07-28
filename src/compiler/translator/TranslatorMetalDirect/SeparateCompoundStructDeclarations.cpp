@@ -43,8 +43,8 @@ class Separator : public TIntermTraverser
             if (structure->symbolType() == SymbolType::Empty)
             {
                 const TStructure *structDefn =
-                    new TStructure(mSymbolTable, mIdGen.createNewName("__unnamed").rawName(),
-                                   &(structure->fields()), SymbolType::AngleInternal);
+                    new TStructure(mSymbolTable, mIdGen.createNewName().rawName(),
+                                   &structure->fields(), SymbolType::AngleInternal);
                 structVar    = new TVariable(mSymbolTable, ImmutableString(""),
                                           new TType(structDefn, true), SymbolType::Empty);
                 instanceType = new TType(structDefn, false);
@@ -55,25 +55,35 @@ class Separator : public TIntermTraverser
                                           new TType(structure, true), SymbolType::Empty);
                 instanceType = new TType(structure, false);
             }
+            if (type.isArray())
+            {
+                instanceType->makeArrays(type.getArraySizes());
+            }
             instanceType->setQualifier(type.getQualifier());
             auto *instanceVar =
                 new TVariable(mSymbolTable, var.name(), instanceType, symbolType, var.extensions());
 
             TIntermSequence replacements;
-            replacements.push_back(new TIntermSymbol(structVar));
+            replacements.push_back(new TIntermDeclaration({structVar}));
 
             TIntermSymbol *instanceSymbol    = new TIntermSymbol(instanceVar);
-            TIntermNode *instanceReplacement = instanceSymbol;
+            TIntermDeclaration *instanceDecl = new TIntermDeclaration;
             if (declaration.initExpr)
             {
-                instanceReplacement =
-                    new TIntermBinary(EOpInitialize, instanceSymbol, declaration.initExpr);
+                instanceDecl->appendDeclarator(new TIntermBinary(
+                    TOperator::EOpInitialize, instanceSymbol, declaration.initExpr));
             }
-            replacements.push_back(instanceReplacement);
+            else
+            {
+                instanceDecl->appendDeclarator(instanceSymbol);
+            }
+            replacements.push_back(instanceDecl);
 
             replacementMap[declaration.symbol.uniqueId().get()] = instanceSymbol;
+            ASSERT(getParentNode() != nullptr);
+            ASSERT(getParentNode()->getAsBlock() != nullptr);
             mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(
-                declNode, declNode->getChildNode(0), std::move(replacements)));
+                getParentNode()->getAsBlock(), declNode, std::move(replacements)));
         }
 
         return false;

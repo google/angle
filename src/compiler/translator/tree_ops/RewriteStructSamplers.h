@@ -7,7 +7,7 @@
 //
 // This traverser is designed to strip out samplers from structs. It moves them into separate
 // uniform sampler declarations. This allows the struct to be stored in the default uniform block.
-// This transformation requires MonomorphizeUnsupportedFunctionsInVulkanGLSL to have been run so it
+// This transformation requires MonomorphizeUnsupportedFunctions to have been run so it
 // wouldn't need to deal with functions that are passed such structs.
 //
 // For example:

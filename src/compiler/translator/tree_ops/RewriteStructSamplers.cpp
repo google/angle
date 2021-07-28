@@ -133,7 +133,7 @@ class RewriteExpressionTraverser final : public TIntermTraverser
     void visitSymbol(TIntermSymbol *node) override
     {
         // It's impossible to reach here with a symbol that needs replacement.
-        // MonomorphizeUnsupportedFunctionsInVulkanGLSL makes sure that whole structs containing
+        // MonomorphizeUnsupportedFunctions makes sure that whole structs containing
         // samplers are not passed to functions, so any instance of the struct uniform is
         // necessarily indexed right away.  visitBinary should have already taken care of it.
         ASSERT(mStructureUniformMap.find(&node->variable()) == mStructureUniformMap.end());

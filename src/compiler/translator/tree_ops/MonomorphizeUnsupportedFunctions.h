@@ -3,8 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// MonomorphizeUnsupportedFunctionsInVulkanGLSL: Monomorphize functions that are called with
-// parameters that are not compatible with Vulkan GLSL:
+// MonomorphizeUnsupportedFunctions: Monomorphize functions that are called with
+// parameters that are incompatible with both Vulkan GLSL and Metal:
 //
 // - Samplers in structs
 // - Structs that have samplers
@@ -17,8 +17,8 @@
 // This transformation basically duplicates such functions, removes the
 // sampler/image/atomic_counter parameters and uses the opaque uniforms used by the caller.
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_VULKAN_MONOMORPHIZEUNSUPPORTEDFUNCTIONSINVULKANGLSL_H_
-#define COMPILER_TRANSLATOR_TREEOPS_VULKAN_MONOMORPHIZEUNSUPPORTEDFUNCTIONSINVULKANGLSL_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_VULKAN_MONOMORPHIZEUNSUPPORTEDFUNCTIONS_H_
+#define COMPILER_TRANSLATOR_TREEOPS_VULKAN_MONOMORPHIZEUNSUPPORTEDFUNCTIONS_H_
 
 #include "common/angleutils.h"
 #include "compiler/translator/Compiler.h"
@@ -28,10 +28,10 @@ namespace sh
 class TIntermBlock;
 class TSymbolTable;
 
-ANGLE_NO_DISCARD bool MonomorphizeUnsupportedFunctionsInVulkanGLSL(TCompiler *compiler,
-                                                                   TIntermBlock *root,
-                                                                   TSymbolTable *symbolTable,
-                                                                   ShCompileOptions compileOptions);
+ANGLE_NO_DISCARD bool MonomorphizeUnsupportedFunctions(TCompiler *compiler,
+                                                       TIntermBlock *root,
+                                                       TSymbolTable *symbolTable,
+                                                       ShCompileOptions compileOptions);
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_VULKAN_MONOMORPHIZEUNSUPPORTEDFUNCTIONSINVULKANGLSL_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_VULKAN_MONOMORPHIZEUNSUPPORTEDFUNCTIONS_H_
