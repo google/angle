@@ -210,7 +210,6 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mLastFragDataAdded;
     bool mFragColorAdded;
     bool mFragDataAdded;
-    bool mFragDepthEXTAdded;
     bool mFragDepthAdded;
     bool mSecondaryFragColorEXTAdded;
     bool mSecondaryFragDataEXTAdded;
@@ -293,7 +292,6 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mLastFragDataAdded(false),
       mFragColorAdded(false),
       mFragDataAdded(false),
-      mFragDepthEXTAdded(false),
       mFragDepthAdded(false),
       mSecondaryFragColorEXTAdded(false),
       mSecondaryFragDataEXTAdded(false),
@@ -631,9 +629,6 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                     mOutputVariables->push_back(info);
                     mFragDataAdded = true;
                 }
-                return;
-            case EvqFragDepthEXT:
-                recordBuiltInFragmentOutputUsed(symbol->variable(), &mFragDepthEXTAdded);
                 return;
             case EvqFragDepth:
                 recordBuiltInFragmentOutputUsed(symbol->variable(), &mFragDepthAdded);

@@ -47,7 +47,7 @@ void CheckEFTOptimizationTraverser::visitSymbol(TIntermSymbol *node)
     // different qualifier if it's the result of a folded ternary node.
     TQualifier qualifier = node->variable().getType().getQualifier();
 
-    if (qualifier == EvqFragDepth || qualifier == EvqFragDepthEXT)
+    if (qualifier == EvqFragDepth)
     {
         mFragDepthUsed = true;
     }

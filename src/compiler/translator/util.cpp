@@ -710,7 +710,6 @@ bool IsBuiltinOutputVariable(TQualifier qualifier)
         case EvqPosition:
         case EvqPointSize:
         case EvqFragDepth:
-        case EvqFragDepthEXT:
         case EvqFragColor:
         case EvqSecondaryFragColorEXT:
         case EvqFragData:

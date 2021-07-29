@@ -5377,8 +5377,9 @@ void main()
     EXPECT_NE(0u, program);
 }
 
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLCompatibilityTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(WebGLCompatibilityTest,
+                                       WithDirectSPIRVGeneration(ES3_VULKAN()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2CompatibilityTest);
-ANGLE_INSTANTIATE_TEST_ES3(WebGL2CompatibilityTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(WebGL2CompatibilityTest, WithDirectSPIRVGeneration(ES3_VULKAN()));
 }  // namespace angle
