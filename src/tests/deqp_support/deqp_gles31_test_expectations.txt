@@ -1470,6 +1470,3 @@
 
 // Fails when the expression being interpolated as an indexed varying array.
 6194 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.shaders.multisample_interpolation.interpolate_at_offset.array_element.* = FAIL
-
-// No support for |precise| yet in SPIR-V gen path
-4889 VULKAN SPIRVGEN : dEQP-GLES31.functional.tessellation.common_edge.*_spacing_precise = FAIL

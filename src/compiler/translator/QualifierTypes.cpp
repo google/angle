@@ -641,7 +641,6 @@ TTypeQualifier GetParameterTypeQualifierFromSortedSequence(
         switch (qualifier->getType())
         {
             case QtInvariant:
-            case QtPrecise:
             case QtInterpolation:
             case QtLayout:
                 break;
@@ -660,6 +659,10 @@ TTypeQualifier GetParameterTypeQualifierFromSortedSequence(
                 typeQualifier.precision =
                     static_cast<const TPrecisionQualifierWrapper *>(qualifier)->getQualifier();
                 ASSERT(typeQualifier.precision != EbpUndefined);
+                break;
+            case QtPrecise:
+                isQualifierValid      = true;
+                typeQualifier.precise = true;
                 break;
             default:
                 UNREACHABLE();

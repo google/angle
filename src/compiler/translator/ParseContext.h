@@ -489,6 +489,9 @@ class TParseContext : angle::NonCopyable
         return mTessEvaluationShaderInputPointType;
     }
 
+    void markShaderHasPrecise() { mHasAnyPreciseType = true; }
+    bool hasAnyPreciseType() const { return mHasAnyPreciseType; }
+
     ShShaderOutput getOutputType() const { return mOutputType; }
 
     // TODO(jmadill): make this private
@@ -725,6 +728,8 @@ class TParseContext : angle::NonCopyable
     // List of array declarations without an explicit size that have come before layout(vertices=N).
     // Once the vertex count is specified, these arrays are sized.
     TVector<TType *> mTessControlDeferredArrayTypesToSize;
+    // Whether the |precise| keyword has been seen in the shader.
+    bool mHasAnyPreciseType;
 
     // Track when we add new scope for func body in ESSL 1.00 spec
     bool mFunctionBodyNewScope;

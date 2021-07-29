@@ -14,6 +14,7 @@
 #include "common/spirv/spirv_instruction_builder_autogen.h"
 #include "compiler/translator/BuildSPIRV.h"
 #include "compiler/translator/Compiler.h"
+#include "compiler/translator/tree_util/FindPreciseNodes.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 
 #include <cfloat>
@@ -183,7 +184,10 @@ bool IsAccessChainUnindexedLValue(const NodeData &data)
 class OutputSPIRVTraverser : public TIntermTraverser
 {
   public:
-    OutputSPIRVTraverser(TCompiler *compiler, ShCompileOptions compileOptions, bool forceHighp);
+    OutputSPIRVTraverser(TCompiler *compiler,
+                         ShCompileOptions compileOptions,
+                         bool forceHighp,
+                         const PreciseNodeSet &preciseNodes);
     ~OutputSPIRVTraverser() override;
 
     spirv::Blob getSpirv();
@@ -365,8 +369,12 @@ class OutputSPIRVTraverser : public TIntermTraverser
                                                spirv::IdRef structValue,
                                                uint32_t fieldIndex);
 
+    bool isPrecise(TIntermTyped *node) { return mPreciseNodes.count(node) > 0; }
+
     TCompiler *mCompiler;
     ANGLE_MAYBE_UNUSED ShCompileOptions mCompileOptions;
+
+    PreciseNodeSet mPreciseNodes;
 
     SPIRVBuilder mBuilder;
 
@@ -489,10 +497,12 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
 
 OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler,
                                            ShCompileOptions compileOptions,
-                                           bool forceHighp)
+                                           bool forceHighp,
+                                           const PreciseNodeSet &preciseNodes)
     : TIntermTraverser(true, true, true, &compiler->getSymbolTable()),
       mCompiler(compiler),
       mCompileOptions(compileOptions),
+      mPreciseNodes(preciseNodes),
       mBuilder(compiler,
                compileOptions,
                forceHighp,
@@ -2810,7 +2820,8 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         parameters.push_back(one);
     }
 
-    const SpirvDecorations decorations = mBuilder.getDecorations(node->getType());
+    const SpirvDecorations decorations =
+        mBuilder.getArithmeticDecorations(node->getType(), isPrecise(node));
     spirv::IdRef result;
     if (node->getType().getBasicType() != EbtVoid)
     {
@@ -2916,9 +2927,9 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
 
         if (binaryInvertSecondParameter)
         {
-            const spirv::IdRef one = mBuilder.getFloatConstant(1);
-            const spirv::IdRef invertedParam =
-                mBuilder.getNewId(mBuilder.getDecorations(secondChild->getType()));
+            const spirv::IdRef one           = mBuilder.getFloatConstant(1);
+            const spirv::IdRef invertedParam = mBuilder.getNewId(
+                mBuilder.getArithmeticDecorations(secondChild->getType(), isPrecise(node)));
             spirv::WriteFDiv(mBuilder.getSpirvCurrentFunctionBlock(), parameterTypeIds.back(),
                              invertedParam, one, parameters[1]);
             parameters[1] = invertedParam;
@@ -5490,8 +5501,7 @@ bool OutputSPIRVTraverser::visitGlobalQualifierDeclaration(Visit visit,
 {
     if (node->isPrecise())
     {
-        // TODO: handle precise.  http://anglebug.com/4889.
-        UNIMPLEMENTED();
+        // Nothing to do for |precise|.
         return false;
     }
 
@@ -6176,8 +6186,15 @@ bool OutputSPIRV(TCompiler *compiler,
                  ShCompileOptions compileOptions,
                  bool forceHighp)
 {
+    // Find the list of nodes that require NoContraction (as a result of |precise|).
+    PreciseNodeSet preciseNodes;
+    if (compiler->hasAnyPreciseType())
+    {
+        FindPreciseNodes(compiler, root, &preciseNodes);
+    }
+
     // Traverse the tree and generate SPIR-V instructions
-    OutputSPIRVTraverser traverser(compiler, compileOptions, forceHighp);
+    OutputSPIRVTraverser traverser(compiler, compileOptions, forceHighp, preciseNodes);
     root->traverse(&traverser);
 
     // Generate the final SPIR-V and store in the sink

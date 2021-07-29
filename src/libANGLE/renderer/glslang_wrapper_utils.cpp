@@ -894,17 +894,6 @@ class SpirvTransformerBase : angle::NonCopyable
     spirv::IdRef getNewId();
 
   protected:
-    // SPIR-V 1.0 Table 1: First Words of Physical Layout
-    enum HeaderIndex
-    {
-        kHeaderIndexMagic        = 0,
-        kHeaderIndexVersion      = 1,
-        kHeaderIndexGenerator    = 2,
-        kHeaderIndexIndexBound   = 3,
-        kHeaderIndexSchema       = 4,
-        kHeaderIndexInstructions = 5,
-    };
-
     // Common utilities
     void onTransformBegin();
     const uint32_t *getCurrentInstruction(spv::Op *opCodeOut, uint32_t *wordCountOut) const;
@@ -933,10 +922,10 @@ class SpirvTransformerBase : angle::NonCopyable
 void SpirvTransformerBase::onTransformBegin()
 {
     // Glslang succeeded in outputting SPIR-V, so we assume it's valid.
-    ASSERT(mSpirvBlobIn.size() >= kHeaderIndexInstructions);
+    ASSERT(mSpirvBlobIn.size() >= spirv::kHeaderIndexInstructions);
     // Since SPIR-V comes from a local call to glslang, it necessarily has the same endianness as
     // the running architecture, so no byte-swapping is necessary.
-    ASSERT(mSpirvBlobIn[kHeaderIndexMagic] == spv::MagicNumber);
+    ASSERT(mSpirvBlobIn[spirv::kHeaderIndexMagic] == spv::MagicNumber);
 
     // Make sure the transformer is not reused to avoid having to reinitialize it here.
     ASSERT(mCurrentWord == 0);
@@ -947,9 +936,10 @@ void SpirvTransformerBase::onTransformBegin()
 
     // Copy the header to SPIR-V blob, we need that to be defined for SpirvTransformerBase::getNewId
     // to work.
-    mSpirvBlobOut->assign(mSpirvBlobIn.begin(), mSpirvBlobIn.begin() + kHeaderIndexInstructions);
+    mSpirvBlobOut->assign(mSpirvBlobIn.begin(),
+                          mSpirvBlobIn.begin() + spirv::kHeaderIndexInstructions);
 
-    mCurrentWord = kHeaderIndexInstructions;
+    mCurrentWord = spirv::kHeaderIndexInstructions;
 }
 
 const uint32_t *SpirvTransformerBase::getCurrentInstruction(spv::Op *opCodeOut,
@@ -973,7 +963,7 @@ void SpirvTransformerBase::copyInstruction(const uint32_t *instruction, size_t w
 
 spirv::IdRef SpirvTransformerBase::GetNewId(spirv::Blob *blob)
 {
-    return spirv::IdRef((*blob)[kHeaderIndexIndexBound]++);
+    return spirv::IdRef((*blob)[spirv::kHeaderIndexIndexBound]++);
 }
 
 spirv::IdRef SpirvTransformerBase::getNewId()
@@ -2902,7 +2892,7 @@ void SpirvTransformer::transform()
 
 void SpirvTransformer::resolveVariableIds()
 {
-    const size_t indexBound = mSpirvBlobIn[kHeaderIndexIndexBound];
+    const size_t indexBound = mSpirvBlobIn[spirv::kHeaderIndexIndexBound];
 
     mIds.init(indexBound);
     mInactiveVaryingRemover.init(indexBound);
@@ -2913,7 +2903,7 @@ void SpirvTransformer::resolveVariableIds()
     // that name in mVariableInfoMap.
     mVariableInfoById.resize(indexBound, nullptr);
 
-    size_t currentWord = kHeaderIndexInstructions;
+    size_t currentWord = spirv::kHeaderIndexInstructions;
 
     while (currentWord < mSpirvBlobIn.size())
     {
@@ -3780,7 +3770,7 @@ void SpirvVertexAttributeAliasingTransformer::transform()
 
 void SpirvVertexAttributeAliasingTransformer::preprocessAliasingAttributes()
 {
-    const uint32_t indexBound = mSpirvBlobIn[kHeaderIndexIndexBound];
+    const uint32_t indexBound = mSpirvBlobIn[spirv::kHeaderIndexIndexBound];
 
     mVariableInfoById.resize(indexBound, nullptr);
     mIsAliasingAttributeById.resize(indexBound, false);

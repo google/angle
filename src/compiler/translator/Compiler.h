@@ -175,6 +175,8 @@ class TCompiler : public TShHandleBase
         return mTessEvaluationShaderInputPointType;
     }
 
+    bool hasAnyPreciseType() const { return mHasAnyPreciseType; }
+
     unsigned int getSharedMemorySize() const;
 
     sh::GLenum getShaderType() const { return mShaderType; }
@@ -337,6 +339,8 @@ class TCompiler : public TShHandleBase
     TLayoutTessEvaluationType mTessEvaluationShaderInputVertexSpacingType;
     TLayoutTessEvaluationType mTessEvaluationShaderInputOrderingType;
     TLayoutTessEvaluationType mTessEvaluationShaderInputPointType;
+
+    bool mHasAnyPreciseType;
 
     // name hashing.
     NameMap mNameMap;

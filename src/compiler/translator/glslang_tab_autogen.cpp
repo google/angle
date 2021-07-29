@@ -3547,7 +3547,7 @@ yyreduce:
         case 128:
 
         {
-            // empty
+            context->markShaderHasPrecise();
         }
 
         break;

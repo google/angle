@@ -200,6 +200,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_util/FindFunction.h",
   "src/compiler/translator/tree_util/FindMain.cpp",
   "src/compiler/translator/tree_util/FindMain.h",
+  "src/compiler/translator/tree_util/FindPreciseNodes.cpp",
+  "src/compiler/translator/tree_util/FindPreciseNodes.h",
   "src/compiler/translator/tree_util/FindSymbolNode.cpp",
   "src/compiler/translator/tree_util/FindSymbolNode.h",
   "src/compiler/translator/tree_util/IntermNodePatternMatcher.cpp",

@@ -311,6 +311,7 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       mTessEvaluationShaderInputVertexSpacingType(EtetUndefined),
       mTessEvaluationShaderInputOrderingType(EtetUndefined),
       mTessEvaluationShaderInputPointType(EtetUndefined),
+      mHasAnyPreciseType(false),
       mCompileOptions(0)
 {}
 
@@ -515,6 +516,8 @@ void TCompiler::setASTMetadata(const TParseContext &parseContext)
     mComputeShaderLocalSize         = parseContext.getComputeShaderLocalSize();
 
     mNumViews = parseContext.getNumViews();
+
+    mHasAnyPreciseType = parseContext.hasAnyPreciseType();
 
     if (mShaderType == GL_GEOMETRY_SHADER_EXT)
     {

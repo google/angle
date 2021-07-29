@@ -811,7 +811,7 @@ invariant_qualifier
 
 precise_qualifier
     : PRECISE {
-        // empty
+        context->markShaderHasPrecise();
     }
     ;
 

@@ -675,7 +675,18 @@ SpirvDecorations SPIRVBuilder::getDecorations(const TType &type)
         decorations.push_back(spv::DecorationRelaxedPrecision);
     }
 
-    // TODO: Handle |precise|.  http://anglebug.com/4889.
+    return decorations;
+}
+
+SpirvDecorations SPIRVBuilder::getArithmeticDecorations(const TType &type, bool isPrecise)
+{
+    SpirvDecorations decorations = getDecorations(type);
+
+    // Handle |precise|.
+    if (isPrecise)
+    {
+        decorations.push_back(spv::DecorationNoContraction);
+    }
 
     return decorations;
 }

@@ -187,6 +187,16 @@ angle_test("angle_unittests") {
     "$angle_root/util:angle_util_static",
   ]
 
+  if (angle_enable_vulkan) {
+    sources += [ "compiler_tests/Precise_test.cpp" ]
+    deps += [
+      "$angle_root/src/common/spirv:angle_spirv_base",
+      "$angle_root/src/common/spirv:angle_spirv_headers",
+      "$angle_root/src/common/spirv:angle_spirv_parser",
+      "${angle_spirv_headers_dir}:spv_headers",
+    ]
+  }
+
   if (!is_android && !is_fuchsia) {
     # SystemUtils.RunApp, the only unittest using a helper binary, is not supported on these
     # platforms yet.
