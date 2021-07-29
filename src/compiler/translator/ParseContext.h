@@ -205,6 +205,10 @@ class TParseContext : angle::NonCopyable
                                const char *value,
                                bool stdgl);
 
+    // For built-ins that can be redeclared, adjusts the type qualifier so transformations can
+    // identify them correctly.
+    void adjustRedeclaredBuiltInType(const ImmutableString &identifier, TType *type);
+
     // Returns true on success. *initNode may still be nullptr on success in case the initialization
     // is not needed in the AST.
     bool executeInitializer(const TSourceLoc &line,

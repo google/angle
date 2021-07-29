@@ -179,7 +179,7 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
         if (mInDefaultUniform)
         {
             const ImmutableString &name = symbol->variable().name();
-            ASSERT(!name.beginsWith("gl_"));
+            ASSERT(!gl::IsBuiltInName(name.data()));
             (*mSink) << HashName(&symbol->variable(), mHashFunction, mNameMap)
                      << ArrayString(symbol->getType());
         }

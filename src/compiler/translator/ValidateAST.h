@@ -48,6 +48,8 @@ struct ValidateASTOptions
     // Implemented:
     //
     //  - Function parameters having one of EvqParam* qualifiers.
+    //  - gl_ClipDistance, gl_CullDistance and gl_LastFragData are correctly qualified even when
+    //    redeclared in the shader.
     //
     // TODO:
     //

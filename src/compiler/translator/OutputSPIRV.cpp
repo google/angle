@@ -423,15 +423,6 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
         return spv::StorageClassOutput;
     }
 
-    // Uniform and storage buffers have the Uniform storage class.  Default uniforms are gathered in
-    // a uniform block as well.
-    if (type.getInterfaceBlock() != nullptr || qualifier == EvqUniform)
-    {
-        // I/O blocks must have already been classified as input or output above.
-        ASSERT(!IsShaderIoBlock(qualifier));
-        return spv::StorageClassUniform;
-    }
-
     switch (qualifier)
     {
         case EvqShared:
@@ -472,9 +463,18 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
         case EvqViewIDOVR:
             return spv::StorageClassInput;
 
+        case EvqPosition:
+        case EvqPointSize:
         case EvqFragDepth:
         case EvqSampleMask:
             return spv::StorageClassOutput;
+
+        case EvqClipDistance:
+        case EvqCullDistance:
+            // gl_Clip/CullDistance (not accessed through gl_in/gl_out) are inputs in FS and outputs
+            // otherwise.
+            return shaderType == GL_FRAGMENT_SHADER ? spv::StorageClassInput
+                                                    : spv::StorageClassOutput;
 
         case EvqTessLevelOuter:
         case EvqTessLevelInner:
@@ -490,8 +490,12 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
                                                     : spv::StorageClassInput;
 
         default:
-            UNREACHABLE();
-            return spv::StorageClassPrivate;
+            // Uniform and storage buffers have the Uniform storage class.  Default uniforms are
+            // gathered in a uniform block as well.
+            ASSERT(type.getInterfaceBlock() != nullptr || qualifier == EvqUniform);
+            // I/O blocks must have already been classified as input or output above.
+            ASSERT(!IsShaderIoBlock(qualifier));
+            return spv::StorageClassUniform;
     }
 }
 
@@ -577,6 +581,16 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
             name              = "gl_SamplePosition";
             builtInDecoration = spv::BuiltInSamplePosition;
             mBuilder.addCapability(spv::CapabilitySampleRateShading);
+            break;
+        case EvqClipDistance:
+            name              = "gl_ClipDistance";
+            builtInDecoration = spv::BuiltInClipDistance;
+            mBuilder.addCapability(spv::CapabilityClipDistance);
+            break;
+        case EvqCullDistance:
+            name              = "gl_CullDistance";
+            builtInDecoration = spv::BuiltInCullDistance;
+            mBuilder.addCapability(spv::CapabilityCullDistance);
             break;
         case EvqHelperInvocation:
             name              = "gl_HelperInvocation";
@@ -4749,6 +4763,19 @@ void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
         uint32_t fieldIndex = static_cast<uint32_t>(type.getInterfaceBlockFieldIndex());
         accessChainPushLiteral(&mNodeData.back(), spirv::LiteralInteger(fieldIndex), typeId);
     }
+
+    // Add gl_PerVertex capabilities only if the field is actually used.
+    switch (type.getQualifier())
+    {
+        case EvqClipDistance:
+            mBuilder.addCapability(spv::CapabilityClipDistance);
+            break;
+        case EvqCullDistance:
+            mBuilder.addCapability(spv::CapabilityCullDistance);
+            break;
+        default:
+            break;
+    }
 }
 
 void OutputSPIRVTraverser::visitConstantUnion(TIntermConstantUnion *node)
@@ -5742,9 +5769,16 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
 
     // Declare specialization constants especially; they don't require processing the left and right
     // nodes, and they are like constant declarations with special instructions and decorations.
-    if (sequence.front()->getAsTyped()->getType().getQualifier() == EvqSpecConst)
+    const TQualifier qualifier = sequence.front()->getAsTyped()->getType().getQualifier();
+    if (qualifier == EvqSpecConst)
     {
         declareSpecConst(node);
+        return false;
+    }
+
+    // Skip redeclaration of builtins.  They will correctly declare as built-in on first use.
+    if (mInGlobalScope && (qualifier == EvqClipDistance || qualifier == EvqCullDistance))
+    {
         return false;
     }
 

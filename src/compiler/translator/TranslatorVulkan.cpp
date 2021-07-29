@@ -103,7 +103,7 @@ class ReplaceDefaultUniformsTraverser : public TIntermTraverser
         const TVariable &variable = symbol->variable();
         const TType &type         = variable.getType();
 
-        if (!IsDefaultUniform(type) || variable.name().beginsWith("gl_"))
+        if (!IsDefaultUniform(type) || gl::IsBuiltInName(variable.name().data()))
         {
             return;
         }
@@ -945,12 +945,10 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
             if (outputVarying.name == "gl_ClipDistance")
             {
                 useClipDistance = true;
-                break;
             }
-            if (outputVarying.name == "gl_CullDistance")
+            else if (outputVarying.name == "gl_CullDistance")
             {
                 useCullDistance = true;
-                break;
             }
         }
         for (const ShaderVariable &inputVarying : mInputVaryings)
@@ -958,12 +956,10 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
             if (inputVarying.name == "gl_ClipDistance")
             {
                 useClipDistance = true;
-                break;
             }
-            if (inputVarying.name == "gl_CullDistance")
+            else if (inputVarying.name == "gl_CullDistance")
             {
                 useCullDistance = true;
-                break;
             }
         }
 

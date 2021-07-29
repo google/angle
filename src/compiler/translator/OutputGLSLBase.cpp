@@ -364,6 +364,18 @@ const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
                 break;
         }
     }
+
+    // Handle qualifiers that produce different output based on shader type.
+    switch (qualifier)
+    {
+        case EvqClipDistance:
+        case EvqCullDistance:
+            return mShaderType == GL_FRAGMENT_SHADER ? "in" : "out";
+            break;
+        default:
+            break;
+    }
+
     return sh::getQualifierString(qualifier);
 }
 

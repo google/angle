@@ -89,15 +89,10 @@ void InputAttachmentReferenceTraverser::setInputAttachmentIndex(unsigned int inp
 
 bool InputAttachmentReferenceTraverser::visitDeclaration(Visit visit, TIntermDeclaration *node)
 {
-    const TIntermSequence &sequence = *(node->getSequence());
+    const TIntermSequence &sequence = *node->getSequence();
+    ASSERT(sequence.size() == 1);
 
-    if (sequence.size() != 1)
-    {
-        return true;
-    }
-
-    TIntermTyped *variable = sequence.front()->getAsTyped();
-    TIntermSymbol *symbol  = variable->getAsSymbolNode();
+    TIntermSymbol *symbol = sequence.front()->getAsSymbolNode();
     if (symbol == nullptr)
     {
         return true;

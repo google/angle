@@ -715,6 +715,7 @@ bool IsBuiltinOutputVariable(TQualifier qualifier)
         case EvqFragData:
         case EvqSecondaryFragDataEXT:
         case EvqClipDistance:
+        case EvqCullDistance:
         case EvqLastFragData:
         case EvqSampleMask:
             return true;
@@ -970,6 +971,11 @@ bool IsValidImplicitConversion(sh::ImplicitTypeConversion conversion, TOperator 
             break;
     }
     return false;
+}
+
+bool IsRedeclarableBuiltIn(const ImmutableString &name)
+{
+    return name == "gl_ClipDistance" || name == "gl_CullDistance" || name == "gl_LastFragData";
 }
 
 size_t FindFieldIndex(const TFieldList &fieldList, const char *fieldName)

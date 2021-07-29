@@ -1371,9 +1371,9 @@ void main()
     }
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ClipDistanceTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(ClipDistanceTest, WithDirectSPIRVGeneration(ES3_VULKAN()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ClipCullDistanceTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(ClipCullDistanceTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND(ClipCullDistanceTest,
+                                        WithDirectSPIRVGeneration(ES3_VULKAN()),
+                                        WithDirectSPIRVGeneration(ES31_VULKAN()));

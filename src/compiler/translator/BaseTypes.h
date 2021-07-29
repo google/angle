@@ -1199,11 +1199,6 @@ inline bool IsShaderOut(TQualifier qualifier)
         case EvqSampleOut:
         case EvqPatchOut:
         case EvqFragmentInOut:
-        // Per-vertex built-ins when used without gl_in or gl_out are always output.
-        case EvqPosition:
-        case EvqPointSize:
-        case EvqClipDistance:
-        case EvqCullDistance:
             return true;
         default:
             return false;
@@ -1469,9 +1464,7 @@ inline const char *getWorkGroupSizeString(size_t dimension)
     }
 }
 
-//
-// This is just for debug and error message print out, carried along with the definitions above.
-//
+// Used for GLSL generation, debugging and error messages.
 inline const char *getQualifierString(TQualifier q)
 {
     // clang-format off
@@ -1544,6 +1537,7 @@ inline const char *getQualifierString(TQualifier q)
     case EvqPrimitiveID:            return "gl_PrimitiveID";
     case EvqPrecise:                return "precise";
     case EvqClipDistance:           return "ClipDistance";
+    case EvqCullDistance:           return "CullDistance";
     case EvqSample:                 return "sample";
     case EvqSampleIn:               return "sample in";
     case EvqSampleOut:              return "sample out";
