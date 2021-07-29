@@ -13,6 +13,7 @@
 
 #if defined(ANGLE_USE_ABSEIL)
 #    include "absl/container/flat_hash_map.h"
+#    include "absl/container/flat_hash_set.h"
 #endif  // defined(ANGLE_USE_ABSEIL)
 
 #if defined(ANGLE_WITH_LSAN)
@@ -26,6 +27,7 @@
 #include <sstream>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 // A helper class to disallow copy and assignment operators
@@ -39,9 +41,13 @@ using Microsoft::WRL::ComPtr;
 #if defined(ANGLE_USE_ABSEIL)
 template <typename Key, typename T, class Hash = absl::container_internal::hash_default_hash<Key>>
 using HashMap = absl::flat_hash_map<Key, T, Hash>;
+template <typename Key, class Hash = absl::container_internal::hash_default_hash<Key>>
+using HashSet = absl::flat_hash_set<Key, Hash>;
 #else
 template <typename Key, typename T, class Hash = std::hash<Key>>
 using HashMap = std::unordered_map<Key, T, Hash>;
+template <typename Key, class Hash = std::hash<Key>>
+using HashSet = std::unordered_set<Key, Hash>;
 #endif  // defined(ANGLE_USE_ABSEIL)
 
 class NonCopyable

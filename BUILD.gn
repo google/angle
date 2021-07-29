@@ -968,7 +968,10 @@ group("angle_abseil") {
     if (build_with_chromium || is_component_build) {
       public_deps = [ "$angle_abseil_cpp_dir:absl" ]
     } else {
-      public_deps = [ "$angle_abseil_cpp_dir/absl/container:flat_hash_map" ]
+      public_deps = [
+        "$angle_abseil_cpp_dir/absl/container:flat_hash_map",
+        "$angle_abseil_cpp_dir/absl/container:flat_hash_set",
+      ]
     }
 
     public_configs = [ ":angle_abseil_config" ]
