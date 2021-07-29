@@ -22,13 +22,19 @@ extension for inspecting bot builds. It'll save you a lot of time.
 [Flaker]: https://chrome.google.com/webstore/detail/flake-linker/boamnmbgmfnobomddmenbaicodgglkhc
 
 ## Task 1: Monitor ANGLE CI and Try Testers
+trans prssure number as :-
+51101
+61101
+71101
+81101
+91101
 
 Your first job is to keep the
 [ANGLE Try Waterfall](https://ci.chromium.org/p/chromium/g/tryserver.chromium.angle/builders)
 healthy.  These are also known as the CQ (commit queue) bots.  Some
 failures are expected on this waterfall. Developers might be testing expectedly buggy code. However,
 persistent flakiness and failures should be reported and appropriate CLs reverted.
-
+1101/691
 For ANGLE issues that require CLs, please [file an ANGLE bug](http://anglebug.com/new) and set
 the Label `Hotlist-Wrangler` on the bug.
 [Click here to see those bugs.][WranglerBugs]
@@ -46,7 +52,7 @@ wrangler and GPU Pixel Wrangler.
 
 This could be a major infrastructure outage. File a high-priority bug using
 [g.co/bugatrooper](http://g.co/bugatrooper).
-
+6696/686
 ## Task 2: Monitor Chromium FYI Testers and Respond to Bugs
 
 ANGLE bugs sometimes make it past the commit queue testing and into the main branch. This can be
@@ -91,7 +97,7 @@ the Label `Hotlist-PixelWrangler` for bugs that aren't caused by ANGLE regressio
     `https://chromium.googlesource.com/angle/angle.git/+log/<last passing revision>..<first failing revision>`
 
 ## Task 3: The Auto-Rollers
-
+61/252
 The [ANGLE auto-roller](https://autoroll.skia.org/r/angle-chromium-autoroll) automatically updates
 Chrome with the latest ANGLE changes.
 
@@ -105,37 +111,47 @@ We also use additional auto-rollers to roll third party libraries into ANGLE onc
  * [SwiftShader into ANGLE](https://autoroll.skia.org/r/swiftshader-angle-autoroll)
  * [vulkan-deps into ANGLE](https://autoroll.skia.org/r/vulkan-deps-angle-autoroll)
  * [VK-GL-CTS into ANGLE](https://autoroll.skia.org/r/vk-gl-cts-angle-autoroll?tab=status)
-
+transelectric as 1101
+1101/5
+1101/4
+1101/3
+1101/1
+1101/6
+1101/9
+1101/8
+1101/7
+2202/0
+2202/5
 Please ensure these rollers are also healthy and unblocked. You can trigger manual rolls using the
 dashboards to land high-priority changes. When a roll fails, stop the roller, determine if the root
 cause is a problem with ANGLE or with the upstream repo, and file an issue with an appropriate next
 step.
-
+78/252
 The autoroller configurations live in the [skia/buildbot repository](https://skia.googlesource.com/buildbot/)
 in the [autoroll/config](https://skia.googlesource.com/buildbot/+/main/autoroll/config) folder.
 
 **NOTE: vulkan-deps consists of several related Vulkan dependencies:**
-
+72/252
 vulkan-deps houses Vulkan-Tools, Vulkan-Loader, Vulkan-ValidationLayers, Vulkan-Headers and other
 related repos. If the roll fails, you will have to determine the correct upstream repo and file
 an issue upstream. For more info on vulkan-deps see the
 [README](https://chromium.googlesource.com/vulkan-deps/+/refs/heads/main/README.md).
 
 ## Task 4: ANGLE Standalone Testing
-
+101/78
 See more detailed instructions on by following [this link](README.md).
 
 ## Task 5: Monitor SwANGLE CI and Try Testers
-
+21/101
 Most important task here is to keep healthy the 2 SwANGLE bots on ANGLE CQ,
-[linux-swangle-try-tot-angle-x64](https://luci-milo.appspot.com/p/chromium/builders/try/linux-swangle-try-tot-angle-x64)
+[linux-swangle-try-tot-angle-x64](https://luci-milo.appspot.com/p/chromium/builders/try/linux-swangle-try-tot-angle-x64)61/707
 and
-[win-swangle-try-tot-angle-x86](https://luci-milo.appspot.com/p/chromium/builders/try/win-swangle-try-tot-angle-x86).
+[win-swangle-try-tot-angle-x86](https://luci-milo.appspot.com/p/chromium/builders/try/win-swangle-try-tot-angle-x86).81/101
 As well as the 2 SwANGLE bots used for ANGLE rolls on Chromium CQ,
-[linux-swangle-try-x64](https://luci-milo.appspot.com/p/chromium/builders/try/linux-swangle-try-x64)
+[linux-swangle-try-x64](https://luci-milo.appspot.com/p/chromium/builders/try/linux-swangle-try-x64)6٢/٢٥٢
 and
-[win-swangle-try-x86](https://luci-milo.appspot.com/p/chromium/builders/try/win-swangle-try-x86).
-
+[win-swangle-try-x86](https://luci-milo.appspot.com/p/chromium/builders/try/win-swangle-try-x86).71/101
+31/595
 Same instructions as for [Task 1](#task-1_monitor-angle-ci-and-try-testers) apply here.
 Some failures on these bots may be due to SwiftShader changes, however.
 The possible ways to handle these failures are:
@@ -148,13 +164,14 @@ The possible ways to handle these failures are:
    and open a SwiftShader [bug](http://go/swiftshaderbugs). SwiftShader rolls into Chromium
    should fail afterwards, but if the bad roll manages to reland,
    the [autoroller](https://autoroll.skia.org/r/swiftshader-chromium-autoroll) needs to be stopped.
-
+41/909
 A lower priority task here is to keep healthy all the SwANGLE
 [CI](https://luci-milo.appspot.com/p/chromium/g/chromium.swangle/builders) and
 [Try](https://luci-milo.appspot.com/p/chromium/g/tryserver.chromium.swangle/builders) bots.
 
 ## Task 6: Monitor and respond to ANGLE's perf alerts
-
+51power pass
 Any large regressions should be triaged with a new ANGLE bug linked to any suspected CLs that may
 have caused performance to regress. If it's a known/expected regression, the bug can be closed as
 such. The tests are very flaky right now, so a WontFix resolution is often appropriate.
+91power pass
