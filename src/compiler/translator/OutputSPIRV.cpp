@@ -274,9 +274,9 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef createConstructorVectorFromMatrix(TIntermAggregate *node,
                                                    spirv::IdRef typeId,
                                                    const spirv::IdRefList &parameters);
-    spirv::IdRef createConstructorVectorFromScalarsAndVectors(TIntermAggregate *node,
-                                                              spirv::IdRef typeId,
-                                                              const spirv::IdRefList &parameters);
+    spirv::IdRef createConstructorVectorFromMultiple(TIntermAggregate *node,
+                                                     spirv::IdRef typeId,
+                                                     const spirv::IdRefList &parameters);
     spirv::IdRef createConstructorMatrixFromScalar(TIntermAggregate *node,
                                                    spirv::IdRef typeId,
                                                    const spirv::IdRefList &parameters);
@@ -1347,11 +1347,13 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
             return createConstructorVectorFromScalar(arg0Type, type.getBasicType(),
                                                      type.getNominalSize(), typeId, parameters);
         }
-        if (arguments.size() == 1 && arg0Type.isMatrix())
+        if (arg0Type.isMatrix())
         {
+            // If the first argument is a matrix, it will always have enough components to fill an
+            // entire vector, so it doesn't matter what's specified after it.
             return createConstructorVectorFromMatrix(node, typeId, parameters);
         }
-        return createConstructorVectorFromScalarsAndVectors(node, typeId, parameters);
+        return createConstructorVectorFromMultiple(node, typeId, parameters);
     }
 
     ASSERT(type.isMatrix());
@@ -1464,14 +1466,54 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromMatrix(
     return result;
 }
 
-spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromScalarsAndVectors(
+spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromMultiple(
     TIntermAggregate *node,
     spirv::IdRef typeId,
     const spirv::IdRefList &parameters)
 {
+    const TType &type = node->getType();
     // vecN(v1.zy, v2.x) translates to OpCompositeConstruct %vecN %v1.z %v1.y %v2.x
     spirv::IdRefList extractedComponents;
-    extractComponents(node, node->getType().getNominalSize(), parameters, &extractedComponents);
+    extractComponents(node, type.getNominalSize(), parameters, &extractedComponents);
+
+    // Handle the case where a matrix is used in the constructor anywhere but the first place.  In
+    // that case, the components extracted from the matrix might need casting to the right type.
+    const TIntermSequence &arguments = *node->getSequence();
+    for (size_t argumentIndex = 0, componentIndex = 0;
+         argumentIndex < arguments.size() && componentIndex < extractedComponents.size();
+         ++argumentIndex)
+    {
+        TIntermNode *argument     = arguments[argumentIndex];
+        const TType &argumentType = argument->getAsTyped()->getType();
+        if (argumentType.isScalar() || argumentType.isVector())
+        {
+            // extractComponents already casts scalar and vector components.
+            componentIndex += argumentType.getNominalSize();
+            continue;
+        }
+
+        TType componentType(argumentType);
+        componentType.setPrimarySize(1);
+        componentType.setSecondarySize(1);
+
+        for (int columnIndex = 0;
+             columnIndex < argumentType.getCols() && componentIndex < extractedComponents.size();
+             ++columnIndex)
+        {
+            for (int rowIndex = 0;
+                 rowIndex < argumentType.getRows() && componentIndex < extractedComponents.size();
+                 ++rowIndex, ++componentIndex)
+            {
+                extractedComponents[componentIndex] =
+                    castBasicType(extractedComponents[componentIndex], componentType,
+                                  type.getBasicType(), nullptr);
+            }
+        }
+
+        // Matrices all have enough components to fill a vector, so it's impossible to need to visit
+        // any other arguments that may come after.
+        ASSERT(componentIndex == extractedComponents.size());
+    }
 
     const spirv::IdRef result = mBuilder.getNewId(mBuilder.getDecorations(node->getType()));
     spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result,

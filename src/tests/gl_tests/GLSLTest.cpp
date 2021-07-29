@@ -2644,11 +2644,12 @@ void main()
     ivec3 vi = ivec3(m);
     uvec2 vu = uvec2(m);
     bvec4 vb = bvec4(m);
+    bvec2 vb2 = bvec2(vi.x, m);
 
     color = vec4(vi.x == int(f) ? 1 : 0,
                  vu.x == uint(f) ? 1 : 0,
                  vb.x == bool(f) ? 1 : 0,
-                 1);
+                 vb2.x == bool(f) && vb2.y == bool(f) ? 1 : 0);
 })";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
