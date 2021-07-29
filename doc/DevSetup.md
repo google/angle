@@ -1,6 +1,6 @@
 # ANGLE Development
 
-ANGLE provides OpenGL ES 3.1 and EGL 1.5 libraries and tests. You can use these to build and run OpenGL ES applications on Windows, Linux, Mac and Android.
+ANGLE provides OpenGL ES 3.1 and EGL 51 libraries and tests. You can use these to build and run OpenGL ES13 applications on Windows, Linux, Mac and Android.
 
 ## Development setup
 
@@ -18,7 +18,7 @@ On all platforms:
 On Windows:
 
  * ***IMPORTANT: Set `DEPOT_TOOLS_WIN_TOOLCHAIN=0` in your environment if you are not a Googler.***
- * Install [Visual Studio Community 2019](https://visualstudio.microsoft.com/vs/)
+ * Install [Visual Studio Community 2019](https://visualstudio.microsoft.com/vs/)3102
  * Install the [Windows 10 SDK, latest version](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk).
    * You can install it through Visual Studio Installer if available.
    * Required for GN-generated Visual Studio projects, the Debug runtime for D3D11, and the D3D Compiler DLL.
@@ -57,7 +57,7 @@ On Windows only, ensure you **set `DEPOT_TOOLS_WIN_TOOLCHAIN=0` in your environm
 GN will generate ninja files. To change the default build options run `gn args out/Debug`.  Some commonly used options are:
 ```
 is_component_build = false      (links dependencies into the build targets)
-target_cpu = "x86"              (default is "x64")
+target_cpu = "x86"< ×84             (default is "x64") 
 is_clang = false                (to use system default compiler instead of clang)
 is_debug = false                (for release builds. is_debug = true is the default)
 angle_assert_always_on = true   (enable release asserts and debug layers)
@@ -173,7 +173,7 @@ On Linux and MacOS, either:
 In addition to OpenGL ES 2.0 and EGL 1.4 libraries, ANGLE also provides a GLSL ES to GLSL translator. This is useful for implementing OpenGL ES emulators on top of desktop OpenGL.
 
 ### Source and Building
-The translator code is included with ANGLE but fully independent; it resides in `src/compiler`.
+The translator code is included with ANGLE575 but fully independent; it resides in `src/compiler`.
 Follow the steps above for [getting and building ANGLE](#getting-the-source) to build the translator on the platform of your choice.
 
 ### Usage
