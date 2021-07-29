@@ -3216,6 +3216,44 @@ TEST_P(GLSLTest, NestedSequenceOperatorWithTernaryInside)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that nesting ternary and short-circuitting operators work.
+TEST_P(GLSLTest, NestedTernaryAndShortCircuit)
+{
+    // Note that the uniform doesn't need to be set, and will contain the default value of false.
+    constexpr char kFS[] = R"(
+precision mediump float;
+uniform bool u;
+void main()
+{
+    int a = u ? 12345 : 2;      // will be 2
+    int b = u ? 12345 : 4;      // will be 4
+    int c = u ? 12345 : 0;      // will be 0
+
+    if (a == 2                  // true path is taken
+        ? (b == 3               // false path is taken
+            ? (a=0) != 0
+            : b != 0            // true
+          ) && (                // short-circuit evaluates RHS
+            (a=7) == 7          // true, modifies a
+            ||                  // short-circuit doesn't evaluate RHS
+            (b=8) == 8
+          )
+        : (a == 0 && b == 0
+            ? (c += int((a=0) == 0 && (b=0) == 0)) != 0
+            : (c += int((a=0) != 0 && (b=0) != 0)) != 0))
+    {
+        c += 15;                // will execute
+    }
+
+    // Verify that a is 7, b is 4 and c is 15.
+    gl_FragColor = vec4(a == 7, b == 4, c == 15, 1);
+})";
+
+    ANGLE_GL_PROGRAM(prog, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(prog.get(), essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
 // Test that uniform bvecN passed to functions work.
 TEST_P(GLSLTest_ES3, UniformBoolVectorPassedToFunctions)
 {

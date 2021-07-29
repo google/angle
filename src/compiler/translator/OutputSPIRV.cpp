@@ -5083,6 +5083,9 @@ bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
     mNodeData.pop_back();
     mNodeData.back().idList.push_back(value);
 
+    // Additionally store the id of block that has produced the result.
+    mNodeData.back().idList.push_back(mBuilder.getSpirvCurrentFunctionBlockId());
+
     if (!canUseOpSelect)
     {
         // Move on to the next block.
@@ -5094,9 +5097,11 @@ bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
     {
         const spirv::IdRef result = mBuilder.getNewId(mBuilder.getDecorations(node->getType()));
 
-        ASSERT(mNodeData.back().idList.size() == 2);
-        const spirv::IdRef trueValue  = mNodeData.back().idList[0].id;
-        const spirv::IdRef falseValue = mNodeData.back().idList[1].id;
+        ASSERT(mNodeData.back().idList.size() == 4);
+        const spirv::IdRef trueValue    = mNodeData.back().idList[0].id;
+        const spirv::IdRef trueBlockId  = mNodeData.back().idList[1].id;
+        const spirv::IdRef falseValue   = mNodeData.back().idList[2].id;
+        const spirv::IdRef falseBlockId = mNodeData.back().idList[3].id;
 
         if (canUseOpSelect)
         {
@@ -5107,11 +5112,6 @@ bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
         }
         else
         {
-            const SpirvConditional *conditional = mBuilder.getCurrentConditional();
-
-            const spirv::IdRef trueBlockId  = conditional->blockIds[0];
-            const spirv::IdRef falseBlockId = conditional->blockIds[1];
-
             spirv::WritePhi(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result,
                             {spirv::PairIdRefIdRef{trueValue, trueBlockId},
                              spirv::PairIdRefIdRef{falseValue, falseBlockId}});
