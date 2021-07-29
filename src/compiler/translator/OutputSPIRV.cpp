@@ -1417,8 +1417,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorScalarFromNonScalar(
                                  parameters[0], indices);
 
     TType arg0TypeAsScalar(arg0Type);
-    arg0TypeAsScalar.setPrimarySize(1);
-    arg0TypeAsScalar.setSecondarySize(1);
+    arg0TypeAsScalar.toComponentType();
 
     return castBasicType(result, arg0TypeAsScalar, type.getBasicType(), nullptr);
 }
@@ -1507,8 +1506,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromMultiple(
         }
 
         TType componentType(argumentType);
-        componentType.setPrimarySize(1);
-        componentType.setSecondarySize(1);
+        componentType.toComponentType();
 
         for (int columnIndex = 0;
              columnIndex < argumentType.getCols() && componentIndex < extractedComponents.size();
@@ -1683,11 +1681,9 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
     {
         // If the parameter is a larger matrix than the constructor type, extract the columns
         // directly and potentially swizzle them.
-        SpirvType paramColumnType     = mBuilder.getSpirvType(parameterType, {});
-        paramColumnType.primarySize   = paramColumnType.secondarySize;
-        paramColumnType.secondarySize = 1;
-        const spirv::IdRef paramColumnTypeId =
-            mBuilder.getSpirvTypeData(paramColumnType, nullptr).id;
+        TType paramColumnType(parameterType);
+        paramColumnType.toMatrixColumnType();
+        const spirv::IdRef paramColumnTypeId = mBuilder.getTypeData(paramColumnType, {}).id;
 
         const bool needsSwizzle           = parameterType.getRows() > type.getRows();
         spirv::LiteralIntegerList swizzle = {spirv::LiteralInteger(0), spirv::LiteralInteger(1),
@@ -1719,11 +1715,9 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorMatrixFromMatrix(
     {
         // Otherwise create an identity matrix and fill in the components that can be taken from the
         // given parameter.
-        SpirvType paramComponentType     = mBuilder.getSpirvType(parameterType, {});
-        paramComponentType.primarySize   = 1;
-        paramComponentType.secondarySize = 1;
-        const spirv::IdRef paramComponentTypeId =
-            mBuilder.getSpirvTypeData(paramComponentType, nullptr).id;
+        TType paramComponentType(parameterType);
+        paramComponentType.toComponentType();
+        const spirv::IdRef paramComponentTypeId = mBuilder.getTypeData(paramComponentType, {}).id;
 
         for (int columnIndex = 0; columnIndex < type.getCols(); ++columnIndex)
         {
@@ -1840,11 +1834,10 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
         }
         if (argumentType.isVector())
         {
-            SpirvType componentType   = mBuilder.getSpirvType(argumentType, {});
-            componentType.type        = expectedBasicType;
-            componentType.primarySize = 1;
-            const spirv::IdRef componentTypeId =
-                mBuilder.getSpirvTypeData(componentType, nullptr).id;
+            TType componentType(argumentType);
+            componentType.toComponentType();
+            componentType.setBasicType(expectedBasicType);
+            const spirv::IdRef componentTypeId = mBuilder.getTypeData(componentType, {}).id;
 
             // Cast the whole vector parameter in one go.
             const spirv::IdRef castParameterId =
@@ -1869,10 +1862,9 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
 
         ASSERT(argumentType.isMatrix());
 
-        SpirvType componentType            = mBuilder.getSpirvType(argumentType, {});
-        componentType.primarySize          = 1;
-        componentType.secondarySize        = 1;
-        const spirv::IdRef componentTypeId = mBuilder.getSpirvTypeData(componentType, nullptr).id;
+        TType componentType(argumentType);
+        componentType.toComponentType();
+        const spirv::IdRef componentTypeId = mBuilder.getTypeData(componentType, {}).id;
 
         // For matrix parameters, take components out of the matrix one by one in column-major
         // order.  No cast is done here; it would only be required for vector constructors with

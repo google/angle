@@ -713,6 +713,13 @@ void TType::toMatrixColumnType()
     invalidateMangledName();
 }
 
+void TType::toComponentType()
+{
+    primarySize   = 1;
+    secondarySize = 1;
+    invalidateMangledName();
+}
+
 void TType::setInterfaceBlock(const TInterfaceBlock *interfaceBlockIn)
 {
     if (mInterfaceBlock != interfaceBlockIn)
