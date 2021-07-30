@@ -1242,12 +1242,6 @@ bool TranslatorMetalDirect::translate(TIntermBlock *root,
         }
     }
 
-    bool precisionEmulation = false;
-    if (!emulatePrecisionIfNeeded(root, sink, &precisionEmulation, SH_SPIRV_VULKAN_OUTPUT))
-    {
-        return false;
-    }
-
     SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
     DriverUniformExtended driverUniforms(DriverUniformMode::Structure);
     if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst, &driverUniforms))

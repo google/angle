@@ -46,10 +46,6 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     // like non-preprocessor tokens.
     WritePragma(sink, compileOptions, getPragma());
 
-    bool precisionEmulation = false;
-    if (!emulatePrecisionIfNeeded(root, sink, &precisionEmulation, SH_ESSL_OUTPUT))
-        return false;
-
     if (!RecordConstantPrecision(this, root, &getSymbolTable()))
     {
         return false;
@@ -95,7 +91,7 @@ bool TranslatorESSL::translate(TIntermBlock *root,
 
     // Write translated shader.
     TOutputESSL outputESSL(sink, getHashFunction(), getNameMap(), &getSymbolTable(),
-                           getShaderType(), shaderVer, precisionEmulation, compileOptions);
+                           getShaderType(), shaderVer, compileOptions);
 
     root->traverse(&outputESSL);
 

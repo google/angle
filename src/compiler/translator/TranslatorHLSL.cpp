@@ -138,10 +138,6 @@ bool TranslatorHLSL::translate(TIntermBlock *root,
         return false;
     }
 
-    bool precisionEmulation = false;
-    if (!emulatePrecisionIfNeeded(root, getInfoSink().obj, &precisionEmulation, getOutputType()))
-        return false;
-
     if ((compileOptions & SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS) != 0)
     {
         if (!sh::ExpandIntegerPowExpressions(this, root, &getSymbolTable()))

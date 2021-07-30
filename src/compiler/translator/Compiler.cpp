@@ -30,7 +30,6 @@
 #include "compiler/translator/tree_ops/DeferGlobalInitializers.h"
 #include "compiler/translator/tree_ops/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h"
-#include "compiler/translator/tree_ops/EmulatePrecision.h"
 #include "compiler/translator/tree_ops/FoldExpressions.h"
 #include "compiler/translator/tree_ops/ForcePrecisionQualifier.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
@@ -715,14 +714,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    // Fail compilation if precision emulation not supported.
-    if (getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision &&
-        !EmulatePrecision::SupportedInLanguage(mOutputType))
-    {
-        mDiagnostics.globalError("Precision emulation not supported for this output type.");
-        return false;
-    }
-
     if (parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance))
     {
         if (!ValidateClipCullDistance(root, &mDiagnostics,
@@ -1196,7 +1187,6 @@ void TCompiler::setResourceString()
         << ":MaxDualSourceDrawBuffers:" << mResources.MaxDualSourceDrawBuffers
         << ":MaxViewsOVR:" << mResources.MaxViewsOVR
         << ":NV_draw_buffers:" << mResources.NV_draw_buffers
-        << ":WEBGL_debug_shader_precision:" << mResources.WEBGL_debug_shader_precision
         << ":ANGLE_multi_draw:" << mResources.ANGLE_multi_draw
         << ":ANGLE_base_vertex_base_instance:" << mResources.ANGLE_base_vertex_base_instance
         << ":APPLE_clip_distance:" << mResources.APPLE_clip_distance
@@ -1282,29 +1272,6 @@ void TCompiler::collectInterfaceBlocks()
     mInterfaceBlocks.insert(mInterfaceBlocks.end(), mUniformBlocks.begin(), mUniformBlocks.end());
     mInterfaceBlocks.insert(mInterfaceBlocks.end(), mShaderStorageBlocks.begin(),
                             mShaderStorageBlocks.end());
-}
-
-bool TCompiler::emulatePrecisionIfNeeded(TIntermBlock *root,
-                                         TInfoSinkBase &sink,
-                                         bool *isNeeded,
-                                         const ShShaderOutput outputLanguage)
-{
-    *isNeeded = getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
-
-    if (*isNeeded)
-    {
-        // TODO: remove this transformation.  http://anglebug.com/6059
-        mValidateASTOptions.validateNoRawFunctionCalls = false;
-
-        EmulatePrecision emulatePrecision(&getSymbolTable());
-        root->traverse(&emulatePrecision);
-        if (!emulatePrecision.updateTree(this, root))
-        {
-            return false;
-        }
-        emulatePrecision.writeEmulationHelpers(sink, getShaderVersion(), outputLanguage);
-    }
-    return true;
 }
 
 void TCompiler::clearResults()

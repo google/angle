@@ -117,10 +117,6 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
         }
     }
 
-    bool precisionEmulation = false;
-    if (!emulatePrecisionIfNeeded(root, sink, &precisionEmulation, getOutputType()))
-        return false;
-
     // Write emulated built-in functions if needed.
     if (!getBuiltInFunctionEmulator().isOutputEmpty())
     {

@@ -300,7 +300,6 @@ class SPIRVBuilder : angle::NonCopyable
   public:
     SPIRVBuilder(TCompiler *compiler,
                  ShCompileOptions compileOptions,
-                 bool forceHighp,
                  ShHashFunction64 hashFunction,
                  NameMap &nameMap);
 
@@ -462,7 +461,6 @@ class SPIRVBuilder : angle::NonCopyable
     ANGLE_MAYBE_UNUSED TCompiler *mCompiler;
     ShCompileOptions mCompileOptions;
     gl::ShaderType mShaderType;
-    const bool mDisableRelaxedPrecision;
 
     // Capabilities the shader is using.  Accumulated as the instructions are generated.  The Shader
     // capability is unconditionally generated, so it's not tracked.

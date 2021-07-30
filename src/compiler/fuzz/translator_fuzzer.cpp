@@ -220,7 +220,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
         resources.EXT_draw_buffers                = 1;
         resources.EXT_frag_depth                  = 1;
         resources.EXT_shader_texture_lod          = 1;
-        resources.WEBGL_debug_shader_precision    = 1;
         resources.EXT_shader_framebuffer_fetch    = 1;
         resources.NV_shader_framebuffer_fetch     = 1;
         resources.ARM_shader_framebuffer_fetch    = 1;

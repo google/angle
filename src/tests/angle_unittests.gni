@@ -88,7 +88,6 @@ angle_unittests_compiler_tests_sources = [
   "compiler_tests/ConstantFoldingOverflow_test.cpp",
   "compiler_tests/ConstantFolding_test.cpp",
   "compiler_tests/ConstructCompiler_test.cpp",
-  "compiler_tests/DebugShaderPrecision_test.cpp",
   "compiler_tests/EXT_YUV_target_test.cpp",
   "compiler_tests/EXT_blend_func_extended_test.cpp",
   "compiler_tests/EXT_clip_cull_distance_test.cpp",

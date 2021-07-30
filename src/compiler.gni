@@ -135,8 +135,6 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/EmulateGLFragColorBroadcast.h",
   "src/compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.cpp",
   "src/compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h",
-  "src/compiler/translator/tree_ops/EmulatePrecision.cpp",
-  "src/compiler/translator/tree_ops/EmulatePrecision.h",
   "src/compiler/translator/tree_ops/FoldExpressions.cpp",
   "src/compiler/translator/tree_ops/FoldExpressions.h",
   "src/compiler/translator/tree_ops/ForcePrecisionQualifier.cpp",

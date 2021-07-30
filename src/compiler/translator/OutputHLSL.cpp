@@ -2375,6 +2375,10 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             bool lod0 = (mInsideDiscontinuousLoop || mOutputLod0Function) &&
                         mShaderType == GL_FRAGMENT_SHADER;
+
+            // No raw function is expected.
+            ASSERT(node->getOp() != EOpCallInternalRawFunction);
+
             if (node->getOp() == EOpCallFunctionInAST)
             {
                 if (node->isArray())
@@ -2388,12 +2392,6 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 out << DecorateFunctionIfNeeded(node->getFunction());
                 out << DisambiguateFunctionName(node->getSequence());
                 out << (lod0 ? "Lod0(" : "(");
-            }
-            else if (node->getOp() == EOpCallInternalRawFunction)
-            {
-                // This path is used for internal functions that don't have their definitions in the
-                // AST, such as precision emulation functions.
-                out << DecorateFunctionIfNeeded(node->getFunction()) << "(";
             }
             else if (node->getFunction()->isImageFunction())
             {

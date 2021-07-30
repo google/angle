@@ -186,7 +186,6 @@ class OutputSPIRVTraverser : public TIntermTraverser
   public:
     OutputSPIRVTraverser(TCompiler *compiler,
                          ShCompileOptions compileOptions,
-                         bool forceHighp,
                          const PreciseNodeSet &preciseNodes);
     ~OutputSPIRVTraverser() override;
 
@@ -501,17 +500,12 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
 
 OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler,
                                            ShCompileOptions compileOptions,
-                                           bool forceHighp,
                                            const PreciseNodeSet &preciseNodes)
     : TIntermTraverser(true, true, true, &compiler->getSymbolTable()),
       mCompiler(compiler),
       mCompileOptions(compileOptions),
       mPreciseNodes(preciseNodes),
-      mBuilder(compiler,
-               compileOptions,
-               forceHighp,
-               compiler->getHashFunction(),
-               compiler->getNameMap())
+      mBuilder(compiler, compileOptions, compiler->getHashFunction(), compiler->getNameMap())
 {}
 
 OutputSPIRVTraverser::~OutputSPIRVTraverser()
@@ -6251,10 +6245,7 @@ spirv::Blob OutputSPIRVTraverser::getSpirv()
 }
 }  // anonymous namespace
 
-bool OutputSPIRV(TCompiler *compiler,
-                 TIntermBlock *root,
-                 ShCompileOptions compileOptions,
-                 bool forceHighp)
+bool OutputSPIRV(TCompiler *compiler, TIntermBlock *root, ShCompileOptions compileOptions)
 {
     // Find the list of nodes that require NoContraction (as a result of |precise|).
     PreciseNodeSet preciseNodes;
@@ -6264,7 +6255,7 @@ bool OutputSPIRV(TCompiler *compiler,
     }
 
     // Traverse the tree and generate SPIR-V instructions
-    OutputSPIRVTraverser traverser(compiler, compileOptions, forceHighp, preciseNodes);
+    OutputSPIRVTraverser traverser(compiler, compileOptions, preciseNodes);
     root->traverse(&traverser);
 
     // Generate the final SPIR-V and store in the sink

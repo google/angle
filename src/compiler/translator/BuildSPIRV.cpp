@@ -480,13 +480,11 @@ void SpirvTypeSpec::onVectorComponentSelection()
 
 SPIRVBuilder::SPIRVBuilder(TCompiler *compiler,
                            ShCompileOptions compileOptions,
-                           bool forceHighp,
                            ShHashFunction64 hashFunction,
                            NameMap &nameMap)
     : mCompiler(compiler),
       mCompileOptions(compileOptions),
       mShaderType(gl::FromGLenum<gl::ShaderType>(compiler->getShaderType())),
-      mDisableRelaxedPrecision(forceHighp),
       mNextAvailableId(1),
       mHashFunction(hashFunction),
       mNameMap(nameMap),
@@ -669,8 +667,7 @@ SpirvDecorations SPIRVBuilder::getDecorations(const TType &type)
     SpirvDecorations decorations;
 
     // Handle precision.
-    if (enablePrecision && !mDisableRelaxedPrecision &&
-        (precision == EbpMedium || precision == EbpLow))
+    if (enablePrecision && (precision == EbpMedium || precision == EbpLow))
     {
         decorations.push_back(spv::DecorationRelaxedPrecision);
     }

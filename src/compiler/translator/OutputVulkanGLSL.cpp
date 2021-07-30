@@ -26,7 +26,6 @@ TOutputVulkanGLSL::TOutputVulkanGLSL(TInfoSinkBase &objSink,
                                      sh::GLenum shaderType,
                                      int shaderVersion,
                                      ShShaderOutput output,
-                                     bool forceHighp,
                                      bool enablePrecision,
                                      ShCompileOptions compileOptions)
     : TOutputGLSL(objSink,
@@ -40,7 +39,6 @@ TOutputVulkanGLSL::TOutputVulkanGLSL(TInfoSinkBase &objSink,
       mNextUnusedBinding(0),
       mNextUnusedInputLocation(0),
       mNextUnusedOutputLocation(0),
-      mForceHighp(forceHighp),
       mEnablePrecision(enablePrecision)
 {}
 
@@ -185,10 +183,7 @@ bool TOutputVulkanGLSL::writeVariablePrecision(TPrecision precision)
         return false;
 
     TInfoSinkBase &out = objSink();
-    if (mForceHighp)
-        out << getPrecisionString(EbpHigh);
-    else
-        out << getPrecisionString(precision);
+    out << getPrecisionString(precision);
     return true;
 }
 

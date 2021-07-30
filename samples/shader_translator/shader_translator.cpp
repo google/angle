@@ -113,9 +113,6 @@ int main(int argc, char *argv[])
                 case 'u':
                     compileOptions |= SH_VARIABLES;
                     break;
-                case 'p':
-                    resources.WEBGL_debug_shader_precision = 1;
-                    break;
                 case 's':
                     if (argv[0][2] == '=')
                     {
@@ -403,12 +400,11 @@ void usage()
 {
     // clang-format off
     printf(
-        "Usage: translate [-i -o -u -l -p -b=e -b=g -b=h9 -x=i -x=d] file1 file2 ...\n"
+        "Usage: translate [-i -o -u -l -b=e -b=g -b=h9 -x=i -x=d] file1 file2 ...\n"
         "Where: filename : filename ending in .frag or .vert\n"
         "       -i       : print intermediate tree\n"
         "       -o       : print translated code\n"
         "       -u       : print active attribs, uniforms, varyings and program outputs\n"
-        "       -p       : use precision emulation\n"
         "       -s=e2    : use GLES2 spec (this is by default)\n"
         "       -s=e3    : use GLES3 spec\n"
         "       -s=e31   : use GLES31 spec (in development)\n"

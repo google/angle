@@ -21,16 +21,12 @@ class TOutputESSL : public TOutputGLSLBase
                 TSymbolTable *symbolTable,
                 sh::GLenum shaderType,
                 int shaderVersion,
-                bool forceHighp,
                 ShCompileOptions compileOptions);
 
   protected:
     bool writeVariablePrecision(TPrecision precision) override;
     ImmutableString translateTextureFunction(const ImmutableString &name,
                                              const ShCompileOptions &option) override;
-
-  private:
-    bool mForceHighp;
 };
 
 }  // namespace sh

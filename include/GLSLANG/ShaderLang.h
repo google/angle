@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 265
+#define ANGLE_SH_VERSION 266
 
 enum ShShaderSpec
 {
@@ -366,7 +366,6 @@ struct ShBuiltInResources
     int EXT_draw_buffers;
     int EXT_frag_depth;
     int EXT_shader_texture_lod;
-    int WEBGL_debug_shader_precision;
     int EXT_shader_framebuffer_fetch;
     int EXT_shader_framebuffer_fetch_non_coherent;
     int NV_shader_framebuffer_fetch;

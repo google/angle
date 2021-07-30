@@ -415,7 +415,9 @@ enum TOperator : uint16_t
     // with AST traversers:
     // * They should not return arrays.
     // * They should not have out parameters.
-    // TODO: remove this.  http://anglebug.com/6059
+    //
+    // DEPRECATED; DO NOT USE.  TODO: remove this.  http://anglebug.com/6059
+    //
     EOpCallInternalRawFunction,
 
     //

@@ -27,7 +27,6 @@ class TOutputVulkanGLSL : public TOutputGLSL
                       sh::GLenum shaderType,
                       int shaderVersion,
                       ShShaderOutput output,
-                      bool forceHighp,
                       bool enablePrecision,
                       ShCompileOptions compileOptions);
 
@@ -62,7 +61,6 @@ class TOutputVulkanGLSL : public TOutputGLSL
     uint32_t mNextUnusedOutputLocation;
 
   private:
-    bool mForceHighp;
     bool mEnablePrecision;
 };
 

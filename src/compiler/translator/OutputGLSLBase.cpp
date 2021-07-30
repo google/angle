@@ -902,8 +902,10 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         ImmutableString functionName = node->getFunction()->name();
         if (visit == PreVisit)
         {
-            if (node->getOp() == EOpCallFunctionInAST ||
-                node->getOp() == EOpCallInternalRawFunction)
+            // No raw function is expected.
+            ASSERT(node->getOp() != EOpCallInternalRawFunction);
+
+            if (node->getOp() == EOpCallFunctionInAST)
             {
                 functionName = hashFunctionNameIfNeeded(node->getFunction());
             }

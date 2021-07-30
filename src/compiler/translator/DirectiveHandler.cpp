@@ -37,13 +37,11 @@ static TBehavior getBehavior(const std::string &str)
 TDirectiveHandler::TDirectiveHandler(TExtensionBehavior &extBehavior,
                                      TDiagnostics &diagnostics,
                                      int &shaderVersion,
-                                     sh::GLenum shaderType,
-                                     bool debugShaderPrecisionSupported)
+                                     sh::GLenum shaderType)
     : mExtensionBehavior(extBehavior),
       mDiagnostics(diagnostics),
       mShaderVersion(shaderVersion),
-      mShaderType(shaderType),
-      mDebugShaderPrecisionSupported(debugShaderPrecisionSupported)
+      mShaderType(shaderType)
 {}
 
 TDirectiveHandler::~TDirectiveHandler() {}
@@ -81,11 +79,10 @@ void TDirectiveHandler::handlePragma(const angle::pp::SourceLocation &loc,
     }
     else
     {
-        const char kOptimize[]             = "optimize";
-        const char kDebug[]                = "debug";
-        const char kDebugShaderPrecision[] = "webgl_debug_shader_precision";
-        const char kOn[]                   = "on";
-        const char kOff[]                  = "off";
+        const char kOptimize[] = "optimize";
+        const char kDebug[]    = "debug";
+        const char kOn[]       = "on";
+        const char kOff[]      = "off";
 
         bool invalidValue = false;
         if (name == kOptimize)
@@ -103,15 +100,6 @@ void TDirectiveHandler::handlePragma(const angle::pp::SourceLocation &loc,
                 mPragma.debug = true;
             else if (value == kOff)
                 mPragma.debug = false;
-            else
-                invalidValue = true;
-        }
-        else if (name == kDebugShaderPrecision && mDebugShaderPrecisionSupported)
-        {
-            if (value == kOn)
-                mPragma.debugShaderPrecision = true;
-            else if (value == kOff)
-                mPragma.debugShaderPrecision = false;
             else
                 invalidValue = true;
         }
