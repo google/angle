@@ -74,6 +74,7 @@ class EmulateFragColorDataTraverser : public TIntermTraverser
         }
 
         TType *outputType = new TType(*StaticType::GetQualified<EbtFloat, EvqFragmentOut, 4, 1>());
+        outputType->setPrecision(type.getPrecision());
         if (arraySize > 0)
         {
             outputType->makeArray(arraySize);

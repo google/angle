@@ -6767,7 +6767,7 @@ class TextureLimitsTest : public ANGLETest
 
         drawQuad(mProgram, "position", 0.5f);
         ASSERT_GL_NO_ERROR();
-        EXPECT_PIXEL_EQ(0, 0, expectedSum.R, expectedSum.G, 0, 255);
+        EXPECT_PIXEL_NEAR(0, 0, expectedSum.R, expectedSum.G, 0, 255, 1);
     }
 
     GLuint mProgram;
