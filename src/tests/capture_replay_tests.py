@@ -339,8 +339,10 @@ def ParseTestNamesFromTestList(output):
     skips = 0
     for line in output_lines:
         l = line.strip()
-        if l == "Tests list:":
+        if l == 'Tests list:':
             seen_start_of_tests = True
+        elif l == 'End tests list.':
+            break
         elif not seen_start_of_tests:
             pass
         elif not SkipTest(skipped_test_patterns, l):
