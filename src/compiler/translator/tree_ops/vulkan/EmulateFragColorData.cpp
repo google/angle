@@ -45,9 +45,8 @@ class EmulateFragColorDataTraverser : public TIntermTraverser
             return;
         }
 
-        unsigned int arraySize = 0;
-        int index              = 0;
-        const char *name       = "";
+        int index        = 0;
+        const char *name = "";
 
         // Replace the built-ins being emulated with a variable of the appropriate type.
         switch (type.getQualifier())
@@ -56,29 +55,23 @@ class EmulateFragColorDataTraverser : public TIntermTraverser
                 name = "webgl_FragColor";
                 break;
             case EvqFragData:
-                name      = "webgl_FragData";
-                arraySize = mResources.MaxDrawBuffers;
+                name = "webgl_FragData";
                 break;
             case EvqSecondaryFragColorEXT:
                 name  = "webgl_SecondaryFragColor";
                 index = 1;
                 break;
             case EvqSecondaryFragDataEXT:
-                name      = "webgl_SecondaryFragData";
-                index     = 1;
-                arraySize = mResources.MaxDualSourceDrawBuffers;
+                name  = "webgl_SecondaryFragData";
+                index = 1;
                 break;
             default:
                 // Not the built-in we are looking for.
                 return;
         }
 
-        TType *outputType = new TType(*StaticType::GetQualified<EbtFloat, EvqFragmentOut, 4, 1>());
-        outputType->setPrecision(type.getPrecision());
-        if (arraySize > 0)
-        {
-            outputType->makeArray(arraySize);
-        }
+        TType *outputType = new TType(type);
+        outputType->setQualifier(EvqFragmentOut);
         if (index > 0)
         {
             TLayoutQualifier layoutQualifier = outputType->getLayoutQualifier();

@@ -13,7 +13,6 @@
 
 #include <algorithm>
 
-#include "angle_gl.h"
 #include "common/angleutils.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
@@ -41,12 +40,8 @@ TIntermBinary *ConstructMatrixIndexBinaryNode(TIntermSymbol *symbolNode, int col
 class ScalarizeArgsTraverser : public TIntermTraverser
 {
   public:
-    ScalarizeArgsTraverser(sh::GLenum shaderType,
-                           bool fragmentPrecisionHigh,
-                           TSymbolTable *symbolTable)
+    ScalarizeArgsTraverser(TSymbolTable *symbolTable)
         : TIntermTraverser(true, false, false, symbolTable),
-          mShaderType(shaderType),
-          mFragmentPrecisionHigh(fragmentPrecisionHigh),
           mNodesToScalarize(IntermNodePatternMatcher::kScalarizedVecOrMatConstructor)
     {}
 
@@ -69,9 +64,6 @@ class ScalarizeArgsTraverser : public TIntermTraverser
     TVariable *createTempVariable(TIntermTyped *original);
 
     std::vector<TIntermSequence> mBlockStack;
-
-    sh::GLenum mShaderType;
-    bool mFragmentPrecisionHigh;
 
     IntermNodePatternMatcher mNodesToScalarize;
 };
@@ -194,14 +186,6 @@ TVariable *ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
 
     TType *type = new TType(original->getType());
     type->setQualifier(EvqTemporary);
-    if (mShaderType == GL_FRAGMENT_SHADER && type->getBasicType() == EbtFloat &&
-        type->getPrecision() == EbpUndefined)
-    {
-        // We use the highest available precision for the temporary variable
-        // to avoid computing the actual precision using the rules defined
-        // in GLSL ES 1.0 Section 4.5.2.
-        type->setPrecision(mFragmentPrecisionHigh ? EbpHigh : EbpMedium);
-    }
 
     TVariable *variable = CreateTempVariable(mSymbolTable, type);
 
@@ -217,11 +201,9 @@ TVariable *ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
 
 bool ScalarizeVecAndMatConstructorArgs(TCompiler *compiler,
                                        TIntermBlock *root,
-                                       sh::GLenum shaderType,
-                                       bool fragmentPrecisionHigh,
                                        TSymbolTable *symbolTable)
 {
-    ScalarizeArgsTraverser scalarizer(shaderType, fragmentPrecisionHigh, symbolTable);
+    ScalarizeArgsTraverser scalarizer(symbolTable);
     root->traverse(&scalarizer);
 
     return compiler->validateAST(root);
