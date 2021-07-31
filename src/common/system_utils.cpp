@@ -70,9 +70,10 @@ std::string GetEnvironmentVarOrUnCachedAndroidProperty(const char *variableName,
     // Set the environment variable with the value.
     SetEnvironmentVar(variableName, propertyValue.c_str());
     return propertyValue;
-#endif  // ANGLE_PLATFORM_ANDROID
+#else
     // Return the environment variable's value.
     return GetEnvironmentVar(variableName);
+#endif  // ANGLE_PLATFORM_ANDROID
 }
 
 bool GetBoolEnvironmentVar(const char *variableName)

@@ -200,13 +200,14 @@ config("extra_warnings") {
       "-Wundefined-reinterpret-cast",
       "-Wunneeded-internal-declaration",
       "-Wweak-template-vtables",
+      "-Wunused-but-set-variable",
 
       # The below warnings are used by WebKit. We enable them to make rolling
       # ANGLE in WebKit easier.
       "-Wparentheses",
       "-Wrange-loop-analysis",
       "-Wstrict-prototypes",
-      "-Wunreachable-code",
+      "-Wunreachable-code-aggressive",
       "-Wshorten-64-to-32",
     ]
     if (!use_xcode_clang) {

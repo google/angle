@@ -326,8 +326,9 @@ EGLClientBuffer CreateEGLClientBufferFromAHardwareBuffer(int width,
     }
 
     return AHardwareBufferToClientBuffer(aHardwareBuffer);
-#endif  // ANGLE_AHARDWARE_BUFFER_SUPPORT
+#else
     return nullptr;
+#endif  // ANGLE_AHARDWARE_BUFFER_SUPPORT
 }
 
 void GetANativeWindowBufferProperties(const ANativeWindowBuffer *buffer,

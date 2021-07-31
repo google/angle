@@ -371,7 +371,6 @@ const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
         case EvqClipDistance:
         case EvqCullDistance:
             return mShaderType == GL_FRAGMENT_SHADER ? "in" : "out";
-            break;
         default:
             break;
     }
