@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// FindPreciseNodes.cpp: Propagates |precise| to AST nodes and creates a set of them.
+// FindPreciseNodes.cpp: Propagates |precise| to AST nodes.
 //
 // The high level algorithm is as follows.  For every node that "assigns" to a precise object,
 // subobject (a precise struct whose field is being assigned) or superobject (a struct with a
@@ -17,6 +17,7 @@
 #include "compiler/translator/tree_util/FindPreciseNodes.h"
 
 #include "common/hash_utils.h"
+#include "compiler/translator/Compiler.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
@@ -491,9 +492,7 @@ class InfoGatherTraverser : public TIntermTraverser
 class PropagatePreciseTraverser : public TIntermTraverser
 {
   public:
-    PropagatePreciseTraverser(ASTInfo *info, PreciseNodeSet *preciseNodesOut)
-        : TIntermTraverser(true, false, false), mInfo(info), mPreciseNodes(preciseNodesOut)
-    {}
+    PropagatePreciseTraverser(ASTInfo *info) : TIntermTraverser(true, false, false), mInfo(info) {}
 
     void propagatePrecise(TIntermNode *expression, const AccessChain &accessChain)
     {
@@ -509,7 +508,7 @@ class PropagatePreciseTraverser : public TIntermTraverser
         // Mark arithmetic nodes as |precise|.
         if (IsArithmeticOp(node->getOp()))
         {
-            mPreciseNodes->insert(node);
+            node->setIsPrecise();
         }
 
         // Mark the operand itself |precise| too.
@@ -548,7 +547,7 @@ class PropagatePreciseTraverser : public TIntermTraverser
         // Mark arithmetic nodes as |precise|.
         if (IsArithmeticOp(node->getOp()))
         {
-            mPreciseNodes->insert(node);
+            node->setIsPrecise();
         }
 
         if (IsAssignment(node->getOp()) || node->getOp() == EOpInitialize)
@@ -624,7 +623,7 @@ class PropagatePreciseTraverser : public TIntermTraverser
         // Mark arithmetic nodes as |precise|.
         if (IsArithmeticOp(node->getOp()))
         {
-            mPreciseNodes->insert(node);
+            node->setIsPrecise();
         }
 
         return false;
@@ -632,19 +631,18 @@ class PropagatePreciseTraverser : public TIntermTraverser
 
   private:
     ASTInfo *mInfo = nullptr;
-    PreciseNodeSet *mPreciseNodes;
     AccessChain mCurrentAccessChain;
 };
 }  // anonymous namespace
 
-void FindPreciseNodes(TCompiler *compiler, TIntermBlock *root, PreciseNodeSet *preciseNodesOut)
+void FindPreciseNodes(TCompiler *compiler, TIntermBlock *root)
 {
     ASTInfo info;
 
     InfoGatherTraverser infoGather(&info);
     root->traverse(&infoGather);
 
-    PropagatePreciseTraverser propagator(&info, preciseNodesOut);
+    PropagatePreciseTraverser propagator(&info);
 
     // First, get return expressions out of the way by propagating |precise|.
     for (TIntermBranch *returnNode : info.preciseReturnNodes)
@@ -696,6 +694,10 @@ void FindPreciseNodes(TCompiler *compiler, TIntermBlock *root, PreciseNodeSet *p
             propagator.propagatePrecise(assignmentNode, remainingAccessChain);
         }
     }
+
+    // The AST nodes now contain information gathered by this post-processing step, and so the tree
+    // must no longer be transformed.
+    compiler->enableValidateNoMoreTransformations();
 }
 
 }  // namespace sh

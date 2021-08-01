@@ -599,6 +599,11 @@ void TCompiler::restoreValidateVariableReferences(bool enable)
     mValidateASTOptions.validateVariableReferences = enable;
 }
 
+void TCompiler::enableValidateNoMoreTransformations()
+{
+    mValidateASTOptions.validateNoMoreTransformations = true;
+}
+
 bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                                     const TParseContext &parseContext,
                                     ShCompileOptions compileOptions)

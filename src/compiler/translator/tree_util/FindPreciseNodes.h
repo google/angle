@@ -3,9 +3,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// FindPreciseNodes.h: Propagates |precise| to AST nodes and creates a set of them.  In SPIR-V, the
-// corresponding decoration (NoContraction) is applied on the intermediate result of operations that
-// affect the |precise| variables, not the variables themselves.
+// FindPreciseNodes.h: Propagates |precise| to AST nodes.  In SPIR-V, the corresponding decoration
+// (NoContraction) is applied on the intermediate result of operations that affect the |precise|
+// variables, not the variables themselves.
 
 #ifndef COMPILER_TRANSLATOR_TREEUTIL_FINDPRECISENODES_H_
 #define COMPILER_TRANSLATOR_TREEUTIL_FINDPRECISENODES_H_
@@ -17,11 +17,8 @@ namespace sh
 
 class TCompiler;
 class TIntermBlock;
-class TIntermTyped;
 
-using PreciseNodeSet = angle::HashSet<const TIntermTyped *>;
-
-void FindPreciseNodes(TCompiler *compiler, TIntermBlock *root, PreciseNodeSet *preciseNodesOut);
+void FindPreciseNodes(TCompiler *compiler, TIntermBlock *root);
 
 }  // namespace sh
 

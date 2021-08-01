@@ -134,7 +134,7 @@ struct TIntermNodePair
 class TIntermTyped : public TIntermNode
 {
   public:
-    TIntermTyped() {}
+    TIntermTyped();
 
     virtual TIntermTyped *deepCopy() const override = 0;
 
@@ -171,13 +171,30 @@ class TIntermTyped : public TIntermNode
     bool isVector() const { return getType().isVector(); }
     bool isScalar() const { return getType().isScalar(); }
     bool isScalarInt() const { return getType().isScalarInt(); }
-    bool isPrecise() const { return getType().isPrecise(); }
     const char *getBasicString() const { return getType().getBasicString(); }
 
     unsigned int getOutermostArraySize() const { return getType().getOutermostArraySize(); }
 
+    // After every transformation is done and just before outputting the tree (i.e. when the tree
+    // nodes are no longer going to change), the tree is traversed to gather some information to be
+    // stored in the intermediate nodes:
+    //
+    // - Precision, which for intermediate nodes is derived from the precision of the declared
+    //   variables.  This is not currently implemented.  TODO: http://anglebug.com/4889
+    // - Precise-ness, which is set for arithmetic nodes that are involved in the calculation of a
+    //   value assigned to a |precise| variable.
+    void setIsPrecise() { mIsPrecise = true; }
+    bool isPrecise() const { return mIsPrecise; }
+
   protected:
     TIntermTyped(const TIntermTyped &node);
+
+    // TODO: move the precision promotion logic to a final post-processing step that sets this
+    // value.  With the current implementation, it's quite trivial for tree transformations to leave
+    // the tree in an inconsistent state, or for example to ignore globally specified precisions.
+    // http://anglebug.com/4889
+    TPrecision mPrecision;
+    bool mIsPrecise;
 };
 
 //

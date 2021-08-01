@@ -184,9 +184,7 @@ bool IsAccessChainUnindexedLValue(const NodeData &data)
 class OutputSPIRVTraverser : public TIntermTraverser
 {
   public:
-    OutputSPIRVTraverser(TCompiler *compiler,
-                         ShCompileOptions compileOptions,
-                         const PreciseNodeSet &preciseNodes);
+    OutputSPIRVTraverser(TCompiler *compiler, ShCompileOptions compileOptions);
     ~OutputSPIRVTraverser() override;
 
     spirv::Blob getSpirv();
@@ -368,12 +366,8 @@ class OutputSPIRVTraverser : public TIntermTraverser
                                                spirv::IdRef structValue,
                                                uint32_t fieldIndex);
 
-    bool isPrecise(TIntermTyped *node) { return mPreciseNodes.count(node) > 0; }
-
     TCompiler *mCompiler;
     ANGLE_MAYBE_UNUSED ShCompileOptions mCompileOptions;
-
-    PreciseNodeSet mPreciseNodes;
 
     SPIRVBuilder mBuilder;
 
@@ -498,13 +492,10 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
     }
 }
 
-OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler,
-                                           ShCompileOptions compileOptions,
-                                           const PreciseNodeSet &preciseNodes)
+OutputSPIRVTraverser::OutputSPIRVTraverser(TCompiler *compiler, ShCompileOptions compileOptions)
     : TIntermTraverser(true, true, true, &compiler->getSymbolTable()),
       mCompiler(compiler),
       mCompileOptions(compileOptions),
-      mPreciseNodes(preciseNodes),
       mBuilder(compiler, compileOptions, compiler->getHashFunction(), compiler->getNameMap())
 {}
 
@@ -2863,7 +2854,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     }
 
     const SpirvDecorations decorations =
-        mBuilder.getArithmeticDecorations(node->getType(), isPrecise(node));
+        mBuilder.getArithmeticDecorations(node->getType(), node->isPrecise());
     spirv::IdRef result;
     if (node->getType().getBasicType() != EbtVoid)
     {
@@ -2971,7 +2962,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         {
             const spirv::IdRef one           = mBuilder.getFloatConstant(1);
             const spirv::IdRef invertedParam = mBuilder.getNewId(
-                mBuilder.getArithmeticDecorations(secondChild->getType(), isPrecise(node)));
+                mBuilder.getArithmeticDecorations(secondChild->getType(), node->isPrecise()));
             spirv::WriteFDiv(mBuilder.getSpirvCurrentFunctionBlock(), parameterTypeIds.back(),
                              invertedParam, one, parameters[1]);
             parameters[1] = invertedParam;
@@ -6248,14 +6239,13 @@ spirv::Blob OutputSPIRVTraverser::getSpirv()
 bool OutputSPIRV(TCompiler *compiler, TIntermBlock *root, ShCompileOptions compileOptions)
 {
     // Find the list of nodes that require NoContraction (as a result of |precise|).
-    PreciseNodeSet preciseNodes;
     if (compiler->hasAnyPreciseType())
     {
-        FindPreciseNodes(compiler, root, &preciseNodes);
+        FindPreciseNodes(compiler, root);
     }
 
     // Traverse the tree and generate SPIR-V instructions
-    OutputSPIRVTraverser traverser(compiler, compileOptions, preciseNodes);
+    OutputSPIRVTraverser traverser(compiler, compileOptions);
     root->traverse(&traverser);
 
     // Generate the final SPIR-V and store in the sink

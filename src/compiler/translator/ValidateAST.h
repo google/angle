@@ -85,6 +85,10 @@ struct ValidateASTOptions
     bool validateExpressionTypes = true;
     // If SeparateDeclarations has been run, check for the absence of multi declarations as well.
     bool validateMultiDeclarations = false;
+
+    // Once set, disallows any further transformations on the tree.  Used before AST post-processing
+    // which requires that the tree remains unmodified.
+    bool validateNoMoreTransformations = false;
 };
 
 // Check for errors and output error messages on the context.

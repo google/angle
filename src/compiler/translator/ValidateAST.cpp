@@ -907,6 +907,15 @@ bool ValidateAST::validateInternal()
 
 bool ValidateAST(TIntermNode *root, TDiagnostics *diagnostics, const ValidateASTOptions &options)
 {
+    // ValidateAST is called after transformations, so if |validateNoMoreTransformations| is set,
+    // it's immediately an error.
+    if (options.validateNoMoreTransformations)
+    {
+        diagnostics->error(kNoSourceLoc, "Unexpected transformation after AST post-processing",
+                           "<validateNoMoreTransformations>");
+        return false;
+    }
+
     return ValidateAST::validate(root, diagnostics, options);
 }
 

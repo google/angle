@@ -189,6 +189,9 @@ class TCompiler : public TShHandleBase
     void restoreValidateFunctionCall(bool enable);
     bool disableValidateVariableReferences();
     void restoreValidateVariableReferences(bool enable);
+    // When the AST is post-processed (such as to determine precise-ness of intermediate nodes),
+    // it's expected to no longer transform.
+    void enableValidateNoMoreTransformations();
 
   protected:
     // Add emulated functions to the built-in function emulator.

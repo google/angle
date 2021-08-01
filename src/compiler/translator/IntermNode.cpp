@@ -1061,12 +1061,16 @@ bool TIntermCase::replaceChildNode(TIntermNode *original, TIntermNode *replaceme
     return false;
 }
 
-TIntermTyped::TIntermTyped(const TIntermTyped &node) : TIntermNode()
+TIntermTyped::TIntermTyped() : mPrecision(EbpUndefined), mIsPrecise(false) {}
+TIntermTyped::TIntermTyped(const TIntermTyped &node) : TIntermTyped()
 {
     // Copy constructor is disallowed for TIntermNode in order to disallow it for subclasses that
     // don't explicitly allow it, so normal TIntermNode constructor is used to construct the copy.
     // We need to manually copy any fields of TIntermNode.
     mLine = node.mLine;
+
+    // Once deteremined, the tree is not expected to transform.
+    ASSERT(mPrecision == EbpUndefined && !mIsPrecise);
 }
 
 bool TIntermTyped::hasConstantValue() const
