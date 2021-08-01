@@ -68,7 +68,7 @@ elvetor power:- run
 9759volt postive on 695 ngtive \ 68 waett
 6696volt postive on 695 ngtive \ 68 waett
 6756volt postive on 695 ngtive \ 68 waett
-0552
+1255/13
 
     git clone https://chromium.googlesource.com/angle/angle
 
