@@ -3046,6 +3046,104 @@ void main()
     EXPECT_EQ(descriptorSetAllocationsAfter, 0u);
 }
 
+// Test that mapping a buffer that the GPU is using as read-only ghosts the buffer, rather than
+// waiting for the GPU access to complete before returning a pointer to the buffer.
+TEST_P(VulkanPerformanceCounterTest, MappingGpuReadOnlyBufferGhostsBuffer)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+
+    // 1. Create a buffer, map it, fill it with red
+    // 2. Draw with buffer (GPU read-only)
+    // 3. Map the same buffer and fill with white
+    //    - This should ghost the buffer, rather than ending the render pass.
+    // 4. Draw with buffer
+    // 5. Update the buffer with glBufferSubData()
+    // 6. Draw with the buffer
+    // The render pass should only be broken (counters.renderPasses == 0) due to the glReadPixels()
+    // to verify the draw at the end.
+
+    const std::array<GLColor, 4> kInitialData = {GLColor::red, GLColor::red, GLColor::red,
+                                                 GLColor::red};
+    const std::array<GLColor, 4> kUpdateData1 = {GLColor::white, GLColor::white, GLColor::white,
+                                                 GLColor::white};
+    const std::array<GLColor, 4> kUpdateData2 = {GLColor::blue, GLColor::blue, GLColor::blue,
+                                                 GLColor::blue};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kInitialData), kInitialData.data(), GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw
+    constexpr char kVerifyUBO[] = R"(#version 300 es
+precision mediump float;
+uniform block {
+    uvec4 data;
+} ubo;
+uniform uint expect;
+uniform vec4 successOutput;
+out vec4 colorOut;
+void main()
+{
+    if (all(equal(ubo.data, uvec4(expect))))
+        colorOut = successOutput;
+    else
+        colorOut = vec4(1.0, 0, 0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(verifyUbo, essl3_shaders::vs::Simple(), kVerifyUBO);
+    glUseProgram(verifyUbo);
+
+    GLint expectLoc = glGetUniformLocation(verifyUbo, "expect");
+    ASSERT_NE(-1, expectLoc);
+    GLint successLoc = glGetUniformLocation(verifyUbo, "successOutput");
+    ASSERT_NE(-1, successLoc);
+
+    glUniform1ui(expectLoc, kInitialData[0].asUint());
+    glUniform4f(successLoc, 0, 1, 0, 1);
+
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    ASSERT_GL_NO_ERROR();
+
+    // Map the buffer and update it.
+    // This should ghost the buffer and avoid breaking the render pass, since the GPU is only
+    // reading it.
+    void *mappedBuffer =
+        glMapBufferRange(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData), GL_MAP_WRITE_BIT);
+    // 'renderPasses == 0' here means the render pass was broken and a new one was started.
+    ASSERT_EQ(counters.renderPasses, 1u);
+    ASSERT_EQ(counters.buffersGhosted, 1u);
+
+    memcpy(mappedBuffer, kUpdateData1.data(), sizeof(kInitialData));
+
+    glUnmapBuffer(GL_UNIFORM_BUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the buffer has the updated value.
+    glUniform1ui(expectLoc, kUpdateData1[0].asUint());
+    glUniform4f(successLoc, 0, 0, 1, 1);
+
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_EQ(counters.renderPasses, 1u);
+
+    // Update the buffer with glBufferSubData
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(kUpdateData2), kUpdateData2.data());
+    ASSERT_GL_NO_ERROR();
+    ASSERT_EQ(counters.renderPasses, 1u);
+
+    // Verify that the buffer has the updated value.
+    glUniform1ui(expectLoc, kUpdateData2[0].asUint());
+    glUniform4f(successLoc, 0, 1, 1, 1);
+
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_EQ(counters.renderPasses, 1u);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN());
 

@@ -2308,12 +2308,16 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
         case angle::SubjectMessage::BindingChanged:
             ASSERT(index == kBufferSubjectIndex);
             break;
-
         case angle::SubjectMessage::InitializationComplete:
             ASSERT(index == rx::kTextureImageImplObserverMessageIndex);
             setInitState(InitState::Initialized);
             break;
-
+        case angle::SubjectMessage::SubjectGhosted:
+            // Need to mark the texture dirty to give the back end a chance to handle the new
+            // buffer. For example, the Vulan back end needs to create a new buffer view that points
+            // to the newly allocated buffer and update the texture descriptor set.
+            signalDirtyState(DIRTY_BIT_IMPLEMENTATION);
+            break;
         default:
             UNREACHABLE();
             break;

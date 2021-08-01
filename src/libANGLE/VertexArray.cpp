@@ -655,6 +655,10 @@ void VertexArray::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
             onStateChange(angle::SubjectMessage::SubjectUnmapped);
             break;
 
+        case angle::SubjectMessage::SubjectGhosted:
+            // Nothing to do.
+            break;
+
         default:
             UNREACHABLE();
             break;

@@ -746,6 +746,84 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(3, 3, GLColor::green);
 }
 
+// Verify that we can map and write the buffer between draws and the second draw sees the new buffer
+// data, using drawQuad().
+TEST_P(BufferDataTest, MapWriteArrayBufferDataDrawQuad)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+
+    std::vector<GLfloat> data(6, 0.0f);
+
+    glUseProgram(mProgram);
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), nullptr, GL_STATIC_DRAW);
+    glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(mAttribLocation);
+
+    // Don't read back to verify black, so we don't break the render pass.
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Map and write.
+    std::vector<GLfloat> data2(6, 1.0f);
+    void *mapPtr = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    ASSERT_NE(nullptr, mapPtr);
+    ASSERT_GL_NO_ERROR();
+    memcpy(mapPtr, data2.data(), sizeof(GLfloat) * data2.size());
+    glUnmapBufferOES(GL_ARRAY_BUFFER);
+
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(8, 8, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Verify that we can map and write the buffer between draws and the second draw sees the new buffer
+// data, calling glDrawArrays() directly.
+TEST_P(BufferDataTest, MapWriteArrayBufferDataDrawArrays)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+
+    std::vector<GLfloat> data(6, 0.0f);
+
+    glUseProgram(mProgram);
+
+    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+    ASSERT_NE(-1, positionLocation);
+
+    // Set up position attribute, don't use drawQuad.
+    auto quadVertices = GetQuadVertices();
+
+    GLBuffer positionBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * quadVertices.size() * 3, quadVertices.data(),
+                 GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+    EXPECT_GL_NO_ERROR();
+
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), nullptr, GL_STATIC_DRAW);
+    glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(mAttribLocation);
+    EXPECT_GL_NO_ERROR();
+
+    // Don't read back to verify black, so we don't break the render pass.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_NO_ERROR();
+
+    // Map and write.
+    std::vector<GLfloat> data2(6, 1.0f);
+    void *mapPtr = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    ASSERT_NE(nullptr, mapPtr);
+    ASSERT_GL_NO_ERROR();
+    memcpy(mapPtr, data2.data(), sizeof(GLfloat) * data2.size());
+    glUnmapBufferOES(GL_ARRAY_BUFFER);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(8, 8, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Tests a null crash bug caused by copying from null back-end buffer pointer
 // when calling bufferData again after drawing without calling bufferData in D3D11.
 TEST_P(BufferDataTestES3, DrawWithNotCallingBufferData)
