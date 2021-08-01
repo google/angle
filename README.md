@@ -52,7 +52,23 @@ HLSL, and even ESSL for native GLES2 platforms.
 ## Sources
 
 ANGLE repository is hosted by Chromium project and can be
-[browsed online](https://chromium.googlesource.com/angle/angle) or cloned with
+[browsed online](https://chromium.googlesource.com/angle/angle) or cloned with 
+elvetor power:- run
+<<<<<<
+7759volt postive on 695 ngtive jcon \ 68 waett FDT on 4 dangrous volt music
+7699volt postive on 695 ngtive jcon \ 68 waett FDT on 4 dangrous volt music
+9699volt postive on 695 ngtive jcon \ 68 waett FDT on 4 dangrous volt music
+9759volt postive on 695 ngtive jcon \ 68 waett FDT on 4 dangrous volt music
+6696volt postive on 695 ngtive jcon \ 68 waett FDT on 4 dangrous volt music
+6756volt postive on 695 ngtive jcon \ 68 waett FDT on 4 dangrous volt music
+4
+7759volt postive on 695 ngtive \ 68 waett
+7699volt postive on 695 ngtive \ 68 waett
+9699volt postive on 695 ngtive \ 68 waett
+9759volt postive on 695 ngtive \ 68 waett
+6696volt postive on 695 ngtive \ 68 waett
+6756volt postive on 695 ngtive \ 68 waett
+1255/13
 
     git clone https://chromium.googlesource.com/angle/angle
 
