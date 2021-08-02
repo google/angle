@@ -674,10 +674,11 @@ bool IsPlatformAvailable(const PlatformParameters &param)
 #endif
 
         case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
-#ifndef ANGLE_ENABLE_NULL
+#if !defined(ANGLE_ENABLE_NULL)
             return false;
-#endif
+#else
             break;
+#endif
 
         default:
             std::cout << "Unknown test platform: " << param << std::endl;
