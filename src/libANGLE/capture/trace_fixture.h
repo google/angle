@@ -55,6 +55,7 @@ using BlockIndexesMap = std::unordered_map<GLuint, std::unordered_map<GLuint, GL
 extern BlockIndexesMap gUniformBlockIndexes;
 extern GLuint gCurrentProgram;
 void UpdateUniformLocation(GLuint program, const char *name, GLint location);
+void UpdateUniformLocation(GLuint program, const char *name, GLint location, GLint count);
 void DeleteUniformLocations(GLuint program);
 void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index);
 void UpdateCurrentProgram(GLuint program);

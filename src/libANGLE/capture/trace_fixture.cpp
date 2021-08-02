@@ -70,9 +70,17 @@ LocationsMap gUniformLocations;
 BlockIndexesMap gUniformBlockIndexes;
 GLuint gCurrentProgram = 0;
 
+// TODO (http://anglebug.com/6234): Remove three parameter UpdateUniformLocation on next retrace
 void UpdateUniformLocation(GLuint program, const char *name, GLint location)
 {
     gUniformLocations[program][location] = glGetUniformLocation(program, name);
+}
+void UpdateUniformLocation(GLuint program, const char *name, GLint location, GLint count)
+{
+    for (GLint i = 0; i < count; i++)
+    {
+        gUniformLocations[program][location + i] = glGetUniformLocation(program, name) + i;
+    }
 }
 void DeleteUniformLocations(GLuint program)
 {
