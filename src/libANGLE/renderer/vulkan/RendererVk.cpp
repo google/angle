@@ -846,7 +846,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     mLibVulkanLibrary->getAs("vkGetInstanceProcAddr", &vulkanLoaderGetInstanceProcAddr);
 
     // Set all vk* function ptrs
-    ANGLE_VK_TRY(displayVk, volkInitialize());
+    volkInitializeCustom(vulkanLoaderGetInstanceProcAddr);
 
     uint32_t ver = volkGetInstanceVersion();
     if (!IsAndroid() && VK_API_VERSION_MAJOR(ver) == 1 &&
