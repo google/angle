@@ -340,7 +340,7 @@ TEST_P(SRGBTextureTestES3, SRGBOverrideFormats)
     {
         GLTexture tex;
         glBindTexture(GL_TEXTURE_2D, tex.get());
-        glTexStorage2D(GL_TEXTURE_2D, 1, format, 1, 1);
+        glTexStorage2D(GL_TEXTURE_2D, 1, format, 4, 4);
         GLenum error = glGetError();
         if (error == GL_INVALID_ENUM)
         {

@@ -1409,17 +1409,26 @@ bool ValidateES3TexStorageParametersBase(const Context *context,
         return false;
     }
 
-    if (formatInfo.compressed && target == TextureType::Rectangle)
+    if (formatInfo.compressed)
     {
-        context->validationError(GL_INVALID_ENUM, kRectangleTextureCompressed);
-        return false;
-    }
-
-    if (formatInfo.compressed && target == TextureType::_3D)
-    {
-        if (!ValidateES3CompressedFormatForTexture3D(context, formatInfo.internalFormat))
+        if (target == TextureType::Rectangle)
         {
-            // Error already generated.
+            context->validationError(GL_INVALID_ENUM, kRectangleTextureCompressed);
+            return false;
+        }
+
+        if (target == TextureType::_3D)
+        {
+            if (!ValidateES3CompressedFormatForTexture3D(context, formatInfo.internalFormat))
+            {
+                // Error already generated.
+                return false;
+            }
+        }
+
+        if (!ValidCompressedImageSize(context, formatInfo.internalFormat, 0, width, height, depth))
+        {
+            context->validationError(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
             return false;
         }
     }
