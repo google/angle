@@ -1524,7 +1524,6 @@ bool InternalFormat::computeRowPitch(GLenum formatType,
     // Compressed images do not use pack/unpack parameters.
     if (compressed)
     {
-        ASSERT(rowLength == 0);
         return computeCompressedImageSize(Extents(width, 1, 1), resultOut);
     }
 

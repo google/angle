@@ -1797,6 +1797,8 @@ class PBOCompressedTextureTest : public Texture2DTest
         Texture2DTest::testTearDown();
     }
 
+    void runCompressedSubImage();
+
     GLuint mPBO;
 };
 
@@ -9173,8 +9175,7 @@ TEST_P(Texture3DIntegerTestES3, NonZeroBaseLevel)
     EXPECT_PIXEL_COLOR_EQ(width - 1, height - 1, color);
 }
 
-// Test that uses glCompressedTexSubImage2D combined with a PBO
-TEST_P(PBOCompressedTextureTest, PBOCompressedSubImage)
+void PBOCompressedTextureTest::runCompressedSubImage()
 {
     // ETC texture formats are not supported on Mac OpenGL. http://anglebug.com/3853
     ANGLE_SKIP_TEST_IF(IsOSX() && IsDesktopOpenGL());
@@ -9230,6 +9231,23 @@ TEST_P(PBOCompressedTextureTest, PBOCompressedSubImage)
 
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
     ASSERT_GL_NO_ERROR();
+}
+
+// Test that uses glCompressedTexSubImage2D combined with a PBO
+TEST_P(PBOCompressedTextureTest, PBOCompressedSubImage)
+{
+    runCompressedSubImage();
+}
+
+// Verify the row length state is ignored when using compressed tex image calls.
+TEST_P(PBOCompressedTextureTest, PBOCompressedSubImageWithUnpackRowLength)
+{
+    // ROW_LENGTH requires ES3 or an extension.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !IsGLExtensionEnabled("GL_EXT_unpack_subimage"));
+
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 1);
+    runCompressedSubImage();
 }
 
 // Test using ETC1_RGB8 with subimage updates
