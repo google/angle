@@ -596,7 +596,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     Context11 *context11 = GetImplAs<Context11>(context);
 
     ANGLE_TRY(mRenderer->allocateResource(context11, vbDesc, &mVertexBuffer));
-    mVertexBuffer.setDebugName("Blit11VertexBuffer");
+    mVertexBuffer.setInternalName("Blit11VertexBuffer");
 
     D3D11_SAMPLER_DESC pointSamplerDesc;
     pointSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
@@ -614,7 +614,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     pointSamplerDesc.MaxLOD         = FLT_MAX;
 
     ANGLE_TRY(mRenderer->allocateResource(context11, pointSamplerDesc, &mPointSampler));
-    mPointSampler.setDebugName("Blit11PointSampler");
+    mPointSampler.setInternalName("Blit11PointSampler");
 
     D3D11_SAMPLER_DESC linearSamplerDesc;
     linearSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -632,7 +632,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     linearSamplerDesc.MaxLOD         = FLT_MAX;
 
     ANGLE_TRY(mRenderer->allocateResource(context11, linearSamplerDesc, &mLinearSampler));
-    mLinearSampler.setDebugName("Blit11LinearSampler");
+    mLinearSampler.setInternalName("Blit11LinearSampler");
 
     // Use a rasterizer state that will not cull so that inverted quads will not be culled
     D3D11_RASTERIZER_DESC rasterDesc;
@@ -648,11 +648,11 @@ angle::Result Blit11::initResources(const gl::Context *context)
 
     rasterDesc.ScissorEnable = TRUE;
     ANGLE_TRY(mRenderer->allocateResource(context11, rasterDesc, &mScissorEnabledRasterizerState));
-    mScissorEnabledRasterizerState.setDebugName("Blit11ScissoringRasterizerState");
+    mScissorEnabledRasterizerState.setInternalName("Blit11ScissoringRasterizerState");
 
     rasterDesc.ScissorEnable = FALSE;
     ANGLE_TRY(mRenderer->allocateResource(context11, rasterDesc, &mScissorDisabledRasterizerState));
-    mScissorDisabledRasterizerState.setDebugName("Blit11NoScissoringRasterizerState");
+    mScissorDisabledRasterizerState.setInternalName("Blit11NoScissoringRasterizerState");
 
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     depthStencilDesc.DepthEnable                  = TRUE;
@@ -671,7 +671,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     depthStencilDesc.BackFace.StencilFunc         = D3D11_COMPARISON_ALWAYS;
 
     ANGLE_TRY(mRenderer->allocateResource(context11, depthStencilDesc, &mDepthStencilState));
-    mDepthStencilState.setDebugName("Blit11DepthStencilState");
+    mDepthStencilState.setInternalName("Blit11DepthStencilState");
 
     D3D11_BUFFER_DESC swizzleBufferDesc;
     swizzleBufferDesc.ByteWidth           = sizeof(unsigned int) * 4;
@@ -682,7 +682,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     swizzleBufferDesc.StructureByteStride = 0;
 
     ANGLE_TRY(mRenderer->allocateResource(context11, swizzleBufferDesc, &mSwizzleCB));
-    mSwizzleCB.setDebugName("Blit11SwizzleConstantBuffer");
+    mSwizzleCB.setInternalName("Blit11SwizzleConstantBuffer");
 
     mResourcesInitialized = true;
 
@@ -1342,7 +1342,7 @@ angle::Result Blit11::addBlitShaderToMap(const gl::Context *context,
 
     d3d11::PixelShader ps;
     ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), shaderData, &ps));
-    ps.setDebugName(name);
+    ps.setInternalName(name);
 
     Shader shader;
     shader.dimension   = dimension;
@@ -1362,7 +1362,7 @@ angle::Result Blit11::addSwizzleShaderToMap(const gl::Context *context,
 
     d3d11::PixelShader ps;
     ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), shaderData, &ps));
-    ps.setDebugName(name);
+    ps.setInternalName(name);
 
     Shader shader;
     shader.dimension   = dimension;
@@ -1770,7 +1770,7 @@ angle::Result Blit11::initResolveDepthOnly(const gl::Context *context,
     Context11 *context11 = GetImplAs<Context11>(context);
 
     ANGLE_TRY(mRenderer->allocateTexture(context11, textureDesc, format, &mResolvedDepth));
-    mResolvedDepth.setDebugName("Blit11::mResolvedDepth");
+    mResolvedDepth.setInternalName("Blit11::mResolvedDepth");
 
     D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
     dsvDesc.Flags              = 0;
@@ -1780,7 +1780,7 @@ angle::Result Blit11::initResolveDepthOnly(const gl::Context *context,
 
     ANGLE_TRY(mRenderer->allocateResource(context11, dsvDesc, mResolvedDepth.get(),
                                           &mResolvedDepthDSView));
-    mResolvedDepthDSView.setDebugName("Blit11::mResolvedDepthDSView");
+    mResolvedDepthDSView.setInternalName("Blit11::mResolvedDepthDSView");
 
     // Possibly D3D11 bug or undefined behaviour: Clear the DSV so that our first render
     // works as expected. Otherwise the results of the first use seem to be incorrect.
@@ -1824,11 +1824,11 @@ angle::Result Blit11::initResolveDepthStencil(const gl::Context *context,
 
     ANGLE_TRY(
         mRenderer->allocateTexture(context11, textureDesc, formatSet, &mResolvedDepthStencil));
-    mResolvedDepthStencil.setDebugName("Blit11::mResolvedDepthStencil");
+    mResolvedDepthStencil.setInternalName("Blit11::mResolvedDepthStencil");
 
     ANGLE_TRY(mRenderer->allocateResourceNoDesc(context11, mResolvedDepthStencil.get(),
                                                 &mResolvedDepthStencilRTView));
-    mResolvedDepthStencilRTView.setDebugName("Blit11::mResolvedDepthStencilRTView");
+    mResolvedDepthStencilRTView.setInternalName("Blit11::mResolvedDepthStencilRTView");
 
     return angle::Result::Continue;
 }
@@ -1875,7 +1875,7 @@ angle::Result Blit11::resolveStencil(const gl::Context *context,
 
         ANGLE_TRY(
             mRenderer->allocateResource(context11, srViewDesc, stencilResource, &mStencilSRV));
-        mStencilSRV.setDebugName("Blit11::mStencilSRV");
+        mStencilSRV.setInternalName("Blit11::mStencilSRV");
     }
 
     // Notify the Renderer that all state should be invalidated.

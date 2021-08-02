@@ -578,7 +578,7 @@ angle::Result Image11::createStagingTexture(const gl::Context *context)
                     mRenderer->allocateTexture(context11, desc, formatInfo, &mStagingTexture));
             }
 
-            mStagingTexture.setDebugName("Image11::StagingTexture3D");
+            mStagingTexture.setInternalName("Image11::StagingTexture3D");
             mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
             mStagingTextureSubresourceVerifier.setDesc(desc);
         }
@@ -617,7 +617,7 @@ angle::Result Image11::createStagingTexture(const gl::Context *context)
                     mRenderer->allocateTexture(context11, desc, formatInfo, &mStagingTexture));
             }
 
-            mStagingTexture.setDebugName("Image11::StagingTexture2D");
+            mStagingTexture.setInternalName("Image11::StagingTexture2D");
             mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
             mStagingTextureSubresourceVerifier.setDesc(desc);
         }

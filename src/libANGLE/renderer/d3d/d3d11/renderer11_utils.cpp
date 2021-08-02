@@ -2277,33 +2277,16 @@ bool operator!=(const RasterizerStateKey &a, const RasterizerStateKey &b)
     return !(a == b);
 }
 
-HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
+HRESULT SetDebugName(ID3D11DeviceChild *resource,
+                     const char *internalName,
+                     const std::string *khrDebugName)
 {
-    UINT existingDataSize = 0;
-    resource->GetPrivateData(WKPDID_D3DDebugObjectName, &existingDataSize, nullptr);
-    // Don't check the HRESULT- if it failed then that probably just means that no private data
-    // exists yet
-
-    if (existingDataSize > 0)
-    {
-        // In some cases, ANGLE will try to apply two names to one object, which causes
-        // a D3D SDK Layers warning. This can occur if, for example, you 'create' two objects
-        // (e.g.Rasterizer States) with identical DESCs on the same device. D3D11 will optimize
-        // these calls and return the same object both times.
-        static const char *multipleNamesUsed = "MultipleNamesSetByANGLE";
-
-        // Remove the existing name
-        const HRESULT hr = resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-        if (FAILED(hr))
-        {
-            return hr;
-        }
-
-        name = multipleNamesUsed;
-    }
-
-    // Prepend ANGLE_ to separate names from other components in the same process.
-    const std::string d3dName = std::string("ANGLE_") + name;
+    // Prepend ANGLE to separate names from other components in the same process.
+    std::string d3dName = "ANGLE";
+    if (internalName)
+        d3dName += std::string("_") + internalName;
+    if (khrDebugName)
+        d3dName += std::string("_") + *khrDebugName;
     return resource->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(d3dName.size()),
                                     d3dName.c_str());
 }
@@ -2321,7 +2304,7 @@ angle::Result LazyResource<ResourceT>::resolveImpl(d3d::Context *context,
     if (!mResource.valid())
     {
         ANGLE_TRY(renderer->allocateResource(context, desc, initData, &mResource));
-        mResource.setDebugName(name);
+        mResource.setInternalName(name);
     }
     return angle::Result::Continue;
 }

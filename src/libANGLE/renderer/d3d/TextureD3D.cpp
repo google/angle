@@ -695,14 +695,18 @@ angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLe
     return angle::Result::Continue;
 }
 
+void TextureD3D::onLabelUpdate()
+{
+    if (mTexStorage)
+    {
+        mTexStorage->onLabelUpdate();
+    }
+}
+
 angle::Result TextureD3D::syncState(const gl::Context *context,
                                     const gl::Texture::DirtyBits &dirtyBits,
                                     gl::Command source)
 {
-    if (dirtyBits.test(gl::Texture::DirtyBitType::DIRTY_BIT_LABEL))
-    {
-        mTexStorage->onLabelUpdate();
-    }
     // This could be improved using dirty bits.
     return angle::Result::Continue;
 }

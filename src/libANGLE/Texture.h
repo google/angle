@@ -603,7 +603,6 @@ class Texture final : public RefCountObject<TextureID>,
         DIRTY_BIT_BOUND_AS_IMAGE,
 
         // Misc
-        DIRTY_BIT_LABEL,
         DIRTY_BIT_USAGE,
         DIRTY_BIT_IMPLEMENTATION,
 

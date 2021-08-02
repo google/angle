@@ -1596,8 +1596,6 @@ angle::Result TextureGL::syncState(const gl::Context *context,
             }
             case gl::Texture::DIRTY_BIT_USAGE:
                 break;
-            case gl::Texture::DIRTY_BIT_LABEL:
-                break;
 
             case gl::Texture::DIRTY_BIT_IMPLEMENTATION:
                 // This special dirty bit is used to signal the front-end that the implementation

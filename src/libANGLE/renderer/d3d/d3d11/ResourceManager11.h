@@ -24,12 +24,16 @@ namespace rx
 // These two methods are declared here to prevent circular includes.
 namespace d3d11
 {
-HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
+HRESULT SetDebugName(ID3D11DeviceChild *resource,
+                     const char *internalName,
+                     const std::string *khrDebugName);
 
 template <typename T>
-HRESULT SetDebugName(angle::ComPtr<T> &resource, const char *name)
+HRESULT SetDebugName(angle::ComPtr<T> &resource,
+                     const char *internalName,
+                     const std::string *khrDebugName)
 {
-    return SetDebugName(resource.Get(), name);
+    return SetDebugName(resource.Get(), internalName, khrDebugName);
 }
 }  // namespace d3d11
 
@@ -191,7 +195,17 @@ class Resource11Base : angle::NonCopyable
     T *get() const { return mData->object; }
     T *const *getPointer() const { return &mData->object; }
 
-    void setDebugName(const char *name) { d3d11::SetDebugName(mData->object, name); }
+    void setInternalName(const char *name)
+    {
+        internalDebugName = name;
+        UpdateDebugNameWithD3D();
+    }
+
+    void setKHRDebugLabel(const std::string *label)
+    {
+        khrDebugName = label;
+        UpdateDebugNameWithD3D();
+    }
 
     void set(T *object)
     {
@@ -231,6 +245,15 @@ class Resource11Base : angle::NonCopyable
     }
 
     Pointer<DataT> mData;
+
+  private:
+    void UpdateDebugNameWithD3D()
+    {
+        d3d11::SetDebugName(mData->object, internalDebugName, khrDebugName);
+    }
+
+    const std::string *khrDebugName = nullptr;
+    const char *internalDebugName   = nullptr;
 };
 
 template <typename T>

@@ -318,6 +318,7 @@ class TextureStorage11_2D : public TextureStorage11
 
     angle::Result useLevelZeroWorkaroundTexture(const gl::Context *context,
                                                 bool useLevelZeroTexture) override;
+    void onLabelUpdate() override;
 
   protected:
     angle::Result getSwizzleTexture(const gl::Context *context,
@@ -409,6 +410,7 @@ class TextureStorage11_External : public TextureStorage11
     angle::Result releaseAssociatedImage(const gl::Context *context,
                                          const gl::ImageIndex &index,
                                          Image11 *incomingImage) override;
+    void onLabelUpdate() override;
 
   protected:
     angle::Result getSwizzleTexture(const gl::Context *context,
@@ -505,6 +507,7 @@ class TextureStorage11_EGLImage final : public TextureStorage11ImmutableBase
 
     angle::Result useLevelZeroWorkaroundTexture(const gl::Context *context,
                                                 bool useLevelZeroTexture) override;
+    void onLabelUpdate() override;
 
   protected:
     angle::Result getSwizzleTexture(const gl::Context *context,
@@ -577,6 +580,7 @@ class TextureStorage11_Cube : public TextureStorage11
 
     angle::Result useLevelZeroWorkaroundTexture(const gl::Context *context,
                                                 bool useLevelZeroTexture) override;
+    void onLabelUpdate() override;
 
   protected:
     angle::Result getSwizzleTexture(const gl::Context *context,
@@ -664,6 +668,7 @@ class TextureStorage11_3D : public TextureStorage11
     angle::Result releaseAssociatedImage(const gl::Context *context,
                                          const gl::ImageIndex &index,
                                          Image11 *incomingImage) override;
+    void onLabelUpdate() override;
 
   protected:
     angle::Result getSwizzleTexture(const gl::Context *context,
@@ -734,6 +739,7 @@ class TextureStorage11_2DArray : public TextureStorage11
     angle::Result releaseAssociatedImage(const gl::Context *context,
                                          const gl::ImageIndex &index,
                                          Image11 *incomingImage) override;
+    void onLabelUpdate() override;
 
     struct LevelLayerRangeKey
     {
@@ -828,6 +834,7 @@ class TextureStorage11_2DMultisample final : public TextureStorage11ImmutableBas
                                   RenderTargetD3D **outRT) override;
 
     angle::Result copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
+    void onLabelUpdate() override;
 
   protected:
     angle::Result getSwizzleTexture(const gl::Context *context,
@@ -884,6 +891,7 @@ class TextureStorage11_2DMultisampleArray final : public TextureStorage11Immutab
                                   RenderTargetD3D **outRT) override;
 
     angle::Result copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
+    void onLabelUpdate() override;
 
   protected:
     angle::Result getSwizzleTexture(const gl::Context *context,
