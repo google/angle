@@ -59,6 +59,7 @@ GLSLTest.MixedShaderLengths/*
 GLSLTest.ZeroShaderLength/*
 GPUTestConfigTest.GPUTestConfigConditions_D3D11/*
 ImageTest.SourceCubeTargetExternal/*
+PBOCompressedTextureTest.PBOCompressedSubImageWithUnpackRowLength/*
 PBOExtensionTest.*
 Texture2DTest.DefineMultipleLevelsWithoutMipmapping/*
 VertexAttributeTest.*
