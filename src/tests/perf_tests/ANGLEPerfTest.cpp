@@ -57,31 +57,31 @@ constexpr TraceCategory gTraceCategories[2] = {
     {1, "gpu.angle.gpu"},
 };
 
-void EmptyPlatformMethod(angle::PlatformMethods *, const char *) {}
+void EmptyPlatformMethod(PlatformMethods *, const char *) {}
 
-void CustomLogError(angle::PlatformMethods *platform, const char *errorMessage)
+void CustomLogError(PlatformMethods *platform, const char *errorMessage)
 {
     auto *angleRenderTest = static_cast<ANGLERenderTest *>(platform->context);
     angleRenderTest->onErrorMessage(errorMessage);
 }
 
-void OverrideWorkaroundsD3D(angle::PlatformMethods *platform, angle::FeaturesD3D *featuresD3D)
+void OverrideWorkaroundsD3D(PlatformMethods *platform, FeaturesD3D *featuresD3D)
 {
     auto *angleRenderTest = static_cast<ANGLERenderTest *>(platform->context);
     angleRenderTest->overrideWorkaroundsD3D(featuresD3D);
 }
 
-angle::TraceEventHandle AddPerfTraceEvent(angle::PlatformMethods *platform,
-                                          char phase,
-                                          const unsigned char *categoryEnabledFlag,
-                                          const char *name,
-                                          unsigned long long id,
-                                          double timestamp,
-                                          int numArgs,
-                                          const char **argNames,
-                                          const unsigned char *argTypes,
-                                          const unsigned long long *argValues,
-                                          unsigned char flags)
+TraceEventHandle AddPerfTraceEvent(PlatformMethods *platform,
+                                   char phase,
+                                   const unsigned char *categoryEnabledFlag,
+                                   const char *name,
+                                   unsigned long long id,
+                                   double timestamp,
+                                   int numArgs,
+                                   const char **argNames,
+                                   const unsigned char *argTypes,
+                                   const unsigned long long *argValues,
+                                   unsigned char flags)
 {
     if (!gEnableTrace)
         return 0;
@@ -103,7 +103,7 @@ angle::TraceEventHandle AddPerfTraceEvent(angle::PlatformMethods *platform,
     return buffer.size();
 }
 
-const unsigned char *GetPerfTraceCategoryEnabled(angle::PlatformMethods *platform,
+const unsigned char *GetPerfTraceCategoryEnabled(PlatformMethods *platform,
                                                  const char *categoryName)
 {
     if (gEnableTrace)
@@ -121,15 +121,15 @@ const unsigned char *GetPerfTraceCategoryEnabled(angle::PlatformMethods *platfor
     return &kZero;
 }
 
-void UpdateTraceEventDuration(angle::PlatformMethods *platform,
+void UpdateTraceEventDuration(PlatformMethods *platform,
                               const unsigned char *categoryEnabledFlag,
                               const char *name,
-                              angle::TraceEventHandle eventHandle)
+                              TraceEventHandle eventHandle)
 {
     // Not implemented.
 }
 
-double MonotonicallyIncreasingTime(angle::PlatformMethods *platform)
+double MonotonicallyIncreasingTime(PlatformMethods *platform)
 {
     return GetHostTimeSeconds();
 }
@@ -501,10 +501,10 @@ std::string RenderTestParams::backend() const
 
     switch (driver)
     {
-        case angle::GLESDriverType::AngleEGL:
+        case GLESDriverType::AngleEGL:
             break;
-        case angle::GLESDriverType::SystemWGL:
-        case angle::GLESDriverType::SystemEGL:
+        case GLESDriverType::SystemWGL:
+        case GLESDriverType::SystemEGL:
             strstr << "_native";
             break;
         default:
@@ -597,26 +597,24 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name,
 
     switch (testParams.driver)
     {
-        case angle::GLESDriverType::AngleEGL:
+        case GLESDriverType::AngleEGL:
             mGLWindow = EGLWindow::New(testParams.majorVersion, testParams.minorVersion);
-            mEntryPointsLib.reset(
-                angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ModuleDir));
+            mEntryPointsLib.reset(OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, SearchType::ModuleDir));
             break;
-        case angle::GLESDriverType::SystemEGL:
+        case GLESDriverType::SystemEGL:
 #if defined(ANGLE_USE_UTIL_LOADER) && !defined(ANGLE_PLATFORM_WINDOWS)
             mGLWindow = EGLWindow::New(testParams.majorVersion, testParams.minorVersion);
-            mEntryPointsLib.reset(angle::OpenSharedLibraryWithExtension(
+            mEntryPointsLib.reset(OpenSharedLibraryWithExtension(
                 GetNativeEGLLibraryNameWithExtension(), SearchType::SystemDir));
 #else
             std::cerr << "Not implemented." << std::endl;
             mSkipTest = true;
 #endif  // defined(ANGLE_USE_UTIL_LOADER) && !defined(ANGLE_PLATFORM_WINDOWS)
             break;
-        case angle::GLESDriverType::SystemWGL:
+        case GLESDriverType::SystemWGL:
 #if defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
             mGLWindow = WGLWindow::New(testParams.majorVersion, testParams.minorVersion);
-            mEntryPointsLib.reset(
-                angle::OpenSharedLibrary("opengl32", angle::SearchType::SystemDir));
+            mEntryPointsLib.reset(OpenSharedLibrary("opengl32", SearchType::SystemDir));
 #else
             std::cout << "WGL driver not available. Skipping test." << std::endl;
             mSkipTest = true;
@@ -650,7 +648,7 @@ void ANGLERenderTest::SetUp()
     ANGLEPerfTest::SetUp();
 
     // Set a consistent CPU core affinity and high priority.
-    angle::StabilizeCPUForBenchmarking();
+    StabilizeCPUForBenchmarking();
 
     mOSWindow = OSWindow::New();
 
@@ -995,7 +993,7 @@ double GetHostTimeSeconds()
 {
     // Move the time origin to the first call to this function, to avoid generating unnecessarily
     // large timestamps.
-    static double origin = angle::GetCurrentTime();
-    return angle::GetCurrentTime() - origin;
+    static double origin = GetCurrentTime();
+    return GetCurrentTime() - origin;
 }
 }  // namespace angle
