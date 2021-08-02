@@ -42,7 +42,7 @@ void InitializeViewIDAndInstanceID(const TVariable *viewID,
     TConstantUnion *numberOfViewsUnsignedConstant = new TConstantUnion();
     numberOfViewsUnsignedConstant->setUConst(numberOfViews);
     TIntermConstantUnion *numberOfViewsUint =
-        new TIntermConstantUnion(numberOfViewsUnsignedConstant, TType(EbtUInt, EbpHigh, EvqConst));
+        new TIntermConstantUnion(numberOfViewsUnsignedConstant, TType(EbtUInt, EbpLow, EvqConst));
 
     // Create a uint(gl_InstanceID) node.
     TIntermSequence glInstanceIDSymbolCastArguments;

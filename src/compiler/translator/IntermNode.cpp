@@ -604,10 +604,7 @@ TIntermAggregate::TIntermAggregate(const TFunction *func,
                                    const TType &type,
                                    TOperator op,
                                    TIntermSequence *arguments)
-    : TIntermOperator(op, type),
-      mUseEmulatedFunction(false),
-      mGotPrecisionFromChildren(false),
-      mFunction(func)
+    : TIntermOperator(op, type), mUseEmulatedFunction(false), mFunction(func)
 {
     if (arguments != nullptr)
     {
@@ -661,7 +658,6 @@ bool TIntermAggregate::areChildrenConstQualified()
 
 void TIntermAggregate::setPrecisionFromChildren()
 {
-    mGotPrecisionFromChildren = true;
     if (getBasicType() == EbtBool)
     {
         mType.setPrecision(EbpUndefined);
@@ -695,12 +691,10 @@ bool TIntermAggregate::setPrecisionForSpecialBuiltInOp()
     {
         case EOpBitfieldExtract:
             mType.setPrecision(mArguments[0]->getAsTyped()->getPrecision());
-            mGotPrecisionFromChildren = true;
             return true;
         case EOpBitfieldInsert:
             mType.setPrecision(GetHigherPrecision(mArguments[0]->getAsTyped()->getPrecision(),
                                                   mArguments[1]->getAsTyped()->getPrecision()));
-            mGotPrecisionFromChildren = true;
             return true;
         case EOpUaddCarry:
         case EOpUsubBorrow:
@@ -1108,7 +1102,6 @@ const TType &TIntermFunctionPrototype::getType() const
 TIntermAggregate::TIntermAggregate(const TIntermAggregate &node)
     : TIntermOperator(node),
       mUseEmulatedFunction(node.mUseEmulatedFunction),
-      mGotPrecisionFromChildren(node.mGotPrecisionFromChildren),
       mFunction(node.mFunction)
 {
     for (TIntermNode *arg : node.mArguments)

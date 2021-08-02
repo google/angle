@@ -640,9 +640,6 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
 
-    // Returns true if changing parameter precision may affect the return value.
-    bool gotPrecisionFromChildren() const { return mGotPrecisionFromChildren; }
-
     const TFunction *getFunction() const { return mFunction; }
 
     // Get the function name to display to the user in an error message.
@@ -654,8 +651,6 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     // If set to true, replace the built-in function call with an emulated one
     // to work around driver bugs. Only for calls mapped to ops other than EOpCall*.
     bool mUseEmulatedFunction;
-
-    bool mGotPrecisionFromChildren;
 
     const TFunction *const mFunction;
 
