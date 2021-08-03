@@ -1257,7 +1257,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
             symbolType = SymbolType::BuiltIn;
             break;
         default:
-            ASSERT(!IsRedeclarableBuiltIn(identifier));
+            break;
     }
 
     (*variable) = new TVariable(&symbolTable, identifier, type, symbolType);
