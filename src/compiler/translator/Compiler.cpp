@@ -51,7 +51,6 @@
 #include "compiler/translator/tree_ops/gl/RegenerateStructNames.h"
 #include "compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.h"
 #include "compiler/translator/tree_ops/gl/UseInterfaceBlockFields.h"
-#include "compiler/translator/tree_ops/gl/VectorizeVectorScalarArithmetic.h"
 #include "compiler/translator/tree_ops/vulkan/EarlyFragmentTestsOptimization.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
@@ -1027,14 +1026,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if ((compileOptions & SH_REWRITE_REPEATED_ASSIGN_TO_SWIZZLED) != 0)
     {
         if (!sh::RewriteRepeatedAssignToSwizzled(this, root))
-        {
-            return false;
-        }
-    }
-
-    if ((compileOptions & SH_REWRITE_VECTOR_SCALAR_ARITHMETIC) != 0)
-    {
-        if (!VectorizeVectorScalarArithmetic(this, root, &getSymbolTable()))
         {
             return false;
         }

@@ -136,7 +136,6 @@ angle_unittests_compiler_tests_sources = [
   "compiler_tests/TypeTracking_test.cpp",
   "compiler_tests/Type_test.cpp",
   "compiler_tests/VariablePacker_test.cpp",
-  "compiler_tests/VectorizeVectorScalarArithmetic_test.cpp",
   "compiler_tests/WorkGroupSize_test.cpp",
   "test_utils/ConstantFoldingTest.cpp",
   "test_utils/ConstantFoldingTest.h",

@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 264
+#define ANGLE_SH_VERSION 265
 
 enum ShShaderSpec
 {
@@ -236,13 +236,7 @@ const ShCompileOptions SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER = UINT64_C(1) << 
 // ShBuiltInResources in vertex shaders.
 const ShCompileOptions SH_CLAMP_POINT_SIZE = UINT64_C(1) << 32;
 
-// Turn some arithmetic operations that operate on a float vector-scalar pair into vector-vector
-// operations. This is done recursively. Some scalar binary operations inside vector constructors
-// are also turned into vector operations.
-//
-// This is targeted to work around a bug in NVIDIA OpenGL drivers that was reproducible on NVIDIA
-// driver version 387.92. It works around the most common occurrences of the bug.
-const ShCompileOptions SH_REWRITE_VECTOR_SCALAR_ARITHMETIC = UINT64_C(1) << 33;
+// Bit 33 is available.
 
 // Don't use loops to initialize uninitialized variables. Only has an effect if some kind of
 // variable initialization is turned on.

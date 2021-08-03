@@ -205,15 +205,6 @@ struct FeaturesGL : FeatureSetBase
         "The point size range reported from the API is inconsistent with the actual behavior",
         &members};
 
-    // On some NVIDIA drivers certain types of GLSL arithmetic ops mixing vectors and scalars may be
-    // executed incorrectly. Change them in the shader translator. Tracking bug:
-    // http://crbug.com/772651
-    Feature rewriteVectorScalarArithmetic = {"rewrite_vector_scalar_arithmetic",
-                                             FeatureCategory::OpenGLWorkarounds,
-                                             "Certain types of GLSL arithmetic ops mixing vectors "
-                                             "and scalars may be executed incorrectly",
-                                             &members, "http://crbug.com/772651"};
-
     // On some Android devices for loops used to initialize variables hit native GLSL compiler bugs.
     Feature dontUseLoopsToInitializeVariables = {
         "dont_use_loops_to_initialize_variables", FeatureCategory::OpenGLWorkarounds,

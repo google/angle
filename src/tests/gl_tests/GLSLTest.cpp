@@ -7496,9 +7496,7 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
-// Test vector/scalar arithmetic (in this case multiplication and addition). Meant to reproduce a
-// bug that appeared in NVIDIA OpenGL drivers and that is worked around by
-// VectorizeVectorScalarArithmetic AST transform.
+// Test vector/scalar arithmetic (in this case multiplication and addition).
 TEST_P(GLSLTest, VectorScalarMultiplyAndAddInLoop)
 {
     constexpr char kFS[] = R"(precision mediump float;
@@ -7522,9 +7520,7 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
-// Test vector/scalar arithmetic (in this case compound division and addition). Meant to reproduce a
-// bug that appeared in NVIDIA OpenGL drivers and that is worked around by
-// VectorizeVectorScalarArithmetic AST transform.
+// Test vector/scalar arithmetic (in this case compound division and addition).
 TEST_P(GLSLTest, VectorScalarDivideAndAddInLoop)
 {
     constexpr char kFS[] = R"(precision mediump float;

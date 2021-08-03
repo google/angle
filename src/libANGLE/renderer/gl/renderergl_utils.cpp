@@ -1935,8 +1935,6 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, reapplyUBOBindingsAfterUsingBinaryProgram,
                             isAMD || IsAndroid());
 
-    ANGLE_FEATURE_CONDITION(features, rewriteVectorScalarArithmetic, isNvidia);
-
     // TODO(oetuaho): Make this specific to the affected driver versions. Versions at least up to
     // 390 are known to be affected. Versions after that are expected not to be affected.
     ANGLE_FEATURE_CONDITION(features, clampFragDepth, isNvidia);

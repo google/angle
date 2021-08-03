@@ -314,11 +314,6 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
         additionalOptions |= SH_CLAMP_POINT_SIZE;
     }
 
-    if (features.rewriteVectorScalarArithmetic.enabled)
-    {
-        additionalOptions |= SH_REWRITE_VECTOR_SCALAR_ARITHMETIC;
-    }
-
     if (features.dontUseLoopsToInitializeVariables.enabled)
     {
         additionalOptions |= SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES;

@@ -194,7 +194,6 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/gl/RegenerateStructNames.h",
   "src/compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.h",
   "src/compiler/translator/tree_ops/gl/UseInterfaceBlockFields.h",
-  "src/compiler/translator/tree_ops/gl/VectorizeVectorScalarArithmetic.h",
   "src/compiler/translator/tree_ops/vulkan/EarlyFragmentTestsOptimization.h",
   "src/compiler/translator/tree_util/AsNode.h",
   "src/compiler/translator/tree_util/BuiltIn.h",
@@ -266,7 +265,6 @@ angle_translator_glsl_sources = [
   "src/compiler/translator/tree_ops/gl/RegenerateStructNames.cpp",
   "src/compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.cpp",
   "src/compiler/translator/tree_ops/gl/UseInterfaceBlockFields.cpp",
-  "src/compiler/translator/tree_ops/gl/VectorizeVectorScalarArithmetic.cpp",
 ]
 angle_translator_apple_sources = [
   "src/compiler/translator/tree_ops/apple/AddAndTrueToLoopCondition.cpp",
