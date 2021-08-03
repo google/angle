@@ -79,6 +79,7 @@
 6124 MAC OPENGL : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 6144 MAC OPENGL : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
 1227129 MAC METAL : StateChangeTestES3.SamplerMetadataUpdateOnSetProgram/* = SKIP
+6236 MAC OPENGL : BufferDataTestES3.DrawWithNotCallingBufferData/* = SKIP
 
 // D3D
 6091 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -93,6 +94,7 @@
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/ES3_OpenGLES = SKIP
 6116 ANDROID GLES : GLSLTestLoops.ForNoCondition/ES3_OpenGLES = SKIP
+6237 ANDROID GLES : BufferDataTestES3.DrawWithNotCallingBufferData/ES3_OpenGLES = SKIP
 
 // Nexus 5X expectations.
 6149 NEXUS5X GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP

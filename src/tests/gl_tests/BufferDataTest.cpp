@@ -746,6 +746,24 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(3, 3, GLColor::green);
 }
 
+// Tests a null crash bug caused by copying from null back-end buffer pointer
+// when calling bufferData again after drawing without calling bufferData in D3D11.
+TEST_P(BufferDataTestES3, DrawWithNotCallingBufferData)
+{
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    glUseProgram(drawRed);
+
+    GLint mem = 0;
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindBuffer(GL_COPY_WRITE_BUFFER, buffer);
+    glBufferData(GL_COPY_WRITE_BUFFER, 1, &mem, GL_STREAM_DRAW);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests a bug where copying buffer data immediately after creation hit a nullptr in D3D11.
 TEST_P(BufferDataTestES3, NoBufferInitDataCopyBug)
 {

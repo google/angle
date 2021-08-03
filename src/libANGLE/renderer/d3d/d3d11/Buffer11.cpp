@@ -999,6 +999,11 @@ angle::Result Buffer11::updateBufferStorage(const gl::Context *context,
         return angle::Result::Continue;
     }
 
+    if (latestBuffer->getSize() == 0 || storage->getSize() == 0)
+    {
+        return angle::Result::Continue;
+    }
+
     // Copy through a staging buffer if we're copying from or to a non-staging, mappable
     // buffer storage. This is because we can't map a GPU buffer, and copy CPU
     // data directly. If we're already using a staging buffer we're fine.
