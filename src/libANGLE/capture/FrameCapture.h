@@ -504,7 +504,7 @@ class FrameCaptureShared final : angle::NonCopyable
     // This simplifies a lot of file management.
     std::vector<uint8_t> mBinaryData;
 
-    bool mEnabled = false;
+    bool mEnabled;
     bool mSerializeStateEnabled;
     std::string mOutDirectory;
     std::string mCaptureLabel;

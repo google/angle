@@ -26,7 +26,7 @@ TrackedResource::~TrackedResource() {}
 FrameCapture::FrameCapture() {}
 FrameCapture::~FrameCapture() {}
 
-FrameCaptureShared::FrameCaptureShared() {}
+FrameCaptureShared::FrameCaptureShared() : mEnabled(false) {}
 FrameCaptureShared::~FrameCaptureShared() {}
 void FrameCaptureShared::onEndFrame(const gl::Context *context) {}
 void FrameCaptureShared::onMakeCurrent(const gl::Context *context, const egl::Surface *drawSurface)
