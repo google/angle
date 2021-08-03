@@ -650,9 +650,15 @@ ANGLE_NO_DISCARD bool ReplaceLastFragData(TCompiler *compiler,
         return false;
     }
 
+    const TBasicType loadVarBasicType = glLastFragDataVar->getType().getBasicType();
+    const TPrecision loadVarPrecision = glLastFragDataVar->getType().getPrecision();
+    const unsigned int loadVarVecSize = glLastFragDataVar->getType().getNominalSize();
+    const int loadVarArraySize        = glLastFragDataVar->getType().getOutermostArraySize();
+
     ImmutableString loadVarName("ANGLELastFragData");
-    TType *loadVarType = new TType(glLastFragDataVar->getType());
-    loadVarType->setQualifier(EvqGlobal);
+    TType *loadVarType = new TType(loadVarBasicType, loadVarPrecision, EvqGlobal,
+                                   static_cast<unsigned char>(loadVarVecSize));
+    loadVarType->makeArray(loadVarArraySize);
 
     TVariable *loadVar =
         new TVariable(symbolTable, loadVarName, loadVarType, SymbolType::AngleInternal);
@@ -714,11 +720,23 @@ ANGLE_NO_DISCARD bool ReplaceInOutVariables(TCompiler *compiler,
         const unsigned int inputAttachmentIndex = originInOutVarIter.first;
         const TIntermSymbol *originInOutVar     = originInOutVarIter.second;
 
-        TType *newOutVarType = new TType(originInOutVar->getType());
+        const TBasicType loadVarBasicType = originInOutVar->getType().getBasicType();
+        const TPrecision loadVarPrecision = originInOutVar->getType().getPrecision();
+        const unsigned int loadVarVecSize = originInOutVar->getType().getNominalSize();
+        const unsigned int loadVarArraySize =
+            (originInOutVar->isArray() ? originInOutVar->getOutermostArraySize() : 0);
+
+        TType *newOutVarType = new TType(loadVarBasicType, loadVarPrecision, EvqGlobal,
+                                         static_cast<unsigned char>(loadVarVecSize));
 
         // We just want to use the original variable decorated with a inout qualifier, except
         // the qualifier itself. The qualifier will be changed from inout to out.
-        newOutVarType->setQualifier(EvqFragmentOut);
+        newOutVarType->setQualifier(TQualifier::EvqFragmentOut);
+
+        if (loadVarArraySize > 0)
+        {
+            newOutVarType->makeArray(loadVarArraySize);
+        }
 
         TVariable *newOutVar = new TVariable(symbolTable, originInOutVar->getName(), newOutVarType,
                                              SymbolType::UserDefined);

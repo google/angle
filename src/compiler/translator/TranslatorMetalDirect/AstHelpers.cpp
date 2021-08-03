@@ -39,8 +39,8 @@ Declaration sh::ViewDeclaration(TIntermDeclaration &declNode)
 const TVariable &sh::CreateStructTypeVariable(TSymbolTable &symbolTable,
                                               const TStructure &structure)
 {
-    TType *type    = new TType(&structure, true);
-    TVariable *var = new TVariable(&symbolTable, ImmutableString(""), type, SymbolType::Empty);
+    auto *type = new TType(&structure, true);
+    auto *var  = new TVariable(&symbolTable, ImmutableString(""), type, SymbolType::Empty);
     return *var;
 }
 
@@ -50,13 +50,13 @@ const TVariable &sh::CreateInstanceVariable(TSymbolTable &symbolTable,
                                             TQualifier qualifier,
                                             const TSpan<const unsigned int> *arraySizes)
 {
-    TType *type = new TType(&structure, false);
+    auto *type = new TType(&structure, false);
     type->setQualifier(qualifier);
     if (arraySizes)
     {
         type->makeArrays(*arraySizes);
     }
-    TVariable *var = new TVariable(&symbolTable, name.rawName(), type, name.symbolType());
+    auto *var = new TVariable(&symbolTable, name.rawName(), type, name.symbolType());
     return *var;
 }
 
@@ -75,7 +75,7 @@ static void AcquireFunctionExtras(TFunction &dest, const TFunction &src)
 
 TIntermSequence &sh::CloneSequenceAndPrepend(const TIntermSequence &seq, TIntermNode &node)
 {
-    TIntermSequence *newSeq = new TIntermSequence();
+    auto *newSeq = new TIntermSequence();
     newSeq->push_back(&node);
 
     for (TIntermNode *oldNode : seq)
@@ -104,9 +104,8 @@ const TFunction &sh::CloneFunction(TSymbolTable &symbolTable,
 
     Name newName = idGen.createNewName(Name(oldFunc));
 
-    TFunction &newFunc =
-        *new TFunction(&symbolTable, newName.rawName(), newName.symbolType(),
-                       &oldFunc.getReturnType(), oldFunc.isKnownToNotHaveSideEffects());
+    auto &newFunc = *new TFunction(&symbolTable, newName.rawName(), newName.symbolType(),
+                                   &oldFunc.getReturnType(), oldFunc.isKnownToNotHaveSideEffects());
 
     AcquireFunctionExtras(newFunc, oldFunc);
     AddParametersFrom(newFunc, oldFunc);
@@ -124,9 +123,8 @@ const TFunction &sh::CloneFunctionAndPrependParam(TSymbolTable &symbolTable,
 
     Name newName = idGen ? idGen->createNewName(Name(oldFunc)) : Name(oldFunc);
 
-    TFunction &newFunc =
-        *new TFunction(&symbolTable, newName.rawName(), newName.symbolType(),
-                       &oldFunc.getReturnType(), oldFunc.isKnownToNotHaveSideEffects());
+    auto &newFunc = *new TFunction(&symbolTable, newName.rawName(), newName.symbolType(),
+                                   &oldFunc.getReturnType(), oldFunc.isKnownToNotHaveSideEffects());
 
     AcquireFunctionExtras(newFunc, oldFunc);
     newFunc.addParameter(&newParam);
@@ -145,13 +143,12 @@ const TFunction &sh::CloneFunctionAndAppendParams(TSymbolTable &symbolTable,
 
     Name newName = idGen ? idGen->createNewName(Name(oldFunc)) : Name(oldFunc);
 
-    TFunction &newFunc =
-        *new TFunction(&symbolTable, newName.rawName(), newName.symbolType(),
-                       &oldFunc.getReturnType(), oldFunc.isKnownToNotHaveSideEffects());
+    auto &newFunc = *new TFunction(&symbolTable, newName.rawName(), newName.symbolType(),
+                                   &oldFunc.getReturnType(), oldFunc.isKnownToNotHaveSideEffects());
 
     AcquireFunctionExtras(newFunc, oldFunc);
     AddParametersFrom(newFunc, oldFunc);
-    for (const TVariable *param : newParams)
+    for (auto *param : newParams)
     {
         newFunc.addParameter(param);
     }
@@ -168,9 +165,9 @@ const TFunction &sh::CloneFunctionAndChangeReturnType(TSymbolTable &symbolTable,
 
     Name newName = idGen ? idGen->createNewName(Name(oldFunc)) : Name(oldFunc);
 
-    TType *newReturnType = new TType(&newReturn, true);
-    TFunction &newFunc   = *new TFunction(&symbolTable, newName.rawName(), newName.symbolType(),
-                                        newReturnType, oldFunc.isKnownToNotHaveSideEffects());
+    auto *newReturnType = new TType(&newReturn, true);
+    auto &newFunc       = *new TFunction(&symbolTable, newName.rawName(), newName.symbolType(),
+                                   newReturnType, oldFunc.isKnownToNotHaveSideEffects());
 
     AcquireFunctionExtras(newFunc, oldFunc);
     AddParametersFrom(newFunc, oldFunc);
@@ -181,9 +178,9 @@ const TFunction &sh::CloneFunctionAndChangeReturnType(TSymbolTable &symbolTable,
 TIntermTyped &sh::GetArg(const TIntermAggregate &call, size_t index)
 {
     ASSERT(index < call.getChildCount());
-    TIntermNode *arg = call.getChildNode(index);
+    auto *arg = call.getChildNode(index);
     ASSERT(arg);
-    TIntermTyped *targ = arg->getAsTyped();
+    auto *targ = arg->getAsTyped();
     ASSERT(targ);
     return *targ;
 }
@@ -249,7 +246,7 @@ TIntermBinary &sh::AccessIndex(TIntermTyped &indexableNode, int index)
     ASSERT(type.isArray() || type.isVector() || type.isMatrix());
 #endif
 
-    TIntermBinary *accessNode = new TIntermBinary(
+    auto *accessNode = new TIntermBinary(
         TOperator::EOpIndexDirect, &indexableNode,
         new TIntermConstantUnion(new TConstantUnion(index), *new TType(TBasicType::EbtInt)));
     return *accessNode;
@@ -276,7 +273,7 @@ TIntermTyped &sh::SubVector(TIntermTyped &vectorNode, int begin, int end)
     }
     TVector<int> offsets(static_cast<size_t>(end - begin));
     std::iota(offsets.begin(), offsets.end(), begin);
-    TIntermSwizzle *swizzle = new TIntermSwizzle(&vectorNode, offsets);
+    auto *swizzle = new TIntermSwizzle(&vectorNode, offsets);
     return *swizzle;
 }
 
@@ -319,16 +316,28 @@ bool sh::HasScalarBasicType(const TType &type)
     return HasScalarBasicType(type.getBasicType());
 }
 
+static void InitType(TType &type)
+{
+    if (type.isArray())
+    {
+        auto sizes = type.getArraySizes();
+        type.toArrayBaseType();
+        type.makeArrays(sizes);
+    }
+}
+
 TType &sh::CloneType(const TType &type)
 {
-    TType &clone = *new TType(type);
+    auto &clone = *new TType(type);
+    InitType(clone);
     return clone;
 }
 
 TType &sh::InnermostType(const TType &type)
 {
-    TType &inner = *new TType(type);
+    auto &inner = *new TType(type);
     inner.toArrayBaseType();
+    InitType(inner);
     return inner;
 }
 
@@ -336,18 +345,26 @@ TType &sh::DropColumns(const TType &matrixType)
 {
     ASSERT(matrixType.isMatrix());
     ASSERT(HasScalarBasicType(matrixType));
+    const char *mangledName = nullptr;
 
-    TType &vectorType = *new TType(matrixType);
-    vectorType.toMatrixColumnType();
+    auto &vectorType =
+        *new TType(matrixType.getBasicType(), matrixType.getPrecision(), matrixType.getQualifier(),
+                   matrixType.getRows(), 1, matrixType.getArraySizes(), mangledName);
+    InitType(vectorType);
     return vectorType;
 }
 
 TType &sh::DropOuterDimension(const TType &arrayType)
 {
     ASSERT(arrayType.isArray());
+    const char *mangledName = nullptr;
+    const auto &arraySizes  = arrayType.getArraySizes();
 
-    TType &innerType = *new TType(arrayType);
-    innerType.toArrayElementType();
+    auto &innerType =
+        *new TType(arrayType.getBasicType(), arrayType.getPrecision(), arrayType.getQualifier(),
+                   arrayType.getNominalSize(), arrayType.getSecondarySize(),
+                   arraySizes.subspan(0, arraySizes.size() - 1), mangledName);
+    InitType(innerType);
     return innerType;
 }
 
@@ -356,16 +373,17 @@ static TType &SetTypeDimsImpl(const TType &type, int primary, int secondary)
     ASSERT(1 < primary && primary <= 4);
     ASSERT(1 <= secondary && secondary <= 4);
     ASSERT(HasScalarBasicType(type));
+    const char *mangledName = nullptr;
 
-    TType &newType = *new TType(type);
-    newType.setPrimarySize(primary);
-    newType.setSecondarySize(secondary);
+    auto &newType = *new TType(type.getBasicType(), type.getPrecision(), type.getQualifier(),
+                               primary, secondary, type.getArraySizes(), mangledName);
+    InitType(newType);
     return newType;
 }
 
 TType &sh::SetVectorDim(const TType &type, int newDim)
 {
-    ASSERT(type.isScalar() || type.isVector());
+    ASSERT(type.isRank0() || type.isVector());
     return SetTypeDimsImpl(type, newDim, 1);
 }
 

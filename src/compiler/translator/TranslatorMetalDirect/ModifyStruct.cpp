@@ -842,7 +842,7 @@ bool SaturateScalarOrVectorCommon(ConvertStructState &state,
     {
         return false;
     }
-    if (!((type.isScalar() && HasScalarBasicType(type)) || type.isVector()))
+    if (!((type.isRank0() && HasScalarBasicType(type)) || type.isVector()))
     {
         return false;
     }

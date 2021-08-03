@@ -22,6 +22,8 @@ class TSymbolTable;
 
 ANGLE_NO_DISCARD bool ScalarizeVecAndMatConstructorArgs(TCompiler *compiler,
                                                         TIntermBlock *root,
+                                                        sh::GLenum shaderType,
+                                                        bool fragmentPrecisionHigh,
                                                         TSymbolTable *symbolTable);
 }  // namespace sh
 

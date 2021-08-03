@@ -89,17 +89,16 @@ TIntermTyped *EnsureSignedInt(TIntermTyped *node)
 
 TType *GetFieldType(const TType &indexedType)
 {
-    TType *fieldType = new TType(indexedType);
     if (indexedType.isMatrix())
     {
-        fieldType->toMatrixColumnType();
+        TType *fieldType = new TType(indexedType.getBasicType(), indexedType.getPrecision());
+        fieldType->setPrimarySize(static_cast<unsigned char>(indexedType.getRows()));
+        return fieldType;
     }
     else
     {
-        ASSERT(indexedType.isVector());
-        fieldType->toComponentType();
+        return new TType(indexedType.getBasicType(), indexedType.getPrecision());
     }
-    return fieldType;
 }
 
 const TType *GetBaseType(const TType &type, bool write)
