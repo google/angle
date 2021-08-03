@@ -78,6 +78,41 @@ constexpr char kAndroidCaptureTrigger[] = "debug.angle.capture.trigger";
 constexpr char kAndroidCaptureLabel[]   = "debug.angle.capture.label";
 constexpr char kAndroidCompression[]    = "debug.angle.capture.compression";
 
+struct FramebufferCaptureFuncs
+{
+    FramebufferCaptureFuncs(bool isGLES1)
+    {
+        if (isGLES1)
+        {
+            framebufferTexture2D    = &gl::CaptureFramebufferTexture2DOES;
+            framebufferRenderbuffer = &gl::CaptureFramebufferRenderbufferOES;
+            bindFramebuffer         = &gl::CaptureBindFramebufferOES;
+            genFramebuffers         = &gl::CaptureGenFramebuffersOES;
+            bindRenderbuffer        = &gl::CaptureBindRenderbufferOES;
+            genRenderbuffers        = &gl::CaptureGenRenderbuffersOES;
+            renderbufferStorage     = &gl::CaptureRenderbufferStorageOES;
+        }
+        else
+        {
+            framebufferTexture2D    = &gl::CaptureFramebufferTexture2D;
+            framebufferRenderbuffer = &gl::CaptureFramebufferRenderbuffer;
+            bindFramebuffer         = &gl::CaptureBindFramebuffer;
+            genFramebuffers         = &gl::CaptureGenFramebuffers;
+            bindRenderbuffer        = &gl::CaptureBindRenderbuffer;
+            genRenderbuffers        = &gl::CaptureGenRenderbuffers;
+            renderbufferStorage     = &gl::CaptureRenderbufferStorage;
+        }
+    }
+
+    decltype(&gl::CaptureFramebufferTexture2D) framebufferTexture2D;
+    decltype(&gl::CaptureFramebufferRenderbuffer) framebufferRenderbuffer;
+    decltype(&gl::CaptureBindFramebuffer) bindFramebuffer;
+    decltype(&gl::CaptureGenFramebuffers) genFramebuffers;
+    decltype(&gl::CaptureBindRenderbuffer) bindRenderbuffer;
+    decltype(&gl::CaptureGenRenderbuffers) genRenderbuffers;
+    decltype(&gl::CaptureRenderbufferStorage) renderbufferStorage;
+};
+
 std::string GetDefaultOutDirectory()
 {
 #if defined(ANGLE_PLATFORM_ANDROID)
@@ -1808,6 +1843,7 @@ void Capture(std::vector<CallCapture> *setupCalls, CallCapture &&call)
 
 void CaptureFramebufferAttachment(std::vector<CallCapture> *setupCalls,
                                   const gl::State &replayState,
+                                  const FramebufferCaptureFuncs &framebufferFuncs,
                                   const gl::FramebufferAttachment &attachment)
 {
     GLuint resourceID = attachment.getResource()->getId();
@@ -1817,16 +1853,16 @@ void CaptureFramebufferAttachment(std::vector<CallCapture> *setupCalls,
     {
         gl::ImageIndex index = attachment.getTextureImageIndex();
 
-        Capture(setupCalls, CaptureFramebufferTexture2D(replayState, true, GL_FRAMEBUFFER,
-                                                        attachment.getBinding(), index.getTarget(),
-                                                        {resourceID}, index.getLevelIndex()));
+        Capture(setupCalls, framebufferFuncs.framebufferTexture2D(
+                                replayState, true, GL_FRAMEBUFFER, attachment.getBinding(),
+                                index.getTarget(), {resourceID}, index.getLevelIndex()));
     }
     else
     {
         ASSERT(attachment.type() == GL_RENDERBUFFER);
-        Capture(setupCalls, CaptureFramebufferRenderbuffer(replayState, true, GL_FRAMEBUFFER,
-                                                           attachment.getBinding(), GL_RENDERBUFFER,
-                                                           {resourceID}));
+        Capture(setupCalls, framebufferFuncs.framebufferRenderbuffer(
+                                replayState, true, GL_FRAMEBUFFER, attachment.getBinding(),
+                                GL_RENDERBUFFER, {resourceID}));
     }
 }
 
@@ -2840,6 +2876,7 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
 
     // Capture Renderbuffers.
     const gl::RenderbufferManager &renderbuffers = apiState.getRenderbufferManagerForCapture();
+    FramebufferCaptureFuncs framebufferFuncs(context->isGLES1());
 
     for (const auto &renderbufIter : renderbuffers)
     {
@@ -2847,9 +2884,9 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
         const gl::Renderbuffer *renderbuffer = renderbufIter.second;
 
         // Generate renderbuffer id.
-        cap(CaptureGenRenderbuffers(replayState, true, 1, &id));
+        cap(framebufferFuncs.genRenderbuffers(replayState, true, 1, &id));
         MaybeCaptureUpdateResourceIDs(setupCalls);
-        cap(CaptureBindRenderbuffer(replayState, true, GL_RENDERBUFFER, id));
+        cap(framebufferFuncs.bindRenderbuffer(replayState, true, GL_RENDERBUFFER, id));
 
         GLenum internalformat = renderbuffer->getFormat().info->internalFormat;
 
@@ -2862,8 +2899,9 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
         }
         else
         {
-            cap(CaptureRenderbufferStorage(replayState, true, GL_RENDERBUFFER, internalformat,
-                                           renderbuffer->getWidth(), renderbuffer->getHeight()));
+            cap(framebufferFuncs.renderbufferStorage(replayState, true, GL_RENDERBUFFER,
+                                                     internalformat, renderbuffer->getWidth(),
+                                                     renderbuffer->getHeight()));
         }
 
         // TODO(jmadill): Capture renderbuffer contents. http://anglebug.com/3662
@@ -3266,6 +3304,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     // Capture Framebuffers.
     const gl::FramebufferManager &framebuffers = apiState.getFramebufferManagerForCapture();
+    FramebufferCaptureFuncs framebufferFuncs(context->isGLES1());
 
     gl::FramebufferID currentDrawFramebuffer = {0};
     gl::FramebufferID currentReadFramebuffer = {0};
@@ -3281,9 +3320,9 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             continue;
         }
 
-        cap(CaptureGenFramebuffers(replayState, true, 1, &id));
+        cap(framebufferFuncs.genFramebuffers(replayState, true, 1, &id));
         MaybeCaptureUpdateResourceIDs(setupCalls);
-        cap(CaptureBindFramebuffer(replayState, true, GL_FRAMEBUFFER, id));
+        cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_FRAMEBUFFER, id));
         currentDrawFramebuffer = currentReadFramebuffer = id;
 
         // Color Attachments.
@@ -3294,7 +3333,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                 continue;
             }
 
-            CaptureFramebufferAttachment(setupCalls, replayState, colorAttachment);
+            CaptureFramebufferAttachment(setupCalls, replayState, framebufferFuncs,
+                                         colorAttachment);
         }
 
         const gl::FramebufferAttachment *depthAttachment = framebuffer->getDepthAttachment();
@@ -3302,7 +3342,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         {
             ASSERT(depthAttachment->getBinding() == GL_DEPTH_ATTACHMENT ||
                    depthAttachment->getBinding() == GL_DEPTH_STENCIL_ATTACHMENT);
-            CaptureFramebufferAttachment(setupCalls, replayState, *depthAttachment);
+            CaptureFramebufferAttachment(setupCalls, replayState, framebufferFuncs,
+                                         *depthAttachment);
         }
 
         const gl::FramebufferAttachment *stencilAttachment = framebuffer->getStencilAttachment();
@@ -3310,7 +3351,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         {
             ASSERT(stencilAttachment->getBinding() == GL_STENCIL_ATTACHMENT ||
                    depthAttachment->getBinding() == GL_DEPTH_STENCIL_ATTACHMENT);
-            CaptureFramebufferAttachment(setupCalls, replayState, *stencilAttachment);
+            CaptureFramebufferAttachment(setupCalls, replayState, framebufferFuncs,
+                                         *stencilAttachment);
         }
 
         const std::vector<GLenum> &drawBufferStates = framebuffer->getDrawBufferStates();
@@ -3326,7 +3368,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         if (currentDrawFramebuffer != stateDrawFramebuffer ||
             currentReadFramebuffer != stateReadFramebuffer)
         {
-            cap(CaptureBindFramebuffer(replayState, true, GL_FRAMEBUFFER, stateDrawFramebuffer));
+            cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_FRAMEBUFFER,
+                                                 stateDrawFramebuffer));
             currentDrawFramebuffer = currentReadFramebuffer = stateDrawFramebuffer;
         }
     }
@@ -3334,15 +3377,15 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     {
         if (currentDrawFramebuffer != stateDrawFramebuffer)
         {
-            cap(CaptureBindFramebuffer(replayState, true, GL_DRAW_FRAMEBUFFER,
-                                       currentDrawFramebuffer));
+            cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_DRAW_FRAMEBUFFER,
+                                                 currentDrawFramebuffer));
             currentDrawFramebuffer = stateDrawFramebuffer;
         }
 
         if (currentReadFramebuffer != stateReadFramebuffer)
         {
-            cap(CaptureBindFramebuffer(replayState, true, GL_READ_FRAMEBUFFER,
-                                       replayState.getReadFramebuffer()->id()));
+            cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_READ_FRAMEBUFFER,
+                                                 replayState.getReadFramebuffer()->id()));
             currentReadFramebuffer = stateReadFramebuffer;
         }
     }
