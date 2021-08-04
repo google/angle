@@ -528,7 +528,7 @@ class FrameCaptureShared final : angle::NonCopyable
     // you reach the content you want to capture. Currently only available on Android.
     uint32_t mCaptureTrigger;
 
-    bool mCaptureActive = false;
+    bool mCaptureActive;
     std::vector<uint32_t> mActiveFrameIndices;
 
     // Cache most recently compiled and linked sources.

@@ -4113,6 +4113,7 @@ FrameCaptureShared::FrameCaptureShared()
       mReadBufferSize(0),
       mHasResourceType{},
       mCaptureTrigger(0),
+      mCaptureActive(false),
       mWindowSurfaceContextID({0})
 {
     reset();
@@ -4185,6 +4186,14 @@ FrameCaptureShared::FrameCaptureShared()
     if (serializeStateFromEnv == "1")
     {
         mSerializeStateEnabled = true;
+    }
+
+    if (mFrameIndex == mCaptureStartFrame)
+    {
+        // Capture is starting from the first frame, so set the capture active to ensure all GLES
+        // commands issued are handled correctly by maybeCapturePreCallUpdates() and
+        // maybeCapturePostCallUpdates().
+        setCaptureActive();
     }
 }
 
@@ -5352,37 +5361,30 @@ void FrameCaptureShared::onEndFrame(const gl::Context *context)
     // On Android, we can trigger a capture during the run
     checkForCaptureTrigger();
     // Done after checkForCaptureTrigger(), since that can modify mCaptureStartFrame.
-    if (mFrameIndex >= mCaptureStartFrame)
-    {
-        setCaptureActive();
-        // Assume that the context performing the swap is the "main" context.
-        mWindowSurfaceContextID = context->id();
-    }
-    else
+    if (mFrameIndex < mCaptureStartFrame)
     {
         reset();
         mFrameIndex++;
-
-        // When performing a mid-execution capture, setup the replay before capturing calls for the
-        // first frame.
         if (mFrameIndex == mCaptureStartFrame)
         {
-            setupSharedAndAuxReplay(context, true);
+            // Set the capture active to ensure all GLES commands issued by the next frame are
+            // handled correctly by maybeCapturePreCallUpdates() and maybeCapturePostCallUpdates().
+            setCaptureActive();
         }
 
-        // Not capturing yet, so return.
+        // Not capturing the current frame, so return.
         return;
     }
 
     if (mIsFirstFrame)
     {
         mCaptureStartFrame = mFrameIndex;
+        // Assume that the context performing the swap is the "main" context.
+        mWindowSurfaceContextID = context->id();
 
         // When *not* performing a mid-execution capture, setup the replay with the first frame.
-        if (mCaptureStartFrame == 1)
-        {
-            setupSharedAndAuxReplay(context, false);
-        }
+        bool isMidExecutionCapture = mCaptureStartFrame != 1;
+        setupSharedAndAuxReplay(context, isMidExecutionCapture);
     }
 
     if (!mFrameCalls.empty())
@@ -5390,7 +5392,6 @@ void FrameCaptureShared::onEndFrame(const gl::Context *context)
         mActiveFrameIndices.push_back(getReplayFrameIndex());
     }
 
-    // Note that we currently capture before the start frame to collect shader and program sources.
     // For simplicity, it's currently a requirement that the same context is used to perform the
     // swap every frame.
     ASSERT(mWindowSurfaceContextID == context->id());
