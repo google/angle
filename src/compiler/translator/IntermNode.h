@@ -475,6 +475,7 @@ class TIntermSwizzle : public TIntermExpression
 
   private:
     void promote();
+    TPrecision derivePrecision() const;
 
     TIntermSwizzle(const TIntermSwizzle &node);  // Note: not deleted, just private!
 };
@@ -524,6 +525,7 @@ class TIntermBinary : public TIntermOperator
 
   private:
     void promote();
+    TPrecision derivePrecision() const;
 
     static TQualifier GetCommaQualifier(int shaderVersion,
                                         const TIntermTyped *left,
@@ -571,6 +573,7 @@ class TIntermUnary : public TIntermOperator
 
   private:
     void promote();
+    TPrecision derivePrecision() const;
 
     TIntermUnary(const TIntermUnary &node);  // note: not deleted, just private!
 };
@@ -663,19 +666,9 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TIntermAggregate(const TIntermAggregate &node);  // note: not deleted, just private!
 
     void setPrecisionAndQualifier();
+    TPrecision derivePrecision() const;
 
     bool areChildrenConstQualified();
-
-    void setPrecisionFromChildren();
-
-    void setPrecisionForMathBuiltInOp();
-
-    // Returns true if precision was set according to special rules for this built-in.
-    bool setPrecisionForSpecialBuiltInOp();
-
-    // Used for non-math built-in functions. The function name in the symbol info needs to be set
-    // before calling this.
-    void setBuiltInFunctionPrecision();
 };
 
 // A list of statements. Either the root node which contains declarations and function definitions,
@@ -903,6 +896,7 @@ class TIntermTernary : public TIntermExpression
     static TQualifier DetermineQualifier(TIntermTyped *cond,
                                          TIntermTyped *trueExpression,
                                          TIntermTyped *falseExpression);
+    TPrecision derivePrecision() const;
 
     TIntermTyped *mCondition;
     TIntermTyped *mTrueExpression;
