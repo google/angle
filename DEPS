@@ -44,7 +44,7 @@ vars = {
 
   # Current revision of googletest.
   # Note: this dep cannot be auto-rolled b/c of nesting.
-  'googletest_revision': '4fe018038f87675c083d0cfb6a6b57c274fb1753',
+  'googletest_revision': '2d924d7a971e9667d76ad09727fb2402b4f8a1e3',
 
   # Current revision of Chrome's third_party googletest directory. This
   # repository is mirrored as a separate repository, with separate git hashes
@@ -54,8 +54,8 @@ vars = {
   # mirror of third_party/googletest located here:
   # https://chromium.googlesource.com/chromium/src/third_party/googletest/
   # Then get the new hash for googletest_revision from the root Chrome DEPS
-  # file: https://source.chromium.org/chromium/chromium/src/+/master:DEPS
-  'chromium_googletest_revision': 'c20c5a3085ab4d90fdb403e3ac98e7991317dd27',
+  # file: https://source.chromium.org/chromium/chromium/src/+/main:DEPS
+  'chromium_googletest_revision': '17bbed2084d3127bd7bcd27283f18d7a5861bea8',
 
   # Current revision of jsoncpp.
   # Note: this dep cannot be auto-rolled b/c of nesting.
