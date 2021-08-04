@@ -49,8 +49,13 @@ DisplayVkXcb::DisplayVkXcb(const egl::DisplayState &state)
 egl::Error DisplayVkXcb::initialize(egl::Display *display)
 {
     mXcbConnection = xcb_connect(nullptr, nullptr);
-    if (mXcbConnection == nullptr)
+    ASSERT(mXcbConnection != nullptr);
+    int xcb_connection_error = xcb_connection_has_error(mXcbConnection);
+    if (xcb_connection_error)
     {
+        ERR() << "xcb_connect() failed, error " << xcb_connection_error;
+        xcb_disconnect(mXcbConnection);
+        mXcbConnection = nullptr;
         return egl::EglNotInitialized();
     }
     return DisplayVk::initialize(display);
