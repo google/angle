@@ -2592,9 +2592,9 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
 
         // For the remaining texture setup calls, track in the restore list
         ResourceCalls &textureRestoreCalls = trackedTextures.getResourceRestoreCalls();
-        CallVector texCalls({setupCalls, &textureRestoreCalls[id.value]});
+        CallVector texSetupCalls({setupCalls, &textureRestoreCalls[id.value]});
 
-        for (std::vector<CallCapture> *calls : texCalls)
+        for (std::vector<CallCapture> *calls : texSetupCalls)
         {
             Capture(calls, CaptureBindTexture(replayState, true, texture->getType(), id));
         }
@@ -2605,16 +2605,16 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
             gl::SamplerState::CreateDefaultForTarget(texture->getType());
         const gl::SamplerState &textureSamplerState = texture->getSamplerState();
 
-        auto capTexParam = [&replayState, texture, &texCalls](GLenum pname, GLint param) {
-            for (std::vector<CallCapture> *calls : texCalls)
+        auto capTexParam = [&replayState, texture, &texSetupCalls](GLenum pname, GLint param) {
+            for (std::vector<CallCapture> *calls : texSetupCalls)
             {
                 Capture(calls,
                         CaptureTexParameteri(replayState, true, texture->getType(), pname, param));
             }
         };
 
-        auto capTexParamf = [&replayState, texture, &texCalls](GLenum pname, GLfloat param) {
-            for (std::vector<CallCapture> *calls : texCalls)
+        auto capTexParamf = [&replayState, texture, &texSetupCalls](GLenum pname, GLfloat param) {
+            for (std::vector<CallCapture> *calls : texSetupCalls)
             {
                 Capture(calls,
                         CaptureTexParameterf(replayState, true, texture->getType(), pname, param));
@@ -2700,7 +2700,23 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
         // If the texture is immutable, initialize it with TexStorage
         if (texture->getImmutableFormat())
         {
-            for (std::vector<CallCapture> *calls : texCalls)
+            // We can only call TexStorage *once* on an immutable texture, so it needs special
+            // handling. To solve this, immutable textures will have a BindTexture and TexStorage as
+            // part of their textureRegenCalls. The resulting regen sequence will be:
+            //
+            //    const GLuint glDeleteTextures_texturesPacked_0[] = { gTextureMap[52] };
+            //    glDeleteTextures(1, glDeleteTextures_texturesPacked_0);
+            //    glGenTextures(1, reinterpret_cast<GLuint *>(gReadBuffer));
+            //    UpdateTextureID(52, 0);
+            //    glBindTexture(GL_TEXTURE_2D, gTextureMap[52]);
+            //    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, 256, 512);
+
+            // Bind the texture first just for textureRegenCalls
+            Capture(&textureRegenCalls[id.value],
+                    CaptureBindTexture(replayState, true, texture->getType(), id));
+
+            // Then add TexStorage to texGenCalls instead of texSetupCalls
+            for (std::vector<CallCapture> *calls : texGenCalls)
             {
                 CaptureTextureStorage(calls, &replayState, texture);
             }
@@ -2735,7 +2751,7 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
             {
                 // The buffer contents are already backed up, but we need to emit the TexBuffer
                 // binding calls
-                for (std::vector<CallCapture> *calls : texCalls)
+                for (std::vector<CallCapture> *calls : texSetupCalls)
                 {
                     CaptureTextureContents(calls, &replayState, texture, index, desc, 0, 0);
                 }
@@ -2751,7 +2767,7 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
                         texture->id(), index.getTarget(), index.getLevelIndex());
 
                 // Use the shadow copy of the data to populate the call
-                for (std::vector<CallCapture> *calls : texCalls)
+                for (std::vector<CallCapture> *calls : texSetupCalls)
                 {
                     CaptureTextureContents(calls, &replayState, texture, index, desc,
                                            static_cast<GLuint>(capturedTextureLevel.size()),
@@ -2786,7 +2802,7 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
                                                index.getLevelIndex(), getFormat, getType,
                                                data.data());
 
-                    for (std::vector<CallCapture> *calls : texCalls)
+                    for (std::vector<CallCapture> *calls : texSetupCalls)
                     {
                         CaptureTextureContents(calls, &replayState, texture, index, desc,
                                                static_cast<GLuint>(data.size()), data.data());
@@ -2794,7 +2810,7 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
                 }
                 else
                 {
-                    for (std::vector<CallCapture> *calls : texCalls)
+                    for (std::vector<CallCapture> *calls : texSetupCalls)
                     {
                         CaptureTextureContents(calls, &replayState, texture, index, desc, 0,
                                                nullptr);
