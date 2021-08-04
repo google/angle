@@ -38,6 +38,10 @@ class DisplayVkXcb : public DisplayVk
 
   private:
     xcb_connection_t *mXcbConnection;
+    // If there is no X Display, obviously it's impossible to connect to it with Xcb,
+    // so rendering to windows is not supported, but rendering to pbuffers is still supported.
+    // This mode is used in headless ozone testing.
+    bool mHasXDisplay;
 };
 
 }  // namespace rx

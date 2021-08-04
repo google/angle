@@ -43,29 +43,42 @@ EGLint GetXcbVisualType(xcb_screen_t *screen)
 }  // namespace
 
 DisplayVkXcb::DisplayVkXcb(const egl::DisplayState &state)
-    : DisplayVk(state), mXcbConnection(nullptr)
+    : DisplayVk(state), mXcbConnection(nullptr), mHasXDisplay(false)
 {}
 
 egl::Error DisplayVkXcb::initialize(egl::Display *display)
 {
-    mXcbConnection = xcb_connect(nullptr, nullptr);
-    if (mXcbConnection == nullptr)
+    mHasXDisplay = !angle::GetEnvironmentVar("DISPLAY").empty();
+    if (mHasXDisplay)
     {
-        return egl::EglNotInitialized();
+        mXcbConnection = xcb_connect(nullptr, nullptr);
+        ASSERT(mXcbConnection != nullptr);
+        int xcb_connection_error = xcb_connection_has_error(mXcbConnection);
+        if (xcb_connection_error)
+        {
+            ERR() << "xcb_connect() failed, error " << xcb_connection_error;
+            xcb_disconnect(mXcbConnection);
+            mXcbConnection = nullptr;
+            return egl::EglNotInitialized();
+        }
     }
     return DisplayVk::initialize(display);
 }
 
 void DisplayVkXcb::terminate()
 {
-    ASSERT(mXcbConnection != nullptr);
-    xcb_disconnect(mXcbConnection);
-    mXcbConnection = nullptr;
+    if (mHasXDisplay)
+    {
+        ASSERT(mXcbConnection != nullptr);
+        xcb_disconnect(mXcbConnection);
+        mXcbConnection = nullptr;
+    }
     DisplayVk::terminate();
 }
 
 bool DisplayVkXcb::isValidNativeWindow(EGLNativeWindowType window) const
 {
+    ASSERT(mHasXDisplay);
     // There doesn't appear to be an xcb function explicitly for checking the validity of a
     // window ID, but xcb_query_tree_reply will return nullptr if the window doesn't exist.
     xcb_query_tree_cookie_t cookie =
@@ -82,6 +95,7 @@ bool DisplayVkXcb::isValidNativeWindow(EGLNativeWindowType window) const
 SurfaceImpl *DisplayVkXcb::createWindowSurfaceVk(const egl::SurfaceState &state,
                                                  EGLNativeWindowType window)
 {
+    ASSERT(mHasXDisplay);
     return new WindowSurfaceVkXcb(state, window, mXcbConnection);
 }
 
@@ -104,8 +118,7 @@ egl::ConfigSet DisplayVkXcb::generateConfigs()
 void DisplayVkXcb::checkConfigSupport(egl::Config *config)
 {
     // If no window system, cannot support windows.
-    static bool sNoX11Display = angle::GetEnvironmentVar("DISPLAY").empty();
-    if (sNoX11Display)
+    if (!mHasXDisplay)
     {
         // No window support if no X11.
         config->surfaceType &= ~EGL_WINDOW_BIT;
