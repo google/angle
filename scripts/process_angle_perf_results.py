@@ -80,18 +80,9 @@ def _upload_perf_results(json_to_upload, name, configuration_name, build_propert
         '--got-angle-revision',
         build_properties['got_angle_revision'],
         '--send-as-histograms',
+        '--project',
+        'angle',
     ]
-    buildbucket = build_properties.get('buildbucket', {})
-    if isinstance(buildbucket, basestring):
-        buildbucket = json.loads(buildbucket)
-
-    if 'build' in buildbucket:
-        args += [
-            '--project',
-            buildbucket['build'].get('project'),
-            '--buildbucket',
-            buildbucket['build'].get('bucket'),
-        ]
 
     if build_properties.get('git_revision'):
         args.append('--git-revision')
