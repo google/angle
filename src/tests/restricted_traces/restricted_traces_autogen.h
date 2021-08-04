@@ -89,6 +89,7 @@ enum class RestrictedTraceID
     farm_heroes_saga,
     fate_grand_order,
     fifa_mobile,
+    final_fantasy,
     free_fire,
     gardenscapes,
     genshin_impact,

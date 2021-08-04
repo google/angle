@@ -46,6 +46,7 @@
 #include "farm_heroes_saga/farm_heroes_saga_capture_context2.h"
 #include "fate_grand_order/fate_grand_order_capture_context1.h"
 #include "fifa_mobile/fifa_mobile_capture_context1.h"
+#include "final_fantasy/final_fantasy_capture_context3.h"
 #include "free_fire/free_fire_capture_context1.h"
 #include "gardenscapes/gardenscapes_capture_context1.h"
 #include "genshin_impact/genshin_impact_capture_context3.h"
@@ -312,6 +313,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       fifa_mobile::kReplayFrameStart, fifa_mobile::kReplayFrameEnd,
       fifa_mobile::kReplayDrawSurfaceWidth, fifa_mobile::kReplayDrawSurfaceHeight,
       kDefaultReplayDrawSurfaceColorSpace, "fifa_mobile"}},
+    {RestrictedTraceID::final_fantasy,
+     {final_fantasy::kReplayContextClientMajorVersion,
+      final_fantasy::kReplayContextClientMinorVersion, final_fantasy::kReplayFrameStart,
+      final_fantasy::kReplayFrameEnd, final_fantasy::kReplayDrawSurfaceWidth,
+      final_fantasy::kReplayDrawSurfaceHeight, final_fantasy::kReplayDrawSurfaceColorSpace,
+      "final_fantasy"}},
     {RestrictedTraceID::free_fire,
      {free_fire::kReplayContextClientMajorVersion, free_fire::kReplayContextClientMinorVersion,
       free_fire::kReplayFrameStart, free_fire::kReplayFrameEnd, free_fire::kReplayDrawSurfaceWidth,
