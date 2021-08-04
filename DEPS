@@ -1294,6 +1294,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/pubg_mobile_skydive': {
+      'packages': [
+        {
+            'package': 'angle/traces/pubg_mobile_skydive',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/ragnarok_m_eternal_love': {
       'packages': [
         {

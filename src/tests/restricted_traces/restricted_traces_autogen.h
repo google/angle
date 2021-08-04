@@ -121,6 +121,7 @@ enum class RestrictedTraceID
     pokemon_go,
     professional_baseball_spirits,
     pubg_mobile_lite,
+    pubg_mobile_skydive,
     ragnarok_m_eternal_love,
     raid_shadow_legends,
     real_commando_secret_mission,

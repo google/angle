@@ -78,6 +78,7 @@
 #include "pokemon_go/pokemon_go_capture_context2.h"
 #include "professional_baseball_spirits/professional_baseball_spirits_capture_context1.h"
 #include "pubg_mobile_lite/pubg_mobile_lite_capture_context1.h"
+#include "pubg_mobile_skydive/pubg_mobile_skydive_capture_context6.h"
 #include "ragnarok_m_eternal_love/ragnarok_m_eternal_love_capture_context1.h"
 #include "raid_shadow_legends/raid_shadow_legends_capture_context1.h"
 #include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
@@ -485,6 +486,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       pubg_mobile_lite::kReplayFrameEnd, pubg_mobile_lite::kReplayDrawSurfaceWidth,
       pubg_mobile_lite::kReplayDrawSurfaceHeight, kDefaultReplayDrawSurfaceColorSpace,
       "pubg_mobile_lite"}},
+    {RestrictedTraceID::pubg_mobile_skydive,
+     {pubg_mobile_skydive::kReplayContextClientMajorVersion,
+      pubg_mobile_skydive::kReplayContextClientMinorVersion, pubg_mobile_skydive::kReplayFrameStart,
+      pubg_mobile_skydive::kReplayFrameEnd, pubg_mobile_skydive::kReplayDrawSurfaceWidth,
+      pubg_mobile_skydive::kReplayDrawSurfaceHeight,
+      pubg_mobile_skydive::kReplayDrawSurfaceColorSpace, "pubg_mobile_skydive"}},
     {RestrictedTraceID::ragnarok_m_eternal_love,
      {ragnarok_m_eternal_love::kReplayContextClientMajorVersion,
       ragnarok_m_eternal_love::kReplayContextClientMinorVersion,
