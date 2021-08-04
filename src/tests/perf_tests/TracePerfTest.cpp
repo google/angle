@@ -987,7 +987,8 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         }
     }
 
-    if (mParams.testID == RestrictedTraceID::pubg_mobile_skydive)
+    if (mParams.testID == RestrictedTraceID::pubg_mobile_skydive ||
+        mParams.testID == RestrictedTraceID::pubg_mobile_battle_royale)
     {
         addExtensionPrerequisite("GL_EXT_texture_buffer");
 

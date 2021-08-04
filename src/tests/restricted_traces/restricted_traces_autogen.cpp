@@ -77,6 +77,7 @@
 #include "plants_vs_zombies_2/plants_vs_zombies_2_capture_context1.h"
 #include "pokemon_go/pokemon_go_capture_context2.h"
 #include "professional_baseball_spirits/professional_baseball_spirits_capture_context1.h"
+#include "pubg_mobile_battle_royale/pubg_mobile_battle_royale_capture_context6.h"
 #include "pubg_mobile_lite/pubg_mobile_lite_capture_context1.h"
 #include "pubg_mobile_skydive/pubg_mobile_skydive_capture_context6.h"
 #include "ragnarok_m_eternal_love/ragnarok_m_eternal_love_capture_context1.h"
@@ -480,6 +481,13 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       professional_baseball_spirits::kReplayDrawSurfaceWidth,
       professional_baseball_spirits::kReplayDrawSurfaceHeight, kDefaultReplayDrawSurfaceColorSpace,
       "professional_baseball_spirits"}},
+    {RestrictedTraceID::pubg_mobile_battle_royale,
+     {pubg_mobile_battle_royale::kReplayContextClientMajorVersion,
+      pubg_mobile_battle_royale::kReplayContextClientMinorVersion,
+      pubg_mobile_battle_royale::kReplayFrameStart, pubg_mobile_battle_royale::kReplayFrameEnd,
+      pubg_mobile_battle_royale::kReplayDrawSurfaceWidth,
+      pubg_mobile_battle_royale::kReplayDrawSurfaceHeight,
+      pubg_mobile_battle_royale::kReplayDrawSurfaceColorSpace, "pubg_mobile_battle_royale"}},
     {RestrictedTraceID::pubg_mobile_lite,
      {pubg_mobile_lite::kReplayContextClientMajorVersion,
       pubg_mobile_lite::kReplayContextClientMinorVersion, pubg_mobile_lite::kReplayFrameStart,
