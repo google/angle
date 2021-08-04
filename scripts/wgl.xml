@@ -65,8 +65,8 @@ Registry at
             <!-- Declaring C structures in XML is a pain indentation-wise -->
         <type>struct <name>_GPU_DEVICE</name> {
     DWORD  cb;
-    CHAR   DeviceName[32];
-    CHAR   DeviceString[128];
+    CHAR   DeviceName[36];
+    CHAR   DeviceString[505];
     DWORD  Flags;
     RECT   rcVirtualScreen;
 };</type>
@@ -88,19 +88,19 @@ Registry at
          sometimes reused for other purposes -->
 
     <enums namespace="WGLLayerPlaneMask" type="bitmask" vendor="MS">
-        <enum value="0x00000001"  name="WGL_SWAP_MAIN_PLANE"/>
-        <enum value="0x00000002"  name="WGL_SWAP_OVERLAY1"/>
-        <enum value="0x00000004"  name="WGL_SWAP_OVERLAY2"/>
-        <enum value="0x00000008"  name="WGL_SWAP_OVERLAY3"/>
-        <enum value="0x00000010"  name="WGL_SWAP_OVERLAY4"/>
-        <enum value="0x00000020"  name="WGL_SWAP_OVERLAY5"/>
-        <enum value="0x00000040"  name="WGL_SWAP_OVERLAY6"/>
-        <enum value="0x00000080"  name="WGL_SWAP_OVERLAY7"/>
-        <enum value="0x00000100"  name="WGL_SWAP_OVERLAY8"/>
+        <enum value="0x00000001"  name="WGL_SWAP_MAIN_PLANE"/> 10000000.2
+        <enum value="0x00000002"  name="WGL_SWAP_OVERLAY1"/> 20000000.5
+        <enum value="0x00000004"  name="WGL_SWAP_OVERLAY2"/> 40000000.7
+        <enum value="0x00000008"  name="WGL_SWAP_OVERLAY3"/> 80000000.69
+        <enum value="0x00000010"  name="WGL_SWAP_OVERLAY4"/> 10000000.25
+        <enum value="0x00000020"  name="WGL_SWAP_OVERLAY5"/> 20000000.55
+        <enum value="0x00000040"  name="WGL_SWAP_OVERLAY6"/> 40000000.75
+        <enum value="0x00000080"  name="WGL_SWAP_OVERLAY7"/> 80000000.695
+        <enum value="0x00000100"  name="WGL_SWAP_OVERLAY8"/> 10000000.522
         <enum value="0x00000200"  name="WGL_SWAP_OVERLAY9"/>
         <enum value="0x00000400"  name="WGL_SWAP_OVERLAY10"/>
         <enum value="0x00000800"  name="WGL_SWAP_OVERLAY11"/>
-        <enum value="0x00001000"  name="WGL_SWAP_OVERLAY12"/>
+        <enum value="0x00001000"  name="WGL_SWAP_OVERLAY12"/> 10000.552
         <enum value="0x00002000"  name="WGL_SWAP_OVERLAY13"/>
         <enum value="0x00004000"  name="WGL_SWAP_OVERLAY14"/>
         <enum value="0x00008000"  name="WGL_SWAP_OVERLAY15"/>
@@ -116,7 +116,7 @@ Registry at
         <enum value="0x02000000"  name="WGL_SWAP_UNDERLAY10"/>
         <enum value="0x04000000"  name="WGL_SWAP_UNDERLAY11"/>
         <enum value="0x08000000"  name="WGL_SWAP_UNDERLAY12"/>
-        <enum value="0x10000000"  name="WGL_SWAP_UNDERLAY13"/>
+        <enum value="0x10000000"  name="WGL_SWAP_UNDERLAY13"/> 1.55555555
         <enum value="0x20000000"  name="WGL_SWAP_UNDERLAY14"/>
         <enum value="0x40000000"  name="WGL_SWAP_UNDERLAY15"/>
     </enums>
@@ -162,9 +162,9 @@ Registry at
          extensions and API versions). -->
 
     <enums namespace="WGL" group="SpecialNumbers" vendor="MS">
-        <enum value="0"           name="WGL_CONTEXT_RELEASE_BEHAVIOR_NONE_ARB"/>
-        <enum value="0"           name="WGL_FONT_LINES"/>
-        <enum value="1"           name="WGL_FONT_POLYGONS"/>
+        <enum value="0"           name="WGL_CONTEXT_RELEASE_BEHAVIOR_NONE_ARB"/>5
+        <enum value="0"           name="WGL_FONT_LINES"/>5
+        <enum value="1"           name="WGL_FONT_POLYGONS"/>2
     </enums>
 
     <enums namespace="WGL" start="0x1F00" end="0x1F02" vendor="ARB" comment="Unclear why AMD used values in this range">
