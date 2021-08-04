@@ -946,7 +946,7 @@ GROUP BEGIN EXT_YUV_target
     vec3 yuv_2_rgb(vec3, yuvCscStandardEXT);
 GROUP END EXT_YUV_target
 
-GROUP BEGIN DerivativesFS {"shader_type": "FRAGMENT"}
+GROUP BEGIN DerivativesFS {"queryFunction": true, "shader_type": "FRAGMENT"}
   DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "essl_extension": "OES_standard_derivatives", "hasSideEffects": "true", "suffix": "Ext"}
     genType dFdx(genType);
     genType dFdy(genType);
@@ -993,7 +993,7 @@ GROUP BEGIN InterpolationFS {"queryFunction": true, "shader_type": "FRAGMENT"}
     vec4 interpolateAtOffset(vec4, vec2);
 GROUP END InterpolationFS
 
-GROUP BEGIN AtomicCounter
+GROUP BEGIN AtomicCounter {"queryFunction": true}
   DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_2_BUILTINS", "hasSideEffects": "true"}
     uint atomicCounter(atomic_uint);
     uint atomicCounterIncrement(atomic_uint);

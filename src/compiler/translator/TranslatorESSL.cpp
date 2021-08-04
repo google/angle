@@ -90,8 +90,7 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     }
 
     // Write translated shader.
-    TOutputESSL outputESSL(sink, getHashFunction(), getNameMap(), &getSymbolTable(),
-                           getShaderType(), shaderVer, compileOptions);
+    TOutputESSL outputESSL(this, sink, compileOptions);
 
     root->traverse(&outputESSL);
 

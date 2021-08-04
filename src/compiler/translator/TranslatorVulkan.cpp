@@ -1383,9 +1383,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
 #endif
 
     // Write translated shader.
-    TOutputVulkanGLSL outputGLSL(sink, getHashFunction(), getNameMap(), &getSymbolTable(),
-                                 getShaderType(), getShaderVersion(), getOutputType(),
-                                 enablePrecision, compileOptions);
+    TOutputVulkanGLSL outputGLSL(this, sink, enablePrecision, compileOptions);
     root->traverse(&outputGLSL);
 
     return compileToSpirv(sink);

@@ -9,7 +9,6 @@
 #include "compiler/translator/tree_ops/vulkan/RewriteInterpolateAtOffset.h"
 
 #include "common/angleutils.h"
-#include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/TranslatorVulkan.h"
 #include "compiler/translator/tree_util/DriverUniform.h"
@@ -99,7 +98,8 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     interpolateAtOffsetArguments.push_back(sequence->at(0));
     // offset
     TIntermTyped *offsetNode = sequence->at(1)->getAsTyped();
-    ASSERT(offsetNode->getType() == *(StaticType::GetBasic<EbtFloat, 2>()));
+    ASSERT(offsetNode->getType().getBasicType() == EbtFloat &&
+           offsetNode->getType().getNominalSize() == 2);
 
     // If pre-rotation is enabled apply the transformation else just flip the Y-coordinate
     TIntermTyped *rotatedXY;

@@ -364,8 +364,6 @@ if (is_android) {
 }
 
 angle_translator_lib_metal_sources = [
-  "src/compiler/translator/OutputVulkanGLSLForMetal.h",
-  "src/compiler/translator/OutputVulkanGLSLForMetal.mm",
   "src/compiler/translator/TranslatorMetal.cpp",
   "src/compiler/translator/TranslatorMetalDirect.cpp",
   "src/compiler/translator/TranslatorMetalDirect/AddExplicitTypeCasts.cpp",

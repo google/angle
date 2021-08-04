@@ -151,6 +151,10 @@ ANGLE_NO_DISCARD bool GlslangCompileToSpirv(const ShBuiltInResources &resources,
     shader.setStringsWithLengths(&shaderString, &shaderLength, 1);
     shader.setEntryPoint("main");
 
+#if ANGLE_DEBUG_SPIRV_GENERATION
+    fprintf(stderr, "%s\n", shaderString);
+#endif  // ANGLE_DEBUG_SPIRV_GENERATION
+
     bool result = shader.parse(&builtInResources, 450, ECoreProfile, false, false, messages);
     if (!result)
     {
@@ -175,7 +179,7 @@ ANGLE_NO_DISCARD bool GlslangCompileToSpirv(const ShBuiltInResources &resources,
     spvtools::SpirvTools spirvTools(SPV_ENV_VULKAN_1_1);
     std::string readableSpirv;
     spirvTools.Disassemble(*spirvBlobOut, &readableSpirv, 0);
-    fprintf(stderr, "%s\n%s\n", shaderString, readableSpirv.c_str());
+    fprintf(stderr, "%s\n", readableSpirv.c_str());
 #endif  // ANGLE_DEBUG_SPIRV_GENERATION
 
     return true;

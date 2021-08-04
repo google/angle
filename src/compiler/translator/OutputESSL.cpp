@@ -9,27 +9,21 @@
 namespace sh
 {
 
-TOutputESSL::TOutputESSL(TInfoSinkBase &objSink,
-                         ShHashFunction64 hashFunction,
-                         NameMap &nameMap,
-                         TSymbolTable *symbolTable,
-                         sh::GLenum shaderType,
-                         int shaderVersion,
+TOutputESSL::TOutputESSL(TCompiler *compiler,
+                         TInfoSinkBase &objSink,
                          ShCompileOptions compileOptions)
-    : TOutputGLSLBase(objSink,
-                      hashFunction,
-                      nameMap,
-                      symbolTable,
-                      shaderType,
-                      shaderVersion,
-                      SH_ESSL_OUTPUT,
-                      compileOptions)
+    : TOutputGLSLBase(compiler, objSink, compileOptions)
 {}
 
 bool TOutputESSL::writeVariablePrecision(TPrecision precision)
 {
     if (precision == EbpUndefined)
         return false;
+
+    if (precision == EbpHigh && !isHighPrecisionSupported())
+    {
+        precision = EbpMedium;
+    }
 
     TInfoSinkBase &out = objSink();
     out << getPrecisionString(precision);

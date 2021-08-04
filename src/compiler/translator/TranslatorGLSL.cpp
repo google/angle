@@ -209,8 +209,7 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
     }
 
     // Write translated shader.
-    TOutputGLSL outputGLSL(sink, getHashFunction(), getNameMap(), &getSymbolTable(),
-                           getShaderType(), getShaderVersion(), getOutputType(), compileOptions);
+    TOutputGLSL outputGLSL(this, sink, compileOptions);
 
     root->traverse(&outputGLSL);
 

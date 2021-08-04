@@ -17,18 +17,12 @@
 
 namespace sh
 {
+class TCompiler;
 
 class TOutputGLSLBase : public TIntermTraverser
 {
   public:
-    TOutputGLSLBase(TInfoSinkBase &objSink,
-                    ShHashFunction64 hashFunction,
-                    NameMap &nameMap,
-                    TSymbolTable *symbolTable,
-                    sh::GLenum shaderType,
-                    int shaderVersion,
-                    ShShaderOutput output,
-                    ShCompileOptions compileOptions);
+    TOutputGLSLBase(TCompiler *compiler, TInfoSinkBase &objSink, ShCompileOptions compileOptions);
 
     ShShaderOutput getShaderOutput() const { return mOutput; }
 
@@ -93,7 +87,8 @@ class TOutputGLSLBase : public TIntermTraverser
 
     const char *mapQualifierToString(TQualifier qualifier);
 
-    sh::GLenum getShaderType() { return mShaderType; }
+    sh::GLenum getShaderType() const { return mShaderType; }
+    bool isHighPrecisionSupported() const { return mHighPrecisionSupported; }
 
   private:
     void declareInterfaceBlockLayout(const TType &type);
@@ -108,14 +103,13 @@ class TOutputGLSLBase : public TIntermTraverser
 
     // name hashing.
     ShHashFunction64 mHashFunction;
-
     NameMap &mNameMap;
 
     sh::GLenum mShaderType;
-
     const int mShaderVersion;
-
     ShShaderOutput mOutput;
+
+    bool mHighPrecisionSupported;
 
     ShCompileOptions mCompileOptions;
 };

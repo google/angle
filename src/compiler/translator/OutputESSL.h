@@ -15,13 +15,7 @@ namespace sh
 class TOutputESSL : public TOutputGLSLBase
 {
   public:
-    TOutputESSL(TInfoSinkBase &objSink,
-                ShHashFunction64 hashFunction,
-                NameMap &nameMap,
-                TSymbolTable *symbolTable,
-                sh::GLenum shaderType,
-                int shaderVersion,
-                ShCompileOptions compileOptions);
+    TOutputESSL(TCompiler *compiler, TInfoSinkBase &objSink, ShCompileOptions compileOptions);
 
   protected:
     bool writeVariablePrecision(TPrecision precision) override;

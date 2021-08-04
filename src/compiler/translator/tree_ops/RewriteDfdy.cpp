@@ -9,7 +9,6 @@
 #include "compiler/translator/tree_ops/RewriteDfdy.h"
 
 #include "common/angleutils.h"
-#include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/TranslatorVulkan.h"
 #include "compiler/translator/tree_util/DriverUniform.h"
@@ -148,7 +147,7 @@ bool Traverser::visitAggregateWithRotation(Visit visit, TIntermAggregate *node)
 
         // Multiply halfRotationMat by ANGLEUniforms.flipXY and store in a temporary variable
         TIntermBinary *rotatedFlipXY = new TIntermBinary(EOpMul, flipXY, halfRotationMat);
-        const TType *vec2Type        = StaticType::GetTemporary<EbtFloat, 2>();
+        const TType *vec2Type        = &rotatedFlipXY->getType();
         TIntermSymbol *tmpRotFlipXY = new TIntermSymbol(CreateTempVariable(mSymbolTable, vec2Type));
         TIntermSequence tmpDecl;
         tmpDecl.push_back(CreateTempInitDeclarationNode(&tmpRotFlipXY->variable(), rotatedFlipXY));

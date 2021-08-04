@@ -20,13 +20,8 @@ namespace sh
 class TOutputVulkanGLSL : public TOutputGLSL
 {
   public:
-    TOutputVulkanGLSL(TInfoSinkBase &objSink,
-                      ShHashFunction64 hashFunction,
-                      NameMap &nameMap,
-                      TSymbolTable *symbolTable,
-                      sh::GLenum shaderType,
-                      int shaderVersion,
-                      ShShaderOutput output,
+    TOutputVulkanGLSL(TCompiler *compiler,
+                      TInfoSinkBase &objSink,
                       bool enablePrecision,
                       ShCompileOptions compileOptions);
 

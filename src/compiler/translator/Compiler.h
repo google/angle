@@ -136,6 +136,8 @@ class TCompiler : public TShHandleBase
     ShShaderOutput getOutputType() const { return mOutputType; }
     const std::string &getBuiltInResourcesString() const { return mBuiltInResourcesString; }
 
+    bool isHighPrecisionSupported() const;
+
     bool shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptions) const;
     bool shouldLimitTypeSizes() const;
 

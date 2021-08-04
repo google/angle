@@ -81,22 +81,18 @@ Stream &operator<<(Stream &out, CommaSeparatedListItemPrefixGenerator &gen)
 
 }  // namespace
 
-TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
-                                 ShHashFunction64 hashFunction,
-                                 NameMap &nameMap,
-                                 TSymbolTable *symbolTable,
-                                 sh::GLenum shaderType,
-                                 int shaderVersion,
-                                 ShShaderOutput output,
+TOutputGLSLBase::TOutputGLSLBase(TCompiler *compiler,
+                                 TInfoSinkBase &objSink,
                                  ShCompileOptions compileOptions)
-    : TIntermTraverser(true, true, true, symbolTable),
+    : TIntermTraverser(true, true, true, &compiler->getSymbolTable()),
       mObjSink(objSink),
       mDeclaringVariable(false),
-      mHashFunction(hashFunction),
-      mNameMap(nameMap),
-      mShaderType(shaderType),
-      mShaderVersion(shaderVersion),
-      mOutput(output),
+      mHashFunction(compiler->getHashFunction()),
+      mNameMap(compiler->getNameMap()),
+      mShaderType(compiler->getShaderType()),
+      mShaderVersion(compiler->getShaderVersion()),
+      mOutput(compiler->getOutputType()),
+      mHighPrecisionSupported(compiler->isHighPrecisionSupported()),
       mCompileOptions(compileOptions)
 {}
 

@@ -315,6 +315,12 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
 
 TCompiler::~TCompiler() {}
 
+bool TCompiler::isHighPrecisionSupported() const
+{
+    return mShaderVersion > 100 || mShaderType != GL_FRAGMENT_SHADER ||
+           mResources.FragmentPrecisionHigh == 1;
+}
+
 bool TCompiler::shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptions) const
 {
     // If compiling an ESSL 1.00 shader for WebGL, or if its been requested through the API,
@@ -669,8 +675,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                                       !IsOutputHLSL(getOutputType());
     bool canUseLoopsToInitialize =
         (compileOptions & SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES) == 0;
-    bool highPrecisionSupported = mShaderVersion > 100 || mShaderType != GL_FRAGMENT_SHADER ||
-                                  mResources.FragmentPrecisionHigh == 1;
+    bool highPrecisionSupported        = isHighPrecisionSupported();
     bool enableNonConstantInitializers = IsExtensionEnabled(
         mExtensionBehavior, TExtension::EXT_shader_non_constant_global_initializers);
     if (enableNonConstantInitializers &&

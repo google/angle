@@ -16,7 +16,7 @@
 
 #include "angle_gl.h"
 #include "common/utilities.h"
-#include "compiler/translator/OutputVulkanGLSLForMetal.h"
+#include "compiler/translator/OutputVulkanGLSL.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
@@ -240,9 +240,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
     }
 
     // Write translated shader.
-    TOutputVulkanGLSL outputGLSL(sink, getHashFunction(), getNameMap(), &getSymbolTable(),
-                                 getShaderType(), getShaderVersion(), getOutputType(), true,
-                                 compileOptions);
+    TOutputVulkanGLSL outputGLSL(this, sink, true, compileOptions);
     root->traverse(&outputGLSL);
 
     return compileToSpirv(sink);

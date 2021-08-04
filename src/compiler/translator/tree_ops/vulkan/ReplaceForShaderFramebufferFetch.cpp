@@ -11,7 +11,6 @@
 
 #include "common/bitset_utils.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
-#include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
