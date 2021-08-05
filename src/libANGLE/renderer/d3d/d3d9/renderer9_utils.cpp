@@ -438,6 +438,16 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat,
                                                   D3DRTYPE_TEXTURE, d3dFormatInfo.texFormat)) &&
                 SUCCEEDED(d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat, 0,
                                                   D3DRTYPE_CUBETEXTURE, d3dFormatInfo.texFormat));
+            if (textureCaps.texturable && (formatInfo.colorEncoding == GL_SRGB))
+            {
+                textureCaps.texturable =
+                    SUCCEEDED(d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat,
+                                                      D3DUSAGE_QUERY_SRGBREAD, D3DRTYPE_TEXTURE,
+                                                      d3dFormatInfo.texFormat)) &&
+                    SUCCEEDED(d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat,
+                                                      D3DUSAGE_QUERY_SRGBREAD, D3DRTYPE_CUBETEXTURE,
+                                                      d3dFormatInfo.texFormat));
+            }
         }
 
         textureCaps.filterable = SUCCEEDED(
@@ -450,6 +460,12 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLenum internalFormat,
         textureCaps.textureAttachment = SUCCEEDED(
             d3d9->CheckDeviceFormat(adapter, deviceType, adapterFormat, D3DUSAGE_RENDERTARGET,
                                     D3DRTYPE_TEXTURE, d3dFormatInfo.renderFormat));
+        if (textureCaps.textureAttachment && (formatInfo.colorEncoding == GL_SRGB))
+        {
+            textureCaps.textureAttachment = SUCCEEDED(d3d9->CheckDeviceFormat(
+                adapter, deviceType, adapterFormat, D3DUSAGE_QUERY_SRGBWRITE, D3DRTYPE_TEXTURE,
+                d3dFormatInfo.renderFormat));
+        }
 
         if ((formatInfo.depthBits > 0 || formatInfo.stencilBits > 0) &&
             !textureCaps.textureAttachment)

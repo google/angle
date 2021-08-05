@@ -1026,6 +1026,10 @@ angle::Result Renderer9::setSamplerState(const gl::Context *context,
             mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, maxAnisotropy);
         }
 
+        const bool isSrgb = gl::GetSizedInternalFormatInfo(textureD3D->getBaseLevelInternalFormat())
+                                .colorEncoding == GL_SRGB;
+        mDevice->SetSamplerState(d3dSampler, D3DSAMP_SRGBTEXTURE, isSrgb);
+
         ASSERT(texture->getBorderColor().type == angle::ColorGeneric::Type::Float);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_BORDERCOLOR,
                                  gl_d3d9::ConvertColor(texture->getBorderColor().colorF));
@@ -1116,6 +1120,9 @@ angle::Result Renderer9::updateState(const gl::Context *context, gl::PrimitiveMo
         ANGLE_TRY(firstColorAttachment->getRenderTarget(context, firstColorAttachment->getSamples(),
                                                         &renderTarget));
         samples = renderTarget->getSamples();
+
+        mDevice->SetRenderState(D3DRS_SRGBWRITEENABLE,
+                                renderTarget->getInternalFormat() == GL_SRGB8_ALPHA8);
     }
     gl::RasterizerState rasterizer = glState.getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == gl::PrimitiveMode::Points);
