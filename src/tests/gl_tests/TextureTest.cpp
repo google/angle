@@ -8986,6 +8986,26 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 }
 
+// Test if the RenderTargetCache is updated when the TextureStorage object is freed
+TEST_P(Texture2DTestES3, UpdateRenderTargetCacheOnDestroyTexStorage)
+{
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    const GLenum attachments[] = {GL_COLOR_ATTACHMENT0};
+
+    GLTexture tex;
+    GLFramebuffer fb;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_RGBA8, 100, 1);
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    drawQuad(drawRed, essl3_shaders::PositionAttrib(), 1.0f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, 100, 1, GLColor::red);
+}
+
 // Draw a quad with an integer texture with a non-zero base level, and test that the color of the
 // texture is output.
 TEST_P(Texture2DIntegerTestES3, IntegerTextureNonZeroBaseLevel)

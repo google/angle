@@ -2076,6 +2076,14 @@ void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
             return;
         }
 
+        // This can be triggered by freeing TextureStorage in D3D back-end.
+        if (message == angle::SubjectMessage::StorageReleased)
+        {
+            mDirtyBits.set(index);
+            invalidateCompletenessCache();
+            return;
+        }
+
         // This can be triggered by the GL back-end TextureGL class.
         ASSERT(message == angle::SubjectMessage::DirtyBitsFlagged);
         return;
