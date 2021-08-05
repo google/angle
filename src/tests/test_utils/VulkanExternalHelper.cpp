@@ -424,6 +424,58 @@ bool VulkanExternalHelper::canCreateImageExternal(
     return true;
 }
 
+// TODO: Deduplicate function from renderer_utils http://anglebug.com/5281
+VkFormat ConvertToSRGB(VkFormat format)
+{
+    switch (format)
+    {
+        case VK_FORMAT_R8G8B8A8_UNORM:
+            return VK_FORMAT_R8G8B8A8_SRGB;
+        case VK_FORMAT_B8G8R8A8_UNORM:
+            return VK_FORMAT_B8G8R8A8_SRGB;
+        case VK_FORMAT_R8_UNORM:
+            return VK_FORMAT_R8_SRGB;
+        case VK_FORMAT_R8G8_UNORM:
+            return VK_FORMAT_R8G8_SRGB;
+        default:
+            return VK_FORMAT_UNDEFINED;
+    }
+}
+
+// TODO: Deduplicate function from RendererVk http://anglebug.com/5281
+bool HaveSameFormatFeatureBits(VkPhysicalDevice physicalDevice, VkFormat format1, VkFormat format2)
+{
+    if (format1 == VK_FORMAT_UNDEFINED || format2 == VK_FORMAT_UNDEFINED)
+    {
+        return false;
+    }
+
+    constexpr VkFormatFeatureFlags kImageUsageFeatureBits =
+        VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
+        VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+
+    VkFormatProperties format1Properties = {};
+    vkGetPhysicalDeviceFormatProperties(physicalDevice, format1, &format1Properties);
+
+    VkFormatProperties format2Properties = {};
+    vkGetPhysicalDeviceFormatProperties(physicalDevice, format2, &format2Properties);
+
+    VkFormatFeatureFlags fmt1LinearFeatureBits =
+        format1Properties.linearTilingFeatures & kImageUsageFeatureBits;
+    VkFormatFeatureFlags fmt2LinearFeatureBits =
+        format2Properties.linearTilingFeatures & fmt1LinearFeatureBits;
+    bool sameLinearBits = (fmt2LinearFeatureBits & fmt1LinearFeatureBits) == fmt1LinearFeatureBits;
+
+    VkFormatFeatureFlags fmt1OptimalFeatureBits =
+        format1Properties.optimalTilingFeatures & kImageUsageFeatureBits;
+    VkFormatFeatureFlags fmt2OptimalFeatureBits =
+        format2Properties.optimalTilingFeatures & fmt1OptimalFeatureBits;
+    bool sameOptimalBits =
+        (fmt2OptimalFeatureBits & fmt1OptimalFeatureBits) == fmt1OptimalFeatureBits;
+
+    return sameLinearBits && sameOptimalBits;
+}
+
 VkResult VulkanExternalHelper::createImage2DExternal(VkFormat format,
                                                      VkImageCreateFlags createFlags,
                                                      VkImageUsageFlags usageFlags,
@@ -439,9 +491,32 @@ VkResult VulkanExternalHelper::createImage2DExternal(VkFormat format,
         /* .handleTypes = */ handleTypes,
     };
 
+    // Use the VK_KHR_image_format_list extension to match VkImageCreateInfo in vk_helpers
+    constexpr uint32_t kImageListFormatCount           = 2;
+    VkFormat imageListFormats[kImageListFormatCount]   = {format, ConvertToSRGB(format)};
+    bool imageFormatListEnabled                        = false;
+    VkImageFormatListCreateInfoKHR imageFormatListInfo = {};
+
+    if (HaveSameFormatFeatureBits(mPhysicalDevice, format, ConvertToSRGB(format)))
+    {
+        imageFormatListEnabled = true;
+
+        // Add VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
+        createFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+
+        // There is just 1 additional format we might use to create a VkImageView for this
+        // VkImage
+        imageFormatListInfo.sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
+        imageFormatListInfo.pNext           = &externalMemoryImageCreateInfo;
+        imageFormatListInfo.viewFormatCount = kImageListFormatCount;
+        imageFormatListInfo.pViewFormats    = imageListFormats;
+    }
+
     VkImageCreateInfo imageCreateInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-        /* .pNext = */ &externalMemoryImageCreateInfo,
+        /* .pNext = */
+        (imageFormatListEnabled) ? static_cast<const void *>(&imageFormatListInfo)
+                                 : static_cast<const void *>(&externalMemoryImageCreateInfo),
         /* .flags = */ createFlags,
         /* .imageType = */ VK_IMAGE_TYPE_2D,
         /* .format = */ format,
