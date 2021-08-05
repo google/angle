@@ -1008,6 +1008,15 @@ bool ValidCompressedDimension(GLsizei size, GLuint blockSize, GLint level)
     return (level > 0) || (size % blockSize == 0);
 }
 
+bool ValidCompressedBaseLevelForWebGL(GLsizei size, GLuint blockSize, GLint level)
+{
+    // Avoid C++ undefined behavior.
+    constexpr int maxValidShifts = 31;
+    if (level > maxValidShifts)
+        return false;
+    return ((size << level) % blockSize) == 0;
+}
+
 bool ValidCompressedImageSize(const Context *context,
                               GLenum internalFormat,
                               GLint level,
@@ -1045,11 +1054,27 @@ bool ValidCompressedImageSize(const Context *context,
 
     if (CompressedTextureFormatRequiresExactSize(internalFormat))
     {
-        if (!ValidCompressedDimension(width, formatInfo.compressedBlockWidth, level) ||
-            !ValidCompressedDimension(height, formatInfo.compressedBlockHeight, level) ||
-            !ValidCompressedDimension(depth, formatInfo.compressedBlockDepth, level))
+        // In WebGL compatibility mode, enforce that the base level implied
+        // by the compressed texture's mip level would conform to the block
+        // size. This is more strict than the non-WebGL check.
+        if (context->getExtensions().webglCompatibility)
         {
-            return false;
+            if (!ValidCompressedBaseLevelForWebGL(width, formatInfo.compressedBlockWidth, level) ||
+                !ValidCompressedBaseLevelForWebGL(height, formatInfo.compressedBlockHeight,
+                                                  level) ||
+                !ValidCompressedBaseLevelForWebGL(depth, formatInfo.compressedBlockDepth, level))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (!ValidCompressedDimension(width, formatInfo.compressedBlockWidth, level) ||
+                !ValidCompressedDimension(height, formatInfo.compressedBlockHeight, level) ||
+                !ValidCompressedDimension(depth, formatInfo.compressedBlockDepth, level))
+            {
+                return false;
+            }
         }
     }
 

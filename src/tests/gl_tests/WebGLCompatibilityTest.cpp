@@ -296,6 +296,16 @@ void main()
                                                    GLsizei blockSize,
                                                    const std::string &extName,
                                                    bool subImageAllowed);
+
+    GLint expectedByteLength(GLenum format, GLsizei width, GLsizei height);
+    void testCompressedTexLevelDimension(GLenum format,
+                                         GLint level,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLsizei expectedByteLength,
+                                         GLenum expectedError,
+                                         const char *explanation);
+    void testCompressedTexImage(GLenum format);
 };
 
 class WebGL2CompatibilityTest : public WebGLCompatibilityTest
@@ -3044,6 +3054,84 @@ TEST_P(WebGLCompatibilityTest, CompressedTextureS3TC)
     ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test WebGL-specific constraints on sizes of S3TC textures' mipmap levels.
+TEST_P(WebGLCompatibilityTest, CompressedTexImageS3TC)
+{
+    const char *extensions[] = {
+        "GL_EXT_texture_compression_dxt1",
+        "GL_ANGLE_texture_compression_dxt3",
+        "GL_ANGLE_texture_compression_dxt5",
+    };
+
+    for (const char *extension : extensions)
+    {
+        if (IsGLExtensionRequestable(extension))
+        {
+            glRequestExtensionANGLE(extension);
+        }
+
+        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(extension));
+    }
+
+    // Ported from WebGL conformance suite:
+    // sdk/tests/conformance/extensions/s3tc-and-srgb.html
+    constexpr GLenum formats[] = {
+        GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+        GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
+        GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
+        GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
+    };
+
+    for (GLenum format : formats)
+    {
+        testCompressedTexImage(format);
+    }
+}
+
+// Test WebGL-specific constraints on sizes of RGTC textures' mipmap levels.
+TEST_P(WebGLCompatibilityTest, CompressedTexImageRGTC)
+{
+    if (IsGLExtensionRequestable("GL_EXT_texture_compression_rgtc"))
+    {
+        glRequestExtensionANGLE("GL_EXT_texture_compression_rgtc");
+    }
+
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_rgtc"));
+
+    // Ported from WebGL conformance suite:
+    // sdk/tests/conformance/extensions/ext-texture-compression-rgtc.html
+    constexpr GLenum formats[] = {GL_COMPRESSED_RED_RGTC1_EXT, GL_COMPRESSED_SIGNED_RED_RGTC1_EXT,
+                                  GL_COMPRESSED_RED_GREEN_RGTC2_EXT,
+                                  GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT};
+
+    for (GLenum format : formats)
+    {
+        testCompressedTexImage(format);
+    }
+}
+
+// Test WebGL-specific constraints on sizes of BPTC textures' mipmap levels.
+TEST_P(WebGLCompatibilityTest, CompressedTexImageBPTC)
+{
+    if (IsGLExtensionRequestable("GL_EXT_texture_compression_bptc"))
+    {
+        glRequestExtensionANGLE("GL_EXT_texture_compression_bptc");
+    }
+
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_bptc"));
+
+    // Ported from WebGL conformance suite:
+    // sdk/tests/conformance/extensions/ext-texture-compression-bptc.html
+    constexpr GLenum formats[] = {
+        GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT,
+        GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT};
+
+    for (GLenum format : formats)
+    {
+        testCompressedTexImage(format);
+    }
+}
+
 TEST_P(WebGLCompatibilityTest, L32FTextures)
 {
     constexpr float textureData[]   = {15.1f, 0.0f, 0.0f, 0.0f};
@@ -4937,6 +5025,119 @@ void WebGLCompatibilityTest::validateCompressedTexImageExtensionFormat(GLenum fo
         else
         {
             EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        }
+    }
+}
+
+GLint WebGLCompatibilityTest::expectedByteLength(GLenum format, GLsizei width, GLsizei height)
+{
+    switch (format)
+    {
+        case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+        case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+        case GL_COMPRESSED_RED_RGTC1_EXT:
+        case GL_COMPRESSED_SIGNED_RED_RGTC1_EXT:
+            return ((width + 3) / 4) * ((height + 3) / 4) * 8;
+        case GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
+        case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
+        case GL_COMPRESSED_RED_GREEN_RGTC2_EXT:
+        case GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT:
+        case GL_COMPRESSED_RGBA_BPTC_UNORM_EXT:
+        case GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT:
+        case GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT:
+        case GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT:
+            return ((width + 3) / 4) * ((height + 3) / 4) * 16;
+    }
+
+    UNREACHABLE();
+    return 0;
+}
+
+void WebGLCompatibilityTest::testCompressedTexLevelDimension(GLenum format,
+                                                             GLint level,
+                                                             GLsizei width,
+                                                             GLsizei height,
+                                                             GLsizei expectedByteLength,
+                                                             GLenum expectedError,
+                                                             const char *explanation)
+{
+    std::vector<uint8_t> tempVector(expectedByteLength, 0);
+
+    EXPECT_GL_NO_ERROR();
+
+    GLTexture sourceTexture;
+    glBindTexture(GL_TEXTURE_2D, sourceTexture);
+    glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height, 0, expectedByteLength,
+                           tempVector.data());
+    if (expectedError == 0)
+    {
+        EXPECT_GL_NO_ERROR() << explanation;
+    }
+    else
+    {
+        EXPECT_GL_ERROR(expectedError) << explanation;
+    }
+}
+
+void WebGLCompatibilityTest::testCompressedTexImage(GLenum format)
+{
+    struct TestCase
+    {
+        GLint level;
+        GLsizei width;
+        GLsizei height;
+        GLenum expectedError;
+        const char *explanation;
+    };
+
+    constexpr TestCase testCases[] = {
+        {0, 4, 3, GL_INVALID_OPERATION, "level is 0, height is not a multiple of 4"},
+        {0, 3, 4, GL_INVALID_OPERATION, "level is 0, width is not a multiple of 4"},
+        {0, 2, 2, GL_INVALID_OPERATION, "level is 0, width is not a multiple of 4"},
+        {0, 4, 4, GL_NO_ERROR, "is valid"},
+        {1, 1, 1, GL_INVALID_OPERATION, "implied base mip 2x2 is invalid"},
+        {1, 1, 2, GL_INVALID_OPERATION, "implied base mip 2x4 is invalid"},
+        {1, 2, 1, GL_INVALID_OPERATION, "implied base mip 4x2 is invalid"},
+        {1, 2, 2, GL_NO_ERROR, "implied base mip 4x4 is valid"},
+    };
+
+    constexpr TestCase webgl2TestCases[] = {
+        {0, 0, 0, GL_NO_ERROR, "0: 0x0 is valid"},
+        {0, 1, 1, GL_INVALID_OPERATION, "0: 1x1 is invalid"},
+        {0, 2, 2, GL_INVALID_OPERATION, "0: 2x2 is invalid"},
+        {0, 3, 3, GL_INVALID_OPERATION, "0: 3x3 is invalid"},
+        {0, 10, 10, GL_INVALID_OPERATION, "0: 10x10 is invalid"},
+        {0, 11, 11, GL_INVALID_OPERATION, "0: 11x11 is invalid"},
+        {0, 11, 12, GL_INVALID_OPERATION, "0: 11x12 is invalid"},
+        {0, 12, 11, GL_INVALID_OPERATION, "0: 12x11 is invalid"},
+        {0, 12, 12, GL_NO_ERROR, "0: 12x12 is valid"},
+        {1, 0, 0, GL_NO_ERROR, "1: 0x0 is valid"},
+        {1, 3, 3, GL_INVALID_OPERATION, "1: 3x3 is invalid"},
+        {1, 5, 5, GL_INVALID_OPERATION, "1: 5x5 is invalid"},
+        {1, 5, 6, GL_INVALID_OPERATION, "1: 5x6 is invalid"},
+        {1, 6, 5, GL_INVALID_OPERATION, "1: 6x5 is invalid"},
+        {1, 6, 6, GL_NO_ERROR, "1: 6x6 is valid"},
+        {2, 0, 0, GL_NO_ERROR, "2: 0x0 is valid"},
+        {2, 3, 3, GL_NO_ERROR, "2: 3x3 is valid"},
+        {3, 1, 3, GL_NO_ERROR, "3: 1x3 is valid"},
+        {3, 1, 1, GL_NO_ERROR, "3: 1x1 is valid"},
+        {2, 1, 3, GL_NO_ERROR, "implied base mip 4x12 is valid"},
+    };
+
+    for (const TestCase &test : testCases)
+    {
+        testCompressedTexLevelDimension(format, test.level, test.width, test.height,
+                                        expectedByteLength(format, test.width, test.height),
+                                        test.expectedError, test.explanation);
+    }
+
+    if (getClientMajorVersion() >= 3)
+    {
+        for (const TestCase &test : webgl2TestCases)
+        {
+            testCompressedTexLevelDimension(format, test.level, test.width, test.height,
+                                            expectedByteLength(format, test.width, test.height),
+                                            test.expectedError, test.explanation);
         }
     }
 }
