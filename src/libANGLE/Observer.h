@@ -54,6 +54,9 @@ enum class SubjectMessage
 
     // Indicates an external change to the default framebuffer.
     SurfaceChanged,
+
+    // Indicates a Storage of back-end in gl::Texture has been released.
+    StorageReleased,
 };
 
 // The observing class inherits from this interface class.
