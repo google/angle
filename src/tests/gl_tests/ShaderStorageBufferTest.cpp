@@ -2118,6 +2118,66 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that BufferData change propagate to context state.
+TEST_P(ShaderStorageBufferTest31, DependentBufferChange)
+{
+    // http://issuetracker.google.com/195678877
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+    // Test fail on Nexus devices. http://anglebug.com/6251
+    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
+
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout (local_size_x=1) in;
+layout(binding=0, std140) buffer Storage0
+{
+    uint b;
+} sb_load;
+layout(binding=1, std140) buffer Storage1
+{
+    uint b;
+} sb_store;
+void main()
+{
+    sb_store.b += sb_load.b;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    glUseProgram(program);
+
+    constexpr unsigned int kBufferSize                        = 4096;
+    constexpr unsigned int kBufferElementCount                = kBufferSize / sizeof(unsigned int);
+    std::array<unsigned int, kBufferElementCount> kBufferData = {};
+    GLBuffer shaderStorageBuffer[2];
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, kBufferData.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    kBufferData[0] = 5;  // initial value
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, kBufferData.data(), GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer[1]);
+
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
+    kBufferData[0] = 7;
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, kBufferData.data(), GL_STATIC_DRAW);
+    glDispatchCompute(1, 1, 1);
+    kBufferData[0] = 11;
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_BUFFER_UPDATE_BARRIER_BIT);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, kBufferData.data(), GL_STATIC_DRAW);
+    glDispatchCompute(1, 1, 1);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
+    constexpr unsigned int kExpectedValue = 5 + 7 + 11;
+    EXPECT_EQ(kExpectedValue, *ptr);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that readonly binary operator for buffer variable is correctly handled.
 TEST_P(ShaderStorageBufferTest31, ReadonlyBinaryOperator)
 {
