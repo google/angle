@@ -1860,14 +1860,10 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     if (shouldUpdateSrgbWriteControlMode)
     {
         // Framebuffer colorspace state has been modified, so refresh the current framebuffer
-        // descriptor to reflect the new state, and notify the context of the state change.
+        // descriptor to reflect the new state.
         gl::SrgbWriteControlMode newSrgbWriteControlMode = mState.getWriteControlMode();
         mCurrentFramebufferDesc.setWriteControlMode(newSrgbWriteControlMode);
         mRenderPassDesc.setWriteControlMode(newSrgbWriteControlMode);
-        mFramebuffer = nullptr;
-
-        angle::Result result = contextVk->onFramebufferChange(this);
-        ANGLE_UNUSED_VARIABLE(result);
     }
 
     if (shouldUpdateColorMask)
