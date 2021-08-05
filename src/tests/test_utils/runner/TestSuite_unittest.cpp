@@ -109,8 +109,11 @@ TEST_F(TestSuiteTest, RunMockTests)
 {
     std::vector<std::string> extraArgs = {"--gtest_filter=MockTestSuiteTest.DISABLED_*"};
 
+    // TODO(crbug.com/1234124): Clang's profile runtime currently emits warnings to stderr, so we
+    // can't validate the stderr output in those builds. Remove this when that is fixed.
+    bool validateStderr = false;
     TestResults actual;
-    ASSERT_TRUE(runTestSuite(extraArgs, &actual, true));
+    ASSERT_TRUE(runTestSuite(extraArgs, &actual, validateStderr));
 
     std::map<TestIdentifier, TestResult> expectedResults = {
         {{"MockTestSuiteTest", "DISABLED_Pass"}, {TestResultType::Pass, 0.0}},
