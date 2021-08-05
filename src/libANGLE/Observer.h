@@ -61,6 +61,9 @@ enum class SubjectMessage
     ProgramRelinked,
     // Indicates a separable program's sampler uniforms were updated.
     SamplerUniformsUpdated,
+
+    // Indicates a Storage of back-end in gl::Texture has been released.
+    StorageReleased,
 };
 
 // The observing class inherits from this interface class.
