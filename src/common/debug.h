@@ -44,6 +44,7 @@ class ScopedPerfEventHelper : angle::NonCopyable
     gl::Context *mContext;
     const angle::EntryPoint mEntryPoint;
     const char *mFunctionName;
+    bool mCalledBeginEvent;
 };
 
 using LogSeverity = int;
