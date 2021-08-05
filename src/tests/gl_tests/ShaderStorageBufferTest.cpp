@@ -2121,8 +2121,6 @@ void main()
 // Test that BufferData change propagate to context state.
 TEST_P(ShaderStorageBufferTest31, DependentBufferChange)
 {
-    // http://issuetracker.google.com/195678877
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     // Test fail on Nexus devices. http://anglebug.com/6251
     ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
 
