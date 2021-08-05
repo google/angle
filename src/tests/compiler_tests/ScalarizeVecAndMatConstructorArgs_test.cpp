@@ -88,7 +88,7 @@ TEST_F(ScalarizeVecAndMatConstructorArgsTest, SequenceOperator)
         })";
     compile(shaderString);
 
-    std::vector<const char *> expectedStrings = {"_uv[0] += 1.0", "-_uv[0]"};
+    std::vector<const char *> expectedStrings = {"_uv[0] += ", "-_uv[0]"};
 
     EXPECT_TRUE(foundInCodeInOrder(expectedStrings));
 }

@@ -95,6 +95,9 @@ ImplicitTypeConversion GetConversion(TBasicType t1, TBasicType t2);
 
 bool IsValidImplicitConversion(ImplicitTypeConversion conversion, TOperator op);
 
+// Whether the given basic type requires precision.
+bool IsPrecisionApplicableToType(TBasicType type);
+
 // Whether this is the name of a built-in that can be redeclared by the shader.
 bool IsRedeclarableBuiltIn(const ImmutableString &name);
 

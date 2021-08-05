@@ -17,6 +17,7 @@
 
 #include "common/mathutil.h"
 #include "common/matrix_utils.h"
+#include "common/utilities.h"
 #include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/IntermNode.h"
@@ -176,6 +177,19 @@ bool CanFoldAggregateBuiltInOp(TOperator op)
             return true;
         default:
             return false;
+    }
+}
+
+void PropagatePrecisionIfApplicable(TIntermTyped *node, TPrecision precision)
+{
+    if (precision == EbpUndefined || node->getPrecision() != EbpUndefined)
+    {
+        return;
+    }
+
+    if (IsPrecisionApplicableToType(node->getBasicType()))
+    {
+        node->propagatePrecision(precision);
     }
 }
 
@@ -575,6 +589,16 @@ const TType &TIntermSymbol::getType() const
     return mVariable->getType();
 }
 
+void TIntermSymbol::propagatePrecision(TPrecision precision)
+{
+    // Every declared variable should already have a precision.  Some built-ins don't have a defined
+    // precision.  This is not asserted however:
+    //
+    // - A shader with no precision specified either globally or on a variable will fail with a
+    //   compilation error later on.
+    // - Transformations declaring variables without precision will be caught by AST validation.
+}
+
 TIntermAggregate *TIntermAggregate::CreateFunctionCall(const TFunction &func,
                                                        TIntermSequence *arguments)
 {
@@ -625,8 +649,7 @@ void TIntermAggregate::setPrecisionAndQualifier()
         }
     }
 
-    const TPrecision precision = derivePrecision();
-    mType.setPrecision(precision);
+    propagatePrecision(derivePrecision());
 }
 
 bool TIntermAggregate::areChildrenConstQualified()
@@ -642,6 +665,7 @@ bool TIntermAggregate::areChildrenConstQualified()
     return true;
 }
 
+// Derive precision from children nodes
 TPrecision TIntermAggregate::derivePrecision() const
 {
     if (getBasicType() == EbtBool || getBasicType() == EbtVoid || getBasicType() == EbtStruct)
@@ -707,6 +731,22 @@ TPrecision TIntermAggregate::derivePrecision() const
     // Every possibility must be explicitly handled, except for desktop-GLSL-specific built-ins
     // for which precision does't matter.
     return EbpUndefined;
+}
+
+// Propagate precision to children nodes that don't already have it defined.
+void TIntermAggregate::propagatePrecision(TPrecision precision)
+{
+    mType.setPrecision(precision);
+
+    // Propagate precision only to constructor arguments.  Precision doesn't propagate through
+    // function call arguments.
+    if (isConstructor())
+    {
+        for (TIntermNode *arg : mArguments)
+        {
+            PropagatePrecisionIfApplicable(arg->getAsTyped(), precision);
+        }
+    }
 }
 
 const char *TIntermAggregate::functionName() const
@@ -1034,7 +1074,7 @@ bool TIntermCase::replaceChildNode(TIntermNode *original, TIntermNode *replaceme
     return false;
 }
 
-TIntermTyped::TIntermTyped() : mPrecision(EbpUndefined), mIsPrecise(false) {}
+TIntermTyped::TIntermTyped() : mIsPrecise(false) {}
 TIntermTyped::TIntermTyped(const TIntermTyped &node) : TIntermTyped()
 {
     // Copy constructor is disallowed for TIntermNode in order to disallow it for subclasses that
@@ -1043,7 +1083,7 @@ TIntermTyped::TIntermTyped(const TIntermTyped &node) : TIntermTyped()
     mLine = node.mLine;
 
     // Once deteremined, the tree is not expected to transform.
-    ASSERT(mPrecision == EbpUndefined && !mIsPrecise);
+    ASSERT(!mIsPrecise);
 }
 
 bool TIntermTyped::hasConstantValue() const
@@ -1059,6 +1099,17 @@ bool TIntermTyped::isConstantNullValue() const
 const TConstantUnion *TIntermTyped::getConstantValue() const
 {
     return nullptr;
+}
+
+TPrecision TIntermTyped::derivePrecision() const
+{
+    UNREACHABLE();
+    return EbpUndefined;
+}
+
+void TIntermTyped::propagatePrecision(TPrecision precision)
+{
+    UNREACHABLE();
 }
 
 TIntermConstantUnion::TIntermConstantUnion(const TIntermConstantUnion &node)
@@ -1290,7 +1341,7 @@ void TIntermUnary::promote()
     resultType.setInterfaceBlock(nullptr);
 
     // Override type properties for special built-ins.  Precision is determined later by
-    // derivePrecision.
+    // |derivePrecision|.
     switch (mOp)
     {
         case EOpFloatBitsToInt:
@@ -1351,11 +1402,11 @@ void TIntermUnary::promote()
             break;
     }
 
-    const TPrecision precision = derivePrecision();
-    resultType.setPrecision(precision);
     setType(resultType);
+    propagatePrecision(derivePrecision());
 }
 
+// Derive precision from children nodes
 TPrecision TIntermUnary::derivePrecision() const
 {
     // Unary operators generally derive their precision from their operand, except for a few
@@ -1391,6 +1442,16 @@ TPrecision TIntermUnary::derivePrecision() const
             return EbpUndefined;
         default:
             return mOperand->getPrecision();
+    }
+}
+
+void TIntermUnary::propagatePrecision(TPrecision precision)
+{
+    mType.setPrecision(precision);
+
+    if (mOp != EOpArrayLength)
+    {
+        PropagatePrecisionIfApplicable(mOperand, precision);
     }
 }
 
@@ -1460,8 +1521,7 @@ TIntermTernary::TIntermTernary(TIntermTyped *cond,
     getTypePointer()->setQualifier(
         TIntermTernary::DetermineQualifier(cond, trueExpression, falseExpression));
 
-    const TPrecision precision = derivePrecision();
-    mType.setPrecision(precision);
+    propagatePrecision(derivePrecision());
 }
 
 TIntermLoop::TIntermLoop(TLoopType type,
@@ -1535,9 +1595,18 @@ TQualifier TIntermTernary::DetermineQualifier(TIntermTyped *cond,
     return EvqTemporary;
 }
 
+// Derive precision from children nodes
 TPrecision TIntermTernary::derivePrecision() const
 {
     return GetHigherPrecision(mTrueExpression->getPrecision(), mFalseExpression->getPrecision());
+}
+
+void TIntermTernary::propagatePrecision(TPrecision precision)
+{
+    mType.setPrecision(precision);
+
+    PropagatePrecisionIfApplicable(mTrueExpression, precision);
+    PropagatePrecisionIfApplicable(mFalseExpression, precision);
 }
 
 TIntermTyped *TIntermTernary::fold(TDiagnostics * /* diagnostics */)
@@ -1563,13 +1632,22 @@ void TIntermSwizzle::promote()
         resultQualifier = EvqConst;
 
     auto numFields = mSwizzleOffsets.size();
-    setType(TType(mOperand->getBasicType(), derivePrecision(), resultQualifier,
+    setType(TType(mOperand->getBasicType(), EbpUndefined, resultQualifier,
                   static_cast<unsigned char>(numFields)));
+    propagatePrecision(derivePrecision());
 }
 
+// Derive precision from children nodes
 TPrecision TIntermSwizzle::derivePrecision() const
 {
     return mOperand->getPrecision();
+}
+
+void TIntermSwizzle::propagatePrecision(TPrecision precision)
+{
+    mType.setPrecision(precision);
+
+    PropagatePrecisionIfApplicable(mOperand, precision);
 }
 
 bool TIntermSwizzle::hasDuplicateOffsets() const
@@ -1817,10 +1895,10 @@ void TIntermBinary::promote()
             break;
     }
 
-    const TPrecision precision = derivePrecision();
-    getTypePointer()->setPrecision(precision);
+    propagatePrecision(derivePrecision());
 }
 
+// Derive precision from children nodes
 TPrecision TIntermBinary::derivePrecision() const
 {
     const TPrecision higherPrecision =
@@ -1864,6 +1942,22 @@ TPrecision TIntermBinary::derivePrecision() const
         default:
             // All other operations are evaluated at the higher of the two operands' precisions.
             return higherPrecision;
+    }
+}
+
+void TIntermBinary::propagatePrecision(TPrecision precision)
+{
+    getTypePointer()->setPrecision(precision);
+
+    if (mOp != EOpComma)
+    {
+        PropagatePrecisionIfApplicable(mLeft, precision);
+    }
+
+    if (mOp != EOpIndexDirect && mOp != EOpIndexIndirect && mOp != EOpIndexDirectStruct &&
+        mOp != EOpIndexDirectInterfaceBlock)
+    {
+        PropagatePrecisionIfApplicable(mRight, precision);
     }
 }
 
@@ -3239,6 +3333,11 @@ void TIntermConstantUnion::foldFloatTypeUnary(const TConstantUnion &parameter,
 
     ASSERT(getType().getBasicType() == EbtFloat);
     result->setFConst(builtinFunc(parameter.getFConst()));
+}
+
+void TIntermConstantUnion::propagatePrecision(TPrecision precision)
+{
+    mType.setPrecision(precision);
 }
 
 // static

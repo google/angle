@@ -973,6 +973,21 @@ bool IsValidImplicitConversion(sh::ImplicitTypeConversion conversion, TOperator 
     return false;
 }
 
+bool IsPrecisionApplicableToType(TBasicType type)
+{
+    switch (type)
+    {
+        case EbtInt:
+        case EbtUInt:
+        case EbtFloat:
+            // TODO: find all types where precision is applicable; for example samplers.
+            // http://anglebug.com/6132
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool IsRedeclarableBuiltIn(const ImmutableString &name)
 {
     return name == "gl_ClipDistance" || name == "gl_CullDistance" || name == "gl_LastFragData";

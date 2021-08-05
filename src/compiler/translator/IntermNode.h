@@ -156,6 +156,13 @@ class TIntermTyped : public TIntermNode
 
     virtual const TType &getType() const = 0;
 
+    // Derive the precision of the node based on its children's.
+    virtual TPrecision derivePrecision() const;
+    // Set precision of the current node and propagate it to any child node that doesn't have
+    // precision.  This should be the case only for TIntermConstantUnion nodes as every other node
+    // would already need to have its precision specified or derived.
+    virtual void propagatePrecision(TPrecision precision);
+
     TBasicType getBasicType() const { return getType().getBasicType(); }
     TQualifier getQualifier() const { return getType().getQualifier(); }
     TPrecision getPrecision() const { return getType().getPrecision(); }
@@ -179,8 +186,6 @@ class TIntermTyped : public TIntermNode
     // nodes are no longer going to change), the tree is traversed to gather some information to be
     // stored in the intermediate nodes:
     //
-    // - Precision, which for intermediate nodes is derived from the precision of the declared
-    //   variables.  This is not currently implemented.  TODO: http://anglebug.com/4889
     // - Precise-ness, which is set for arithmetic nodes that are involved in the calculation of a
     //   value assigned to a |precise| variable.
     void setIsPrecise() { mIsPrecise = true; }
@@ -189,11 +194,6 @@ class TIntermTyped : public TIntermNode
   protected:
     TIntermTyped(const TIntermTyped &node);
 
-    // TODO: move the precision promotion logic to a final post-processing step that sets this
-    // value.  With the current implementation, it's quite trivial for tree transformations to leave
-    // the tree in an inconsistent state, or for example to ignore globally specified precisions.
-    // http://anglebug.com/4889
-    TPrecision mPrecision;
     bool mIsPrecise;
 };
 
@@ -307,6 +307,7 @@ class TIntermSymbol : public TIntermTyped
 
   private:
     TIntermSymbol(const TIntermSymbol &) = default;  // Note: not deleted, just private!
+    void propagatePrecision(TPrecision precision) override;
 
     const TVariable *const mVariable;  // Guaranteed to be non-null
 };
@@ -409,6 +410,7 @@ class TIntermConstantUnion : public TIntermExpression
     void foldFloatTypeUnary(const TConstantUnion &parameter,
                             FloatTypeUnaryFunc builtinFunc,
                             TConstantUnion *result) const;
+    void propagatePrecision(TPrecision precision) override;
 
     TIntermConstantUnion(const TIntermConstantUnion &node);  // Note: not deleted, just private!
 };
@@ -468,6 +470,8 @@ class TIntermSwizzle : public TIntermExpression
 
     TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
+    TPrecision derivePrecision() const override;
+
   protected:
     TIntermTyped *mOperand;
     TVector<int> mSwizzleOffsets;
@@ -475,7 +479,7 @@ class TIntermSwizzle : public TIntermExpression
 
   private:
     void promote();
-    TPrecision derivePrecision() const;
+    void propagatePrecision(TPrecision precision) override;
 
     TIntermSwizzle(const TIntermSwizzle &node);  // Note: not deleted, just private!
 };
@@ -519,13 +523,15 @@ class TIntermBinary : public TIntermOperator
     // This method is only valid for EOpIndexDirectStruct. It returns the name of the field.
     const ImmutableString &getIndexStructFieldName() const;
 
+    TPrecision derivePrecision() const override;
+
   protected:
     TIntermTyped *mLeft;
     TIntermTyped *mRight;
 
   private:
     void promote();
-    TPrecision derivePrecision() const;
+    void propagatePrecision(TPrecision precision) override;
 
     static TQualifier GetCommaQualifier(int shaderVersion,
                                         const TIntermTyped *left,
@@ -562,6 +568,8 @@ class TIntermUnary : public TIntermOperator
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
 
+    TPrecision derivePrecision() const override;
+
   protected:
     TIntermTyped *mOperand;
 
@@ -573,7 +581,7 @@ class TIntermUnary : public TIntermOperator
 
   private:
     void promote();
-    TPrecision derivePrecision() const;
+    void propagatePrecision(TPrecision precision) override;
 
     TIntermUnary(const TIntermUnary &node);  // note: not deleted, just private!
 };
@@ -648,6 +656,8 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     // Get the function name to display to the user in an error message.
     const char *functionName() const;
 
+    TPrecision derivePrecision() const override;
+
   protected:
     TIntermSequence mArguments;
 
@@ -666,7 +676,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TIntermAggregate(const TIntermAggregate &node);  // note: not deleted, just private!
 
     void setPrecisionAndQualifier();
-    TPrecision derivePrecision() const;
+    void propagatePrecision(TPrecision precision) override;
 
     bool areChildrenConstQualified();
 };
@@ -890,13 +900,15 @@ class TIntermTernary : public TIntermExpression
 
     TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
+    TPrecision derivePrecision() const override;
+
   private:
     TIntermTernary(const TIntermTernary &node);  // Note: not deleted, just private!
 
     static TQualifier DetermineQualifier(TIntermTyped *cond,
                                          TIntermTyped *trueExpression,
                                          TIntermTyped *falseExpression);
-    TPrecision derivePrecision() const;
+    void propagatePrecision(TPrecision precision) override;
 
     TIntermTyped *mCondition;
     TIntermTyped *mTrueExpression;
