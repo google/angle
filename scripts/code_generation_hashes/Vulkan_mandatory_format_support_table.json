@@ -10,5 +10,5 @@
   "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp":
     "5b3158f99d4e3f316d9bf89cca9174d6",
   "third_party/vulkan-deps/vulkan-headers/src/registry/vk.xml":
-    "6f18e809e416a48dc8f7e8ca08388a41"
+    "b8278d93f7fab7a48e1c1cba34adfbcb"
 }
