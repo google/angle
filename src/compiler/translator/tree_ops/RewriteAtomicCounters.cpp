@@ -27,7 +27,7 @@ const TVariable *DeclareAtomicCountersBuffers(TIntermBlock *root, TSymbolTable *
 {
     // Define `uint counters[];` as the only field in the interface block.
     TFieldList *fieldList = new TFieldList;
-    TType *counterType    = new TType(EbtUInt);
+    TType *counterType    = new TType(EbtUInt, EbpHigh, EvqGlobal);
     counterType->makeArray(0);
 
     TField *countersField =

@@ -211,7 +211,7 @@ TIntermTyped *CreateFloatArrayWithRotationIndex(const Vec2EnumMap &valuesEnumMap
                                                 float scale,
                                                 TIntermSymbol *rotation)
 {
-    const TType *floatType = StaticType::GetBasic<EbtFloat>();
+    const TType *floatType = StaticType::GetBasic<EbtFloat, EbpHigh>();
     TType *typeFloat8      = new TType(*floatType);
     typeFloat8->makeArray(static_cast<unsigned int>(vk::SurfaceRotation::EnumCount));
 
@@ -318,7 +318,7 @@ TIntermSymbol *SpecConst::getLineRasterEmulation()
     }
     if (mLineRasterEmulationVar == nullptr)
     {
-        const TType *type = MakeSpecConst(*StaticType::GetBasic<EbtBool>(),
+        const TType *type = MakeSpecConst(*StaticType::GetBasic<EbtBool, EbpUndefined>(),
                                           vk::SpecializationConstantId::LineRasterEmulation);
 
         mLineRasterEmulationVar = new TVariable(mSymbolTable, kLineRasterEmulationSpecConstVarName,
@@ -332,7 +332,7 @@ TIntermSymbol *SpecConst::getFlipRotation()
 {
     if (mSurfaceRotationVar == nullptr)
     {
-        const TType *type = MakeSpecConst(*StaticType::GetBasic<EbtUInt>(),
+        const TType *type = MakeSpecConst(*StaticType::GetBasic<EbtUInt, EbpHigh>(),
                                           vk::SpecializationConstantId::SurfaceRotation);
 
         mSurfaceRotationVar = new TVariable(mSymbolTable, kSurfaceRotationSpecConstVarName, type,
@@ -489,7 +489,7 @@ TIntermSymbol *SpecConst::getDrawableWidth()
 {
     if (mDrawableWidthVar == nullptr)
     {
-        const TType *type = MakeSpecConst(*StaticType::GetBasic<EbtFloat>(),
+        const TType *type = MakeSpecConst(*StaticType::GetBasic<EbtFloat, EbpHigh>(),
                                           vk::SpecializationConstantId::DrawableWidth);
 
         mDrawableWidthVar = new TVariable(mSymbolTable, kDrawableWidthSpecConstVarName, type,
@@ -502,7 +502,7 @@ TIntermSymbol *SpecConst::getDrawableHeight()
 {
     if (mDrawableHeightVar == nullptr)
     {
-        const TType *type = MakeSpecConst(*StaticType::GetBasic<EbtFloat>(),
+        const TType *type = MakeSpecConst(*StaticType::GetBasic<EbtFloat, EbpHigh>(),
                                           vk::SpecializationConstantId::DrawableHeight);
 
         mDrawableHeightVar = new TVariable(mSymbolTable, kDrawableHeightSpecConstVarName, type,

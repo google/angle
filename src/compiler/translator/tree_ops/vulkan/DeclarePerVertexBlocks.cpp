@@ -281,8 +281,8 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
     {
         TFieldList *fields = new TFieldList;
 
-        const TType *vec4Type  = StaticType::GetBasic<EbtFloat, 4>();
-        const TType *floatType = StaticType::GetBasic<EbtFloat, 1>();
+        const TType *vec4Type  = StaticType::GetBasic<EbtFloat, EbpHigh, 4>();
+        const TType *floatType = StaticType::GetBasic<EbtFloat, EbpHigh, 1>();
 
         TType *positionType     = new TType(*vec4Type);
         TType *pointSizeType    = new TType(*floatType);
@@ -293,6 +293,8 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
         pointSizeType->setQualifier(EvqPointSize);
         clipDistanceType->setQualifier(EvqClipDistance);
         cullDistanceType->setQualifier(EvqCullDistance);
+
+        pointSizeType->setPrecision(EbpMedium);
 
         // TODO: handle interaction with GS and T*S where the two can have different sizes.  These
         // values are valid for EvqPerVertexOut only.  For EvqPerVertexIn, the size should come from

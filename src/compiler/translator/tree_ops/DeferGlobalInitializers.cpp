@@ -109,7 +109,7 @@ void InsertInitCallToMain(TIntermBlock *root,
 
     TFunction *initGlobalsFunction =
         new TFunction(symbolTable, kInitGlobalsString, SymbolType::AngleInternal,
-                      StaticType::GetBasic<EbtVoid>(), false);
+                      StaticType::GetBasic<EbtVoid, EbpUndefined>(), false);
 
     TIntermFunctionPrototype *initGlobalsFunctionPrototype =
         CreateInternalFunctionPrototypeNode(*initGlobalsFunction);

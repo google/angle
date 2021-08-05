@@ -266,7 +266,7 @@ ANGLE_NO_DISCARD bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
     TIntermSwizzle *builtinXY    = new TIntermSwizzle(builtinRef, swizzleOffsetXY);
 
     // Create a symbol reference to our new variable that will hold the modified builtin.
-    const TType *type = StaticType::GetForVec<EbtFloat>(
+    const TType *type = StaticType::GetForVec<EbtFloat, EbpHigh>(
         EvqGlobal, static_cast<unsigned char>(builtin->getType().getNominalSize()));
     TVariable *replacementVar =
         new TVariable(symbolTable, flippedVariableName.rawName(), type, SymbolType::AngleInternal);
@@ -506,9 +506,9 @@ ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertSampleMaskWritingLogic(
         new TVariable(symbolTable, sh::ImmutableString(sh::mtl::kCoverageMaskEnabledConstName),
                       boolType, SymbolType::AngleInternal);
 
-    TFunction *sampleMaskWriteFunc = new TFunction(symbolTable, kSampleMaskWriteFuncName.rawName(),
-                                                   kSampleMaskWriteFuncName.symbolType(),
-                                                   StaticType::GetBasic<EbtVoid>(), false);
+    TFunction *sampleMaskWriteFunc = new TFunction(
+        symbolTable, kSampleMaskWriteFuncName.rawName(), kSampleMaskWriteFuncName.symbolType(),
+        StaticType::GetBasic<EbtVoid, EbpUndefined>(), false);
 
     TType *uintType = new TType(EbtUInt);
     TVariable *maskArg =

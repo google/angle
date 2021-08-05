@@ -313,7 +313,7 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(
 
     TFunction *sampleMaskWriteFunc =
         new TFunction(symbolTable, kSampleMaskWriteFuncName, SymbolType::AngleInternal,
-                      StaticType::GetBasic<EbtVoid>(), false);
+                      StaticType::GetBasic<EbtVoid, EbpUndefined>(), false);
 
     TType *uintType = new TType(EbtUInt);
     TVariable *maskArg =

@@ -459,7 +459,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                         GetIndexFunctionName(node->getLeft()->getType(), true));
                     indexedWriteFunction =
                         new TFunction(mSymbolTable, functionName, SymbolType::AngleInternal,
-                                      StaticType::GetBasic<EbtVoid>(), false);
+                                      StaticType::GetBasic<EbtVoid, EbpUndefined>(), false);
                     indexedWriteFunction->addParameter(new TVariable(mSymbolTable, kBaseName,
                                                                      GetBaseType(type, true),
                                                                      SymbolType::AngleInternal));

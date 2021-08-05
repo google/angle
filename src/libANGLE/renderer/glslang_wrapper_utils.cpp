@@ -1395,8 +1395,10 @@ TransformationState SpirvPerVertexTrimmer::transformMemberDecorate(const SpirvID
     //
     // - OpMemberDecorate %gl_PerVertex N BuiltIn B
     // - OpMemberDecorate %gl_PerVertex N Invariant
+    // - OpMemberDecorate %gl_PerVertex N RelaxedPrecision
     if (!ids.isPerVertex(typeId) ||
-        (decoration != spv::DecorationBuiltIn && decoration != spv::DecorationInvariant))
+        (decoration != spv::DecorationBuiltIn && decoration != spv::DecorationInvariant &&
+         decoration != spv::DecorationRelaxedPrecision))
     {
         return TransformationState::Unchanged;
     }

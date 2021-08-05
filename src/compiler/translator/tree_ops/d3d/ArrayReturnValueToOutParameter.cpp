@@ -121,7 +121,7 @@ void ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(TIntermFunc
                               SymbolType::AngleInternal);
             TFunction *func = new TFunction(mSymbolTable, node->getFunction()->name(),
                                             node->getFunction()->symbolType(),
-                                            StaticType::GetBasic<EbtVoid>(), false);
+                                            StaticType::GetBasic<EbtVoid, EbpUndefined>(), false);
             for (size_t i = 0; i < node->getFunction()->getParamCount(); ++i)
             {
                 func->addParameter(node->getFunction()->getParam(i));

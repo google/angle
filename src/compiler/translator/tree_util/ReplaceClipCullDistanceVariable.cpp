@@ -259,7 +259,7 @@ class ReplaceClipCullDistanceAssignments : angle::NonCopyable
 
     unsigned int getEnabledClipCullDistance(const bool useNonConstIndex,
                                             const unsigned int maxConstIndex);
-    const TVariable *declareANGLEVariable();
+    const TVariable *declareANGLEVariable(const TVariable *originalVariable);
     bool assignOriginalValueToANGLEVariable(const GLenum shaderType);
     bool assignANGLEValueToOriginalVariable(const GLenum shaderType,
                                             const bool isRedeclared,
@@ -305,11 +305,14 @@ unsigned int ReplaceClipCullDistanceAssignments::getEnabledClipCullDistance(
     return mEnabledDistances;
 }
 
-const TVariable *ReplaceClipCullDistanceAssignments::declareANGLEVariable()
+const TVariable *ReplaceClipCullDistanceAssignments::declareANGLEVariable(
+    const TVariable *originalVariable)
 {
     ASSERT(mEnabledDistances > 0);
 
-    TType *clipCullDistanceType = new TType(EbtFloat, EbpMedium, EvqGlobal, 1);
+    TType *clipCullDistanceType = new TType(originalVariable->getType());
+    clipCullDistanceType->setQualifier(EvqGlobal);
+    clipCullDistanceType->toArrayBaseType();
     clipCullDistanceType->makeArray(mEnabledDistances);
 
     mANGLEVar =
@@ -522,7 +525,7 @@ ANGLE_NO_DISCARD bool ReplaceClipCullDistanceAssignmentsImpl(
         return false;
     }
 
-    const TVariable *replacementVar = replacementUtils.declareANGLEVariable();
+    const TVariable *replacementVar = replacementUtils.declareANGLEVariable(builtInVar);
 
     // Replace gl_ClipDistance reference with ANGLEClipDistance, except the declaration
     ReplaceVariableExceptOneTraverser replaceTraverser(builtInVar,

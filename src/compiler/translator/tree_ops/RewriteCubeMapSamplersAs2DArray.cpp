@@ -394,7 +394,7 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
 
         // Create the function parameters: vec3 P, vec3 dPdx, vec3 dPdy,
         //                                 out vec2 dUVdx, out vec2 dUVdy
-        const TType *vec3Type = StaticType::GetBasic<EbtFloat, 3>();
+        const TType *vec3Type = StaticType::GetBasic<EbtFloat, EbpHigh, 3>();
         TType *inVec3Type     = new TType(*vec3Type);
         inVec3Type->setQualifier(EvqParamIn);
 
@@ -405,7 +405,7 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
         TVariable *dPdyVar = new TVariable(mSymbolTable, ImmutableString("dPdy"), inVec3Type,
                                            SymbolType::AngleInternal);
 
-        const TType *vec2Type = StaticType::GetBasic<EbtFloat, 2>();
+        const TType *vec2Type = StaticType::GetBasic<EbtFloat, EbpHigh, 2>();
         TType *outVec2Type    = new TType(*vec2Type);
         outVec2Type->setQualifier(EvqParamOut);
 
@@ -429,7 +429,7 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
         TIntermSwizzle *z = new TIntermSwizzle(p->deepCopy(), {2});
 
         // Create abs and "< 0" expressions from the channels.
-        const TType *floatType = StaticType::GetBasic<EbtFloat>();
+        const TType *floatType = StaticType::GetBasic<EbtFloat, EbpHigh>();
 
         TIntermTyped *isNegX = new TIntermBinary(EOpLessThan, x, CreateZeroNode(*floatType));
         TIntermTyped *isNegY = new TIntermBinary(EOpLessThan, y, CreateZeroNode(*floatType));
@@ -456,7 +456,7 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
         // Create temporary variable for division outer product matrix and its
         // derivatives.
         // recipOuter[i][j] = 0.5 * P[j] / P[i]
-        const TType *mat3Type     = StaticType::GetBasic<EbtFloat, 3, 3>();
+        const TType *mat3Type     = StaticType::GetBasic<EbtFloat, EbpHigh, 3, 3>();
         TIntermSymbol *recipOuter = new TIntermSymbol(CreateTempVariable(mSymbolTable, mat3Type));
 
         TIntermTyped *pRecip     = new TIntermBinary(EOpDiv, CreateFloatNode(1.0), p->deepCopy());
@@ -712,7 +712,7 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
                                                         TIntermTyped *dUVdx,
                                                         TIntermTyped *dUVdy)
     {
-        const TType *vec3Type = StaticType::GetBasic<EbtFloat, 3>();
+        const TType *vec3Type = StaticType::GetBasic<EbtFloat, EbpHigh, 3>();
         TIntermTyped *dPdx    = CreateZeroNode(*vec3Type);
         TIntermTyped *dPdy    = CreateZeroNode(*vec3Type);
         TIntermSequence args  = {P, dPdx, dPdy, dUVdx, dUVdy};
@@ -840,8 +840,8 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
         TIntermSequence *arguments = node->getSequence();
         ASSERT(arguments->size() >= 2);
 
-        const TType *vec2Type = StaticType::GetBasic<EbtFloat, 2>();
-        const TType *vec3Type = StaticType::GetBasic<EbtFloat, 3>();
+        const TType *vec2Type = StaticType::GetBasic<EbtFloat, EbpHigh, 2>();
+        const TType *vec3Type = StaticType::GetBasic<EbtFloat, EbpHigh, 3>();
         TIntermSymbol *uvl    = new TIntermSymbol(CreateTempVariable(mSymbolTable, vec3Type));
         TIntermSymbol *dUVdx  = new TIntermSymbol(CreateTempVariable(mSymbolTable, vec2Type));
         TIntermSymbol *dUVdy  = new TIntermSymbol(CreateTempVariable(mSymbolTable, vec2Type));
@@ -893,7 +893,7 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
         TIntermTyped *dUVdyArg = dUVdy;
         if (hasBias)
         {
-            const TType *floatType   = StaticType::GetBasic<EbtFloat>();
+            const TType *floatType   = StaticType::GetBasic<EbtFloat, EbpHigh>();
             TIntermTyped *bias       = (*arguments)[2]->getAsTyped()->deepCopy();
             TIntermSequence exp2Args = {bias};
             TIntermTyped *exp2Call =

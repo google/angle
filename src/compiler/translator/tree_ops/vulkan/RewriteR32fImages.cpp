@@ -237,7 +237,7 @@ TIntermTyped *RewriteBuiltinFunctionCall(TCompiler *compiler,
         if (isImageLoad)
         {
             // vec4(uintBitsToFloat(imageLoad().rgb), 1.0)
-            const TType &vec4Type           = *StaticType::GetBasic<EbtFloat, 4>();
+            const TType &vec4Type           = *StaticType::GetBasic<EbtFloat, EbpHigh, 4>();
             TIntermSequence constructorArgs = {replacementCall, CreateFloatNode(1.0f)};
             replacementCall = TIntermAggregate::CreateConstructor(vec4Type, &constructorArgs);
         }

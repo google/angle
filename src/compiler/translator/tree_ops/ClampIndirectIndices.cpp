@@ -67,8 +67,8 @@ class ClampIndirectIndicesTraverser : public TIntermTraverser
             if (useFloatClamp)
             {
                 TIntermSequence constructorArgs = {max};
-                max = TIntermAggregate::CreateConstructor(*StaticType::GetBasic<EbtFloat>(),
-                                                          &constructorArgs);
+                max                             = TIntermAggregate::CreateConstructor(
+                    *StaticType::GetBasic<EbtFloat, EbpHigh>(), &constructorArgs);
             }
         }
         else if (leftType.isArray())
@@ -88,8 +88,8 @@ class ClampIndirectIndicesTraverser : public TIntermTraverser
         const TBasicType requiredBasicType = useFloatClamp ? EbtFloat : EbtInt;
         if (rightType.getBasicType() != requiredBasicType)
         {
-            const TType *clampType =
-                useFloatClamp ? StaticType::GetBasic<EbtFloat>() : StaticType::GetBasic<EbtInt>();
+            const TType *clampType = useFloatClamp ? StaticType::GetBasic<EbtFloat, EbpHigh>()
+                                                   : StaticType::GetBasic<EbtInt, EbpHigh>();
             TIntermSequence constructorArgs = {index};
             index = TIntermAggregate::CreateConstructor(*clampType, &constructorArgs);
         }
@@ -106,7 +106,7 @@ class ClampIndirectIndicesTraverser : public TIntermTraverser
         if (useFloatClamp)
         {
             TIntermSequence constructorArgs = {clamped};
-            clamped = TIntermAggregate::CreateConstructor(*StaticType::GetBasic<EbtInt>(),
+            clamped = TIntermAggregate::CreateConstructor(*StaticType::GetBasic<EbtInt, EbpHigh>(),
                                                           &constructorArgs);
         }
 
