@@ -185,9 +185,6 @@ TEST_P(AtomicCounterBufferTest31, DependentAtomicCounterBufferChange)
     // http://anglebug.com/1729
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    // http://issuetracker.google.com/195678877
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"

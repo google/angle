@@ -782,6 +782,7 @@ class State : angle::NonCopyable
     void onImageStateChange(const Context *context, size_t unit);
 
     void onUniformBufferStateChange(size_t uniformBufferIndex);
+    void onAtomicCounterBufferStateChange(size_t atomicCounterBufferIndex);
 
     bool isCurrentTransformFeedback(const TransformFeedback *tf) const
     {

@@ -268,7 +268,10 @@ enum SubjectIndexes : angle::SubjectIndex
     kUniformBuffer0SubjectIndex = kImageMaxSubjectIndex,
     kUniformBufferMaxSubjectIndex =
         kUniformBuffer0SubjectIndex + IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS,
-    kSampler0SubjectIndex    = kUniformBufferMaxSubjectIndex,
+    kAtomicCounterBuffer0SubjectIndex = kUniformBufferMaxSubjectIndex,
+    kAtomicCounterBufferMaxSubjectIndex =
+        kAtomicCounterBuffer0SubjectIndex + IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS,
+    kSampler0SubjectIndex    = kAtomicCounterBufferMaxSubjectIndex,
     kSamplerMaxSubjectIndex  = kSampler0SubjectIndex + IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
     kVertexArraySubjectIndex = kSamplerMaxSubjectIndex,
     kReadFramebufferSubjectIndex,
@@ -375,6 +378,12 @@ Context::Context(egl::Display *display,
          uboIndex < kUniformBufferMaxSubjectIndex; ++uboIndex)
     {
         mUniformBufferObserverBindings.emplace_back(this, uboIndex);
+    }
+
+    for (angle::SubjectIndex acbIndex = kAtomicCounterBuffer0SubjectIndex;
+         acbIndex < kAtomicCounterBufferMaxSubjectIndex; ++acbIndex)
+    {
+        mAtomicCounterBufferObserverBindings.emplace_back(this, acbIndex);
     }
 
     for (angle::SubjectIndex samplerIndex = kSampler0SubjectIndex;
@@ -6042,6 +6051,11 @@ void Context::bindBufferRange(BufferBinding target,
         mUniformBufferObserverBindings[index].bind(object);
         mStateCache.onUniformBufferStateChange(this);
     }
+    else if (target == BufferBinding::AtomicCounter)
+    {
+        mAtomicCounterBufferObserverBindings[index].bind(object);
+        mStateCache.onAtomicCounterBufferStateChange(this);
+    }
     else
     {
         mStateCache.onBufferBindingChange(this);
@@ -8876,6 +8890,11 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
                 mState.onUniformBufferStateChange(index - kUniformBuffer0SubjectIndex);
                 mStateCache.onUniformBufferStateChange(this);
             }
+            else if (index < kAtomicCounterBufferMaxSubjectIndex)
+            {
+                mState.onAtomicCounterBufferStateChange(index - kAtomicCounterBuffer0SubjectIndex);
+                mStateCache.onAtomicCounterBufferStateChange(this);
+            }
             else
             {
                 ASSERT(index < kSamplerMaxSubjectIndex);
@@ -9327,6 +9346,11 @@ void StateCache::onActiveTransformFeedbackChange(Context *context)
 }
 
 void StateCache::onUniformBufferStateChange(Context *context)
+{
+    updateBasicDrawStatesError();
+}
+
+void StateCache::onAtomicCounterBufferStateChange(Context *context)
 {
     updateBasicDrawStatesError();
 }

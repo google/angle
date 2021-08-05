@@ -271,6 +271,7 @@ class StateCache final : angle::NonCopyable
     void onQueryChange(Context *context);
     void onActiveTransformFeedbackChange(Context *context);
     void onUniformBufferStateChange(Context *context);
+    void onAtomicCounterBufferStateChange(Context *context);
     void onColorMaskChange(Context *context);
     void onBufferBindingChange(Context *context);
     void onBlendFuncIndexedChange(Context *context);
@@ -774,6 +775,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     angle::ObserverBinding mDrawFramebufferObserverBinding;
     angle::ObserverBinding mReadFramebufferObserverBinding;
     std::vector<angle::ObserverBinding> mUniformBufferObserverBindings;
+    std::vector<angle::ObserverBinding> mAtomicCounterBufferObserverBindings;
     std::vector<angle::ObserverBinding> mSamplerObserverBindings;
     std::vector<angle::ObserverBinding> mImageObserverBindings;
 
