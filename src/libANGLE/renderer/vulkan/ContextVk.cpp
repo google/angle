@@ -4261,6 +4261,11 @@ angle::Result ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
         return angle::Result::Continue;
     }
 
+    // Always consider the render pass finished.  FramebufferVk::syncState (caller of this function)
+    // normally closes the render pass, except for blit to allow an optimization.  The following
+    // code nevertheless must treat the render pass closed.
+    onRenderPassFinished();
+
     // Ensure that the pipeline description is updated.
     if (mGraphicsPipelineDesc->getRasterizationSamples() !=
         static_cast<uint32_t>(framebufferVk->getSamples()))
