@@ -170,6 +170,11 @@ const char *GetColorName(GLColor color)
     return nullptr;
 }
 
+const char *GetColorName(GLColorRGB color)
+{
+    return GetColorName(GLColor(color.R, color.G, color.B, 255));
+}
+
 // Always re-use displays when using --bot-mode in the test runner.
 bool gReuseDisplays = false;
 
@@ -303,6 +308,30 @@ std::ostream &operator<<(std::ostream &ostream, const GLColor &color)
     ostream << "(" << static_cast<unsigned int>(color.R) << ", "
             << static_cast<unsigned int>(color.G) << ", " << static_cast<unsigned int>(color.B)
             << ", " << static_cast<unsigned int>(color.A) << ")";
+    return ostream;
+}
+
+bool operator==(const GLColorRGB &a, const GLColorRGB &b)
+{
+    return a.R == b.R && a.G == b.G && a.B == b.B;
+}
+
+bool operator!=(const GLColorRGB &a, const GLColorRGB &b)
+{
+    return !(a == b);
+}
+
+std::ostream &operator<<(std::ostream &ostream, const GLColorRGB &color)
+{
+    const char *colorName = GetColorName(color);
+    if (colorName)
+    {
+        return ostream << colorName;
+    }
+
+    ostream << "(" << static_cast<unsigned int>(color.R) << ", "
+            << static_cast<unsigned int>(color.G) << ", " << static_cast<unsigned int>(color.B)
+            << ")";
     return ostream;
 }
 

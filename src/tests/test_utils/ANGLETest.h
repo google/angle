@@ -197,6 +197,10 @@ bool operator!=(const GLColor &a, const GLColor &b);
 std::ostream &operator<<(std::ostream &ostream, const GLColor &color);
 GLColor ReadColor(GLint x, GLint y);
 
+bool operator==(const GLColorRGB &a, const GLColorRGB &b);
+bool operator!=(const GLColorRGB &a, const GLColorRGB &b);
+std::ostream &operator<<(std::ostream &ostream, const GLColorRGB &color);
+
 // Useful to cast any type to GLfloat.
 template <typename TR, typename TG, typename TB, typename TA>
 GLColor32F MakeGLColor32F(TR r, TG g, TB b, TA a)

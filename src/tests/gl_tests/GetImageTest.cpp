@@ -410,6 +410,48 @@ TEST_P(GetImageTest, GetTexImageAlpha)
     }
 }
 
+// Tests GetImage behaviour with an RGB image.
+TEST_P(GetImageTest, GetImageRGB)
+{
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+
+    constexpr uint32_t kSmallSize        = 2;
+    std::vector<GLColorRGB> expectedData = {GLColorRGB::red, GLColorRGB::blue, GLColorRGB::green,
+                                            GLColorRGB::yellow};
+
+    glViewport(0, 0, kSmallSize, kSmallSize);
+
+    // Pack pixels tightly.
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    // Init simple texture.
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, kSmallSize, kSmallSize, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                 expectedData.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGB, kSmallSize / 2, kSmallSize / 2, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, expectedData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Verify GetImage.
+    std::vector<GLColorRGB> actualData(kSmallSize * kSmallSize);
+    glGetTexImageANGLE(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, actualData.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(expectedData, actualData);
+
+    // Draw after the GetImage.
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5, 1.0f, true);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::yellow);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTest);
 ANGLE_INSTANTIATE_TEST(GetImageTest, ES2_VULKAN(), ES3_VULKAN());
 
