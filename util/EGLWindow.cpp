@@ -279,6 +279,11 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         enabledFeatureOverrides.push_back("sync_vertex_arrays_to_default");
     }
 
+    if (params.captureLimits == EGL_TRUE)
+    {
+        enabledFeatureOverrides.push_back("enable_capture_limits");
+    }
+
     const bool hasFeatureControlANGLE =
         strstr(extensionString, "EGL_ANGLE_feature_control") != nullptr;
 
