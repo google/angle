@@ -540,8 +540,8 @@ class Test():
                 source_txt_count += 1
             elif f.endswith(".h"):
                 context_header_count += 1
-                context = f.split(TRACE_FILE_SUFFIX)[1][:-2]
-                if context != "_shared":
+                if TRACE_FILE_SUFFIX in f:
+                    context = f.split(TRACE_FILE_SUFFIX)[1][:-2]
                     context_id = int(context)
             elif f.endswith(".cpp"):
                 context_source_count += 1
@@ -728,7 +728,7 @@ class TestBatch():
                 files = f.readlines()
                 f.close()
             files = ['"%s/%s"' % (self.trace_dir, file.strip()) for file in files]
-            angledata = "%s%s_shared.angledata.gz" % (label, TRACE_FILE_SUFFIX)
+            angledata = "%s%s.angledata.gz" % (label, TRACE_FILE_SUFFIX)
             test_list += [
                 '["%s", %s, [%s], "%s"]' % (label, test.context_id, ','.join(files), angledata)
             ]

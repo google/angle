@@ -132,7 +132,10 @@ std::ostream &operator<<(std::ostream &os, gl::ContextID contextId)
     return os;
 }
 
-constexpr static gl::ContextID kSharedContextId = {0};
+// Used to indicate that "shared" should be used to identify the files.
+constexpr gl::ContextID kSharedContextId = {0};
+// Used to indicate no context ID should be output.
+constexpr gl::ContextID kNoContextId = {std::numeric_limits<uint32_t>::max()};
 
 struct FmtCapturePrefix
 {
@@ -154,7 +157,15 @@ std::ostream &operator<<(std::ostream &os, const FmtCapturePrefix &fmt)
         os << fmt.captureLabel;
     }
 
-    if (fmt.contextId != kSharedContextId)
+    if (fmt.contextId == kNoContextId)
+    {
+        // Do nothing
+    }
+    else if (fmt.contextId == kSharedContextId)
+    {
+        os << "_capture_shared";
+    }
+    else
     {
         os << "_capture_context" << fmt.contextId;
     }
@@ -308,8 +319,17 @@ std::string GetCaptureFileName(gl::ContextID contextId,
                                const char *suffix)
 {
     std::stringstream fnameStream;
-    fnameStream << FmtCapturePrefix(contextId, captureLabel) << "_frame" << std::setfill('0')
-                << std::setw(3) << frameIndex << suffix;
+
+    if (contextId == kSharedContextId)
+    {
+        fnameStream << FmtCapturePrefix(contextId, captureLabel) << suffix;
+    }
+    else
+    {
+        fnameStream << FmtCapturePrefix(contextId, captureLabel) << "_frame" << std::setfill('0')
+                    << std::setw(3) << frameIndex << suffix;
+    }
+
     return fnameStream.str();
 }
 
@@ -777,12 +797,10 @@ struct SaveFileHelper
     std::string mFilePath;
 };
 
-std::string GetBinaryDataFilePath(bool compression,
-                                  gl::ContextID contextId,
-                                  const std::string &captureLabel)
+std::string GetBinaryDataFilePath(bool compression, const std::string &captureLabel)
 {
     std::stringstream fnameStream;
-    fnameStream << FmtCapturePrefix(contextId, captureLabel) << ".angledata";
+    fnameStream << FmtCapturePrefix(kNoContextId, captureLabel) << ".angledata";
     if (compression)
     {
         fnameStream << ".gz";
@@ -796,7 +814,7 @@ void SaveBinaryData(bool compression,
                     const std::string &captureLabel,
                     const std::vector<uint8_t> &binaryData)
 {
-    std::string binaryDataFileName = GetBinaryDataFilePath(compression, contextId, captureLabel);
+    std::string binaryDataFileName = GetBinaryDataFilePath(compression, captureLabel);
     std::string dataFilepath       = outDir + binaryDataFileName;
 
     SaveFileHelper saveData(dataFilepath);
@@ -834,7 +852,7 @@ void WriteInitReplayCall(bool compression,
                          size_t maxClientArraySize,
                          size_t readBufferSize)
 {
-    std::string binaryDataFileName = GetBinaryDataFilePath(compression, contextId, captureLabel);
+    std::string binaryDataFileName = GetBinaryDataFilePath(compression, captureLabel);
     out << "    InitializeReplay(\"" << binaryDataFileName << "\", " << maxClientArraySize << ", "
         << readBufferSize << ");\n";
 }
