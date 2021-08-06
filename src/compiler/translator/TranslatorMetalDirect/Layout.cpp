@@ -147,7 +147,7 @@ Layout sh::MetalLayoutOf(const TType &type, MetalLayoutOfConfig config)
 
     const Layout scalarLayout = ScalarLayoutOf(type, Language::Metal);
 
-    if (type.isScalar())
+    if (type.isRank0())
     {
         return scalarLayout;
     }
@@ -294,7 +294,7 @@ static Layout CommonGlslLayoutOf(const TType &type,
 
     const auto scalarLayout = ScalarLayoutOf(type, Language::GLSL);
 
-    if (type.isScalar())
+    if (type.isRank0())
     {
         return scalarLayout;
     }

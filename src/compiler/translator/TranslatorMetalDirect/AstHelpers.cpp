@@ -365,7 +365,7 @@ static TType &SetTypeDimsImpl(const TType &type, int primary, int secondary)
 
 TType &sh::SetVectorDim(const TType &type, int newDim)
 {
-    ASSERT(type.isScalar() || type.isVector());
+    ASSERT(type.isRank0() || type.isVector());
     return SetTypeDimsImpl(type, newDim, 1);
 }
 
