@@ -3754,7 +3754,11 @@ bool ValidateBufferSubData(const Context *context,
         return false;
     }
 
-    if (buffer->isMapped())
+    // EXT_buffer_storage allows persistently mapped buffers to be updated via glBufferSubData
+    bool isPersistent = (buffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) != 0;
+
+    // Verify that buffer is not currently mapped unless persistent
+    if (buffer->isMapped() && !isPersistent)
     {
         context->validationError(GL_INVALID_OPERATION, kBufferMapped);
         return false;

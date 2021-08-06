@@ -3172,8 +3172,13 @@ bool ValidateCopyBufferSubData(const Context *context,
         return false;
     }
 
-    // Verify that readBuffer and writeBuffer are not currently mapped
-    if (readBuffer->isMapped() || writeBuffer->isMapped())
+    // EXT_buffer_storage allows persistently mapped buffers to be updated via glCopyBufferSubData
+    bool isReadPersistent  = (readBuffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) != 0;
+    bool isWritePersistent = (writeBuffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) != 0;
+
+    // Verify that readBuffer and writeBuffer are not currently mapped unless persistent
+    if ((readBuffer->isMapped() && !isReadPersistent) ||
+        (writeBuffer->isMapped() && !isWritePersistent))
     {
         context->validationError(GL_INVALID_OPERATION, kBufferMapped);
         return false;
