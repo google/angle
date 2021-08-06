@@ -14,7 +14,7 @@
 // in case that is required for correct precision propagation.
 //
 
-#include "compiler/translator/tree_ops/gl/RecordConstantPrecision.h"
+#include "compiler/translator/tree_ops/RecordConstantPrecision.h"
 
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"

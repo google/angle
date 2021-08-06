@@ -14,8 +14,8 @@
 // in case that is required for correct precision propagation.
 //
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_GL_RECORDCONSTANTPRECISION_H_
-#define COMPILER_TRANSLATOR_TREEOPS_GL_RECORDCONSTANTPRECISION_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_RECORDCONSTANTPRECISION_H_
+#define COMPILER_TRANSLATOR_TREEOPS_RECORDCONSTANTPRECISION_H_
 
 #include "common/angleutils.h"
 
@@ -30,4 +30,4 @@ ANGLE_NO_DISCARD bool RecordConstantPrecision(TCompiler *compiler,
                                               TSymbolTable *symbolTable);
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_GL_RECORDCONSTANTPRECISION_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_RECORDCONSTANTPRECISION_H_

@@ -13102,6 +13102,36 @@ void main()
     runTest(kFS);
 }
 
+TEST_P(GLSLTest, AAA)
+{
+    constexpr char kFS[] = R"(
+// It is assumed that uTest is set to 0. It's here to make the expression not constant.
+uniform mediump float uTest;
+void main() {
+    // exact representation of 4096.5 requires 13 bits of relative precision.
+    const highp float c = 4096.5;
+    mediump float a = 0.0;
+    // Below, addition should be evaluated at highp, since one of the operands has the highp qualifier.
+    // Thus fract should also be evaluated at highp.
+    // See OpenGL ES Shading Language spec section 4.5.2.
+    // This should make the result 0.5, since highp provides at least 16 bits of relative precision.
+    // (exceptions for operation precision are allowed for a small number of computationally
+    // intensive built-in functions, but it is reasonable to think that fract is not one of those).
+    // However, if fract() is incorrectly evaluated at minimum precision fulfilling mediump criteria,
+    // or at IEEE half float precision, the result is 0.0.
+    a = fract(c + uTest);
+    // Multiply by 2.0 to make the color green.
+    gl_FragColor = vec4(0.0, 2.0 * a, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest, WithDirectSPIRVGeneration(ES2_VULKAN()));

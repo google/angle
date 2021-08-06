@@ -149,6 +149,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/PruneEmptyCases.h",
   "src/compiler/translator/tree_ops/PruneNoOps.cpp",
   "src/compiler/translator/tree_ops/PruneNoOps.h",
+  "src/compiler/translator/tree_ops/RecordConstantPrecision.cpp",
+  "src/compiler/translator/tree_ops/RecordConstantPrecision.h",
   "src/compiler/translator/tree_ops/RemoveArrayLengthMethod.cpp",
   "src/compiler/translator/tree_ops/RemoveArrayLengthMethod.h",
   "src/compiler/translator/tree_ops/RemoveAtomicCounterBuiltins.cpp",
@@ -248,8 +250,6 @@ angle_translator_essl_sources = [
   "src/compiler/translator/OutputESSL.cpp",
   "src/compiler/translator/OutputESSL.h",
   "src/compiler/translator/TranslatorESSL.cpp",
-  "src/compiler/translator/tree_ops/gl/RecordConstantPrecision.cpp",
-  "src/compiler/translator/tree_ops/gl/RecordConstantPrecision.h",
 ]
 angle_translator_glsl_sources = [
   "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",

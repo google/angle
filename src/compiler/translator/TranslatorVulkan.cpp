@@ -22,6 +22,7 @@
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/glslang_wrapper.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
+#include "compiler/translator/tree_ops/RecordConstantPrecision.h"
 #include "compiler/translator/tree_ops/RemoveAtomicCounterBuiltins.h"
 #include "compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.h"
 #include "compiler/translator/tree_ops/RewriteArrayOfArrayOfOpaqueUniforms.h"
@@ -146,7 +147,6 @@ bool DeclareDefaultUniforms(TCompiler *compiler,
         if (IsDefaultUniform(type))
         {
             TType *fieldType = new TType(type);
-            fieldType->setPrecision(EbpUndefined);
 
             uniformList->push_back(new TField(fieldType, symbol->getName(), symbol->getLine(),
                                               symbol->variable().symbolType()));
@@ -168,7 +168,6 @@ bool DeclareDefaultUniforms(TCompiler *compiler,
         const TVariable *variable = uniformVars[fieldIndex];
 
         TType *replacementType = new TType(variable->getType());
-        replacementType->setPrecision(EbpUndefined);
         replacementType->setInterfaceBlockField(uniformBlock->getType().getInterfaceBlock(),
                                                 fieldIndex);
 
@@ -1381,6 +1380,15 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
         return OutputSPIRV(this, root, compileOptions);
     }
 #endif
+
+    // When generating text, glslang cannot know the precision of folded constants so it may infer
+    // the wrong precisions.  The following transformation gives constants names with precision to
+    // guide glslang.  This is not an issue for SPIR-V generation because the precision information
+    // is present in the tree already.
+    if (!RecordConstantPrecision(this, root, &getSymbolTable()))
+    {
+        return false;
+    }
 
     // Write translated shader.
     TOutputVulkanGLSL outputGLSL(this, sink, enablePrecision, compileOptions);
