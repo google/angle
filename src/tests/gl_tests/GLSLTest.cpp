@@ -9629,6 +9629,37 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Regression test based on fuzzer issue.  If a case has statements that are pruned, and those
+// pruned statements in turn have branches, and another case follows, a prior implementation of
+// dead-code elimination doubly pruned some statements.
+TEST_P(GLSLTest_ES3, DeadCodeBranchInPrunedStatementsInCaseBeforeAnotherCase)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    color = vec4(0, 1, 0, 1);
+    switch(0)
+    {
+    case 0:
+        break;
+        break;
+        color = vec4(1, 0, 0, 1);   // The bug was pruning this statement twice
+    default:
+        color = vec4(0, 0, 1, 1);
+        break;
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test shader with all resources (default uniform, UBO, SSBO, image, sampler and atomic counter) to
 // make sure they are all linked ok.  The front-end sorts these resources and traverses the list of
 // "uniforms" to find the range for each resource.  A bug there was causing some resource ranges to
