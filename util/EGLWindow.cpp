@@ -284,6 +284,11 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         enabledFeatureOverrides.push_back("enable_capture_limits");
     }
 
+    if (params.forceRobustResourceInit == EGL_TRUE)
+    {
+        enabledFeatureOverrides.push_back("forceRobustResourceInit");
+    }
+
     const bool hasFeatureControlANGLE =
         strstr(extensionString, "EGL_ANGLE_feature_control") != nullptr;
 
