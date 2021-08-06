@@ -247,6 +247,8 @@ class Shader final : angle::NonCopyable, public LabeledObject
     unsigned int getMaxComputeSharedMemory() const { return mMaxComputeSharedMemory; }
     bool hasBeenDeleted() const { return mDeleteStatus; }
 
+    void resolveCompile();
+
   private:
     struct CompilingState;
 
@@ -255,8 +257,6 @@ class Shader final : angle::NonCopyable, public LabeledObject
                               GLsizei bufSize,
                               GLsizei *length,
                               char *buffer);
-
-    void resolveCompile();
 
     ShaderState mState;
     std::unique_ptr<rx::ShaderImpl> mImplementation;

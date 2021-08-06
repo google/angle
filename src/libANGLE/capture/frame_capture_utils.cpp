@@ -250,7 +250,7 @@ class ANGLE_NO_DISCARD GroupScope
     {
         constexpr size_t kBufSize = 255;
         char buf[kBufSize + 1]    = {};
-        snprintf(buf, kBufSize, "%s%s%02d", name.c_str(), name.empty() ? "" : " ", index);
+        snprintf(buf, kBufSize, "%s%s%03d", name.c_str(), name.empty() ? "" : " ", index);
         mJson->startGroup(buf);
     }
 
@@ -1025,6 +1025,9 @@ void SerializeShaderState(JsonSerializer *json, const gl::ShaderState &shaderSta
 
 void SerializeShader(JsonSerializer *json, GLuint id, gl::Shader *shader)
 {
+    // Ensure deterministic compilation.
+    shader->resolveCompile();
+
     GroupScope group(json, "Shader", id);
     SerializeShaderState(json, shader->getState());
     json->addScalar("Handle", shader->getHandle().value);
@@ -1135,8 +1138,14 @@ void SerializeProgramBindings(JsonSerializer *json, const gl::ProgramBindings &p
     }
 }
 
-void SerializeProgram(JsonSerializer *json, GLuint id, gl::Program *program)
+void SerializeProgram(JsonSerializer *json,
+                      const gl::Context *context,
+                      GLuint id,
+                      gl::Program *program)
 {
+    // Ensure deterministic link.
+    program->resolveLink(context);
+
     GroupScope group(json, "Program", id);
     SerializeProgramState(json, program->getState());
     json->addScalar("IsValidated", program->isValidated());
@@ -1149,9 +1158,9 @@ void SerializeProgram(JsonSerializer *json, GLuint id, gl::Program *program)
     json->addScalar("ID", program->id().value);
 }
 
-void SerializeImageDesc(JsonSerializer *json, const gl::ImageDesc &imageDesc)
+void SerializeImageDesc(JsonSerializer *json, size_t descIndex, const gl::ImageDesc &imageDesc)
 {
-    GroupScope group(json, "ImageDesc");
+    GroupScope group(json, "ImageDesc", static_cast<int>(descIndex));
     SerializeExtents(json, imageDesc.size);
     SerializeFormat(json, imageDesc.format);
     json->addScalar("Samples", imageDesc.samples);
@@ -1175,15 +1184,18 @@ void SerializeTextureState(JsonSerializer *json, const gl::TextureState &texture
     json->addScalar("ImmutableFormat", textureState.getImmutableFormat());
     json->addScalar("ImmutableLevels", textureState.getImmutableLevels());
     json->addScalar("Usage", textureState.getUsage());
-    const std::vector<gl::ImageDesc> &imageDescs = textureState.getImageDescs();
-    for (const gl::ImageDesc &imageDesc : imageDescs)
-    {
-        SerializeImageDesc(json, imageDesc);
-    }
     SerializeRectangle(json, "Crop", textureState.getCrop());
-
     json->addScalar("GenerateMipmapHint", textureState.getGenerateMipmapHint());
     json->addCString("InitState", InitStateToString(textureState.getInitState()));
+
+    {
+        GroupScope descGroup(json, "ImageDescs");
+        const std::vector<gl::ImageDesc> &imageDescs = textureState.getImageDescs();
+        for (size_t descIndex = 0; descIndex < imageDescs.size(); ++descIndex)
+        {
+            SerializeImageDesc(json, descIndex, imageDescs[descIndex]);
+        }
+    }
 }
 
 Result SerializeTextureData(JsonSerializer *json,
@@ -1226,24 +1238,26 @@ Result SerializeTextureData(JsonSerializer *json,
         gl::PixelPackState packState;
         packState.alignment = 1;
 
+        std::string label = "Texels-Level" + std::to_string(index.getLevelIndex());
+
         if (texture->getState().getInitState() == gl::InitState::Initialized)
         {
             if (format.compressed)
             {
                 // TODO: Read back compressed data. http://anglebug.com/6177
-                json->addCString("Texels", "compressed texel data");
+                json->addCString(label, "compressed texel data");
             }
             else
             {
                 ANGLE_TRY(texture->getTexImage(context, packState, nullptr, index.getTarget(),
                                                index.getLevelIndex(), getFormat, getType,
                                                texelsPtr->data()));
-                json->addBlob("Texels", texelsPtr->data(), texelsPtr->size());
+                json->addBlob(label, texelsPtr->data(), texelsPtr->size());
             }
         }
         else
         {
-            json->addCString("Texels", "not initialized");
+            json->addCString(label, "not initialized");
         }
     }
     return Result::Continue;
@@ -1397,7 +1411,7 @@ Result SerializeContextToString(const gl::Context *context, std::string *stringO
         {
             GLuint id               = program.first;
             gl::Program *programPtr = program.second;
-            SerializeProgram(&json, id, programPtr);
+            SerializeProgram(&json, context, id, programPtr);
         }
     }
     {
