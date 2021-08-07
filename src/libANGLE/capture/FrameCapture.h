@@ -769,6 +769,21 @@ void WriteParamValueReplay<ParamType::TGLubyte>(std::ostream &os,
                                                 const CallCapture &call,
                                                 GLubyte value);
 
+template <>
+void WriteParamValueReplay<ParamType::TEGLDEBUGPROCKHR>(std::ostream &os,
+                                                        const CallCapture &call,
+                                                        EGLDEBUGPROCKHR value);
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLGetBlobFuncANDROID>(std::ostream &os,
+                                                              const CallCapture &call,
+                                                              EGLGetBlobFuncANDROID value);
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLSetBlobFuncANDROID>(std::ostream &os,
+                                                              const CallCapture &call,
+                                                              EGLSetBlobFuncANDROID value);
+
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>
 void WriteParamValueReplay(std::ostream &os, const CallCapture &call, T value)

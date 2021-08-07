@@ -6473,4 +6473,37 @@ void WriteParamValueReplay<ParamType::TGLubyte>(std::ostream &os,
     os << v;
 }
 
+template <>
+void WriteParamValueReplay<ParamType::TEGLDEBUGPROCKHR>(std::ostream &os,
+                                                        const CallCapture &call,
+                                                        EGLDEBUGPROCKHR value)
+{
+    // The value isn't actually useful, but this fixes MSVC compile errors:
+    // error: implicit conversion between pointer-to-function and pointer-to-object is a Microsoft
+    // extension [-Werror,-Wmicrosoft-cast]
+    os << reinterpret_cast<void *>(value);
+}
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLGetBlobFuncANDROID>(std::ostream &os,
+                                                              const CallCapture &call,
+                                                              EGLGetBlobFuncANDROID value)
+{
+    // The value isn't actually useful, but this fixes MSVC compile errors:
+    // error: implicit conversion between pointer-to-function and pointer-to-object is a Microsoft
+    // extension [-Werror,-Wmicrosoft-cast]
+    os << reinterpret_cast<void *>(value);
+}
+
+template <>
+void WriteParamValueReplay<ParamType::TEGLSetBlobFuncANDROID>(std::ostream &os,
+                                                              const CallCapture &call,
+                                                              EGLSetBlobFuncANDROID value)
+{
+    // The value isn't actually useful, but this fixes MSVC compile errors:
+    // error: implicit conversion between pointer-to-function and pointer-to-object is a Microsoft
+    // extension [-Werror,-Wmicrosoft-cast]
+    os << reinterpret_cast<void *>(value);
+}
+
 }  // namespace angle
