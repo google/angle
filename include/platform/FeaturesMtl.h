@@ -109,6 +109,12 @@ struct FeaturesMtl : FeatureSetBase
                                      "Direct translation to SPIR-V.", &members,
                                      "http://anglebug.com/4889"};
 
+    // Generate Metal directly instead of generating SPIR-V and then using SPIR-V Cross.  Transitory
+    // feature until the work is complete.
+    Feature directMetalGeneration = {"directMetalGeneration", FeatureCategory::MetalFeatures,
+                                     "Direct translation to Metal.", &members,
+                                     "http://anglebug.com/5505"};
+
     Feature forceNonCSBaseMipmapGeneration = {
         "force_non_cs_mipmap_gen", FeatureCategory::MetalFeatures,
         "Turn this feature on to disallow Compute Shader based mipmap generation. Compute Shader "

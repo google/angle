@@ -164,6 +164,9 @@ class DisplayMtl : public DisplayImpl
 #if ANGLE_MTL_EVENT_AVAILABLE
     mtl::AutoObjCObj<MTLSharedEventListener> getOrCreateSharedEventListener();
 #endif
+
+    bool useDirectToMetalCompiler();
+
   protected:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;

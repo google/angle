@@ -444,7 +444,8 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext,
                                    gl::InfoLog &infoLog)
 {
 #if ANGLE_ENABLE_METAL_SPIRV
-    if (CompilerMtl::useDirectToMSLCompiler())
+    ContextMtl *contextMtl = mtl::GetImpl(glContext);
+    if (contextMtl->getDisplay()->useDirectToMetalCompiler())
     {
         return linkImplDirect(glContext, resources, infoLog);
     }
@@ -595,7 +596,7 @@ angle::Result ProgramMtl::getSpecializedShader(mtl::Context *context,
 {
     static_assert(YES == 1, "YES should have value of 1");
 #if ANGLE_ENABLE_METAL_SPIRV
-    static const bool useSpirv = !CompilerMtl::useDirectToMSLCompiler();
+    static const bool useSpirv = !context->getDisplay()->useDirectToMetalCompiler();
 #endif
 
     mtl::TranslatedShaderInfo *translatedMslInfo = &mMslShaderTranslateInfo[shaderType];

@@ -259,6 +259,11 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         enabledFeatureOverrides.push_back("directSPIRVGeneration");
     }
 
+    if (params.directMetalGeneration == EGL_TRUE)
+    {
+        enabledFeatureOverrides.push_back("directMetalGeneration");
+    }
+
     if (params.hasExplicitMemBarrierFeatureMtl == EGL_FALSE)
     {
         disabledFeatureOverrides.push_back("has_explicit_mem_barrier_mtl");

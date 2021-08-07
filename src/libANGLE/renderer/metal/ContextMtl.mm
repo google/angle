@@ -11,6 +11,7 @@
 
 #include <TargetConditionals.h>
 
+#include "GLSLANG/ShaderLang.h"
 #include "common/debug.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/renderer/metal/BufferMtl.h"
@@ -1121,7 +1122,9 @@ const gl::Limitations &ContextMtl::getNativeLimitations() const
 // Shader creation
 CompilerImpl *ContextMtl::createCompiler()
 {
-    return new CompilerMtl();
+    ShShaderOutput outputType =
+        getDisplay()->useDirectToMetalCompiler() ? SH_MSL_METAL_OUTPUT : SH_SPIRV_METAL_OUTPUT;
+    return new CompilerMtl(outputType);
 }
 ShaderImpl *ContextMtl::createShader(const gl::ShaderState &state)
 {

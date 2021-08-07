@@ -12,52 +12,19 @@
 #include <stdio.h>
 
 #include "common/debug.h"
-#include "common/system_utils.h"
 
 namespace rx
 {
 
-CompilerMtl::CompilerMtl() : CompilerImpl() {}
+CompilerMtl::CompilerMtl(ShShaderOutput translatorOutputType)
+    : CompilerImpl(), mTranslatorOutputType(translatorOutputType)
+{}
 
 CompilerMtl::~CompilerMtl() {}
 
 ShShaderOutput CompilerMtl::getTranslatorOutputType() const
 {
-#ifdef ANGLE_ENABLE_ASSERTS
-    static bool outputted = false;
-#endif
-#if ANGLE_ENABLE_METAL_SPIRV
-    if (useDirectToMSLCompiler())
-    {
-#    ifdef ANGLE_ENABLE_ASSERTS
-        if (!outputted)
-        {
-            fprintf(stderr, "Using direct-to-Metal shader compiler\n");
-            outputted = true;
-        }
-#    endif
-        return SH_MSL_METAL_OUTPUT;
-    }
-    else
-    {
-#    ifdef ANGLE_ENABLE_ASSERTS
-        if (!outputted)
-        {
-            fprintf(stderr, "Using SPIR-V Metal shader compiler\n");
-            outputted = true;
-        }
-#    endif
-        return SH_SPIRV_METAL_OUTPUT;
-    }
-#else
-    return SH_MSL_METAL_OUTPUT;
-#endif
-}
-
-bool CompilerMtl::useDirectToMSLCompiler()
-{
-    static bool val = angle::GetBoolEnvironmentVar("ANGLE_USE_MSL_COMPILER");
-    return val;
+    return mTranslatorOutputType;
 }
 
 }  // namespace rx

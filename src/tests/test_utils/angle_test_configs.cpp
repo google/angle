@@ -278,6 +278,11 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_DirectSPIRVGen";
     }
 
+    if (pp.eglParameters.directMetalGeneration == EGL_TRUE)
+    {
+        stream << "_DirectMetalGen";
+    }
+
     return stream;
 }
 
