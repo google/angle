@@ -480,7 +480,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
         DIRTY_BIT_MAX = DIRTY_BIT_INVALID,
     };
 
-    // See compiler/translator/TranslatorVulkan.cpp: AddDriverUniformsToShader()
+    // Must keep this in sync with DriverUniformExtended::createUniformFields in:
+    // src/compiler/translator/tree_util/DriverUniform.h
     struct DriverUniforms
     {
         float viewport[4];
@@ -503,6 +504,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
         float halfRenderArea[2];
         float flipXY[2];
         float negFlipXY[2];
+        uint32_t emulatedInstanceID;
         uint32_t coverageMask;
         uint32_t padding;
     };

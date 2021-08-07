@@ -2177,6 +2177,11 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context,
 
     // NOTE(hqle): preRotation & fragRotation are unused.
 
+    // Emulated gl_InstanceID
+    // TODO(anglebug.com/5505): these code paths differ significantly from
+    // Apple's fork; there is no place currently to set the emulatedInstanceID.
+    mDriverUniforms.emulatedInstanceID = 0;
+
     // Sample coverage mask
     uint32_t sampleBitCount = mDrawFramebuffer->getSamples();
     uint32_t coverageSampleBitCount =

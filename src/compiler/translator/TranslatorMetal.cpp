@@ -42,10 +42,11 @@ const char kRasterizerDiscardEnabledConstName[] = "ANGLERasterizerDisabled";
 namespace
 {
 // Metal specific driver uniforms
-constexpr const char kHalfRenderArea[] = "halfRenderArea";
-constexpr const char kFlipXY[]         = "flipXY";
-constexpr const char kNegFlipXY[]      = "negFlipXY";
-constexpr const char kCoverageMask[]   = "coverageMask";
+constexpr const char kHalfRenderArea[]     = "halfRenderArea";
+constexpr const char kFlipXY[]             = "flipXY";
+constexpr const char kNegFlipXY[]          = "negFlipXY";
+constexpr const char kEmulatedInstanceID[] = "emulatedInstanceID";
+constexpr const char kCoverageMask[]       = "coverageMask";
 
 constexpr ImmutableString kSampleMaskWriteFuncName = ImmutableString("ANGLEWriteSampleMask");
 
@@ -116,18 +117,21 @@ ANGLE_NO_DISCARD bool InitializeUnusedOutputs(TIntermBlock *root,
 }  // anonymous namespace
 
 // class DriverUniformMetal
+// The fields here must match the DriverUniforms structure defined in ContextMtl.h.
 TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable)
 {
     TFieldList *driverFieldList = DriverUniform::createUniformFields(symbolTable);
 
-    constexpr size_t kNumGraphicsDriverUniformsMetal = 4;
+    constexpr size_t kNumGraphicsDriverUniformsMetal = 5;
     constexpr std::array<const char *, kNumGraphicsDriverUniformsMetal>
-        kGraphicsDriverUniformNamesMetal = {{kHalfRenderArea, kFlipXY, kNegFlipXY, kCoverageMask}};
+        kGraphicsDriverUniformNamesMetal = {
+            {kHalfRenderArea, kFlipXY, kNegFlipXY, kEmulatedInstanceID, kCoverageMask}};
 
     const std::array<TType *, kNumGraphicsDriverUniformsMetal> kDriverUniformTypesMetal = {{
         new TType(EbtFloat, 2),  // halfRenderArea
         new TType(EbtFloat, 2),  // flipXY
         new TType(EbtFloat, 2),  // negFlipXY
+        new TType(EbtUInt),      // kEmulatedInstanceID - unused in SPIR-V Metal compiler
         new TType(EbtUInt),      // kCoverageMask
     }};
 
