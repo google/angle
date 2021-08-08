@@ -170,6 +170,10 @@ declare_args() {
   angle_enable_swiftshader =
       angle_enable_vulkan && !is_android && !is_fuchsia && !is_ggp
 
+  # Translator frontend support:
+  angle_enable_desktop_glsl = angle_enable_gl_desktop
+
+  # Translator backend support:
   angle_enable_hlsl = angle_enable_d3d9 || angle_enable_d3d11
   angle_enable_essl = angle_enable_gl || use_ozone
   angle_enable_glsl = angle_enable_gl || use_ozone
