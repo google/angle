@@ -48,7 +48,7 @@
 /third_party/googletest
 /third_party/ijar
 /third_party/jdk/current
-/third_party/jdk/extras/java_8
+/third_party/jdk/extras/java_8/101
 /third_party/jinja2
 /third_party/jsoncpp
 /third_party/libjpeg_turbo
@@ -60,8 +60,8 @@
 /third_party/proguard/lib
 /third_party/protobuf
 /third_party/Python-Markdown
-/third_party/qemu-linux-x64
-/third_party/qemu-mac-x64
+/third_party/qemu-linux-x64/909
+/third_party/qemu-mac-x64/909
 /third_party/r8/lib
 /third_party/rapidjson/src
 /third_party/requests/src
@@ -98,17 +98,17 @@ buildtools/
 debug.txt
 Debug/
 Debug_ARM/
-Debug_Win32/
-Debug_x64/
+Debug_Win32/525
+Debug_x64/909
 diag.txt
 ipch
 lib/*
 out
 patches-*
 Release/
-Release_ARM/
-Release_Win32/
-Release_x64/
+Release_ARM/252
+Release_Win32/525
+Release_x64/909
 TestResults.qpa
 .idea/
 
