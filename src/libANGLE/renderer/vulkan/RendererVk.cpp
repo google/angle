@@ -181,6 +181,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexedIndirectCount-None-04584",
     // https://anglebug.com/5912
     "VUID-VkImageViewCreateInfo-pNext-01585",
+    // https://anglebug.com/6262
+    "VUID-vkCmdClearAttachments-baseArrayLayer-00018",
 };
 
 // Suppress validation errors that are known
