@@ -653,6 +653,10 @@
 1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.refract.lowp_fragment.vec4 = SKIP
 1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.refract.lowp_vertex.vec4 = SKIP
 
+// Fails on Win x86 SwANGLE bots with Clang llvmorg-13-init-15561-gf98ed74f
+6265 WIN SWIFTSHADER : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.lowp_uvec3_vertex = FAIL
+6265 WIN SWIFTSHADER : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.mediump_uvec3_vertex = FAIL
+
 // AddressSanitizer:DEADLYSIGNAL on Nexus 5X
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat3_offset_1 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat4 = SKIP
