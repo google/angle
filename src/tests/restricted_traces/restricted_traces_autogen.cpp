@@ -95,6 +95,7 @@
 #include "slingshot_test1/slingshot_test1_capture_context2.h"
 #include "slingshot_test2/slingshot_test2_capture_context2.h"
 #include "sniper_3d/sniper_3d_capture_context1.h"
+#include "sonic_the_hedgehog/sonic_the_hedgehog_capture_context2.h"
 #include "standoff_2/standoff_2_capture_context1.h"
 #include "subway_princess_runner/subway_princess_runner_capture_context2.h"
 #include "subway_surfers/subway_surfers_capture_context1.h"
@@ -594,6 +595,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {sniper_3d::kReplayContextClientMajorVersion, sniper_3d::kReplayContextClientMinorVersion,
       sniper_3d::kReplayFrameStart, sniper_3d::kReplayFrameEnd, sniper_3d::kReplayDrawSurfaceWidth,
       sniper_3d::kReplayDrawSurfaceHeight, kDefaultReplayDrawSurfaceColorSpace, "sniper_3d"}},
+    {RestrictedTraceID::sonic_the_hedgehog,
+     {sonic_the_hedgehog::kReplayContextClientMajorVersion,
+      sonic_the_hedgehog::kReplayContextClientMinorVersion, sonic_the_hedgehog::kReplayFrameStart,
+      sonic_the_hedgehog::kReplayFrameEnd, sonic_the_hedgehog::kReplayDrawSurfaceWidth,
+      sonic_the_hedgehog::kReplayDrawSurfaceHeight,
+      sonic_the_hedgehog::kReplayDrawSurfaceColorSpace, "sonic_the_hedgehog"}},
     {RestrictedTraceID::standoff_2,
      {standoff_2::kReplayContextClientMajorVersion, standoff_2::kReplayContextClientMinorVersion,
       standoff_2::kReplayFrameStart, standoff_2::kReplayFrameEnd,
