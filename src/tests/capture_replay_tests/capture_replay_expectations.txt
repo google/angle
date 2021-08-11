@@ -31,23 +31,23 @@
 # with one of these outcomes will bring down the whole batch.
 #
 
-6180 : ContextLostSkipValidationTest.LostNoErrorGetProgram/ES2_Vulkan = SKIP_FOR_CAPTURE
-6180 : ContextLostTest.ParallelCompileReadyQuery/ES2_Vulkan = SKIP_FOR_CAPTURE
+6266 : ContextLostSkipValidationTest.LostNoErrorGetProgram/ES2_Vulkan = FAIL
+6266 : ContextLostTest.ParallelCompileReadyQuery/ES2_Vulkan = FAIL
 
 6180 : EGLContextASANTest.DestroyContextInUse/ES2_Vulkan = FAIL
-6180 : EGLContextSharingTest.TextureLifetime/ES2_Vulkan = SKIP_FOR_CAPTURE
-6180 : EGLContextSharingTest.BindTextureAfterShareContextFree/ES2_Vulkan = SKIPPED_BY_GTEST
-6180 : EGLContextSharingTest.DisplayShareGroupObjectSharing/ES2_Vulkan = SKIPPED_BY_GTEST
-6180 : EGLContextSharingTest.DisplayShareGroupReleasedWithLastContext/ES2_Vulkan = SKIPPED_BY_GTEST
+6267 : EGLContextSharingTest.TextureLifetime/ES2_Vulkan = SKIP_FOR_CAPTURE
+6269 : EGLContextSharingTest.BindTextureAfterShareContextFree/ES2_Vulkan = SKIPPED_BY_GTEST
+6269 : EGLContextSharingTest.DisplayShareGroupObjectSharing/ES2_Vulkan = SKIPPED_BY_GTEST
+6269 : EGLContextSharingTest.DisplayShareGroupReleasedWithLastContext/ES2_Vulkan = SKIPPED_BY_GTEST
 
 5822 : ExternalWrapTest.ClampToEdge/* = SKIP_FOR_CAPTURE
 5822 : ExternalWrapTest.MirroredRepeat/* = SKIP_FOR_CAPTURE
 5822 : ExternalWrapTest.NoWrap/* = SKIP_FOR_CAPTURE
 5822 : ExternalWrapTest.Repeat/* = SKIP_FOR_CAPTURE
 
-6180 : FramebufferTest.MultiContextNoRenderingFeedbackLoops/* = SKIP_FOR_CAPTURE
+6267 : FramebufferTest.MultiContextNoRenderingFeedbackLoops/* = SKIP_FOR_CAPTURE
 
-6180 : GLSLTest.ZeroShaderLength/* = SKIP_FOR_CAPTURE
+6268 : GLSLTest.ZeroShaderLength/* = SKIP_FOR_CAPTURE
 
 6180 : ImageTest.Deletion/* = FAIL
 6180 : ImageTest.MipLevels/* = FAIL
@@ -84,7 +84,7 @@
 6221 : VulkanExternalImageTest.ShouldDrawOpaqueFdWithSemaphores/ES2_Vulkan* = SKIP_FOR_CAPTURE
 6221 : VulkanExternalImageTest.WaitSemaphoresRetainsContentOpaqueFd/ES2_Vulkan* = SKIP_FOR_CAPTURE
 
-6180 : WebGLCompatibilityTest.MultiContextNoRenderingFeedbackLoops/* = SKIP_FOR_CAPTURE
+6267 : WebGLCompatibilityTest.MultiContextNoRenderingFeedbackLoops/* = SKIP_FOR_CAPTURE
 
 6180 WIN : WebGLCompatibilityTest.DrawArraysBufferOutOfBoundsNonInstanced/ES2_Vulkan_SwiftShader = FAIL
 6180 WIN : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/ES2_Vulkan_SwiftShader = FAIL
