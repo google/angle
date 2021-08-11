@@ -14,6 +14,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -52,6 +56,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -89,6 +97,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -127,6 +139,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -164,6 +180,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -202,6 +222,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -239,6 +263,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -276,6 +304,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles2_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -313,6 +345,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles31_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -350,6 +386,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles31_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -388,6 +428,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles32_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -424,6 +468,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles32_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -461,6 +509,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles3_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -498,6 +550,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles3_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -535,6 +591,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -569,6 +629,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -610,6 +674,10 @@
           "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -652,6 +720,10 @@
           "--gerrit-patchset=${patch_set}",
           "--buildbucket-id=${buildbucket_build_id}"
         ],
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -689,6 +761,10 @@
           "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "cipd_packages": [
@@ -727,6 +803,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -755,6 +835,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -779,6 +863,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -805,6 +893,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -837,6 +929,10 @@
           "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -870,6 +966,10 @@
           "--gerrit-patchset=${patch_set}",
           "--buildbucket-id=${buildbucket_build_id}"
         ],
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -897,6 +997,10 @@
           "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -927,6 +1031,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -953,6 +1061,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -980,6 +1092,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1007,6 +1123,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1033,6 +1153,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1059,6 +1183,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_rotate180_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1085,6 +1213,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_rotate270_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1111,6 +1243,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_rotate90_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1137,6 +1273,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1165,6 +1305,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1192,6 +1336,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1219,6 +1367,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_rotate180_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1246,6 +1398,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_rotate270_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1273,6 +1429,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_rotate90_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1300,6 +1460,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1328,6 +1492,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1355,6 +1523,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1382,6 +1554,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles2_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1409,6 +1585,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles31_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1435,6 +1615,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles31_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1462,6 +1646,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles32_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1488,6 +1676,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles32_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1515,6 +1707,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles3_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1541,6 +1737,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles3_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1568,6 +1768,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1593,6 +1797,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1617,6 +1825,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -1649,6 +1861,10 @@
           "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1681,6 +1897,10 @@
           "--gerrit-patchset=${patch_set}",
           "--buildbucket-id=${buildbucket_build_id}"
         ],
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1708,6 +1928,10 @@
           "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1738,6 +1962,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1767,6 +1995,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_metal_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1796,6 +2028,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1825,6 +2061,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_metal_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1854,6 +2094,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1885,6 +2129,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_metal_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1915,6 +2163,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -1942,6 +2194,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -1977,6 +2233,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2004,6 +2264,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_metal_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2031,6 +2295,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2058,6 +2326,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_metal_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2085,6 +2357,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2114,6 +2390,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_metal_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2142,6 +2422,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2167,6 +2451,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -2199,6 +2487,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2226,6 +2518,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -2260,6 +2556,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_d3d11_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2286,6 +2586,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -2314,6 +2618,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2337,6 +2645,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -2363,6 +2675,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -2395,6 +2711,10 @@
           "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2428,6 +2748,10 @@
           "--gerrit-patchset=${patch_set}",
           "--buildbucket-id=${buildbucket_build_id}"
         ],
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2455,6 +2779,10 @@
           "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2484,6 +2812,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_d3d11_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2511,6 +2843,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2537,6 +2873,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2564,6 +2904,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_d3d11_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2590,6 +2934,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2617,6 +2965,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2643,6 +2995,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2669,6 +3025,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_rotate180_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2695,6 +3055,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_rotate270_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2721,6 +3085,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_rotate90_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2747,6 +3115,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_d3d11_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2774,6 +3146,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2802,6 +3178,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2829,6 +3209,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles31_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2856,6 +3240,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_rotate180_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2883,6 +3271,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_rotate270_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2910,6 +3302,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_rotate90_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2937,6 +3333,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_d3d11_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2964,6 +3364,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_gl_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -2992,6 +3396,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3019,6 +3427,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3046,6 +3458,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles2_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3073,6 +3489,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles31_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3099,6 +3519,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles31_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3126,6 +3550,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles32_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3152,6 +3580,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles32_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3179,6 +3611,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles3_vulkan_spirvgen_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3205,6 +3641,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_khr_gles3_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3230,6 +3670,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -3258,6 +3702,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3281,6 +3729,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -3306,6 +3758,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -3338,6 +3794,10 @@
           "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3370,6 +3830,10 @@
           "--gerrit-patchset=${patch_set}",
           "--buildbucket-id=${buildbucket_build_id}"
         ],
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3397,6 +3861,10 @@
           "script": "//scripts/process_angle_perf_results.py"
         },
         "name": "angle_perftests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3426,6 +3894,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_egl_d3d11_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3452,6 +3924,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_d3d11_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3478,6 +3954,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles3_d3d11_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3504,6 +3984,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -3532,6 +4016,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3555,6 +4043,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -3580,6 +4072,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,
@@ -3611,6 +4107,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_d3d11_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3637,6 +4137,10 @@
           "script": "//scripts/angle_deqp_test_merge.py"
         },
         "name": "angle_deqp_gles2_vulkan_tests",
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3664,6 +4168,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3689,6 +4197,10 @@
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
+        },
         "swarming": {
           "can_use_on_swarming_builders": true,
           "containment_type": "AUTO",
@@ -3713,6 +4225,10 @@
         "merge": {
           "args": [],
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "resultdb": {
+          "enable": true,
+          "has_native_resultdb_integration": true
         },
         "swarming": {
           "can_use_on_swarming_builders": true,

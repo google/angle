@@ -223,6 +223,7 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
         properties = properties,
         dimensions = dimensions,
         build_numbers = True,
+        resultdb_settings = resultdb.settings(enable = True),
     )
 
     is_perf = "-perf" in name
