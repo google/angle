@@ -270,6 +270,7 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
             properties = properties,
             dimensions = dimensions,
             build_numbers = True,
+            resultdb_settings = resultdb.settings(enable = True),
         )
 
         # Include all other bots in the CQ by default except the placeholder GCC configs.
@@ -318,6 +319,7 @@ luci.builder(
         "repo_name": "angle",
         "runhooks": True,
     },
+    resultdb_settings = resultdb.settings(enable = True),
 )
 
 luci.gitiles_poller(
