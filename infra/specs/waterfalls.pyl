@@ -22,7 +22,6 @@
       'android-arm64-pixel4': {
         'os_type': 'android',
         'mixins': [
-          'has_native_resultdb_integration',
           'android_r',
           'flame',
           'gpu-swarming-pool',
@@ -35,7 +34,6 @@
       'android-arm64-pixel4-perf': {
         'os_type': 'android',
         'mixins': [
-          'has_native_resultdb_integration',
           'android_r',
           'flame',
           'gpu-swarming-pool',
@@ -47,7 +45,6 @@
       'linux-intel': {
         'os_type': 'linux',
         'mixins': [
-          'has_native_resultdb_integration',
           'linux_intel_hd_630_stable',
         ],
         'test_suites': {
@@ -58,7 +55,6 @@
       'linux-intel-perf': {
         'os_type': 'linux',
         'mixins': [
-          'has_native_resultdb_integration',
           'linux_intel_hd_630_stable',
         ],
         'test_suites': {
@@ -68,7 +64,6 @@
       'linux-nvidia': {
         'os_type': 'linux',
         'mixins': [
-          'has_native_resultdb_integration',
           'linux_nvidia_quadro_p400_stable',
         ],
         'test_suites': {
@@ -79,7 +74,6 @@
       'linux-nvidia-perf': {
         'os_type': 'linux',
         'mixins': [
-          'has_native_resultdb_integration',
           'linux_nvidia_quadro_p400_stable',
         ],
         'test_suites': {
@@ -89,7 +83,6 @@
       'mac-amd': {
         'os_type': 'mac',
         'mixins': [
-          'has_native_resultdb_integration',
           'mac_retina_amd_gpu_stable',
         ],
         'test_suites': {
@@ -99,7 +92,6 @@
       'mac-intel': {
         'os_type': 'mac',
         'mixins': [
-          'has_native_resultdb_integration',
           'mac_mini_intel_gpu_stable',
         ],
         'test_suites': {
@@ -109,7 +101,6 @@
       'mac-nvidia': {
         'os_type': 'mac',
         'mixins': [
-          'has_native_resultdb_integration',
           'mac_retina_nvidia_gpu_stable',
         ],
         'test_suites': {
@@ -120,7 +111,6 @@
       'win10-x64-intel': {
         'os_type': 'win',
         'mixins': [
-          'has_native_resultdb_integration',
           'win10_intel_hd_630_stable',
         ],
         'test_suites': {
@@ -131,7 +121,6 @@
       'win10-x64-intel-perf': {
         'os_type': 'win',
         'mixins': [
-          'has_native_resultdb_integration',
           'win10_intel_hd_630_stable',
         ],
         'test_suites': {
@@ -141,7 +130,6 @@
       'win10-x64-nvidia': {
         'os_type': 'win',
         'mixins': [
-          'has_native_resultdb_integration',
           'win10_nvidia_quadro_p400_stable',
         ],
         'test_suites': {
@@ -152,7 +140,6 @@
       'win10-x64-nvidia-perf': {
         'os_type': 'win',
         'mixins': [
-          'has_native_resultdb_integration',
           'win10_nvidia_quadro_p400_stable',
         ],
         'test_suites': {
@@ -162,7 +149,6 @@
       'win7-x64-nvidia': {
         'os_type': 'win',
         'mixins': [
-          'has_native_resultdb_integration',
           'win7_nvidia_quadro_p400',
         ],
         'test_suites': {
@@ -172,7 +158,6 @@
       'win7-x86-amd': {
         'os_type': 'win',
         'mixins': [
-          'has_native_resultdb_integration',
           'win7_amd_r7_240',
         ],
         'test_suites': {

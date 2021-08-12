@@ -23,8 +23,6 @@
   'flame': { 'swarming': { 'dimensions': { 'device_type': 'flame',
                                            'os': 'Android'}}},
   'gpu-swarming-pool': { 'swarming': { 'dimensions': { 'pool': 'chromium.tests.gpu'}}},
-  'has_native_resultdb_integration': { 'resultdb': { 'enable': True,
-                                                     'has_native_resultdb_integration': True}},
   'linux_intel_hd_630_stable': { 'swarming': { 'dimensions': { 'gpu': '8086:5912-19.0.2',
                                                                'os': 'Ubuntu-19.04',
                                                                'pool': 'chromium.tests.gpu'}}},
