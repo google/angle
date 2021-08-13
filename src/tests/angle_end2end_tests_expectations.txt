@@ -212,6 +212,3 @@
 
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
-
-// Fails in M92 branch
-1234829 MAC METAL : Texture2DTestES3.UpdateRenderTargetCacheOnDestroyTexStorage/ES3_Metal = SKIP
