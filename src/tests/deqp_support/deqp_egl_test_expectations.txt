@@ -171,6 +171,16 @@
 2546 ANDROID VULKAN : dEQP-EGL.functional.query_surface.set_attribute.window.other = SKIP
 2546 ANDROID VULKAN : dEQP-EGL.functional.query_surface.simple.window.other = SKIP
 2546 ANDROID VULKAN : dEQP-EGL.functional.resize.pixel_density.* = SKIP
+6277 ANDROID VULKAN : dEQP-EGL.functional.image.api.create_image_gles2_android_native_rgb8 = SKIP
+6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles2_android_native_rgb8_read_pixels = SKIP
+6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles2_android_native_rgb8_texture = SKIP
+6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_rgb565_texture_array = SKIP
+6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_rgb8_texture_array = SKIP
+6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles3_android_native_array_rgba8_texture_array = SKIP
+6277 ANDROID VULKAN : dEQP-EGL.functional.image.modify.android_native_rgb8_renderbuffer_clear_color = SKIP
+6277 ANDROID VULKAN : dEQP-EGL.functional.image.modify.android_native_rgb8_tex_subimage_rgb8 = SKIP
+6277 ANDROID VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_read_pixels = SKIP
+6277 ANDROID VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_texture = SKIP
 
 // Robustness failures on multiple platforms
 3711 : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.reads.* = FAIL
