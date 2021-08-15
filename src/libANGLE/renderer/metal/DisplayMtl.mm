@@ -758,6 +758,16 @@ void DisplayMtl::ensureCapsInitialized() const
     // Apple platforms require PVRTC1 textures to be squares.
     mNativeLimitations.squarePvrtc1 = true;
 
+    // Older Metal does not support compressed formats for TEXTURE_3D target.
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.0, 13.0))
+    {
+        mNativeLimitations.noCompressedTexture3D = !supportsEitherGPUFamily(3, 1);
+    }
+    else
+    {
+        mNativeLimitations.noCompressedTexture3D = true;
+    }
+
     // Direct-to-metal constants:
     mNativeCaps.driverUniformsBindingIndex    = mtl::kDriverUniformsBindingIndex;
     mNativeCaps.defaultUniformsBindingIndex   = mtl::kDefaultUniformsBindingIndex;

@@ -43,6 +43,7 @@ angle_end2end_tests_sources = [
   "gl_tests/ClientArraysTest.cpp",
   "gl_tests/ClipDistanceTest.cpp",
   "gl_tests/ColorMaskTest.cpp",
+  "gl_tests/CompressedTextureFormatsTest.cpp",
   "gl_tests/ComputeShaderTest.cpp",
   "gl_tests/ContextLostTest.cpp",
   "gl_tests/ContextNoErrorTest.cpp",

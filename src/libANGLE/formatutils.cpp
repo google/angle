@@ -1217,11 +1217,11 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddCompressedFormat(&map, GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG,     8,  4,  1,  64,  4, false, RequireExt<&Extensions::compressedTexturePVRTC>,    AlwaysSupported, NeverSupported,      NeverSupported, NeverSupported);
 
     // From GL_EXT_pvrtc_sRGB
-    //                       | Internal format                             | W | H | D | BS |CC| SRGB | Texture supported                                     | Filterable     | Texture attachment | Renderbuffer  | Blend
-    AddCompressedFormat(&map, GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT,           8,  4,  1,  64,  3, true, RequireExt<&Extensions::compressedTexturePVRTCsRGB>,    AlwaysSupported, NeverSupported,      NeverSupported, NeverSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT,           4,  4,  1,  64,  3, true, RequireExt<&Extensions::compressedTexturePVRTCsRGB>,    AlwaysSupported, NeverSupported,      NeverSupported, NeverSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT,     8,  4,  1,  64,  4, true, RequireExt<&Extensions::compressedTexturePVRTCsRGB>,    AlwaysSupported, NeverSupported,      NeverSupported, NeverSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT,     4,  4,  1,  64,  4, true, RequireExt<&Extensions::compressedTexturePVRTCsRGB>,    AlwaysSupported, NeverSupported,      NeverSupported, NeverSupported);
+    //                       | Internal format                             | W | H | D | BS |CC| SRGB | Texture supported                                                                               | Filterable     | Texture attachment | Renderbuffer  | Blend
+    AddCompressedFormat(&map, GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT,           8,  4,  1,  64,  3, true, RequireExtAndExt<&Extensions::compressedTexturePVRTC, &Extensions::compressedTexturePVRTCsRGB>,    AlwaysSupported, NeverSupported,      NeverSupported, NeverSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT,           4,  4,  1,  64,  3, true, RequireExtAndExt<&Extensions::compressedTexturePVRTC, &Extensions::compressedTexturePVRTCsRGB>,    AlwaysSupported, NeverSupported,      NeverSupported, NeverSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT,     8,  4,  1,  64,  4, true, RequireExtAndExt<&Extensions::compressedTexturePVRTC, &Extensions::compressedTexturePVRTCsRGB>,    AlwaysSupported, NeverSupported,      NeverSupported, NeverSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT,     4,  4,  1,  64,  4, true, RequireExtAndExt<&Extensions::compressedTexturePVRTC, &Extensions::compressedTexturePVRTCsRGB>,    AlwaysSupported, NeverSupported,      NeverSupported, NeverSupported);
 
     // For STENCIL_INDEX8 we chose a normalized component type for the following reasons:
     // - Multisampled buffer are disallowed for non-normalized integer component types and we want to support it for STENCIL_INDEX8

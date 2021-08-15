@@ -807,6 +807,9 @@ struct Limitations
 
     // ETC1 texture support is emulated.
     bool emulatedEtc1 = false;
+
+    // No compressed TEXTURE_3D support.
+    bool noCompressedTexture3D = false;
 };
 
 struct TypePrecision

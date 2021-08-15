@@ -940,10 +940,12 @@ angle_source_set("libANGLE") {
 }
 
 angle_source_set("angle_gl_enum_utils") {
-  public_deps = [ ":libANGLE_base" ]
+  deps = [ ":angle_common" ]
   sources = [
     "src/libANGLE/capture/gl_enum_utils.cpp",
+    "src/libANGLE/capture/gl_enum_utils.h",
     "src/libANGLE/capture/gl_enum_utils_autogen.cpp",
+    "src/libANGLE/capture/gl_enum_utils_autogen.h",
   ]
 }
 
