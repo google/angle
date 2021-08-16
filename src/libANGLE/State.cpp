@@ -3657,6 +3657,17 @@ State::ExtendedDirtyBits State::getAndResetExtendedDirtyBits() const
     return retVal;
 }
 
+void State::initializeForCapture(const Context *context)
+{
+    mCaps       = context->getCaps();
+    mExtensions = context->getExtensions();
+
+    // This little kludge gets around the frame capture "constness". It should be safe because
+    // nothing in the context is modified in a non-compatible way during capture.
+    Context *mutableContext = const_cast<Context *>(context);
+    initialize(mutableContext);
+}
+
 constexpr State::DirtyObjectHandler State::kDirtyObjectHandlers[DIRTY_OBJECT_MAX];
 
 }  // namespace gl

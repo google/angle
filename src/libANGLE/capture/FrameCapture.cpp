@@ -1699,9 +1699,9 @@ void CaptureFramebufferAttachment(std::vector<CallCapture> *setupCalls,
     }
 }
 
-void CaptureUpdateUniformValues(const gl::State &replayState,
+void CaptureUpdateUniformValues(gl::State &replayState,
                                 const gl::Context *context,
-                                const gl::Program *program,
+                                gl::Program *program,
                                 std::vector<CallCapture> *callsOut)
 {
     if (!program->isLinked())
@@ -1711,9 +1711,12 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
     }
 
     // We need to bind the program and update its uniforms
-    // TODO (http://anglebug.com/3662): Only bind if different from currently bound
-    Capture(callsOut, CaptureUseProgram(replayState, true, program->id()));
-    CaptureUpdateCurrentProgram(callsOut->back(), callsOut);
+    if (!replayState.getProgram() || replayState.getProgram()->id() != program->id())
+    {
+        Capture(callsOut, CaptureUseProgram(replayState, true, program->id()));
+        CaptureUpdateCurrentProgram(callsOut->back(), callsOut);
+        (void)replayState.setProgram(context, program);
+    }
 
     const std::vector<gl::LinkedUniform> &uniforms = program->getState().getUniforms();
 
@@ -1962,10 +1965,22 @@ void CaptureVertexPointerES1(std::vector<CallCapture> *setupCalls,
     }
 }
 
-void CaptureVertexArrayData(std::vector<CallCapture> *setupCalls,
-                            const gl::Context *context,
-                            const gl::VertexArray *vertexArray,
-                            gl::State *replayState)
+bool VertexBindingMatchesAttribStride(const gl::VertexAttribute &attrib,
+                                      const gl::VertexBinding &binding)
+{
+    if (attrib.vertexAttribArrayStride == 0 &&
+        binding.getStride() == ComputeVertexAttributeTypeSize(attrib))
+    {
+        return true;
+    }
+
+    return attrib.vertexAttribArrayStride == binding.getStride();
+}
+
+void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
+                             const gl::Context *context,
+                             const gl::VertexArray *vertexArray,
+                             gl::State *replayState)
 {
     const std::vector<gl::VertexAttribute> &vertexAttribs = vertexArray->getVertexAttributes();
     const std::vector<gl::VertexBinding> &vertexBindings  = vertexArray->getVertexBindings();
@@ -2012,13 +2027,21 @@ void CaptureVertexArrayData(std::vector<CallCapture> *setupCalls,
             {
                 CaptureVertexPointerES1(setupCalls, replayState, attribIndex, attrib, binding);
             }
-            else
+            else if (attrib.bindingIndex == attribIndex &&
+                     VertexBindingMatchesAttribStride(attrib, binding) &&
+                     (!buffer || binding.getOffset() == reinterpret_cast<GLintptr>(attrib.pointer)))
             {
+                // Check if we can use strictly ES2 semantics.
                 Capture(setupCalls,
                         CaptureVertexAttribPointer(
                             *replayState, true, attribIndex, attrib.format->channelCount,
                             attrib.format->vertexAttribType, attrib.format->isNorm(),
-                            binding.getStride(), attrib.pointer));
+                            attrib.vertexAttribArrayStride, attrib.pointer));
+            }
+            else
+            {
+                // TOOD: http://anglebug.com/6274. ES 3.1 vertex array state is not yet implemented.
+                UNIMPLEMENTED();
             }
         }
 
@@ -2334,14 +2357,12 @@ void CaptureDefaultVertexAttribs(const gl::State &replayState,
 //   container objects and are not shared.
 void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
                                         std::vector<CallCapture> *setupCalls,
-                                        ResourceTracker *resourceTracker)
+                                        ResourceTracker *resourceTracker,
+                                        gl::State &replayState)
 {
 
     FrameCaptureShared *frameCaptureShared = context->getShareGroup()->getFrameCaptureShared();
     const gl::State &apiState              = context->getState();
-    gl::State replayState(nullptr, nullptr, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
-                          apiState.getClientVersion(), false, true, true, true, false,
-                          EGL_CONTEXT_PRIORITY_MEDIUM_IMG, apiState.hasProtectedContent());
 
     // Small helper function to make the code more readable.
     auto cap = [frameCaptureShared, setupCalls](CallCapture &&call) {
@@ -2485,6 +2506,7 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
         {
             Capture(calls, CaptureBindTexture(replayState, true, texture->getType(), id));
         }
+        replayState.setSamplerTexture(context, texture->getType(), texture);
 
         // Capture sampler parameter states.
         // TODO(jmadill): More sampler / texture states. http://anglebug.com/3662
@@ -2752,8 +2774,8 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
     gl::ShaderProgramID tempShaderID = {resourceTracker->getMaxShaderPrograms()};
     for (const auto &programIter : programs)
     {
-        gl::ShaderProgramID id     = {programIter.first};
-        const gl::Program *program = programIter.second;
+        gl::ShaderProgramID id = {programIter.first};
+        gl::Program *program   = programIter.second;
 
         // Unlinked programs don't have an executable. Thus they don't need to be captured.
         // Programs are shared by contexts in the share group and only need to be captured once.
@@ -2979,24 +3001,15 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
 
 void CaptureMidExecutionSetup(const gl::Context *context,
                               std::vector<CallCapture> *setupCalls,
-                              ResourceTracker *resourceTracker)
+                              ResourceTracker *resourceTracker,
+                              gl::State &replayState)
 {
     const gl::State &apiState = context->getState();
-    gl::State replayState(nullptr, nullptr, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
-                          context->getState().getClientVersion(), false, true, true, true, false,
-                          EGL_CONTEXT_PRIORITY_MEDIUM_IMG, apiState.hasProtectedContent());
 
     // Small helper function to make the code more readable.
     auto cap = [setupCalls](CallCapture &&call) { setupCalls->emplace_back(std::move(call)); };
 
-    // Currently this code assumes we can use create-on-bind. It does not support 'Gen' usage.
-    // TODO(jmadill): Use handle mapping for captured objects. http://anglebug.com/3662
-
-    // Vertex input states. Only handles GLES 2.0 states right now.
-    // Must happen after buffer data initialization.
-    // TODO(http://anglebug.com/3662): Complete state capture.
-
-    // Capture default vertex attribs. Do not capture on GLES1.
+    // Vertex input states. Must happen after buffer data initialization. Do not capture on GLES1.
     if (!context->isGLES1())
     {
         CaptureDefaultVertexAttribs(replayState, apiState, setupCalls);
@@ -3024,7 +3037,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                 cap(CaptureBindVertexArray(replayState, true, vertexArrayID));
                 boundVertexArrayID = vertexArrayID;
             }
-            CaptureVertexArrayData(setupCalls, context, vertexArray, &replayState);
+            CaptureVertexArrayState(setupCalls, context, vertexArray, &replayState);
         }
     }
 
@@ -3083,42 +3096,42 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     }
 
     // Capture Texture setup and data.
-    const gl::TextureBindingMap &boundTextures = apiState.getBoundTexturesForCapture();
+    const gl::TextureBindingMap &apiBoundTextures = apiState.getBoundTexturesForCapture();
 
     // Set Texture bindings.
-    size_t currentActiveTexture = 0;
-    gl::TextureTypeMap<gl::TextureID> currentTextureBindings;
     for (gl::TextureType textureType : angle::AllEnums<gl::TextureType>())
     {
-        const gl::TextureBindingVector &bindings = boundTextures[textureType];
-        for (size_t bindingIndex = 0; bindingIndex < bindings.size(); ++bindingIndex)
+        const gl::TextureBindingVector &apiBindings = apiBoundTextures[textureType];
+        const gl::TextureBindingVector &replayBindings =
+            replayState.getBoundTexturesForCapture()[textureType];
+        ASSERT(apiBindings.size() == replayBindings.size());
+        for (size_t bindingIndex = 0; bindingIndex < apiBindings.size(); ++bindingIndex)
         {
-            gl::TextureID textureID = bindings[bindingIndex].id();
+            gl::TextureID apiTextureID    = apiBindings[bindingIndex].id();
+            gl::TextureID replayTextureID = replayBindings[bindingIndex].id();
 
-            if (textureID.value != 0)
+            if (apiTextureID != replayTextureID)
             {
-                if (currentActiveTexture != bindingIndex)
+                if (replayState.getActiveSampler() != bindingIndex)
                 {
                     cap(CaptureActiveTexture(replayState, true,
                                              GL_TEXTURE0 + static_cast<GLenum>(bindingIndex)));
-                    currentActiveTexture = bindingIndex;
+                    replayState.setActiveSampler(static_cast<unsigned int>(bindingIndex));
                 }
 
-                if (currentTextureBindings[textureType] != textureID)
-                {
-                    cap(CaptureBindTexture(replayState, true, textureType, textureID));
-                    currentTextureBindings[textureType] = textureID;
-                }
+                cap(CaptureBindTexture(replayState, true, textureType, apiTextureID));
+                replayState.setSamplerTexture(context, textureType,
+                                              apiBindings[bindingIndex].get());
             }
         }
     }
 
     // Set active Texture.
-    size_t stateActiveTexture = apiState.getActiveSampler();
-    if (currentActiveTexture != stateActiveTexture)
+    if (replayState.getActiveSampler() != apiState.getActiveSampler())
     {
         cap(CaptureActiveTexture(replayState, true,
-                                 GL_TEXTURE0 + static_cast<GLenum>(stateActiveTexture)));
+                                 GL_TEXTURE0 + static_cast<GLenum>(apiState.getActiveSampler())));
+        replayState.setActiveSampler(apiState.getActiveSampler());
     }
 
     // Set Renderbuffer binding.
@@ -3268,27 +3281,34 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     // For now we assume the installed program executable is the same as the current program.
     // TODO(jmadill): Handle installed program executable. http://anglebug.com/3662
-    if (apiState.getProgram() && !context->isGLES1())
+    if (!context->isGLES1())
     {
-        cap(CaptureUseProgram(replayState, true, apiState.getProgram()->id()));
-        CaptureUpdateCurrentProgram(setupCalls->back(), setupCalls);
-    }
-    else if (apiState.getProgramPipeline())
-    {
-        // glUseProgram() is called above to update the necessary uniform values for each program
-        // that's being recreated. If there is no program currently bound, then we need to unbind
-        // the last bound program so the PPO will be used instead:
-        // 7.4 Program Pipeline Objects
-        // If no current program object has been established by UseProgram, the program objects used
-        // for each shader stage and for uniform updates are taken from the bound program pipeline
-        // object, if any. If there is a current program object established by UseProgram, the bound
-        // program pipeline object has no effect on rendering or uniform updates.
-        cap(CaptureUseProgram(replayState, true, {0}));
-        CaptureUpdateCurrentProgram(setupCalls->back(), setupCalls);
-        cap(CaptureBindProgramPipeline(replayState, true, apiState.getProgramPipeline()->id()));
-    }
+        // If we have a program bound in the API, or if there is no program bound to the API at
+        // time of capture and we bound a program for uniform updates during MEC, we must add
+        // a set program call to replay the correct states.
+        if (apiState.getProgram())
+        {
+            cap(CaptureUseProgram(replayState, true, apiState.getProgram()->id()));
+            CaptureUpdateCurrentProgram(setupCalls->back(), setupCalls);
+            (void)replayState.setProgram(context, apiState.getProgram());
+        }
+        else if (replayState.getProgram())
+        {
+            cap(CaptureUseProgram(replayState, true, {0}));
+            CaptureUpdateCurrentProgram(setupCalls->back(), setupCalls);
+            (void)replayState.setProgram(context, nullptr);
+        }
 
-    // TODO(http://anglebug.com/3662): ES 3.x objects.
+        // Same for program pipelines as for programs, see comment above.
+        if (apiState.getProgramPipeline())
+        {
+            cap(CaptureBindProgramPipeline(replayState, true, apiState.getProgramPipeline()->id()));
+        }
+        else if (replayState.getProgramPipeline())
+        {
+            cap(CaptureBindProgramPipeline(replayState, true, {0}));
+        }
+    }
 
     // Create existing queries. Note that queries may be genned and not yet started. In that
     // case the queries will exist in the query map as nullptr entries.
@@ -3767,6 +3787,9 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     // Allow the replayState object to be destroyed conveniently.
     replayState.setBufferBinding(context, gl::BufferBinding::Array, nullptr);
+
+    // Clean up the replay state.
+    replayState.reset(context);
 }
 
 bool SkipCall(EntryPoint entryPoint)
@@ -5167,8 +5190,16 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
     egl::ShareGroup *shareGroup = mainContext->getShareGroup();
     shareGroup->finishAllContexts();
 
+    const gl::State &contextState = mainContext->getState();
+    gl::State mainContextReplayState(nullptr, nullptr, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
+                                     contextState.getClientVersion(), false, true, true, true,
+                                     false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG,
+                                     contextState.hasProtectedContent());
+    mainContextReplayState.initializeForCapture(mainContext);
+
     std::vector<CallCapture> shareGroupSetupCalls;
-    CaptureShareGroupMidExecutionSetup(mainContext, &shareGroupSetupCalls, &mResourceTracker);
+    CaptureShareGroupMidExecutionSetup(mainContext, &shareGroupSetupCalls, &mResourceTracker,
+                                       mainContextReplayState);
 
     WriteShareGroupCppSetupReplay(mCompression, mOutDirectory, mCaptureLabel, 1, 1,
                                   shareGroupSetupCalls, &mResourceTracker, &mBinaryData,
@@ -5179,16 +5210,26 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
         FrameCapture *frameCapture = shareContext->getFrameCapture();
         ASSERT(frameCapture->getSetupCalls().empty());
 
-        CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(), &mResourceTracker);
-
-        // The main context's setup will be written later as part of writeMainContextCppReplay().
         if (shareContext->id() == mainContext->id())
         {
-            continue;
+            CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
+                                     &mResourceTracker, mainContextReplayState);
         }
-        WriteAuxiliaryContextCppSetupReplay(mCompression, mOutDirectory, shareContext,
-                                            mCaptureLabel, 1, frameCapture->getSetupCalls(),
-                                            &mBinaryData, mSerializeStateEnabled, *this);
+        else
+        {
+            gl::State auxContextReplayState(
+                nullptr, nullptr, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
+                shareContext->getState().getClientVersion(), false, true, true, true, false,
+                EGL_CONTEXT_PRIORITY_MEDIUM_IMG, shareContext->getState().hasProtectedContent());
+            auxContextReplayState.initializeForCapture(shareContext);
+
+            CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
+                                     &mResourceTracker, auxContextReplayState);
+
+            WriteAuxiliaryContextCppSetupReplay(mCompression, mOutDirectory, shareContext,
+                                                mCaptureLabel, 1, frameCapture->getSetupCalls(),
+                                                &mBinaryData, mSerializeStateEnabled, *this);
+        }
     }
 }
 

@@ -852,9 +852,13 @@ class State : angle::NonCopyable
     }
     const SyncManager &getSyncManagerForCapture() const { return *mSyncManager; }
     const SamplerManager &getSamplerManagerForCapture() const { return *mSamplerManager; }
+    const ProgramPipelineManager *getProgramPipelineManagerForCapture() const
+    {
+        return mProgramPipelineManager;
+    }
     const SamplerBindingVector &getSamplerBindingsForCapture() const { return mSamplers; }
-
     const ActiveQueryMap &getActiveQueriesForCapture() const { return mActiveQueries; }
+    void initializeForCapture(const Context *context);
 
     bool hasConstantAlphaBlendFunc() const
     {
@@ -909,11 +913,6 @@ class State : angle::NonCopyable
     }
 
     const std::vector<ImageUnit> &getImageUnits() const { return mImageUnits; }
-
-    const ProgramPipelineManager *getProgramPipelineManagerForCapture() const
-    {
-        return mProgramPipelineManager;
-    }
 
   private:
     friend class Context;
