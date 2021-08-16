@@ -31,6 +31,7 @@ import xvfb
 sys.path.append(os.path.join(ANGLE_DIR, 'third_party', 'catapult', 'tracing'))
 from tracing.value import histogram
 from tracing.value import histogram_set
+from tracing.value import merge_histograms
 
 DEFAULT_TEST_SUITE = 'angle_perftests'
 DEFAULT_LOG = 'info'
@@ -293,6 +294,7 @@ def main():
         logging.info('Running %s %d times with %d trials and %d steps per trial.' %
                      (test, args.samples_per_test, args.trials_per_sample, steps_per_trial))
         wall_times = []
+        test_histogram_set = histogram_set.HistogramSet()
         for sample in range(args.samples_per_test):
             if total_errors >= args.max_errors:
                 logging.error('Error count exceeded max errors (%d). Aborting.' % args.max_errors)
@@ -321,7 +323,7 @@ def main():
                         sample_json = json.load(histogram_file)
                         sample_histogram = histogram_set.HistogramSet()
                         sample_histogram.ImportDicts(sample_json)
-                        histograms.Merge(sample_histogram)
+                        test_histogram_set.Merge(sample_histogram)
                 else:
                     logging.error('Failed to get sample for test %s' % test)
                     total_errors += 1
@@ -340,10 +342,22 @@ def main():
 
             if len(wall_times) > 1:
                 logging.info(
-                    "Mean wall_time for %s is %.2f, with coefficient of variation %.2f%%" %
+                    'Mean wall_time for %s is %.2f, with coefficient of variation %.2f%%' %
                     (test, _mean(wall_times), (_coefficient_of_variation(wall_times) * 100.0)))
             test_results[test] = {'expected': PASS, 'actual': PASS}
             results['num_failures_by_type'][PASS] += 1
+
+            # Merge the histogram set into one histogram
+            with common.temporary_file() as merge_histogram_path:
+                logging.info('Writing merged histograms to %s.' % merge_histogram_path)
+                with open(merge_histogram_path, 'w') as merge_histogram_file:
+                    json.dump(test_histogram_set.AsDicts(), merge_histogram_file)
+                    merge_histogram_file.close()
+                merged_dicts = merge_histograms.MergeHistograms(
+                    merge_histogram_path, groupby=['name'])
+                merged_histogram = histogram_set.HistogramSet()
+                merged_histogram.ImportDicts(merged_dicts)
+                histograms.Merge(merged_histogram)
         else:
             logging.error('Test %s failed to record some samples' % test)
             test_results[test] = {'expected': PASS, 'actual': FAIL, 'is_unexpected': True}
