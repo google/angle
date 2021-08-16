@@ -532,6 +532,19 @@ ShareGroup::ShareGroup(rx::EGLImplFactory *factory)
       mFrameCaptureShared(new angle::FrameCaptureShared)
 {}
 
+void ShareGroup::finishAllContexts()
+{
+    for (gl::Context *shareContext : mContexts)
+    {
+        shareContext->finish();
+    }
+}
+
+void ShareGroup::addSharedContext(gl::Context *context)
+{
+    mContexts.insert(context);
+}
+
 ShareGroup::~ShareGroup()
 {
     SafeDelete(mImplementation);

@@ -42,7 +42,7 @@ from sys import platform
 
 PIPE_STDOUT = True
 DEFAULT_OUT_DIR = "out/CaptureReplayTest"  # relative to angle folder
-DEFAULT_FILTER = "*/ES2_Vulkan"
+DEFAULT_FILTER = "*/ES2_Vulkan_SwiftShader"
 DEFAULT_TEST_SUITE = "angle_end2end_tests"
 REPLAY_SAMPLE_FOLDER = "src/tests/capture_replay_tests"  # relative to angle folder
 DEFAULT_BATCH_COUNT = 8  # number of tests batched together

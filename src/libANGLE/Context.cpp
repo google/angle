@@ -522,7 +522,7 @@ void Context::initializeDefaultResources()
     ANGLE_CONTEXT_TRY(mImplementation->initialize());
 
     // Add context into the share group
-    mState.getShareGroup()->getContexts()->insert(this);
+    mState.getShareGroup()->addSharedContext(this);
 
     bindVertexArray({0});
 

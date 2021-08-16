@@ -379,7 +379,6 @@ class FrameCaptureShared final : angle::NonCopyable
 
     void captureCall(const gl::Context *context, CallCapture &&call, bool isCallValid);
     void checkForCaptureTrigger();
-    void setupSharedAndAuxReplay(const gl::Context *context, bool isMidExecutionCapture);
     void onEndFrame(const gl::Context *context);
     void onDestroyContext(const gl::Context *context);
     void onMakeCurrent(const gl::Context *context, const egl::Surface *drawSurface);
@@ -489,6 +488,8 @@ class FrameCaptureShared final : angle::NonCopyable
 
   private:
     void writeCppReplayIndexFiles(const gl::Context *, bool writeResetContextCall);
+    void writeMainContextCppReplay(const gl::Context *context,
+                                   const std::vector<CallCapture> &setupCalls);
 
     void captureClientArraySnapshot(const gl::Context *context,
                                     size_t vertexCount,
@@ -510,14 +511,12 @@ class FrameCaptureShared final : angle::NonCopyable
                                             size_t instanceCount);
     void updateCopyImageSubData(CallCapture &call);
 
+    void runMidExecutionCapture(const gl::Context *context);
+
     static void ReplayCall(gl::Context *context,
                            ReplayContext *replayContext,
                            const CallCapture &call);
 
-    std::vector<CallCapture> &getSetupCalls() { return mSetupCalls; }
-    void clearSetupCalls() { mSetupCalls.clear(); }
-
-    std::vector<CallCapture> mSetupCalls;
     std::vector<CallCapture> mFrameCalls;
 
     // We save one large buffer of binary data for the whole CPP replay.

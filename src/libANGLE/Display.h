@@ -89,7 +89,10 @@ class ShareGroup final : angle::NonCopyable
 
     angle::FrameCaptureShared *getFrameCaptureShared() { return mFrameCaptureShared.get(); }
 
-    ContextSet *getContexts() { return &mContexts; }
+    void finishAllContexts();
+
+    const ContextSet &getContexts() const { return mContexts; }
+    void addSharedContext(gl::Context *context);
 
   protected:
     ~ShareGroup();

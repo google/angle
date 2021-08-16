@@ -149,9 +149,11 @@ def main():
         logging.debug('Read metadata: %s' % str(metadata))
 
         env = os.environ.copy()
-        env['ANGLE_CAPTURE_OUT_DIR'] = trace_path
-        env['ANGLE_CAPTURE_LABEL'] = trace
-        env['ANGLE_CAPTURE_TRIGGER'] = str(num_frames)
+        additional_env = {}
+        additional_env['ANGLE_CAPTURE_OUT_DIR'] = trace_path
+        additional_env['ANGLE_CAPTURE_LABEL'] = trace
+        additional_env['ANGLE_CAPTURE_TRIGGER'] = str(num_frames)
+        env = {**env, **additional_env}
 
         renderer = 'vulkan' if args.no_swiftshader else 'vulkan_swiftshader'
 
@@ -166,7 +168,8 @@ def main():
         ]
 
         print('Capturing "%s" (%d frames)...' % (trace, num_frames))
-        logging.debug('Running "%s" with capture environment' % ' '.join(run_args))
+        logging.debug('Running "%s" with environment: %s' %
+                      (' '.join(run_args), str(additional_env)))
         try:
             subprocess.check_call(run_args, env=env)
 

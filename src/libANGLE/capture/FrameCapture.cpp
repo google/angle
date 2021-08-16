@@ -1209,7 +1209,9 @@ void WriteAuxiliaryContextCppSetupReplay(bool compression,
     std::stringstream include;
     std::stringstream header;
 
-    include << "#include \"" << FmtCapturePrefix(context->id(), captureLabel) << ".h\"\n";
+    include << "#include \""
+            << FmtCapturePrefix(frameCaptureShared.getWindowSurfaceContextID(), captureLabel)
+            << ".h\"\n";
     include << "#include \"angle_trace_gl.h\"\n";
     include << "";
     include << "\n";
@@ -1270,191 +1272,35 @@ void WriteAuxiliaryContextCppSetupReplay(bool compression,
     }
 }
 
-void WriteWindowSurfaceContextCppReplay(bool compression,
-                                        const std::string &outDir,
-                                        const gl::Context *context,
-                                        const std::string &captureLabel,
-                                        uint32_t frameIndex,
-                                        uint32_t frameCount,
-                                        const std::vector<CallCapture> &frameCalls,
-                                        const std::vector<CallCapture> &setupCalls,
-                                        ResourceTracker *resourceTracker,
-                                        std::vector<uint8_t> *binaryData,
-                                        bool serializeStateEnabled,
-                                        const FrameCaptureShared &frameCaptureShared)
-{
-    ASSERT(frameCaptureShared.getWindowSurfaceContextID() == context->id());
-
-    DataTracker dataTracker;
-
-    std::stringstream out;
-    std::stringstream header;
-
-    egl::ShareGroup *shareGroup      = context->getShareGroup();
-    egl::ContextSet *shareContextSet = shareGroup->getContexts();
-
-    header << "#include \"" << FmtCapturePrefix(kSharedContextId, captureLabel) << ".h\"\n";
-    for (gl::Context *shareContext : *shareContextSet)
-    {
-        header << "#include \"" << FmtCapturePrefix(shareContext->id(), captureLabel) << ".h\"\n";
-    }
-
-    header << "#include \"angle_trace_gl.h\"\n";
-    header << "";
-    header << "\n";
-    header << "namespace\n";
-    header << "{\n";
-
-    if (frameIndex == 1 || frameIndex == frameCount)
-    {
-        out << "extern \"C\" {\n";
-    }
-
-    if (frameIndex == 1)
-    {
-        std::stringstream setupCallStream;
-
-        setupCallStream << "void " << FmtSetupFunction(kNoPartId, context->id()) << "\n";
-        setupCallStream << "{\n";
-
-        WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Setup, &dataTracker, frameIndex,
-                                        binaryData, setupCalls, header, setupCallStream, out);
-
-        out << setupCallStream.str();
-        out << "}\n";
-        out << "\n";
-        out << "void SetupReplay()\n";
-        out << "{\n";
-        out << "    " << captureLabel << "::InitReplay();\n";
-
-        // Setup all of the shared objects.
-        out << "    " << captureLabel << "::" << FmtSetupFunction(kNoPartId, kSharedContextId)
-            << ";\n";
-
-        // Setup the presentation (this) context before any other contexts in the share group.
-        out << "    " << FmtSetupFunction(kNoPartId, context->id()) << ";\n";
-        out << "}\n";
-        out << "\n";
-    }
-
-    if (frameIndex == frameCount)
-    {
-        // Emit code to reset back to starting state
-        out << "void " << FmtResetFunction() << "\n";
-        out << "{\n";
-
-        // TODO(http://anglebug.com/5878): Look at moving this into the shared context file since
-        // it's resetting shared objects.
-        std::stringstream restoreCallStream;
-        for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
-        {
-            MaybeResetResources(restoreCallStream, resourceType, &dataTracker, header,
-                                resourceTracker, binaryData);
-        }
-
-        // Reset opaque type objects that don't have IDs, so are not ResourceIDTypes.
-        MaybeResetOpaqueTypeObjects(restoreCallStream, &dataTracker, header, resourceTracker,
-                                    binaryData);
-
-        out << restoreCallStream.str();
-        out << "}\n";
-    }
-
-    if (frameIndex == 1 || frameIndex == frameCount)
-    {
-        out << "}  // extern \"C\"\n";
-        out << "\n";
-    }
-
-    if (!captureLabel.empty())
-    {
-        out << "namespace " << captureLabel << "\n";
-        out << "{\n";
-    }
-
-    if (!frameCalls.empty())
-    {
-        std::stringstream callStream;
-
-        callStream << "void " << FmtReplayFunction(context->id(), frameIndex) << "\n";
-        callStream << "{\n";
-
-        WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Replay, &dataTracker, frameIndex,
-                                        binaryData, frameCalls, header, callStream, out);
-
-        out << callStream.str();
-        out << "}\n";
-    }
-
-    if (serializeStateEnabled)
-    {
-        std::string serializedContextString;
-        if (SerializeContextToString(const_cast<gl::Context *>(context),
-                                     &serializedContextString) == Result::Continue)
-        {
-            out << "const char *" << FmtGetSerializedContextStateFunction(context->id(), frameIndex)
-                << "\n";
-            out << "{\n";
-            out << "    return R\"(" << serializedContextString << ")\";\n";
-            out << "}\n";
-            out << "\n";
-        }
-    }
-
-    if (!captureLabel.empty())
-    {
-        out << "} // namespace " << captureLabel << "\n";
-    }
-
-    header << "}  // namespace\n";
-
-    {
-        std::string outString    = out.str();
-        std::string headerString = header.str();
-
-        std::string cppFilePath =
-            GetCaptureFilePath(outDir, context->id(), captureLabel, frameIndex, ".cpp");
-
-        SaveFileHelper saveCpp(cppFilePath);
-        saveCpp << headerString << "\n" << outString;
-    }
-}
-
-void WriteSharedContextCppReplay(bool compression,
-                                 const std::string &outDir,
-                                 const std::string &captureLabel,
-                                 uint32_t frameIndex,
-                                 uint32_t frameCount,
-                                 const std::vector<CallCapture> &setupCalls,
-                                 ResourceTracker *resourceTracker,
-                                 std::vector<uint8_t> *binaryData,
-                                 bool serializeStateEnabled,
-                                 const FrameCaptureShared &frameCaptureShared)
+void WriteShareGroupCppSetupReplay(bool compression,
+                                   const std::string &outDir,
+                                   const std::string &captureLabel,
+                                   uint32_t frameIndex,
+                                   uint32_t frameCount,
+                                   const std::vector<CallCapture> &setupCalls,
+                                   ResourceTracker *resourceTracker,
+                                   std::vector<uint8_t> *binaryData,
+                                   bool serializeStateEnabled,
+                                   const FrameCaptureShared &frameCaptureShared)
 {
     DataTracker dataTracker;
 
     std::stringstream out;
     std::stringstream include;
-    std::stringstream header;
 
-    include << "#include \"" << FmtCapturePrefix(kSharedContextId, captureLabel) << ".h\"\n";
     include << "#include \"angle_trace_gl.h\"\n";
-    include << "";
     include << "\n";
     include << "namespace\n";
     include << "{\n";
 
     if (!captureLabel.empty())
     {
-        header << "namespace " << captureLabel << "\n";
-        header << "{\n";
         out << "namespace " << captureLabel << "\n";
         out << "{\n";
     }
 
     std::stringstream setupCallStream;
 
-    header << "void " << FmtSetupFunction(kNoPartId, kSharedContextId) << ";\n";
     setupCallStream << "void " << FmtSetupFunction(kNoPartId, kSharedContextId) << "\n";
     setupCallStream << "{\n";
 
@@ -1467,7 +1313,6 @@ void WriteSharedContextCppReplay(bool compression,
 
     if (!captureLabel.empty())
     {
-        header << "} // namespace " << captureLabel << "\n";
         out << "} // namespace " << captureLabel << "\n";
     }
 
@@ -1483,18 +1328,6 @@ void WriteSharedContextCppReplay(bool compression,
 
         SaveFileHelper saveCpp(cppFilePath);
         saveCpp << headerString << "\n" << outString;
-    }
-
-    // Write out the header file.
-    {
-        std::string headerContents = header.str();
-
-        std::stringstream headerPathStream;
-        headerPathStream << outDir << FmtCapturePrefix(kSharedContextId, captureLabel) << ".h";
-        std::string headerPath = headerPathStream.str();
-
-        SaveFileHelper saveHeader(headerPath);
-        saveHeader << headerContents;
     }
 }
 
@@ -2499,9 +2332,9 @@ void CaptureDefaultVertexAttribs(const gl::State &replayState,
 //     Objects which contain references to other objects include framebuffer, program
 //   pipeline, transform feedback, and vertex array objects. Such objects are called
 //   container objects and are not shared.
-void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
-                                           std::vector<CallCapture> *setupCalls,
-                                           ResourceTracker *resourceTracker)
+void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
+                                        std::vector<CallCapture> *setupCalls,
+                                        ResourceTracker *resourceTracker)
 {
 
     FrameCaptureShared *frameCaptureShared = context->getShareGroup()->getFrameCaptureShared();
@@ -4218,6 +4051,11 @@ FrameCaptureShared::FrameCaptureShared()
     {
         mCaptureStartFrame = atoi(startFromEnv.c_str());
     }
+    if (mCaptureStartFrame < 1)
+    {
+        WARN() << "Cannot use a capture start frame less than 1.";
+        mCaptureStartFrame = 1;
+    }
 
     std::string endFromEnv =
         GetEnvironmentVarOrUnCachedAndroidProperty(kFrameEndVarName, kAndroidFrameEnd);
@@ -5308,11 +5146,11 @@ void FrameCaptureShared::checkForCaptureTrigger()
     uint32_t captureTrigger = atoi(captureTriggerStr.c_str());
     if (captureTrigger != mCaptureTrigger)
     {
-        // Start mid-execution capture for the next frame
+        // Start mid-execution capture for the current frame
         mCaptureStartFrame = mFrameIndex + 1;
 
         // Use the original trigger value as the frame count
-        mCaptureEndFrame = mCaptureStartFrame + (mCaptureTrigger - 1);
+        mCaptureEndFrame = mCaptureStartFrame + mCaptureTrigger;
 
         INFO() << "Capture triggered after frame " << mFrameIndex << " for " << mCaptureTrigger
                << " frames";
@@ -5322,46 +5160,35 @@ void FrameCaptureShared::checkForCaptureTrigger()
     }
 }
 
-void FrameCaptureShared::setupSharedAndAuxReplay(const gl::Context *context,
-                                                 bool isMidExecutionCapture)
+void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
 {
     // Make sure all pending work for every Context in the share group has completed so all data
     // (buffers, textures, etc.) has been updated and no resources are in use.
-    egl::ShareGroup *shareGroup            = context->getShareGroup();
-    const egl::ContextSet *shareContextSet = shareGroup->getContexts();
-    for (gl::Context *shareContext : *shareContextSet)
-    {
-        shareContext->finish();
-    }
+    egl::ShareGroup *shareGroup = mainContext->getShareGroup();
+    shareGroup->finishAllContexts();
 
-    clearSetupCalls();
-    if (isMidExecutionCapture)
-    {
-        CaptureSharedContextMidExecutionSetup(context, &mSetupCalls, &mResourceTracker);
-    }
+    std::vector<CallCapture> shareGroupSetupCalls;
+    CaptureShareGroupMidExecutionSetup(mainContext, &shareGroupSetupCalls, &mResourceTracker);
 
-    WriteSharedContextCppReplay(mCompression, mOutDirectory, mCaptureLabel, 1, 1, mSetupCalls,
-                                &mResourceTracker, &mBinaryData, mSerializeStateEnabled, *this);
+    WriteShareGroupCppSetupReplay(mCompression, mOutDirectory, mCaptureLabel, 1, 1,
+                                  shareGroupSetupCalls, &mResourceTracker, &mBinaryData,
+                                  mSerializeStateEnabled, *this);
 
-    for (const gl::Context *shareContext : *shareContextSet)
+    for (const gl::Context *shareContext : shareGroup->getContexts())
     {
         FrameCapture *frameCapture = shareContext->getFrameCapture();
-        frameCapture->clearSetupCalls();
+        ASSERT(frameCapture->getSetupCalls().empty());
 
-        if (isMidExecutionCapture)
-        {
-            CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
-                                     &mResourceTracker);
-        }
+        CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(), &mResourceTracker);
 
-        if (!frameCapture->getSetupCalls().empty() && shareContext->id() != context->id())
+        // The main context's setup will be written later as part of writeMainContextCppReplay().
+        if (shareContext->id() == mainContext->id())
         {
-            // The presentation context's setup functions will be written later as part of the
-            // WriteWindowSurfaceContextCppReplay() output.
-            WriteAuxiliaryContextCppSetupReplay(mCompression, mOutDirectory, shareContext,
-                                                mCaptureLabel, 1, frameCapture->getSetupCalls(),
-                                                &mBinaryData, mSerializeStateEnabled, *this);
+            continue;
         }
+        WriteAuxiliaryContextCppSetupReplay(mCompression, mOutDirectory, shareContext,
+                                            mCaptureLabel, 1, frameCapture->getSetupCalls(),
+                                            &mBinaryData, mSerializeStateEnabled, *this);
     }
 }
 
@@ -5389,57 +5216,42 @@ void FrameCaptureShared::onEndFrame(const gl::Context *context)
         }
     }
 
+    // Assume that the context performing the swap is the "main" context.
+    ASSERT(mWindowSurfaceContextID.value == 0 || mWindowSurfaceContextID == context->id());
+    mWindowSurfaceContextID = context->id();
+
     // On Android, we can trigger a capture during the run
     checkForCaptureTrigger();
-    // Done after checkForCaptureTrigger(), since that can modify mCaptureStartFrame.
+
+    // Check for MEC. Done after checkForCaptureTrigger(), since that can modify mCaptureStartFrame.
     if (mFrameIndex < mCaptureStartFrame)
     {
-        reset();
-        mFrameIndex++;
-        if (mFrameIndex == mCaptureStartFrame)
+        if (mFrameIndex == mCaptureStartFrame - 1)
         {
+            runMidExecutionCapture(context);
+
             // Set the capture active to ensure all GLES commands issued by the next frame are
             // handled correctly by maybeCapturePreCallUpdates() and maybeCapturePostCallUpdates().
             setCaptureActive();
         }
-
-        // Not capturing the current frame, so return.
+        mFrameIndex++;
+        reset();
         return;
     }
 
-    if (mIsFirstFrame)
-    {
-        mCaptureStartFrame = mFrameIndex;
-        // Assume that the context performing the swap is the "main" context.
-        mWindowSurfaceContextID = context->id();
-
-        // When *not* performing a mid-execution capture, setup the replay with the first frame.
-        bool isMidExecutionCapture = mCaptureStartFrame != 1;
-        setupSharedAndAuxReplay(context, isMidExecutionCapture);
-    }
+    ASSERT(isCaptureActive());
 
     if (!mFrameCalls.empty())
     {
         mActiveFrameIndices.push_back(getReplayFrameIndex());
     }
 
-    // For simplicity, it's currently a requirement that the same context is used to perform the
-    // swap every frame.
-    ASSERT(mWindowSurfaceContextID == context->id());
-
     // Make sure all pending work for every Context in the share group has completed so all data
     // (buffers, textures, etc.) has been updated and no resources are in use.
-    egl::ShareGroup *shareGroup            = context->getShareGroup();
-    const egl::ContextSet *shareContextSet = shareGroup->getContexts();
-    for (gl::Context *shareContext : *shareContextSet)
-    {
-        shareContext->finish();
-    }
+    egl::ShareGroup *shareGroup = context->getShareGroup();
+    shareGroup->finishAllContexts();
 
-    WriteWindowSurfaceContextCppReplay(mCompression, mOutDirectory, context, mCaptureLabel,
-                                       getReplayFrameIndex(), getFrameCount(), mFrameCalls,
-                                       frameCapture->getSetupCalls(), &mResourceTracker,
-                                       &mBinaryData, mSerializeStateEnabled, *this);
+    writeMainContextCppReplay(context, frameCapture->getSetupCalls());
 
     if (mFrameIndex == mCaptureEndFrame)
     {
@@ -5452,7 +5264,6 @@ void FrameCaptureShared::onEndFrame(const gl::Context *context)
 
     reset();
     mFrameIndex++;
-    mIsFirstFrame = false;
 }
 
 void FrameCaptureShared::onDestroyContext(const gl::Context *context)
@@ -5465,7 +5276,7 @@ void FrameCaptureShared::onDestroyContext(const gl::Context *context)
     {
         // If context is destroyed before end frame is reached and at least
         // 1 frame has been recorded, then write the index files.
-        // It doesnt make sense to write the index files when no frame has been recorded
+        // It doesn't make sense to write the index files when no frame has been recorded
         mFrameIndex -= 1;
         mCaptureEndFrame = mFrameIndex;
         writeCppReplayIndexFiles(context, true);
@@ -5695,6 +5506,7 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
     const gl::ContextID contextId       = context->id();
     const egl::Config *config           = context->getConfig();
     const egl::AttributeMap &attributes = context->getDisplay()->getAttributeMap();
+    const egl::ShareGroup *shareGroup   = context->getShareGroup();
 
     unsigned frameCount = getFrameCount();
 
@@ -5778,6 +5590,15 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
     }
 
     header << "void InitReplay();\n";
+    if (mCaptureStartFrame != 1)
+    {
+        header << "void SetupReplayContextShared();\n";
+    }
+
+    for (const gl::Context *shareContext : shareGroup->getContexts())
+    {
+        header << "void " << FmtSetupFunction(kNoPartId, shareContext->id()) << ";\n";
+    }
 
     source << "#include \"" << FmtCapturePrefix(contextId, mCaptureLabel) << ".h\"\n";
     source << "#include \"trace_fixture.h\"\n";
@@ -5883,9 +5704,7 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
             saveIndex << GetCaptureFileName(contextId, mCaptureLabel, frameIndex, ".cpp") << "\n";
         }
 
-        egl::ShareGroup *shareGroup      = context->getShareGroup();
-        egl::ContextSet *shareContextSet = shareGroup->getContexts();
-        for (gl::Context *shareContext : *shareContextSet)
+        for (gl::Context *shareContext : shareGroup->getContexts())
         {
             if (shareContext->id() == contextId)
             {
@@ -5894,7 +5713,150 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
             }
             saveIndex << GetCaptureFileName(shareContext->id(), mCaptureLabel, 1, ".cpp") << "\n";
         }
-        saveIndex << GetCaptureFileName(kSharedContextId, mCaptureLabel, 1, ".cpp") << "\n";
+
+        // Only save the MEC setup if we are using MEC.
+        if (mCaptureStartFrame != 1)
+        {
+            saveIndex << GetCaptureFileName(kSharedContextId, mCaptureLabel, 1, ".cpp") << "\n";
+        }
+    }
+}
+
+void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
+                                                   const std::vector<CallCapture> &setupCalls)
+{
+    ASSERT(mWindowSurfaceContextID == context->id());
+
+    DataTracker dataTracker;
+
+    std::stringstream out;
+    std::stringstream header;
+
+    header << "#include \"" << FmtCapturePrefix(context->id(), mCaptureLabel) << ".h\"\n";
+    header << "#include \"angle_trace_gl.h\"\n";
+    header << "";
+    header << "\n";
+    header << "namespace\n";
+    header << "{\n";
+
+    uint32_t frameCount = getFrameCount();
+    uint32_t frameIndex = getReplayFrameIndex();
+
+    if (frameIndex == 1 || frameIndex == frameCount)
+    {
+        out << "extern \"C\" {\n";
+    }
+
+    if (frameIndex == 1)
+    {
+        std::stringstream setupCallStream;
+
+        setupCallStream << "void " << FmtSetupFunction(kNoPartId, context->id()) << "\n";
+        setupCallStream << "{\n";
+
+        WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Setup, &dataTracker, frameIndex,
+                                        &mBinaryData, setupCalls, header, setupCallStream, out);
+
+        out << setupCallStream.str();
+        out << "}\n";
+        out << "\n";
+        out << "void SetupReplay()\n";
+        out << "{\n";
+        out << "    " << mCaptureLabel << "::InitReplay();\n";
+
+        // Setup all of the share group objects if we're using MEC.
+        if (mCaptureStartFrame != 1)
+        {
+            out << "    " << mCaptureLabel << "::" << FmtSetupFunction(kNoPartId, kSharedContextId)
+                << ";\n";
+
+            // Setup the main (this) context before any other contexts in the share group.
+            out << "    " << FmtSetupFunction(kNoPartId, context->id()) << ";\n";
+        }
+        out << "}\n";
+        out << "\n";
+    }
+
+    if (frameIndex == frameCount)
+    {
+        // Emit code to reset back to starting state
+        out << "void " << FmtResetFunction() << "\n";
+        out << "{\n";
+
+        // TODO(http://anglebug.com/5878): Look at moving this into the shared context file since
+        // it's resetting shared objects.
+        std::stringstream restoreCallStream;
+        for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
+        {
+            MaybeResetResources(restoreCallStream, resourceType, &dataTracker, header,
+                                &mResourceTracker, &mBinaryData);
+        }
+
+        // Reset opaque type objects that don't have IDs, so are not ResourceIDTypes.
+        MaybeResetOpaqueTypeObjects(restoreCallStream, &dataTracker, header, &mResourceTracker,
+                                    &mBinaryData);
+
+        out << restoreCallStream.str();
+        out << "}\n";
+    }
+
+    if (frameIndex == 1 || frameIndex == frameCount)
+    {
+        out << "}  // extern \"C\"\n";
+        out << "\n";
+    }
+
+    if (!mCaptureLabel.empty())
+    {
+        out << "namespace " << mCaptureLabel << "\n";
+        out << "{\n";
+    }
+
+    if (!mFrameCalls.empty())
+    {
+        std::stringstream callStream;
+
+        callStream << "void " << FmtReplayFunction(context->id(), frameIndex) << "\n";
+        callStream << "{\n";
+
+        WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Replay, &dataTracker, frameIndex,
+                                        &mBinaryData, mFrameCalls, header, callStream, out);
+
+        out << callStream.str();
+        out << "}\n";
+    }
+
+    if (mSerializeStateEnabled)
+    {
+        std::string serializedContextString;
+        if (SerializeContextToString(const_cast<gl::Context *>(context),
+                                     &serializedContextString) == Result::Continue)
+        {
+            out << "const char *" << FmtGetSerializedContextStateFunction(context->id(), frameIndex)
+                << "\n";
+            out << "{\n";
+            out << "    return R\"(" << serializedContextString << ")\";\n";
+            out << "}\n";
+            out << "\n";
+        }
+    }
+
+    if (!mCaptureLabel.empty())
+    {
+        out << "} // namespace " << mCaptureLabel << "\n";
+    }
+
+    header << "}  // namespace\n";
+
+    {
+        std::string outString    = out.str();
+        std::string headerString = header.str();
+
+        std::string cppFilePath =
+            GetCaptureFilePath(mOutDirectory, context->id(), mCaptureLabel, frameIndex, ".cpp");
+
+        SaveFileHelper saveCpp(cppFilePath);
+        saveCpp << headerString << "\n" << outString;
     }
 }
 
