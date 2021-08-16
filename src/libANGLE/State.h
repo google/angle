@@ -1008,10 +1008,6 @@ class State : angle::NonCopyable
     MemoryObjectManager *mMemoryObjectManager;
     SemaphoreManager *mSemaphoreManager;
 
-    // Cached values from Context's caps
-    GLuint mMaxDrawBuffers;
-    GLuint mMaxCombinedTextureImageUnits;
-
     ColorF mColorClearValue;
     GLfloat mDepthClearValue;
     int mStencilClearValue;
@@ -1069,7 +1065,7 @@ class State : angle::NonCopyable
     ComponentTypeMask mCurrentValuesTypeMask;
 
     // Texture and sampler bindings
-    size_t mActiveSampler;  // Active texture unit selector - GL_TEXTURE0
+    GLint mActiveSampler;  // Active texture unit selector - GL_TEXTURE0
 
     TextureBindingMap mSamplerTextures;
 

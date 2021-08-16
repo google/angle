@@ -506,7 +506,7 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
     }
 
     GLsizei effectiveStride =
-        stride != 0 ? stride : static_cast<GLsizei>(ComputeVertexAttributeTypeSize(attrib));
+        stride == 0 ? static_cast<GLsizei>(ComputeVertexAttributeTypeSize(attrib)) : stride;
 
     if (attrib.vertexAttribArrayStride != static_cast<GLuint>(stride))
     {
