@@ -1267,6 +1267,9 @@ struct DisplayExtensions
 
     // EGL_EXT_protected_content
     bool protectedContentEXT = false;
+
+    // EGL_ANGLE_create_surface_swap_interval
+    bool createSurfaceSwapIntervalANGLE = false;
 };
 
 struct DeviceExtensions

@@ -687,6 +687,10 @@ void ANGLERenderTest::SetUp()
     mConfigParams.depthBits   = 24;
     mConfigParams.stencilBits = 8;
     mConfigParams.colorSpace  = mTestParams.colorSpace;
+    if (mTestParams.surfaceType != SurfaceType::WindowWithVSync)
+    {
+        mConfigParams.swapInterval = 0;
+    }
 
     if (!mGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), mTestParams.driver, withMethods,
                                  mConfigParams))
@@ -696,7 +700,7 @@ void ANGLERenderTest::SetUp()
         // FAIL returns.
     }
 
-    // Disable vsync.
+    // Disable vsync (if not done by the window init).
     if (mTestParams.surfaceType != SurfaceType::WindowWithVSync)
     {
         if (!mGLWindow->setSwapInterval(0))

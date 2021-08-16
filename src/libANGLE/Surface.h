@@ -50,6 +50,7 @@ struct SurfaceState final : private angle::NonCopyable
 
     bool isRobustResourceInitEnabled() const;
     bool hasProtectedContent() const;
+    EGLint getPreferredSwapInterval() const;
 
     EGLLabelKHR label;
     const egl::Config *config;

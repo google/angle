@@ -143,10 +143,11 @@ class EGLSurfaceTest : public ANGLETest
         initializeSingleContext(&mSecondContext);
     }
 
-    void initializeSurfaceWithAttribs(EGLConfig config,
-                                      const std::vector<EGLint> &additionalAttributes)
+    void initializeWindowSurfaceWithAttribs(EGLConfig config,
+                                            const std::vector<EGLint> &additionalAttributes,
+                                            EGLenum expectedResult)
     {
-        mConfig = config;
+        ASSERT_EQ(mWindowSurface, EGL_NO_SURFACE);
 
         EGLint surfaceType = EGL_NONE;
         eglGetConfigAttrib(mDisplay, mConfig, EGL_SURFACE_TYPE, &surfaceType);
@@ -159,7 +160,22 @@ class EGLSurfaceTest : public ANGLETest
             // Create first window surface
             mWindowSurface = eglCreateWindowSurface(mDisplay, mConfig, mOSWindow->getNativeWindow(),
                                                     windowAttributes.data());
-            ASSERT_EGL_SUCCESS();
+        }
+
+        ASSERT_EGLENUM_EQ(eglGetError(), expectedResult);
+    }
+
+    void initializeSurfaceWithAttribs(EGLConfig config,
+                                      const std::vector<EGLint> &additionalAttributes)
+    {
+        mConfig = config;
+
+        EGLint surfaceType = EGL_NONE;
+        eglGetConfigAttrib(mDisplay, mConfig, EGL_SURFACE_TYPE, &surfaceType);
+
+        if (surfaceType & EGL_WINDOW_BIT)
+        {
+            initializeWindowSurfaceWithAttribs(config, additionalAttributes, EGL_SUCCESS);
         }
 
         if (surfaceType & EGL_PBUFFER_BIT)
@@ -282,6 +298,8 @@ class EGLSurfaceTest : public ANGLETest
         // Simple operation to test the FBO is set appropriately
         glClear(GL_COLOR_BUFFER_BIT);
     }
+
+    void drawQuadThenTearDown();
 
     EGLDisplay mDisplay;
     EGLSurface mWindowSurface;
@@ -1351,6 +1369,78 @@ TEST_P(EGLSurfaceTest, RobustResourceInitAndEmulatedAlpha)
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
         eglSwapBuffers(mDisplay, mWindowSurface);
+    }
+}
+
+void EGLSurfaceTest::drawQuadThenTearDown()
+{
+    initializeSingleContext(&mContext);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    {
+        ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+        drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+        eglSwapBuffers(mDisplay, mWindowSurface);
+        ASSERT_EGL_SUCCESS();
+    }
+
+    tearDownContextAndSurface();
+}
+
+// Tests the EGL_ANGLE_create_surface_swap_interval extension if available.
+TEST_P(EGLSurfaceTest, CreateSurfaceSwapIntervalANGLE)
+{
+    initializeDisplay();
+    ASSERT_NE(mDisplay, EGL_NO_DISPLAY);
+
+    mConfig = chooseDefaultConfig(true);
+    ASSERT_NE(mConfig, nullptr);
+
+    if (IsEGLDisplayExtensionEnabled(mDisplay, "EGL_ANGLE_create_surface_swap_interval"))
+    {
+        // Test error conditions.
+        EGLint minSwapInterval = 0;
+        eglGetConfigAttrib(mDisplay, mConfig, EGL_MIN_SWAP_INTERVAL, &minSwapInterval);
+        ASSERT_EGL_SUCCESS();
+
+        if (minSwapInterval > 0)
+        {
+            std::vector<EGLint> min1SwapAttribs = {EGL_SWAP_INTERVAL_ANGLE, minSwapInterval - 1};
+            initializeWindowSurfaceWithAttribs(mConfig, min1SwapAttribs, EGL_BAD_ATTRIBUTE);
+        }
+
+        EGLint maxSwapInterval = 0;
+        eglGetConfigAttrib(mDisplay, mConfig, EGL_MAX_SWAP_INTERVAL, &maxSwapInterval);
+        ASSERT_EGL_SUCCESS();
+
+        if (maxSwapInterval < std::numeric_limits<EGLint>::max())
+        {
+            std::vector<EGLint> max1SwapAttribs = {EGL_SWAP_INTERVAL_ANGLE, maxSwapInterval + 1};
+            initializeWindowSurfaceWithAttribs(mConfig, max1SwapAttribs, EGL_BAD_ATTRIBUTE);
+        }
+
+        // Test valid min/max usage.
+        {
+            std::vector<EGLint> minSwapAttribs = {EGL_SWAP_INTERVAL_ANGLE, minSwapInterval};
+            initializeWindowSurfaceWithAttribs(mConfig, minSwapAttribs, EGL_SUCCESS);
+            drawQuadThenTearDown();
+        }
+
+        if (minSwapInterval != maxSwapInterval)
+        {
+            std::vector<EGLint> maxSwapAttribs = {EGL_SWAP_INTERVAL_ANGLE, maxSwapInterval};
+            initializeWindowSurfaceWithAttribs(mConfig, maxSwapAttribs, EGL_SUCCESS);
+            drawQuadThenTearDown();
+        }
+    }
+    else
+    {
+        // Test extension unavailable error.
+        std::vector<EGLint> swapInterval1Attribs = {EGL_SWAP_INTERVAL_ANGLE, 1};
+        initializeWindowSurfaceWithAttribs(mConfig, swapInterval1Attribs, EGL_BAD_ATTRIBUTE);
     }
 }
 }  // anonymous namespace

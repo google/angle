@@ -153,6 +153,7 @@ supported_egl_extensions = [
     "EGL_ANDROID_get_native_client_buffer",
     "EGL_ANDROID_native_fence_sync",
     "EGL_ANDROID_presentation_time",
+    "EGL_ANGLE_create_surface_swap_interval",
     "EGL_ANGLE_d3d_share_handle_client_buffer",
     "EGL_ANGLE_device_creation",
     "EGL_ANGLE_device_d3d",

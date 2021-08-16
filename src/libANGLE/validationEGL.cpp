@@ -2248,6 +2248,23 @@ bool ValidateCreateWindowSurface(const ValidationContext *val,
                 }
                 break;
 
+            case EGL_SWAP_INTERVAL_ANGLE:
+                if (!displayExtensions.createSurfaceSwapIntervalANGLE)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "Attribute EGL_SWAP_INTERVAL_ANGLE requires "
+                                  "extension EGL_ANGLE_create_surface_swap_interval.");
+                    return false;
+                }
+                if (value < config->minSwapInterval || value > config->maxSwapInterval)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "EGL_SWAP_INTERVAL_ANGLE must "
+                                  "be within the EGLConfig min and max swap intervals.");
+                    return false;
+                }
+                break;
+
             default:
                 val->setError(EGL_BAD_ATTRIBUTE);
                 return false;

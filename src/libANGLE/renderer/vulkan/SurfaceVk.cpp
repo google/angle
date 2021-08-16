@@ -740,9 +740,14 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfacePresentModesKHR(
                                 physicalDevice, mSurface, &presentModeCount, mPresentModes.data()));
 
-    // Select appropriate present mode based on vsync parameter.  Default to 1 (FIFO), though it
+    // Select appropriate present mode based on vsync parameter. Default to 1 (FIFO), though it
     // will get clamped to the min/max values specified at display creation time.
-    setSwapInterval(renderer->getFeatures().disableFifoPresentMode.enabled ? 0 : 1);
+    EGLint preferredSwapInterval = mState.getPreferredSwapInterval();
+    if (renderer->getFeatures().disableFifoPresentMode.enabled)
+    {
+        preferredSwapInterval = 0;
+    }
+    setSwapInterval(preferredSwapInterval);
 
     uint32_t surfaceFormatCount = 0;
     ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, mSurface,
@@ -1581,6 +1586,7 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
         // Get the next available swapchain image.
 
         VkResult result = acquireNextSwapchainImage(contextVk);
+
         // If SUBOPTIMAL/OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain
         // before continuing.
         if (ANGLE_UNLIKELY((result == VK_ERROR_OUT_OF_DATE_KHR) || (result == VK_SUBOPTIMAL_KHR)))

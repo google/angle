@@ -53,6 +53,11 @@ bool SurfaceState::hasProtectedContent() const
     return attributes.get(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE) == EGL_TRUE;
 }
 
+EGLint SurfaceState::getPreferredSwapInterval() const
+{
+    return attributes.getAsInt(EGL_SWAP_INTERVAL_ANGLE, 1);
+}
+
 Surface::Surface(EGLint surfaceType,
                  const egl::Config *config,
                  const AttributeMap &attributes,
