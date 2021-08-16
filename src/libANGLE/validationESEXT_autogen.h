@@ -751,6 +751,16 @@ bool ValidateLoseContextCHROMIUM(const Context *context,
 
 // GL_EXT_EGL_image_array
 
+// GL_EXT_EGL_image_storage
+bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
+                                         GLenum target,
+                                         GLeglImageOES image,
+                                         const GLint *attrib_list);
+bool ValidateEGLImageTargetTextureStorageEXT(const Context *context,
+                                             GLuint texture,
+                                             GLeglImageOES image,
+                                             const GLint *attrib_list);
+
 // GL_EXT_YUV_target
 
 // GL_EXT_blend_func_extended

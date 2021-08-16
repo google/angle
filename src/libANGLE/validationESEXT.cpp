@@ -2225,4 +2225,23 @@ bool ValidateLabelObjectEXT(const Context *context,
 
     return ValidateObjectIdentifierAndName(context, type, object);
 }
+
+bool ValidateEGLImageTargetTextureStorageEXT(const Context *context,
+                                             GLuint texture,
+                                             GLeglImageOES image,
+                                             const GLint *attrib_list)
+{
+    UNREACHABLE();
+    return false;
+}
+
+bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
+                                         GLenum target,
+                                         GLeglImageOES image,
+                                         const GLint *attrib_list)
+{
+    UNREACHABLE();
+    return false;
+}
+
 }  // namespace gl

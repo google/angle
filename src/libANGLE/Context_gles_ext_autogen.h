@@ -104,6 +104,10 @@
     void getTranslatedShaderSource(ShaderProgramID shaderPacked, GLsizei bufsize, GLsizei *length, \
                                    GLchar *source);                                                \
     /* GL_EXT_EGL_image_array */                                                                   \
+    /* GL_EXT_EGL_image_storage */                                                                 \
+    void eGLImageTargetTexStorage(GLenum target, GLeglImageOES image, const GLint *attrib_list);   \
+    void eGLImageTargetTextureStorage(GLuint texture, GLeglImageOES image,                         \
+                                      const GLint *attrib_list);                                   \
     /* GL_EXT_YUV_target */                                                                        \
     /* GL_EXT_blend_func_extended */                                                               \
     void bindFragDataLocation(ShaderProgramID programPacked, GLuint color, const GLchar *name);    \

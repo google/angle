@@ -80,6 +80,7 @@ gles_extensions = [
     "GL_EXT_draw_buffers_indexed",
     "GL_EXT_draw_elements_base_vertex",
     "GL_EXT_EGL_image_array",
+    "GL_EXT_EGL_image_storage",
     "GL_EXT_external_buffer",
     "GL_EXT_geometry_shader",
     "GL_EXT_instanced_arrays",

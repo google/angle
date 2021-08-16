@@ -655,6 +655,14 @@ ANGLE_EXPORT void GL_APIENTRY GL_LoseContextCHROMIUM(GLenum current, GLenum othe
 
 // GL_EXT_EGL_image_array
 
+// GL_EXT_EGL_image_storage
+ANGLE_EXPORT void GL_APIENTRY GL_EGLImageTargetTexStorageEXT(GLenum target,
+                                                             GLeglImageOES image,
+                                                             const GLint *attrib_list);
+ANGLE_EXPORT void GL_APIENTRY GL_EGLImageTargetTextureStorageEXT(GLuint texture,
+                                                                 GLeglImageOES image,
+                                                                 const GLint *attrib_list);
+
 // GL_EXT_YUV_target
 
 // GL_EXT_blend_func_extended

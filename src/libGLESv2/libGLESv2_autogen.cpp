@@ -3771,6 +3771,21 @@ void GL_APIENTRY glLoseContextCHROMIUM(GLenum current, GLenum other)
 
 // GL_EXT_EGL_image_array
 
+// GL_EXT_EGL_image_storage
+void GL_APIENTRY glEGLImageTargetTexStorageEXT(GLenum target,
+                                               GLeglImageOES image,
+                                               const GLint *attrib_list)
+{
+    return GL_EGLImageTargetTexStorageEXT(target, image, attrib_list);
+}
+
+void GL_APIENTRY glEGLImageTargetTextureStorageEXT(GLuint texture,
+                                                   GLeglImageOES image,
+                                                   const GLint *attrib_list)
+{
+    return GL_EGLImageTargetTextureStorageEXT(texture, image, attrib_list);
+}
+
 // GL_EXT_YUV_target
 
 // GL_EXT_blend_func_extended

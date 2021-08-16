@@ -744,6 +744,9 @@ struct Extensions
 
     // GL_EXT_protected_textures
     bool protectedTexturesEXT = false;
+
+    // GL_EXT_EGL_image_storage
+    bool eglImageStorageEXT = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

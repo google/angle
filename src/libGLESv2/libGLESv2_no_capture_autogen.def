@@ -612,6 +612,10 @@ EXPORTS
 
     ; GL_EXT_EGL_image_array
 
+    ; GL_EXT_EGL_image_storage
+    glEGLImageTargetTexStorageEXT
+    glEGLImageTargetTextureStorageEXT
+
     ; GL_EXT_YUV_target
 
     ; GL_EXT_blend_func_extended

@@ -3627,6 +3627,62 @@ void GL_APIENTRY GL_LoseContextCHROMIUM(GLenum current, GLenum other)
 
 // GL_EXT_EGL_image_array
 
+// GL_EXT_EGL_image_storage
+void GL_APIENTRY GL_EGLImageTargetTexStorageEXT(GLenum target,
+                                                GLeglImageOES image,
+                                                const GLint *attrib_list)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLEGLImageTargetTexStorageEXT,
+          "context = %d, target = %s, image = 0x%016" PRIxPTR ", attrib_list = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), (uintptr_t)image,
+          (uintptr_t)attrib_list);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateEGLImageTargetTexStorageEXT(
+                                                             context, target, image, attrib_list));
+        if (isCallValid)
+        {
+            context->eGLImageTargetTexStorage(target, image, attrib_list);
+        }
+        ANGLE_CAPTURE(EGLImageTargetTexStorageEXT, isCallValid, context, target, image,
+                      attrib_list);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+void GL_APIENTRY GL_EGLImageTargetTextureStorageEXT(GLuint texture,
+                                                    GLeglImageOES image,
+                                                    const GLint *attrib_list)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLEGLImageTargetTextureStorageEXT,
+          "context = %d, texture = %u, image = 0x%016" PRIxPTR ", attrib_list = 0x%016" PRIxPTR "",
+          CID(context), texture, (uintptr_t)image, (uintptr_t)attrib_list);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateEGLImageTargetTextureStorageEXT(
+                                                             context, texture, image, attrib_list));
+        if (isCallValid)
+        {
+            context->eGLImageTargetTextureStorage(texture, image, attrib_list);
+        }
+        ANGLE_CAPTURE(EGLImageTargetTextureStorageEXT, isCallValid, context, texture, image,
+                      attrib_list);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_EXT_YUV_target
 
 // GL_EXT_blend_func_extended

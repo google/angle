@@ -869,6 +869,18 @@ angle::CallCapture CaptureLoseContextCHROMIUM(const State &glState,
 
 // GL_EXT_EGL_image_array
 
+// GL_EXT_EGL_image_storage
+angle::CallCapture CaptureEGLImageTargetTexStorageEXT(const State &glState,
+                                                      bool isCallValid,
+                                                      GLenum target,
+                                                      GLeglImageOES image,
+                                                      const GLint *attrib_list);
+angle::CallCapture CaptureEGLImageTargetTextureStorageEXT(const State &glState,
+                                                          bool isCallValid,
+                                                          GLuint texture,
+                                                          GLeglImageOES image,
+                                                          const GLint *attrib_list);
+
 // GL_EXT_YUV_target
 
 // GL_EXT_blend_func_extended
@@ -3650,6 +3662,18 @@ void CaptureBindUniformLocationCHROMIUM_name(const State &glState,
                                              UniformLocation locationPacked,
                                              const GLchar *name,
                                              angle::ParamCapture *paramCapture);
+void CaptureEGLImageTargetTexStorageEXT_attrib_list(const State &glState,
+                                                    bool isCallValid,
+                                                    GLenum target,
+                                                    GLeglImageOES image,
+                                                    const GLint *attrib_list,
+                                                    angle::ParamCapture *paramCapture);
+void CaptureEGLImageTargetTextureStorageEXT_attrib_list(const State &glState,
+                                                        bool isCallValid,
+                                                        GLuint texture,
+                                                        GLeglImageOES image,
+                                                        const GLint *attrib_list,
+                                                        angle::ParamCapture *paramCapture);
 void CaptureBindFragDataLocationEXT_name(const State &glState,
                                          bool isCallValid,
                                          ShaderProgramID programPacked,

@@ -1034,8 +1034,12 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glDrawTransformFeedbackStreamInstanced";
         case EntryPoint::GLEGLImageTargetRenderbufferStorageOES:
             return "glEGLImageTargetRenderbufferStorageOES";
+        case EntryPoint::GLEGLImageTargetTexStorageEXT:
+            return "glEGLImageTargetTexStorageEXT";
         case EntryPoint::GLEGLImageTargetTexture2DOES:
             return "glEGLImageTargetTexture2DOES";
+        case EntryPoint::GLEGLImageTargetTextureStorageEXT:
+            return "glEGLImageTargetTextureStorageEXT";
         case EntryPoint::GLEdgeFlag:
             return "glEdgeFlag";
         case EntryPoint::GLEdgeFlagPointer:
