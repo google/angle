@@ -90,4 +90,9 @@ std::string GLbitfieldToString(GLenumGroup enumGroup, unsigned int value)
 
     return st.str();
 }
+
+const char *GLinternalFormatToString(unsigned int format)
+{
+    return GLenumToString(gl::GLenumGroup::InternalFormat, format);
+}
 }  // namespace gl

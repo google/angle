@@ -21,6 +21,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value);
 std::string GLbitfieldToString(GLenumGroup enumGroup, unsigned int value);
 void OutputGLenumString(std::ostream &out, GLenumGroup enumGroup, unsigned int value);
 void OutputGLbitfieldString(std::ostream &out, GLenumGroup enumGroup, unsigned int value);
+const char *GLinternalFormatToString(unsigned int format);
 
 extern const char kUnknownGLenumString[];
 }  // namespace gl

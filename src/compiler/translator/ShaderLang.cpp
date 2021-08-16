@@ -969,4 +969,52 @@ const char kInputAttachmentName[] = "ANGLEInputAttachment";
 
 }  // namespace vk
 
+const char *BlockLayoutTypeToString(BlockLayoutType type)
+{
+    switch (type)
+    {
+        case BlockLayoutType::BLOCKLAYOUT_STD140:
+            return "std140";
+        case BlockLayoutType::BLOCKLAYOUT_STD430:
+            return "std430";
+        case BlockLayoutType::BLOCKLAYOUT_PACKED:
+            return "packed";
+        case BlockLayoutType::BLOCKLAYOUT_SHARED:
+            return "shared";
+        default:
+            return "invalid";
+    }
+}
+
+const char *BlockTypeToString(BlockType type)
+{
+    switch (type)
+    {
+        case BlockType::BLOCK_BUFFER:
+            return "buffer";
+        case BlockType::BLOCK_UNIFORM:
+            return "uniform";
+        default:
+            return "invalid";
+    }
+}
+
+const char *InterpolationTypeToString(InterpolationType type)
+{
+    switch (type)
+    {
+        case InterpolationType::INTERPOLATION_SMOOTH:
+            return "smooth";
+        case InterpolationType::INTERPOLATION_CENTROID:
+            return "centroid";
+        case InterpolationType::INTERPOLATION_SAMPLE:
+            return "sample";
+        case InterpolationType::INTERPOLATION_FLAT:
+            return "flat";
+        case InterpolationType::INTERPOLATION_NOPERSPECTIVE:
+            return "noperspective";
+        default:
+            return "invalid";
+    }
+}
 }  // namespace sh
