@@ -177,6 +177,8 @@ class TranslatorMetalDirect : public TCompiler
     ANGLE_NO_DISCARD bool transformDepthBeforeCorrection(TIntermBlock *root,
                                                          const DriverUniform *driverUniforms);
 
+    ANGLE_NO_DISCARD bool appendVertexShaderDepthCorrectionToMain(TIntermBlock *root);
+
     ANGLE_NO_DISCARD bool insertSampleMaskWritingLogic(TIntermBlock &root,
                                                        DriverUniform &driverUniforms);
     ANGLE_NO_DISCARD bool insertRasterizationDiscardLogic(TIntermBlock &root);

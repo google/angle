@@ -609,6 +609,38 @@ bool TranslatorMetalDirect::transformDepthBeforeCorrection(TIntermBlock *root,
     return RunAtTheEndOfShader(this, root, assignment, &getSymbolTable());
 }
 
+// This operation performs the viewport depth translation needed by Metal. GL uses a
+// clip space z range of -1 to +1 where as Metal uses 0 to 1. The translation becomes
+// this expression
+//
+//     z_metal = 0.5 * (w_gl + z_gl)
+//
+// where z_metal is the depth output of a Metal vertex shader and z_gl is the same for GL.
+bool TranslatorMetalDirect::appendVertexShaderDepthCorrectionToMain(TIntermBlock *root)
+{
+    const TVariable *position  = BuiltInVariable::gl_Position();
+    TIntermSymbol *positionRef = new TIntermSymbol(position);
+
+    TVector<int> swizzleOffsetZ = {2};
+    TIntermSwizzle *positionZ   = new TIntermSwizzle(positionRef, swizzleOffsetZ);
+
+    TIntermConstantUnion *oneHalf = CreateFloatNode(0.5f);
+
+    TVector<int> swizzleOffsetW = {3};
+    TIntermSwizzle *positionW   = new TIntermSwizzle(positionRef->deepCopy(), swizzleOffsetW);
+
+    // Create the expression "(gl_Position.z + gl_Position.w) * 0.5".
+    TIntermBinary *zPlusW = new TIntermBinary(EOpAdd, positionZ->deepCopy(), positionW->deepCopy());
+    TIntermBinary *halfZPlusW = new TIntermBinary(EOpMul, zPlusW, oneHalf->deepCopy());
+
+    // Create the assignment "gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5"
+    TIntermTyped *positionZLHS = positionZ->deepCopy();
+    TIntermBinary *assignment  = new TIntermBinary(TOperator::EOpAssign, positionZLHS, halfZPlusW);
+
+    // Append the assignment as a statement at the end of the shader.
+    return RunAtTheEndOfShader(this, root, assignment, &getSymbolTable());
+}
+
 static std::set<ImmutableString> GetMslKeywords()
 {
     std::set<ImmutableString> keywords;
@@ -1058,6 +1090,11 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         }
 
         if (!transformDepthBeforeCorrection(root, driverUniforms))
+        {
+            return false;
+        }
+
+        if (!appendVertexShaderDepthCorrectionToMain(root))
         {
             return false;
         }
