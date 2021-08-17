@@ -149,6 +149,8 @@ class UtilsVk : angle::NonCopyable
         bool srcFlipY;
         bool destFlipY;
         SurfaceRotation srcRotation;
+        GLenum srcColorEncoding;
+        GLenum destColorEncoding;
     };
 
     struct CopyImageBitsParameters

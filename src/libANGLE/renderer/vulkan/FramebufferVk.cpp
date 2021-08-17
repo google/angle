@@ -65,8 +65,8 @@ bool HasDstBlitFeature(RendererVk *renderer, RenderTargetVk *dstRenderTarget)
 bool AreSrcAndDstColorChannelsBlitCompatible(RenderTargetVk *srcRenderTarget,
                                              RenderTargetVk *dstRenderTarget)
 {
-    const angle::Format &srcFormat = srcRenderTarget->getImageFormat().intendedFormat();
-    const angle::Format &dstFormat = dstRenderTarget->getImageFormat().intendedFormat();
+    const angle::Format &srcFormat = srcRenderTarget->getImageIntendedFormat();
+    const angle::Format &dstFormat = dstRenderTarget->getImageIntendedFormat();
 
     // Luminance/alpha formats are not renderable, so they can't have ended up in a framebuffer to
     // participate in a blit.
@@ -94,8 +94,8 @@ bool AreSrcAndDstFormatsIdentical(RenderTargetVk *srcRenderTarget, RenderTargetV
 bool AreSrcAndDstDepthStencilChannelsBlitCompatible(RenderTargetVk *srcRenderTarget,
                                                     RenderTargetVk *dstRenderTarget)
 {
-    const angle::Format &srcFormat = srcRenderTarget->getImageFormat().intendedFormat();
-    const angle::Format &dstFormat = dstRenderTarget->getImageFormat().intendedFormat();
+    const angle::Format &srcFormat = srcRenderTarget->getImageIntendedFormat();
+    const angle::Format &dstFormat = dstRenderTarget->getImageIntendedFormat();
 
     return (dstFormat.depthBits > 0 || srcFormat.depthBits == 0) &&
            (dstFormat.stencilBits > 0 || srcFormat.stencilBits == 0);
@@ -1657,7 +1657,7 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
         updateActiveColorMasks(colorIndexGL, actualFormat.redBits > 0, actualFormat.greenBits > 0,
                                actualFormat.blueBits > 0, actualFormat.alphaBits > 0);
 
-        const angle::Format &intendedFormat = renderTarget->getImageFormat().intendedFormat();
+        const angle::Format &intendedFormat = renderTarget->getImageIntendedFormat();
         mEmulatedAlphaAttachmentMask.set(
             colorIndexGL, intendedFormat.alphaBits == 0 && actualFormat.alphaBits > 0);
 
@@ -1964,8 +1964,7 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
             RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
             ASSERT(colorRenderTarget);
             mRenderPassDesc.packColorAttachment(
-                colorIndexGL,
-                colorRenderTarget->getImageForRenderPass().getFormat().intendedFormatID);
+                colorIndexGL, colorRenderTarget->getImageForRenderPass().getIntendedFormatID());
 
             // Add the resolve attachment, if any.
             if (colorRenderTarget->hasResolveAttachment())
@@ -1984,7 +1983,7 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
     if (depthStencilRenderTarget)
     {
         mRenderPassDesc.packDepthStencilAttachment(
-            depthStencilRenderTarget->getImageForRenderPass().getFormat().intendedFormatID);
+            depthStencilRenderTarget->getImageForRenderPass().getIntendedFormatID());
 
         // Add the resolve attachment, if any.
         if (depthStencilRenderTarget->hasResolveAttachment())
@@ -2580,15 +2579,15 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                     kUninitializedClearValue);
         }
 
-        const vk::Format &format = depthStencilRenderTarget->getImageFormat();
+        const angle::Format &format = depthStencilRenderTarget->getImageIntendedFormat();
         // If the format we picked has stencil but user did not ask for it due to hardware
         // limitations, use DONT_CARE for load/store. The same logic for depth follows.
-        if (format.intendedFormat().stencilBits == 0)
+        if (format.stencilBits == 0)
         {
             stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
             stencilStoreOp = vk::RenderPassStoreOp::DontCare;
         }
-        if (format.intendedFormat().depthBits == 0)
+        if (format.depthBits == 0)
         {
             depthLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
             depthStoreOp = vk::RenderPassStoreOp::DontCare;

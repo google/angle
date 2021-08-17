@@ -106,8 +106,8 @@ egl::Error ImageVk::initialize(const egl::Display *display)
 
         // start with some reasonable alignment that's safe for the case where intendedFormatID is
         // FormatID::NONE
-        size_t alignment = vk::GetValidImageCopyBufferAlignment(
-            mImage->getFormat().intendedFormatID, mImage->getActualFormatID());
+        size_t alignment = vk::GetValidImageCopyBufferAlignment(mImage->getIntendedFormatID(),
+                                                                mImage->getActualFormatID());
 
         // Make sure a staging buffer is ready to use to upload data
         mImage->initStagingBuffer(renderer, alignment, vk::kStagingBufferFlags,

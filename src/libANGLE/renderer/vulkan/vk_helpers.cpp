@@ -5192,8 +5192,7 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(),
                                  dstImage->getImage(), dstImage->getCurrentLayout(), 1, &region);
     }
-    else if (!srcImage->getFormat().intendedFormat().isBlock &&
-             !dstImage->getFormat().intendedFormat().isBlock)
+    else if (!srcImage->getIntendedFormat().isBlock && !dstImage->getIntendedFormat().isBlock)
     {
         // The source and destination image formats may be using a fallback in the case of RGB
         // images.  A compute shader is used in such a case to perform the copy.

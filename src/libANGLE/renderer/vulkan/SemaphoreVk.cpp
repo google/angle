@@ -143,8 +143,7 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
 
             // Image should not be accessed while unowned. Emulated formats may have staged updates
             // to clear the image after initialization.
-            ASSERT(!image.hasStagedUpdatesInAllocatedLevels() ||
-                   image.getFormat().hasEmulatedImageChannels());
+            ASSERT(!image.hasStagedUpdatesInAllocatedLevels() || image.hasEmulatedImageChannels());
 
             // Queue ownership transfer and layout transition.
             image.acquireFromExternal(contextVk, VK_QUEUE_FAMILY_EXTERNAL, rendererQueueFamilyIndex,

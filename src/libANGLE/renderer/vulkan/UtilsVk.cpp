@@ -213,11 +213,9 @@ uint32_t GetFormatFlags(const angle::Format &format,
     return floatFlag;
 }
 
-uint32_t GetImageCopyFlags(const vk::Format &srcFormat, const vk::Format &dstFormat)
+uint32_t GetImageCopyFlags(const angle::Format &srcIntendedFormat,
+                           const angle::Format &dstIntendedFormat)
 {
-    const angle::Format &srcIntendedFormat = srcFormat.intendedFormat();
-    const angle::Format &dstIntendedFormat = dstFormat.intendedFormat();
-
     uint32_t flags = 0;
 
     flags |= GetFormatFlags(srcIntendedFormat, ImageCopy_frag::kSrcIsSint,
@@ -231,12 +229,10 @@ uint32_t GetImageCopyFlags(const vk::Format &srcFormat, const vk::Format &dstFor
 uint32_t GetBlitResolveFlags(bool blitColor,
                              bool blitDepth,
                              bool blitStencil,
-                             const vk::Format &format)
+                             const angle::Format &intendedFormat)
 {
     if (blitColor)
     {
-        const angle::Format &intendedFormat = format.intendedFormat();
-
         return GetFormatFlags(intendedFormat, BlitResolve_frag::kBlitColorInt,
                               BlitResolve_frag::kBlitColorUint, BlitResolve_frag::kBlitColorFloat);
     }
@@ -323,7 +319,7 @@ uint32_t GetUnresolveFlags(uint32_t colorAttachmentCount,
 
     for (uint32_t attachmentIndex = 0; attachmentIndex < colorAttachmentCount; ++attachmentIndex)
     {
-        const angle::Format &format = colorSrc[attachmentIndex]->getFormat().intendedFormat();
+        const angle::Format &format = colorSrc[attachmentIndex]->getIntendedFormat();
 
         UnresolveColorAttachmentType type = kUnresolveTypeFloat;
         if (format.isSint())
@@ -358,19 +354,18 @@ uint32_t GetUnresolveFlags(uint32_t colorAttachmentCount,
     return flags;
 }
 
-uint32_t GetFormatDefaultChannelMask(const vk::Format &format)
+uint32_t GetFormatDefaultChannelMask(const angle::Format &intendedImageFormat,
+                                     const angle::Format &actualImageFormat)
 {
     uint32_t mask = 0;
 
-    const angle::Format &intendedFormat = format.intendedFormat();
-    const angle::Format &imageFormat    = format.actualImageFormat();
-
     // Red can never be introduced due to format emulation (except for luma which is handled
     // especially)
-    ASSERT(((intendedFormat.redBits > 0) == (imageFormat.redBits > 0)) || intendedFormat.isLUMA());
-    mask |= intendedFormat.greenBits == 0 && imageFormat.greenBits > 0 ? 2 : 0;
-    mask |= intendedFormat.blueBits == 0 && imageFormat.blueBits > 0 ? 4 : 0;
-    mask |= intendedFormat.alphaBits == 0 && imageFormat.alphaBits > 0 ? 8 : 0;
+    ASSERT(((intendedImageFormat.redBits > 0) == (actualImageFormat.redBits > 0)) ||
+           intendedImageFormat.isLUMA());
+    mask |= intendedImageFormat.greenBits == 0 && actualImageFormat.greenBits > 0 ? 2 : 0;
+    mask |= intendedImageFormat.blueBits == 0 && actualImageFormat.blueBits > 0 ? 4 : 0;
+    mask |= intendedImageFormat.alphaBits == 0 && actualImageFormat.alphaBits > 0 ? 8 : 0;
 
     return mask;
 }
@@ -2262,7 +2257,8 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     // Linear sampling is only valid with color blitting.
     ASSERT((blitColor && !isResolve) || !params.linear);
 
-    uint32_t flags = GetBlitResolveFlags(blitColor, blitDepth, blitStencil, src->getFormat());
+    uint32_t flags =
+        GetBlitResolveFlags(blitColor, blitDepth, blitStencil, src->getIntendedFormat());
     flags |= src->getLayerCount() > 1 ? BlitResolve_frag::kSrcIsArray : 0;
     flags |= isResolve ? BlitResolve_frag::kIsResolve : 0;
 
@@ -2620,9 +2616,8 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 {
     ANGLE_TRY(ensureImageCopyResourcesInitialized(contextVk));
 
-    const vk::Format &srcFormat            = src->getFormat();
-    const vk::Format &dstFormat            = dest->getFormat();
-    const angle::Format &dstIntendedFormat = dstFormat.intendedFormat();
+    const angle::Format &srcIntendedFormat = src->getIntendedFormat();
+    const angle::Format &dstIntendedFormat = dest->getIntendedFormat();
 
     ImageCopyShaderParams shaderParams;
     shaderParams.flipX            = 0;
@@ -2631,19 +2626,18 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     shaderParams.unmultiplyAlpha  = params.srcUnmultiplyAlpha;
     shaderParams.destHasLuminance = dstIntendedFormat.luminanceBits > 0;
     shaderParams.destIsAlpha      = dstIntendedFormat.isLUMA() && dstIntendedFormat.alphaBits > 0;
-    shaderParams.destDefaultChannelsMask = GetFormatDefaultChannelMask(dstFormat);
-    shaderParams.srcMip                  = params.srcMip;
-    shaderParams.srcLayer                = params.srcLayer;
-    shaderParams.srcOffset[0]            = params.srcOffset[0];
-    shaderParams.srcOffset[1]            = params.srcOffset[1];
-    shaderParams.destOffset[0]           = params.destOffset[0];
-    shaderParams.destOffset[1]           = params.destOffset[1];
-    shaderParams.rotateXY                = 0;
+    shaderParams.destDefaultChannelsMask =
+        GetFormatDefaultChannelMask(dest->getIntendedFormat(), dest->getActualFormat());
+    shaderParams.srcMip        = params.srcMip;
+    shaderParams.srcLayer      = params.srcLayer;
+    shaderParams.srcOffset[0]  = params.srcOffset[0];
+    shaderParams.srcOffset[1]  = params.srcOffset[1];
+    shaderParams.destOffset[0] = params.destOffset[0];
+    shaderParams.destOffset[1] = params.destOffset[1];
+    shaderParams.rotateXY      = 0;
 
-    shaderParams.srcIsSRGB =
-        gl::GetSizedInternalFormatInfo(srcFormat.intendedGLFormat).colorEncoding == GL_SRGB;
-    shaderParams.destIsSRGB =
-        gl::GetSizedInternalFormatInfo(dstFormat.intendedGLFormat).colorEncoding == GL_SRGB;
+    shaderParams.srcIsSRGB  = params.srcColorEncoding == GL_SRGB;
+    shaderParams.destIsSRGB = params.destColorEncoding == GL_SRGB;
 
     // If both src and dest are sRGB, and there is no alpha multiplication/division necessary, then
     // the shader can work with sRGB data and pretend they are linear.
@@ -2695,7 +2689,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
             break;
     }
 
-    uint32_t flags = GetImageCopyFlags(srcFormat, dstFormat);
+    uint32_t flags = GetImageCopyFlags(srcIntendedFormat, dstIntendedFormat);
     if (src->getType() == VK_IMAGE_TYPE_3D)
     {
         flags |= ImageCopy_frag::kSrcIs3D;
@@ -2716,7 +2710,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     vk::RenderPassDesc renderPassDesc;
     renderPassDesc.setSamples(dest->getSamples());
-    renderPassDesc.packColorAttachment(0, dstFormat.intendedFormatID);
+    renderPassDesc.packColorAttachment(0, dest->getIntendedFormatID());
 
     // Copy from multisampled image is not supported.
     ASSERT(src->getSamples() == 1);
@@ -2822,13 +2816,10 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
     // new shader is necessary.  The srcEmulatedAlpha parameter is used to make sure the destination
     // alpha value is correct, if dest is RGBA.
 
-    const vk::Format &srcFormat = src->getFormat();
-    const vk::Format &dstFormat = dest->getFormat();
-
     // This path should only be necessary for when RGBA is used as fallback for RGB.  No other
     // format which can be used with EXT_copy_image has a fallback.
-    ASSERT(srcFormat.intendedFormat().blueBits > 0 && srcFormat.intendedFormat().alphaBits == 0);
-    ASSERT(dstFormat.intendedFormat().blueBits > 0 && dstFormat.intendedFormat().alphaBits == 0);
+    ASSERT(src->getIntendedFormat().blueBits > 0 && src->getIntendedFormat().alphaBits == 0);
+    ASSERT(dest->getIntendedFormat().blueBits > 0 && dest->getIntendedFormat().alphaBits == 0);
 
     const angle::Format &srcImageFormat = src->getActualFormat();
     const angle::Format &dstImageFormat = dest->getActualFormat();
