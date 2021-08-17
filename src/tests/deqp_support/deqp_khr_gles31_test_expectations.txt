@@ -46,10 +46,6 @@
 // Failures on windows nvidia
 5579 VULKAN NVIDIA : KHR-GLES31.core.geometry_shader.limits.max_invocations = FAIL
 
-// Dispatch indirect:
-4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.resource-ubo = FAIL
-4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.built-in-variables = FAIL
-
 // XFB array elements capture:
 // These tests only fail with VK_EXT_transform_feedback
 4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case1 = SKIP
@@ -112,17 +108,6 @@
 
 // Crashes on Android
 4107 VULKAN ANDROID : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength* = SKIP
-
-// Explicit uniform locations:
-4219 VULKAN PIXEL2ORXL : KHR-GLES31.core.explicit_uniform_location.uniform-loc-mix-with-implicit-max = FAIL
-4219 VULKAN PIXEL2ORXL : KHR-GLES31.core.explicit_uniform_location.uniform-loc-mix-with-implicit-max-array = FAIL
-
-// Fails on Pixel2 and Pixel2 XL
-4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-elements = FAIL
-4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-arrays = FAIL
-
-// Fails to link the shader program on Pixel2 and Pixel2 XL
-5572 VULKAN PIXEL2ORXL : KHR-GLES31.core.sample_variables.mask.rgba8*.samples_*.mask_* = FAIL
 
 // Failing on Android with SwiftShader
 4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-bvec4 = FAIL

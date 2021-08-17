@@ -228,58 +228,6 @@
 //2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = FAIL
 //2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = FAIL
 
-// Android Pixel 2 clear failures with Vulkan backend
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.color_clear.masked_rgb = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.color_clear.masked_rgba = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.depth_stencil_clear.depth_stencil_masked = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.5 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.7 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.23 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.54 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.57 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.67 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.71 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.83 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.4 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.7 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.11 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.13 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.14 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.16 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.19 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.20 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.24 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.30 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.34 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.35 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.37 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.38 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.42 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.44 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.46 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.47 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.48 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.55 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.58 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.60 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.61 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.64 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.65 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.66 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.67 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.68 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.69 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.71 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.74 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.79 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.80 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.82 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.83 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.86 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.87 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.94 = FAIL
-161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.97 = FAIL
-
 // Nexus 5x failures
 3309 NEXUS5X GLES : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = FAIL
 3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
@@ -332,19 +280,6 @@
 2830 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.primitives.line_loop = FAIL
 2830 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.primitives.line_strip = FAIL
 2830 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.primitives.lines = FAIL
-
-// Failing on the Pixel 2.
-2808 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.shaders.builtin_variable.fragcoord_w = FAIL
-
-// Failing on the Pixel 2 due to Qualcomm Vulkan driver
-4344 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.1 = FAIL
-4344 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.30 = FAIL
-4344 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.35 = FAIL
-4344 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.38 = FAIL
-4344 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.60 = FAIL
-4344 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.62 = FAIL
-4344 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.62 = FAIL
-4344 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.fragment_ops.random.78 = FAIL
 
 // These tests also fail on AMD windows driver as it is not allowed to use emulation due to errors.
 3243 VULKAN WIN AMD : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL

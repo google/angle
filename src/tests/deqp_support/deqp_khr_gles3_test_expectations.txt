@@ -10,9 +10,6 @@
 3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth24_stencil8 = FAIL
 3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth32f_stencil8 = FAIL
 
-// Pixel 2 crashes
-5340 PIXEL2ORXL VULKAN : KHR-GLES3.copy_tex_image_conversions.* = SKIP
-
 // CopyTexImage conversion failing due to Vulkan validation error re: UINT/SINT-descriptor-set issue.
 3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_texture2d = FAIL
 3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_cubemap_negx = FAIL

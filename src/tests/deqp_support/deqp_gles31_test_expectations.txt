@@ -221,18 +221,8 @@
 // Seem to trigger LowMemoryKiller when run in a certain sequence
 5185 VULKAN ANDROID : dEQP-GLES31.functional.atomic_counter.* = SKIP
 
-// SSBO synchronization:
-4097 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.synchronization.in_invocation.ssbo_alias_overwrite = FAIL
-
 // Framebuffer without attachments:
 3579 ANDROID VULKAN : dEQP-GLES31.functional.fbo.no_attachments.* = SKIP
-
-// Stencil textures (some missing support for base level):
-3683 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.stencil_texturing.format.* = FAIL
-3683 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.stencil_texturing.misc.compare_mode_effect = FAIL
-
-// Instanced lines with base vertex:
-4166 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_base_vertex.draw_elements_instanced_base_vertex.lines.instanced_attributes = FAIL
 
 // Need to support non-color when staging image updates
 4080 ANDROID VULKAN : dEQP-GLES31.functional.stencil_texturing.misc.base_level = SKIP
@@ -241,24 +231,6 @@
 4371 VULKAN ANDROID : dEQP-GLES31.functional.shaders.implicit_conversions.es31.arithmetic.input_before_literal.add.int_to_vec3_vertex = FAIL
 4371 VULKAN ANDROID : dEQP-GLES31.functional.shaders.implicit_conversions.es31.arithmetic.input_before_literal.add.int_to_uvec3_vertex = FAIL
 4371 SWIFTSHADER : dEQP-GLES31.functional.shaders.implicit_conversions.* = FAIL
-
-// Unexpected crashes on Pixel 2.
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.1 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.3 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.5 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.9 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.10 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.12 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.13 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.14 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.15 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.17 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.18 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.0 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.2 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.10 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.11 = SKIP
-4822 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.17 = SKIP
 
 // Swiftshader fails to create a correct source/destination srgb8_alpha8_astc image before copy, however 5x4 is correct
 5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*rgba*srgb8_alpha8_astc_*_khr.*_to_texture2d* = FAIL
@@ -281,38 +253,6 @@
 // Vulkan Android failures with these formats
 5277 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb10_a2* = FAIL
 5277 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb9_e5* = FAIL
-
-// Failures with some formats when copying to a renderbuffer
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rg8_snorm_r16i.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rg8_snorm_r16ui.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgb8_snorm_rgb8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgb8i_rgb8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgb8ui_rgb8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*srgb8_rgb8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*r32i_rgba8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*r32i_srgb8_alpha8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*r32ui_rgba8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*r32ui_srgb8_alpha8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rg16i_rgba8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rg16i_srgb8_alpha8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rg16ui_rgba8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rg16ui_srgb8_alpha8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgb10_a2_rgba8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgb10_a2_srgb8_alpha8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgb10_a2ui_rgba8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgb10_a2ui_srgb8_alpha8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8_snorm_r32i.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8_snorm_r32ui.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8_snorm_rg16i.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8_snorm_rg16ui.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8_snorm_rgba8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8_snorm_srgb8_alpha8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8_srgb8_alpha8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8i_rgba8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8i_srgb8_alpha8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8ui_rgba8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8ui_srgb8_alpha8.*to_renderbuffer = FAIL
-5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*srgb8_alpha8_rgba8.*to_renderbuffer = FAIL
 
 // Cannot support a seperate set of fragment shader input when per-sample shading:
 3588 VULKAN ANDROID : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.correctness.multisample_*_1 = FAIL
