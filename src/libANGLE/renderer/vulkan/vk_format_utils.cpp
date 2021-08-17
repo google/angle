@@ -191,44 +191,6 @@ void Format::initBufferFallback(RendererVk *renderer,
     }
 }
 
-size_t Format::getImageCopyBufferAlignment() const
-{
-    // vkCmdCopyBufferToImage must have an offset that is a multiple of 4 as well as a multiple
-    // of the texel size (if uncompressed) or pixel block size (if compressed).
-    // https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferImageCopy.html
-    //
-    // We need lcm(4, texelSize) (lcm = least common multiplier).  For compressed images,
-    // |texelSize| would contain the block size.  Since 4 is constant, this can be calculated as:
-    //
-    //                      | texelSize             texelSize % 4 == 0
-    //                      | 4 * texelSize         texelSize % 4 == 1
-    // lcm(4, texelSize) = <
-    //                      | 2 * texelSize         texelSize % 4 == 2
-    //                      | 4 * texelSize         texelSize % 4 == 3
-    //
-    // This means:
-    //
-    // - texelSize % 2 != 0 gives a 4x multiplier
-    // - else texelSize % 4 != 0 gives a 2x multiplier
-    // - else there's no multiplier.
-    //
-    const angle::Format &format = actualImageFormat();
-
-    ASSERT(format.pixelBytes != 0);
-    const size_t texelSize  = format.pixelBytes;
-    const size_t multiplier = texelSize % 2 != 0 ? 4 : texelSize % 4 != 0 ? 2 : 1;
-    const size_t alignment  = multiplier * texelSize;
-
-    return alignment;
-}
-
-size_t Format::getValidImageCopyBufferAlignment() const
-{
-    constexpr size_t kMinimumAlignment = 16;
-    return (intendedFormatID == angle::FormatID::NONE) ? kMinimumAlignment
-                                                       : getImageCopyBufferAlignment();
-}
-
 bool Format::hasEmulatedImageChannels() const
 {
     const angle::Format &angleFmt   = intendedFormat();
@@ -291,6 +253,46 @@ void FormatTable::initialize(RendererVk *renderer,
             outCompressedTextureFormats->push_back(format.intendedGLFormat);
         }
     }
+}
+
+size_t GetImageCopyBufferAlignment(angle::FormatID formatID)
+{
+    // vkCmdCopyBufferToImage must have an offset that is a multiple of 4 as well as a multiple
+    // of the texel size (if uncompressed) or pixel block size (if compressed).
+    // https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferImageCopy.html
+    //
+    // We need lcm(4, texelSize) (lcm = least common multiplier).  For compressed images,
+    // |texelSize| would contain the block size.  Since 4 is constant, this can be calculated as:
+    //
+    //                      | texelSize             texelSize % 4 == 0
+    //                      | 4 * texelSize         texelSize % 4 == 1
+    // lcm(4, texelSize) = <
+    //                      | 2 * texelSize         texelSize % 4 == 2
+    //                      | 4 * texelSize         texelSize % 4 == 3
+    //
+    // This means:
+    //
+    // - texelSize % 2 != 0 gives a 4x multiplier
+    // - else texelSize % 4 != 0 gives a 2x multiplier
+    // - else there's no multiplier.
+    //
+    const angle::Format &format = angle::Format::Get(formatID);
+
+    ASSERT(format.pixelBytes != 0);
+    const size_t texelSize  = format.pixelBytes;
+    const size_t multiplier = texelSize % 2 != 0 ? 4 : texelSize % 4 != 0 ? 2 : 1;
+    const size_t alignment  = multiplier * texelSize;
+
+    return alignment;
+}
+
+size_t GetValidImageCopyBufferAlignment(angle::FormatID intendedFormatID,
+                                        angle::FormatID actualFormatID)
+{
+    constexpr size_t kMinimumAlignment = 16;
+    return (intendedFormatID == angle::FormatID::NONE)
+               ? kMinimumAlignment
+               : GetImageCopyBufferAlignment(actualFormatID);
 }
 
 VkImageUsageFlags GetMaximalImageUsageFlags(RendererVk *renderer, angle::FormatID formatID)
@@ -393,11 +395,9 @@ gl::SwizzleState ApplySwizzle(const gl::SwizzleState &formatSwizzle,
 }
 
 gl::SwizzleState GetFormatSwizzle(const ContextVk *contextVk,
-                                  const vk::Format &format,
+                                  const angle::Format &angleFormat,
                                   const bool sized)
 {
-    const angle::Format &angleFormat = format.intendedFormat();
-
     gl::SwizzleState internalSwizzle;
 
     if (angleFormat.isLUMA())

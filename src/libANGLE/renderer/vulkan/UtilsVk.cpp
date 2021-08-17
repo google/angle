@@ -274,10 +274,8 @@ uint32_t GetConvertIndexIndirectLineLoopFlag(uint32_t indicesBitsWidth)
     }
 }
 
-uint32_t GetGenerateMipmapFlags(ContextVk *contextVk, const vk::Format &format)
+uint32_t GetGenerateMipmapFlags(ContextVk *contextVk, const angle::Format &actualFormat)
 {
-    const angle::Format &actualFormat = format.actualImageFormat();
-
     uint32_t flags = 0;
 
     // Note: If bits-per-component is 8 or 16 and float16 is supported in the shader, use that for
@@ -2832,8 +2830,8 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
     ASSERT(srcFormat.intendedFormat().blueBits > 0 && srcFormat.intendedFormat().alphaBits == 0);
     ASSERT(dstFormat.intendedFormat().blueBits > 0 && dstFormat.intendedFormat().alphaBits == 0);
 
-    const angle::Format &srcImageFormat = srcFormat.actualImageFormat();
-    const angle::Format &dstImageFormat = dstFormat.actualImageFormat();
+    const angle::Format &srcImageFormat = src->getActualFormat();
+    const angle::Format &dstImageFormat = dest->getActualFormat();
 
     // Create temporary buffers.
     vk::RendererScoped<vk::BufferHelper> srcBuffer(contextVk->getRenderer());
@@ -3050,7 +3048,7 @@ angle::Result UtilsVk::generateMipmap(ContextVk *contextVk,
     shaderParams.invSrcExtent[1] = 1.0f / srcExtents.height;
     shaderParams.levelCount      = params.destLevelCount;
 
-    uint32_t flags = GetGenerateMipmapFlags(contextVk, src->getFormat());
+    uint32_t flags = GetGenerateMipmapFlags(contextVk, src->getActualFormat());
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;

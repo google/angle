@@ -755,23 +755,24 @@ void ExtendRenderPassInvalidateArea(const gl::Rectangle &invalidateArea, gl::Rec
 }
 
 bool CanCopyWithTransferForCopyImage(RendererVk *renderer,
-                                     const Format &srcFormat,
+                                     ImageHelper *srcImage,
                                      VkImageTiling srcTilingMode,
-                                     const Format &destFormat,
+                                     ImageHelper *destImage,
                                      VkImageTiling destTilingMode)
 {
     // Neither source nor destination formats can be emulated for copy image through transfer,
-    // unless they are emualted with the same format!
+    // unless they are emulated with the same format!
     bool isFormatCompatible =
-        (!srcFormat.hasEmulatedImageFormat() && !destFormat.hasEmulatedImageFormat()) ||
-        srcFormat.actualImageFormatID == destFormat.actualImageFormatID;
+        (!srcImage->hasEmulatedImageFormat() && !destImage->hasEmulatedImageFormat()) ||
+        srcImage->getActualFormatID() == destImage->getActualFormatID();
 
     // If neither formats are emulated, GL validation ensures that pixelBytes is the same for both.
     ASSERT(!isFormatCompatible ||
-           srcFormat.actualImageFormat().pixelBytes == destFormat.actualImageFormat().pixelBytes);
+           srcImage->getActualFormat().pixelBytes == destImage->getActualFormat().pixelBytes);
 
     return isFormatCompatible &&
-           CanCopyWithTransfer(renderer, srcFormat, srcTilingMode, destFormat, destTilingMode);
+           CanCopyWithTransfer(renderer, srcImage->getActualFormatID(), srcTilingMode,
+                               destImage->getActualFormatID(), destTilingMode);
 }
 
 bool CanCopyWithTransformForReadPixels(const PackPixelsParams &packPixelsParams,
@@ -852,18 +853,17 @@ bool FormatHasNecessaryFeature(RendererVk *renderer,
 }
 
 bool CanCopyWithTransfer(RendererVk *renderer,
-                         const Format &srcFormat,
+                         angle::FormatID srcFormatID,
                          VkImageTiling srcTilingMode,
-                         const Format &destFormat,
+                         angle::FormatID destFormatID,
                          VkImageTiling destTilingMode)
 {
     // Checks that the formats in the copy transfer have the appropriate tiling and transfer bits
     bool isTilingCompatible           = srcTilingMode == destTilingMode;
     bool srcFormatHasNecessaryFeature = FormatHasNecessaryFeature(
-        renderer, srcFormat.actualImageFormatID, srcTilingMode, VK_FORMAT_FEATURE_TRANSFER_SRC_BIT);
-    bool dstFormatHasNecessaryFeature =
-        FormatHasNecessaryFeature(renderer, destFormat.actualImageFormatID, destTilingMode,
-                                  VK_FORMAT_FEATURE_TRANSFER_DST_BIT);
+        renderer, srcFormatID, srcTilingMode, VK_FORMAT_FEATURE_TRANSFER_SRC_BIT);
+    bool dstFormatHasNecessaryFeature = FormatHasNecessaryFeature(
+        renderer, destFormatID, destTilingMode, VK_FORMAT_FEATURE_TRANSFER_DST_BIT);
 
     return isTilingCompatible && srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
 }
@@ -1419,7 +1419,7 @@ void CommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
 
     if (barrierRequired)
     {
-        const angle::Format &format = mDepthStencilImage->getFormat().actualImageFormat();
+        const angle::Format &format = mDepthStencilImage->getActualFormat();
         ASSERT(format.hasDepthOrStencilBits());
         VkImageAspectFlags aspectFlags = GetDepthStencilAspectFlags(format);
         updateImageLayoutAndBarrier(context, mDepthStencilImage, aspectFlags, imageLayout);
@@ -1433,7 +1433,7 @@ void CommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *contex
     ASSERT(!mDepthStencilResolveImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment));
 
     ImageLayout imageLayout     = ImageLayout::DepthStencilResolveAttachment;
-    const angle::Format &format = mDepthStencilResolveImage->getFormat().actualImageFormat();
+    const angle::Format &format = mDepthStencilResolveImage->getActualFormat();
     ASSERT(format.hasDepthOrStencilBits());
     VkImageAspectFlags aspectFlags = GetDepthStencilAspectFlags(format);
 
@@ -5139,16 +5139,14 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
 {
     ContextVk *contextVk = GetImpl(context);
 
-    const Format &sourceVkFormat = srcImage->getFormat();
     VkImageTiling srcTilingMode  = srcImage->getTilingMode();
-    const Format &destVkFormat   = dstImage->getFormat();
     VkImageTiling destTilingMode = dstImage->getTilingMode();
 
     const gl::LevelIndex srcLevelGL = gl::LevelIndex(srcLevel);
     const gl::LevelIndex dstLevelGL = gl::LevelIndex(dstLevel);
 
-    if (CanCopyWithTransferForCopyImage(contextVk->getRenderer(), sourceVkFormat, srcTilingMode,
-                                        destVkFormat, destTilingMode))
+    if (CanCopyWithTransferForCopyImage(contextVk->getRenderer(), srcImage, srcTilingMode, dstImage,
+                                        destTilingMode))
     {
         bool isSrc3D = srcImage->getType() == VK_IMAGE_TYPE_3D;
         bool isDst3D = dstImage->getType() == VK_IMAGE_TYPE_3D;
@@ -5194,7 +5192,8 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(),
                                  dstImage->getImage(), dstImage->getCurrentLayout(), 1, &region);
     }
-    else if (!sourceVkFormat.intendedFormat().isBlock && !destVkFormat.intendedFormat().isBlock)
+    else if (!srcImage->getFormat().intendedFormat().isBlock &&
+             !dstImage->getFormat().intendedFormat().isBlock)
     {
         // The source and destination image formats may be using a fallback in the case of RGB
         // images.  A compute shader is used in such a case to perform the copy.
@@ -5254,7 +5253,8 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
     barrier.subresourceRange.layerCount     = mLayerCount;
     barrier.subresourceRange.levelCount     = 1;
 
-    const VkFilter filter = gl_vk::GetFilter(CalculateGenerateMipmapFilter(contextVk, getFormat()));
+    const VkFilter filter =
+        gl_vk::GetFilter(CalculateGenerateMipmapFilter(contextVk, getActualFormatID()));
 
     for (LevelIndex mipLevel(1); mipLevel <= LevelIndex(mLevelCount); ++mipLevel)
     {
@@ -6089,7 +6089,7 @@ angle::Result ImageHelper::stageRobustResourceClearWithFormat(ContextVk *context
 void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled)
 {
     // Skip staging extra clears if robust resource init is enabled.
-    if (!mFormat->hasEmulatedImageChannels() || isRobustResourceInitEnabled)
+    if (!hasEmulatedImageChannels() || isRobustResourceInitEnabled)
     {
         return;
     }
@@ -7275,6 +7275,18 @@ void ImageHelper::prependSubresourceUpdate(gl::LevelIndex level, SubresourceUpda
     onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 
+bool ImageHelper::hasEmulatedImageChannels() const
+{
+    const angle::Format &angleFmt   = getIntendedFormat();
+    const angle::Format &textureFmt = getActualFormat();
+
+    return (angleFmt.alphaBits == 0 && textureFmt.alphaBits > 0) ||
+           (angleFmt.blueBits == 0 && textureFmt.blueBits > 0) ||
+           (angleFmt.greenBits == 0 && textureFmt.greenBits > 0) ||
+           (angleFmt.depthBits == 0 && textureFmt.depthBits > 0) ||
+           (angleFmt.stencilBits == 0 && textureFmt.stencilBits > 0);
+}
+
 // FramebufferHelper implementation.
 FramebufferHelper::FramebufferHelper() = default;
 
@@ -7586,11 +7598,11 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
     // When we select the linear/srgb counterpart formats, we must first make sure they're
     // actually supported by the ICD. If they are not supported by the ICD, then we treat that as if
     // there is no counterpart format. (In this case, the relevant extension should not be exposed)
-    angle::FormatID srgbOverrideFormat = ConvertToSRGB(image.getFormat().actualImageFormatID);
+    angle::FormatID srgbOverrideFormat = ConvertToSRGB(image.getActualFormatID());
     ASSERT((srgbOverrideFormat == angle::FormatID::NONE) ||
            (HasNonRenderableTextureFormatSupport(contextVk->getRenderer(), srgbOverrideFormat)));
 
-    angle::FormatID linearOverrideFormat = ConvertToLinear(image.getFormat().actualImageFormatID);
+    angle::FormatID linearOverrideFormat = ConvertToLinear(image.getActualFormatID());
     ASSERT((linearOverrideFormat == angle::FormatID::NONE) ||
            (HasNonRenderableTextureFormatSupport(contextVk->getRenderer(), linearOverrideFormat)));
 
@@ -7699,7 +7711,7 @@ angle::Result ImageViewHelper::getLevelLayerStorageImageView(ContextVk *contextV
 {
     ASSERT(image.valid());
     ASSERT(mImageViewSerial.valid());
-    ASSERT(!image.getFormat().actualImageFormat().isBlock);
+    ASSERT(!image.getActualFormat().isBlock);
 
     retain(&contextVk->getResourceUseList());
 
@@ -7730,7 +7742,7 @@ angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
 {
     ASSERT(image.valid());
     ASSERT(mImageViewSerial.valid());
-    ASSERT(!image.getFormat().actualImageFormat().isBlock);
+    ASSERT(!image.getActualFormat().isBlock);
 
     retain(&contextVk->getResourceUseList());
 
@@ -7764,7 +7776,7 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
 {
     ASSERT(image.valid());
     ASSERT(mImageViewSerial.valid());
-    ASSERT(!image.getFormat().actualImageFormat().isBlock);
+    ASSERT(!image.getActualFormat().isBlock);
 
     retain(&contextVk->getResourceUseList());
 

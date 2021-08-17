@@ -300,7 +300,7 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
 
 const gl::InternalFormat &RenderbufferVk::getImplementationSizedFormat() const
 {
-    GLenum internalFormat = mImage->getFormat().actualImageFormat().glInternalFormat;
+    GLenum internalFormat = mImage->getActualFormat().glInternalFormat;
     return gl::GetSizedInternalFormatInfo(internalFormat);
 }
 

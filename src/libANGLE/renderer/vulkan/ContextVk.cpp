@@ -5093,7 +5093,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         if (textureVk->getImage().hasImmutableSampler())
         {
             uint64_t externalFormat = textureVk->getImage().getExternalFormat();
-            VkFormat vkFormat       = textureVk->getImage().getFormat().actualImageVkFormat();
+            VkFormat vkFormat       = textureVk->getImage().getActualVkFormat();
             if (externalFormat != 0)
             {
                 externalFormatIndexMap[externalFormat] = static_cast<uint32_t>(textureUnit);

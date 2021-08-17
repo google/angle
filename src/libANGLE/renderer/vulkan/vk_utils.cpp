@@ -1032,10 +1032,10 @@ void InitExternalSemaphoreCapabilitiesFunctions(VkInstance instance)
 
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
 
-GLenum CalculateGenerateMipmapFilter(ContextVk *contextVk, const vk::Format &format)
+GLenum CalculateGenerateMipmapFilter(ContextVk *contextVk, angle::FormatID formatID)
 {
     const bool formatSupportsLinearFiltering = contextVk->getRenderer()->hasImageFormatFeatureBits(
-        format.actualImageFormatID, VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
+        formatID, VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
     const bool hintFastest = contextVk->getState().getGenerateMipmapHint() == GL_FASTEST;
 
     return formatSupportsLinearFiltering && !hintFastest ? GL_LINEAR : GL_NEAREST;

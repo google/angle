@@ -712,8 +712,8 @@ void ProgramExecutableVk::addTextureDescriptorSetDesc(
                 // All descriptors in a binding use the same maximum
                 // combinedImageSamplerDescriptorCount descriptors to allow implementations to use a
                 // uniform stride for dynamic indexing of the descriptors in the binding.
-                uint64_t externalFormat = textureVk->getImage().getExternalFormat();
-                VkFormat vkFormat       = textureVk->getImage().getFormat().actualImageVkFormat();
+                uint64_t externalFormat        = textureVk->getImage().getExternalFormat();
+                VkFormat vkFormat              = textureVk->getImage().getActualVkFormat();
                 uint32_t formatDescriptorCount = 0;
                 angle::Result result           = angle::Result::Stop;
 

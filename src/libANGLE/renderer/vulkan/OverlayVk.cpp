@@ -224,7 +224,7 @@ angle::Result OverlayVk::onPresent(ContextVk *contextVk,
 
     // If the swapchain image doesn't support storage image, we can't output to it.
     VkFormatFeatureFlags featureBits = renderer->getImageFormatFeatureBits(
-        imageToPresent->getFormat().actualImageFormatID, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
+        imageToPresent->getActualFormatID(), VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
     if ((featureBits & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT) == 0)
     {
         return angle::Result::Continue;

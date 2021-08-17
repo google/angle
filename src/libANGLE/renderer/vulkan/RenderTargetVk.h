@@ -96,6 +96,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
                                             const vk::ImageView **imageViewOut) const;
 
     const vk::Format &getImageFormat() const;
+    angle::FormatID getImageActualFormatID() const;
+    const angle::Format &getImageActualFormat() const;
     gl::Extents getExtents() const;
     gl::Extents getRotatedExtents() const;
     gl::LevelIndex getLevelIndex() const { return mLevelIndexGL; }

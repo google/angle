@@ -51,6 +51,11 @@ struct BufferFormatInitInfo final
 VkFormat GetVkFormatFromFormatID(angle::FormatID formatID);
 angle::FormatID GetFormatIDFromVkFormat(VkFormat vkFormat);
 
+// Returns buffer alignment for image-copy operations (to or from a buffer).
+size_t GetImageCopyBufferAlignment(angle::FormatID formatID);
+size_t GetValidImageCopyBufferAlignment(angle::FormatID intendedFormatID,
+                                        angle::FormatID actualFormatID);
+
 // Describes a Vulkan format. For more information on formats in the Vulkan back-end please see
 // https://chromium.googlesource.com/angle/angle/+/master/src/libANGLE/renderer/vulkan/doc/FormatTablesAndEmulation.md
 struct Format final : private angle::NonCopyable
@@ -104,10 +109,6 @@ struct Format final : private angle::NonCopyable
     {
         return gl::GetInternalFormatInfo(intendedGLFormat, type);
     }
-
-    // Returns buffer alignment for image-copy operations (to or from a buffer).
-    size_t getImageCopyBufferAlignment() const;
-    size_t getValidImageCopyBufferAlignment() const;
 
     // Returns true if the image format has more channels than the ANGLE format.
     bool hasEmulatedImageChannels() const;
@@ -196,7 +197,7 @@ size_t GetVertexInputAlignment(const vk::Format &format, bool compressed);
 
 // Get the swizzle state based on format's requirements and emulations.
 gl::SwizzleState GetFormatSwizzle(const ContextVk *contextVk,
-                                  const vk::Format &format,
+                                  const angle::Format &angleFormat,
                                   const bool sized);
 
 // Apply application's swizzle to the swizzle implied by format as received from GetFormatSwizzle.

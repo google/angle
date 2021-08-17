@@ -79,48 +79,53 @@ bool IsTextureLevelDefinitionCompatibleWithImage(const vk::ImageHelper &image,
     ASSERT(IsTextureLevelInAllocatedImage(image, textureLevelIndexGL));
 
     vk::LevelIndex imageLevelIndexVk = image.toVkLevel(textureLevelIndexGL);
-    return size == image.getLevelExtents(imageLevelIndexVk) && format == image.getFormat();
+    return size == image.getLevelExtents(imageLevelIndexVk) &&
+           format.intendedFormatID == image.getIntendedFormatID() &&
+           format.actualImageFormatID == image.getActualFormatID();
 }
 
 bool CanCopyWithTransferForTexImage(RendererVk *renderer,
-                                    const vk::Format &srcFormat,
+                                    angle::FormatID srcIntendedFormatID,
+                                    angle::FormatID srcActualFormatID,
                                     VkImageTiling srcTilingMode,
-                                    const vk::Format &destFormat,
+                                    angle::FormatID destIntendedFormatID,
+                                    angle::FormatID destActualFormatID,
                                     VkImageTiling destTilingMode)
 {
     // For glTex[Sub]Image, only accept same-format transfers.
-    bool isFormatCompatible = srcFormat.intendedFormatID == destFormat.intendedFormatID;
+    bool isFormatCompatible = srcIntendedFormatID == destIntendedFormatID;
 
-    return isFormatCompatible &&
-           vk::CanCopyWithTransfer(renderer, srcFormat, srcTilingMode, destFormat, destTilingMode);
+    return isFormatCompatible && vk::CanCopyWithTransfer(renderer, srcActualFormatID, srcTilingMode,
+                                                         destActualFormatID, destTilingMode);
 }
 
 bool CanCopyWithTransferForCopyTexture(RendererVk *renderer,
-                                       const vk::Format &srcFormat,
+                                       const vk::ImageHelper &srcImage,
                                        VkImageTiling srcTilingMode,
                                        const vk::Format &destFormat,
                                        VkImageTiling destTilingMode)
 {
-    if (!vk::CanCopyWithTransfer(renderer, srcFormat, srcTilingMode, destFormat, destTilingMode))
+    if (!vk::CanCopyWithTransfer(renderer, srcImage.getActualFormatID(), srcTilingMode,
+                                 destFormat.actualImageFormatID, destTilingMode))
     {
         return false;
     }
 
     // If the formats are identical, we can always transfer between them.
-    if (srcFormat.intendedFormatID == destFormat.intendedFormatID)
+    if (srcImage.getFormat().intendedFormatID == destFormat.intendedFormatID)
     {
         return true;
     }
 
     // If either format is emulated, cannot transfer.
-    if (srcFormat.hasEmulatedImageFormat() || destFormat.hasEmulatedImageFormat())
+    if (srcImage.hasEmulatedImageFormat() || destFormat.hasEmulatedImageFormat())
     {
         return false;
     }
 
     // Otherwise, allow transfer between compatible formats.  This is derived from the specification
     // of CHROMIUM_copy_texture.
-    const angle::Format &srcAngleFormat  = srcFormat.actualImageFormat();
+    const angle::Format &srcAngleFormat  = srcImage.getActualFormat();
     const angle::Format &destAngleFormat = destFormat.actualImageFormat();
 
     const bool srcIsBGRA   = srcAngleFormat.isBGRA();
@@ -145,18 +150,16 @@ bool CanCopyWithTransferForCopyTexture(RendererVk *renderer,
 }
 
 bool CanCopyWithDraw(RendererVk *renderer,
-                     const vk::Format &srcFormat,
+                     const angle::FormatID srcFormatID,
                      VkImageTiling srcTilingMode,
-                     const vk::Format &destFormat,
+                     const angle::FormatID destFormatID,
                      VkImageTiling destTilingMode)
 {
     // Checks that the formats in copy by drawing have the appropriate feature bits
-    bool srcFormatHasNecessaryFeature =
-        vk::FormatHasNecessaryFeature(renderer, srcFormat.actualImageFormatID, srcTilingMode,
-                                      VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
-    bool dstFormatHasNecessaryFeature =
-        vk::FormatHasNecessaryFeature(renderer, destFormat.actualImageFormatID, destTilingMode,
-                                      VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
+    bool srcFormatHasNecessaryFeature = vk::FormatHasNecessaryFeature(
+        renderer, srcFormatID, srcTilingMode, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
+    bool dstFormatHasNecessaryFeature = vk::FormatHasNecessaryFeature(
+        renderer, destFormatID, destTilingMode, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
 
     return srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
 }
@@ -168,10 +171,10 @@ bool ForceCPUPathForCopy(RendererVk *renderer, const vk::ImageHelper &image)
 
 bool CanGenerateMipmapWithCompute(RendererVk *renderer,
                                   VkImageType imageType,
-                                  const vk::Format &format,
+                                  angle::FormatID formatID,
                                   GLint samples)
 {
-    const angle::Format &angleFormat = format.actualImageFormat();
+    const angle::Format &angleFormat = angle::Format::Get(formatID);
 
     if (!renderer->getFeatures().allowGenerateMipmapWithCompute.enabled)
     {
@@ -179,8 +182,8 @@ bool CanGenerateMipmapWithCompute(RendererVk *renderer,
     }
 
     // Format must have STORAGE support.
-    const bool hasStorageSupport = renderer->hasImageFormatFeatureBits(
-        format.actualImageFormatID, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
+    const bool hasStorageSupport =
+        renderer->hasImageFormatFeatureBits(formatID, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
 
     // No support for sRGB formats yet.
     const bool isSRGB = angleFormat.isSRGB;
@@ -722,10 +725,14 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
 
     RenderTargetVk *colorReadRT = framebufferVk->getColorReadRenderTarget();
 
-    const vk::Format &srcFormat  = colorReadRT->getImageFormat();
-    VkImageTiling srcTilingMode  = colorReadRT->getImageForCopy().getTilingMode();
-    const vk::Format &destFormat = renderer->getFormat(internalFormat.sizedInternalFormat);
-    VkImageTiling destTilingMode = getTilingMode();
+    const vk::Format &srcFormat          = colorReadRT->getImageFormat();
+    angle::FormatID srcIntendedFormatID  = srcFormat.intendedFormatID;
+    angle::FormatID srcActualFormatID    = colorReadRT->getImageActualFormatID();
+    VkImageTiling srcTilingMode          = colorReadRT->getImageForCopy().getTilingMode();
+    const vk::Format &destFormat         = renderer->getFormat(internalFormat.sizedInternalFormat);
+    angle::FormatID destIntendedFormatID = destFormat.intendedFormatID;
+    angle::FormatID destActualFormatID   = destFormat.actualImageFormatID;
+    VkImageTiling destTilingMode         = getTilingMode();
 
     bool isViewportFlipY = contextVk->isViewportFlipEnabledForReadFBO();
 
@@ -733,8 +740,9 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
                              clippedSourceArea.width, clippedSourceArea.height, 1);
 
     // If it's possible to perform the copy with a transfer, that's the best option.
-    if (!isViewportFlipY && CanCopyWithTransferForTexImage(renderer, srcFormat, srcTilingMode,
-                                                           destFormat, destTilingMode))
+    if (!isViewportFlipY && CanCopyWithTransferForTexImage(
+                                renderer, srcIntendedFormatID, srcActualFormatID, srcTilingMode,
+                                destIntendedFormatID, destActualFormatID, destTilingMode))
     {
         return copySubImageImplWithTransfer(contextVk, offsetImageIndex, modifiedDestOffset,
                                             destFormat, colorReadRT->getLevelIndex(),
@@ -745,7 +753,8 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     bool forceCPUPath = ForceCPUPathForCopy(renderer, *mImage);
 
     // If it's possible to perform the copy with a draw call, do that.
-    if (CanCopyWithDraw(renderer, srcFormat, srcTilingMode, destFormat, destTilingMode) &&
+    if (CanCopyWithDraw(renderer, srcActualFormatID, srcTilingMode, destActualFormatID,
+                        destTilingMode) &&
         !forceCPUPath)
     {
         // Layer count can only be 1 as the source is a framebuffer.
@@ -801,15 +810,17 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     ANGLE_TRY(source->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
     const vk::Format &sourceVkFormat = source->getImage().getFormat();
+    angle::FormatID sourceFormatID   = source->getImage().getActualFormatID();
     VkImageTiling srcTilingMode      = source->getImage().getTilingMode();
     const vk::Format &destVkFormat   = renderer->getFormat(destFormat.sizedInternalFormat);
+    angle::FormatID destFormatID     = destVkFormat.actualImageFormatID;
     VkImageTiling destTilingMode     = getTilingMode();
 
     const gl::ImageIndex offsetImageIndex = getNativeImageIndex(index);
 
     // If it's possible to perform the copy with a transfer, that's the best option.
     if (!unpackFlipY && !unpackPremultiplyAlpha && !unpackUnmultiplyAlpha &&
-        CanCopyWithTransferForCopyTexture(renderer, sourceVkFormat, srcTilingMode, destVkFormat,
+        CanCopyWithTransferForCopyTexture(renderer, source->getImage(), srcTilingMode, destVkFormat,
                                           destTilingMode))
     {
         return copySubImageImplWithTransfer(contextVk, offsetImageIndex, destOffset, destVkFormat,
@@ -820,7 +831,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     bool forceCPUPath = ForceCPUPathForCopy(renderer, *mImage);
 
     // If it's possible to perform the copy with a draw call, do that.
-    if (CanCopyWithDraw(renderer, sourceVkFormat, srcTilingMode, destVkFormat, destTilingMode) &&
+    if (CanCopyWithDraw(renderer, sourceFormatID, srcTilingMode, destFormatID, destTilingMode) &&
         !forceCPUPath)
     {
         return copySubImageImplWithDraw(
@@ -843,7 +854,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     ANGLE_TRY(source->copyImageDataToBufferAndGetData(contextVk, sourceLevelGL, sourceBox.depth,
                                                       sourceBox, &sourceData));
 
-    const angle::Format &sourceTextureFormat = sourceVkFormat.actualImageFormat();
+    const angle::Format &sourceTextureFormat = source->getImage().getActualFormat();
     const angle::Format &destTextureFormat   = destVkFormat.actualImageFormat();
     size_t destinationAllocationSize =
         sourceBox.width * sourceBox.height * sourceBox.depth * destTextureFormat.pixelBytes;
@@ -1476,7 +1487,7 @@ angle::Result TextureVk::ensureImageAllocated(ContextVk *contextVk, const vk::Fo
         // the format should not affect the currently allocated image.  The following function only
         // takes the alignment requirement to make sure the format is not accidentally used for any
         // other purpose.
-        updateImageHelper(contextVk, format.getImageCopyBufferAlignment());
+        updateImageHelper(contextVk, vk::GetImageCopyBufferAlignment(format.actualImageFormatID));
     }
 
     initImageUsageFlags(contextVk, format);
@@ -1502,7 +1513,7 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
     mImageLevelOffset = imageLevelOffset;
     mImageLayerOffset = imageLayerOffset;
     mImage            = imageHelper;
-    updateImageHelper(contextVk, format.getImageCopyBufferAlignment());
+    updateImageHelper(contextVk, vk::GetImageCopyBufferAlignment(format.actualImageFormatID));
 
     // Force re-creation of render targets next time they are needed
     for (auto &renderTargets : mSingleLayerRenderTargets)
@@ -1725,14 +1736,14 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
     //
     // Support for the first two can be added easily.  Supporting 3D textures, MSAA and
     // depth/stencil would be more involved.
-    ASSERT(!mImage->getFormat().actualImageFormat().isSRGB);
-    ASSERT(!mImage->getFormat().actualImageFormat().isInt());
+    ASSERT(!mImage->getActualFormat().isSRGB);
+    ASSERT(!mImage->getActualFormat().isInt());
     ASSERT(mImage->getType() == VK_IMAGE_TYPE_2D);
     ASSERT(mImage->getSamples() == 1);
     ASSERT(mImage->getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT);
 
     // Create the appropriate sampler.
-    GLenum filter = CalculateGenerateMipmapFilter(contextVk, mImage->getFormat());
+    GLenum filter = CalculateGenerateMipmapFilter(contextVk, mImage->getActualFormatID());
 
     gl::SamplerState samplerState;
     samplerState.setMinFilter(filter);
@@ -1830,7 +1841,7 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
     ANGLE_TRY(copyImageDataToBufferAndGetData(contextVk, baseLevelGL, imageLayerCount, imageArea,
                                               &imageData));
 
-    const angle::Format &angleFormat = mImage->getFormat().actualImageFormat();
+    const angle::Format &angleFormat = mImage->getActualFormat();
     GLuint sourceRowPitch            = baseLevelExtents.width * angleFormat.pixelBytes;
     GLuint sourceDepthPitch          = sourceRowPitch * baseLevelExtents.height;
     size_t baseLevelAllocationSize   = sourceDepthPitch * baseLevelExtents.depth;
@@ -1874,7 +1885,7 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
 
     // If it's possible to generate mipmap in compute, that would give the best possible
     // performance on some hardware.
-    if (CanGenerateMipmapWithCompute(renderer, mImage->getType(), mImage->getFormat(),
+    if (CanGenerateMipmapWithCompute(renderer, mImage->getType(), mImage->getActualFormatID(),
                                      mImage->getSamples()))
     {
         ASSERT((mImageUsageFlags & VK_IMAGE_USAGE_STORAGE_BIT) != 0);
@@ -1884,8 +1895,7 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
 
         return generateMipmapsWithCompute(contextVk);
     }
-    else if (renderer->hasImageFormatFeatureBits(mImage->getFormat().actualImageFormatID,
-                                                 kBlitFeatureFlags))
+    else if (renderer->hasImageFormatFeatureBits(mImage->getActualFormatID(), kBlitFeatureFlags))
     {
         // Otherwise, use blit if possible.
         return mImage->generateMipmapsWithBlit(contextVk, baseLevel, maxLevel);
@@ -2422,7 +2432,8 @@ void TextureVk::prepareForGenerateMipmap(ContextVk *contextVk)
     const GLint samples                = baseLevelDesc.samples ? baseLevelDesc.samples : 1;
 
     // If the compute path is to be used to generate mipmaps, add the STORAGE usage.
-    if (CanGenerateMipmapWithCompute(contextVk->getRenderer(), imageType, format, samples))
+    if (CanGenerateMipmapWithCompute(contextVk->getRenderer(), imageType,
+                                     format.actualImageFormatID, samples))
     {
         mImageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
     }
@@ -2697,9 +2708,10 @@ const vk::ImageView &TextureVk::getCopyImageViewAndRecordUse(ContextVk *contextV
     const vk::ImageViewHelper &imageViews = getImageViews();
     imageViews.retain(&contextVk->getResourceUseList());
 
-    ASSERT(mImage->getFormat().actualImageFormat().isSRGB ==
-           (ConvertToLinear(mImage->getFormat().actualImageFormatID) != angle::FormatID::NONE));
-    if (mImage->getFormat().actualImageFormat().isSRGB)
+    const angle::Format &angleFormat = mImage->getActualFormat();
+    ASSERT(angleFormat.isSRGB ==
+           (ConvertToLinear(mImage->getActualFormatID()) != angle::FormatID::NONE));
+    if (angleFormat.isSRGB)
     {
         return imageViews.getSRGBCopyImageView();
     }
@@ -2839,8 +2851,9 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
     vk::LevelIndex baseLevelVk = mImage->toVkLevel(baseLevelGL);
     uint32_t baseLayer         = getNativeImageLayer(0);
 
-    gl::SwizzleState formatSwizzle = GetFormatSwizzle(contextVk, format, sized);
-    gl::SwizzleState readSwizzle   = ApplySwizzle(formatSwizzle, mState.getSwizzleState());
+    const angle::Format &angleFormat = format.intendedFormat();
+    gl::SwizzleState formatSwizzle   = GetFormatSwizzle(contextVk, angleFormat, sized);
+    gl::SwizzleState readSwizzle     = ApplySwizzle(formatSwizzle, mState.getSwizzleState());
 
     // Use this as a proxy for the SRGB override & skip decode settings.
     bool createExtraSRGBViews = mRequiresMutableStorage;
@@ -2995,7 +3008,7 @@ const gl::InternalFormat &TextureVk::getImplementationSizedFormat(const gl::Cont
 
     if (mImage && mImage->valid())
     {
-        sizedFormat = mImage->getFormat().actualImageFormat().glInternalFormat;
+        sizedFormat = mImage->getActualFormat().glInternalFormat;
     }
     else
     {
@@ -3080,15 +3093,17 @@ vk::ImageOrBufferViewSubresourceSerial TextureVk::getImageViewSubresourceSerial(
 {
     gl::LevelIndex baseLevel(mState.getEffectiveBaseLevel());
     // getMipmapMaxLevel will clamp to the max level if it is smaller than the number of mips.
-    uint32_t levelCount               = gl::LevelIndex(mState.getMipmapMaxLevel()) - baseLevel + 1;
-    vk::SrgbDecodeMode srgbDecodeMode = (mImage->getFormat().actualImageFormat().isSRGB &&
-                                         (samplerState.getSRGBDecode() == GL_DECODE_EXT))
-                                            ? vk::SrgbDecodeMode::SrgbDecode
-                                            : vk::SrgbDecodeMode::SkipDecode;
-    gl::SrgbOverride srgbOverrideMode = (!mImage->getFormat().actualImageFormat().isSRGB &&
-                                         (mState.getSRGBOverride() == gl::SrgbOverride::SRGB))
-                                            ? gl::SrgbOverride::SRGB
-                                            : gl::SrgbOverride::Default;
+    uint32_t levelCount = gl::LevelIndex(mState.getMipmapMaxLevel()) - baseLevel + 1;
+
+    const angle::Format &angleFormat = mImage->getActualFormat();
+    vk::SrgbDecodeMode srgbDecodeMode =
+        (angleFormat.isSRGB && (samplerState.getSRGBDecode() == GL_DECODE_EXT))
+            ? vk::SrgbDecodeMode::SrgbDecode
+            : vk::SrgbDecodeMode::SkipDecode;
+    gl::SrgbOverride srgbOverrideMode =
+        (!angleFormat.isSRGB && (mState.getSRGBOverride() == gl::SrgbOverride::SRGB))
+            ? gl::SrgbOverride::SRGB
+            : gl::SrgbOverride::Default;
 
     return getImageViews().getSubresourceSerial(baseLevel, levelCount, 0, vk::LayerMode::All,
                                                 srgbDecodeMode, srgbOverrideMode);
