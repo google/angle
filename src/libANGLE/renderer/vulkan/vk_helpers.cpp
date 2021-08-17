@@ -4421,7 +4421,7 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
 
 angle::Result ImageHelper::initLayerImageViewWithFormat(Context *context,
                                                         gl::TextureType textureType,
-                                                        const Format &format,
+                                                        VkFormat imageFormat,
                                                         VkImageAspectFlags aspectMask,
                                                         const gl::SwizzleState &swizzleMap,
                                                         ImageView *imageViewOut,
@@ -4432,7 +4432,7 @@ angle::Result ImageHelper::initLayerImageViewWithFormat(Context *context,
 {
     return initLayerImageViewImpl(context, textureType, aspectMask, swizzleMap, imageViewOut,
                                   baseMipLevelVk, levelCount, baseArrayLayer, layerCount,
-                                  format.actualImageVkFormat(), nullptr);
+                                  imageFormat, nullptr);
 }
 
 angle::Result ImageHelper::initLayerImageViewImpl(
@@ -7487,7 +7487,7 @@ void ImageViewHelper::destroy(VkDevice device)
 angle::Result ImageViewHelper::initReadViews(ContextVk *contextVk,
                                              gl::TextureType viewType,
                                              const ImageHelper &image,
-                                             const Format &format,
+                                             const angle::Format &format,
                                              const gl::SwizzleState &formatSwizzle,
                                              const gl::SwizzleState &readSwizzle,
                                              LevelIndex baseLevel,
@@ -7533,7 +7533,7 @@ angle::Result ImageViewHelper::initReadViews(ContextVk *contextVk,
 angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
                                                  gl::TextureType viewType,
                                                  const ImageHelper &image,
-                                                 const Format &format,
+                                                 const angle::Format &format,
                                                  const gl::SwizzleState &formatSwizzle,
                                                  const gl::SwizzleState &readSwizzle,
                                                  LevelIndex baseLevel,
@@ -7543,22 +7543,23 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
 {
     ASSERT(mImageViewSerial.valid());
 
-    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(format.intendedFormat());
-    mLinearColorspace                    = !format.actualImageFormat().isSRGB;
+    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(image.getIntendedFormat());
+    mLinearColorspace                    = !format.isSRGB;
+    VkFormat vkFormat                    = GetVkFormatFromFormatID(format.id);
 
     if (HasBothDepthAndStencilAspects(aspectFlags))
     {
         ANGLE_TRY(image.initLayerImageViewWithFormat(
-            contextVk, viewType, format, VK_IMAGE_ASPECT_DEPTH_BIT, readSwizzle,
+            contextVk, viewType, vkFormat, VK_IMAGE_ASPECT_DEPTH_BIT, readSwizzle,
             &getReadImageView(), baseLevel, levelCount, baseLayer, layerCount));
         ANGLE_TRY(image.initLayerImageViewWithFormat(
-            contextVk, viewType, format, VK_IMAGE_ASPECT_STENCIL_BIT, readSwizzle,
+            contextVk, viewType, vkFormat, VK_IMAGE_ASPECT_STENCIL_BIT, readSwizzle,
             &mPerLevelStencilReadImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
             baseLayer, layerCount));
     }
     else
     {
-        ANGLE_TRY(image.initLayerImageViewWithFormat(contextVk, viewType, format, aspectFlags,
+        ANGLE_TRY(image.initLayerImageViewWithFormat(contextVk, viewType, vkFormat, aspectFlags,
                                                      readSwizzle, &getReadImageView(), baseLevel,
                                                      levelCount, baseLayer, layerCount));
     }
@@ -7570,12 +7571,12 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
     {
         fetchType = Get2DTextureType(layerCount, image.getSamples());
 
-        ANGLE_TRY(image.initLayerImageViewWithFormat(contextVk, fetchType, format, aspectFlags,
+        ANGLE_TRY(image.initLayerImageViewWithFormat(contextVk, fetchType, vkFormat, aspectFlags,
                                                      readSwizzle, &getFetchImageView(), baseLevel,
                                                      levelCount, baseLayer, layerCount));
     }
 
-    ANGLE_TRY(image.initLayerImageViewWithFormat(contextVk, fetchType, format, aspectFlags,
+    ANGLE_TRY(image.initLayerImageViewWithFormat(contextVk, fetchType, vkFormat, aspectFlags,
                                                  formatSwizzle, &getCopyImageView(), baseLevel,
                                                  levelCount, baseLayer, layerCount));
 
@@ -7585,7 +7586,7 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
 angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
                                                      gl::TextureType viewType,
                                                      const ImageHelper &image,
-                                                     const Format &format,
+                                                     const angle::Format &format,
                                                      const gl::SwizzleState &formatSwizzle,
                                                      const gl::SwizzleState &readSwizzle,
                                                      LevelIndex baseLevel,
@@ -7605,12 +7606,11 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
     ASSERT((linearOverrideFormat == angle::FormatID::NONE) ||
            (HasNonRenderableTextureFormatSupport(contextVk->getRenderer(), linearOverrideFormat)));
 
-    angle::FormatID linearFormat = (linearOverrideFormat != angle::FormatID::NONE)
-                                       ? linearOverrideFormat
-                                       : format.actualImageFormatID;
+    angle::FormatID linearFormat =
+        (linearOverrideFormat != angle::FormatID::NONE) ? linearOverrideFormat : format.id;
     ASSERT(linearFormat != angle::FormatID::NONE);
 
-    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(format.intendedFormat());
+    const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(image.getIntendedFormat());
 
     if (!mPerLevelLinearReadImageViews[mCurrentMaxLevel.get()].valid())
     {
