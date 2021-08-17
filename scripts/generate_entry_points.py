@@ -1082,6 +1082,11 @@ enum class ResourceIDType
 
 ResourceIDType GetResourceIDTypeFromParamType(ParamType paramType);
 const char *GetResourceIDTypeName(ResourceIDType resourceIDType);
+
+template <typename ResourceType>
+struct GetResourceIDTypeFromType;
+
+{type_to_resource_id_type_structs}
 }}  // namespace angle
 
 #endif  // LIBANGLE_FRAME_CAPTURE_UTILS_AUTOGEN_H_
@@ -2190,6 +2195,19 @@ def format_resource_id_types(all_param_types):
     return resource_id_types
 
 
+def format_resource_id_convert_structs(all_param_types):
+    templ = """\
+template <>
+struct GetResourceIDTypeFromType<gl::%sID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::%s;
+};
+"""
+    resource_id_types = get_resource_id_types(all_param_types)
+    convert_struct_strings = [templ % (id, id) for id in resource_id_types]
+    return "\n".join(convert_struct_strings)
+
+
 def write_capture_helper_header(all_param_types):
 
     param_types = "\n    ".join(["T%s," % t for t in all_param_types])
@@ -2202,6 +2220,7 @@ def write_capture_helper_header(all_param_types):
         [format_set_param_val_specialization(t) for t in all_param_types])
     init_param_value_cases = "\n".join([format_init_param_value_case(t) for t in all_param_types])
     resource_id_types = format_resource_id_types(all_param_types)
+    convert_structs = format_resource_id_convert_structs(all_param_types)
 
     content = TEMPLATE_FRAME_CAPTURE_UTILS_HEADER.format(
         script_name=os.path.basename(sys.argv[0]),
@@ -2213,7 +2232,8 @@ def write_capture_helper_header(all_param_types):
         access_param_value_cases=access_param_value_cases,
         set_param_val_specializations=set_param_val_specializations,
         init_param_value_cases=init_param_value_cases,
-        resource_id_types=resource_id_types)
+        resource_id_types=resource_id_types,
+        type_to_resource_id_type_structs=convert_structs)
 
     path = path_to(os.path.join("libANGLE", "capture"), "frame_capture_utils_autogen.h")
 

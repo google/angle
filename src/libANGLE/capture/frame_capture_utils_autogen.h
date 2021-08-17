@@ -3130,6 +3130,88 @@ enum class ResourceIDType
 
 ResourceIDType GetResourceIDTypeFromParamType(ParamType paramType);
 const char *GetResourceIDTypeName(ResourceIDType resourceIDType);
+
+template <typename ResourceType>
+struct GetResourceIDTypeFromType;
+
+template <>
+struct GetResourceIDTypeFromType<gl::BufferID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::Buffer;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::FenceNVID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::FenceNV;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::FramebufferID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::Framebuffer;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::MemoryObjectID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::MemoryObject;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::ProgramPipelineID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::ProgramPipeline;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::QueryID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::Query;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::RenderbufferID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::Renderbuffer;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::SamplerID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::Sampler;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::SemaphoreID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::Semaphore;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::ShaderProgramID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::ShaderProgram;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::TextureID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::Texture;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::TransformFeedbackID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::TransformFeedback;
+};
+
+template <>
+struct GetResourceIDTypeFromType<gl::VertexArrayID>
+{
+    static constexpr ResourceIDType IDType = ResourceIDType::VertexArray;
+};
+
 }  // namespace angle
 
 #endif  // LIBANGLE_FRAME_CAPTURE_UTILS_AUTOGEN_H_

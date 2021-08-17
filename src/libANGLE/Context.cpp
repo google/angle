@@ -8791,12 +8791,6 @@ const angle::FrontendFeatures &Context::getFrontendFeatures() const
     return mDisplay->getFrontendFeatures();
 }
 
-angle::ResourceTracker &Context::getFrameCaptureSharedResourceTracker() const
-{
-    angle::FrameCaptureShared *frameCaptureShared = getShareGroup()->getFrameCaptureShared();
-    return frameCaptureShared->getResourceTracker();
-}
-
 bool Context::isRenderbufferGenerated(RenderbufferID renderbuffer) const
 {
     return mState.mRenderbufferManager->isHandleGenerated(renderbuffer);

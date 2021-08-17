@@ -4792,11 +4792,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
             for (GLsizei i = 0; i < count; i++)
             {
                 // If we're capturing, track what new textures have been genned
-                if (isCaptureActive())
-                {
-                    mResourceTracker.getTrackedResource(ResourceIDType::Texture)
-                        .setGennedResource(textureIDs[i].value);
-                }
+                handleGennedResource(textureIDs[i]);
             }
             break;
         }
@@ -4807,9 +4803,6 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
             const gl::BufferID *bufferIDs =
                 call.params.getParam("buffersPacked", ParamType::TBufferIDConstPointer, 1)
                     .value.BufferIDConstPointerVal;
-            FrameCaptureShared *frameCaptureShared =
-                context->getShareGroup()->getFrameCaptureShared();
-            ResourceTracker &resourceTracker = context->getFrameCaptureSharedResourceTracker();
             for (GLsizei i = 0; i < count; i++)
             {
                 // For each buffer being deleted, check our backup of data and remove it
@@ -4819,11 +4812,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
                     mBufferDataMap.erase(bufferDataInfo);
                 }
                 // If we're capturing, track what buffers have been deleted
-                if (frameCaptureShared->isCaptureActive())
-                {
-                    resourceTracker.getTrackedResource(ResourceIDType::Buffer)
-                        .setDeletedResource(bufferIDs[i].value);
-                }
+                handleDeletedResource(bufferIDs[i]);
             }
             break;
         }
@@ -4834,17 +4823,9 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
             const gl::BufferID *bufferIDs =
                 call.params.getParam("buffersPacked", ParamType::TBufferIDPointer, 1)
                     .value.BufferIDPointerVal;
-            FrameCaptureShared *frameCaptureShared =
-                context->getShareGroup()->getFrameCaptureShared();
-            ResourceTracker &resourceTracker = context->getFrameCaptureSharedResourceTracker();
             for (GLsizei i = 0; i < count; i++)
             {
-                // If we're capturing, track what new buffers have been genned
-                if (frameCaptureShared->isCaptureActive())
-                {
-                    resourceTracker.getTrackedResource(ResourceIDType::Buffer)
-                        .setGennedResource(bufferIDs[i].value);
-                }
+                handleGennedResource(bufferIDs[i]);
             }
             break;
         }
@@ -4854,11 +4835,10 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
             GLsync sync = call.params.getParam("sync", ParamType::TGLsync, 0).value.GLsyncVal;
             FrameCaptureShared *frameCaptureShared =
                 context->getShareGroup()->getFrameCaptureShared();
-            ResourceTracker &resourceTracker = context->getFrameCaptureSharedResourceTracker();
             // If we're capturing, track which fence sync has been deleted
             if (frameCaptureShared->isCaptureActive())
             {
-                resourceTracker.setDeletedFenceSync(sync);
+                mResourceTracker.setDeletedFenceSync(sync);
             }
             break;
         }
@@ -4911,45 +4891,26 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
             ASSERT(program);
             const gl::Shader *shader = program->getAttachedShader(shaderType);
             ASSERT(shader);
-            FrameCaptureShared *frameCaptureShared =
-                context->getShareGroup()->getFrameCaptureShared();
-            frameCaptureShared->setShaderSource(shader->getHandle(), shader->getSourceString());
-            frameCaptureShared->setProgramSources(programID, GetAttachedProgramSources(program));
-
-            if (isCaptureActive())
-            {
-                frameCaptureShared->getResourceTracker()
-                    .getTrackedResource(ResourceIDType::ShaderProgram)
-                    .setGennedResource(programID.value);
-            }
+            setShaderSource(shader->getHandle(), shader->getSourceString());
+            setProgramSources(programID, GetAttachedProgramSources(program));
+            handleGennedResource(programID);
             break;
         }
 
         case EntryPoint::GLCreateProgram:
         {
             // If we're capturing, track which programs have been created
-            if (isCaptureActive())
-            {
-                gl::ShaderProgramID programID    = {call.params.getReturnValue().value.GLuintVal};
-                ResourceTracker &resourceTracker = context->getFrameCaptureSharedResourceTracker();
-                resourceTracker.getTrackedResource(ResourceIDType::ShaderProgram)
-                    .setGennedResource(programID.value);
-            }
+            gl::ShaderProgramID programID = {call.params.getReturnValue().value.GLuintVal};
+            handleGennedResource(programID);
             break;
         }
 
         case EntryPoint::GLDeleteProgram:
         {
             // If we're capturing, track which programs have been deleted
-            if (isCaptureActive())
-            {
-                const ParamCapture &param =
-                    call.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
-
-                ResourceTracker &resourceTracker = context->getFrameCaptureSharedResourceTracker();
-                resourceTracker.getTrackedResource(ResourceIDType::ShaderProgram)
-                    .setDeletedResource(param.value.ShaderProgramIDVal.value);
-            }
+            const ParamCapture &param =
+                call.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
+            handleDeletedResource(param.value.ShaderProgramIDVal);
             break;
         }
 
@@ -4960,8 +4921,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
                 call.params.getParam("shaderPacked", ParamType::TShaderProgramID, 0)
                     .value.ShaderProgramIDVal;
             const gl::Shader *shader = context->getShader(shaderID);
-            context->getShareGroup()->getFrameCaptureShared()->setShaderSource(
-                shaderID, shader->getSourceString());
+            setShaderSource(shaderID, shader->getSourceString());
             break;
         }
 
@@ -4972,8 +4932,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
                 call.params.getParam("programPacked", ParamType::TShaderProgramID, 0)
                     .value.ShaderProgramIDVal;
             const gl::Program *program = context->getProgramResolveLink(programID);
-            context->getShareGroup()->getFrameCaptureShared()->setProgramSources(
-                programID, GetAttachedProgramSources(program));
+            setProgramSources(programID, GetAttachedProgramSources(program));
             break;
         }
 
@@ -5016,22 +4975,14 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
                 call.params.getParam("texturesPacked", ParamType::TTextureIDConstPointer, 1)
                     .value.TextureIDConstPointerVal;
 
-            ResourceTracker &resourceTracker = context->getFrameCaptureSharedResourceTracker();
-
             // For each texture listed for deletion
             for (int32_t i = 0; i < n; ++i)
             {
                 // Look it up in the cache, and delete it if found
-                context->getShareGroup()->getFrameCaptureShared()->deleteCachedTextureLevelData(
-                    textureIDs[i]);
+                deleteCachedTextureLevelData(textureIDs[i]);
 
                 // If we're capturing, track what textures have been deleted
-                if (isCaptureActive())
-                {
-
-                    resourceTracker.getTrackedResource(ResourceIDType::Texture)
-                        .setDeletedResource(textureIDs[i].value);
-                }
+                handleDeletedResource(textureIDs[i]);
             }
             break;
         }
@@ -5095,12 +5046,11 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
             captureMappedBufferSnapshot(context, call);
 
             // Track that the buffer was unmapped, for use during state reset
-            ResourceTracker &resourceTracker = context->getFrameCaptureSharedResourceTracker();
             gl::BufferBinding target =
                 call.params.getParam("targetPacked", ParamType::TBufferBinding, 0)
                     .value.BufferBindingVal;
             gl::Buffer *buffer = context->getState().getTargetBuffer(target);
-            resourceTracker.setBufferUnmapped(buffer->id().value);
+            mResourceTracker.setBufferUnmapped(buffer->id().value);
             break;
         }
 
@@ -5114,8 +5064,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
             gl::Buffer *buffer = context->getState().getTargetBuffer(target);
 
             // Track that this buffer's contents have been modified
-            ResourceTracker &resourceTracker = context->getFrameCaptureSharedResourceTracker();
-            resourceTracker.getTrackedResource(ResourceIDType::Buffer)
+            mResourceTracker.getTrackedResource(ResourceIDType::Buffer)
                 .setModifiedResource(buffer->id().value);
 
             // BufferData is equivalent to UnmapBuffer, for what we're tracking.
@@ -5125,7 +5074,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
             //     6.3.1) is executed in each such context prior to deleting the existing data
             //     store.
             // Track that the buffer was unmapped, for use during state reset
-            resourceTracker.setBufferUnmapped(buffer->id().value);
+            mResourceTracker.setBufferUnmapped(buffer->id().value);
 
             break;
         }
@@ -5144,8 +5093,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
     gl::ShaderProgramID shaderProgramID;
     if (FindShaderProgramIDInCall(call, &shaderProgramID))
     {
-        ResourceTracker &resourceTracker = context->getFrameCaptureSharedResourceTracker();
-        resourceTracker.onShaderProgramAccess(shaderProgramID);
+        mResourceTracker.onShaderProgramAccess(shaderProgramID);
     }
 }
 
