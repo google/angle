@@ -810,10 +810,10 @@
           'script': '//scripts/process_angle_perf_results.py',
         },
         'android_swarming': {
-          'shards': 20,
+          'shards': 30,
         },
         'swarming': {
-          'shards': 10,
+          'shards': 20,
         },
       },
     },
