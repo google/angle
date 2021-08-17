@@ -4155,16 +4155,16 @@ void FrameCaptureShared::copyCompressedTextureData(const gl::Context *context,
         call.params.getParam("dstName", ParamType::TTextureID, 6).value.TextureIDVal;
     GLint dstLevel = call.params.getParam("dstLevel", ParamType::TGLint, 8).value.GLintVal;
 
-    // Look up the texture type
-    gl::TextureTarget dstTargetPacked = gl::PackParam<gl::TextureTarget>(dstTarget);
-    gl::TextureType dstTextureType    = gl::TextureTargetToType(dstTargetPacked);
-
-    // Look up the currently bound texture
-    gl::Texture *dstTexture = context->getState().getTargetTexture(dstTextureType);
+    // Inspect the dest texture to see if this is compressed in case we need to back it up
+    gl::Texture *dstTexture = context->getTexture(dstName);
     ASSERT(dstTexture);
 
-    const gl::InternalFormat &dstFormat = *dstTexture->getFormat(dstTargetPacked, dstLevel).info;
+    // Look up its target using dstZ as the slice in case of 3D/Cube/Array
+    GLint dstZ = call.params.getParam("dstZ", ParamType::TGLint, 11).value.GLintVal;
+    gl::TextureTarget dstTargetPacked = gl::TextureTypeToTarget(dstTexture->getType(), dstZ);
 
+    // Pull the info and check
+    const gl::InternalFormat &dstFormat = *dstTexture->getFormat(dstTargetPacked, dstLevel).info;
     if (dstFormat.compressed)
     {
         context->getShareGroup()->getFrameCaptureShared()->copyCachedTextureLevel(
