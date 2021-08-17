@@ -2648,13 +2648,19 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
 
             const gl::InternalFormat &format = *desc.format.info;
 
+            bool supportedType = (index.getType() == gl::TextureType::_2D ||
+                                  index.getType() == gl::TextureType::_3D ||
+                                  index.getType() == gl::TextureType::_2DArray ||
+                                  index.getType() == gl::TextureType::Buffer ||
+                                  index.getType() == gl::TextureType::CubeMap ||
+                                  index.getType() == gl::TextureType::CubeMapArray);
+
             // Check for supported textures
-            ASSERT(index.getType() == gl::TextureType::_2D ||
-                   index.getType() == gl::TextureType::_3D ||
-                   index.getType() == gl::TextureType::_2DArray ||
-                   index.getType() == gl::TextureType::Buffer ||
-                   index.getType() == gl::TextureType::CubeMap ||
-                   index.getType() == gl::TextureType::CubeMapArray);
+            if (!supportedType)
+            {
+                ERR() << "Unsupported texture type: " << index.getType();
+                UNREACHABLE();
+            }
 
             if (index.getType() == gl::TextureType::Buffer)
             {
@@ -5941,12 +5947,22 @@ const std::vector<uint8_t> &FrameCaptureShared::retrieveCachedTextureLevel(gl::T
 {
     // Look up the data for the requested texture
     const auto &foundTextureLevels = mCachedTextureLevelData.find(id);
-    ASSERT(foundTextureLevels != mCachedTextureLevelData.end());
+    if (foundTextureLevels == mCachedTextureLevelData.end())
+    {
+        ERR() << "Cached texture level not found for id=" << id.value << " target=" << target
+              << " level=" << level;
+        UNREACHABLE();
+    }
 
     GLint adjustedLevel = GetAdjustedTextureCacheLevel(target, level);
 
     const auto &foundTextureLevel = foundTextureLevels->second.find(adjustedLevel);
-    ASSERT(foundTextureLevel != foundTextureLevels->second.end());
+    if (foundTextureLevel == foundTextureLevels->second.end())
+    {
+        ERR() << "Cached texture level not found for id=" << id.value << " target=" << target
+              << " level=" << level << " adjustedLevel=" << adjustedLevel;
+        UNREACHABLE();
+    }
     const std::vector<uint8_t> &capturedTextureLevel = foundTextureLevel->second;
 
     return capturedTextureLevel;
