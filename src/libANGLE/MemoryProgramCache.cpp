@@ -21,6 +21,7 @@
 #include "libANGLE/BinaryStream.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Uniform.h"
+#include "libANGLE/capture/FrameCapture.h"
 #include "libANGLE/histogram_macros.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "platform/PlatformMethods.h"
@@ -125,6 +126,9 @@ void MemoryProgramCache::ComputeHash(const Context *context,
                << program->getState().getTransformFeedbackBufferMode()
                << program->getState().getOutputLocations()
                << program->getState().getSecondaryOutputLocations();
+
+    // Include the status of FrameCapture, which adds source strings to the binary
+    hashStream << context->getShareGroup()->getFrameCaptureShared()->enabled();
 
     // Call the secure SHA hashing function.
     const std::string &programKey = hashStream.str();

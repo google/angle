@@ -656,7 +656,7 @@ void CaptureProgramBinary_binary(const State &glState,
                                  GLsizei length,
                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // Do nothing. glProgramBinary will be overridden in GenerateLinkedProgram.
 }
 
 void CaptureSamplerParameterfv_param(const State &glState,

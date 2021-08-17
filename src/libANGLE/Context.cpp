@@ -3803,8 +3803,8 @@ void Context::initCaps()
         mSupportedExtensions.compressedETC1RGB8TextureOES = false;
     }
 
-    // If we're capturing application calls for replay, don't expose any binary formats to prevent
-    // traces from trying to use cached results
+    // If we're capturing application calls for replay, apply some feature limits to increase
+    // portability of the trace.
     if (getShareGroup()->getFrameCaptureShared()->enabled() ||
         getFrontendFeatures().captureLimits.enabled)
     {
@@ -3814,8 +3814,13 @@ void Context::initCaps()
                        : "FrameCapture limits were forced")
                << std::endl;
 
-        INFO() << "Limiting binary format support count to zero";
-        mDisplay->overrideFrontendFeatures({"disable_program_binary"}, true);
+        if (!getFrontendFeatures().enableProgramBinaryForCapture.enabled)
+        {
+            // Some apps insist on being able to use glProgramBinary. For those, we'll allow the
+            // extension to remain on. Otherwise, force the extension off.
+            INFO() << "Disabling GL_OES_get_program_binary for trace portability";
+            mDisplay->overrideFrontendFeatures({"disable_program_binary"}, true);
+        }
 
         // Set to the most common limit per gpuinfo.org. Required for several platforms we test.
         constexpr GLint maxImageUnits = 8;

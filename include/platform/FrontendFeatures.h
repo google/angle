@@ -87,6 +87,11 @@ struct FrontendFeatures : angle::FeatureSetBase
     angle::Feature forceInitShaderOutputVariables = {
         "forceInitShaderOutputVariables", angle::FeatureCategory::FrontendFeatures,
         "Force-enable shader output variable initialization", &members};
+
+    angle::Feature enableProgramBinaryForCapture = {
+        "enableProgramBinaryForCapture", angle::FeatureCategory::FrontendFeatures,
+        "Even if FrameCapture is enabled, enable GL_OES_get_program_binary", &members,
+        "http://anglebug.com/5658"};
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;
