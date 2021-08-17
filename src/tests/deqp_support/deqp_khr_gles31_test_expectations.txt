@@ -98,9 +98,8 @@
 //// SwANGLE expectations
 ////
 
-// Flaky on Windows SwANGLE
-5755 WIN SWIFTSHADER : KHR-GLES31.core.arrays_of_arrays.SizedDeclarationsPrimitive = SKIP
-
+// Times out on SwANGLE tests.
+5755 SWIFTSHADER : KHR-GLES31.core.arrays_of_arrays.SizedDeclarationsPrimitive = TIMEOUT
 
 ////
 //// Android (i.e. Pixel*) Vulkan expectations
