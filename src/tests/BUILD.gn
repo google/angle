@@ -509,6 +509,7 @@ if (build_angle_gles1_conform_tests) {
         "-Wno-int-to-pointer-cast",
         "-Wno-self-assign",
         "-Wno-sign-compare",
+        "-Wno-unreachable-code-break",
         "-Wno-unused-const-variable",
         "-Wno-unused-result",
         "-Wno-unused-variable",
