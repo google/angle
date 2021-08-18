@@ -147,14 +147,6 @@ std::vector<TestTraceInfo> testTraceInfos =
 """
 
 
-def debug(str):
-    logging.debug('%s: %s' % (multiprocessing.current_process().name, str))
-
-
-def info(str):
-    logging.info('%s: %s' % (multiprocessing.current_process().name, str))
-
-
 def winext(name, ext):
     return ("%s.%s" % (name, ext)) if platform == "win32" else name
 
@@ -165,7 +157,7 @@ def AutodetectGoma():
 
 class SubProcess():
 
-    def __init__(self, command, env=os.environ, pipe_stdout=PIPE_STDOUT):
+    def __init__(self, command, logger, env=os.environ, pipe_stdout=PIPE_STDOUT):
         # shell=False so that only 1 subprocess is spawned.
         # if shell=True, a shell process is spawned, which in turn spawns the process running
         # the command. Since we do not have a handle to the 2nd process, we cannot terminate it.
@@ -174,9 +166,10 @@ class SubProcess():
                 command, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False)
         else:
             self.proc_handle = subprocess.Popen(command, env=env, shell=False)
+        self._logger = logger
 
     def Join(self, timeout):
-        debug('Joining with subprocess %d, timeout %s' % (self.Pid(), str(timeout)))
+        self._logger.debug('Joining with subprocess %d, timeout %s' % (self.Pid(), str(timeout)))
         output = self.proc_handle.communicate(timeout=timeout)[0]
         if output:
             output = output.decode('utf-8')
@@ -201,7 +194,7 @@ class ChildProcessesManager():
         path = os.path.join('third_party', 'depot_tools')
         return os.path.join(path, winext('gn', 'bat')), os.path.join(path, winext('ninja', 'exe'))
 
-    def __init__(self):
+    def __init__(self, logger):
         # a dictionary of Subprocess, with pid as key
         self.subprocesses = {}
         # list of Python multiprocess.Process handles
@@ -209,10 +202,11 @@ class ChildProcessesManager():
 
         self._gn_path, self._ninja_path = self._GetGnAndNinjaAbsolutePaths()
         self._use_goma = AutodetectGoma()
+        self._logger = logger
 
     def RunSubprocess(self, command, env=None, pipe_stdout=True, timeout=None):
-        proc = SubProcess(command, env, pipe_stdout)
-        debug('Created subprocess: %s with pid %d' % (' '.join(command), proc.Pid()))
+        proc = SubProcess(command, self._logger, env, pipe_stdout)
+        self._logger.debug('Created subprocess: %s with pid %d' % (' '.join(command), proc.Pid()))
         self.subprocesses[proc.Pid()] = proc
         try:
             returncode, output = self.subprocesses[proc.Pid()].Join(timeout)
@@ -275,8 +269,8 @@ class ChildProcessesManager():
             gn_args.append(('angle_assert_always_on', 'true'))
         if args.asan:
             gn_args.append(('is_asan', 'true'))
-        debug('Calling GN gen with %s' % str(gn_args))
         args_str = ' '.join(['%s=%s' % (k, v) for (k, v) in gn_args])
+        self._logger.info('Calling gn gen --args="%s"' % args_str)
         cmd = [self._gn_path, 'gen', '--args=%s' % args_str, build_dir]
         return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
 
@@ -307,15 +301,15 @@ class ChildProcessesManager():
         return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
 
 
-def GetTestsListForFilter(args, test_path, filter):
+def GetTestsListForFilter(args, test_path, filter, logger):
     cmd = GetRunCommand(args, test_path) + ["--list-tests", "--gtest_filter=%s" % filter]
-    info('Getting test list from "%s"' % " ".join(cmd))
+    logger.info('Getting test list from "%s"' % " ".join(cmd))
     return subprocess.check_output(cmd, text=True)
 
 
 class TestExpectation():
     # tests that must not be run as list
-    disabled_tests = []
+    skipped_for_capture_tests = []
 
     # test expectations for tests that do not pass
     non_pass_results = {}
@@ -357,15 +351,15 @@ class TestExpectation():
         if platform in platforms:
             test_name_regex = re.compile('^' + test_name.replace('*', '.*') + '$')
             if result_stripped == 'SKIP_FOR_CAPTURE':
-                self.disabled_tests.append(test_name_regex)
+                self.skipped_for_capture_tests.append(test_name_regex)
             elif result_stripped == 'FLAKY':
                 self.flaky_tests.append(test_name_regex)
             else:
                 self.non_pass_results[test_name] = self.result_map[result_stripped]
                 self.non_pass_re[test_name] = test_name_regex
 
-    def TestIsDisabled(self, test_name):
-        for p in self.disabled_tests:
+    def TestIsSkippedForCapture(self, test_name):
+        for p in self.skipped_for_capture_tests:
             m = p.match(test_name)
             if m is not None:
                 return True
@@ -386,7 +380,8 @@ class TestExpectation():
         return False
 
 
-def ParseTestNamesFromTestList(output, test_expectation, ignore_exclude_from_run):
+def ParseTestNamesFromTestList(output, test_expectation, also_run_skipped_for_capture_tests,
+                               logger):
     output_lines = output.splitlines()
     tests = []
     seen_start_of_tests = False
@@ -399,12 +394,12 @@ def ParseTestNamesFromTestList(output, test_expectation, ignore_exclude_from_run
             break
         elif not seen_start_of_tests:
             pass
-        elif not test_expectation.TestIsDisabled(l) or ignore_exclude_from_run:
+        elif not test_expectation.TestIsSkippedForCapture(l) or also_run_skipped_for_capture_tests:
             tests.append(l)
         else:
             disabled += 1
 
-    info('Found %s tests and %d disabled tests.' % (len(tests), disabled))
+    logger.info('Found %s tests and %d disabled tests.' % (len(tests), disabled))
     return tests
 
 
@@ -557,10 +552,11 @@ class TestBatch():
 
     CAPTURE_FRAME_END = 100
 
-    def __init__(self, args):
+    def __init__(self, args, logger):
         self.args = args
         self.tests = []
         self.results = []
+        self.logger = logger
 
     def SetWorkerId(self, worker_id):
         self.trace_dir = "%s%d" % (TRACE_FOLDER, worker_id)
@@ -569,31 +565,28 @@ class TestBatch():
     def RunWithCapture(self, args, child_processes_manager):
         test_exe_path = os.path.join(args.out_dir, 'Capture', args.test_suite)
 
-        # set the static environment variables that do not change throughout the script run
-        env = os.environ.copy()
-        env['ANGLE_CAPTURE_FRAME_END'] = '{}'.format(self.CAPTURE_FRAME_END)
-        env['ANGLE_CAPTURE_SERIALIZE_STATE'] = '1'
-        env['ANGLE_FEATURE_OVERRIDES_ENABLED'] = 'forceRobustResourceInit'
-        env['ANGLE_CAPTURE_ENABLED'] = '1'
+        extra_env = {
+            'ANGLE_CAPTURE_FRAME_END': '{}'.format(self.CAPTURE_FRAME_END),
+            'ANGLE_CAPTURE_SERIALIZE_STATE': '1',
+            'ANGLE_FEATURE_OVERRIDES_ENABLED': 'forceRobustResourceInit',
+            'ANGLE_CAPTURE_ENABLED': '1',
+            'ANGLE_CAPTURE_OUT_DIR': self.trace_folder_path,
+        }
 
-        info('Setting ANGLE_CAPTURE_OUT_DIR to %s' % self.trace_folder_path)
-        env['ANGLE_CAPTURE_OUT_DIR'] = self.trace_folder_path
+        env = {**os.environ.copy(), **extra_env}
 
         if not self.args.keep_temp_files:
             ClearFolderContent(self.trace_folder_path)
         filt = ':'.join([test.full_test_name for test in self.tests])
 
         cmd = GetRunCommand(args, test_exe_path)
-        filter_string = '--gtest_filter=%s' % filt
-        cmd += [filter_string, '--angle-per-test-capture-label']
-
-        if self.args.verbose:
-            info("Run capture: '{} {}'".format(test_exe_path, filter_string))
+        cmd += ['--gtest_filter=%s' % filt, '--angle-per-test-capture-label']
+        self.logger.info("Run capture: '{}' with env {}".format(' '.join(cmd), str(extra_env)))
 
         returncode, output = child_processes_manager.RunSubprocess(
             cmd, env, timeout=SUBPROCESS_TIMEOUT)
         if args.show_capture_stdout:
-            info("Capture stdout: %s" % output)
+            self.logger.info("Capture stdout: %s" % output)
         if returncode == -1:
             self.results.append(GroupedResult(GroupedResult.Crashed, "", output, self.tests))
             return False
@@ -638,6 +631,7 @@ class TestBatch():
         returncode, output = child_processes_manager.RunNinja(self.args, replay_build_dir,
                                                               REPLAY_BINARY, True)
         if returncode != 0:
+            self.logger.warning('Ninja failure output: %s' % output)
             self.results.append(
                 GroupedResult(GroupedResult.CompileFailed, "Build replay failed at ninja", output,
                               tests))
@@ -645,12 +639,13 @@ class TestBatch():
         return True
 
     def RunReplay(self, replay_build_dir, replay_exe_path, child_processes_manager, tests):
-        env = os.environ.copy()
-        env['ANGLE_CAPTURE_ENABLED'] = '0'
-        env['ANGLE_FEATURE_OVERRIDES_ENABLED'] = 'enable_capture_limits'
+        extra_env = {
+            'ANGLE_CAPTURE_ENABLED': '0',
+            'ANGLE_FEATURE_OVERRIDES_ENABLED': 'enable_capture_limits',
+        }
+        env = {**os.environ.copy(), **extra_env}
 
-        if self.args.verbose:
-            info("Run Replay: {}".format(replay_exe_path))
+        self.logger.info("Run Replay: {} with env {}".format(replay_exe_path, str(extra_env)))
 
         returncode, output = child_processes_manager.RunSubprocess(
             GetRunCommand(self.args, replay_exe_path), env, timeout=SUBPROCESS_TIMEOUT)
@@ -676,7 +671,7 @@ class TestBatch():
                     passes.append(self.FindTestByLabel(words[1]))
                 else:
                     fails.append(self.FindTestByLabel(words[1]))
-                    logging.info("Context comparison failed: {}".format(
+                    self.logger.info("Context comparison failed: {}".format(
                         self.FindTestByLabel(words[1])))
                     self.PrintContextDiff(replay_build_dir, words[1])
 
@@ -793,11 +788,11 @@ def SetCWDToAngleFolder():
     return cwd
 
 
-def RunTests(args, worker_id, job_queue, result_list, message_queue):
+def RunTests(args, worker_id, job_queue, result_list, message_queue, logger):
     replay_build_dir = os.path.join(args.out_dir, 'Replay%d' % worker_id)
     replay_exec_path = os.path.join(replay_build_dir, REPLAY_BINARY)
 
-    child_processes_manager = ChildProcessesManager()
+    child_processes_manager = ChildProcessesManager(logger)
     # used to differentiate between multiple composite files when there are multiple test batchs
     # running on the same worker and --deleted_trace is set to False
     composite_file_id = 1
@@ -888,7 +883,10 @@ def GetPlatformForSkip(platform):
 
 
 def main(args, platform):
-    child_processes_manager = ChildProcessesManager()
+    logger = multiprocessing.log_to_stderr()
+    logger.setLevel(level=args.log.upper())
+
+    child_processes_manager = ChildProcessesManager(logger)
     try:
         start_time = time.time()
         # set the number of workers to be cpu_count - 1 (since the main process already takes up a
@@ -901,22 +899,22 @@ def main(args, platform):
         capture_build_dir = os.path.normpath(r"%s/Capture" % args.out_dir)
         returncode, output = child_processes_manager.RunGNGen(args, capture_build_dir, False)
         if returncode != 0:
-            logging.error(output)
+            logger.error(output)
             child_processes_manager.KillAll()
             return EXIT_FAILURE
         # run ninja to build all tests
         returncode, output = child_processes_manager.RunNinja(args, capture_build_dir,
                                                               args.test_suite, False)
         if returncode != 0:
-            logging.error(output)
+            logger.error(output)
             child_processes_manager.KillAll()
             return EXIT_FAILURE
         # get a list of tests
         test_path = os.path.join(capture_build_dir, args.test_suite)
-        test_list = GetTestsListForFilter(args, test_path, args.gtest_filter)
+        test_list = GetTestsListForFilter(args, test_path, args.filter, logger)
         test_expectation = TestExpectation(platform)
         test_names = ParseTestNamesFromTestList(test_list, test_expectation,
-                                                args.force_run_capture)
+                                                args.also_run_skipped_for_capture_tests, logger)
         test_expectation_for_list = test_expectation.Filter(test_names)
         # objects created by manager can be shared by multiple processes. We use it to create
         # collections that are shared by multiple processes such as job queue or result list.
@@ -926,7 +924,7 @@ def main(args, platform):
 
         # put the test batchs into the job queue
         for batch_index in range(test_batch_num):
-            batch = TestBatch(args)
+            batch = TestBatch(args, logger)
             test_index = batch_index
             while test_index < len(test_names):
                 batch.AddTest(Test(test_names[test_index]))
@@ -946,7 +944,6 @@ def main(args, platform):
         compile_failed_tests = []
         skipped_tests = []
 
-
         # result list is created by manager and can be shared by multiple processes. Each
         # subprocess populates the result list with the results of its test runs. After all
         # subprocesses finish, the main process processes the results in the result list.
@@ -960,7 +957,8 @@ def main(args, platform):
         # spawning and starting up workers
         for worker_id in range(worker_count):
             proc = multiprocessing.Process(
-                target=RunTests, args=(args, worker_id, job_queue, result_list, message_queue))
+                target=RunTests,
+                args=(args, worker_id, job_queue, result_list, message_queue, logger))
             child_processes_manager.AddWorker(proc)
             proc.start()
 
@@ -972,30 +970,30 @@ def main(args, platform):
         while child_processes_manager.IsAnyWorkerAlive():
             while not message_queue.empty():
                 msg = message_queue.get()
-                info(msg)
+                logger.info(msg)
                 last_message_timestamp = time.time()
             cur_time = time.time()
             if cur_time - last_message_timestamp > TIME_BETWEEN_MESSAGE:
                 last_message_timestamp = cur_time
-                info("Tests are still running. Remaining workers: " + \
+                logger.info("Tests are still running. Remaining workers: " + \
                 str(child_processes_manager.GetRemainingWorkers()) + \
                 ". Unstarted jobs: " + str(job_queue.qsize()))
             time.sleep(1.0)
         child_processes_manager.JoinWorkers()
         while not message_queue.empty():
             msg = message_queue.get()
-            logging.warning(msg)
+            logger.warning(msg)
         end_time = time.time()
 
         # print out results
-        logging.info("\n\n\n")
-        logging.info("Results:")
+        logger.info("\n\n\n")
+        logger.info("Results:")
 
         test_results = {}
         flaky_results = []
 
         for test_batch_result in result_list:
-            debug(str(test_batch_result))
+            logger.debug(str(test_batch_result))
             passed_count += len(test_batch_result.passes)
             failed_count += len(test_batch_result.fails)
             timedout_count += len(test_batch_result.timeouts)
@@ -1041,13 +1039,13 @@ def main(args, platform):
                 expected_result.append("{} {}\n".format(test, result))
 
         if len(flaky_results):
-            logging.info("\n\nFlaky test(s):")
+            logger.info("\n\nFlaky test(s):")
             for line in flaky_results:
-                logging.info(line)
+                logger.info(line)
 
-        logging.info("\n\n")
-        logging.info("Elapsed time: %.2lf seconds" % (end_time - start_time))
-        logging.info(
+        logger.info("\n\n")
+        logger.info("Elapsed time: %.2lf seconds" % (end_time - start_time))
+        logger.info(
             "Passed: %d, Comparison Failed: %d, Crashed: %d, CompileFailed %d, Skipped: %d, Timeout: %d"
             % (passed_count, failed_count, crashed_count, compile_failed_count, skipped_count,
                timedout_count))
@@ -1062,13 +1060,13 @@ def main(args, platform):
         diff_lines = 0
         for line in result_diff:
             if line is not None:
-                logging.info(line.rstrip("\n"))
+                logger.info(line.rstrip("\n"))
                 diff_lines = diff_lines + 1
 
         if diff_lines == 0:
             retval = EXIT_SUCCESS
         else:
-            logging.info("\nFailure: Obtained results differed from expectation")
+            logger.info("\nFailure: Obtained results differed from expectation")
             retval = EXIT_FAILURE
 
         # delete generated folders if --keep_temp_files flag is set to false
@@ -1088,7 +1086,7 @@ def main(args, platform):
         return EXIT_FAILURE
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--out-dir',
@@ -1101,6 +1099,8 @@ if __name__ == "__main__":
         action='store_true',
         help='Use goma for distributed builds. Requires internal access. Off by default.')
     parser.add_argument(
+        '-f',
+        '--filter',
         '--gtest_filter',
         default=DEFAULT_FILTER,
         help='Same as GoogleTest\'s filter argument. Default is "%s".' % DEFAULT_FILTER)
@@ -1119,22 +1119,22 @@ if __name__ == "__main__":
         help='Whether to keep the temp files and folders. Off by default')
     parser.add_argument('--purge', help='Purge all build directories on exit.')
     parser.add_argument(
-        "--goma-dir",
-        default="",
+        '--goma-dir',
+        default='',
         help='Set custom goma directory. Uses the goma in path by default.')
     parser.add_argument(
-        "--output-to-file",
+        '--output-to-file',
         action='store_true',
         help='Whether to write output to a result file. Off by default')
     parser.add_argument(
-        "--result-file",
+        '--result-file',
         default=DEFAULT_RESULT_FILE,
         help='Name of the result file in the capture_replay_tests folder. Default is "%s".' %
         DEFAULT_RESULT_FILE)
-    parser.add_argument('-v', "--verbose", action='store_true', help='Off by default')
+    parser.add_argument('-v', "--verbose", action='store_true', help='Shows full test output.')
     parser.add_argument(
-        "-l",
-        "--log",
+        '-l',
+        '--log',
         default=DEFAULT_LOG_LEVEL,
         help='Controls the logging level. Default is "%s".' % DEFAULT_LOG_LEVEL)
     parser.add_argument(
@@ -1144,8 +1144,8 @@ if __name__ == "__main__":
         type=int,
         help='Maximum number of test processes. Default is %d.' % DEFAULT_MAX_JOBS)
     parser.add_argument(
-        '-f',
-        '--force-run-capture',
+        '-a',
+        '--also-run-skipped-for-capture-tests',
         action='store_true',
         help='Also run tests that are disabled in the expectations by SKIP_FOR_CAPTURE')
 
