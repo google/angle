@@ -999,6 +999,15 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         }
     }
 
+    if (mParams.testID == RestrictedTraceID::sakura_school_simulator)
+    {
+        // Flaky on Intel. http://anglebug.com/6294
+        if (IsWindows() && IsIntel())
+        {
+            mSkipTest = true;
+        }
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 
