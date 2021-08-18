@@ -8,6 +8,7 @@
 #include <map>
 
 #include "common/system_utils.h"
+#include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/TranslatorMetalDirect.h"
@@ -1043,12 +1044,14 @@ void GenMetalTraverser::emitFieldDeclaration(const TField &field,
                       basic == TBasicType::EbtFloat)) ||
                     type.getQualifier() == EvqFragData)
                 {
-                    // TODO:
-                    // This is not correct in general and needs a reimplementation.
-                    // In GLSL 3.0, We can't always assume this is going to be a safe index.
-                    // See 4.3.8.2
-                    // https://www.khronos.org/registry/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf
-                    size_t index = annotationIndices.color++;
+                    // The OpenGL ES 3.0 spec says locations must be specified
+                    // unless there is only a single output, in which case the
+                    // location is 0. So, when we get to this point the shader
+                    // will have been rejected if locations are not specified
+                    // and there is more than one output.
+                    const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
+                    size_t index = layoutQualifier.locationsSpecified ? layoutQualifier.location
+                                                                      : annotationIndices.color++;
                     mOut << " [[color(" << index << ")]]";
                 }
             }
