@@ -212,3 +212,7 @@
 
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
+
+// Slow tests
+5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
+6251 : MultiThreadingTest* = TIMEOUT

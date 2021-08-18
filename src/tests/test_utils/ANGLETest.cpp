@@ -604,8 +604,9 @@ void ANGLETestBase::ANGLETestSetUp()
     fullTestNameStr << testInfo->test_case_name() << "." << testInfo->name();
     std::string fullTestName = fullTestNameStr.str();
 
-    TestSuite *testSuite    = TestSuite::GetInstance();
-    int32_t testExpectation = testSuite->getTestExpectationWithConfig(testConfig, fullTestName);
+    TestSuite *testSuite = TestSuite::GetInstance();
+    int32_t testExpectation =
+        testSuite->getTestExpectationWithConfigAndUpdateTimeout(testConfig, fullTestName);
 
     if (testExpectation == GPUTestExpectationsParser::kGpuTestSkip)
     {

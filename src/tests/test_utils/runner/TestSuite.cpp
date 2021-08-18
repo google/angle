@@ -56,13 +56,16 @@ constexpr char kSkippedTestString[] = "[  SKIPPED ] ";
 
 constexpr char kArtifactsFakeTestName[] = "TestArtifactsFakeTest";
 
+// Note: we use a fairly high test timeout to allow for the first test in a batch to be slow.
+// Ideally we could use a separate timeout for the slow first test.
 #if defined(NDEBUG)
-constexpr int kDefaultTestTimeout = 20;
+constexpr int kDefaultTestTimeout = 60;
 #else
-constexpr int kDefaultTestTimeout  = 60;
+constexpr int kDefaultTestTimeout  = 120;
 #endif
+constexpr int kSlowTestTimeoutScale = 3;
 #if defined(NDEBUG)
-constexpr int kDefaultBatchTimeout = 240;
+constexpr int kDefaultBatchTimeout = 300;
 #else
 constexpr int kDefaultBatchTimeout = 600;
 #endif
@@ -432,39 +435,17 @@ TestIdentifier GetTestIdentifier(const testing::TestInfo &testInfo)
     return {testInfo.test_suite_name(), testInfo.name()};
 }
 
-bool IsSlowTest(const std::vector<std::string> &slowTests, const TestIdentifier &testID)
-{
-    char buffer[200] = {};
-    testID.sprintfName(buffer);
-
-    for (const std::string &slowTest : slowTests)
-    {
-        if (NamesMatchWithWildcard(slowTest.c_str(), buffer))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 class TestEventListener : public testing::EmptyTestEventListener
 {
   public:
     // Note: TestResults is owned by the TestSuite. It should outlive TestEventListener.
     TestEventListener(const std::string &resultsFile,
                       const std::string &histogramJsonFile,
-                      const std::vector<std::string> &slowTests,
-                      double fastTestTimeout,
-                      double slowTestTimeout,
                       const char *testSuiteName,
                       TestResults *testResults,
                       HistogramWriter *histogramWriter)
         : mResultsFile(resultsFile),
           mHistogramJsonFile(histogramJsonFile),
-          mSlowTests(slowTests),
-          mFastTestTimeout(fastTestTimeout),
-          mSlowTestTimeout(slowTestTimeout),
           mTestSuiteName(testSuiteName),
           mTestResults(testResults),
           mHistogramWriter(histogramWriter)
@@ -475,8 +456,6 @@ class TestEventListener : public testing::EmptyTestEventListener
         std::lock_guard<std::mutex> guard(mTestResults->currentTestMutex);
         mTestResults->currentTest = GetTestIdentifier(testInfo);
         mTestResults->currentTestTimer.start();
-        mTestResults->currentTestTimeout =
-            IsSlowTest(mSlowTests, mTestResults->currentTest) ? mSlowTestTimeout : mFastTestTimeout;
     }
 
     void OnTestEnd(const testing::TestInfo &testInfo) override
@@ -499,9 +478,6 @@ class TestEventListener : public testing::EmptyTestEventListener
   private:
     std::string mResultsFile;
     std::string mHistogramJsonFile;
-    const std::vector<std::string> &mSlowTests;
-    double mFastTestTimeout;
-    double mSlowTestTimeout;
     const char *mTestSuiteName;
     TestResults *mTestResults;
     HistogramWriter *mHistogramWriter;
@@ -1112,6 +1088,8 @@ TestSuite::TestSuite(int *argc, char **argv)
         ++argIndex;
     }
 
+    mTestResults.currentTestTimeout = mTestTimeout;
+
 #if defined(ANGLE_PLATFORM_ANDROID)
     // Workaround for the Android test runner requiring a GTest test list.
     if (mListTests && filterArgIndex.valid())
@@ -1290,9 +1268,9 @@ TestSuite::TestSuite(int *argc, char **argv)
     if (!mBotMode)
     {
         testing::TestEventListeners &listeners = testing::UnitTest::GetInstance()->listeners();
-        listeners.Append(new TestEventListener(
-            mResultsFile, mHistogramJsonFile, mSlowTests, mTestTimeout, mTestTimeout * 3.0,
-            mTestSuiteName.c_str(), &mTestResults, &mHistogramWriter));
+        listeners.Append(new TestEventListener(mResultsFile, mHistogramJsonFile,
+                                               mTestSuiteName.c_str(), &mTestResults,
+                                               &mHistogramWriter));
 
         for (const TestIdentifier &id : testSet)
         {
@@ -1402,7 +1380,7 @@ bool TestSuite::launchChildTestProcess(uint32_t batchId,
 
     std::string resultsFileArg = kResultFileArg + processInfo.resultsFileName;
 
-    // Construct commandline for child process.
+    // Construct command line for child process.
     std::vector<const char *> args;
 
     args.push_back(mTestExecutableName.c_str());
@@ -1881,14 +1859,6 @@ void TestSuite::addHistogramSample(const std::string &measurement,
     mHistogramWriter.addSample(measurement, story, value, units);
 }
 
-void TestSuite::registerSlowTests(const char *slowTests[], size_t numSlowTests)
-{
-    for (size_t slowTestIndex = 0; slowTestIndex < numSlowTests; ++slowTestIndex)
-    {
-        mSlowTests.push_back(slowTests[slowTestIndex]);
-    }
-}
-
 std::string TestSuite::addTestArtifact(const std::string &artifactName)
 {
     mTestResults.testArtifactPaths.push_back(artifactName);
@@ -1985,10 +1955,26 @@ int32_t TestSuite::getTestExpectation(const std::string &testName)
     return mTestExpectationsParser.getTestExpectation(testName);
 }
 
-int32_t TestSuite::getTestExpectationWithConfig(const GPUTestConfig &config,
-                                                const std::string &testName)
+void TestSuite::maybeUpdateTestTimeout(uint32_t testExpectation)
 {
-    return mTestExpectationsParser.getTestExpectationWithConfig(config, testName);
+    double testTimeout = (testExpectation == GPUTestExpectationsParser::kGpuTestTimeout)
+                             ? getSlowTestTimeout()
+                             : mTestTimeout;
+    std::lock_guard<std::mutex> guard(mTestResults.currentTestMutex);
+    mTestResults.currentTestTimeout = testTimeout;
+}
+
+int32_t TestSuite::getTestExpectationWithConfigAndUpdateTimeout(const GPUTestConfig &config,
+                                                                const std::string &testName)
+{
+    uint32_t expectation = mTestExpectationsParser.getTestExpectationWithConfig(config, testName);
+    maybeUpdateTestTimeout(expectation);
+    return expectation;
+}
+
+int TestSuite::getSlowTestTimeout() const
+{
+    return mTestTimeout * kSlowTestTimeoutScale;
 }
 
 const char *TestResultTypeToString(TestResultType type)

@@ -98,9 +98,6 @@
 //// SwANGLE expectations
 ////
 
-// Times out on SwANGLE tests.
-5755 SWIFTSHADER : KHR-GLES31.core.arrays_of_arrays.SizedDeclarationsPrimitive = TIMEOUT
-
 ////
 //// Android (i.e. Pixel*) Vulkan expectations
 ////
@@ -280,3 +277,7 @@
 5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_6 = SKIP
 5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_7 = SKIP
 5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_zero = SKIP
+
+// Slow tests
+5755 SWIFTSHADER : KHR-GLES31.core.arrays_of_arrays.SizedDeclarationsPrimitive = TIMEOUT
+6295 : KHR-GLES31.core.arrays_of_arrays.ConstructorsAndUnsizedDeclConstructors1 = TIMEOUT

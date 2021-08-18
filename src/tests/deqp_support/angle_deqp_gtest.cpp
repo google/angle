@@ -379,13 +379,15 @@ class dEQPTest : public testing::TestWithParam<size_t>
         // crashed tests we track how many tests we "tried" to run.
         sTestCount++;
 
-        if (caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestSkip ||
-            caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestTimeout)
+        if (caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestSkip)
         {
             sSkippedTestCount++;
             std::cout << "Test skipped.\n";
             return;
         }
+
+        TestSuite *testSuite = TestSuite::GetInstance();
+        testSuite->maybeUpdateTestTimeout(caseInfo.mExpectation);
 
         gExpectError          = (caseInfo.mExpectation != GPUTestExpectationsParser::kGpuTestPass);
         dEQPTestResult result = deqp_libtester_run(caseInfo.mDEQPName.c_str());

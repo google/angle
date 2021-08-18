@@ -135,7 +135,6 @@ class TestSuite
                             const std::string &story,
                             double value,
                             const std::string &units);
-    void registerSlowTests(const char *slowTests[], size_t numSlowTests);
 
     static TestSuite *GetInstance() { return mInstance; }
 
@@ -150,7 +149,9 @@ class TestSuite
                                                 const std::string &fileName);
     bool loadAllTestExpectationsFromFile(const std::string &fileName);
     int32_t getTestExpectation(const std::string &testName);
-    int32_t getTestExpectationWithConfig(const GPUTestConfig &config, const std::string &testName);
+    void maybeUpdateTestTimeout(uint32_t testExpectation);
+    int32_t getTestExpectationWithConfigAndUpdateTimeout(const GPUTestConfig &config,
+                                                         const std::string &testName);
     bool logAnyUnusedTestExpectations();
     void setTestExpectationsAllowMask(uint32_t mask)
     {
@@ -164,6 +165,7 @@ class TestSuite
     int printFailuresAndReturnCount() const;
     void startWatchdog();
     void dumpTestExpectationsErrorMessages();
+    int getSlowTestTimeout() const;
 
     static TestSuite *mInstance;
 
@@ -200,7 +202,6 @@ class TestSuite
     std::vector<ProcessInfo> mCurrentProcesses;
     std::thread mWatchdogThread;
     HistogramWriter mHistogramWriter;
-    std::vector<std::string> mSlowTests;
     std::string mTestArtifactDirectory;
     GPUTestExpectationsParser mTestExpectationsParser;
 };

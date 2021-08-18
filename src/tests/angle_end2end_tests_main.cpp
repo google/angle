@@ -19,11 +19,8 @@ void ANGLEProcessTestArgs(int *argc, char *argv[]);
 // likely specialize more register functions more like dEQP instead of relying on static init.
 void RegisterContextCompatibilityTests();
 
-// If we ever move to a text-based expectations format, we should move this list in that file.
 namespace
 {
-const char *kSlowTests[]               = {"GLSLTest.VerifyMaxVertexUniformVectors*",
-                            "MultiThreadingTest.MultiContextDeleteDraw*"};
 constexpr char kTestExpectationsPath[] = "src/tests/angle_end2end_tests_expectations.txt";
 }  // namespace
 
@@ -32,7 +29,6 @@ int main(int argc, char **argv)
     angle::TestSuite testSuite(&argc, argv);
     ANGLEProcessTestArgs(&argc, argv);
     RegisterContextCompatibilityTests();
-    testSuite.registerSlowTests(kSlowTests, ArraySize(kSlowTests));
 
     constexpr size_t kMaxPath = 512;
     std::array<char, kMaxPath> foundDataPath;
@@ -43,7 +39,8 @@ int main(int argc, char **argv)
     }
 
     // end2end test expectations only allow SKIP at the moment.
-    testSuite.setTestExpectationsAllowMask(angle::GPUTestExpectationsParser::kGpuTestSkip);
+    testSuite.setTestExpectationsAllowMask(angle::GPUTestExpectationsParser::kGpuTestSkip |
+                                           angle::GPUTestExpectationsParser::kGpuTestTimeout);
 
     if (!testSuite.loadAllTestExpectationsFromFile(std::string(foundDataPath.data())))
     {

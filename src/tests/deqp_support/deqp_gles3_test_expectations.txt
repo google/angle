@@ -573,10 +573,10 @@
 4418 SWIFTSHADER : dEQP-GLES3.functional.negative_api.buffer.framebuffer_texture_layer = FAIL
 
 // Flaky timeouts on SwANGLE
-1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.faceforward.lowp_fragment.vec4 = SKIP
-1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.faceforward.lowp_vertex.vec4 = SKIP
-1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.refract.lowp_fragment.vec4 = SKIP
-1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.refract.lowp_vertex.vec4 = SKIP
+1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.faceforward.lowp_fragment.vec4 = TIMEOUT
+1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.faceforward.lowp_vertex.vec4 = TIMEOUT
+1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.refract.lowp_fragment.vec4 = TIMEOUT
+1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.refract.lowp_vertex.vec4 = TIMEOUT
 
 // Fails on Win x86 SwANGLE bots with Clang llvmorg-13-init-15561-gf98ed74f
 6265 WIN SWIFTSHADER : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.lowp_uvec3_vertex = FAIL

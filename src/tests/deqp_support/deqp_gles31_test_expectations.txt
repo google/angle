@@ -1410,3 +1410,6 @@
 
 // Fails when the expression being interpolated as an indexed varying array.
 6194 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.shaders.multisample_interpolation.interpolate_at_offset.array_element.* = FAIL
+
+// Slow tests.
+6021 : dEQP-GLES31.functional.ssbo.layout.random.all_shared_buffer.36 = TIMEOUT
