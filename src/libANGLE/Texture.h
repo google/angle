@@ -148,6 +148,7 @@ class TextureState final : private angle::NonCopyable
     bool isStencilMode() const { return mDepthStencilTextureMode == GL_STENCIL_INDEX; }
 
     bool hasBeenBoundAsImage() const { return mHasBeenBoundAsImage; }
+    bool hasBeenBoundAsAttachment() const { return mHasBeenBoundAsAttachment; }
 
     gl::SrgbOverride getSRGBOverride() const { return mSrgbOverride; }
 
@@ -218,6 +219,7 @@ class TextureState final : private angle::NonCopyable
     GLenum mDepthStencilTextureMode;
 
     bool mHasBeenBoundAsImage;
+    bool mHasBeenBoundAsAttachment;
 
     bool mImmutableFormat;
     GLuint mImmutableLevels;
@@ -601,6 +603,7 @@ class Texture final : public RefCountObject<TextureID>,
 
         // Image state
         DIRTY_BIT_BOUND_AS_IMAGE,
+        DIRTY_BIT_BOUND_AS_ATTACHMENT,
 
         // Misc
         DIRTY_BIT_USAGE,

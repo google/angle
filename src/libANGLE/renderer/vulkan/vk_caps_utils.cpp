@@ -45,20 +45,22 @@ bool FormatReinterpretationSupported(const std::vector<GLenum> &optionalSizedFor
         if (baseCaps.texturable && baseCaps.filterable)
         {
             const Format &vkFormat = rendererVk->getFormat(glFormat);
+            // For capability query, we use the renderable format since that is what we are capable
+            // of when we fallback.
+            angle::FormatID imageFormatID = vkFormat.getActualRenderableImageFormatID();
 
-            angle::FormatID reinterpretedFormatID =
-                checkLinearColorspace ? ConvertToLinear(vkFormat.actualImageFormatID)
-                                      : ConvertToSRGB(vkFormat.actualImageFormatID);
+            angle::FormatID reinterpretedFormatID = checkLinearColorspace
+                                                        ? ConvertToLinear(imageFormatID)
+                                                        : ConvertToSRGB(imageFormatID);
 
             const Format &reinterpretedVkFormat = rendererVk->getFormat(reinterpretedFormatID);
 
-            if (reinterpretedVkFormat.actualImageFormatID != reinterpretedFormatID)
+            if (reinterpretedVkFormat.getActualRenderableImageFormatID() != reinterpretedFormatID)
             {
                 return false;
             }
 
-            if (!rendererVk->haveSameFormatFeatureBits(vkFormat.actualImageFormatID,
-                                                       reinterpretedFormatID))
+            if (!rendererVk->haveSameFormatFeatureBits(imageFormatID, reinterpretedFormatID))
             {
                 return false;
             }
@@ -273,12 +275,14 @@ bool CanSupportYuvInternalFormat(const RendererVk *rendererVk)
 
     const Format &twoPlane8bitYuvFormat = rendererVk->getFormat(GL_G8_B8R8_2PLANE_420_UNORM_ANGLE);
     bool twoPlane8bitYuvFormatSupported = rendererVk->hasImageFormatFeatureBits(
-        twoPlane8bitYuvFormat.actualImageFormatID, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
+        twoPlane8bitYuvFormat.getActualImageFormatID(vk::ImageAccess::SampleOnly),
+        VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
 
     const Format &threePlane8bitYuvFormat =
         rendererVk->getFormat(GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE);
     bool threePlane8bitYuvFormatSupported = rendererVk->hasImageFormatFeatureBits(
-        threePlane8bitYuvFormat.actualImageFormatID, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
+        threePlane8bitYuvFormat.getActualImageFormatID(vk::ImageAccess::SampleOnly),
+        VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
 
     return twoPlane8bitYuvFormatSupported && threePlane8bitYuvFormatSupported;
 }

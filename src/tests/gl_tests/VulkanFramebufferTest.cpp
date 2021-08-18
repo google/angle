@@ -92,10 +92,6 @@ TEST_P(VulkanFramebufferTest, R4G4B4A4TextureSampleOnlyActuallyUses444Format)
         VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
     ANGLE_SKIP_TEST_IF(!isTexturable);
 
-    // https://issuetracker.google.com/196456356: The Vulkan backend is always falling back to
-    // R8G8B8A8.
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     static constexpr GLsizei kTexWidth  = 100;
     static constexpr GLsizei kTexHeight = 100;
     GLTexture texture;

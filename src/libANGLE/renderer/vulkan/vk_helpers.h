@@ -1683,6 +1683,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                              GLenum type,
                                              const uint8_t *pixels,
                                              const Format &vkFormat,
+                                             ImageAccess access,
                                              const GLuint inputRowPitch,
                                              const GLuint inputDepthPitch,
                                              const GLuint inputSkipBytes);
@@ -1696,7 +1697,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                          DynamicBuffer *stagingBufferOverride,
                                          GLenum type,
                                          const uint8_t *pixels,
-                                         const Format &vkFormat);
+                                         const Format &vkFormat,
+                                         ImageAccess access);
 
     angle::Result stageSubresourceUpdateAndGetData(ContextVk *contextVk,
                                                    size_t allocationSize,
@@ -1713,6 +1715,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                                         const gl::Offset &dstOffset,
                                                         const gl::Extents &dstExtent,
                                                         const gl::InternalFormat &formatInfo,
+                                                        ImageAccess access,
                                                         FramebufferVk *framebufferVk,
                                                         DynamicBuffer *stagingBufferOverride);
 
@@ -1922,6 +1925,9 @@ class ImageHelper final : public Resource, public angle::Subject
     void restoreSubresourceStencilContent(gl::LevelIndex level,
                                           uint32_t layerIndex,
                                           uint32_t layerCount);
+    bool hasStagedUpdatesWithMismatchedFormat(gl::LevelIndex levelStart,
+                                              gl::LevelIndex levelEnd,
+                                              angle::FormatID formatID) const;
 
   private:
     enum class UpdateSource

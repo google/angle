@@ -712,7 +712,7 @@ const gl::InternalFormat &FramebufferVk::getImplementationColorReadFormat(
     ContextVk *contextVk       = vk::GetImpl(context);
     GLenum sizedFormat         = mState.getReadAttachment()->getFormat().info->sizedInternalFormat;
     const vk::Format &vkFormat = contextVk->getRenderer()->getFormat(sizedFormat);
-    GLenum implFormat          = vkFormat.actualImageFormat().fboImplementationInternalFormat;
+    GLenum implFormat = vkFormat.getActualRenderableImageFormat().fboImplementationInternalFormat;
     return gl::GetSizedInternalFormatInfo(implFormat);
 }
 

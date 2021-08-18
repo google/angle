@@ -34,6 +34,12 @@ namespace vk
 // VkFormat values in range [0, kNumVkFormats) are used as indices in various tables.
 constexpr uint32_t kNumVkFormats = 185;
 
+enum ImageAccess
+{
+    SampleOnly,
+    Renderable,
+};
+
 struct ImageFormatInitInfo final
 {
     angle::FormatID format;
@@ -57,6 +63,8 @@ size_t GetValidImageCopyBufferAlignment(angle::FormatID intendedFormatID,
                                         angle::FormatID actualFormatID);
 bool HasEmulatedImageChannels(const angle::Format &intendedFormat,
                               const angle::Format &actualFormat);
+// Returns true if the image has a different image format than intended.
+bool HasEmulatedImageFormat(angle::FormatID intendedFormatID, angle::FormatID actualFormatID);
 
 // Describes a Vulkan format. For more information on formats in the Vulkan back-end please see
 // https://chromium.googlesource.com/angle/angle/+/main/src/libANGLE/renderer/vulkan/doc/FormatTablesAndEmulation.md
@@ -72,12 +80,39 @@ struct Format final : private angle::NonCopyable
     const angle::Format &intendedFormat() const { return angle::Format::Get(intendedFormatID); }
 
     // The actual Image format is used to implement the front-end format for Texture/Renderbuffers.
-    const angle::Format &actualImageFormat() const
+    const angle::Format &getActualImageFormat(ImageAccess access) const
     {
-        return angle::Format::Get(actualImageFormatID);
+        return angle::Format::Get(getActualImageFormatID(access));
     }
 
-    VkFormat actualImageVkFormat() const { return GetVkFormatFromFormatID(actualImageFormatID); }
+    angle::FormatID getActualRenderableImageFormatID() const
+    {
+        return actualRenderableImageFormatID;
+    }
+    const angle::Format &getActualRenderableImageFormat() const
+    {
+        return angle::Format::Get(actualRenderableImageFormatID);
+    }
+    VkFormat getActualRenderableImageVkFormat() const
+    {
+        return GetVkFormatFromFormatID(actualRenderableImageFormatID);
+    }
+
+    angle::FormatID getActualImageFormatID(ImageAccess access) const
+    {
+        return ImageAccess::Renderable == access ? actualRenderableImageFormatID
+                                                 : actualImageFormatID;
+    }
+    VkFormat getActualImageVkFormat(ImageAccess access) const
+    {
+        return GetVkFormatFromFormatID(getActualImageFormatID(access));
+    }
+
+    LoadImageFunctionInfo getTextureLoadFunction(ImageAccess access, GLenum type) const
+    {
+        return ImageAccess::Renderable == access ? renderableTextureLoadFunctions(type)
+                                                 : textureLoadFunctions(type);
+    }
 
     // The actual Buffer format is used to implement the front-end format for Buffers.  This format
     // is used by vertex buffers as well as texture buffers.  Note that all formats required for
@@ -112,11 +147,10 @@ struct Format final : private angle::NonCopyable
         return gl::GetInternalFormatInfo(intendedGLFormat, type);
     }
 
-    // Returns true if the image format has more channels than the ANGLE format.
-    bool hasEmulatedImageChannels() const;
-
-    // Returns true if the image has a different image format than intended.
-    bool hasEmulatedImageFormat() const { return actualImageFormatID != intendedFormatID; }
+    bool hasRenderableImageFallbackFormat() const
+    {
+        return actualImageFormatID != actualRenderableImageFormatID;
+    }
 
     // This is an auto-generated method in vk_format_table_autogen.cpp.
     void initialize(RendererVk *renderer, const angle::Format &intendedAngleFormat);
@@ -131,12 +165,14 @@ struct Format final : private angle::NonCopyable
     angle::FormatID intendedFormatID;
     GLenum intendedGLFormat;
     angle::FormatID actualImageFormatID;
+    angle::FormatID actualRenderableImageFormatID;
     angle::FormatID actualBufferFormatID;
     angle::FormatID actualCompressedBufferFormatID;
 
     InitializeTextureDataFunction imageInitializerFunction;
     LoadFunctionMap textureLoadFunctions;
     LoadTextureBorderFunctionMap textureBorderLoadFunctions;
+    LoadFunctionMap renderableTextureLoadFunctions;
     VertexCopyFunction vertexLoadFunction;
     VertexCopyFunction compressedVertexLoadFunction;
 

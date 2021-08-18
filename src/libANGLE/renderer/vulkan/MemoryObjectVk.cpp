@@ -178,7 +178,7 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     const vk::Format &vkFormat     = renderer->getFormat(internalFormat);
-    angle::FormatID actualFormatID = vkFormat.actualImageFormatID;
+    angle::FormatID actualFormatID = vkFormat.getActualRenderableImageFormatID();
 
     // EXT_external_objects issue 13 says that all supported usage flags must be specified.
     // However, ANGLE_external_objects_flags allows these flags to be masked.  Note that the GL enum

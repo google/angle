@@ -124,7 +124,7 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
                               bool hasProtectedContent,
                               vk::ImageHelper *imageHelper)
 {
-    const angle::Format &textureFormat = vkFormat.actualImageFormat();
+    const angle::Format &textureFormat = vkFormat.getActualRenderableImageFormat();
     bool isDepthOrStencilFormat   = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
     const VkImageUsageFlags usage = isDepthOrStencilFormat ? kSurfaceVkDepthStencilImageUsageFlags
                                                            : kSurfaceVkColorImageUsageFlags;
@@ -136,9 +136,9 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
         hasProtectedContent ? VK_IMAGE_CREATE_PROTECTED_BIT : vk::kVkImageCreateFlagsNone;
     ANGLE_TRY(imageHelper->initExternal(
         displayVk, gl::TextureType::_2D, extents, vkFormat.intendedFormatID,
-        vkFormat.actualImageFormatID, samples, usage, imageCreateFlags, vk::ImageLayout::Undefined,
-        nullptr, gl::LevelIndex(0), 1, 1, isRobustResourceInitEnabled, nullptr,
-        hasProtectedContent));
+        vkFormat.getActualRenderableImageFormatID(), samples, usage, imageCreateFlags,
+        vk::ImageLayout::Undefined, nullptr, gl::LevelIndex(0), 1, 1, isRobustResourceInitEnabled,
+        nullptr, hasProtectedContent));
 
     return angle::Result::Continue;
 }
@@ -760,7 +760,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
                                                       surfaceFormats.data()));
 
     const vk::Format &format = renderer->getFormat(mState.config->renderTargetFormat);
-    VkFormat nativeFormat    = format.actualImageVkFormat();
+    VkFormat nativeFormat    = format.getActualRenderableImageVkFormat();
 
     if (surfaceFormatCount == 1u && surfaceFormats[0].format == VK_FORMAT_UNDEFINED)
     {
@@ -1010,7 +1010,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     VkDevice device      = renderer->getDevice();
 
     const vk::Format &format = renderer->getFormat(mState.config->renderTargetFormat);
-    VkFormat nativeFormat    = format.actualImageVkFormat();
+    VkFormat nativeFormat    = format.getActualRenderableImageVkFormat();
 
     gl::Extents rotatedExtents = extents;
     if (Is90DegreeRotation(getPreTransform()))
@@ -1032,7 +1032,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     if (kEnableOverlay)
     {
         VkFormatFeatureFlags featureBits = renderer->getImageFormatFeatureBits(
-            format.actualImageFormatID, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
+            format.getActualRenderableImageFormatID(), VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
         if ((featureBits & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT) != 0)
         {
             imageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;

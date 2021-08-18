@@ -70,8 +70,8 @@ TEST_P(VulkanFormatTablesTest, TestFormatSupport)
 
         for (const ParametersToTest params : parametersToTest)
         {
-            VkFormat actualImageVkFormat =
-                rx::vk::GetVkFormatFromFormatID(vkFormat.actualImageFormatID);
+            VkFormat actualImageVkFormat = rx::vk::GetVkFormatFromFormatID(
+                vkFormat.getActualImageFormatID(rx::vk::ImageAccess::SampleOnly));
 
             // Now let's verify that against vulkan.
             VkFormatProperties formatProperties;
@@ -97,14 +97,16 @@ TEST_P(VulkanFormatTablesTest, TestFormatSupport)
             EXPECT_EQ(isFilterable, textureCaps.filterable) << actualImageVkFormat;
 
             // isRenderable?
+            VkFormat actualRenderableImageVkFormat =
+                rx::vk::GetVkFormatFromFormatID(vkFormat.getActualRenderableImageFormatID());
             const bool isRenderableColor =
                 (vkGetPhysicalDeviceImageFormatProperties(
-                    renderer->getPhysicalDevice(), actualImageVkFormat, params.imageType,
+                    renderer->getPhysicalDevice(), actualRenderableImageVkFormat, params.imageType,
                     VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                     params.createFlags, &imageProperties)) == VK_SUCCESS;
             const bool isRenderableDepthStencil =
                 (vkGetPhysicalDeviceImageFormatProperties(
-                    renderer->getPhysicalDevice(), actualImageVkFormat, params.imageType,
+                    renderer->getPhysicalDevice(), actualRenderableImageVkFormat, params.imageType,
                     VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
                     params.createFlags, &imageProperties)) == VK_SUCCESS;
 

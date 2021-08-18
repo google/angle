@@ -48,7 +48,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     ContextVk *contextVk            = vk::GetImpl(context);
     RendererVk *renderer            = contextVk->getRenderer();
     const vk::Format &format        = renderer->getFormat(internalformat);
-    angle::FormatID textureFormatID = format.actualImageFormatID;
+    angle::FormatID textureFormatID = format.getActualRenderableImageFormatID();
 
     if (!mOwnsImage)
     {
@@ -79,7 +79,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         mImageViews.init(renderer);
     }
 
-    const angle::Format &textureFormat = format.actualImageFormat();
+    const angle::Format &textureFormat = format.getActualRenderableImageFormat();
     const bool isDepthStencilFormat    = textureFormat.hasDepthOrStencilBits();
     ASSERT(textureFormat.redBits > 0 || isDepthStencilFormat);
 
@@ -171,7 +171,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
     mImageViews.init(renderer);
 
     const vk::Format &vkFormat = renderer->getFormat(image->getFormat().info->sizedInternalFormat);
-    const angle::Format &textureFormat = vkFormat.actualImageFormat();
+    const angle::Format &textureFormat = vkFormat.getActualRenderableImageFormat();
 
     VkImageAspectFlags aspect = vk::GetFormatAspectFlags(textureFormat);
 

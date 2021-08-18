@@ -141,6 +141,7 @@ TextureState::TextureState(TextureType type)
       mMaxLevel(kInitialMaxLevel),
       mDepthStencilTextureMode(GL_DEPTH_COMPONENT),
       mHasBeenBoundAsImage(false),
+      mHasBeenBoundAsAttachment(false),
       mImmutableFormat(false),
       mImmutableLevels(0),
       mUsage(GL_NONE),
@@ -2039,6 +2040,12 @@ void Texture::onAttach(const Context *context, rx::Serial framebufferSerial)
 
     // Duplicates allowed for multiple attachment points. See the comment in the header.
     mBoundFramebufferSerials.push_back(framebufferSerial);
+
+    if (!mState.mHasBeenBoundAsAttachment)
+    {
+        mDirtyBits.set(DIRTY_BIT_BOUND_AS_ATTACHMENT);
+        mState.mHasBeenBoundAsAttachment = true;
+    }
 }
 
 void Texture::onDetach(const Context *context, rx::Serial framebufferSerial)

@@ -1601,6 +1601,7 @@ angle::Result TextureGL::syncState(const gl::Context *context,
                 // has local dirty bits. The real dirty bits are in mLocalDirty bits.
                 break;
             case gl::Texture::DIRTY_BIT_BOUND_AS_IMAGE:
+            case gl::Texture::DIRTY_BIT_BOUND_AS_ATTACHMENT:
                 // Only used for Vulkan.
                 break;
 

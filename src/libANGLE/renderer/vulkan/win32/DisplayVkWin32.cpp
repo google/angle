@@ -163,7 +163,7 @@ void DisplayVkWin32::checkConfigSupport(egl::Config *config)
 
     for (const VkSurfaceFormatKHR &surfaceFormat : mSurfaceFormats)
     {
-        if (surfaceFormat.format == formatVk.actualImageVkFormat())
+        if (surfaceFormat.format == formatVk.getActualRenderableImageVkFormat())
         {
             return;
         }
