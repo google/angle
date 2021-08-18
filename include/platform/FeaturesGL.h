@@ -553,6 +553,13 @@ struct FeaturesGL : FeatureSetBase
         "chunked_texture_upload", FeatureCategory::OpenGLWorkarounds,
         "Upload texture data in <120kb chunks to work around Mac driver hangs and crashes.",
         &members, "http://crbug.com/1181068"};
+
+    // Qualcomm drivers may sometimes reject immutable ASTC sliced 3D texture
+    // allocation. Instead, use non-immutable allocation internally.
+    Feature emulateImmutableCompressedTexture3D = {
+        "emulate_immutable_compressed_texture_3d", FeatureCategory::OpenGLWorkarounds,
+        "Use non-immutable texture allocation to work around a driver bug.", &members,
+        "https://crbug.com/1060012"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

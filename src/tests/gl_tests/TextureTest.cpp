@@ -3237,6 +3237,16 @@ TEST_P(Texture2DTest, SubImageValidationOverflow)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
+// Test to ensure that glTexStorage3D accepts ASTC sliced 3D. https://crbug.com/1060012
+TEST_P(Texture3DTestES3, ImmutableASTCSliced3D)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_texture_compression_astc_sliced_3d"));
+
+    glBindTexture(GL_TEXTURE_3D, mTexture3D);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_COMPRESSED_RGBA_ASTC_4x4, 4, 4, 1);
+    EXPECT_GL_NO_ERROR();
+}
+
 void FillLevel(GLint level,
                GLuint width,
                GLuint height,

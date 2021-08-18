@@ -2198,6 +2198,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // http://crbug.com/1181068
     ANGLE_FEATURE_CONDITION(features, uploadTextureDataInChunks, IsApple());
+
+    // https://crbug.com/1060012
+    ANGLE_FEATURE_CONDITION(features, emulateImmutableCompressedTexture3D, isQualcomm);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
