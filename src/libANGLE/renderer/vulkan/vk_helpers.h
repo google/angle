@@ -1455,6 +1455,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                gl::TextureType textureType,
                                const VkExtent3D &extents,
                                const Format &format,
+                               angle::FormatID actualFormatID,
                                GLint samples,
                                VkImageUsageFlags usage,
                                VkImageCreateFlags additionalCreateFlags,
@@ -1526,6 +1527,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                 const MemoryProperties &memoryProperties,
                                 const gl::Extents &glExtents,
                                 const Format &format,
+                                angle::FormatID actualFormatID,
                                 VkImageUsageFlags usage,
                                 uint32_t layerCount);
     // Create an image for staging purposes.  Used by:
@@ -1538,6 +1540,7 @@ class ImageHelper final : public Resource, public angle::Subject
                               VkImageType imageType,
                               const VkExtent3D &extents,
                               const Format &format,
+                              angle::FormatID actualFormatID,
                               GLint samples,
                               VkImageUsageFlags usage,
                               uint32_t mipLevels,
@@ -1588,22 +1591,13 @@ class ImageHelper final : public Resource, public angle::Subject
     uint32_t getLayerCount() const { return mLayerCount; }
     uint32_t getLevelCount() const { return mLevelCount; }
     const Format &getFormat() const { return *mFormat; }
-    angle::FormatID getIntendedFormatID() const { return mFormat->intendedFormatID; }
-    const angle::Format &getIntendedFormat() const
-    {
-        return angle::Format::Get(mFormat->intendedFormatID);
-    }
-    angle::FormatID getActualFormatID() const { return mFormat->actualImageFormatID; }
-    VkFormat getActualVkFormat() const { return mFormat->actualImageVkFormat(); }
-    const angle::Format &getActualFormat() const
-    {
-        return angle::Format::Get(mFormat->actualImageFormatID);
-    }
+    angle::FormatID getIntendedFormatID() const { return mIntendedFormatID; }
+    const angle::Format &getIntendedFormat() const { return angle::Format::Get(mIntendedFormatID); }
+    angle::FormatID getActualFormatID() const { return mActualFormatID; }
+    VkFormat getActualVkFormat() const { return GetVkFormatFromFormatID(mActualFormatID); }
+    const angle::Format &getActualFormat() const { return angle::Format::Get(mActualFormatID); }
     bool hasEmulatedImageChannels() const;
-    bool hasEmulatedImageFormat() const
-    {
-        return mFormat->actualImageFormatID != mFormat->intendedFormatID;
-    }
+    bool hasEmulatedImageFormat() const { return mActualFormatID != mIntendedFormatID; }
     GLint getSamples() const { return mSamples; }
 
     ImageSerial getImageSerial() const
@@ -1743,7 +1737,8 @@ class ImageHelper final : public Resource, public angle::Subject
     angle::Result stageRobustResourceClearWithFormat(ContextVk *contextVk,
                                                      const gl::ImageIndex &index,
                                                      const gl::Extents &glExtents,
-                                                     const Format &format);
+                                                     const angle::Format &intendedFormat,
+                                                     const angle::Format &actualFormat);
     void stageRobustResourceClear(const gl::ImageIndex &index);
 
     // Stage the currently allocated image as updates to base level and on, making this !valid().
@@ -2085,6 +2080,8 @@ class ImageHelper final : public Resource, public angle::Subject
         VkFormat imageFormat,
         const VkImageViewUsageCreateInfo *imageViewUsageCreateInfo) const;
 
+    bool canCopyWithTransformForReadPixels(const PackPixelsParams &packPixelsParams,
+                                           const angle::Format *readFormat);
     // Vulkan objects.
     Image mImage;
     DeviceMemory mDeviceMemory;
@@ -2102,6 +2099,8 @@ class ImageHelper final : public Resource, public angle::Subject
     VkExtent3D mExtents;
     bool mRotatedAspectRatio;
     const Format *mFormat;
+    angle::FormatID mIntendedFormatID;
+    angle::FormatID mActualFormatID;
     GLint mSamples;
     ImageSerial mImageSerial;
 

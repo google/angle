@@ -191,16 +191,19 @@ void Format::initBufferFallback(RendererVk *renderer,
     }
 }
 
+bool HasEmulatedImageChannels(const angle::Format &intendedFormat,
+                              const angle::Format &actualFormat)
+{
+    return (intendedFormat.alphaBits == 0 && actualFormat.alphaBits > 0) ||
+           (intendedFormat.blueBits == 0 && actualFormat.blueBits > 0) ||
+           (intendedFormat.greenBits == 0 && actualFormat.greenBits > 0) ||
+           (intendedFormat.depthBits == 0 && actualFormat.depthBits > 0) ||
+           (intendedFormat.stencilBits == 0 && actualFormat.stencilBits > 0);
+}
+
 bool Format::hasEmulatedImageChannels() const
 {
-    const angle::Format &angleFmt   = intendedFormat();
-    const angle::Format &textureFmt = actualImageFormat();
-
-    return (angleFmt.alphaBits == 0 && textureFmt.alphaBits > 0) ||
-           (angleFmt.blueBits == 0 && textureFmt.blueBits > 0) ||
-           (angleFmt.greenBits == 0 && textureFmt.greenBits > 0) ||
-           (angleFmt.depthBits == 0 && textureFmt.depthBits > 0) ||
-           (angleFmt.stencilBits == 0 && textureFmt.stencilBits > 0);
+    return HasEmulatedImageChannels(intendedFormat(), actualImageFormat());
 }
 
 bool operator==(const Format &lhs, const Format &rhs)
@@ -224,12 +227,12 @@ void FormatTable::initialize(RendererVk *renderer,
 {
     for (size_t formatIndex = 0; formatIndex < angle::kNumANGLEFormats; ++formatIndex)
     {
-        Format &format                   = mFormatData[formatIndex];
-        const auto formatID              = static_cast<angle::FormatID>(formatIndex);
-        const angle::Format &angleFormat = angle::Format::Get(formatID);
+        Format &format                           = mFormatData[formatIndex];
+        const auto intendedFormatID              = static_cast<angle::FormatID>(formatIndex);
+        const angle::Format &intendedAngleFormat = angle::Format::Get(intendedFormatID);
 
-        format.initialize(renderer, angleFormat);
-        format.intendedFormatID = formatID;
+        format.initialize(renderer, intendedAngleFormat);
+        format.intendedFormatID = intendedFormatID;
 
         if (!format.valid())
         {
@@ -238,7 +241,7 @@ void FormatTable::initialize(RendererVk *renderer,
 
         gl::TextureCaps textureCaps;
         FillTextureFormatCaps(renderer, format.actualImageFormatID, &textureCaps);
-        outTextureCapsMap->set(formatID, textureCaps);
+        outTextureCapsMap->set(intendedFormatID, textureCaps);
 
         if (textureCaps.texturable)
         {
@@ -248,14 +251,14 @@ void FormatTable::initialize(RendererVk *renderer,
                 format.intendedGLFormat, format.actualImageFormatID);
         }
 
-        if (angleFormat.isBlock)
+        if (intendedAngleFormat.isBlock)
         {
             outCompressedTextureFormats->push_back(format.intendedGLFormat);
         }
     }
 }
 
-size_t GetImageCopyBufferAlignment(angle::FormatID formatID)
+size_t GetImageCopyBufferAlignment(angle::FormatID actualFormatID)
 {
     // vkCmdCopyBufferToImage must have an offset that is a multiple of 4 as well as a multiple
     // of the texel size (if uncompressed) or pixel block size (if compressed).
@@ -276,10 +279,10 @@ size_t GetImageCopyBufferAlignment(angle::FormatID formatID)
     // - else texelSize % 4 != 0 gives a 2x multiplier
     // - else there's no multiplier.
     //
-    const angle::Format &format = angle::Format::Get(formatID);
+    const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
 
-    ASSERT(format.pixelBytes != 0);
-    const size_t texelSize  = format.pixelBytes;
+    ASSERT(actualFormat.pixelBytes != 0);
+    const size_t texelSize  = actualFormat.pixelBytes;
     const size_t multiplier = texelSize % 2 != 0 ? 4 : texelSize % 4 != 0 ? 2 : 1;
     const size_t alignment  = multiplier * texelSize;
 
