@@ -566,11 +566,16 @@ class TestBatch():
         test_exe_path = os.path.join(args.out_dir, 'Capture', args.test_suite)
 
         extra_env = {
-            'ANGLE_CAPTURE_FRAME_END': '{}'.format(self.CAPTURE_FRAME_END),
-            'ANGLE_CAPTURE_SERIALIZE_STATE': '1',
-            'ANGLE_FEATURE_OVERRIDES_ENABLED': 'forceRobustResourceInit',
-            'ANGLE_CAPTURE_ENABLED': '1',
-            'ANGLE_CAPTURE_OUT_DIR': self.trace_folder_path,
+            'ANGLE_CAPTURE_FRAME_END':
+                '{}'.format(self.CAPTURE_FRAME_END),
+            'ANGLE_CAPTURE_SERIALIZE_STATE':
+                '1',
+            'ANGLE_FEATURE_OVERRIDES_ENABLED':
+                'forceRobustResourceInit:forceInitShaderOutputVariables',
+            'ANGLE_CAPTURE_ENABLED':
+                '1',
+            'ANGLE_CAPTURE_OUT_DIR':
+                self.trace_folder_path,
         }
 
         env = {**os.environ.copy(), **extra_env}

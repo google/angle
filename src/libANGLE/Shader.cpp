@@ -356,7 +356,7 @@ void Shader::compile(const Context *context)
         options |= SH_INIT_SHARED_VARIABLES;
     }
 
-    // Some targets (eg D3D11 Feature Level 9_3 and below) do not support non-constant loop
+    // Some targets (e.g. D3D11 Feature Level 9_3 and below) do not support non-constant loop
     // indexes in fragment shaders. Shader compilation will fail. To provide a better error
     // message we can instruct the compiler to pre-validate.
     if (mRendererLimitations.shadersRequireIndexedLoopValidation)
@@ -367,6 +367,11 @@ void Shader::compile(const Context *context)
     if (context->getFrontendFeatures().scalarizeVecAndMatConstructorArgs.enabled)
     {
         options |= SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS;
+    }
+
+    if (context->getFrontendFeatures().forceInitShaderOutputVariables.enabled)
+    {
+        options |= SH_INIT_OUTPUT_VARIABLES;
     }
 
     mCurrentMaxComputeWorkGroupInvocations =

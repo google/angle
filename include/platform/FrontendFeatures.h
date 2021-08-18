@@ -77,9 +77,16 @@ struct FrontendFeatures : angle::FeatureSetBase
         "enableCompressingPipelineCacheInThreadPool", angle::FeatureCategory::FrontendWorkarounds,
         "Enable compressing pipeline cache in thread pool.", &members, "http://anglebug.com/4722"};
 
+    // Forces on robust resource init. Useful for some tests to avoid undefined values.
     angle::Feature forceRobustResourceInit = {
-        "forceRobustResourceInit", angle::FeatureCategory::FrontendWorkarounds,
+        "forceRobustResourceInit", angle::FeatureCategory::FrontendFeatures,
         "Force-enable robust resource init", &members, "http://anglebug.com/6041"};
+
+    // Forces on shader output initialization to avoid undefined values in tests. Normally this
+    // feature is only enabled for WebGL.
+    angle::Feature forceInitShaderOutputVariables = {
+        "forceInitShaderOutputVariables", angle::FeatureCategory::FrontendFeatures,
+        "Force-enable shader output variable initialization", &members};
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;
