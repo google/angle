@@ -2020,8 +2020,8 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(state.getVertexArray());
                 bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getNativeState());
 
-                propagateProgramToVAO(context, state.getProgram(),
-                                      GetImplAs<VertexArrayGL>(state.getVertexArray()));
+                ANGLE_TRY(propagateProgramToVAO(context, state.getProgram(),
+                                                GetImplAs<VertexArrayGL>(state.getVertexArray())));
 
                 if (mFeatures.syncVertexArraysToDefault.enabled)
                 {
@@ -2104,8 +2104,8 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 if (!program ||
                     !program->getExecutable().hasLinkedShaderStage(gl::ShaderType::Compute))
                 {
-                    propagateProgramToVAO(context, program,
-                                          GetImplAs<VertexArrayGL>(state.getVertexArray()));
+                    ANGLE_TRY(propagateProgramToVAO(
+                        context, program, GetImplAs<VertexArrayGL>(state.getVertexArray())));
                 }
                 break;
             }
@@ -2427,13 +2427,13 @@ void StateManagerGL::setTextureCubemapSeamlessEnabled(bool enabled)
     }
 }
 
-void StateManagerGL::propagateProgramToVAO(const gl::Context *context,
-                                           const gl::Program *program,
-                                           VertexArrayGL *vao)
+angle::Result StateManagerGL::propagateProgramToVAO(const gl::Context *context,
+                                                    const gl::Program *program,
+                                                    VertexArrayGL *vao)
 {
     if (vao == nullptr)
     {
-        return;
+        return angle::Result::Continue;
     }
 
     // Number of views:
@@ -2444,15 +2444,17 @@ void StateManagerGL::propagateProgramToVAO(const gl::Context *context,
         {
             programNumViews = program->getNumViews();
         }
-        vao->applyNumViewsToDivisor(context, programNumViews);
+        ANGLE_TRY(vao->applyNumViewsToDivisor(context, programNumViews));
     }
 
     // Attribute enabled mask:
     if (program)
     {
-        vao->applyActiveAttribLocationsMask(
-            context, program->getExecutable().getActiveAttribLocationsMask());
+        ANGLE_TRY(vao->applyActiveAttribLocationsMask(
+            context, program->getExecutable().getActiveAttribLocationsMask()));
     }
+
+    return angle::Result::Continue;
 }
 
 void StateManagerGL::updateMultiviewBaseViewLayerIndexUniformImpl(

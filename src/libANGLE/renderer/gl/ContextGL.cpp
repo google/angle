@@ -234,7 +234,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *cont
                                             first, count, instanceCount));
 
 #if defined(ANGLE_STATE_VALIDATION_ENABLED)
-        vaoGL->validateState(context);
+        ANGLE_TRY(vaoGL->validateState(context));
 #endif  // ANGLE_STATE_VALIDATION_ENABLED
     }
     else if (features.shiftInstancedArrayDataWithExtraOffset.enabled && first == 0)
@@ -244,7 +244,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *cont
         const gl::State &glState   = context->getState();
         const gl::VertexArray *vao = glState.getVertexArray();
         const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
-        vaoGL->recoverForcedStreamingAttributesForDrawArraysInstanced(context);
+        ANGLE_TRY(vaoGL->recoverForcedStreamingAttributesForDrawArraysInstanced(context));
     }
 
     if (features.setPrimitiveRestartFixedIndexForDrawArrays.enabled)
@@ -275,7 +275,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
         // There might be instanced arrays that are forced streaming for drawArraysInstanced
         // They cannot be ELEMENT_ARRAY_BUFFER
         const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
-        vaoGL->recoverForcedStreamingAttributesForDrawArraysInstanced(context);
+        ANGLE_TRY(vaoGL->recoverForcedStreamingAttributesForDrawArraysInstanced(context));
     }
 
     if (stateCache.hasAnyActiveClientAttrib() || vao->getElementArrayBuffer() == nullptr)
@@ -300,7 +300,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
 
 #if defined(ANGLE_STATE_VALIDATION_ENABLED)
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
-    vaoGL->validateState(context);
+    ANGLE_TRY(vaoGL->validateState(context));
 #endif  // ANGLE_STATE_VALIDATION_ENABLED
 
     return angle::Result::Continue;
