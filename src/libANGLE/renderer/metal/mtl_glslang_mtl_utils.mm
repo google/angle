@@ -172,7 +172,7 @@ std::string updateShaderAttributes(std::string shaderSourceIn, const gl::Program
             for (int i = 0; i < regs; i++)
             {
                 stream.str("");
-                stream << attribute.name << "_" << std::to_string(i)
+                stream << " " << attribute.name << "_" << std::to_string(i)
                        << sh::kUnassignedAttributeString;
                 attributeBindings.insert({std::string(stream.str()), i + attribute.location});
             }
@@ -180,7 +180,7 @@ std::string updateShaderAttributes(std::string shaderSourceIn, const gl::Program
         else
         {
             stream.str("");
-            stream << attribute.name << sh::kUnassignedAttributeString;
+            stream << " " << attribute.name << sh::kUnassignedAttributeString;
             attributeBindings.insert({std::string(stream.str()), attribute.location});
         }
     }
