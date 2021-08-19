@@ -822,7 +822,7 @@ TEST_P(ProgramBinaryTest, SRGBDecodeWithSamplerAndTexelFetchTest)
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinaryES3Test);
-ANGLE_INSTANTIATE_TEST_ES3_AND(ProgramBinaryES3Test, WithDirectMetalGeneration(ES3_METAL()));
+ANGLE_INSTANTIATE_TEST_ES3(ProgramBinaryES3Test);
 
 class ProgramBinaryES31Test : public ANGLETest
 {
