@@ -5173,7 +5173,7 @@ void FrameCaptureShared::checkForCaptureTrigger()
         mCaptureStartFrame = mFrameIndex + 1;
 
         // Use the original trigger value as the frame count
-        mCaptureEndFrame = mCaptureStartFrame + mCaptureTrigger;
+        mCaptureEndFrame = mCaptureStartFrame + mCaptureTrigger - 1;
 
         INFO() << "Capture triggered after frame " << mFrameIndex << " for " << mCaptureTrigger
                << " frames";
