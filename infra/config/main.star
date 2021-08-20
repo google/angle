@@ -357,9 +357,11 @@ angle_builder("winuwp-x64-rel", debug = False, cpu = "x64", toolchain = "msvc", 
 angle_builder("linux-trace-rel", debug = False, cpu = "x64", test_mode = "trace_tests")
 angle_builder("win-trace-rel", debug = False, cpu = "x64", test_mode = "trace_tests")
 
-angle_builder("android-perf", debug = False, cpu = "arm64")
-angle_builder("linux-perf", debug = False, cpu = "x64")
-angle_builder("win-perf", debug = False, cpu = "x64")
+angle_builder("android-pixel4-perf", debug = False, cpu = "arm64")
+angle_builder("linux-intel-hd630-perf", debug = False, cpu = "x64")
+angle_builder("linux-nvidia-p400-perf", debug = False, cpu = "x64")
+angle_builder("win10-intel-hd630-perf", debug = False, cpu = "x64")
+angle_builder("win10-nvidia-p400-perf", debug = False, cpu = "x64")
 
 # Views
 
