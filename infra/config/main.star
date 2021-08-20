@@ -187,6 +187,9 @@ def get_os_from_name(name):
         return os.MAC
     return os.MAC
 
+def get_gpu_type_from_builder_name(name):
+    return name.split("-")[1]
+
 # Adds both the CI and Try standalone builders.
 def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode = "compile_and_test"):
     properties = {
@@ -246,7 +249,12 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
     else:
         os_name = config_os.console_name
 
-    short_name = "dbg" if debug else "rel"
+    if is_perf:
+        short_name = get_gpu_type_from_builder_name(name)
+    elif debug:
+        short_name = "dbg"
+    else:
+        short_name = "rel"
 
     luci.console_view_entry(
         console_view = "ci",
