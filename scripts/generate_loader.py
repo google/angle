@@ -319,13 +319,14 @@ trace_gles_preamble = """#if defined(GL_GLES_PROTOTYPES) && GL_GLES_PROTOTYPES
 #endif  // defined(GL_GLES_PROTOTYPES)
 
 #include "angle_gl.h"
-#include "restricted_traces_autogen.h"
+#include "restricted_traces_export.h"
 """
 
-trace_egl_preamble = """#include "restricted_traces_autogen.h"
-
+trace_egl_preamble = """
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+
+#include "restricted_traces_export.h"
 """
 
 util_wgl_preamble = """

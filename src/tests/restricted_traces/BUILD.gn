@@ -9,6 +9,7 @@ import("../../../gni/angle.gni")
 angle_shared_library("angle_restricted_trace_loader") {
   sources = [
     "restricted_traces_autogen.h",
+    "restricted_traces_export.h",
     "trace_egl_loader_autogen.cpp",
     "trace_egl_loader_autogen.h",
     "trace_gles_loader_autogen.cpp",
@@ -52,6 +53,7 @@ angle_shared_library("angle_restricted_traces") {
   sources = [
     "restricted_traces_autogen.cpp",
     "restricted_traces_autogen.h",
+    "restricted_traces_export.h",
   ]
 
   data_deps = _traces

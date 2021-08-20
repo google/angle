@@ -6,7 +6,7 @@
   "scripts/egl_angle_ext.xml":
     "5bcc01462b355d933cf3ada15198fb68",
   "scripts/generate_loader.py":
-    "22eee9c55261d30f7718123c89549c55",
+    "b95f0518351e08bf17240279b2681a6c",
   "scripts/gl.xml":
     "e99461f683ac14cbb1eac57ad73db0e8",
   "scripts/gl_angle_ext.xml":
@@ -22,11 +22,11 @@
   "src/tests/restricted_traces/trace_egl_loader_autogen.cpp":
     "ab1ce9e72e1e248b13302349f2228a89",
   "src/tests/restricted_traces/trace_egl_loader_autogen.h":
-    "c912fbb18f691ab4b2694089cfd668d5",
+    "30b75afa44eb620baaf98c0fb1641634",
   "src/tests/restricted_traces/trace_gles_loader_autogen.cpp":
     "a8629018bc1abd495c29bfcfdaec3a07",
   "src/tests/restricted_traces/trace_gles_loader_autogen.h":
-    "3deef846019511bb5ad15c9d4e6c276f",
+    "b799b834e9e5adf94faec51451406726",
   "util/egl_loader_autogen.cpp":
     "ad2bc908fbd69d8a1406320a4f5142c8",
   "util/egl_loader_autogen.h":

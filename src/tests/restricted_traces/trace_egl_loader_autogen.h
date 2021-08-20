@@ -11,10 +11,10 @@
 #ifndef ANGLE_RESTRICTED_TRACES_EGL_LOADER_AUTOGEN_H_
 #define ANGLE_RESTRICTED_TRACES_EGL_LOADER_AUTOGEN_H_
 
-#include "restricted_traces_autogen.h"
-
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+
+#include "restricted_traces_export.h"
 
 #define eglChooseConfig t_eglChooseConfig
 #define eglCopyBuffers t_eglCopyBuffers

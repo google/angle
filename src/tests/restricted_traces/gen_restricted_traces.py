@@ -39,42 +39,15 @@ HEADER_TEMPLATE = """\
 //
 // {filename}: Types and enumerations for trace tests.
 
-#ifndef ANGLE_RESTRICTED_TRACES_H_
-#define ANGLE_RESTRICTED_TRACES_H_
+#ifndef ANGLE_RESTRICTED_TRACES_AUTOGEN_H_
+#define ANGLE_RESTRICTED_TRACES_AUTOGEN_H_
 
 #include <cstdint>
 #include <vector>
 #include <KHR/khrplatform.h>
 #include <EGL/egl.h>
 
-// See util/util_export.h for details on import/export labels.
-#if !defined(ANGLE_TRACE_EXPORT)
-#    if defined(_WIN32)
-#        if defined(ANGLE_TRACE_IMPLEMENTATION)
-#            define ANGLE_TRACE_EXPORT __declspec(dllexport)
-#        else
-#            define ANGLE_TRACE_EXPORT __declspec(dllimport)
-#        endif
-#    elif defined(__GNUC__)
-#        define ANGLE_TRACE_EXPORT __attribute__((visibility("default")))
-#    else
-#        define ANGLE_TRACE_EXPORT
-#    endif
-#endif  // !defined(ANGLE_TRACE_EXPORT)
-
-#if !defined(ANGLE_TRACE_LOADER_EXPORT)
-#    if defined(_WIN32)
-#        if defined(ANGLE_TRACE_LOADER_IMPLEMENTATION)
-#            define ANGLE_TRACE_LOADER_EXPORT __declspec(dllexport)
-#        else
-#            define ANGLE_TRACE_LOADER_EXPORT __declspec(dllimport)
-#        endif
-#    elif defined(__GNUC__)
-#        define ANGLE_TRACE_LOADER_EXPORT __attribute__((visibility("default")))
-#    else
-#        define ANGLE_TRACE_LOADER_EXPORT
-#    endif
-#endif  // !defined(ANGLE_TRACE_LOADER_EXPORT)
+#include "restricted_traces_export.h"
 
 namespace trace_angle
 {{
@@ -112,7 +85,7 @@ struct TraceInfo
 ANGLE_TRACE_EXPORT const TraceInfo &GetTraceInfo(RestrictedTraceID traceID);
 }}  // namespace angle
 
-#endif  // ANGLE_RESTRICTED_TRACES_H_
+#endif  // ANGLE_RESTRICTED_TRACES_AUTOGEN_H_
 """
 
 SOURCE_TEMPLATE = """\
@@ -181,7 +154,7 @@ def get_angledata_filename(trace):
     angledata_files = glob.glob('%s/%s*angledata.gz' % (trace, trace))
     assert len(angledata_files) == 1, "Trace '%s' has %d angledata.gz files" % (
         trace, len(angledata_files))
-    return angledata_files[0]
+    return angledata_files[0].replace('\\', '/')
 
 
 def gen_gni(traces, gni_file, format_args):

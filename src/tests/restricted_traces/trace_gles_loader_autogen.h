@@ -16,7 +16,7 @@
 #endif  // defined(GL_GLES_PROTOTYPES)
 
 #include "angle_gl.h"
-#include "restricted_traces_autogen.h"
+#include "restricted_traces_export.h"
 
 #define glAlphaFunc t_glAlphaFunc
 #define glClipPlanef t_glClipPlanef

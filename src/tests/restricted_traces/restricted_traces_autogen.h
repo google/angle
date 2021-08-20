@@ -7,42 +7,15 @@
 //
 // restricted_traces_autogen: Types and enumerations for trace tests.
 
-#ifndef ANGLE_RESTRICTED_TRACES_H_
-#define ANGLE_RESTRICTED_TRACES_H_
+#ifndef ANGLE_RESTRICTED_TRACES_AUTOGEN_H_
+#define ANGLE_RESTRICTED_TRACES_AUTOGEN_H_
 
 #include <EGL/egl.h>
 #include <KHR/khrplatform.h>
 #include <cstdint>
 #include <vector>
 
-// See util/util_export.h for details on import/export labels.
-#if !defined(ANGLE_TRACE_EXPORT)
-#    if defined(_WIN32)
-#        if defined(ANGLE_TRACE_IMPLEMENTATION)
-#            define ANGLE_TRACE_EXPORT __declspec(dllexport)
-#        else
-#            define ANGLE_TRACE_EXPORT __declspec(dllimport)
-#        endif
-#    elif defined(__GNUC__)
-#        define ANGLE_TRACE_EXPORT __attribute__((visibility("default")))
-#    else
-#        define ANGLE_TRACE_EXPORT
-#    endif
-#endif  // !defined(ANGLE_TRACE_EXPORT)
-
-#if !defined(ANGLE_TRACE_LOADER_EXPORT)
-#    if defined(_WIN32)
-#        if defined(ANGLE_TRACE_LOADER_IMPLEMENTATION)
-#            define ANGLE_TRACE_LOADER_EXPORT __declspec(dllexport)
-#        else
-#            define ANGLE_TRACE_LOADER_EXPORT __declspec(dllimport)
-#        endif
-#    elif defined(__GNUC__)
-#        define ANGLE_TRACE_LOADER_EXPORT __attribute__((visibility("default")))
-#    else
-#        define ANGLE_TRACE_LOADER_EXPORT
-#    endif
-#endif  // !defined(ANGLE_TRACE_LOADER_EXPORT)
+#include "restricted_traces_export.h"
 
 namespace trace_angle
 {
@@ -179,4 +152,4 @@ struct TraceInfo
 ANGLE_TRACE_EXPORT const TraceInfo &GetTraceInfo(RestrictedTraceID traceID);
 }  // namespace angle
 
-#endif  // ANGLE_RESTRICTED_TRACES_H_
+#endif  // ANGLE_RESTRICTED_TRACES_AUTOGEN_H_
