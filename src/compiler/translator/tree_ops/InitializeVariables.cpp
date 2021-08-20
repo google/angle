@@ -176,7 +176,7 @@ void InsertInitCode(TCompiler *compiler,
         ImmutableString tempVariableName(var.name.c_str(), var.name.length());
 
         TIntermTyped *initializedSymbol = nullptr;
-        if (var.isBuiltIn())
+        if (var.isBuiltIn() && !symbolTable->findUserDefined(tempVariableName))
         {
             initializedSymbol =
                 ReferenceBuiltInVariable(tempVariableName, *symbolTable, shaderVersion);
