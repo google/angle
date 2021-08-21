@@ -895,6 +895,8 @@ ANGLE_EXPORT void GL_APIENTRY GL_PrimitiveBoundingBoxEXT(GLfloat minX,
 
 // GL_EXT_protected_textures
 
+// GL_EXT_pvrtc_sRGB
+
 // GL_EXT_read_format_bgra
 
 // GL_EXT_robustness
@@ -1171,6 +1173,10 @@ ANGLE_EXPORT void GL_APIENTRY GL_TexStorage3DEXT(GLenum target,
                                                  GLsizei height,
                                                  GLsizei depth);
 
+// GL_IMG_texture_compression_pvrtc
+
+// GL_IMG_texture_compression_pvrtc2
+
 // GL_KHR_blend_equation_advanced
 ANGLE_EXPORT void GL_APIENTRY GL_BlendBarrierKHR();
 
@@ -1222,6 +1228,12 @@ ANGLE_EXPORT void GL_APIENTRY GL_PushDebugGroupKHR(GLenum source,
 
 // GL_KHR_parallel_shader_compile
 ANGLE_EXPORT void GL_APIENTRY GL_MaxShaderCompilerThreadsKHR(GLuint count);
+
+// GL_KHR_texture_compression_astc_hdr
+
+// GL_KHR_texture_compression_astc_ldr
+
+// GL_KHR_texture_compression_astc_sliced_3d
 
 // GL_NV_fence
 ANGLE_EXPORT void GL_APIENTRY GL_DeleteFencesNV(GLsizei n, const GLuint *fences);

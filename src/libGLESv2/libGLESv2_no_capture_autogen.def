@@ -718,6 +718,8 @@ EXPORTS
 
     ; GL_EXT_protected_textures
 
+    ; GL_EXT_pvrtc_sRGB
+
     ; GL_EXT_read_format_bgra
 
     ; GL_EXT_robustness
@@ -835,6 +837,10 @@ EXPORTS
     glTexStorage2DEXT
     glTexStorage3DEXT
 
+    ; GL_IMG_texture_compression_pvrtc
+
+    ; GL_IMG_texture_compression_pvrtc2
+
     ; GL_KHR_blend_equation_advanced
     glBlendBarrierKHR
 
@@ -853,6 +859,12 @@ EXPORTS
 
     ; GL_KHR_parallel_shader_compile
     glMaxShaderCompilerThreadsKHR
+
+    ; GL_KHR_texture_compression_astc_hdr
+
+    ; GL_KHR_texture_compression_astc_ldr
+
+    ; GL_KHR_texture_compression_astc_sliced_3d
 
     ; GL_NV_fence
     glDeleteFencesNV

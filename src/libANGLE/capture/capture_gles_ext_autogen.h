@@ -1275,6 +1275,8 @@ angle::CallCapture CapturePrimitiveBoundingBoxEXT(const State &glState,
 
 // GL_EXT_protected_textures
 
+// GL_EXT_pvrtc_sRGB
+
 // GL_EXT_read_format_bgra
 
 // GL_EXT_robustness
@@ -1729,6 +1731,10 @@ angle::CallCapture CaptureTexStorage3DEXT(const State &glState,
                                           GLsizei height,
                                           GLsizei depth);
 
+// GL_IMG_texture_compression_pvrtc
+
+// GL_IMG_texture_compression_pvrtc2
+
 // GL_KHR_blend_equation_advanced
 angle::CallCapture CaptureBlendBarrierKHR(const State &glState, bool isCallValid);
 
@@ -1804,6 +1810,12 @@ angle::CallCapture CapturePushDebugGroupKHR(const State &glState,
 angle::CallCapture CaptureMaxShaderCompilerThreadsKHR(const State &glState,
                                                       bool isCallValid,
                                                       GLuint count);
+
+// GL_KHR_texture_compression_astc_hdr
+
+// GL_KHR_texture_compression_astc_ldr
+
+// GL_KHR_texture_compression_astc_sliced_3d
 
 // GL_NV_fence
 angle::CallCapture CaptureDeleteFencesNV(const State &glState,

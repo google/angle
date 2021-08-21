@@ -8,11 +8,11 @@
   "scripts/generate_loader.py":
     "22eee9c55261d30f7718123c89549c55",
   "scripts/gl.xml":
-    "4fcbd11300c8edcb3ed50826780cd57e",
+    "e99461f683ac14cbb1eac57ad73db0e8",
   "scripts/gl_angle_ext.xml":
     "08f74b35d908b7c02b45fdf45572c434",
   "scripts/registry_xml.py":
-    "d81cbf2dfb6161645177343e87b0d848",
+    "79b3dff3906f5189cb35d720902212de",
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/libEGL/egl_loader_autogen.cpp":

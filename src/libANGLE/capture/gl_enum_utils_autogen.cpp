@@ -2590,6 +2590,22 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_RGB16F";
                 case 0x88F0:
                     return "GL_DEPTH24_STENCIL8";
+                case 0x8A54:
+                    return "GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT";
+                case 0x8A55:
+                    return "GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT";
+                case 0x8A56:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT";
+                case 0x8A57:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT";
+                case 0x8C00:
+                    return "GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG";
+                case 0x8C01:
+                    return "GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG";
+                case 0x8C02:
+                    return "GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG";
+                case 0x8C03:
+                    return "GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG";
                 case 0x8C3A:
                     return "GL_R11F_G11F_B10F";
                 case 0x8C3D:
@@ -2666,6 +2682,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_RGBA8_SNORM";
                 case 0x906F:
                     return "GL_RGB10_A2UI";
+                case 0x9137:
+                    return "GL_COMPRESSED_RGBA_PVRTC_2BPPV2_IMG";
+                case 0x9138:
+                    return "GL_COMPRESSED_RGBA_PVRTC_4BPPV2_IMG";
                 case 0x9270:
                     return "GL_COMPRESSED_R11_EAC";
                 case 0x9271:
@@ -2686,6 +2706,66 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_COMPRESSED_RGBA8_ETC2_EAC";
                 case 0x9279:
                     return "GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC";
+                case 0x93B0:
+                    return "GL_COMPRESSED_RGBA_ASTC_4x4_KHR";
+                case 0x93B1:
+                    return "GL_COMPRESSED_RGBA_ASTC_5x4_KHR";
+                case 0x93B2:
+                    return "GL_COMPRESSED_RGBA_ASTC_5x5_KHR";
+                case 0x93B3:
+                    return "GL_COMPRESSED_RGBA_ASTC_6x5_KHR";
+                case 0x93B4:
+                    return "GL_COMPRESSED_RGBA_ASTC_6x6_KHR";
+                case 0x93B5:
+                    return "GL_COMPRESSED_RGBA_ASTC_8x5_KHR";
+                case 0x93B6:
+                    return "GL_COMPRESSED_RGBA_ASTC_8x6_KHR";
+                case 0x93B7:
+                    return "GL_COMPRESSED_RGBA_ASTC_8x8_KHR";
+                case 0x93B8:
+                    return "GL_COMPRESSED_RGBA_ASTC_10x5_KHR";
+                case 0x93B9:
+                    return "GL_COMPRESSED_RGBA_ASTC_10x6_KHR";
+                case 0x93BA:
+                    return "GL_COMPRESSED_RGBA_ASTC_10x8_KHR";
+                case 0x93BB:
+                    return "GL_COMPRESSED_RGBA_ASTC_10x10_KHR";
+                case 0x93BC:
+                    return "GL_COMPRESSED_RGBA_ASTC_12x10_KHR";
+                case 0x93BD:
+                    return "GL_COMPRESSED_RGBA_ASTC_12x12_KHR";
+                case 0x93D0:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR";
+                case 0x93D1:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR";
+                case 0x93D2:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR";
+                case 0x93D3:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR";
+                case 0x93D4:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR";
+                case 0x93D5:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR";
+                case 0x93D6:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR";
+                case 0x93D7:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR";
+                case 0x93D8:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR";
+                case 0x93D9:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR";
+                case 0x93DA:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR";
+                case 0x93DB:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR";
+                case 0x93DC:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR";
+                case 0x93DD:
+                    return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR";
+                case 0x93F0:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV2_IMG";
+                case 0x93F1:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV2_IMG";
                 default:
                     return UnknownGLenumToString(value);
             }

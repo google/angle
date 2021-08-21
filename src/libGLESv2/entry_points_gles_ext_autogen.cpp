@@ -5485,6 +5485,8 @@ void GL_APIENTRY GL_PrimitiveBoundingBoxEXT(GLfloat minX,
 
 // GL_EXT_protected_textures
 
+// GL_EXT_pvrtc_sRGB
+
 // GL_EXT_read_format_bgra
 
 // GL_EXT_robustness
@@ -7612,6 +7614,10 @@ void GL_APIENTRY GL_TexStorage3DEXT(GLenum target,
     }
 }
 
+// GL_IMG_texture_compression_pvrtc
+
+// GL_IMG_texture_compression_pvrtc2
+
 // GL_KHR_blend_equation_advanced
 void GL_APIENTRY GL_BlendBarrierKHR()
 {
@@ -7979,6 +7985,12 @@ void GL_APIENTRY GL_MaxShaderCompilerThreadsKHR(GLuint count)
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_KHR_texture_compression_astc_hdr
+
+// GL_KHR_texture_compression_astc_ldr
+
+// GL_KHR_texture_compression_astc_sliced_3d
 
 // GL_NV_fence
 void GL_APIENTRY GL_DeleteFencesNV(GLsizei n, const GLuint *fences)
