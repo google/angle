@@ -8,8 +8,8 @@
 
 #include <gtest/gtest.h>
 
-#include "EGLMultiThreadSteps.h"
 #include "test_utils/ANGLETest.h"
+#include "test_utils/MultiThreadSteps.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"

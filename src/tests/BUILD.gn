@@ -109,6 +109,7 @@ template("angle_common_test_utils") {
     ]
     sources = [
       "$angle_root/third_party/renderdoc/src/renderdoc_app.h",
+      "test_utils/MultiThreadSteps.h",
       "test_utils/RenderDoc.cpp",
       "test_utils/RenderDoc.h",
       "test_utils/angle_test_configs.cpp",
