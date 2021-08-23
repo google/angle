@@ -446,8 +446,9 @@ double ANGLEPerfTest::printResults()
     // Output histogram JSON set format if enabled.
     double secondsPerStep = elapsedTimeSeconds[0] / static_cast<double>(mTrialNumStepsPerformed);
     double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
-    TestSuite::GetInstance()->addHistogramSample(
-        mName + mBackend, mStory, secondsPerIteration * kMilliSecondsPerSecond, "msBestFitFormat");
+    TestSuite::GetInstance()->addHistogramSample(mName + mBackend, mStory,
+                                                 secondsPerIteration * kMilliSecondsPerSecond,
+                                                 "ms_smallerIsBetter");
     return retValue;
 }
 
