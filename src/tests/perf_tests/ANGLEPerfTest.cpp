@@ -462,7 +462,7 @@ void ANGLEPerfTest::calibrateStepsToRun(RunLoopPolicy policy)
 
     double elapsedTime = mTimer.getElapsedTime();
 
-    // Scale steps down according to the time that exeeded one second.
+    // Scale steps down according to the time that exceeded one second.
     double scale = gCalibrationTimeSeconds / elapsedTime;
     mStepsToRun  = static_cast<unsigned int>(static_cast<double>(mTrialNumStepsPerformed) * scale);
     mStepsToRun  = std::max(1, mStepsToRun);
@@ -760,7 +760,7 @@ void ANGLERenderTest::SetUp()
     if (mStepsToRun <= 0)
     {
         // Ensure we always call Finish when calibrating Render tests. This completes our work
-        // beween calibration measurements.
+        // between calibration measurements.
         calibrateStepsToRun(RunLoopPolicy::FinishEveryStep);
     }
 }
