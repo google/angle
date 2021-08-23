@@ -119,8 +119,7 @@
 2715 LINUX VULKAN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgb888_depth_stencil = FAIL
 2715 LINUX VULKAN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgb888_no_depth_no_stencil = FAIL
 2716 LINUX VULKAN : dEQP-EGL.functional.preserve_swap.no_preserve.* = FAIL
-5753 LINUX VULKAN NVIDIA : dEQP-EGL.functional.resize.surface_size.grow = FAIL
-5884 LINUX VULKAN NVIDIA : dEQP-EGL.functional.resize.surface_size.stretch_width = FAIL
+5753 LINUX VULKAN : dEQP-EGL.functional.resize.surface_size.* = FAIL
 
 // Mac failures
 2546 MAC : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
