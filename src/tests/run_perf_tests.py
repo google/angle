@@ -38,6 +38,8 @@ DEFAULT_LOG = 'info'
 DEFAULT_SAMPLES = 5
 DEFAULT_TRIALS = 3
 DEFAULT_MAX_ERRORS = 3
+DEFAULT_WARMUP_LOOPS = 3
+DEFAULT_CALIBRATION_TIME = 3
 
 # Filters out stuff like: " I   72.572s run_tests_on_device(96071FFAZ00096) "
 ANDROID_LOGGING_PREFIX = r'I +\d+.\d+s \w+\(\w+\)  '
@@ -211,6 +213,18 @@ def main():
         default=DEFAULT_MAX_ERRORS)
     parser.add_argument(
         '--smoke-test-mode', help='Do a quick run to validate correctness.', action='store_true')
+    parser.add_argument(
+        '--warmup-loops',
+        help='Number of warmup loops to run in the perf test. Default is %d.' %
+        DEFAULT_WARMUP_LOOPS,
+        type=int,
+        default=DEFAULT_WARMUP_LOOPS)
+    parser.add_argument(
+        '--calibration-time',
+        help='Amount of time to spend each loop in calibration and warmup. Default is %d seconds.'
+        % DEFAULT_CALIBRATION_TIME,
+        type=int,
+        default=DEFAULT_CALIBRATION_TIME)
 
     args, extra_flags = parser.parse_known_args()
     logging.basicConfig(level=args.log.upper(), stream=sys.stdout)
@@ -273,11 +287,17 @@ def main():
             '--skip-clear-data',
             '--use-existing-test-data',
             '--verbose',
+            '--calibration-time',
+            str(args.calibration_time),
         ]
         if args.steps_per_trial:
             steps_per_trial = args.steps_per_trial
         else:
-            cmd_calibrate = cmd + ['--calibration']
+            cmd_calibrate = cmd + [
+                '--calibration',
+                '--warmup-loops',
+                str(args.warmup_loops),
+            ]
             calibrate_output = _run_and_get_output(args, cmd_calibrate, env)
             if not calibrate_output:
                 logging.error('Failed to get calibration output')
@@ -308,6 +328,8 @@ def main():
             ]
             if args.smoke_test_mode:
                 cmd_run += ['--no-warmup']
+            else:
+                cmd_run += ['--warmup-loops', str(args.warmup_loops)]
             with common.temporary_file() as histogram_file_path:
                 cmd_run += ['--isolated-script-test-perf-output=%s' % histogram_file_path]
                 output = _run_and_get_output(args, cmd_run, env)
