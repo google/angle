@@ -332,8 +332,8 @@ const ShCompileOptions SH_ADD_VULKAN_XFB_EXTENSION_SUPPORT_CODE = UINT64_C(1) <<
 const ShCompileOptions SH_INIT_FRAGMENT_OUTPUT_VARIABLES = UINT64_C(1) << 57;
 
 // Transitory flag to select between producing SPIR-V directly vs using glslang.  Ignored in
-// non-assert-enabled builds to avoid increasing ANGLE's binary size while both generators coexist.
-const ShCompileOptions SH_GENERATE_SPIRV_DIRECTLY = UINT64_C(1) << 58;
+// non-assert-enabled builds to avoid increasing ANGLE's binary size.
+const ShCompileOptions SH_GENERATE_SPIRV_THROUGH_GLSLANG = UINT64_C(1) << 58;
 
 // Insert explicit casts for float/double/unsigned/signed int on macOS 10.15 with Intel driver
 const ShCompileOptions SH_ADD_EXPLICIT_BOOL_CASTS = UINT64_C(1) << 59;

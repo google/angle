@@ -636,7 +636,6 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterMemoryBarrier)
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(AtomicCounterBufferTest);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(AtomicCounterBufferTest31);
 ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(AtomicCounterBufferTest);
-ANGLE_INSTANTIATE_TEST_ES31_AND(AtomicCounterBufferTest31,
-                                WithDirectSPIRVGeneration(ES31_VULKAN()));
+ANGLE_INSTANTIATE_TEST_ES31(AtomicCounterBufferTest31);
 
 }  // namespace

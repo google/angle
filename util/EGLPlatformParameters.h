@@ -65,7 +65,7 @@ struct EGLPlatformParameters
                         robustness, emulatedPrerotation, asyncCommandQueueFeatureVulkan,
                         hasExplicitMemBarrierFeatureMtl, hasCheapRenderPassFeatureMtl,
                         forceBufferGPUStorageFeatureMtl, supportsVulkanViewportFlip, emulatedVAOs,
-                        directSPIRVGeneration, captureLimits, forceRobustResourceInit,
+                        generateSPIRVThroughGlslang, captureLimits, forceRobustResourceInit,
                         directMetalGeneration, forceInitShaderVariables, forceVulkanFallbackFormat);
     }
 
@@ -89,7 +89,7 @@ struct EGLPlatformParameters
     EGLint forceBufferGPUStorageFeatureMtl        = EGL_DONT_CARE;
     EGLint supportsVulkanViewportFlip             = EGL_DONT_CARE;
     EGLint emulatedVAOs                           = EGL_DONT_CARE;
-    EGLint directSPIRVGeneration                  = EGL_DONT_CARE;
+    EGLint generateSPIRVThroughGlslang            = EGL_DONT_CARE;
     EGLint captureLimits                          = EGL_DONT_CARE;
     EGLint forceRobustResourceInit                = EGL_DONT_CARE;
     EGLint directMetalGeneration                  = EGL_DONT_CARE;

@@ -1854,8 +1854,7 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GeometryShaderTest);
 ANGLE_INSTANTIATE_TEST_ES31_AND(GeometryShaderTest,
                                 WithEmulatedPrerotation(ES31_VULKAN(), 90),
                                 WithEmulatedPrerotation(ES31_VULKAN(), 180),
-                                WithEmulatedPrerotation(ES31_VULKAN(), 270),
-                                WithDirectSPIRVGeneration(ES31_VULKAN()));
+                                WithEmulatedPrerotation(ES31_VULKAN(), 270));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GeometryShaderTestES32);
 ANGLE_INSTANTIATE_TEST_ES32(GeometryShaderTestES32);

@@ -293,11 +293,11 @@ inline PlatformParameters WithEmulatedVAOs(const PlatformParameters &params)
     return emualtedVAOParams;
 }
 
-inline PlatformParameters WithDirectSPIRVGeneration(const PlatformParameters &params)
+inline PlatformParameters WithGlslang(const PlatformParameters &params)
 {
-    PlatformParameters directSPIRVGeneration                  = params;
-    directSPIRVGeneration.eglParameters.directSPIRVGeneration = EGL_TRUE;
-    return directSPIRVGeneration;
+    PlatformParameters generateSPIRVThroughGlslang                        = params;
+    generateSPIRVThroughGlslang.eglParameters.generateSPIRVThroughGlslang = EGL_TRUE;
+    return generateSPIRVThroughGlslang;
 }
 
 inline PlatformParameters WithDirectMetalGeneration(const PlatformParameters &params)

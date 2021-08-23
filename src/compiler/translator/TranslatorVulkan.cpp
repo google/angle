@@ -1349,8 +1349,6 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
 {
     TInfoSinkBase sink;
 
-    bool enablePrecision = (compileOptions & SH_IGNORE_PRECISION_QUALIFIERS) == 0;
-
     SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
 
     if ((compileOptions & SH_USE_SPECIALIZATION_CONSTANT) != 0)
@@ -1372,34 +1370,36 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
         }
     }
 
-#if defined(ANGLE_ENABLE_DIRECT_SPIRV_GENERATION)
-    if ((compileOptions & SH_GENERATE_SPIRV_DIRECTLY) != 0)
+#if defined(ANGLE_ENABLE_SPIRV_GENERATION_THROUGH_GLSLANG)
+    if ((compileOptions & SH_GENERATE_SPIRV_THROUGH_GLSLANG) != 0)
     {
-        // Declare the implicitly defined gl_PerVertex I/O blocks if not already.  This will help
-        // SPIR-V generation treat them mostly like usual I/O blocks.
-        if (!DeclarePerVertexBlocks(this, root, &getSymbolTable()))
+        // When generating text, glslang cannot know the precision of folded constants so it may
+        // infer the wrong precisions.  The following transformation gives constants names with
+        // precision to guide glslang.  This is not an issue for SPIR-V generation because the
+        // precision information is present in the tree already.
+        if (!RecordConstantPrecision(this, root, &getSymbolTable()))
         {
             return false;
         }
 
-        return OutputSPIRV(this, root, compileOptions);
+        const bool enablePrecision = (compileOptions & SH_IGNORE_PRECISION_QUALIFIERS) == 0;
+
+        // Write translated shader.
+        TOutputVulkanGLSL outputGLSL(this, sink, enablePrecision, compileOptions);
+        root->traverse(&outputGLSL);
+
+        return compileToSpirv(sink);
     }
 #endif
 
-    // When generating text, glslang cannot know the precision of folded constants so it may infer
-    // the wrong precisions.  The following transformation gives constants names with precision to
-    // guide glslang.  This is not an issue for SPIR-V generation because the precision information
-    // is present in the tree already.
-    if (!RecordConstantPrecision(this, root, &getSymbolTable()))
+    // Declare the implicitly defined gl_PerVertex I/O blocks if not already.  This will help SPIR-V
+    // generation treat them mostly like usual I/O blocks.
+    if (!DeclarePerVertexBlocks(this, root, &getSymbolTable()))
     {
         return false;
     }
 
-    // Write translated shader.
-    TOutputVulkanGLSL outputGLSL(this, sink, enablePrecision, compileOptions);
-    root->traverse(&outputGLSL);
-
-    return compileToSpirv(sink);
+    return OutputSPIRV(this, root, compileOptions);
 }
 
 bool TranslatorVulkan::shouldFlattenPragmaStdglInvariantAll()

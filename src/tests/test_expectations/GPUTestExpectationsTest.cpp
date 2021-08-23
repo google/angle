@@ -39,8 +39,7 @@ class GPUTestConfigTest : public ANGLETest
 
     void validateConfigAPI(const GPUTestConfig &config,
                            const GPUTestConfig::API &api,
-                           uint32_t preRotation,
-                           bool enableDirectSPIRVGen)
+                           uint32_t preRotation)
     {
         bool D3D9      = false;
         bool D3D11     = false;
@@ -106,8 +105,6 @@ class GPUTestConfigTest : public ANGLETest
                 EXPECT_FALSE(config.getConditions()[GPUTestConfig::kConditionPreRotation270]);
                 break;
         }
-
-        EXPECT_EQ(enableDirectSPIRVGen, config.getConditions()[GPUTestConfig::kConditionSPIRVGen]);
     }
 };
 
@@ -123,62 +120,56 @@ TEST_P(GPUTestConfigTest, GPUTestConfigConditions)
 // condition flags are set correctly.
 TEST_P(GPUTestConfigTest, GPUTestConfigConditions_D3D9)
 {
-    GPUTestConfig config(GPUTestConfig::kAPID3D9, 0, false);
-    validateConfigAPI(config, GPUTestConfig::kAPID3D9, 0, false);
+    GPUTestConfig config(GPUTestConfig::kAPID3D9, 0);
+    validateConfigAPI(config, GPUTestConfig::kAPID3D9, 0);
 }
 
 TEST_P(GPUTestConfigTest, GPUTestConfigConditions_D3D11)
 {
-    GPUTestConfig config(GPUTestConfig::kAPID3D11, 0, false);
-    validateConfigAPI(config, GPUTestConfig::kAPID3D11, 0, false);
+    GPUTestConfig config(GPUTestConfig::kAPID3D11, 0);
+    validateConfigAPI(config, GPUTestConfig::kAPID3D11, 0);
 }
 
 TEST_P(GPUTestConfigTest, GPUTestConfigConditions_Metal)
 {
-    GPUTestConfig config(GPUTestConfig::kAPIMetal, 0, false);
-    validateConfigAPI(config, GPUTestConfig::kAPIMetal, 0, false);
+    GPUTestConfig config(GPUTestConfig::kAPIMetal, 0);
+    validateConfigAPI(config, GPUTestConfig::kAPIMetal, 0);
 }
 
 TEST_P(GPUTestConfigTest, GPUTestConfigConditions_GLDesktop)
 {
-    GPUTestConfig config(GPUTestConfig::kAPIGLDesktop, 0, false);
-    validateConfigAPI(config, GPUTestConfig::kAPIGLDesktop, 0, false);
+    GPUTestConfig config(GPUTestConfig::kAPIGLDesktop, 0);
+    validateConfigAPI(config, GPUTestConfig::kAPIGLDesktop, 0);
 }
 
 TEST_P(GPUTestConfigTest, GPUTestConfigConditions_GLES)
 {
-    GPUTestConfig config(GPUTestConfig::kAPIGLES, 0, false);
-    validateConfigAPI(config, GPUTestConfig::kAPIGLES, 0, false);
+    GPUTestConfig config(GPUTestConfig::kAPIGLES, 0);
+    validateConfigAPI(config, GPUTestConfig::kAPIGLES, 0);
 }
 
 TEST_P(GPUTestConfigTest, GPUTestConfigConditions_Vulkan)
 {
-    GPUTestConfig config(GPUTestConfig::kAPIVulkan, 0, false);
-    validateConfigAPI(config, GPUTestConfig::kAPIVulkan, 0, false);
+    GPUTestConfig config(GPUTestConfig::kAPIVulkan, 0);
+    validateConfigAPI(config, GPUTestConfig::kAPIVulkan, 0);
 }
 
 TEST_P(GPUTestConfigTest, GPUTestConfigConditions_Vulkan_PreRotation90)
 {
-    GPUTestConfig config(GPUTestConfig::kAPIVulkan, 90, false);
-    validateConfigAPI(config, GPUTestConfig::kAPIVulkan, 90, false);
+    GPUTestConfig config(GPUTestConfig::kAPIVulkan, 90);
+    validateConfigAPI(config, GPUTestConfig::kAPIVulkan, 90);
 }
 
 TEST_P(GPUTestConfigTest, GPUTestConfigConditions_Vulkan_PreRotation180)
 {
-    GPUTestConfig config(GPUTestConfig::kAPIVulkan, 180, false);
-    validateConfigAPI(config, GPUTestConfig::kAPIVulkan, 180, false);
+    GPUTestConfig config(GPUTestConfig::kAPIVulkan, 180);
+    validateConfigAPI(config, GPUTestConfig::kAPIVulkan, 180);
 }
 
 TEST_P(GPUTestConfigTest, GPUTestConfigConditions_Vulkan_PreRotation270)
 {
-    GPUTestConfig config(GPUTestConfig::kAPIVulkan, 270, false);
-    validateConfigAPI(config, GPUTestConfig::kAPIVulkan, 270, false);
-}
-
-TEST_P(GPUTestConfigTest, GPUTestConfigConditions_Vulkan_PreRotation270_DirectSPIRVGen)
-{
-    GPUTestConfig config(GPUTestConfig::kAPIVulkan, 270, true);
-    validateConfigAPI(config, GPUTestConfig::kAPIVulkan, 270, true);
+    GPUTestConfig config(GPUTestConfig::kAPIVulkan, 270);
+    validateConfigAPI(config, GPUTestConfig::kAPIVulkan, 270);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

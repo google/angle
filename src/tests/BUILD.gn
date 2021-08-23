@@ -189,9 +189,7 @@ angle_test("angle_unittests") {
   ]
 
   if (angle_enable_vulkan) {
-    if (angle_enable_direct_spirv_gen) {
-      sources += [ "compiler_tests/Precise_test.cpp" ]
-    }
+    sources += [ "compiler_tests/Precise_test.cpp" ]
     deps += [
       "$angle_root/src/common/spirv:angle_spirv_base",
       "$angle_root/src/common/spirv:angle_spirv_headers",

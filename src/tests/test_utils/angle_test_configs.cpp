@@ -283,9 +283,9 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_EmulatedVAOs";
     }
 
-    if (pp.eglParameters.directSPIRVGeneration == EGL_TRUE)
+    if (pp.eglParameters.generateSPIRVThroughGlslang == EGL_TRUE)
     {
-        stream << "_DirectSPIRVGen";
+        stream << "_Glslang";
     }
 
     if (pp.eglParameters.directMetalGeneration == EGL_TRUE)

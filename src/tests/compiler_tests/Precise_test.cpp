@@ -75,15 +75,12 @@ class PreciseTest : public testing::TestWithParam<bool>
             << " could not be constructed.";
     }
 
-    bool isDirectSPIRVGen() const { return GetParam(); }
-
     testing::AssertionResult TestShaderCompile(ShShaderOutput shaderOutputType,
                                                const char *shaderSource)
     {
         const char *shaderStrings[] = {shaderSource};
 
-        const ShCompileOptions options =
-            SH_VARIABLES | SH_OBJECT_CODE | (isDirectSPIRVGen() ? SH_GENERATE_SPIRV_DIRECTLY : 0);
+        const ShCompileOptions options = SH_VARIABLES | SH_OBJECT_CODE;
 
         bool success = sh::Compile(mCompilerList[shaderOutputType], shaderStrings, 1, options);
         if (success)
@@ -165,7 +162,7 @@ void PreciseTest::ValidateDecorations(const spirv::Blob &blob,
 }
 
 // Test that precise on a local variable works.
-TEST_P(PreciseTest, LocalVariable)
+TEST_F(PreciseTest, LocalVariable)
 {
     constexpr char kVS[] = R"(#version 320 es
 
@@ -200,17 +197,8 @@ void main()
 }
 
 // Test that precise on gl_Position works.
-TEST_P(PreciseTest, Position)
+TEST_F(PreciseTest, Position)
 {
-    if (!isDirectSPIRVGen())
-    {
-        // glslang doesn't apply NoContraction to dot(), while its code seemingly means to.  Unclear
-        // whether dot() requires NoContraction.
-        // https://github.com/KhronosGroup/glslang/issues/2708
-        std::cout << "Test skipped on glslang" << std::endl;
-        return;
-    }
-
     constexpr char kVS[] = R"(#version 320 es
 
 uniform float u;
@@ -243,7 +231,7 @@ void main()
 }
 
 // Test that precise on struct member works.
-TEST_P(PreciseTest, StructMember)
+TEST_F(PreciseTest, StructMember)
 {
     constexpr char kVS[] = R"(#version 320 es
 
@@ -299,7 +287,7 @@ void main()
 }
 
 // Test that precise on function parameters and return value works.
-TEST_P(PreciseTest, Functions)
+TEST_F(PreciseTest, Functions)
 {
     constexpr char kVS[] = R"(#version 320 es
 
@@ -355,16 +343,8 @@ void main()
 }
 
 // Test that struct constructors only apply precise to the precise fields.
-TEST_P(PreciseTest, StructConstructor)
+TEST_F(PreciseTest, StructConstructor)
 {
-    if (!isDirectSPIRVGen())
-    {
-        // glslang doesn't apply NoContraction through constructor arguments correctly.
-        // https://github.com/KhronosGroup/glslang/issues/2709
-        std::cout << "Test skipped on glslang" << std::endl;
-        return;
-    }
-
     constexpr char kVS[] = R"(#version 320 es
 
 uniform float u;
@@ -415,16 +395,8 @@ void main()
 
 // Test that function call arguments become precise when the return value is assigned to a precise
 // object.
-TEST_P(PreciseTest, FunctionParams)
+TEST_F(PreciseTest, FunctionParams)
 {
-    if (!isDirectSPIRVGen())
-    {
-        // glslang doesn't apply NoContraction through function arguments correctly.
-        // https://github.com/KhronosGroup/glslang/issues/2710
-        std::cout << "Test skipped on glslang" << std::endl;
-        return;
-    }
-
     constexpr char kVS[] = R"(#version 320 es
 
 uniform float u;
@@ -482,7 +454,5 @@ void main()
     InitializeCompiler();
     TestShaderCompile(kVS, 16);
 }
-
-INSTANTIATE_TEST_SUITE_P(, PreciseTest, testing::Bool());
 
 }  // anonymous namespace

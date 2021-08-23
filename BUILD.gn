@@ -609,12 +609,19 @@ template("translator_lib") {
       deps += [
         "$angle_root/src/common/spirv:angle_spirv_base",
         "$angle_root/src/common/spirv:angle_spirv_builder",
-        "${angle_glslang_dir}:glslang_default_resource_limits_sources",
-        "${angle_glslang_dir}:glslang_lib_sources",
         "${angle_spirv_headers_dir}:spv_headers",
         "${angle_spirv_tools_dir}:spvtools_headers",
         "${angle_spirv_tools_dir}:spvtools_val",
       ]
+
+      if (angle_enable_spirv_gen_through_glslang) {
+        defines += [ "ANGLE_ENABLE_SPIRV_GENERATION_THROUGH_GLSLANG" ]
+        sources += [ "src/compiler/translator/glslang_wrapper.cpp" ]
+        deps += [
+          "${angle_glslang_dir}:glslang_default_resource_limits_sources",
+          "${angle_glslang_dir}:glslang_lib_sources",
+        ]
+      }
     }
 
     public_deps = [

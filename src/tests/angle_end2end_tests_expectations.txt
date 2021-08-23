@@ -13,19 +13,17 @@
 6073 OPENGL : ProgramInterfaceTestES31.ReloadFromCacheShouldNotCrash/ES3_1_OpenGL__cached = SKIP
 6073 GLES : ProgramInterfaceTestES31.ReloadFromCacheShouldNotCrash/ES3_1_OpenGLES__cached = SKIP
 6142 VULKAN : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
-6153 VULKAN WIN INTEL : GLSLTest_ES31.StructAndArrayEqualOperator/ES3_1_Vulkan_DirectSPIRVGen = SKIP
-6153 VULKAN PIXEL4ORXL : GLSLTest_ES31.StructAndArrayEqualOperator/ES3_1_Vulkan_DirectSPIRVGen = SKIP
-6344 PIXEL4ORXL : GLSLTest_ES31_InitShaderVariables.InitIOBlockWithStruct/ES3_1_Vulkan_InitShaderVars = SKIP
-6344 PIXEL4ORXL : GLSLTest_ES31_InitShaderVariables.InitIOBlockWithComplexTypes/ES3_1_Vulkan_InitShaderVars = SKIP
+6153 VULKAN WIN INTEL : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
+6153 VULKAN PIXEL4ORXL : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 6347 OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_BlitCopyTexImage/* = SKIP
 6347 OPENGL : FramebufferTestWithFormatFallback.RGBA4444_BlitCopyTexImage/* = SKIP
 6347 GLES : FramebufferTestWithFormatFallback.R5G5B5A1_BlitCopyTexImage/* = SKIP
 6347 GLES : FramebufferTestWithFormatFallback.RGBA4444_BlitCopyTexImage/* = SKIP
 
 // Direct SPIR-V generation.  The following tests pass on some platforms but not others.  Need to investigate.
-4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/ES3_1_Vulkan_DirectSPIRVGen = SKIP
-4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/ES3_1_Vulkan_DirectSPIRVGen = SKIP
-4889 VULKAN : GLSLTest_ES31.VaryingTessellationSampleInAndOut/ES3_1_Vulkan_DirectSPIRVGen = SKIP
+4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/* = SKIP
+4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/* = SKIP
+4889 VULKAN : GLSLTest_ES31.VaryingTessellationSampleInAndOut/* = SKIP
 
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
@@ -81,6 +79,8 @@
 // the test says.  The test also fails on Intel/Vulkan/Windows.
 6068 INTEL VULKAN : MultiviewRenderPrimitiveTest.LineLoop/* = SKIP
 6068 INTEL VULKAN : MultiviewRenderPrimitiveTest.LineStrip/* = SKIP
+// Fails on older mesa in some sequence of test
+6563 LINUX INTEL VULKAN : TransformFeedbackTest.EndWithDifferentProgram/* = SKIP
 
 // Mac
 
@@ -227,6 +227,9 @@
 200067929 NEXUS5X GLES : ShaderStorageBufferTest31.ShaderStorageBufferReadWriteAndBufferSubData/* = SKIP
 
 // Pixel 4 expectations.
+6344 PIXEL4ORXL : GLSLTest_ES31_InitShaderVariables.InitIOBlockWithStruct/ES3_1_Vulkan_InitShaderVars = SKIP
+6344 PIXEL4ORXL : GLSLTest_ES31_InitShaderVariables.InitIOBlockWithComplexTypes/ES3_1_Vulkan_InitShaderVars = SKIP
+
 5981 PIXEL4ORXL GLES : BlitFramebufferTest.BlitSRGBToRGBOversizedDestArea/* = SKIP
 5981 PIXEL4ORXL GLES : CopyTexImageTest.CopyTexSubImageFrom3DTexureOES/* = SKIP
 5981 PIXEL4ORXL GLES : CubeMapTextureTest.SampleCoordinateTransform/* = SKIP
@@ -330,11 +333,16 @@
 
 // AMD windows failures.  The GPU and driver on our bots are very old and buggy.
 // http://crbug.com/1224996
-4889 WIN AMD VULKAN : GLSLTest.StructWithInitializer/ES2_Vulkan_DirectSPIRVGen = SKIP
-4889 WIN AMD VULKAN : GLSLTest.StructWithUniformInitializer/ES2_Vulkan_DirectSPIRVGen = SKIP
-4889 WIN AMD VULKAN : GLSLTest_ES3.ValidIndexClampES300/ES3_Vulkan_DirectSPIRVGen = SKIP
-4889 WIN AMD VULKAN : GLSLTest_ES3.InitGlobalComplexConstant/ES3_Vulkan_DirectSPIRVGen = SKIP
-4889 WIN AMD VULKAN : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
+1224996 WIN AMD VULKAN : BootAnimationTest.DefaultBootAnimation/* = SKIP
+1224996 WIN AMD VULKAN : DrawTextureTest.Basic/* = SKIP
+1224996 WIN AMD VULKAN : DrawTextureTest.ColorArrayNotUsed/* = SKIP
+1224996 WIN AMD VULKAN : DrawTextureTest.CorrectNdcForOddViewportDimensions/* = SKIP
+1224996 WIN AMD VULKAN : DrawTextureTest.VertexAttributesNoCrash/* = SKIP
+1224996 WIN AMD VULKAN : GLSLTest.StructWithInitializer/* = SKIP
+1224996 WIN AMD VULKAN : GLSLTest.StructWithUniformInitializer/* = SKIP
+1224996 WIN AMD VULKAN : GLSLTest_ES3.ValidIndexClampES300/* = SKIP
+1224996 WIN AMD VULKAN : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
+1224996 WIN AMD VULKAN : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 
 // Test is disabled as it only pertains to desktop GLSL
 6197 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP

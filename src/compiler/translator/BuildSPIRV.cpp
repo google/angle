@@ -2227,7 +2227,7 @@ void SPIRVBuilder::writeExecutionModes(spirv::Blob *blob)
     }
 
     // Add any execution modes that were added due to built-ins used in the shader.
-    for (uint32_t executionMode : mExecutionModes)
+    for (size_t executionMode : mExecutionModes)
     {
         spirv::WriteExecutionMode(blob, mEntryPointId,
                                   static_cast<spv::ExecutionMode>(executionMode), {});

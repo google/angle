@@ -99,9 +99,9 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         compileOptions |= SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE;
     }
 
-    if (contextVk->getFeatures().directSPIRVGeneration.enabled)
+    if (contextVk->getFeatures().generateSPIRVThroughGlslang.enabled)
     {
-        compileOptions |= SH_GENERATE_SPIRV_DIRECTLY;
+        compileOptions |= SH_GENERATE_SPIRV_THROUGH_GLSLANG;
     }
 
     return compileImpl(context, compilerInstance, mState.getSource(), compileOptions | options);

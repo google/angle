@@ -126,8 +126,7 @@ TEST_P(APPLEClipDistanceTest, CompileSucceedsWithoutExtSupportVulkan)
     })";
     const char *shaderStrings[]  = {kNoClipCull};
 
-    bool success =
-        sh::Compile(mCompiler, shaderStrings, 1, SH_OBJECT_CODE | SH_GENERATE_SPIRV_DIRECTLY);
+    bool success = sh::Compile(mCompiler, shaderStrings, 1, SH_OBJECT_CODE);
     if (success)
     {
         ::testing::AssertionSuccess() << "Compilation success";

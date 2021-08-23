@@ -40,7 +40,6 @@ enum class dEQPTestResult
 struct dEQPOptions
 {
     uint32_t preRotation;
-    bool enableDirectSPIRVGen;  // TODO: remove when no longer needed.  http://anglebug.com/6210
     bool enableRenderDocCapture;
 };
 

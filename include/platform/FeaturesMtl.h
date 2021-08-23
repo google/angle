@@ -103,12 +103,6 @@ struct FeaturesMtl : FeatureSetBase
         "macOS), force using GPU memory allocation for buffers everytime or not.",
         &members};
 
-    // Whether SPIR-V should be generated directly instead of through glslang.  Transitory feature
-    // until the work is complete.
-    Feature directSPIRVGeneration = {"directSPIRVGeneration", FeatureCategory::MetalFeatures,
-                                     "Direct translation to SPIR-V.", &members,
-                                     "http://anglebug.com/4889"};
-
     // Generate Metal directly instead of generating SPIR-V and then using SPIR-V Cross.  Transitory
     // feature until the work is complete.
     Feature directMetalGeneration = {"directMetalGeneration", FeatureCategory::MetalFeatures,

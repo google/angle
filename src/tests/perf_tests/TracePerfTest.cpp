@@ -690,6 +690,12 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
 
         // TODO: http://anglebug.com/4731 This extension is missing on older Intel drivers.
         addExtensionPrerequisite("GL_OES_EGL_image_external");
+
+        // Flaky on Intel/windows http://anglebug.com/6568
+        if (IsWindows() && IsIntel())
+        {
+            mSkipTest = true;
+        }
     }
 
     if (traceNameIs("brawl_stars"))

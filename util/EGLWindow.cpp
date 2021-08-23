@@ -278,9 +278,9 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         enabledFeatureOverrides.push_back("asynchronousCommandProcessing");
     }
 
-    if (params.directSPIRVGeneration == EGL_TRUE)
+    if (params.generateSPIRVThroughGlslang == EGL_TRUE)
     {
-        enabledFeatureOverrides.push_back("directSPIRVGeneration");
+        enabledFeatureOverrides.push_back("generateSPIRVThroughGlslang");
     }
 
     if (params.directMetalGeneration == EGL_TRUE)

@@ -38,9 +38,7 @@ namespace tcu
 class ANGLEPlatform : public tcu::Platform, private glu::Platform, private eglu::Platform
 {
   public:
-    ANGLEPlatform(angle::LogErrorFunc logErrorFunc,
-                  uint32_t preRotation,
-                  bool enableDirectSPIRVGen);
+    ANGLEPlatform(angle::LogErrorFunc logErrorFunc, uint32_t preRotation);
     ~ANGLEPlatform();
 
     bool processEvents() override;
@@ -68,8 +66,6 @@ class ANGLEPlatform : public tcu::Platform, private glu::Platform, private eglu:
 
 }  // namespace tcu
 
-tcu::Platform *CreateANGLEPlatform(angle::LogErrorFunc logErrorFunc,
-                                   uint32_t preRotation,
-                                   bool enableDirectSPIRVGen);
+tcu::Platform *CreateANGLEPlatform(angle::LogErrorFunc logErrorFunc, uint32_t preRotation);
 
 #endif  // TCU_ANGLE_PLATFORM_H_
