@@ -887,6 +887,30 @@ def GetPlatformForSkip(platform):
     return platform_map.get(platform, "UNKNOWN")
 
 
+def CheckNoPassResult(batch, expectation, result_type, unexpected_test_results):
+    unexpected = 0
+    for test in batch:
+        if test not in expectation.keys():
+            unexpected += 1
+            unexpected_test_results[test] = "{} (expected Pass or is new test)".format(result_type)
+        else:
+            expected_result = expectation[test]
+            if expected_result != result_type:
+                unexpected += 1
+                unexpected_test_results[test] = "{} (expected {})".format(
+                    result_type, expected_result)
+    return unexpected
+
+
+def CheckPassResult(batch, expectation, unexpected_test_results):
+    unexpected = 0
+    for test in batch:
+        if test in expectation.keys():
+            unexpected += 1
+            unexpected_test_results[test] = "Pass (expected {})".format(expectation[test])
+    return unexpected
+
+
 def main(args, platform):
     logger = multiprocessing.log_to_stderr()
     logger.setLevel(level=args.log.upper())
@@ -943,11 +967,12 @@ def main(args, platform):
         compile_failed_count = 0
         skipped_count = 0
 
-        failed_tests = []
-        timed_out_tests = []
-        crashed_tests = []
-        compile_failed_tests = []
-        skipped_tests = []
+        unexpected_passed_count = 0
+        unexpected_failed_count = 0
+        unexpected_timedout_count = 0
+        unexpected_crashed_count = 0
+        unexpected_compile_failed_count = 0
+        unexpected_skipped_count = 0
 
         # result list is created by manager and can be shared by multiple processes. Each
         # subprocess populates the result list with the results of its test runs. After all
@@ -994,7 +1019,7 @@ def main(args, platform):
         logger.info("\n\n\n")
         logger.info("Results:")
 
-        test_results = {}
+        unexpected_test_results = {}
         flaky_results = []
 
         for test_batch_result in result_list:
@@ -1006,73 +1031,66 @@ def main(args, platform):
             compile_failed_count += len(test_batch_result.compile_fails)
             skipped_count += len(test_batch_result.skips)
 
-            for failed_test in test_batch_result.fails:
-                failed_tests.append(failed_test)
-                test_results[failed_test] = "Fail"
+            stable_pass = []
+            stable_fail = []
 
-            for timeout_test in test_batch_result.timeouts:
-                timed_out_tests.append(timeout_test)
-                test_results[timeout_test] = "Timeout"
+            for test in test_batch_result.passes:
+                if test_expectation.IsFlaky(test):
+                    flaky_results.append("{} (Pass)".format(test))
+                else:
+                    stable_pass.append(test)
 
-            for crashed_test in test_batch_result.crashes:
-                crashed_tests.append(crashed_test)
-                test_results[crashed_test] = "Crashed"
+            for test in test_batch_result.fails:
+                if test_expectation.IsFlaky(test):
+                    flaky_results.append("{} (Fail)".format(test))
+                else:
+                    stable_fail.append(test)
 
-            for compile_failed_test in test_batch_result.compile_fails:
-                compile_failed_tests.append(compile_failed_test)
-                test_results[compile_failed_test] = "CompileFailed"
+            unexpected_failed_count += CheckNoPassResult(stable_fail, test_expectation_for_list,
+                                                         "Fail", unexpected_test_results)
+            unexpected_passed_count += CheckPassResult(stable_pass, test_expectation_for_list,
+                                                       unexpected_test_results)
 
-            for skipped_test in test_batch_result.skips:
-                skipped_tests.append(skipped_test)
-                test_results[skipped_test] = "Skipped"
+            unexpected_crashed_count += CheckNoPassResult(test_batch_result.crashes,
+                                                          test_expectation_for_list, "Crash",
+                                                          unexpected_test_results)
+            unexpected_timedout_count += CheckNoPassResult(test_batch_result.timeouts,
+                                                           test_expectation_for_list, "Timeout",
+                                                           unexpected_test_results)
+            unexpected_compile_failed_count += CheckNoPassResult(test_batch_result.compile_fails,
+                                                                 test_expectation_for_list,
+                                                                 "CompileFailed",
+                                                                 unexpected_test_results)
+            unexpected_skipped_count += CheckNoPassResult(test_batch_result.skips,
+                                                          test_expectation_for_list, "Skip",
+                                                          unexpected_test_results)
 
-            for passed_test in test_batch_result.passes:
-                if test_expectation.IsFlaky(passed_test):
-                    flaky_results.append("  {} (Pass)".format(passed_test))
-
-        test_result = []
-        for test, result in sorted(test_results.items()):
-            if not test_expectation.IsFlaky(test):
-                test_result.append("{} {}\n".format(test, result))
-            else:
-                flaky_results.append("  {} ({})".format(test, result))
-
-        expected_result = []
-        expected_result_map = sorted(test_expectation_for_list.items())
-        for test, result in expected_result_map:
-            if test in test_names:
-                expected_result.append("{} {}\n".format(test, result))
+        logger.info("")
+        logger.info("Elapsed time: %.2lf seconds" % (end_time - start_time))
+        logger.info("")
 
         if len(flaky_results):
-            logger.info("\n\nFlaky test(s):")
+            logger.info("")
+            logger.info("  Flaky test(s):")
             for line in flaky_results:
-                logger.info(line)
+                logger.info("    {}".format(line))
 
-        logger.info("\n\n")
-        logger.info("Elapsed time: %.2lf seconds" % (end_time - start_time))
         logger.info(
             "Passed: %d, Comparison Failed: %d, Crashed: %d, CompileFailed %d, Skipped: %d, Timeout: %d"
             % (passed_count, failed_count, crashed_count, compile_failed_count, skipped_count,
                timedout_count))
 
-        result_diff = difflib.unified_diff(
-            expected_result,
-            test_result,
-            fromfile="expected result",
-            tofile="obtained result",
-            n=0)
+        retval = EXIT_SUCCESS
 
-        diff_lines = 0
-        for line in result_diff:
-            if line is not None:
-                logger.info(line.rstrip("\n"))
-                diff_lines = diff_lines + 1
-
-        if diff_lines == 0:
-            retval = EXIT_SUCCESS
-        else:
-            logger.info("\nFailure: Obtained results differed from expectation")
+        if len(unexpected_test_results) > 0:
             retval = EXIT_FAILURE
+            logger.info("")
+            logger.info("Failure: Obtained results differed from expectation:")
+
+            for t, r in unexpected_test_results.items():
+                logger.info("  {} {}".format(t, r))
+
+        logger.info("\n\n")
 
         # delete generated folders if --keep_temp_files flag is set to false
         if args.purge:
