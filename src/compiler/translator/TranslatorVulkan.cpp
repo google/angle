@@ -349,11 +349,11 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationVS(TCompiler *compiler,
     // Convert NDC to window coordinates. According to Vulkan spec.
     // "vec2 window = 0.5 * viewport.wh * (ndc + 1) + viewport.xy"
     TIntermBinary *ndcPlusOne =
-        new TIntermBinary(EOpAdd, CreateTempSymbolNode(ndc), CreateFloatNode(1.0f));
+        new TIntermBinary(EOpAdd, CreateTempSymbolNode(ndc), CreateFloatNode(1.0f, EbpMedium));
     TIntermSwizzle *viewportZW = CreateSwizzle(viewportRef, 2, 3);
     TIntermBinary *ndcViewport = new TIntermBinary(EOpMul, viewportZW, ndcPlusOne);
     TIntermBinary *ndcViewportHalf =
-        new TIntermBinary(EOpVectorTimesScalar, ndcViewport, CreateFloatNode(0.5f));
+        new TIntermBinary(EOpVectorTimesScalar, ndcViewport, CreateFloatNode(0.5f, EbpMedium));
     TIntermSwizzle *viewportXY     = CreateSwizzle(viewportRef->deepCopy(), 0, 1);
     TIntermBinary *ndcToWindow     = new TIntermBinary(EOpAdd, ndcViewportHalf, viewportXY);
     TVariable *windowCoords        = CreateTempVariable(symbolTable, vec2Type);
@@ -361,8 +361,9 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationVS(TCompiler *compiler,
 
     // Clamp to subpixel grid.
     // "vec2 clamped = round(window * 2^{subpixelBits}) / 2^{subpixelBits}"
-    int subpixelBits                    = compiler->getResources().SubPixelBits;
-    TIntermConstantUnion *scaleConstant = CreateFloatNode(static_cast<float>(1 << subpixelBits));
+    int subpixelBits = compiler->getResources().SubPixelBits;
+    TIntermConstantUnion *scaleConstant =
+        CreateFloatNode(static_cast<float>(1 << subpixelBits), EbpHigh);
     TIntermBinary *windowScaled =
         new TIntermBinary(EOpVectorTimesScalar, CreateTempSymbolNode(windowCoords), scaleConstant);
     TIntermTyped *windowRounded =
@@ -378,9 +379,10 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationVS(TCompiler *compiler,
     TIntermBinary *clampedOffset = new TIntermBinary(
         EOpSub, CreateTempSymbolNode(clampedWindowCoords), viewportXY->deepCopy());
     TIntermBinary *clampedOff2x =
-        new TIntermBinary(EOpVectorTimesScalar, clampedOffset, CreateFloatNode(2.0f));
+        new TIntermBinary(EOpVectorTimesScalar, clampedOffset, CreateFloatNode(2.0f, EbpMedium));
     TIntermBinary *clampedDivided = new TIntermBinary(EOpDiv, clampedOff2x, viewportZW->deepCopy());
-    TIntermBinary *clampedNDC    = new TIntermBinary(EOpSub, clampedDivided, CreateFloatNode(1.0f));
+    TIntermBinary *clampedNDC =
+        new TIntermBinary(EOpSub, clampedDivided, CreateFloatNode(1.0f, EbpMedium));
     TIntermSymbol *varyingRef    = new TIntermSymbol(anglePosition);
     TIntermBinary *varyingAssign = new TIntermBinary(EOpAssign, varyingRef, clampedNDC);
 
@@ -694,7 +696,7 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationFS(TCompiler *compiler,
     TIntermSwizzle *viewportXY    = CreateSwizzle(viewportRef->deepCopy(), 0, 1);
     TIntermSwizzle *viewportZW    = CreateSwizzle(viewportRef, 2, 3);
     TIntermSymbol *position       = new TIntermSymbol(anglePosition);
-    TIntermConstantUnion *oneHalf = CreateFloatNode(0.5f);
+    TIntermConstantUnion *oneHalf = CreateFloatNode(0.5f, EbpMedium);
     TIntermBinary *halfPosition   = new TIntermBinary(EOpVectorTimesScalar, position, oneHalf);
     TIntermBinary *offsetHalfPosition =
         new TIntermBinary(EOpAdd, halfPosition, oneHalf->deepCopy());
@@ -748,7 +750,7 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationFS(TCompiler *compiler,
     // lines are exactly vertical or horizontal.
     static constexpr float kEpsilon   = 0.0001f;
     static constexpr float kThreshold = 0.5 + kEpsilon;
-    TIntermConstantUnion *threshold   = CreateFloatNode(kThreshold);
+    TIntermConstantUnion *threshold   = CreateFloatNode(kThreshold, EbpHigh);
 
     // if (i.x > (0.5 + e) && i.y > (0.5 + e))
     TIntermSwizzle *ix     = CreateSwizzle(new TIntermSymbol(i), 0);
@@ -1102,7 +1104,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                 {
                     flipNegXY = driverUniforms->getNegFlipXYRef();
                 }
-                TIntermConstantUnion *pivot = CreateFloatNode(0.5f);
+                TIntermConstantUnion *pivot = CreateFloatNode(0.5f, EbpMedium);
                 TIntermTyped *fragRotation  = nullptr;
                 if (usePreRotation)
                 {
@@ -1128,7 +1130,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                 {
                     flipXY = driverUniforms->getFlipXYRef();
                 }
-                TIntermConstantUnion *pivot = CreateFloatNode(0.5f);
+                TIntermConstantUnion *pivot = CreateFloatNode(0.5f, EbpMedium);
                 TIntermTyped *fragRotation  = nullptr;
                 if (usePreRotation)
                 {

@@ -73,10 +73,10 @@ TIntermAggregate *CreateMat2x2(const Mat2x2EnumMap &matrix, vk::SurfaceRotation 
 {
     auto mat2Type = new TType(EbtFloat, 2, 2);
     TIntermSequence mat2Args;
-    mat2Args.push_back(CreateFloatNode(matrix[rotation][0]));
-    mat2Args.push_back(CreateFloatNode(matrix[rotation][1]));
-    mat2Args.push_back(CreateFloatNode(matrix[rotation][2]));
-    mat2Args.push_back(CreateFloatNode(matrix[rotation][3]));
+    mat2Args.push_back(CreateFloatNode(matrix[rotation][0], EbpLow));
+    mat2Args.push_back(CreateFloatNode(matrix[rotation][1], EbpLow));
+    mat2Args.push_back(CreateFloatNode(matrix[rotation][2], EbpLow));
+    mat2Args.push_back(CreateFloatNode(matrix[rotation][3], EbpLow));
     TIntermAggregate *constVarConstructor =
         TIntermAggregate::CreateConstructor(*mat2Type, &mat2Args);
     return constVarConstructor;
@@ -130,8 +130,8 @@ TIntermAggregate *CreateVec2(Vec2EnumMap vec2Values, float yscale, vk::SurfaceRo
 {
     auto vec2Type = new TType(EbtFloat, 2);
     TIntermSequence vec2Args;
-    vec2Args.push_back(CreateFloatNode(vec2Values[rotation][0]));
-    vec2Args.push_back(CreateFloatNode(vec2Values[rotation][1] * yscale));
+    vec2Args.push_back(CreateFloatNode(vec2Values[rotation][0], EbpLow));
+    vec2Args.push_back(CreateFloatNode(vec2Values[rotation][1] * yscale, EbpLow));
     TIntermAggregate *constVarConstructor =
         TIntermAggregate::CreateConstructor(*vec2Type, &vec2Args);
     return constVarConstructor;
@@ -216,17 +216,23 @@ TIntermTyped *CreateFloatArrayWithRotationIndex(const Vec2EnumMap &valuesEnumMap
     typeFloat8->makeArray(static_cast<unsigned int>(vk::SurfaceRotation::EnumCount));
 
     TIntermSequence sequences = {
-        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::Identity][subscript] * scale),
-        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::Rotated90Degrees][subscript] * scale),
-        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::Rotated180Degrees][subscript] * scale),
-        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::Rotated270Degrees][subscript] * scale),
-        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::FlippedIdentity][subscript] * scale),
-        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::FlippedRotated90Degrees][subscript] *
-                        scale),
-        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::FlippedRotated180Degrees][subscript] *
-                        scale),
-        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::FlippedRotated270Degrees][subscript] *
-                        scale)};
+        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::Identity][subscript] * scale, EbpLow),
+        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::Rotated90Degrees][subscript] * scale,
+                        EbpLow),
+        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::Rotated180Degrees][subscript] * scale,
+                        EbpLow),
+        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::Rotated270Degrees][subscript] * scale,
+                        EbpLow),
+        CreateFloatNode(valuesEnumMap[vk::SurfaceRotation::FlippedIdentity][subscript] * scale,
+                        EbpLow),
+        CreateFloatNode(
+            valuesEnumMap[vk::SurfaceRotation::FlippedRotated90Degrees][subscript] * scale, EbpLow),
+        CreateFloatNode(
+            valuesEnumMap[vk::SurfaceRotation::FlippedRotated180Degrees][subscript] * scale,
+            EbpLow),
+        CreateFloatNode(
+            valuesEnumMap[vk::SurfaceRotation::FlippedRotated270Degrees][subscript] * scale,
+            EbpLow)};
     TIntermTyped *array = TIntermAggregate::CreateConstructor(*typeFloat8, &sequences);
 
     return new TIntermBinary(EOpIndexIndirect, array, rotation);
@@ -297,7 +303,7 @@ void SpecConst::declareSpecConsts(TIntermBlock *root)
     {
         TIntermDeclaration *decl = new TIntermDeclaration();
         decl->appendDeclarator(
-            new TIntermBinary(EOpInitialize, getDrawableWidth(), CreateFloatNode(0)));
+            new TIntermBinary(EOpInitialize, getDrawableWidth(), CreateFloatNode(0, EbpMedium)));
         root->insertStatement(0, decl);
     }
 
@@ -305,7 +311,7 @@ void SpecConst::declareSpecConsts(TIntermBlock *root)
     {
         TIntermDeclaration *decl = new TIntermDeclaration();
         decl->appendDeclarator(
-            new TIntermBinary(EOpInitialize, getDrawableHeight(), CreateFloatNode(0)));
+            new TIntermBinary(EOpInitialize, getDrawableHeight(), CreateFloatNode(0, EbpMedium)));
         root->insertStatement(1, decl);
     }
 }
@@ -528,7 +534,7 @@ TIntermBinary *SpecConst::getHalfRenderArea()
 
     // drawableSize * 0.5f
     TIntermBinary *halfRenderArea =
-        new TIntermBinary(EOpVectorTimesScalar, drawableSize, CreateFloatNode(0.5));
+        new TIntermBinary(EOpVectorTimesScalar, drawableSize, CreateFloatNode(0.5, EbpMedium));
     mUsageBits.set(vk::SpecConstUsage::DrawableSize);
 
     // drawableSize * 0.5f * halfRenderAreaRotationMatrix (See comment in

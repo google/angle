@@ -122,7 +122,7 @@ class ClampIndirectIndicesTraverser : public TIntermTraverser
     {
         if (useFloat)
         {
-            return CreateFloatNode(static_cast<float>(value));
+            return CreateFloatNode(static_cast<float>(value), EbpHigh);
         }
         return CreateIndexNode(value);
     }

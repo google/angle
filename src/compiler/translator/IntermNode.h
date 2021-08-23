@@ -470,8 +470,6 @@ class TIntermSwizzle : public TIntermExpression
 
     TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
-    TPrecision derivePrecision() const override;
-
   protected:
     TIntermTyped *mOperand;
     TVector<int> mSwizzleOffsets;
@@ -479,6 +477,7 @@ class TIntermSwizzle : public TIntermExpression
 
   private:
     void promote();
+    TPrecision derivePrecision() const override;
     void propagatePrecision(TPrecision precision) override;
 
     TIntermSwizzle(const TIntermSwizzle &node);  // Note: not deleted, just private!
@@ -523,14 +522,13 @@ class TIntermBinary : public TIntermOperator
     // This method is only valid for EOpIndexDirectStruct. It returns the name of the field.
     const ImmutableString &getIndexStructFieldName() const;
 
-    TPrecision derivePrecision() const override;
-
   protected:
     TIntermTyped *mLeft;
     TIntermTyped *mRight;
 
   private:
     void promote();
+    TPrecision derivePrecision() const override;
     void propagatePrecision(TPrecision precision) override;
 
     static TQualifier GetCommaQualifier(int shaderVersion,
@@ -568,8 +566,6 @@ class TIntermUnary : public TIntermOperator
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
 
-    TPrecision derivePrecision() const override;
-
   protected:
     TIntermTyped *mOperand;
 
@@ -581,6 +577,7 @@ class TIntermUnary : public TIntermOperator
 
   private:
     void promote();
+    TPrecision derivePrecision() const override;
     void propagatePrecision(TPrecision precision) override;
 
     TIntermUnary(const TIntermUnary &node);  // note: not deleted, just private!
@@ -656,8 +653,6 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     // Get the function name to display to the user in an error message.
     const char *functionName() const;
 
-    TPrecision derivePrecision() const override;
-
   protected:
     TIntermSequence mArguments;
 
@@ -676,6 +671,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TIntermAggregate(const TIntermAggregate &node);  // note: not deleted, just private!
 
     void setPrecisionAndQualifier();
+    TPrecision derivePrecision() const override;
     void propagatePrecision(TPrecision precision) override;
 
     bool areChildrenConstQualified();
@@ -900,14 +896,13 @@ class TIntermTernary : public TIntermExpression
 
     TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
-    TPrecision derivePrecision() const override;
-
   private:
     TIntermTernary(const TIntermTernary &node);  // Note: not deleted, just private!
 
     static TQualifier DetermineQualifier(TIntermTyped *cond,
                                          TIntermTyped *trueExpression,
                                          TIntermTyped *falseExpression);
+    TPrecision derivePrecision() const override;
     void propagatePrecision(TPrecision precision) override;
 
     TIntermTyped *mCondition;

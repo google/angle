@@ -38,6 +38,22 @@ bool TranslatorHLSL::translate(TIntermBlock *root,
                                ShCompileOptions compileOptions,
                                PerformanceDiagnostics *perfDiagnostics)
 {
+    // A few transformations leave the tree in an inconsistent state.  For example, when unfolding
+    // the short-circuit in the following function:
+    //
+    //     mediump float f(float a) { return a > 0 ? 0.0 : 1.0; }
+    //
+    // a temp variable is created to hold the result of the expression.  Currently the precision of
+    // the return value of the function is not propagated to its return expressions.  Additionally,
+    // an expression such as
+    //
+    //     cond ? gl_NumWorkGroups.x : gl_NumWorkGroups.y
+    //
+    // does not have a precision as the built-in does not specify a precision.
+    //
+    // Precision is not applicable to HLSL so fixing these issues are deferred.
+    mValidateASTOptions.validatePrecision = false;
+
     const ShBuiltInResources &resources = getResources();
     int numRenderTargets                = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
     int maxDualSourceDrawBuffers =

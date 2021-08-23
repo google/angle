@@ -422,6 +422,11 @@ class ConvertStructState : angle::NonCopyable
                 padType = new TType(TBasicType::EbtBool);
             }
 
+            if (padType->getBasicType() != EbtBool)
+            {
+                padType->setPrecision(EbpLow);
+            }
+
             if (updateLayout)
             {
                 metalLayoutTotal += MetalLayoutOf(*padType);

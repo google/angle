@@ -1954,10 +1954,18 @@ void TIntermBinary::propagatePrecision(TPrecision precision)
         PropagatePrecisionIfApplicable(mLeft, precision);
     }
 
-    if (mOp != EOpIndexDirect && mOp != EOpIndexIndirect && mOp != EOpIndexDirectStruct &&
+    if (mOp != EOpIndexIndirect && mOp != EOpIndexDirectStruct &&
         mOp != EOpIndexDirectInterfaceBlock)
     {
         PropagatePrecisionIfApplicable(mRight, precision);
+    }
+
+    // For literal indices, always apply highp.  This is purely for the purpose of making sure
+    // constant nodes are also given a precision, so if they are hoisted to a temp variable, there
+    // would be a precision to apply to that variable.
+    if (mOp == EOpIndexDirect)
+    {
+        PropagatePrecisionIfApplicable(mRight, EbpHigh);
     }
 }
 

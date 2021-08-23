@@ -128,11 +128,12 @@ TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable)
             {kHalfRenderArea, kFlipXY, kNegFlipXY, kEmulatedInstanceID, kCoverageMask}};
 
     const std::array<TType *, kNumGraphicsDriverUniformsMetal> kDriverUniformTypesMetal = {{
-        new TType(EbtFloat, 2),  // halfRenderArea
-        new TType(EbtFloat, 2),  // flipXY
-        new TType(EbtFloat, 2),  // negFlipXY
-        new TType(EbtUInt),      // kEmulatedInstanceID - unused in SPIR-V Metal compiler
-        new TType(EbtUInt),      // kCoverageMask
+        new TType(EbtFloat, EbpHigh, EvqGlobal, 2),  // halfRenderArea
+        new TType(EbtFloat, EbpLow, EvqGlobal, 2),   // flipXY
+        new TType(EbtFloat, EbpLow, EvqGlobal, 2),   // negFlipXY
+        new TType(EbtUInt, EbpHigh,
+                  EvqGlobal),  // kEmulatedInstanceID - unused in SPIR-V Metal compiler
+        new TType(EbtUInt, EbpHigh, EvqGlobal),  // kCoverageMask
     }};
 
     for (size_t uniformIndex = 0; uniformIndex < kNumGraphicsDriverUniformsMetal; ++uniformIndex)
@@ -373,10 +374,10 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertRasterizerDiscardLogic(TInfoSinkBas
     // Create vec4(-3, -3, -3, 1):
     auto vec4Type = new TType(EbtFloat, 4);
     TIntermSequence vec4Args;
-    vec4Args.push_back(CreateFloatNode(-3.0f));
-    vec4Args.push_back(CreateFloatNode(-3.0f));
-    vec4Args.push_back(CreateFloatNode(-3.0f));
-    vec4Args.push_back(CreateFloatNode(1.0f));
+    vec4Args.push_back(CreateFloatNode(-3.0f, EbpMedium));
+    vec4Args.push_back(CreateFloatNode(-3.0f, EbpMedium));
+    vec4Args.push_back(CreateFloatNode(-3.0f, EbpMedium));
+    vec4Args.push_back(CreateFloatNode(1.0f, EbpMedium));
     TIntermAggregate *constVarConstructor =
         TIntermAggregate::CreateConstructor(*vec4Type, &vec4Args);
 

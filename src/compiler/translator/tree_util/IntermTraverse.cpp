@@ -10,6 +10,7 @@
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {
@@ -540,6 +541,22 @@ bool TIntermTraverser::updateTree(TCompiler *compiler, TIntermNode *node)
         bool replaced =
             replacement.parent->replaceChildNode(replacement.original, replacement.replacement);
         ASSERT(replaced);
+
+        // Make sure the precision is not accidentally dropped.  It's ok if the precision is not the
+        // same, as the transformations are allowed to replace an expression with one that is
+        // temporarily evaluated at a different (likely higher) precision.
+        TIntermTyped *originalAsTyped = replacement.original->getAsTyped();
+        TIntermTyped *replacementAsTyped =
+            replacement.replacement ? replacement.replacement->getAsTyped() : nullptr;
+        if (originalAsTyped != nullptr && replacementAsTyped != nullptr)
+        {
+            const TType &originalType    = originalAsTyped->getType();
+            const TType &replacementType = replacementAsTyped->getType();
+            ASSERT(!IsPrecisionApplicableToType(originalType.getBasicType()) ||
+                   !IsPrecisionApplicableToType(replacementType.getBasicType()) ||
+                   originalType.getPrecision() == EbpUndefined ||
+                   replacementType.getPrecision() != EbpUndefined);
+        }
 
         if (!replacement.originalBecomesChildOfReplacement)
         {

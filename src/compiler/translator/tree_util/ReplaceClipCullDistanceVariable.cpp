@@ -231,7 +231,7 @@ TIntermNode *assignFuncWithEnableFlags(const unsigned int index,
     trueBlock->appendStatement(assignment);
 
     TIntermBinary *zeroAssignment =
-        new TIntermBinary(EOpAssign, left->deepCopy(), CreateFloatNode(0));
+        new TIntermBinary(EOpAssign, left->deepCopy(), CreateFloatNode(0, EbpMedium));
     TIntermBlock *falseBlock = new TIntermBlock();
     falseBlock->appendStatement(zeroAssignment);
 
@@ -388,7 +388,7 @@ bool ReplaceClipCullDistanceAssignments::assignANGLEValueToOriginalVariableImpl(
                 TIntermBinary *left = new TIntermBinary(
                     EOpIndexDirect, glClipCullDistanceSymbol->deepCopy(), CreateIndexNode(i));
                 TIntermBinary *zeroAssignment =
-                    new TIntermBinary(EOpAssign, left, CreateFloatNode(0));
+                    new TIntermBinary(EOpAssign, left, CreateFloatNode(0, EbpMedium));
                 assignBlock->appendStatement(zeroAssignment);
             }
         }

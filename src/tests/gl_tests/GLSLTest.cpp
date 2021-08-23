@@ -13102,7 +13102,9 @@ void main()
     runTest(kFS);
 }
 
-TEST_P(GLSLTest, AAA)
+// Test that precision is retained for constants (which are constant folded).  Adapted from a WebGL
+// test.
+TEST_P(GLSLTest, ConstantFoldedConstantsRetainPrecision)
 {
     constexpr char kFS[] = R"(
 // It is assumed that uTest is set to 0. It's here to make the expression not constant.

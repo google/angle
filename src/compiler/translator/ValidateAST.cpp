@@ -12,6 +12,7 @@
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/tree_util/SpecializationConstant.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {
@@ -103,6 +104,9 @@ class ValidateAST : public TIntermTraverser
 
     // For validateQualifiers:
     bool mQualifiersFailed = false;
+
+    // For validatePrecision:
+    bool mPrecisionFailed = false;
 
     // For validateStructUsage:
     std::vector<std::map<ImmutableString, const TFieldListCollection *>> mStructsAndBlocksByName;
@@ -602,9 +606,23 @@ void ValidateAST::visitSymbol(TIntermSymbol *node)
         }
     }
 
-    if (gl::IsBuiltInName(variable->name().data()))
+    const bool isBuiltIn = gl::IsBuiltInName(variable->name().data());
+    if (isBuiltIn)
     {
         visitBuiltInVariable(node);
+    }
+
+    if (mOptions.validatePrecision)
+    {
+        if (!isBuiltIn && IsPrecisionApplicableToType(node->getBasicType()) &&
+            node->getType().getPrecision() == EbpUndefined)
+        {
+            // Note that some built-ins don't have a precision.
+            mDiagnostics->error(node->getLine(),
+                                "Found symbol with undefined precision <validatePrecision>",
+                                variable->name().data());
+            mPrecisionFailed = true;
+        }
     }
 }
 
@@ -677,14 +695,15 @@ void ValidateAST::visitFunctionPrototype(TIntermFunctionPrototype *node)
         mDeclaredFunctions.insert(function);
     }
 
-    if (mOptions.validateQualifiers)
+    const TFunction *function = node->getFunction();
+    for (size_t paramIndex = 0; paramIndex < function->getParamCount(); ++paramIndex)
     {
-        const TFunction *function = node->getFunction();
-        for (size_t paramIndex = 0; paramIndex < function->getParamCount(); ++paramIndex)
-        {
-            const TVariable *param = function->getParam(paramIndex);
-            TQualifier qualifier   = param->getType().getQualifier();
+        const TVariable *param = function->getParam(paramIndex);
+        const TType &paramType = param->getType();
 
+        if (mOptions.validateQualifiers)
+        {
+            TQualifier qualifier = paramType.getQualifier();
             if (qualifier != EvqParamIn && qualifier != EvqParamOut && qualifier != EvqParamInOut &&
                 qualifier != EvqParamConst)
             {
@@ -695,6 +714,27 @@ void ValidateAST::visitFunctionPrototype(TIntermFunctionPrototype *node)
                 mQualifiersFailed = true;
             }
         }
+
+        if (mOptions.validatePrecision && IsPrecisionApplicableToType(paramType.getBasicType()) &&
+            paramType.getPrecision() == EbpUndefined)
+        {
+            mDiagnostics->error(
+                node->getLine(),
+                "Found function parameter with undefined precision <validatePrecision>",
+                param->name().data());
+            mPrecisionFailed = true;
+        }
+    }
+
+    const TType &returnType = function->getReturnType();
+    if (mOptions.validatePrecision && IsPrecisionApplicableToType(returnType.getBasicType()) &&
+        returnType.getPrecision() == EbpUndefined)
+    {
+        mDiagnostics->error(
+            node->getLine(),
+            "Found function with undefined precision on return value <validatePrecision>",
+            function->name().data());
+        mPrecisionFailed = true;
     }
 }
 
@@ -829,6 +869,7 @@ bool ValidateAST::visitDeclaration(Visit visit, TIntermDeclaration *node)
             ASSERT(symbol);
 
             const TVariable *variable = &symbol->variable();
+            const TType &type         = variable->getType();
 
             if (mOptions.validateVariableReferences)
             {
@@ -863,7 +904,6 @@ bool ValidateAST::visitDeclaration(Visit visit, TIntermDeclaration *node)
                 // Only declare the struct once.
                 validateStructUsage = false;
 
-                const TType &type = variable->getType();
                 if (type.isStructSpecifier() || type.isInterfaceBlock())
                     visitStructOrInterfaceBlockDeclaration(type, node->getLine());
             }
@@ -871,6 +911,29 @@ bool ValidateAST::visitDeclaration(Visit visit, TIntermDeclaration *node)
             if (gl::IsBuiltInName(variable->name().data()))
             {
                 visitBuiltInVariable(symbol);
+            }
+
+            if (mOptions.validatePrecision && (type.isStructSpecifier() || type.isInterfaceBlock()))
+            {
+                const TFieldListCollection *structOrBlock = type.getStruct();
+                if (structOrBlock == nullptr)
+                {
+                    structOrBlock = type.getInterfaceBlock();
+                }
+
+                for (const TField *field : structOrBlock->fields())
+                {
+                    const TType *fieldType = field->type();
+                    if (IsPrecisionApplicableToType(fieldType->getBasicType()) &&
+                        fieldType->getPrecision() == EbpUndefined)
+                    {
+                        mDiagnostics->error(
+                            node->getLine(),
+                            "Found block field with undefined precision <validatePrecision>",
+                            field->name().data());
+                        mPrecisionFailed = true;
+                    }
+                }
             }
         }
     }
@@ -899,8 +962,8 @@ bool ValidateAST::validateInternal()
 {
     return !mSingleParentFailed && !mVariableReferencesFailed && !mBuiltInOpsFailed &&
            !mFunctionCallFailed && !mNoRawFunctionCallsFailed && !mNullNodesFailed &&
-           !mQualifiersFailed && !mStructUsageFailed && !mExpressionTypesFailed &&
-           !mMultiDeclarationsFailed;
+           !mQualifiersFailed && !mPrecisionFailed && !mStructUsageFailed &&
+           !mExpressionTypesFailed && !mMultiDeclarationsFailed;
 }
 
 }  // anonymous namespace

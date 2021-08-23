@@ -113,12 +113,12 @@ TIntermTyped *CreateZeroNode(const TType &type)
     return TIntermAggregate::CreateConstructor(constType, &arguments);
 }
 
-TIntermConstantUnion *CreateFloatNode(float value)
+TIntermConstantUnion *CreateFloatNode(float value, TPrecision precision)
 {
     TConstantUnion *u = new TConstantUnion[1];
     u[0].setFConst(value);
 
-    TType type(EbtFloat, EbpUndefined, EvqConst, 1);
+    TType type(EbtFloat, precision, EvqConst, 1);
     return new TIntermConstantUnion(u, type);
 }
 
@@ -127,7 +127,7 @@ TIntermConstantUnion *CreateIndexNode(int index)
     TConstantUnion *u = new TConstantUnion[1];
     u[0].setIConst(index);
 
-    TType type(EbtInt, EbpUndefined, EvqConst, 1);
+    TType type(EbtInt, EbpHigh, EvqConst, 1);
     return new TIntermConstantUnion(u, type);
 }
 
@@ -136,7 +136,7 @@ TIntermConstantUnion *CreateUIntNode(unsigned int value)
     TConstantUnion *u = new TConstantUnion[1];
     u[0].setUConst(value);
 
-    TType type(EbtUInt, EbpUndefined, EvqConst, 1);
+    TType type(EbtUInt, EbpHigh, EvqConst, 1);
     return new TIntermConstantUnion(u, type);
 }
 
