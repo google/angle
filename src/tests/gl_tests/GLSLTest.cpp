@@ -13132,6 +13132,57 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+TEST_P(GLSLTest, VectorAndMatrixScalarizationDoesNotAffectRendering)
+{
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && (IsOpenGL() || IsOpenGLES()));
+
+    constexpr char kFS[] = R"(
+precision mediump float;
+
+varying vec2 v_texCoord;
+
+float a = 0.;
+#define A 0.
+
+#define r(a)    mat2( cos( a + vec4(0,-1.5708,1.5708,0) ) )
+vec2 c;
+#define f(U,a)  ( c = (U) * r(a) , sin(10.*c.x) )
+
+void main() {
+    vec2 U = v_texCoord;
+
+    gl_FragColor = U.y > .5
+        ? vec4( f(U,a) , f(U*4.,a) , 0,1.0)   // top
+        : vec4( f(U,A) , f(U*4.,A) , 0,1.0);  // bottom
+}
+
+)";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Make sure we rendered something.
+    EXPECT_PIXEL_NE(0, 0, 0, 0, 0, 0);
+
+    // Comapare one line in top half to one line in bottom half.
+    int compareWidth  = getWindowWidth();
+    int compareHeight = getWindowHeight() / 4;
+
+    ASSERT_GE(compareWidth, 2);
+    ASSERT_GE(compareHeight, 2);
+
+    GLubyte pixelValue[4];
+    constexpr int tolerance = 12;
+
+    for (int x = 0; x < compareWidth; ++x)
+    {
+        glReadPixels(x, compareHeight, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelValue);
+        EXPECT_PIXEL_NEAR(x, getWindowHeight() - compareHeight, pixelValue[0], pixelValue[1],
+                          pixelValue[2], pixelValue[3], tolerance);
+    }
+    EXPECT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest, WithDirectSPIRVGeneration(ES2_VULKAN()));
