@@ -307,79 +307,6 @@ def GetTestsListForFilter(args, test_path, filter, logger):
     return subprocess.check_output(cmd, text=True)
 
 
-class TestExpectation():
-    # tests that must not be run as list
-    skipped_for_capture_tests = []
-
-    # test expectations for tests that do not pass
-    non_pass_results = {}
-
-    flaky_tests = []
-
-    non_pass_re = {}
-
-    # yapf: disable
-    # we want each pair on one line
-    result_map = { "FAIL" : "Fail",
-                   "TIMEOUT" : "Timeout",
-                   "CRASHED" : "Crashed",
-                   "COMPILE_FAILED" : "CompileFailed",
-                   "SKIPPED_BY_GTEST" : "Skipped",
-                   "PASS" : "Pass"}
-    # yapf: enable
-
-    def __init__(self, platform):
-        expected_results_filename = "capture_replay_expectations.txt"
-        expected_results_path = os.path.join(REPLAY_SAMPLE_FOLDER, expected_results_filename)
-        with open(expected_results_path, "rt") as f:
-            for line in f:
-                l = line.strip()
-                if l != "" and not l.startswith("#"):
-                    self.ReadOneExpectation(l, platform)
-
-    def ReadOneExpectation(self, line, platform):
-        (testpattern, result) = line.split('=')
-        (test_info_string, test_name_string) = testpattern.split(':')
-        test_name = test_name_string.strip()
-        test_info = test_info_string.strip().split()
-        result_stripped = result.strip()
-
-        platforms = [platform]
-        if len(test_info) > 1:
-            platforms = test_info[1:]
-
-        if platform in platforms:
-            test_name_regex = re.compile('^' + test_name.replace('*', '.*') + '$')
-            if result_stripped == 'SKIP_FOR_CAPTURE':
-                self.skipped_for_capture_tests.append(test_name_regex)
-            elif result_stripped == 'FLAKY':
-                self.flaky_tests.append(test_name_regex)
-            else:
-                self.non_pass_results[test_name] = self.result_map[result_stripped]
-                self.non_pass_re[test_name] = test_name_regex
-
-    def TestIsSkippedForCapture(self, test_name):
-        for p in self.skipped_for_capture_tests:
-            m = p.match(test_name)
-            if m is not None:
-                return True
-        return False
-
-    def Filter(self, test_list):
-        result = {}
-        for t in test_list:
-            for key in self.non_pass_results.keys():
-                if self.non_pass_re[key].match(t) is not None:
-                    result[t] = self.non_pass_results[key]
-        return result
-
-    def IsFlaky(self, test_name):
-        for flaky in self.flaky_tests:
-            if flaky.match(test_name) is not None:
-                return True
-        return False
-
-
 def ParseTestNamesFromTestList(output, test_expectation, also_run_skipped_for_capture_tests,
                                logger):
     output_lines = output.splitlines()
@@ -411,13 +338,14 @@ def GetRunCommand(args, command):
 
 
 class GroupedResult():
-    Passed = "Passed"
-    Failed = "Comparison Failed"
+    Passed = "Pass"
+    Failed = "Fail"
     TimedOut = "Timeout"
     Crashed = "Crashed"
     CompileFailed = "CompileFailed"
     Skipped = "Skipped"
 
+    ResultTypes = [Passed, Failed, TimedOut, Crashed, CompileFailed, Skipped]
 
     def __init__(self, resultcode, message, output, tests):
         self.resultcode = resultcode
@@ -433,32 +361,13 @@ class TestBatchResult():
     display_output_lines = 20
 
     def __init__(self, grouped_results, verbose):
-        self.passes = []
-        self.fails = []
-        self.timeouts = []
-        self.crashes = []
-        self.compile_fails = []
-        self.skips = []
+        self.results = {}
+        for result_type in GroupedResult.ResultTypes:
+            self.results[result_type] = []
 
         for grouped_result in grouped_results:
-            if grouped_result.resultcode == GroupedResult.Passed:
-                for test in grouped_result.tests:
-                    self.passes.append(test.full_test_name)
-            elif grouped_result.resultcode == GroupedResult.Failed:
-                for test in grouped_result.tests:
-                    self.fails.append(test.full_test_name)
-            elif grouped_result.resultcode == GroupedResult.TimedOut:
-                for test in grouped_result.tests:
-                    self.timeouts.append(test.full_test_name)
-            elif grouped_result.resultcode == GroupedResult.Crashed:
-                for test in grouped_result.tests:
-                    self.crashes.append(test.full_test_name)
-            elif grouped_result.resultcode == GroupedResult.CompileFailed:
-                for test in grouped_result.tests:
-                    self.compile_fails.append(test.full_test_name)
-            elif grouped_result.resultcode == GroupedResult.Skipped:
-                for test in grouped_result.tests:
-                    self.skips.append(test.full_test_name)
+            for test in grouped_result.tests:
+                self.results[grouped_result.resultcode].append(test.full_test_name)
 
         self.repr_str = ""
         self.GenerateRepresentationString(grouped_results, verbose)
@@ -781,6 +690,79 @@ class TestBatch():
         return TestBatchResult(self.results, self.args.verbose)
 
 
+class TestExpectation():
+    # tests that must not be run as list
+    skipped_for_capture_tests = []
+
+    # test expectations for tests that do not pass
+    non_pass_results = {}
+
+    flaky_tests = []
+
+    non_pass_re = {}
+
+    # yapf: disable
+    # we want each pair on one line
+    result_map = { "FAIL" : GroupedResult.Failed,
+                   "TIMEOUT" : GroupedResult.TimedOut,
+                   "CRASHED" : GroupedResult.Crashed,
+                   "COMPILE_FAILED" : GroupedResult.CompileFailed,
+                   "SKIPPED_BY_GTEST" : GroupedResult.Skipped,
+                   "PASS" : GroupedResult.Passed}
+    # yapf: enable
+
+    def __init__(self, platform):
+        expected_results_filename = "capture_replay_expectations.txt"
+        expected_results_path = os.path.join(REPLAY_SAMPLE_FOLDER, expected_results_filename)
+        with open(expected_results_path, "rt") as f:
+            for line in f:
+                l = line.strip()
+                if l != "" and not l.startswith("#"):
+                    self.ReadOneExpectation(l, platform)
+
+    def ReadOneExpectation(self, line, platform):
+        (testpattern, result) = line.split('=')
+        (test_info_string, test_name_string) = testpattern.split(':')
+        test_name = test_name_string.strip()
+        test_info = test_info_string.strip().split()
+        result_stripped = result.strip()
+
+        platforms = [platform]
+        if len(test_info) > 1:
+            platforms = test_info[1:]
+
+        if platform in platforms:
+            test_name_regex = re.compile('^' + test_name.replace('*', '.*') + '$')
+            if result_stripped == 'SKIP_FOR_CAPTURE':
+                self.skipped_for_capture_tests.append(test_name_regex)
+            elif result_stripped == 'FLAKY':
+                self.flaky_tests.append(test_name_regex)
+            else:
+                self.non_pass_results[test_name] = self.result_map[result_stripped]
+                self.non_pass_re[test_name] = test_name_regex
+
+    def TestIsSkippedForCapture(self, test_name):
+        for p in self.skipped_for_capture_tests:
+            m = p.match(test_name)
+            if m is not None:
+                return True
+        return False
+
+    def Filter(self, test_list):
+        result = {}
+        for t in test_list:
+            for key in self.non_pass_results.keys():
+                if self.non_pass_re[key].match(t) is not None:
+                    result[t] = self.non_pass_results[key]
+        return result
+
+    def IsFlaky(self, test_name):
+        for flaky in self.flaky_tests:
+            if flaky.match(test_name) is not None:
+                return True
+        return False
+
+
 def ClearFolderContent(path):
     all_files = []
     for f in os.listdir(path):
@@ -887,30 +869,6 @@ def GetPlatformForSkip(platform):
     return platform_map.get(platform, "UNKNOWN")
 
 
-def CheckNoPassResult(batch, expectation, result_type, unexpected_test_results):
-    unexpected = 0
-    for test in batch:
-        if test not in expectation.keys():
-            unexpected += 1
-            unexpected_test_results[test] = "{} (expected Pass or is new test)".format(result_type)
-        else:
-            expected_result = expectation[test]
-            if expected_result != result_type:
-                unexpected += 1
-                unexpected_test_results[test] = "{} (expected {})".format(
-                    result_type, expected_result)
-    return unexpected
-
-
-def CheckPassResult(batch, expectation, unexpected_test_results):
-    unexpected = 0
-    for test in batch:
-        if test in expectation.keys():
-            unexpected += 1
-            unexpected_test_results[test] = "Pass (expected {})".format(expectation[test])
-    return unexpected
-
-
 def main(args, platform):
     logger = multiprocessing.log_to_stderr()
     logger.setLevel(level=args.log.upper())
@@ -967,12 +925,12 @@ def main(args, platform):
         compile_failed_count = 0
         skipped_count = 0
 
-        unexpected_passed_count = 0
-        unexpected_failed_count = 0
-        unexpected_timedout_count = 0
-        unexpected_crashed_count = 0
-        unexpected_compile_failed_count = 0
-        unexpected_skipped_count = 0
+        unexpected_count = {}
+        unexpected_test_results = {}
+
+        for type in GroupedResult.ResultTypes:
+            unexpected_count[type] = 0
+            unexpected_test_results[type] = []
 
         # result list is created by manager and can be shared by multiple processes. Each
         # subprocess populates the result list with the results of its test runs. After all
@@ -1019,76 +977,71 @@ def main(args, platform):
         logger.info("\n\n\n")
         logger.info("Results:")
 
-        unexpected_test_results = {}
         flaky_results = []
 
-        for test_batch_result in result_list:
+        for test_batch in result_list:
+            test_batch_result = test_batch.results
             logger.debug(str(test_batch_result))
-            passed_count += len(test_batch_result.passes)
-            failed_count += len(test_batch_result.fails)
-            timedout_count += len(test_batch_result.timeouts)
-            crashed_count += len(test_batch_result.crashes)
-            compile_failed_count += len(test_batch_result.compile_fails)
-            skipped_count += len(test_batch_result.skips)
 
-            stable_pass = []
-            stable_fail = []
+            passed_count += len(test_batch_result[GroupedResult.Passed])
+            failed_count += len(test_batch_result[GroupedResult.Failed])
+            timedout_count += len(test_batch_result[GroupedResult.TimedOut])
+            crashed_count += len(test_batch_result[GroupedResult.Crashed])
+            compile_failed_count += len(test_batch_result[GroupedResult.CompileFailed])
+            skipped_count += len(test_batch_result[GroupedResult.Skipped])
 
-            for test in test_batch_result.passes:
-                if test_expectation.IsFlaky(test):
-                    flaky_results.append("{} (Pass)".format(test))
-                else:
-                    stable_pass.append(test)
+            for real_result, test_list in test_batch_result.items():
+                for test in test_list:
+                    if test_expectation.IsFlaky(test):
+                        flaky_results.append("{} ({})".format(test, real_result))
+                        continue
 
-            for test in test_batch_result.fails:
-                if test_expectation.IsFlaky(test):
-                    flaky_results.append("{} (Fail)".format(test))
-                else:
-                    stable_fail.append(test)
-
-            unexpected_failed_count += CheckNoPassResult(stable_fail, test_expectation_for_list,
-                                                         "Fail", unexpected_test_results)
-            unexpected_passed_count += CheckPassResult(stable_pass, test_expectation_for_list,
-                                                       unexpected_test_results)
-
-            unexpected_crashed_count += CheckNoPassResult(test_batch_result.crashes,
-                                                          test_expectation_for_list, "Crash",
-                                                          unexpected_test_results)
-            unexpected_timedout_count += CheckNoPassResult(test_batch_result.timeouts,
-                                                           test_expectation_for_list, "Timeout",
-                                                           unexpected_test_results)
-            unexpected_compile_failed_count += CheckNoPassResult(test_batch_result.compile_fails,
-                                                                 test_expectation_for_list,
-                                                                 "CompileFailed",
-                                                                 unexpected_test_results)
-            unexpected_skipped_count += CheckNoPassResult(test_batch_result.skips,
-                                                          test_expectation_for_list, "Skip",
-                                                          unexpected_test_results)
+                    # Passing tests are not in the list
+                    if test not in test_expectation_for_list.keys():
+                        if real_result != GroupedResult.Passed:
+                            unexpected_count[real_result] += 1
+                            unexpected_test_results[real_result].append(
+                                "{} {} (expected Pass or is new test)".format(test, real_result))
+                    else:
+                        expected_result = test_expectation_for_list[test]
+                        if real_result != expected_result:
+                            unexpected_count[real_result] += 1
+                            unexpected_test_results[real_result].append(
+                                "{} {} (expected {})".format(test, real_result, expected_result))
 
         logger.info("")
         logger.info("Elapsed time: %.2lf seconds" % (end_time - start_time))
         logger.info("")
 
         if len(flaky_results):
-            logger.info("")
-            logger.info("  Flaky test(s):")
+            logger.info("Flaky test(s):")
             for line in flaky_results:
                 logger.info("    {}".format(line))
+            logger.info("")
 
         logger.info(
-            "Passed: %d, Comparison Failed: %d, Crashed: %d, CompileFailed %d, Skipped: %d, Timeout: %d"
+            "Summary: Passed: %d, Comparison Failed: %d, Crashed: %d, CompileFailed %d, Skipped: %d, Timeout: %d"
             % (passed_count, failed_count, crashed_count, compile_failed_count, skipped_count,
                timedout_count))
 
         retval = EXIT_SUCCESS
 
-        if len(unexpected_test_results) > 0:
+        unexpected_test_results_count = 0
+        for count in unexpected_count.values():
+            unexpected_test_results_count += count
+
+        if unexpected_test_results_count > 0:
             retval = EXIT_FAILURE
             logger.info("")
-            logger.info("Failure: Obtained results differed from expectation:")
-
-            for t, r in unexpected_test_results.items():
-                logger.info("  {} {}".format(t, r))
+            logger.info("Failure: Obtained {} results that differ from expectation:".format(
+                unexpected_test_results_count))
+            logger.info("")
+            for result, count in unexpected_count.items():
+                if count > 0:
+                    logger.info("Unexpected '{}' ({}):".format(result, count))
+                    for test_result in unexpected_test_results[result]:
+                        logger.info("     {}".format(test_result))
+                    logger.info("")
 
         logger.info("\n\n")
 
