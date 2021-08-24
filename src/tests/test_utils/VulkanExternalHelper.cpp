@@ -976,7 +976,7 @@ void VulkanExternalHelper::readPixels(VkImage srcImage,
     vkFreeCommandBuffers(mDevice, mCommandPool, commandBufferCount, commandBuffers);
 
     void *stagingMemory = nullptr;
-    result = vkMapMemory(mDevice, deviceMemory, 0 /* offset */, pixelsSize, 0 /* flags */,
+    result = vkMapMemory(mDevice, deviceMemory, 0 /* offset */, deviceMemorySize, 0 /* flags */,
                          &stagingMemory);
     ASSERT(result == VK_SUCCESS);
 
@@ -986,7 +986,7 @@ void VulkanExternalHelper::readPixels(VkImage srcImage,
             /* .pNext = */ nullptr,
             /* .memory = */ deviceMemory,
             /* .offset = */ 0,
-            /* .size = */ pixelsSize,
+            /* .size = */ deviceMemorySize,
         },
     };
     constexpr uint32_t memoryRangeCount = std::extent<decltype(memoryRanges)>();
