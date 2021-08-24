@@ -86,7 +86,6 @@ ANGLE_CHROMIUM_DEPS = [
     'tools/skia_goldctl/linux',
     'tools/skia_goldctl/mac',
     'tools/skia_goldctl/win',
-    'tools/swarming_client',
 ]
 
 ANGLE_URL = 'https://chromium.googlesource.com/angle/angle'
