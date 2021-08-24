@@ -754,7 +754,7 @@
         "shader_type": "FRAGMENT",
         "variables":{
             "gl_FragCoord":{
-                "essl_level":"COMMON_BUILTINS",
+                "essl_level":"ESSL1_BUILTINS",
                 "type":{
                     "basic":"Float",
                     "precision":"Medium",
@@ -808,6 +808,20 @@
             }
         },
         "subgroups":{
+            "ES300":{
+                "variables":{
+                    "gl_FragCoord":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "suffix":"300",
+                        "type":{
+                            "basic":"Float",
+                            "precision":"High",
+                            "qualifier":"FragCoord",
+                            "primarySize":4
+                        }
+                    }
+                }
+            },
             "EXTBlendFuncExtended":{
                 "variables":{
                     "gl_SecondaryFragColorEXT":{

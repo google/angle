@@ -1772,6 +1772,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_FragColor;
 constexpr const TSymbolUniqueId BuiltInId::gl_FragData;
 constexpr const TSymbolUniqueId BuiltInId::gl_FragDepth;
 constexpr const TSymbolUniqueId BuiltInId::gl_HelperInvocation;
+constexpr const TSymbolUniqueId BuiltInId::gl_FragCoord300;
 constexpr const TSymbolUniqueId BuiltInId::gl_SecondaryFragColorEXT;
 constexpr const TSymbolUniqueId BuiltInId::gl_SecondaryFragDataEXT;
 constexpr const TSymbolUniqueId BuiltInId::gl_FragDepthEXT;
@@ -1874,7 +1875,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_PositionTES;
 constexpr const TSymbolUniqueId BuiltInId::gl_PositionTESES3_2;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVR;
 
-const int TSymbolTable::kLastBuiltInId = 4998;
+const int TSymbolTable::kLastBuiltInId = 5000;
 
 namespace BuiltInName
 {
@@ -2259,6 +2260,12 @@ constexpr const TVariable kgl_FragCoord(BuiltInId::gl_FragCoord,
                                         SymbolType::BuiltIn,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
                                         StaticType::Get<EbtFloat, EbpMedium, EvqFragCoord, 4, 1>());
+constexpr const TVariable kgl_FragCoord300(
+    BuiltInId::gl_FragCoord300,
+    BuiltInName::gl_FragCoord,
+    SymbolType::BuiltIn,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    StaticType::Get<EbtFloat, EbpHigh, EvqFragCoord, 4, 1>());
 constexpr const TVariable kgl_FragDepth(BuiltInId::gl_FragDepth,
                                         BuiltInName::gl_FragDepth,
                                         SymbolType::BuiltIn,
@@ -3189,6 +3196,11 @@ const TVariable *gl_FragColor()
 const TVariable *gl_FragCoord()
 {
     return &kgl_FragCoord;
+}
+
+const TVariable *gl_FragCoord300()
+{
+    return &kgl_FragCoord300;
 }
 
 const TVariable *gl_FragDepth()
@@ -20896,7 +20908,8 @@ constexpr SymbolRule kRules[] = {
         &TableBase::m_gl_MaxCullDistancesEXT),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(EXT_clip_cull_distance)>(
         &TableBase::m_gl_MaxCombinedClipAndCullDistancesEXT),
-    Rule::Get<Spec::ESSL, 0, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_FragCoord),
+    Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_FragCoord),
+    Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_FragCoord300),
     Rule::Get<Spec::ESSL, 0, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_FrontFacing),
     Rule::Get<Spec::ESSL, 0, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_PointCoord),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_FragColor),
@@ -24294,55 +24307,55 @@ constexpr uint16_t kMangledOffsets[] = {
     1771,  // gl_MaxCullDistances
     1772,  // gl_MaxCombinedClipAndCullDistances
     1773,  // gl_FragCoord
-    1774,  // gl_FrontFacing
-    1775,  // gl_PointCoord
-    1776,  // gl_FragColor
-    1777,  // gl_FragData
-    1778,  // gl_FragDepth
-    1779,  // gl_HelperInvocation
-    1780,  // gl_SecondaryFragColorEXT
-    1781,  // gl_SecondaryFragDataEXT
-    1782,  // gl_FragDepthEXT
-    1783,  // gl_LastFragData
-    1786,  // gl_LastFragColor
-    1787,  // gl_LastFragColorARM
-    1788,  // gl_PrimitiveID
-    1798,  // gl_Layer
-    1804,  // gl_SampleID
-    1806,  // gl_SamplePosition
-    1808,  // gl_SampleMaskIn
-    1810,  // gl_SampleMask
-    1812,  // gl_CullDistance
-    1814,  // gl_ClipDistance
-    1816,  // gl_Position
-    1824,  // gl_PointSize
-    1825,  // gl_InstanceID
-    1826,  // Empty
-    1826,  // gl_VertexID
+    1775,  // gl_FrontFacing
+    1776,  // gl_PointCoord
+    1777,  // gl_FragColor
+    1778,  // gl_FragData
+    1779,  // gl_FragDepth
+    1780,  // gl_HelperInvocation
+    1781,  // gl_SecondaryFragColorEXT
+    1782,  // gl_SecondaryFragDataEXT
+    1783,  // gl_FragDepthEXT
+    1784,  // gl_LastFragData
+    1787,  // gl_LastFragColor
+    1788,  // gl_LastFragColorARM
+    1789,  // gl_PrimitiveID
+    1799,  // gl_Layer
+    1805,  // gl_SampleID
+    1807,  // gl_SamplePosition
+    1809,  // gl_SampleMaskIn
+    1811,  // gl_SampleMask
+    1813,  // gl_CullDistance
+    1815,  // gl_ClipDistance
+    1817,  // gl_Position
+    1825,  // gl_PointSize
+    1826,  // gl_InstanceID
     1827,  // Empty
-    1827,  // Empty
-    1827,  // gl_DrawID
-    1828,  // gl_BaseVertex
-    1829,  // gl_BaseInstance
-    1830,  // angle_BaseVertex
-    1831,  // angle_BaseInstance
-    1832,  // gl_NumWorkGroups
-    1833,  // gl_WorkGroupSize
-    1834,  // gl_WorkGroupID
-    1835,  // gl_LocalInvocationID
-    1836,  // gl_GlobalInvocationID
-    1837,  // gl_LocalInvocationIndex
-    1838,  // gl_PrimitiveIDIn
-    1841,  // gl_InvocationID
-    1846,  // gl_PerVertex
-    1853,  // gl_in
-    1860,  // gl_PatchVerticesIn
-    1864,  // gl_TessLevelOuter
-    1868,  // gl_TessLevelInner
-    1872,  // gl_out
-    1876,  // gl_BoundingBoxEXT
-    1878,  // gl_TessCoord
-    1879,  // gl_ViewID_OVR
+    1827,  // gl_VertexID
+    1828,  // Empty
+    1828,  // Empty
+    1828,  // gl_DrawID
+    1829,  // gl_BaseVertex
+    1830,  // gl_BaseInstance
+    1831,  // angle_BaseVertex
+    1832,  // angle_BaseInstance
+    1833,  // gl_NumWorkGroups
+    1834,  // gl_WorkGroupSize
+    1835,  // gl_WorkGroupID
+    1836,  // gl_LocalInvocationID
+    1837,  // gl_GlobalInvocationID
+    1838,  // gl_LocalInvocationIndex
+    1839,  // gl_PrimitiveIDIn
+    1842,  // gl_InvocationID
+    1847,  // gl_PerVertex
+    1854,  // gl_in
+    1861,  // gl_PatchVerticesIn
+    1865,  // gl_TessLevelOuter
+    1869,  // gl_TessLevelInner
+    1873,  // gl_out
+    1877,  // gl_BoundingBoxEXT
+    1879,  // gl_TessCoord
+    1880,  // gl_ViewID_OVR
 };
 
 using Ext = TExtension;
