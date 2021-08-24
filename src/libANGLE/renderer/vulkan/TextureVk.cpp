@@ -2509,7 +2509,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     // then have more levels defined in it and mipmapping enabled.  In that case, the image needs
     // to be recreated.
     bool isMipmapEnabledByMinFilter = false;
-    if (!isGenerateMipmap && mImage->valid() && dirtyBits.test(gl::Texture::DIRTY_BIT_MIN_FILTER))
+    if (!isGenerateMipmap && mImage && mImage->valid() &&
+        dirtyBits.test(gl::Texture::DIRTY_BIT_MIN_FILTER))
     {
         isMipmapEnabledByMinFilter =
             mImage->getLevelCount() < getMipLevelCount(ImageMipLevels::EnabledLevels);
@@ -2517,7 +2518,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 
     // If generating mipmaps and the image needs to be recreated (not full-mip already, or changed
     // usage flags), make sure it's recreated.
-    if (isGenerateMipmap && mImage->valid() &&
+    if (isGenerateMipmap && mImage && mImage->valid() &&
         (oldUsageFlags != mImageUsageFlags ||
          (!mState.getImmutableFormat() &&
           mImage->getLevelCount() != getMipLevelCount(ImageMipLevels::FullMipChain))))
