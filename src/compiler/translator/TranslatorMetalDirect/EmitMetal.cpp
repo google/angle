@@ -1339,7 +1339,23 @@ void GenMetalTraverser::emitSingleConstant(const TConstantUnion *const constUnio
 
         case TBasicType::EbtFloat:
         {
-            mOut << constUnion->getFConst() << "f";
+            float value = constUnion->getFConst();
+            if (std::isnan(value))
+            {
+                mOut << "NAN";
+            }
+            else if (std::isinf(value))
+            {
+                if (value < 0)
+                {
+                    mOut << "-";
+                }
+                mOut << "INFINITY";
+            }
+            else
+            {
+                mOut << value << "f";
+            }
         }
         break;
 
