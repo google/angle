@@ -102,21 +102,19 @@ inline void UpdateAccess(ResourceAccess *oldAccess, ResourceAccess newAccess)
     }
 }
 
-enum RenderPassStoreOp
+enum class RenderPassLoadOp
+{
+    Load     = VK_ATTACHMENT_LOAD_OP_LOAD,
+    Clear    = VK_ATTACHMENT_LOAD_OP_CLEAR,
+    DontCare = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+    None,
+};
+enum class RenderPassStoreOp
 {
     Store    = VK_ATTACHMENT_STORE_OP_STORE,
     DontCare = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-    NoneQCOM,
+    None,
 };
-// ConvertRenderPassStoreOpToVkStoreOp rely on the fact that only NoneQCOM is different from VK
-// enums.
-static_assert(RenderPassStoreOp::NoneQCOM == 2, "ConvertRenderPassStoreOpToVkStoreOp must updated");
-
-inline VkAttachmentStoreOp ConvertRenderPassStoreOpToVkStoreOp(RenderPassStoreOp storeOp)
-{
-    return storeOp == RenderPassStoreOp::NoneQCOM ? VK_ATTACHMENT_STORE_OP_NONE_QCOM
-                                                  : static_cast<VkAttachmentStoreOp>(storeOp);
-}
 
 // There can be a maximum of IMPLEMENTATION_MAX_DRAW_BUFFERS color and resolve attachments, plus one
 // depth/stencil attachment and one depth/stencil resolve attachment.
@@ -287,7 +285,7 @@ static_assert(kRenderPassDescSize == 16, "Size check failed");
 
 struct PackedAttachmentOpsDesc final
 {
-    // VkAttachmentLoadOp is in range [0, 2], and VkAttachmentStoreOp is in range [0, 2].
+    // RenderPassLoadOp is in range [0, 3], and RenderPassStoreOp is in range [0, 2].
     uint16_t loadOp : 2;
     uint16_t storeOp : 2;
     uint16_t stencilLoadOp : 2;
@@ -332,9 +330,9 @@ class AttachmentOpsArray final
     void setLayouts(PackedAttachmentIndex index,
                     ImageLayout initialLayout,
                     ImageLayout finalLayout);
-    void setOps(PackedAttachmentIndex index, VkAttachmentLoadOp loadOp, RenderPassStoreOp storeOp);
+    void setOps(PackedAttachmentIndex index, RenderPassLoadOp loadOp, RenderPassStoreOp storeOp);
     void setStencilOps(PackedAttachmentIndex index,
-                       VkAttachmentLoadOp loadOp,
+                       RenderPassLoadOp loadOp,
                        RenderPassStoreOp storeOp);
 
     void setClearOp(PackedAttachmentIndex index);

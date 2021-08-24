@@ -1482,7 +1482,11 @@ void CommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
 {
     ASSERT(mDepthStencilAttachmentIndex != kAttachmentIndexInvalid);
 
-    PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
+    PackedAttachmentOpsDesc &dsOps   = mAttachmentOps[mDepthStencilAttachmentIndex];
+    RenderPassLoadOp depthLoadOp     = static_cast<RenderPassLoadOp>(dsOps.loadOp);
+    RenderPassStoreOp depthStoreOp   = static_cast<RenderPassStoreOp>(dsOps.storeOp);
+    RenderPassLoadOp stencilLoadOp   = static_cast<RenderPassLoadOp>(dsOps.stencilLoadOp);
+    RenderPassStoreOp stencilStoreOp = static_cast<RenderPassStoreOp>(dsOps.stencilStoreOp);
 
     // This has to be called after layout been finalized
     ASSERT(dsOps.initialLayout != static_cast<uint16_t>(ImageLayout::Undefined));
@@ -1493,12 +1497,12 @@ void CommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
 
     // If the attachment is invalidated, skip the store op.  If we are not loading or clearing the
     // attachment and the attachment has not been used, auto-invalidate it.
-    const bool depthNotLoaded = dsOps.loadOp == VK_ATTACHMENT_LOAD_OP_DONT_CARE &&
-                                !mRenderPassDesc.hasDepthUnresolveAttachment();
+    const bool depthNotLoaded =
+        depthLoadOp == RenderPassLoadOp::DontCare && !mRenderPassDesc.hasDepthUnresolveAttachment();
     if (isInvalidated(mDepthCmdSizeInvalidated, mDepthCmdSizeDisabled) ||
         (depthNotLoaded && mDepthAccess != ResourceAccess::Write))
     {
-        dsOps.storeOp       = RenderPassStoreOp::DontCare;
+        depthStoreOp        = RenderPassStoreOp::DontCare;
         dsOps.isInvalidated = true;
     }
     else if (hasWriteAfterInvalidate(mDepthCmdSizeInvalidated, mDepthCmdSizeDisabled))
@@ -1507,12 +1511,12 @@ void CommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
         // are now defined so a future render pass would use loadOp=LOAD.
         restoreDepthContent();
     }
-    const bool stencilNotLoaded = dsOps.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_DONT_CARE &&
+    const bool stencilNotLoaded = stencilLoadOp == RenderPassLoadOp::DontCare &&
                                   !mRenderPassDesc.hasStencilUnresolveAttachment();
     if (isInvalidated(mStencilCmdSizeInvalidated, mStencilCmdSizeDisabled) ||
         (stencilNotLoaded && mStencilAccess != ResourceAccess::Write))
     {
-        dsOps.stencilStoreOp       = RenderPassStoreOp::DontCare;
+        stencilStoreOp             = RenderPassStoreOp::DontCare;
         dsOps.isStencilInvalidated = true;
     }
     else if (hasWriteAfterInvalidate(mStencilCmdSizeInvalidated, mStencilCmdSizeDisabled))
@@ -1522,44 +1526,19 @@ void CommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
         restoreStencilContent();
     }
 
-    // For read only depth stencil, we can use StoreOpNone if available. DONT_CARE is still
-    // preferred, so do this after finish the DONT_CARE handling.
-    if (mDepthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment) &&
-        context->getRenderer()->getFeatures().supportsRenderPassStoreOpNoneQCOM.enabled)
-    {
-        if (dsOps.storeOp == RenderPassStoreOp::Store)
-        {
-            dsOps.storeOp = RenderPassStoreOp::NoneQCOM;
-        }
-        if (dsOps.stencilStoreOp == RenderPassStoreOp::Store)
-        {
-            dsOps.stencilStoreOp = RenderPassStoreOp::NoneQCOM;
-        }
-    }
-
-    // If we are loading or clearing the attachment, but the attachment has not been used, and the
-    // data has also not been stored back into attachment, then just skip the load/clear op.
-    if (mDepthAccess == ResourceAccess::Unused && dsOps.storeOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
-    {
-        dsOps.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    }
-
-    if (mStencilAccess == ResourceAccess::Unused &&
-        dsOps.stencilStoreOp == RenderPassStoreOp::DontCare)
-    {
-        dsOps.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    }
+    finalizeDepthStencilLoadStoreOps(context, mDepthAccess, &depthLoadOp, &depthStoreOp);
+    finalizeDepthStencilLoadStoreOps(context, mStencilAccess, &stencilLoadOp, &stencilStoreOp);
 
     // This has to be done after storeOp has been finalized.
     if (!mDepthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
     {
         // If the image is being written to, mark its contents defined.
         VkImageAspectFlags definedAspects = 0;
-        if (dsOps.storeOp == VK_ATTACHMENT_STORE_OP_STORE)
+        if (depthStoreOp == RenderPassStoreOp::Store)
         {
             definedAspects |= VK_IMAGE_ASPECT_DEPTH_BIT;
         }
-        if (dsOps.stencilStoreOp == VK_ATTACHMENT_STORE_OP_STORE)
+        if (stencilStoreOp == RenderPassStoreOp::Store)
         {
             definedAspects |= VK_IMAGE_ASPECT_STENCIL_BIT;
         }
@@ -1567,6 +1546,51 @@ void CommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
         {
             mDepthStencilImage->onWrite(mDepthStencilLevelIndex, 1, mDepthStencilLayerIndex,
                                         mDepthStencilLayerCount, definedAspects);
+        }
+    }
+
+    SetBitField(dsOps.loadOp, depthLoadOp);
+    SetBitField(dsOps.storeOp, depthStoreOp);
+    SetBitField(dsOps.stencilLoadOp, stencilLoadOp);
+    SetBitField(dsOps.stencilStoreOp, stencilStoreOp);
+}
+
+void CommandBufferHelper::finalizeDepthStencilLoadStoreOps(Context *context,
+                                                           ResourceAccess access,
+                                                           RenderPassLoadOp *loadOp,
+                                                           RenderPassStoreOp *storeOp)
+{
+    // For read only depth stencil, we can use StoreOpNone if available.  DontCare is still
+    // preferred, so do this after handling DontCare.
+    const bool supportsLoadStoreOpNone =
+        context->getRenderer()->getFeatures().supportsRenderPassLoadStoreOpNone.enabled;
+    const bool supportsStoreOpNone =
+        supportsLoadStoreOpNone ||
+        context->getRenderer()->getFeatures().supportsRenderPassStoreOpNoneQCOM.enabled;
+    if (mDepthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment) &&
+        supportsStoreOpNone)
+    {
+        if (*storeOp == RenderPassStoreOp::Store)
+        {
+            *storeOp = RenderPassStoreOp::None;
+        }
+    }
+
+    if (access == ResourceAccess::Unused)
+    {
+        if (*storeOp == RenderPassStoreOp::DontCare)
+        {
+            // If we are loading or clearing the attachment, but the attachment has not been used,
+            // and the data has also not been stored back into attachment, then just skip the
+            // load/clear op.
+            *loadOp = RenderPassLoadOp::DontCare;
+        }
+        else if (*loadOp != RenderPassLoadOp::Clear && supportsLoadStoreOpNone)
+        {
+            // Otherwise make sure the attachment is neither loaded nor stored (as it's neither
+            // used nor invalidated).
+            *loadOp  = RenderPassLoadOp::None;
+            *storeOp = RenderPassStoreOp::None;
         }
     }
 }
@@ -1746,14 +1770,16 @@ void CommandBufferHelper::updateRenderPassForResolve(ContextVk *contextVk,
 }
 
 // Helper functions used below
-char GetLoadOpShorthand(uint32_t loadOp)
+char GetLoadOpShorthand(RenderPassLoadOp loadOp)
 {
     switch (loadOp)
     {
-        case VK_ATTACHMENT_LOAD_OP_CLEAR:
+        case RenderPassLoadOp::Clear:
             return 'C';
-        case VK_ATTACHMENT_LOAD_OP_LOAD:
+        case RenderPassLoadOp::Load:
             return 'L';
+        case RenderPassLoadOp::None:
+            return 'N';
         default:
             return 'D';
     }
@@ -1765,7 +1791,7 @@ char GetStoreOpShorthand(RenderPassStoreOp storeOp)
     {
         case RenderPassStoreOp::Store:
             return 'S';
-        case RenderPassStoreOp::NoneQCOM:
+        case RenderPassStoreOp::None:
             return 'N';
         default:
             return 'D';
@@ -1802,7 +1828,8 @@ void CommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
 
             for (size_t i = 0; i < colorAttachmentCount; ++i)
             {
-                loadOps += GetLoadOpShorthand(mAttachmentOps[attachmentIndexVk].loadOp);
+                loadOps += GetLoadOpShorthand(
+                    static_cast<RenderPassLoadOp>(mAttachmentOps[attachmentIndexVk].loadOp));
                 storeOps += GetStoreOpShorthand(
                     static_cast<RenderPassStoreOp>(mAttachmentOps[attachmentIndexVk].storeOp));
                 ++attachmentIndexVk;
@@ -1816,8 +1843,10 @@ void CommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
             loadOps += " Depth/Stencil: ";
             storeOps += " Depth/Stencil: ";
 
-            loadOps += GetLoadOpShorthand(mAttachmentOps[attachmentIndexVk].loadOp);
-            loadOps += GetLoadOpShorthand(mAttachmentOps[attachmentIndexVk].stencilLoadOp);
+            loadOps += GetLoadOpShorthand(
+                static_cast<RenderPassLoadOp>(mAttachmentOps[attachmentIndexVk].loadOp));
+            loadOps += GetLoadOpShorthand(
+                static_cast<RenderPassLoadOp>(mAttachmentOps[attachmentIndexVk].stencilLoadOp));
 
             storeOps += GetStoreOpShorthand(
                 static_cast<RenderPassStoreOp>(mAttachmentOps[attachmentIndexVk].storeOp));
