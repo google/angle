@@ -6,9 +6,9 @@
   "src/compiler/translator/Operator_autogen.h":
     "cdaafd06e84ef6a8e4721678d622d844",
   "src/compiler/translator/SymbolTable_ESSL_autogen.cpp":
-    "980c8f4bb755e608c7fd26ad07187483",
+    "cdec7a491a8177afb290b966343fc830",
   "src/compiler/translator/SymbolTable_autogen.cpp":
-    "4936e43f2c7d2e55c6285ee1a8e38170",
+    "c3e73e253e68c35c8896dce160a8be29",
   "src/compiler/translator/SymbolTable_autogen.h":
     "291eba34a070f5fddbf2827a1577c598",
   "src/compiler/translator/builtin_function_declarations.txt":
@@ -16,7 +16,7 @@
   "src/compiler/translator/builtin_variables.json":
     "9cfcb559faaa064c8e30b2d985129297",
   "src/compiler/translator/gen_builtin_symbols.py":
-    "dcd1e9037d54a9531b03862fda8c09e0",
+    "74ac1eb203c04abfbb81174c5fdb257d",
   "src/compiler/translator/tree_util/BuiltIn_ESSL_autogen.h":
     "4ea3769755b81f27d7143a4186854d57",
   "src/compiler/translator/tree_util/BuiltIn_complete_autogen.h":
