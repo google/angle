@@ -1424,6 +1424,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/scrabble_go': {
+      'packages': [
+        {
+            'package': 'angle/traces/scrabble_go',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/shadow_fight_2': {
       'packages': [
         {

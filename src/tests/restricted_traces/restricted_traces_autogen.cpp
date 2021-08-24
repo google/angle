@@ -91,6 +91,7 @@
 #include "rope_hero_vice_town/rope_hero_vice_town_capture_context1.h"
 #include "saint_seiya_awakening/saint_seiya_awakening_capture_context1.h"
 #include "sakura_school_simulator/sakura_school_simulator_capture_context2.h"
+#include "scrabble_go/scrabble_go_capture_context2.h"
 #include "shadow_fight_2/shadow_fight_2_capture_context1.h"
 #include "slingshot_test1/slingshot_test1_capture_context2.h"
 #include "slingshot_test2/slingshot_test2_capture_context2.h"
@@ -573,6 +574,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       sakura_school_simulator::kReplayDrawSurfaceWidth,
       sakura_school_simulator::kReplayDrawSurfaceHeight, kDefaultReplayDrawSurfaceColorSpace,
       "sakura_school_simulator"}},
+    {RestrictedTraceID::scrabble_go,
+     {scrabble_go::kReplayContextClientMajorVersion, scrabble_go::kReplayContextClientMinorVersion,
+      scrabble_go::kReplayFrameStart, scrabble_go::kReplayFrameEnd,
+      scrabble_go::kReplayDrawSurfaceWidth, scrabble_go::kReplayDrawSurfaceHeight,
+      scrabble_go::kReplayDrawSurfaceColorSpace, "scrabble_go"}},
     {RestrictedTraceID::shadow_fight_2,
      {shadow_fight_2::kReplayContextClientMajorVersion,
       shadow_fight_2::kReplayContextClientMinorVersion, shadow_fight_2::kReplayFrameStart,

@@ -108,6 +108,7 @@ enum class RestrictedTraceID
     rope_hero_vice_town,
     saint_seiya_awakening,
     sakura_school_simulator,
+    scrabble_go,
     shadow_fight_2,
     slingshot_test1,
     slingshot_test2,
