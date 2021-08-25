@@ -235,6 +235,9 @@ TEST_P(EGLBlobCacheTest, FragmentOutputLocationKey)
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_blend_func_extended") ||
                        getClientMajorVersion() < 3);
 
+    // http://anglebug.com/5945: ES3_Vulkan_NoVirtual flaky on linux-clang-rel NVIDIA
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsMetal());
+
     EGLDisplay display = getEGLWindow()->getDisplay();
 
     EXPECT_TRUE(mHasBlobCache);
