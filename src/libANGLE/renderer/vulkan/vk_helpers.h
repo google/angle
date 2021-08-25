@@ -1454,7 +1454,7 @@ class ImageHelper final : public Resource, public angle::Subject
     angle::Result initExternal(Context *context,
                                gl::TextureType textureType,
                                const VkExtent3D &extents,
-                               const Format &format,
+                               angle::FormatID intendedFormatID,
                                angle::FormatID actualFormatID,
                                GLint samples,
                                VkImageUsageFlags usage,
@@ -1526,7 +1526,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                 bool hasProtectedContent,
                                 const MemoryProperties &memoryProperties,
                                 const gl::Extents &glExtents,
-                                const Format &format,
+                                angle::FormatID intendedFormatID,
                                 angle::FormatID actualFormatID,
                                 VkImageUsageFlags usage,
                                 uint32_t layerCount);
@@ -1539,7 +1539,7 @@ class ImageHelper final : public Resource, public angle::Subject
                               const MemoryProperties &memoryProperties,
                               VkImageType imageType,
                               const VkExtent3D &extents,
-                              const Format &format,
+                              angle::FormatID intendedFormatID,
                               angle::FormatID actualFormatID,
                               GLint samples,
                               VkImageUsageFlags usage,
@@ -1590,7 +1590,6 @@ class ImageHelper final : public Resource, public angle::Subject
     const VkExtent3D getRotatedExtents() const;
     uint32_t getLayerCount() const { return mLayerCount; }
     uint32_t getLevelCount() const { return mLevelCount; }
-    const Format &getFormat() const { return *mFormat; }
     angle::FormatID getIntendedFormatID() const { return mIntendedFormatID; }
     const angle::Format &getIntendedFormat() const { return angle::Format::Get(mIntendedFormatID); }
     angle::FormatID getActualFormatID() const { return mActualFormatID; }
@@ -2098,7 +2097,6 @@ class ImageHelper final : public Resource, public angle::Subject
     // different between the rotated and non-rotated extents.
     VkExtent3D mExtents;
     bool mRotatedAspectRatio;
-    const Format *mFormat;
     angle::FormatID mIntendedFormatID;
     angle::FormatID mActualFormatID;
     GLint mSamples;

@@ -3803,7 +3803,6 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mUsage(other.mUsage),
       mExtents(other.mExtents),
       mRotatedAspectRatio(other.mRotatedAspectRatio),
-      mFormat(other.mFormat),
       mIntendedFormatID(other.mIntendedFormatID),
       mActualFormatID(other.mActualFormatID),
       mSamples(other.mSamples),
@@ -3840,7 +3839,6 @@ void ImageHelper::resetCachedProperties()
     mUsage                       = 0;
     mExtents                     = {};
     mRotatedAspectRatio          = false;
-    mFormat                      = nullptr;
     mIntendedFormatID            = angle::FormatID::NONE;
     mActualFormatID              = angle::FormatID::NONE;
     mSamples                     = 1;
@@ -3957,10 +3955,10 @@ angle::Result ImageHelper::init(Context *context,
                                 bool isRobustResourceInitEnabled,
                                 bool hasProtectedContent)
 {
-    return initExternal(context, textureType, extents, format, format.actualImageFormatID, samples,
-                        usage, kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
-                        mipLevels, layerCount, isRobustResourceInitEnabled, nullptr,
-                        hasProtectedContent);
+    return initExternal(context, textureType, extents, format.intendedFormatID,
+                        format.actualImageFormatID, samples, usage, kVkImageCreateFlagsNone,
+                        ImageLayout::Undefined, nullptr, firstLevel, mipLevels, layerCount,
+                        isRobustResourceInitEnabled, nullptr, hasProtectedContent);
 }
 
 angle::Result ImageHelper::initMSAASwapchain(Context *context,
@@ -3976,10 +3974,10 @@ angle::Result ImageHelper::initMSAASwapchain(Context *context,
                                              bool isRobustResourceInitEnabled,
                                              bool hasProtectedContent)
 {
-    ANGLE_TRY(initExternal(context, textureType, extents, format, format.actualImageFormatID,
-                           samples, usage, kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr,
-                           firstLevel, mipLevels, layerCount, isRobustResourceInitEnabled, nullptr,
-                           hasProtectedContent));
+    ANGLE_TRY(initExternal(context, textureType, extents, format.intendedFormatID,
+                           format.actualImageFormatID, samples, usage, kVkImageCreateFlagsNone,
+                           ImageLayout::Undefined, nullptr, firstLevel, mipLevels, layerCount,
+                           isRobustResourceInitEnabled, nullptr, hasProtectedContent));
     if (rotatedAspectRatio)
     {
         std::swap(mExtents.width, mExtents.height);
@@ -3991,7 +3989,7 @@ angle::Result ImageHelper::initMSAASwapchain(Context *context,
 angle::Result ImageHelper::initExternal(Context *context,
                                         gl::TextureType textureType,
                                         const VkExtent3D &extents,
-                                        const Format &format,
+                                        angle::FormatID intendedFormatID,
                                         angle::FormatID actualFormatID,
                                         GLint samples,
                                         VkImageUsageFlags usage,
@@ -4012,8 +4010,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     mImageType           = gl_vk::GetImageType(textureType);
     mExtents             = extents;
     mRotatedAspectRatio  = false;
-    mFormat              = &format;
-    mIntendedFormatID    = format.intendedFormatID;
+    mIntendedFormatID    = intendedFormatID;
     mActualFormatID      = actualFormatID;
     mSamples             = std::max(samples, 1);
     mImageSerial         = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
@@ -4533,7 +4530,6 @@ void ImageHelper::init2DWeakReference(Context *context,
 
     gl_vk::GetExtent(glExtents, &mExtents);
     mRotatedAspectRatio = rotatedAspectRatio;
-    mFormat             = &format;
     mIntendedFormatID   = format.intendedFormatID;
     mActualFormatID     = format.actualImageFormatID;
     mSamples            = std::max(samples, 1);
@@ -4551,7 +4547,7 @@ angle::Result ImageHelper::init2DStaging(Context *context,
                                          bool hasProtectedContent,
                                          const MemoryProperties &memoryProperties,
                                          const gl::Extents &glExtents,
-                                         const Format &format,
+                                         angle::FormatID intendedFormatID,
                                          angle::FormatID actualFormatID,
                                          VkImageUsageFlags usage,
                                          uint32_t layerCount)
@@ -4559,7 +4555,7 @@ angle::Result ImageHelper::init2DStaging(Context *context,
     gl_vk::GetExtent(glExtents, &mExtents);
 
     return initStaging(context, hasProtectedContent, memoryProperties, VK_IMAGE_TYPE_2D, mExtents,
-                       format, actualFormatID, 1, usage, 1, layerCount);
+                       intendedFormatID, actualFormatID, 1, usage, 1, layerCount);
 }
 
 angle::Result ImageHelper::initStaging(Context *context,
@@ -4567,7 +4563,7 @@ angle::Result ImageHelper::initStaging(Context *context,
                                        const MemoryProperties &memoryProperties,
                                        VkImageType imageType,
                                        const VkExtent3D &extents,
-                                       const Format &format,
+                                       angle::FormatID intendedFormatID,
                                        angle::FormatID actualFormatID,
                                        GLint samples,
                                        VkImageUsageFlags usage,
@@ -4581,8 +4577,7 @@ angle::Result ImageHelper::initStaging(Context *context,
     mImageType          = imageType;
     mExtents            = extents;
     mRotatedAspectRatio = false;
-    mFormat             = &format;
-    mIntendedFormatID   = format.intendedFormatID;
+    mIntendedFormatID   = intendedFormatID;
     mActualFormatID     = actualFormatID;
     mSamples            = std::max(samples, 1);
     mImageSerial        = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
@@ -4660,8 +4655,8 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
         hasProtectedContent ? VK_IMAGE_CREATE_PROTECTED_BIT : 0;
 
     ANGLE_TRY(initExternal(context, textureType, resolveImage.getExtents(),
-                           resolveImage.getFormat(), resolveImage.getActualFormatID(), samples,
-                           kMultisampledUsageFlags, kMultisampledCreateFlags,
+                           resolveImage.getIntendedFormatID(), resolveImage.getActualFormatID(),
+                           samples, kMultisampledUsageFlags, kMultisampledCreateFlags,
                            ImageLayout::Undefined, nullptr, resolveImage.getFirstAllocatedLevel(),
                            resolveImage.getLevelCount(), resolveImage.getLayerCount(),
                            isRobustResourceInitEnabled, nullptr, hasProtectedContent));
@@ -6137,7 +6132,6 @@ void ImageHelper::stageSelfAsSubresourceUpdates(ContextVk *contextVk,
 
     // Barrier information.  Note: mLevelCount is set to levelCount so that only the necessary
     // levels are transitioned when flushing the update.
-    prevImage->get().mFormat                      = mFormat;
     prevImage->get().mIntendedFormatID            = mIntendedFormatID;
     prevImage->get().mActualFormatID              = mActualFormatID;
     prevImage->get().mCurrentLayout               = mCurrentLayout;
@@ -6940,7 +6934,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     {
         ANGLE_TRY(resolvedImage.get().init2DStaging(
             contextVk, contextVk->hasProtectedContent(), renderer->getMemoryProperties(),
-            gl::Extents(area.width, area.height, 1), *mFormat, mActualFormatID,
+            gl::Extents(area.width, area.height, 1), mIntendedFormatID, mActualFormatID,
             VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT, 1));
         resolvedImage.get().retain(&contextVk->getResourceUseList());
     }
