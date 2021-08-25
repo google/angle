@@ -6843,12 +6843,11 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
             if (angleFormat.stencilBits != 0)
             {
                 // TODO (anglebug.com/4688) Support combined depth stencil for GetTexImage
-                WARN() << "Unable to pull combined depth/stencil for GetTexImage";
-                return angle::Result::Continue;
+                WARN() << "Unable to pull stencil from combined depth/stencil for GetTexImage";
             }
             aspectFlags = VK_IMAGE_ASPECT_DEPTH_BIT;
         }
-        if (angleFormat.stencilBits > 0)
+        else if (angleFormat.stencilBits > 0)
         {
             aspectFlags = VK_IMAGE_ASPECT_STENCIL_BIT;
         }
