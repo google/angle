@@ -7,6 +7,7 @@
 # gen_restricted_traces.py:
 #   Generates integration code for the restricted trace tests.
 
+import getpass
 import glob
 import fnmatch
 import json
@@ -122,6 +123,7 @@ const TraceInfo &GetTraceInfo(RestrictedTraceID traceID)
 """
 
 CIPD_TRACE_PREFIX = 'angle/traces'
+EXPERIMENTAL_CIPD_PREFIX = 'experimental/google.com/%s/angle/traces'
 DEPS_PATH = '../../../DEPS'
 DEPS_START = '# === ANGLE Restricted Trace Generated Code Start ==='
 DEPS_END = '# === ANGLE Restricted Trace Generated Code End ==='
@@ -280,7 +282,12 @@ def update_deps(trace_pairs):
     # Generate substitution string
     replacement = ""
     for (trace, version) in trace_pairs:
-        sub = {'trace': trace, 'version': version, 'trace_prefix': CIPD_TRACE_PREFIX}
+        if 'x' in version:
+            version = version.strip('x')
+            trace_prefix = EXPERIMENTAL_CIPD_PREFIX % getpass.getuser()
+        else:
+            trace_prefix = CIPD_TRACE_PREFIX
+        sub = {'trace': trace, 'version': version, 'trace_prefix': trace_prefix}
         replacement += DEPS_TEMPLATE.format(**sub)
 
     # Update DEPS to download CIPD dependencies

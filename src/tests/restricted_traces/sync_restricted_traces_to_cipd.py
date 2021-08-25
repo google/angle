@@ -9,6 +9,8 @@
 #   restricted_traces.json. Requires access to the CIPD path to work.
 
 import argparse
+import getpass
+import fnmatch
 import logging
 import json
 import os
@@ -17,6 +19,7 @@ import subprocess
 import sys
 
 CIPD_PREFIX = 'angle/traces'
+EXPERIMENTAL_CIPD_PREFIX = 'experimental/google.com/%s/angle/traces'
 LOG_LEVEL = 'info'
 JSON_PATH = 'restricted_traces.json'
 SCRIPT_DIR = os.path.dirname(sys.argv[0])
@@ -37,7 +40,18 @@ def main(args):
 
     for trace_info in traces['traces']:
         trace, trace_version = trace_info.split(' ')
-        trace_name = '%s/%s' % (args.prefix, trace)
+
+        if args.filter and not fnmatch.fnmatch(trace, args.filter):
+            logging.debug('Skipping %s because it does not match the test filter.' % trace)
+            continue
+
+        if 'x' in trace_version:
+            trace_prefix = EXPERIMENTAL_CIPD_PREFIX % getpass.getuser()
+            trace_version = trace_version.strip('x')
+        else:
+            trace_prefix = CIPD_PREFIX
+
+        trace_name = '%s/%s' % (trace_prefix, trace)
         # Determine if this version exists
         if cipd('describe', trace_name, '-version', 'version:%s' % trace_version) == 0:
             logging.info('%s version %s already present' % (trace, trace_version))
@@ -59,6 +73,8 @@ if __name__ == '__main__':
         '-p', '--prefix', help='CIPD Prefix. Default: %s' % CIPD_PREFIX, default=CIPD_PREFIX)
     parser.add_argument(
         '-l', '--log', help='Logging level. Default: %s' % LOG_LEVEL, default=LOG_LEVEL)
+    parser.add_argument(
+        '-f', '--filter', help='Only sync specified tests. Supports fnmatch expressions.')
     args, extra_flags = parser.parse_known_args()
 
     logging.basicConfig(level=args.log.upper())
