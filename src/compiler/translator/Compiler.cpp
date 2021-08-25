@@ -682,9 +682,24 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     bool highPrecisionSupported        = isHighPrecisionSupported();
     bool enableNonConstantInitializers = IsExtensionEnabled(
         mExtensionBehavior, TExtension::EXT_shader_non_constant_global_initializers);
+    // forceDeferGlobalInitializers is needed for MSL
+    // to convert a non-const global. For example:
+    //
+    //    int someGlobal = 123;
+    //
+    // to
+    //
+    //    int someGlobal;
+    //    void main() {
+    //        someGlobal = 123;
+    //
+    // This is because MSL doesn't allow statically initialized globals.
+    bool forceDeferGlobalInitializers = getOutputType() == SH_MSL_METAL_OUTPUT;
+
     if (enableNonConstantInitializers &&
         !DeferGlobalInitializers(this, root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
-                                 highPrecisionSupported, &mSymbolTable))
+                                 highPrecisionSupported, forceDeferGlobalInitializers,
+                                 &mSymbolTable))
     {
         return false;
     }
@@ -978,7 +993,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // be optimized out
     if (!enableNonConstantInitializers &&
         !DeferGlobalInitializers(this, root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
-                                 highPrecisionSupported, &mSymbolTable))
+                                 highPrecisionSupported, forceDeferGlobalInitializers,
+                                 &mSymbolTable))
     {
         return false;
     }
