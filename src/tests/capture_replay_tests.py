@@ -194,7 +194,7 @@ class ChildProcessesManager():
         path = os.path.join('third_party', 'depot_tools')
         return os.path.join(path, winext('gn', 'bat')), os.path.join(path, winext('ninja', 'exe'))
 
-    def __init__(self, logger):
+    def __init__(self, logger, ninja_lock):
         # a dictionary of Subprocess, with pid as key
         self.subprocesses = {}
         # list of Python multiprocess.Process handles
@@ -203,6 +203,7 @@ class ChildProcessesManager():
         self._gn_path, self._ninja_path = self._GetGnAndNinjaAbsolutePaths()
         self._use_goma = AutodetectGoma()
         self._logger = logger
+        self._ninja_lock = ninja_lock
 
     def RunSubprocess(self, command, env=None, pipe_stdout=True, timeout=None):
         proc = SubProcess(command, self._logger, env, pipe_stdout)
@@ -298,7 +299,9 @@ class ChildProcessesManager():
             cmd.append('%d' % os.cpu_count())
 
         cmd += ['-C', build_dir, target]
-        return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
+        with self._ninja_lock:
+            self._logger.info('Running %s' % ' '.join(cmd))
+            return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
 
 
 def GetTestsListForFilter(args, test_path, filter, logger):
@@ -775,11 +778,11 @@ def SetCWDToAngleFolder():
     return cwd
 
 
-def RunTests(args, worker_id, job_queue, result_list, message_queue, logger):
+def RunTests(args, worker_id, job_queue, result_list, message_queue, logger, ninja_lock):
     replay_build_dir = os.path.join(args.out_dir, 'Replay%d' % worker_id)
     replay_exec_path = os.path.join(replay_build_dir, REPLAY_BINARY)
 
-    child_processes_manager = ChildProcessesManager(logger)
+    child_processes_manager = ChildProcessesManager(logger, ninja_lock)
     # used to differentiate between multiple composite files when there are multiple test batchs
     # running on the same worker and --deleted_trace is set to False
     composite_file_id = 1
@@ -873,7 +876,8 @@ def main(args, platform):
     logger = multiprocessing.log_to_stderr()
     logger.setLevel(level=args.log.upper())
 
-    child_processes_manager = ChildProcessesManager(logger)
+    ninja_lock = multiprocessing.Lock()
+    child_processes_manager = ChildProcessesManager(logger, ninja_lock)
     try:
         start_time = time.time()
         # set the number of workers to be cpu_count - 1 (since the main process already takes up a
@@ -946,7 +950,7 @@ def main(args, platform):
         for worker_id in range(worker_count):
             proc = multiprocessing.Process(
                 target=RunTests,
-                args=(args, worker_id, job_queue, result_list, message_queue, logger))
+                args=(args, worker_id, job_queue, result_list, message_queue, logger, ninja_lock))
             child_processes_manager.AddWorker(proc)
             proc.start()
 
