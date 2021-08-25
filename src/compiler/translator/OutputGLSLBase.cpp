@@ -924,13 +924,12 @@ bool TOutputGLSLBase::visitDeclaration(Visit visit, TIntermDeclaration *node)
     if (visit == PreVisit)
     {
         const TIntermSequence &sequence = *(node->getSequence());
-        TIntermTyped *variable          = sequence.front()->getAsTyped();
-        TIntermSymbol *symbolNode       = variable->getAsSymbolNode();
+        TIntermTyped *decl              = sequence.front()->getAsTyped();
+        TIntermSymbol *symbolNode       = decl->getAsSymbolNode();
         if (symbolNode == nullptr)
         {
-            ASSERT(variable->getAsBinaryNode() &&
-                   variable->getAsBinaryNode()->getOp() == EOpInitialize);
-            symbolNode = variable->getAsBinaryNode()->getLeft()->getAsSymbolNode();
+            ASSERT(decl->getAsBinaryNode() && decl->getAsBinaryNode()->getOp() == EOpInitialize);
+            symbolNode = decl->getAsBinaryNode()->getLeft()->getAsSymbolNode();
         }
         ASSERT(symbolNode);
 
@@ -941,11 +940,7 @@ bool TOutputGLSLBase::visitDeclaration(Visit visit, TIntermDeclaration *node)
             writeLayoutQualifier(symbolNode);
         }
 
-        // Note: the TIntermDeclaration type is used for variable declaration instead of the
-        // TIntermSymbol one.  The TIntermDeclaration type includes precision promotions from the
-        // right hand side that the symbol may be missing.  This is an inconsistency in the tree
-        // that is too ingrained.
-        writeVariableType(variable->getType(), &symbolNode->variable(), false);
+        writeVariableType(symbolNode->getType(), &symbolNode->variable(), false);
         if (symbolNode->variable().symbolType() != SymbolType::Empty)
         {
             out << " ";

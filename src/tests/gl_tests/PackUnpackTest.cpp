@@ -37,7 +37,7 @@ layout(location = 0) out mediump vec4 fragColor;
 
 void main()
 {
-    uint u = packSnorm2x16(v);
+    highp uint u = packSnorm2x16(v);
     vec2 r = unpackSnorm2x16(u);
     fragColor = vec4(r, 0.0, 1.0);
 })";
@@ -50,7 +50,7 @@ layout(location = 0) out mediump vec4 fragColor;
 
 void main()
 {
-    uint u = packUnorm2x16(v);
+    highp uint u = packUnorm2x16(v);
     vec2 r = unpackUnorm2x16(u);
     fragColor = vec4(r, 0.0, 1.0);
 })";
@@ -63,7 +63,7 @@ layout(location = 0) out mediump vec4 fragColor;
 
 void main()
 {
-    uint u = packHalf2x16(v);
+    highp uint u = packHalf2x16(v);
     vec2 r = unpackHalf2x16(u);
     fragColor = vec4(r, 0.0, 1.0);
 })";
