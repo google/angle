@@ -452,6 +452,9 @@ TEST_P(MultithreadingTest, MultiCreateContext)
     // Not supported on Ozone (https://crbug.com/1103009)
     ANGLE_SKIP_TEST_IF(!(IsWindows() || IsLinux() || IsOSX()) || IsOzone());
 
+    // http://anglebug.com/5945: ES3_Vulkan_NoVirtual flaky on linux-clang-rel NVIDIA
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux() && IsNVIDIA());
+
     EGLWindow *window  = getEGLWindow();
     EGLDisplay dpy     = window->getDisplay();
     EGLContext ctx     = window->getContext();
