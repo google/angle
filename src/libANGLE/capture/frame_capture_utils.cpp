@@ -782,23 +782,33 @@ Result SerializeRenderbuffer(const gl::Context *context,
     GroupScope wg(json, "Renderbuffer", renderbuffer->id().value);
     SerializeRenderbufferState(json, renderbuffer->getState());
     json->addString("Label", renderbuffer->getLabel());
-    MemoryBuffer *pixelsPtr = nullptr;
-    ANGLE_CHECK_GL_ALLOC(
-        const_cast<gl::Context *>(context),
-        scratchBuffer->getInitialized(renderbuffer->getMemorySize(), &pixelsPtr, 0));
 
     if (renderbuffer->initState(gl::ImageIndex()) == gl::InitState::Initialized)
     {
+        const gl::InternalFormat &format = *renderbuffer->getFormat().info;
+
+        const gl::Extents size(renderbuffer->getWidth(), renderbuffer->getHeight(), 1);
         gl::PixelPackState packState;
         packState.alignment = 1;
+
+        GLenum readFormat = renderbuffer->getImplementationColorReadFormat(context);
+        GLenum readType   = renderbuffer->getImplementationColorReadType(context);
+
+        GLuint bytes   = 0;
+        bool computeOK = format.computePackUnpackEndByte(readType, size, packState, false, &bytes);
+        ASSERT(computeOK);
+
+        MemoryBuffer *pixelsPtr = nullptr;
+        ANGLE_CHECK_GL_ALLOC(const_cast<gl::Context *>(context),
+                             scratchBuffer->getInitialized(bytes, &pixelsPtr, 0));
+
         ANGLE_TRY(renderbuffer->getImplementation()->getRenderbufferImage(
-            context, packState, nullptr, renderbuffer->getImplementationColorReadFormat(context),
-            renderbuffer->getImplementationColorReadType(context), pixelsPtr->data()));
-        json->addBlob("pixel", pixelsPtr->data(), pixelsPtr->size());
+            context, packState, nullptr, readFormat, readType, pixelsPtr->data()));
+        json->addBlob("Pixels", pixelsPtr->data(), pixelsPtr->size());
     }
     else
     {
-        json->addCString("pixel", "Not initialized");
+        json->addCString("Pixels", "Not initialized");
     }
     return Result::Continue;
 }
@@ -1115,21 +1125,20 @@ Result SerializeTextureData(JsonSerializer *json,
                index.getType() == gl::TextureType::_2DArray ||
                index.getType() == gl::TextureType::CubeMap);
 
-        GLenum getFormat = format.format;
-        GLenum getType   = format.type;
+        GLenum glFormat = format.format;
+        GLenum glType   = format.type;
 
         const gl::Extents size(desc.size.width, desc.size.height, desc.size.depth);
-        const gl::PixelUnpackState &unpack = context->getState().getUnpackState();
+        gl::PixelPackState packState;
+        packState.alignment = 1;
 
         GLuint endByte  = 0;
-        bool unpackSize = format.computePackUnpackEndByte(getType, size, unpack, true, &endByte);
+        bool unpackSize = format.computePackUnpackEndByte(glType, size, packState, true, &endByte);
         ASSERT(unpackSize);
         MemoryBuffer *texelsPtr = nullptr;
         ANGLE_CHECK_GL_ALLOC(const_cast<gl::Context *>(context),
                              scratchBuffer->getInitialized(endByte, &texelsPtr, 0));
 
-        gl::PixelPackState packState;
-        packState.alignment = 1;
         std::stringstream label;
 
         label << "Texels-Level" << index.getLevelIndex();
@@ -1146,7 +1155,7 @@ Result SerializeTextureData(JsonSerializer *json,
             else
             {
                 ANGLE_TRY(texture->getTexImage(context, packState, nullptr, index.getTarget(),
-                                               index.getLevelIndex(), getFormat, getType,
+                                               index.getLevelIndex(), glFormat, glType,
                                                texelsPtr->data()));
                 json->addBlob(label.str(), texelsPtr->data(), texelsPtr->size());
             }

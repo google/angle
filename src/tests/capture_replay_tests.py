@@ -38,8 +38,6 @@ import sys
 import time
 import traceback
 
-from sys import platform
-
 PIPE_STDOUT = True
 DEFAULT_OUT_DIR = "out/CaptureReplayTest"  # relative to angle folder
 DEFAULT_FILTER = "*/ES2_Vulkan_SwiftShader"
@@ -54,7 +52,7 @@ DEFAULT_RESULT_FILE = "results.txt"
 DEFAULT_LOG_LEVEL = "info"
 DEFAULT_MAX_JOBS = 8
 REPLAY_BINARY = "capture_replay_tests"
-if platform == "win32":
+if sys.platform == "win32":
     REPLAY_BINARY += ".exe"
 TRACE_FOLDER = "traces"
 
@@ -148,7 +146,7 @@ std::vector<TestTraceInfo> testTraceInfos =
 
 
 def winext(name, ext):
-    return ("%s.%s" % (name, ext)) if platform == "win32" else name
+    return ("%s.%s" % (name, ext)) if sys.platform == "win32" else name
 
 
 def AutodetectGoma():
@@ -714,27 +712,38 @@ class TestExpectation():
                    "PASS" : GroupedResult.Passed}
     # yapf: enable
 
-    def __init__(self, platform):
+    def __init__(self, args):
         expected_results_filename = "capture_replay_expectations.txt"
         expected_results_path = os.path.join(REPLAY_SAMPLE_FOLDER, expected_results_filename)
+        self._asan = args.asan
         with open(expected_results_path, "rt") as f:
             for line in f:
                 l = line.strip()
                 if l != "" and not l.startswith("#"):
-                    self.ReadOneExpectation(l, platform)
+                    self.ReadOneExpectation(l)
 
-    def ReadOneExpectation(self, line, platform):
+    def _CheckTagsWithConfig(self, tags, config_tags):
+        for tag in tags:
+            if tag not in config_tags:
+                return False
+        return True
+
+    def ReadOneExpectation(self, line):
         (testpattern, result) = line.split('=')
         (test_info_string, test_name_string) = testpattern.split(':')
         test_name = test_name_string.strip()
         test_info = test_info_string.strip().split()
         result_stripped = result.strip()
 
-        platforms = [platform]
+        tags = []
         if len(test_info) > 1:
-            platforms = test_info[1:]
+            tags = test_info[1:]
 
-        if platform in platforms:
+        config_tags = [GetPlatformForSkip()]
+        if self._asan:
+            config_tags += ['ASAN']
+
+        if self._CheckTagsWithConfig(tags, config_tags):
             test_name_regex = re.compile('^' + test_name.replace('*', '.*') + '$')
             if result_stripped == 'SKIP_FOR_CAPTURE':
                 self.skipped_for_capture_tests.append(test_name_regex)
@@ -863,16 +872,16 @@ def DeleteTraceFolders(folder_num):
             SafeDeleteFolder(folder_path)
 
 
-def GetPlatformForSkip(platform):
+def GetPlatformForSkip():
     # yapf: disable
     # we want each pair on one line
     platform_map = { "win32" : "WIN",
                      "linux" : "LINUX" }
     # yapf: enable
-    return platform_map.get(platform, "UNKNOWN")
+    return platform_map.get(sys.platform, "UNKNOWN")
 
 
-def main(args, platform):
+def main(args):
     logger = multiprocessing.log_to_stderr()
     logger.setLevel(level=args.log.upper())
 
@@ -903,7 +912,7 @@ def main(args, platform):
         # get a list of tests
         test_path = os.path.join(capture_build_dir, args.test_suite)
         test_list = GetTestsListForFilter(args, test_path, args.filter, logger)
-        test_expectation = TestExpectation(platform)
+        test_expectation = TestExpectation(args)
         test_names = ParseTestNamesFromTestList(test_list, test_expectation,
                                                 args.also_run_skipped_for_capture_tests, logger)
         test_expectation_for_list = test_expectation.Filter(test_names)
@@ -1137,11 +1146,11 @@ if __name__ == '__main__':
         '--show-capture-stdout', action='store_true', help='Print test stdout during capture.')
     parser.add_argument('--debug', action='store_true', help='Debug builds (default is Release).')
     args = parser.parse_args()
-    if platform == "win32":
+    if sys.platform == "win32":
         args.test_suite += ".exe"
     if args.output_to_file:
         logging.basicConfig(level=args.log.upper(), filename=args.result_file)
     else:
         logging.basicConfig(level=args.log.upper())
 
-    sys.exit(main(args, GetPlatformForSkip(platform)))
+    sys.exit(main(args))
