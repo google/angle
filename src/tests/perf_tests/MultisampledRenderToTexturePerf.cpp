@@ -107,8 +107,8 @@ MultisampledRenderToTextureBenchmark::MultisampledRenderToTextureBenchmark()
         mSkipTest = true;
     }
 
-    // Fails on Pixel 2 GLES: http://anglebug.com/5120
-    if (IsPixel2() && GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
+    // Fails on Pixel 4 GLES: http://anglebug.com/5120
+    if (IsPixel4() && GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
     {
         mSkipTest = true;
     }
@@ -117,6 +117,13 @@ MultisampledRenderToTextureBenchmark::MultisampledRenderToTextureBenchmark()
     if (IsLinux() && IsAMD() &&
         GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
         GetParam().multiplePasses && GetParam().withDepthStencil)
+    {
+        mSkipTest = true;
+    }
+
+    // http://anglebug.com/6319
+    if (IsLinux() && IsIntel() &&
+        GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         mSkipTest = true;
     }
