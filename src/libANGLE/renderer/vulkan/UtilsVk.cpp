@@ -2097,14 +2097,15 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         imageClearProgram = &mImageClearProgram[flags];
     }
 
-    ANGLE_TRY(setupProgram(contextVk, Function::ImageClear, fragmentShader, vertexShader,
-                           imageClearProgram, &pipelineDesc, VK_NULL_HANDLE, &shaderParams,
-                           sizeof(shaderParams), commandBuffer));
-
-    // Make sure transform feedback is paused
+    // Make sure transform feedback is paused.  Needs to be done before binding the pipeline as
+    // that's not allowed in Vulkan.
     bool isTransformFeedbackActiveUnpaused =
         contextVk->getStartedRenderPassCommands().isTransformFeedbackActiveUnpaused();
     contextVk->pauseTransformFeedbackIfActiveUnpaused();
+
+    ANGLE_TRY(setupProgram(contextVk, Function::ImageClear, fragmentShader, vertexShader,
+                           imageClearProgram, &pipelineDesc, VK_NULL_HANDLE, &shaderParams,
+                           sizeof(shaderParams), commandBuffer));
 
     // Make sure this draw call doesn't count towards occlusion query results.
     contextVk->pauseRenderPassQueriesIfActive();
