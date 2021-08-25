@@ -1784,122 +1784,26 @@ bool ValidateES2TexStorageParametersBase(const Context *context,
         }
     }
 
+    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidFormat);
+        return false;
+    }
+
+    // Even with OES_texture_npot, some compressed formats may impose extra restrictions.
+    if (formatInfo.compressed)
+    {
+        if (!ValidCompressedImageSize(context, formatInfo.internalFormat, 0, width, height, 1))
+        {
+            context->validationError(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
+            return false;
+        }
+    }
+
     switch (internalformat)
     {
-        case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-        case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-            if (!context->getExtensions().textureCompressionDXT1)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-            if (!context->getExtensions().textureCompressionDXT3)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-            if (!context->getExtensions().textureCompressionDXT5)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_ETC1_RGB8_OES:
-            if (!context->getExtensions().compressedETC1RGB8TextureOES)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
-        case GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE:
-        case GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE:
-        case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-        case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-            if (!context->getExtensions().lossyETCDecode)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
-        case GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG:
-        case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-        case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-            if (!context->getExtensions().compressedTexturePVRTC)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT:
-        case GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT:
-        case GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT:
-        case GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT:
-            if (!context->getExtensions().compressedTexturePVRTCsRGB)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_RGBA32F_EXT:
-        case GL_RGB32F_EXT:
-        case GL_ALPHA32F_EXT:
-        case GL_LUMINANCE32F_EXT:
-        case GL_LUMINANCE_ALPHA32F_EXT:
-            if (!context->getExtensions().textureFloatOES)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_RGBA16F_EXT:
-        case GL_RGB16F_EXT:
-        case GL_ALPHA16F_EXT:
-        case GL_LUMINANCE16F_EXT:
-        case GL_LUMINANCE_ALPHA16F_EXT:
-            if (!context->getExtensions().textureHalfFloat)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_R8_EXT:
-        case GL_RG8_EXT:
-            if (!context->getExtensions().textureRG)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_R16F_EXT:
-        case GL_RG16F_EXT:
-            if (!context->getExtensions().textureRG || !context->getExtensions().textureHalfFloat)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-        case GL_R32F_EXT:
-        case GL_RG32F_EXT:
-            if (!context->getExtensions().textureRG || !context->getExtensions().textureFloatOES)
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
         case GL_DEPTH_COMPONENT16:
         case GL_DEPTH_COMPONENT32_OES:
-            if (!(context->getExtensions().depthTextureAny()))
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-
             switch (target)
             {
                 case TextureType::_2D:
@@ -1927,15 +1831,6 @@ bool ValidateES2TexStorageParametersBase(const Context *context,
             }
             break;
         case GL_DEPTH24_STENCIL8_OES:
-            if (!(context->getExtensions().depthTextureANGLE ||
-                  ((context->getExtensions().packedDepthStencilOES ||
-                    context->getExtensions().depthTextureCubeMapOES) &&
-                   context->getExtensions().textureStorage)))
-            {
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-
             switch (target)
             {
                 case TextureType::_2D:

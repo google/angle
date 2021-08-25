@@ -142,7 +142,7 @@ TEST_P(TextureRectangleTest, TexStorage2D)
     {
         GLTexture tex;
         glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
-        TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 1, GL_RGBA8UI, 16, 16);
+        TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 1, GL_RGBA8, 16, 16);
         ASSERT_GL_NO_ERROR();
     }
 
@@ -152,7 +152,7 @@ TEST_P(TextureRectangleTest, TexStorage2D)
         glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
         // Use 5 levels because the EXT_texture_storage extension requires a mip chain all the way
         // to a 1x1 mip.
-        TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 5, GL_RGBA8UI, 16, 16);
+        TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 5, GL_RGBA8, 16, 16);
         ASSERT_GL_ERROR(GL_INVALID_VALUE);
     }
 
@@ -165,7 +165,7 @@ TEST_P(TextureRectangleTest, TexStorage2D)
 
         GLTexture tex;
         glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
-        TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 1, GL_RGBA8UI, maxSize, maxSize);
+        TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 1, GL_RGBA8, maxSize, maxSize);
         GLenum error = glGetError();
         ASSERT_TRUE(error == GL_NO_ERROR || error == GL_OUT_OF_MEMORY);
     }
@@ -174,9 +174,9 @@ TEST_P(TextureRectangleTest, TexStorage2D)
     {
         GLTexture tex;
         glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
-        TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 1, GL_RGBA8UI, maxSize + 1, maxSize);
+        TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 1, GL_RGBA8, maxSize + 1, maxSize);
         ASSERT_GL_ERROR(GL_INVALID_VALUE);
-        TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 1, GL_RGBA8UI, maxSize, maxSize + 1);
+        TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 1, GL_RGBA8, maxSize, maxSize + 1);
         ASSERT_GL_ERROR(GL_INVALID_VALUE);
     }
 

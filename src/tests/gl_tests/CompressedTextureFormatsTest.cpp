@@ -44,7 +44,7 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
         mDisableTexture3D = IsMetal() && !IsMetalCompressedTexture3DAvailable();
     }
 
-    void check2D(const bool extensionEnabled)
+    void check2D(const bool compressedFormatEnabled)
     {
         const GLenum format = ::testing::get<1>(GetParam()).first;
         const GLsizei size  = ::testing::get<1>(GetParam()).second;
@@ -62,7 +62,7 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
             EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
             glCompressedTexImage2D(GL_TEXTURE_2D, 0, format, 4, 4, 0, size, nullptr);
-            if (extensionEnabled)
+            if (compressedFormatEnabled)
             {
                 EXPECT_GL_NO_ERROR();
                 glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -83,7 +83,7 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
             glBindTexture(GL_TEXTURE_2D, texture);
 
             glTexStorage2D(GL_TEXTURE_2D, 1, format, 4, 4);
-            if (extensionEnabled)
+            if (compressedFormatEnabled)
             {
                 EXPECT_GL_NO_ERROR();
                 glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -99,7 +99,36 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
         }
     }
 
-    void check3D(GLenum target, const bool extensionEnabled, const bool supportsTarget)
+    void check2DExt(const bool compressedFormatEnabled)
+    {
+        if (!EnsureGLExtensionEnabled("GL_EXT_texture_storage"))
+            return;
+
+        const GLenum format = ::testing::get<1>(GetParam()).first;
+        const GLsizei size  = ::testing::get<1>(GetParam()).second;
+
+        GLubyte data[32];
+
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, 4, 4);
+        if (compressedFormatEnabled)
+        {
+            EXPECT_GL_NO_ERROR();
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, format, size, data);
+            EXPECT_GL_ERROR(mSupportsUpdates ? GL_NO_ERROR : GL_INVALID_OPERATION);
+        }
+        else
+        {
+            EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        }
+    }
+
+    void check3D(GLenum target, const bool compressedFormatEnabled, const bool supportsTarget)
     {
         const GLenum format = ::testing::get<1>(GetParam()).first;
         const GLsizei size  = ::testing::get<1>(GetParam()).second;
@@ -114,7 +143,7 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
             EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
             glCompressedTexImage3D(target, 0, format, 4, 4, 1, 0, size, nullptr);
-            if (extensionEnabled)
+            if (compressedFormatEnabled)
             {
                 if (supportsTarget)
                 {
@@ -139,7 +168,7 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
             glBindTexture(target, texture);
 
             glTexStorage3D(target, 1, format, 4, 4, 1);
-            if (extensionEnabled)
+            if (compressedFormatEnabled)
             {
                 if (supportsTarget)
                 {
@@ -172,12 +201,13 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
         }
 
         // It's not possible to disable ETC2/EAC support on ES 3.0.
-        const bool extensionEnabled = mAlwaysOnES3 && getClientMajorVersion() >= 3;
-        check2D(extensionEnabled);
+        const bool compressedFormatEnabled = mAlwaysOnES3 && getClientMajorVersion() >= 3;
+        check2D(compressedFormatEnabled);
+        check2DExt(compressedFormatEnabled);
         if (getClientMajorVersion() >= 3)
         {
-            check3D(GL_TEXTURE_2D_ARRAY, extensionEnabled, mSupports2DArray);
-            check3D(GL_TEXTURE_3D, extensionEnabled, mSupports3D && !mDisableTexture3D);
+            check3D(GL_TEXTURE_2D_ARRAY, compressedFormatEnabled, mSupports2DArray);
+            check3D(GL_TEXTURE_3D, compressedFormatEnabled, mSupports3D && !mDisableTexture3D);
         }
 
         for (const std::string &extName : mExtNames)
@@ -194,6 +224,7 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
 
         // Repeat all checks after enabling the extensions.
         check2D(true);
+        check2DExt(true);
         if (getClientMajorVersion() >= 3)
         {
             check3D(GL_TEXTURE_2D_ARRAY, true, mSupports2DArray);
