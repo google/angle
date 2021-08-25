@@ -1856,6 +1856,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                         gl::Buffer *packBuffer,
                                         gl::LevelIndex levelGL,
                                         uint32_t layer,
+                                        uint32_t layerCount,
                                         GLenum format,
                                         GLenum type,
                                         void *pixels);

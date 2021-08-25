@@ -6824,6 +6824,7 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
                                                  gl::Buffer *packBuffer,
                                                  gl::LevelIndex levelGL,
                                                  uint32_t layer,
+                                                 uint32_t layerCount,
                                                  GLenum format,
                                                  GLenum type,
                                                  void *pixels)
@@ -6870,12 +6871,17 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
     stagingBuffer.get().init(contextVk->getRenderer(), VK_BUFFER_USAGE_TRANSFER_DST_BIT, 1,
                              kStagingBufferSize, true, DynamicBufferPolicy::OneShotUse);
 
-    if (mExtents.depth > 1)
+    if (mExtents.depth > 1 || layerCount > 1)
     {
+        ASSERT(layer == 0);
+        ASSERT(layerCount == 1 || mipExtents.depth == 1);
+
+        uint32_t lastLayer = std::max(static_cast<uint32_t>(mipExtents.depth), layerCount);
+
         // Depth > 1 means this is a 3D texture and we need to copy all layers
-        for (layer = 0; layer < static_cast<uint32_t>(mipExtents.depth); layer++)
+        for (uint32_t mipLayer = 0; mipLayer < lastLayer; mipLayer++)
         {
-            ANGLE_TRY(readPixels(contextVk, area, params, aspectFlags, levelGL, layer,
+            ANGLE_TRY(readPixels(contextVk, area, params, aspectFlags, levelGL, mipLayer,
                                  static_cast<uint8_t *>(pixels) + outputSkipBytes,
                                  &stagingBuffer.get()));
 

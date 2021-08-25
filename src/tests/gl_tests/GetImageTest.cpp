@@ -41,6 +41,12 @@ class GetImageTestNoExtensions : public ANGLETest
     GetImageTestNoExtensions() { setExtensionsEnabled(false); }
 };
 
+class GetImageTestES31 : public GetImageTest
+{
+  public:
+    GetImageTestES31() {}
+};
+
 GLTexture InitTextureWithFormatAndSize(GLenum format, uint32_t size, void *pixelData)
 {
     GLTexture tex;
@@ -452,8 +458,88 @@ TEST_P(GetImageTest, GetImageRGB)
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::yellow);
 }
 
+// Tests GetImage with 2D array textures.
+TEST_P(GetImageTestES31, Texture2DArray)
+{
+    constexpr GLsizei kSize   = 2;
+    constexpr GLsizei kLayers = 4;
+
+    std::vector<GLColor> expectedPixels = {
+        GLColor::red,    GLColor::red,    GLColor::red,    GLColor::red,
+        GLColor::green,  GLColor::green,  GLColor::green,  GLColor::green,
+        GLColor::blue,   GLColor::blue,   GLColor::blue,   GLColor::blue,
+        GLColor::yellow, GLColor::yellow, GLColor::yellow, GLColor::yellow,
+    };
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, kSize, kSize, kLayers, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, expectedPixels.data());
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLColor> actualPixels(expectedPixels.size(), GLColor::white);
+    glGetTexImageANGLE(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, GL_UNSIGNED_BYTE, actualPixels.data());
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(expectedPixels, actualPixels);
+}
+
+// Tests GetImage with 3D textures.
+TEST_P(GetImageTestES31, Texture3D)
+{
+    constexpr GLsizei kSize = 2;
+
+    std::vector<GLColor> expectedPixels = {
+        GLColor::red,  GLColor::red,  GLColor::green,  GLColor::green,
+        GLColor::blue, GLColor::blue, GLColor::yellow, GLColor::yellow,
+    };
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_3D, tex);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, kSize, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 expectedPixels.data());
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLColor> actualPixels(expectedPixels.size(), GLColor::white);
+    glGetTexImageANGLE(GL_TEXTURE_3D, 0, GL_RGBA, GL_UNSIGNED_BYTE, actualPixels.data());
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(expectedPixels, actualPixels);
+}
+
+// Tests GetImage with cube map array textures.
+TEST_P(GetImageTestES31, TextureCubeMapArray)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_cube_map_array") &&
+                       !IsGLExtensionEnabled("GL_OES_texture_cube_map_array"));
+
+    constexpr GLsizei kSize   = 1;
+    constexpr GLsizei kLayers = 2;
+
+    std::vector<GLColor> expectedPixels = {
+        GLColor::red,  GLColor::green,   GLColor::blue, GLColor::yellow,
+        GLColor::cyan, GLColor::magenta, GLColor::red,  GLColor::green,
+        GLColor::blue, GLColor::yellow,  GLColor::cyan, GLColor::magenta,
+    };
+
+    ASSERT_EQ(expectedPixels.size(), static_cast<size_t>(6 * kSize * kSize * kLayers));
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, tex);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, kSize, kSize, kLayers * 6, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, expectedPixels.data());
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLColor> actualPixels(expectedPixels.size(), GLColor::white);
+    glGetTexImageANGLE(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                       actualPixels.data());
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(expectedPixels, actualPixels);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTest);
 ANGLE_INSTANTIATE_TEST(GetImageTest, ES2_VULKAN(), ES3_VULKAN());
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTestES31);
+ANGLE_INSTANTIATE_TEST(GetImageTestES31, ES31_VULKAN());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTestNoExtensions);
 ANGLE_INSTANTIATE_TEST(GetImageTestNoExtensions, ES2_VULKAN(), ES3_VULKAN());
