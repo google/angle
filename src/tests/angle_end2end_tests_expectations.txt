@@ -42,6 +42,8 @@
 1230024 LINUX AMD GLES : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 1230024 LINUX AMD OPENGL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 6192 LINUX AMD OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_OpenGL = SKIP
+5945 LINUX NVIDIA VULKAN : MultithreadingTest.MultiContextClear/* = SKIP
+5945 LINUX NVIDIA VULKAN : MultithreadingTest.MultiCreateContext/* = SKIP
 
 // Nvidia
 6115 NVIDIA OPENGL : GLSLTestLoops.DoWhileContinue/* = SKIP
@@ -82,6 +84,7 @@
 1227129 MAC METAL : StateChangeTestES3.SamplerMetadataUpdateOnSetProgram/* = SKIP
 772651 MAC NVIDIA OPENGL : GLSLTest.VectorScalarDivideAndAddInLoop/* = SKIP
 772651 MAC NVIDIA OPENGL : GLSLTest.VectorScalarMultiplyAndAddInLoop/* = SKIP
+6318 MAC METAL : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
 
 // D3D
 6091 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP

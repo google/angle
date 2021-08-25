@@ -193,9 +193,6 @@ TEST_P(MultithreadingTest, MultiContextClear)
 {
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
 
-    // http://anglebug.com/5945: ES3_Vulkan_NoVirtual flaky on linux-clang-rel NVIDIA
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux() && IsNVIDIA());
-
     auto testBody = [](EGLSurface surface, size_t thread) {
         constexpr size_t kIterationsPerThread = 32;
         for (size_t iteration = 0; iteration < kIterationsPerThread; iteration++)
@@ -451,9 +448,6 @@ TEST_P(MultithreadingTest, MultiCreateContext)
     // Supported by CGL, GLX, and WGL (https://anglebug.com/4725)
     // Not supported on Ozone (https://crbug.com/1103009)
     ANGLE_SKIP_TEST_IF(!(IsWindows() || IsLinux() || IsOSX()) || IsOzone());
-
-    // http://anglebug.com/5945: ES3_Vulkan_NoVirtual flaky on linux-clang-rel NVIDIA
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux() && IsNVIDIA());
 
     EGLWindow *window  = getEGLWindow();
     EGLDisplay dpy     = window->getDisplay();
