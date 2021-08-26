@@ -64,6 +64,9 @@ enum class SubjectMessage
 
     // Indicates a Storage of back-end in gl::Texture has been released.
     StorageReleased,
+
+    // Indicates that all pending updates are complete in the subject.
+    InitializationComplete,
 };
 
 // The observing class inherits from this interface class.

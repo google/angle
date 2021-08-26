@@ -6463,6 +6463,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     {
         mStagingBuffer.releaseInFlightBuffers(contextVk);
         mStagingBuffer.release(contextVk->getRenderer());
+        onStateChange(angle::SubjectMessage::InitializationComplete);
     }
 
     return angle::Result::Continue;

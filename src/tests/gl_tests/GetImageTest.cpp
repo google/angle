@@ -461,6 +461,9 @@ TEST_P(GetImageTest, GetImageRGB)
 // Tests GetImage with 2D array textures.
 TEST_P(GetImageTestES31, Texture2DArray)
 {
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+
     constexpr GLsizei kSize   = 2;
     constexpr GLsizei kLayers = 4;
 
@@ -486,6 +489,9 @@ TEST_P(GetImageTestES31, Texture2DArray)
 // Tests GetImage with 3D textures.
 TEST_P(GetImageTestES31, Texture3D)
 {
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+
     constexpr GLsizei kSize = 2;
 
     std::vector<GLColor> expectedPixels = {
@@ -511,6 +517,9 @@ TEST_P(GetImageTestES31, TextureCubeMapArray)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_cube_map_array") &&
                        !IsGLExtensionEnabled("GL_OES_texture_cube_map_array"));
 
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+
     constexpr GLsizei kSize   = 1;
     constexpr GLsizei kLayers = 2;
 
@@ -533,6 +542,58 @@ TEST_P(GetImageTestES31, TextureCubeMapArray)
                        actualPixels.data());
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(expectedPixels, actualPixels);
+}
+
+// Tests GetImage with an inconsistent 2D texture.
+TEST_P(GetImageTest, InconsistentTexture2D)
+{
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+
+    constexpr uint32_t kSmallSize     = 2;
+    std::vector<GLColor> expectedData = {GLColor::red, GLColor::blue, GLColor::green,
+                                         GLColor::yellow};
+
+    glViewport(0, 0, kSmallSize, kSmallSize);
+
+    // Draw once with simple texture.
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSmallSize, kSmallSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 expectedData.data());
+    // The texture becomes inconsistent because a second 2x2 image does not fit in the mip chain.
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, kSmallSize, kSmallSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 expectedData.data());
+
+    // Pack pixels tightly.
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    // Verify GetImage.
+    std::vector<GLColor> actualData(kSmallSize * kSmallSize, GLColor::white);
+    glGetTexImageANGLE(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, actualData.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(expectedData, actualData);
+
+    std::fill(actualData.begin(), actualData.end(), GLColor::white);
+    glGetTexImageANGLE(GL_TEXTURE_2D, 1, GL_RGBA, GL_UNSIGNED_BYTE, actualData.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(expectedData, actualData);
+}
+
+// Test GetImage with non-defined textures.
+TEST_P(GetImageTest, EmptyTexture)
+{
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    std::vector<GLColor> expectedData(4, GLColor::white);
+    std::vector<GLColor> actualData(4, GLColor::white);
+    glGetTexImageANGLE(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, actualData.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(expectedData, actualData);
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTest);

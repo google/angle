@@ -350,9 +350,13 @@ angle::Result RenderbufferVk::ensureImageInitialized(const gl::Context *context)
 void RenderbufferVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
     ASSERT(index == kRenderbufferImageSubjectIndex &&
-           message == angle::SubjectMessage::SubjectChanged);
+           (message == angle::SubjectMessage::SubjectChanged ||
+            message == angle::SubjectMessage::InitializationComplete));
 
     // Forward the notification to the parent class that the staging buffer changed.
-    onStateChange(angle::SubjectMessage::SubjectChanged);
+    if (message == angle::SubjectMessage::SubjectChanged)
+    {
+        onStateChange(angle::SubjectMessage::SubjectChanged);
+    }
 }
 }  // namespace rx

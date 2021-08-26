@@ -221,3 +221,5 @@
 // Slow tests
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 6251 : MultiThreadingTest* = TIMEOUT
+
+6336 VULKAN : GetImageTest.InconsistentTexture2D/* = SKIP

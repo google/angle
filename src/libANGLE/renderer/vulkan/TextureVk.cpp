@@ -2492,7 +2492,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 
     // Before redefining the image for any reason, check to see if it's about to go through mipmap
     // generation.  In that case, drop every staged change for the subsequent mips after base, and
-    // make sure the image is created with the complete mipchain.
+    // make sure the image is created with the complete mip chain.
     bool isGenerateMipmap = source == gl::Command::GenerateMipmap;
     if (isGenerateMipmap)
     {
@@ -2559,7 +2559,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     // Respecify the image if it's changed in usage, or if any of its levels are redefined and no
     // update to base/max levels were done (otherwise the above call would have already taken care
     // of this).  Note that if both base/max and image usage are changed, the image is recreated
-    // twice, which incurs unncessary copies.  This is not expected to be happening in real
+    // twice, which incurs unnecessary copies.  This is not expected to be happening in real
     // applications.
     if (oldUsageFlags != mImageUsageFlags || oldCreateFlags != mImageCreateFlags ||
         mRedefinedLevels.any() || isMipmapEnabledByMinFilter)
@@ -3049,11 +3049,18 @@ angle::Result TextureVk::getTexImage(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    // Assumes Texture is consistent.
-    // TODO(http://anglebug.com/4058): Handle incomplete textures.
     if (!mImage || !mImage->valid())
     {
         ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+    }
+
+    GLint baseLevel = static_cast<int>(mState.getBaseLevel());
+    if (level < baseLevel || level >= baseLevel + static_cast<int>(mState.getEnabledLevelCount()))
+    {
+        // TODO(http://anglebug.com/6336): Handle inconsistent textures.
+        WARN() << "GetTexImage for inconsistent texture levels is not implemented.";
+        UNIMPLEMENTED();
+        return angle::Result::Continue;
     }
 
     gl::MaybeOverrideLuminance(format, type, getColorReadFormat(context),
@@ -3088,10 +3095,12 @@ const vk::Format &TextureVk::getBaseLevelFormat(RendererVk *renderer) const
 
 void TextureVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
-    ASSERT(index == kTextureImageSubjectIndex && message == angle::SubjectMessage::SubjectChanged);
+    ASSERT(index == kTextureImageSubjectIndex &&
+           (message == angle::SubjectMessage::SubjectChanged ||
+            message == angle::SubjectMessage::InitializationComplete));
 
     // Forward the notification to the parent that the staging buffer changed.
-    onStateChange(angle::SubjectMessage::SubjectChanged);
+    onStateChange(message);
 }
 
 vk::ImageOrBufferViewSubresourceSerial TextureVk::getImageViewSubresourceSerial(
