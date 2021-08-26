@@ -1108,8 +1108,8 @@ Result SerializeTextureData(JsonSerializer *json,
                             ScratchBuffer *scratchBuffer)
 {
     gl::ImageIndexIterator imageIter = gl::ImageIndexIterator::MakeGeneric(
-        texture->getType(), 0, texture->getMipmapMaxLevel() + 1, gl::ImageIndex::kEntireLevel,
-        gl::ImageIndex::kEntireLevel);
+        texture->getType(), texture->getBaseLevel(), texture->getMipmapMaxLevel() + 1,
+        gl::ImageIndex::kEntireLevel, gl::ImageIndex::kEntireLevel);
     while (imageIter.hasNext())
     {
         gl::ImageIndex index = imageIter.next();
