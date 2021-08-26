@@ -301,6 +301,69 @@ TEST_P(SRGBFramebufferTestES3, BlitFramebuffer)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, srgbColor, 1.0);
 }
 
+// This test reproduces an issue in the Vulkan backend found in the Chromium CI that
+// was caused by enabling the VK_KHR_image_format_list extension on SwiftShader
+// which exposed GL_EXT_sRGB_write_control.
+TEST_P(SRGBFramebufferTest, DrawToSmallFBOClearLargeFBO)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_sRGB_write_control") ||
+                       (!IsGLExtensionEnabled("GL_EXT_sRGB") && getClientMajorVersion() < 3));
+
+    // Disabling GL_FRAMEBUFFER_SRGB_EXT caused the issue
+    glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+
+    // The issue involved framebuffers of two different sizes.
+    // The smaller needed to be drawn to, while the larger one could be just cleared
+    // to reproduce the issue. These are the smallest tested sizes that generated
+    // the validation error.
+    constexpr GLsizei kDimensionsSmall[] = {1, 1};
+    constexpr GLsizei kDimensionsLarge[] = {2, 2};
+    {
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture.get());
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, kDimensionsSmall[0], kDimensionsSmall[1]);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.get(),
+                               0);
+
+        unsigned char vertexData[] = {0};
+        GLBuffer vertexBuffer;
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.get());
+        glBufferData(GL_ARRAY_BUFFER, sizeof(char), vertexData, GL_STATIC_DRAW);
+
+        unsigned int indexData[] = {0};
+        GLBuffer indexBuffer;
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.get());
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int), indexData, GL_STATIC_DRAW);
+
+        glUseProgram(mProgram);
+
+        glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, nullptr);
+
+        EXPECT_GL_NO_ERROR();
+    }
+    {
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture.get());
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, kDimensionsLarge[0], kDimensionsLarge[1]);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.get(),
+                               0);
+
+        // Vulkan validation happened to fail here with:
+        // "Cannot execute a render pass with renderArea not within the bound of the framebuffer"
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(SRGBFramebufferTest);
