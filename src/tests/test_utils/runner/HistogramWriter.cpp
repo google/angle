@@ -37,8 +37,8 @@ namespace
 std::string GetUnitAndDirection(proto::UnitAndDirection unit)
 {
     ASSERT(unit.improvement_direction() == proto::SMALLER_IS_BETTER);
-    ASSERT(unit.unit() == proto::MS_BEST_FIT_FORMAT);
-    return "msBestFitFormat";
+    ASSERT(unit.unit() == proto::MS);
+    return "ms_smallerIsBetter";
 }
 }  // namespace
 
@@ -56,7 +56,7 @@ void HistogramWriter::addSample(const std::string &measurement,
     {
         proto::UnitAndDirection unitAndDirection;
         unitAndDirection.set_improvement_direction(proto::SMALLER_IS_BETTER);
-        unitAndDirection.set_unit(proto::MS_BEST_FIT_FORMAT);
+        unitAndDirection.set_unit(proto::MS);
 
         std::unique_ptr<catapult::HistogramBuilder> builder =
             std::make_unique<catapult::HistogramBuilder>(measurement, unitAndDirection);
