@@ -15,6 +15,8 @@
 6142 VULKAN : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
 6153 VULKAN WIN INTEL : GLSLTest_ES31.StructAndArrayEqualOperator/ES3_1_Vulkan_DirectSPIRVGen = SKIP
 6153 VULKAN PIXEL4ORXL : GLSLTest_ES31.StructAndArrayEqualOperator/ES3_1_Vulkan_DirectSPIRVGen = SKIP
+6344 PIXEL4ORXL : GLSLTest_ES31_InitOutputVariables.InitIOBlockWithStruct/ES3_1_Vulkan_InitShaderOutputs = SKIP
+6344 PIXEL4ORXL : GLSLTest_ES31_InitOutputVariables.InitIOBlockWithComplexTypes/ES3_1_Vulkan_InitShaderOutputs = SKIP
 
 // Direct SPIR-V generation.  The following tests pass on some platforms but not others.  Need to investigate.
 4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/ES3_1_Vulkan_DirectSPIRVGen = SKIP

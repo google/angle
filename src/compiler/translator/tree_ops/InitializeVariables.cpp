@@ -57,6 +57,26 @@ void AddZeroInitSequence(const TIntermTyped *initializedNode,
         AddStructZeroInitSequence(initializedNode, canUseLoopsToInitialize, highPrecisionSupported,
                                   initSequenceOut, symbolTable);
     }
+    else if (initializedNode->getType().isInterfaceBlock())
+    {
+        const ImmutableString &name =
+            static_cast<const TIntermSymbol *>(initializedNode)->getName();
+        const TType &type                     = initializedNode->getType();
+        const TInterfaceBlock &interfaceBlock = *type.getInterfaceBlock();
+        const TFieldList &fieldList           = interfaceBlock.fields();
+        for (size_t fieldIndex = 0; fieldIndex < fieldList.size(); ++fieldIndex)
+        {
+            const TField &field          = *fieldList[fieldIndex];
+            TIntermTyped *blockReference = ReferenceGlobalVariable(name, *symbolTable);
+            TIntermTyped *fieldIndexRef  = CreateIndexNode(static_cast<int>(fieldIndex));
+            TIntermTyped *fieldReference = new TIntermBinary(
+                TOperator::EOpIndexDirectInterfaceBlock, blockReference, fieldIndexRef);
+            TIntermTyped *fieldZero = CreateZeroNode(*field.type());
+            TIntermTyped *assignment =
+                new TIntermBinary(TOperator::EOpAssign, fieldReference, fieldZero);
+            initSequenceOut->push_back(assignment);
+        }
+    }
     else
     {
         initSequenceOut->push_back(CreateZeroInitAssignment(initializedNode));
@@ -169,7 +189,7 @@ void InsertInitCode(TCompiler *compiler,
                     bool canUseLoopsToInitialize,
                     bool highPrecisionSupported)
 {
-    for (const auto &var : variables)
+    for (const ShaderVariable &var : variables)
     {
         // Note that tempVariableName will reference a short-lived char array here - that's fine
         // since we're only using it to find symbols.

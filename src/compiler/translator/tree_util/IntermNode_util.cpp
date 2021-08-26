@@ -74,7 +74,7 @@ TIntermTyped *CreateZeroNode(const TType &type)
                     // CreateZeroNode is called by ParseContext that keeps parsing even when an
                     // error occurs, so it is possible for CreateZeroNode to be called with
                     // non-basic types. This happens only on error condition but CreateZeroNode
-                    // needs to return a value with the correct type to continue the typecheck.
+                    // needs to return a value with the correct type to continue the type check.
                     // That's why we handle non-basic type by setting whatever value, we just need
                     // the type to be right.
                     u[i].setIConst(42);
@@ -323,9 +323,9 @@ TIntermBlock *EnsureBlock(TIntermNode *node)
 
 TIntermSymbol *ReferenceGlobalVariable(const ImmutableString &name, const TSymbolTable &symbolTable)
 {
-    const TVariable *var = static_cast<const TVariable *>(symbolTable.findGlobal(name));
-    ASSERT(var);
-    return new TIntermSymbol(var);
+    const TSymbol *symbol = symbolTable.findGlobal(name);
+    ASSERT(symbol && symbol->isVariable());
+    return new TIntermSymbol(static_cast<const TVariable *>(symbol));
 }
 
 TIntermSymbol *ReferenceBuiltInVariable(const ImmutableString &name,
