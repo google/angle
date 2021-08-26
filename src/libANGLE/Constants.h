@@ -107,6 +107,11 @@ constexpr uint32_t kMinimumComputeStorageBuffers = 4;
 constexpr uint32_t kMinimumShaderUniformBlocks = 12;
 // Table 6.31 MAX_VERTEX_OUTPUT_COMPONENTS minimum value = 64
 constexpr uint32_t kMinimumVertexOutputComponents = 64;
+
+// OpenGL ES 3.2+ Minimum Values
+// Table 21.42 TEXTURE_BUFFER_OFFSET_ALIGNMENT minimum value = 256
+constexpr uint32_t kMinTextureBufferOffsetAlignment = 256;
+
 }  // namespace limits
 
 }  // namespace gl
