@@ -14,6 +14,7 @@
 #include "common/spirv/spirv_instruction_builder_autogen.h"
 #include "compiler/translator/BuildSPIRV.h"
 #include "compiler/translator/Compiler.h"
+#include "compiler/translator/StaticType.h"
 #include "compiler/translator/tree_util/FindPreciseNodes.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 
@@ -264,8 +265,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
                                                       spirv::IdRef typeId,
                                                       const spirv::IdRefList &parameters);
     spirv::IdRef createConstructorVectorFromScalar(const TType &parameterType,
-                                                   TBasicType expectedType,
-                                                   int vectorSize,
+                                                   const TType &expectedType,
                                                    spirv::IdRef typeId,
                                                    const spirv::IdRefList &parameters);
     spirv::IdRef createConstructorVectorFromMatrix(TIntermAggregate *node,
@@ -318,7 +318,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
     //
     spirv::IdRef castBasicType(spirv::IdRef value,
                                const TType &valueType,
-                               TBasicType expectedBasicType,
+                               const TType &expectedType,
                                spirv::IdRef *resultTypeIdOut);
     spirv::IdRef cast(spirv::IdRef value,
                       const TType &valueType,
@@ -1330,7 +1330,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
                                     type.getRows() == arg0Type.getRows();
     if (isSingleScalarCast || isSingleVectorCast || isSingleMatrixCast)
     {
-        return castBasicType(parameters[0], arg0Type, type.getBasicType(), nullptr);
+        return castBasicType(parameters[0], arg0Type, type, nullptr);
     }
 
     if (type.isScalar())
@@ -1343,8 +1343,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
     {
         if (arguments.size() == 1 && arg0Type.isScalar())
         {
-            return createConstructorVectorFromScalar(arg0Type, type.getBasicType(),
-                                                     type.getNominalSize(), typeId, parameters);
+            return createConstructorVectorFromScalar(arg0Type, type, typeId, parameters);
         }
         if (arg0Type.isMatrix())
         {
@@ -1359,7 +1358,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
 
     if (arg0Type.isScalar() && arguments.size() == 1)
     {
-        parameters[0] = castBasicType(parameters[0], arg0Type, type.getBasicType(), nullptr);
+        parameters[0] = castBasicType(parameters[0], arg0Type, type, nullptr);
         return createConstructorMatrixFromScalar(node, typeId, parameters);
     }
     if (arg0Type.isMatrix())
@@ -1404,13 +1403,12 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorScalarFromNonScalar(
     TType arg0TypeAsScalar(arg0Type);
     arg0TypeAsScalar.toComponentType();
 
-    return castBasicType(result, arg0TypeAsScalar, type.getBasicType(), nullptr);
+    return castBasicType(result, arg0TypeAsScalar, type, nullptr);
 }
 
 spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromScalar(
     const TType &parameterType,
-    TBasicType expectedType,
-    int vectorSize,
+    const TType &expectedType,
     spirv::IdRef typeId,
     const spirv::IdRefList &parameters)
 {
@@ -1420,7 +1418,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromScalar(
     const spirv::IdRef castParameter =
         castBasicType(parameters[0], parameterType, expectedType, nullptr);
 
-    spirv::IdRefList replicatedParameter(vectorSize, castParameter);
+    spirv::IdRefList replicatedParameter(expectedType.getNominalSize(), castParameter);
 
     const spirv::IdRef result = mBuilder.getNewId(mBuilder.getDecorations(parameterType));
     spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), typeId, result,
@@ -1439,15 +1437,15 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromMatrix(
 
     // Construct the vector with the basic type of the argument, and cast it at end if needed.
     ASSERT(parameters.size() == 1);
-    const TType &arg0Type              = node->getChildNode(0)->getAsTyped()->getType();
-    const TBasicType expectedBasicType = node->getType().getBasicType();
+    const TType &arg0Type     = node->getChildNode(0)->getAsTyped()->getType();
+    const TType &expectedType = node->getType();
 
     spirv::IdRef argumentTypeId = typeId;
     TType arg0TypeAsVector(arg0Type);
     arg0TypeAsVector.setPrimarySize(static_cast<unsigned char>(node->getType().getNominalSize()));
     arg0TypeAsVector.setSecondarySize(1);
 
-    if (arg0Type.getBasicType() != expectedBasicType)
+    if (arg0Type.getBasicType() != expectedType.getBasicType())
     {
         argumentTypeId = mBuilder.getTypeData(arg0TypeAsVector, {}).id;
     }
@@ -1456,9 +1454,9 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromMatrix(
     spirv::WriteCompositeConstruct(mBuilder.getSpirvCurrentFunctionBlock(), argumentTypeId, result,
                                    extractedComponents);
 
-    if (arg0Type.getBasicType() != expectedBasicType)
+    if (arg0Type.getBasicType() != expectedType.getBasicType())
     {
-        result = castBasicType(result, arg0TypeAsVector, expectedBasicType, nullptr);
+        result = castBasicType(result, arg0TypeAsVector, expectedType, nullptr);
     }
 
     return result;
@@ -1501,9 +1499,8 @@ spirv::IdRef OutputSPIRVTraverser::createConstructorVectorFromMultiple(
                  rowIndex < argumentType.getRows() && componentIndex < extractedComponents.size();
                  ++rowIndex, ++componentIndex)
             {
-                extractedComponents[componentIndex] =
-                    castBasicType(extractedComponents[componentIndex], componentType,
-                                  type.getBasicType(), nullptr);
+                extractedComponents[componentIndex] = castBasicType(
+                    extractedComponents[componentIndex], componentType, type, nullptr);
             }
         }
 
@@ -1795,7 +1792,7 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
     const TIntermSequence &arguments = *node->getSequence();
 
     const SpirvDecorations decorations = mBuilder.getDecorations(node->getType());
-    const TBasicType expectedBasicType = node->getType().getBasicType();
+    const TType &expectedType          = node->getType();
 
     ASSERT(arguments.size() == parameters.size());
 
@@ -1813,7 +1810,7 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
             const spirv::IdRef castParameterId =
                 argument->getAsConstantUnion()
                     ? parameterId
-                    : castBasicType(parameterId, argumentType, expectedBasicType, nullptr);
+                    : castBasicType(parameterId, argumentType, expectedType, nullptr);
             extractedComponentsOut->push_back(castParameterId);
             continue;
         }
@@ -1821,14 +1818,14 @@ void OutputSPIRVTraverser::extractComponents(TIntermAggregate *node,
         {
             TType componentType(argumentType);
             componentType.toComponentType();
-            componentType.setBasicType(expectedBasicType);
+            componentType.setBasicType(expectedType.getBasicType());
             const spirv::IdRef componentTypeId = mBuilder.getTypeData(componentType, {}).id;
 
             // Cast the whole vector parameter in one go.
             const spirv::IdRef castParameterId =
                 argument->getAsConstantUnion()
                     ? parameterId
-                    : castBasicType(parameterId, argumentType, expectedBasicType, nullptr);
+                    : castBasicType(parameterId, argumentType, expectedType, nullptr);
 
             // For vector parameters, take components out of the vector one by one.
             for (int componentIndex = 0; componentIndex < argumentType.getNominalSize() &&
@@ -4107,9 +4104,10 @@ spirv::IdRef OutputSPIRVTraverser::createInterpolate(TIntermOperator *node,
 
 spirv::IdRef OutputSPIRVTraverser::castBasicType(spirv::IdRef value,
                                                  const TType &valueType,
-                                                 TBasicType expectedBasicType,
+                                                 const TType &expectedType,
                                                  spirv::IdRef *resultTypeIdOut)
 {
+    const TBasicType expectedBasicType = expectedType.getBasicType();
     if (valueType.getBasicType() == expectedBasicType)
     {
         return value;
@@ -4123,7 +4121,7 @@ spirv::IdRef OutputSPIRVTraverser::castBasicType(spirv::IdRef value,
     valueSpirvType.typeSpec.isOrHasBoolInInterfaceBlock = false;
     const spirv::IdRef castTypeId = mBuilder.getSpirvTypeData(valueSpirvType, nullptr).id;
 
-    const spirv::IdRef castValue = mBuilder.getNewId(mBuilder.getDecorations(valueType));
+    const spirv::IdRef castValue = mBuilder.getNewId(mBuilder.getDecorations(expectedType));
 
     // Write the instruction that casts between types.  Different instructions are used based on the
     // types being converted.
@@ -4331,17 +4329,19 @@ spirv::IdRef OutputSPIRVTraverser::cast(spirv::IdRef value,
         ASSERT(valueTypeSpec.isOrHasBoolInInterfaceBlock ||
                expectedTypeSpec.isOrHasBoolInInterfaceBlock);
 
+        TType emulatedValueType(valueType);
+        emulatedValueType.setBasicType(EbtUInt);
+        emulatedValueType.setPrecise(EbpLow);
+
         // If value is loaded as uint, it needs to change to bool.  If it's bool, it needs to change
         // to uint before storage.
         if (valueTypeSpec.isOrHasBoolInInterfaceBlock)
         {
-            TType emulatedValueType(valueType);
-            emulatedValueType.setBasicType(EbtUInt);
-            return castBasicType(value, emulatedValueType, EbtBool, resultTypeIdOut);
+            return castBasicType(value, emulatedValueType, valueType, resultTypeIdOut);
         }
         else
         {
-            return castBasicType(value, valueType, EbtUInt, resultTypeIdOut);
+            return castBasicType(value, valueType, emulatedValueType, resultTypeIdOut);
         }
     }
 
@@ -4381,10 +4381,13 @@ void OutputSPIRVTraverser::extendScalarParamsToVector(TIntermOperator *node,
         // If the child is a scalar, replicate it to form a vector of the right size.
         if (childType.isScalar())
         {
-            const int vectorSize = type.isMatrix() ? type.getRows() : type.getNominalSize();
-            (*parameters)[childIndex] =
-                createConstructorVectorFromScalar(childType, type.getBasicType(), vectorSize,
-                                                  resultTypeId, {{(*parameters)[childIndex]}});
+            TType vectorType(type);
+            if (vectorType.isMatrix())
+            {
+                vectorType.toMatrixColumnType();
+            }
+            (*parameters)[childIndex] = createConstructorVectorFromScalar(
+                childType, vectorType, resultTypeId, {{(*parameters)[childIndex]}});
         }
     }
 }
@@ -5056,10 +5059,12 @@ bool OutputSPIRVTraverser::visitTernary(Visit visit, TIntermTernary *node)
             // So when selecting between vectors, we must replicate the condition scalar.
             if (type.isVector())
             {
+                const TType &boolVectorType = *StaticType::GetForVec<EbtBool, EbpUndefined>(
+                    EvqGlobal, static_cast<unsigned char>(type.getNominalSize()));
                 typeId =
                     mBuilder.getBasicTypeId(conditionType.getBasicType(), type.getNominalSize());
-                conditionValue = createConstructorVectorFromScalar(
-                    conditionType, EbtBool, type.getNominalSize(), typeId, {{conditionValue}});
+                conditionValue = createConstructorVectorFromScalar(conditionType, boolVectorType,
+                                                                   typeId, {{conditionValue}});
             }
             nodeDataInitRValue(&mNodeData.back(), conditionValue, typeId);
             return true;

@@ -182,9 +182,39 @@ bool CanFoldAggregateBuiltInOp(TOperator op)
 
 void PropagatePrecisionIfApplicable(TIntermTyped *node, TPrecision precision)
 {
-    if (precision == EbpUndefined || node->getPrecision() != EbpUndefined)
+    if (precision == EbpUndefined)
     {
         return;
+    }
+
+    if (node->getPrecision() != EbpUndefined)
+    {
+        // If an expression already has a precision, cannot modify it.  Constructors however are in
+        // a special position.  They initially don't have a precision:
+        //
+        // > Literal constants do not have precision qualifiers. Neither do Boolean variables.
+        // Neither do constructors.
+        //
+        // And will inherit their precision from other operands:
+        //
+        // > In cases where operands do not have a precision qualifier, the precision qualification
+        // will come from the other operands.
+        //
+        // At the same time, they have a precision at least as high as their operands:
+        //
+        // > The precision used to internally evaluate an operation, and the precision qualification
+        // subsequently associated with any resulting intermediate values, must be at least as high
+        // as the highest precision qualification of the operands consumed by the operation.
+        //
+        // ANGLE tentatively assigns the precision of the constructor based on its operands, and
+        // allows it to be increased based on other operands as necessary.
+        TIntermAggregate *asAggregate = node->getAsAggregate();
+        const bool isConstructor      = asAggregate != nullptr && asAggregate->isConstructor();
+        const bool isPrecisionBeingIncreased = node->getPrecision() < precision;
+        if (!(isConstructor && isPrecisionBeingIncreased))
+        {
+            return;
+        }
     }
 
     if (IsPrecisionApplicableToType(node->getBasicType()))
@@ -700,8 +730,7 @@ TPrecision TIntermAggregate::derivePrecision() const
             break;
     }
 
-    // The rest of the math operations and constructors get their precision from their
-    // arguments.
+    // The rest of the math operations and constructors get their precision from their arguments.
     if (BuiltInGroup::IsMath(mOp) || mOp == EOpConstruct)
     {
         TPrecision precision = EbpUndefined;
@@ -739,14 +768,45 @@ void TIntermAggregate::propagatePrecision(TPrecision precision)
 {
     mType.setPrecision(precision);
 
-    // Propagate precision only to constructor arguments.  Precision doesn't propagate through
-    // function call arguments.
+    // For constructors, propagate precision to arguments.
     if (isConstructor())
     {
         for (TIntermNode *arg : mArguments)
         {
             PropagatePrecisionIfApplicable(arg->getAsTyped(), precision);
         }
+        return;
+    }
+
+    // For function calls, propagate precision of each parameter to its corresponding argument.
+    if (isFunctionCall())
+    {
+        for (size_t paramIndex = 0; paramIndex < mFunction->getParamCount(); ++paramIndex)
+        {
+            const TVariable *paramVariable = mFunction->getParam(paramIndex);
+            PropagatePrecisionIfApplicable(mArguments[paramIndex]->getAsTyped(),
+                                           paramVariable->getType().getPrecision());
+        }
+        return;
+    }
+
+    // Some built-ins explicitly specify the precision of their parameters.
+    switch (mOp)
+    {
+        case EOpUaddCarry:
+        case EOpUsubBorrow:
+        case EOpUmulExtended:
+        case EOpImulExtended:
+            PropagatePrecisionIfApplicable(mArguments[0]->getAsTyped(), EbpHigh);
+            PropagatePrecisionIfApplicable(mArguments[1]->getAsTyped(), EbpHigh);
+            break;
+        case EOpFindMSB:
+        case EOpFrexp:
+        case EOpLdexp:
+            PropagatePrecisionIfApplicable(mArguments[0]->getAsTyped(), EbpHigh);
+            break;
+        default:
+            break;
     }
 }
 
@@ -1450,9 +1510,37 @@ void TIntermUnary::propagatePrecision(TPrecision precision)
 {
     mType.setPrecision(precision);
 
-    if (mOp != EOpArrayLength)
+    // Generally precision of the operand and the precision of the result match.  A few built-ins
+    // are exceptional.
+    switch (mOp)
     {
-        PropagatePrecisionIfApplicable(mOperand, precision);
+        case EOpArrayLength:
+        case EOpPackSnorm2x16:
+        case EOpPackUnorm2x16:
+        case EOpPackUnorm4x8:
+        case EOpPackSnorm4x8:
+        case EOpPackHalf2x16:
+        case EOpBitCount:
+        case EOpFindLSB:
+        case EOpFindMSB:
+        case EOpIsinf:
+        case EOpIsnan:
+            // Precision of result does not affect the operand in any way.
+            break;
+        case EOpFloatBitsToInt:
+        case EOpFloatBitsToUint:
+        case EOpIntBitsToFloat:
+        case EOpUintBitsToFloat:
+        case EOpUnpackSnorm2x16:
+        case EOpUnpackUnorm2x16:
+        case EOpUnpackUnorm4x8:
+        case EOpUnpackSnorm4x8:
+        case EOpUnpackHalf2x16:
+        case EOpBitfieldReverse:
+            PropagatePrecisionIfApplicable(mOperand, EbpHigh);
+            break;
+        default:
+            PropagatePrecisionIfApplicable(mOperand, precision);
     }
 }
 
@@ -1913,7 +2001,12 @@ TPrecision TIntermBinary::derivePrecision() const
 
         case EOpIndexDirect:
         case EOpIndexIndirect:
-            // When indexing an array, the precision of the array is preserved.
+        case EOpBitShiftLeft:
+        case EOpBitShiftRight:
+            // When indexing an array, the precision of the array is preserved (which is the left
+            // node).
+            // For shift operations, the precision is derived from the expression being shifted
+            // (which is also the left node).
             return mLeft->getPrecision();
 
         case EOpIndexDirectStruct:
@@ -1955,16 +2048,16 @@ void TIntermBinary::propagatePrecision(TPrecision precision)
         PropagatePrecisionIfApplicable(mLeft, precision);
     }
 
-    if (mOp != EOpIndexIndirect && mOp != EOpIndexDirectStruct &&
+    if (mOp != EOpIndexDirect && mOp != EOpIndexIndirect && mOp != EOpIndexDirectStruct &&
         mOp != EOpIndexDirectInterfaceBlock)
     {
         PropagatePrecisionIfApplicable(mRight, precision);
     }
 
-    // For literal indices, always apply highp.  This is purely for the purpose of making sure
-    // constant nodes are also given a precision, so if they are hoisted to a temp variable, there
-    // would be a precision to apply to that variable.
-    if (mOp == EOpIndexDirect)
+    // For indices, always apply highp.  This is purely for the purpose of making sure constant and
+    // constructor nodes are also given a precision, so if they are hoisted to a temp variable,
+    // there would be a precision to apply to that variable.
+    if (mOp == EOpIndexDirect || mOp == EOpIndexIndirect)
     {
         PropagatePrecisionIfApplicable(mRight, EbpHigh);
     }
