@@ -3694,7 +3694,8 @@ bool ValidateCopyTexImageParametersBase(const Context *context,
         }
     }
 
-    if (textureFormatOut)
+    // Do not leak the previous texture format for non-subImage case.
+    if (textureFormatOut && isSubImage)
     {
         *textureFormatOut = texture->getFormat(target, level);
     }
