@@ -124,7 +124,6 @@
           'win10_intel_hd_630_stable',
         ],
         'test_suites': {
-          'isolated_scripts': 'angle_perf_isolated_scripts',
         },
       },
       'win10-x64-nvidia': {

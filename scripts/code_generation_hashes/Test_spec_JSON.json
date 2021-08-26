@@ -1,6 +1,6 @@
 {
   "infra/specs/angle.json":
-    "8ea1a1e10a2dc5fd2c0d1f708cc7728e",
+    "ac4e0fa2f8991a24ef234ef3ed14ba95",
   "infra/specs/generate_test_spec_json.py":
     "348921bf70270ec6ee51fbb7e97d6925",
   "infra/specs/mixins.pyl":
@@ -12,7 +12,7 @@
   "infra/specs/variants.pyl":
     "8cfcaa99fa07ad2a2d5d14f220fd5037",
   "infra/specs/waterfalls.pyl":
-    "5cba5fb3a739bbc3f1710db863fde2a8",
+    "7aadb90c13b22384200c56bd07de652d",
   "testing/buildbot/generate_buildbot_json.py":
     "2c5941c113e26d87b609e143c64d415b",
   "testing/buildbot/mixins.pyl":
