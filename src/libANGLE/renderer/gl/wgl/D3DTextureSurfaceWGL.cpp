@@ -273,8 +273,8 @@ D3DTextureSurfaceWGL::~D3DTextureSurfaceWGL()
             mFunctionsWGL->dxUnregisterObjectNV(mDeviceHandle, mBoundObjectRenderbufferHandle);
             mBoundObjectRenderbufferHandle = nullptr;
         }
-        (void)mStateManager->deleteRenderbuffer(nullptr, mColorRenderbufferID);
-        (void)mStateManager->deleteRenderbuffer(nullptr, mDepthStencilRenderbufferID);
+        mStateManager->deleteRenderbuffer(mColorRenderbufferID);
+        mStateManager->deleteRenderbuffer(mDepthStencilRenderbufferID);
 
         if (mBoundObjectTextureHandle)
         {
@@ -326,7 +326,7 @@ egl::Error D3DTextureSurfaceWGL::initialize(const egl::Display *display)
     }
 
     mFunctionsGL->genRenderbuffers(1, &mColorRenderbufferID);
-    (void)mStateManager->bindRenderbuffer(nullptr, GL_RENDERBUFFER, mColorRenderbufferID);
+    mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mColorRenderbufferID);
     mBoundObjectRenderbufferHandle = mFunctionsWGL->dxRegisterObjectNV(
         mDeviceHandle, mObject, mColorRenderbufferID, GL_RENDERBUFFER, WGL_ACCESS_READ_WRITE_NV);
     if (mBoundObjectRenderbufferHandle == nullptr)
@@ -339,8 +339,7 @@ egl::Error D3DTextureSurfaceWGL::initialize(const egl::Display *display)
     if (config->depthStencilFormat != GL_NONE)
     {
         mFunctionsGL->genRenderbuffers(1, &mDepthStencilRenderbufferID);
-        (void)mStateManager->bindRenderbuffer(nullptr, GL_RENDERBUFFER,
-                                              mDepthStencilRenderbufferID);
+        mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mDepthStencilRenderbufferID);
         mFunctionsGL->renderbufferStorage(GL_RENDERBUFFER, config->depthStencilFormat,
                                           static_cast<GLsizei>(mWidth),
                                           static_cast<GLsizei>(mHeight));
@@ -485,7 +484,7 @@ FramebufferImpl *D3DTextureSurfaceWGL::createDefaultFramebuffer(const gl::Contex
 
     GLuint framebufferID = 0;
     functions->genFramebuffers(1, &framebufferID);
-    (void)stateManager->bindFramebuffer(context, GL_FRAMEBUFFER, framebufferID);
+    stateManager->bindFramebuffer(GL_FRAMEBUFFER, framebufferID);
     functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
                                        mColorRenderbufferID);
     if (mState.config->depthSize > 0)

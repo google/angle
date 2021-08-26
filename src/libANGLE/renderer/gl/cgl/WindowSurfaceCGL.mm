@@ -171,7 +171,7 @@ WindowSurfaceCGL::~WindowSurfaceCGL()
 
     if (mDSRenderbuffer != 0)
     {
-        ANGLE_SWALLOW_ERR(mStateManager->deleteRenderbuffer(nullptr, mDSRenderbuffer));
+        mStateManager->deleteRenderbuffer(mDSRenderbuffer);
         mDSRenderbuffer = 0;
     }
 
@@ -186,8 +186,7 @@ WindowSurfaceCGL::~WindowSurfaceCGL()
     {
         if (mSwapState.textures[i].texture != 0)
         {
-            ANGLE_SWALLOW_ERR(
-                mStateManager->deleteTexture(nullptr, mSwapState.textures[i].texture));
+            mStateManager->deleteTexture(mSwapState.textures[i].texture);
             mSwapState.textures[i].texture = 0;
         }
     }
@@ -203,8 +202,7 @@ egl::Error WindowSurfaceCGL::initialize(const egl::Display *display)
     for (size_t i = 0; i < ArraySize(mSwapState.textures); ++i)
     {
         mFunctions->genTextures(1, &mSwapState.textures[i].texture);
-        ANGLE_SWALLOW_ERR(mStateManager->bindTexture(nullptr, gl::TextureType::_2D,
-                                                     mSwapState.textures[i].texture));
+        mStateManager->bindTexture(gl::TextureType::_2D, mSwapState.textures[i].texture);
         mFunctions->texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                                GL_UNSIGNED_BYTE, nullptr);
         mSwapState.textures[i].width  = width;
@@ -222,7 +220,7 @@ egl::Error WindowSurfaceCGL::initialize(const egl::Display *display)
     [mSwapLayer setContentsScale:[mLayer contentsScale]];
 
     mFunctions->genRenderbuffers(1, &mDSRenderbuffer);
-    ANGLE_SWALLOW_ERR(mStateManager->bindRenderbuffer(nullptr, GL_RENDERBUFFER, mDSRenderbuffer));
+    mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mDSRenderbuffer);
     mFunctions->renderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 
     return egl::Error(EGL_SUCCESS);
@@ -253,13 +251,11 @@ egl::Error WindowSurfaceCGL::swap(const gl::Context *context)
 
     if (texture.width != width || texture.height != height)
     {
-        ANGLE_TRY(angle::ResultToEGL(
-            stateManager->bindTexture(context, gl::TextureType::_2D, texture.texture)));
+        stateManager->bindTexture(gl::TextureType::_2D, texture.texture);
         functions->texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                               GL_UNSIGNED_BYTE, nullptr);
 
-        ANGLE_TRY(angle::ResultToEGL(
-            stateManager->bindRenderbuffer(context, GL_RENDERBUFFER, mDSRenderbuffer)));
+        stateManager->bindRenderbuffer(GL_RENDERBUFFER, mDSRenderbuffer);
         functions->renderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 
         texture.width  = width;
@@ -267,8 +263,7 @@ egl::Error WindowSurfaceCGL::swap(const gl::Context *context)
     }
 
     FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(context->getFramebuffer({0}));
-    ANGLE_TRY(angle::ResultToEGL(
-        stateManager->bindFramebuffer(context, GL_FRAMEBUFFER, framebufferGL->getFramebufferID())));
+    stateManager->bindFramebuffer(GL_FRAMEBUFFER, framebufferGL->getFramebufferID());
     functions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                     mSwapState.beingRendered->texture, 0);
 
@@ -339,7 +334,7 @@ FramebufferImpl *WindowSurfaceCGL::createDefaultFramebuffer(const gl::Context *c
 
     GLuint framebuffer = 0;
     functions->genFramebuffers(1, &framebuffer);
-    ANGLE_SWALLOW_ERR(stateManager->bindFramebuffer(context, GL_FRAMEBUFFER, framebuffer));
+    stateManager->bindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     functions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                     mSwapState.beingRendered->texture, 0);
     functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,

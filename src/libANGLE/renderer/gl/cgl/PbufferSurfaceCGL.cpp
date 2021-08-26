@@ -50,13 +50,11 @@ PbufferSurfaceCGL::~PbufferSurfaceCGL()
 egl::Error PbufferSurfaceCGL::initialize(const egl::Display *display)
 {
     mFunctions->genRenderbuffers(1, &mColorRenderbuffer);
-    ANGLE_TRY(angle::ResultToEGL(
-        mStateManager->bindRenderbuffer(nullptr, GL_RENDERBUFFER, mColorRenderbuffer)));
+    mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mColorRenderbuffer);
     mFunctions->renderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, mWidth, mHeight);
 
     mFunctions->genRenderbuffers(1, &mDSRenderbuffer);
-    ANGLE_TRY(angle::ResultToEGL(
-        mStateManager->bindRenderbuffer(nullptr, GL_RENDERBUFFER, mDSRenderbuffer)));
+    mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mDSRenderbuffer);
     mFunctions->renderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mWidth, mHeight);
 
     return egl::NoError();
@@ -132,7 +130,7 @@ FramebufferImpl *PbufferSurfaceCGL::createDefaultFramebuffer(const gl::Context *
 
     GLuint framebuffer = 0;
     functions->genFramebuffers(1, &framebuffer);
-    ANGLE_SWALLOW_ERR(stateManager->bindFramebuffer(context, GL_FRAMEBUFFER, framebuffer));
+    stateManager->bindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
                                        mColorRenderbuffer);
     functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
