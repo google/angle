@@ -258,7 +258,6 @@ angle_translator_glsl_sources = [
   "src/compiler/translator/ExtensionGLSL.h",
   "src/compiler/translator/TranslatorGLSL.cpp",
   "src/compiler/translator/VersionGLSL.cpp",
-  "src/compiler/translator/VersionGLSL.h",
   "src/compiler/translator/tree_ops/gl/ClampFragDepth.cpp",
   "src/compiler/translator/tree_ops/gl/RegenerateStructNames.cpp",
   "src/compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.cpp",
