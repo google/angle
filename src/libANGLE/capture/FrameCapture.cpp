@@ -2071,6 +2071,8 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
     const std::vector<gl::VertexAttribute> &vertexAttribs = vertexArray->getVertexAttributes();
     const std::vector<gl::VertexBinding> &vertexBindings  = vertexArray->getVertexBindings();
 
+    gl::AttributesMask vertexPointerBindings;
+
     for (GLuint attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; ++attribIndex)
     {
         const gl::VertexAttribute defaultAttrib(attribIndex);
@@ -2117,24 +2119,58 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
                      VertexBindingMatchesAttribStride(attrib, binding) &&
                      (!buffer || binding.getOffset() == reinterpret_cast<GLintptr>(attrib.pointer)))
             {
-                // Check if we can use strictly ES2 semantics.
+                // Check if we can use strictly ES2 semantics, and track indexes that do.
+                vertexPointerBindings.set(attribIndex);
+
                 Capture(setupCalls,
                         CaptureVertexAttribPointer(
                             *replayState, true, attribIndex, attrib.format->channelCount,
                             attrib.format->vertexAttribType, attrib.format->isNorm(),
                             attrib.vertexAttribArrayStride, attrib.pointer));
+
+                if (binding.getDivisor() != 0)
+                {
+                    Capture(setupCalls, CaptureVertexAttribDivisor(*replayState, true, attribIndex,
+                                                                   binding.getDivisor()));
+                }
             }
             else
             {
-                // TOOD: http://anglebug.com/6274. ES 3.1 vertex array state is not yet implemented.
-                UNIMPLEMENTED();
+                ASSERT(context->getClientVersion() >= gl::ES_3_1);
+
+                Capture(setupCalls,
+                        CaptureVertexAttribFormat(*replayState, true, attribIndex,
+                                                  attrib.format->channelCount,
+                                                  attrib.format->vertexAttribType,
+                                                  attrib.format->isNorm(), attrib.relativeOffset));
+                Capture(setupCalls, CaptureVertexAttribBinding(*replayState, true, attribIndex,
+                                                               attrib.bindingIndex));
             }
+        }
+    }
+
+    // The loop below expects attribs and bindings to have equal counts
+    static_assert(gl::MAX_VERTEX_ATTRIBS == gl::MAX_VERTEX_ATTRIB_BINDINGS,
+                  "Max vertex attribs and bindings count mismatch");
+
+    // Loop through binding indices that weren't used by VertexAttribPointer
+    for (size_t bindingIndex : vertexPointerBindings.flip())
+    {
+        const gl::VertexBinding &binding = vertexBindings[bindingIndex];
+
+        if (binding.getBuffer().id().value != 0)
+        {
+            Capture(setupCalls,
+                    CaptureBindVertexBuffer(*replayState, true, static_cast<GLuint>(bindingIndex),
+                                            binding.getBuffer().id(), binding.getOffset(),
+                                            binding.getStride()));
         }
 
         if (binding.getDivisor() != 0)
         {
-            Capture(setupCalls, CaptureVertexAttribDivisor(*replayState, true, attribIndex,
-                                                           binding.getDivisor()));
+            Capture(setupCalls, CaptureVertexBindingDivisor(*replayState, true,
+                                                            static_cast<GLuint>(bindingIndex),
+                                                            binding.getDivisor()));
         }
     }
 
