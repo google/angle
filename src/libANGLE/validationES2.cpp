@@ -1162,12 +1162,6 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                         return false;
                 }
                 break;
-            case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:  // error cases for compressed textures are
-                                                   // handled below
-            case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-            case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-            case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-                break;
             case GL_DEPTH_COMPONENT:
                 switch (type)
                 {
@@ -1214,73 +1208,6 @@ bool ValidateES2TexImageParametersBase(const Context *context,
 
         switch (format)
         {
-            case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-            case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-                if (context->getExtensions().textureCompressionDXT1)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-                if (context->getExtensions().textureCompressionDXT3)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-                if (context->getExtensions().textureCompressionDXT5)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_ETC1_RGB8_OES:
-                if (context->getExtensions().compressedETC1RGB8TextureOES)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
-            case GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-                if (context->getExtensions().lossyETCDecode)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
-            case GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG:
-            case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-            case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-                if (context->getExtensions().compressedTexturePVRTC)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT:
-            case GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT:
-            case GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT:
-            case GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT:
-                if (context->getExtensions().compressedTexturePVRTCsRGB)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_STENCIL_OES:
                 if (!context->getExtensions().depthTextureANGLE &&

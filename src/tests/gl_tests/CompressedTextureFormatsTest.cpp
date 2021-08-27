@@ -44,20 +44,75 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
         mDisableTexture3D = IsMetal() && !IsMetalCompressedTexture3DAvailable();
     }
 
+    void checkSubImage2D(GLenum format, GLsizei size)
+    {
+        GLubyte data[32];
+
+        // The semantic of this call is to take uncompressed data, compress it on-the-fly,
+        // and perform a partial update of an existing GPU-compressed texture. This
+        // operation is not supported in OpenGL ES.
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        // Compressed texture extensions never extend TexSubImage2D.
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, format, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        // The semantic of this call is to take pixel data from the current framebuffer, compress it
+        // on-the-fly, and perform a partial update of an existing GPU-compressed texture. This
+        // operation is not supported in OpenGL ES.
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 4, 4);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, format, size, data);
+        EXPECT_GL_ERROR(mSupportsUpdates ? GL_NO_ERROR : GL_INVALID_OPERATION);
+    }
+
+    void checkSubImage3D(GLenum target, GLenum format, GLsizei size)
+    {
+        GLubyte data[32];
+
+        // The semantic of this call is to take uncompressed data, compress it on-the-fly,
+        // and perform a partial update of an existing GPU-compressed texture. This
+        // operation is not supported in OpenGL ES.
+        glTexSubImage3D(target, 0, 0, 0, 0, 4, 4, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        // Compressed texture extensions never extend TexSubImage3D.
+        glTexSubImage3D(target, 0, 0, 0, 0, 4, 4, 1, format, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        // The semantic of this call is to take pixel data from the current framebuffer, compress it
+        // on-the-fly, and perform a partial update of an existing GPU-compressed texture. This
+        // operation is not supported in OpenGL ES.
+        glCopyTexSubImage3D(target, 0, 0, 0, 0, 0, 0, 4, 4);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        glCompressedTexSubImage3D(target, 0, 0, 0, 0, 4, 4, 1, format, size, data);
+        EXPECT_GL_NO_ERROR();
+    }
+
     void check2D(const bool compressedFormatEnabled)
     {
         const GLenum format = ::testing::get<1>(GetParam()).first;
         const GLsizei size  = ::testing::get<1>(GetParam()).second;
 
-        GLubyte data[32];
-
         {
             GLTexture texture;
             glBindTexture(GL_TEXTURE_2D, texture);
 
+            // The semantic of this call is to take uncompressed data and compress it on-the-fly.
+            // This operation is not supported in OpenGL ES.
             glTexImage2D(GL_TEXTURE_2D, 0, format, 4, 4, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
             EXPECT_GL_ERROR(getClientMajorVersion() >= 3 ? GL_INVALID_OPERATION : GL_INVALID_VALUE);
 
+            // Try compressed enum as format. Compressed texture extensions never allow this.
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, format, GL_UNSIGNED_BYTE, nullptr);
+            EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+            // The semantic of this call is to take pixel data from the current framebuffer
+            // and create a compressed texture from it on-the-fly. This operation is not supported
+            // in OpenGL ES.
             glCopyTexImage2D(GL_TEXTURE_2D, 0, format, 0, 0, 4, 4, 0);
             EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
@@ -65,11 +120,8 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
             if (compressedFormatEnabled)
             {
                 EXPECT_GL_NO_ERROR();
-                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-                glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, format, size, data);
-                EXPECT_GL_ERROR(mSupportsUpdates ? GL_NO_ERROR : GL_INVALID_OPERATION);
+                checkSubImage2D(format, size);
             }
             else
             {
@@ -86,11 +138,26 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
             if (compressedFormatEnabled)
             {
                 EXPECT_GL_NO_ERROR();
-                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-                glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, format, size, data);
-                EXPECT_GL_ERROR(mSupportsUpdates ? GL_NO_ERROR : GL_INVALID_OPERATION);
+                checkSubImage2D(format, size);
+            }
+            else
+            {
+                EXPECT_GL_ERROR(GL_INVALID_ENUM);
+            }
+        }
+
+        if (EnsureGLExtensionEnabled("GL_EXT_texture_storage"))
+        {
+            GLTexture texture;
+            glBindTexture(GL_TEXTURE_2D, texture);
+
+            glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, 4, 4);
+            if (compressedFormatEnabled)
+            {
+                EXPECT_GL_NO_ERROR();
+
+                checkSubImage2D(format, size);
             }
             else
             {
@@ -99,48 +166,24 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
         }
     }
 
-    void check2DExt(const bool compressedFormatEnabled)
-    {
-        if (!EnsureGLExtensionEnabled("GL_EXT_texture_storage"))
-            return;
-
-        const GLenum format = ::testing::get<1>(GetParam()).first;
-        const GLsizei size  = ::testing::get<1>(GetParam()).second;
-
-        GLubyte data[32];
-
-        GLTexture texture;
-        glBindTexture(GL_TEXTURE_2D, texture);
-
-        glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, 4, 4);
-        if (compressedFormatEnabled)
-        {
-            EXPECT_GL_NO_ERROR();
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
-            glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, format, size, data);
-            EXPECT_GL_ERROR(mSupportsUpdates ? GL_NO_ERROR : GL_INVALID_OPERATION);
-        }
-        else
-        {
-            EXPECT_GL_ERROR(GL_INVALID_ENUM);
-        }
-    }
-
     void check3D(GLenum target, const bool compressedFormatEnabled, const bool supportsTarget)
     {
         const GLenum format = ::testing::get<1>(GetParam()).first;
         const GLsizei size  = ::testing::get<1>(GetParam()).second;
 
-        GLubyte data[32];
-
         {
             GLTexture texture;
             glBindTexture(target, texture);
 
+            // Try compressed enum as internalformat. The semantic of this call is to take
+            // uncompressed data and compress it on-the-fly. This operation is not supported in
+            // OpenGL ES.
             glTexImage3D(target, 0, format, 4, 4, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
             EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            // Try compressed enum as format. Compressed texture extensions never allow this.
+            glTexImage3D(target, 0, GL_RGB, 4, 4, 1, 0, format, GL_UNSIGNED_BYTE, nullptr);
+            EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
             glCompressedTexImage3D(target, 0, format, 4, 4, 1, 0, size, nullptr);
             if (compressedFormatEnabled)
@@ -149,13 +192,12 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
                 {
                     EXPECT_GL_NO_ERROR();
 
-                    glCompressedTexSubImage3D(target, 0, 0, 0, 0, 4, 4, 1, format, size, data);
-                    EXPECT_GL_NO_ERROR();
-
-                    glTexSubImage3D(target, 0, 0, 0, 0, 4, 4, 1, GL_RGBA, GL_UNSIGNED_BYTE,
-                                    nullptr);
+                    checkSubImage3D(target, format, size);
                 }
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+                else
+                {
+                    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+                }
             }
             else
             {
@@ -174,13 +216,12 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
                 {
                     EXPECT_GL_NO_ERROR();
 
-                    glCompressedTexSubImage3D(target, 0, 0, 0, 0, 4, 4, 1, format, size, data);
-                    EXPECT_GL_NO_ERROR();
-
-                    glTexSubImage3D(target, 0, 0, 0, 0, 4, 4, 1, GL_RGBA, GL_UNSIGNED_BYTE,
-                                    nullptr);
+                    checkSubImage3D(target, format, size);
                 }
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+                else
+                {
+                    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+                }
             }
             else
             {
@@ -203,7 +244,6 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
         // It's not possible to disable ETC2/EAC support on ES 3.0.
         const bool compressedFormatEnabled = mAlwaysOnES3 && getClientMajorVersion() >= 3;
         check2D(compressedFormatEnabled);
-        check2DExt(compressedFormatEnabled);
         if (getClientMajorVersion() >= 3)
         {
             check3D(GL_TEXTURE_2D_ARRAY, compressedFormatEnabled, mSupports2DArray);
@@ -224,7 +264,6 @@ class CompressedTextureFormatsTest : public ANGLETestWithParam<CompressedTexture
 
         // Repeat all checks after enabling the extensions.
         check2D(true);
-        check2DExt(true);
         if (getClientMajorVersion() >= 3)
         {
             check3D(GL_TEXTURE_2D_ARRAY, true, mSupports2DArray);
