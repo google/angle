@@ -760,12 +760,16 @@ class TestExpectation():
                 return True
         return False
 
-    def Filter(self, test_list):
+    def Filter(self, test_list, run_all_tests):
         result = {}
         for t in test_list:
             for key in self.non_pass_results.keys():
                 if self.non_pass_re[key].match(t) is not None:
                     result[t] = self.non_pass_results[key]
+            if run_all_tests:
+                for skip in self.skipped_for_capture_tests:
+                    if skip.match(t) is not None:
+                        result[t] = "'forced skip'"
         return result
 
     def IsFlaky(self, test_name):
@@ -915,7 +919,8 @@ def main(args):
         test_expectation = TestExpectation(args)
         test_names = ParseTestNamesFromTestList(test_list, test_expectation,
                                                 args.also_run_skipped_for_capture_tests, logger)
-        test_expectation_for_list = test_expectation.Filter(test_names)
+        test_expectation_for_list = test_expectation.Filter(
+            test_names, args.also_run_skipped_for_capture_tests)
         # objects created by manager can be shared by multiple processes. We use it to create
         # collections that are shared by multiple processes such as job queue or result list.
         manager = multiprocessing.Manager()
