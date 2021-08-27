@@ -712,18 +712,19 @@ TPrecision TIntermAggregate::derivePrecision() const
         return precision;
     }
 
-    // Image load and atomic operations return highp.
-    if (BuiltInGroup::IsImageLoad(mOp) || BuiltInGroup::IsImageAtomic(mOp) ||
-        BuiltInGroup::IsAtomicCounter(mOp) || BuiltInGroup::IsAtomicMemory(mOp))
+    // Atomic operations return highp.
+    if (BuiltInGroup::IsImageAtomic(mOp) || BuiltInGroup::IsAtomicCounter(mOp) ||
+        BuiltInGroup::IsAtomicMemory(mOp))
     {
         return EbpHigh;
     }
 
-    // Texture functions return the same precision as that of the sampler.  textureSize returns
-    // highp, but that's handled above.  The same is true for dFd*, interpolateAt* and
-    // subpassLoad operations.
-    if (BuiltInGroup::IsTexture(mOp) || BuiltInGroup::IsDerivativesFS(mOp) ||
-        BuiltInGroup::IsInterpolationFS(mOp) || mOp == EOpSubpassLoad)
+    // Texture functions return the same precision as that of the sampler (textureSize returns
+    // highp, but that's handled above).  imageLoad similar takes the precision of the image.  The
+    // same is true for dFd*, interpolateAt* and subpassLoad operations.
+    if (BuiltInGroup::IsTexture(mOp) || BuiltInGroup::IsImageLoad(mOp) ||
+        BuiltInGroup::IsDerivativesFS(mOp) || BuiltInGroup::IsInterpolationFS(mOp) ||
+        mOp == EOpSubpassLoad)
     {
         return mArguments[0]->getAsTyped()->getPrecision();
     }
