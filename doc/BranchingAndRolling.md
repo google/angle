@@ -15,18 +15,9 @@ appropriate testing.
 ## Autorollers
 
 At present, autorollers manage both the ANGLE roll into Chromium, and
-the Chromium roll into ANGLE.
-
-The top-level page for the ANGLE autoroller into Chromium is:
-[https://autoroll.skia.org/r/angle-chromium-autoroll](https://autoroll.skia.org/r/angle-chromium-autoroll)
-
-The top-level page for the Chromium autoroller into ANGLE is:
-[https://autoroll.skia.org/r/chromium-angle-autoroll](https://autoroll.skia.org/r/chromium-angle-autoroll)
-
-Each of these can be triggered manually if necessary by logging in
-with appropriate credentials. The Chromium-into-ANGLE autoroller in
-particular usually only runs daily, and sometimes when adding or
-removing test suppressions it's advantageous to run it more often.
+the Chromium roll into ANGLE. All of the ANGLE-related autorollers are
+documented in the [ANGLE Wrangling
+documentation](../infra/ANGLEWrangling.md#the-auto-rollers).
 
 ## Manually rolling DEPS
 

@@ -90,7 +90,7 @@ the Label `Hotlist-PixelWrangler` for bugs that aren't caused by ANGLE regressio
  1. Use this URL:
     `https://chromium.googlesource.com/angle/angle.git/+log/<last passing revision>..<first failing revision>`
 
-## Task 3: The Auto-Rollers
+## <a name="the-auto-rollers"></a>Task 3: The Auto-Rollers
 
 The [ANGLE auto-roller](https://autoroll.skia.org/r/angle-chromium-autoroll) automatically updates
 Chrome with the latest ANGLE changes.
@@ -100,16 +100,17 @@ Chrome with the latest ANGLE changes.
  1. **Chrome Branching**: You are responsible for pausing the roller 24h before branch days, and resuming afterwards.
     See the [Chrome Release Schedule](https://chromiumdash.appspot.com/schedule).
 
-We also use additional auto-rollers to roll third party libraries into ANGLE once per day:
+We also use additional auto-rollers to roll third party libraries, and Chromium, into ANGLE once per day:
 
  * [SwiftShader into ANGLE](https://autoroll.skia.org/r/swiftshader-angle-autoroll)
  * [vulkan-deps into ANGLE](https://autoroll.skia.org/r/vulkan-deps-angle-autoroll)
  * [VK-GL-CTS into ANGLE](https://autoroll.skia.org/r/vk-gl-cts-angle-autoroll?tab=status)
+ * [Chromium into ANGLE](https://autoroll.skia.org/r/chromium-angle-autoroll)
 
 Please ensure these rollers are also healthy and unblocked. You can trigger manual rolls using the
-dashboards to land high-priority changes. When a roll fails, stop the roller, determine if the root
-cause is a problem with ANGLE or with the upstream repo, and file an issue with an appropriate next
-step.
+dashboards to land high-priority changes, for example Chromium-side test expectation updates or
+suppressions. When a roll fails, stop the roller, determine if the root cause is a problem with
+ANGLE or with the upstream repo, and file an issue with an appropriate next step.
 
 The autoroller configurations live in the [skia/buildbot repository](https://skia.googlesource.com/buildbot/)
 in the [autoroll/config](https://skia.googlesource.com/buildbot/+/main/autoroll/config) folder.
