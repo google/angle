@@ -2368,6 +2368,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsTransformFeedbackExtension,
                             mTransformFeedbackFeatures.transformFeedback == VK_TRUE);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsGeometryStreamsCapability,
+                            mTransformFeedbackFeatures.geometryStreams == VK_TRUE);
+
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsIndexTypeUint8,
                             mIndexTypeUint8Features.indexTypeUint8 == VK_TRUE);
 

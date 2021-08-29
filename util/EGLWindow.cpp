@@ -202,6 +202,7 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
     if (params.transformFeedbackFeature == EGL_FALSE)
     {
         disabledFeatureOverrides.push_back("supportsTransformFeedbackExtension");
+        disabledFeatureOverrides.push_back("supportsGeometryStreamsCapability");
         disabledFeatureOverrides.push_back("emulateTransformFeedback");
     }
 

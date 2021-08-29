@@ -1957,7 +1957,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     VkPipelineRasterizationStateStreamCreateInfoEXT rasterStreamState = {};
     rasterStreamState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT;
-    if (contextVk->getFeatures().supportsTransformFeedbackExtension.enabled)
+    if (contextVk->getFeatures().supportsGeometryStreamsCapability.enabled)
     {
         rasterStreamState.rasterizationStream = 0;
         *pNextPtr                             = &rasterStreamState;

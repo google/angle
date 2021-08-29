@@ -199,6 +199,11 @@ struct FeaturesVk : FeatureSetBase
         "Transform feedback uses the VK_EXT_transform_feedback extension.", &members,
         "http://anglebug.com/3206"};
 
+    Feature supportsGeometryStreamsCapability = {
+        "supportsGeometryStreamsCapability", FeatureCategory::VulkanFeatures,
+        "Implementation supports the GeometryStreams SPIR-V capability.", &members,
+        "http://anglebug.com/3206"};
+
     // Whether the VkDevice supports the VK_EXT_index_type_uint8 extension
     // http://anglebug.com/4405
     Feature supportsIndexTypeUint8 = {"supportsIndexTypeUint8", FeatureCategory::VulkanFeatures,
