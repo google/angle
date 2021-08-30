@@ -34,13 +34,15 @@ import tempfile
 import time
 import traceback
 
-from skia_gold import angle_skia_gold_properties
-from skia_gold import angle_skia_gold_session_manager
-
 # Add //src/testing into sys.path for importing xvfb and test_env, and
 # //src/testing/scripts for importing common.
 d = os.path.dirname
 THIS_DIR = d(os.path.abspath(__file__))
+sys.path.insert(0, d(THIS_DIR))
+
+from skia_gold import angle_skia_gold_properties
+from skia_gold import angle_skia_gold_session_manager
+
 ANGLE_SRC_DIR = d(d(d(THIS_DIR)))
 sys.path.insert(0, os.path.join(ANGLE_SRC_DIR, 'testing'))
 sys.path.insert(0, os.path.join(ANGLE_SRC_DIR, 'testing', 'scripts'))
