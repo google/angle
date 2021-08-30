@@ -399,10 +399,11 @@ void GlslangGetShaderSpirvCode(const gl::ProgramState &programState,
         ResetGlslangProgramInterfaceInfo(&xfbOnlyInterfaceInfo);
 
         options.enableTransformFeedbackEmulation = true;
-
+        UniformBindingIndexMap uniformBindingIndexMap;
         GlslangAssignLocations(options, programState, resources.varyingPacking,
                                gl::ShaderType::Vertex, gl::ShaderType::InvalidEnum, true,
-                               &xfbOnlyInterfaceInfo, xfbOnlyVSVariableInfoMapOut);
+                               &xfbOnlyInterfaceInfo, &uniformBindingIndexMap,
+                               xfbOnlyVSVariableInfoMapOut);
     }
 }
 

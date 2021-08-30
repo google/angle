@@ -50,6 +50,7 @@
 6192 LINUX AMD OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_OpenGL = SKIP
 5945 LINUX NVIDIA VULKAN : MultithreadingTest.MultiContextClear/* = SKIP
 5945 LINUX NVIDIA VULKAN : MultithreadingTest.MultiCreateContext/* = SKIP
+6367 LINUX INTEL OPENGL : ComputeShaderTest.DispatchGenerateMipmapDispatch/ES3_1_OpenGL = SKIP
 
 // Nvidia
 6115 NVIDIA OPENGL : GLSLTestLoops.DoWhileContinue/* = SKIP

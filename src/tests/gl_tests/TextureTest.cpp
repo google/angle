@@ -6846,11 +6846,6 @@ TEST_P(TextureLimitsTest, MaxFragmentTextures)
 // Test rendering with maximum combined texture units.
 TEST_P(TextureLimitsTest, MaxCombinedTextures)
 {
-    // TODO(timvp): http://anglebug.com/3570
-    // max per-stage sampled image bindings count (32) exceeds device
-    // maxPerStageDescriptorSampledImages limit (16)
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
-
     GLint vertexTextures = mMaxVertexTextures;
 
     if (vertexTextures + mMaxFragmentTextures > mMaxCombinedTextures)

@@ -63,6 +63,19 @@ struct GlslangSpirvOptions
     bool isTransformFeedbackEmulated          = false;
 };
 
+struct UniformBindingInfo final
+{
+    UniformBindingInfo();
+    UniformBindingInfo(uint32_t bindingIndex,
+                       gl::ShaderBitSet shaderBitSet,
+                       gl::ShaderType frontShaderType);
+    uint32_t bindingIndex          = 0;
+    gl::ShaderBitSet shaderBitSet  = gl::ShaderBitSet();
+    gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
+};
+
+using UniformBindingIndexMap = angle::HashMap<std::string, UniformBindingInfo>;
+
 struct ShaderInterfaceVariableXfbInfo
 {
     static constexpr uint32_t kInvalid = std::numeric_limits<uint32_t>::max();
@@ -119,6 +132,8 @@ struct ShaderInterfaceVariableInfo
     // vertex attribute aliasing transformation only.
     uint8_t attributeComponentCount = 0;
     uint8_t attributeLocationCount  = 0;
+    // Indicate if this variable has been deduplicated.
+    bool isDuplicate = false;
 };
 
 // TODO: http://anglebug.com/4524: Need a different hash key than a string, since that's slow to
@@ -135,6 +150,7 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
                                            const std::string &variableName) const;
     ShaderInterfaceVariableInfo &get(gl::ShaderType shaderType, const std::string &variableName);
     ShaderInterfaceVariableInfo &add(gl::ShaderType shaderType, const std::string &variableName);
+    void markAsDuplicate(gl::ShaderType shaderType, const std::string &variableName);
     ShaderInterfaceVariableInfo &addOrGet(gl::ShaderType shaderType,
                                           const std::string &variableName);
     size_t variableCount(gl::ShaderType shaderType) const { return mData[shaderType].size(); }
@@ -175,6 +191,7 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
                             const gl::ShaderType frontShaderType,
                             bool isTransformFeedbackStage,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
+                            UniformBindingIndexMap *uniformBindingIndexMapOut,
                             ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
 void GlslangAssignTransformFeedbackLocations(gl::ShaderType shaderType,
