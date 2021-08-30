@@ -812,10 +812,10 @@ void ProgramExecutable::updateActiveSamplers(const ProgramState &programState)
 
 void ProgramExecutable::updateActiveImages(const ProgramExecutable &executable)
 {
-    const std::vector<ImageBinding> *imageBindings = getImageBindings();
-    for (uint32_t imageIndex = 0; imageIndex < imageBindings->size(); ++imageIndex)
+    const std::vector<ImageBinding> &imageBindings = executable.getImageBindings();
+    for (uint32_t imageIndex = 0; imageIndex < imageBindings.size(); ++imageIndex)
     {
-        const gl::ImageBinding &imageBinding = imageBindings->at(imageIndex);
+        const gl::ImageBinding &imageBinding = imageBindings.at(imageIndex);
 
         uint32_t uniformIndex = executable.getUniformIndexFromImageIndex(imageIndex);
         const gl::LinkedUniform &imageUniform = executable.getUniforms()[uniformIndex];

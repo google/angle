@@ -1090,6 +1090,46 @@ void main()
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::yellow);
 }
 
+// Verify that image uniforms can be used with separable programs
+TEST_P(ProgramPipelineTest31, ImageUniforms)
+{
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    const GLchar *vertString = R"(#version 310 es
+precision highp float;
+precision highp image2D;
+layout(binding = 0, r32f) uniform image2D img;
+
+void main()
+{
+    gl_Position = imageLoad(img, ivec2(0, 0));
+})";
+
+    const GLchar *fragString = essl31_shaders::fs::Red();
+
+    bindProgramPipeline(vertString, fragString);
+
+    GLTexture texture;
+    GLfloat value = 1.0;
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexStorage2D(GL_TEXTURE_2D, 1 /*levels*/, GL_R32F, 1 /*width*/, 1 /*height*/);
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0 /*level*/, 0 /*xoffset*/, 0 /*yoffset*/, 1 /*width*/,
+                    1 /*height*/, GL_RED, GL_FLOAT, &value);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindImageTexture(0, texture, 0 /*level*/, GL_FALSE /*is layered?*/, 0 /*layer*/, GL_READ_ONLY,
+                       GL_R32F);
+
+    glDrawArrays(GL_POINTS, 0, 6);
+    ASSERT_GL_NO_ERROR();
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramPipelineTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(ProgramPipelineTest);
 

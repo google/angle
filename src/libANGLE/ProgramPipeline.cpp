@@ -125,7 +125,8 @@ void ProgramPipelineState::updateExecutableTextures()
         const Program *program = getShaderProgram(shaderType);
         ASSERT(program);
         mExecutable->setActiveTextureMask(program->getExecutable().getActiveSamplersMask());
-        mExecutable->setActiveImagesMask(program->getExecutable().getActiveImagesMask());
+        mExecutable->setActiveImagesMask(mExecutable->getActiveImagesMask() |
+                                         program->getExecutable().getActiveImagesMask());
         // Updates mActiveSamplerRefCounts, mActiveSamplerTypes, and mActiveSamplerFormats
         mExecutable->updateActiveSamplers(program->getState());
     }
