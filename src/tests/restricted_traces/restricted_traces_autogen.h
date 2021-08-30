@@ -126,6 +126,7 @@ enum class RestrictedTraceID
     trex_200,
     whatsapp,
     wordscapes,
+    world_of_kings,
     world_of_tanks_blitz,
     world_war_doh,
     worms_zone_io,

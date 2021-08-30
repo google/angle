@@ -109,6 +109,7 @@
 #include "trex_200/trex_200_capture_context1.h"
 #include "whatsapp/whatsapp_capture_context1.h"
 #include "wordscapes/wordscapes_capture_context3.h"
+#include "world_of_kings/world_of_kings_capture_context3.h"
 #include "world_of_tanks_blitz/world_of_tanks_blitz_capture_context1.h"
 #include "world_war_doh/world_war_doh_capture_context1.h"
 #include "worms_zone_io/worms_zone_io_capture_context1.h"
@@ -672,6 +673,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       wordscapes::kReplayFrameStart, wordscapes::kReplayFrameEnd,
       wordscapes::kReplayDrawSurfaceWidth, wordscapes::kReplayDrawSurfaceHeight,
       wordscapes::kReplayDrawSurfaceColorSpace, "wordscapes"}},
+    {RestrictedTraceID::world_of_kings,
+     {world_of_kings::kReplayContextClientMajorVersion,
+      world_of_kings::kReplayContextClientMinorVersion, world_of_kings::kReplayFrameStart,
+      world_of_kings::kReplayFrameEnd, world_of_kings::kReplayDrawSurfaceWidth,
+      world_of_kings::kReplayDrawSurfaceHeight, world_of_kings::kReplayDrawSurfaceColorSpace,
+      "world_of_kings"}},
     {RestrictedTraceID::world_of_tanks_blitz,
      {world_of_tanks_blitz::kReplayContextClientMajorVersion,
       world_of_tanks_blitz::kReplayContextClientMinorVersion,

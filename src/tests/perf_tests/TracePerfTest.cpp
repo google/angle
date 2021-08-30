@@ -1058,6 +1058,11 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
 
+    if (mParams.testID == RestrictedTraceID::world_of_kings)
+    {
+        addExtensionPrerequisite("GL_OES_EGL_image_external");
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 
