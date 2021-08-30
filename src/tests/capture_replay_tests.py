@@ -720,7 +720,7 @@ class TestExpectation():
             for line in f:
                 l = line.strip()
                 if l != "" and not l.startswith("#"):
-                    self.ReadOneExpectation(l)
+                    self.ReadOneExpectation(l, args.debug)
 
     def _CheckTagsWithConfig(self, tags, config_tags):
         for tag in tags:
@@ -728,7 +728,7 @@ class TestExpectation():
                 return False
         return True
 
-    def ReadOneExpectation(self, line):
+    def ReadOneExpectation(self, line, is_debug):
         (testpattern, result) = line.split('=')
         (test_info_string, test_name_string) = testpattern.split(':')
         test_name = test_name_string.strip()
@@ -742,6 +742,8 @@ class TestExpectation():
         config_tags = [GetPlatformForSkip()]
         if self._asan:
             config_tags += ['ASAN']
+        if is_debug:
+            config_tags += ['DEBUG']
 
         if self._CheckTagsWithConfig(tags, config_tags):
             test_name_regex = re.compile('^' + test_name.replace('*', '.*') + '$')
@@ -1151,6 +1153,9 @@ if __name__ == '__main__':
         '--show-capture-stdout', action='store_true', help='Print test stdout during capture.')
     parser.add_argument('--debug', action='store_true', help='Debug builds (default is Release).')
     args = parser.parse_args()
+    if args.debug and (args.out_dir == DEFAULT_OUT_DIR):
+        args.out_dir = args.out_dir + "Debug"
+
     if sys.platform == "win32":
         args.test_suite += ".exe"
     if args.output_to_file:
