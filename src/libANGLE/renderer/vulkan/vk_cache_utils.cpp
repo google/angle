@@ -1826,15 +1826,9 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
                 vkFormat = convertedFormat.actualBufferVkFormat(packedAttrib.compressed);
             }
 
-            GLenum programAttributeType =
-                contextVk->getState().getProgramExecutable()->getProgramInputs()[attribIndex].type;
-            GLuint attribSize = gl::GetVertexFormatFromID(formatID).components;
-            GLuint shaderVarSize =
-                static_cast<GLuint>(gl::VariableColumnCount(programAttributeType));
-
             ASSERT(contextVk->getNativeExtensions().relaxedVertexAttributeTypeANGLE);
             if (programAttribType == gl::ComponentType::Float ||
-                attribType == gl::ComponentType::Float || attribSize != shaderVarSize)
+                attribType == gl::ComponentType::Float)
             {
                 bindingDesc.stride = 0;  // Prevent out-of-bounds accesses.
             }
