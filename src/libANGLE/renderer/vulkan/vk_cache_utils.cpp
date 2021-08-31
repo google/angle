@@ -153,12 +153,12 @@ VkCompareOp PackGLCompareFunc(GLenum compareFunc)
 }
 
 void UnpackAttachmentDesc(VkAttachmentDescription *desc,
-                          const Format &format,
+                          angle::FormatID formatID,
                           uint8_t samples,
                           const PackedAttachmentOpsDesc &ops)
 {
     desc->flags   = 0;
-    desc->format  = format.actualImageVkFormat();
+    desc->format  = GetVkFormatFromFormatID(formatID);
     desc->samples = gl_vk::GetSamples(samples);
     desc->loadOp  = static_cast<VkAttachmentLoadOp>(ops.loadOp);
     desc->storeOp =
@@ -173,15 +173,15 @@ void UnpackAttachmentDesc(VkAttachmentDescription *desc,
 }
 
 void UnpackColorResolveAttachmentDesc(VkAttachmentDescription *desc,
-                                      const Format &format,
+                                      angle::FormatID formatID,
                                       bool usedAsInputAttachment,
                                       bool isInvalidated)
 {
     desc->flags  = 0;
-    desc->format = format.actualImageVkFormat();
+    desc->format = GetVkFormatFromFormatID(formatID);
 
     // This function is for color resolve attachments.
-    const angle::Format &angleFormat = format.actualImageFormat();
+    const angle::Format &angleFormat = angle::Format::Get(formatID);
     ASSERT(angleFormat.depthBits == 0 && angleFormat.stencilBits == 0);
 
     // Resolve attachments always have a sample count of 1.
@@ -202,7 +202,7 @@ void UnpackColorResolveAttachmentDesc(VkAttachmentDescription *desc,
 }
 
 void UnpackDepthStencilResolveAttachmentDesc(VkAttachmentDescription *desc,
-                                             const Format &format,
+                                             angle::FormatID formatID,
                                              bool usedAsDepthInputAttachment,
                                              bool usedAsStencilInputAttachment,
                                              bool isDepthInvalidated,
@@ -211,10 +211,10 @@ void UnpackDepthStencilResolveAttachmentDesc(VkAttachmentDescription *desc,
     // There cannot be simultaneous usages of the depth/stencil resolve image, as depth/stencil
     // resolve currently only comes from depth/stencil renderbuffers.
     desc->flags  = 0;
-    desc->format = format.actualImageVkFormat();
+    desc->format = GetVkFormatFromFormatID(formatID);
 
     // This function is for depth/stencil resolve attachment.
-    const angle::Format &angleFormat = format.intendedFormat();
+    const angle::Format &angleFormat = angle::Format::Get(formatID);
     ASSERT(angleFormat.depthBits != 0 || angleFormat.stencilBits != 0);
 
     // Missing aspects are folded in is*Invalidated parameters, so no need to double check.
@@ -924,8 +924,6 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
                                            const AttachmentOpsArray &ops,
                                            RenderPassHelper *renderPassHelper)
 {
-    RendererVk *renderer = contextVk->getRenderer();
-
     constexpr VkAttachmentReference kUnusedAttachment   = {VK_ATTACHMENT_UNUSED,
                                                          VK_IMAGE_LAYOUT_UNDEFINED};
     constexpr VkAttachmentReference2 kUnusedAttachment2 = {
@@ -977,9 +975,8 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
             continue;
         }
 
-        angle::FormatID formatID = desc[colorIndexGL];
-        ASSERT(formatID != angle::FormatID::NONE);
-        const Format &format = renderer->getFormat(formatID);
+        angle::FormatID attachmentFormatID = desc[colorIndexGL];
+        ASSERT(attachmentFormatID != angle::FormatID::NONE);
 
         VkAttachmentReference colorRef;
         colorRef.attachment = attachmentCount.get();
@@ -989,24 +986,21 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
                                     static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
         colorAttachmentRefs.push_back(colorRef);
 
-        UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], format, attachmentSamples,
-                             ops[attachmentCount]);
-
-        angle::FormatID attachmentFormat = format.actualImageFormatID;
+        UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], attachmentFormatID,
+                             attachmentSamples, ops[attachmentCount]);
 
         // If this renderpass uses EXT_srgb_write_control, we need to override the format to its
         // linear counterpart. Formats that cannot be reinterpreted are exempt from this
         // requirement.
-        angle::FormatID linearFormat = rx::ConvertToLinear(attachmentFormat);
+        angle::FormatID linearFormat = rx::ConvertToLinear(attachmentFormatID);
         if (linearFormat != angle::FormatID::NONE)
         {
             if (desc.getSRGBWriteControlMode() == gl::SrgbWriteControlMode::Linear)
             {
-                attachmentFormat = linearFormat;
+                attachmentFormatID = linearFormat;
             }
         }
-        attachmentDescs[attachmentCount.get()].format =
-            contextVk->getRenderer()->getFormat(attachmentFormat).actualImageVkFormat();
+        attachmentDescs[attachmentCount.get()].format = GetVkFormatFromFormatID(attachmentFormatID);
         ASSERT(attachmentDescs[attachmentCount.get()].format != VK_FORMAT_UNDEFINED);
 
         isColorInvalidated.set(colorIndexGL, ops[attachmentCount].isInvalidated);
@@ -1019,16 +1013,15 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
     {
         uint32_t depthStencilIndexGL = static_cast<uint32_t>(desc.depthStencilAttachmentIndex());
 
-        angle::FormatID formatID = desc[depthStencilIndexGL];
-        ASSERT(formatID != angle::FormatID::NONE);
-        const Format &format = renderer->getFormat(formatID);
+        angle::FormatID attachmentFormatID = desc[depthStencilIndexGL];
+        ASSERT(attachmentFormatID != angle::FormatID::NONE);
 
         depthStencilAttachmentRef.attachment = attachmentCount.get();
         depthStencilAttachmentRef.layout     = ConvertImageLayoutToVkImageLayout(
             static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
 
-        UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], format, attachmentSamples,
-                             ops[attachmentCount]);
+        UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], attachmentFormatID,
+                             attachmentSamples, ops[attachmentCount]);
 
         isDepthInvalidated   = ops[attachmentCount].isInvalidated;
         isStencilInvalidated = ops[attachmentCount].isStencilInvalidated;
@@ -1048,7 +1041,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 
         ASSERT(desc.isColorAttachmentEnabled(colorIndexGL));
 
-        const Format &format = renderer->getFormat(desc[colorIndexGL]);
+        angle::FormatID attachmentFormatID = desc[colorIndexGL];
 
         VkAttachmentReference colorRef;
         colorRef.attachment = attachmentCount.get();
@@ -1064,9 +1057,9 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
             colorResolveAttachmentRefs.push_back(colorRef);
         }
 
-        UnpackColorResolveAttachmentDesc(&attachmentDescs[attachmentCount.get()], format,
-                                         desc.hasColorUnresolveAttachment(colorIndexGL),
-                                         isColorInvalidated.test(colorIndexGL));
+        UnpackColorResolveAttachmentDesc(
+            &attachmentDescs[attachmentCount.get()], attachmentFormatID,
+            desc.hasColorUnresolveAttachment(colorIndexGL), isColorInvalidated.test(colorIndexGL));
 
         ++attachmentCount;
     }
@@ -1078,8 +1071,8 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 
         uint32_t depthStencilIndexGL = static_cast<uint32_t>(desc.depthStencilAttachmentIndex());
 
-        const Format &format             = renderer->getFormat(desc[depthStencilIndexGL]);
-        const angle::Format &angleFormat = format.intendedFormat();
+        angle::FormatID attachmentFormatID = desc[depthStencilIndexGL];
+        const angle::Format &angleFormat   = angle::Format::Get(attachmentFormatID);
 
         // Treat missing aspect as invalidated for the purpose of the resolve attachment.
         if (angleFormat.depthBits == 0)
@@ -1105,8 +1098,9 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         }
 
         UnpackDepthStencilResolveAttachmentDesc(
-            &attachmentDescs[attachmentCount.get()], format, desc.hasDepthUnresolveAttachment(),
-            desc.hasStencilUnresolveAttachment(), isDepthInvalidated, isStencilInvalidated);
+            &attachmentDescs[attachmentCount.get()], attachmentFormatID,
+            desc.hasDepthUnresolveAttachment(), desc.hasStencilUnresolveAttachment(),
+            isDepthInvalidated, isStencilInvalidated);
 
         ++attachmentCount;
     }

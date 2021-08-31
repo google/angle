@@ -1962,7 +1962,7 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
             RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
             ASSERT(colorRenderTarget);
             mRenderPassDesc.packColorAttachment(
-                colorIndexGL, colorRenderTarget->getImageForRenderPass().getIntendedFormatID());
+                colorIndexGL, colorRenderTarget->getImageForRenderPass().getActualFormatID());
 
             // Add the resolve attachment, if any.
             if (colorRenderTarget->hasResolveAttachment())
@@ -1981,7 +1981,7 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
     if (depthStencilRenderTarget)
     {
         mRenderPassDesc.packDepthStencilAttachment(
-            depthStencilRenderTarget->getImageForRenderPass().getIntendedFormatID());
+            depthStencilRenderTarget->getImageForRenderPass().getActualFormatID());
 
         // Add the resolve attachment, if any.
         if (depthStencilRenderTarget->hasResolveAttachment())

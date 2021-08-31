@@ -2710,7 +2710,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     vk::RenderPassDesc renderPassDesc;
     renderPassDesc.setSamples(dest->getSamples());
-    renderPassDesc.packColorAttachment(0, dest->getIntendedFormatID());
+    renderPassDesc.packColorAttachment(0, dest->getActualFormatID());
 
     // Copy from multisampled image is not supported.
     ASSERT(src->getSamples() == 1);
