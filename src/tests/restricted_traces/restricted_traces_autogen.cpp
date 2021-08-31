@@ -108,6 +108,7 @@
 #include "township/township_capture_context2.h"
 #include "trex_200/trex_200_capture_context1.h"
 #include "whatsapp/whatsapp_capture_context1.h"
+#include "words_with_friends_2/words_with_friends_2_capture_context1.h"
 #include "wordscapes/wordscapes_capture_context3.h"
 #include "world_of_kings/world_of_kings_capture_context3.h"
 #include "world_of_tanks_blitz/world_of_tanks_blitz_capture_context1.h"
@@ -668,6 +669,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {whatsapp::kReplayContextClientMajorVersion, whatsapp::kReplayContextClientMinorVersion,
       whatsapp::kReplayFrameStart, whatsapp::kReplayFrameEnd, whatsapp::kReplayDrawSurfaceWidth,
       whatsapp::kReplayDrawSurfaceHeight, kDefaultReplayDrawSurfaceColorSpace, "whatsapp"}},
+    {RestrictedTraceID::words_with_friends_2,
+     {words_with_friends_2::kReplayContextClientMajorVersion,
+      words_with_friends_2::kReplayContextClientMinorVersion,
+      words_with_friends_2::kReplayFrameStart, words_with_friends_2::kReplayFrameEnd,
+      words_with_friends_2::kReplayDrawSurfaceWidth, words_with_friends_2::kReplayDrawSurfaceHeight,
+      words_with_friends_2::kReplayDrawSurfaceColorSpace, "words_with_friends_2"}},
     {RestrictedTraceID::wordscapes,
      {wordscapes::kReplayContextClientMajorVersion, wordscapes::kReplayContextClientMinorVersion,
       wordscapes::kReplayFrameStart, wordscapes::kReplayFrameEnd,

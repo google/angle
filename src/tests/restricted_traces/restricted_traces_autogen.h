@@ -125,6 +125,7 @@ enum class RestrictedTraceID
     township,
     trex_200,
     whatsapp,
+    words_with_friends_2,
     wordscapes,
     world_of_kings,
     world_of_tanks_blitz,
