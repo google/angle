@@ -59,8 +59,7 @@ void JsonSerializer::addBlob(const std::string &name, const uint8_t *blob, size_
     angle::base::SHA1HashBytes(blob, length, hash);
     std::ostringstream os;
 
-    // Since we don't want to de-serialize the data we just store a checksume
-    // of the blob
+    // Since we don't want to de-serialize the data we just store a checksum of the blob
     os << "SHA1:";
     static constexpr char kASCII[] = "0123456789ABCDEF";
     for (size_t i = 0; i < angle::base::kSHA1Length; ++i)
@@ -68,16 +67,16 @@ void JsonSerializer::addBlob(const std::string &name, const uint8_t *blob, size_
         os << kASCII[hash[i] & 0xf] << kASCII[hash[i] >> 4];
     }
 
-    std::ostringstream hash_name;
-    hash_name << name << "-hash";
-    addString(hash_name.str(), os.str());
+    std::ostringstream hashName;
+    hashName << name << "-hash";
+    addString(hashName.str(), os.str());
 
-    std::vector<uint8_t> data(length < 16 ? length : (size_t)16);
+    std::vector<uint8_t> data((length < 16) ? length : static_cast<size_t>(16));
     std::copy(blob, blob + data.size(), data.begin());
 
-    std::ostringstream raw_name;
-    raw_name << name << "-raw[0-" << data.size() - 1 << ']';
-    addVector(raw_name.str(), data);
+    std::ostringstream rawName;
+    rawName << name << "-raw[0-" << data.size() - 1 << ']';
+    addVector(rawName.str(), data);
 }
 
 void JsonSerializer::addCString(const std::string &name, const char *value)
@@ -123,8 +122,8 @@ void JsonSerializer::endDocument()
     ASSERT(!mGroupValueStack.empty());
     ASSERT(!mGroupNameStack.empty());
 
-    rapidjson::Value name_value(mGroupNameStack.top().c_str(), mAllocator);
-    mDoc.AddMember(name_value, makeValueGroup(mGroupValueStack.top()), mAllocator);
+    rapidjson::Value nameValue(mGroupNameStack.top().c_str(), mAllocator);
+    mDoc.AddMember(nameValue, makeValueGroup(mGroupValueStack.top()), mAllocator);
 
     mGroupValueStack.pop();
     mGroupNameStack.pop();
@@ -133,8 +132,8 @@ void JsonSerializer::endDocument()
 
     std::stringstream os;
     js::OStreamWrapper osw(os);
-    js::PrettyWriter<js::OStreamWrapper> pretty_os(osw);
-    mDoc.Accept(pretty_os);
+    js::PrettyWriter<js::OStreamWrapper> prettyOs(osw);
+    mDoc.Accept(prettyOs);
     mResult = os.str();
 }
 
