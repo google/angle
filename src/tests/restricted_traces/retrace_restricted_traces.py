@@ -118,6 +118,9 @@ def main():
     parser.add_argument(
         '--validation', help='Enable state serialization validation calls.', action='store_true')
     parser.add_argument(
+        '--validation-expr',
+        help='Validation expression, used to add more validation checkpoints.')
+    parser.add_argument(
         '--limit',
         '--frame-limit',
         type=int,
@@ -170,6 +173,8 @@ def main():
             # Also turn on shader output init to ensure we have no undefined values.
             # This feature is also enabled in replay when using --validation.
             additional_env['ANGLE_FEATURE_OVERRIDES_ENABLED'] = 'forceInitShaderOutputVariables'
+        if args.validation_expr:
+            additional_env['ANGLE_CAPTURE_VALIDATION_EXPR'] = args.validation_expr
 
         env = {**os.environ.copy(), **additional_env}
 
