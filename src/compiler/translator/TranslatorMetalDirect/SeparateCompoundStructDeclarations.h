@@ -12,6 +12,7 @@
 #include "compiler/translator/TranslatorMetalDirect/IdGen.h"
 namespace sh
 {
+class TSymbolTable;
 
 // Example:
 //  struct Foo { int x; } foo;
@@ -19,7 +20,8 @@ namespace sh
 //  struct Foo {int x; }; Foo foo;
 ANGLE_NO_DISCARD bool SeparateCompoundStructDeclarations(TCompiler &compiler,
                                                          IdGen &idGen,
-                                                         TIntermBlock &root);
+                                                         TIntermBlock &root,
+                                                         TSymbolTable *symbolTable);
 
 }  // namespace sh
 

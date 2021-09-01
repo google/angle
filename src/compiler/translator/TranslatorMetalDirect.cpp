@@ -1159,12 +1159,12 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
-    if (!ReduceInterfaceBlocks(*this, *root, idGen))
+    if (!ReduceInterfaceBlocks(*this, *root, idGen, &getSymbolTable()))
     {
         return false;
     }
 
-    if (!SeparateCompoundStructDeclarations(*this, idGen, *root))
+    if (!SeparateCompoundStructDeclarations(*this, idGen, *root, &getSymbolTable()))
     {
         return false;
     }

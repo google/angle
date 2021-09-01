@@ -103,7 +103,10 @@ class Separator : public TIntermTraverser
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool sh::SeparateCompoundStructDeclarations(TCompiler &compiler, IdGen &idGen, TIntermBlock &root)
+bool sh::SeparateCompoundStructDeclarations(TCompiler &compiler,
+                                            IdGen &idGen,
+                                            TIntermBlock &root,
+                                            TSymbolTable *symbolTable)
 {
     Separator separator(compiler.getSymbolTable(), idGen);
     root.traverse(&separator);
@@ -112,7 +115,7 @@ bool sh::SeparateCompoundStructDeclarations(TCompiler &compiler, IdGen &idGen, T
         return false;
     }
 
-    if (!SeparateDeclarations(&compiler, &root))
+    if (!SeparateDeclarations(&compiler, &root, symbolTable))
     {
         return false;
     }

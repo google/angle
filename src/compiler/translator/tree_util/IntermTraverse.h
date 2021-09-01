@@ -229,6 +229,30 @@ class TIntermTraverser : angle::NonCopyable
                                     TIntermNode *original,
                                     TIntermNode *replacement,
                                     OriginalNode originalStatus);
+    // Walk the ancestors and replace the access chain that leads to this symbol.  This fixes up the
+    // types of the intermediate nodes, so it should be used when the type of the symbol changes.
+    // The AST transformation must still visit the (indirect) index nodes to transform the
+    // expression inside those nodes.  Note that due to the way these replacements work, the AST
+    // transformation should not attempt to replace the actual index node itself, but only a subnode
+    // of that.
+    //
+    //                    Node 1                                                Node 6
+    //                 EOpIndexDirect                                        EOpIndexDirect
+    //                /          \                                              /       \
+    //           Node 2        Node 3                                   Node 7        Node 3
+    //       EOpIndexIndirect     N     --> replaced with -->       EOpIndexIndirect     N
+    //         /        \                                            /        \
+    //      Node 4    Node 5                                      Node 8      Node 5
+    //      symbol   expression                                replacement   expression
+    //        ^                                                                 ^
+    //        |                                                                 |
+    //    This symbol is being replaced,                        This node is directly placed in the
+    //    and the replacement is given                          new access chain, and its parent is
+    //    to this function.                                     is changed.  This is why a
+    //                                                          replacment attempt for this node
+    //                                                          itself will not work.
+    //
+    void queueAccessChainReplacement(TIntermTyped *replacement);
 
     const bool preVisit;
     const bool inVisit;

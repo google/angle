@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <unordered_map>
 
+#include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/TranslatorMetalDirect.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
 #include "compiler/translator/TranslatorMetalDirect/IntermRebuild.h"
@@ -112,7 +113,10 @@ class Reducer : public TIntermRebuild
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool sh::ReduceInterfaceBlocks(TCompiler &compiler, TIntermBlock &root, IdGen &idGen)
+bool sh::ReduceInterfaceBlocks(TCompiler &compiler,
+                               TIntermBlock &root,
+                               IdGen &idGen,
+                               TSymbolTable *symbolTable)
 {
     Reducer reducer(compiler, idGen);
     if (!reducer.rebuildRoot(root))
@@ -120,7 +124,7 @@ bool sh::ReduceInterfaceBlocks(TCompiler &compiler, TIntermBlock &root, IdGen &i
         return false;
     }
 
-    if (!SeparateDeclarations(&compiler, &root))
+    if (!SeparateDeclarations(&compiler, &root, symbolTable))
     {
         return false;
     }

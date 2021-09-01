@@ -12089,6 +12089,111 @@ void main()
     EXPECT_EQ(0u, program);
 }
 
+// Test that separating declarators works with structs that have been separately defined.
+TEST_P(GLSLTest_ES31, SeparateDeclaratorsOfStructType)
+{
+    constexpr char kVS[] = R"(#version 310 es
+precision highp float;
+
+struct S
+{
+    mat4 a;
+    mat4 b;
+};
+
+S s1 = S(mat4(1), mat4(2)), s2[2][3], s3[2] = S[2](S(mat4(0), mat4(3)), S(mat4(4), mat4(5)));
+
+void main() {
+    S s4[2][3] = s2, s5 = s3[0], s6[2] = S[2](s1, s5), s7 = s5;
+
+    gl_Position = vec4(s3[1].a[0].x, s2[0][2].b[1].y, s4[1][0].a[2].z, s6[0].b[3].w);
+})";
+
+    GLuint shader = glCreateShader(GL_VERTEX_SHADER);
+
+    const char *sourceArray[1] = {kVS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kVS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Test that separating declarators works with structs that are simultaneously defined.
+TEST_P(GLSLTest_ES31, SeparateDeclaratorsOfStructTypeBeingSpecified)
+{
+    constexpr char kVS[] = R"(#version 310 es
+precision highp float;
+
+struct S
+{
+    mat4 a;
+    mat4 b;
+} s1 = S(mat4(1), mat4(2)), s2[2][3], s3[2] = S[2](S(mat4(0), mat4(3)), S(mat4(4), mat4(5)));
+
+void main() {
+    struct T
+    {
+        mat4 a;
+        mat4 b;
+    } s4[2][3], s5 = T(s3[0].a, s3[0].b), s6[2] = T[2](T(s1.a, s1.b), s5), s7 = s5;
+
+    float f1 = s3[1].a[0].x, f2 = s2[0][2].b[1].y;
+
+    gl_Position = vec4(f1, f2, s4[1][0].a[2].z, s6[0].b[3].w);
+})";
+
+    GLuint shader = glCreateShader(GL_VERTEX_SHADER);
+
+    const char *sourceArray[1] = {kVS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kVS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Test that separating declarators works with structs that are simultaneously defined and that are
+// nameless.
+TEST_P(GLSLTest_ES31, SeparateDeclaratorsOfNamelessStructType)
+{
+    constexpr char kVS[] = R"(#version 310 es
+precision highp float;
+
+struct
+{
+    mat4 a;
+    mat4 b;
+} s1, s2[2][3], s3[2];
+
+void main() {
+    struct
+    {
+        mat4 a;
+        mat4 b;
+    } s4[2][3], s5, s6[2], s7 = s5;
+
+    float f1 = s1.a[0].x + s3[1].a[0].x, f2 = s2[0][2].b[1].y + s7.b[1].z;
+
+    gl_Position = vec4(f1, f2, s4[1][0].a[2].z, s6[0].b[3].w);
+})";
+
+    GLuint shader = glCreateShader(GL_VERTEX_SHADER);
+
+    const char *sourceArray[1] = {kVS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kVS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
 // Regression test for transformation bug which separates struct declarations from uniform
 // declarations.  The bug was that the uniform variable usage in the initializer of a new
 // declaration (y below) was not being processed.

@@ -862,7 +862,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     // Note that separate declarations need to be run before other AST transformations that
     // generate new statements from expressions.
-    if (!SeparateDeclarations(this, root))
+    if (!SeparateDeclarations(this, root, &getSymbolTable()))
     {
         return false;
     }
