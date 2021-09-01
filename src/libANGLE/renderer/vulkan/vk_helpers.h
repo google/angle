@@ -1704,7 +1704,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                                    const gl::Extents &glExtents,
                                                    const gl::Offset &offset,
                                                    uint8_t **destData,
-                                                   DynamicBuffer *stagingBufferOverride);
+                                                   DynamicBuffer *stagingBufferOverride,
+                                                   angle::FormatID formatID);
 
     angle::Result stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
                                                         const gl::ImageIndex &index,
@@ -1947,18 +1948,24 @@ class ImageHelper final : public Resource, public angle::Subject
     {
         BufferHelper *bufferHelper;
         VkBufferImageCopy copyRegion;
+        angle::FormatID formatID;
     };
     struct ImageUpdate
     {
         VkImageCopy copyRegion;
+        angle::FormatID formatID;
     };
 
     struct SubresourceUpdate : angle::NonCopyable
     {
         SubresourceUpdate();
         ~SubresourceUpdate();
-        SubresourceUpdate(BufferHelper *bufferHelperIn, const VkBufferImageCopy &copyRegion);
-        SubresourceUpdate(RefCounted<ImageHelper> *imageIn, const VkImageCopy &copyRegion);
+        SubresourceUpdate(BufferHelper *bufferHelperIn,
+                          const VkBufferImageCopy &copyRegion,
+                          angle::FormatID formatID);
+        SubresourceUpdate(RefCounted<ImageHelper> *imageIn,
+                          const VkImageCopy &copyRegion,
+                          angle::FormatID formatID);
         SubresourceUpdate(VkImageAspectFlags aspectFlags,
                           const VkClearValue &clearValue,
                           const gl::ImageIndex &imageIndex);

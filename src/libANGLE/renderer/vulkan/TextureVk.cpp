@@ -877,9 +877,9 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     }
 
     uint8_t *destData = nullptr;
-    ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(contextVk, destinationAllocationSize,
-                                                       stagingIndex, stagingExtents, stagingOffset,
-                                                       &destData, contextStagingBuffer));
+    ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
+        contextVk, destinationAllocationSize, stagingIndex, stagingExtents, stagingOffset,
+        &destData, contextStagingBuffer, destFormatID));
 
     // Source and dest data is tightly packed
     GLuint sourceDataRowPitch = sourceBox.width * sourceTextureFormat.pixelBytes;
@@ -2982,7 +2982,8 @@ angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
         ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
             contextVk, mipAllocationSize,
             gl::ImageIndex::MakeFromType(mState.getType(), currentMipLevel.get(), layer),
-            mipLevelExtents, gl::Offset(), &destData, contextVk->getStagingBuffer()));
+            mipLevelExtents, gl::Offset(), &destData, contextVk->getStagingBuffer(),
+            sourceFormat.id));
 
         // Generate the mipmap into that new buffer
         sourceFormat.mipGenerationFunction(

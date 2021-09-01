@@ -5534,7 +5534,8 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
             gl_vk::GetExtent(yuvInfo.planeExtent[plane], &copy.imageExtent);
             copy.imageSubresource.baseArrayLayer = 0;
             copy.imageSubresource.aspectMask     = kPlaneAspectFlags[plane];
-            appendSubresourceUpdate(gl::LevelIndex(0), SubresourceUpdate(currentBuffer, copy));
+            appendSubresourceUpdate(gl::LevelIndex(0),
+                                    SubresourceUpdate(currentBuffer, copy, storageFormat.id));
         }
 
         return angle::Result::Continue;
@@ -5594,7 +5595,8 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
         stencilCopy.imageOffset                     = copy.imageOffset;
         stencilCopy.imageExtent                     = copy.imageExtent;
         stencilCopy.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_STENCIL_BIT;
-        appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(currentBuffer, stencilCopy));
+        appendSubresourceUpdate(updateLevelGL,
+                                SubresourceUpdate(currentBuffer, stencilCopy, storageFormat.id));
 
         aspectFlags &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
     }
@@ -5617,7 +5619,8 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
     if (aspectFlags)
     {
         copy.imageSubresource.aspectMask = aspectFlags;
-        appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(currentBuffer, copy));
+        appendSubresourceUpdate(updateLevelGL,
+                                SubresourceUpdate(currentBuffer, copy, storageFormat.id));
     }
 
     return angle::Result::Continue;
@@ -5802,7 +5805,8 @@ angle::Result ImageHelper::stageSubresourceUpdateAndGetData(ContextVk *contextVk
                                                             const gl::Extents &glExtents,
                                                             const gl::Offset &offset,
                                                             uint8_t **destData,
-                                                            DynamicBuffer *stagingBufferOverride)
+                                                            DynamicBuffer *stagingBufferOverride,
+                                                            angle::FormatID formatID)
 {
     VkBuffer bufferHandle;
     VkDeviceSize stagingOffset = 0;
@@ -5831,7 +5835,7 @@ angle::Result ImageHelper::stageSubresourceUpdateAndGetData(ContextVk *contextVk
     gl_vk::GetExtent(glExtents, &copy.imageExtent);
 
     appendSubresourceUpdate(updateLevelGL,
-                            SubresourceUpdate(stagingBuffer->getCurrentBuffer(), copy));
+                            SubresourceUpdate(stagingBuffer->getCurrentBuffer(), copy, formatID));
 
     return angle::Result::Continue;
 }
@@ -5938,7 +5942,8 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
     gl_vk::GetExtent(dstExtent, &copyToImage.imageExtent);
 
     // 3- enqueue the destination image subresource update
-    appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(currentBuffer, copyToImage));
+    appendSubresourceUpdate(updateLevelGL,
+                            SubresourceUpdate(currentBuffer, copyToImage, storageFormat.id));
     return angle::Result::Continue;
 }
 
@@ -5979,7 +5984,8 @@ void ImageHelper::stageSubresourceUpdateFromImage(RefCounted<ImageHelper> *image
     gl_vk::GetOffset(destOffset, &copyToImage.dstOffset);
     gl_vk::GetExtent(glExtents, &copyToImage.extent);
 
-    appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(image, copyToImage));
+    appendSubresourceUpdate(
+        updateLevelGL, SubresourceUpdate(image, copyToImage, image->get().getActualFormatID()));
 }
 
 void ImageHelper::stageSubresourceUpdatesFromAllImageLevels(RefCounted<ImageHelper> *image,
@@ -6061,8 +6067,8 @@ angle::Result ImageHelper::stageRobustResourceClearWithFormat(ContextVk *context
         copyRegion.imageSubresource.baseArrayLayer = index.hasLayer() ? index.getLayerIndex() : 0;
         copyRegion.imageSubresource.layerCount     = index.getLayerCount();
 
-        appendSubresourceUpdate(updateLevelGL,
-                                SubresourceUpdate(mStagingBuffer.getCurrentBuffer(), copyRegion));
+        appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(mStagingBuffer.getCurrentBuffer(),
+                                                                 copyRegion, imageFormat.id));
     }
     else
     {
@@ -6351,10 +6357,12 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             }
             else if (update.updateSource == UpdateSource::Buffer)
             {
+                ASSERT(update.data.buffer.formatID == mActualFormatID);
                 update.data.buffer.copyRegion.imageSubresource.mipLevel = updateMipLevelVk.get();
             }
             else if (update.updateSource == UpdateSource::Image)
             {
+                ASSERT(update.data.image.formatID == mActualFormatID);
                 update.data.image.copyRegion.dstSubresource.mipLevel = updateMipLevelVk.get();
             }
 
@@ -7104,19 +7112,23 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate()
 ImageHelper::SubresourceUpdate::~SubresourceUpdate() {}
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(BufferHelper *bufferHelperIn,
-                                                  const VkBufferImageCopy &copyRegionIn)
+                                                  const VkBufferImageCopy &copyRegionIn,
+                                                  angle::FormatID formatID)
     : updateSource(UpdateSource::Buffer), image(nullptr)
 {
     data.buffer.bufferHelper = bufferHelperIn;
     data.buffer.copyRegion   = copyRegionIn;
+    data.buffer.formatID     = formatID;
 }
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(RefCounted<ImageHelper> *imageIn,
-                                                  const VkImageCopy &copyRegionIn)
+                                                  const VkImageCopy &copyRegionIn,
+                                                  angle::FormatID formatID)
     : updateSource(UpdateSource::Image), image(imageIn)
 {
     image->addRef();
     data.image.copyRegion = copyRegionIn;
+    data.image.formatID   = formatID;
 }
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags,
