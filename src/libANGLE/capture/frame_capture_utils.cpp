@@ -1035,6 +1035,22 @@ void SerializeProgramBindings(JsonSerializer *json, const gl::ProgramBindings &p
     }
 }
 
+template <typename T>
+void SerializeUniformData(JsonSerializer *json,
+                          const gl::Context *context,
+                          gl::Program *program,
+                          gl::UniformLocation loc,
+                          GLenum type,
+                          GLint size,
+                          void (gl::Program::*getFunc)(const gl::Context *,
+                                                       gl::UniformLocation,
+                                                       T *) const)
+{
+    std::vector<T> uniformData(gl::VariableComponentCount(type) * size, 0);
+    (program->*getFunc)(context, loc, uniformData.data());
+    json->addVector("Data", uniformData);
+}
+
 void SerializeProgram(JsonSerializer *json,
                       const gl::Context *context,
                       GLuint id,
@@ -1053,6 +1069,60 @@ void SerializeProgram(JsonSerializer *json,
     json->addScalar("IsFlaggedForDeletion", program->isFlaggedForDeletion());
     json->addScalar("RefCount", program->getRefCount());
     json->addScalar("ID", program->id().value);
+
+    // Serialize uniforms.
+    {
+        GroupScope uniformsGroup(json, "Uniforms");
+        GLint uniformCount = program->getActiveUniformCount();
+        for (int uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+        {
+            GroupScope uniformGroup(json, "Uniform", uniformIndex);
+
+            constexpr GLsizei kMaxUniformNameLen = 1024;
+            char uniformName[kMaxUniformNameLen] = {};
+            GLint size                           = 0;
+            GLenum type                          = GL_NONE;
+            program->getActiveUniform(uniformIndex, kMaxUniformNameLen, nullptr, &size, &type,
+                                      uniformName);
+
+            json->addCString("Name", uniformName);
+            json->addScalar("Size", size);
+            json->addCString("Type", gl::GLenumToString(gl::GLenumGroup::AttributeType, type));
+
+            const gl::UniformLocation loc = program->getUniformLocation(uniformName);
+
+            if (loc.value == -1)
+            {
+                continue;
+            }
+
+            switch (gl::VariableComponentType(type))
+            {
+                case GL_FLOAT:
+                {
+                    SerializeUniformData<GLfloat>(json, context, program, loc, type, size,
+                                                  &gl::Program::getUniformfv);
+                    break;
+                }
+                case GL_BOOL:
+                case GL_INT:
+                {
+                    SerializeUniformData<GLint>(json, context, program, loc, type, size,
+                                                &gl::Program::getUniformiv);
+                    break;
+                }
+                case GL_UNSIGNED_INT:
+                {
+                    SerializeUniformData<GLuint>(json, context, program, loc, type, size,
+                                                 &gl::Program::getUniformuiv);
+                    break;
+                }
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+        }
+    }
 }
 
 void SerializeImageDesc(JsonSerializer *json, size_t descIndex, const gl::ImageDesc &imageDesc)
