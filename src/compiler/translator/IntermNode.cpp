@@ -182,39 +182,9 @@ bool CanFoldAggregateBuiltInOp(TOperator op)
 
 void PropagatePrecisionIfApplicable(TIntermTyped *node, TPrecision precision)
 {
-    if (precision == EbpUndefined)
+    if (precision == EbpUndefined || node->getPrecision() != EbpUndefined)
     {
         return;
-    }
-
-    if (node->getPrecision() != EbpUndefined)
-    {
-        // If an expression already has a precision, cannot modify it.  Constructors however are in
-        // a special position.  They initially don't have a precision:
-        //
-        // > Literal constants do not have precision qualifiers. Neither do Boolean variables.
-        // Neither do constructors.
-        //
-        // And will inherit their precision from other operands:
-        //
-        // > In cases where operands do not have a precision qualifier, the precision qualification
-        // will come from the other operands.
-        //
-        // At the same time, they have a precision at least as high as their operands:
-        //
-        // > The precision used to internally evaluate an operation, and the precision qualification
-        // subsequently associated with any resulting intermediate values, must be at least as high
-        // as the highest precision qualification of the operands consumed by the operation.
-        //
-        // ANGLE tentatively assigns the precision of the constructor based on its operands, and
-        // allows it to be increased based on other operands as necessary.
-        TIntermAggregate *asAggregate = node->getAsAggregate();
-        const bool isConstructor      = asAggregate != nullptr && asAggregate->isConstructor();
-        const bool isPrecisionBeingIncreased = node->getPrecision() < precision;
-        if (!(isConstructor && isPrecisionBeingIncreased))
-        {
-            return;
-        }
     }
 
     if (IsPrecisionApplicableToType(node->getBasicType()))
