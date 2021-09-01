@@ -359,6 +359,9 @@ State::State(const State *shareContextState,
       mPatchVertices(3),
       mOverlay(overlay),
       mNoSimultaneousConstantColorAndAlphaBlendFunc(false),
+      mSetBlendIndexedInvoked(false),
+      mSetBlendFactorsIndexedInvoked(false),
+      mSetBlendEquationsIndexedInvoked(false),
       mBoundingBoxMinX(-1.0f),
       mBoundingBoxMinY(-1.0f),
       mBoundingBoxMinZ(-1.0f),
@@ -849,20 +852,31 @@ void State::setClipControl(GLenum origin, GLenum depth)
 
 void State::setBlend(bool enabled)
 {
-    mBlendState.blend = enabled;
+    if (mSetBlendIndexedInvoked || mBlendState.blend != enabled)
+    {
+        mBlendState.blend = enabled;
 
-    mBlendStateExt.setEnabled(enabled);
-    mDirtyBits.set(DIRTY_BIT_BLEND_ENABLED);
+        mSetBlendIndexedInvoked = false;
+        mBlendStateExt.setEnabled(enabled);
+        mDirtyBits.set(DIRTY_BIT_BLEND_ENABLED);
+    }
 }
 
 void State::setBlendIndexed(bool enabled, GLuint index)
 {
+    mSetBlendIndexedInvoked = true;
     mBlendStateExt.setEnabledIndexed(index, enabled);
     mDirtyBits.set(DIRTY_BIT_BLEND_ENABLED);
 }
 
 void State::setBlendFactors(GLenum sourceRGB, GLenum destRGB, GLenum sourceAlpha, GLenum destAlpha)
 {
+    if (!mSetBlendFactorsIndexedInvoked && mBlendState.sourceBlendRGB == sourceRGB &&
+        mBlendState.destBlendRGB == destRGB && mBlendState.sourceBlendAlpha == sourceAlpha &&
+        mBlendState.destBlendAlpha == destAlpha)
+    {
+        return;
+    }
 
     mBlendState.sourceBlendRGB   = sourceRGB;
     mBlendState.destBlendRGB     = destRGB;
@@ -890,6 +904,7 @@ void State::setBlendFactors(GLenum sourceRGB, GLenum destRGB, GLenum sourceAlpha
         }
     }
 
+    mSetBlendFactorsIndexedInvoked = false;
     mBlendStateExt.setFactors(sourceRGB, destRGB, sourceAlpha, destAlpha);
     mDirtyBits.set(DIRTY_BIT_BLEND_FUNCS);
 }
@@ -906,6 +921,7 @@ void State::setBlendFactorsIndexed(GLenum sourceRGB,
         mBlendFuncConstantAlphaDrawBuffers.set(index, hasConstantAlpha(sourceRGB, destRGB));
     }
 
+    mSetBlendFactorsIndexedInvoked = true;
     mBlendStateExt.setFactorsIndexed(index, sourceRGB, destRGB, sourceAlpha, destAlpha);
     mDirtyBits.set(DIRTY_BIT_BLEND_FUNCS);
 }
@@ -926,24 +942,34 @@ void State::setBlendColor(float red, float green, float blue, float alpha)
         alpha = clamp01(alpha);
     }
 
-    mBlendColor.red   = red;
-    mBlendColor.green = green;
-    mBlendColor.blue  = blue;
-    mBlendColor.alpha = alpha;
-    mDirtyBits.set(DIRTY_BIT_BLEND_COLOR);
+    if (mBlendColor.red != red || mBlendColor.green != green || mBlendColor.blue != blue ||
+        mBlendColor.alpha != alpha)
+    {
+        mBlendColor.red   = red;
+        mBlendColor.green = green;
+        mBlendColor.blue  = blue;
+        mBlendColor.alpha = alpha;
+        mDirtyBits.set(DIRTY_BIT_BLEND_COLOR);
+    }
 }
 
 void State::setBlendEquation(GLenum rgbEquation, GLenum alphaEquation)
 {
-    mBlendState.blendEquationRGB   = rgbEquation;
-    mBlendState.blendEquationAlpha = alphaEquation;
+    if (mSetBlendEquationsIndexedInvoked || mBlendState.blendEquationRGB != rgbEquation ||
+        mBlendState.blendEquationAlpha != alphaEquation)
+    {
+        mBlendState.blendEquationRGB   = rgbEquation;
+        mBlendState.blendEquationAlpha = alphaEquation;
 
-    mBlendStateExt.setEquations(rgbEquation, alphaEquation);
-    mDirtyBits.set(DIRTY_BIT_BLEND_EQUATIONS);
+        mSetBlendEquationsIndexedInvoked = false;
+        mBlendStateExt.setEquations(rgbEquation, alphaEquation);
+        mDirtyBits.set(DIRTY_BIT_BLEND_EQUATIONS);
+    }
 }
 
 void State::setBlendEquationIndexed(GLenum rgbEquation, GLenum alphaEquation, GLuint index)
 {
+    mSetBlendEquationsIndexedInvoked = true;
     mBlendStateExt.setEquationsIndexed(index, rgbEquation, alphaEquation);
     mDirtyBits.set(DIRTY_BIT_BLEND_EQUATIONS);
 }

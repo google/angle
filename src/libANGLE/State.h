@@ -1158,6 +1158,11 @@ class State : angle::NonCopyable
     DrawBufferMask mBlendFuncConstantAlphaDrawBuffers;
     DrawBufferMask mBlendFuncConstantColorDrawBuffers;
     bool mNoSimultaneousConstantColorAndAlphaBlendFunc;
+    // Whether the indexed variants of setBlend* have been called.  If so, the call to the
+    // non-indexed variants are not no-oped.
+    bool mSetBlendIndexedInvoked;
+    bool mSetBlendFactorsIndexedInvoked;
+    bool mSetBlendEquationsIndexedInvoked;
 
     // GL_EXT_primitive_bounding_box
     GLfloat mBoundingBoxMinX;
