@@ -74,14 +74,15 @@ bool IsTextureLevelInAllocatedImage(const vk::ImageHelper &image,
 bool IsTextureLevelDefinitionCompatibleWithImage(const vk::ImageHelper &image,
                                                  gl::LevelIndex textureLevelIndexGL,
                                                  const gl::Extents &size,
-                                                 const vk::Format &format)
+                                                 angle::FormatID intendedFormatID,
+                                                 angle::FormatID actualFormatID)
 {
     ASSERT(IsTextureLevelInAllocatedImage(image, textureLevelIndexGL));
 
     vk::LevelIndex imageLevelIndexVk = image.toVkLevel(textureLevelIndexGL);
     return size == image.getLevelExtents(imageLevelIndexVk) &&
-           format.intendedFormatID == image.getIntendedFormatID() &&
-           format.actualImageFormatID == image.getActualFormatID();
+           intendedFormatID == image.getIntendedFormatID() &&
+           actualFormatID == image.getActualFormatID();
 }
 
 bool CanCopyWithTransferForTexImage(RendererVk *renderer,
@@ -102,23 +103,24 @@ bool CanCopyWithTransferForTexImage(RendererVk *renderer,
 bool CanCopyWithTransferForCopyTexture(RendererVk *renderer,
                                        const vk::ImageHelper &srcImage,
                                        VkImageTiling srcTilingMode,
-                                       const vk::Format &destFormat,
+                                       angle::FormatID destIntendedFormatID,
+                                       angle::FormatID destActualFormatID,
                                        VkImageTiling destTilingMode)
 {
     if (!vk::CanCopyWithTransfer(renderer, srcImage.getActualFormatID(), srcTilingMode,
-                                 destFormat.actualImageFormatID, destTilingMode))
+                                 destActualFormatID, destTilingMode))
     {
         return false;
     }
 
     // If the formats are identical, we can always transfer between them.
-    if (srcImage.getIntendedFormatID() == destFormat.intendedFormatID)
+    if (srcImage.getIntendedFormatID() == destIntendedFormatID)
     {
         return true;
     }
 
     // If either format is emulated, cannot transfer.
-    if (srcImage.hasEmulatedImageFormat() || destFormat.hasEmulatedImageFormat())
+    if (srcImage.hasEmulatedImageFormat() || destIntendedFormatID != destActualFormatID)
     {
         return false;
     }
@@ -126,7 +128,7 @@ bool CanCopyWithTransferForCopyTexture(RendererVk *renderer,
     // Otherwise, allow transfer between compatible formats.  This is derived from the specification
     // of CHROMIUM_copy_texture.
     const angle::Format &srcAngleFormat  = srcImage.getActualFormat();
-    const angle::Format &destAngleFormat = destFormat.actualImageFormat();
+    const angle::Format &destAngleFormat = angle::Format::Get(destActualFormatID);
 
     const bool srcIsBGRA   = srcAngleFormat.isBGRA();
     const bool srcHasR8    = srcAngleFormat.redBits == 8;
@@ -811,7 +813,8 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
 
     // If it's possible to perform the copy with a transfer, that's the best option.
     if (!unpackFlipY && !unpackPremultiplyAlpha && !unpackUnmultiplyAlpha &&
-        CanCopyWithTransferForCopyTexture(renderer, source->getImage(), srcTilingMode, destVkFormat,
+        CanCopyWithTransferForCopyTexture(renderer, source->getImage(), srcTilingMode,
+                                          destVkFormat.intendedFormatID, destFormatID,
                                           destTilingMode))
     {
         return copySubImageImplWithTransfer(contextVk, offsetImageIndex, destOffset, destVkFormat,
@@ -1442,24 +1445,24 @@ void TextureVk::releaseAndDeleteImageAndViews(ContextVk *contextVk)
     mRedefinedLevels.reset();
 }
 
-void TextureVk::initImageUsageFlags(ContextVk *contextVk, const vk::Format &format)
+void TextureVk::initImageUsageFlags(ContextVk *contextVk, angle::FormatID actualFormatID)
 {
     mImageUsageFlags = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
                        VK_IMAGE_USAGE_SAMPLED_BIT;
 
     // If the image has depth/stencil support, add those as possible usage.
     RendererVk *renderer = contextVk->getRenderer();
-    if (format.actualImageFormat().hasDepthOrStencilBits())
+    if (angle::Format::Get(actualFormatID).hasDepthOrStencilBits())
     {
         // Work around a bug in the Mock ICD:
         // https://github.com/KhronosGroup/Vulkan-Tools/issues/445
-        if (renderer->hasImageFormatFeatureBits(format.actualImageFormatID,
+        if (renderer->hasImageFormatFeatureBits(actualFormatID,
                                                 VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT))
         {
             mImageUsageFlags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
         }
     }
-    else if (renderer->hasImageFormatFeatureBits(format.actualImageFormatID,
+    else if (renderer->hasImageFormatFeatureBits(actualFormatID,
                                                  VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
     {
         mImageUsageFlags |=
@@ -1484,7 +1487,7 @@ angle::Result TextureVk::ensureImageAllocated(ContextVk *contextVk, const vk::Fo
         updateImageHelper(contextVk, vk::GetImageCopyBufferAlignment(format.actualImageFormatID));
     }
 
-    initImageUsageFlags(contextVk, format);
+    initImageUsageFlags(contextVk, format.actualImageFormatID);
 
     return angle::Result::Continue;
 }
@@ -1588,8 +1591,9 @@ angle::Result TextureVk::redefineLevel(const gl::Context *context,
             //   make sure any updates to this level are staged.
             bool isInAllocatedImage = IsTextureLevelInAllocatedImage(*mImage, levelIndexGL);
             bool isCompatibleRedefinition =
-                isInAllocatedImage &&
-                IsTextureLevelDefinitionCompatibleWithImage(*mImage, levelIndexGL, size, format);
+                isInAllocatedImage && IsTextureLevelDefinitionCompatibleWithImage(
+                                          *mImage, levelIndexGL, size, format.intendedFormatID,
+                                          format.actualImageFormatID);
 
             // Mark the level as incompatibly redefined if that's the case.  Note that if the level
             // was previously incompatibly defined, then later redefined to be compatible, the
