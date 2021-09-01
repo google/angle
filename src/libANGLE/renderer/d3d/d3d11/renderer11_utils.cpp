@@ -2178,28 +2178,35 @@ angle::Result GenerateInitialTextureData(
     const d3d11::DXGIFormatSize &dxgiFormatInfo =
         d3d11::GetDXGIFormatSizeInfo(d3dFormatInfo.texFormat);
 
-    unsigned int rowPitch     = dxgiFormatInfo.pixelBytes * width;
-    unsigned int depthPitch   = rowPitch * height;
-    unsigned int maxImageSize = depthPitch * depth;
+    using CheckedSize        = angle::CheckedNumeric<size_t>;
+    CheckedSize rowPitch     = CheckedSize(dxgiFormatInfo.pixelBytes) * CheckedSize(width);
+    CheckedSize depthPitch   = rowPitch * CheckedSize(height);
+    CheckedSize maxImageSize = depthPitch * CheckedSize(depth);
+
+    Context11 *context11 = GetImplAs<Context11>(context);
+    ANGLE_CHECK_GL_ALLOC(context11, maxImageSize.IsValid());
 
     angle::MemoryBuffer *scratchBuffer = nullptr;
-    ANGLE_CHECK_GL_ALLOC(GetImplAs<Context11>(context),
-                         context->getScratchBuffer(maxImageSize, &scratchBuffer));
+    ANGLE_CHECK_GL_ALLOC(context11,
+                         context->getScratchBuffer(maxImageSize.ValueOrDie(), &scratchBuffer));
 
-    d3dFormatInfo.dataInitializerFunction(width, height, depth, scratchBuffer->data(), rowPitch,
-                                          depthPitch);
+    d3dFormatInfo.dataInitializerFunction(width, height, depth, scratchBuffer->data(),
+                                          rowPitch.ValueOrDie(), depthPitch.ValueOrDie());
 
     for (unsigned int i = 0; i < mipLevels; i++)
     {
         unsigned int mipWidth  = std::max(width >> i, 1U);
         unsigned int mipHeight = std::max(height >> i, 1U);
 
-        unsigned int mipRowPitch   = dxgiFormatInfo.pixelBytes * mipWidth;
-        unsigned int mipDepthPitch = mipRowPitch * mipHeight;
+        using CheckedUINT         = angle::CheckedNumeric<UINT>;
+        CheckedUINT mipRowPitch   = CheckedUINT(dxgiFormatInfo.pixelBytes) * CheckedUINT(mipWidth);
+        CheckedUINT mipDepthPitch = mipRowPitch * CheckedUINT(mipHeight);
+
+        ANGLE_CHECK_GL_ALLOC(context11, mipRowPitch.IsValid() && mipDepthPitch.IsValid());
 
         outSubresourceData->at(i).pSysMem          = scratchBuffer->data();
-        outSubresourceData->at(i).SysMemPitch      = mipRowPitch;
-        outSubresourceData->at(i).SysMemSlicePitch = mipDepthPitch;
+        outSubresourceData->at(i).SysMemPitch      = mipRowPitch.ValueOrDie();
+        outSubresourceData->at(i).SysMemSlicePitch = mipDepthPitch.ValueOrDie();
     }
 
     return angle::Result::Continue;
