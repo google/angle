@@ -135,8 +135,7 @@
 6329 : RenderbufferMultisampleTest.OddSampleCount/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6333 : Texture2DFloatTestES3.TextureHalfFloatLinearLegacyTest/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6333 : Texture2DFloatTestES3.TextureHalfFloatSampleLegacyTest/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6180 : Texture2DTestES3.ImmutableTextureBaseLevelOutOfRange/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6180 : Texture2DTestES3.IncompatibleMipsButNoMipmapFiltering/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+6334 : Texture2DTestES3.ImmutableTextureBaseLevelOutOfRange/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6180 : Texture2DTestES3.TexStorage2DCycleThroughYuvSourcesNoData/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6180 : Texture2DTestES3.TextureBaseLevelGreaterThanMaxLevel/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6180 : Texture2DTestES3.TexStorage2DSimultaneousUseOfMultipleYuvSourcesNoData/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
