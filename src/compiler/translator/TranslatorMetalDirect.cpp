@@ -12,7 +12,6 @@
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/OutputGLSLBase.h"
 #include "compiler/translator/StaticType.h"
-#include "compiler/translator/TranslatorMetalDirect/AddExplicitTypeCasts.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
 #include "compiler/translator/TranslatorMetalDirect/EmitMetal.h"
 #include "compiler/translator/TranslatorMetalDirect/FixTypeConstructors.h"
@@ -33,6 +32,7 @@
 #include "compiler/translator/TranslatorMetalDirect/ToposortStructs.h"
 #include "compiler/translator/TranslatorMetalDirect/TranslatorMetalUtils.h"
 #include "compiler/translator/TranslatorMetalDirect/WrapMain.h"
+#include "compiler/translator/tree_ops/ConvertUnsupportedConstructorsToFunctionCalls.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/NameNamelessUniformBuffers.h"
@@ -1183,7 +1183,7 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
-    if (!AddExplicitTypeCasts(*this, *root, symbolEnv))
+    if (!ConvertUnsupportedConstructorsToFunctionCalls(*this, *root, symbolEnv))
     {
         return false;
     }
