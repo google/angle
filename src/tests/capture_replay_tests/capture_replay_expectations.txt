@@ -152,13 +152,8 @@
 6180 : VulkanExternalImageTest.WaitSemaphoresRetainsContentOpaqueFd/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 
 # Skip because CompileFailed
-6180 : FramebufferTest_ES3.ScissoredDrawSubInvalidateThenNonScissoredDraw/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6180 : FramebufferTest_ES3.SubInvalidateFirst/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6180 : FramebufferTest_ES3.SubInvalidateIncomplete/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6180 : FramebufferTest_ES3.SubInvalidatePartial/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6180 : ProgramPipelineTest.GenerateProgramPipelineObjectEXT/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6180 : ReadPixelsPBOTest.ExistingDataPreserved/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6180 : SimpleStateChangeTestES3.SubInvalidateThenDraw/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6180 : UniformTestES3.ReturnsOnlyOneArrayElement/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6180 : WebGL2CompatibilityTest.FragmentShaderColorBufferTypeMissmatch/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6180 : WebGLCompatibilityTest.DrawBuffersIndexedGetIndexedParameter/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE

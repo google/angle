@@ -645,7 +645,7 @@ void CaptureInvalidateSubFramebuffer_attachments(const State &glState,
                                                  GLsizei height,
                                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(attachments, sizeof(GLenum) * numAttachments, paramCapture);
 }
 
 void CaptureProgramBinary_binary(const State &glState,
