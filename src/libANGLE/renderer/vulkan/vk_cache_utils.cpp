@@ -1789,13 +1789,13 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         }
 
         // Get the corresponding VkFormat for the attrib's format.
-        angle::FormatID formatID         = static_cast<angle::FormatID>(packedAttrib.format);
-        const Format &format             = contextVk->getRenderer()->getFormat(formatID);
-        const angle::Format &angleFormat = format.intendedFormat();
-        VkFormat vkFormat                = format.actualBufferVkFormat(packedAttrib.compressed);
+        angle::FormatID formatID            = static_cast<angle::FormatID>(packedAttrib.format);
+        const Format &format                = contextVk->getRenderer()->getFormat(formatID);
+        const angle::Format &intendedFormat = format.getIntendedFormat();
+        VkFormat vkFormat = format.getActualBufferVkFormat(packedAttrib.compressed);
 
-        gl::ComponentType attribType =
-            GetVertexAttributeComponentType(angleFormat.isPureInt(), angleFormat.vertexAttribType);
+        gl::ComponentType attribType = GetVertexAttributeComponentType(
+            intendedFormat.isPureInt(), intendedFormat.vertexAttribType);
         gl::ComponentType programAttribType =
             gl::GetComponentTypeMask(programAttribsTypeMask, attribIndex);
 
@@ -1814,16 +1814,17 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
             {
                 // When converting from an unsigned to a signed format or vice versa, attempt to
                 // match the bit width.
-                angle::FormatID convertedFormatID = gl::ConvertFormatSignedness(angleFormat);
+                angle::FormatID convertedFormatID = gl::ConvertFormatSignedness(intendedFormat);
                 const Format &convertedFormat =
                     contextVk->getRenderer()->getFormat(convertedFormatID);
-                ASSERT(angleFormat.channelCount == convertedFormat.intendedFormat().channelCount);
-                ASSERT(angleFormat.redBits == convertedFormat.intendedFormat().redBits);
-                ASSERT(angleFormat.greenBits == convertedFormat.intendedFormat().greenBits);
-                ASSERT(angleFormat.blueBits == convertedFormat.intendedFormat().blueBits);
-                ASSERT(angleFormat.alphaBits == convertedFormat.intendedFormat().alphaBits);
+                ASSERT(intendedFormat.channelCount ==
+                       convertedFormat.getIntendedFormat().channelCount);
+                ASSERT(intendedFormat.redBits == convertedFormat.getIntendedFormat().redBits);
+                ASSERT(intendedFormat.greenBits == convertedFormat.getIntendedFormat().greenBits);
+                ASSERT(intendedFormat.blueBits == convertedFormat.getIntendedFormat().blueBits);
+                ASSERT(intendedFormat.alphaBits == convertedFormat.getIntendedFormat().alphaBits);
 
-                vkFormat = convertedFormat.actualBufferVkFormat(packedAttrib.compressed);
+                vkFormat = convertedFormat.getActualBufferVkFormat(packedAttrib.compressed);
             }
 
             ASSERT(contextVk->getNativeExtensions().relaxedVertexAttributeTypeANGLE);
@@ -3154,7 +3155,7 @@ void SamplerDesc::update(ContextVk *contextVk,
     {
         mIsExternalFormat   = 0;
         mExternalOrVkFormat = 0;
-        if (vkFormat.intendedFormat().isYUV)
+        if (vkFormat.getIntendedFormat().isYUV)
         {
             ASSERT(!vkFormat.hasRenderableImageFallbackFormat());
             mExternalOrVkFormat =
@@ -3209,9 +3210,9 @@ void SamplerDesc::update(ContextVk *contextVk,
         (samplerState.getBorderColor().type == angle::ColorGeneric::Type::Float) ? 0 : 1;
 
     mBorderColor = samplerState.getBorderColor().colorF;
-    if (vkFormat.intendedFormatID != angle::FormatID::NONE)
+    if (vkFormat.getIntendedFormatID() != angle::FormatID::NONE)
     {
-        LoadTextureBorderFunctionInfo loadFunction = vkFormat.textureBorderLoadFunctions();
+        LoadTextureBorderFunctionInfo loadFunction = vkFormat.getTextureBorderLoadFunctions();
         loadFunction.loadFunction(mBorderColor);
     }
 

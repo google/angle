@@ -121,22 +121,22 @@ namespace vk
 {
 // Format implementation.
 Format::Format()
-    : intendedFormatID(angle::FormatID::NONE),
-      intendedGLFormat(GL_NONE),
-      actualImageFormatID(angle::FormatID::NONE),
-      actualRenderableImageFormatID(angle::FormatID::NONE),
-      actualBufferFormatID(angle::FormatID::NONE),
-      actualCompressedBufferFormatID(angle::FormatID::NONE),
-      imageInitializerFunction(nullptr),
-      textureLoadFunctions(),
-      renderableTextureLoadFunctions(),
-      vertexLoadFunction(nullptr),
-      compressedVertexLoadFunction(nullptr),
-      vertexLoadRequiresConversion(false),
-      compressedVertexLoadRequiresConversion(false),
-      vkBufferFormatIsPacked(false),
-      vkFormatIsInt(false),
-      vkFormatIsUnsigned(false)
+    : mIntendedFormatID(angle::FormatID::NONE),
+      mIntendedGLFormat(GL_NONE),
+      mActualSampleOnlyImageFormatID(angle::FormatID::NONE),
+      mActualRenderableImageFormatID(angle::FormatID::NONE),
+      mActualBufferFormatID(angle::FormatID::NONE),
+      mActualCompressedBufferFormatID(angle::FormatID::NONE),
+      mImageInitializerFunction(nullptr),
+      mTextureLoadFunctions(),
+      mRenderableTextureLoadFunctions(),
+      mVertexLoadFunction(nullptr),
+      mCompressedVertexLoadFunction(nullptr),
+      mVertexLoadRequiresConversion(false),
+      mCompressedVertexLoadRequiresConversion(false),
+      mVkBufferFormatIsPacked(false),
+      mVkFormatIsInt(false),
+      mVkFormatIsUnsigned(false)
 {}
 
 void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *info, int numInfo)
@@ -154,8 +154,8 @@ void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *
     }
 
     int i = FindSupportedFormat(renderer, info, skip, static_cast<uint32_t>(numInfo), testFunction);
-    actualImageFormatID      = info[i].format;
-    imageInitializerFunction = info[i].initializer;
+    mActualSampleOnlyImageFormatID = info[i].format;
+    mImageInitializerFunction      = info[i].initializer;
 
     // Set renderable format.
     if (testFunction != HasNonFilterableTextureFormatSupport && !format.isSnorm() &&
@@ -166,7 +166,7 @@ void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *
         // Compressed textures also need to perform this check.
         testFunction = HasFullTextureFormatSupport;
         i = FindSupportedFormat(renderer, info, skip, static_cast<uint32_t>(numInfo), testFunction);
-        actualRenderableImageFormatID = info[i].format;
+        mActualRenderableImageFormatID = info[i].format;
     }
 }
 
@@ -180,10 +180,10 @@ void Format::initBufferFallback(RendererVk *renderer,
         int i       = FindSupportedFormat(renderer, info, skip, compressedStartIndex,
                                     HasFullBufferFormatSupport);
 
-        actualBufferFormatID         = info[i].format;
-        vkBufferFormatIsPacked       = info[i].vkFormatIsPacked;
-        vertexLoadFunction           = info[i].vertexLoadFunction;
-        vertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
+        mActualBufferFormatID         = info[i].format;
+        mVkBufferFormatIsPacked       = info[i].vkFormatIsPacked;
+        mVertexLoadFunction           = info[i].vertexLoadFunction;
+        mVertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
     }
 
     if (renderer->getFeatures().compressVertexData.enabled && compressedStartIndex < numInfo)
@@ -191,11 +191,18 @@ void Format::initBufferFallback(RendererVk *renderer,
         int i = FindSupportedFormat(renderer, info, compressedStartIndex, numInfo,
                                     HasFullBufferFormatSupport);
 
-        actualCompressedBufferFormatID         = info[i].format;
-        vkCompressedBufferFormatIsPacked       = info[i].vkFormatIsPacked;
-        compressedVertexLoadFunction           = info[i].vertexLoadFunction;
-        compressedVertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
+        mActualCompressedBufferFormatID         = info[i].format;
+        mVkCompressedBufferFormatIsPacked       = info[i].vkFormatIsPacked;
+        mCompressedVertexLoadFunction           = info[i].vertexLoadFunction;
+        mCompressedVertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
     }
+}
+
+size_t Format::getVertexInputAlignment(bool compressed) const
+{
+    const angle::Format &bufferFormat = getActualBufferFormat(compressed);
+    size_t pixelBytes                 = bufferFormat.pixelBytes;
+    return mVkBufferFormatIsPacked ? pixelBytes : (pixelBytes / bufferFormat.channelCount);
 }
 
 bool HasEmulatedImageChannels(const angle::Format &intendedFormat,
@@ -239,14 +246,14 @@ void FormatTable::initialize(RendererVk *renderer,
         const angle::Format &intendedAngleFormat = angle::Format::Get(intendedFormatID);
 
         format.initialize(renderer, intendedAngleFormat);
-        format.intendedFormatID = intendedFormatID;
+        format.mIntendedFormatID = intendedFormatID;
 
-        if (format.actualRenderableImageFormatID == angle::FormatID::NONE)
+        if (format.mActualRenderableImageFormatID == angle::FormatID::NONE)
         {
             // If renderable format was not set, it means there is no fallback format for
             // renderable. We populate this the same formatID as sampleOnly formatID so that
             // getActualFormatID() will be simpler.
-            format.actualRenderableImageFormatID = format.actualImageFormatID;
+            format.mActualRenderableImageFormatID = format.mActualSampleOnlyImageFormatID;
         }
 
         if (!format.valid())
@@ -255,35 +262,35 @@ void FormatTable::initialize(RendererVk *renderer,
         }
 
         gl::TextureCaps textureCaps;
-        FillTextureFormatCaps(renderer, format.actualImageFormatID, &textureCaps);
+        FillTextureFormatCaps(renderer, format.mActualSampleOnlyImageFormatID, &textureCaps);
 
         if (textureCaps.texturable)
         {
-            format.textureLoadFunctions =
-                GetLoadFunctionsMap(format.intendedGLFormat, format.actualImageFormatID);
-            format.textureBorderLoadFunctions = GetLoadTextureBorderFunctionsMap(
-                format.intendedGLFormat, format.actualImageFormatID);
+            format.mTextureLoadFunctions = GetLoadFunctionsMap(
+                format.mIntendedGLFormat, format.mActualSampleOnlyImageFormatID);
+            format.mTextureBorderLoadFunctions = GetLoadTextureBorderFunctionsMap(
+                format.mIntendedGLFormat, format.mActualSampleOnlyImageFormatID);
         }
 
-        if (format.actualRenderableImageFormatID == format.actualImageFormatID)
+        if (format.mActualRenderableImageFormatID == format.mActualSampleOnlyImageFormatID)
         {
             outTextureCapsMap->set(intendedFormatID, textureCaps);
-            format.renderableTextureLoadFunctions = format.textureLoadFunctions;
+            format.mRenderableTextureLoadFunctions = format.mTextureLoadFunctions;
         }
         else
         {
-            FillTextureFormatCaps(renderer, format.actualRenderableImageFormatID, &textureCaps);
+            FillTextureFormatCaps(renderer, format.mActualRenderableImageFormatID, &textureCaps);
             outTextureCapsMap->set(intendedFormatID, textureCaps);
             if (textureCaps.texturable)
             {
-                format.renderableTextureLoadFunctions = GetLoadFunctionsMap(
-                    format.intendedGLFormat, format.actualRenderableImageFormatID);
+                format.mRenderableTextureLoadFunctions = GetLoadFunctionsMap(
+                    format.mIntendedGLFormat, format.mActualRenderableImageFormatID);
             }
         }
 
         if (intendedAngleFormat.isBlock)
         {
-            outCompressedTextureFormats->push_back(format.intendedGLFormat);
+            outCompressedTextureFormats->push_back(format.mIntendedGLFormat);
         }
     }
 }
@@ -388,13 +395,6 @@ bool HasNonRenderableTextureFormatSupport(RendererVk *renderer, angle::FormatID 
 
     return renderer->hasImageFormatFeatureBits(formatID, kBitsColor) ||
            renderer->hasImageFormatFeatureBits(formatID, kBitsDepth);
-}
-
-size_t GetVertexInputAlignment(const vk::Format &format, bool compressed)
-{
-    const angle::Format &bufferFormat = format.actualBufferFormat(compressed);
-    size_t pixelBytes                 = bufferFormat.pixelBytes;
-    return format.vkBufferFormatIsPacked ? pixelBytes : (pixelBytes / bufferFormat.channelCount);
 }
 
 GLenum GetSwizzleStateComponent(const gl::SwizzleState &swizzleState, GLenum component)

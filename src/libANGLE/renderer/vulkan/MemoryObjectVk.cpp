@@ -213,10 +213,10 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
     // |createFlags| are identical to their corresponding Vulkan value.
     bool hasProtectedContent = mProtectedMemory;
     ANGLE_TRY(image->initExternal(
-        contextVk, type, vkExtents, vkFormat.intendedFormatID, actualFormatID, 1, imageUsageFlags,
-        createFlags, vk::ImageLayout::Undefined, &externalMemoryImageCreateInfo, gl::LevelIndex(0),
-        static_cast<uint32_t>(levels), layerCount, contextVk->isRobustResourceInitEnabled(),
-        nullptr, hasProtectedContent));
+        contextVk, type, vkExtents, vkFormat.getIntendedFormatID(), actualFormatID, 1,
+        imageUsageFlags, createFlags, vk::ImageLayout::Undefined, &externalMemoryImageCreateInfo,
+        gl::LevelIndex(0), static_cast<uint32_t>(levels), layerCount,
+        contextVk->isRobustResourceInitEnabled(), nullptr, hasProtectedContent));
 
     VkMemoryRequirements externalMemoryRequirements;
     image->getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);

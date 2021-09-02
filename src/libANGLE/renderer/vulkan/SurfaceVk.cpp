@@ -135,7 +135,7 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
     VkImageCreateFlags imageCreateFlags =
         hasProtectedContent ? VK_IMAGE_CREATE_PROTECTED_BIT : vk::kVkImageCreateFlagsNone;
     ANGLE_TRY(imageHelper->initExternal(
-        displayVk, gl::TextureType::_2D, extents, vkFormat.intendedFormatID,
+        displayVk, gl::TextureType::_2D, extents, vkFormat.getIntendedFormatID(),
         vkFormat.getActualRenderableImageFormatID(), samples, usage, imageCreateFlags,
         vk::ImageLayout::Undefined, nullptr, gl::LevelIndex(0), 1, 1, isRobustResourceInitEnabled,
         nullptr, hasProtectedContent));

@@ -112,8 +112,6 @@ constexpr uint32_t kAttributeOffsetMaxBits = 15;
 
 namespace vk
 {
-struct Format;
-
 // A packed attachment index interface with vulkan API
 class PackedAttachmentIndex final
 {

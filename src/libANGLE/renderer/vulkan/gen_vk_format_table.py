@@ -80,14 +80,14 @@ break;
 """
 
 format_entry_template = """case angle::FormatID::{format_id}:
-intendedGLFormat = {internal_format};
+mIntendedGLFormat = {internal_format};
 {image_template}
 {buffer_template}
 break;
 """
 
-image_basic_template = """actualImageFormatID = {image};
-imageInitializerFunction = {image_initializer};"""
+image_basic_template = """mActualSampleOnlyImageFormatID = {image};
+mImageInitializerFunction = {image_initializer};"""
 
 image_struct_template = "{{{image}, {image_initializer}}}"
 
@@ -96,10 +96,10 @@ static constexpr ImageFormatInitInfo kInfo[] = {{{image_list}}};
 initImageFallback(renderer, kInfo, ArraySize(kInfo));
 }}"""
 
-buffer_basic_template = """actualBufferFormatID = {buffer};
-vkBufferFormatIsPacked = {vk_buffer_format_is_packed};
-vertexLoadFunction = {vertex_load_function};
-vertexLoadRequiresConversion = {vertex_load_converts};"""
+buffer_basic_template = """mActualBufferFormatID = {buffer};
+mVkBufferFormatIsPacked = {vk_buffer_format_is_packed};
+mVertexLoadFunction = {vertex_load_function};
+mVertexLoadRequiresConversion = {vertex_load_converts};"""
 
 buffer_struct_template = """{{{buffer}, {vk_buffer_format_is_packed}, 
 {vertex_load_function}, {vertex_load_converts}}}"""

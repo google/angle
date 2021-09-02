@@ -3955,7 +3955,7 @@ angle::Result ImageHelper::init(Context *context,
                                 bool isRobustResourceInitEnabled,
                                 bool hasProtectedContent)
 {
-    return initExternal(context, textureType, extents, format.intendedFormatID,
+    return initExternal(context, textureType, extents, format.getIntendedFormatID(),
                         format.getActualRenderableImageFormatID(), samples, usage,
                         kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
                         mipLevels, layerCount, isRobustResourceInitEnabled, nullptr,
@@ -3975,7 +3975,7 @@ angle::Result ImageHelper::initMSAASwapchain(Context *context,
                                              bool isRobustResourceInitEnabled,
                                              bool hasProtectedContent)
 {
-    ANGLE_TRY(initExternal(context, textureType, extents, format.intendedFormatID,
+    ANGLE_TRY(initExternal(context, textureType, extents, format.getIntendedFormatID(),
                            format.getActualRenderableImageFormatID(), samples, usage,
                            kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
                            mipLevels, layerCount, isRobustResourceInitEnabled, nullptr,
@@ -4532,7 +4532,7 @@ void ImageHelper::init2DWeakReference(Context *context,
 
     gl_vk::GetExtent(glExtents, &mExtents);
     mRotatedAspectRatio = rotatedAspectRatio;
-    mIntendedFormatID   = format.intendedFormatID;
+    mIntendedFormatID   = format.getIntendedFormatID();
     mActualFormatID     = format.getActualRenderableImageFormatID();
     mSamples            = std::max(samples, 1);
     mImageSerial        = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
@@ -8000,7 +8000,7 @@ angle::Result BufferViewHelper::getView(ContextVk *contextVk,
 {
     ASSERT(format.valid());
 
-    VkFormat viewVkFormat = format.actualBufferVkFormat(false);
+    VkFormat viewVkFormat = format.getActualBufferVkFormat(false);
 
     auto iter = mViews.find(viewVkFormat);
     if (iter != mViews.end())
@@ -8012,7 +8012,7 @@ angle::Result BufferViewHelper::getView(ContextVk *contextVk,
     // If the size is not a multiple of pixelBytes, remove the extra bytes.  The last element cannot
     // be read anyway, and this is a requirement of Vulkan (for size to be a multiple of format
     // texel block size).
-    const angle::Format &bufferFormat = format.actualBufferFormat(false);
+    const angle::Format &bufferFormat = format.getActualBufferFormat(false);
     const GLuint pixelBytes           = bufferFormat.pixelBytes;
     VkDeviceSize size                 = mSize - mSize % pixelBytes;
 
