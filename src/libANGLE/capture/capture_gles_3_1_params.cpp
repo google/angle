@@ -75,7 +75,7 @@ void CaptureGetBooleani_v_data(const State &glState,
                                GLboolean *data,
                                ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(data, sizeof(GLboolean), paramCapture);
 }
 
 void CaptureGetFramebufferParameteriv_params(const State &glState,
