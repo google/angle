@@ -3046,11 +3046,7 @@ angle::Result TextureVk::getTexImage(const gl::Context *context,
                                      void *pixels)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-
-    if (!mImage || !mImage->valid())
-    {
-        ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
-    }
+    ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
     GLint baseLevel = static_cast<int>(mState.getBaseLevel());
     if (level < baseLevel || level >= baseLevel + static_cast<int>(mState.getEnabledLevelCount()))
