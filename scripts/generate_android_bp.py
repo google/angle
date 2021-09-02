@@ -575,7 +575,6 @@ def main():
             'third_party/vulkan-deps/vulkan-headers/LICENSE.txt',
             'third_party/vulkan-deps/vulkan-headers/src/LICENSE.txt',
             'third_party/vulkan_memory_allocator/LICENSE.txt',
-            'third_party/vulkan_memory_allocator/premake/LICENSE.txt',
             'third_party/zlib/LICENSE',
             'tools/flex-bison/third_party/m4sugar/LICENSE',
             'tools/flex-bison/third_party/skeletons/LICENSE',
