@@ -299,7 +299,7 @@ void CaptureGetFragDataLocation_name(const State &glState,
                                      const GLchar *name,
                                      ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureGetInteger64i_v_data(const State &glState,
