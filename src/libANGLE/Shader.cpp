@@ -369,9 +369,10 @@ void Shader::compile(const Context *context)
         options |= SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS;
     }
 
-    if (context->getFrontendFeatures().forceInitShaderOutputVariables.enabled)
+    if (context->getFrontendFeatures().forceInitShaderVariables.enabled)
     {
         options |= SH_INIT_OUTPUT_VARIABLES;
+        options |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
     }
 
     mCurrentMaxComputeWorkGroupInvocations =

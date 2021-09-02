@@ -301,9 +301,9 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         enabledFeatureOverrides.push_back("forceRobustResourceInit");
     }
 
-    if (params.forceInitShaderOutputVariables == EGL_TRUE)
+    if (params.forceInitShaderVariables == EGL_TRUE)
     {
-        enabledFeatureOverrides.push_back("forceInitShaderOutputVariables");
+        enabledFeatureOverrides.push_back("forceInitShaderVariables");
     }
 
     const bool hasFeatureControlANGLE =

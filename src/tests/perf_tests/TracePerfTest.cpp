@@ -1876,7 +1876,7 @@ void RegisterTraceTests()
             overrideParams.eglParameters.captureLimits = EGL_TRUE;
 
             // This feature should also be enabled in capture to mirror the replay.
-            overrideParams.eglParameters.forceInitShaderOutputVariables = EGL_TRUE;
+            overrideParams.eglParameters.forceInitShaderVariables = EGL_TRUE;
         }
 
         auto factory          = [overrideParams]() { return new TracePerfTest(overrideParams); };

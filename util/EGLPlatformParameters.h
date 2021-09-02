@@ -19,7 +19,7 @@ struct PlatformMethods;
 // The GLES driver type determines what shared object we use to load the GLES entry points.
 // AngleEGL loads from ANGLE's version of libEGL, libGLESv2, and libGLESv1_CM.
 // SystemEGL uses the system copies of libEGL, libGLESv2, and libGLESv1_CM.
-// SystemWGL loads Windows GL with the GLES compatiblity extensions. See util/WGLWindow.h.
+// SystemWGL loads Windows GL with the GLES compatibility extensions. See util/WGLWindow.h.
 enum class GLESDriverType
 {
     AngleEGL,
@@ -66,7 +66,7 @@ struct EGLPlatformParameters
                         hasExplicitMemBarrierFeatureMtl, hasCheapRenderPassFeatureMtl,
                         forceBufferGPUStorageFeatureMtl, supportsVulkanViewportFlip, emulatedVAOs,
                         directSPIRVGeneration, captureLimits, forceRobustResourceInit,
-                        directMetalGeneration, forceInitShaderOutputVariables);
+                        directMetalGeneration, forceInitShaderVariables);
     }
 
     EGLint renderer                               = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
@@ -93,7 +93,7 @@ struct EGLPlatformParameters
     EGLint captureLimits                          = EGL_DONT_CARE;
     EGLint forceRobustResourceInit                = EGL_DONT_CARE;
     EGLint directMetalGeneration                  = EGL_DONT_CARE;
-    EGLint forceInitShaderOutputVariables         = EGL_DONT_CARE;
+    EGLint forceInitShaderVariables               = EGL_DONT_CARE;
 
     angle::PlatformMethods *platformMethods = nullptr;
 };

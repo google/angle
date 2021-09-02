@@ -516,7 +516,7 @@ class GLSLTest_ES31 : public GLSLTest
 {};
 
 // Tests the "init output variables" ANGLE shader translator option.
-class GLSLTest_ES31_InitOutputVariables : public GLSLTest
+class GLSLTest_ES31_InitShaderVariables : public GLSLTest
 {};
 
 std::string BuildBigInitialStackShader(int length)
@@ -13295,7 +13295,7 @@ void main() {
 }
 
 // Tests initializing a shader IO block using the shader translator option.
-TEST_P(GLSLTest_ES31_InitOutputVariables, InitIOBlock)
+TEST_P(GLSLTest_ES31_InitShaderVariables, InitIOBlock)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
 
@@ -13335,7 +13335,7 @@ void main()
 }
 
 // Tests initializing a shader IO block with an array using the shader translator option.
-TEST_P(GLSLTest_ES31_InitOutputVariables, InitIOBlockWithArray)
+TEST_P(GLSLTest_ES31_InitShaderVariables, InitIOBlockWithArray)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
 
@@ -13376,7 +13376,7 @@ void main()
 }
 
 // Tests initializing a shader IO block with a struct using the shader translator option.
-TEST_P(GLSLTest_ES31_InitOutputVariables, InitIOBlockWithStruct)
+TEST_P(GLSLTest_ES31_InitShaderVariables, InitIOBlockWithStruct)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
 
@@ -13425,7 +13425,7 @@ void main()
 }
 
 // Tests initializing an IO block with a complicated set of types, using the shader translator.
-TEST_P(GLSLTest_ES31_InitOutputVariables, InitIOBlockWithComplexTypes)
+TEST_P(GLSLTest_ES31_InitShaderVariables, InitIOBlockWithComplexTypes)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
 
@@ -13501,6 +13501,5 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(WebGL2GLSLTest, WithDirectSPIRVGeneration(ES3_VUL
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(GLSLTest_ES31, WithDirectSPIRVGeneration(ES31_VULKAN()));
 
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES31_InitOutputVariables);
-ANGLE_INSTANTIATE_TEST(GLSLTest_ES31_InitOutputVariables,
-                       WithInitShaderOutputVariables(ES31_VULKAN()));
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES31_InitShaderVariables);
+ANGLE_INSTANTIATE_TEST(GLSLTest_ES31_InitShaderVariables, WithInitShaderVariables(ES31_VULKAN()));

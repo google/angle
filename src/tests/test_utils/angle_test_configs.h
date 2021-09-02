@@ -311,11 +311,11 @@ inline PlatformParameters WithDirectMetalGeneration(const PlatformParameters &pa
     return directMetalGeneration;
 }
 
-inline PlatformParameters WithInitShaderOutputVariables(const PlatformParameters &params)
+inline PlatformParameters WithInitShaderVariables(const PlatformParameters &params)
 {
-    PlatformParameters initShaderOutputVariables                           = params;
-    initShaderOutputVariables.eglParameters.forceInitShaderOutputVariables = EGL_TRUE;
-    return initShaderOutputVariables;
+    PlatformParameters initShaderVariables                     = params;
+    initShaderVariables.eglParameters.forceInitShaderVariables = EGL_TRUE;
+    return initShaderVariables;
 }
 }  // namespace angle
 
