@@ -6364,8 +6364,8 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             {
                 if (update.data.buffer.formatID != mActualFormatID)
                 {
-                    // ToDo: anglebug:6368, we should handle this in higher level code.
-                    // If we have incompatible updates, skip but keept it.
+                    // TODD: http://anglebug.com/6368, we should handle this in higher level code.
+                    // If we have incompatible updates, skip but keep it.
                     updatesToKeep.emplace_back(std::move(update));
                     continue;
                 }

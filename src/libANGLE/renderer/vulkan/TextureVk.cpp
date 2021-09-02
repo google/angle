@@ -2088,6 +2088,9 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
+    ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+                       "Copying data due to texture format fallback");
+
     // Make sure the source is initialized and it's staged updates are flushed.
     ASSERT(mImage->valid());
     ANGLE_TRY(flushImageStagedUpdates(contextVk));

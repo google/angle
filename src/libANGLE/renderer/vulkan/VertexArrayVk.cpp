@@ -59,16 +59,17 @@ angle::Result WarnOnVertexFormatConversion(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    std::ostringstream stream;
-    stream << "The Vulkan driver does not support the 0x" << std::hex
-           << vertexFormat.getIntendedFormat().glInternalFormat
-           << " vertex attribute format; emulating with 0x"
-           << vertexFormat.getActualBufferFormat(compressed).glInternalFormat;
-    ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW, stream.str().c_str());
+    char stringBuffer[100];
+    snprintf(
+        stringBuffer, sizeof(stringBuffer),
+        "The Vulkan driver does not support vertex attribute format 0x%04X, emulating with 0x%04X",
+        vertexFormat.getIntendedFormat().glInternalFormat,
+        vertexFormat.getActualBufferFormat(compressed).glInternalFormat);
+    ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW, stringBuffer);
 
     if (insertEventMarker)
     {
-        ANGLE_TRY(contextVk->insertEventMarker(0, stream.str().c_str()));
+        ANGLE_TRY(contextVk->insertEventMarker(0, stringBuffer));
     }
 
     return angle::Result::Continue;
