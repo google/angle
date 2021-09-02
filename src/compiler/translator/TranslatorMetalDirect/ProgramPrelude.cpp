@@ -145,6 +145,7 @@ class ProgramPrelude : public TIntermTraverser
     void inverse2();
     void inverse3();
     void inverse4();
+    void equalScalar();
     void equalVector();
     void equalMatrix();
     void notEqualVector();
@@ -1052,10 +1053,13 @@ template <typename T, size_t N>
 ANGLE_ALWAYS_INLINE bool ANGLE_equal(metal::array<T, N> u, metal::array<T, N> v)
 {
     for(size_t i = 0; i < N; i++)
-        if (u[i] != v[i]) return false;
+        if (!ANGLE_equal(u[i], v[i])) return false;
     return true;
 }
-)")
+)",
+                        equalScalar(),
+                        equalVector(),
+                        equalMatrix())
 
 PROGRAM_PRELUDE_DECLARE(equalStructArray,
                         R"(
@@ -1080,6 +1084,16 @@ ANGLE_ALWAYS_INLINE bool ANGLE_notEqual(metal::array<T, N> u, metal::array<T, N>
 }
 )",
                         equalArray())
+
+PROGRAM_PRELUDE_DECLARE(equalScalar,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE bool ANGLE_equal(T u, T v)
+{
+    return u == v;
+}
+)",
+                        include_metal_math())
 
 PROGRAM_PRELUDE_DECLARE(equalVector,
                         R"(

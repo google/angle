@@ -106,6 +106,8 @@
 // Nexus 5X expectations.
 6149 NEXUS5X GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 6193 NEXUS5X GLES : GLSLTest_ES31.BuiltInsWithOutParameters/* = SKIP
+5505 NEXUS5X GLES : GLSLTest_ES3.CompareInequalityOfArrayOfVectors/ES3_OpenGLES = SKIP
+5505 NEXUS5X GLES : GLSLTest_ES3.CompareEqualityOfArrayOfVectors/ES3_OpenGLES = SKIP
 
 // Pixel 4 expectations.
 5981 PIXEL4ORXL GLES : BlitFramebufferTest.BlitSRGBToRGBOversizedDestArea/* = SKIP
