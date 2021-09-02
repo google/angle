@@ -154,7 +154,6 @@
 
 # Skip because CompileFailed
 6180 : ReadPixelsPBOTest.ExistingDataPreserved/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6180 : UniformTestES3.ReturnsOnlyOneArrayElement/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 
 # Skip because Timeout
 
