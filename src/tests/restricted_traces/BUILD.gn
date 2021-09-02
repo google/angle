@@ -59,6 +59,8 @@ angle_shared_library("angle_restricted_traces") {
     "restricted_traces_export.h",
   ]
 
+  data = [ "restricted_traces.json" ]
+
   data_deps = _traces
   defines = [ "ANGLE_TRACE_IMPLEMENTATION" ]
 
