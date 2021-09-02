@@ -3567,7 +3567,7 @@ void CaptureDeleteProgramPipelinesEXT_pipelinesPacked(const State &glState,
                                                       const ProgramPipelineID *pipelinesPacked,
                                                       angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(pipelinesPacked, n, paramCapture);
 }
 
 void CaptureGenProgramPipelinesEXT_pipelinesPacked(const State &glState,
@@ -3576,7 +3576,7 @@ void CaptureGenProgramPipelinesEXT_pipelinesPacked(const State &glState,
                                                    ProgramPipelineID *pipelinesPacked,
                                                    angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureGenHandles(n, pipelinesPacked, paramCapture);
 }
 
 void CaptureGetProgramPipelineInfoLogEXT_length(const State &glState,

@@ -4912,6 +4912,35 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
             break;
         }
 
+        case EntryPoint::GLDeleteProgramPipelines:
+        case EntryPoint::GLDeleteProgramPipelinesEXT:
+        {
+            GLsizei count = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+            const gl::ProgramPipelineID *pipelineIDs =
+                call.params
+                    .getParam("pipelinesPacked", ParamType::TProgramPipelineIDConstPointer, 1)
+                    .value.ProgramPipelineIDPointerVal;
+            for (GLsizei i = 0; i < count; i++)
+            {
+                handleDeletedResource(pipelineIDs[i]);
+            }
+            break;
+        }
+
+        case EntryPoint::GLGenProgramPipelines:
+        case EntryPoint::GLGenProgramPipelinesEXT:
+        {
+            GLsizei count = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+            const gl::ProgramPipelineID *pipelineIDs =
+                call.params.getParam("pipelinesPacked", ParamType::TProgramPipelineIDPointer, 1)
+                    .value.ProgramPipelineIDPointerVal;
+            for (GLsizei i = 0; i < count; i++)
+            {
+                handleGennedResource(pipelineIDs[i]);
+            }
+            break;
+        }
+
         case EntryPoint::GLDeleteSync:
         {
             GLsync sync = call.params.getParam("sync", ParamType::TGLsync, 0).value.GLsyncVal;
