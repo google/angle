@@ -164,11 +164,6 @@ bool CanCopyWithDraw(RendererVk *renderer,
     return srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
 }
 
-bool ForceCPUPathForCopy(RendererVk *renderer, const vk::ImageHelper &image)
-{
-    return image.getLayerCount() > 1 && renderer->getFeatures().forceCPUPathForCubeMapCopy.enabled;
-}
-
 bool CanGenerateMipmapWithCompute(RendererVk *renderer,
                                   VkImageType imageType,
                                   angle::FormatID formatID,
@@ -749,12 +744,9 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
                                             &colorReadRT->getImageForCopy());
     }
 
-    bool forceCPUPath = ForceCPUPathForCopy(renderer, *mImage);
-
     // If it's possible to perform the copy with a draw call, do that.
     if (CanCopyWithDraw(renderer, srcActualFormatID, srcTilingMode, destActualFormatID,
-                        destTilingMode) &&
-        !forceCPUPath)
+                        destTilingMode))
     {
         // Layer count can only be 1 as the source is a framebuffer.
         ASSERT(offsetImageIndex.getLayerCount() == 1);
@@ -827,11 +819,8 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
                                             &source->getImage());
     }
 
-    bool forceCPUPath = ForceCPUPathForCopy(renderer, *mImage);
-
     // If it's possible to perform the copy with a draw call, do that.
-    if (CanCopyWithDraw(renderer, sourceFormatID, srcTilingMode, destFormatID, destTilingMode) &&
-        !forceCPUPath)
+    if (CanCopyWithDraw(renderer, sourceFormatID, srcTilingMode, destFormatID, destTilingMode))
     {
         return copySubImageImplWithDraw(
             contextVk, offsetImageIndex, destOffset, destVkFormat, sourceLevelGL, sourceBox, false,

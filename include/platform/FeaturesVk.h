@@ -90,14 +90,6 @@ struct FeaturesVk : FeatureSetBase
         "supportsIncrementalPresent", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_KHR_incremental_present extension", &members};
 
-    // Whether texture copies on cube map targets should be done on GPU.  This is a workaround for
-    // Intel drivers on windows that have an issue with creating single-layer views on cube map
-    // textures.
-    Feature forceCPUPathForCubeMapCopy = {
-        "forceCPUPathForCubeMapCopy", FeatureCategory::VulkanWorkarounds,
-        "Some drivers have an issue with creating single-layer views on cube map textures",
-        &members};
-
     // Whether the VkDevice supports the VK_ANDROID_external_memory_android_hardware_buffer
     // extension, on which the EGL_ANDROID_image_native_buffer extension can be layered.
     Feature supportsAndroidHardwareBuffer = {

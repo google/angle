@@ -2251,8 +2251,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // http://anglebug.com/2838
     ANGLE_FEATURE_CONDITION(&mFeatures, extraCopyBufferRegion, IsWindows() && isIntel);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, forceCPUPathForCubeMapCopy, false);
-
     // Work around incorrect NVIDIA point size range clamping.
     // http://anglebug.com/2970#c10
     // Clamp if driver version is:
