@@ -25,6 +25,7 @@ import argparse
 import difflib
 import distutils.util
 import fnmatch
+import json
 import logging
 import math
 import multiprocessing
@@ -76,73 +77,6 @@ default_case_without_return_template = """\
 default_case_with_return_template = """\
         default:
             return {default_val};"""
-
-test_trace_info_init_template = """\
-    {{
-        "{namespace}",
-        {namespace}::kReplayContextClientMajorVersion,
-        {namespace}::kReplayContextClientMinorVersion,
-        {namespace}::kReplayPlatformType,
-        {namespace}::kReplayDeviceType,
-        {namespace}::kReplayFrameStart,
-        {namespace}::kReplayFrameEnd,
-        {namespace}::kReplayDrawSurfaceWidth,
-        {namespace}::kReplayDrawSurfaceHeight,
-        {namespace}::kDefaultFramebufferRedBits,
-        {namespace}::kDefaultFramebufferGreenBits,
-        {namespace}::kDefaultFramebufferBlueBits,
-        {namespace}::kDefaultFramebufferAlphaBits,
-        {namespace}::kDefaultFramebufferDepthBits,
-        {namespace}::kDefaultFramebufferStencilBits,
-        {namespace}::kIsBinaryDataCompressed,
-        {namespace}::kAreClientArraysEnabled,
-        {namespace}::kbindGeneratesResources,
-        {namespace}::kWebGLCompatibility,
-        {namespace}::kRobustResourceInit,
-    }},
-"""
-
-composite_h_file_template = """\
-#pragma once
-#include <vector>
-#include <string>
-
-{trace_headers}
-
-struct TestTraceInfo {{
-    std::string testName;
-    uint32_t replayContextMajorVersion;
-    uint32_t replayContextMinorVersion;
-    EGLint replayPlatformType;
-    EGLint replayDeviceType;
-    uint32_t replayFrameStart;
-    uint32_t replayFrameEnd;
-    EGLint replayDrawSurfaceWidth;
-    EGLint replayDrawSurfaceHeight;
-    EGLint defaultFramebufferRedBits;
-    EGLint defaultFramebufferGreenBits;
-    EGLint defaultFramebufferBlueBits;
-    EGLint defaultFramebufferAlphaBits;
-    EGLint defaultFramebufferDepthBits;
-    EGLint defaultFramebufferStencilBits;
-    bool isBinaryDataCompressed;
-    bool areClientArraysEnabled;
-    bool bindGeneratesResources;
-    bool webGLCompatibility;
-    bool robustResourceInit;
-}};
-
-extern std::vector<TestTraceInfo> testTraceInfos;
-"""
-
-composite_cpp_file_template = """\
-#include "{h_filename}"
-
-std::vector<TestTraceInfo> testTraceInfos =
-{{
-{test_trace_info_inits}
-}};
-"""
 
 
 def winext(name, ext):
@@ -524,9 +458,7 @@ class TestBatch():
     def BuildReplay(self, replay_build_dir, composite_file_id, tests, child_processes_manager):
         # write gni file that holds all the traces files in a list
         self.CreateGNIFile(composite_file_id, tests)
-        # write header and cpp composite files, which glue the trace files with
-        # CaptureReplayTests.cpp
-        self.CreateTestsCompositeFiles(composite_file_id, tests)
+        self.CreateTestNamesFile(composite_file_id, tests)
 
         gn_args = [('angle_build_capture_replay_tests', 'true'),
                    ('angle_capture_replay_test_trace_dir', '"%s"' % self.trace_dir),
@@ -534,6 +466,7 @@ class TestBatch():
         returncode, output = child_processes_manager.RunGNGen(self.args, replay_build_dir, True,
                                                               gn_args)
         if returncode != 0:
+            self.logger.warning('GN failure output: %s' % output)
             self.results.append(
                 GroupedResult(GroupedResult.CompileFailed, "Build replay failed at gn generation",
                               output, tests))
@@ -627,47 +560,28 @@ class TestBatch():
             label = test.GetLabel()
             assert (test.context_id > 0)
 
-            fname = "%s%s%d_files.txt" % (label, TRACE_FILE_SUFFIX, test.context_id)
+            fname = '%s%s%d_files.txt' % (label, TRACE_FILE_SUFFIX, test.context_id)
             fpath = os.path.join(self.trace_folder_path, fname)
             with open(fpath) as f:
                 files = f.readlines()
                 f.close()
             files = ['"%s/%s"' % (self.trace_dir, file.strip()) for file in files]
-            angledata = "%s%s.angledata.gz" % (label, TRACE_FILE_SUFFIX)
+            angledata = '%s%s.angledata.gz' % (label, TRACE_FILE_SUFFIX)
+            jsondata = '%s%s.json' % (label, TRACE_FILE_SUFFIX)
             test_list += [
-                '["%s", %s, [%s], "%s"]' % (label, test.context_id, ','.join(files), angledata)
+                '["%s", %s, [%s], ["%s", "%s"]]' %
+                (label, test.context_id, ','.join(files), angledata, jsondata)
             ]
-        gni_path = os.path.join(self.trace_folder_path, "traces%d.gni" % composite_file_id)
-        with open(gni_path, "w") as f:
-            f.write("trace_data = [\n%s\n]\n" % ',\n'.join(test_list))
+        gni_path = os.path.join(self.trace_folder_path, 'traces%d.gni' % composite_file_id)
+        with open(gni_path, 'w') as f:
+            f.write('trace_data = [\n%s\n]\n' % ',\n'.join(test_list))
             f.close()
 
-    # header and cpp composite files, which glue the trace files with CaptureReplayTests.cpp
-    def CreateTestsCompositeFiles(self, composite_file_id, tests):
-        # write CompositeTests header file
-        include_header_template = '#include "{header_file_path}.h"\n'
-        trace_headers = "".join([
-            include_header_template.format(header_file_path=test.GetLabel() + TRACE_FILE_SUFFIX +
-                                           str(test.context_id)) for test in tests
-        ])
-
-        h_filename = "CompositeTests%d.h" % composite_file_id
-        with open(os.path.join(self.trace_folder_path, h_filename), "w") as h_file:
-            h_file.write(composite_h_file_template.format(trace_headers=trace_headers))
-            h_file.close()
-
-        # write CompositeTests cpp file
-        test_trace_info_inits = "".join([
-            test_trace_info_init_template.format(namespace=tests[i].GetLabel())
-            for i in range(len(tests))
-        ])
-
-        cpp_filename = "CompositeTests%d.cpp" % composite_file_id
-        with open(os.path.join(self.trace_folder_path, cpp_filename), "w") as cpp_file:
-            cpp_file.write(
-                composite_cpp_file_template.format(
-                    h_filename=h_filename, test_trace_info_inits=test_trace_info_inits))
-            cpp_file.close()
+    def CreateTestNamesFile(self, composite_file_id, tests):
+        data = {'traces': [test.GetLabel() for test in tests]}
+        names_path = os.path.join(self.trace_folder_path, 'test_names_%d.json' % composite_file_id)
+        with open(names_path, 'w') as f:
+            f.write(json.dumps(data))
 
     def __str__(self):
         repr_str = "TestBatch:\n"

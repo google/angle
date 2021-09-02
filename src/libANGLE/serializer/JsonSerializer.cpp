@@ -94,16 +94,22 @@ void JsonSerializer::addString(const std::string &name, const std::string &value
 void JsonSerializer::addVectorOfStrings(const std::string &name,
                                         const std::vector<std::string> &value)
 {
-    rapidjson::Value array(rapidjson::kArrayType);
-    array.SetArray();
+    rapidjson::Value arrayValue(rapidjson::kArrayType);
+    arrayValue.SetArray();
 
     for (const std::string &v : value)
     {
         rapidjson::Value str(v.c_str(), mAllocator);
-        array.PushBack(str, mAllocator);
+        arrayValue.PushBack(str, mAllocator);
     }
 
-    mGroupValueStack.top().insert(std::make_pair(name, std::move(array)));
+    mGroupValueStack.top().insert(std::make_pair(name, std::move(arrayValue)));
+}
+
+void JsonSerializer::addBool(const std::string &name, bool value)
+{
+    rapidjson::Value boolValue(value);
+    mGroupValueStack.top().insert(std::make_pair(name, std::move(boolValue)));
 }
 
 const char *JsonSerializer::data() const

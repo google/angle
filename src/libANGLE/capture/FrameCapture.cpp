@@ -42,6 +42,7 @@
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
+#include "libANGLE/serializer/JsonSerializer.h"
 #include "third_party/ceval/ceval.h"
 
 #define USE_SYSTEM_ZLIB
@@ -5905,12 +5906,73 @@ void FrameCaptureShared::replay(gl::Context *context)
 void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
                                                   bool writeResetContextCall)
 {
-    const gl::ContextID contextId       = context->id();
-    const egl::Config *config           = context->getConfig();
-    const egl::AttributeMap &attributes = context->getDisplay()->getAttributeMap();
-    const egl::ShareGroup *shareGroup   = context->getShareGroup();
+    const gl::ContextID contextId           = context->id();
+    const egl::Config *config               = context->getConfig();
+    const egl::AttributeMap &displayAttribs = context->getDisplay()->getAttributeMap();
+    const egl::ShareGroup *shareGroup       = context->getShareGroup();
 
     unsigned frameCount = getFrameCount();
+
+    const SurfaceParams &surfaceParams = mDrawSurfaceParams.at(contextId);
+    const gl::State &glState           = context->getState();
+
+    // Serialize trace metadata into a JSON file. The JSON file will be named "trace_prefix.json".
+    //
+    // As of writing, it will have the format like so:
+    // {
+    //     "TraceMetadata":
+    //     {
+    //         "AreClientArraysEnabled" : 1, "CaptureRevision" : 16631, "ConfigAlphaBits" : 8,
+    //             "ConfigBlueBits" : 8, "ConfigDepthBits" : 24, "ConfigGreenBits" : 8,
+    // ... etc ...
+
+    JsonSerializer json;
+    json.startDocument("TraceMetadata");
+    json.addScalar("CaptureRevision", ANGLE_REVISION);
+    json.addScalar("ContextClientMajorVersion", context->getClientMajorVersion());
+    json.addScalar("ContextClientMinorVersion", context->getClientMinorVersion());
+    json.addScalar("DisplayPlatformType", displayAttribs.getAsInt(EGL_PLATFORM_ANGLE_TYPE_ANGLE));
+    json.addScalar("DisplayDeviceType",
+                   displayAttribs.getAsInt(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE));
+    json.addScalar("FrameStart", 1);
+    json.addScalar("FrameEnd", frameCount);
+    json.addScalar("DrawSurfaceWidth", surfaceParams.extents.width);
+    json.addScalar("DrawSurfaceHeight", surfaceParams.extents.height);
+    json.addScalar("DrawSurfaceColorSpace", ToEGLenum(surfaceParams.colorSpace));
+    if (config)
+    {
+        json.addScalar("ConfigRedBits", config->redSize);
+        json.addScalar("ConfigGreenBits", config->greenSize);
+        json.addScalar("ConfigBlueBits", config->blueSize);
+        json.addScalar("ConfigAlphaBits", config->alphaSize);
+        json.addScalar("ConfigDepthBits", config->depthSize);
+        json.addScalar("ConfigStencilBits", config->stencilSize);
+    }
+    else
+    {
+        json.addScalar("ConfigRedBits", EGL_DONT_CARE);
+        json.addScalar("ConfigGreenBits", EGL_DONT_CARE);
+        json.addScalar("ConfigBlueBits", EGL_DONT_CARE);
+        json.addScalar("ConfigAlphaBits", EGL_DONT_CARE);
+        json.addScalar("ConfigDepthBits", EGL_DONT_CARE);
+        json.addScalar("ConfigStencilBits", EGL_DONT_CARE);
+    }
+    json.addBool("IsBinaryDataCompressed", mCompression);
+    json.addBool("AreClientArraysEnabled", glState.areClientArraysEnabled());
+    json.addBool("IsBindGeneratesResourcesEnabled", glState.isBindGeneratesResourceEnabled());
+    json.addBool("IsWebGLCompatibilityEnabled", glState.isWebGL());
+    json.addBool("IsRobustResourceInitEnabled", glState.isRobustResourceInitEnabled());
+    json.endDocument();
+
+    {
+        std::stringstream jsonFileNameStream;
+        jsonFileNameStream << mOutDirectory << FmtCapturePrefix(kNoContextId, mCaptureLabel)
+                           << ".json";
+        std::string jsonFileName = jsonFileNameStream.str();
+
+        SaveFileHelper saveData(jsonFileName);
+        saveData.write(reinterpret_cast<const uint8_t *>(json.data()), json.length());
+    }
 
     std::stringstream header;
     std::stringstream source;
@@ -5926,56 +5988,6 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
         header << "namespace " << mCaptureLabel << "\n";
         header << "{\n";
     }
-    header << "// Begin Trace Metadata\n";
-    header << "#define ANGLE_REPLAY_VERSION";
-    if (!mCaptureLabel.empty())
-    {
-        std::string captureLabelUpper = mCaptureLabel;
-        angle::ToUpper(&captureLabelUpper);
-        header << "_" << captureLabelUpper;
-    }
-    header << " " << ANGLE_REVISION << "\n";
-    header << "constexpr uint32_t kReplayContextClientMajorVersion = "
-           << context->getClientMajorVersion() << ";\n";
-    header << "constexpr uint32_t kReplayContextClientMinorVersion = "
-           << context->getClientMinorVersion() << ";\n";
-    header << "constexpr EGLint kReplayPlatformType = "
-           << attributes.getAsInt(EGL_PLATFORM_ANGLE_TYPE_ANGLE) << ";\n";
-    header << "constexpr EGLint kReplayDeviceType = "
-           << attributes.getAsInt(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE) << ";\n";
-    header << "constexpr uint32_t kReplayFrameStart = 1;\n";
-    header << "constexpr uint32_t kReplayFrameEnd = " << frameCount << ";\n";
-    header << "constexpr EGLint kReplayDrawSurfaceWidth = "
-           << mDrawSurfaceParams.at(contextId).extents.width << ";\n";
-    header << "constexpr EGLint kReplayDrawSurfaceHeight = "
-           << mDrawSurfaceParams.at(contextId).extents.height << ";\n";
-    header << "constexpr EGLenum kReplayDrawSurfaceColorSpace = "
-           << mDrawSurfaceParams.at(contextId).colorSpace << ";\n";
-    header << "constexpr EGLint kDefaultFramebufferRedBits = "
-           << (config ? std::to_string(config->redSize) : "EGL_DONT_CARE") << ";\n";
-    header << "constexpr EGLint kDefaultFramebufferGreenBits = "
-           << (config ? std::to_string(config->greenSize) : "EGL_DONT_CARE") << ";\n";
-    header << "constexpr EGLint kDefaultFramebufferBlueBits = "
-           << (config ? std::to_string(config->blueSize) : "EGL_DONT_CARE") << ";\n";
-    header << "constexpr EGLint kDefaultFramebufferAlphaBits = "
-           << (config ? std::to_string(config->alphaSize) : "EGL_DONT_CARE") << ";\n";
-    header << "constexpr EGLint kDefaultFramebufferDepthBits = "
-           << (config ? std::to_string(config->depthSize) : "EGL_DONT_CARE") << ";\n";
-    header << "constexpr EGLint kDefaultFramebufferStencilBits = "
-           << (config ? std::to_string(config->stencilSize) : "EGL_DONT_CARE") << ";\n";
-    header << "constexpr bool kIsBinaryDataCompressed = " << (mCompression ? "true" : "false")
-           << ";\n";
-    header << "constexpr bool kAreClientArraysEnabled = "
-           << (context->getState().areClientArraysEnabled() ? "true" : "false") << ";\n";
-    header << "constexpr bool kbindGeneratesResources = "
-           << (context->getState().isBindGeneratesResourceEnabled() ? "true" : "false") << ";\n";
-    header << "constexpr bool kWebGLCompatibility = "
-           << (context->getState().getExtensions().webglCompatibility ? "true" : "false") << ";\n";
-    header << "constexpr bool kRobustResourceInit = "
-           << (context->getState().isRobustResourceInitEnabled() ? "true" : "false") << ";\n";
-
-    header << "// End Trace Metadata\n";
-    header << "\n";
     for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
     {
         header << "void " << FmtReplayFunction(contextId, frameIndex) << ";\n";

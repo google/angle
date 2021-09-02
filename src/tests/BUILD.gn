@@ -426,6 +426,7 @@ if (build_angle_perftests) {
       deps = [
         ":angle_perftests_shared",
         "$angle_root:angle_compression",
+        "$angle_root/util:angle_frame_capture_test_utils",
         "$angle_root/util:angle_png_utils",
         "restricted_traces:angle_restricted_traces",
       ]

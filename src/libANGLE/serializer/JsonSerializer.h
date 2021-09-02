@@ -105,6 +105,8 @@ class JsonSerializer : public angle::NonCopyable
 
     void addVectorOfStrings(const std::string &name, const std::vector<std::string> &value);
 
+    void addBool(const std::string &name, bool value);
+
   private:
     using SortedValueGroup = std::multimap<std::string, rapidjson::Value>;
 

@@ -81,6 +81,9 @@ declare_args() {
   } else {
     assert(false, "Unknown current CPU: $current_cpu")
   }
+
+  # Indicate if the rapidJSON library is available to build with in third_party/.
+  angle_has_rapidjson = angle_has_build
 }
 
 declare_args() {
@@ -540,8 +543,8 @@ template("angle_trace") {
                 "${_trace_prefix}.h",
               ] + invoker.sources
 
-    # TODO(http://anglebug.com/5878): Revert back to non-autogen'ed file names for the angledata.gz.
-    data = [ invoker.angledata ]
+    # TODO(http://anglebug.com/5133): Revert back to non-autogen'ed data.
+    data = invoker.data
     defines = [ "ANGLE_REPLAY_IMPLEMENTATION" ]
     suppressed_configs += [ "$angle_root:constructor_and_destructor_warnings" ]
 

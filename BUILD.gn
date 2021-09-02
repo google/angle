@@ -48,9 +48,6 @@ declare_args() {
 
   # Optional feature that forces dirty state whenever we use a new context regardless of thread.
   angle_force_context_check_every_call = false
-
-  # Indicate if the rapidJSON library is available to build with in third_party/.
-  angle_has_rapidjson = angle_has_build
 }
 
 if (angle_build_all) {

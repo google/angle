@@ -23,11 +23,8 @@ using GenericProc = void (*)();
 using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
 ANGLE_TRACE_LOADER_EXPORT void LoadEGL(LoadProc loadProc);
 ANGLE_TRACE_LOADER_EXPORT void LoadGLES(LoadProc loadProc);
-}  // namespace trace_angle
 
-namespace angle
-{
-static constexpr size_t kTraceInfoMaxNameLen = 32;
+static constexpr size_t kTraceInfoMaxNameLen = 128;
 
 static constexpr uint32_t kDefaultReplayContextClientMajorVersion = 3;
 static constexpr uint32_t kDefaultReplayContextClientMinorVersion = 1;
@@ -35,17 +32,30 @@ static constexpr uint32_t kDefaultReplayDrawSurfaceColorSpace     = EGL_COLORSPA
 
 struct TraceInfo
 {
+    char name[kTraceInfoMaxNameLen];
     uint32_t contextClientMajorVersion;
     uint32_t contextClientMinorVersion;
-    uint32_t startFrame;
-    uint32_t endFrame;
+    uint32_t frameEnd;
+    uint32_t frameStart;
     uint32_t drawSurfaceWidth;
     uint32_t drawSurfaceHeight;
     uint32_t drawSurfaceColorSpace;
-    char name[kTraceInfoMaxNameLen];
+    uint32_t displayPlatformType;
+    uint32_t displayDeviceType;
+    int configRedBits;
+    int configBlueBits;
+    int configGreenBits;
+    int configAlphaBits;
+    int configDepthBits;
+    int configStencilBits;
+    bool isBinaryDataCompressed;
+    bool areClientArraysEnabled;
+    bool isBindGeneratesResourcesEnabled;
+    bool isWebGLCompatibilityEnabled;
+    bool isRobustResourceInitEnabled;
 };
 
 ANGLE_TRACE_EXPORT const TraceInfo &GetTraceInfo(const char *traceName);
-}  // namespace angle
+}  // namespace trace_angle
 
 #endif  // ANGLE_RESTRICTED_TRACES_AUTOGEN_H_

@@ -15,7 +15,6 @@ _util_sources = [
   "OSWindow.cpp",
   "OSWindow.h",
   "com_utils.h",
-  "frame_capture_test_utils.h",
   "geometry_utils.cpp",
   "geometry_utils.h",
   "keyboard.h",
@@ -152,6 +151,21 @@ angle_source_set("angle_util_loader") {
     ":angle_util_loader_config",
     ":angle_util_loader_headers_config",
   ]
+}
+
+if (angle_has_rapidjson) {
+  angle_source_set("angle_frame_capture_test_utils") {
+    testonly = true
+    sources = [
+      "capture/frame_capture_test_utils.cpp",
+      "capture/frame_capture_test_utils.h",
+    ]
+    deps = [
+      "$angle_root:angle_common",
+      "$angle_root:angle_compression",
+      "$angle_root/third_party/rapidjson",
+    ]
+  }
 }
 
 config("angle_util_config") {

@@ -56,11 +56,8 @@ using GenericProc = void (*)();
 using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
 ANGLE_TRACE_LOADER_EXPORT void LoadEGL(LoadProc loadProc);
 ANGLE_TRACE_LOADER_EXPORT void LoadGLES(LoadProc loadProc);
-}}  // namespace trace_angle
 
-namespace angle
-{{
-static constexpr size_t kTraceInfoMaxNameLen = 32;
+static constexpr size_t kTraceInfoMaxNameLen = 128;
 
 static constexpr uint32_t kDefaultReplayContextClientMajorVersion = 3;
 static constexpr uint32_t kDefaultReplayContextClientMinorVersion = 1;
@@ -68,18 +65,31 @@ static constexpr uint32_t kDefaultReplayDrawSurfaceColorSpace = EGL_COLORSPACE_L
 
 struct TraceInfo
 {{
+    char name[kTraceInfoMaxNameLen];
     uint32_t contextClientMajorVersion;
     uint32_t contextClientMinorVersion;
-    uint32_t startFrame;
-    uint32_t endFrame;
+    uint32_t frameEnd;
+    uint32_t frameStart;
     uint32_t drawSurfaceWidth;
     uint32_t drawSurfaceHeight;
     uint32_t drawSurfaceColorSpace;
-    char name[kTraceInfoMaxNameLen];
+    uint32_t displayPlatformType;
+    uint32_t displayDeviceType;
+    int configRedBits;
+    int configBlueBits;
+    int configGreenBits;
+    int configAlphaBits;
+    int configDepthBits;
+    int configStencilBits;
+    bool isBinaryDataCompressed;
+    bool areClientArraysEnabled;
+    bool isBindGeneratesResourcesEnabled;
+    bool isWebGLCompatibilityEnabled;
+    bool isRobustResourceInitEnabled;
 }};
 
 ANGLE_TRACE_EXPORT const TraceInfo &GetTraceInfo(const char *traceName);
-}}  // namespace angle
+}}  // namespace trace_angle
 
 #endif  // ANGLE_RESTRICTED_TRACES_AUTOGEN_H_
 """
@@ -101,7 +111,7 @@ SOURCE_TEMPLATE = """\
 
 {trace_includes}
 
-namespace angle
+namespace trace_angle
 {{
 namespace
 {{
@@ -129,7 +139,7 @@ const TraceInfo &GetTraceInfo(const char *traceName)
     UNREACHABLE();
     return kTraceInfos[0].info;
 }}
-}}  // namespace angle
+}}  // namespace trace_angle
 """
 
 CIPD_TRACE_PREFIX = 'angle/traces'
@@ -177,8 +187,15 @@ def gen_gni(traces, gni_file, format_args):
         with open('%s/%s_capture_context%s_files.txt' % (trace, trace, context)) as f:
             files = f.readlines()
             f.close()
-        files = ['"%s/%s"' % (trace, file.strip()) for file in files]
-        test_list += ['["%s", %s, [%s], "%s"]' % (trace, context, ','.join(files), angledata_file)]
+        source_files = ['"%s/%s"' % (trace, file.strip()) for file in files]
+        data_files = ['"%s"' % angledata_file]
+        json_file_name = '%s/%s.json' % (trace, trace)
+        if os.path.exists(json_file_name):
+            data_files.append('"%s"' % json_file_name)
+        test_list += [
+            '["%s", %s, [%s], [%s]]' %
+            (trace, context, ','.join(source_files), ','.join(data_files))
+        ]
 
     format_args['test_list'] = ',\n'.join(test_list)
     gni_data = GNI_TEMPLATE.format(**format_args)
@@ -207,9 +224,18 @@ def contains_colorspace(trace):
     return contains_string(trace, 'kReplayDrawSurfaceColorSpace')
 
 
+def json_metadata_exists(trace):
+    return os.path.isfile('%s/%s.json' % (trace, trace))
+
+
 def get_trace_info(trace):
+    # Skip getting trace info if we're using JSON metadata.
+    # TODO: Remove generated code. http://anglebug.com/5133
+    if json_metadata_exists(trace):
+        return ''
+
     # Some traces don't contain major/minor version, so use defaults
-    info = []
+    info = [f'"{trace}"']
     if contains_context_version(trace):
         info += [
             f'{trace}::kReplayContextClientMajorVersion',
@@ -230,7 +256,9 @@ def get_trace_info(trace):
     else:
         info += ['kDefaultReplayDrawSurfaceColorSpace']
 
-    info += [f'"{trace}"']
+    # Add placeholder fields to fix an MSVC warning.
+    info += ['0'] * 8
+    info += ['false'] * 5
 
     return ", ".join(info)
 
