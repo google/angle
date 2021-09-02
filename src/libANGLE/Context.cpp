@@ -3835,11 +3835,15 @@ void Context::initCaps()
         INFO() << "Setting uniform buffer offset alignment to " << uniformBufferOffsetAlignment;
         mState.mCaps.uniformBufferOffsetAlignment = uniformBufferOffsetAlignment;
 
-        // Same for texture buffer offset alignment
-        constexpr GLint textureBufferOffsetAlignment = gl::limits::kMinTextureBufferOffsetAlignment;
-        ASSERT(textureBufferOffsetAlignment % mState.mCaps.textureBufferOffsetAlignment == 0);
-        INFO() << "Setting texture buffer offset alignment to " << textureBufferOffsetAlignment;
-        mState.mCaps.textureBufferOffsetAlignment = textureBufferOffsetAlignment;
+        // Also limit texture buffer offset alignment, if enabled
+        if (mState.mExtensions.textureBufferAny())
+        {
+            constexpr GLint textureBufferOffsetAlignment =
+                gl::limits::kMinTextureBufferOffsetAlignment;
+            ASSERT(textureBufferOffsetAlignment % mState.mCaps.textureBufferOffsetAlignment == 0);
+            INFO() << "Setting texture buffer offset alignment to " << textureBufferOffsetAlignment;
+            mState.mCaps.textureBufferOffsetAlignment = textureBufferOffsetAlignment;
+        }
 
         INFO() << "Disabling GL_EXT_map_buffer_range and GL_OES_mapbuffer during capture, which "
                   "are not supported on some native drivers";
