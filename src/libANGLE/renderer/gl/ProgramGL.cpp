@@ -152,8 +152,7 @@ class ProgramGL::LinkTask final : public angle::Closure
     std::string mInfoLog;
 };
 
-using PostLinkImplFunctor =
-    std::function<angle::Result(const gl::Context *, bool, const std::string &)>;
+using PostLinkImplFunctor = std::function<angle::Result(bool, const std::string &)>;
 
 // The event for a parallelized linking using the native driver extension.
 class ProgramGL::LinkEventNativeParallel final : public LinkEvent
@@ -173,7 +172,7 @@ class ProgramGL::LinkEventNativeParallel final : public LinkEvent
         mFunctions->getProgramiv(mProgramID, GL_LINK_STATUS, &linkStatus);
         if (linkStatus == GL_TRUE)
         {
-            return mPostLinkImplFunctor(context, false, std::string());
+            return mPostLinkImplFunctor(false, std::string());
         }
         return angle::Result::Incomplete;
     }
@@ -209,8 +208,7 @@ class ProgramGL::LinkEventGL final : public LinkEvent
         ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::LinkEventGL::wait");
 
         mWaitableEvent->wait();
-        return mPostLinkImplFunctor(context, mLinkTask->fallbackToMainContext(),
-                                    mLinkTask->getInfoLog());
+        return mPostLinkImplFunctor(mLinkTask->fallbackToMainContext(), mLinkTask->getInfoLog());
     }
 
     bool isLinking() override { return !mWaitableEvent->isReady(); }
@@ -431,8 +429,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         return false;
     });
 
-    auto postLinkImplTask = [this, &infoLog, &resources](const gl::Context *context,
-                                                         bool fallbackToMainContext,
+    auto postLinkImplTask = [this, &infoLog, &resources](bool fallbackToMainContext,
                                                          const std::string &workerInfoLog) {
         infoLog << workerInfoLog;
         if (fallbackToMainContext)
@@ -467,7 +464,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
 
         if (mFeatures.alwaysCallUseProgramAfterLink.enabled)
         {
-            ANGLE_TRY(mStateManager->forceUseProgram(context, mProgramID));
+            mStateManager->forceUseProgram(mProgramID);
         }
 
         linkResources(resources);
@@ -490,7 +487,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
     }
     else
     {
-        return std::make_unique<LinkEventDone>(postLinkImplTask(context, true, std::string()));
+        return std::make_unique<LinkEventDone>(postLinkImplTask(true, std::string()));
     }
 }
 
@@ -508,8 +505,7 @@ void ProgramGL::setUniform1fv(GLint location, GLsizei count, const GLfloat *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform1fv(uniLoc(location), count, v);
     }
 }
@@ -522,8 +518,7 @@ void ProgramGL::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform2fv(uniLoc(location), count, v);
     }
 }
@@ -536,8 +531,7 @@ void ProgramGL::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform3fv(uniLoc(location), count, v);
     }
 }
@@ -550,8 +544,7 @@ void ProgramGL::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform4fv(uniLoc(location), count, v);
     }
 }
@@ -564,8 +557,7 @@ void ProgramGL::setUniform1iv(GLint location, GLsizei count, const GLint *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform1iv(uniLoc(location), count, v);
     }
 }
@@ -578,8 +570,7 @@ void ProgramGL::setUniform2iv(GLint location, GLsizei count, const GLint *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform2iv(uniLoc(location), count, v);
     }
 }
@@ -592,8 +583,7 @@ void ProgramGL::setUniform3iv(GLint location, GLsizei count, const GLint *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform3iv(uniLoc(location), count, v);
     }
 }
@@ -606,8 +596,7 @@ void ProgramGL::setUniform4iv(GLint location, GLsizei count, const GLint *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform4iv(uniLoc(location), count, v);
     }
 }
@@ -620,8 +609,7 @@ void ProgramGL::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform1uiv(uniLoc(location), count, v);
     }
 }
@@ -634,8 +622,7 @@ void ProgramGL::setUniform2uiv(GLint location, GLsizei count, const GLuint *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform2uiv(uniLoc(location), count, v);
     }
 }
@@ -648,8 +635,7 @@ void ProgramGL::setUniform3uiv(GLint location, GLsizei count, const GLuint *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform3uiv(uniLoc(location), count, v);
     }
 }
@@ -662,8 +648,7 @@ void ProgramGL::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniform4uiv(uniLoc(location), count, v);
     }
 }
@@ -679,8 +664,7 @@ void ProgramGL::setUniformMatrix2fv(GLint location,
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniformMatrix2fv(uniLoc(location), count, transpose, value);
     }
 }
@@ -696,8 +680,7 @@ void ProgramGL::setUniformMatrix3fv(GLint location,
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniformMatrix3fv(uniLoc(location), count, transpose, value);
     }
 }
@@ -713,8 +696,7 @@ void ProgramGL::setUniformMatrix4fv(GLint location,
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniformMatrix4fv(uniLoc(location), count, transpose, value);
     }
 }
@@ -731,8 +713,7 @@ void ProgramGL::setUniformMatrix2x3fv(GLint location,
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniformMatrix2x3fv(uniLoc(location), count, transpose, value);
     }
 }
@@ -749,8 +730,7 @@ void ProgramGL::setUniformMatrix3x2fv(GLint location,
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniformMatrix3x2fv(uniLoc(location), count, transpose, value);
     }
 }
@@ -767,8 +747,7 @@ void ProgramGL::setUniformMatrix2x4fv(GLint location,
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniformMatrix2x4fv(uniLoc(location), count, transpose, value);
     }
 }
@@ -785,8 +764,7 @@ void ProgramGL::setUniformMatrix4x2fv(GLint location,
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniformMatrix4x2fv(uniLoc(location), count, transpose, value);
     }
 }
@@ -803,8 +781,7 @@ void ProgramGL::setUniformMatrix3x4fv(GLint location,
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniformMatrix3x4fv(uniLoc(location), count, transpose, value);
     }
 }
@@ -821,8 +798,7 @@ void ProgramGL::setUniformMatrix4x3fv(GLint location,
     }
     else
     {
-        // TODO(geofflang): Pass in a gl::Context* and return angle::Result.  anglebug.com/3020
-        (void)mStateManager->useProgram(nullptr, mProgramID);
+        mStateManager->useProgram(mProgramID);
         mFunctions->uniformMatrix4x3fv(uniLoc(location), count, transpose, value);
     }
 }

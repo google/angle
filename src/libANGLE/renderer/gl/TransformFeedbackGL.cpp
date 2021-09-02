@@ -36,7 +36,7 @@ TransformFeedbackGL::TransformFeedbackGL(const gl::TransformFeedbackState &state
 
 TransformFeedbackGL::~TransformFeedbackGL()
 {
-    (void)mStateManager->deleteTransformFeedback(nullptr, mTransformFeedbackID);
+    mStateManager->deleteTransformFeedback(mTransformFeedbackID);
     mTransformFeedbackID = 0;
 }
 
@@ -52,7 +52,7 @@ angle::Result TransformFeedbackGL::end(const gl::Context *context)
     mStateManager->onTransformFeedbackStateChange();
 
     // Immediately end the transform feedback so that the results are visible.
-    ANGLE_TRY(syncActiveState(context, false, gl::PrimitiveMode::InvalidEnum));
+    syncActiveState(context, false, gl::PrimitiveMode::InvalidEnum);
     return angle::Result::Continue;
 }
 
@@ -60,7 +60,7 @@ angle::Result TransformFeedbackGL::pause(const gl::Context *context)
 {
     mStateManager->onTransformFeedbackStateChange();
 
-    ANGLE_TRY(syncPausedState(context, true));
+    syncPausedState(true);
     return angle::Result::Continue;
 }
 
@@ -79,8 +79,7 @@ angle::Result TransformFeedbackGL::bindIndexedBuffer(
 
     // Directly bind buffer (not through the StateManager methods) because the buffer bindings are
     // tracked per transform feedback object
-    ANGLE_TRY(
-        mStateManager->bindTransformFeedback(context, GL_TRANSFORM_FEEDBACK, mTransformFeedbackID));
+    mStateManager->bindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedbackID);
     if (binding.get() != nullptr)
     {
         const BufferGL *bufferGL = GetImplAs<BufferGL>(binding.get());
@@ -119,22 +118,21 @@ GLuint TransformFeedbackGL::getTransformFeedbackID() const
     return mTransformFeedbackID;
 }
 
-angle::Result TransformFeedbackGL::syncActiveState(const gl::Context *context,
-                                                   bool active,
-                                                   gl::PrimitiveMode primitiveMode) const
+void TransformFeedbackGL::syncActiveState(const gl::Context *context,
+                                          bool active,
+                                          gl::PrimitiveMode primitiveMode) const
 {
     if (mIsActive != active)
     {
         mIsActive = active;
         mIsPaused = false;
 
-        ANGLE_TRY(mStateManager->bindTransformFeedback(context, GL_TRANSFORM_FEEDBACK,
-                                                       mTransformFeedbackID));
+        mStateManager->bindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedbackID);
         if (mIsActive)
         {
             ASSERT(primitiveMode != gl::PrimitiveMode::InvalidEnum);
             mActiveProgram = GetImplAs<ProgramGL>(mState.getBoundProgram())->getProgramID();
-            ANGLE_TRY(mStateManager->useProgram(context, mActiveProgram));
+            mStateManager->useProgram(mActiveProgram);
             mFunctions->beginTransformFeedback(gl::ToGLenum(primitiveMode));
         }
         else
@@ -143,23 +141,21 @@ angle::Result TransformFeedbackGL::syncActiveState(const gl::Context *context,
             // when calling EndTransformFeedback. We avoid the ambiguity by always re-binding the
             // program associated with this transform feedback.
             GLuint previousProgram = mStateManager->getProgramID();
-            ANGLE_TRY(mStateManager->useProgram(context, mActiveProgram));
+            mStateManager->useProgram(mActiveProgram);
             mFunctions->endTransformFeedback();
             // Restore the current program if we changed it.
-            ANGLE_TRY(mStateManager->useProgram(context, previousProgram));
+            mStateManager->useProgram(previousProgram);
         }
     }
-    return angle::Result::Continue;
 }
 
-angle::Result TransformFeedbackGL::syncPausedState(const gl::Context *context, bool paused) const
+void TransformFeedbackGL::syncPausedState(bool paused) const
 {
     if (mIsActive && mIsPaused != paused)
     {
         mIsPaused = paused;
 
-        ANGLE_TRY(mStateManager->bindTransformFeedback(context, GL_TRANSFORM_FEEDBACK,
-                                                       mTransformFeedbackID));
+        mStateManager->bindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedbackID);
         if (mIsPaused)
         {
             mFunctions->pauseTransformFeedback();
@@ -169,6 +165,5 @@ angle::Result TransformFeedbackGL::syncPausedState(const gl::Context *context, b
             mFunctions->resumeTransformFeedback();
         }
     }
-    return angle::Result::Continue;
 }
 }  // namespace rx

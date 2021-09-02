@@ -32,8 +32,7 @@ angle::Result ContextEGL::onMakeCurrent(const gl::Context *context)
             mExtState->textureBindings.resize(
                 static_cast<size_t>(caps.maxCombinedTextureImageUnits));
         }
-        ANGLE_TRY(getStateManager()->syncFromNativeContext(context, getNativeExtensions(),
-                                                           mExtState.get()));
+        getStateManager()->syncFromNativeContext(getNativeExtensions(), mExtState.get());
 
         // Use current FBO as the default framebuffer when the external context is current.
         gl::Framebuffer *framebuffer = mState.getDefaultFramebuffer();
@@ -49,8 +48,7 @@ angle::Result ContextEGL::onUnMakeCurrent(const gl::Context *context)
     {
         ASSERT(context->isExternal());
         ASSERT(mExtState);
-        ANGLE_TRY(getStateManager()->restoreNativeContext(context, getNativeExtensions(),
-                                                          mExtState.get()));
+        getStateManager()->restoreNativeContext(getNativeExtensions(), mExtState.get());
     }
 
     return ContextGL::onUnMakeCurrent(context);
