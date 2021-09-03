@@ -225,3 +225,7 @@
 6251 : MultiThreadingTest* = TIMEOUT
 
 6336 VULKAN : GetImageTest.InconsistentTexture2D/* = SKIP
+
+6358 D3D11 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
+6358 SWIFTSHADER : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
+6358 METAL : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP

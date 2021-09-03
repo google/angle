@@ -13732,6 +13732,54 @@ void main()
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
+
+// Tests an unsuccessful re-link using glBindAttribLocation.
+TEST_P(GLSLTest_ES3, UnsuccessfulRelinkWithBindAttribLocation)
+{
+    // Make a simple program.
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    // Install the executable.
+    glUseProgram(testProgram);
+
+    // Re-link with a bad XFB varying and a bound attrib location.
+    const char *tfVaryings = "gl_FragColor";
+    glTransformFeedbackVaryings(testProgram, 1, &tfVaryings, GL_SEPARATE_ATTRIBS);
+    glBindAttribLocation(testProgram, 8, essl1_shaders::PositionAttrib());
+    glLinkProgram(testProgram);
+    GLint linkStatus = 999;
+    glGetProgramiv(testProgram, GL_LINK_STATUS, &linkStatus);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_EQ(linkStatus, GL_FALSE);
+
+    // Under normal GL this is not an error.
+    glDrawArrays(GL_TRIANGLES, 79, 16);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Tests an unsuccessful re-link using glBindAttribLocation under WebGL.
+TEST_P(WebGL2GLSLTest, UnsuccessfulRelinkWithBindAttribLocation)
+{
+    // Make a simple program.
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    // Install the executable.
+    glUseProgram(testProgram);
+
+    // Re-link with a bad XFB varying and a bound attrib location.
+    const char *tfVaryings = "gl_FragColor";
+    glTransformFeedbackVaryings(testProgram, 1, &tfVaryings, GL_SEPARATE_ATTRIBS);
+    glBindAttribLocation(testProgram, 8, essl1_shaders::PositionAttrib());
+    glLinkProgram(testProgram);
+    GLint linkStatus = 999;
+    glGetProgramiv(testProgram, GL_LINK_STATUS, &linkStatus);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_EQ(linkStatus, GL_FALSE);
+
+    // Under WebGL this is an error.
+    glDrawArrays(GL_TRIANGLES, 79, 16);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest, WithDirectSPIRVGeneration(ES2_VULKAN()));
