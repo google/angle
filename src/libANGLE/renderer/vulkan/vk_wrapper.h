@@ -411,6 +411,7 @@ class Image final : public WrappedObject<Image, VkImage>
 
     void getMemoryRequirements(VkDevice device, VkMemoryRequirements *requirementsOut) const;
     VkResult bindMemory(VkDevice device, const DeviceMemory &deviceMemory);
+    VkResult bindMemory2(VkDevice device, const VkBindImageMemoryInfoKHR &bindInfo);
 
     void getSubresourceLayout(VkDevice device,
                               VkImageAspectFlagBits aspectMask,
@@ -1298,6 +1299,12 @@ ANGLE_INLINE VkResult Image::bindMemory(VkDevice device, const vk::DeviceMemory 
 {
     ASSERT(valid() && deviceMemory.valid());
     return vkBindImageMemory(device, mHandle, deviceMemory.getHandle(), 0);
+}
+
+ANGLE_INLINE VkResult Image::bindMemory2(VkDevice device, const VkBindImageMemoryInfoKHR &bindInfo)
+{
+    ASSERT(valid());
+    return vkBindImageMemory2KHR(device, 1, &bindInfo);
 }
 
 ANGLE_INLINE void Image::getSubresourceLayout(VkDevice device,

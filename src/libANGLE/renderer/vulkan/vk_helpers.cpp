@@ -4362,13 +4362,35 @@ angle::Result ImageHelper::initExternalMemory(
     const MemoryProperties &memoryProperties,
     const VkMemoryRequirements &memoryRequirements,
     const VkSamplerYcbcrConversionCreateInfo *samplerYcbcrConversionCreateInfo,
-    const void *extraAllocationInfo,
+    uint32_t extraAllocationInfoCount,
+    const void **extraAllocationInfo,
     uint32_t currentQueueFamilyIndex,
     VkMemoryPropertyFlags flags)
 {
-    // TODO(jmadill): Memory sub-allocation. http://anglebug.com/2162
-    ANGLE_TRY(AllocateImageMemoryWithRequirements(context, flags, memoryRequirements,
-                                                  extraAllocationInfo, &mImage, &mDeviceMemory));
+    // Vulkan allows up to 4 memory planes.
+    constexpr size_t kMaxMemoryPlanes                                     = 4;
+    constexpr VkImageAspectFlagBits kMemoryPlaneAspects[kMaxMemoryPlanes] = {
+        VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT,
+        VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT,
+        VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT,
+        VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT,
+    };
+    ASSERT(extraAllocationInfoCount <= kMaxMemoryPlanes);
+
+    VkBindImagePlaneMemoryInfoKHR bindImagePlaneMemoryInfo = {};
+    bindImagePlaneMemoryInfo.sType = VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO;
+
+    const VkBindImagePlaneMemoryInfoKHR *bindImagePlaneMemoryInfoPtr =
+        extraAllocationInfoCount == 1 ? nullptr : &bindImagePlaneMemoryInfo;
+
+    for (uint32_t memoryPlane = 0; memoryPlane < extraAllocationInfoCount; ++memoryPlane)
+    {
+        bindImagePlaneMemoryInfo.planeAspect = kMemoryPlaneAspects[memoryPlane];
+
+        ANGLE_TRY(AllocateImageMemoryWithRequirements(
+            context, flags, memoryRequirements, extraAllocationInfo[memoryPlane],
+            bindImagePlaneMemoryInfoPtr, &mImage, &mDeviceMemory));
+    }
     mCurrentQueueFamilyIndex = currentQueueFamilyIndex;
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR

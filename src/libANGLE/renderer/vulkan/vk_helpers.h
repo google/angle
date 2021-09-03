@@ -1480,7 +1480,8 @@ class ImageHelper final : public Resource, public angle::Subject
         const MemoryProperties &memoryProperties,
         const VkMemoryRequirements &memoryRequirements,
         const VkSamplerYcbcrConversionCreateInfo *samplerYcbcrConversionCreateInfo,
-        const void *extraAllocationInfo,
+        uint32_t extraAllocationInfoCount,
+        const void **extraAllocationInfo,
         uint32_t currentQueueFamilyIndex,
         VkMemoryPropertyFlags flags);
     angle::Result initLayerImageView(Context *context,

@@ -230,6 +230,14 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->framebufferTargetANDROID     = true;
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 
+    // EGL_EXT_image_dma_buf_import is only exposed if EGL_EXT_image_dma_buf_import_modifiers can
+    // also be exposed.  The Vulkan extensions that support these EGL extensions are not split in
+    // the same way; both Vulkan extensions are needed for EGL_EXT_image_dma_buf_import, and with
+    // both Vulkan extensions, EGL_EXT_image_dma_buf_import_modifiers is also supportable.
+    outExtensions->imageDmaBufImportEXT =
+        getRenderer()->getFeatures().supportsExternalMemoryDmaBufAndModifiers.enabled;
+    outExtensions->imageDmaBufImportModifiersEXT = outExtensions->imageDmaBufImportEXT;
+
     // Disable context priority when non-zero memory init is enabled. This enforces a queue order.
     outExtensions->contextPriority = !getRenderer()->getFeatures().allocateNonZeroMemory.enabled;
     outExtensions->noConfigContext = true;

@@ -235,7 +235,8 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initializeWithExternalMemory(
     importMemoryHostPointerInfo.pNext = nullptr;
     importMemoryHostPointerInfo.handleType =
         VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT;
-    importMemoryHostPointerInfo.pHostPointer = buffer;
+    importMemoryHostPointerInfo.pHostPointer   = buffer;
+    const void *importMemoryHostPointerInfoPtr = &importMemoryHostPointerInfo;
 
     VkMemoryRequirements externalMemoryRequirements;
     image.getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);
@@ -246,8 +247,8 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initializeWithExternalMemory(
         flags |= VK_MEMORY_PROPERTY_PROTECTED_BIT;
     }
     ANGLE_TRY(image.initExternalMemory(
-        displayVk, renderer->getMemoryProperties(), externalMemoryRequirements, nullptr,
-        &importMemoryHostPointerInfo, VK_QUEUE_FAMILY_EXTERNAL, flags));
+        displayVk, renderer->getMemoryProperties(), externalMemoryRequirements, nullptr, 1,
+        &importMemoryHostPointerInfoPtr, VK_QUEUE_FAMILY_EXTERNAL, flags));
 
     imageViews.init(renderer);
 

@@ -11,12 +11,12 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_DISPLAY_DISPLAYVKSIMPLE_H_
 #define LIBANGLE_RENDERER_VULKAN_DISPLAY_DISPLAYVKSIMPLE_H_
 
-#include "libANGLE/renderer/vulkan/DisplayVk.h"
+#include "libANGLE/renderer/vulkan/linux/DisplayVkLinux.h"
 
 namespace rx
 {
 
-class DisplayVkSimple : public DisplayVk
+class DisplayVkSimple : public DisplayVkLinux
 {
   public:
     DisplayVkSimple(const egl::DisplayState &state);

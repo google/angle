@@ -7,15 +7,15 @@
 //    Implements the class methods for DisplayVkXcb.
 //
 
-#include "libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h"
+#include "libANGLE/renderer/vulkan/linux/xcb/DisplayVkXcb.h"
 
 #include <X11/Xutil.h>
 #include <xcb/xcb.h>
 
 #include "common/system_utils.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/renderer/vulkan/linux/xcb/WindowSurfaceVkXcb.h"
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
-#include "libANGLE/renderer/vulkan/xcb/WindowSurfaceVkXcb.h"
 
 namespace rx
 {
@@ -43,7 +43,7 @@ EGLint GetXcbVisualType(xcb_screen_t *screen)
 }  // namespace
 
 DisplayVkXcb::DisplayVkXcb(const egl::DisplayState &state)
-    : DisplayVk(state), mXcbConnection(nullptr), mHasXDisplay(false)
+    : DisplayVkLinux(state), mXcbConnection(nullptr), mHasXDisplay(false)
 {}
 
 egl::Error DisplayVkXcb::initialize(egl::Display *display)

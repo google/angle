@@ -221,7 +221,7 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
     VkMemoryRequirements externalMemoryRequirements;
     image->getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);
 
-    void *importMemoryInfo                                    = nullptr;
+    const void *importMemoryInfo                              = nullptr;
     VkMemoryDedicatedAllocateInfo memoryDedicatedAllocateInfo = {};
     if (mDedicatedMemory)
     {
@@ -262,7 +262,7 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
 
     VkMemoryPropertyFlags flags = hasProtectedContent ? VK_MEMORY_PROPERTY_PROTECTED_BIT : 0;
     ANGLE_TRY(image->initExternalMemory(contextVk, renderer->getMemoryProperties(),
-                                        externalMemoryRequirements, nullptr, importMemoryInfo,
+                                        externalMemoryRequirements, nullptr, 1, &importMemoryInfo,
                                         renderer->getQueueFamilyIndex(), flags));
 
     return angle::Result::Continue;

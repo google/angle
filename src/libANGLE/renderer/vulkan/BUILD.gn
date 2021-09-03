@@ -138,14 +138,18 @@ if (angle_use_vulkan_null_display) {
 
 if (is_linux) {
   _vulkan_backend_sources += [
-    "display/DisplayVkSimple.cpp",
-    "display/DisplayVkSimple.h",
-    "display/WindowSurfaceVkSimple.cpp",
-    "display/WindowSurfaceVkSimple.h",
-    "headless/DisplayVkHeadless.cpp",
-    "headless/DisplayVkHeadless.h",
-    "headless/WindowSurfaceVkHeadless.cpp",
-    "headless/WindowSurfaceVkHeadless.h",
+    "linux/DisplayVkLinux.cpp",
+    "linux/DisplayVkLinux.h",
+    "linux/DmaBufImageSiblingVkLinux.cpp",
+    "linux/DmaBufImageSiblingVkLinux.h",
+    "linux/display/DisplayVkSimple.cpp",
+    "linux/display/DisplayVkSimple.h",
+    "linux/display/WindowSurfaceVkSimple.cpp",
+    "linux/display/WindowSurfaceVkSimple.h",
+    "linux/headless/DisplayVkHeadless.cpp",
+    "linux/headless/DisplayVkHeadless.h",
+    "linux/headless/WindowSurfaceVkHeadless.cpp",
+    "linux/headless/WindowSurfaceVkHeadless.h",
   ]
 }
 
@@ -173,10 +177,10 @@ if (is_win) {
 
 if (angle_use_x11) {
   _vulkan_backend_sources += [
-    "xcb/DisplayVkXcb.cpp",
-    "xcb/DisplayVkXcb.h",
-    "xcb/WindowSurfaceVkXcb.cpp",
-    "xcb/WindowSurfaceVkXcb.h",
+    "linux/xcb/DisplayVkXcb.cpp",
+    "linux/xcb/DisplayVkXcb.h",
+    "linux/xcb/WindowSurfaceVkXcb.cpp",
+    "linux/xcb/WindowSurfaceVkXcb.h",
   ]
 }
 
@@ -275,6 +279,10 @@ angle_source_set("angle_vulkan_backend") {
   if (angle_enable_vulkan_validation_layers) {
     defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT" ]
     data_deps += [ "$angle_root/src/common/vulkan:vulkan_validation_layers" ]
+  }
+
+  if (is_linux) {
+    deps += [ "$angle_root/src/common/linux:angle_dma_buf" ]
   }
 
   if (is_fuchsia) {

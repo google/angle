@@ -7,7 +7,7 @@
 //    Implements the class methods for WindowSurfaceVkXcb.
 //
 
-#include "libANGLE/renderer/vulkan/xcb/WindowSurfaceVkXcb.h"
+#include "libANGLE/renderer/vulkan/linux/xcb/WindowSurfaceVkXcb.h"
 
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 

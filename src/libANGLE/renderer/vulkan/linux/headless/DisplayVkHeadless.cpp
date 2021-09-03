@@ -17,7 +17,7 @@
 namespace rx
 {
 
-DisplayVkHeadless::DisplayVkHeadless(const egl::DisplayState &state) : DisplayVk(state) {}
+DisplayVkHeadless::DisplayVkHeadless(const egl::DisplayState &state) : DisplayVkLinux(state) {}
 
 void DisplayVkHeadless::terminate()
 {

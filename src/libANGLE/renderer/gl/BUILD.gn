@@ -264,6 +264,9 @@ angle_source_set("angle_gl_backend") {
       "Xext",
     ]
   }
+  if (is_android || is_linux || is_chromeos) {
+    deps += [ "$angle_root/src/common/linux:angle_dma_buf" ]
+  }
   if (is_apple) {
     frameworks = [
       "IOSurface.framework",

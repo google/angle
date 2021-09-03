@@ -369,7 +369,7 @@ CheckedUnsignedAbs(T value)
     typename std::enable_if<std::numeric_limits<T>::is_iec559, T>::type Checked##NAME( \
         T, T, RangeConstraint *)                                                       \
     {                                                                                  \
-        NOTREACHED();                                                                  \
+        UNREACHABLE();                                                                 \
         return static_cast<T>(0);                                                      \
     }
 
@@ -496,7 +496,7 @@ class CheckedNumericState<T, NUMERIC_FLOATING>
                 break;
 
             default:
-                NOTREACHED();
+                UNREACHABLE();
         }
     }
 

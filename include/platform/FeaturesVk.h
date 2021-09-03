@@ -301,6 +301,15 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports the VK_EXT_swapchain_colorspace extension", &members,
         "http://anglebug.com/2514"};
 
+    // Whether the VkDevice supports the VK_EXT_external_memory_dma_buf and
+    // VK_EXT_image_drm_format_modifier extensions.  These extensions are always used together to
+    // implement EGL_EXT_image_dma_buf_import and EGL_EXT_image_dma_buf_import_modifiers.
+    Feature supportsExternalMemoryDmaBufAndModifiers = {
+        "supportsExternalMemoryDmaBufAndModifiers", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_external_memory_dma_buf and VK_EXT_image_drm_format_modifier "
+        "extensions",
+        &members, "http://anglebug.com/6248"};
+
     // Whether the VkDevice supports the VK_EXT_external_memory_host extension, on which the
     // ANGLE_iosurface_client_buffer extension can be layered.
     Feature supportsExternalMemoryHost = {

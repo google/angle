@@ -11,12 +11,12 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_DISPLAY_DISPLAYVKHEADLESS_H_
 #define LIBANGLE_RENDERER_VULKAN_DISPLAY_DISPLAYVKHEADLESS_H_
 
-#include "libANGLE/renderer/vulkan/DisplayVk.h"
+#include "libANGLE/renderer/vulkan/linux/DisplayVkLinux.h"
 
 namespace rx
 {
 
-class DisplayVkHeadless : public DisplayVk
+class DisplayVkHeadless : public DisplayVkLinux
 {
   public:
     DisplayVkHeadless(const egl::DisplayState &state);

@@ -10,14 +10,14 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_XCB_DISPLAYVKXCB_H_
 #define LIBANGLE_RENDERER_VULKAN_XCB_DISPLAYVKXCB_H_
 
-#include "libANGLE/renderer/vulkan/DisplayVk.h"
+#include "libANGLE/renderer/vulkan/linux/DisplayVkLinux.h"
 
 struct xcb_connection_t;
 
 namespace rx
 {
 
-class DisplayVkXcb : public DisplayVk
+class DisplayVkXcb : public DisplayVkLinux
 {
   public:
     DisplayVkXcb(const egl::DisplayState &state);

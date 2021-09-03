@@ -17,7 +17,7 @@
 namespace rx
 {
 
-DisplayVkSimple::DisplayVkSimple(const egl::DisplayState &state) : DisplayVk(state) {}
+DisplayVkSimple::DisplayVkSimple(const egl::DisplayState &state) : DisplayVkLinux(state) {}
 
 void DisplayVkSimple::terminate()
 {
