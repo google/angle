@@ -181,13 +181,11 @@ declare_args() {
   angle_enable_trace_android_logcat = false
 
   # Disable the layers in ubsan builds because of really slow builds.
-  # TODO(anglebug.com/4082) enable validation layers on mac for swiftshader
   # Vulkan Validation Layers require Android NDK API level 26, i.e. Oreo, due to
   # Vulkan Validation Layers compatibility issues, see http://crrev/c/1405714.
   angle_enable_vulkan_validation_layers =
       angle_enable_vulkan && !is_ubsan && !is_tsan && !is_asan &&
-      angle_debug_layers_enabled && !is_mac &&
-      (!is_android || ndk_api_level_at_least_26)
+      angle_debug_layers_enabled && (!is_android || ndk_api_level_at_least_26)
 
   # ISpriteVisual windows cannot be validated and can lead to crashes if an invalid window is
   # provided to ANGLE. Disable them for non-standalone ANGLE builds. crbug.com/1176118
