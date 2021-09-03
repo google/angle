@@ -26,6 +26,7 @@
       'linux-intel-hd630-perf': 'angle_goma_perf_bot',
       'linux-nvidia-p400-perf': 'angle_goma_perf_bot',
       'mac-dbg': 'angle_goma_debug_bot',
+      'mac-exp': 'angle_goma_release_bot',
       'mac-rel': 'angle_goma_release_bot',
       'win-clang-x64-dbg': 'angle_goma_debug_bot',
       'win-clang-x64-rel': 'angle_goma_release_bot',

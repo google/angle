@@ -89,10 +89,28 @@
           'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
+      'mac-amd-exp': {
+        'os_type': 'mac',
+        'mixins': [
+          'mac_retina_amd_gpu_experimental',
+        ],
+        'test_suites': {
+          'gtest_tests': 'mac_amd_and_intel_gtests',
+        },
+      },
       'mac-intel': {
         'os_type': 'mac',
         'mixins': [
           'mac_mini_intel_gpu_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'mac_amd_and_intel_gtests',
+        },
+      },
+      'mac-intel-exp': {
+        'os_type': 'mac',
+        'mixins': [
+          'mac_mini_intel_uhd_630_gpu_stable',
         ],
         'test_suites': {
           'gtest_tests': 'mac_amd_and_intel_gtests',

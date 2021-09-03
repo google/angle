@@ -230,6 +230,7 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
     )
 
     is_perf = "-perf" in name
+    is_experimental = "-exp" in name
 
     # Trace tests are only included automatically if files in the capture folder change.
     if test_mode == "trace_tests":
@@ -251,6 +252,8 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
 
     if is_perf:
         short_name = get_gpu_type_from_builder_name(name)
+    elif is_experimental:
+        short_name = "exp"
     elif debug:
         short_name = "dbg"
     else:
@@ -282,7 +285,8 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
         )
 
         # Include all other bots in the CQ by default except the placeholder GCC configs.
-        if toolchain != "gcc":
+        # Also exclude experimental bots.
+        if toolchain != "gcc" and not is_experimental:
             luci.cq_tryjob_verifier(
                 cq_group = "master",
                 builder = "angle:try/" + name,
@@ -350,6 +354,7 @@ angle_builder("linux-clang-rel", debug = False, cpu = "x64")
 angle_builder("linux-gcc-dbg", debug = True, cpu = "x64", toolchain = "gcc")
 angle_builder("linux-gcc-rel", debug = False, cpu = "x64", toolchain = "gcc")
 angle_builder("mac-dbg", debug = True, cpu = "x64")
+angle_builder("mac-exp", debug = False, cpu = "x64")
 angle_builder("mac-rel", debug = False, cpu = "x64")
 angle_builder("win-clang-x86-dbg", debug = True, cpu = "x86")
 angle_builder("win-clang-x86-rel", debug = False, cpu = "x86")
