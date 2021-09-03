@@ -24,12 +24,12 @@ We currently run pre-commit tests on:
 
 Looking at an example build shows how tests are split up between machines. See for example:
 
-[`https://ci.chromium.org/ui/p/chromium/builders/try/mac-angle-try/454/overview`](https://ci.chromium.org/ui/p/chromium/builders/try/mac-angle-try/454/overview)
+[`https://ci.chromium.org/ui/p/angle/builders/ci/mac-rel/8123/overview`](https://ci.chromium.org/ui/p/angle/builders/ci/mac-rel/8123/overview)
 
-This build ran 81 test steps across 3 GPU families. In some cases (e.g.
+This build ran 68 test steps across 3 GPU families. In some cases (e.g.
 `angle_deqp_gles3_metal_tests`) the test is split up between multiple machines to
-run faster (in this case 4 different machines at once). This build took 15
-minutes to complete 1 hour of real automated testing.
+run faster (in this case 2 different machines at once). This build took 23
+minutes to complete 72 minutes of real automated testing.
 
 For more details on running and working with our test sets see the docs in [Contributing Code][Contrib].
 
