@@ -17,6 +17,10 @@
 6153 VULKAN PIXEL4ORXL : GLSLTest_ES31.StructAndArrayEqualOperator/ES3_1_Vulkan_DirectSPIRVGen = SKIP
 6344 PIXEL4ORXL : GLSLTest_ES31_InitShaderVariables.InitIOBlockWithStruct/ES3_1_Vulkan_InitShaderVars = SKIP
 6344 PIXEL4ORXL : GLSLTest_ES31_InitShaderVariables.InitIOBlockWithComplexTypes/ES3_1_Vulkan_InitShaderVars = SKIP
+6347 OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_BlitCopyTexImage/* = SKIP
+6347 OPENGL : FramebufferTestWithFormatFallback.RGBA4444_BlitCopyTexImage/* = SKIP
+6347 GLES : FramebufferTestWithFormatFallback.R5G5B5A1_BlitCopyTexImage/* = SKIP
+6347 GLES : FramebufferTestWithFormatFallback.RGBA4444_BlitCopyTexImage/* = SKIP
 
 // Direct SPIR-V generation.  The following tests pass on some platforms but not others.  Need to investigate.
 4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/ES3_1_Vulkan_DirectSPIRVGen = SKIP
@@ -87,6 +91,10 @@
 772651 MAC NVIDIA OPENGL : GLSLTest.VectorScalarDivideAndAddInLoop/* = SKIP
 772651 MAC NVIDIA OPENGL : GLSLTest.VectorScalarMultiplyAndAddInLoop/* = SKIP
 6318 MAC METAL : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
+6347 MAC OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_TexImage/* = SKIP
+6347 MAC OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_CopyTexImage/* = SKIP
+6347 MAC OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_CubeTexImage/* = SKIP
+6347 MAC OPENGL : FramebufferTestWithFormatFallback.R4G4B4A4_OutOfRangeStagedUpdateReformated/* = SKIP
 
 // D3D
 6091 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
