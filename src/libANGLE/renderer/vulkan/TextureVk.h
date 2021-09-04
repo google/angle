@@ -416,10 +416,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     angle::Result initImage(ContextVk *contextVk,
                             const vk::Format &format,
-                            const bool sized,
-                            const gl::Extents &firstLevelExtents,
-                            const uint32_t firstLevel,
-                            const uint32_t levelCount);
+                            ImageMipLevels mipLevels);
     void releaseImage(ContextVk *contextVk);
     void releaseStagingBuffer(ContextVk *contextVk);
     uint32_t getMipLevelCount(ImageMipLevels mipLevels) const;

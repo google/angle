@@ -1255,14 +1255,7 @@ angle::Result TextureVk::setStorageMultisample(const gl::Context *context,
     ASSERT(mState.getImmutableFormat());
     ASSERT(!mRedefinedLevels.any());
 
-    // For immutable texture, we always allocate the full immutable levels specified by texStorage
-    // call.
-    const gl::ImageDesc &Level0Desc  = mState.getLevelZeroDesc();
-    const gl::Extents &Level0Extents = Level0Desc.size;
-    const uint32_t levelCount        = mState.getImmutableLevels();
-
-    ANGLE_TRY(
-        initImage(contextVk, format, Level0Desc.format.info->sized, Level0Extents, 0, levelCount));
+    ANGLE_TRY(initImage(contextVk, format, ImageMipLevels::FullMipChain));
 
     return angle::Result::Continue;
 }
@@ -2084,26 +2077,9 @@ angle::Result TextureVk::respecifyImageStorageAndLevels(ContextVk *contextVk,
         // Create the image helper
         ANGLE_TRY(ensureImageAllocated(contextVk, format));
 
-        // Create the image. For immutable texture, we always allocate the full immutable levels
-        // specified by texStorage call. Otherwise we only try to allocate from base to max levels.
-        if (mState.getImmutableFormat())
-        {
-            const gl::ImageDesc &Level0Desc  = mState.getLevelZeroDesc();
-            const gl::Extents &Level0Extents = Level0Desc.size;
-            const uint32_t levelCount        = mState.getImmutableLevels();
-
-            ANGLE_TRY(initImage(contextVk, format, Level0Desc.format.info->sized, Level0Extents, 0,
-                                levelCount));
-        }
-        else
-        {
-            const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
-            const gl::Extents &baseLevelExtents = baseLevelDesc.size;
-            const uint32_t levelCount           = getMipLevelCount(ImageMipLevels::EnabledLevels);
-
-            ANGLE_TRY(initImage(contextVk, format, baseLevelDesc.format.info->sized,
-                                baseLevelExtents, mState.getEffectiveBaseLevel(), levelCount));
-        }
+        ANGLE_TRY(initImage(contextVk, format,
+                            mState.getImmutableFormat() ? ImageMipLevels::FullMipChain
+                                                        : ImageMipLevels::EnabledLevels));
 
         // Make a copy of the old image (that's being released) and stage that as an update to the
         // new image.
@@ -2173,14 +2149,8 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
     {
         // Immutable texture must already have a valid image
         ASSERT(!mState.getImmutableFormat());
-
-        const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
-        const gl::Extents &baseLevelExtents = baseLevelDesc.size;
-        const uint32_t levelCount           = getMipLevelCount(ImageMipLevels::EnabledLevels);
-        const vk::Format &format            = getBaseLevelFormat(contextVk->getRenderer());
-
-        ANGLE_TRY(initImage(contextVk, format, baseLevelDesc.format.info->sized, baseLevelExtents,
-                            mState.getEffectiveBaseLevel(), levelCount));
+        const vk::Format &format = getBaseLevelFormat(contextVk->getRenderer());
+        ANGLE_TRY(initImage(contextVk, format, ImageMipLevels::EnabledLevels));
     }
 
     const bool hasRenderToTextureEXT =
@@ -2251,27 +2221,7 @@ angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk, ImageMipLe
         ASSERT(!mRedefinedLevels.any());
 
         const vk::Format &format = getBaseLevelFormat(contextVk->getRenderer());
-
-        // For immutable texture, we always allocate the full immutable levels specified by
-        // texStorage call. Otherwise we only try to allocate from base to max levels.
-        if (mState.getImmutableFormat())
-        {
-            const gl::ImageDesc &Level0Desc  = mState.getLevelZeroDesc();
-            const gl::Extents &Level0Extents = Level0Desc.size;
-            const uint32_t levelCount        = mState.getImmutableLevels();
-
-            ANGLE_TRY(initImage(contextVk, format, Level0Desc.format.info->sized, Level0Extents, 0,
-                                levelCount));
-        }
-        else
-        {
-            const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
-            const gl::Extents &baseLevelExtents = baseLevelDesc.size;
-            const uint32_t levelCount           = getMipLevelCount(mipLevels);
-
-            ANGLE_TRY(initImage(contextVk, format, baseLevelDesc.format.info->sized,
-                                baseLevelExtents, mState.getEffectiveBaseLevel(), levelCount));
-        }
+        ANGLE_TRY(initImage(contextVk, format, mipLevels));
 
         if (mipLevels == ImageMipLevels::FullMipChain)
         {
@@ -2797,12 +2747,28 @@ angle::Result TextureVk::getBufferViewAndRecordUse(ContextVk *contextVk,
 
 angle::Result TextureVk::initImage(ContextVk *contextVk,
                                    const vk::Format &format,
-                                   const bool sized,
-                                   const gl::Extents &firstLevelExtents,
-                                   const uint32_t firstLevel,
-                                   const uint32_t levelCount)
+                                   ImageMipLevels mipLevels)
 {
     RendererVk *renderer = contextVk->getRenderer();
+
+    // Create the image. For immutable texture, we always allocate the full immutable levels
+    // specified by texStorage call. Otherwise we only try to allocate from base to max levels.
+    const gl::ImageDesc *firstLevelDesc;
+    uint32_t firstLevel, levelCount;
+    if (mState.getImmutableFormat())
+    {
+        firstLevelDesc = &mState.getLevelZeroDesc();
+        firstLevel     = 0;
+        levelCount     = mState.getImmutableLevels();
+    }
+    else
+    {
+        firstLevelDesc = &mState.getBaseLevelDesc();
+        firstLevel     = mState.getEffectiveBaseLevel();
+        levelCount     = getMipLevelCount(mipLevels);
+    }
+    const bool sized                     = firstLevelDesc->format.info->sized;
+    const gl::Extents &firstLevelExtents = firstLevelDesc->size;
 
     VkExtent3D vkExtent;
     uint32_t layerCount;
