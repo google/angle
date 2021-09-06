@@ -22,6 +22,13 @@
 6347 GLES : FramebufferTestWithFormatFallback.R5G5B5A1_BlitCopyTexImage/* = SKIP
 6347 GLES : FramebufferTestWithFormatFallback.RGBA4444_BlitCopyTexImage/* = SKIP
 
+// The following broke with a vulkan-deps autoroll (2021-09-06)
+6442 VULKAN : GLSLTest_ES3.ComplexVaryingStructsUsedInFragmentShader/* = SKIP
+6442 VULKAN : GLSLTest_ES3.InactiveVaryingStructUnusedInFragmentShader/* = SKIP
+6442 VULKAN : GLSLTest_ES3.VaryingStructUsedInFragmentShader/* = SKIP
+6442 VULKAN : GLSLTest_ES31.IOBlockArray/* = SKIP
+6442 VULKAN : MatrixTest31.Mat3x4StructVarying/* = SKIP
+
 // Direct SPIR-V generation.  The following tests pass on some platforms but not others.  Need to investigate.
 4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/ES3_1_Vulkan_DirectSPIRVGen = SKIP
 4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/ES3_1_Vulkan_DirectSPIRVGen = SKIP
