@@ -119,9 +119,11 @@ void SeparateDeclarationsTraverser::separateDeclarator(TIntermSequence *sequence
     {
         if (*replacementStructure == nullptr)
         {
-            structure = new TStructure(mSymbolTable, kEmptyImmutableString, &structure->fields(),
-                                       SymbolType::AngleInternal);
-            *replacementStructure = structure;
+            TStructure *newStructure =
+                new TStructure(mSymbolTable, kEmptyImmutableString, &structure->fields(),
+                               SymbolType::AngleInternal);
+            newStructure->setAtGlobalScope(structure->atGlobalScope());
+            *replacementStructure = structure = newStructure;
 
             TType *namedType = new TType(structure, true);
             namedType->setQualifier(EvqGlobal);
