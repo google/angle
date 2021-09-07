@@ -993,7 +993,7 @@
                 }
             },
             "gl_PointSize":{
-                "essl_level":"COMMON_BUILTINS",
+                "essl_level":"ESSL1_BUILTINS",
                 "type":{
                     "basic":"Float",
                     "precision":"Medium",
@@ -1055,6 +1055,19 @@
             }
         },
         "subgroups":{
+            "ES300":{
+                "variables":{
+                    "gl_PointSize":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "suffix":"300",
+                        "type":{
+                            "basic":"Float",
+                            "precision":"High",
+                            "qualifier":"PointSize"
+                        }
+                    }
+                }
+            },
             "ANGLEMultiDraw":{
                 "subgroups":{
                   "ESSL3":{

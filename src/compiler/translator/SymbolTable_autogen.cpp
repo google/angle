@@ -2949,6 +2949,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_VertexID;
 constexpr const TSymbolUniqueId BuiltInId::gl_VertexIndex;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewportIndex;
 constexpr const TSymbolUniqueId BuiltInId::gl_LayerVS;
+constexpr const TSymbolUniqueId BuiltInId::gl_PointSize300;
 constexpr const TSymbolUniqueId BuiltInId::gl_DrawID;
 constexpr const TSymbolUniqueId BuiltInId::gl_BaseVertex;
 constexpr const TSymbolUniqueId BuiltInId::gl_BaseInstance;
@@ -3021,7 +3022,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_PositionTES;
 constexpr const TSymbolUniqueId BuiltInId::gl_PositionTESES3_2;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVR;
 
-const int TSymbolTable::kLastBuiltInId = 3067;
+const int TSymbolTable::kLastBuiltInId = 3068;
 
 namespace BuiltInName
 {
@@ -3624,6 +3625,12 @@ constexpr const TVariable kgl_PointSize(BuiltInId::gl_PointSize,
                                         SymbolType::BuiltIn,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
                                         StaticType::Get<EbtFloat, EbpMedium, EvqPointSize, 1, 1>());
+constexpr const TVariable kgl_PointSize300(
+    BuiltInId::gl_PointSize300,
+    BuiltInName::gl_PointSize,
+    SymbolType::BuiltIn,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    StaticType::Get<EbtFloat, EbpHigh, EvqPointSize, 1, 1>());
 constexpr const TVariable kgl_Position(BuiltInId::gl_Position,
                                        BuiltInName::gl_Position,
                                        SymbolType::BuiltIn,
@@ -4641,6 +4648,11 @@ const TVariable *gl_PointCoord()
 const TVariable *gl_PointSize()
 {
     return &kgl_PointSize;
+}
+
+const TVariable *gl_PointSize300()
+{
+    return &kgl_PointSize300;
 }
 
 const TVariable *gl_Position()
@@ -34575,8 +34587,10 @@ constexpr SymbolRule kRules[] = {
         &TableBase::m_gl_PositionTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_PositionTES),
-    Rule::Get<Spec::ESSL, 0, Shader::VERTEX, 0>(&BuiltInVariable::kgl_PointSize),
+    Rule::Get<Spec::ESSL, 100, Shader::VERTEX, 0>(&BuiltInVariable::kgl_PointSize),
     Rule::Get<Spec::GLSL, 0, Shader::VERTEX, 0>(&BuiltInVariable::kgl_PointSize),
+    Rule::Get<Spec::ESSL, 300, Shader::VERTEX, 0>(&BuiltInVariable::kgl_PointSize300),
+    Rule::Get<Spec::GLSL, 0, Shader::VERTEX, 0>(&BuiltInVariable::kgl_PointSize300),
     Rule::Get<Spec::ESSL, 300, Shader::VERTEX, 0>(&BuiltInVariable::kgl_InstanceID),
     Rule::Get<Spec::GLSL, 0, Shader::VERTEX, 0>(&BuiltInVariable::kgl_InstanceID),
     Rule::Get<Spec::ESSL, 300, Shader::VERTEX, 0>(&BuiltInVariable::kgl_VertexID),
@@ -39040,33 +39054,33 @@ constexpr uint16_t kMangledOffsets[] = {
     3914,  // gl_ClipDistance
     3916,  // gl_Position
     3928,  // gl_PointSize
-    3930,  // gl_InstanceID
-    3932,  // Empty
-    3932,  // gl_VertexID
+    3932,  // gl_InstanceID
     3934,  // Empty
-    3934,  // Empty
-    3934,  // gl_DrawID
-    3935,  // gl_BaseVertex
-    3936,  // gl_BaseInstance
-    3937,  // angle_BaseVertex
-    3938,  // angle_BaseInstance
-    3939,  // gl_NumWorkGroups
-    3941,  // gl_WorkGroupSize
-    3943,  // gl_WorkGroupID
-    3945,  // gl_LocalInvocationID
-    3947,  // gl_GlobalInvocationID
-    3949,  // gl_LocalInvocationIndex
-    3951,  // gl_PrimitiveIDIn
-    3955,  // gl_InvocationID
-    3962,  // gl_PerVertex
-    3972,  // gl_in
-    3982,  // gl_PatchVerticesIn
-    3988,  // gl_TessLevelOuter
-    3994,  // gl_TessLevelInner
-    4000,  // gl_out
-    4006,  // gl_BoundingBoxEXT
-    4009,  // gl_TessCoord
-    4011,  // gl_ViewID_OVR
+    3934,  // gl_VertexID
+    3936,  // Empty
+    3936,  // Empty
+    3936,  // gl_DrawID
+    3937,  // gl_BaseVertex
+    3938,  // gl_BaseInstance
+    3939,  // angle_BaseVertex
+    3940,  // angle_BaseInstance
+    3941,  // gl_NumWorkGroups
+    3943,  // gl_WorkGroupSize
+    3945,  // gl_WorkGroupID
+    3947,  // gl_LocalInvocationID
+    3949,  // gl_GlobalInvocationID
+    3951,  // gl_LocalInvocationIndex
+    3953,  // gl_PrimitiveIDIn
+    3957,  // gl_InvocationID
+    3964,  // gl_PerVertex
+    3974,  // gl_in
+    3984,  // gl_PatchVerticesIn
+    3990,  // gl_TessLevelOuter
+    3996,  // gl_TessLevelInner
+    4002,  // gl_out
+    4008,  // gl_BoundingBoxEXT
+    4011,  // gl_TessCoord
+    4013,  // gl_ViewID_OVR
 };
 
 using Ext = TExtension;
