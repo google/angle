@@ -5965,6 +5965,34 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
     json.endGroup();
 
     {
+        std::vector<std::string> traceFiles;
+        for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
+        {
+            traceFiles.push_back(GetCaptureFileName(contextId, mCaptureLabel, frameIndex, ".cpp"));
+        }
+
+        for (gl::Context *shareContext : shareGroup->getContexts())
+        {
+            if (shareContext->id() == contextId)
+            {
+                // We already listed all of the "main" context's files, so skip it here.
+                continue;
+            }
+            traceFiles.push_back(GetCaptureFileName(shareContext->id(), mCaptureLabel, 1, ".cpp"));
+        }
+
+        // Only save the MEC setup if we are using MEC.
+        if (mCaptureStartFrame != 1)
+        {
+            traceFiles.push_back(GetCaptureFileName(kSharedContextId, mCaptureLabel, 1, ".cpp"));
+        }
+
+        json.addVectorOfStrings("TraceFiles", traceFiles);
+    }
+
+    json.addScalar("WindowSurfaceContextID", contextId.value);
+
+    {
         std::stringstream jsonFileNameStream;
         jsonFileNameStream << mOutDirectory << FmtCapturePrefix(kNoContextId, mCaptureLabel)
                            << ".json";
@@ -6105,35 +6133,6 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
 
         SaveFileHelper saveSource(sourcePath);
         saveSource << sourceContents;
-    }
-
-    {
-        std::stringstream indexPathStream;
-        indexPathStream << mOutDirectory << FmtCapturePrefix(contextId, mCaptureLabel)
-                        << "_files.txt";
-        std::string indexPath = indexPathStream.str();
-
-        SaveFileHelper saveIndex(indexPath);
-        for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
-        {
-            saveIndex << GetCaptureFileName(contextId, mCaptureLabel, frameIndex, ".cpp") << "\n";
-        }
-
-        for (gl::Context *shareContext : shareGroup->getContexts())
-        {
-            if (shareContext->id() == contextId)
-            {
-                // We already listed all of the "main" context's files, so skip it here.
-                continue;
-            }
-            saveIndex << GetCaptureFileName(shareContext->id(), mCaptureLabel, 1, ".cpp") << "\n";
-        }
-
-        // Only save the MEC setup if we are using MEC.
-        if (mCaptureStartFrame != 1)
-        {
-            saveIndex << GetCaptureFileName(kSharedContextId, mCaptureLabel, 1, ".cpp") << "\n";
-        }
     }
 }
 

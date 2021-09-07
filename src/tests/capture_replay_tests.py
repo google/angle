@@ -370,7 +370,7 @@ class Test():
 
     def CanRunReplay(self, trace_folder_path):
         test_files = []
-        label = self.GetLabel() + "_capture"
+        label = self.GetLabel()
         assert (self.context_id == 0)
         for f in os.listdir(trace_folder_path):
             if os.path.isfile(os.path.join(trace_folder_path, f)) and f.startswith(label):
@@ -378,13 +378,13 @@ class Test():
         frame_files_count = 0
         context_header_count = 0
         context_source_count = 0
-        source_txt_count = 0
+        source_json_count = 0
         context_id = 0
         for f in test_files:
             if "_frame" in f:
                 frame_files_count += 1
-            elif f.endswith(".txt"):
-                source_txt_count += 1
+            elif f.endswith(".json"):
+                source_json_count += 1
             elif f.endswith(".h"):
                 context_header_count += 1
                 if TRACE_FILE_SUFFIX in f:
@@ -393,7 +393,7 @@ class Test():
             elif f.endswith(".cpp"):
                 context_source_count += 1
         can_run_replay = frame_files_count >= 1 and context_header_count >= 1 \
-            and context_source_count >= 1 and source_txt_count == 1
+            and context_source_count >= 1 and source_json_count == 1
         if not can_run_replay:
             return False
         self.context_id = context_id
@@ -469,7 +469,6 @@ class TestBatch():
 
     def BuildReplay(self, replay_build_dir, composite_file_id, tests, child_processes_manager):
         # write gni file that holds all the traces files in a list
-        self.CreateGNIFile(composite_file_id, tests)
         self.CreateTestNamesFile(composite_file_id, tests)
 
         gn_args = [('angle_build_capture_replay_tests', 'true'),
@@ -564,30 +563,6 @@ class TestBatch():
         assert len(self.tests) <= self.args.batch_count
         test.index = len(self.tests)
         self.tests.append(test)
-
-    # gni file, which holds all the sources for a replay application
-    def CreateGNIFile(self, composite_file_id, tests):
-        test_list = []
-        for test in tests:
-            label = test.GetLabel()
-            assert (test.context_id > 0)
-
-            fname = '%s%s%d_files.txt' % (label, TRACE_FILE_SUFFIX, test.context_id)
-            fpath = os.path.join(self.trace_folder_path, fname)
-            with open(fpath) as f:
-                files = f.readlines()
-                f.close()
-            files = ['"%s/%s"' % (self.trace_dir, file.strip()) for file in files]
-            angledata = '%s%s.angledata.gz' % (label, TRACE_FILE_SUFFIX)
-            jsondata = '%s%s.json' % (label, TRACE_FILE_SUFFIX)
-            test_list += [
-                '["%s", %s, [%s], ["%s", "%s"]]' %
-                (label, test.context_id, ','.join(files), angledata, jsondata)
-            ]
-        gni_path = os.path.join(self.trace_folder_path, 'traces%d.gni' % composite_file_id)
-        with open(gni_path, 'w') as f:
-            f.write('trace_data = [\n%s\n]\n' % ',\n'.join(test_list))
-            f.close()
 
     def CreateTestNamesFile(self, composite_file_id, tests):
         data = {'traces': [test.GetLabel() for test in tests]}

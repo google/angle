@@ -10,6 +10,7 @@
 import getpass
 import glob
 import fnmatch
+import re
 import json
 import os
 import sys
@@ -179,17 +180,27 @@ def get_angledata_filename(trace):
     return angledata_files[0].replace('\\', '/')
 
 
+# TODO(jmadill): Remove the GNI generation. http://anglebug.com/5133
 def gen_gni(traces, gni_file, format_args):
     test_list = []
     for trace in traces:
         context = get_context(trace)
         angledata_file = get_angledata_filename(trace)
-        with open('%s/%s_capture_context%s_files.txt' % (trace, trace, context)) as f:
-            files = f.readlines()
-            f.close()
+        txt_file = '%s/%s_capture_context%s_files.txt' % (trace, trace, context)
+        json_file_name = '%s/%s.json' % (trace, trace)
+        if os.path.exists(txt_file):
+            with open(txt_file) as f:
+                files = f.readlines()
+                f.close()
+                source_files = ['"%s/%s"' % (trace, file.strip()) for file in files]
+        else:
+            assert os.path.exists(json_file_name), '%s does not exist' % json_file_name
+            with open(json_file_name) as f:
+                json_data = json.loads(f.read())
+                files = json_data["TraceFiles"]
+
         source_files = ['"%s/%s"' % (trace, file.strip()) for file in files]
         data_files = ['"%s"' % angledata_file]
-        json_file_name = '%s/%s.json' % (trace, trace)
         if os.path.exists(json_file_name):
             data_files.append('"%s"' % json_file_name)
         test_list += [
@@ -264,9 +275,10 @@ def get_trace_info(trace):
 
 
 def get_context(trace):
-    """Returns the context number used by trace txt file"""
+    """Returns the trace context number."""
+    # TODO(jmadill): Remove the txt scan once migrated. http://anglebug.com/5133
+    # Load up the only header present for each trace
     for file in os.listdir(trace):
-        # Load up the only header present for each trace
         if fnmatch.fnmatch(file, '*.txt'):
             # Strip the extension to isolate the context by scanning
             # for numbers leading up to the last one, i.e.:
@@ -278,8 +290,17 @@ def get_context(trace):
             while file[start - 1].isdigit():
                 start -= 1
             context = file[start:end]
-            assert context.isnumeric(), 'Failed to find trace context number'
+            assert context.isnumeric(), 'Trace context number is not numeric: %s' % context
             return context
+
+    expr = re.compile(r'.*_context(\d+).cpp')
+    for file in os.listdir(trace):
+        m = expr.match(file)
+        if m:
+            context = m.group(1)
+            assert context.isnumeric(), 'Trace context number is not numeric: %s' % context
+            return context
+    assert False, 'Failed to find context number for %s' % trace
 
 
 def get_header_name(trace):
