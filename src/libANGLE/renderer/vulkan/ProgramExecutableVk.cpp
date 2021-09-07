@@ -1188,7 +1188,7 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
     if (defaultUniformBlock.uniformData.empty())
     {
         bufferHelper = &contextVk->getEmptyBuffer();
-        bufferHelper->retain(&contextVk->getResourceUseList());
+        bufferHelper->retainReadOnly(&contextVk->getResourceUseList());
         size = bufferHelper->getSize();
     }
 
@@ -1384,7 +1384,7 @@ angle::Result ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
 
     // Bind the empty buffer to every array slot that's unused.
     vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
-    emptyBuffer.retain(&contextVk->getResourceUseList());
+    emptyBuffer.retainReadOnly(&contextVk->getResourceUseList());
     size_t count                        = (~writtenBindings).count();
     VkDescriptorBufferInfo *bufferInfos = contextVk->allocDescriptorBufferInfos(count);
     VkWriteDescriptorSet *writeInfos    = contextVk->allocWriteDescriptorSets(count);

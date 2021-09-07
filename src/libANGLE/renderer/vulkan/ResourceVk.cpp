@@ -15,6 +15,38 @@ namespace rx
 {
 namespace vk
 {
+namespace
+{
+angle::Result FinishRunningCommands(ContextVk *contextVk, Serial serial)
+{
+    return contextVk->finishToSerial(serial);
+}
+
+template <typename T>
+angle::Result WaitForIdle(ContextVk *contextVk, const char *debugMessage, T *resource)
+{
+    // If there are pending commands for the resource, flush them.
+    if (resource->usedInRecordedCommands())
+    {
+        ANGLE_TRY(contextVk->flushImpl(nullptr));
+    }
+
+    // Make sure the driver is done with the resource.
+    if (resource->usedInRunningCommands(contextVk->getLastCompletedQueueSerial()))
+    {
+        if (debugMessage)
+        {
+            ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH, debugMessage);
+        }
+        ANGLE_TRY(resource->finishRunningCommands(contextVk));
+    }
+
+    ASSERT(!resource->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()));
+
+    return angle::Result::Continue;
+}
+}  // namespace
+
 // Resource implementation.
 Resource::Resource()
 {
@@ -33,30 +65,41 @@ Resource::~Resource()
 
 angle::Result Resource::finishRunningCommands(ContextVk *contextVk)
 {
-    return contextVk->finishToSerial(mUse.getSerial());
+    return FinishRunningCommands(contextVk, mUse.getSerial());
 }
 
 angle::Result Resource::waitForIdle(ContextVk *contextVk, const char *debugMessage)
 {
-    // If there are pending commands for the resource, flush them.
-    if (usedInRecordedCommands())
-    {
-        ANGLE_TRY(contextVk->flushImpl(nullptr));
-    }
+    return WaitForIdle(contextVk, debugMessage, this);
+}
 
-    // Make sure the driver is done with the resource.
-    if (usedInRunningCommands(contextVk->getLastCompletedQueueSerial()))
-    {
-        if (debugMessage)
-        {
-            ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH, debugMessage);
-        }
-        ANGLE_TRY(finishRunningCommands(contextVk));
-    }
+// Resource implementation.
+ReadWriteResource::ReadWriteResource()
+{
+    mReadOnlyUse.init();
+    mReadWriteUse.init();
+}
 
-    ASSERT(!isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()));
+ReadWriteResource::ReadWriteResource(ReadWriteResource &&other) : ReadWriteResource()
+{
+    mReadOnlyUse  = std::move(other.mReadOnlyUse);
+    mReadWriteUse = std::move(other.mReadWriteUse);
+}
 
-    return angle::Result::Continue;
+ReadWriteResource::~ReadWriteResource()
+{
+    mReadOnlyUse.release();
+    mReadWriteUse.release();
+}
+
+angle::Result ReadWriteResource::finishRunningCommands(ContextVk *contextVk)
+{
+    return FinishRunningCommands(contextVk, mReadOnlyUse.getSerial());
+}
+
+angle::Result ReadWriteResource::waitForIdle(ContextVk *contextVk, const char *debugMessage)
+{
+    return WaitForIdle(contextVk, debugMessage, this);
 }
 
 // SharedGarbage implementation.

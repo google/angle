@@ -2437,7 +2437,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
 
     ANGLE_TRY(
         blitBuffer.get().init(contextVk, blitBufferInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-    blitBuffer.get().retain(&contextVk->getResourceUseList());
+    blitBuffer.get().retainReadWrite(&contextVk->getResourceUseList());
 
     BlitResolveStencilNoExportShaderParams shaderParams;
     // Note: adjustments made for pre-rotatation in FramebufferVk::blit() affect these
@@ -2856,8 +2856,8 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
 
     ANGLE_TRY(dstBuffer.get().init(contextVk, bufferInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
-    srcBuffer.get().retain(&contextVk->getResourceUseList());
-    dstBuffer.get().retain(&contextVk->getResourceUseList());
+    srcBuffer.get().retainReadOnly(&contextVk->getResourceUseList());
+    dstBuffer.get().retainReadWrite(&contextVk->getResourceUseList());
 
     bool isSrc3D = src->getType() == VK_IMAGE_TYPE_3D;
     bool isDst3D = dest->getType() == VK_IMAGE_TYPE_3D;

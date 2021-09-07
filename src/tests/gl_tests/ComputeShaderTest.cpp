@@ -465,6 +465,91 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that the buffer written to by imageStore() in the CS does not race with writing to the
+// buffer when it's mapped.
+TEST_P(ComputeShaderTest, BufferImageBufferMapWrite)
+{
+    // See http://anglebug.com/3536
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
+
+    constexpr char kCS0[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(binding = 0, offset = 4) uniform atomic_uint ac[2];
+void main()
+{
+    atomicCounterIncrement(ac[0]);
+    atomicCounterDecrement(ac[1]);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program0, kCS0);
+    glUseProgram(program0);
+
+    unsigned int expectedBufferData[3] = {11u, 4u, 4u};
+    unsigned int bufferData[3]         = {0};
+    memcpy(bufferData, expectedBufferData, sizeof(bufferData));
+
+    GLBuffer atomicCounterBuffer;
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(bufferData), bufferData, GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    void *mappedBuffer =
+        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_READ_BIT);
+    memcpy(bufferData, mappedBuffer, sizeof(bufferData));
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+
+    EXPECT_EQ(11u, bufferData[0]);
+    EXPECT_EQ(5u, bufferData[1]);
+    EXPECT_EQ(3u, bufferData[2]);
+
+    constexpr char kCS1[] = R"(#version 310 es
+layout(local_size_x=4, local_size_y=3, local_size_z=2) in;
+layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
+void main()
+{
+    uvec3 temp = gl_NumWorkGroups;
+    imageStore(imageOut, ivec2(gl_GlobalInvocationID.xy), uvec4(temp, 0u));
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program1, kCS1);
+
+    GLTexture texture;
+    createMockOutputImage(texture, GL_RGBA32UI, 4, 3);
+
+    glUseProgram(program1);
+    glDispatchCompute(8, 4, 2);
+
+    glMemoryBarrier(GL_ATOMIC_COUNTER_BARRIER_BIT);
+    glUseProgram(program0);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    mappedBuffer =
+        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_READ_BIT);
+
+    memcpy(mappedBuffer, expectedBufferData, sizeof(expectedBufferData));
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+
+    // Force the CS imageStore() writes to the buffer to complete.
+    glFinish();
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    mappedBuffer =
+        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_READ_BIT);
+    memcpy(bufferData, mappedBuffer, sizeof(bufferData));
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+
+    EXPECT_EQ(expectedBufferData[0], bufferData[0]);
+    EXPECT_EQ(expectedBufferData[1], bufferData[1]);
+    EXPECT_EQ(expectedBufferData[2], bufferData[2]);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that binds UAV with type image to slot 0, then binds UAV with type buffer to slot 0.
 TEST_P(ComputeShaderTest, ImageAtomicCounterBuffer)
 {
@@ -4577,6 +4662,76 @@ void main()
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, nonCoherentBuffer);
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     EXPECT_GL_NO_ERROR();
+}
+
+// Verify the CS doesn't overwrite the mapped buffer data.
+TEST_P(ComputeShaderTest, ImageBufferMapWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
+
+    // Claims to support GL_OES_texture_buffer, but fails compilation of shader because "extension
+    // 'GL_OES_texture_buffer' is not supported".  http://anglebug.com/5832
+    ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
+
+    constexpr char kComputeImageBuffer[] = R"(#version 310 es
+#extension GL_OES_texture_buffer : require
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba32f, binding = 0) uniform highp writeonly imageBuffer dst;
+uniform vec4 uniformData;
+void main()
+{
+    imageStore(dst, int(gl_GlobalInvocationID.x), uniformData);
+})";
+
+    GLProgram program;
+    program.makeCompute(kComputeImageBuffer);
+    glUseProgram(program);
+
+    GLBuffer textureBufferStorage;
+    GLTexture texture;
+    constexpr std::array<float, 4> kInitData = {1.0, 0.0, 0.0, 1.0};
+
+    glBindBuffer(GL_TEXTURE_BUFFER, textureBufferStorage);
+    glBufferData(GL_TEXTURE_BUFFER, sizeof(kInitData), kInitData.data(), GL_STATIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_BUFFER, texture);
+    glTexBufferEXT(GL_TEXTURE_BUFFER, GL_RGBA32F, textureBufferStorage);
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr std::array<float, 4> kComputeShaderData = {0.0, 1.0, 0.0, 1.0};
+    GLint uniformLocation = glGetUniformLocation(program, "uniformData");
+    ASSERT_NE(uniformLocation, -1);
+    glUniform4f(uniformLocation, kComputeShaderData[0], kComputeShaderData[1],
+                kComputeShaderData[2], kComputeShaderData[3]);
+    EXPECT_GL_NO_ERROR();
+
+    // Write to the buffer with the CS.
+    glDispatchCompute(1, 1, 1);
+
+    // Issue the appropriate memory barrier before mapping the buffer.
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    // Map the buffer and write to it.
+    constexpr std::array<float, 4> kMapData = {0.0, 0.0, 1.0, 1.0};
+    void *mappedBuffer =
+        glMapBufferRange(GL_TEXTURE_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_WRITE_BIT);
+    memcpy(mappedBuffer, kMapData.data(), sizeof(kMapData));
+    glUnmapBuffer(GL_TEXTURE_BUFFER);
+
+    glFinish();
+
+    // Read back and verify buffer data.
+    std::array<float, 4> bufferData = {0};
+    mappedBuffer = glMapBufferRange(GL_TEXTURE_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_READ_BIT);
+    memcpy(bufferData.data(), mappedBuffer, sizeof(bufferData));
+    glUnmapBuffer(GL_TEXTURE_BUFFER);
+
+    EXPECT_EQ(bufferData[0], kMapData[0]);
+    EXPECT_EQ(bufferData[1], kMapData[1]);
+    EXPECT_EQ(bufferData[2], kMapData[2]);
+    EXPECT_EQ(bufferData[3], kMapData[3]);
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ComputeShaderTest);

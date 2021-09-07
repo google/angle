@@ -845,7 +845,7 @@ class BufferMemory : angle::NonCopyable
     uint8_t *mMappedMemory;
 };
 
-class BufferHelper final : public Resource
+class BufferHelper final : public ReadWriteResource
 {
   public:
     BufferHelper();

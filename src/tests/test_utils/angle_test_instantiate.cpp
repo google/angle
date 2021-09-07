@@ -386,7 +386,7 @@ bool IsNVIDIA()
 
 bool IsQualcomm()
 {
-    return IsNexus5X() || IsNexus9() || IsPixelXL() || IsPixel2() || IsPixel2XL();
+    return IsNexus5X() || IsNexus9() || IsPixelXL() || IsPixel2() || IsPixel2XL() || IsPixel4();
 }
 
 bool IsConfigAllowlisted(const SystemInfo &systemInfo, const PlatformParameters &param)

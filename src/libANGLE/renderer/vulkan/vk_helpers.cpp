@@ -980,7 +980,7 @@ void CommandBufferHelper::bufferRead(ContextVk *contextVk,
                                      PipelineStage readStage,
                                      BufferHelper *buffer)
 {
-    buffer->retain(&contextVk->getResourceUseList());
+    buffer->retainReadOnly(&contextVk->getResourceUseList());
     VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[readStage];
     if (buffer->recordReadBarrier(readAccessType, stageBits, &mPipelineBarriers[readStage]))
     {
@@ -1000,7 +1000,7 @@ void CommandBufferHelper::bufferWrite(ContextVk *contextVk,
                                       AliasingMode aliasingMode,
                                       BufferHelper *buffer)
 {
-    buffer->retain(&contextVk->getResourceUseList());
+    buffer->retainReadWrite(&contextVk->getResourceUseList());
     VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[writeStage];
     if (buffer->recordWriteBarrier(writeAccessType, stageBits, &mPipelineBarriers[writeStage]))
     {
@@ -2206,7 +2206,10 @@ void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk
     ResourceUseList *resourceUseList = &contextVk->getResourceUseList();
     for (std::unique_ptr<BufferHelper> &bufferHelper : mInFlightBuffers)
     {
-        bufferHelper->retain(resourceUseList);
+        // This function is used only for internal buffers, and they are all read-only.
+        // It's possible this may change in the future, but there isn't a good way to detect that,
+        // unfortunately.
+        bufferHelper->retainReadOnly(resourceUseList);
 
         if (ShouldReleaseFreeBuffer(*bufferHelper, mSize, mPolicy, mBufferFreeList.size()))
         {
@@ -3647,7 +3650,10 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context, VkDeviceSi
                                           vk::SubmitPolicy::AllowDeferred, &serial));
 
     stagingBuffer.collectGarbage(renderer, serial);
-    mUse.updateSerialOneOff(serial);
+    // Update both SharedResourceUse objects, since mReadOnlyUse tracks when the buffer can be
+    // destroyed, and mReadWriteUse tracks when the write has completed.
+    mReadOnlyUse.updateSerialOneOff(serial);
+    mReadWriteUse.updateSerialOneOff(serial);
 
     return angle::Result::Continue;
 }
@@ -3667,8 +3673,10 @@ void BufferHelper::release(RendererVk *renderer)
     unmap(renderer);
     mSize = 0;
 
-    renderer->collectGarbageAndReinit(&mUse, &mBuffer, mMemory.getExternalMemoryObject(),
+    renderer->collectGarbageAndReinit(&mReadOnlyUse, &mBuffer, mMemory.getExternalMemoryObject(),
                                       mMemory.getMemoryObject());
+    mReadWriteUse.release();
+    mReadWriteUse.init();
 }
 
 angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
