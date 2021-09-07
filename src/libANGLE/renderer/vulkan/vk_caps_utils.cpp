@@ -409,20 +409,27 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.vertexAttribType1010102OES = true;
 
-    // We use secondary command buffers almost everywhere and they require a feature to be
-    // able to execute in the presence of queries.  As a result, we won't support queries
-    // unless that feature is available.
-    mNativeExtensions.occlusionQueryBoolean =
-        vk::CommandBuffer::SupportsQueries(mPhysicalDeviceFeatures);
+    // Occlusion queries are natively supported in Vulkan.  ANGLE only issues this query inside a
+    // render pass, so there is no dependency to `inheritedQueries`.
+    mNativeExtensions.occlusionQueryBoolean = true;
 
     // From the Vulkan specs:
     // > The number of valid bits in a timestamp value is determined by the
     // > VkQueueFamilyProperties::timestampValidBits property of the queue on which the timestamp is
     // > written. Timestamps are supported on any queue which reports a non-zero value for
     // > timestampValidBits via vkGetPhysicalDeviceQueueFamilyProperties.
-    mNativeExtensions.disjointTimerQuery          = queueFamilyProperties.timestampValidBits > 0;
-    mNativeExtensions.queryCounterBitsTimeElapsed = queueFamilyProperties.timestampValidBits;
-    mNativeExtensions.queryCounterBitsTimestamp   = queueFamilyProperties.timestampValidBits;
+    //
+    // This query is applicable to render passes, but the `inheritedQueries` feature may not be
+    // present.  The extension is not exposed in that case.
+    // We use secondary command buffers almost everywhere and they require a feature to be
+    // able to execute in the presence of queries.  As a result, we won't support queries
+    // unless that feature is available.
+    if (vk::CommandBuffer::SupportsQueries(mPhysicalDeviceFeatures))
+    {
+        mNativeExtensions.disjointTimerQuery = queueFamilyProperties.timestampValidBits > 0;
+        mNativeExtensions.queryCounterBitsTimeElapsed = queueFamilyProperties.timestampValidBits;
+        mNativeExtensions.queryCounterBitsTimestamp   = queueFamilyProperties.timestampValidBits;
+    }
 
     mNativeExtensions.textureFilterAnisotropic =
         mPhysicalDeviceFeatures.samplerAnisotropy && limitsVk.maxSamplerAnisotropy > 1.0f;

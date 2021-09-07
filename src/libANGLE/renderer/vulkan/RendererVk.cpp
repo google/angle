@@ -2139,12 +2139,6 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
         maxVersion = LimitVersionTo(maxVersion, {2, 0});
     }
 
-    // If the command buffer doesn't support queries, we can't support ES3.
-    if (!vk::CommandBuffer::SupportsQueries(mPhysicalDeviceFeatures))
-    {
-        maxVersion = LimitVersionTo(maxVersion, {2, 0});
-    }
-
     // If independentBlend is not supported, we can't have a mix of has-alpha and emulated-alpha
     // render targets in a framebuffer.  We also cannot perform masked clears of multiple render
     // targets.
