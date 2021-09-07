@@ -1330,7 +1330,7 @@ void SerializeVertexArray(JsonSerializer *json, gl::VertexArray *vertexArray)
 Result SerializeContextToString(const gl::Context *context, std::string *stringOut)
 {
     JsonSerializer json;
-    json.startDocument("Context");
+    json.startGroup("Context");
 
     SerializeContextState(&json, context->getState());
     ScratchBuffer scratchBuffer(1);
@@ -1416,7 +1416,7 @@ Result SerializeContextToString(const gl::Context *context, std::string *stringO
             SerializeVertexArray(&json, vertexArrayPtr);
         }
     }
-    json.endDocument();
+    json.endGroup();
 
     *stringOut = json.data();
 
