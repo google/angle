@@ -872,6 +872,59 @@ TEST_P(EGLContextSharingTestNoFixture, EglDestoryContextManyTimesSameContext)
 
     ASSERT_NE(currentStep, Step::Abort);
 }
+
+// Test that eglTerminate() can be called multiple times on the same Display while Contexts are
+// still current without causing errors.
+TEST_P(EGLContextSharingTestNoFixture, EglTerminateMultipleTimes)
+{
+    // https://bugs.chromium.org/p/skia/issues/detail?id=12413#c4
+    // The following sequence caused a crash with the D3D backend in the Skia infra:
+    //   eglDestroyContext(ctx0)
+    //   eglDestroySurface(srf0)
+    //   eglTerminate(shared-display)
+    //   eglDestroyContext(ctx1) // completes the cleanup from the above terminate
+    //   eglDestroySurface(srf1)
+    //   eglTerminate(shared-display)
+
+    EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+    mDisplay           = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
+                                        reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+    EXPECT_TRUE(mDisplay != EGL_NO_DISPLAY);
+    EXPECT_EGL_TRUE(eglInitialize(mDisplay, nullptr, nullptr));
+
+    EGLConfig config = EGL_NO_CONFIG_KHR;
+    EXPECT_TRUE(chooseConfig(&config));
+
+    mOsWindow->initialize("EGLContextSharingTestNoFixture", kWidth, kHeight);
+    EXPECT_TRUE(createWindowSurface(config, mOsWindow->getNativeWindow(), &mSurface));
+    EXPECT_TRUE(mSurface != EGL_NO_SURFACE);
+    ASSERT_EGL_SUCCESS() << "eglCreateWindowSurface failed.";
+
+    EXPECT_TRUE(createContext(config, &mContexts[0]));
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mSurface, mSurface, mContexts[0]));
+    EXPECT_TRUE(createContext(config, &mContexts[1]));
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mSurface, mSurface, mContexts[1]));
+
+    // Must be after the eglMakeCurrent() so renderer string is initialized.
+    // TODO(http://www.anglebug.com/6304): Fails with Mac + OpenGL backend.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    EXPECT_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+
+    eglDestroySurface(mDisplay, mSurface);
+    mSurface = EGL_NO_SURFACE;
+    EXPECT_EGL_TRUE(eglDestroyContext(mDisplay, mContexts[0]));
+    mContexts[0] = EGL_NO_CONTEXT;
+    eglTerminate(mDisplay);
+    EXPECT_EGL_SUCCESS();
+
+    eglDestroyContext(mDisplay, mContexts[1]);
+    mContexts[1] = EGL_NO_CONTEXT;
+    ASSERT_EGL_ERROR(EGL_NOT_INITIALIZED);
+    eglTerminate(mDisplay);
+    EXPECT_EGL_SUCCESS();
+    mDisplay = EGL_NO_DISPLAY;
+}
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLContextSharingTest);

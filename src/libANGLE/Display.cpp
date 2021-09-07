@@ -982,6 +982,14 @@ Error Display::terminate(Thread *thread)
         }
     }
 
+    // Destroy all of the Contexts for this Display, since none of them are current anymore.
+    while (!mContextSet.empty())
+    {
+        gl::Context *context = *mContextSet.begin();
+        context->setIsDestroyed();
+        ANGLE_TRY(releaseContext(context, thread));
+    }
+
     mMemoryProgramCache.clear();
     mBlobCache.setBlobCacheFuncs(nullptr, nullptr);
 
@@ -1512,20 +1520,6 @@ Error Display::releaseContext(gl::Context *context, Thread *thread)
 
     ANGLE_TRY(context->onDestroy(this));
 
-    // If eglTerminate() has previously been called and this is the last Context the Display owns,
-    // we can now fully terminate the display and release all of its resources.
-    for (const gl::Context *ctx : mContextSet)
-    {
-        if (ctx->getRefCount() > 0)
-        {
-            return NoError();
-        }
-    }
-    if (mIsTerminated)
-    {
-        return terminate(thread);
-    }
-
     return NoError();
 }
 
@@ -1563,6 +1557,22 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
         ANGLE_TRY(
             makeCurrent(thread, context, currentDrawSurface, currentReadSurface, currentContext));
     }
+
+    // If eglTerminate() has previously been called and this is the last Context the Display owns,
+    // we can now fully terminate the display and release all of its resources.
+    if (mIsTerminated)
+    {
+        for (const gl::Context *ctx : mContextSet)
+        {
+            if (ctx->getRefCount() > 0)
+            {
+                return NoError();
+            }
+        }
+
+        return terminate(thread);
+    }
+
     return NoError();
 }
 
