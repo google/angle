@@ -23,6 +23,9 @@ declare_args() {
       (is_linux || is_chromeos) && (!is_chromecast || is_cast_desktop_build) &&
       (angle_use_x11 || use_ozone) && angle_has_build
 
+  # Enable using Vulkan to collect system info as a fallback.
+  angle_enable_vulkan_system_info = false
+
   # Link in system libGL, to work with apitrace.  See doc/DebuggingTips.md.
   angle_link_glx = false
 
@@ -455,7 +458,9 @@ angle_static_library("angle_gpu_info_util") {
       "$angle_root/src/common/vulkan:angle_libvulkan_loader",
       "$angle_vulkan_headers_dir:vulkan_headers",
     ]
-    defines += [ "ANGLE_HAS_VULKAN_SYSTEM_INFO" ]
+    if (angle_enable_vulkan_system_info) {
+      defines += [ "ANGLE_HAS_VULKAN_SYSTEM_INFO" ]
+    }
   }
 
   if (is_android) {
