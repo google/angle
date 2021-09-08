@@ -47,7 +47,7 @@ REPLAY_SAMPLE_FOLDER = "src/tests/capture_replay_tests"  # relative to angle fol
 DEFAULT_BATCH_COUNT = 8  # number of tests batched together
 TRACE_FILE_SUFFIX = "_capture_context"  # because we only deal with 1 context right now
 RESULT_TAG = "*RESULT"
-TIME_BETWEEN_MESSAGE = 20  # in seconds
+STATUS_MESSAGE_PERIOD = 20  # in seconds
 SUBPROCESS_TIMEOUT = 600  # in seconds
 DEFAULT_RESULT_FILE = "results.txt"
 DEFAULT_LOG_LEVEL = "info"
@@ -127,7 +127,7 @@ class ChildProcessesManager():
         path = os.path.join('third_party', 'depot_tools')
         return os.path.join(path, winext('gn', 'bat')), os.path.join(path, winext('ninja', 'exe'))
 
-    def __init__(self, logger, ninja_lock):
+    def __init__(self, args, logger, ninja_lock):
         # a dictionary of Subprocess, with pid as key
         self.subprocesses = {}
         # list of Python multiprocess.Process handles
@@ -137,13 +137,20 @@ class ChildProcessesManager():
         self._use_goma = AutodetectGoma()
         self._logger = logger
         self._ninja_lock = ninja_lock
+        self.runtimes = {}
+        self._args = args
 
     def RunSubprocess(self, command, env=None, pipe_stdout=True, timeout=None):
         proc = SubProcess(command, self._logger, env, pipe_stdout)
         self._logger.debug('Created subprocess: %s with pid %d' % (' '.join(command), proc.Pid()))
         self.subprocesses[proc.Pid()] = proc
+        start_time = time.time()
         try:
             returncode, output = self.subprocesses[proc.Pid()].Join(timeout)
+            elapsed_time = time.time() - start_time
+            cmd_name = os.path.basename(command[0])
+            self.runtimes.setdefault(cmd_name, 0.0)
+            self.runtimes[cmd_name] += elapsed_time
             self.RemoveSubprocess(proc.Pid())
             if returncode != 0:
                 return -1, output
@@ -191,24 +198,24 @@ class ChildProcessesManager():
                 count += 1
         return count
 
-    def RunGNGen(self, args, build_dir, pipe_stdout, extra_gn_args=[]):
+    def RunGNGen(self, build_dir, pipe_stdout, extra_gn_args=[]):
         gn_args = [('angle_with_capture_by_default', 'true')] + extra_gn_args
         if self._use_goma:
             gn_args.append(('use_goma', 'true'))
-            if args.goma_dir:
-                gn_args.append(('goma_dir', '"%s"' % args.goma_dir))
-        if not args.debug:
+            if self._args.goma_dir:
+                gn_args.append(('goma_dir', '"%s"' % self._args.goma_dir))
+        if not self._args.debug:
             gn_args.append(('is_debug', 'false'))
             gn_args.append(('symbol_level', '1'))
             gn_args.append(('angle_assert_always_on', 'true'))
-        if args.asan:
+        if self._args.asan:
             gn_args.append(('is_asan', 'true'))
         args_str = ' '.join(['%s=%s' % (k, v) for (k, v) in gn_args])
-        self._logger.info('Calling gn gen --args="%s"' % args_str)
         cmd = [self._gn_path, 'gen', '--args=%s' % args_str, build_dir]
+        self._logger.info(' '.join(cmd))
         return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
 
-    def RunNinja(self, args, build_dir, target, pipe_stdout):
+    def RunNinja(self, build_dir, target, pipe_stdout):
         cmd = [self._ninja_path]
 
         # This code is taken from depot_tools/autoninja.py
@@ -233,7 +240,7 @@ class ChildProcessesManager():
 
         cmd += ['-C', build_dir, target]
         with self._ninja_lock:
-            self._logger.info('Running %s' % ' '.join(cmd))
+            self._logger.info(' '.join(cmd))
             return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
 
 
@@ -393,6 +400,10 @@ class Test():
         return True
 
 
+def _FormatEnv(env):
+    return ' '.join(['%s=%s' % (k, v) for (k, v) in env.items()])
+
+
 class TestBatch():
 
     CAPTURE_FRAME_END = 100
@@ -426,7 +437,7 @@ class TestBatch():
 
         cmd = GetRunCommand(args, test_exe_path)
         cmd += ['--gtest_filter=%s' % filt, '--angle-per-test-capture-label']
-        self.logger.info("Run capture: '{}' with env {}".format(' '.join(cmd), str(extra_env)))
+        self.logger.info('%s %s' % (_FormatEnv(extra_env), ' '.join(cmd)))
 
         returncode, output = child_processes_manager.RunSubprocess(
             cmd, env, timeout=SUBPROCESS_TIMEOUT)
@@ -464,16 +475,15 @@ class TestBatch():
         gn_args = [('angle_build_capture_replay_tests', 'true'),
                    ('angle_capture_replay_test_trace_dir', '"%s"' % self.trace_dir),
                    ('angle_capture_replay_composite_file_id', str(composite_file_id))]
-        returncode, output = child_processes_manager.RunGNGen(self.args, replay_build_dir, True,
-                                                              gn_args)
+        returncode, output = child_processes_manager.RunGNGen(replay_build_dir, True, gn_args)
         if returncode != 0:
             self.logger.warning('GN failure output: %s' % output)
             self.results.append(
                 GroupedResult(GroupedResult.CompileFailed, "Build replay failed at gn generation",
                               output, tests))
             return False
-        returncode, output = child_processes_manager.RunNinja(self.args, replay_build_dir,
-                                                              REPLAY_BINARY, True)
+        returncode, output = child_processes_manager.RunNinja(replay_build_dir, REPLAY_BINARY,
+                                                              True)
         if returncode != 0:
             self.logger.warning('Ninja failure output: %s' % output)
             self.results.append(
@@ -489,10 +499,11 @@ class TestBatch():
         }
         env = {**os.environ.copy(), **extra_env}
 
-        self.logger.info("Run Replay: {} with env {}".format(replay_exe_path, str(extra_env)))
+        run_cmd = GetRunCommand(self.args, replay_exe_path)
+        self.logger.info('%s %s' % (_FormatEnv(extra_env), ' '.join(run_cmd)))
 
         returncode, output = child_processes_manager.RunSubprocess(
-            GetRunCommand(self.args, replay_exe_path), env, timeout=SUBPROCESS_TIMEOUT)
+            run_cmd, env, timeout=SUBPROCESS_TIMEOUT)
         if returncode == -1:
             cmd = replay_exe_path
             self.results.append(
@@ -707,14 +718,14 @@ def RunTests(args, worker_id, job_queue, result_list, message_queue, logger, nin
     replay_build_dir = os.path.join(args.out_dir, 'Replay%d' % worker_id)
     replay_exec_path = os.path.join(replay_build_dir, REPLAY_BINARY)
 
-    child_processes_manager = ChildProcessesManager(logger, ninja_lock)
+    child_processes_manager = ChildProcessesManager(args, logger, ninja_lock)
     # used to differentiate between multiple composite files when there are multiple test batchs
     # running on the same worker and --deleted_trace is set to False
     composite_file_id = 1
     while not job_queue.empty():
         try:
             test_batch = job_queue.get()
-            message_queue.put("Starting {} tests on worker {}. Unstarted jobs: {}".format(
+            logger.info('Starting {} tests on worker {}. Unstarted jobs: {}'.format(
                 len(test_batch.tests), worker_id, job_queue.qsize()))
 
             test_batch.SetWorkerId(worker_id)
@@ -722,12 +733,12 @@ def RunTests(args, worker_id, job_queue, result_list, message_queue, logger, nin
             success = test_batch.RunWithCapture(args, child_processes_manager)
             if not success:
                 result_list.append(test_batch.GetResults())
-                message_queue.put(str(test_batch.GetResults()))
+                logger.info(str(test_batch.GetResults()))
                 continue
             continued_tests = test_batch.RemoveTestsThatDoNotProduceAppropriateTraceFiles()
             if len(continued_tests) == 0:
                 result_list.append(test_batch.GetResults())
-                message_queue.put(str(test_batch.GetResults()))
+                logger.info(str(test_batch.GetResults()))
                 continue
             success = test_batch.BuildReplay(replay_build_dir, composite_file_id, continued_tests,
                                              child_processes_manager)
@@ -735,12 +746,12 @@ def RunTests(args, worker_id, job_queue, result_list, message_queue, logger, nin
                 composite_file_id += 1
             if not success:
                 result_list.append(test_batch.GetResults())
-                message_queue.put(str(test_batch.GetResults()))
+                logger.info(str(test_batch.GetResults()))
                 continue
             test_batch.RunReplay(replay_build_dir, replay_exec_path, child_processes_manager,
                                  continued_tests)
             result_list.append(test_batch.GetResults())
-            message_queue.put(str(test_batch.GetResults()))
+            logger.info(str(test_batch.GetResults()))
         except KeyboardInterrupt:
             child_processes_manager.KillAll()
             raise
@@ -748,9 +759,10 @@ def RunTests(args, worker_id, job_queue, result_list, message_queue, logger, nin
             child_processes_manager.KillAll()
             break
         except Exception as e:
-            message_queue.put("RunTestsException: %s\n%s" % (repr(e), traceback.format_exc()))
+            logger.error('RunTestsException: %s\n%s' % (repr(e), traceback.format_exc()))
             child_processes_manager.KillAll()
             pass
+    message_queue.put(child_processes_manager.runtimes)
     child_processes_manager.KillAll()
 
 
@@ -791,10 +803,10 @@ def DeleteTraceFolders(folder_num):
 def GetPlatformForSkip():
     # yapf: disable
     # we want each pair on one line
-    platform_map = { "win32" : "WIN",
-                     "linux" : "LINUX" }
+    platform_map = { 'win32' : 'WIN',
+                     'linux' : 'LINUX' }
     # yapf: enable
-    return platform_map.get(sys.platform, "UNKNOWN")
+    return platform_map.get(sys.platform, 'UNKNOWN')
 
 
 def main(args):
@@ -802,7 +814,7 @@ def main(args):
     logger.setLevel(level=args.log.upper())
 
     ninja_lock = multiprocessing.Semaphore(args.max_ninja_jobs)
-    child_processes_manager = ChildProcessesManager(logger, ninja_lock)
+    child_processes_manager = ChildProcessesManager(args, logger, ninja_lock)
     try:
         start_time = time.time()
         # set the number of workers to be cpu_count - 1 (since the main process already takes up a
@@ -812,15 +824,15 @@ def main(args):
         cwd = SetCWDToAngleFolder()
 
         CreateTraceFolders(worker_count)
-        capture_build_dir = os.path.normpath(r"%s/Capture" % args.out_dir)
-        returncode, output = child_processes_manager.RunGNGen(args, capture_build_dir, False)
+        capture_build_dir = os.path.normpath(r'%s/Capture' % args.out_dir)
+        returncode, output = child_processes_manager.RunGNGen(capture_build_dir, False)
         if returncode != 0:
             logger.error(output)
             child_processes_manager.KillAll()
             return EXIT_FAILURE
         # run ninja to build all tests
-        returncode, output = child_processes_manager.RunNinja(args, capture_build_dir,
-                                                              args.test_suite, False)
+        returncode, output = child_processes_manager.RunNinja(capture_build_dir, args.test_suite,
+                                                              False)
         if returncode != 0:
             logger.error(output)
             child_processes_manager.KillAll()
@@ -880,32 +892,25 @@ def main(args):
             child_processes_manager.AddWorker(proc)
             proc.start()
 
-        # print out messages from the message queue populated by workers
-        # if there is no message, and the elapsed time between now and when the last message is
-        # print exceeds TIME_BETWEEN_MESSAGE, prints out a message to signal that tests are still
-        # running
-        last_message_timestamp = 0
+        # print out periodic status messages
         while child_processes_manager.IsAnyWorkerAlive():
-            while not message_queue.empty():
-                msg = message_queue.get()
-                logger.info(msg)
-                last_message_timestamp = time.time()
-            cur_time = time.time()
-            if cur_time - last_message_timestamp > TIME_BETWEEN_MESSAGE:
-                last_message_timestamp = cur_time
-                logger.info("Tests are still running. Remaining workers: " + \
-                str(child_processes_manager.GetRemainingWorkers()) + \
-                ". Unstarted jobs: " + str(job_queue.qsize()))
-            time.sleep(1.0)
+            logger.info('%d workers running, %d jobs left.' %
+                        (child_processes_manager.GetRemainingWorkers(), (job_queue.qsize())))
+            time.sleep(STATUS_MESSAGE_PERIOD)
+
         child_processes_manager.JoinWorkers()
-        while not message_queue.empty():
-            msg = message_queue.get()
-            logger.warning(msg)
         end_time = time.time()
 
+        summed_runtimes = child_processes_manager.runtimes
+        while not message_queue.empty():
+            runtimes = message_queue.get()
+            for k, v in runtimes.items():
+                summed_runtimes.setdefault(k, 0.0)
+                summed_runtimes[k] += v
+
         # print out results
-        logger.info("\n\n\n")
-        logger.info("Results:")
+        logger.info('')
+        logger.info('Results:')
 
         flaky_results = []
 
@@ -923,7 +928,7 @@ def main(args):
             for real_result, test_list in test_batch_result.items():
                 for test in test_list:
                     if test_expectation.IsFlaky(test):
-                        flaky_results.append("{} ({})".format(test, real_result))
+                        flaky_results.append('{} ({})'.format(test, real_result))
                         continue
 
                     # Passing tests are not in the list
@@ -931,17 +936,19 @@ def main(args):
                         if real_result != GroupedResult.Passed:
                             unexpected_count[real_result] += 1
                             unexpected_test_results[real_result].append(
-                                "{} {} (expected Pass or is new test)".format(test, real_result))
+                                '{} {} (expected Pass or is new test)'.format(test, real_result))
                     else:
                         expected_result = test_expectation_for_list[test]
                         if real_result != expected_result:
                             unexpected_count[real_result] += 1
                             unexpected_test_results[real_result].append(
-                                "{} {} (expected {})".format(test, real_result, expected_result))
+                                '{} {} (expected {})'.format(test, real_result, expected_result))
 
-        logger.info("")
-        logger.info("Elapsed time: %.2lf seconds" % (end_time - start_time))
-        logger.info("")
+        logger.info('')
+        logger.info('Elapsed time: %.2lf seconds' % (end_time - start_time))
+        logger.info('')
+        logger.info('Runtimes by process:\n%s' %
+                    '\n'.join('%s: %.2lf seconds' % (k, v) for (k, v) in summed_runtimes.items()))
 
         if len(flaky_results):
             logger.info("Flaky test(s):")
@@ -950,7 +957,7 @@ def main(args):
             logger.info("")
 
         logger.info(
-            "Summary: Passed: %d, Comparison Failed: %d, Crashed: %d, CompileFailed %d, Skipped: %d, Timeout: %d"
+            'Summary: Passed: %d, Comparison Failed: %d, Crashed: %d, CompileFailed %d, Skipped: %d, Timeout: %d'
             % (passed_count, failed_count, crashed_count, compile_failed_count, skipped_count,
                timedout_count))
 
@@ -962,20 +969,20 @@ def main(args):
 
         if unexpected_test_results_count > 0:
             retval = EXIT_FAILURE
-            logger.info("")
-            logger.info("Failure: Obtained {} results that differ from expectation:".format(
+            logger.info('')
+            logger.info('Failure: Obtained {} results that differ from expectation:'.format(
                 unexpected_test_results_count))
-            logger.info("")
+            logger.info('')
             for result, count in unexpected_count.items():
                 if count > 0:
                     logger.info("Unexpected '{}' ({}):".format(result, count))
                     for test_result in unexpected_test_results[result]:
-                        logger.info("     {}".format(test_result))
-                    logger.info("")
+                        logger.info('     {}'.format(test_result))
+                    logger.info('')
 
-        logger.info("\n\n")
+        logger.info('')
 
-        # delete generated folders if --keep_temp_files flag is set to false
+        # delete generated folders if --keep-temp-files flag is set to false
         if args.purge:
             DeleteTraceFolders(worker_count)
             if os.path.isdir(args.out_dir):
@@ -999,11 +1006,6 @@ if __name__ == '__main__':
         default=DEFAULT_OUT_DIR,
         help='Where to build ANGLE for capture and replay. Relative to the ANGLE folder. Default is "%s".'
         % DEFAULT_OUT_DIR)
-    # TODO(jmadill): Remove this argument. http://anglebug.com/6102
-    parser.add_argument(
-        '--use-goma',
-        action='store_true',
-        help='Use goma for distributed builds. Requires internal access. Off by default.')
     parser.add_argument(
         '-f',
         '--filter',
@@ -1037,7 +1039,7 @@ if __name__ == '__main__':
         default=DEFAULT_RESULT_FILE,
         help='Name of the result file in the capture_replay_tests folder. Default is "%s".' %
         DEFAULT_RESULT_FILE)
-    parser.add_argument('-v', "--verbose", action='store_true', help='Shows full test output.')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Shows full test output.')
     parser.add_argument(
         '-l',
         '--log',
@@ -1059,9 +1061,6 @@ if __name__ == '__main__':
         type=int,
         default=DEFAULT_MAX_NINJA_JOBS,
         help='Maximum number of concurrent ninja jobs to run at once.')
-
-    # TODO(jmadill): Remove this argument. http://anglebug.com/6102
-    parser.add_argument('--depot-tools-path', default=None, help='Path to depot tools')
     parser.add_argument('--xvfb', action='store_true', help='Run with xvfb.')
     parser.add_argument('--asan', action='store_true', help='Build with ASAN.')
     parser.add_argument(
