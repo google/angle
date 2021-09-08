@@ -66,13 +66,13 @@ EGLint GetDeviceTypeFromArg(const char *displayTypeArg)
         return EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
     }
 }
+}  // anonymous namespace
 
-ANGLE_MAYBE_UNUSED bool IsGLExtensionEnabled(const std::string &extName)
+bool IsGLExtensionEnabled(const std::string &extName)
 {
     return angle::CheckExtensionExists(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)),
                                        extName);
 }
-}  // anonymous namespace
 
 SampleApplication::SampleApplication(std::string name,
                                      int argc,

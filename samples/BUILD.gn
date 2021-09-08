@@ -198,6 +198,13 @@ angle_sample("gles2_torus_lighting") {
   ]
 }
 
+angle_sample("gles3_torus_bufferstorage") {
+  sources = [
+    "torus_lighting/TorusBufferStorage.cpp",
+    "torus_lighting/torus.h",
+  ]
+}
+
 if (angle_build_capture_replay_sample) {
   # The capture_replay sample is set up to work with a single Context.
   # To use the capture replay sample first move your capture sources into
@@ -250,6 +257,7 @@ group("angle_samples") {
       ":gles1_simple_texture_2d",
       ":gles1_torus_lighting",
       ":gles2_torus_lighting",
+      ":gles3_torus_bufferstorage",
       ":hello_triangle",
       ":mip_map_2d",
       ":multi_texture",
