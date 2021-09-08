@@ -653,7 +653,8 @@ constexpr char kTraceTestFolder[] = "src/tests/restricted_traces";
 bool FindTraceTestDataPath(const char *traceName, char *testDataDirOut, size_t maxDataDirLen)
 {
     char relativeTestDataDir[kMaxPath] = {};
-    snprintf(relativeTestDataDir, kMaxPath, "%s%s", kTraceTestFolder, traceName);
+    snprintf(relativeTestDataDir, kMaxPath, "%s%c%s", kTraceTestFolder, GetPathSeparator(),
+             traceName);
     return angle::FindTestDataPath(relativeTestDataDir, testDataDirOut, maxDataDirLen);
 }
 
@@ -1115,9 +1116,8 @@ void TracePerfTest::initializeBenchmark()
 
     if (!mTraceLibrary->valid())
     {
-        ERR() << "Could not load trace library.";
         mSkipTest = true;
-        return;
+        FAIL() << "Could not load trace library.";
     }
 
     mStartFrame = traceInfo.frameStart;
@@ -1129,9 +1129,8 @@ void TracePerfTest::initializeBenchmark()
     char testDataDir[kMaxPath] = {};
     if (!FindTraceTestDataPath(traceInfo.name, testDataDir, kMaxPath))
     {
-        ERR() << "Could not find test data folder.";
         mSkipTest = true;
-        return;
+        FAIL() << "Could not find test data folder.";
     }
 
     mTraceLibrary->setBinaryDataDir(testDataDir);
