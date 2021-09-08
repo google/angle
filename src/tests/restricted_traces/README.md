@@ -38,7 +38,7 @@ src/tests/restricted_traces/cod_mobile/
 ...
 ```
 
-[CIPD]: https://chromium.googlesource.com/infra/luci/luci-go/+/master/cipd/README.md
+[CIPD]: https://chromium.googlesource.com/infra/luci/luci-go/+/main/cipd/README.md
 
 ## Building the trace tests
 

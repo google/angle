@@ -2093,7 +2093,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
                     stream << "]\nin the " << gl::GetShaderTypeString(shaderType) << " shader.\n";
 
                     stream << "You could get more details from "
-                              "https://chromium.googlesource.com/angle/angle/+/refs/heads/master/"
+                              "https://chromium.googlesource.com/angle/angle/+/refs/heads/main/"
                               "src/libANGLE/renderer/d3d/d3d11/"
                               "UniformBlockToStructuredBufferTranslation.md\n";
                     ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_MEDIUM,

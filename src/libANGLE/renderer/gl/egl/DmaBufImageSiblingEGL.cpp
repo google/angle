@@ -13,7 +13,7 @@ namespace
 {
 
 // Refer to the following link
-// https://source.chromium.org/chromium/chromium/src/+/master:ui/gl/gl_image_native_pixmap.cc;l=24
+// https://source.chromium.org/chromium/chromium/src/+/main:ui/gl/gl_image_native_pixmap.cc;l=24
 #define FOURCC(a, b, c, d)                                          \
     ((static_cast<uint32_t>(a)) | (static_cast<uint32_t>(b) << 8) | \
      (static_cast<uint32_t>(c) << 16) | (static_cast<uint32_t>(d) << 24))

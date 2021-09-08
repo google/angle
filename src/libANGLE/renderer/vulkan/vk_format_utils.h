@@ -59,7 +59,7 @@ bool HasEmulatedImageChannels(const angle::Format &intendedFormat,
                               const angle::Format &actualFormat);
 
 // Describes a Vulkan format. For more information on formats in the Vulkan back-end please see
-// https://chromium.googlesource.com/angle/angle/+/master/src/libANGLE/renderer/vulkan/doc/FormatTablesAndEmulation.md
+// https://chromium.googlesource.com/angle/angle/+/main/src/libANGLE/renderer/vulkan/doc/FormatTablesAndEmulation.md
 struct Format final : private angle::NonCopyable
 {
     Format();

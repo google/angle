@@ -78,6 +78,6 @@ See the source code for more details: [TestSuite.h](TestSuite.h) and [TestSuite.
  * Closer integration with ANGLE's test expectations and system config libraries.
  * Supporting a GoogleTest-free integration.
 
-[BaseTest]: https://chromium.googlesource.com/chromium/src/+/refs/heads/master/base/test/
-[JSONFormat]: https://chromium.googlesource.com/chromium/src/+/master/docs/testing/json_test_results_format.md
+[BaseTest]: https://chromium.googlesource.com/chromium/src/+/refs/heads/main/base/test/
+[JSONFormat]: https://chromium.googlesource.com/chromium/src/+/main/docs/testing/json_test_results_format.md
 [HistogramSet]: https://chromium.googlesource.com/catapult/+/HEAD/docs/histogram-set-json-format.md

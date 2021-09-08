@@ -1,4 +1,4 @@
-# See https://chromium.googlesource.com/angle/angle/+/master/doc/ContributingCode.md#selecting-reviewers for more info
+# See https://chromium.googlesource.com/angle/angle/+/main/doc/ContributingCode.md#selecting-reviewers for more info
 # Note: Owners must be split by domain to avoid git merge conflicts on platforms that cannot have
 # email addresses from all platforms.  Also, to avoid downstream git merge conflicts, all changes
 # to this file should be done in the upstream ANGLE repository's main branch.

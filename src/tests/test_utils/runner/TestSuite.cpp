@@ -230,7 +230,7 @@ bool WriteJsonFile(const std::string &outputFile, js::Document *doc)
 }
 
 // Writes out a TestResults to the Chromium JSON Test Results format.
-// https://chromium.googlesource.com/chromium/src.git/+/master/docs/testing/json_test_results_format.md
+// https://chromium.googlesource.com/chromium/src.git/+/main/docs/testing/json_test_results_format.md
 void WriteResultsFile(bool interrupted,
                       const TestResults &testResults,
                       const std::string &outputFile,
@@ -1456,7 +1456,7 @@ void ParseTestIdentifierAndSetResult(const std::string &testName,
 
 bool TestSuite::finishProcess(ProcessInfo *processInfo)
 {
-    // Get test results and merge into master list.
+    // Get test results and merge into main list.
     TestResults batchResults;
 
     if (!GetTestResultsFromFile(processInfo->resultsFileName.c_str(), &batchResults))
