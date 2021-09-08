@@ -52,6 +52,7 @@ SUBPROCESS_TIMEOUT = 600  # in seconds
 DEFAULT_RESULT_FILE = "results.txt"
 DEFAULT_LOG_LEVEL = "info"
 DEFAULT_MAX_JOBS = 8
+DEFAULT_MAX_NINJA_JOBS = 3
 REPLAY_BINARY = "capture_replay_tests"
 if sys.platform == "win32":
     REPLAY_BINARY += ".exe"
@@ -800,7 +801,7 @@ def main(args):
     logger = multiprocessing.log_to_stderr()
     logger.setLevel(level=args.log.upper())
 
-    ninja_lock = multiprocessing.Lock()
+    ninja_lock = multiprocessing.Semaphore(args.max_ninja_jobs)
     child_processes_manager = ChildProcessesManager(logger, ninja_lock)
     try:
         start_time = time.time()
@@ -1053,6 +1054,11 @@ if __name__ == '__main__':
         '--also-run-skipped-for-capture-tests',
         action='store_true',
         help='Also run tests that are disabled in the expectations by SKIP_FOR_CAPTURE')
+    parser.add_argument(
+        '--max-ninja-jobs',
+        type=int,
+        default=DEFAULT_MAX_NINJA_JOBS,
+        help='Maximum number of concurrent ninja jobs to run at once.')
 
     # TODO(jmadill): Remove this argument. http://anglebug.com/6102
     parser.add_argument('--depot-tools-path', default=None, help='Path to depot tools')
