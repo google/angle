@@ -1070,6 +1070,11 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
     if (traceNameIs("world_of_kings"))
     {
         addExtensionPrerequisite("GL_OES_EGL_image_external");
+        // Flaky on Intel. http://anglebug.com/6372
+        if (IsWindows() && IsIntel())
+        {
+            mSkipTest = true;
+        }
     }
 
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
