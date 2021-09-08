@@ -304,7 +304,9 @@ def upload_test_result_to_skia_gold(args, gold_session_manager, gold_session, go
             logging.error('Failed to get triage link for %s, raw output: %s', image_name, error)
             logging.error('Reason for no triage link: %s',
                           gold_session.GetTriageLinkOmissionReason(image_name))
-        elif gold_properties.IsTryjobRun():
+        if gold_properties.IsTryjobRun():
+            # Pick "show all results" so we can see the tryjob images by default.
+            triage_link += '&master=true'
             artifacts['triage_link_for_entire_cl'] = [triage_link]
         else:
             artifacts['gold_triage_link'] = [triage_link]
