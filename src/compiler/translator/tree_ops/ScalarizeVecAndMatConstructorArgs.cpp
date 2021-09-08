@@ -27,12 +27,12 @@ namespace sh
 namespace
 {
 
-TIntermBinary *ConstructVectorIndexBinaryNode(TIntermSymbol *symbolNode, int index)
+TIntermBinary *ConstructVectorIndexBinaryNode(TIntermTyped *symbolNode, int index)
 {
     return new TIntermBinary(EOpIndexDirect, symbolNode, CreateIndexNode(index));
 }
 
-TIntermBinary *ConstructMatrixIndexBinaryNode(TIntermSymbol *symbolNode, int colIndex, int rowIndex)
+TIntermBinary *ConstructMatrixIndexBinaryNode(TIntermTyped *symbolNode, int colIndex, int rowIndex)
 {
     TIntermBinary *colVectorNode = ConstructVectorIndexBinaryNode(symbolNode, colIndex);
 
@@ -63,7 +63,7 @@ class ScalarizeArgsTraverser : public TIntermTraverser
     //   vec4 v(1, s0[0][0], s0[0][1], s0[0][2]);
     // This function is to create nodes for "mat4 s0 = m;" and insert it to the code sequence. This
     // way the possible side effects of the constructor argument will only be evaluated once.
-    TVariable *createTempVariable(TIntermTyped *original);
+    TIntermTyped *createTempVariable(TIntermTyped *original);
 
     std::vector<TIntermSequence> mBlockStack;
 
@@ -123,10 +123,10 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
         ASSERT(size > 0);
         TIntermTyped *originalArg = originalArgNode->getAsTyped();
         ASSERT(originalArg);
-        TVariable *argVariable = createTempVariable(originalArg);
+        TIntermTyped *argVariable = createTempVariable(originalArg);
         if (originalArg->isScalar())
         {
-            sequence->push_back(CreateTempSymbolNode(argVariable));
+            sequence->push_back(argVariable);
             size--;
         }
         else if (originalArg->isVector())
@@ -137,15 +137,14 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
                 size -= repeat;
                 for (int index = 0; index < repeat; ++index)
                 {
-                    TIntermSymbol *symbolNode = CreateTempSymbolNode(argVariable);
-                    TIntermBinary *newNode    = ConstructVectorIndexBinaryNode(symbolNode, index);
+                    TIntermBinary *newNode =
+                        ConstructVectorIndexBinaryNode(argVariable->deepCopy(), index);
                     sequence->push_back(newNode);
                 }
             }
             else
             {
-                TIntermSymbol *symbolNode = CreateTempSymbolNode(argVariable);
-                sequence->push_back(symbolNode);
+                sequence->push_back(argVariable);
                 size -= originalArg->getNominalSize();
             }
         }
@@ -159,9 +158,8 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
                 size -= repeat;
                 while (repeat > 0)
                 {
-                    TIntermSymbol *symbolNode = CreateTempSymbolNode(argVariable);
                     TIntermBinary *newNode =
-                        ConstructMatrixIndexBinaryNode(symbolNode, colIndex, rowIndex);
+                        ConstructMatrixIndexBinaryNode(argVariable->deepCopy(), colIndex, rowIndex);
                     sequence->push_back(newNode);
                     rowIndex++;
                     if (rowIndex >= originalArg->getRows())
@@ -174,15 +172,14 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
             }
             else
             {
-                TIntermSymbol *symbolNode = CreateTempSymbolNode(argVariable);
-                sequence->push_back(symbolNode);
+                sequence->push_back(argVariable);
                 size -= originalArg->getCols() * originalArg->getRows();
             }
         }
     }
 }
 
-TVariable *ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
+TIntermTyped *ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
 {
     ASSERT(original);
 
@@ -190,9 +187,16 @@ TVariable *ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
     type->setQualifier(EvqTemporary);
 
     // The precision of the constant must have been retained (or derived), which will now apply to
-    // the temp variable.
-    ASSERT(!IsPrecisionApplicableToType(type->getBasicType()) ||
-           type->getPrecision() != EbpUndefined);
+    // the temp variable.  In some cases, the precision cannot be derived, so use the constant as
+    // is.  For example, in the following standalone statement, the precision of the constant 0
+    // cannot be determined:
+    //
+    //      mat2(0, bvec3(m));
+    //
+    if (IsPrecisionApplicableToType(type->getBasicType()) && type->getPrecision() == EbpUndefined)
+    {
+        return original;
+    }
 
     TVariable *variable = CreateTempVariable(mSymbolTable, type);
 
@@ -201,7 +205,7 @@ TVariable *ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
     TIntermDeclaration *declaration = CreateTempInitDeclarationNode(variable, original);
     sequence.push_back(declaration);
 
-    return variable;
+    return CreateTempSymbolNode(variable);
 }
 
 }  // namespace
