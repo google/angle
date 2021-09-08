@@ -203,9 +203,18 @@ def gen_gni(traces, gni_file, format_args):
         data_files = ['"%s"' % angledata_file]
         if os.path.exists(json_file_name):
             data_files.append('"%s"' % json_file_name)
+
+        for prefix_expr in ['%s/%s_capture_context%s', '%s/%s_context%s']:
+            prefix = prefix_expr % (trace, trace, context)
+            prefix_cpp = '%s.cpp' % prefix
+            if os.path.exists(prefix_cpp):
+                break
+
+        assert os.path.exists(prefix_cpp), '%s does not exist' % prefix_cpp
+
         test_list += [
-            '["%s", %s, [%s], [%s]]' %
-            (trace, context, ','.join(source_files), ','.join(data_files))
+            '["%s", %s, [%s], [%s], "%s"]' %
+            (trace, context, ','.join(source_files), ','.join(data_files), prefix)
         ]
 
     format_args['test_list'] = ',\n'.join(test_list)
@@ -305,10 +314,6 @@ def get_context(trace):
 
 def get_header_name(trace):
     return '%s/%s_capture_context%s.h' % (trace, trace, get_context(trace))
-
-
-def get_source_name(trace):
-    return '%s/%s_capture_context%s.cpp' % (trace, trace, get_context(trace))
 
 
 def gen_header(header_file, format_args):
@@ -413,8 +418,10 @@ def main():
         print('.gni file generation failed.')
         return 1
 
-    includes = ['#include "%s"' % get_header_name(trace) for trace in traces]
     trace_infos = ['{"%s", {%s}}' % (trace, get_trace_info(trace)) for trace in traces]
+
+    no_json_traces = filter(lambda trace: not json_metadata_exists(trace), traces)
+    includes = ['#include "%s"' % get_header_name(trace) for trace in no_json_traces]
 
     format_args['filename'] = 'restricted_traces_autogen'
     format_args['num_traces'] = len(trace_infos)

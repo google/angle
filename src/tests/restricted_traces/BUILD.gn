@@ -35,14 +35,13 @@ _trace_headers = []
 
 foreach(_trace_data, angle_restricted_traces) {
   _trace = _trace_data[0]
+  _trace_ctx = _trace_data[1]
   _target = "angle_restricted_trace_${_trace}"
 
   angle_trace(_target) {
-    trace_name = _trace
-    trace_dir = _trace
-    trace_ctx = _trace_data[1]
     sources = _trace_data[2]
     data = _trace_data[3]
+    trace_prefix = _trace_data[4]
     fixture = ":angle_restricted_trace_fixture"
   }
 

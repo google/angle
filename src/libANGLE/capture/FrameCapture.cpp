@@ -192,24 +192,20 @@ std::ostream &operator<<(std::ostream &os, const FmtCapturePrefix &fmt)
 {
     if (fmt.captureLabel.empty())
     {
-        os << "angle";
+        os << "angle_capture";
     }
     else
     {
         os << fmt.captureLabel;
     }
 
-    if (fmt.contextId == kNoContextId)
+    if (fmt.contextId == kSharedContextId)
     {
-        // Do nothing
+        os << "_shared";
     }
-    else if (fmt.contextId == kSharedContextId)
+    else if (fmt.contextId != kNoContextId)
     {
-        os << "_capture_shared";
-    }
-    else
-    {
-        os << "_capture_context" << fmt.contextId;
+        os << "_context" << fmt.contextId;
     }
 
     return os;

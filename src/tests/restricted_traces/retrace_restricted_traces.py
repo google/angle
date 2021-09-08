@@ -36,8 +36,14 @@ def src_trace_path(trace):
 
 def context_header(trace, trace_path):
     context_id = get_context(trace_path)
-    header = '%s_capture_context%s.h' % (trace, context_id)
-    return os.path.join(trace_path, header)
+    # TODO(jmadill): Remove after retrace. http://anglebug.com/5133
+    for try_path_expr in ['%s_capture_context%s.h', '%s_context%s.h']:
+        header = try_path_expr % (trace, context_id)
+        try_path = os.path.join(trace_path, header)
+        if os.path.isfile(try_path):
+            return try_path
+    logging.fatal('Could not find context header for %s' % trace)
+    return None
 
 
 def get_num_frames(trace):
@@ -47,7 +53,7 @@ def get_num_frames(trace):
     hi = 0
 
     for file in os.listdir(trace_path):
-        match = re.match(r'.+_capture_context\d_frame(\d+)\.cpp', file)
+        match = re.match(r'.+_context\d_frame(\d+)\.cpp', file)
         if match:
             frame = int(match.group(1))
             if frame < lo:

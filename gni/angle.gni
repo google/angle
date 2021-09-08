@@ -533,10 +533,7 @@ template("angle_trace_fixture") {
 }
 
 template("angle_trace") {
-  _trace_name = invoker.trace_name
-  _trace_dir = invoker.trace_dir
-  _trace_ctx = invoker.trace_ctx
-  _trace_prefix = "${_trace_dir}/${_trace_name}_capture_context${_trace_ctx}"
+  _trace_prefix = invoker.trace_prefix
   angle_shared_library(target_name) {
     testonly = true
 
