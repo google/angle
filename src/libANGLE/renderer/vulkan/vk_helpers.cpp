@@ -5629,6 +5629,70 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+angle::Result ImageHelper::reformatStagedUpdate(ContextVk *contextVk,
+                                                angle::FormatID srcFormatID,
+                                                angle::FormatID dstFormatID)
+{
+    const angle::Format &srcFormat = angle::Format::Get(srcFormatID);
+    const angle::Format &dstFormat = angle::Format::Get(dstFormatID);
+    const gl::InternalFormat &destFormatInfo =
+        gl::GetSizedInternalFormatInfo(dstFormat.glInternalFormat);
+
+    for (std::vector<SubresourceUpdate> &levelUpdates : mSubresourceUpdates)
+    {
+        for (SubresourceUpdate &update : levelUpdates)
+        {
+            // Right now whenever we stage update from a source image, the formats always match.
+            ASSERT(valid() || update.updateSource != UpdateSource::Image ||
+                   update.data.image.formatID == srcFormatID);
+
+            if (update.updateSource == UpdateSource::Buffer &&
+                update.data.buffer.formatID == srcFormatID)
+            {
+                const VkBufferImageCopy &copy = update.data.buffer.copyRegion;
+
+                // Source and dest data are tightly packed
+                GLuint srcDataRowPitch = copy.imageExtent.width * srcFormat.pixelBytes;
+                GLuint dstDataRowPitch = copy.imageExtent.width * dstFormat.pixelBytes;
+
+                GLuint srcDataDepthPitch = srcDataRowPitch * copy.imageExtent.height;
+                GLuint dstDataDepthPitch = dstDataRowPitch * copy.imageExtent.height;
+
+                // Retrieve source buffer
+                vk::BufferHelper *srcBuffer = update.data.buffer.bufferHelper;
+                uint8_t *srcData            = srcBuffer->getMappedMemory() + copy.bufferOffset;
+
+                // Allocate memory with dstFormat
+                uint8_t *dstData             = nullptr;
+                VkBuffer dstBufferHandle     = VK_NULL_HANDLE;
+                VkDeviceSize dstBufferOffset = 0;
+                GLuint dstBufferSize         = dstDataDepthPitch * copy.imageExtent.depth;
+                ANGLE_TRY(mStagingBuffer.allocateWithAlignment(
+                    contextVk, dstBufferSize, mStagingBuffer.getAlignment(), &dstData,
+                    &dstBufferHandle, &dstBufferOffset, nullptr));
+                BufferHelper *dstBuffer = mStagingBuffer.getCurrentBuffer();
+
+                rx::PixelReadFunction pixelReadFunction   = srcFormat.pixelReadFunction;
+                rx::PixelWriteFunction pixelWriteFunction = dstFormat.pixelWriteFunction;
+
+                CopyImageCHROMIUM(srcData, srcDataRowPitch, srcFormat.pixelBytes, srcDataDepthPitch,
+                                  pixelReadFunction, dstData, dstDataRowPitch, dstFormat.pixelBytes,
+                                  dstDataDepthPitch, pixelWriteFunction, destFormatInfo.format,
+                                  destFormatInfo.componentType, copy.imageExtent.width,
+                                  copy.imageExtent.height, copy.imageExtent.depth, false, false,
+                                  false);
+
+                // Replace srcBuffer with dstBuffer
+                update.data.buffer.bufferHelper            = dstBuffer;
+                update.data.buffer.formatID                = dstFormatID;
+                update.data.buffer.copyRegion.bufferOffset = dstBufferOffset;
+            }
+        }
+    }
+
+    return angle::Result::Continue;
+}
+
 angle::Result ImageHelper::CalculateBufferInfo(ContextVk *contextVk,
                                                const gl::Extents &glExtents,
                                                const gl::InternalFormat &formatInfo,
@@ -6542,35 +6606,6 @@ bool ImageHelper::hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelI
         if (!levelUpdates->empty())
         {
             return true;
-        }
-    }
-    return false;
-}
-
-bool ImageHelper::hasStagedUpdatesWithMismatchedFormat(gl::LevelIndex levelStart,
-                                                       gl::LevelIndex levelEnd,
-                                                       angle::FormatID formatID) const
-{
-    for (gl::LevelIndex level = levelStart; level < levelEnd; ++level)
-    {
-        const std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(level);
-        if (levelUpdates == nullptr)
-        {
-            continue;
-        }
-
-        for (const SubresourceUpdate &update : *levelUpdates)
-        {
-            if (update.updateSource == UpdateSource::Buffer &&
-                update.data.buffer.formatID != formatID)
-            {
-                return true;
-            }
-            if (update.updateSource == UpdateSource::Image &&
-                update.data.image.formatID != formatID)
-            {
-                return true;
-            }
         }
     }
     return false;

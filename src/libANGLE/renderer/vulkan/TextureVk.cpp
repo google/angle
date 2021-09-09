@@ -2166,15 +2166,6 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk,
         rx::PixelReadFunction pixelReadFunction   = srcFormat.pixelReadFunction;
         rx::PixelWriteFunction pixelWriteFunction = dstFormat.pixelWriteFunction;
 
-        // Fix up the read/write functions for the sake of luminance/alpha that are emulated with
-        // formats whose channels don't correspond to the original format (alpha is emulated with
-        // red, and luminance/alpha is emulated with red/green).
-        if (format.getIntendedFormat().isLUMA())
-        {
-            pixelReadFunction  = format.getIntendedFormat().pixelReadFunction;
-            pixelWriteFunction = format.getIntendedFormat().pixelWriteFunction;
-        }
-
         const gl::InternalFormat &destFormatInfo = *mState.getImageDesc(index).format.info;
         for (uint32_t layer = 0; layer < layerCount; layer++)
         {
@@ -3329,41 +3320,17 @@ angle::Result TextureVk::ensureRenderable(ContextVk *contextVk)
         return angle::Result::Continue;
     }
 
-    if (!mImage->valid())
-    {
-        // Immutable texture must already have a valid image
-        ASSERT(!mState.getImmutableFormat());
-        // If we have staged update and it was encoded with different format, we need to flush out
-        // these staged update. The respecifyImageStorage should handle read back data and re-stage
-        // data with new format.
-        angle::FormatID intendedFormatID = format.getIntendedFormatID();
-        angle::FormatID actualFormatID = format.getActualImageFormatID(vk::ImageAccess::Renderable);
+    // luminance/alpha  format never fallback for rendering and if we ever do fallback, the
+    // following code may not handle it properly.
+    ASSERT(!format.getIntendedFormat().isLUMA());
 
-        gl::LevelIndex levelGLStart, levelGLEnd;
-        ImageMipLevels mipLevels;
-        if (mState.getImmutableFormat())
-        {
-            levelGLStart = gl::LevelIndex(0);
-            levelGLEnd   = gl::LevelIndex(mState.getImmutableLevels());
-            mipLevels    = ImageMipLevels::FullMipChain;
-        }
-        else
-        {
-            levelGLStart = gl::LevelIndex(mState.getEffectiveBaseLevel());
-            levelGLEnd =
-                gl::LevelIndex(levelGLStart + getMipLevelCount(ImageMipLevels::EnabledLevels));
-            mipLevels = ImageMipLevels::EnabledLevels;
-        }
+    angle::FormatID previousActualFormatID =
+        format.getActualImageFormatID(vk::ImageAccess::SampleOnly);
+    angle::FormatID actualFormatID = format.getActualImageFormatID(vk::ImageAccess::Renderable);
 
-        if (mImage->hasStagedUpdatesWithMismatchedFormat(levelGLStart, levelGLEnd, actualFormatID))
-        {
-            angle::FormatID sampleOnlyFormatID =
-                format.getActualImageFormatID(vk::ImageAccess::SampleOnly);
-
-            ANGLE_TRY(initImage(contextVk, intendedFormatID, sampleOnlyFormatID, mipLevels));
-            ANGLE_TRY(flushImageStagedUpdates(contextVk));
-        }
-    }
+    // First try to convert any staged buffer updates from old format to new format using
+    // CPU.
+    ANGLE_TRY(mImage->reformatStagedUpdate(contextVk, previousActualFormatID, actualFormatID));
 
     // Make sure we update mImageUsage bits
     ANGLE_TRY(ensureImageAllocated(contextVk, format));
