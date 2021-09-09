@@ -621,8 +621,6 @@ void ParamBuffer::addEnumParam(const char *paramName,
     mParamCaptures.emplace_back(std::move(capture));
 }
 
-std::ostream &operator<<(std::ostream &os, const ParamCapture &capture);
-
 // Pointer capture helpers.
 void CaptureMemory(const void *source, size_t size, ParamCapture *paramCapture);
 void CaptureString(const GLchar *str, ParamCapture *paramCapture);
