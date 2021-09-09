@@ -20,6 +20,7 @@
 #include "avakin_life/avakin_life_capture_context1.h"
 #include "aztec_ruins/aztec_ruins_capture_context1.h"
 #include "beach_buggy_racing/beach_buggy_racing_capture_context1.h"
+#include "blockman_go/blockman_go_capture_context2.h"
 #include "brawl_stars/brawl_stars_capture_context1.h"
 #include "bricks_breaker_quest/bricks_breaker_quest_capture_context2.h"
 #include "bubble_shooter/bubble_shooter_capture_context5.h"
@@ -119,7 +120,7 @@ namespace trace_angle
 {
 namespace
 {
-constexpr size_t kNumTraces = 102;
+constexpr size_t kNumTraces = 103;
 struct TracePair
 {
     const char name[kTraceInfoMaxNameLen];
@@ -289,6 +290,28 @@ constexpr TracePair kTraceInfos[kNumTraces] = {
       beach_buggy_racing::kReplayDrawSurfaceWidth,
       beach_buggy_racing::kReplayDrawSurfaceHeight,
       kDefaultReplayDrawSurfaceColorSpace,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      false,
+      false,
+      false,
+      false,
+      false}},
+    {"blockman_go",
+     {"blockman_go",
+      blockman_go::kReplayContextClientMajorVersion,
+      blockman_go::kReplayContextClientMinorVersion,
+      blockman_go::kReplayFrameStart,
+      blockman_go::kReplayFrameEnd,
+      blockman_go::kReplayDrawSurfaceWidth,
+      blockman_go::kReplayDrawSurfaceHeight,
+      blockman_go::kReplayDrawSurfaceColorSpace,
       0,
       0,
       0,
