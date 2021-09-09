@@ -5,7 +5,7 @@
 //
 
 #include "compiler/translator/TranslatorMetalDirect/MapSymbols.h"
-#include "compiler/translator/TranslatorMetalDirect/IntermRebuild.h"
+#include "compiler/translator/tree_util/IntermRebuild.h"
 
 using namespace sh;
 

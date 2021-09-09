@@ -7,8 +7,8 @@
 #include "compiler/translator/TranslatorMetalDirect/FixTypeConstructors.h"
 #include <unordered_map>
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
-#include "compiler/translator/TranslatorMetalDirect/IntermRebuild.h"
 #include "compiler/translator/tree_ops/SimplifyLoopConditions.h"
+#include "compiler/translator/tree_util/IntermRebuild.h"
 using namespace sh;
 ////////////////////////////////////////////////////////////////////////////////
 namespace

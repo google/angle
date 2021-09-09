@@ -7,8 +7,8 @@
 #include "compiler/translator/TranslatorMetalDirect/IntroduceVertexIndexID.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
-#include "compiler/translator/TranslatorMetalDirect/IntermRebuild.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
+#include "compiler/translator/tree_util/IntermRebuild.h"
 using namespace sh;
 
 ////////////////////////////////////////////////////////////////////////////////

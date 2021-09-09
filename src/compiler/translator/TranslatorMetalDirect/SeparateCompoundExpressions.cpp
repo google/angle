@@ -8,9 +8,9 @@
 
 #include "common/system_utils.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
-#include "compiler/translator/TranslatorMetalDirect/IntermRebuild.h"
 #include "compiler/translator/TranslatorMetalDirect/SeparateCompoundExpressions.h"
 #include "compiler/translator/tree_ops/SimplifyLoopConditions.h"
+#include "compiler/translator/tree_util/IntermRebuild.h"
 
 using namespace sh;
 

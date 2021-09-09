@@ -12,7 +12,6 @@
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
 #include "compiler/translator/TranslatorMetalDirect/DiscoverDependentFunctions.h"
 #include "compiler/translator/TranslatorMetalDirect/IdGen.h"
-#include "compiler/translator/TranslatorMetalDirect/IntermRebuild.h"
 #include "compiler/translator/TranslatorMetalDirect/MapSymbols.h"
 #include "compiler/translator/TranslatorMetalDirect/Pipeline.h"
 #include "compiler/translator/TranslatorMetalDirect/RewritePipelines.h"
@@ -20,6 +19,7 @@
 #include "compiler/translator/tree_ops/PruneNoOps.h"
 #include "compiler/translator/tree_util/DriverUniform.h"
 #include "compiler/translator/tree_util/FindMain.h"
+#include "compiler/translator/tree_util/IntermRebuild.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 using namespace sh;
 

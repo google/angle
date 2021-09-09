@@ -9,8 +9,8 @@
 
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
-#include "compiler/translator/TranslatorMetalDirect/IntermRebuild.h"
 #include "compiler/translator/TranslatorMetalDirect/SymbolEnv.h"
+#include "compiler/translator/tree_util/IntermRebuild.h"
 
 using namespace sh;
 

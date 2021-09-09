@@ -6,9 +6,9 @@
 
 #include "compiler/translator/TranslatorMetalDirect/HoistConstants.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
-#include "compiler/translator/TranslatorMetalDirect/IntermRebuild.h"
 #include "compiler/translator/TranslatorMetalDirect/Layout.h"
 #include "compiler/translator/tree_util/FindFunction.h"
+#include "compiler/translator/tree_util/IntermRebuild.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"
 
 using namespace sh;

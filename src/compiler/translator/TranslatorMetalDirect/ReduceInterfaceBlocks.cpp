@@ -10,9 +10,9 @@
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/TranslatorMetalDirect.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
-#include "compiler/translator/TranslatorMetalDirect/IntermRebuild.h"
 #include "compiler/translator/TranslatorMetalDirect/ReduceInterfaceBlocks.h"
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
+#include "compiler/translator/tree_util/IntermRebuild.h"
 
 using namespace sh;
 
