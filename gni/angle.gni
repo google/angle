@@ -24,8 +24,8 @@ declare_args() {
 if (angle_has_build) {
   import("//build/config/dcheck_always_on.gni")
   import("//build/config/ozone.gni")
+  import("//build/config/ozone.gni")  # import the ozone_platform_x11 variable
   import("//build/config/sanitizers/sanitizers.gni")
-  import("//build/config/ui.gni")  # import the use_x11 variable
   import("//build_overrides/build.gni")
   import("//testing/test.gni")
   if (is_android) {
@@ -40,7 +40,7 @@ if (angle_has_build) {
     angle_vulkan_display_mode = "headless"
   }
 
-  angle_use_x11 = use_x11 && !is_ggp
+  angle_use_x11 = ozone_platform_x11 && !is_ggp && is_linux
   angle_use_vulkan_display = is_linux && !is_ggp
 } else {
   declare_args() {
