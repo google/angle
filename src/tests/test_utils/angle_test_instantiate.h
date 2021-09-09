@@ -141,11 +141,13 @@ struct CombinedPrintToStringParamName
 
 #define ANGLE_ALL_TEST_PLATFORMS_ES2                                                               \
     ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN(), ES2_VULKAN_SWIFTSHADER(), \
-        ES2_METAL(), WithAsyncCommandQueueFeatureVulkan(ES2_VULKAN())
+        ES2_METAL(), WithAsyncCommandQueueFeatureVulkan(ES2_VULKAN()),                             \
+        WithDirectMetalGeneration(ES2_METAL())
 
 #define ANGLE_ALL_TEST_PLATFORMS_ES3                                                   \
     ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER(), \
-        ES3_METAL(), WithAsyncCommandQueueFeatureVulkan(ES3_VULKAN())
+        ES3_METAL(), WithAsyncCommandQueueFeatureVulkan(ES3_VULKAN()),                 \
+        WithDirectMetalGeneration(ES3_METAL())
 
 #define ANGLE_ALL_TEST_PLATFORMS_ES31                                                       \
     ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES(), ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER(), \
