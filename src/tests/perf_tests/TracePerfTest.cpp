@@ -1317,12 +1317,6 @@ void TracePerfTest::drawBenchmark()
             uint32_t windowX = kOffscreenOffsetX + frameX * kOffscreenFrameWidth;
             uint32_t windowY = kOffscreenOffsetY + frameY * kOffscreenFrameHeight;
 
-            if (gVerboseLogging)
-            {
-                printf("Frame %d: x %d y %d (screen x %d, screen y %d)\n", mOffscreenFrameCount,
-                       frameX, frameY, windowX, windowY);
-            }
-
             GLboolean scissorTest = GL_FALSE;
             glGetBooleanv(GL_SCISSOR_TEST, &scissorTest);
 
