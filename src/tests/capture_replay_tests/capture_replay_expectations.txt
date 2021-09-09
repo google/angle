@@ -97,6 +97,7 @@
 6180 : DrawBuffersTest.UnwrittenOutputVariablesShouldNotCrash/ES2_Vulkan_SwiftShader = FLAKY
 6180 : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInIndexBuffer/ES2_Vulkan_SwiftShader = FLAKY
 6180 : ImageTest.MipLevels/* = FLAKY
+6373 : WebGLCompatibilityTest.DrawArraysBufferOutOfBoundsNonInstanced/* = FLAKY
 
 # ES3
 6180 : BlitFramebufferTest.BlitDepthStencilPixelByPixel/ES3_Vulkan_SwiftShader = SKIPPED_BY_GTEST
