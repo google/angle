@@ -4199,7 +4199,9 @@ const char *ValidateDrawElementsStates(const Context *context)
                 return kElementArrayBufferBoundForTransformFeedback;
             }
         }
-        else if (elementArrayBuffer->isMapped())
+        else if (elementArrayBuffer->isMapped() &&
+                 (!elementArrayBuffer->isImmutable() ||
+                  (elementArrayBuffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) == 0))
         {
             // WebGL buffers cannot be mapped/unmapped because the MapBufferRange,
             // FlushMappedBufferRange, and UnmapBuffer entry points are removed from the

@@ -1090,6 +1090,64 @@ TEST_P(BufferStorageTestES3, StorageCopyBufferSubDataMapped)
     ASSERT_GL_NO_ERROR();
 }
 
+// Verify persistently mapped element array buffers can use glDrawElements
+// Tests a pattern used by Fortnite's GLES backend
+TEST_P(BufferStorageTestES3, DrawElementsElementArrayBufferMapped)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage") ||
+                       !IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+
+    GLfloat kVertexBuffer[] = {-1.0f, -1.0f, 1.0f,  // (x, y, R)
+                               -1.0f, 1.0f,  1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
+    // Set up array buffer
+    GLBuffer readBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, readBuffer.get());
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kVertexBuffer), kVertexBuffer, GL_DYNAMIC_DRAW);
+    GLint vLoc = glGetAttribLocation(mProgram, "position");
+    GLint cLoc = mAttribLocation;
+    glVertexAttribPointer(vLoc, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
+    glEnableVertexAttribArray(vLoc);
+    glVertexAttribPointer(cLoc, 1, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const GLvoid *)8);
+    glEnableVertexAttribArray(cLoc);
+
+    // Set up the element array buffer to be persistently mapped
+    GLshort kElementArrayBuffer[] = {0, 0, 0, 0, 0, 0};
+
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.get());
+    glBufferStorageEXT(GL_ELEMENT_ARRAY_BUFFER, sizeof(kElementArrayBuffer), kElementArrayBuffer,
+                       GL_DYNAMIC_STORAGE_BIT_EXT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT |
+                           GL_MAP_COHERENT_BIT_EXT);
+
+    glUseProgram(mProgram);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, 0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+
+    GLshort *mappedPtr = (GLshort *)glMapBufferRange(
+        GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(kElementArrayBuffer),
+        GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+    ASSERT_NE(nullptr, mappedPtr);
+    ASSERT_GL_NO_ERROR();
+
+    mappedPtr[0] = 0;
+    mappedPtr[1] = 1;
+    mappedPtr[2] = 2;
+    mappedPtr[3] = 2;
+    mappedPtr[4] = 1;
+    mappedPtr[5] = 3;
+    glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, 0);
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Verify persistently mapped buffers can use glBufferSubData
 TEST_P(BufferStorageTestES3, StorageBufferSubDataMapped)
 {
