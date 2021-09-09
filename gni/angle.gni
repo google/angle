@@ -117,6 +117,9 @@ declare_args() {
 
   # Currently Windows on Arm doesn't support OpenGL or Vulkan.
   is_win_arm64 = is_win && target_cpu == "arm64"
+
+  # Frame capture code is enabled by default if rapidjson is available.
+  angle_has_frame_capture = angle_has_rapidjson
 }
 
 declare_args() {

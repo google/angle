@@ -153,7 +153,7 @@ angle_source_set("angle_util_loader") {
   ]
 }
 
-if (angle_has_rapidjson) {
+if (angle_has_frame_capture) {
   angle_source_set("angle_frame_capture_test_utils") {
     testonly = true
     sources = [
