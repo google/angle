@@ -376,6 +376,8 @@
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.shaders.discard.function_static_loop_never = SKIP
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.shaders.discard.dynamic_loop_never = SKIP
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.shaders.discard.static_loop_never = SKIP
+// Mac Intel UHD 630 crashes
+6376 MAC OPENGL INTEL : dEQP-GLES3.functional.draw.random.127 = SKIP
 
 // Mac Intel failures
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.color_clear.* = FAIL
@@ -443,6 +445,12 @@
 
 5172 MAC OPENGL INTEL : dEQP-GLES3.functional.fragment_out.basic.int.* = FAIL
 5172 MAC OPENGL INTEL : dEQP-GLES3.functional.fragment_out.basic.uint.* = FAIL
+
+// Mac Intel UHD 630 failures
+6376 MAC OPENGL INTEL : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.isampler3d_vertex = FAIL
+6376 MAC OPENGL INTEL : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.usampler3d_vertex = FAIL
+6376 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.base_level.linear_linear = FAIL
+6376 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.base_level.linear_nearest = FAIL
 
 // Android only failures
 1487 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.red_half_float_oes = FAIL
