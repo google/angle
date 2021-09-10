@@ -63,6 +63,13 @@ struct ANGLE_UTIL_EXPORT ConfigParameters
 
 using GLWindowContext = struct GLWindowHandleContext_T *;
 
+enum class GLWindowResult
+{
+    NoError,
+    NoColorspaceSupport,
+    Error,
+};
+
 class ANGLE_UTIL_EXPORT GLWindowBase : angle::NonCopyable
 {
   public:
@@ -77,13 +84,20 @@ class ANGLE_UTIL_EXPORT GLWindowBase : angle::NonCopyable
                               angle::GLESDriverType driverType,
                               const EGLPlatformParameters &platformParams,
                               const ConfigParameters &configParams) = 0;
-    virtual bool isGLInitialized() const                            = 0;
-    virtual void swap()                                             = 0;
-    virtual void destroyGL()                                        = 0;
-    virtual bool makeCurrent()                                      = 0;
-    virtual bool hasError() const                                   = 0;
-    virtual bool setSwapInterval(EGLint swapInterval)               = 0;
-    virtual angle::GenericProc getProcAddress(const char *name)     = 0;
+
+    virtual GLWindowResult initializeGLWithResult(OSWindow *osWindow,
+                                                  angle::Library *glWindowingLibrary,
+                                                  angle::GLESDriverType driverType,
+                                                  const EGLPlatformParameters &platformParams,
+                                                  const ConfigParameters &configParams) = 0;
+
+    virtual bool isGLInitialized() const                        = 0;
+    virtual void swap()                                         = 0;
+    virtual void destroyGL()                                    = 0;
+    virtual bool makeCurrent()                                  = 0;
+    virtual bool hasError() const                               = 0;
+    virtual bool setSwapInterval(EGLint swapInterval)           = 0;
+    virtual angle::GenericProc getProcAddress(const char *name) = 0;
     // EGLContext and HGLRC (WGL) are both "handles", which are implemented as pointers.
     // Use void* here and let the underlying implementation handle interpreting the type correctly.
     virtual GLWindowContext getCurrentContextGeneric()                  = 0;
@@ -130,6 +144,12 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
                       const EGLPlatformParameters &platformParams,
                       const ConfigParameters &configParams) override;
 
+    GLWindowResult initializeGLWithResult(OSWindow *osWindow,
+                                          angle::Library *glWindowingLibrary,
+                                          angle::GLESDriverType driverType,
+                                          const EGLPlatformParameters &platformParams,
+                                          const ConfigParameters &configParams) override;
+
     bool isGLInitialized() const override;
     void swap() override;
     void destroyGL() override;
@@ -149,9 +169,9 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
                            const EGLPlatformParameters &params);
 
     // Only initializes the Surface.
-    bool initializeSurface(OSWindow *osWindow,
-                           angle::Library *glWindowingLibrary,
-                           const ConfigParameters &params);
+    GLWindowResult initializeSurface(OSWindow *osWindow,
+                                     angle::Library *glWindowingLibrary,
+                                     const ConfigParameters &params);
 
     // Create an EGL context with this window's configuration
     EGLContext createContext(EGLContext share);

@@ -33,6 +33,13 @@ class ANGLE_UTIL_EXPORT WGLWindow : public GLWindowBase
                       angle::GLESDriverType driverType,
                       const EGLPlatformParameters &platformParams,
                       const ConfigParameters &configParams) override;
+
+    GLWindowResult initializeGLWithResult(OSWindow *osWindow,
+                                          angle::Library *glWindowingLibrary,
+                                          angle::GLESDriverType driverType,
+                                          const EGLPlatformParameters &platformParams,
+                                          const ConfigParameters &configParams) override;
+
     void destroyGL() override;
     bool isGLInitialized() const override;
     bool makeCurrent() override;

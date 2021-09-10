@@ -102,19 +102,36 @@ bool EGLWindow::isContextVersion(EGLint glesMajorVersion, EGLint glesMinorVersio
     return mClientMajorVersion == glesMajorVersion && mClientMinorVersion == glesMinorVersion;
 }
 
+GLWindowResult EGLWindow::initializeGLWithResult(OSWindow *osWindow,
+                                                 angle::Library *glWindowingLibrary,
+                                                 angle::GLESDriverType driverType,
+                                                 const EGLPlatformParameters &platformParams,
+                                                 const ConfigParameters &configParams)
+{
+    if (!initializeDisplay(osWindow, glWindowingLibrary, driverType, platformParams))
+    {
+        return GLWindowResult::Error;
+    }
+    GLWindowResult res = initializeSurface(osWindow, glWindowingLibrary, configParams);
+    if (res != GLWindowResult::NoError)
+    {
+        return res;
+    }
+    if (!initializeContext())
+    {
+        return GLWindowResult::Error;
+    }
+    return GLWindowResult::NoError;
+}
+
 bool EGLWindow::initializeGL(OSWindow *osWindow,
                              angle::Library *glWindowingLibrary,
                              angle::GLESDriverType driverType,
                              const EGLPlatformParameters &platformParams,
                              const ConfigParameters &configParams)
 {
-    if (!initializeDisplay(osWindow, glWindowingLibrary, driverType, platformParams))
-        return false;
-    if (!initializeSurface(osWindow, glWindowingLibrary, configParams))
-        return false;
-    if (!initializeContext())
-        return false;
-    return true;
+    return initializeGLWithResult(osWindow, glWindowingLibrary, driverType, platformParams,
+                                  configParams) == GLWindowResult::NoError;
 }
 
 bool EGLWindow::initializeDisplay(OSWindow *osWindow,
@@ -370,9 +387,9 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
     return true;
 }
 
-bool EGLWindow::initializeSurface(OSWindow *osWindow,
-                                  angle::Library *glWindowingLibrary,
-                                  const ConfigParameters &params)
+GLWindowResult EGLWindow::initializeSurface(OSWindow *osWindow,
+                                            angle::Library *glWindowingLibrary,
+                                            const ConfigParameters &params)
 {
     mConfigParams                 = params;
     const char *displayExtensions = eglQueryString(mDisplay, EGL_EXTENSIONS);
@@ -404,7 +421,7 @@ bool EGLWindow::initializeSurface(OSWindow *osWindow,
     {
         fprintf(stderr, "Mising EGL_EXT_pixel_format_float.\n");
         destroyGL();
-        return false;
+        return GLWindowResult::Error;
     }
     if (hasPixelFormatFloat)
     {
@@ -419,7 +436,7 @@ bool EGLWindow::initializeSurface(OSWindow *osWindow,
     {
         fprintf(stderr, "Could not find a suitable EGL config!\n");
         destroyGL();
-        return false;
+        return GLWindowResult::Error;
     }
 
     eglGetConfigAttrib(mDisplay, mConfig, EGL_RED_SIZE, &mConfigParams.redBits);
@@ -451,7 +468,7 @@ bool EGLWindow::initializeSurface(OSWindow *osWindow,
     {
         fprintf(stderr, "Mising EGL_KHR_gl_colorspace.\n");
         destroyGL();
-        return false;
+        return GLWindowResult::NoColorspaceSupport;
     }
     if (hasGLColorSpace)
     {
@@ -477,14 +494,14 @@ bool EGLWindow::initializeSurface(OSWindow *osWindow,
     {
         fprintf(stderr, "eglCreateWindowSurface failed: 0x%X\n", eglGetError());
         destroyGL();
-        return false;
+        return GLWindowResult::Error;
     }
 
 #if defined(ANGLE_USE_UTIL_LOADER)
     angle::LoadGLES(eglGetProcAddress);
 #endif  // defined(ANGLE_USE_UTIL_LOADER)
 
-    return true;
+    return GLWindowResult::NoError;
 }
 
 GLWindowContext EGLWindow::getCurrentContextGeneric()

@@ -713,8 +713,8 @@ void ANGLETestBase::ANGLETestSetUp()
             FAIL() << "Internal parameter conflict error.";
         }
 
-        if (!mFixture->eglWindow->initializeSurface(mFixture->osWindow, driverLib,
-                                                    mFixture->configParams))
+        if (mFixture->eglWindow->initializeSurface(
+                mFixture->osWindow, driverLib, mFixture->configParams) != GLWindowResult::NoError)
         {
             FAIL() << "egl surface init failed.";
         }
