@@ -80,6 +80,8 @@ bool ValidateCopySubTexture3DANGLE(const Context *context,
                                    GLboolean unpackPremultiplyAlpha,
                                    GLboolean unpackUnmultiplyAlpha);
 
+// GL_ANGLE_depth_texture
+
 // GL_ANGLE_framebuffer_blit
 bool ValidateBlitFramebufferANGLE(const Context *context,
                                   GLint srcX0,
@@ -218,6 +220,8 @@ bool ValidateMultiDrawElementsInstancedANGLE(const Context *context,
                                              const GLvoid *const *indices,
                                              const GLsizei *instanceCounts,
                                              GLsizei drawcount);
+
+// GL_ANGLE_pack_reverse_row_order
 
 // GL_ANGLE_program_binary
 
@@ -669,6 +673,10 @@ bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,
                                               HandleType handleTypePacked,
                                               GLuint handle);
 
+// GL_ANGLE_texture_compression_dxt3
+
+// GL_ANGLE_texture_compression_dxt5
+
 // GL_ANGLE_texture_external_update
 bool ValidateTexImage2DExternalANGLE(const Context *context,
                                      TextureTarget targetPacked,
@@ -695,12 +703,18 @@ bool ValidateGetMultisamplefvANGLE(const Context *context,
                                    const GLfloat *val);
 bool ValidateSampleMaskiANGLE(const Context *context, GLuint maskNumber, GLbitfield mask);
 
+// GL_ANGLE_texture_usage
+
 // GL_ANGLE_translated_shader_source
 bool ValidateGetTranslatedShaderSourceANGLE(const Context *context,
                                             ShaderProgramID shaderPacked,
                                             GLsizei bufsize,
                                             const GLsizei *length,
                                             const GLchar *source);
+
+// GL_APPLE_clip_distance
+
+// GL_ARB_sync
 
 // GL_CHROMIUM_bind_uniform_location
 bool ValidateBindUniformLocationCHROMIUM(const Context *context,
@@ -781,6 +795,8 @@ bool ValidateGetProgramResourceLocationIndexEXT(const Context *context,
                                                 GLenum programInterface,
                                                 const GLchar *name);
 
+// GL_EXT_blend_minmax
+
 // GL_EXT_buffer_storage
 bool ValidateBufferStorageEXT(const Context *context,
                               BufferBinding targetPacked,
@@ -790,6 +806,12 @@ bool ValidateBufferStorageEXT(const Context *context,
 
 // GL_EXT_clip_control
 bool ValidateClipControlEXT(const Context *context, GLenum origin, GLenum depth);
+
+// GL_EXT_clip_cull_distance
+
+// GL_EXT_color_buffer_float
+
+// GL_EXT_color_buffer_half_float
 
 // GL_EXT_copy_image
 bool ValidateCopyImageSubDataEXT(const Context *context,
@@ -932,12 +954,16 @@ bool ValidateNamedBufferStorageExternalEXT(const Context *context,
                                            GLeglClientBufferEXT clientBuffer,
                                            GLbitfield flags);
 
+// GL_EXT_float_blend
+
 // GL_EXT_geometry_shader
 bool ValidateFramebufferTextureEXT(const Context *context,
                                    GLenum target,
                                    GLenum attachment,
                                    TextureID texturePacked,
                                    GLint level);
+
+// GL_EXT_gpu_shader5
 
 // GL_EXT_instanced_arrays
 bool ValidateDrawArraysInstancedEXT(const Context *context,
@@ -1351,6 +1377,12 @@ bool ValidateFramebufferFetchBarrierEXT(const Context *context);
 
 // GL_EXT_shader_io_blocks
 
+// GL_EXT_shader_non_constant_global_initializers
+
+// GL_EXT_shader_texture_lod
+
+// GL_EXT_shadow_samplers
+
 // GL_EXT_tessellation_shader
 bool ValidatePatchParameteriEXT(const Context *context, GLenum pname, GLint value);
 
@@ -1416,9 +1448,17 @@ bool ValidateTexBufferRangeEXT(const Context *context,
 
 // GL_EXT_texture_format_BGRA8888
 
+// GL_EXT_texture_format_sRGB_override
+
+// GL_EXT_texture_norm16
+
+// GL_EXT_texture_rg
+
 // GL_EXT_texture_sRGB_R8
 
 // GL_EXT_texture_sRGB_RG8
+
+// GL_EXT_texture_sRGB_decode
 
 // GL_EXT_texture_storage
 bool ValidateTexStorage1DEXT(const Context *context,
@@ -1439,6 +1479,10 @@ bool ValidateTexStorage3DEXT(const Context *context,
                              GLsizei width,
                              GLsizei height,
                              GLsizei depth);
+
+// GL_EXT_texture_type_2_10_10_10_REV
+
+// GL_EXT_unpack_subimage
 
 // GL_IMG_texture_compression_pvrtc
 
@@ -1502,8 +1546,12 @@ bool ValidatePushDebugGroupKHR(const Context *context,
                                GLsizei length,
                                const GLchar *message);
 
+// GL_KHR_no_error
+
 // GL_KHR_parallel_shader_compile
 bool ValidateMaxShaderCompilerThreadsKHR(const Context *context, GLuint count);
+
+// GL_KHR_robust_buffer_access_behavior
 
 // GL_KHR_texture_compression_astc_hdr
 
@@ -1536,6 +1584,16 @@ bool ValidateBlitFramebufferNV(const Context *context,
                                GLbitfield mask,
                                GLenum filter);
 
+// GL_NV_pixel_buffer_object
+
+// GL_NV_read_depth
+
+// GL_NV_read_stencil
+
+// GL_NV_robustness_video_memory_purge
+
+// GL_NV_shader_noperspective_interpolation
+
 // GL_OES_EGL_image
 bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
                                                   GLenum target,
@@ -1543,6 +1601,10 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
 bool ValidateEGLImageTargetTexture2DOES(const Context *context,
                                         TextureType targetPacked,
                                         GLeglImageOES image);
+
+// GL_OES_EGL_image_external
+
+// GL_OES_EGL_image_external_essl3
 
 // GL_OES_compressed_ETC1_RGB8_texture
 
@@ -1564,7 +1626,11 @@ bool ValidateCopyImageSubDataOES(const Context *context,
                                  GLsizei srcHeight,
                                  GLsizei srcDepth);
 
+// GL_OES_depth24
+
 // GL_OES_depth32
+
+// GL_OES_depth_texture
 
 // GL_OES_draw_buffers_indexed
 bool ValidateBlendEquationSeparateiOES(const Context *context,
@@ -1641,6 +1707,10 @@ bool ValidateDrawTexxOES(const Context *context,
                          GLfixed width,
                          GLfixed height);
 bool ValidateDrawTexxvOES(const Context *context, const GLfixed *coords);
+
+// GL_OES_element_index_uint
+
+// GL_OES_fbo_render_mipmap
 
 // GL_OES_framebuffer_object
 bool ValidateBindFramebufferOES(const Context *context,
@@ -1733,21 +1803,37 @@ bool ValidateWeightPointerOES(const Context *context,
                               GLsizei stride,
                               const void *pointer);
 
+// GL_OES_packed_depth_stencil
+
 // GL_OES_point_size_array
 bool ValidatePointSizePointerOES(const Context *context,
                                  VertexAttribType typePacked,
                                  GLsizei stride,
                                  const void *pointer);
 
+// GL_OES_point_sprite
+
 // GL_OES_query_matrix
 bool ValidateQueryMatrixxOES(const Context *context,
                              const GLfixed *mantissa,
                              const GLint *exponent);
 
+// GL_OES_rgb8_rgba8
+
 // GL_OES_sample_shading
 bool ValidateMinSampleShadingOES(const Context *context, GLfloat value);
 
+// GL_OES_sample_variables
+
+// GL_OES_shader_image_atomic
+
 // GL_OES_shader_io_blocks
+
+// GL_OES_shader_multisample_interpolation
+
+// GL_OES_standard_derivatives
+
+// GL_OES_surfaceless_context
 
 // GL_OES_texture_3D
 bool ValidateCompressedTexImage3DOES(const Context *context,
@@ -1859,6 +1945,8 @@ bool ValidateTexBufferRangeOES(const Context *context,
                                GLintptr offset,
                                GLsizeiptr size);
 
+// GL_OES_texture_compression_astc
+
 // GL_OES_texture_cube_map
 bool ValidateGetTexGenfvOES(const Context *context,
                             GLenum coord,
@@ -1881,7 +1969,15 @@ bool ValidateTexGenxvOES(const Context *context, GLenum coord, GLenum pname, con
 
 // GL_OES_texture_cube_map_array
 
+// GL_OES_texture_float
+
+// GL_OES_texture_float_linear
+
 // GL_OES_texture_half_float
+
+// GL_OES_texture_half_float_linear
+
+// GL_OES_texture_npot
 
 // GL_OES_texture_stencil8
 
@@ -1904,6 +2000,10 @@ bool ValidateGenVertexArraysOES(const Context *context,
                                 GLsizei n,
                                 const VertexArrayID *arraysPacked);
 bool ValidateIsVertexArrayOES(const Context *context, VertexArrayID arrayPacked);
+
+// GL_OES_vertex_half_float
+
+// GL_OES_vertex_type_10_10_10_2
 
 // GL_OVR_multiview
 bool ValidateFramebufferTextureMultiviewOVR(const Context *context,

@@ -1,12 +1,12 @@
 {
+  "doc/SupportedExtensions.md":
+    "4e06f9a617d379fe869ac6fa515b1bb2",
   "scripts/cl.xml":
     "f923201d4ea3e1130763b19fa7faa7a2",
   "scripts/egl.xml":
     "013c552e6c523abdcf268268ea47e9fe",
   "scripts/egl_angle_ext.xml":
     "5bcc01462b355d933cf3ada15198fb68",
-  "scripts/gen_proc_table.py":
-    "8336449da7e36f45dd6d70c44add2ebf",
   "scripts/gl.xml":
     "a442a7aeff3a2f0a1fba52ee08089500",
   "scripts/gl_angle_ext.xml":
@@ -15,12 +15,10 @@
     "7e9a66850b966c79f2f4d5036a5bd8b0",
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
-  "src/libGL/proc_table_wgl_autogen.cpp":
-    "2174a66447df2d577184fbe4b96c77e9",
-  "src/libGLESv2/proc_table_cl_autogen.cpp":
-    "ed003b0f041aaaa35b67d3fe07e61f91",
-  "src/libGLESv2/proc_table_egl_autogen.cpp":
-    "a0cefa273843854690e93fd7d3987da0",
-  "src/libOpenCL/libOpenCL_autogen.map":
-    "bc5f5cf48227149ed321258a16eff1d7"
+  "src/libANGLE/gen_extensions.py":
+    "09abdc7e386601ea3b259cd30ec08ea0",
+  "src/libANGLE/gles_extensions_autogen.cpp":
+    "039e36b4e6f02839e380b07fc9cb2855",
+  "src/libANGLE/gles_extensions_autogen.h":
+    "a88430deae68c3fcd045bd22d00033e8"
 }

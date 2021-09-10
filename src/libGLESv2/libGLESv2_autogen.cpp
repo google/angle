@@ -2800,6 +2800,8 @@ void GL_APIENTRY glCopySubTexture3DANGLE(GLuint sourceId,
                                     unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 }
 
+// GL_ANGLE_depth_texture
+
 // GL_ANGLE_framebuffer_blit
 void GL_APIENTRY glBlitFramebufferANGLE(GLint srcX0,
                                         GLint srcY0,
@@ -2990,6 +2992,8 @@ void GL_APIENTRY glMultiDrawElementsInstancedANGLE(GLenum mode,
     return GL_MultiDrawElementsInstancedANGLE(mode, counts, type, indices, instanceCounts,
                                               drawcount);
 }
+
+// GL_ANGLE_pack_reverse_row_order
 
 // GL_ANGLE_program_binary
 
@@ -3658,6 +3662,10 @@ void GL_APIENTRY glImportSemaphoreZirconHandleANGLE(GLuint semaphore,
     return GL_ImportSemaphoreZirconHandleANGLE(semaphore, handleType, handle);
 }
 
+// GL_ANGLE_texture_compression_dxt3
+
+// GL_ANGLE_texture_compression_dxt5
+
 // GL_ANGLE_texture_external_update
 void GL_APIENTRY glTexImage2DExternalANGLE(GLenum target,
                                            GLint level,
@@ -3699,6 +3707,8 @@ void GL_APIENTRY glSampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
     return GL_SampleMaskiANGLE(maskNumber, mask);
 }
 
+// GL_ANGLE_texture_usage
+
 // GL_ANGLE_translated_shader_source
 void GL_APIENTRY glGetTranslatedShaderSourceANGLE(GLuint shader,
                                                   GLsizei bufsize,
@@ -3707,6 +3717,10 @@ void GL_APIENTRY glGetTranslatedShaderSourceANGLE(GLuint shader,
 {
     return GL_GetTranslatedShaderSourceANGLE(shader, bufsize, length, source);
 }
+
+// GL_APPLE_clip_distance
+
+// GL_ARB_sync
 
 // GL_CHROMIUM_bind_uniform_location
 void GL_APIENTRY glBindUniformLocationCHROMIUM(GLuint program, GLint location, const GLchar *name)
@@ -3814,6 +3828,8 @@ GLint GL_APIENTRY glGetProgramResourceLocationIndexEXT(GLuint program,
     return GL_GetProgramResourceLocationIndexEXT(program, programInterface, name);
 }
 
+// GL_EXT_blend_minmax
+
 // GL_EXT_buffer_storage
 void GL_APIENTRY glBufferStorageEXT(GLenum target,
                                     GLsizeiptr size,
@@ -3828,6 +3844,12 @@ void GL_APIENTRY glClipControlEXT(GLenum origin, GLenum depth)
 {
     return GL_ClipControlEXT(origin, depth);
 }
+
+// GL_EXT_clip_cull_distance
+
+// GL_EXT_color_buffer_float
+
+// GL_EXT_color_buffer_half_float
 
 // GL_EXT_copy_image
 void GL_APIENTRY glCopyImageSubDataEXT(GLuint srcName,
@@ -4057,6 +4079,8 @@ void GL_APIENTRY glNamedBufferStorageExternalEXT(GLuint buffer,
     return GL_NamedBufferStorageExternalEXT(buffer, offset, size, clientBuffer, flags);
 }
 
+// GL_EXT_float_blend
+
 // GL_EXT_geometry_shader
 void GL_APIENTRY glFramebufferTextureEXT(GLenum target,
                                          GLenum attachment,
@@ -4065,6 +4089,8 @@ void GL_APIENTRY glFramebufferTextureEXT(GLenum target,
 {
     return GL_FramebufferTextureEXT(target, attachment, texture, level);
 }
+
+// GL_EXT_gpu_shader5
 
 // GL_EXT_instanced_arrays
 void GL_APIENTRY glDrawArraysInstancedEXT(GLenum mode,
@@ -4652,6 +4678,12 @@ void GL_APIENTRY glFramebufferFetchBarrierEXT()
 
 // GL_EXT_shader_io_blocks
 
+// GL_EXT_shader_non_constant_global_initializers
+
+// GL_EXT_shader_texture_lod
+
+// GL_EXT_shadow_samplers
+
 // GL_EXT_tessellation_shader
 void GL_APIENTRY glPatchParameteriEXT(GLenum pname, GLint value)
 {
@@ -4730,9 +4762,17 @@ void GL_APIENTRY glTexBufferRangeEXT(GLenum target,
 
 // GL_EXT_texture_format_BGRA8888
 
+// GL_EXT_texture_format_sRGB_override
+
+// GL_EXT_texture_norm16
+
+// GL_EXT_texture_rg
+
 // GL_EXT_texture_sRGB_R8
 
 // GL_EXT_texture_sRGB_RG8
+
+// GL_EXT_texture_sRGB_decode
 
 // GL_EXT_texture_storage
 void GL_APIENTRY glTexStorage1DEXT(GLenum target,
@@ -4761,6 +4801,10 @@ void GL_APIENTRY glTexStorage3DEXT(GLenum target,
 {
     return GL_TexStorage3DEXT(target, levels, internalformat, width, height, depth);
 }
+
+// GL_EXT_texture_type_2_10_10_10_REV
+
+// GL_EXT_unpack_subimage
 
 // GL_IMG_texture_compression_pvrtc
 
@@ -4856,11 +4900,15 @@ void GL_APIENTRY glPushDebugGroupKHR(GLenum source,
     return GL_PushDebugGroupKHR(source, id, length, message);
 }
 
+// GL_KHR_no_error
+
 // GL_KHR_parallel_shader_compile
 void GL_APIENTRY glMaxShaderCompilerThreadsKHR(GLuint count)
 {
     return GL_MaxShaderCompilerThreadsKHR(count);
 }
+
+// GL_KHR_robust_buffer_access_behavior
 
 // GL_KHR_texture_compression_astc_hdr
 
@@ -4920,6 +4968,16 @@ void GL_APIENTRY glBlitFramebufferNV(GLint srcX0,
                                 filter);
 }
 
+// GL_NV_pixel_buffer_object
+
+// GL_NV_read_depth
+
+// GL_NV_read_stencil
+
+// GL_NV_robustness_video_memory_purge
+
+// GL_NV_shader_noperspective_interpolation
+
 // GL_OES_EGL_image
 void GL_APIENTRY glEGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
 {
@@ -4930,6 +4988,10 @@ void GL_APIENTRY glEGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image
 {
     return GL_EGLImageTargetTexture2DOES(target, image);
 }
+
+// GL_OES_EGL_image_external
+
+// GL_OES_EGL_image_external_essl3
 
 // GL_OES_compressed_ETC1_RGB8_texture
 
@@ -4955,7 +5017,11 @@ void GL_APIENTRY glCopyImageSubDataOES(GLuint srcName,
                                   srcDepth);
 }
 
+// GL_OES_depth24
+
 // GL_OES_depth32
+
+// GL_OES_depth_texture
 
 // GL_OES_draw_buffers_indexed
 void GL_APIENTRY glBlendEquationSeparateiOES(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
@@ -5071,6 +5137,10 @@ void GL_APIENTRY glDrawTexxvOES(const GLfixed *coords)
 {
     return GL_DrawTexxvOES(coords);
 }
+
+// GL_OES_element_index_uint
+
+// GL_OES_fbo_render_mipmap
 
 // GL_OES_framebuffer_object
 void GL_APIENTRY glBindFramebufferOES(GLenum target, GLuint framebuffer)
@@ -5228,11 +5298,15 @@ void GL_APIENTRY glWeightPointerOES(GLint size, GLenum type, GLsizei stride, con
     return GL_WeightPointerOES(size, type, stride, pointer);
 }
 
+// GL_OES_packed_depth_stencil
+
 // GL_OES_point_size_array
 void GL_APIENTRY glPointSizePointerOES(GLenum type, GLsizei stride, const void *pointer)
 {
     return GL_PointSizePointerOES(type, stride, pointer);
 }
+
+// GL_OES_point_sprite
 
 // GL_OES_query_matrix
 GLbitfield GL_APIENTRY glQueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
@@ -5240,13 +5314,25 @@ GLbitfield GL_APIENTRY glQueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
     return GL_QueryMatrixxOES(mantissa, exponent);
 }
 
+// GL_OES_rgb8_rgba8
+
 // GL_OES_sample_shading
 void GL_APIENTRY glMinSampleShadingOES(GLfloat value)
 {
     return GL_MinSampleShadingOES(value);
 }
 
+// GL_OES_sample_variables
+
+// GL_OES_shader_image_atomic
+
 // GL_OES_shader_io_blocks
+
+// GL_OES_shader_multisample_interpolation
+
+// GL_OES_standard_derivatives
+
+// GL_OES_surfaceless_context
 
 // GL_OES_texture_3D
 void GL_APIENTRY glCompressedTexImage3DOES(GLenum target,
@@ -5389,6 +5475,8 @@ void GL_APIENTRY glTexBufferRangeOES(GLenum target,
     return GL_TexBufferRangeOES(target, internalformat, buffer, offset, size);
 }
 
+// GL_OES_texture_compression_astc
+
 // GL_OES_texture_cube_map
 void GL_APIENTRY glGetTexGenfvOES(GLenum coord, GLenum pname, GLfloat *params)
 {
@@ -5437,7 +5525,15 @@ void GL_APIENTRY glTexGenxvOES(GLenum coord, GLenum pname, const GLfixed *params
 
 // GL_OES_texture_cube_map_array
 
+// GL_OES_texture_float
+
+// GL_OES_texture_float_linear
+
 // GL_OES_texture_half_float
+
+// GL_OES_texture_half_float_linear
+
+// GL_OES_texture_npot
 
 // GL_OES_texture_stencil8
 
@@ -5474,6 +5570,10 @@ GLboolean GL_APIENTRY glIsVertexArrayOES(GLuint array)
 {
     return GL_IsVertexArrayOES(array);
 }
+
+// GL_OES_vertex_half_float
+
+// GL_OES_vertex_type_10_10_10_2
 
 // GL_OVR_multiview
 void GL_APIENTRY glFramebufferTextureMultiviewOVR(GLenum target,

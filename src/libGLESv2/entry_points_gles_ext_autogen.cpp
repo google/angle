@@ -298,6 +298,8 @@ void GL_APIENTRY GL_CopySubTexture3DANGLE(GLuint sourceId,
     }
 }
 
+// GL_ANGLE_depth_texture
+
 // GL_ANGLE_framebuffer_blit
 void GL_APIENTRY GL_BlitFramebufferANGLE(GLint srcX0,
                                          GLint srcY0,
@@ -941,6 +943,8 @@ void GL_APIENTRY GL_MultiDrawElementsInstancedANGLE(GLenum mode,
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_ANGLE_pack_reverse_row_order
 
 // GL_ANGLE_program_binary
 
@@ -3231,6 +3235,10 @@ void GL_APIENTRY GL_ImportSemaphoreZirconHandleANGLE(GLuint semaphore,
     }
 }
 
+// GL_ANGLE_texture_compression_dxt3
+
+// GL_ANGLE_texture_compression_dxt5
+
 // GL_ANGLE_texture_external_update
 void GL_APIENTRY GL_TexImage2DExternalANGLE(GLenum target,
                                             GLint level,
@@ -3384,6 +3392,8 @@ void GL_APIENTRY GL_SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
 
 // GetTexLevelParameterivANGLE is already defined.
 
+// GL_ANGLE_texture_usage
+
 // GL_ANGLE_translated_shader_source
 void GL_APIENTRY GL_GetTranslatedShaderSourceANGLE(GLuint shader,
                                                    GLsizei bufsize,
@@ -3415,6 +3425,23 @@ void GL_APIENTRY GL_GetTranslatedShaderSourceANGLE(GLuint shader,
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_APPLE_clip_distance
+
+// GL_ARB_sync
+// ClientWaitSync is already defined.
+
+// DeleteSync is already defined.
+
+// FenceSync is already defined.
+
+// GetInteger64v is already defined.
+
+// GetSynciv is already defined.
+
+// IsSync is already defined.
+
+// WaitSync is already defined.
 
 // GL_CHROMIUM_bind_uniform_location
 void GL_APIENTRY GL_BindUniformLocationCHROMIUM(GLuint program, GLint location, const GLchar *name)
@@ -3813,6 +3840,8 @@ GLint GL_APIENTRY GL_GetProgramResourceLocationIndexEXT(GLuint program,
     return returnValue;
 }
 
+// GL_EXT_blend_minmax
+
 // GL_EXT_buffer_storage
 void GL_APIENTRY GL_BufferStorageEXT(GLenum target,
                                      GLsizeiptr size,
@@ -3868,6 +3897,12 @@ void GL_APIENTRY GL_ClipControlEXT(GLenum origin, GLenum depth)
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_EXT_clip_cull_distance
+
+// GL_EXT_color_buffer_float
+
+// GL_EXT_color_buffer_half_float
 
 // GL_EXT_copy_image
 void GL_APIENTRY GL_CopyImageSubDataEXT(GLuint srcName,
@@ -4817,6 +4852,8 @@ void GL_APIENTRY GL_NamedBufferStorageExternalEXT(GLuint buffer,
     }
 }
 
+// GL_EXT_float_blend
+
 // GL_EXT_geometry_shader
 void GL_APIENTRY GL_FramebufferTextureEXT(GLenum target,
                                           GLenum attachment,
@@ -4848,6 +4885,8 @@ void GL_APIENTRY GL_FramebufferTextureEXT(GLenum target,
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_EXT_gpu_shader5
 
 // GL_EXT_instanced_arrays
 void GL_APIENTRY GL_DrawArraysInstancedEXT(GLenum mode,
@@ -7258,6 +7297,12 @@ void GL_APIENTRY GL_FramebufferFetchBarrierEXT()
 
 // GL_EXT_shader_io_blocks
 
+// GL_EXT_shader_non_constant_global_initializers
+
+// GL_EXT_shader_texture_lod
+
+// GL_EXT_shadow_samplers
+
 // GL_EXT_tessellation_shader
 void GL_APIENTRY GL_PatchParameteriEXT(GLenum pname, GLint value)
 {
@@ -7570,9 +7615,17 @@ void GL_APIENTRY GL_TexBufferRangeEXT(GLenum target,
 
 // GL_EXT_texture_format_BGRA8888
 
+// GL_EXT_texture_format_sRGB_override
+
+// GL_EXT_texture_norm16
+
+// GL_EXT_texture_rg
+
 // GL_EXT_texture_sRGB_R8
 
 // GL_EXT_texture_sRGB_RG8
+
+// GL_EXT_texture_sRGB_decode
 
 // GL_EXT_texture_storage
 void GL_APIENTRY GL_TexStorage1DEXT(GLenum target,
@@ -7669,6 +7722,10 @@ void GL_APIENTRY GL_TexStorage3DEXT(GLenum target,
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_EXT_texture_type_2_10_10_10_REV
+
+// GL_EXT_unpack_subimage
 
 // GL_IMG_texture_compression_pvrtc
 
@@ -8019,6 +8076,8 @@ void GL_APIENTRY GL_PushDebugGroupKHR(GLenum source,
     }
 }
 
+// GL_KHR_no_error
+
 // GL_KHR_parallel_shader_compile
 void GL_APIENTRY GL_MaxShaderCompilerThreadsKHR(GLuint count)
 {
@@ -8041,6 +8100,8 @@ void GL_APIENTRY GL_MaxShaderCompilerThreadsKHR(GLuint count)
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_KHR_robust_buffer_access_behavior
 
 // GL_KHR_texture_compression_astc_hdr
 
@@ -8267,6 +8328,16 @@ void GL_APIENTRY GL_BlitFramebufferNV(GLint srcX0,
     }
 }
 
+// GL_NV_pixel_buffer_object
+
+// GL_NV_read_depth
+
+// GL_NV_read_stencil
+
+// GL_NV_robustness_video_memory_purge
+
+// GL_NV_shader_noperspective_interpolation
+
 // GL_OES_EGL_image
 void GL_APIENTRY GL_EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
 {
@@ -8316,6 +8387,10 @@ void GL_APIENTRY GL_EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES imag
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_OES_EGL_image_external
+
+// GL_OES_EGL_image_external_essl3
 
 // GL_OES_compressed_ETC1_RGB8_texture
 
@@ -8370,7 +8445,11 @@ void GL_APIENTRY GL_CopyImageSubDataOES(GLuint srcName,
     }
 }
 
+// GL_OES_depth24
+
 // GL_OES_depth32
+
+// GL_OES_depth_texture
 
 // GL_OES_draw_buffers_indexed
 void GL_APIENTRY GL_BlendEquationSeparateiOES(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
@@ -8867,6 +8946,10 @@ void GL_APIENTRY GL_DrawTexxvOES(const GLfixed *coords)
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_OES_element_index_uint
+
+// GL_OES_fbo_render_mipmap
 
 // GL_OES_framebuffer_object
 void GL_APIENTRY GL_BindFramebufferOES(GLenum target, GLuint framebuffer)
@@ -9576,6 +9659,8 @@ void GL_APIENTRY GL_WeightPointerOES(GLint size, GLenum type, GLsizei stride, co
     }
 }
 
+// GL_OES_packed_depth_stencil
+
 // GL_OES_point_size_array
 void GL_APIENTRY GL_PointSizePointerOES(GLenum type, GLsizei stride, const void *pointer)
 {
@@ -9601,6 +9686,8 @@ void GL_APIENTRY GL_PointSizePointerOES(GLenum type, GLsizei stride, const void 
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GL_OES_point_sprite
 
 // GL_OES_query_matrix
 GLbitfield GL_APIENTRY GL_QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
@@ -9634,6 +9721,8 @@ GLbitfield GL_APIENTRY GL_QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
     return returnValue;
 }
 
+// GL_OES_rgb8_rgba8
+
 // GL_OES_sample_shading
 void GL_APIENTRY GL_MinSampleShadingOES(GLfloat value)
 {
@@ -9657,7 +9746,17 @@ void GL_APIENTRY GL_MinSampleShadingOES(GLfloat value)
     }
 }
 
+// GL_OES_sample_variables
+
+// GL_OES_shader_image_atomic
+
 // GL_OES_shader_io_blocks
+
+// GL_OES_shader_multisample_interpolation
+
+// GL_OES_standard_derivatives
+
+// GL_OES_surfaceless_context
 
 // GL_OES_texture_3D
 void GL_APIENTRY GL_CompressedTexImage3DOES(GLenum target,
@@ -10174,6 +10273,8 @@ void GL_APIENTRY GL_TexBufferRangeOES(GLenum target,
     }
 }
 
+// GL_OES_texture_compression_astc
+
 // GL_OES_texture_cube_map
 void GL_APIENTRY GL_GetTexGenfvOES(GLenum coord, GLenum pname, GLfloat *params)
 {
@@ -10399,7 +10500,15 @@ void GL_APIENTRY GL_TexGenxvOES(GLenum coord, GLenum pname, const GLfixed *param
 
 // GL_OES_texture_cube_map_array
 
+// GL_OES_texture_float
+
+// GL_OES_texture_float_linear
+
 // GL_OES_texture_half_float
+
+// GL_OES_texture_half_float_linear
+
+// GL_OES_texture_npot
 
 // GL_OES_texture_stencil8
 
@@ -10543,6 +10652,10 @@ GLboolean GL_APIENTRY GL_IsVertexArrayOES(GLuint array)
     }
     return returnValue;
 }
+
+// GL_OES_vertex_half_float
+
+// GL_OES_vertex_type_10_10_10_2
 
 // GL_OVR_multiview
 void GL_APIENTRY GL_FramebufferTextureMultiviewOVR(GLenum target,

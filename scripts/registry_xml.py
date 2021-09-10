@@ -10,6 +10,7 @@
 # List of supported extensions. Add to this list to enable new extensions
 # available in gl.xml.
 
+import difflib
 import os
 import sys
 import xml.etree.ElementTree as etree
@@ -26,63 +27,72 @@ xml_inputs = [
     'registry_xml.py',
 ]
 
-angle_extensions = [
-    # ANGLE extensions
-    "GL_CHROMIUM_bind_uniform_location",
-    "GL_CHROMIUM_framebuffer_mixed_samples",
-    "GL_CHROMIUM_path_rendering",
-    "GL_CHROMIUM_copy_texture",
-    "GL_CHROMIUM_copy_compressed_texture",
-    "GL_CHROMIUM_lose_context",
-    "GL_ANGLE_copy_texture_3d",
-    "GL_ANGLE_get_image",
-    "GL_ANGLE_get_serialized_context_string",
-    "GL_ANGLE_get_tex_level_parameter",
-    "GL_ANGLE_program_binary",
-    "GL_ANGLE_request_extension",
-    "GL_ANGLE_robust_client_memory",
-    "GL_ANGLE_texture_external_update",
+# Notes on categories of extensions:
+# 'Requestable' extensions are extensions that can be enabled with ANGLE_request_extension
+# 'ES-Only' extensions are always implicitly enabled.
+# 'Toggleable' extensions are like 'Requestable' except they can be also disabled.
+# 'ANGLE' extensions are extensions that are not yet officially upstreamed to Khronos.
+# We document those extensions in gl_angle_ext.xml instead of the canonical gl.xml.
+
+angle_toggleable_extensions = [
+    "GL_ANGLE_texture_rectangle",
 ]
 
-gles1_extensions = [
-    # ES1 (Possibly the min set of extensions needed by Android)
-    "GL_OES_draw_texture",
-    "GL_OES_framebuffer_object",
-    "GL_OES_matrix_palette",
-    "GL_OES_point_size_array",
-    "GL_OES_query_matrix",
-    "GL_OES_texture_cube_map",
-]
-
-gles_extensions = [
-    # ES2+
+angle_requestable_extensions = [
     "GL_ANGLE_base_vertex_base_instance",
-    "GL_ANGLE_framebuffer_blit",
+    "GL_ANGLE_compressed_texture_etc",
+    "GL_ANGLE_copy_texture_3d",
     "GL_ANGLE_framebuffer_multisample",
-    "GL_ANGLE_instanced_arrays",
+    "GL_ANGLE_get_image",
+    "GL_ANGLE_get_tex_level_parameter",
+    "GL_ANGLE_lossy_etc_decode",
     "GL_ANGLE_memory_object_flags",
     "GL_ANGLE_memory_object_fuchsia",
+    "GL_ANGLE_memory_size",
     "GL_ANGLE_multi_draw",
+    "GL_ANGLE_multiview_multisample",
     "GL_ANGLE_provoking_vertex",
     "GL_ANGLE_semaphore_fuchsia",
+    "GL_ANGLE_texture_compression_dxt3",
+    "GL_ANGLE_texture_compression_dxt5",
+    "GL_ANGLE_texture_external_update",
     "GL_ANGLE_texture_multisample",
-    "GL_ANGLE_translated_shader_source",
-    "GL_KHR_blend_equation_advanced",
+    "GL_ANGLE_yuv_internal_format",
+    "GL_CHROMIUM_color_buffer_float_rgb",
+    "GL_CHROMIUM_color_buffer_float_rgba",
+    "GL_CHROMIUM_lose_context",
+    "GL_CHROMIUM_sync_query",
+    "GL_CHROMIUM_texture_filtering_hint",
+]
+
+gles_requestable_extensions = [
+    "GL_ANGLE_framebuffer_blit",
+    "GL_ANGLE_instanced_arrays",
+    "GL_ANGLE_pack_reverse_row_order",
+    "GL_ANGLE_texture_usage",
+    "GL_APPLE_clip_distance",
+    "GL_ARB_sync",
     "GL_EXT_blend_func_extended",
+    "GL_EXT_blend_minmax",
     "GL_EXT_buffer_storage",
-    "GL_EXT_copy_image",
     "GL_EXT_clip_control",
-    "GL_EXT_debug_label",
-    "GL_EXT_debug_marker",
-    "GL_EXT_discard_framebuffer",
+    "GL_EXT_clip_cull_distance",
+    "GL_EXT_color_buffer_float",
+    "GL_EXT_color_buffer_half_float",
+    "GL_EXT_compressed_ETC1_RGB8_sub_texture",
+    "GL_EXT_copy_image",
     "GL_EXT_disjoint_timer_query",
     "GL_EXT_draw_buffers",
     "GL_EXT_draw_buffers_indexed",
     "GL_EXT_draw_elements_base_vertex",
     "GL_EXT_EGL_image_array",
+    "GL_EXT_EGL_image_external_wrap_modes",
     "GL_EXT_EGL_image_storage",
     "GL_EXT_external_buffer",
+    "GL_EXT_float_blend",
+    "GL_EXT_frag_depth",
     "GL_EXT_geometry_shader",
+    "GL_EXT_gpu_shader5",
     "GL_EXT_instanced_arrays",
     "GL_EXT_map_buffer_range",
     "GL_EXT_memory_object",
@@ -90,18 +100,18 @@ gles_extensions = [
     "GL_EXT_multisampled_render_to_texture",
     "GL_EXT_multisampled_render_to_texture2",
     "GL_EXT_occlusion_query_boolean",
-    "GL_EXT_primitive_bounding_box",
     "GL_EXT_protected_textures",
     "GL_EXT_pvrtc_sRGB",
     "GL_EXT_read_format_bgra",
-    "GL_EXT_robustness",
     "GL_EXT_semaphore",
     "GL_EXT_semaphore_fd",
     "GL_EXT_separate_shader_objects",
     "GL_EXT_shader_framebuffer_fetch_non_coherent",
     "GL_EXT_shader_io_blocks",
+    "GL_EXT_shader_non_constant_global_initializers",
+    "GL_EXT_shader_texture_lod",
+    "GL_EXT_shadow_samplers",
     "GL_EXT_sRGB",
-    "GL_EXT_sRGB_write_control",
     "GL_EXT_tessellation_shader",
     "GL_EXT_texture_border_clamp",
     "GL_EXT_texture_buffer",
@@ -113,44 +123,150 @@ gles_extensions = [
     "GL_EXT_texture_cube_map_array",
     "GL_EXT_texture_filter_anisotropic",
     "GL_EXT_texture_format_BGRA8888",
-    "GL_EXT_texture_storage",
+    "GL_EXT_texture_norm16",
+    "GL_EXT_texture_rg",
     "GL_EXT_texture_sRGB_R8",
     "GL_EXT_texture_sRGB_RG8",
+    "GL_EXT_texture_storage",
+    "GL_EXT_texture_type_2_10_10_10_REV",
+    "GL_EXT_unpack_subimage",
     "GL_EXT_YUV_target",
     "GL_IMG_texture_compression_pvrtc",
     "GL_IMG_texture_compression_pvrtc2",
-    "GL_KHR_debug",
     "GL_KHR_parallel_shader_compile",
-    "GL_KHR_texture_compression_astc_ldr",
     "GL_KHR_texture_compression_astc_hdr",
+    "GL_KHR_texture_compression_astc_ldr",
     "GL_KHR_texture_compression_astc_sliced_3d",
-    "GL_NV_fence",
+    "GL_NV_depth_buffer_float2",
+    "GL_NV_EGL_stream_consumer_external",
     "GL_NV_framebuffer_blit",
+    "GL_NV_pack_subimage",
+    "GL_NV_pixel_buffer_object",
+    "GL_NV_read_depth",
+    "GL_NV_read_stencil",
+    "GL_NV_shader_noperspective_interpolation",
+    "GL_OES_compressed_EAC_R11_signed_texture",
+    "GL_OES_compressed_EAC_R11_unsigned_texture",
+    "GL_OES_compressed_EAC_RG11_signed_texture",
+    "GL_OES_compressed_EAC_RG11_unsigned_texture",
     "GL_OES_compressed_ETC1_RGB8_texture",
-    "GL_EXT_compressed_ETC1_RGB8_sub_texture",
+    "GL_OES_compressed_ETC2_punchthroughA_RGBA8_texture",
+    "GL_OES_compressed_ETC2_punchthroughA_sRGB8_alpha_texture",
+    "GL_OES_compressed_ETC2_RGB8_texture",
+    "GL_OES_compressed_ETC2_RGBA8_texture",
+    "GL_OES_compressed_ETC2_sRGB8_alpha8_texture",
+    "GL_OES_compressed_ETC2_sRGB8_texture",
     "GL_OES_copy_image",
-    "GL_OES_depth32",
+    "GL_OES_depth_texture_cube_map",
     "GL_OES_draw_buffers_indexed",
     "GL_OES_draw_elements_base_vertex",
     "GL_OES_EGL_image",
+    "GL_OES_EGL_image_external",
+    "GL_OES_EGL_image_external_essl3",
+    "GL_OES_element_index_uint",
+    "GL_OES_fbo_render_mipmap",
     "GL_OES_geometry_shader",
     "GL_OES_get_program_binary",
     "GL_OES_mapbuffer",
+    "GL_OES_rgb8_rgba8",
     "GL_OES_sample_shading",
+    "GL_OES_sample_variables",
+    "GL_OES_shader_image_atomic",
     "GL_OES_shader_io_blocks",
+    "GL_OES_shader_multisample_interpolation",
+    "GL_OES_standard_derivatives",
     "GL_OES_texture_3D",
     "GL_OES_texture_border_clamp",
     "GL_OES_texture_buffer",
+    "GL_OES_texture_compression_astc",
     "GL_OES_texture_cube_map_array",
+    "GL_OES_texture_float",
+    "GL_OES_texture_float_linear",
     "GL_OES_texture_half_float",
+    "GL_OES_texture_half_float_linear",
+    "GL_OES_texture_npot",
     "GL_OES_texture_stencil8",
     "GL_OES_texture_storage_multisample_2d_array",
     "GL_OES_vertex_array_object",
+    "GL_OES_vertex_half_float",
+    "GL_OES_vertex_type_10_10_10_2",
     "GL_OVR_multiview",
     "GL_OVR_multiview2",
+    "GL_WEBGL_video_texture",
 ]
 
+angle_es_only_extensions = [
+    "GL_ANGLE_client_arrays",
+    "GL_ANGLE_get_serialized_context_string",
+    "GL_ANGLE_program_binary",
+    "GL_ANGLE_program_cache_control",
+    "GL_ANGLE_relaxed_vertex_attribute_type",
+    "GL_ANGLE_request_extension",
+    "GL_ANGLE_robust_client_memory",
+    "GL_ANGLE_robust_resource_initialization",
+    "GL_ANGLE_webgl_compatibility",
+    "GL_CHROMIUM_bind_generates_resource",
+    "GL_CHROMIUM_bind_uniform_location",
+    "GL_CHROMIUM_copy_compressed_texture",
+    "GL_CHROMIUM_copy_texture",
+    "GL_CHROMIUM_framebuffer_mixed_samples",
+]
+
+gles_es_only_extensions = [
+    "GL_ANGLE_depth_texture",
+    "GL_ANGLE_translated_shader_source",
+    "GL_EXT_debug_label",
+    "GL_EXT_debug_marker",
+    "GL_EXT_discard_framebuffer",
+    "GL_EXT_multisample_compatibility",
+    "GL_EXT_primitive_bounding_box",
+    "GL_EXT_robustness",
+    "GL_EXT_sRGB_write_control",
+    "GL_EXT_texture_format_sRGB_override",
+    "GL_EXT_texture_sRGB_decode",
+    "GL_KHR_blend_equation_advanced",
+    "GL_KHR_debug",
+    "GL_KHR_no_error",
+    "GL_KHR_robust_buffer_access_behavior",
+    "GL_NV_fence",
+    "GL_NV_robustness_video_memory_purge",
+    "GL_OES_depth24",
+    "GL_OES_depth32",
+    "GL_OES_depth_texture",
+    "GL_OES_EGL_sync",
+    "GL_OES_packed_depth_stencil",
+    "GL_OES_surfaceless_context",
+]
+
+# ES1 (Possibly the min set of extensions needed by Android)
+gles1_extensions = [
+    "GL_OES_draw_texture",
+    "GL_OES_framebuffer_object",
+    "GL_OES_matrix_palette",
+    "GL_OES_point_size_array",
+    "GL_OES_point_sprite",
+    "GL_OES_query_matrix",
+    "GL_OES_texture_cube_map",
+]
+
+
+def check_sorted(name, l):
+    unidiff = difflib.unified_diff(l, sorted(l, key=str.casefold), 'unsorted', 'sorted')
+    diff_lines = list(unidiff)
+    assert not diff_lines, '\n\nPlease sort "%s":\n%s' % (name, '\n'.join(diff_lines))
+
+
+angle_extensions = angle_requestable_extensions + angle_es_only_extensions + angle_toggleable_extensions
+gles_extensions = gles_requestable_extensions + gles_es_only_extensions
 supported_extensions = sorted(angle_extensions + gles1_extensions + gles_extensions)
+
+assert len(supported_extensions) == len(set(supported_extensions)), 'Duplicates in extension list'
+check_sorted('angle_requestable_extensions', angle_requestable_extensions)
+check_sorted('angle_es_only_extensions', angle_es_only_extensions)
+check_sorted('angle_toggleable_extensions', angle_toggleable_extensions)
+check_sorted('gles_requestable_extensions', gles_requestable_extensions)
+check_sorted('gles_es_only_extensions', gles_es_only_extensions)
+check_sorted('gles_extensions', gles1_extensions)
 
 supported_egl_extensions = [
     "EGL_ANDROID_blob_cache",
@@ -205,6 +321,8 @@ supported_egl_extensions = [
     "EGL_NV_post_sub_buffer",
     "EGL_NV_stream_consumer_gltexture_yuv",
 ]
+
+check_sorted('supported_egl_extensions', supported_egl_extensions)
 
 supported_cl_extensions = [
     # Since OpenCL 1.1
@@ -352,7 +470,8 @@ class RegistryXML:
         self.all_cmd_names.add_commands(annotation, commands)
         self.commands[annotation] = commands
 
-    def _ClassifySupport(self, supported):
+    def _ClassifySupport(self, extension):
+        supported = extension.attrib['supported']
         if 'gles2' in supported:
             return 'gl2ext'
         elif 'gles1' in supported:
@@ -364,7 +483,8 @@ class RegistryXML:
         elif 'cl' in supported:
             return 'clext'
         else:
-            assert False
+            assert False, 'Cannot classify support for %s: %s' % (extension.attrib['name'],
+                                                                  supported)
             return 'unknown'
 
     def AddExtensionCommands(self, supported_extensions, apis):
@@ -379,7 +499,7 @@ class RegistryXML:
             if not extension_name in supported_extensions:
                 continue
 
-            ext_annotations[extension_name] = self._ClassifySupport(extension.attrib['supported'])
+            ext_annotations[extension_name] = self._ClassifySupport(extension)
 
             ext_cmd_names = []
 
