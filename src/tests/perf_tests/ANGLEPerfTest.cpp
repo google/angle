@@ -461,7 +461,7 @@ double ANGLEPerfTest::printResults()
     double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
     TestSuite::GetInstance()->addHistogramSample(mName + mBackend, mStory,
                                                  secondsPerIteration * kMilliSecondsPerSecond,
-                                                 "ms_smallerIsBetter");
+                                                 "msBestFitFormat_smallerIsBetter");
     return retValue;
 }
 
