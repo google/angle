@@ -18,8 +18,7 @@ class SymbolEnv;
 
 // Adds explicit type casts into the AST where casting is done implicitly.
 ANGLE_NO_DISCARD bool ConvertUnsupportedConstructorsToFunctionCalls(TCompiler &compiler,
-                                                                    TIntermBlock &root,
-                                                                    SymbolEnv &symbolEnv);
+                                                                    TIntermBlock &root);
 
 }  // namespace sh
 

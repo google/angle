@@ -1187,7 +1187,7 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
-    if (!ConvertUnsupportedConstructorsToFunctionCalls(*this, *root, symbolEnv))
+    if (!ConvertUnsupportedConstructorsToFunctionCalls(*this, *root))
     {
         return false;
     }

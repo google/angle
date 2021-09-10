@@ -9,7 +9,7 @@
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/tree_util/FindFunction.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
-#include "compiler/translator/tree_util/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermRebuild.h"
 
 using namespace sh;
 
@@ -172,36 +172,34 @@ void AppendMatrixFromMatrixArgument(const TType &type,
     }
 }
 
-class Traverser : public TIntermTraverser
+class Rebuild : public TIntermRebuild
 {
   public:
-    explicit Traverser(TSymbolTable &symbolTable)
-        : TIntermTraverser(true, false, false, &symbolTable)
-    {}
-    bool visitAggregate(Visit visit, TIntermAggregate *node) override
+    explicit Rebuild(TCompiler &compiler) : TIntermRebuild(compiler, false, true) {}
+    PostResult visitAggregatePost(TIntermAggregate &node) override
     {
-        if (!node->isConstructor())
+        if (!node.isConstructor())
         {
-            return true;
+            return node;
         }
 
-        TIntermSequence &arguments = *node->getSequence();
+        TIntermSequence &arguments = *node.getSequence();
         if (arguments.empty())
         {
-            return true;
+            return node;
         }
 
-        const TType &type     = node->getType();
+        const TType &type     = node.getType();
         const TType &arg0Type = arguments[0]->getAsTyped()->getType();
 
         if (!type.isScalar() && !type.isVector() && !type.isMatrix())
         {
-            return true;
+            return node;
         }
 
         if (type.isArray())
         {
-            return true;
+            return node;
         }
 
         // check for type_ctor(sameType)
@@ -210,7 +208,7 @@ class Traverser : public TIntermTraverser
         // matN(matN) -> passthrough
         if (arguments.size() == 1 && arg0Type == type)
         {
-            return true;
+            return node;
         }
 
         // The following are simple casts:
@@ -231,7 +229,7 @@ class Traverser : public TIntermTraverser
             type.getCols() == arg0Type.getCols() && type.getRows() == arg0Type.getRows();
         if (isSingleScalarCast || isSingleVectorCast || isSingleMatrixCast)
         {
-            return true;
+            return node;
         }
 
         // Cases we need to handle:
@@ -247,7 +245,7 @@ class Traverser : public TIntermTraverser
 
         // Build a function and pass all the constructor's arguments to it.
         TIntermBlock *body  = new TIntermBlock;
-        TFunction *function = new TFunction(mSymbolTable, ImmutableString(""),
+        TFunction *function = new TFunction(&mSymbolTable, ImmutableString(""),
                                             SymbolType::AngleInternal, &type, true);
 
         for (size_t i = 0; i < arguments.size(); ++i)
@@ -256,7 +254,7 @@ class Traverser : public TIntermTraverser
             TType *argType    = new TType(arg.getBasicType(), arg.getPrecision(), EvqParamIn,
                                        static_cast<unsigned char>(arg.getNominalSize()),
                                        static_cast<unsigned char>(arg.getSecondarySize()));
-            TVariable *var    = CreateTempVariable(mSymbolTable, argType);
+            TVariable *var    = CreateTempVariable(&mSymbolTable, argType);
             function->addParameter(var);
         }
 
@@ -306,20 +304,24 @@ class Traverser : public TIntermTraverser
         mFunctionDefs.push_back(functionDefinition);
 
         TIntermTyped *functionCall = TIntermAggregate::CreateFunctionCall(*function, &arguments);
-        queueReplacement(functionCall, OriginalNode::IS_DROPPED);
 
-        return true;
+        return *functionCall;
     }
 
-    bool update(TCompiler &compiler, TIntermBlock &root)
+    bool rewrite(TIntermBlock &root)
     {
+        if (!rebuildInPlace(root))
+        {
+            return true;
+        }
+
         size_t firstFunctionIndex = FindFirstFunctionDefinitionIndex(&root);
         for (TIntermFunctionDefinition *functionDefinition : mFunctionDefs)
         {
             root.insertChildNodes(firstFunctionIndex, TIntermSequence({functionDefinition}));
         }
 
-        return updateTree(&compiler, &root);
+        return mCompiler.validateAST(&root);
     }
 
   private:
@@ -328,11 +330,7 @@ class Traverser : public TIntermTraverser
 
 }  // anonymous namespace
 
-bool sh::ConvertUnsupportedConstructorsToFunctionCalls(TCompiler &compiler,
-                                                       TIntermBlock &root,
-                                                       SymbolEnv &symbolEnv)
+bool sh::ConvertUnsupportedConstructorsToFunctionCalls(TCompiler &compiler, TIntermBlock &root)
 {
-    Traverser traverser(compiler.getSymbolTable());
-    root.traverse(&traverser);
-    return traverser.update(compiler, root);
+    return Rebuild(compiler).rewrite(root);
 }
