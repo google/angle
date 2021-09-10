@@ -172,6 +172,14 @@ def _save_extra_output_files(args, test_results, histograms):
         out_file.write(json.dumps(histograms.AsDicts(), indent=2))
 
 
+def _split_samples(tests, sample_count):
+    split_tests = []
+    for test in tests:
+        for sample_index in range(sample_count):
+            split_tests += [(test, sample_index, 1)]
+    return split_tests
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--isolated-script-test-output', type=str)
@@ -225,6 +233,11 @@ def main():
         % DEFAULT_CALIBRATION_TIME,
         type=int,
         default=DEFAULT_CALIBRATION_TIME)
+    parser.add_argument(
+        '--split-samples',
+        action='store_true',
+        help='Splits test samples into sub-tests. Each sub-test then runs on a different machine when sharded.'
+    )
 
     args, extra_flags = parser.parse_known_args()
     logging.basicConfig(level=args.log.upper(), stream=sys.stdout)
@@ -233,9 +246,9 @@ def main():
 
     # Use fast execution for smoke test mode.
     if args.smoke_test_mode:
-        args.steps_per_trial = 1
-        args.trials_per_sample = 1
-        args.samples_per_test = 1
+        args.steps_per_trial = 2
+        args.trials_per_sample = 2
+        args.samples_per_test = 2
 
     env = os.environ.copy()
 
@@ -256,6 +269,11 @@ def main():
 
     if args.filter:
         tests = _filter_tests(tests, args.filter)
+
+    if args.split_samples:
+        tests = _split_samples(tests, args.samples_per_test)
+    else:
+        tests = [(test, 0, args.samples_per_test) for test in tests]
 
     # Get tests for this shard (if using sharding args)
     tests = _shard_tests(tests, args.shard_count, args.shard_index)
@@ -278,7 +296,7 @@ def main():
     histograms = histogram_set.HistogramSet()
     total_errors = 0
 
-    for test in tests:
+    for (test, sample_index, sample_count) in tests:
         cmd = [
             get_binary_name(args.test_suite),
             '--gtest_filter=%s' % test,
@@ -312,10 +330,11 @@ def main():
             assert (len(steps_per_trial) == 1)
             steps_per_trial = int(steps_per_trial[0])
         logging.info('Running %s %d times with %d trials and %d steps per trial.' %
-                     (test, args.samples_per_test, args.trials_per_sample, steps_per_trial))
+                     (test, sample_count, args.trials_per_sample, steps_per_trial))
         wall_times = []
         test_histogram_set = histogram_set.HistogramSet()
-        for sample in range(args.samples_per_test):
+        for sample in range(sample_count):
+            test_and_sample = '%s_sample_%d' % (test, sample)
             if total_errors >= args.max_errors:
                 logging.error('Error count exceeded max errors (%d). Aborting.' % args.max_errors)
                 return 1
@@ -337,10 +356,14 @@ def main():
                     sample_wall_times = _get_results_from_output(output, 'wall_time')
                     if not sample_wall_times:
                         logging.warning('Test %s failed to produce a sample output' % test)
+                        test_results[test_and_sample] = {'expected': SKIP, 'actual': SKIP}
+                        results['num_failures_by_type'][SKIP] += 1
                         break
                     logging.info('Sample %d wall_time results: %s' %
                                  (sample, str(sample_wall_times)))
                     wall_times += sample_wall_times
+                    test_results[test_and_sample] = {'expected': PASS, 'actual': PASS}
+                    results['num_failures_by_type'][PASS] += 1
                     with open(histogram_file_path) as histogram_file:
                         sample_json = json.load(histogram_file)
                         sample_histogram = histogram_set.HistogramSet()
@@ -349,12 +372,14 @@ def main():
                 else:
                     logging.error('Failed to get sample for test %s' % test)
                     total_errors += 1
+                    test_results[test_and_sample] = {
+                        'expected': PASS,
+                        'actual': FAIL,
+                        'is_unexpected': True
+                    }
+                    results['num_failures_by_type'][FAIL] += 1
 
-        if not wall_times:
-            logging.warning('Skipping test %s. Assuming this is intentional.' % test)
-            test_results[test] = {'expected': SKIP, 'actual': SKIP}
-            results['num_failures_by_type'][SKIP] += 1
-        elif len(wall_times) == (args.samples_per_test * args.trials_per_sample):
+        if len(wall_times) == (sample_count * args.trials_per_sample):
             if len(wall_times) > 7:
                 truncation_n = len(wall_times) >> 3
                 logging.info(
@@ -366,8 +391,6 @@ def main():
                 logging.info(
                     'Mean wall_time for %s is %.2f, with coefficient of variation %.2f%%' %
                     (test, _mean(wall_times), (_coefficient_of_variation(wall_times) * 100.0)))
-            test_results[test] = {'expected': PASS, 'actual': PASS}
-            results['num_failures_by_type'][PASS] += 1
 
             # Merge the histogram set into one histogram
             with common.temporary_file() as merge_histogram_path:
@@ -380,10 +403,6 @@ def main():
                 merged_histogram = histogram_set.HistogramSet()
                 merged_histogram.ImportDicts(merged_dicts)
                 histograms.Merge(merged_histogram)
-        else:
-            logging.error('Test %s failed to record some samples' % test)
-            test_results[test] = {'expected': PASS, 'actual': FAIL, 'is_unexpected': True}
-            results['num_failures_by_type'][FAIL] += 1
 
     if test_results:
         results['tests'][args.test_suite] = test_results

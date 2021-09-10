@@ -890,7 +890,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "--log=debug"
+          "--log=debug",
+          "--split-samples"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -1701,7 +1702,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "--log=debug"
+          "--log=debug",
+          "--split-samples"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -3825,7 +3827,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "--log=debug"
+          "--log=debug",
+          "--split-samples"
         ],
         "isolate_name": "angle_perftests",
         "merge": {

@@ -815,6 +815,10 @@
         'swarming': {
           'shards': 20,
         },
+        'desktop_args': [
+          # Splits up test samples between shards to mitigate variance.
+          '--split-samples',
+        ],
       },
     },
 
