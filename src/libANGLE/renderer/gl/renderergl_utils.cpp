@@ -1367,7 +1367,7 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->textureNPOTOES = functions->standard == STANDARD_GL_DESKTOP ||
                                  functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                  functions->hasGLESExtension("GL_OES_texture_npot");
-    // TODO(jmadill): Investigate emulating EXT_draw_buffers on ES 3.0's core functionality.
+    // Note that we could emulate EXT_draw_buffers on ES 3.0's core functionality.
     extensions->drawBuffers = functions->isAtLeastGL(gl::Version(2, 0)) ||
                               functions->hasGLExtension("ARB_draw_buffers") ||
                               functions->hasGLESExtension("GL_EXT_draw_buffers");
@@ -1386,7 +1386,7 @@ void GenerateCaps(const FunctionsGL *functions,
         functions->hasGLExtension("GL_EXT_texture_filter_anisotropic") ||
         functions->hasGLESExtension("GL_EXT_texture_filter_anisotropic");
     extensions->occlusionQueryBoolean = nativegl::SupportsOcclusionQueries(functions);
-    extensions->maxTextureAnisotropy =
+    caps->maxTextureAnisotropy =
         extensions->textureFilterAnisotropic
             ? QuerySingleGLFloat(functions, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT)
             : 0.0f;
@@ -1432,7 +1432,7 @@ void GenerateCaps(const FunctionsGL *functions,
         const int maxLayers = QuerySingleGLInt(functions, GL_MAX_ARRAY_TEXTURE_LAYERS);
         // GL_MAX_VIEWPORTS is guaranteed to be at least 16.
         const int maxViewports       = QuerySingleGLInt(functions, GL_MAX_VIEWPORTS);
-        extensions->maxViews         = static_cast<GLuint>(std::min(maxLayers, maxViewports));
+        caps->maxViews               = static_cast<GLuint>(std::min(maxLayers, maxViewports));
         *multiviewImplementationType = MultiviewImplementationTypeGL::NV_VIEWPORT_ARRAY2;
     }
 
@@ -1489,9 +1489,9 @@ void GenerateCaps(const FunctionsGL *functions,
         // If we can't query the counter bits, leave them at 0.
         if (!features.queryCounterBitsGeneratesErrors.enabled)
         {
-            extensions->queryCounterBitsTimeElapsed =
+            caps->queryCounterBitsTimeElapsed =
                 QueryQueryValue(functions, GL_TIME_ELAPSED, GL_QUERY_COUNTER_BITS);
-            extensions->queryCounterBitsTimestamp =
+            caps->queryCounterBitsTimestamp =
                 QueryQueryValue(functions, GL_TIMESTAMP, GL_QUERY_COUNTER_BITS);
         }
     }
@@ -1568,7 +1568,7 @@ void GenerateCaps(const FunctionsGL *functions,
     // Disabling GL_FRAMEBUFFER_SRGB will then convert in the wrong direction.
     extensions->sRGBWriteControl = false;
 
-    // BGRA formats do not appear to be accepted by the Nexus 5X driver dispite the extension being
+    // BGRA formats do not appear to be accepted by the Nexus 5X driver despite the extension being
     // exposed.
     extensions->textureFormatBGRA8888 = false;
 #endif
@@ -1683,7 +1683,7 @@ void GenerateCaps(const FunctionsGL *functions,
         // TODO(http://anglebug.com/1085): Support greater values of
         // MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT queried from the driver. See comments in ProgramGL.cpp
         // for more information about this limitation.
-        extensions->maxDualSourceDrawBuffers = 1;
+        caps->maxDualSourceDrawBuffers = 1;
     }
 
     // EXT_float_blend

@@ -429,7 +429,7 @@ bool ValidateTextureMaxAnisotropyValue(const Context *context, GLfloat paramValu
         return false;
     }
 
-    GLfloat largest = context->getExtensions().maxTextureAnisotropy;
+    GLfloat largest = context->getCaps().maxTextureAnisotropy;
 
     if (paramValue < 1 || paramValue > largest)
     {

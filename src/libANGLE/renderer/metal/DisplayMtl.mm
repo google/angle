@@ -838,12 +838,12 @@ void DisplayMtl::initializeExtensions() const
 
     mNativeExtensions.occlusionQueryBoolean = true;
 
-    mNativeExtensions.disjointTimerQuery          = false;
-    mNativeExtensions.queryCounterBitsTimeElapsed = false;
-    mNativeExtensions.queryCounterBitsTimestamp   = false;
+    mNativeExtensions.disjointTimerQuery    = false;
+    mNativeCaps.queryCounterBitsTimeElapsed = 0;
+    mNativeCaps.queryCounterBitsTimestamp   = 0;
 
     mNativeExtensions.textureFilterAnisotropic = true;
-    mNativeExtensions.maxTextureAnisotropy     = 16;
+    mNativeCaps.maxTextureAnisotropy           = 16;
 
     mNativeExtensions.textureNPOTOES = true;
 

@@ -1334,10 +1334,10 @@ void Context::getQueryiv(QueryType target, GLenum pname, GLint *params)
             switch (target)
             {
                 case QueryType::TimeElapsed:
-                    params[0] = getExtensions().queryCounterBitsTimeElapsed;
+                    params[0] = getCaps().queryCounterBitsTimeElapsed;
                     break;
                 case QueryType::Timestamp:
-                    params[0] = getExtensions().queryCounterBitsTimestamp;
+                    params[0] = getCaps().queryCounterBitsTimestamp;
                     break;
                 default:
                     UNREACHABLE();
@@ -1525,7 +1525,7 @@ void Context::getFloatvImpl(GLenum pname, GLfloat *params) const
             break;
         case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
             ASSERT(mState.mExtensions.textureFilterAnisotropic);
-            *params = mState.mExtensions.maxTextureAnisotropy;
+            *params = mState.mCaps.maxTextureAnisotropy;
             break;
         case GL_MAX_TEXTURE_LOD_BIAS:
             *params = mState.mCaps.maxLODBias;
@@ -1725,21 +1725,21 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
 
         // GL_KHR_debug
         case GL_MAX_DEBUG_MESSAGE_LENGTH:
-            *params = mState.mExtensions.maxDebugMessageLength;
+            *params = mState.mCaps.maxDebugMessageLength;
             break;
         case GL_MAX_DEBUG_LOGGED_MESSAGES:
-            *params = mState.mExtensions.maxDebugLoggedMessages;
+            *params = mState.mCaps.maxDebugLoggedMessages;
             break;
         case GL_MAX_DEBUG_GROUP_STACK_DEPTH:
-            *params = mState.mExtensions.maxDebugGroupStackDepth;
+            *params = mState.mCaps.maxDebugGroupStackDepth;
             break;
         case GL_MAX_LABEL_LENGTH:
-            *params = mState.mExtensions.maxLabelLength;
+            *params = mState.mCaps.maxLabelLength;
             break;
 
         // GL_OVR_multiview2
         case GL_MAX_VIEWS_OVR:
-            *params = mState.mExtensions.maxViews;
+            *params = mState.mCaps.maxViews;
             break;
 
         // GL_EXT_disjoint_timer_query
@@ -2063,7 +2063,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
 
         // GL_EXT_blend_func_extended
         case GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT:
-            *params = mState.mExtensions.maxDualSourceDrawBuffers;
+            *params = mState.mCaps.maxDualSourceDrawBuffers;
             break;
 
         // OES_shader_multisample_interpolation
@@ -3424,7 +3424,6 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.textureNorm16            = false;
         supportedExtensions.multiview                = false;
         supportedExtensions.multiview2               = false;
-        supportedExtensions.maxViews                 = 1u;
         supportedExtensions.copyTexture3d            = false;
         supportedExtensions.textureMultisample       = false;
         supportedExtensions.drawBuffersIndexedEXT    = false;
@@ -3520,11 +3519,7 @@ Extensions Context::generateSupportedExtensions() const
     supportedExtensions.surfacelessContextOES = mSurfacelessSupported;
 
     // Explicitly enable GL_KHR_debug
-    supportedExtensions.debug                   = true;
-    supportedExtensions.maxDebugMessageLength   = 1024;
-    supportedExtensions.maxDebugLoggedMessages  = 1024;
-    supportedExtensions.maxDebugGroupStackDepth = 1024;
-    supportedExtensions.maxLabelLength          = 1024;
+    supportedExtensions.debug = true;
 
     // Explicitly enable GL_EXT_debug_label
     supportedExtensions.debugLabel = true;
@@ -3585,7 +3580,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.protectedTexturesEXT = false;
     }
 
-    // GL_ANGLE_get_tex_level_parameter is implemented in the frontend
+    // GL_ANGLE_get_tex_level_parameter is implemented in the front-end
     supportedExtensions.getTexLevelParameterANGLE = true;
 
     // Always enabled. Will return a default string if capture is not enabled.
@@ -3653,6 +3648,16 @@ void Context::initCaps()
         mState.mCaps.maxSmoothPointSize            = 1.0f;
         mState.mCaps.minSmoothLineWidth            = 1.0f;
         mState.mCaps.maxSmoothLineWidth            = 1.0f;
+    }
+
+    mState.mCaps.maxDebugMessageLength   = 1024;
+    mState.mCaps.maxDebugLoggedMessages  = 1024;
+    mState.mCaps.maxDebugGroupStackDepth = 1024;
+    mState.mCaps.maxLabelLength          = 1024;
+
+    if (getClientVersion() < Version(3, 0))
+    {
+        mState.mCaps.maxViews = 1u;
     }
 
 #if 0
@@ -3771,9 +3776,9 @@ void Context::initCaps()
 
     ANGLE_LIMIT_CAP(mState.mCaps.maxSampleMaskWords, MAX_SAMPLE_MASK_WORDS);
 
-    ANGLE_LIMIT_CAP(mState.mExtensions.maxViews, IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS);
+    ANGLE_LIMIT_CAP(mState.mCaps.maxViews, IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS);
 
-    ANGLE_LIMIT_CAP(mState.mExtensions.maxDualSourceDrawBuffers,
+    ANGLE_LIMIT_CAP(mState.mCaps.maxDualSourceDrawBuffers,
                     IMPLEMENTATION_MAX_DUAL_SOURCE_DRAW_BUFFERS);
 
     // WebGL compatibility

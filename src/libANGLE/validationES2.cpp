@@ -1956,7 +1956,7 @@ bool ValidateDebugMessageInsertKHR(const Context *context,
     }
 
     size_t messageLength = (length < 0) ? strlen(buf) : length;
-    if (messageLength > context->getExtensions().maxDebugMessageLength)
+    if (messageLength > context->getCaps().maxDebugMessageLength)
     {
         context->validationError(GL_INVALID_VALUE, kExceedsMaxDebugMessageLength);
         return false;
@@ -2022,14 +2022,14 @@ bool ValidatePushDebugGroupKHR(const Context *context,
     }
 
     size_t messageLength = (length < 0) ? strlen(message) : length;
-    if (messageLength > context->getExtensions().maxDebugMessageLength)
+    if (messageLength > context->getCaps().maxDebugMessageLength)
     {
         context->validationError(GL_INVALID_VALUE, kExceedsMaxDebugMessageLength);
         return false;
     }
 
     size_t currentStackSize = context->getState().getDebug().getGroupStackDepth();
-    if (currentStackSize >= context->getExtensions().maxDebugGroupStackDepth)
+    if (currentStackSize >= context->getCaps().maxDebugGroupStackDepth)
     {
         context->validationError(GL_STACK_OVERFLOW, kExceedsMaxDebugGroupStackDepth);
         return false;
@@ -2170,7 +2170,7 @@ static bool ValidateLabelLength(const Context *context, GLsizei length, const GL
         labelLength = static_cast<size_t>(length);
     }
 
-    if (labelLength > context->getExtensions().maxLabelLength)
+    if (labelLength > context->getCaps().maxLabelLength)
     {
         context->validationError(GL_INVALID_VALUE, kExceedsMaxLabelLength);
         return false;

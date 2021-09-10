@@ -711,7 +711,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     // the spec
     extensions->textureFilterAnisotropic =
         (deviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY) != 0 && deviceCaps.MaxAnisotropy >= 2;
-    extensions->maxTextureAnisotropy = static_cast<GLfloat>(deviceCaps.MaxAnisotropy);
+    caps->maxTextureAnisotropy = static_cast<GLfloat>(deviceCaps.MaxAnisotropy);
 
     // Check occlusion query support by trying to create one
     IDirect3DQuery9 *occlusionQuery = nullptr;

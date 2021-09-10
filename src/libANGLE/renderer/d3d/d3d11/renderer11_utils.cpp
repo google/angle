@@ -1567,6 +1567,11 @@ void GenerateCaps(ID3D11Device *device,
     caps->minProgramTextureGatherOffset = GetMinimumTextureGatherOffset(featureLevel);
     caps->maxProgramTextureGatherOffset = GetMaximumTextureGatherOffset(featureLevel);
 
+    caps->maxTextureAnisotropy        = GetMaximumAnisotropy(featureLevel);
+    caps->queryCounterBitsTimeElapsed = 64;
+    caps->queryCounterBitsTimestamp = 0;  // Timestamps cannot be supported due to D3D11 limitations
+    caps->maxDualSourceDrawBuffers  = 1;
+
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
 
@@ -1586,17 +1591,13 @@ void GenerateCaps(ID3D11Device *device,
     extensions->drawBuffers         = GetMaximumSimultaneousRenderTargets(featureLevel) > 1;
     extensions->drawBuffersIndexedEXT =
         (renderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_1);
-    extensions->drawBuffersIndexedOES       = extensions->drawBuffersIndexedEXT;
-    extensions->textureStorage              = true;
-    extensions->textureFilterAnisotropic    = true;
-    extensions->maxTextureAnisotropy        = GetMaximumAnisotropy(featureLevel);
-    extensions->occlusionQueryBoolean       = GetOcclusionQuerySupport(featureLevel);
-    extensions->fenceNV                     = GetEventQuerySupport(featureLevel);
-    extensions->disjointTimerQuery          = true;
-    extensions->queryCounterBitsTimeElapsed = 64;
-    extensions->queryCounterBitsTimestamp =
-        0;  // Timestamps cannot be supported due to D3D11 limitations
-    extensions->robustness = true;
+    extensions->drawBuffersIndexedOES    = extensions->drawBuffersIndexedEXT;
+    extensions->textureStorage           = true;
+    extensions->textureFilterAnisotropic = true;
+    extensions->occlusionQueryBoolean    = GetOcclusionQuerySupport(featureLevel);
+    extensions->fenceNV                  = GetEventQuerySupport(featureLevel);
+    extensions->disjointTimerQuery       = true;
+    extensions->robustness               = true;
     // Direct3D guarantees to return zero for any resource that is accessed out of bounds.
     // See https://msdn.microsoft.com/en-us/library/windows/desktop/ff476332(v=vs.85).aspx
     // and https://msdn.microsoft.com/en-us/library/windows/desktop/ff476900(v=vs.85).aspx
@@ -1617,9 +1618,8 @@ void GenerateCaps(ID3D11Device *device,
     extensions->multiview2             = IsMultiviewSupported(featureLevel);
     if (extensions->multiview || extensions->multiview2)
     {
-        extensions->maxViews =
-            std::min(static_cast<GLuint>(GetMaximum2DTextureArraySize(featureLevel)),
-                     GetMaxViewportAndScissorRectanglesPerPipeline(featureLevel));
+        caps->maxViews = std::min(static_cast<GLuint>(GetMaximum2DTextureArraySize(featureLevel)),
+                                  GetMaxViewportAndScissorRectanglesPerPipeline(featureLevel));
     }
     extensions->textureUsage       = true;  // This could be false since it has no effect in D3D11
     extensions->discardFramebuffer = true;
@@ -1638,14 +1638,13 @@ void GenerateCaps(ID3D11Device *device,
     extensions->copyTexture                         = true;
     extensions->copyCompressedTexture               = true;
     extensions->textureStorageMultisample2DArrayOES = true;
-    extensions->multiviewMultisample     = ((extensions->multiview || extensions->multiview2) &&
+    extensions->multiviewMultisample  = ((extensions->multiview || extensions->multiview2) &&
                                         extensions->textureStorageMultisample2DArrayOES);
-    extensions->copyTexture3d            = true;
-    extensions->textureBorderClampOES    = true;
-    extensions->textureMultisample       = true;
-    extensions->provokingVertex          = true;
-    extensions->blendFuncExtended        = true;
-    extensions->maxDualSourceDrawBuffers = 1;
+    extensions->copyTexture3d         = true;
+    extensions->textureBorderClampOES = true;
+    extensions->textureMultisample    = true;
+    extensions->provokingVertex       = true;
+    extensions->blendFuncExtended     = true;
     // http://anglebug.com/4926
     extensions->texture3DOES              = false;
     extensions->baseVertexBaseInstance    = true;

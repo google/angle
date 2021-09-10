@@ -4318,7 +4318,7 @@ bool Program::linkOutputVariables(const Caps &caps,
     {
         // EXT_blend_func_extended: Program outputs will be validated against
         // MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT if there's even one output with index one.
-        maxLocation = extensions.maxDualSourceDrawBuffers;
+        maxLocation = caps.maxDualSourceDrawBuffers;
     }
 
     for (unsigned int outputVariableIndex = 0;

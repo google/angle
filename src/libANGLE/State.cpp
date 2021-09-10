@@ -501,7 +501,7 @@ void State::initialize(Context *context)
 
     mPrimitiveRestart = false;
 
-    mDebug.setMaxLoggedMessages(mExtensions.maxDebugLoggedMessages);
+    mDebug.setMaxLoggedMessages(mCaps.maxDebugLoggedMessages);
 
     mMultiSampling    = true;
     mSampleAlphaToOne = false;

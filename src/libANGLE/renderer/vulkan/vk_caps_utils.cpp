@@ -430,14 +430,14 @@ void RendererVk::ensureCapsInitialized() const
     // unless that feature is available.
     if (vk::CommandBuffer::SupportsQueries(mPhysicalDeviceFeatures))
     {
-        mNativeExtensions.disjointTimerQuery = queueFamilyProperties.timestampValidBits > 0;
-        mNativeExtensions.queryCounterBitsTimeElapsed = queueFamilyProperties.timestampValidBits;
-        mNativeExtensions.queryCounterBitsTimestamp   = queueFamilyProperties.timestampValidBits;
+        mNativeExtensions.disjointTimerQuery    = queueFamilyProperties.timestampValidBits > 0;
+        mNativeCaps.queryCounterBitsTimeElapsed = queueFamilyProperties.timestampValidBits;
+        mNativeCaps.queryCounterBitsTimestamp   = queueFamilyProperties.timestampValidBits;
     }
 
     mNativeExtensions.textureFilterAnisotropic =
         mPhysicalDeviceFeatures.samplerAnisotropy && limitsVk.maxSamplerAnisotropy > 1.0f;
-    mNativeExtensions.maxTextureAnisotropy =
+    mNativeCaps.maxTextureAnisotropy =
         mNativeExtensions.textureFilterAnisotropic ? limitsVk.maxSamplerAnisotropy : 0.0f;
 
     // Vulkan natively supports non power-of-two textures
@@ -1068,8 +1068,8 @@ void RendererVk::ensureCapsInitialized() const
     }
 
     // GL_EXT_blend_func_extended
-    mNativeExtensions.blendFuncExtended        = (mPhysicalDeviceFeatures.dualSrcBlend == VK_TRUE);
-    mNativeExtensions.maxDualSourceDrawBuffers = LimitToInt(limitsVk.maxFragmentDualSrcAttachments);
+    mNativeExtensions.blendFuncExtended  = (mPhysicalDeviceFeatures.dualSrcBlend == VK_TRUE);
+    mNativeCaps.maxDualSourceDrawBuffers = LimitToInt(limitsVk.maxFragmentDualSrcAttachments);
 
     // GL_ANGLE_relaxed_vertex_attribute_type
     mNativeExtensions.relaxedVertexAttributeTypeANGLE = true;
@@ -1079,7 +1079,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.multiview =
         mMultiviewFeatures.multiview && mFeatures.bresenhamLineRasterization.enabled;
     mNativeExtensions.multiview2 = mNativeExtensions.multiview;
-    mNativeExtensions.maxViews   = mMultiviewProperties.maxMultiviewViewCount;
+    mNativeCaps.maxViews         = mMultiviewProperties.maxMultiviewViewCount;
 
     // GL_ANGLE_yuv_internal_format
     mNativeExtensions.yuvInternalFormatANGLE =

@@ -128,7 +128,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
 
     // OVR_multiview2 state
     mResources.OVR_multiview2 = extensions.multiview2;
-    mResources.MaxViewsOVR    = extensions.maxViews;
+    mResources.MaxViewsOVR    = caps.maxViews;
 
     // EXT_multisampled_render_to_texture and EXT_multisampled_render_to_texture2
     mResources.EXT_multisampled_render_to_texture  = extensions.multisampledRenderToTexture;
@@ -168,7 +168,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
 
     // EXT_blend_func_extended
     mResources.EXT_blend_func_extended  = extensions.blendFuncExtended;
-    mResources.MaxDualSourceDrawBuffers = extensions.maxDualSourceDrawBuffers;
+    mResources.MaxDualSourceDrawBuffers = caps.maxDualSourceDrawBuffers;
 
     // APPLE_clip_distance/EXT_clip_cull_distance
     mResources.MaxClipDistances                = caps.maxClipDistances;

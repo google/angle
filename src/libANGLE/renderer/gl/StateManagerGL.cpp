@@ -161,7 +161,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mLocalDirtyBits()
 {
     ASSERT(mFunctions);
-    ASSERT(extensions.maxViews >= 1u);
+    ASSERT(rendererCaps.maxViews >= 1u);
 
     mIndexedBuffers[gl::BufferBinding::Uniform].resize(rendererCaps.maxUniformBufferBindings);
     mIndexedBuffers[gl::BufferBinding::AtomicCounter].resize(

@@ -328,7 +328,6 @@ struct Extensions
 
     // GL_EXT_texture_filter_anisotropic
     bool textureFilterAnisotropic = false;
-    GLfloat maxTextureAnisotropy  = 0.0f;
 
     // GL_EXT_occlusion_query_boolean
     bool occlusionQueryBoolean = false;
@@ -337,9 +336,7 @@ struct Extensions
     bool fenceNV = false;
 
     // GL_EXT_disjoint_timer_query
-    bool disjointTimerQuery            = false;
-    GLuint queryCounterBitsTimeElapsed = 0;
-    GLuint queryCounterBitsTimestamp   = 0;
+    bool disjointTimerQuery = false;
 
     // GL_EXT_robustness
     bool robustness = false;
@@ -389,8 +386,7 @@ struct Extensions
     bool fragDepth = false;
 
     // OVR_multiview
-    bool multiview  = false;
-    GLuint maxViews = 1;
+    bool multiview = false;
 
     // OVR_multiview2
     bool multiview2 = false;
@@ -471,11 +467,7 @@ struct Extensions
     bool vertexAttribType1010102OES = false;
 
     // GL_KHR_debug
-    bool debug                     = false;
-    GLuint maxDebugMessageLength   = 0;
-    GLuint maxDebugLoggedMessages  = 0;
-    GLuint maxDebugGroupStackDepth = 0;
-    GLuint maxLabelLength          = 0;
+    bool debug = false;
 
     // KHR_no_error
     bool noError = false;
@@ -607,8 +599,7 @@ struct Extensions
     bool blendEquationAdvancedKHR = false;
 
     // GL_EXT_blend_func_extended
-    bool blendFuncExtended          = false;
-    GLuint maxDualSourceDrawBuffers = 0;
+    bool blendFuncExtended = false;
 
     // GL_EXT_float_blend
     bool floatBlend = false;
@@ -996,6 +987,25 @@ struct Caps
     GLint maxTessEvaluationOutputComponents = 0;
 
     GLuint subPixelBits = 4;
+
+    // GL_EXT_blend_func_extended
+    GLuint maxDualSourceDrawBuffers = 0;
+
+    // GL_EXT_texture_filter_anisotropic
+    GLfloat maxTextureAnisotropy = 0.0f;
+
+    // GL_EXT_disjoint_timer_query
+    GLuint queryCounterBitsTimeElapsed = 0;
+    GLuint queryCounterBitsTimestamp   = 0;
+
+    // OVR_multiview
+    GLuint maxViews = 1;
+
+    // GL_KHR_debug
+    GLuint maxDebugMessageLength   = 0;
+    GLuint maxDebugLoggedMessages  = 0;
+    GLuint maxDebugGroupStackDepth = 0;
+    GLuint maxLabelLength          = 0;
 
     // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
     GLuint maxClipDistances                = 0;

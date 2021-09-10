@@ -53,8 +53,7 @@ bool ValidateFramebufferTextureMultiviewBaseANGLE(const Context *context,
         return false;
     }
 
-    const Extensions &extensions = context->getExtensions();
-    if (static_cast<GLuint>(numViews) > extensions.maxViews)
+    if (static_cast<GLuint>(numViews) > context->getCaps().maxViews)
     {
         context->validationError(GL_INVALID_VALUE, kMultiviewViewsTooLarge);
         return false;
@@ -4739,7 +4738,7 @@ bool ValidateBindFragDataLocationIndexedEXT(const Context *context,
     }
     if (index == 1)
     {
-        if (colorNumber >= context->getExtensions().maxDualSourceDrawBuffers)
+        if (colorNumber >= context->getCaps().maxDualSourceDrawBuffers)
         {
             context->validationError(GL_INVALID_VALUE,
                                      kColorNumberGreaterThanMaxDualSourceDrawBuffers);
