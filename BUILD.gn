@@ -306,13 +306,14 @@ config("angle_disable_pool_alloc") {
 }
 
 config("debug_annotations_config") {
+  defines = []
   if (is_debug) {
-    defines = [ "ANGLE_ENABLE_DEBUG_ANNOTATIONS" ]
+    defines += [ "ANGLE_ENABLE_DEBUG_ANNOTATIONS" ]
   }
   if (angle_enable_annotator_run_time_checks) {
     # When used with angle_enable_trace, enables debug markers for AGI with run-time checks to
     # filter out EVENT() messages when the debug annotator is disabled.
-    defines = [ "ANGLE_ENABLE_ANNOTATOR_RUN_TIME_CHECKS" ]
+    defines += [ "ANGLE_ENABLE_ANNOTATOR_RUN_TIME_CHECKS" ]
   }
 }
 
