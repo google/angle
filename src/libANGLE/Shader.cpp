@@ -347,7 +347,7 @@ void Shader::compile(const Context *context)
 
     // Add default options to WebGL shaders to prevent unexpected behavior during
     // compilation.
-    if (context->getExtensions().webglCompatibility)
+    if (context->isWebGL())
     {
         options |= SH_INIT_GL_POSITION;
         options |= SH_LIMIT_CALL_STACK_DEPTH;

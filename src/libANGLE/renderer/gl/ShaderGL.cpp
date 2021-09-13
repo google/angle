@@ -246,7 +246,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
 
     ShCompileOptions additionalOptions = SH_INIT_GL_POSITION;
 
-    bool isWebGL = context->getExtensions().webglCompatibility;
+    bool isWebGL = context->isWebGL();
     if (isWebGL && mState.getShaderType() != gl::ShaderType::Compute)
     {
         additionalOptions |= SH_INIT_OUTPUT_VARIABLES;

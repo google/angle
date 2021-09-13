@@ -3252,7 +3252,7 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, Sampler *sampler) const
 {
     const gl::Extensions &extensions = contextVk->getExtensions();
 
-    bool anisotropyEnable = extensions.textureFilterAnisotropic && mMaxAnisotropy > 1.0f;
+    bool anisotropyEnable = extensions.textureFilterAnisotropicEXT && mMaxAnisotropy > 1.0f;
 
     VkSamplerCreateInfo createInfo     = {};
     createInfo.sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;

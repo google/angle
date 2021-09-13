@@ -448,9 +448,9 @@ angle::Result TextureD3D::generateMipmap(const gl::Context *context)
     if (mTexStorage && mRenderer->getFeatures().zeroMaxLodWorkaround.enabled)
     {
         // Switch to using the mipmapped texture.
-        TextureStorage *textureStorage = nullptr;
-        ANGLE_TRY(getNativeTexture(context, &textureStorage));
-        ANGLE_TRY(textureStorage->useLevelZeroWorkaroundTexture(context, false));
+        TextureStorage *textureStorageEXT = nullptr;
+        ANGLE_TRY(getNativeTexture(context, &textureStorageEXT));
+        ANGLE_TRY(textureStorageEXT->useLevelZeroWorkaroundTexture(context, false));
     }
 
     // Set up proper mipmap chain in our Image array.
@@ -1077,8 +1077,7 @@ angle::Result TextureD3D_2D::copyImage(const gl::Context *context,
     // WebGL requires that pixels that would be outside the framebuffer are treated as zero values,
     // so clear the mip level to 0 prior to making the copy if any pixel would be sampled outside.
     // Same thing for robust resource init.
-    if (outside &&
-        (context->getExtensions().webglCompatibility || context->isRobustResourceInitEnabled()))
+    if (outside && (context->isWebGL() || context->isRobustResourceInitEnabled()))
     {
         ANGLE_TRY(initializeContents(context, index));
     }
@@ -1832,8 +1831,7 @@ angle::Result TextureD3D_Cube::copyImage(const gl::Context *context,
     // WebGL requires that pixels that would be outside the framebuffer are treated as zero values,
     // so clear the mip level to 0 prior to making the copy if any pixel would be sampled outside.
     // Same thing for robust resource init.
-    if (outside &&
-        (context->getExtensions().webglCompatibility || context->isRobustResourceInitEnabled()))
+    if (outside && (context->isWebGL() || context->isRobustResourceInitEnabled()))
     {
         ANGLE_TRY(initializeContents(context, index));
     }
@@ -2186,8 +2184,8 @@ angle::Result TextureD3D_Cube::createCompleteStorage(bool renderTarget,
     bool hintLevelZeroOnly = false;
     if (mRenderer->getFeatures().zeroMaxLodWorkaround.enabled)
     {
-        // If any of the CPU images (levels >= 1) are dirty, then the textureStorage should use the
-        // mipped texture to begin with. Otherwise, it should use the level-zero-only texture.
+        // If any of the CPU images (levels >= 1) are dirty, then the textureStorageEXT should use
+        // the mipped texture to begin with. Otherwise, it should use the level-zero-only texture.
         hintLevelZeroOnly = true;
         for (int faceIndex = 0;
              faceIndex < static_cast<int>(gl::kCubeFaceCount) && hintLevelZeroOnly; faceIndex++)

@@ -289,7 +289,7 @@ State::State(const State *shareContextState,
              const EGLenum clientType,
              const Version &clientVersion,
              bool debug,
-             bool bindGeneratesResource,
+             bool bindGeneratesResourceCHROMIUM,
              bool clientArraysEnabled,
              bool robustResourceInit,
              bool programBinaryCacheEnabled,
@@ -336,7 +336,7 @@ State::State(const State *shareContextState,
       mGenerateMipmapHint(GL_NONE),
       mTextureFilteringHint(GL_NONE),
       mFragmentShaderDerivativeHint(GL_NONE),
-      mBindGeneratesResource(bindGeneratesResource),
+      mBindGeneratesResource(bindGeneratesResourceCHROMIUM),
       mClientArraysEnabled(clientArraysEnabled),
       mNearZ(0),
       mFarZ(0),
@@ -446,7 +446,7 @@ void State::initialize(Context *context)
     {
         mSamplerTextures[TextureType::_2DArray].resize(mCaps.maxCombinedTextureImageUnits);
     }
-    if (clientVersion >= Version(3, 1) || nativeExtensions.textureMultisample)
+    if (clientVersion >= Version(3, 1) || nativeExtensions.textureMultisampleANGLE)
     {
         mSamplerTextures[TextureType::_2DMultisample].resize(mCaps.maxCombinedTextureImageUnits);
     }
@@ -467,7 +467,7 @@ void State::initialize(Context *context)
     {
         mSamplerTextures[TextureType::Buffer].resize(mCaps.maxCombinedTextureImageUnits);
     }
-    if (nativeExtensions.textureRectangle)
+    if (nativeExtensions.textureRectangleANGLE)
     {
         mSamplerTextures[TextureType::Rectangle].resize(mCaps.maxCombinedTextureImageUnits);
     }
@@ -475,7 +475,7 @@ void State::initialize(Context *context)
     {
         mSamplerTextures[TextureType::External].resize(mCaps.maxCombinedTextureImageUnits);
     }
-    if (nativeExtensions.webglVideoTexture)
+    if (nativeExtensions.videoTextureWEBGL)
     {
         mSamplerTextures[TextureType::VideoImage].resize(mCaps.maxCombinedTextureImageUnits);
     }
@@ -510,7 +510,7 @@ void State::initialize(Context *context)
 
     mNoSimultaneousConstantColorAndAlphaBlendFunc =
         context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc ||
-        context->getExtensions().webglCompatibility;
+        context->getExtensions().webglCompatibilityANGLE;
 
     // GLES1 emulation: Initialize state for GLES1 if version applies
     // TODO(http://anglebug.com/3745): When on desktop client only do this in compatibility profile
@@ -522,7 +522,7 @@ void State::initialize(Context *context)
 
 void State::reset(const Context *context)
 {
-    // Force a sync so clear doesn't end up deferencing stale pointers.
+    // Force a sync so clear doesn't end up dereferencing stale pointers.
     (void)syncActiveTextures(context, Command::Other);
     mActiveTexturesCache.clear();
 
@@ -932,8 +932,8 @@ void State::setBlendColor(float red, float green, float blue, float alpha)
     // On ES3+, or with render-to-float exts enabled, it does not clamp on store.
     const bool isES2 = mClientVersion.major == 2;
     const bool hasFloatBlending =
-        mExtensions.colorBufferFloat || mExtensions.colorBufferHalfFloat ||
-        mExtensions.colorBufferFloatRGB || mExtensions.colorBufferFloatRGBA;
+        mExtensions.colorBufferFloatEXT || mExtensions.colorBufferHalfFloatEXT ||
+        mExtensions.colorBufferFloatRGBCHROMIUM || mExtensions.colorBufferFloatRGBACHROMIUM;
     if (isES2 && !hasFloatBlending)
     {
         red   = clamp01(red);

@@ -122,8 +122,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
 
     ShCompileOptions compileOptions = SH_INITIALIZE_UNINITIALIZED_LOCALS;
 
-    bool isWebGL = context->getExtensions().webglCompatibility;
-    if (isWebGL && mState.getShaderType() != gl::ShaderType::Compute)
+    if (context->isWebGL() && mState.getShaderType() != gl::ShaderType::Compute)
     {
         compileOptions |= SH_INIT_OUTPUT_VARIABLES;
     }

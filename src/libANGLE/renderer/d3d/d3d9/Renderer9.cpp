@@ -605,7 +605,7 @@ void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions)
     // D3D9 can be used without an output surface
     outExtensions->surfacelessContext = true;
 
-    outExtensions->robustResourceInitialization = true;
+    outExtensions->robustResourceInitializationANGLE = true;
 }
 
 void Renderer9::startScene()
@@ -1019,7 +1019,7 @@ angle::Result Renderer9::setSamplerState(const gl::Context *context,
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, baseLevel);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPMAPLODBIAS, static_cast<DWORD>(lodBias));
-        if (getNativeExtensions().textureFilterAnisotropic)
+        if (getNativeExtensions().textureFilterAnisotropicEXT)
         {
             DWORD maxAnisotropy = std::min(mDeviceCaps.MaxAnisotropy,
                                            static_cast<DWORD>(samplerState.getMaxAnisotropy()));

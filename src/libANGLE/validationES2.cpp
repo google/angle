@@ -184,7 +184,7 @@ bool IsValidCopyTextureDestinationTargetEnum(const Context *context, TextureTarg
             return true;
 
         case TextureTarget::Rectangle:
-            return context->getExtensions().textureRectangle;
+            return context->getExtensions().textureRectangleANGLE;
 
         default:
             return false;
@@ -205,11 +205,11 @@ bool IsValidCopyTextureSourceTarget(const Context *context, TextureType type)
         case TextureType::_2D:
             return true;
         case TextureType::Rectangle:
-            return context->getExtensions().textureRectangle;
+            return context->getExtensions().textureRectangleANGLE;
         case TextureType::External:
             return context->getExtensions().eglImageExternalOES;
         case TextureType::VideoImage:
-            return context->getExtensions().webglVideoTexture;
+            return context->getExtensions().videoTextureWEBGL;
         default:
             return false;
     }
@@ -323,7 +323,7 @@ static inline bool Valid1to4ComponentFloatColorBufferFormat(const Context *conte
     return (context->getExtensions().textureFloatOES &&
             (format == GL_RGBA32F || format == GL_RGB32F || format == GL_RG32F ||
              format == GL_R32F)) ||
-           (context->getExtensions().textureHalfFloat &&
+           (context->getExtensions().textureHalfFloatOES &&
             (format == GL_RGBA16F || format == GL_RGB16F || format == GL_RG16F ||
              format == GL_R16F));
 }
@@ -332,7 +332,7 @@ static inline bool Valid2to4ComponentFloatColorBufferFormat(const Context *conte
 {
     return (context->getExtensions().textureFloatOES &&
             (format == GL_RGBA32F || format == GL_RGB32F || format == GL_RG32F)) ||
-           (context->getExtensions().textureHalfFloat &&
+           (context->getExtensions().textureHalfFloatOES &&
             (format == GL_RGBA16F || format == GL_RGB16F || format == GL_RG16F));
 }
 
@@ -340,14 +340,14 @@ static inline bool Valid3to4ComponentFloatColorBufferFormat(const Context *conte
 {
     return (context->getExtensions().textureFloatOES &&
             (format == GL_RGBA32F || format == GL_RGB32F)) ||
-           (context->getExtensions().textureHalfFloat &&
+           (context->getExtensions().textureHalfFloatOES &&
             (format == GL_RGBA16F || format == GL_RGB16F));
 }
 
 static inline bool Valid4ComponentFloatColorBufferFormat(const Context *context, GLenum format)
 {
     return (context->getExtensions().textureFloatOES && format == GL_RGBA32F) ||
-           (context->getExtensions().textureHalfFloat && format == GL_RGBA16F);
+           (context->getExtensions().textureHalfFloatOES && format == GL_RGBA16F);
 }
 
 bool ValidateES2CopyTexImageParameters(const Context *context,
@@ -565,7 +565,7 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         // EXT_multisample_compatibility
         case GL_MULTISAMPLE_EXT:
         case GL_SAMPLE_ALPHA_TO_ONE_EXT:
-            return context->getExtensions().multisampleCompatibility;
+            return context->getExtensions().multisampleCompatibilityEXT;
 
         case GL_CULL_FACE:
         case GL_POLYGON_OFFSET_FILL:
@@ -584,25 +584,25 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
 
         case GL_DEBUG_OUTPUT_SYNCHRONOUS:
         case GL_DEBUG_OUTPUT:
-            return context->getExtensions().debug;
+            return context->getExtensions().debugKHR;
 
         case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
-            return queryOnly && context->getExtensions().bindGeneratesResource;
+            return queryOnly && context->getExtensions().bindGeneratesResourceCHROMIUM;
 
         case GL_CLIENT_ARRAYS_ANGLE:
-            return queryOnly && context->getExtensions().clientArrays;
+            return queryOnly && context->getExtensions().clientArraysANGLE;
 
         case GL_FRAMEBUFFER_SRGB_EXT:
-            return context->getExtensions().sRGBWriteControl;
+            return context->getExtensions().sRGBWriteControlEXT;
 
         case GL_SAMPLE_MASK:
             return context->getClientVersion() >= Version(3, 1);
 
         case GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-            return queryOnly && context->getExtensions().robustResourceInitialization;
+            return queryOnly && context->getExtensions().robustResourceInitializationANGLE;
 
         case GL_TEXTURE_RECTANGLE_ANGLE:
-            return context->getExtensions().webglCompatibility;
+            return context->isWebGL();
 
         // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
         case GL_CLIP_DISTANCE0_EXT:
@@ -775,7 +775,7 @@ bool ValidBlendFunc(const Context *context, GLenum val)
         case GL_ONE_MINUS_SRC1_COLOR_EXT:
         case GL_ONE_MINUS_SRC1_ALPHA_EXT:
         case GL_SRC_ALPHA_SATURATE_EXT:
-            return ext.blendFuncExtended;
+            return ext.blendFuncExtendedEXT;
 
         default:
             return false;
@@ -969,7 +969,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
             //
             // This is relaxed if GL_EXT_compressed_ETC1_RGB8_sub_texture is supported.
             if (actualInternalFormat == GL_ETC1_RGB8_OES &&
-                !context->getExtensions().compressedETC1RGB8SubTexture)
+                !context->getExtensions().compressedETC1RGB8SubTextureEXT)
             {
                 context->validationError(GL_INVALID_OPERATION, kInvalidInternalFormat);
                 return false;
@@ -1015,7 +1015,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
             case GL_FLOAT:
                 break;
             case GL_UNSIGNED_INT_2_10_10_10_REV_EXT:
-                if (!context->getExtensions().textureFormat2101010REV)
+                if (!context->getExtensions().textureFormat2101010REVEXT)
                 {
                     context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                     return false;
@@ -1047,7 +1047,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                 break;
             case GL_RED:
             case GL_RG:
-                if (!context->getExtensions().textureRG)
+                if (!context->getExtensions().textureRGEXT)
                 {
                     context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                     return false;
@@ -1065,7 +1065,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                         break;
                     case GL_HALF_FLOAT_OES:
                         if (!context->getExtensions().textureFloatOES &&
-                            !context->getExtensions().textureHalfFloat)
+                            !context->getExtensions().textureHalfFloatOES)
                         {
                             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                             return false;
@@ -1073,7 +1073,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                         break;
                     case GL_SHORT:
                     case GL_UNSIGNED_SHORT:
-                        if (!context->getExtensions().textureNorm16)
+                        if (!context->getExtensions().textureNorm16EXT)
                         {
                             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                             return false;
@@ -1095,7 +1095,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                         break;
                     case GL_SHORT:
                     case GL_UNSIGNED_SHORT:
-                        if (!context->getExtensions().textureNorm16)
+                        if (!context->getExtensions().textureNorm16EXT)
                         {
                             context->validationError(GL_INVALID_OPERATION,
                                                      kMismatchedTypeAndFormat);
@@ -1119,7 +1119,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                         break;
                     case GL_SHORT:
                     case GL_UNSIGNED_SHORT:
-                        if (!context->getExtensions().textureNorm16)
+                        if (!context->getExtensions().textureNorm16EXT)
                         {
                             context->validationError(GL_INVALID_OPERATION,
                                                      kMismatchedTypeAndFormat);
@@ -1132,7 +1132,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                 }
                 break;
             case GL_BGRA_EXT:
-                if (!context->getExtensions().textureFormatBGRA8888)
+                if (!context->getExtensions().textureFormatBGRA8888EXT)
                 {
                     context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                     return false;
@@ -1148,7 +1148,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                 break;
             case GL_SRGB_EXT:
             case GL_SRGB_ALPHA_EXT:
-                if (!context->getExtensions().sRGB)
+                if (!context->getExtensions().sRGBEXT)
                 {
                     context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                     return false;
@@ -1258,7 +1258,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                 }
                 break;
             case GL_STENCIL_INDEX:
-                if (!context->getExtensions().stencilIndex8)
+                if (!context->getExtensions().stencilIndex8OES)
                 {
                     context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
                     return false;
@@ -1303,7 +1303,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     break;
 
                 case GL_RGBA32F:
-                    if (!context->getExtensions().colorBufferFloatRGBA)
+                    if (!context->getExtensions().colorBufferFloatRGBACHROMIUM)
                     {
                         context->validationError(GL_INVALID_ENUM, kInvalidFormat);
                         return false;
@@ -1324,7 +1324,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     break;
 
                 case GL_RGB32F:
-                    if (!context->getExtensions().colorBufferFloatRGB)
+                    if (!context->getExtensions().colorBufferFloatRGBCHROMIUM)
                     {
                         context->validationError(GL_INVALID_ENUM, kInvalidFormat);
                         return false;
@@ -1345,7 +1345,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     break;
 
                 case GL_BGRA_EXT:
-                    if (!context->getExtensions().textureFormatBGRA8888)
+                    if (!context->getExtensions().textureFormatBGRA8888EXT)
                     {
                         context->validationError(GL_INVALID_ENUM, kInvalidFormat);
                         return false;
@@ -1371,7 +1371,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     break;
 
                 case GL_STENCIL_INDEX8:
-                    if (!context->getExtensions().stencilIndex8)
+                    if (!context->getExtensions().stencilIndex8OES)
                     {
                         context->validationError(GL_INVALID_ENUM, kInvalidFormat);
                         return false;
@@ -1380,7 +1380,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
 
                 case GL_RED:
                 case GL_RG:
-                    if (!context->getExtensions().textureRG)
+                    if (!context->getExtensions().textureRGEXT)
                     {
                         context->validationError(GL_INVALID_ENUM, kInvalidFormat);
                         return false;
@@ -1389,7 +1389,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
 
                 case GL_SRGB_EXT:
                 case GL_SRGB_ALPHA_EXT:
-                    if (!context->getExtensions().sRGB)
+                    if (!context->getExtensions().sRGBEXT)
                     {
                         context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                         return false;
@@ -1397,7 +1397,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     break;
 
                 case GL_RGB10_A2_EXT:
-                    if (!context->getExtensions().textureFormat2101010REV)
+                    if (!context->getExtensions().textureFormat2101010REVEXT)
                     {
                         context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                         return false;
@@ -1414,7 +1414,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     break;
 
                 case GL_RGB5_A1:
-                    if (context->getExtensions().textureFormat2101010REV &&
+                    if (context->getExtensions().textureFormat2101010REVEXT &&
                         type == GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGBA)
                     {
                         nonEqualFormatsAllowed = true;
@@ -1430,7 +1430,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                 case GL_RG16_SNORM_EXT:
                 case GL_RGB16_SNORM_EXT:
                 case GL_RGBA16_SNORM_EXT:
-                    if (!context->getExtensions().textureNorm16)
+                    if (!context->getExtensions().textureNorm16EXT)
                     {
                         context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                         return false;
@@ -1452,7 +1452,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
         }
         else if (type == GL_HALF_FLOAT_OES)
         {
-            if (!context->getExtensions().textureHalfFloat)
+            if (!context->getExtensions().textureHalfFloatOES)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
@@ -1475,7 +1475,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
             return false;
         }
 
-        if (context->getExtensions().webglCompatibility)
+        if (context->isWebGL())
         {
             if (GetInternalFormatInfo(format, type).sizedInternalFormat !=
                 textureInternalFormat.sizedInternalFormat)
@@ -1713,7 +1713,7 @@ bool ValidateDiscardFramebufferEXT(const Context *context,
                                    GLsizei numAttachments,
                                    const GLenum *attachments)
 {
-    if (!context->getExtensions().discardFramebuffer)
+    if (!context->getExtensions().discardFramebufferEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1874,7 +1874,7 @@ bool ValidateDebugMessageControlKHR(const Context *context,
                                     const GLuint *ids,
                                     GLboolean enabled)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1924,7 +1924,7 @@ bool ValidateDebugMessageInsertKHR(const Context *context,
                                    GLsizei length,
                                    const GLchar *buf)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1969,7 +1969,7 @@ bool ValidateDebugMessageCallbackKHR(const Context *context,
                                      GLDEBUGPROCKHR callback,
                                      const void *userParam)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1988,7 +1988,7 @@ bool ValidateGetDebugMessageLogKHR(const Context *context,
                                    const GLsizei *lengths,
                                    const GLchar *messageLog)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2009,7 +2009,7 @@ bool ValidatePushDebugGroupKHR(const Context *context,
                                GLsizei length,
                                const GLchar *message)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2040,7 +2040,7 @@ bool ValidatePushDebugGroupKHR(const Context *context,
 
 bool ValidatePopDebugGroupKHR(const Context *context)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2185,7 +2185,7 @@ bool ValidateObjectLabelKHR(const Context *context,
                             GLsizei length,
                             const GLchar *label)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2211,7 +2211,7 @@ bool ValidateGetObjectLabelKHR(const Context *context,
                                const GLsizei *length,
                                const GLchar *label)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2247,7 +2247,7 @@ bool ValidateObjectPtrLabelKHR(const Context *context,
                                GLsizei length,
                                const GLchar *label)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2272,7 +2272,7 @@ bool ValidateGetObjectPtrLabelKHR(const Context *context,
                                   const GLsizei *length,
                                   const GLchar *label)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2294,7 +2294,7 @@ bool ValidateGetObjectPtrLabelKHR(const Context *context,
 
 bool ValidateGetPointervKHR(const Context *context, GLenum pname, void *const *params)
 {
-    if (!context->getExtensions().debug)
+    if (!context->getExtensions().debugKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2496,7 +2496,7 @@ bool ValidateClear(const Context *context, GLbitfield mask)
         return false;
     }
 
-    if (extensions.webglCompatibility && (mask & GL_COLOR_BUFFER_BIT) != 0)
+    if (extensions.webglCompatibilityANGLE && (mask & GL_COLOR_BUFFER_BIT) != 0)
     {
         constexpr GLenum validComponentTypes[] = {GL_FLOAT, GL_UNSIGNED_NORMALIZED,
                                                   GL_SIGNED_NORMALIZED};
@@ -2512,7 +2512,7 @@ bool ValidateClear(const Context *context, GLbitfield mask)
         }
     }
 
-    if ((extensions.multiview || extensions.multiview2) && extensions.disjointTimerQuery)
+    if ((extensions.multiviewOVR || extensions.multiview2OVR) && extensions.disjointTimerQueryEXT)
     {
         const State &state       = context->getState();
         Framebuffer *framebuffer = state.getDrawFramebuffer();
@@ -2528,7 +2528,7 @@ bool ValidateClear(const Context *context, GLbitfield mask)
 
 bool ValidateDrawBuffersEXT(const Context *context, GLsizei n, const GLenum *bufs)
 {
-    if (!context->getExtensions().drawBuffers)
+    if (!context->getExtensions().drawBuffersEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2911,7 +2911,7 @@ bool ValidateMapBufferRangeEXT(const Context *context,
                                GLsizeiptr length,
                                GLbitfield access)
 {
-    if (!context->getExtensions().mapBufferRange)
+    if (!context->getExtensions().mapBufferRangeEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2940,8 +2940,7 @@ bool ValidateMapBufferBase(const Context *context, BufferBinding target)
         }
     }
 
-    if (context->getExtensions().webglCompatibility &&
-        buffer->isBoundForTransformFeedbackAndOtherUse())
+    if (context->isWebGL() && buffer->isBoundForTransformFeedbackAndOtherUse())
     {
         context->validationError(GL_INVALID_OPERATION, kBufferBoundForTransformFeedback);
         return false;
@@ -2955,7 +2954,7 @@ bool ValidateFlushMappedBufferRangeEXT(const Context *context,
                                        GLintptr offset,
                                        GLsizeiptr length)
 {
-    if (!context->getExtensions().mapBufferRange)
+    if (!context->getExtensions().mapBufferRangeEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2969,7 +2968,7 @@ bool ValidateBindUniformLocationCHROMIUM(const Context *context,
                                          UniformLocation location,
                                          const GLchar *name)
 {
-    if (!context->getExtensions().bindUniformLocation)
+    if (!context->getExtensions().bindUniformLocationCHROMIUM)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2997,7 +2996,7 @@ bool ValidateBindUniformLocationCHROMIUM(const Context *context,
 
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    if (context->isWebGL() && !IsValidESSLString(name, strlen(name)))
     {
         context->validationError(GL_INVALID_VALUE, kInvalidNameCharacters);
         return false;
@@ -3014,7 +3013,7 @@ bool ValidateBindUniformLocationCHROMIUM(const Context *context,
 
 bool ValidateCoverageModulationCHROMIUM(const Context *context, GLenum components)
 {
-    if (!context->getExtensions().framebufferMixedSamples)
+    if (!context->getExtensions().framebufferMixedSamplesCHROMIUM)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -3046,7 +3045,7 @@ bool ValidateCopyTextureCHROMIUM(const Context *context,
                                  GLboolean unpackPremultiplyAlpha,
                                  GLboolean unpackUnmultiplyAlpha)
 {
-    if (!context->getExtensions().copyTexture)
+    if (!context->getExtensions().copyTextureCHROMIUM)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -3152,7 +3151,7 @@ bool ValidateCopySubTextureCHROMIUM(const Context *context,
                                     GLboolean unpackPremultiplyAlpha,
                                     GLboolean unpackUnmultiplyAlpha)
 {
-    if (!context->getExtensions().copyTexture)
+    if (!context->getExtensions().copyTextureCHROMIUM)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -3273,7 +3272,7 @@ bool ValidateCompressedCopyTextureCHROMIUM(const Context *context,
                                            TextureID sourceId,
                                            TextureID destId)
 {
-    if (!context->getExtensions().copyCompressedTexture)
+    if (!context->getExtensions().copyCompressedTextureCHROMIUM)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -3430,8 +3429,7 @@ bool ValidateBufferData(const Context *context,
         return false;
     }
 
-    if (context->getExtensions().webglCompatibility &&
-        buffer->isBoundForTransformFeedbackAndOtherUse())
+    if (context->isWebGL() && buffer->isBoundForTransformFeedbackAndOtherUse())
     {
         context->validationError(GL_INVALID_OPERATION, kBufferBoundForTransformFeedback);
         return false;
@@ -3488,8 +3486,7 @@ bool ValidateBufferSubData(const Context *context,
         return false;
     }
 
-    if (context->getExtensions().webglCompatibility &&
-        buffer->isBoundForTransformFeedbackAndOtherUse())
+    if (context->isWebGL() && buffer->isBoundForTransformFeedbackAndOtherUse())
     {
         context->validationError(GL_INVALID_OPERATION, kBufferBoundForTransformFeedback);
         return false;
@@ -3522,7 +3519,7 @@ bool ValidateBufferSubData(const Context *context,
 
 bool ValidateRequestExtensionANGLE(const Context *context, const GLchar *name)
 {
-    if (!context->getExtensions().requestExtension)
+    if (!context->getExtensions().requestExtensionANGLE)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -3539,7 +3536,7 @@ bool ValidateRequestExtensionANGLE(const Context *context, const GLchar *name)
 
 bool ValidateDisableExtensionANGLE(const Context *context, const GLchar *name)
 {
-    if (!context->getExtensions().requestExtension)
+    if (!context->getExtensions().requestExtensionANGLE)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -3654,7 +3651,7 @@ static bool ValidBlendEquationMode(const Context *context, GLenum mode)
 
         case GL_MIN:
         case GL_MAX:
-            return context->getClientVersion() >= ES_3_0 || context->getExtensions().blendMinMax;
+            return context->getClientVersion() >= ES_3_0 || context->getExtensions().blendMinMaxEXT;
 
         default:
             return false;
@@ -3734,7 +3731,7 @@ bool ValidateBlendFuncSeparate(const Context *context,
     }
 
     if (context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc ||
-        context->getExtensions().webglCompatibility)
+        context->isWebGL())
     {
         bool constantColorUsed =
             (srcRGB == GL_CONSTANT_COLOR || srcRGB == GL_ONE_MINUS_CONSTANT_COLOR ||
@@ -3746,7 +3743,7 @@ bool ValidateBlendFuncSeparate(const Context *context,
 
         if (constantColorUsed && constantAlphaUsed)
         {
-            if (context->getExtensions().webglCompatibility)
+            if (context->isWebGL())
             {
                 context->validationError(GL_INVALID_OPERATION, kInvalidConstantColor);
                 return false;
@@ -3773,7 +3770,7 @@ bool ValidateGetString(const Context *context, GLenum name)
             break;
 
         case GL_REQUESTABLE_EXTENSIONS_ANGLE:
-            if (!context->getExtensions().requestExtension)
+            if (!context->getExtensions().requestExtensionANGLE)
             {
                 context->validationError(GL_INVALID_ENUM, kInvalidName);
                 return false;
@@ -3809,7 +3806,7 @@ bool ValidateLineWidth(const Context *context, GLfloat width)
 
 bool ValidateDepthRangef(const Context *context, GLfloat zNear, GLfloat zFar)
 {
-    if (context->getExtensions().webglCompatibility && zNear > zFar)
+    if (context->isWebGL() && zNear > zFar)
     {
         context->validationError(GL_INVALID_OPERATION, kInvalidDepthRange);
         return false;
@@ -3835,7 +3832,7 @@ bool ValidateRenderbufferStorageMultisampleANGLE(const Context *context,
                                                  GLsizei width,
                                                  GLsizei height)
 {
-    if (!context->getExtensions().framebufferMultisample)
+    if (!context->getExtensions().framebufferMultisampleANGLE)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -4168,7 +4165,7 @@ bool ValidateGetAttribLocation(const Context *context, ShaderProgramID program, 
 {
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    if (context->isWebGL() && !IsValidESSLString(name, strlen(name)))
     {
         context->validationError(GL_INVALID_VALUE, kInvalidNameCharacters);
         return false;
@@ -4326,7 +4323,7 @@ bool ValidateGetUniformLocation(const Context *context, ShaderProgramID program,
 
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    if (context->isWebGL() && !IsValidESSLString(name, strlen(name)))
     {
         context->validationError(GL_INVALID_VALUE, kInvalidNameCharacters);
         return false;
@@ -4447,7 +4444,7 @@ bool ValidatePixelStorei(const Context *context, GLenum pname, GLint param)
             case GL_UNPACK_ROW_LENGTH:
             case GL_UNPACK_SKIP_ROWS:
             case GL_UNPACK_SKIP_PIXELS:
-                if (!context->getExtensions().unpackSubimage)
+                if (!context->getExtensions().unpackSubimageEXT)
                 {
                     context->validationError(GL_INVALID_ENUM, kInvalidPname);
                     return false;
@@ -4457,7 +4454,7 @@ bool ValidatePixelStorei(const Context *context, GLenum pname, GLint param)
             case GL_PACK_ROW_LENGTH:
             case GL_PACK_SKIP_ROWS:
             case GL_PACK_SKIP_PIXELS:
-                if (!context->getExtensions().packSubimage)
+                if (!context->getExtensions().packSubimageNV)
                 {
                     context->validationError(GL_INVALID_ENUM, kInvalidPname);
                     return false;
@@ -4491,7 +4488,7 @@ bool ValidatePixelStorei(const Context *context, GLenum pname, GLint param)
             break;
 
         case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
-            if (!context->getExtensions().packReverseRowOrder)
+            if (!context->getExtensions().packReverseRowOrderANGLE)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             }
@@ -5088,7 +5085,7 @@ bool ValidateFramebufferTexture2D(const Context *context,
             case TextureTarget::_2DMultisample:
             {
                 if (context->getClientVersion() < ES_3_1 &&
-                    !context->getExtensions().textureMultisample)
+                    !context->getExtensions().textureMultisampleANGLE)
                 {
                     context->validationError(GL_INVALID_OPERATION,
                                              kMultisampleTextureExtensionOrES31Required);
@@ -5568,7 +5565,7 @@ bool ValidateGetFenceivNV(const Context *context,
 
 bool ValidateGetGraphicsResetStatusEXT(const Context *context)
 {
-    if (!context->getExtensions().robustness)
+    if (!context->getExtensions().robustnessEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -5583,7 +5580,7 @@ bool ValidateGetTranslatedShaderSourceANGLE(const Context *context,
                                             const GLsizei *length,
                                             const GLchar *source)
 {
-    if (!context->getExtensions().translatedShaderSource)
+    if (!context->getExtensions().translatedShaderSourceANGLE)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -5674,7 +5671,7 @@ bool ValidateTexStorage2DEXT(const Context *context,
                              GLsizei width,
                              GLsizei height)
 {
-    if (!context->getExtensions().textureStorage)
+    if (!context->getExtensions().textureStorageEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -5756,7 +5753,7 @@ bool ValidateTexImage3DOES(const Context *context,
 
 bool ValidatePopGroupMarkerEXT(const Context *context)
 {
-    if (!context->getExtensions().debugMarker)
+    if (!context->getExtensions().debugMarkerEXT)
     {
         // The debug marker calls should not set error state
         // However, it seems reasonable to set an error state if the extension is not enabled
@@ -5786,7 +5783,7 @@ bool ValidateTexStorage3DEXT(const Context *context,
                              GLsizei height,
                              GLsizei depth)
 {
-    if (!context->getExtensions().textureStorage)
+    if (!context->getExtensions().textureStorageEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -5804,7 +5801,7 @@ bool ValidateTexStorage3DEXT(const Context *context,
 
 bool ValidateMaxShaderCompilerThreadsKHR(const Context *context, GLuint count)
 {
-    if (!context->getExtensions().parallelShaderCompile)
+    if (!context->getExtensions().parallelShaderCompileKHR)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -5818,7 +5815,7 @@ bool ValidateMultiDrawArraysANGLE(const Context *context,
                                   const GLsizei *counts,
                                   GLsizei drawcount)
 {
-    if (!context->getExtensions().multiDraw)
+    if (!context->getExtensions().multiDrawANGLE)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -5840,7 +5837,7 @@ bool ValidateMultiDrawElementsANGLE(const Context *context,
                                     const GLvoid *const *indices,
                                     GLsizei drawcount)
 {
-    if (!context->getExtensions().multiDraw)
+    if (!context->getExtensions().multiDrawANGLE)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -5857,7 +5854,7 @@ bool ValidateMultiDrawElementsANGLE(const Context *context,
 
 bool ValidateProvokingVertexANGLE(const Context *context, ProvokingVertexConvention modePacked)
 {
-    if (!context->getExtensions().provokingVertex)
+    if (!context->getExtensions().provokingVertexANGLE)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -5884,7 +5881,7 @@ bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
                                                 GLint level,
                                                 GLsizei samples)
 {
-    if (!context->getExtensions().multisampledRenderToTexture)
+    if (!context->getExtensions().multisampledRenderToTextureEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -5925,7 +5922,7 @@ bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
     }
 
     // Unless EXT_multisampled_render_to_texture2 is enabled, only color attachment 0 can be used.
-    if (!context->getExtensions().multisampledRenderToTexture2 &&
+    if (!context->getExtensions().multisampledRenderToTexture2EXT &&
         attachment != GL_COLOR_ATTACHMENT0)
     {
         context->validationError(GL_INVALID_ENUM, kInvalidAttachment);
@@ -5948,7 +5945,7 @@ bool ValidateRenderbufferStorageMultisampleEXT(const Context *context,
                                                GLsizei width,
                                                GLsizei height)
 {
-    if (!context->getExtensions().multisampledRenderToTexture)
+    if (!context->getExtensions().multisampledRenderToTextureEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -5992,7 +5989,7 @@ void RecordBindTextureTypeError(const Context *context, TextureType target)
     switch (target)
     {
         case TextureType::Rectangle:
-            ASSERT(!context->getExtensions().textureRectangle);
+            ASSERT(!context->getExtensions().textureRectangleANGLE);
             context->validationError(GL_INVALID_ENUM, kTextureRectangleNotSupported);
             break;
 
@@ -6004,7 +6001,7 @@ void RecordBindTextureTypeError(const Context *context, TextureType target)
 
         case TextureType::_2DMultisample:
             ASSERT(context->getClientVersion() < Version(3, 1) &&
-                   !context->getExtensions().textureMultisample);
+                   !context->getExtensions().textureMultisampleANGLE);
             context->validationError(GL_INVALID_ENUM, kMultisampleTextureExtensionOrES31Required);
             break;
 
@@ -6020,7 +6017,7 @@ void RecordBindTextureTypeError(const Context *context, TextureType target)
             break;
 
         case TextureType::VideoImage:
-            ASSERT(!context->getExtensions().webglVideoTexture);
+            ASSERT(!context->getExtensions().videoTextureWEBGL);
             context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
             break;
 

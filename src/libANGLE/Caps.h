@@ -155,31 +155,31 @@ struct Extensions
 
     // GL_EXT_texture_format_BGRA8888
     // Implies that TextureCaps for GL_BGRA8 exist
-    bool textureFormatBGRA8888 = false;
+    bool textureFormatBGRA8888EXT = false;
 
     // GL_EXT_read_format_bgra
-    bool readFormatBGRA = false;
+    bool readFormatBGRAEXT = false;
 
     // GL_NV_pixel_buffer_object
     bool pixelBufferObjectNV = false;
 
     // GL_ARB_sync
-    bool glSyncARB = false;
+    bool syncARB = false;
 
     // GL_OES_mapbuffer and GL_EXT_map_buffer_range
-    bool mapBufferOES   = false;
-    bool mapBufferRange = false;
+    bool mapBufferOES      = false;
+    bool mapBufferRangeEXT = false;
 
     // GL_EXT_color_buffer_half_float
     // Together with GL_OES_texture_half_float in a GLES 2.0 context, implies that half-float
     // textures are renderable.
-    bool colorBufferHalfFloat = false;
+    bool colorBufferHalfFloatEXT = false;
 
     // GL_OES_texture_half_float and GL_OES_texture_half_float_linear
     // Implies that TextureCaps for GL_RGB16F, GL_RGBA16F, GL_ALPHA32F_EXT, GL_LUMINANCE32F_EXT and
     // GL_LUMINANCE_ALPHA32F_EXT exist
-    bool textureHalfFloat       = false;
-    bool textureHalfFloatLinear = false;
+    bool textureHalfFloatOES       = false;
+    bool textureHalfFloatLinearOES = false;
 
     // GL_OES_texture_float and GL_OES_texture_float_linear
     // Implies that TextureCaps for GL_RGB32F, GL_RGBA32F, GL_ALPHA16F_EXT, GL_LUMINANCE16F_EXT and
@@ -190,24 +190,24 @@ struct Extensions
     // GL_EXT_texture_rg
     // Implies that TextureCaps for GL_R8, GL_RG8 (and floating point R/RG texture formats if
     // floating point extensions are also present) exist
-    bool textureRG = false;
+    bool textureRGEXT = false;
 
     // GL_EXT_texture_type_2_10_10_10_REV
-    bool textureFormat2101010REV = false;
+    bool textureFormat2101010REVEXT = false;
 
     // GL_EXT_texture_compression_dxt1, GL_ANGLE_texture_compression_dxt3 and
     // GL_ANGLE_texture_compression_dxt5 Implies that TextureCaps exist for
     // GL_COMPRESSED_RGB_S3TC_DXT1_EXT, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
     // GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE and GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE
-    bool textureCompressionDXT1 = false;
-    bool textureCompressionDXT3 = false;
-    bool textureCompressionDXT5 = false;
+    bool textureCompressionDXT1EXT = false;
+    bool textureCompressionDXT3EXT = false;
+    bool textureCompressionDXT5EXT = false;
 
     // GL_EXT_texture_compression_s3tc_srgb
     // Implies that TextureCaps exist for GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,
     // GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, and
     // GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
-    bool textureCompressionS3TCsRGB = false;
+    bool textureCompressionS3TCsRGBEXT = false;
 
     // GL_KHR_texture_compression_astc_ldr
     bool textureCompressionASTCLDRKHR = false;
@@ -222,17 +222,17 @@ struct Extensions
     bool textureCompressionSliced3dASTCKHR = false;
 
     // GL_EXT_texture_compression_bptc
-    bool textureCompressionBPTC = false;
+    bool textureCompressionBPTCEXT = false;
 
     // GL_EXT_texture_compression_rgtc
-    bool textureCompressionRGTC = false;
+    bool textureCompressionRGTCEXT = false;
 
     // GL_OES_compressed_ETC1_RGB8_texture
     // Implies that TextureCaps for GL_ETC1_RGB8_OES exist
     bool compressedETC1RGB8TextureOES = false;
 
     // GL_EXT_compressed_ETC1_RGB8_sub_texture
-    bool compressedETC1RGB8SubTexture = false;
+    bool compressedETC1RGB8SubTextureEXT = false;
 
     // OES_compressed_ETC2_RGB8_texture
     bool compressedETC2RGB8TextureOES = false;
@@ -269,18 +269,18 @@ struct Extensions
     // Backends should enable this extension explicitly. It is not enabled with
     // setTextureExtensionSupport, use DetermineCompressedTextureETCSupport to check if all of the
     // individual formats required to support this extension are available.
-    bool compressedTextureETC = false;
+    bool compressedTextureETCANGLE = false;
 
     // GL_IMG_texture_compression_pvrtc
-    bool compressedTexturePVRTC = false;
+    bool compressedTexturePVRTCIMG = false;
 
     // GL_EXT_pvrtc_sRGB
-    bool compressedTexturePVRTCsRGB = false;
+    bool compressedTexturePVRTCsRGBEXT = false;
 
     // GL_EXT_sRGB
     // Implies that TextureCaps for GL_SRGB8_ALPHA8 and GL_SRGB8 exist
     // TODO: Don't advertise this extension in ES3
-    bool sRGB = false;
+    bool sRGBEXT = false;
 
     // GL_EXT_texture_sRGB_R8
     bool sRGBR8EXT = false;
@@ -309,13 +309,13 @@ struct Extensions
     bool texture3DOES = false;
 
     // GL_EXT_texture_storage
-    bool textureStorage = false;
+    bool textureStorageEXT = false;
 
     // GL_OES_texture_npot
     bool textureNPOTOES = false;
 
     // GL_EXT_draw_buffers
-    bool drawBuffers = false;
+    bool drawBuffersEXT = false;
 
     // GL_EXT_draw_buffers_indexed
     bool drawBuffersIndexedEXT = false;
@@ -327,25 +327,25 @@ struct Extensions
     bool drawBuffersIndexedAny() const { return (drawBuffersIndexedEXT || drawBuffersIndexedOES); }
 
     // GL_EXT_texture_filter_anisotropic
-    bool textureFilterAnisotropic = false;
+    bool textureFilterAnisotropicEXT = false;
 
     // GL_EXT_occlusion_query_boolean
-    bool occlusionQueryBoolean = false;
+    bool occlusionQueryBooleanEXT = false;
 
     // GL_NV_fence
     bool fenceNV = false;
 
     // GL_EXT_disjoint_timer_query
-    bool disjointTimerQuery = false;
+    bool disjointTimerQueryEXT = false;
 
     // GL_EXT_robustness
-    bool robustness = false;
+    bool robustnessEXT = false;
 
     // GL_KHR_robust_buffer_access_behavior
-    bool robustBufferAccessBehavior = false;
+    bool robustBufferAccessBehaviorKHR = false;
 
     // GL_EXT_blend_minmax
-    bool blendMinMax = false;
+    bool blendMinMaxEXT = false;
 
     // GL_ANGLE_framebuffer_blit
     bool framebufferBlitANGLE = false;
@@ -355,13 +355,13 @@ struct Extensions
     bool framebufferBlitAny() const { return (framebufferBlitANGLE || framebufferBlitNV); }
 
     // GL_ANGLE_framebuffer_multisample
-    bool framebufferMultisample = false;
+    bool framebufferMultisampleANGLE = false;
 
     // GL_EXT_multisampled_render_to_texture
-    bool multisampledRenderToTexture = false;
+    bool multisampledRenderToTextureEXT = false;
 
     // GL_EXT_multisampled_render_to_texture2
-    bool multisampledRenderToTexture2 = false;
+    bool multisampledRenderToTexture2EXT = false;
 
     // GL_ANGLE_instanced_arrays
     bool instancedArraysANGLE = false;
@@ -371,43 +371,43 @@ struct Extensions
     bool instancedArraysAny() const { return (instancedArraysANGLE || instancedArraysEXT); }
 
     // GL_ANGLE_pack_reverse_row_order
-    bool packReverseRowOrder = false;
+    bool packReverseRowOrderANGLE = false;
 
     // GL_OES_standard_derivatives
     bool standardDerivativesOES = false;
 
     // GL_EXT_shader_texture_lod
-    bool shaderTextureLOD = false;
+    bool shaderTextureLODEXT = false;
 
     // GL_EXT_shader_framebuffer_fetch_non_coherent
     bool shaderFramebufferFetchNonCoherentEXT = false;
 
     // GL_EXT_frag_depth
-    bool fragDepth = false;
+    bool fragDepthEXT = false;
 
     // OVR_multiview
-    bool multiview = false;
+    bool multiviewOVR = false;
 
     // OVR_multiview2
-    bool multiview2 = false;
+    bool multiview2OVR = false;
 
     // GL_ANGLE_texture_usage
-    bool textureUsage = false;
+    bool textureUsageANGLE = false;
 
     // GL_ANGLE_translated_shader_source
-    bool translatedShaderSource = false;
+    bool translatedShaderSourceANGLE = false;
 
     // GL_OES_fbo_render_mipmap
     bool fboRenderMipmapOES = false;
 
     // GL_EXT_discard_framebuffer
-    bool discardFramebuffer = false;
+    bool discardFramebufferEXT = false;
 
     // EXT_debug_marker
-    bool debugMarker = false;
+    bool debugMarkerEXT = false;
 
     // EXT_debug_label
-    bool debugLabel = false;
+    bool debugLabelEXT = false;
 
     // GL_OES_EGL_image
     bool eglImageOES = false;
@@ -425,10 +425,10 @@ struct Extensions
     bool eglSyncOES = false;
 
     // GL_EXT_memory_object
-    bool memoryObject = false;
+    bool memoryObjectEXT = false;
 
     // GL_EXT_memory_object_fd
-    bool memoryObjectFd = false;
+    bool memoryObjectFdEXT = false;
 
     // GL_ANGLE_memory_object_flags
     bool memoryObjectFlagsANGLE = false;
@@ -437,10 +437,10 @@ struct Extensions
     bool memoryObjectFuchsiaANGLE = false;
 
     // GL_EXT_semaphore
-    bool semaphore = false;
+    bool semaphoreEXT = false;
 
     // GL_EXT_semaphore_fd
-    bool semaphoreFd = false;
+    bool semaphoreFdEXT = false;
 
     // GL_ANGLE_semaphore_fuchsia
     bool semaphoreFuchsiaANGLE = false;
@@ -449,10 +449,10 @@ struct Extensions
     bool eglStreamConsumerExternalNV = false;
 
     // EXT_unpack_subimage
-    bool unpackSubimage = false;
+    bool unpackSubimageEXT = false;
 
     // NV_pack_subimage
-    bool packSubimage = false;
+    bool packSubimageNV = false;
 
     // GL_NV_shader_noperspective_interpolation
     bool noperspectiveInterpolationNV = false;
@@ -467,40 +467,40 @@ struct Extensions
     bool vertexAttribType1010102OES = false;
 
     // GL_KHR_debug
-    bool debug = false;
+    bool debugKHR = false;
 
     // KHR_no_error
-    bool noError = false;
+    bool noErrorKHR = false;
 
     // GL_ANGLE_lossy_etc_decode
-    bool lossyETCDecode = false;
+    bool lossyETCDecodeANGLE = false;
 
     // GL_CHROMIUM_bind_uniform_location
-    bool bindUniformLocation = false;
+    bool bindUniformLocationCHROMIUM = false;
 
     // GL_CHROMIUM_sync_query
-    bool syncQuery = false;
+    bool syncQueryCHROMIUM = false;
 
     // GL_CHROMIUM_copy_texture
-    bool copyTexture = false;
+    bool copyTextureCHROMIUM = false;
 
     // GL_CHROMIUM_copy_compressed_texture
-    bool copyCompressedTexture = false;
+    bool copyCompressedTextureCHROMIUM = false;
 
     // GL_ANGLE_copy_texture_3d
-    bool copyTexture3d = false;
+    bool copyTexture3dANGLE = false;
 
     // GL_ANGLE_webgl_compatibility
-    bool webglCompatibility = false;
+    bool webglCompatibilityANGLE = false;
 
     // GL_ANGLE_request_extension
-    bool requestExtension = false;
+    bool requestExtensionANGLE = false;
 
     // GL_CHROMIUM_bind_generates_resource
-    bool bindGeneratesResource = false;
+    bool bindGeneratesResourceCHROMIUM = false;
 
     // GL_ANGLE_robust_client_memory
-    bool robustClientMemory = false;
+    bool robustClientMemoryANGLE = false;
 
     // GL_OES_texture_border_clamp
     bool textureBorderClampOES = false;
@@ -512,53 +512,53 @@ struct Extensions
     bool textureBorderClampAny() const { return (textureBorderClampOES || textureBorderClampEXT); }
 
     // GL_EXT_texture_sRGB_decode
-    bool textureSRGBDecode = false;
+    bool textureSRGBDecodeEXT = false;
 
     // GL_EXT_texture_format_sRGB_override
-    bool textureSRGBOverride = false;
+    bool textureSRGBOverrideEXT = false;
 
     // GL_EXT_sRGB_write_control
-    bool sRGBWriteControl = false;
+    bool sRGBWriteControlEXT = false;
 
     // GL_CHROMIUM_color_buffer_float_rgb
-    bool colorBufferFloatRGB = false;
+    bool colorBufferFloatRGBCHROMIUM = false;
 
     // GL_CHROMIUM_color_buffer_float_rgba
-    bool colorBufferFloatRGBA = false;
+    bool colorBufferFloatRGBACHROMIUM = false;
 
     // GL_EXT_EGL_image_array
-    bool eglImageArray = false;
+    bool eglImageArrayEXT = false;
 
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float
-    bool colorBufferFloat = false;
+    bool colorBufferFloatEXT = false;
 
     // GL_EXT_multisample_compatibility.
     // written against ES 3.1 but can apply to earlier versions.
-    bool multisampleCompatibility = false;
+    bool multisampleCompatibilityEXT = false;
 
     // GL_CHROMIUM_framebuffer_mixed_samples
-    bool framebufferMixedSamples = false;
+    bool framebufferMixedSamplesCHROMIUM = false;
 
     // GL_EXT_texture_norm16
     // written against ES 3.1 but can apply to ES 3.0 as well.
-    bool textureNorm16 = false;
+    bool textureNorm16EXT = false;
 
     // GL_OES_surfaceless_context
     bool surfacelessContextOES = false;
 
     // GL_ANGLE_client_arrays
-    bool clientArrays = false;
+    bool clientArraysANGLE = false;
 
     // GL_ANGLE_robust_resource_initialization
-    bool robustResourceInitialization = false;
+    bool robustResourceInitializationANGLE = false;
 
     // GL_ANGLE_program_cache_control
-    bool programCacheControl = false;
+    bool programCacheControlANGLE = false;
 
     // GL_ANGLE_texture_rectangle
-    bool textureRectangle = false;
+    bool textureRectangleANGLE = false;
 
     // GL_EXT_geometry_shader
     bool geometryShaderEXT = false;
@@ -584,37 +584,37 @@ struct Extensions
     bool framebufferObjectOES = false;
 
     // GL_KHR_parallel_shader_compile
-    bool parallelShaderCompile = false;
+    bool parallelShaderCompileKHR = false;
 
     // GL_EXT_separate_shader_objects
-    bool separateShaderObjects = false;
+    bool separateShaderObjectsEXT = false;
 
     // GL_OES_texture_storage_multisample_2d_array
     bool textureStorageMultisample2DArrayOES = false;
 
     // GL_ANGLE_multiview_multisample
-    bool multiviewMultisample = false;
+    bool multiviewMultisampleANGLE = false;
 
     // GL_KHR_blend_equation_advanced
     bool blendEquationAdvancedKHR = false;
 
     // GL_EXT_blend_func_extended
-    bool blendFuncExtended = false;
+    bool blendFuncExtendedEXT = false;
 
     // GL_EXT_float_blend
-    bool floatBlend = false;
+    bool floatBlendEXT = false;
 
     // GL_ANGLE_memory_size
-    bool memorySize = false;
+    bool memorySizeANGLE = false;
 
     // GL_ANGLE_texture_multisample
-    bool textureMultisample = false;
+    bool textureMultisampleANGLE = false;
 
     // GL_ANGLE_multi_draw
-    bool multiDraw = false;
+    bool multiDrawANGLE = false;
 
     // GL_ANGLE_provoking_vertex
-    bool provokingVertex = false;
+    bool provokingVertexANGLE = false;
 
     // GL_CHROMIUM_texture_filtering_hint
     bool textureFilteringCHROMIUM = false;
@@ -626,7 +626,7 @@ struct Extensions
     bool textureExternalUpdateANGLE = false;
 
     // GL_ANGLE_base_vertex_base_instance
-    bool baseVertexBaseInstance = false;
+    bool baseVertexBaseInstanceANGLE = false;
 
     // GL_ANGLE_get_image
     bool getImageANGLE = false;
@@ -642,7 +642,7 @@ struct Extensions
     }
 
     // GL_EXT_shader_non_constant_global_initializers
-    bool shaderNonConstGlobalInitializersEXT = false;
+    bool shaderNonConstantGlobalInitializersEXT = false;
 
     // GL_OES_shader_io_blocks
     bool shaderIoBlocksOES = false;
@@ -654,7 +654,7 @@ struct Extensions
     // GL_EXT_gpu_shader5
     bool gpuShader5EXT = false;
     // WEBGL_video_texture
-    bool webglVideoTexture = false;
+    bool videoTextureWEBGL = false;
 
     // GL_APPLE_clip_distance
     bool clipDistanceAPPLE = false;
@@ -682,7 +682,7 @@ struct Extensions
     bool externalBufferEXT = false;
 
     // GL_OES_texture_stencil8
-    bool stencilIndex8 = false;
+    bool stencilIndex8OES = false;
 
     // GL_OES_sample_shading
     bool sampleShadingOES = false;
@@ -740,7 +740,7 @@ struct Extensions
     bool eglImageStorageEXT = false;
 };
 
-// Pointer to a boolean memeber of the Extensions struct
+// Pointer to a boolean member of the Extensions struct
 using ExtensionBool = bool Extensions::*;
 
 struct ExtensionInfo
@@ -1174,10 +1174,10 @@ struct DisplayExtensions
     bool createContextClientArrays = false;
 
     // EGL_ANGLE_program_cache_control
-    bool programCacheControl = false;
+    bool programCacheControlANGLE = false;
 
     // EGL_ANGLE_robust_resource_initialization
-    bool robustResourceInitialization = false;
+    bool robustResourceInitializationANGLE = false;
 
     // EGL_ANGLE_iosurface_client_buffer
     bool iosurfaceClientBuffer = false;

@@ -1575,8 +1575,7 @@ angle::Result Program::linkImpl(const Context *context)
 
         GLuint combinedShaderStorageBlocks = 0u;
         if (!linkInterfaceBlocks(context->getCaps(), context->getClientVersion(),
-                                 context->getExtensions().webglCompatibility, infoLog,
-                                 &combinedShaderStorageBlocks))
+                                 context->isWebGL(), infoLog, &combinedShaderStorageBlocks))
         {
             return angle::Result::Continue;
         }
@@ -1626,8 +1625,7 @@ angle::Result Program::linkImpl(const Context *context)
 
         GLuint combinedShaderStorageBlocks = 0u;
         if (!linkInterfaceBlocks(context->getCaps(), context->getClientVersion(),
-                                 context->getExtensions().webglCompatibility, infoLog,
-                                 &combinedShaderStorageBlocks))
+                                 context->isWebGL(), infoLog, &combinedShaderStorageBlocks))
         {
             return angle::Result::Continue;
         }
@@ -3763,7 +3761,7 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
 {
     const Caps &caps               = context->getCaps();
     const Limitations &limitations = context->getLimitations();
-    bool webglCompatibility        = context->getExtensions().webglCompatibility;
+    bool webglCompatibility        = context->isWebGL();
     int shaderVersion              = -1;
     unsigned int usedLocations     = 0;
 
@@ -4864,12 +4862,12 @@ void Program::postResolveLink(const gl::Context *context)
 
     setUniformValuesFromBindingQualifiers();
 
-    if (context->getExtensions().multiDraw)
+    if (context->getExtensions().multiDrawANGLE)
     {
         mState.mDrawIDLocation = getUniformLocation("gl_DrawID").value;
     }
 
-    if (context->getExtensions().baseVertexBaseInstance)
+    if (context->getExtensions().baseVertexBaseInstanceANGLE)
     {
         mState.mBaseVertexLocation   = getUniformLocation("gl_BaseVertex").value;
         mState.mBaseInstanceLocation = getUniformLocation("gl_BaseInstance").value;

@@ -197,11 +197,11 @@ gl::Version DisplayVk::getMaxConformantESVersion() const
 
 void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    outExtensions->createContextRobustness      = getRenderer()->getNativeExtensions().robustness;
-    outExtensions->surfaceOrientation           = true;
-    outExtensions->displayTextureShareGroup     = true;
-    outExtensions->displaySemaphoreShareGroup   = true;
-    outExtensions->robustResourceInitialization = true;
+    outExtensions->createContextRobustness    = getRenderer()->getNativeExtensions().robustnessEXT;
+    outExtensions->surfaceOrientation         = true;
+    outExtensions->displayTextureShareGroup   = true;
+    outExtensions->displaySemaphoreShareGroup = true;
+    outExtensions->robustResourceInitializationANGLE = true;
 
     // The Vulkan implementation will always say that EGL_KHR_swap_buffers_with_damage is supported.
     // When the Vulkan driver supports VK_KHR_incremental_present, it will use it.  Otherwise, it
@@ -256,7 +256,7 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 void DisplayVk::generateCaps(egl::Caps *outCaps) const
 {
     outCaps->textureNPOT = true;
-    outCaps->stencil8    = getRenderer()->getNativeExtensions().stencilIndex8;
+    outCaps->stencil8    = getRenderer()->getNativeExtensions().stencilIndex8OES;
 }
 
 const char *DisplayVk::getWSILayer() const

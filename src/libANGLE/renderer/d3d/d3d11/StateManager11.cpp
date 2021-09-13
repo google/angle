@@ -1923,7 +1923,7 @@ angle::Result StateManager11::ensureInitialized(const gl::Context *context)
 
     mShaderConstants.init(caps);
 
-    mIsMultiviewEnabled = extensions.multiview || extensions.multiview2;
+    mIsMultiviewEnabled = extensions.multiviewOVR || extensions.multiview2OVR;
 
     mIndependentBlendStates = extensions.drawBuffersIndexedAny();  // requires FL10_1
 

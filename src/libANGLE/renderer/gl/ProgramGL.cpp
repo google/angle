@@ -297,7 +297,7 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
         // Bind the secondary fragment color outputs defined in EXT_blend_func_extended. We only use
         // the API to bind fragment output locations in case EXT_blend_func_extended is enabled.
         // Otherwise shader-assigned locations will work.
-        if (context->getExtensions().blendFuncExtended)
+        if (context->getExtensions().blendFuncExtendedEXT)
         {
             gl::Shader *fragmentShader = mState.getAttachedShader(gl::ShaderType::Fragment);
             if (fragmentShader && fragmentShader->getShaderVersion() == 100)

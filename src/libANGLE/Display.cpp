@@ -1818,7 +1818,7 @@ void Display::initDisplayExtensions()
     mDisplayExtensions.getAllProcAddresses = true;
 
     // Enable program cache control since it is not back-end dependent.
-    mDisplayExtensions.programCacheControl = true;
+    mDisplayExtensions.programCacheControlANGLE = true;
 
     // Request extension is implemented in the ANGLE frontend
     mDisplayExtensions.createContextExtensionsEnabled = true;

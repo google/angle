@@ -936,7 +936,7 @@ bool ProgramExecutable::linkMergedVaryings(
         // D3D9 pack mode is strictly more strict than WebGL, so takes priority.
         packMode = PackMode::ANGLE_NON_CONFORMANT_D3D9;
     }
-    else if (context->getExtensions().webglCompatibility)
+    else if (context->isWebGL())
     {
         packMode = PackMode::WEBGL_STRICT;
     }

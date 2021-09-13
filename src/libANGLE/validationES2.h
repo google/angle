@@ -106,7 +106,7 @@ ANGLE_INLINE bool ValidateVertexAttribPointer(const Context *context,
         return false;
     }
 
-    if (context->getExtensions().webglCompatibility)
+    if (context->isWebGL())
     {
         // WebGL 1.0 [Section 6.14] Fixed point support
         // The WebGL API does not support the GL_FIXED data type.

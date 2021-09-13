@@ -920,7 +920,7 @@ ANGLE_INLINE bool ValidateDrawElementsCommon(const Context *context,
 
     ASSERT(isPow2(GetDrawElementsTypeSize(type)) && GetDrawElementsTypeSize(type) > 0);
 
-    if (context->getExtensions().webglCompatibility)
+    if (context->isWebGL())
     {
         GLuint typeBytes = GetDrawElementsTypeSize(type);
 

@@ -29,11 +29,9 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
 
     ContextVk *contextVk = vk::GetImpl(context);
 
-    bool isWebGL = context->getExtensions().webglCompatibility;
-
-    if (isWebGL)
+    if (context->isWebGL())
     {
-        // Only webgl requires initialization of local variables, others don't.
+        // Only WebGL requires initialization of local variables, others don't.
         // Extra initialization in spirv shader may affect performance.
         compileOptions |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
 

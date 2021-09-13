@@ -140,7 +140,7 @@ bool ValidateObjectIdentifierAndName(const Context *context, GLenum identifier, 
             return true;
 
         case GL_QUERY_OBJECT_EXT:
-            if (!isGLES3 && !context->getExtensions().occlusionQueryBoolean)
+            if (!isGLES3 && !context->getExtensions().occlusionQueryBooleanEXT)
             {
                 context->validationError(GL_INVALID_ENUM, kInvalidType);
                 return false;
@@ -203,7 +203,7 @@ bool ValidateObjectIdentifierAndName(const Context *context, GLenum identifier, 
             return true;
 
         case GL_PROGRAM_PIPELINE_OBJECT_EXT:
-            if (!isGLES31 && !context->getExtensions().separateShaderObjects)
+            if (!isGLES31 && !context->getExtensions().separateShaderObjectsEXT)
             {
                 context->validationError(GL_INVALID_ENUM, kInvalidType);
                 return false;
@@ -687,7 +687,7 @@ bool ValidateIsEnablediOES(const Context *context, GLenum target, GLuint index)
 
 bool ValidateGetInteger64vEXT(const Context *context, GLenum pname, const GLint64 *data)
 {
-    if (!context->getExtensions().disjointTimerQuery)
+    if (!context->getExtensions().disjointTimerQueryEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -765,7 +765,7 @@ bool ValidateBufferStorageMemEXT(const Context *context,
                                  MemoryObjectID memory,
                                  GLuint64 offset)
 {
-    if (!context->getExtensions().memoryObject)
+    if (!context->getExtensions().memoryObjectEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -779,7 +779,7 @@ bool ValidateCreateMemoryObjectsEXT(const Context *context,
                                     GLsizei n,
                                     const MemoryObjectID *memoryObjects)
 {
-    if (!context->getExtensions().memoryObject)
+    if (!context->getExtensions().memoryObjectEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -792,7 +792,7 @@ bool ValidateDeleteMemoryObjectsEXT(const Context *context,
                                     GLsizei n,
                                     const MemoryObjectID *memoryObjects)
 {
-    if (!context->getExtensions().memoryObject)
+    if (!context->getExtensions().memoryObjectEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -806,7 +806,7 @@ bool ValidateGetMemoryObjectParameterivEXT(const Context *context,
                                            GLenum pname,
                                            const GLint *params)
 {
-    if (!context->getExtensions().memoryObject)
+    if (!context->getExtensions().memoryObjectEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -829,7 +829,7 @@ bool ValidateGetMemoryObjectParameterivEXT(const Context *context,
 
 bool ValidateGetUnsignedBytevEXT(const Context *context, GLenum pname, const GLubyte *data)
 {
-    if (!context->getExtensions().memoryObject && !context->getExtensions().semaphore)
+    if (!context->getExtensions().memoryObjectEXT && !context->getExtensions().semaphoreEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -844,7 +844,7 @@ bool ValidateGetUnsignedBytei_vEXT(const Context *context,
                                    GLuint index,
                                    const GLubyte *data)
 {
-    if (!context->getExtensions().memoryObject && !context->getExtensions().semaphore)
+    if (!context->getExtensions().memoryObjectEXT && !context->getExtensions().semaphoreEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -856,7 +856,7 @@ bool ValidateGetUnsignedBytei_vEXT(const Context *context,
 
 bool ValidateIsMemoryObjectEXT(const Context *context, MemoryObjectID memoryObject)
 {
-    if (!context->getExtensions().memoryObject)
+    if (!context->getExtensions().memoryObjectEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -870,7 +870,7 @@ bool ValidateMemoryObjectParameterivEXT(const Context *context,
                                         GLenum pname,
                                         const GLint *params)
 {
-    if (!context->getExtensions().memoryObject)
+    if (!context->getExtensions().memoryObjectEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -907,7 +907,7 @@ bool ValidateTexStorageMem2DEXT(const Context *context,
                                 MemoryObjectID memory,
                                 GLuint64 offset)
 {
-    if (!context->getExtensions().memoryObject)
+    if (!context->getExtensions().memoryObjectEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -934,7 +934,7 @@ bool ValidateTexStorageMem3DEXT(const Context *context,
                                 MemoryObjectID memory,
                                 GLuint64 offset)
 {
-    if (!context->getExtensions().memoryObject)
+    if (!context->getExtensions().memoryObjectEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -950,7 +950,7 @@ bool ValidateImportMemoryFdEXT(const Context *context,
                                HandleType handleType,
                                GLint fd)
 {
-    if (!context->getExtensions().memoryObjectFd)
+    if (!context->getExtensions().memoryObjectFdEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -994,7 +994,7 @@ bool ValidateImportMemoryZirconHandleANGLE(const Context *context,
 
 bool ValidateDeleteSemaphoresEXT(const Context *context, GLsizei n, const SemaphoreID *semaphores)
 {
-    if (!context->getExtensions().semaphore)
+    if (!context->getExtensions().semaphoreEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1005,7 +1005,7 @@ bool ValidateDeleteSemaphoresEXT(const Context *context, GLsizei n, const Semaph
 
 bool ValidateGenSemaphoresEXT(const Context *context, GLsizei n, const SemaphoreID *semaphores)
 {
-    if (!context->getExtensions().semaphore)
+    if (!context->getExtensions().semaphoreEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1019,7 +1019,7 @@ bool ValidateGetSemaphoreParameterui64vEXT(const Context *context,
                                            GLenum pname,
                                            const GLuint64 *params)
 {
-    if (!context->getExtensions().semaphore)
+    if (!context->getExtensions().semaphoreEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1031,7 +1031,7 @@ bool ValidateGetSemaphoreParameterui64vEXT(const Context *context,
 
 bool ValidateIsSemaphoreEXT(const Context *context, SemaphoreID semaphore)
 {
-    if (!context->getExtensions().semaphore)
+    if (!context->getExtensions().semaphoreEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1045,7 +1045,7 @@ bool ValidateSemaphoreParameterui64vEXT(const Context *context,
                                         GLenum pname,
                                         const GLuint64 *params)
 {
-    if (!context->getExtensions().semaphore)
+    if (!context->getExtensions().semaphoreEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1063,7 +1063,7 @@ bool ValidateSignalSemaphoreEXT(const Context *context,
                                 const TextureID *textures,
                                 const GLenum *dstLayouts)
 {
-    if (!context->getExtensions().semaphore)
+    if (!context->getExtensions().semaphoreEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1089,7 +1089,7 @@ bool ValidateWaitSemaphoreEXT(const Context *context,
                               const TextureID *textures,
                               const GLenum *srcLayouts)
 {
-    if (!context->getExtensions().semaphore)
+    if (!context->getExtensions().semaphoreEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1112,7 +1112,7 @@ bool ValidateImportSemaphoreFdEXT(const Context *context,
                                   HandleType handleType,
                                   GLint fd)
 {
-    if (!context->getExtensions().semaphoreFd)
+    if (!context->getExtensions().semaphoreFdEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1536,7 +1536,7 @@ bool ValidateActiveShaderProgramEXT(const Context *context,
                                     ProgramPipelineID pipelinePacked,
                                     ShaderProgramID programPacked)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1547,7 +1547,7 @@ bool ValidateActiveShaderProgramEXT(const Context *context,
 
 bool ValidateBindProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1561,7 +1561,7 @@ bool ValidateCreateShaderProgramvEXT(const Context *context,
                                      GLsizei count,
                                      const GLchar **strings)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1574,7 +1574,7 @@ bool ValidateDeleteProgramPipelinesEXT(const Context *context,
                                        GLsizei n,
                                        const ProgramPipelineID *pipelinesPacked)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1587,7 +1587,7 @@ bool ValidateGenProgramPipelinesEXT(const Context *context,
                                     GLsizei n,
                                     const ProgramPipelineID *pipelinesPacked)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1602,7 +1602,7 @@ bool ValidateGetProgramPipelineInfoLogEXT(const Context *context,
                                           const GLsizei *length,
                                           const GLchar *infoLog)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1616,7 +1616,7 @@ bool ValidateGetProgramPipelineivEXT(const Context *context,
                                      GLenum pname,
                                      const GLint *params)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1627,7 +1627,7 @@ bool ValidateGetProgramPipelineivEXT(const Context *context,
 
 bool ValidateIsProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1641,7 +1641,7 @@ bool ValidateProgramParameteriEXT(const Context *context,
                                   GLenum pname,
                                   GLint value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1655,7 +1655,7 @@ bool ValidateProgramUniform1fEXT(const Context *context,
                                  UniformLocation locationPacked,
                                  GLfloat v0)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1670,7 +1670,7 @@ bool ValidateProgramUniform1fvEXT(const Context *context,
                                   GLsizei count,
                                   const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1684,7 +1684,7 @@ bool ValidateProgramUniform1iEXT(const Context *context,
                                  UniformLocation locationPacked,
                                  GLint v0)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1699,7 +1699,7 @@ bool ValidateProgramUniform1ivEXT(const Context *context,
                                   GLsizei count,
                                   const GLint *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1713,7 +1713,7 @@ bool ValidateProgramUniform1uiEXT(const Context *context,
                                   UniformLocation locationPacked,
                                   GLuint v0)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1728,7 +1728,7 @@ bool ValidateProgramUniform1uivEXT(const Context *context,
                                    GLsizei count,
                                    const GLuint *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1743,7 +1743,7 @@ bool ValidateProgramUniform2fEXT(const Context *context,
                                  GLfloat v0,
                                  GLfloat v1)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1758,7 +1758,7 @@ bool ValidateProgramUniform2fvEXT(const Context *context,
                                   GLsizei count,
                                   const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1773,7 +1773,7 @@ bool ValidateProgramUniform2iEXT(const Context *context,
                                  GLint v0,
                                  GLint v1)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1788,7 +1788,7 @@ bool ValidateProgramUniform2ivEXT(const Context *context,
                                   GLsizei count,
                                   const GLint *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1803,7 +1803,7 @@ bool ValidateProgramUniform2uiEXT(const Context *context,
                                   GLuint v0,
                                   GLuint v1)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1818,7 +1818,7 @@ bool ValidateProgramUniform2uivEXT(const Context *context,
                                    GLsizei count,
                                    const GLuint *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1834,7 +1834,7 @@ bool ValidateProgramUniform3fEXT(const Context *context,
                                  GLfloat v1,
                                  GLfloat v2)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1849,7 +1849,7 @@ bool ValidateProgramUniform3fvEXT(const Context *context,
                                   GLsizei count,
                                   const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1865,7 +1865,7 @@ bool ValidateProgramUniform3iEXT(const Context *context,
                                  GLint v1,
                                  GLint v2)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1880,7 +1880,7 @@ bool ValidateProgramUniform3ivEXT(const Context *context,
                                   GLsizei count,
                                   const GLint *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1896,7 +1896,7 @@ bool ValidateProgramUniform3uiEXT(const Context *context,
                                   GLuint v1,
                                   GLuint v2)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1911,7 +1911,7 @@ bool ValidateProgramUniform3uivEXT(const Context *context,
                                    GLsizei count,
                                    const GLuint *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1928,7 +1928,7 @@ bool ValidateProgramUniform4fEXT(const Context *context,
                                  GLfloat v2,
                                  GLfloat v3)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1943,7 +1943,7 @@ bool ValidateProgramUniform4fvEXT(const Context *context,
                                   GLsizei count,
                                   const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1960,7 +1960,7 @@ bool ValidateProgramUniform4iEXT(const Context *context,
                                  GLint v2,
                                  GLint v3)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -1986,7 +1986,7 @@ bool ValidateProgramUniform4uiEXT(const Context *context,
                                   GLuint v2,
                                   GLuint v3)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2011,7 +2011,7 @@ bool ValidateProgramUniformMatrix2fvEXT(const Context *context,
                                         GLboolean transpose,
                                         const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2028,7 +2028,7 @@ bool ValidateProgramUniformMatrix2x3fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2045,7 +2045,7 @@ bool ValidateProgramUniformMatrix2x4fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2062,7 +2062,7 @@ bool ValidateProgramUniformMatrix3fvEXT(const Context *context,
                                         GLboolean transpose,
                                         const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2079,7 +2079,7 @@ bool ValidateProgramUniformMatrix3x2fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2096,7 +2096,7 @@ bool ValidateProgramUniformMatrix3x4fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2113,7 +2113,7 @@ bool ValidateProgramUniformMatrix4fvEXT(const Context *context,
                                         GLboolean transpose,
                                         const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2130,7 +2130,7 @@ bool ValidateProgramUniformMatrix4x2fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2147,7 +2147,7 @@ bool ValidateProgramUniformMatrix4x3fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2162,7 +2162,7 @@ bool ValidateUseProgramStagesEXT(const Context *context,
                                  GLbitfield stages,
                                  ShaderProgramID programPacked)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2173,7 +2173,7 @@ bool ValidateUseProgramStagesEXT(const Context *context,
 
 bool ValidateValidateProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked)
 {
-    if (!context->getExtensions().separateShaderObjects)
+    if (!context->getExtensions().separateShaderObjectsEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2190,7 +2190,7 @@ bool ValidateGetObjectLabelEXT(const Context *context,
                                const GLsizei *length,
                                const GLchar *label)
 {
-    if (!context->getExtensions().debugLabel)
+    if (!context->getExtensions().debugLabelEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2211,7 +2211,7 @@ bool ValidateLabelObjectEXT(const Context *context,
                             GLsizei length,
                             const GLchar *label)
 {
-    if (!context->getExtensions().debugLabel)
+    if (!context->getExtensions().debugLabelEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;

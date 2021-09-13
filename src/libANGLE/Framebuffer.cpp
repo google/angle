@@ -178,7 +178,7 @@ FramebufferStatus CheckAttachmentSampleCounts(const Context *context,
         {
             // CHROMIUM_framebuffer_mixed_samples allows a framebuffer to be considered complete
             // when its depth or stencil samples are a multiple of the number of color samples.
-            if (!context->getExtensions().framebufferMixedSamples)
+            if (!context->getExtensions().framebufferMixedSamplesCHROMIUM)
             {
                 return FramebufferStatus::Incomplete(
                     GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE,
@@ -1491,7 +1491,7 @@ FramebufferStatus Framebuffer::checkStatusWithGLFrontEnd(const Context *context)
 
     // In ES 2.0 and WebGL, all color attachments must have the same width and height.
     // In ES 3.0, there is no such restriction.
-    if ((state.getClientMajorVersion() < 3 || state.getExtensions().webglCompatibility) &&
+    if ((state.getClientMajorVersion() < 3 || state.getExtensions().webglCompatibilityANGLE) &&
         !mState.attachmentsHaveSameDimensions())
     {
         return FramebufferStatus::Incomplete(
@@ -1511,7 +1511,7 @@ FramebufferStatus Framebuffer::checkStatusWithGLFrontEnd(const Context *context)
     // The WebGL conformance tests implicitly define that all framebuffer
     // attachments must be unique. For example, the same level of a texture can
     // not be attached to two different color attachments.
-    if (state.getExtensions().webglCompatibility)
+    if (state.getExtensions().webglCompatibilityANGLE)
     {
         if (!mState.colorAttachmentsAreUniqueImages())
         {

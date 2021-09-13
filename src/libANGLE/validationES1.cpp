@@ -742,7 +742,7 @@ bool ValidateCullFace(const Context *context, GLenum mode)
 bool ValidateDepthRangex(const Context *context, GLfixed n, GLfixed f)
 {
     ANGLE_VALIDATE_IS_GLES1(context);
-    if (context->getExtensions().webglCompatibility && n > f)
+    if (context->isWebGL() && n > f)
     {
         context->validationError(GL_INVALID_OPERATION, kInvalidDepthRange);
         return false;

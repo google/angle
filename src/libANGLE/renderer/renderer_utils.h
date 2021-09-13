@@ -440,8 +440,8 @@ bool IsOverridableLinearFormat(angle::FormatID formatID);
 
 // MultiDraw macro patterns
 // These macros are to avoid too much code duplication as we don't want to have if detect for
-// hasDrawID/BaseVertex/BaseInstance inside for loop in a multiDraw call Part of these are put in
-// the header as we want to share with specialized context impl on some platforms for multidraw
+// hasDrawID/BaseVertex/BaseInstance inside for loop in a multiDrawANGLE call Part of these are put
+// in the header as we want to share with specialized context impl on some platforms for multidraw
 #define ANGLE_SET_DRAW_ID_UNIFORM_0(drawID) \
     {}
 #define ANGLE_SET_DRAW_ID_UNIFORM_1(drawID) programObject->setDrawIDUniform(drawID)

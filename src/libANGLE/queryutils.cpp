@@ -3141,7 +3141,7 @@ bool GetQueryParameterInfo(const State &glState,
         }
         case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
         {
-            if (!extensions.packReverseRowOrder)
+            if (!extensions.packReverseRowOrderANGLE)
             {
                 return false;
             }
@@ -3152,7 +3152,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE:
         case GL_TEXTURE_BINDING_RECTANGLE_ANGLE:
         {
-            if (!extensions.textureRectangle)
+            if (!extensions.textureRectangleANGLE)
             {
                 return false;
             }
@@ -3163,7 +3163,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_MAX_DRAW_BUFFERS_EXT:
         case GL_MAX_COLOR_ATTACHMENTS_EXT:
         {
-            if ((clientMajorVersion < 3) && !extensions.drawBuffers)
+            if ((clientMajorVersion < 3) && !extensions.drawBuffersEXT)
             {
                 return false;
             }
@@ -3235,7 +3235,7 @@ bool GetQueryParameterInfo(const State &glState,
             return true;
         }
         case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
-            if (!extensions.textureFilterAnisotropic)
+            if (!extensions.textureFilterAnisotropicEXT)
             {
                 return false;
             }
@@ -3243,7 +3243,7 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_TIMESTAMP_EXT:
-            if (!extensions.disjointTimerQuery)
+            if (!extensions.disjointTimerQueryEXT)
             {
                 return false;
             }
@@ -3251,7 +3251,7 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_GPU_DISJOINT_EXT:
-            if (!extensions.disjointTimerQuery)
+            if (!extensions.disjointTimerQueryEXT)
             {
                 return false;
             }
@@ -3259,7 +3259,7 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_COVERAGE_MODULATION_CHROMIUM:
-            if (!extensions.framebufferMixedSamples)
+            if (!extensions.framebufferMixedSamplesCHROMIUM)
             {
                 return false;
             }
@@ -3330,7 +3330,7 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (extensions.debug)
+    if (extensions.debugKHR)
     {
         switch (pname)
         {
@@ -3353,7 +3353,7 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (extensions.multisampleCompatibility)
+    if (extensions.multisampleCompatibilityEXT)
     {
         switch (pname)
         {
@@ -3365,7 +3365,7 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (extensions.bindGeneratesResource)
+    if (extensions.bindGeneratesResourceCHROMIUM)
     {
         switch (pname)
         {
@@ -3376,7 +3376,7 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (extensions.clientArrays)
+    if (extensions.clientArraysANGLE)
     {
         switch (pname)
         {
@@ -3387,7 +3387,7 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (extensions.sRGBWriteControl)
+    if (extensions.sRGBWriteControlEXT)
     {
         switch (pname)
         {
@@ -3398,28 +3398,29 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (extensions.robustResourceInitialization && pname == GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE)
+    if (extensions.robustResourceInitializationANGLE &&
+        pname == GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE)
     {
         *type      = GL_BOOL;
         *numParams = 1;
         return true;
     }
 
-    if (extensions.programCacheControl && pname == GL_PROGRAM_CACHE_ENABLED_ANGLE)
+    if (extensions.programCacheControlANGLE && pname == GL_PROGRAM_CACHE_ENABLED_ANGLE)
     {
         *type      = GL_BOOL;
         *numParams = 1;
         return true;
     }
 
-    if (extensions.parallelShaderCompile && pname == GL_MAX_SHADER_COMPILER_THREADS_KHR)
+    if (extensions.parallelShaderCompileKHR && pname == GL_MAX_SHADER_COMPILER_THREADS_KHR)
     {
         *type      = GL_INT;
         *numParams = 1;
         return true;
     }
 
-    if (extensions.blendFuncExtended && pname == GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT)
+    if (extensions.blendFuncExtendedEXT && pname == GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT)
     {
         *type      = GL_INT;
         *numParams = 1;
@@ -3460,7 +3461,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_PACK_ROW_LENGTH:
         case GL_PACK_SKIP_ROWS:
         case GL_PACK_SKIP_PIXELS:
-            if ((clientMajorVersion < 3) && !extensions.packSubimage)
+            if ((clientMajorVersion < 3) && !extensions.packSubimageNV)
             {
                 return false;
             }
@@ -3470,7 +3471,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_UNPACK_ROW_LENGTH:
         case GL_UNPACK_SKIP_ROWS:
         case GL_UNPACK_SKIP_PIXELS:
-            if ((clientMajorVersion < 3) && !extensions.unpackSubimage)
+            if ((clientMajorVersion < 3) && !extensions.unpackSubimageEXT)
             {
                 return false;
             }
@@ -3498,8 +3499,8 @@ bool GetQueryParameterInfo(const State &glState,
         {
             static_assert(GL_MAX_SAMPLES_ANGLE == GL_MAX_SAMPLES,
                           "GL_MAX_SAMPLES_ANGLE not equal to GL_MAX_SAMPLES");
-            if ((clientMajorVersion < 3) &&
-                !(extensions.framebufferMultisample || extensions.multisampledRenderToTexture))
+            if ((clientMajorVersion < 3) && !(extensions.framebufferMultisampleANGLE ||
+                                              extensions.multisampledRenderToTextureEXT))
             {
                 return false;
             }
@@ -3536,7 +3537,7 @@ bool GetQueryParameterInfo(const State &glState,
 
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
     {
-        if ((glState.getClientVersion() < Version(3, 0)) && !extensions.drawBuffers)
+        if ((glState.getClientVersion() < Version(3, 0)) && !extensions.drawBuffersEXT)
         {
             return false;
         }
@@ -3545,7 +3546,7 @@ bool GetQueryParameterInfo(const State &glState,
         return true;
     }
 
-    if ((extensions.multiview2 || extensions.multiview) && pname == GL_MAX_VIEWS_OVR)
+    if ((extensions.multiview2OVR || extensions.multiviewOVR) && pname == GL_MAX_VIEWS_OVR)
     {
         *type      = GL_INT;
         *numParams = 1;
@@ -3717,7 +3718,7 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (extensions.requestExtension)
+    if (extensions.requestExtensionANGLE)
     {
         switch (pname)
         {
@@ -3728,7 +3729,7 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (extensions.textureMultisample)
+    if (extensions.textureMultisampleANGLE)
     {
         switch (pname)
         {

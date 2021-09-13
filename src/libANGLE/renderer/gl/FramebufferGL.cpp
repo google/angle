@@ -714,7 +714,7 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
 
     // We want to use rowLength, but that might not be supported.
     bool cannotSetDesiredRowLength =
-        packState.rowLength && !GetImplAs<ContextGL>(context)->getNativeExtensions().packSubimage;
+        packState.rowLength && !GetImplAs<ContextGL>(context)->getNativeExtensions().packSubimageNV;
 
     bool usePackSkipWorkaround = features.emulatePackSkipRowsAndPackSkipPixels.enabled &&
                                  (packState.skipRows != 0 || packState.skipPixels != 0);

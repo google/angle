@@ -1824,7 +1824,7 @@ bool ValidateCreateContext(const ValidationContext *val,
                 break;
 
             case EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE:
-                if (!display->getExtensions().programCacheControl)
+                if (!display->getExtensions().programCacheControlANGLE)
                 {
                     val->setError(EGL_BAD_ATTRIBUTE,
                                   "Attribute EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE "
@@ -1841,7 +1841,7 @@ bool ValidateCreateContext(const ValidationContext *val,
                 break;
 
             case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-                if (!display->getExtensions().robustResourceInitialization)
+                if (!display->getExtensions().robustResourceInitializationANGLE)
                 {
                     val->setError(EGL_BAD_ATTRIBUTE,
                                   "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
@@ -2206,7 +2206,7 @@ bool ValidateCreateWindowSurface(const ValidationContext *val,
                 break;
 
             case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-                if (!display->getExtensions().robustResourceInitialization)
+                if (!display->getExtensions().robustResourceInitializationANGLE)
                 {
                     val->setError(EGL_BAD_ATTRIBUTE,
                                   "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
@@ -2367,7 +2367,7 @@ bool ValidateCreatePbufferSurface(const ValidationContext *val,
                 break;
 
             case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-                if (!displayExtensions.robustResourceInitialization)
+                if (!displayExtensions.robustResourceInitializationANGLE)
                 {
                     val->setError(EGL_BAD_ATTRIBUTE,
                                   "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
@@ -4825,7 +4825,7 @@ bool ValidateProgramCacheGetAttribANGLE(const ValidationContext *val,
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
-    if (!display->getExtensions().programCacheControl)
+    if (!display->getExtensions().programCacheControlANGLE)
     {
         val->setError(EGL_BAD_ACCESS, "Extension not supported");
         return false;
@@ -4855,7 +4855,7 @@ bool ValidateProgramCacheQueryANGLE(const ValidationContext *val,
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
-    if (!display->getExtensions().programCacheControl)
+    if (!display->getExtensions().programCacheControlANGLE)
     {
         val->setError(EGL_BAD_ACCESS, "Extension not supported");
         return false;
@@ -4897,7 +4897,7 @@ bool ValidateProgramCachePopulateANGLE(const ValidationContext *val,
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
-    if (!display->getExtensions().programCacheControl)
+    if (!display->getExtensions().programCacheControlANGLE)
     {
         val->setError(EGL_BAD_ACCESS, "Extension not supported");
         return false;
@@ -4932,7 +4932,7 @@ bool ValidateProgramCacheResizeANGLE(const ValidationContext *val,
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
-    if (!display->getExtensions().programCacheControl)
+    if (!display->getExtensions().programCacheControlANGLE)
     {
         val->setError(EGL_BAD_ACCESS, "Extension not supported");
         return false;
@@ -5180,7 +5180,7 @@ bool ValidateQuerySurface(const ValidationContext *val,
             break;
 
         case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-            if (!display->getExtensions().robustResourceInitialization)
+            if (!display->getExtensions().robustResourceInitializationANGLE)
             {
                 val->setError(EGL_BAD_ATTRIBUTE,
                               "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE cannot be "
@@ -5246,7 +5246,7 @@ bool ValidateQueryContext(const ValidationContext *val,
             break;
 
         case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-            if (!display->getExtensions().robustResourceInitialization)
+            if (!display->getExtensions().robustResourceInitializationANGLE)
             {
                 val->setError(EGL_BAD_ATTRIBUTE,
                               "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE cannot be "

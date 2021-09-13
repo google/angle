@@ -879,8 +879,8 @@ bool UniformLinker::indexUniforms(InfoLog &infoLog,
 
     int maxUniformLocation = -1;
 
-    // Gather uniform locations that have been set either using the bindUniformLocation API or by
-    // using a location layout qualifier and check conflicts between them.
+    // Gather uniform locations that have been set either using the bindUniformLocationCHROMIUM API
+    // or by using a location layout qualifier and check conflicts between them.
     if (!gatherUniformLocationsAndCheckConflicts(infoLog, uniformLocationBindings,
                                                  &ignoredLocations, &maxUniformLocation))
     {

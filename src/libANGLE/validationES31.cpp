@@ -112,7 +112,7 @@ bool ValidateProgramResourceProperty(const Context *context, GLenum prop)
                    context->getClientVersion() >= ES_3_2;
 
         case GL_LOCATION_INDEX_EXT:
-            return context->getExtensions().blendFuncExtended;
+            return context->getExtensions().blendFuncExtendedEXT;
 
         default:
             return false;
@@ -971,7 +971,7 @@ bool ValidateTexStorageMem2DMultisampleEXT(const Context *context,
                                            MemoryObjectID memory,
                                            GLuint64 offset)
 {
-    if (!context->getExtensions().memoryObject)
+    if (!context->getExtensions().memoryObjectEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2823,7 +2823,7 @@ bool ValidateTexStorageMem3DMultisampleEXT(const Context *context,
                                            MemoryObjectID memory,
                                            GLuint64 offset)
 {
-    if (!context->getExtensions().memoryObject)
+    if (!context->getExtensions().memoryObjectEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2838,7 +2838,7 @@ bool ValidateGetProgramResourceLocationIndexEXT(const Context *context,
                                                 GLenum programInterface,
                                                 const char *name)
 {
-    if (!context->getExtensions().blendFuncExtended)
+    if (!context->getExtensions().blendFuncExtendedEXT)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;

@@ -179,9 +179,9 @@ angle::Result Image11::copyToStorage(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-void Image11::verifyAssociatedStorageValid(TextureStorage11 *textureStorage) const
+void Image11::verifyAssociatedStorageValid(TextureStorage11 *textureStorageEXT) const
 {
-    ASSERT(mAssociatedStorage == textureStorage);
+    ASSERT(mAssociatedStorage == textureStorageEXT);
 }
 
 angle::Result Image11::recoverFromAssociatedStorage(const gl::Context *context)
