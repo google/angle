@@ -1091,7 +1091,6 @@ TEST_P(BufferStorageTestES3, StorageCopyBufferSubDataMapped)
 }
 
 // Verify persistently mapped element array buffers can use glDrawElements
-// Tests a pattern used by Fortnite's GLES backend
 TEST_P(BufferStorageTestES3, DrawElementsElementArrayBufferMapped)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
