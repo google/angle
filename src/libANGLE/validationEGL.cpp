@@ -1236,7 +1236,7 @@ bool ValidateCreateSyncBase(const ValidationContext *val,
 
             ANGLE_VALIDATION_TRY(ValidateContext(val, currentDisplay, currentContext));
 
-            if (!currentContext->getExtensions().eglSyncOES)
+            if (!currentContext->getExtensions().EGLSyncOES)
             {
                 val->setError(EGL_BAD_MATCH,
                               "EGL_SYNC_FENCE_KHR cannot be used without "
@@ -1268,7 +1268,7 @@ bool ValidateCreateSyncBase(const ValidationContext *val,
 
             ANGLE_VALIDATION_TRY(ValidateContext(val, currentDisplay, currentContext));
 
-            if (!currentContext->getExtensions().eglSyncOES)
+            if (!currentContext->getExtensions().EGLSyncOES)
             {
                 val->setError(EGL_BAD_MATCH,
                               "EGL_SYNC_FENCE_KHR cannot be used without "
@@ -3777,7 +3777,7 @@ bool ValidateWaitSync(const ValidationContext *val,
         return false;
     }
 
-    if (!context->getExtensions().eglSyncOES)
+    if (!context->getExtensions().EGLSyncOES)
     {
         val->setError(EGL_BAD_MATCH,
                       "Server-side waits cannot be performed without "
@@ -3942,7 +3942,7 @@ bool ValidateStreamConsumerGLTextureExternalKHR(const ValidationContext *val,
         return false;
     }
 
-    if (!context->getExtensions().eglStreamConsumerExternalNV)
+    if (!context->getExtensions().EGLStreamConsumerExternalNV)
     {
         val->setError(EGL_BAD_ACCESS, "EGL stream consumer external GL extension not enabled");
         return false;
@@ -4096,7 +4096,7 @@ bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *v
     // Although technically not a requirement in spec, the context needs to be checked for support
     // for external textures or future logic will cause assertations. This extension is also
     // effectively useless without external textures.
-    if (!context->getExtensions().eglStreamConsumerExternalNV)
+    if (!context->getExtensions().EGLStreamConsumerExternalNV)
     {
         val->setError(EGL_BAD_ACCESS, "EGL stream consumer external GL extension not enabled");
         return false;

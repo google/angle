@@ -73,7 +73,7 @@ ContextNULL::ContextNULL(const gl::State &state,
     mExtensions.instancedArraysANGLE          = true;
     mExtensions.instancedArraysEXT            = true;
     mExtensions.pixelBufferObjectNV           = true;
-    mExtensions.mapBufferOES                  = true;
+    mExtensions.mapbufferOES                  = true;
     mExtensions.mapBufferRangeEXT             = true;
     mExtensions.copyTextureCHROMIUM           = true;
     mExtensions.copyCompressedTextureCHROMIUM = true;
@@ -84,25 +84,25 @@ ContextNULL::ContextNULL(const gl::State &state,
     mExtensions.translatedShaderSourceANGLE   = true;
 
     mExtensions.textureStorageEXT               = true;
-    mExtensions.rgb8rgba8OES                    = true;
-    mExtensions.textureCompressionDXT1EXT       = true;
-    mExtensions.textureCompressionDXT3EXT       = true;
-    mExtensions.textureCompressionDXT5EXT       = true;
-    mExtensions.textureCompressionS3TCsRGBEXT   = true;
-    mExtensions.textureCompressionASTCHDRKHR    = true;
-    mExtensions.textureCompressionASTCLDRKHR    = true;
-    mExtensions.textureCompressionASTCOES       = true;
+    mExtensions.rgb8Rgba8OES                    = true;
+    mExtensions.textureCompressionDxt1EXT       = true;
+    mExtensions.textureCompressionDxt3ANGLE     = true;
+    mExtensions.textureCompressionDxt5ANGLE     = true;
+    mExtensions.textureCompressionS3tcSrgbEXT   = true;
+    mExtensions.textureCompressionAstcHdrKHR    = true;
+    mExtensions.textureCompressionAstcLdrKHR    = true;
+    mExtensions.textureCompressionAstcOES       = true;
     mExtensions.compressedETC1RGB8TextureOES    = true;
     mExtensions.compressedETC1RGB8SubTextureEXT = true;
-    mExtensions.lossyETCDecodeANGLE             = true;
+    mExtensions.lossyEtcDecodeANGLE             = true;
     mExtensions.geometryShaderEXT               = true;
     mExtensions.geometryShaderOES               = true;
 
-    mExtensions.eglImageOES                 = true;
-    mExtensions.eglImageExternalOES         = true;
-    mExtensions.eglImageExternalEssl3OES    = true;
-    mExtensions.eglImageArrayEXT            = true;
-    mExtensions.eglStreamConsumerExternalNV = true;
+    mExtensions.EGLImageOES                 = true;
+    mExtensions.EGLImageExternalOES         = true;
+    mExtensions.EGLImageExternalEssl3OES    = true;
+    mExtensions.EGLImageArrayEXT            = true;
+    mExtensions.EGLStreamConsumerExternalNV = true;
 
     const gl::Version maxClientVersion(3, 1);
     mCaps = GenerateMinimumCaps(maxClientVersion, mExtensions);

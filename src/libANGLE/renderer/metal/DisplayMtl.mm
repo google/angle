@@ -781,7 +781,7 @@ void DisplayMtl::initializeExtensions() const
 
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // NOTE(hqle): Support full mapBufferRangeEXT extension.
-    mNativeExtensions.mapBufferOES                  = true;
+    mNativeExtensions.mapbufferOES                  = true;
     mNativeExtensions.mapBufferRangeEXT             = true;
     mNativeExtensions.textureStorageEXT             = true;
     mNativeExtensions.drawBuffersEXT                = true;
@@ -816,12 +816,12 @@ void DisplayMtl::initializeExtensions() const
 #endif
 
     // Enable EXT_blend_minmax
-    mNativeExtensions.blendMinMaxEXT = true;
+    mNativeExtensions.blendMinmaxEXT = true;
 
-    mNativeExtensions.eglImageOES         = true;
-    mNativeExtensions.eglImageExternalOES = false;
+    mNativeExtensions.EGLImageOES         = true;
+    mNativeExtensions.EGLImageExternalOES = false;
     // NOTE(hqle): Support GL_OES_EGL_image_external_essl3.
-    mNativeExtensions.eglImageExternalEssl3OES = false;
+    mNativeExtensions.EGLImageExternalEssl3OES = false;
 
     mNativeExtensions.memoryObjectEXT   = false;
     mNativeExtensions.memoryObjectFdEXT = false;
@@ -834,7 +834,7 @@ void DisplayMtl::initializeExtensions() const
 
     mNativeExtensions.robustBufferAccessBehaviorKHR = false;
 
-    mNativeExtensions.eglSyncOES = false;
+    mNativeExtensions.EGLSyncOES = false;
 
     mNativeExtensions.occlusionQueryBooleanEXT = true;
 
@@ -845,7 +845,7 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.textureFilterAnisotropicEXT = true;
     mNativeCaps.maxTextureAnisotropy              = 16;
 
-    mNativeExtensions.textureNPOTOES = true;
+    mNativeExtensions.textureNpotOES = true;
 
     mNativeExtensions.texture3DOES = true;
 
@@ -870,7 +870,7 @@ void DisplayMtl::initializeExtensions() const
         mNativeExtensions.fenceNV = true;
 
         // GL_OES_EGL_sync
-        mNativeExtensions.eglSyncOES = true;
+        mNativeExtensions.EGLSyncOES = true;
     }
 }
 
@@ -889,7 +889,7 @@ void DisplayMtl::initializeTextureCaps() const
     // emulated.
     if (supportsAppleGPUFamily(1) && gl::DetermineCompressedTextureETCSupport(mNativeTextureCaps))
     {
-        mNativeExtensions.compressedTextureETCANGLE = true;
+        mNativeExtensions.compressedTextureEtcANGLE = true;
     }
     else
     {
@@ -897,22 +897,22 @@ void DisplayMtl::initializeTextureCaps() const
     }
 
     // Enable ASTC sliced 3D, requires MTLGPUFamilyApple3
-    if (supportsAppleGPUFamily(3) && mNativeExtensions.textureCompressionASTCLDRKHR)
+    if (supportsAppleGPUFamily(3) && mNativeExtensions.textureCompressionAstcLdrKHR)
     {
-        mNativeExtensions.textureCompressionSliced3dASTCKHR = true;
+        mNativeExtensions.textureCompressionAstcSliced3dKHR = true;
     }
 
     // Enable ASTC HDR, requires MTLGPUFamilyApple6
-    if (supportsAppleGPUFamily(6) && mNativeExtensions.textureCompressionASTCLDRKHR)
+    if (supportsAppleGPUFamily(6) && mNativeExtensions.textureCompressionAstcLdrKHR)
     {
-        mNativeExtensions.textureCompressionASTCHDRKHR = true;
+        mNativeExtensions.textureCompressionAstcHdrKHR = true;
     }
 
     // Disable all depth buffer and stencil buffer readback extensions until we need them
     mNativeExtensions.readDepthNV         = false;
     mNativeExtensions.readStencilNV       = false;
     mNativeExtensions.depthBufferFloat2NV = false;
-    mNativeExtensions.textureCompressionASTCLDRKHR &= supportsAppleGPUFamily(2);
+    mNativeExtensions.textureCompressionAstcLdrKHR &= supportsAppleGPUFamily(2);
 }
 
 void DisplayMtl::initializeLimitations()

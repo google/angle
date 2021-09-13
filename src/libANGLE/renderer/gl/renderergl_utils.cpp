@@ -1337,18 +1337,18 @@ void GenerateCaps(const FunctionsGL *functions,
 
     // Extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
-    extensions->textureCompressionASTCHDRKHR =
-        extensions->textureCompressionASTCLDRKHR &&
+    extensions->textureCompressionAstcHdrKHR =
+        extensions->textureCompressionAstcLdrKHR &&
         functions->hasExtension("GL_KHR_texture_compression_astc_hdr");
-    extensions->textureCompressionSliced3dASTCKHR =
-        (extensions->textureCompressionASTCLDRKHR &&
+    extensions->textureCompressionAstcSliced3dKHR =
+        (extensions->textureCompressionAstcLdrKHR &&
          functions->hasExtension("GL_KHR_texture_compression_astc_sliced_3d")) ||
-        extensions->textureCompressionASTCHDRKHR;
+        extensions->textureCompressionAstcHdrKHR;
     extensions->elementIndexUintOES = functions->standard == STANDARD_GL_DESKTOP ||
                                       functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                       functions->hasGLESExtension("GL_OES_element_index_uint");
     extensions->getProgramBinaryOES = caps->programBinaryFormats.size() > 0;
-    extensions->readFormatBGRAEXT   = functions->isAtLeastGL(gl::Version(1, 2)) ||
+    extensions->readFormatBgraEXT   = functions->isAtLeastGL(gl::Version(1, 2)) ||
                                     functions->hasGLExtension("GL_EXT_bgra") ||
                                     functions->hasGLESExtension("GL_EXT_read_format_bgra");
     extensions->pixelBufferObjectNV = functions->isAtLeastGL(gl::Version(2, 1)) ||
@@ -1357,14 +1357,14 @@ void GenerateCaps(const FunctionsGL *functions,
                                       functions->hasGLExtension("GL_EXT_pixel_buffer_object") ||
                                       functions->hasGLESExtension("GL_NV_pixel_buffer_object");
     extensions->syncARB      = nativegl::SupportsFenceSync(functions);
-    extensions->mapBufferOES = functions->isAtLeastGL(gl::Version(1, 5)) ||
+    extensions->mapbufferOES = functions->isAtLeastGL(gl::Version(1, 5)) ||
                                functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                functions->hasGLESExtension("GL_OES_mapbuffer");
     extensions->mapBufferRangeEXT = functions->isAtLeastGL(gl::Version(3, 0)) ||
                                     functions->hasGLExtension("GL_ARB_map_buffer_range") ||
                                     functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                     functions->hasGLESExtension("GL_EXT_map_buffer_range");
-    extensions->textureNPOTOES = functions->standard == STANDARD_GL_DESKTOP ||
+    extensions->textureNpotOES = functions->standard == STANDARD_GL_DESKTOP ||
                                  functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                  functions->hasGLESExtension("GL_OES_texture_npot");
     // Note that we could emulate EXT_draw_buffers on ES 3.0's core functionality.
@@ -1391,7 +1391,7 @@ void GenerateCaps(const FunctionsGL *functions,
             ? QuerySingleGLFloat(functions, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT)
             : 0.0f;
     extensions->fenceNV = FenceNVGL::Supported(functions) || FenceNVSyncGL::Supported(functions);
-    extensions->blendMinMaxEXT = functions->isAtLeastGL(gl::Version(1, 5)) ||
+    extensions->blendMinmaxEXT = functions->isAtLeastGL(gl::Version(1, 5)) ||
                                  functions->hasGLExtension("GL_EXT_blend_minmax") ||
                                  functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                  functions->hasGLESExtension("GL_EXT_blend_minmax");
@@ -1414,7 +1414,7 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->standardDerivativesOES = functions->isAtLeastGL(gl::Version(2, 0)) ||
                                          functions->hasGLExtension("GL_ARB_fragment_shader") ||
                                          functions->hasGLESExtension("GL_OES_standard_derivatives");
-    extensions->shaderTextureLODEXT = functions->isAtLeastGL(gl::Version(3, 0)) ||
+    extensions->shaderTextureLodEXT = functions->isAtLeastGL(gl::Version(3, 0)) ||
                                       functions->hasGLExtension("GL_ARB_shader_texture_lod") ||
                                       functions->hasGLESExtension("GL_EXT_shader_texture_lod");
     extensions->fragDepthEXT = functions->standard == STANDARD_GL_DESKTOP ||
@@ -1456,8 +1456,8 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->unpackSubimageEXT  = functions->standard == STANDARD_GL_DESKTOP ||
                                     functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                     functions->hasGLESExtension("GL_EXT_unpack_subimage");
-    extensions->noperspectiveInterpolationNV = functions->isAtLeastGL(gl::Version(3, 0));
-    extensions->packSubimageNV               = functions->standard == STANDARD_GL_DESKTOP ||
+    extensions->shaderNoperspectiveInterpolationNV = functions->isAtLeastGL(gl::Version(3, 0));
+    extensions->packSubimageNV                     = functions->standard == STANDARD_GL_DESKTOP ||
                                  functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                  functions->hasGLESExtension("GL_NV_pack_subimage");
     extensions->vertexArrayObjectOES = functions->isAtLeastGL(gl::Version(3, 0)) ||
@@ -1470,15 +1470,15 @@ void GenerateCaps(const FunctionsGL *functions,
                                  functions->isAtLeastGLES(gl::Version(3, 2)) ||
                                  functions->hasGLESExtension("GL_KHR_debug") ||
                                  functions->hasGLESExtension("GL_EXT_debug_marker");
-    extensions->eglImageOES         = functions->hasGLESExtension("GL_OES_EGL_image");
-    extensions->eglImageExternalOES = functions->hasGLESExtension("GL_OES_EGL_image_external");
-    extensions->eglImageExternalWrapModesEXT =
+    extensions->EGLImageOES         = functions->hasGLESExtension("GL_OES_EGL_image");
+    extensions->EGLImageExternalOES = functions->hasGLESExtension("GL_OES_EGL_image_external");
+    extensions->EGLImageExternalWrapModesEXT =
         functions->hasExtension("GL_EXT_EGL_image_external_wrap_modes");
-    extensions->eglImageExternalEssl3OES =
+    extensions->EGLImageExternalEssl3OES =
         functions->hasGLESExtension("GL_OES_EGL_image_external_essl3");
-    extensions->eglImageArrayEXT = functions->hasGLESExtension("GL_EXT_EGL_image_array");
+    extensions->EGLImageArrayEXT = functions->hasGLESExtension("GL_EXT_EGL_image_array");
 
-    extensions->eglSyncOES = functions->hasGLESExtension("GL_OES_EGL_sync");
+    extensions->EGLSyncOES = functions->hasGLESExtension("GL_OES_EGL_sync");
 
     if (!features.disableTimestampQueries.enabled &&
         (functions->isAtLeastGL(gl::Version(3, 3)) ||
@@ -1525,10 +1525,10 @@ void GenerateCaps(const FunctionsGL *functions,
 
     // Note that OES_texture_storage_multisample_2d_array support could be extended down to GL 3.2
     // if we emulated texStorage* API on top of texImage*.
-    extensions->textureStorageMultisample2DArrayOES =
+    extensions->textureStorageMultisample2dArrayOES =
         functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 2));
 
-    extensions->multiviewMultisampleANGLE = extensions->textureStorageMultisample2DArrayOES &&
+    extensions->multiviewMultisampleANGLE = extensions->textureStorageMultisample2dArrayOES &&
                                             (extensions->multiviewOVR || extensions->multiview2OVR);
 
     extensions->textureMultisampleANGLE = functions->isAtLeastGL(gl::Version(3, 2)) ||
@@ -1712,7 +1712,7 @@ void GenerateCaps(const FunctionsGL *functions,
     // ANGLE_compressed_texture_etc
     // Expose this extension only when we support the formats or we're running on top of a native
     // ES driver.
-    extensions->compressedTextureETCANGLE =
+    extensions->compressedTextureEtcANGLE =
         (features.allowEtcFormats.enabled || functions->standard == STANDARD_GL_ES) &&
         gl::DetermineCompressedTextureETCSupport(*textureCapsMap);
 
@@ -1802,7 +1802,7 @@ void GenerateCaps(const FunctionsGL *functions,
         LimitVersion(maxSupportedESVersion, gl::Version(3, 1));
     }
 
-    extensions->yuvTargetEXT = functions->hasGLESExtension("GL_EXT_YUV_target");
+    extensions->YUVTargetEXT = functions->hasGLESExtension("GL_EXT_YUV_target");
 
     // PVRTC1 textures must be squares on Apple platforms.
     if (IsApple())

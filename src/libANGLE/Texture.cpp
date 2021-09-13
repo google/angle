@@ -358,7 +358,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     {
         return false;
     }
-    bool npotSupport = state.getExtensions().textureNPOTOES || state.getClientMajorVersion() >= 3;
+    bool npotSupport = state.getExtensions().textureNpotOES || state.getClientMajorVersion() >= 3;
     if (!npotSupport)
     {
         if ((samplerState.getWrapS() != GL_CLAMP_TO_EDGE &&
@@ -405,7 +405,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // completeness.
     if (mType == TextureType::External)
     {
-        if (!state.getExtensions().eglImageExternalWrapModesEXT)
+        if (!state.getExtensions().EGLImageExternalWrapModesEXT)
         {
             if (samplerState.getWrapS() != GL_CLAMP_TO_EDGE ||
                 samplerState.getWrapT() != GL_CLAMP_TO_EDGE)

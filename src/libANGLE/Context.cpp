@@ -499,8 +499,8 @@ void Context::initializeDefaultResources()
         mZeroTextures[TextureType::Rectangle].set(this, zeroTextureRectangle);
     }
 
-    if (mSupportedExtensions.eglImageExternalOES ||
-        mSupportedExtensions.eglStreamConsumerExternalNV)
+    if (mSupportedExtensions.EGLImageExternalOES ||
+        mSupportedExtensions.EGLStreamConsumerExternalNV)
     {
         Texture *zeroTextureExternal =
             new Texture(mImplementation.get(), {0}, TextureType::External);
@@ -3419,20 +3419,20 @@ Extensions Context::generateSupportedExtensions() const
     if (getClientVersion() < ES_3_0)
     {
         // Disable ES3+ extensions
-        supportedExtensions.colorBufferFloatEXT      = false;
-        supportedExtensions.eglImageExternalEssl3OES = false;
-        supportedExtensions.textureNorm16EXT         = false;
-        supportedExtensions.multiviewOVR             = false;
-        supportedExtensions.multiview2OVR            = false;
-        supportedExtensions.copyTexture3dANGLE       = false;
-        supportedExtensions.textureMultisampleANGLE  = false;
-        supportedExtensions.drawBuffersIndexedEXT    = false;
-        supportedExtensions.drawBuffersIndexedOES    = false;
-        supportedExtensions.eglImageArrayEXT         = false;
-        supportedExtensions.textureSRGBOverrideEXT   = false;
+        supportedExtensions.colorBufferFloatEXT          = false;
+        supportedExtensions.EGLImageExternalEssl3OES     = false;
+        supportedExtensions.textureNorm16EXT             = false;
+        supportedExtensions.multiviewOVR                 = false;
+        supportedExtensions.multiview2OVR                = false;
+        supportedExtensions.copyTexture3dANGLE           = false;
+        supportedExtensions.textureMultisampleANGLE      = false;
+        supportedExtensions.drawBuffersIndexedEXT        = false;
+        supportedExtensions.drawBuffersIndexedOES        = false;
+        supportedExtensions.EGLImageArrayEXT             = false;
+        supportedExtensions.textureFormatSRGBOverrideEXT = false;
 
         // Requires glCompressedTexImage3D
-        supportedExtensions.textureCompressionASTCOES = false;
+        supportedExtensions.textureCompressionAstcOES = false;
 
         // Don't expose GL_EXT_texture_sRGB_decode without sRGB texture support
         if (!supportedExtensions.sRGBEXT)
@@ -3452,10 +3452,10 @@ Extensions Context::generateSupportedExtensions() const
         // Because of the difference in the SNORM to FLOAT conversion formula
         // between GLES 2.0 and 3.0, vertex type 10_10_10_2 is disabled
         // when the context version is lower than 3.0
-        supportedExtensions.vertexAttribType1010102OES = false;
+        supportedExtensions.vertexType1010102OES = false;
 
         // GL_EXT_YUV_target requires ESSL3
-        supportedExtensions.yuvTargetEXT = false;
+        supportedExtensions.YUVTargetEXT = false;
 
         // GL_EXT_clip_cull_distance requires ESSL3
         supportedExtensions.clipCullDistanceEXT = false;
@@ -3470,7 +3470,7 @@ Extensions Context::generateSupportedExtensions() const
 
         // TODO(http://anglebug.com/2775): Multisample arrays could be supported on ES 3.0 as well
         // once 2D multisample texture extension is exposed there.
-        supportedExtensions.textureStorageMultisample2DArrayOES = false;
+        supportedExtensions.textureStorageMultisample2dArrayOES = false;
     }
 
     if (getClientVersion() > ES_2_0)
@@ -3495,8 +3495,8 @@ Extensions Context::generateSupportedExtensions() const
 
         // Disable support for CHROMIUM_color_buffer_float_rgb[a] in ES 3.0+, these extensions are
         // non-conformant in ES 3.0 and superseded by EXT_color_buffer_float.
-        supportedExtensions.colorBufferFloatRGBCHROMIUM  = false;
-        supportedExtensions.colorBufferFloatRGBACHROMIUM = false;
+        supportedExtensions.colorBufferFloatRgbCHROMIUM  = false;
+        supportedExtensions.colorBufferFloatRgbaCHROMIUM = false;
     }
 
     if (getFrontendFeatures().disableAnisotropicFiltering.enabled)
@@ -3542,7 +3542,7 @@ Extensions Context::generateSupportedExtensions() const
     ASSERT(mDisplay);
     if (!mDisplay->getExtensions().fenceSync)
     {
-        supportedExtensions.eglSyncOES = false;
+        supportedExtensions.EGLSyncOES = false;
     }
 
     if (mDisplay->getExtensions().robustnessVideoMemoryPurgeNV)
@@ -3556,20 +3556,20 @@ Extensions Context::generateSupportedExtensions() const
     supportedExtensions.loseContextCHROMIUM = true;
 
     // The ASTC texture extensions have dependency requirements.
-    if (supportedExtensions.textureCompressionASTCHDRKHR ||
-        supportedExtensions.textureCompressionSliced3dASTCKHR)
+    if (supportedExtensions.textureCompressionAstcHdrKHR ||
+        supportedExtensions.textureCompressionAstcSliced3dKHR)
     {
         // GL_KHR_texture_compression_astc_hdr cannot be exposed without also exposing
         // GL_KHR_texture_compression_astc_ldr
-        ASSERT(supportedExtensions.textureCompressionASTCLDRKHR);
+        ASSERT(supportedExtensions.textureCompressionAstcLdrKHR);
     }
 
-    if (supportedExtensions.textureCompressionASTCOES)
+    if (supportedExtensions.textureCompressionAstcOES)
     {
         // GL_OES_texture_compression_astc cannot be exposed without also exposing
         // GL_KHR_texture_compression_astc_ldr and GL_KHR_texture_compression_astc_hdr
-        ASSERT(supportedExtensions.textureCompressionASTCLDRKHR);
-        ASSERT(supportedExtensions.textureCompressionASTCHDRKHR);
+        ASSERT(supportedExtensions.textureCompressionAstcLdrKHR);
+        ASSERT(supportedExtensions.textureCompressionAstcHdrKHR);
     }
 
     // GL_KHR_protected_textures
@@ -3606,27 +3606,27 @@ void Context::initCaps()
         mSupportedExtensions.compressedEACRG11UnsignedTextureOES             = false;
         mSupportedExtensions.compressedETC1RGB8SubTextureEXT                 = false;
         mSupportedExtensions.compressedETC1RGB8TextureOES                    = false;
-        mSupportedExtensions.compressedETC2PunchthroughARGB8TextureOES       = false;
-        mSupportedExtensions.compressedETC2PunchthroughAsRGB8AlphaTextureOES = false;
+        mSupportedExtensions.compressedETC2PunchthroughARGBA8TextureOES      = false;
+        mSupportedExtensions.compressedETC2PunchthroughASRGB8AlphaTextureOES = false;
         mSupportedExtensions.compressedETC2RGB8TextureOES                    = false;
         mSupportedExtensions.compressedETC2RGBA8TextureOES                   = false;
-        mSupportedExtensions.compressedETC2sRGB8Alpha8TextureOES             = false;
-        mSupportedExtensions.compressedETC2sRGB8TextureOES                   = false;
-        mSupportedExtensions.compressedTextureETCANGLE                       = false;
-        mSupportedExtensions.compressedTexturePVRTCIMG                       = false;
-        mSupportedExtensions.compressedTexturePVRTCsRGBEXT                   = false;
+        mSupportedExtensions.compressedETC2SRGB8Alpha8TextureOES             = false;
+        mSupportedExtensions.compressedETC2SRGB8TextureOES                   = false;
+        mSupportedExtensions.compressedTextureEtcANGLE                       = false;
+        mSupportedExtensions.textureCompressionPvrtcIMG                      = false;
+        mSupportedExtensions.pvrtcSRGBEXT                                    = false;
         mSupportedExtensions.copyCompressedTextureCHROMIUM                   = false;
-        mSupportedExtensions.textureCompressionASTCHDRKHR                    = false;
-        mSupportedExtensions.textureCompressionASTCLDRKHR                    = false;
-        mSupportedExtensions.textureCompressionASTCOES                       = false;
-        mSupportedExtensions.textureCompressionBPTCEXT                       = false;
-        mSupportedExtensions.textureCompressionDXT1EXT                       = false;
-        mSupportedExtensions.textureCompressionDXT3EXT                       = false;
-        mSupportedExtensions.textureCompressionDXT5EXT                       = false;
-        mSupportedExtensions.textureCompressionRGTCEXT                       = false;
-        mSupportedExtensions.textureCompressionS3TCsRGBEXT                   = false;
-        mSupportedExtensions.textureCompressionSliced3dASTCKHR               = false;
-        mSupportedExtensions.textureFilteringCHROMIUM                        = false;
+        mSupportedExtensions.textureCompressionAstcHdrKHR                    = false;
+        mSupportedExtensions.textureCompressionAstcLdrKHR                    = false;
+        mSupportedExtensions.textureCompressionAstcOES                       = false;
+        mSupportedExtensions.textureCompressionBptcEXT                       = false;
+        mSupportedExtensions.textureCompressionDxt1EXT                       = false;
+        mSupportedExtensions.textureCompressionDxt3ANGLE                     = false;
+        mSupportedExtensions.textureCompressionDxt5ANGLE                     = false;
+        mSupportedExtensions.textureCompressionRgtcEXT                       = false;
+        mSupportedExtensions.textureCompressionS3tcSrgbEXT                   = false;
+        mSupportedExtensions.textureCompressionAstcSliced3dKHR               = false;
+        mSupportedExtensions.textureFilteringHintCHROMIUM                    = false;
 
         mState.mCaps.compressedTextureFormats.clear();
     }
@@ -3844,7 +3844,7 @@ void Context::initCaps()
         INFO() << "Disabling GL_EXT_map_buffer_range and GL_OES_mapbuffer during capture, which "
                   "are not supported on some native drivers";
         mState.mExtensions.mapBufferRangeEXT = false;
-        mState.mExtensions.mapBufferOES      = false;
+        mState.mExtensions.mapbufferOES      = false;
 
         INFO() << "Disabling GL_CHROMIUM_bind_uniform_location during capture, which is not "
                   "supported on native drivers";
@@ -3852,7 +3852,7 @@ void Context::initCaps()
 
         INFO() << "Disabling GL_NV_shader_noperspective_interpolation during capture, which is not "
                   "supported on some native drivers";
-        mState.mExtensions.noperspectiveInterpolationNV = false;
+        mState.mExtensions.shaderNoperspectiveInterpolationNV = false;
 
         // NVIDIA's Vulkan driver only supports 4 draw buffers
         constexpr GLint maxDrawBuffers = 4;
@@ -9519,9 +9519,9 @@ void StateCache::updateValidBindTextureTypes(Context *context)
         {TextureType::_2D, true},
         {TextureType::_2DArray, isGLES3},
         {TextureType::_2DMultisample, isGLES31 || exts.textureMultisampleANGLE},
-        {TextureType::_2DMultisampleArray, exts.textureStorageMultisample2DArrayOES},
+        {TextureType::_2DMultisampleArray, exts.textureStorageMultisample2dArrayOES},
         {TextureType::_3D, isGLES3 || exts.texture3DOES},
-        {TextureType::External, exts.eglImageExternalOES || exts.eglStreamConsumerExternalNV},
+        {TextureType::External, exts.EGLImageExternalOES || exts.EGLStreamConsumerExternalNV},
         {TextureType::Rectangle, exts.textureRectangleANGLE},
         {TextureType::CubeMap, true},
         {TextureType::CubeMapArray, exts.textureCubeMapArrayAny()},
@@ -9554,9 +9554,9 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
                                                  ? VertexAttribTypeCase::Valid
                                                  : VertexAttribTypeCase::Invalid;
 
-    VertexAttribTypeCase vertexType1010102Validity =
-        (context->getExtensions().vertexAttribType1010102OES) ? VertexAttribTypeCase::ValidSize3or4
-                                                              : VertexAttribTypeCase::Invalid;
+    VertexAttribTypeCase vertexType1010102Validity = (context->getExtensions().vertexType1010102OES)
+                                                         ? VertexAttribTypeCase::ValidSize3or4
+                                                         : VertexAttribTypeCase::Invalid;
 
     if (context->getClientMajorVersion() <= 2)
     {

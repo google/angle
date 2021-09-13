@@ -398,8 +398,8 @@ static bool ValidateES3CompressedFormatForTexture3D(const Context *context, GLen
         return false;
     }
 
-    if (IsASTC2DFormat(format) && !(context->getExtensions().textureCompressionASTCHDRKHR ||
-                                    context->getExtensions().textureCompressionSliced3dASTCKHR))
+    if (IsASTC2DFormat(format) && !(context->getExtensions().textureCompressionAstcHdrKHR ||
+                                    context->getExtensions().textureCompressionAstcSliced3dKHR))
     {
         // GL_KHR_texture_compression_astc_hdr, TEXTURE_3D is not supported without HDR profile
         context->validationError(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArrayASTC);
@@ -2886,7 +2886,7 @@ bool ValidateGetBufferPointervRobustANGLE(const Context *context,
 
     GLsizei numParams = 0;
 
-    if (context->getClientMajorVersion() < 3 && !context->getExtensions().mapBufferOES)
+    if (context->getClientMajorVersion() < 3 && !context->getExtensions().mapbufferOES)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;

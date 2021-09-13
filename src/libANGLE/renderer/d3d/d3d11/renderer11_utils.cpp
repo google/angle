@@ -1582,12 +1582,12 @@ void GenerateCaps(ID3D11Device *device,
 
     extensions->elementIndexUintOES = true;
     extensions->getProgramBinaryOES = true;
-    extensions->rgb8rgba8OES        = true;
-    extensions->readFormatBGRAEXT   = true;
+    extensions->rgb8Rgba8OES        = true;
+    extensions->readFormatBgraEXT   = true;
     extensions->pixelBufferObjectNV = true;
-    extensions->mapBufferOES        = true;
+    extensions->mapbufferOES        = true;
     extensions->mapBufferRangeEXT   = true;
-    extensions->textureNPOTOES      = GetNPOTTextureSupport(featureLevel);
+    extensions->textureNpotOES      = GetNPOTTextureSupport(featureLevel);
     extensions->drawBuffersEXT      = GetMaximumSimultaneousRenderTargets(featureLevel) > 1;
     extensions->drawBuffersIndexedEXT =
         (renderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_1);
@@ -1602,7 +1602,7 @@ void GenerateCaps(ID3D11Device *device,
     // See https://msdn.microsoft.com/en-us/library/windows/desktop/ff476332(v=vs.85).aspx
     // and https://msdn.microsoft.com/en-us/library/windows/desktop/ff476900(v=vs.85).aspx
     extensions->robustBufferAccessBehaviorKHR = true;
-    extensions->blendMinMaxEXT                = true;
+    extensions->blendMinmaxEXT                = true;
     // https://docs.microsoft.com/en-us/windows/desktop/direct3ddxgi/format-support-for-direct3d-11-0-feature-level-hardware
     extensions->floatBlendEXT               = true;
     extensions->framebufferBlitANGLE        = GetFramebufferBlitSupport(featureLevel);
@@ -1612,7 +1612,7 @@ void GenerateCaps(ID3D11Device *device,
     extensions->instancedArraysEXT          = GetInstancingSupport(featureLevel);
     extensions->packReverseRowOrderANGLE    = true;
     extensions->standardDerivativesOES      = GetDerivativeInstructionSupport(featureLevel);
-    extensions->shaderTextureLODEXT         = GetShaderTextureLODSupport(featureLevel);
+    extensions->shaderTextureLodEXT         = GetShaderTextureLODSupport(featureLevel);
     extensions->fragDepthEXT                = true;
     extensions->multiviewOVR                = IsMultiviewSupported(featureLevel);
     extensions->multiview2OVR               = IsMultiviewSupported(featureLevel);
@@ -1626,21 +1626,21 @@ void GenerateCaps(ID3D11Device *device,
     extensions->translatedShaderSourceANGLE         = true;
     extensions->fboRenderMipmapOES                  = true;
     extensions->debugMarkerEXT                      = true;
-    extensions->eglImageOES                         = true;
-    extensions->eglImageExternalOES                 = true;
-    extensions->eglImageExternalWrapModesEXT        = true;
-    extensions->eglImageExternalEssl3OES            = true;
-    extensions->eglStreamConsumerExternalNV         = true;
+    extensions->EGLImageOES                         = true;
+    extensions->EGLImageExternalOES                 = true;
+    extensions->EGLImageExternalWrapModesEXT        = true;
+    extensions->EGLImageExternalEssl3OES            = true;
+    extensions->EGLStreamConsumerExternalNV         = true;
     extensions->unpackSubimageEXT                   = true;
     extensions->packSubimageNV                      = true;
-    extensions->lossyETCDecodeANGLE                 = true;
+    extensions->lossyEtcDecodeANGLE                 = true;
     extensions->syncQueryCHROMIUM                   = GetEventQuerySupport(featureLevel);
     extensions->copyTextureCHROMIUM                 = true;
     extensions->copyCompressedTextureCHROMIUM       = true;
-    extensions->textureStorageMultisample2DArrayOES = true;
+    extensions->textureStorageMultisample2dArrayOES = true;
     extensions->multiviewMultisampleANGLE =
         ((extensions->multiviewOVR || extensions->multiview2OVR) &&
-         extensions->textureStorageMultisample2DArrayOES);
+         extensions->textureStorageMultisample2dArrayOES);
     extensions->copyTexture3dANGLE      = true;
     extensions->textureBorderClampOES   = true;
     extensions->textureMultisampleANGLE = true;

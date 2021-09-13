@@ -3267,7 +3267,7 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_TEXTURE_BINDING_EXTERNAL_OES:
-            if (!extensions.eglStreamConsumerExternalNV && !extensions.eglImageExternalOES)
+            if (!extensions.EGLStreamConsumerExternalNV && !extensions.EGLImageExternalOES)
             {
                 return false;
             }

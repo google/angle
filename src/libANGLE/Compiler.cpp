@@ -98,26 +98,27 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.MaxDrawBuffers               = caps.maxDrawBuffers;
     mResources.OES_standard_derivatives     = extensions.standardDerivativesOES;
     mResources.EXT_draw_buffers             = extensions.drawBuffersEXT;
-    mResources.EXT_shader_texture_lod       = extensions.shaderTextureLODEXT;
+    mResources.EXT_shader_texture_lod       = extensions.shaderTextureLodEXT;
     mResources.EXT_shader_non_constant_global_initializers =
         extensions.shaderNonConstantGlobalInitializersEXT;
-    mResources.OES_EGL_image_external                = extensions.eglImageExternalOES;
-    mResources.OES_EGL_image_external_essl3          = extensions.eglImageExternalEssl3OES;
-    mResources.NV_EGL_stream_consumer_external       = extensions.eglStreamConsumerExternalNV;
-    mResources.NV_shader_noperspective_interpolation = extensions.noperspectiveInterpolationNV;
-    mResources.ARB_texture_rectangle                 = extensions.textureRectangleANGLE;
-    mResources.EXT_gpu_shader5                       = extensions.gpuShader5EXT;
-    mResources.OES_shader_io_blocks                  = extensions.shaderIoBlocksOES;
-    mResources.EXT_shader_io_blocks                  = extensions.shaderIoBlocksEXT;
+    mResources.OES_EGL_image_external          = extensions.EGLImageExternalOES;
+    mResources.OES_EGL_image_external_essl3    = extensions.EGLImageExternalEssl3OES;
+    mResources.NV_EGL_stream_consumer_external = extensions.EGLStreamConsumerExternalNV;
+    mResources.NV_shader_noperspective_interpolation =
+        extensions.shaderNoperspectiveInterpolationNV;
+    mResources.ARB_texture_rectangle = extensions.textureRectangleANGLE;
+    mResources.EXT_gpu_shader5       = extensions.gpuShader5EXT;
+    mResources.OES_shader_io_blocks  = extensions.shaderIoBlocksOES;
+    mResources.EXT_shader_io_blocks  = extensions.shaderIoBlocksEXT;
     mResources.OES_texture_storage_multisample_2d_array =
-        extensions.textureStorageMultisample2DArrayOES;
+        extensions.textureStorageMultisample2dArrayOES;
     mResources.OES_texture_3D                  = extensions.texture3DOES;
     mResources.ANGLE_texture_multisample       = extensions.textureMultisampleANGLE;
     mResources.ANGLE_multi_draw                = extensions.multiDrawANGLE;
     mResources.ANGLE_base_vertex_base_instance = extensions.baseVertexBaseInstanceANGLE;
     mResources.APPLE_clip_distance             = extensions.clipDistanceAPPLE;
     // OES_shader_multisample_interpolation
-    mResources.OES_shader_multisample_interpolation = extensions.multisampleInterpolationOES;
+    mResources.OES_shader_multisample_interpolation = extensions.shaderMultisampleInterpolationOES;
     mResources.OES_shader_image_atomic              = extensions.shaderImageAtomicOES;
     // TODO: use shader precision caps to determine if high precision is supported?
     mResources.FragmentPrecisionHigh = 1;
@@ -149,7 +150,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.EXT_texture_buffer = extensions.textureBufferEXT;
 
     // GL_EXT_YUV_target
-    mResources.EXT_YUV_target = extensions.yuvTargetEXT;
+    mResources.EXT_YUV_target = extensions.YUVTargetEXT;
 
     mResources.EXT_shader_framebuffer_fetch_non_coherent =
         extensions.shaderFramebufferFetchNonCoherentEXT;

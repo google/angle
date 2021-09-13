@@ -154,7 +154,7 @@ bool ValidReadPixelsFormatEnum(const Context *context, GLenum format)
             return context->getExtensions().sRGBEXT;
 
         case GL_BGRA_EXT:
-            return context->getExtensions().readFormatBGRAEXT;
+            return context->getExtensions().readFormatBgraEXT;
 
         default:
             return false;
@@ -203,7 +203,7 @@ bool ValidReadPixelsFormatType(const Context *context,
                            (context->getExtensions().textureNorm16EXT &&
                             (type == GL_UNSIGNED_SHORT) && info->pixelBytes >= 2);
                 case GL_BGRA_EXT:
-                    return context->getExtensions().readFormatBGRAEXT && (type == GL_UNSIGNED_BYTE);
+                    return context->getExtensions().readFormatBgraEXT && (type == GL_UNSIGNED_BYTE);
                 case GL_STENCIL_INDEX_OES:
                     return context->getExtensions().readStencilNV && (type == GL_UNSIGNED_BYTE);
                 case GL_DEPTH_COMPONENT:
@@ -391,7 +391,7 @@ bool ValidateTextureSRGBDecodeValue(const Context *context, const ParamType *par
 template <typename ParamType>
 bool ValidateTextureSRGBOverrideValue(const Context *context, const ParamType *params)
 {
-    if (!context->getExtensions().textureSRGBOverrideEXT)
+    if (!context->getExtensions().textureFormatSRGBOverrideEXT)
     {
         context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
         return false;
@@ -633,7 +633,7 @@ bool ValidTextureTarget(const Context *context, TextureType type)
             return (context->getClientVersion() >= Version(3, 1) ||
                     context->getExtensions().textureMultisampleANGLE);
         case TextureType::_2DMultisampleArray:
-            return context->getExtensions().textureStorageMultisample2DArrayOES;
+            return context->getExtensions().textureStorageMultisample2dArrayOES;
 
         case TextureType::CubeMapArray:
             return (context->getClientVersion() >= Version(3, 2) ||
@@ -689,8 +689,8 @@ bool ValidTexture3DTarget(const Context *context, TextureType target)
 bool ValidTextureExternalTarget(const Context *context, TextureType target)
 {
     return (target == TextureType::External) &&
-           (context->getExtensions().eglImageExternalOES ||
-            context->getExtensions().eglStreamConsumerExternalNV);
+           (context->getExtensions().EGLImageExternalOES ||
+            context->getExtensions().EGLStreamConsumerExternalNV);
 }
 
 bool ValidTextureExternalTarget(const Context *context, TextureTarget target)
@@ -903,7 +903,7 @@ bool ValidTexLevelDestinationTarget(const Context *context, TextureType type)
         case TextureType::Rectangle:
             return context->getExtensions().textureRectangleANGLE;
         case TextureType::_2DMultisampleArray:
-            return context->getExtensions().textureStorageMultisample2DArrayOES;
+            return context->getExtensions().textureStorageMultisample2dArrayOES;
         case TextureType::Buffer:
             return (context->getClientVersion() >= Version(3, 2) ||
                     context->getExtensions().textureBufferAny());
@@ -986,7 +986,7 @@ bool ValidImageSizeParameters(const Context *context,
     // TexSubImage parameters can be NPOT without textureNPOT extension,
     // as long as the destination texture is POT.
     bool hasNPOTSupport =
-        context->getExtensions().textureNPOTOES || context->getClientVersion() >= Version(3, 0);
+        context->getExtensions().textureNpotOES || context->getClientVersion() >= Version(3, 0);
     if (!isSubImage && !hasNPOTSupport &&
         (level != 0 && (!isPow2(width) || !isPow2(height) || !isPow2(depth))))
     {
@@ -1905,7 +1905,7 @@ bool ValidateGenerateMipmapBase(const Context *context, TextureType target)
     }
 
     // Non-power of 2 ES2 check
-    if (context->getClientVersion() < Version(3, 0) && !context->getExtensions().textureNPOTOES &&
+    if (context->getClientVersion() < Version(3, 0) && !context->getExtensions().textureNpotOES &&
         (!isPow2(static_cast<int>(texture->getWidth(baseTarget, 0))) ||
          !isPow2(static_cast<int>(texture->getHeight(baseTarget, 0)))))
     {
@@ -2722,7 +2722,7 @@ bool ValidateStateQuery(const Context *context,
         case GL_TEXTURE_BINDING_2D_MULTISAMPLE:
             break;
         case GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY:
-            if (!context->getExtensions().textureStorageMultisample2DArrayOES)
+            if (!context->getExtensions().textureStorageMultisample2dArrayOES)
             {
                 context->validationError(GL_INVALID_ENUM, kMultisampleArrayExtensionRequired);
                 return false;
@@ -2736,8 +2736,8 @@ bool ValidateStateQuery(const Context *context,
             }
             break;
         case GL_TEXTURE_BINDING_EXTERNAL_OES:
-            if (!context->getExtensions().eglStreamConsumerExternalNV &&
-                !context->getExtensions().eglImageExternalOES)
+            if (!context->getExtensions().EGLStreamConsumerExternalNV &&
+                !context->getExtensions().EGLImageExternalOES)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
@@ -4586,7 +4586,7 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
                                         TextureType type,
                                         GLeglImageOES image)
 {
-    if (!context->getExtensions().eglImageOES && !context->getExtensions().eglImageExternalOES)
+    if (!context->getExtensions().EGLImageOES && !context->getExtensions().EGLImageExternalOES)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -4595,21 +4595,21 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
     switch (type)
     {
         case TextureType::_2D:
-            if (!context->getExtensions().eglImageOES)
+            if (!context->getExtensions().EGLImageOES)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             }
             break;
 
         case TextureType::_2DArray:
-            if (!context->getExtensions().eglImageArrayEXT)
+            if (!context->getExtensions().EGLImageArrayEXT)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             }
             break;
 
         case TextureType::External:
-            if (!context->getExtensions().eglImageExternalOES)
+            if (!context->getExtensions().EGLImageExternalOES)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             }
@@ -4669,7 +4669,7 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
                                                   GLenum target,
                                                   GLeglImageOES image)
 {
-    if (!context->getExtensions().eglImageOES)
+    if (!context->getExtensions().EGLImageOES)
     {
         context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -6261,7 +6261,7 @@ bool ValidateGetBufferParameterBase(const Context *context,
             break;
 
         case GL_BUFFER_ACCESS_OES:
-            if (!extensions.mapBufferOES)
+            if (!extensions.mapbufferOES)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
@@ -6270,7 +6270,7 @@ bool ValidateGetBufferParameterBase(const Context *context,
 
         case GL_BUFFER_MAPPED:
             static_assert(GL_BUFFER_MAPPED == GL_BUFFER_MAPPED_OES, "GL enums should be equal.");
-            if (context->getClientMajorVersion() < 3 && !extensions.mapBufferOES &&
+            if (context->getClientMajorVersion() < 3 && !extensions.mapbufferOES &&
                 !extensions.mapBufferRangeEXT)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
@@ -7092,7 +7092,7 @@ bool ValidateTexParameterBase(const Context *context,
                 return false;
             }
             if (target == TextureType::External &&
-                !context->getExtensions().eglImageExternalEssl3OES)
+                !context->getExtensions().EGLImageExternalEssl3OES)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
@@ -7142,7 +7142,7 @@ bool ValidateTexParameterBase(const Context *context,
         case GL_TEXTURE_WRAP_R:
         {
             bool restrictedWrapModes = ((target == TextureType::External &&
-                                         !context->getExtensions().eglImageExternalWrapModesEXT) ||
+                                         !context->getExtensions().EGLImageExternalWrapModesEXT) ||
                                         target == TextureType::Rectangle);
             if (!ValidateTextureWrapModeValue(context, params, restrictedWrapModes))
             {
@@ -7701,7 +7701,7 @@ bool ValidateGetInternalFormativBase(const Context *context,
             }
             break;
         case GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES:
-            if (!context->getExtensions().textureStorageMultisample2DArrayOES)
+            if (!context->getExtensions().textureStorageMultisample2dArrayOES)
             {
                 context->validationError(GL_INVALID_ENUM, kMultisampleArrayExtensionRequired);
                 return false;

@@ -3280,7 +3280,7 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, Sampler *sampler) const
     GLenum hint = contextVk->getState().getTextureFilteringHint();
     if (hint == GL_NICEST)
     {
-        ASSERT(extensions.textureFilteringCHROMIUM);
+        ASSERT(extensions.textureFilteringHintCHROMIUM);
         filteringInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_FILTERING_PRECISION_GOOGLE;
         filteringInfo.samplerFilteringPrecisionMode =
             VK_SAMPLER_FILTERING_PRECISION_MODE_HIGH_GOOGLE;

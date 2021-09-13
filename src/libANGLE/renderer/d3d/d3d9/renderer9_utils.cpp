@@ -669,24 +669,24 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->elementIndexUintOES = deviceCaps.MaxVertexIndex >= (1 << 16);
     extensions->getProgramBinaryOES = true;
-    extensions->rgb8rgba8OES        = true;
-    extensions->readFormatBGRAEXT   = true;
+    extensions->rgb8Rgba8OES        = true;
+    extensions->readFormatBgraEXT   = true;
     extensions->pixelBufferObjectNV = false;
-    extensions->mapBufferOES        = false;
+    extensions->mapbufferOES        = false;
     extensions->mapBufferRangeEXT   = false;
 
     // D3D does not allow depth textures to have more than one mipmap level OES_depth_texture
     // allows for that so we can't implement full support with the D3D9 back end.
     extensions->depthTextureOES = false;
 
-    // textureRGEXT is emulated and not performant.
-    extensions->textureRGEXT = false;
+    // textureRgEXT is emulated and not performant.
+    extensions->textureRgEXT = false;
 
     D3DADAPTER_IDENTIFIER9 adapterId = {};
     if (SUCCEEDED(d3d9->GetAdapterIdentifier(adapter, 0, &adapterId)))
     {
         // ATI cards on XP have problems with non-power-of-two textures.
-        extensions->textureNPOTOES =
+        extensions->textureNpotOES =
             !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_POW2) &&
             !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_CUBEMAP_POW2) &&
             !(deviceCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) &&
@@ -701,7 +701,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     }
     else
     {
-        extensions->textureNPOTOES = false;
+        extensions->textureNpotOES = false;
     }
 
     extensions->drawBuffersEXT    = false;
@@ -731,7 +731,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     // returning zero values when out-of-bounds reads. See
     // https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_robustness.txt
     extensions->robustBufferAccessBehaviorKHR = false;
-    extensions->blendMinMaxEXT                = true;
+    extensions->blendMinmaxEXT                = true;
     // Although according to
     // https://docs.microsoft.com/en-us/windows/desktop/direct3ddxgi/format-support-for-direct3d-feature-level-9-1-hardware
     // D3D9 doesn't have full blending capability for RGBA32F. But turns out it could provide
@@ -747,7 +747,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->packReverseRowOrderANGLE = true;
     extensions->standardDerivativesOES =
         (deviceCaps.PS20Caps.Caps & D3DPS20CAPS_GRADIENTINSTRUCTIONS) != 0;
-    extensions->shaderTextureLODEXT         = true;
+    extensions->shaderTextureLodEXT         = true;
     extensions->fragDepthEXT                = true;
     extensions->textureUsageANGLE           = true;
     extensions->translatedShaderSourceANGLE = true;
@@ -756,8 +756,8 @@ void GenerateCaps(IDirect3D9 *d3d9,
                                                 // glDiscardFramebufferEXT is just a hint
     extensions->colorBufferFloatEXT   = false;
     extensions->debugMarkerEXT        = true;
-    extensions->eglImageOES           = true;
-    extensions->eglImageExternalOES   = true;
+    extensions->EGLImageOES           = true;
+    extensions->EGLImageExternalOES   = true;
     extensions->unpackSubimageEXT     = true;
     extensions->packSubimageNV        = true;
     extensions->syncQueryCHROMIUM     = extensions->fenceNV;

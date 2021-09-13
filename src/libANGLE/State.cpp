@@ -471,7 +471,7 @@ void State::initialize(Context *context)
     {
         mSamplerTextures[TextureType::Rectangle].resize(mCaps.maxCombinedTextureImageUnits);
     }
-    if (nativeExtensions.eglImageExternalOES || nativeExtensions.eglStreamConsumerExternalNV)
+    if (nativeExtensions.EGLImageExternalOES || nativeExtensions.EGLStreamConsumerExternalNV)
     {
         mSamplerTextures[TextureType::External].resize(mCaps.maxCombinedTextureImageUnits);
     }
@@ -933,7 +933,7 @@ void State::setBlendColor(float red, float green, float blue, float alpha)
     const bool isES2 = mClientVersion.major == 2;
     const bool hasFloatBlending =
         mExtensions.colorBufferFloatEXT || mExtensions.colorBufferHalfFloatEXT ||
-        mExtensions.colorBufferFloatRGBCHROMIUM || mExtensions.colorBufferFloatRGBACHROMIUM;
+        mExtensions.colorBufferFloatRgbCHROMIUM || mExtensions.colorBufferFloatRgbaCHROMIUM;
     if (isES2 && !hasFloatBlending)
     {
         red   = clamp01(red);

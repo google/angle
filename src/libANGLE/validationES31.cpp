@@ -2728,7 +2728,7 @@ bool ValidateFramebufferTextureCommon(const Context *context,
         // [OES_texture_storage_multisample_2d_array] Section 9.2.2 "Attaching Images to Framebuffer
         // Objects"
         // If texture is a two-dimensional multisample array texture, then level must be zero.
-        if (context->getExtensions().textureStorageMultisample2DArrayOES &&
+        if (context->getExtensions().textureStorageMultisample2dArrayOES &&
             tex->getType() == TextureType::_2DMultisampleArray && level != 0)
         {
             context->validationError(GL_INVALID_VALUE, kLevelNotZero);
@@ -2784,7 +2784,7 @@ bool ValidateTexStorage3DMultisampleOES(const Context *context,
                                         GLsizei depth,
                                         GLboolean fixedsamplelocations)
 {
-    if (!context->getExtensions().textureStorageMultisample2DArrayOES)
+    if (!context->getExtensions().textureStorageMultisample2dArrayOES)
     {
         context->validationError(GL_INVALID_ENUM, kMultisampleArrayExtensionRequired);
         return false;

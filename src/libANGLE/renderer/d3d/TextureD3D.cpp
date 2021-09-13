@@ -402,7 +402,7 @@ angle::Result TextureD3D::fastUnpackPixels(const gl::Context *context,
 GLint TextureD3D::creationLevels(GLsizei width, GLsizei height, GLsizei depth) const
 {
     if ((gl::isPow2(width) && gl::isPow2(height) && gl::isPow2(depth)) ||
-        mRenderer->getNativeExtensions().textureNPOTOES)
+        mRenderer->getNativeExtensions().textureNpotOES)
     {
         // Maximum number of levels
         return gl::log2(std::max(std::max(width, height), depth)) + 1;
