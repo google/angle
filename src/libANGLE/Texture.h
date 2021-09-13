@@ -615,6 +615,10 @@ class Texture final : public RefCountObject<TextureID>,
 
     angle::Result syncState(const Context *context, Command source);
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
+    bool hasAnyDirtyBitExcludingBoundAsAttachmentBit() const
+    {
+        return (mDirtyBits.to_ulong() & ~DIRTY_BIT_BOUND_AS_ATTACHMENT) != 0;
+    }
 
     // ObserverInterface implementation.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
