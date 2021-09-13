@@ -2851,7 +2851,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
     }
 
     const SpirvDecorations decorations =
-        mBuilder.getArithmeticDecorations(node->getType(), node->isPrecise());
+        mBuilder.getArithmeticDecorations(node->getType(), node->isPrecise(), op);
     spirv::IdRef result;
     if (node->getType().getBasicType() != EbtVoid)
     {
@@ -2959,7 +2959,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         {
             const spirv::IdRef one           = mBuilder.getFloatConstant(1);
             const spirv::IdRef invertedParam = mBuilder.getNewId(
-                mBuilder.getArithmeticDecorations(secondChild->getType(), node->isPrecise()));
+                mBuilder.getArithmeticDecorations(secondChild->getType(), node->isPrecise(), op));
             spirv::WriteFDiv(mBuilder.getSpirvCurrentFunctionBlock(), parameterTypeIds.back(),
                              invertedParam, one, parameters[1]);
             parameters[1] = invertedParam;

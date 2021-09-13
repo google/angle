@@ -316,7 +316,7 @@ class SPIRVBuilder : angle::NonCopyable
     // Decorations that may apply to intermediate instructions (in addition to variables).
     // |precise| is only applicable to arithmetic nodes.
     SpirvDecorations getDecorations(const TType &type);
-    SpirvDecorations getArithmeticDecorations(const TType &type, bool isPrecise);
+    SpirvDecorations getArithmeticDecorations(const TType &type, bool isPrecise, TOperator op);
 
     // Extended instructions
     spirv::IdRef getExtInstImportIdStd();
