@@ -48,7 +48,7 @@ class CaptureReplayTests
         OSWindow::Delete(&mOSWindow);
     }
 
-    bool initializeTest(const angle::TraceInfo &traceInfo)
+    bool initializeTest(const std::string &execDir, const angle::TraceInfo &traceInfo)
     {
         if (!mOSWindow->initialize(traceInfo.name, traceInfo.drawSurfaceWidth,
                                    traceInfo.drawSurfaceHeight))
@@ -115,7 +115,12 @@ class CaptureReplayTests
         {
             mTraceLibrary->setBinaryDataDecompressCallback(angle::DecompressBinaryData);
         }
-        mTraceLibrary->setBinaryDataDir(ANGLE_CAPTURE_REPLAY_TEST_DATA_DIR);
+
+        std::stringstream binaryPathStream;
+        binaryPathStream << execDir << angle::GetPathSeparator()
+                         << ANGLE_CAPTURE_REPLAY_TEST_DATA_DIR;
+
+        mTraceLibrary->setBinaryDataDir(binaryPathStream.str().c_str());
 
         mTraceLibrary->setupReplay();
         return true;
@@ -130,9 +135,9 @@ class CaptureReplayTests
 
     void swap() { mEGLWindow->swap(); }
 
-    int runTest(const angle::TraceInfo &traceInfo)
+    int runTest(const std::string &exeDir, const angle::TraceInfo &traceInfo)
     {
-        if (!initializeTest(traceInfo))
+        if (!initializeTest(exeDir, traceInfo))
         {
             return -1;
         }
@@ -179,14 +184,13 @@ class CaptureReplayTests
 
         // Set CWD to executable directory.
         std::string exeDir = angle::GetExecutableDirectory();
-        if (!angle::SetCWD(exeDir.c_str()))
-        {
-            std::cout << "Unable to SetCWD to trace directory: " << exeDir << "\n";
-            return 1;
-        }
 
         std::vector<std::string> traces;
-        if (!angle::LoadTraceNamesFromJSON(kTracePath, &traces))
+
+        std::stringstream tracePathStream;
+        tracePathStream << exeDir << angle::GetPathSeparator() << kTracePath;
+
+        if (!angle::LoadTraceNamesFromJSON(tracePathStream.str(), &traces))
         {
             std::cout << "Unable to load trace names from " << kTracePath << "\n";
             return 1;
@@ -195,7 +199,8 @@ class CaptureReplayTests
         for (const std::string &trace : traces)
         {
             std::stringstream traceJsonPathStream;
-            traceJsonPathStream << ANGLE_CAPTURE_REPLAY_TEST_DATA_DIR << angle::GetPathSeparator()
+            traceJsonPathStream << exeDir << angle::GetPathSeparator()
+                                << ANGLE_CAPTURE_REPLAY_TEST_DATA_DIR << angle::GetPathSeparator()
                                 << trace << ".json";
             std::string traceJsonPath = traceJsonPathStream.str();
 
@@ -207,7 +212,7 @@ class CaptureReplayTests
             }
             else
             {
-                result = runTest(traceInfo);
+                result = runTest(exeDir, traceInfo);
             }
             std::cout << kResultTag << " " << trace << " " << result << "\n";
         }

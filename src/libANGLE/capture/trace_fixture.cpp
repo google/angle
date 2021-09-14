@@ -11,6 +11,8 @@
 
 #include "angle_trace_gl.h"
 
+#include <string>
+
 namespace
 {
 void UpdateResourceMap(ResourceMap *resourceMap, GLuint id, GLsizei readBufferOffset)
@@ -28,7 +30,7 @@ void UpdateResourceMap2(GLuint *resourceMap, GLuint id, GLsizei readBufferOffset
 }
 
 DecompressCallback gDecompressCallback;
-const char *gBinaryDataDir = ".";
+std::string gBinaryDataDir = ".";
 
 void LoadBinaryData(const char *fileName)
 {
@@ -38,7 +40,8 @@ void LoadBinaryData(const char *fileName)
         delete[] gBinaryData;
     }
     char pathBuffer[1000] = {};
-    sprintf(pathBuffer, "%s/%s", gBinaryDataDir, fileName);
+
+    sprintf(pathBuffer, "%s/%s", gBinaryDataDir.c_str(), fileName);
     FILE *fp = fopen(pathBuffer, "rb");
     if (fp == 0)
     {
