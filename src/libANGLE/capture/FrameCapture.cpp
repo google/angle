@@ -2637,9 +2637,11 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
             resourceTracker->setStartingBufferMapped(buffer->id().value, true);
 
             frameCaptureShared->trackBufferMapping(
-                &setupCalls->back(), buffer->id(), static_cast<GLsizeiptr>(buffer->getMapOffset()),
+                &setupCalls->back(), buffer->id(), buffer,
+                static_cast<GLsizeiptr>(buffer->getMapOffset()),
                 static_cast<GLsizeiptr>(buffer->getMapLength()),
-                (buffer->getAccessFlags() & GL_MAP_WRITE_BIT) != 0);
+                (buffer->getAccessFlags() & GL_MAP_WRITE_BIT) != 0,
+                (buffer->getAccessFlags() & GL_MAP_COHERENT_BIT_EXT) != 0);
         }
         else
         {
@@ -4613,11 +4615,327 @@ void FrameCaptureShared::captureCompressedTextureData(const gl::Context *context
     }
 }
 
+PageRange::PageRange(size_t start, size_t end) : start(start), end(end) {}
+PageRange::~PageRange() = default;
+
+AddressRange::AddressRange() {}
+AddressRange::AddressRange(uintptr_t start, size_t size) : start(start), size(size) {}
+AddressRange::~AddressRange() = default;
+
+uintptr_t AddressRange::end()
+{
+    return start + size;
+}
+
+CoherentBuffer::CoherentBuffer(uintptr_t start, size_t size, size_t pageSize) : mPageSize(pageSize)
+{
+    mRange.start            = start;
+    mRange.size             = size;
+    mProtectionRange.start  = rx::roundDownPow2(start, pageSize);
+    uintptr_t protectionEnd = rx::roundUpPow2(start + size, pageSize);
+
+    mProtectionRange.size = protectionEnd - mProtectionRange.start;
+    mPageCount            = mProtectionRange.size / pageSize;
+
+    mProtectionStartPage = mProtectionRange.start / mPageSize;
+    mProtectionEndPage   = mProtectionStartPage + mPageCount;
+
+    mDirtyPages = std::vector<bool>(mPageCount);
+    mDirtyPages.assign(mPageCount, true);
+}
+
+std::vector<PageRange> CoherentBuffer::getDirtyPageRanges()
+{
+    std::vector<PageRange> dirtyPageRanges;
+
+    bool inDirty = false;
+    for (size_t i = 0; i < mPageCount; i++)
+    {
+        if (!inDirty && mDirtyPages[i])
+        {
+            // Found start of a dirty range
+            inDirty = true;
+            // Set end page as last page initially
+            dirtyPageRanges.push_back(PageRange(i, mPageCount));
+        }
+        else if (inDirty && !mDirtyPages[i])
+        {
+            // Found end of a dirty range
+            inDirty                    = false;
+            dirtyPageRanges.back().end = i;
+        }
+    }
+
+    return dirtyPageRanges;
+}
+
+AddressRange CoherentBuffer::getRange()
+{
+    return mRange;
+}
+
+AddressRange CoherentBuffer::getDirtyAddressRange(const PageRange &dirtyPageRange)
+{
+    AddressRange range;
+
+    if (dirtyPageRange.start == 0)
+    {
+        // First page, use non page aligned buffer start.
+        range.start = mRange.start;
+    }
+    else
+    {
+        range.start = mProtectionRange.start + dirtyPageRange.start * mPageSize;
+    }
+
+    if (dirtyPageRange.end == mPageCount)
+    {
+        // Last page, use non page aligned buffer end.
+        range.size = mRange.end() - range.start;
+    }
+    else
+    {
+        range.size = (dirtyPageRange.end - dirtyPageRange.start) * mPageSize;
+        // This occurs when a buffer occupies 2 pages, but is smaller than a page.
+        if (mRange.end() < range.end())
+        {
+            range.size = mRange.end() - range.start;
+        }
+    }
+
+    // Dirty range must be in buffer
+    ASSERT(range.start >= mRange.start && mRange.end() >= range.end());
+
+    return range;
+}
+
+CoherentBuffer::~CoherentBuffer() {}
+
+bool CoherentBuffer::isDirty()
+{
+    return std::find(mDirtyPages.begin(), mDirtyPages.end(), true) != mDirtyPages.end();
+}
+
+bool CoherentBuffer::contains(size_t page, size_t *relativePage)
+{
+    bool isInProtectionRange = page >= mProtectionStartPage && page < mProtectionEndPage;
+    if (!isInProtectionRange)
+    {
+        return false;
+    }
+
+    *relativePage = page - mProtectionStartPage;
+
+    ASSERT(page >= mProtectionStartPage);
+
+    return true;
+}
+
+void CoherentBuffer::protectPageRange(const PageRange &pageRange)
+{
+    for (size_t i = pageRange.start; i < pageRange.end; i++)
+    {
+        setDirty(i, false);
+    }
+}
+
+void CoherentBuffer::setDirty(size_t relativePage, bool dirty)
+{
+    if (mDirtyPages[relativePage] == dirty)
+    {
+        // The page is already set.
+        // This can happen when tracked buffers overlap in a page.
+        return;
+    }
+
+    uintptr_t pageStart = mProtectionRange.start + relativePage * mPageSize;
+
+    // Last page end must be the same as protection end
+    if (relativePage + 1 == mPageCount)
+    {
+        ASSERT(mProtectionRange.end() == pageStart + mPageSize);
+    }
+
+    bool ret;
+    if (dirty)
+    {
+        ret = UnprotectMemory(pageStart, mPageSize);
+    }
+    else
+    {
+        ret = ProtectMemory(pageStart, mPageSize);
+    }
+
+    if (!ret)
+    {
+        ERR() << "Could not set protection for buffer page " << relativePage << " at "
+              << reinterpret_cast<void *>(pageStart) << " with size " << mPageSize;
+    }
+    mDirtyPages[relativePage] = dirty;
+}
+
+void CoherentBuffer::removeProtection()
+{
+    if (!UnprotectMemory(mProtectionRange.start, mProtectionRange.size))
+    {
+        ERR() << "Could not remove protection for buffer at " << mProtectionRange.start
+              << " with size " << mProtectionRange.size;
+    }
+}
+
+CoherentBufferTracker::CoherentBufferTracker()
+{
+    mPageSize = GetPageSize();
+
+    PageFaultCallback callback = [this](uintptr_t address) { return handleWrite(address); };
+
+    mPageFaultHandler = std::unique_ptr<PageFaultHandler>(CreatePageFaultHandler(callback));
+}
+
+CoherentBufferTracker::~CoherentBufferTracker()
+{
+    disable();
+}
+
+PageFaultHandlerRangeType CoherentBufferTracker::handleWrite(uintptr_t address)
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+    auto pagesInBuffers = getBufferPagesForAddress(address);
+
+    if (pagesInBuffers.empty())
+    {
+        ERR() << "Didn't find a tracked buffer containing " << reinterpret_cast<void *>(address);
+    }
+
+    for (const auto &page : pagesInBuffers)
+    {
+        std::shared_ptr<CoherentBuffer> buffer = page.first;
+        size_t relativePage                    = page.second;
+        buffer->setDirty(relativePage, true);
+    }
+
+    return pagesInBuffers.empty() ? PageFaultHandlerRangeType::OutOfRange
+                                  : PageFaultHandlerRangeType::InRange;
+}
+
+HashMap<std::shared_ptr<CoherentBuffer>, size_t> CoherentBufferTracker::getBufferPagesForAddress(
+    uintptr_t address)
+{
+    HashMap<std::shared_ptr<CoherentBuffer>, size_t> foundPages;
+    size_t page = address / mPageSize;
+    for (const auto &pair : mBuffers)
+    {
+        std::shared_ptr<CoherentBuffer> buffer = pair.second;
+        size_t relativePage;
+        if (buffer->contains(page, &relativePage))
+        {
+            foundPages.insert(std::make_pair(buffer, relativePage));
+        }
+    }
+
+    return foundPages;
+}
+
+bool CoherentBufferTracker::isDirty(gl::BufferID id)
+{
+    return mBuffers[id.value]->isDirty();
+}
+
+void CoherentBufferTracker::enable()
+{
+    if (mEnabled)
+    {
+        return;
+    }
+
+    bool ret = mPageFaultHandler->enable();
+    if (ret)
+    {
+        mEnabled = true;
+    }
+    else
+    {
+        ERR() << "Could not enable page fault handler.";
+    }
+}
+
+bool CoherentBufferTracker::haveBuffer(gl::BufferID id)
+{
+    return mBuffers.find(id.value) != mBuffers.end();
+}
+
+void CoherentBufferTracker::onEndFrame()
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+
+    if (!mEnabled)
+    {
+        return;
+    }
+
+    // Remove protection from all buffers
+    for (const auto &pair : mBuffers)
+    {
+        std::shared_ptr<CoherentBuffer> buffer = pair.second;
+        buffer->removeProtection();
+    }
+
+    disable();
+}
+
+void CoherentBufferTracker::disable()
+{
+    if (!mEnabled)
+    {
+        return;
+    }
+
+    if (mPageFaultHandler->disable())
+    {
+        mEnabled = false;
+    }
+    else
+    {
+        ERR() << "Could not disable page fault handler.";
+    }
+}
+
+void CoherentBufferTracker::addBuffer(gl::BufferID id, uintptr_t start, size_t size)
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+
+    if (haveBuffer(id))
+    {
+        return;
+    }
+
+    auto buffer = std::make_shared<CoherentBuffer>(start, size, mPageSize);
+
+    mBuffers.insert(std::make_pair(id.value, std::move(buffer)));
+}
+
+void CoherentBufferTracker::removeBuffer(gl::BufferID id)
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+
+    if (!haveBuffer(id))
+    {
+        return;
+    }
+
+    // Expecting that no buffer that overlapps in a page with another is removed
+    // while the other is kept and still written to. These writes would be missed.
+    mBuffers[id.value]->removeProtection();
+    mBuffers.erase(id.value);
+}
+
 void FrameCaptureShared::trackBufferMapping(CallCapture *call,
                                             gl::BufferID id,
+                                            gl::Buffer *buffer,
                                             GLintptr offset,
                                             GLsizeiptr length,
-                                            bool writable)
+                                            bool writable,
+                                            bool coherent)
 {
     // Track that the buffer was mapped
     mResourceTracker.setBufferMapped(id.value);
@@ -4634,6 +4952,14 @@ void FrameCaptureShared::trackBufferMapping(CallCapture *call,
 
         // Track the bufferID that was just mapped for use when writing return value
         call->params.setMappedBufferID(id);
+
+        // Track coherent buffer
+        if (coherent)
+        {
+            mCoherentBufferTracker.enable();
+            uintptr_t data = reinterpret_cast<uintptr_t>(buffer->getMapPointer());
+            mCoherentBufferTracker.addBuffer(id, data, length);
+        }
     }
 }
 
@@ -4846,6 +5172,25 @@ void FrameCaptureShared::maybeOverrideEntryPoint(const gl::Context *context,
             // Pass the single call through
             outCalls.emplace_back(std::move(inCall));
             break;
+        }
+    }
+}
+
+void FrameCaptureShared::maybeCaptureCoherentBuffers(const gl::Context *context)
+{
+    if (!isCaptureActive())
+    {
+        return;
+    }
+
+    std::lock_guard<std::mutex> lock(mCoherentBufferTracker.mMutex);
+
+    for (const auto &pair : mCoherentBufferTracker.mBuffers)
+    {
+        gl::BufferID id = {pair.first};
+        if (mCoherentBufferTracker.isDirty(id))
+        {
+            captureCoherentBufferSnapshot(context, id);
         }
     }
 }
@@ -5080,6 +5425,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
         case EntryPoint::GLDrawArrays:
         {
             maybeCaptureDrawArraysClientData(context, call, 1);
+            maybeCaptureCoherentBuffers(context);
             break;
         }
 
@@ -5090,13 +5436,16 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             GLsizei instancecount =
                 call.params.getParamFlexName("instancecount", "primcount", ParamType::TGLsizei, 3)
                     .value.GLsizeiVal;
+
             maybeCaptureDrawArraysClientData(context, call, instancecount);
+            maybeCaptureCoherentBuffers(context);
             break;
         }
 
         case EntryPoint::GLDrawElements:
         {
             maybeCaptureDrawElementsClientData(context, call, 1);
+            maybeCaptureCoherentBuffers(context);
             break;
         }
 
@@ -5107,7 +5456,9 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             GLsizei instancecount =
                 call.params.getParamFlexName("instancecount", "primcount", ParamType::TGLsizei, 4)
                     .value.GLsizeiVal;
+
             maybeCaptureDrawElementsClientData(context, call, instancecount);
+            maybeCaptureCoherentBuffers(context);
             break;
         }
 
@@ -5247,9 +5598,12 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             bool writable =
                 access == GL_WRITE_ONLY_OES || access == GL_WRITE_ONLY || access == GL_READ_WRITE;
 
+            bool coherent = access & GL_MAP_COHERENT_BIT_EXT;
+
             FrameCaptureShared *frameCaptureShared =
                 context->getShareGroup()->getFrameCaptureShared();
-            frameCaptureShared->trackBufferMapping(&call, buffer->id(), offset, length, writable);
+            frameCaptureShared->trackBufferMapping(&call, buffer->id(), buffer, offset, length,
+                                                   writable, coherent);
             break;
         }
 
@@ -5276,8 +5630,9 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
 
             FrameCaptureShared *frameCaptureShared =
                 context->getShareGroup()->getFrameCaptureShared();
-            frameCaptureShared->trackBufferMapping(&call, buffer->id(), offset, length,
-                                                   access & GL_MAP_WRITE_BIT);
+            frameCaptureShared->trackBufferMapping(&call, buffer->id(), buffer, offset, length,
+                                                   access & GL_MAP_WRITE_BIT,
+                                                   access & GL_MAP_COHERENT_BIT_EXT);
             break;
         }
 
@@ -5293,6 +5648,9 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
                     .value.BufferBindingVal;
             gl::Buffer *buffer = context->getState().getTargetBuffer(target);
             mResourceTracker.setBufferUnmapped(buffer->id().value);
+
+            // Remove from CoherentBufferTracker
+            mCoherentBufferTracker.removeBuffer(buffer->id());
             break;
         }
 
@@ -5318,6 +5676,11 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             // Track that the buffer was unmapped, for use during state reset
             mResourceTracker.setBufferUnmapped(buffer->id().value);
 
+            break;
+        }
+        case EntryPoint::GLCopyBufferSubData:
+        {
+            maybeCaptureCoherentBuffers(context);
             break;
         }
         default:
@@ -5618,6 +5981,76 @@ void FrameCaptureShared::captureClientArraySnapshot(const gl::Context *context,
     }
 }
 
+void FrameCaptureShared::captureCoherentBufferSnapshot(const gl::Context *context, gl::BufferID id)
+{
+    if (!hasBufferData(id))
+    {
+        // This buffer was not marked writable
+        return;
+    }
+
+    const gl::State &apiState        = context->getState();
+    const gl::BufferManager &buffers = apiState.getBufferManagerForCapture();
+    gl::Buffer *buffer               = buffers.getBuffer(id);
+    if (!buffer)
+    {
+        // Could not find buffer binding
+        return;
+    }
+
+    ASSERT(buffer->isMapped());
+
+    std::shared_ptr<angle::CoherentBuffer> coherentBuffer =
+        mCoherentBufferTracker.mBuffers[id.value];
+
+    std::vector<PageRange> dirtyPageRanges = coherentBuffer->getDirtyPageRanges();
+
+    AddressRange wholeRange = coherentBuffer->getRange();
+
+    for (PageRange &pageRange : dirtyPageRanges)
+    {
+        // Write protect the memory already, so the app is blocked on writing during our capture
+        coherentBuffer->protectPageRange(pageRange);
+
+        // Create the parameters to our helper for use during replay
+        ParamBuffer dataParamBuffer;
+
+        // Pass in the target buffer ID
+        dataParamBuffer.addValueParam("dest", ParamType::TGLuint, buffer->id().value);
+
+        // Capture the current buffer data with a binary param
+        ParamCapture captureData("source", ParamType::TvoidConstPointer);
+
+        AddressRange dirtyRange = coherentBuffer->getDirtyAddressRange(pageRange);
+        CaptureMemory(reinterpret_cast<void *>(dirtyRange.start), dirtyRange.size, &captureData);
+        dataParamBuffer.addParam(std::move(captureData));
+
+        // Also track its size for use with memcpy
+        dataParamBuffer.addValueParam<GLsizeiptr>("size", ParamType::TGLsizeiptr,
+                                                  static_cast<GLsizeiptr>(dirtyRange.size));
+
+        if (wholeRange.start != dirtyRange.start)
+        {
+            // Capture with offset
+            GLsizeiptr offset = dirtyRange.start - wholeRange.start;
+
+            ASSERT(offset > 0);
+
+            // The dirty page range is not at the start of the buffer, track the offset.
+            dataParamBuffer.addValueParam<GLsizeiptr>("offset", ParamType::TGLsizeiptr, offset);
+
+            // Call the helper that populates the buffer with captured data
+            mFrameCalls.emplace_back("UpdateClientBufferData2WithOffset",
+                                     std::move(dataParamBuffer));
+        }
+        else
+        {
+            // Call the helper that populates the buffer with captured data
+            mFrameCalls.emplace_back("UpdateClientBufferData2", std::move(dataParamBuffer));
+        }
+    }
+}
+
 void FrameCaptureShared::captureMappedBufferSnapshot(const gl::Context *context,
                                                      const CallCapture &call)
 {
@@ -5786,6 +6219,7 @@ void FrameCaptureShared::onEndFrame(const gl::Context *context)
     if (!enabled() || mFrameIndex > mCaptureEndFrame)
     {
         setCaptureInactive();
+        mCoherentBufferTracker.onEndFrame();
         return;
     }
 

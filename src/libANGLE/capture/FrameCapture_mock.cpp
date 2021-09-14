@@ -47,4 +47,7 @@ const ProgramSources &FrameCaptureShared::getProgramSources(gl::ShaderProgramID 
     return foundSources->second;
 }
 void FrameCaptureShared::setProgramSources(gl::ShaderProgramID id, ProgramSources sources) {}
+
+CoherentBufferTracker::CoherentBufferTracker() {}
+CoherentBufferTracker::~CoherentBufferTracker() {}
 }  // namespace angle
