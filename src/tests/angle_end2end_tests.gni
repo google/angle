@@ -198,4 +198,3 @@ angle_end2end_tests_win_sources = [
   "egl_tests/media/yuvtest.inl",
   "gl_tests/D3DImageFormatConversionTest.cpp",
 ]
-angle_end2end_tests_x11_sources = [ "egl_tests/EGLX11VisualTest.cpp" ]

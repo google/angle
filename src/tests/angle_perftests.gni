@@ -46,11 +46,6 @@ angle_white_box_perf_tests_sources = [
   "perf_tests/ResultPerf.cpp",
 ]
 
-if (is_win) {
-  angle_white_box_perf_tests_sources +=
-      [ "perf_tests/IndexDataManagerTest.cpp" ]
-}
-
 angle_white_box_perf_tests_vulkan_sources = [
   "perf_tests/VulkanCommandBufferPerf.cpp",
   "perf_tests/VulkanPipelineCachePerf.cpp",

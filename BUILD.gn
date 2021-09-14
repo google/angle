@@ -806,7 +806,7 @@ if (angle_enable_vulkan || angle_enable_metal) {
   }
 }
 
-if (is_win) {
+if ((is_win && angle_enable_gl) || angle_enable_d3d11 || angle_enable_d3d9) {
   angle_source_set("angle_d3d_format_tables") {
     sources = [
       "src/libANGLE/renderer/dxgi_format_map.h",

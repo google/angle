@@ -10,6 +10,7 @@
 #include "test_utils/gl_raii.h"
 
 #include <d3d11.h>
+#include <d3d9.h>
 #include <windows.h>
 
 #include "util/EGLWindow.h"
