@@ -14,9 +14,7 @@
 #include "common/Color.h"
 #include "common/MemoryBuffer.h"
 #include "common/angleutils.h"
-
-#include "libANGLE/capture/gl_enum_utils.h"
-
+#include "common/serializer/JsonSerializer.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Context.h"
@@ -26,13 +24,12 @@
 #include "libANGLE/ResourceMap.h"
 #include "libANGLE/Sampler.h"
 #include "libANGLE/State.h"
-
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
-#include "libANGLE/serializer/JsonSerializer.h"
 
 #if !ANGLE_CAPTURE_ENABLED
 #    error Frame capture must be enabled to build this file.

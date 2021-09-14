@@ -18,6 +18,7 @@
 
 #include "common/angle_version.h"
 #include "common/mathutil.h"
+#include "common/serializer/JsonSerializer.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
 #include "libANGLE/Config.h"
@@ -42,7 +43,6 @@
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
-#include "libANGLE/serializer/JsonSerializer.h"
 #include "third_party/ceval/ceval.h"
 
 #define USE_SYSTEM_ZLIB

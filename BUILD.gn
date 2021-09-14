@@ -1010,8 +1010,8 @@ if (angle_has_rapidjson) {
       "$angle_root/third_party/rapidjson",
     ]
     sources = [
-      "src/libANGLE/serializer/JsonSerializer.cpp",
-      "src/libANGLE/serializer/JsonSerializer.h",
+      "src/common/serializer/JsonSerializer.cpp",
+      "src/common/serializer/JsonSerializer.h",
     ]
     public_configs = [ ":angle_rapidjson_config" ]
   }

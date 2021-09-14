@@ -3,13 +3,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// JsonSerializer_unittests-cpp: Unit tests for the JSON based serializer
+// JsonSerializer_unittests.cpp: Unit tests for the JSON based serializer
 //
 
-#if defined(ANGLE_HAS_RAPIDJSON)
-#    include "JsonSerializer.h"
+#if !defined(ANGLE_HAS_RAPIDJSON)
+#    error RapidJSON must be available to build this file.
+#endif  // !defined(ANGLE_HAS_RAPIDJSON)
 
-#    include <gtest/gtest.h>
+#include "JsonSerializer.h"
+
+#include <gtest/gtest.h>
 
 class JsonSerializerTest : public ::testing::Test
 {
@@ -275,5 +278,3 @@ void JsonSerializerTest::check(const std::string &expect)
     std::vector<uint8_t> expectAsUbyte(expect.begin(), expect.end());
     EXPECT_EQ(js.getData(), expectAsUbyte);
 }
-
-#endif

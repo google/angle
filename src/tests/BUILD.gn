@@ -205,6 +205,10 @@ angle_test("angle_unittests") {
     # platforms yet.
     data_deps = [ ":test_utils_unittest_helper" ]
   }
+
+  if (angle_has_rapidjson) {
+    sources += [ "../common/serializer/JsonSerializer_unittest.cpp" ]
+  }
 }
 
 if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {

@@ -6,8 +6,8 @@
 // JsonSerializer.h: Implementation of a JSON based serializer
 //
 
-#ifndef LIBANGLE_JSONSERIALIZER_H_
-#define LIBANGLE_JSONSERIALIZER_H_
+#ifndef COMMON_JSONSERIALIZER_H_
+#define COMMON_JSONSERIALIZER_H_
 
 #include "common/angleutils.h"
 
@@ -125,4 +125,4 @@ class JsonSerializer : public angle::NonCopyable
 
 }  // namespace angle
 
-#endif  // JSONSERIALIZER_H
+#endif  // COMMON_JSONSERIALIZER_H_
