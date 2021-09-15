@@ -183,7 +183,9 @@ class BufferVk : public BufferImpl
     void release(ContextVk *context);
     void markConversionBuffersDirty();
 
-    angle::Result acquireBufferHelper(ContextVk *contextVk, size_t sizeInBytes);
+    angle::Result acquireBufferHelper(ContextVk *contextVk,
+                                      size_t sizeInBytes,
+                                      bool notifyFrontEnd);
 
     struct VertexConversionBuffer : public ConversionBuffer
     {

@@ -51,9 +51,9 @@ enum class SubjectMessage
     // gl::VertexArray, into gl::Context. Used to track validation.
     SubjectMapped,
     SubjectUnmapped,
-    // Indicates a bound buffer was ghosted when it was mapped, to prevent having to flush pending
-    // commands and waiting for the GPU to become idle.
-    SubjectGhosted,
+    // Indicates a bound buffer was reallocated when it was mapped, to prevent having to flush
+    // pending commands and waiting for the GPU to become idle.
+    InternalMemoryAllocationChanged,
 
     // Indicates an external change to the default framebuffer.
     SurfaceChanged,

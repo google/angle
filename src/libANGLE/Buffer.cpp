@@ -384,7 +384,7 @@ void Buffer::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessa
     // Pass it along!
     ASSERT(index == kImplementationSubjectIndex);
     ASSERT(message == angle::SubjectMessage::SubjectChanged ||
-           message == angle::SubjectMessage::SubjectGhosted);
+           message == angle::SubjectMessage::InternalMemoryAllocationChanged);
     onStateChange(message);
 }
 }  // namespace gl

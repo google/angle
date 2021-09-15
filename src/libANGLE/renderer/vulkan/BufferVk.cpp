@@ -430,7 +430,7 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
                                   bufferHelperPoolInitialSize, memoryPropertyFlags,
                                   vk::DynamicBufferPolicy::FrequentSmallAllocations);
 
-        ANGLE_TRY(acquireBufferHelper(contextVk, size));
+        ANGLE_TRY(acquireBufferHelper(contextVk, size, false));
 
         // persistentMapRequired may request that the server read from or write to the buffer while
         // it is mapped. The client's pointer to the data store remains valid so long as the data
@@ -598,7 +598,7 @@ angle::Result BufferVk::ghostBuffer(ContextVk *contextVk, VkDeviceSize offset, v
     // case the caller only updates a portion of the new buffer.
     previousBuffer = mBuffer;
     previousOffset = mBufferOffset;
-    ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize())));
+    ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize()), true));
 
     // Before returning the new buffer, map the previous buffer and copy its entire
     // contents into the new buffer.
@@ -616,12 +616,6 @@ angle::Result BufferVk::ghostBuffer(ContextVk *contextVk, VkDeviceSize offset, v
     previousBuffer->unmap(contextVk->getRenderer());
     // Return the already mapped pointer with the offset adjustment to avoid the call to unmap().
     *mapPtr = newBufferMapPtr + offset;
-
-    // Tell the observers (front end) that the buffer was ghosted, so the necessary
-    // dirty bits can be set. This allows the buffer views pointing to the old buffer to
-    // be recreated and point to the new buffer, along with updating the descriptor sets
-    // to use the new buffer.
-    onStateChange(angle::SubjectMessage::SubjectGhosted);
 
     return angle::Result::Continue;
 }
@@ -646,7 +640,8 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
 
             if ((access & GL_MAP_INVALIDATE_BUFFER_BIT) != 0)
             {
-                ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize())));
+                ANGLE_TRY(
+                    acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize()), true));
             }
             else if (!mBuffer->isCurrentlyInUseForWrite(contextVk->getLastCompletedQueueSerial()))
             {
@@ -871,7 +866,7 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
     bool updateRegionBeforeSubData = (offset > 0);
     bool updateRegionAfterSubData  = (offsetAfterSubdata < bufferSize);
 
-    ANGLE_TRY(acquireBufferHelper(contextVk, bufferSize));
+    ANGLE_TRY(acquireBufferHelper(contextVk, bufferSize, false));
     ANGLE_TRY(updateBuffer(contextVk, data, updateSize, offset));
 
     constexpr int kMaxCopyRegions = 2;
@@ -963,7 +958,9 @@ void BufferVk::onDataChanged()
     markConversionBuffersDirty();
 }
 
-angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk, size_t sizeInBytes)
+angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk,
+                                            size_t sizeInBytes,
+                                            bool notifyFrontEnd)
 {
     // This method should not be called if it is an ExternalBuffer
     ASSERT(mBuffer == nullptr || mBuffer->isExternalBuffer() == false);
@@ -982,6 +979,15 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk, size_t sizeInB
 
     mBuffer = mBufferPool.getCurrentBuffer();
     ASSERT(mBuffer);
+
+    if (notifyFrontEnd)
+    {
+        // Tell the observers (front end) that a new buffer was created, so the necessary
+        // dirty bits can be set. This allows the buffer views pointing to the old buffer to
+        // be recreated and point to the new buffer, along with updating the descriptor sets
+        // to use the new buffer.
+        onStateChange(angle::SubjectMessage::InternalMemoryAllocationChanged);
+    }
 
     return angle::Result::Continue;
 }
