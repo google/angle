@@ -85,7 +85,7 @@ class BlockLayoutEncoder
     BlockMemberInfo encodeArrayOfPreEncodedStructs(size_t size,
                                                    const std::vector<unsigned int> &arraySizes);
 
-    size_t getCurrentOffset() const { return mCurrentOffset * kBytesPerComponent; }
+    size_t getCurrentOffset() const;
     size_t getShaderVariableSize(const ShaderVariable &structVar, bool isRowMajor);
 
     // Called when entering/exiting a structure variable.
