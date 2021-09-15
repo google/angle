@@ -4214,7 +4214,7 @@ FrameCaptureShared::FrameCaptureShared()
       mClientVertexArrayMap{},
       mFrameIndex(1),
       mCaptureStartFrame(1),
-      mCaptureEndFrame(10),
+      mCaptureEndFrame(0),
       mClientArraySizes{},
       mReadBufferSize(0),
       mHasResourceType{},
@@ -4321,6 +4321,11 @@ FrameCaptureShared::FrameCaptureShared()
         // commands issued are handled correctly by maybeCapturePreCallUpdates() and
         // maybeCapturePostCallUpdates().
         setCaptureActive();
+    }
+
+    if (mCaptureEndFrame < mCaptureStartFrame)
+    {
+        mEnabled = false;
     }
 }
 
