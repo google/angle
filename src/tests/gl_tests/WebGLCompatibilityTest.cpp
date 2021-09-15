@@ -5285,7 +5285,7 @@ void main()
 
     constexpr char kVSArrayMuchTooLarge[] =
         R"(varying vec4 color;
-const int array_size = 795418649;
+const int array_size = 556007917;
 void main()
 {
     mat2 array[array_size];
