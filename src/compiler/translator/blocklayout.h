@@ -80,7 +80,7 @@ class BlockLayoutEncoder
                                const std::vector<unsigned int> &arraySizes,
                                bool isRowMajorMatrix);
 
-    size_t getCurrentOffset() const { return mCurrentOffset * kBytesPerComponent; }
+    size_t getCurrentOffset() const;
     size_t getShaderVariableSize(const ShaderVariable &structVar, bool isRowMajor);
 
     // Called when entering/exiting a structure variable.
