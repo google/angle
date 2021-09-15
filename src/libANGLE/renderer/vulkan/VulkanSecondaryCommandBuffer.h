@@ -503,8 +503,7 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::memoryBarrier(VkPipelineStageFla
                                                               const VkMemoryBarrier *memoryBarrier)
 {
     onRecordCommand();
-    CommandBuffer::pipelineBarrier(srcStageMask, dstStageMask, 0, 1, memoryBarrier, 0, nullptr, 0,
-                                   nullptr);
+    CommandBuffer::memoryBarrier(srcStageMask, dstStageMask, memoryBarrier);
 }
 
 ANGLE_INLINE void VulkanSecondaryCommandBuffer::bufferBarrier(

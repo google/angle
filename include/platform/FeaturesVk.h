@@ -590,6 +590,11 @@ struct FeaturesVk : FeatureSetBase
     Feature overrideSurfaceFormatRGB8toRGBA8 = {
         "overrideSurfaceFormatRGB8toRGBA8", FeatureCategory::VulkanWorkarounds,
         "Override surface format GL_RGB8 to GL_RGBA8", &members, "http://anglebug.com/6651"};
+
+    // Whether the VkSurface supports VK_KHR_shared_presentable_images.
+    Feature supportsSharedPresentableImageExtension = {
+        "supportsSharedPresentableImageExtension", FeatureCategory::VulkanFeatures,
+        "VkSurface supports the VK_KHR_shared_presentable_images extension", &members};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

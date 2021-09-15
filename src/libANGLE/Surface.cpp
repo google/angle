@@ -697,9 +697,11 @@ void Surface::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
     }
 }
 
-void Surface::setRenderBuffer(EGLint value)
+Error Surface::setRenderBuffer(EGLint renderBuffer)
 {
-    mRenderBuffer = value;
+    ANGLE_TRY(mImplementation->setRenderBuffer(renderBuffer));
+    mRenderBuffer = renderBuffer;
+    return NoError();
 }
 
 bool Surface::isLocked() const

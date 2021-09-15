@@ -124,6 +124,9 @@ extern PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBuf
 extern PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP;
 #    endif  // defined(ANGLE_PLATFORM_GGP)
 
+// VK_KHR_shared_presentable_image
+extern PFN_vkGetSwapchainStatusKHR vkGetSwapchainStatusKHR;
+
 }  // namespace rx
 
 #endif  // ANGLE_SHARED_LIBVULKAN

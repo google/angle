@@ -249,6 +249,8 @@ class WindowSurfaceVk : public SurfaceVk
 
     egl::Error getBufferAge(const gl::Context *context, EGLint *age) override;
 
+    egl::Error setRenderBuffer(EGLint renderBuffer) override;
+
   protected:
     angle::Result swapImpl(const gl::Context *context,
                            const EGLint *rects,
