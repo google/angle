@@ -100,24 +100,10 @@
 6386 MAC METAL : GLSLTest_ES3.MixedRowAndColumnMajorMatrices_ReadSideEffectShortCircuit/ES3_Metal_DirectMetalGen = SKIP
 6387 MAC METAL : GLSLTest_ES3.ValidIndexClampES300/ES3_Metal_DirectMetalGen = SKIP
 
-// Direct Metal does not yet implement Transformfeedback
-6375 MAC METAL : GLSLTest_ES3.MaxVaryingWithFeedbackAndGLline/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : StateChangeTestES3.RedefineTransformFeedbackBuffer/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackLifetimeTest.DeletedBuffer/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.BufferRebinding/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.DrawWithoutTransformFeedbackThenWith/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.InactiveStructureVarying/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.MultiplePaused/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.OffsetResetOnBeginTransformFeedback/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.OptimizedVaryings/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.PackingBug/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.RecordTwiceWithBindingOffsetChange/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.TwoUnreferencedInFragShader/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.VaryingReservedOpenGLName/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.VertexOnly/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : TransformFeedbackTest.ZeroSizedViewport/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : ValidationStateChangeTest.TransformFeedbackDrawModes/ES3_Metal_DirectMetalGen = SKIP
-6375 MAC METAL : WebGL2ValidationStateChangeTest.TransformFeedbackNegativeAPI/ES3_Metal_DirectMetalGen = SKIP
+// Failures from Transform Feedback Enablement. Passes on BigSur
+6407 MAC NVIDIA METAL : TransformFeedbackTest.OptimizedVaryings/ES3_Metal_DirectMetalGen = SKIP
+6415 MAC INTEL METAL : CompressedTextureBPTCTest.Test/RGB_BPTC_SIGNED_FLOAT__ES3_Metal_DirectMetalGen = SKIP
+
 6389 MAC METAL : RobustResourceInitTestES3.BlitDepthStencilAfterClearBuffer/ES3_Metal = SKIP
 
 // Direct Metal does not yet implement vertex attribute aliasing

@@ -246,14 +246,9 @@ ProgramMtl::ProgramMtl(const gl::ProgramState &state)
       mShadowCompareModes(),
       mMetalRenderPipelineCache(this),
       mAuxBufferPool(nullptr)
-{
-    mMetalXfbRenderPipelineCache = new mtl::RenderPipelineCache(this);
-}
+{}
 
-ProgramMtl::~ProgramMtl()
-{
-    delete mMetalXfbRenderPipelineCache;
-}
+ProgramMtl::~ProgramMtl() {}
 
 void ProgramMtl::destroy(const gl::Context *context)
 {
@@ -300,7 +295,6 @@ void ProgramMtl::reset(ContextMtl *context)
         }
     }
     mMetalRenderPipelineCache.clear();
-    mMetalXfbRenderPipelineCache->clear();
 }
 
 void ProgramMtl::saveTranslatedShaders(gl::BinaryOutputStream *stream)
@@ -310,6 +304,7 @@ void ProgramMtl::saveTranslatedShaders(gl::BinaryOutputStream *stream)
     {
         stream->writeString(mMslShaderTranslateInfo[shaderType].metalShaderSource);
     }
+    stream->writeString(mMslXfbOnlyVertexShaderInfo.metalShaderSource);
 }
 
 void ProgramMtl::loadTranslatedShaders(gl::BinaryInputStream *stream)
@@ -319,6 +314,7 @@ void ProgramMtl::loadTranslatedShaders(gl::BinaryInputStream *stream)
     {
         mMslShaderTranslateInfo[shaderType].metalShaderSource = stream->readString();
     }
+    mMslXfbOnlyVertexShaderInfo.metalShaderSource = stream->readString();
 }
 
 std::unique_ptr<rx::LinkEvent> ProgramMtl::load(const gl::Context *context,
@@ -425,7 +421,7 @@ angle::Result ProgramMtl::linkImplDirect(const gl::Context *glContext,
     ANGLE_TRY(mtl::GlslangGetMSL(glContext, mState, contextMtl->getCaps(), shaderSources,
                                  variableInfoMap, &mMslShaderTranslateInfo, &translatedMslShaders,
                                  mState.getExecutable().getTransformFeedbackBufferCount()));
-
+    mMslXfbOnlyVertexShaderInfo = mMslShaderTranslateInfo[gl::ShaderType::Vertex];
     for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
         // Create actual Metal shader
@@ -433,9 +429,6 @@ angle::Result ProgramMtl::linkImplDirect(const gl::Context *glContext,
                                      &mMslShaderTranslateInfo[shaderType],
                                      getDefaultSubstitutionDictionary()));
     }
-    // Save this, could be reset on shader destruction. These values will eventually be written out
-    // and restored in saveTranslatedShaders/loadTranslatedShaders
-    mXfbBindings = mMslShaderTranslateInfo[gl::ShaderType::Vertex].actualXFBBindings;
     return angle::Result::Continue;
 }
 
@@ -470,7 +463,6 @@ angle::Result ProgramMtl::linkTranslatedShaders(const gl::Context *glContext,
     loadTranslatedShaders(stream);
     loadShaderInternalInfo(stream);
     ANGLE_TRY(loadDefaultUniformBlocksInfo(glContext, stream));
-
     ANGLE_TRY(createMslShaderLib(contextMtl, gl::ShaderType::Vertex, infoLog,
                                  &mMslShaderTranslateInfo[gl::ShaderType::Vertex],
                                  getDefaultSubstitutionDictionary()));
@@ -624,8 +616,9 @@ angle::Result ProgramMtl::getSpecializedShader(mtl::Context *context,
             {
                 // Lazily compile XFB only shader
                 gl::InfoLog infoLog;
-                ANGLE_TRY(
-                    createMslShaderLib(context, shaderType, infoLog, &mMslXfbOnlyVertexShaderInfo));
+                ANGLE_TRY(createMslShaderLib(context, shaderType, infoLog,
+                                             &mMslXfbOnlyVertexShaderInfo,
+                                             @{@"TRANSFORM_FEEDBACK_ENABLED" : @"1"}));
                 translatedMslInfo->metalLibrary.get().label = @"TransformFeedback";
             }
         }
@@ -843,9 +836,27 @@ void ProgramMtl::saveShaderInternalInfo(gl::BinaryOutputStream *stream)
     }
     for (size_t xfbBindIndex = 0; xfbBindIndex < mtl::kMaxShaderXFBs; xfbBindIndex++)
     {
-        stream->writeInt(mXfbBindings[xfbBindIndex]);
         stream->writeInt(
             mMslShaderTranslateInfo[gl::ShaderType::Vertex].actualXFBBindings[xfbBindIndex]);
+    }
+
+    // Write out XFB info.
+    {
+        stream->writeInt<int>(mMslXfbOnlyVertexShaderInfo.hasUBOArgumentBuffer);
+        for (mtl::SamplerBinding &binding : mMslXfbOnlyVertexShaderInfo.actualSamplerBindings)
+        {
+            stream->writeInt<uint32_t>(binding.textureBinding);
+            stream->writeInt<uint32_t>(binding.samplerBinding);
+        }
+
+        for (uint32_t &uboBinding : mMslXfbOnlyVertexShaderInfo.actualUBOBindings)
+        {
+            stream->writeInt<uint32_t>(uboBinding);
+        }
+        for (size_t xfbBindIndex = 0; xfbBindIndex < mtl::kMaxShaderXFBs; xfbBindIndex++)
+        {
+            stream->writeInt(mMslXfbOnlyVertexShaderInfo.actualXFBBindings[xfbBindIndex]);
+        }
     }
 }
 
@@ -868,9 +879,27 @@ void ProgramMtl::loadShaderInternalInfo(gl::BinaryInputStream *stream)
     }
     for (size_t xfbBindIndex = 0; xfbBindIndex < mtl::kMaxShaderXFBs; xfbBindIndex++)
     {
-        stream->readInt(&mXfbBindings[xfbBindIndex]);
         stream->readInt(
             &mMslShaderTranslateInfo[gl::ShaderType::Vertex].actualXFBBindings[xfbBindIndex]);
+    }
+    // Load Transform Feedback info
+    {
+        mMslXfbOnlyVertexShaderInfo.hasUBOArgumentBuffer = stream->readInt<int>() != 0;
+        for (mtl::SamplerBinding &binding : mMslXfbOnlyVertexShaderInfo.actualSamplerBindings)
+        {
+            binding.textureBinding = stream->readInt<uint32_t>();
+            binding.samplerBinding = stream->readInt<uint32_t>();
+        }
+
+        for (uint32_t &uboBinding : mMslXfbOnlyVertexShaderInfo.actualUBOBindings)
+        {
+            uboBinding = stream->readInt<uint32_t>();
+        }
+        for (size_t xfbBindIndex = 0; xfbBindIndex < mtl::kMaxShaderXFBs; xfbBindIndex++)
+        {
+            stream->readInt(&mMslXfbOnlyVertexShaderInfo.actualXFBBindings[xfbBindIndex]);
+        }
+        mMslXfbOnlyVertexShaderInfo.metalLibrary = nullptr;
     }
 }
 

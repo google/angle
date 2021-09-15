@@ -152,13 +152,10 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
                             bool forceTexturesSetting,
                             bool uniformBuffersDirty);
 
-    std::array<uint32_t, mtl::kMaxShaderXFBs> getXfbBindings() const { return mXfbBindings; }
     std::string getTranslatedShaderSource(const gl::ShaderType shaderType) const
     {
         return mMslShaderTranslateInfo[shaderType].metalShaderSource;
     }
-
-    mtl::RenderPipelineCache *mMetalXfbRenderPipelineCache;
 
   private:
     template <int cols, int rows>
@@ -281,7 +278,6 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
     uint32_t mShadowCompareModes[mtl::kMaxShaderSamplers];
 
     mtl::RenderPipelineCache mMetalRenderPipelineCache;
-    std::array<uint32_t, mtl::kMaxShaderXFBs> mXfbBindings;
     mtl::BufferPool *mAuxBufferPool;
 };
 

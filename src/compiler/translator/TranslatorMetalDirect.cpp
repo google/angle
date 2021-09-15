@@ -451,6 +451,19 @@ ANGLE_NO_DISCARD bool EmulateInstanceID(TCompiler &compiler,
     return ReplaceVariableWithTyped(&compiler, &root, instanceID, emuInstanceID);
 }
 
+ANGLE_NO_DISCARD bool AppendVertexShaderTransformFeedbackOutputToMain(TCompiler &compiler,
+                                                                      SymbolEnv &mSymbolEnv,
+                                                                      TIntermBlock &root)
+{
+    TSymbolTable &symbolTable = compiler.getSymbolTable();
+
+    // Append the assignment as a statement at the end of the shader.
+    return RunAtTheEndOfShader(&compiler, &root,
+                               &(mSymbolEnv.callFunctionOverload(Name("@@XFB-OUT@@"), *new TType(),
+                                                                 *new TIntermSequence())),
+                               &symbolTable);
+}
+
 // Unlike Vulkan having auto viewport flipping extension, in Metal we have to flip gl_Position.y
 // manually.
 // This operation performs flipping the gl_Position.y using this expression:
@@ -1075,6 +1088,12 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
                 return false;
             }
             DeclareRightBeforeMain(*root, kgl_VertexIDMetal);
+        }
+
+        // Append a macro for transform feedback substitution prior to modifying depth.
+        if (!AppendVertexShaderTransformFeedbackOutputToMain(*this, symbolEnv, *root))
+        {
+            return false;
         }
 
         // Search for the gl_ClipDistance usage, if its used, we need to do some replacements.

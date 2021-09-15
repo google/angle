@@ -750,7 +750,6 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
             NSLog(@"%@\n", nsSource);
         }
         [nsSource ANGLE_MTL_AUTORELEASE];
-
         *errorOut = std::move(nsError);
 
         return [library ANGLE_MTL_AUTORELEASE];

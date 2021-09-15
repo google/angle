@@ -670,19 +670,6 @@ RenderPipelineDesc GetComputingVertexShaderOnlyRenderPipelineDesc(RenderCommandE
 
 // Get pipeline descriptor for render pipeline that contains vertex shader acting as transform
 // feedback.
-ANGLE_INLINE
-RenderPipelineDesc GetTransformFeedbackRenderPipelineDesc(RenderCommandEncoder *cmdEncoder,
-                                                          mtl::RenderPipelineDesc &pipelineDesc)
-{
-    RenderPipelineDesc xfbPipelineDesc   = RenderPipelineDesc(pipelineDesc);
-    const RenderPassDesc &renderPassDesc = cmdEncoder->renderPassDesc();
-
-    renderPassDesc.populateRenderPipelineOutputDesc(&pipelineDesc.outputDescriptor);
-    xfbPipelineDesc.rasterizationType      = RenderPipelineRasterization::Disabled;
-    xfbPipelineDesc.inputPrimitiveTopology = kPrimitiveTopologyClassPoint;
-
-    return xfbPipelineDesc;
-}
 
 template <typename T>
 void ClearRenderPipelineCacheArray(T *pipelineCacheArray)
@@ -1209,21 +1196,6 @@ angle::Result RenderUtils::expandVertexFormatComponentsVS(const gl::Context *con
 {
     return mVertexFormatUtils.expandVertexFormatComponentsVS(context, encoder, srcAngleFormat,
                                                              params);
-}
-
-angle::Result RenderUtils::createTransformFeedbackPSO(const gl::Context *context,
-                                                      RenderCommandEncoder *renderEncoder,
-                                                      mtl::RenderPipelineDesc &pipelineDesc)
-{
-    ContextMtl *contextMtl = mtl::GetImpl(context);
-    // Create and cache the PSO
-    auto pso = mTransformFeedbackUtils.getTransformFeedbackRenderPipeline(contextMtl, renderEncoder,
-                                                                          pipelineDesc);
-    if (pso)
-    {
-        return angle::Result::Continue;
-    }
-    return angle::Result::Stop;
 }
 
 // ClearUtils implementation
@@ -3087,33 +3059,6 @@ AutoObjCPtr<id<MTLLibrary>> TransformFeedbackUtils::createMslXfbLibrary(
         mtlShaderLib.get().label = @"TransformFeedback";
         return mtlShaderLib;
     }
-}
-
-AutoObjCPtr<id<MTLRenderPipelineState>> TransformFeedbackUtils::getTransformFeedbackRenderPipeline(
-    ContextMtl *contextMtl,
-    RenderCommandEncoder *cmdEncoder,
-    mtl::RenderPipelineDesc &pipelineDesc)
-{
-    const ProgramMtl *programMtl = mtl::GetImpl(contextMtl->getState().getProgram());
-    RenderPipelineCache &cache   = *programMtl->mMetalXfbRenderPipelineCache;
-
-    if (!cache.getVertexShader())
-    {
-        // Pipeline cache not intialized, do it now:
-        ANGLE_MTL_OBJC_SCOPE
-        {
-            auto shaderLib = createMslXfbLibrary(
-                contextMtl, programMtl->getTranslatedShaderSource(gl::ShaderType::Vertex));
-            // Non specialized constants provided, use default creation function.
-            EnsureVertexShaderOnlyPipelineCacheInitialized(contextMtl, SHADER_ENTRY_NAME, shaderLib,
-                                                           &cache);
-        }
-    }
-
-    RenderPipelineDesc xfbPipelineDesc =
-        GetTransformFeedbackRenderPipelineDesc(cmdEncoder, pipelineDesc);
-
-    return cache.getRenderPipelineState(contextMtl, xfbPipelineDesc);
 }
 
 }  // namespace mtl

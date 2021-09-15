@@ -678,9 +678,6 @@ class RenderUtils : public Context, angle::NonCopyable
                                                  RenderCommandEncoder *renderEncoder,
                                                  const angle::Format &srcAngleFormat,
                                                  const VertexFormatConvertParams &params);
-    angle::Result createTransformFeedbackPSO(const gl::Context *context,
-                                             RenderCommandEncoder *renderEncoder,
-                                             mtl::RenderPipelineDesc &pipelineDesc);
 
     angle::Result generatePrimitiveRestartPointsBuffer(ContextMtl *contextMtl,
                                                        const IndexGenerationParams &params,
@@ -714,7 +711,6 @@ class RenderUtils : public Context, angle::NonCopyable
     MipmapUtils mMipmapUtils;
     std::array<CopyPixelsUtils, angle::EnumSize<PixelType>()> mCopyPixelsUtils;
     VertexFormatConversionUtils mVertexFormatUtils;
-    TransformFeedbackUtils mTransformFeedbackUtils;
 };
 
 }  // namespace mtl

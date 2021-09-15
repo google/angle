@@ -208,9 +208,6 @@ TEST_P(TransformFeedbackTest, BufferRebinding)
 // afterward.
 TEST_P(TransformFeedbackTest, RecordAndDraw)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
-
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
@@ -286,8 +283,6 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
 // Test that transform feedback can cover multiple render passes.
 TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
@@ -382,8 +377,6 @@ TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
 // Test that uploading data to buffer that's in use then using it for transform feedback works.
 TEST_P(TransformFeedbackTest, UseAsUBOThenUpdateThenCapture)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // http://anglebug.com/5833
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsQualcomm());
@@ -546,8 +539,6 @@ void TransformFeedbackTest::midRecordOpDoesNotContributeTest(std::function<void(
 // Test that draw-based clear between draws does not contribute to transform feedback.
 TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
@@ -588,8 +579,6 @@ TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
 // Test that copy in the middle of rendering doesn't contribute to transform feedback.
 TEST_P(TransformFeedbackTest, CopyWhileRecordingDoesNotContribute)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
@@ -636,9 +625,6 @@ TEST_P(TransformFeedbackTest, BlitWhileRecordingDoesNotContribute)
 
     // anglebug.com/5434
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
-
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     auto blit = []() {
         GLFramebuffer dstFbo;
@@ -1503,8 +1489,6 @@ TEST_P(TransformFeedbackTest, OffsetResetOnBeginTransformFeedback)
 // Test that the captured buffer can be copied to other buffers.
 TEST_P(TransformFeedbackTest, CaptureAndCopy)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -2277,12 +2261,6 @@ TEST_P(TransformFeedbackTest, BufferOutOfMemory)
     // TODO: http://anglebug.com/5345: fails consistently on Mac FYI GPU ASAN Release bot
     ANGLE_SKIP_TEST_IF(IsMetal() && (IsIntel() || IsAMD()));
 
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsNVIDIA());
-
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
-
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -2366,8 +2344,6 @@ void VerifyVertexFloats(const GLfloat *mapPtrFloat,
 // Tests that stopping XFB works as expected.
 TEST_P(TransformFeedbackTest, Overrun)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
@@ -2398,8 +2374,6 @@ TEST_P(TransformFeedbackTest, Overrun)
 // Similar to the overrun test but with Pause instead of End.
 TEST_P(TransformFeedbackTest, OverrunWithPause)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
@@ -2435,8 +2409,6 @@ TEST_P(TransformFeedbackTest, OverrunWithPause)
 // Similar to the overrun test but with Pause instead of End.
 TEST_P(TransformFeedbackTest, OverrunWithPauseAndResume)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
@@ -2479,8 +2451,6 @@ TEST_P(TransformFeedbackTest, OverrunWithPauseAndResume)
 // Similar to the overrun Pause/Resume test but with more than one Pause and Resume.
 TEST_P(TransformFeedbackTest, OverrunWithMultiplePauseAndResume)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
@@ -2531,8 +2501,6 @@ TEST_P(TransformFeedbackTest, OverrunWithMultiplePauseAndResume)
 // Tests begin/draw/end/*bindBuffer*/begin/draw/end.
 TEST_P(TransformFeedbackTest, EndThenBindNewBufferAndRestart)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
@@ -2708,9 +2676,6 @@ void main() {
 // Test that transform feedback with scissor test enabled works.
 TEST_P(TransformFeedbackTest, RecordAndDrawWithScissorTest)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
-
     // http://crbug.com/1135841
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOSX());
 

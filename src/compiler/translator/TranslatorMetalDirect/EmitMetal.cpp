@@ -1740,11 +1740,11 @@ void GenMetalTraverser::emitFunctionSignature(const TFunction &func)
         const TVariable &param = *func.getParam(i);
         emitFunctionParameter(func, param);
     }
-    // TODO(anglebug.com/5505): reimplement transform feedback support.
-    //    if (isTraversingVertexMain)
-    //    {
-    //        mOut << " @@XFB-Bindings@@ ";
-    //    }
+
+    if (isTraversingVertexMain)
+    {
+        mOut << " @@XFB-Bindings@@ ";
+    }
 
     mOut << ")";
 }
