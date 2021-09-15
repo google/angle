@@ -750,6 +750,11 @@ TEST_P(ProgramBinaryES3Test, BinaryWithLargeUniformCount)
 // Test that sampler texelFetch references are saved and loaded correctly
 TEST_P(ProgramBinaryTest, SRGBDecodeWithSamplerAndTexelFetchTest)
 {
+    if (!supported())
+    {
+        return;
+    }
+
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_decode") ||
                        getClientMajorVersion() < 3);
 

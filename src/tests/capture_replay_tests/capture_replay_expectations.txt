@@ -131,7 +131,6 @@
 6180 : ImageTestES3.SourceCubeTargetExternalESSL3/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6334 : MipmapTestES3.GenerateMipmapBaseLevelOutOfRangeImmutableTexture/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6324 : OcclusionQueriesTestES3.UnresolveNotCounted/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6325 : ProgramBinaryTest.SRGBDecodeWithSamplerAndTexelFetchTest/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6329 : RenderbufferMultisampleTest.OddSampleCount/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6333 : Texture2DFloatTestES3.TextureHalfFloatLinearLegacyTest/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6333 : Texture2DFloatTestES3.TextureHalfFloatSampleLegacyTest/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
