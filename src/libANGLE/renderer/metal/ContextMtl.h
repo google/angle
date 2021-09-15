@@ -506,7 +506,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
         float negFlipXY[2];
         uint32_t emulatedInstanceID;
         uint32_t coverageMask;
-        uint32_t padding;
+        float fragRotation[4];
+        float preRotation[4];
     };
 
     struct DefaultAttribute
