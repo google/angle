@@ -1024,7 +1024,9 @@ class CommandBufferHelper : angle::NonCopyable
     ~CommandBufferHelper();
 
     // General Functions (non-renderPass specific)
-    void initialize(bool isRenderPassCommandBuffer);
+    angle::Result initialize(Context *context,
+                             bool isRenderPassCommandBuffer,
+                             CommandPool *commandPool);
 
     void bufferRead(ContextVk *contextVk,
                     VkAccessFlags readAccessType,
@@ -1061,8 +1063,9 @@ class CommandBufferHelper : angle::NonCopyable
                                 ImageHelper *resolveImage);
 
     CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
+    CommandPool *getCommandPool() { return mCommandPool; }
 
-    angle::Result flushToPrimary(const angle::FeaturesVk &features,
+    angle::Result flushToPrimary(Context *context,
                                  PrimaryCommandBuffer *primary,
                                  const RenderPass *renderPass);
 
@@ -1081,7 +1084,7 @@ class CommandBufferHelper : angle::NonCopyable
     void markClosed() {}
 #endif
 
-    void reset();
+    angle::Result reset(Context *context);
 
     // Returns true if we have no work to execute. For renderpass command buffer, even if the
     // underlying command buffer is empty, we may still have a renderpass with an empty command
@@ -1101,16 +1104,17 @@ class CommandBufferHelper : angle::NonCopyable
     // Finalize the layout if image has any deferred layout transition.
     void finalizeImageLayout(Context *context, const ImageHelper *image);
 
-    void beginRenderPass(const Framebuffer &framebuffer,
-                         const gl::Rectangle &renderArea,
-                         const RenderPassDesc &renderPassDesc,
-                         const AttachmentOpsArray &renderPassAttachmentOps,
-                         const vk::PackedAttachmentCount colorAttachmentCount,
-                         const PackedAttachmentIndex depthStencilAttachmentIndex,
-                         const PackedClearValuesArray &clearValues,
-                         CommandBuffer **commandBufferOut);
+    angle::Result beginRenderPass(ContextVk *contextVk,
+                                  const Framebuffer &framebuffer,
+                                  const gl::Rectangle &renderArea,
+                                  const RenderPassDesc &renderPassDesc,
+                                  const AttachmentOpsArray &renderPassAttachmentOps,
+                                  const vk::PackedAttachmentCount colorAttachmentCount,
+                                  const PackedAttachmentIndex depthStencilAttachmentIndex,
+                                  const PackedClearValuesArray &clearValues,
+                                  CommandBuffer **commandBufferOut);
 
-    void endRenderPass(ContextVk *contextVk);
+    angle::Result endRenderPass(ContextVk *contextVk);
 
     void updateStartedRenderPassWithDepthMode(bool readOnlyDepthStencilMode);
 
@@ -1218,6 +1222,8 @@ class CommandBufferHelper : angle::NonCopyable
     void setImageOptimizeForPresent(ImageHelper *image) { mImageOptimizeForPresent = image; }
 
   private:
+    angle::Result initializeCommandBuffer(Context *context);
+
     bool onDepthStencilAccess(ResourceAccess access,
                               uint32_t *cmdCountInvalidated,
                               uint32_t *cmdCountDisabled);
@@ -1253,6 +1259,9 @@ class CommandBufferHelper : angle::NonCopyable
     PipelineBarrierArray mPipelineBarriers;
     PipelineStagesMask mPipelineBarrierMask;
     CommandBuffer mCommandBuffer;
+    // The command pool mCommandBuffer is allocated from.  Only used with Vulkan secondary command
+    // buffers (as opposed to ANGLE's SecondaryCommandBuffer).
+    CommandPool *mCommandPool;
 
     // RenderPass state
     uint32_t mCounter;
@@ -1320,6 +1329,32 @@ class CommandBufferHelper : angle::NonCopyable
     // This is last renderpass before present and this is the image will be presented. We can use
     // final layout of the renderpass to transit it to the presentable layout
     ImageHelper *mImageOptimizeForPresent;
+};
+
+// The following class helps support both Vulkan and ANGLE secondary command buffers by
+// encapsulating their differences.
+// TODO: support ANGLE secondary command buffers.  http://anglebug.com/6100
+class CommandBufferRecycler
+{
+  public:
+    CommandBufferRecycler();
+    ~CommandBufferRecycler();
+
+    void onDestroy();
+
+    angle::Result getCommandBufferHelper(Context *context,
+                                         bool hasRenderPass,
+                                         CommandPool *commandPool,
+                                         CommandBufferHelper **commandBufferHelperOut);
+
+    void recycleCommandBufferHelper(VkDevice device, CommandBufferHelper *commandBuffer);
+
+    void resetCommandBufferHelper(CommandBuffer &&commandBuffer);
+
+  private:
+    void recycleImpl(VkDevice device, CommandBufferHelper *commandBuffer);
+
+    std::vector<vk::CommandBufferHelper *> mCommandBufferHelperFreeList;
 };
 
 // Imagine an image going through a few layout transitions:

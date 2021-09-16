@@ -709,7 +709,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void reset()
     {
         mCommands.clear();
-        initialize(mAllocator);
+        mCurrentWritePointer   = nullptr;
+        mCurrentBytesRemaining = 0;
     }
 
     // This will cause the SecondaryCommandBuffer to become invalid by clearing its allocator

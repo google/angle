@@ -364,6 +364,18 @@ const char *gLoaderLayersPathEnv   = "VK_LAYER_PATH";
 const char *gLoaderICDFilenamesEnv = "VK_ICD_FILENAMES";
 const char *gANGLEPreferredDevice  = "ANGLE_PREFERRED_DEVICE";
 
+#if !ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
+ANGLE_NO_DISCARD VkResult SecondaryCommandBufferInitialize(CommandBuffer *secondary,
+                                                           VkDevice device,
+                                                           vk::CommandPool *pool,
+                                                           angle::PoolAllocator *allocator)
+{
+    // TODO: support Vulkan secondary command buffers.  http://anglebug.com/6100
+    UNREACHABLE();
+    return VK_ERROR_UNKNOWN;
+}
+#endif
+
 VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format)
 {
     return (format.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |

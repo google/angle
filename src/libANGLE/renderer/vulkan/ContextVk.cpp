@@ -627,8 +627,8 @@ void ContextVk::onDestroy(const gl::Context *context)
     }
 
     // Recycle current commands buffers.
-    mRenderer->recycleCommandBufferHelper(mOutsideRenderPassCommands);
-    mRenderer->recycleCommandBufferHelper(mRenderPassCommands);
+    mRenderer->recycleCommandBufferHelper(device, mOutsideRenderPassCommands);
+    mRenderer->recycleCommandBufferHelper(device, mRenderPassCommands);
     mOutsideRenderPassCommands = nullptr;
     mRenderPassCommands        = nullptr;
 
@@ -752,8 +752,9 @@ angle::Result ContextVk::initialize()
     mEmulateSeamfulCubeMapSampling = shouldEmulateSeamfulCubeMapSampling();
 
     // Assign initial command buffers from queue
-    mOutsideRenderPassCommands = mRenderer->getCommandBufferHelper(false);
-    mRenderPassCommands        = mRenderer->getCommandBufferHelper(true);
+    ANGLE_TRY(
+        mRenderer->getCommandBufferHelper(this, false, &mCommandPool, &mOutsideRenderPassCommands));
+    ANGLE_TRY(mRenderer->getCommandBufferHelper(this, true, &mCommandPool, &mRenderPassCommands));
 
     if (mGpuEventsEnabled)
     {
@@ -2529,8 +2530,8 @@ void ContextVk::clearAllGarbage()
 
 void ContextVk::handleDeviceLost()
 {
-    mOutsideRenderPassCommands->reset();
-    mRenderPassCommands->reset();
+    (void)mOutsideRenderPassCommands->reset(this);
+    (void)mRenderPassCommands->reset(this);
     mRenderer->handleDeviceLost();
     clearAllGarbage();
 
@@ -5570,12 +5571,10 @@ angle::Result ContextVk::beginNewRenderPass(
     // Next end any currently outstanding renderPass
     ANGLE_TRY(flushCommandsAndEndRenderPass());
 
-    mRenderPassCommands->beginRenderPass(
-        framebuffer, renderArea, renderPassDesc, renderPassAttachmentOps, colorAttachmentCount,
-        depthStencilAttachmentIndex, clearValues, commandBufferOut);
     mPerfCounters.renderPasses++;
-
-    return angle::Result::Continue;
+    return mRenderPassCommands->beginRenderPass(
+        this, framebuffer, renderArea, renderPassDesc, renderPassAttachmentOps,
+        colorAttachmentCount, depthStencilAttachmentIndex, clearValues, commandBufferOut);
 }
 
 angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
@@ -5690,7 +5689,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassImpl()
 
     pauseTransformFeedbackIfActiveUnpaused();
 
-    mRenderPassCommands->endRenderPass(this);
+    ANGLE_TRY(mRenderPassCommands->endRenderPass(this));
 
     if (vk::CommandBufferHelper::kEnableCommandStreamDiagnostics)
     {
@@ -6145,12 +6144,14 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
 {
     ANGLE_TRY(flushCommandBuffersIfNecessary(access));
 
+    vk::CommandBuffer *commandBuffer = &mOutsideRenderPassCommands->getCommandBuffer();
+
     for (const vk::CommandBufferImageAccess &imageAccess : access.getReadImages())
     {
         ASSERT(!IsRenderPassStartedAndUsesImage(*mRenderPassCommands, *imageAccess.image));
 
         imageAccess.image->recordReadBarrier(this, imageAccess.aspectFlags, imageAccess.imageLayout,
-                                             &mOutsideRenderPassCommands->getCommandBuffer());
+                                             commandBuffer);
         imageAccess.image->retain(&mResourceUseList);
     }
 
@@ -6158,9 +6159,8 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
     {
         ASSERT(!IsRenderPassStartedAndUsesImage(*mRenderPassCommands, *imageWrite.access.image));
 
-        imageWrite.access.image->recordWriteBarrier(
-            this, imageWrite.access.aspectFlags, imageWrite.access.imageLayout,
-            &mOutsideRenderPassCommands->getCommandBuffer());
+        imageWrite.access.image->recordWriteBarrier(this, imageWrite.access.aspectFlags,
+                                                    imageWrite.access.imageLayout, commandBuffer);
         imageWrite.access.image->retain(&mResourceUseList);
         imageWrite.access.image->onWrite(imageWrite.levelStart, imageWrite.levelCount,
                                          imageWrite.layerStart, imageWrite.layerCount,

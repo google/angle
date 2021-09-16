@@ -777,11 +777,7 @@ void RendererVk::onDestroy(vk::Context *context)
     mYuvConversionCache.destroy(this);
     mVkFormatDescriptorCountMap.clear();
 
-    for (vk::CommandBufferHelper *commandBufferHelper : mCommandBufferHelperFreeList)
-    {
-        SafeDelete(commandBufferHelper);
-    }
-    mCommandBufferHelperFreeList.clear();
+    mCommandBufferRecycler.onDestroy();
 
     mAllocator.destroy();
 
@@ -3231,34 +3227,22 @@ VkResult RendererVk::queuePresent(vk::Context *context,
     return result;
 }
 
-vk::CommandBufferHelper *RendererVk::getCommandBufferHelper(bool hasRenderPass)
+angle::Result RendererVk::getCommandBufferHelper(vk::Context *context,
+                                                 bool hasRenderPass,
+                                                 vk::CommandPool *commandPool,
+                                                 vk::CommandBufferHelper **commandBufferHelperOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::getCommandBufferHelper");
-    std::unique_lock<std::mutex> lock(mCommandBufferHelperFreeListMutex);
-
-    if (mCommandBufferHelperFreeList.empty())
-    {
-        vk::CommandBufferHelper *commandBuffer = new vk::CommandBufferHelper();
-        commandBuffer->initialize(hasRenderPass);
-        return commandBuffer;
-    }
-    else
-    {
-        vk::CommandBufferHelper *commandBuffer = mCommandBufferHelperFreeList.back();
-        mCommandBufferHelperFreeList.pop_back();
-        commandBuffer->setHasRenderPass(hasRenderPass);
-        return commandBuffer;
-    }
+    std::unique_lock<std::mutex> lock(mCommandBufferRecyclerMutex);
+    return mCommandBufferRecycler.getCommandBufferHelper(context, hasRenderPass, commandPool,
+                                                         commandBufferHelperOut);
 }
 
-void RendererVk::recycleCommandBufferHelper(vk::CommandBufferHelper *commandBuffer)
+void RendererVk::recycleCommandBufferHelper(VkDevice device, vk::CommandBufferHelper *commandBuffer)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::recycleCommandBufferHelper");
-    std::lock_guard<std::mutex> lock(mCommandBufferHelperFreeListMutex);
-
-    ASSERT(commandBuffer->empty());
-    commandBuffer->markOpen();
-    mCommandBufferHelperFreeList.push_back(commandBuffer);
+    std::lock_guard<std::mutex> lock(mCommandBufferRecyclerMutex);
+    mCommandBufferRecycler.recycleCommandBufferHelper(device, commandBuffer);
 }
 
 void RendererVk::logCacheStats() const

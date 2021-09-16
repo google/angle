@@ -183,13 +183,27 @@ class Context : angle::NonCopyable
     RendererVk *const mRenderer;
 };
 
-#if ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
-using CommandBuffer = priv::SecondaryCommandBuffer;
-#else
-using CommandBuffer                          = priv::CommandBuffer;
-#endif
+class RenderPassDesc;
 
 using PrimaryCommandBuffer = priv::CommandBuffer;
+
+#if ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
+using CommandBuffer = priv::SecondaryCommandBuffer;
+ANGLE_NO_DISCARD inline VkResult SecondaryCommandBufferInitialize(CommandBuffer *secondary,
+                                                                  VkDevice device,
+                                                                  vk::CommandPool *pool,
+                                                                  angle::PoolAllocator *allocator)
+{
+    secondary->initialize(allocator);
+    return VK_SUCCESS;
+}
+#else
+using CommandBuffer = priv::CommandBuffer;
+ANGLE_NO_DISCARD VkResult SecondaryCommandBufferInitialize(CommandBuffer *secondary,
+                                                           VkDevice device,
+                                                           vk::CommandPool *pool,
+                                                           angle::PoolAllocator *allocator);
+#endif
 
 VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format);
 VkImageAspectFlags GetFormatAspectFlags(const angle::Format &format);
