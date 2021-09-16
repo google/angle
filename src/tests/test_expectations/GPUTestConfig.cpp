@@ -421,6 +421,12 @@ inline bool IsVMWare()
     return angle::IsVMWare(GetActiveGPUVendorID());
 }
 
+// Check whether the active GPU is Apple.
+inline bool IsApple()
+{
+    return angle::IsApple(GetActiveGPUVendorID());
+}
+
 // Check whether this is a debug build.
 inline bool IsDebug()
 {
@@ -577,6 +583,7 @@ GPUTestConfig::GPUTestConfig(bool isSwiftShader)
     mConditions[kConditionAMD]         = !isSwiftShader && IsAMD();
     mConditions[kConditionIntel]       = !isSwiftShader && IsIntel();
     mConditions[kConditionVMWare]      = !isSwiftShader && IsVMWare();
+    mConditions[kConditionApple]       = !isSwiftShader && IsApple();
     mConditions[kConditionSwiftShader] = isSwiftShader;
 
     mConditions[kConditionRelease] = IsRelease();
