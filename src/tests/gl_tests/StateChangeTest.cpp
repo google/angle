@@ -6905,7 +6905,7 @@ void main()
         EGLConfig config           = window->getConfig();
         EGLint pbufferAttributes[] = {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE};
         EGLSurface surface         = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
-        EGLContext ctx             = window->createContext(EGL_NO_CONTEXT);
+        EGLContext ctx             = window->createContext(EGL_NO_CONTEXT, nullptr);
         EXPECT_EGL_SUCCESS();
         std::thread flushThread = std::thread([&]() {
             EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, ctx));

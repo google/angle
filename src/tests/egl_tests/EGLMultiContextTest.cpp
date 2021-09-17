@@ -63,8 +63,8 @@ TEST_P(EGLMultiContextTest, TestContextDestroySimple)
     EGLWindow *window = getEGLWindow();
     EGLDisplay dpy    = window->getDisplay();
 
-    EGLContext context1 = window->createContext(EGL_NO_CONTEXT);
-    EGLContext context2 = window->createContext(EGL_NO_CONTEXT);
+    EGLContext context1 = window->createContext(EGL_NO_CONTEXT, nullptr);
+    EGLContext context2 = window->createContext(EGL_NO_CONTEXT, nullptr);
 
     EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, context1));
     EXPECT_EGL_TRUE(eglDestroyContext(dpy, context2));
@@ -101,7 +101,7 @@ TEST_P(EGLMultiContextTest, ComputeShaderOkayWithRendering)
         surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
         EXPECT_EGL_SUCCESS();
 
-        ctx[t] = window->createContext(EGL_NO_CONTEXT);
+        ctx[t] = window->createContext(EGL_NO_CONTEXT, nullptr);
         EXPECT_NE(EGL_NO_CONTEXT, ctx[t]);
     }
 

@@ -115,10 +115,10 @@
 #define EGL_PLATFORM_ANGLE_DEVICE_TYPE_EGL_ANGLE 0x348E
 #endif /* EGL_ANGLE_platform_angle_device_type_egl_angle */
 
-#ifndef EGL_ANGLE_platform_angle_context_virtualization
-#define EGL_ANGLE_platform_angle_context_virtualization 1
-#define EGL_PLATFORM_ANGLE_CONTEXT_VIRTUALIZATION_ANGLE 0x3481
-#endif /* EGL_ANGLE_platform_angle_context_virtualization */
+#ifndef EGL_ANGLE_context_virtualization
+#define EGL_ANGLE_context_virtualization 1
+#define EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE 0x3481
+#endif /* EGL_ANGLE_context_virtualization */
 
 #ifndef EGL_ANGLE_platform_angle_device_context_volatile_eagl
 #define EGL_ANGLE_platform_angle_device_context_volatile_eagl 1

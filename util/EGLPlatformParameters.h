@@ -59,10 +59,10 @@ struct EGLPlatformParameters
     auto tie() const
     {
         return std::tie(renderer, majorVersion, minorVersion, deviceType, presentPath,
-                        debugLayersEnabled, contextVirtualization, transformFeedbackFeature,
-                        allocateNonZeroMemoryFeature, emulateCopyTexImage2DFromRenderbuffers,
-                        shaderStencilOutputFeature, genMultipleMipsPerPassFeature, platformMethods,
-                        robustness, emulatedPrerotation, asyncCommandQueueFeatureVulkan,
+                        debugLayersEnabled, transformFeedbackFeature, allocateNonZeroMemoryFeature,
+                        emulateCopyTexImage2DFromRenderbuffers, shaderStencilOutputFeature,
+                        genMultipleMipsPerPassFeature, platformMethods, robustness,
+                        emulatedPrerotation, asyncCommandQueueFeatureVulkan,
                         hasExplicitMemBarrierFeatureMtl, hasCheapRenderPassFeatureMtl,
                         forceBufferGPUStorageFeatureMtl, supportsVulkanViewportFlip, emulatedVAOs,
                         generateSPIRVThroughGlslang, captureLimits, forceRobustResourceInit,
@@ -75,7 +75,6 @@ struct EGLPlatformParameters
     EGLint deviceType                             = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
     EGLint presentPath                            = EGL_DONT_CARE;
     EGLint debugLayersEnabled                     = EGL_DONT_CARE;
-    EGLint contextVirtualization                  = EGL_DONT_CARE;
     EGLint robustness                             = EGL_DONT_CARE;
     EGLint transformFeedbackFeature               = EGL_DONT_CARE;
     EGLint allocateNonZeroMemoryFeature           = EGL_DONT_CARE;

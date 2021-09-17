@@ -174,7 +174,7 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
                                      const ConfigParameters &params);
 
     // Create an EGL context with this window's configuration
-    EGLContext createContext(EGLContext share);
+    EGLContext createContext(EGLContext share, EGLint *extraAttributes);
     // Make the EGL context current
     bool makeCurrent(EGLContext context);
 

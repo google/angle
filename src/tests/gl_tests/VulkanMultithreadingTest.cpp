@@ -88,7 +88,7 @@ class VulkanMultithreadingTest : public ANGLETest
                     surface = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
                     EXPECT_EGL_SUCCESS();
 
-                    ctx = window->createContext(EGL_NO_CONTEXT);
+                    ctx = window->createContext(EGL_NO_CONTEXT, nullptr);
                     EXPECT_NE(EGL_NO_CONTEXT, ctx);
 
                     EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, ctx));

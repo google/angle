@@ -196,11 +196,6 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_NoFixture";
     }
 
-    if (pp.eglParameters.contextVirtualization == EGL_FALSE)
-    {
-        stream << "_NoVirtual";
-    }
-
     if (pp.eglParameters.transformFeedbackFeature == EGL_FALSE)
     {
         stream << "_NoTransformFeedback";

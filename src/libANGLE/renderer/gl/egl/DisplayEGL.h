@@ -138,6 +138,8 @@ class DisplayEGL : public DisplayGL
                                     const U &defaultValue) const;
 
     std::shared_ptr<RendererEGL> mRenderer;
+    std::map<EGLAttrib, std::weak_ptr<RendererEGL>> mVirtualizationGroups;
+
     FunctionsEGLDL *mEGL = nullptr;
     EGLConfig mConfig    = EGL_NO_CONFIG_KHR;
     egl::AttributeMap mDisplayAttributes;
@@ -159,8 +161,6 @@ class DisplayEGL : public DisplayGL
 
     bool mHasEXTCreateContextRobustness   = false;
     bool mHasNVRobustnessVideoMemoryPurge = false;
-
-    bool mVirtualizedContexts = false;
 
     bool mSupportsSurfaceless      = false;
     bool mSupportsNoConfigContexts = false;

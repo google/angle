@@ -1222,7 +1222,10 @@ void ANGLETestBase::draw3DTexturedQuad(GLfloat positionAttribZ,
 
 bool ANGLETestBase::platformSupportsMultithreading() const
 {
-    return (IsOpenGLES() && IsAndroid()) || IsVulkan();
+    return (mFixture && mFixture->eglWindow &&
+            IsEGLDisplayExtensionEnabled(mFixture->eglWindow->getDisplay(),
+                                         "EGL_ANGLE_context_virtualization")) ||
+           IsVulkan();
 }
 
 void ANGLETestBase::checkD3D11SDKLayersMessages()

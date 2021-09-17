@@ -695,31 +695,6 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
                     }
                     break;
 
-                case EGL_PLATFORM_ANGLE_CONTEXT_VIRTUALIZATION_ANGLE:
-                    if (!clientExtensions.platformANGLEContextVirtualization)
-                    {
-                        val->setError(EGL_BAD_ATTRIBUTE,
-                                      "EGL_ANGLE_platform_angle_context_"
-                                      "virtualization extension not active");
-                        return false;
-                    }
-
-                    switch (value)
-                    {
-                        case EGL_DONT_CARE:
-                        case EGL_FALSE:
-                        case EGL_TRUE:
-                            break;
-
-                        default:
-                            val->setError(EGL_BAD_ATTRIBUTE,
-                                          "Invalid value for "
-                                          "EGL_PLATFORM_ANGLE_CONTEXT_VIRTUALIZATION_"
-                                          "ANGLE attrib");
-                            return false;
-                    }
-                    break;
-
                 case EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE:
                 case EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE:
                     luidSpecified = true;
@@ -2000,6 +1975,16 @@ bool ValidateCreateContext(const ValidationContext *val,
                     val->setError(EGL_BAD_ATTRIBUTE,
                                   "EGL_PROTECTED_CONTENT_EXT must "
                                   "be either EGL_TRUE or EGL_FALSE.");
+                    return false;
+                }
+                break;
+
+            case EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE:
+                if (!display->getExtensions().contextVirtualizationANGLE)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "Attribute EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE requires "
+                                  "extension EGL_ANGLE_context_virtualization.");
                     return false;
                 }
                 break;

@@ -109,11 +109,7 @@ void WorkerContextEGL::unmakeCurrent()
 namespace rx
 {
 
-static constexpr bool kDefaultEGLVirtualizedContexts = true;
-
-DisplayEGL::DisplayEGL(const egl::DisplayState &state)
-    : DisplayGL(state), mVirtualizedContexts(kDefaultEGLVirtualizedContexts)
-{}
+DisplayEGL::DisplayEGL(const egl::DisplayState &state) : DisplayGL(state) {}
 
 DisplayEGL::~DisplayEGL() {}
 
@@ -253,9 +249,7 @@ egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
 egl::Error DisplayEGL::initialize(egl::Display *display)
 {
     mDisplayAttributes = display->getAttributeMap();
-    mVirtualizedContexts =
-        ShouldUseVirtualizedContexts(mDisplayAttributes, kDefaultEGLVirtualizedContexts);
-    mEGL = new FunctionsEGLDL();
+    mEGL               = new FunctionsEGLDL();
 
     void *eglHandle =
         reinterpret_cast<void *>(mDisplayAttributes.get(EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE, 0));
@@ -402,6 +396,7 @@ void DisplayEGL::terminate()
     }
 
     mRenderer.reset();
+    mVirtualizationGroups.clear();
 
     mCurrentNativeContexts.clear();
 
@@ -497,36 +492,47 @@ ContextImpl *DisplayEGL::createContext(const gl::State &state,
                                        const gl::Context *shareContext,
                                        const egl::AttributeMap &attribs)
 {
-    std::shared_ptr<RendererEGL> renderer;
     bool usingExternalContext = attribs.get(EGL_EXTERNAL_CONTEXT_ANGLE, EGL_FALSE) == EGL_TRUE;
-    if (mVirtualizedContexts && !usingExternalContext)
-    {
-        renderer = mRenderer;
-    }
-    else
-    {
-        EGLContext nativeShareContext = EGL_NO_CONTEXT;
-        if (usingExternalContext)
-        {
-            ASSERT(!shareContext);
-        }
-        else if (shareContext)
-        {
-            ContextEGL *shareContextEGL = GetImplAs<ContextEGL>(shareContext);
-            nativeShareContext          = shareContextEGL->getContext();
-        }
+    EGLAttrib virtualizationGroup =
+        attribs.get(EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, EGL_DONT_CARE);
 
-        // Create a new renderer for this context.  It only needs to share with the user's requested
-        // share context because there are no internal resources in DisplayEGL that are shared
-        // at the GL level.
-        egl::Error error =
-            createRenderer(nativeShareContext, false, usingExternalContext, &renderer);
+    std::shared_ptr<RendererEGL> renderer = mRenderer;
+    if (usingExternalContext)
+    {
+        ASSERT(!shareContext);
+        egl::Error error = createRenderer(EGL_NO_CONTEXT, false, true, &renderer);
         if (error.isError())
         {
             ERR() << "Failed to create a shared renderer: " << error.getMessage();
             return nullptr;
         }
     }
+    else if (virtualizationGroup != EGL_DONT_CARE)
+    {
+        renderer = mVirtualizationGroups[virtualizationGroup].lock();
+        if (!renderer)
+        {
+            EGLContext nativeShareContext = EGL_NO_CONTEXT;
+            if (shareContext)
+            {
+                ContextEGL *shareContextEGL = GetImplAs<ContextEGL>(shareContext);
+                nativeShareContext          = shareContextEGL->getContext();
+            }
+
+            // Create a new renderer for this context.  It only needs to share with the user's
+            // requested share context because there are no internal resources in DisplayEGL that
+            // are shared at the GL level.
+            egl::Error error = createRenderer(nativeShareContext, false, false, &renderer);
+            if (error.isError())
+            {
+                ERR() << "Failed to create a shared renderer: " << error.getMessage();
+                return nullptr;
+            }
+
+            mVirtualizationGroups[virtualizationGroup] = renderer;
+        }
+    }
+    ASSERT(renderer);
 
     RobustnessVideoMemoryPurgeStatus robustnessVideoMemoryPurgeStatus =
         GetRobustnessVideoMemoryPurge(attribs);
@@ -764,31 +770,6 @@ egl::Error DisplayEGL::makeCurrent(egl::Display *display,
         return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
     }
 
-    // The context should never change when context virtualization is being used unless binding a
-    // null context.
-    if (mVirtualizedContexts && newContext != EGL_NO_CONTEXT)
-    {
-        ASSERT(currentContext.context == EGL_NO_CONTEXT || newContext == currentContext.context);
-
-        newContext = mRenderer->getContext();
-
-        // If we know that we're only running on one thread (mVirtualizedContexts == true) and
-        // EGL_NO_SURFACE is going to be bound, we can optimize this case by not changing the
-        // surface binding and emulate the surfaceless extension in the frontend.
-        if (newSurface == EGL_NO_SURFACE)
-        {
-            newSurface = currentContext.surface;
-        }
-
-        // It's possible that no surface has been created yet and the driver doesn't support
-        // surfaceless, bind the mock pbuffer.
-        if (newSurface == EGL_NO_SURFACE && !mSupportsSurfaceless)
-        {
-            newSurface = mMockPbuffer;
-            ASSERT(newSurface != EGL_NO_SURFACE);
-        }
-    }
-
     if (newSurface != currentContext.surface || newContext != currentContext.context)
     {
         if (mEGL->makeCurrent(newSurface, newContext) == EGL_FALSE)
@@ -900,9 +881,11 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     // Surfaceless can be support if the native driver supports it or we know that we are running on
     // a single thread (mVirtualizedContexts == true)
-    outExtensions->surfacelessContext = mSupportsSurfaceless || mVirtualizedContexts;
+    outExtensions->surfacelessContext = mSupportsSurfaceless;
 
     outExtensions->externalContextAndSurface = true;
+
+    outExtensions->contextVirtualizationANGLE = true;
 
     DisplayGL::generateExtensions(outExtensions);
 }

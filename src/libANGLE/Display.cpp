@@ -1733,9 +1733,6 @@ static ClientExtensions GenerateClientExtensions()
 
 #if defined(ANGLE_ENABLE_OPENGL)
     extensions.platformANGLEOpenGL = true;
-
-    // Selecting context virtualization is currently only supported in the OpenGL backend.
-    extensions.platformANGLEContextVirtualization = true;
 #endif
 
 #if defined(ANGLE_ENABLE_NULL)

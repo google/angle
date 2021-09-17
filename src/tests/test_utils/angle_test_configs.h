@@ -191,13 +191,6 @@ PlatformParameters ES3_EGL();
 
 const char *GetNativeEGLLibraryNameWithExtension();
 
-inline PlatformParameters WithNoVirtualContexts(const PlatformParameters &params)
-{
-    PlatformParameters withNoVirtualContexts                  = params;
-    withNoVirtualContexts.eglParameters.contextVirtualization = EGL_FALSE;
-    return withNoVirtualContexts;
-}
-
 inline PlatformParameters WithNoFixture(const PlatformParameters &params)
 {
     PlatformParameters withNoFixture = params;

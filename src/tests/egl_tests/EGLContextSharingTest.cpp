@@ -484,7 +484,7 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
         surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
         EXPECT_EGL_SUCCESS();
 
-        ctx[t] = window->createContext(t == 0 ? EGL_NO_CONTEXT : ctx[0]);
+        ctx[t] = window->createContext(t == 0 ? EGL_NO_CONTEXT : ctx[0], nullptr);
         EXPECT_NE(EGL_NO_CONTEXT, ctx[t]);
     }
 

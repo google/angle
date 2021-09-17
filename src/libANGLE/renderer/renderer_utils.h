@@ -174,7 +174,6 @@ struct LoadTextureBorderFunctionInfo
 using LoadTextureBorderFunctionMap = LoadTextureBorderFunctionInfo (*)();
 
 bool ShouldUseDebugLayers(const egl::AttributeMap &attribs);
-bool ShouldUseVirtualizedContexts(const egl::AttributeMap &attribs, bool defaultValue);
 
 void CopyImageCHROMIUM(const uint8_t *sourceData,
                        size_t sourceRowPitch,

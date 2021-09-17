@@ -378,7 +378,7 @@ TEST_P(EGLSyncTest, AndroidNativeFence_WaitSync)
     {
         EXPECT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
 
-        EGLContext context2 = getEGLWindow()->createContext(EGL_NO_CONTEXT);
+        EGLContext context2 = getEGLWindow()->createContext(EGL_NO_CONTEXT, nullptr);
         EXPECT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context2));
 
         // We can eglWaitSync on this - import FD from first sync.
@@ -462,7 +462,7 @@ TEST_P(EGLSyncTest, AndroidNativeFence_withFences)
     {
         EXPECT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
 
-        EGLContext context2 = getEGLWindow()->createContext(EGL_NO_CONTEXT);
+        EGLContext context2 = getEGLWindow()->createContext(EGL_NO_CONTEXT, nullptr);
         EXPECT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context2));
 
         // check that Fence and Android fences work together
