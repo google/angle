@@ -66,6 +66,7 @@ ANGLE_INLINE GLenum GetNonLinearFormat(const GLenum format)
             return GL_SRGB8_ALPHA8;
         case GL_RGB8:
         case GL_BGRX8_ANGLEX:
+        case GL_RGBX8_ANGLEX:
             return GL_SRGB8;
         case GL_RGBA16F:
             return GL_RGBA16F;

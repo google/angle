@@ -220,6 +220,7 @@ inline bool IsLittleEndian()
 
 #define GL_A1RGB5_ANGLEX 0x6AC5
 #define GL_BGRX8_ANGLEX 0x6ABA
+#define GL_RGBX8_ANGLEX 0x6AFA
 #define GL_BGR565_ANGLEX 0x6ABB
 #define GL_BGRA4_ANGLEX 0x6ABC
 #define GL_BGR5_A1_ANGLEX 0x6ABD

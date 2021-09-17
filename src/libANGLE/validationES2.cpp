@@ -459,7 +459,7 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                     colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_RGB32F &&
                     colorbufferFormat != GL_RGBA32F && colorbufferFormat != GL_BGRA8_EXT &&
                     colorbufferFormat != GL_BGR5_A1_ANGLEX &&
-                    colorbufferFormat != GL_BGRX8_ANGLEX &&
+                    colorbufferFormat != GL_BGRX8_ANGLEX && colorbufferFormat != GL_RGBX8_ANGLEX &&
                     !Valid3to4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
                     context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
