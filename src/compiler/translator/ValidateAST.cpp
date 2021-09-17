@@ -54,7 +54,7 @@ class ValidateAST : public TIntermTraverser
     void visitNode(Visit visit, TIntermNode *node);
     // Visit a structure or interface block, and recursively visit its fields of structure type.
     void visitStructOrInterfaceBlockDeclaration(const TType &type, const TSourceLoc &location);
-    void visitStructInDeclarationUsage(const TType &type, const TSourceLoc &location);
+    void visitStructUsage(const TType &type, const TSourceLoc &location);
     // Visit a unary or aggregate node and validate its built-in op against its built-in function.
     void visitBuiltInFunction(TIntermOperator *op, const TFunction *function);
     // Visit an aggregate node and validate its function call is to one that's already defined.
@@ -237,11 +237,11 @@ void ValidateAST::visitStructOrInterfaceBlockDeclaration(const TType &type,
 
     for (const TField *field : structOrBlock->fields())
     {
-        visitStructInDeclarationUsage(*field->type(), field->line());
+        visitStructUsage(*field->type(), field->line());
     }
 }
 
-void ValidateAST::visitStructInDeclarationUsage(const TType &type, const TSourceLoc &location)
+void ValidateAST::visitStructUsage(const TType &type, const TSourceLoc &location)
 {
     if (type.getStruct() == nullptr)
     {
@@ -272,6 +272,8 @@ void ValidateAST::visitStructInDeclarationUsage(const TType &type, const TSource
                                     typeName.data());
                 mStructUsageFailed = true;
             }
+
+            break;
         }
     }
 
@@ -696,10 +698,38 @@ void ValidateAST::visitFunctionPrototype(TIntermFunctionPrototype *node)
     }
 
     const TFunction *function = node->getFunction();
+    const TType &returnType   = function->getReturnType();
+    if (mOptions.validatePrecision && IsPrecisionApplicableToType(returnType.getBasicType()) &&
+        returnType.getPrecision() == EbpUndefined)
+    {
+        mDiagnostics->error(
+            node->getLine(),
+            "Found function with undefined precision on return value <validatePrecision>",
+            function->name().data());
+        mPrecisionFailed = true;
+    }
+
+    if (mOptions.validateStructUsage)
+    {
+        if (returnType.isStructSpecifier())
+        {
+            visitStructOrInterfaceBlockDeclaration(returnType, node->getLine());
+        }
+        else
+        {
+            visitStructUsage(returnType, node->getLine());
+        }
+    }
+
     for (size_t paramIndex = 0; paramIndex < function->getParamCount(); ++paramIndex)
     {
         const TVariable *param = function->getParam(paramIndex);
         const TType &paramType = param->getType();
+
+        if (mOptions.validateStructUsage)
+        {
+            visitStructUsage(paramType, node->getLine());
+        }
 
         if (mOptions.validateQualifiers)
         {
@@ -724,17 +754,6 @@ void ValidateAST::visitFunctionPrototype(TIntermFunctionPrototype *node)
                 param->name().data());
             mPrecisionFailed = true;
         }
-    }
-
-    const TType &returnType = function->getReturnType();
-    if (mOptions.validatePrecision && IsPrecisionApplicableToType(returnType.getBasicType()) &&
-        returnType.getPrecision() == EbpUndefined)
-    {
-        mDiagnostics->error(
-            node->getLine(),
-            "Found function with undefined precision on return value <validatePrecision>",
-            function->name().data());
-        mPrecisionFailed = true;
     }
 }
 
@@ -901,11 +920,17 @@ bool ValidateAST::visitDeclaration(Visit visit, TIntermDeclaration *node)
 
             if (validateStructUsage)
             {
-                // Only declare the struct once.
+                // Only declare and/or validate the struct once.
                 validateStructUsage = false;
 
                 if (type.isStructSpecifier() || type.isInterfaceBlock())
+                {
                     visitStructOrInterfaceBlockDeclaration(type, node->getLine());
+                }
+                else
+                {
+                    visitStructUsage(type, node->getLine());
+                }
             }
 
             if (gl::IsBuiltInName(variable->name().data()))

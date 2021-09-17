@@ -78,6 +78,11 @@ class TShHandleBase
     angle::PoolAllocator allocator;
 };
 
+struct TFunctionMetadata
+{
+    bool used = false;
+};
+
 //
 // The base class for the machine dependent compiler to derive from
 // for managing object code from the compile.
@@ -266,8 +271,7 @@ class TCompiler : public TShHandleBase
     bool mGLPositionInitialized;
 
     // Removes unused function declarations and prototypes from the AST
-    class UnusedPredicate;
-    void pruneUnusedFunctions(TIntermBlock *root);
+    bool pruneUnusedFunctions(TIntermBlock *root);
 
     TIntermBlock *compileTreeImpl(const char *const shaderStrings[],
                                   size_t numStrings,
@@ -289,14 +293,8 @@ class TCompiler : public TShHandleBase
     ShShaderSpec mShaderSpec;
     ShShaderOutput mOutputType;
 
-    struct FunctionMetadata
-    {
-        FunctionMetadata() : used(false) {}
-        bool used;
-    };
-
     CallDAG mCallDag;
-    std::vector<FunctionMetadata> mFunctionMetadata;
+    std::vector<TFunctionMetadata> mFunctionMetadata;
 
     ShBuiltInResources mResources;
     std::string mBuiltInResourcesString;

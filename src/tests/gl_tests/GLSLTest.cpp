@@ -12508,6 +12508,49 @@ void main() {
     EXPECT_NE(compileResult, 0);
 }
 
+// Regression test based on fuzzer issue resulting in an AST validation failure.  Struct definition
+// was not found in the tree.  Tests that struct declaration in function return value is visible to
+// instantiations later on.
+TEST_P(GLSLTest, MissingStructDeclarationBug)
+{
+    constexpr char kVS[] = R"(
+struct S
+{
+    vec4 i;
+} p();
+void main()
+{
+    S s;
+})";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kVS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
+// Regression test based on fuzzer issue resulting in an AST validation failure.  Struct definition
+// was not found in the tree.  Tests that struct declaration in function return value is visible to
+// other struct declarations.
+TEST_P(GLSLTest, MissingStructDeclarationBug2)
+{
+    constexpr char kVS[] = R"(
+struct T
+{
+    vec4 I;
+} p();
+struct
+{
+    T c;
+};
+void main()
+{
+})";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kVS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
 // Test that providing more components to a matrix constructor than necessary works.  Based on a
 // clusterfuzz test that caught an OOB array write in glslang.
 TEST_P(GLSLTest, MatrixConstructor)
