@@ -3144,6 +3144,46 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
 }
 
+// Verifies that BufferSubData calls don't trigger state updates for non-translated formats.
+TEST_P(VulkanPerformanceCounterTest, BufferSubDataShouldNotTriggerSyncState)
+{
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glUseProgram(testProgram);
+
+    GLint posLoc = glGetAttribLocation(testProgram, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLoc);
+
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    EXPECT_EQ(hackANGLE().vertexArraySyncStateCalls, 1u);
+
+    const std::array<Vector3, 6> &quadVertices = GetQuadVertices();
+    size_t bufferSize                          = sizeof(quadVertices[0]) * quadVertices.size();
+
+    glBufferSubData(GL_ARRAY_BUFFER, 0, bufferSize, quadVertices.data());
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    EXPECT_EQ(hackANGLE().vertexArraySyncStateCalls, 1u);
+
+    // Verify the BufferData with a whole buffer size is treated like the SubData call.
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices[0]) * quadVertices.size(),
+                 quadVertices.data(), GL_STATIC_DRAW);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    EXPECT_EQ(hackANGLE().vertexArraySyncStateCalls, 1u);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN());
 

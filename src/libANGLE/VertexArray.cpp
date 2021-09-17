@@ -112,12 +112,15 @@ VertexArray::VertexArray(rx::GLImplFactory *factory,
     : mId(id),
       mState(this, maxAttribs, maxAttribBindings),
       mVertexArray(factory->createVertexArray(mState)),
-      mBufferAccessValidationEnabled(false)
+      mBufferAccessValidationEnabled(false),
+      mContentsObservers(this)
 {
     for (size_t attribIndex = 0; attribIndex < maxAttribBindings; ++attribIndex)
     {
         mArrayBufferObserverBindings.emplace_back(this, attribIndex);
     }
+
+    mVertexArray->setContentsObservers(&mContentsObservers);
 }
 
 void VertexArray::onDestroy(const Context *context)
@@ -350,7 +353,6 @@ bool VertexArray::bindVertexBufferImpl(const Context *context,
         boundBuffer->addRef();
         boundBuffer->onNonTFBindingChanged(1);
         boundBuffer->addObserver(observer);
-        boundBuffer->addContentsObserver(this, static_cast<uint32_t>(bindingIndex));
         if (context->isWebGL())
         {
             mCachedTransformFeedbackConflictedBindingsMask.set(
@@ -684,7 +686,7 @@ void VertexArray::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
             break;
 
         case angle::SubjectMessage::InternalMemoryAllocationChanged:
-            // Nothing to do.
+            setDependentDirtyBit(false, index);
             break;
 
         default:
@@ -765,5 +767,19 @@ void VertexArray::IndexRangeCache::put(DrawElementsType type,
 void VertexArray::onBufferContentsChange(uint32_t bufferIndex)
 {
     setDependentDirtyBit(true, bufferIndex);
+}
+
+VertexArrayBufferContentsObservers::VertexArrayBufferContentsObservers(VertexArray *vertexArray)
+    : mVertexArray(vertexArray)
+{}
+
+void VertexArrayBufferContentsObservers::enableForBuffer(Buffer *buffer, uint32_t bufferIndex)
+{
+    buffer->addContentsObserver(mVertexArray, bufferIndex);
+}
+
+void VertexArrayBufferContentsObservers::disableForBuffer(Buffer *buffer, uint32_t bufferIndex)
+{
+    buffer->removeContentsObserver(mVertexArray, bufferIndex);
 }
 }  // namespace gl

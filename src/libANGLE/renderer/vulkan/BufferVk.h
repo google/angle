@@ -41,10 +41,10 @@ struct ConversionBuffer
     vk::DynamicBuffer data;
 };
 
-enum BufferNotificationPolicy
+enum BufferUpdateType
 {
-    OnStorageChange,
-    DoNotNotify,
+    StorageRedefined,
+    ContentsUpdate,
 };
 
 class BufferVk : public BufferImpl
@@ -127,7 +127,7 @@ class BufferVk : public BufferImpl
                                GLbitfield access,
                                void **mapPtr);
     angle::Result unmapImpl(ContextVk *contextVk);
-    angle::Result ghostBuffer(ContextVk *contextVk, VkDeviceSize offset, void **mapPtr);
+    angle::Result ghostMappedBuffer(ContextVk *contextVk, VkDeviceSize offset, void **mapPtr);
 
     ConversionBuffer *getVertexConversionBuffer(RendererVk *renderer,
                                                 angle::FormatID formatID,
@@ -168,7 +168,7 @@ class BufferVk : public BufferImpl
                                    const uint8_t *data,
                                    size_t updateSize,
                                    size_t offset,
-                                   BufferNotificationPolicy notificationPolicy);
+                                   BufferUpdateType updateType);
     angle::Result setDataWithMemoryType(const gl::Context *context,
                                         gl::BufferBinding target,
                                         const void *data,
@@ -187,13 +187,13 @@ class BufferVk : public BufferImpl
                               const uint8_t *data,
                               size_t size,
                               size_t offset,
-                              BufferNotificationPolicy notificationPolicy);
+                              BufferUpdateType updateType);
     void release(ContextVk *context);
     void markConversionBuffersDirty();
 
     angle::Result acquireBufferHelper(ContextVk *contextVk,
                                       size_t sizeInBytes,
-                                      BufferNotificationPolicy notificationPolicy);
+                                      BufferUpdateType updateType);
 
     struct VertexConversionBuffer : public ConversionBuffer
     {

@@ -626,10 +626,12 @@ angle::Result VertexArrayMtl::syncDirtyAttrib(const gl::Context *glContext,
 
             if (needConversion)
             {
+                mContentsObservers->enableForBuffer(bufferGL, static_cast<uint32_t>(attribIndex));
                 ANGLE_TRY(convertVertexBuffer(glContext, bufferMtl, binding, attribIndex, format));
             }
             else
             {
+                mContentsObservers->disableForBuffer(bufferGL, static_cast<uint32_t>(attribIndex));
                 mCurrentArrayBuffers[attribIndex]       = bufferMtl;
                 mCurrentArrayBufferOffsets[attribIndex] = binding.getOffset();
                 mCurrentArrayBufferStrides[attribIndex] = binding.getStride();

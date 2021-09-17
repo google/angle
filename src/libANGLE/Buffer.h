@@ -199,6 +199,7 @@ class Buffer final : public RefCountObject<BufferID>,
                                          GLbitfield flags);
 
     void onContentsChange();
+    size_t getContentsObserverIndex(VertexArray *vertexArray, uint32_t bufferIndex) const;
 
     BufferState mState;
     rx::BufferImpl *mImpl;

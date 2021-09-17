@@ -401,9 +401,11 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
         return angle::Result::Continue;
     }
 
+    const bool wholeSize = size == static_cast<size_t>(mState.getSize());
+
     // BufferData call is re-specifying the entire buffer
     // Release and init a new mBuffer with this new size
-    if (size != static_cast<size_t>(mState.getSize()))
+    if (!wholeSize)
     {
         // Release and re-create the memory and buffer.
         release(contextVk);
@@ -430,7 +432,7 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
                                   bufferHelperPoolInitialSize, memoryPropertyFlags,
                                   vk::DynamicBufferPolicy::FrequentSmallAllocations);
 
-        ANGLE_TRY(acquireBufferHelper(contextVk, size, BufferNotificationPolicy::DoNotNotify));
+        ANGLE_TRY(acquireBufferHelper(contextVk, size, BufferUpdateType::StorageRedefined));
 
         // persistentMapRequired may request that the server read from or write to the buffer while
         // it is mapped. The client's pointer to the data store remains valid so long as the data
@@ -444,8 +446,11 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
 
     if (data)
     {
-        ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, 0,
-                              BufferNotificationPolicy::DoNotNotify));
+        // Treat full-buffer updates as SubData calls.
+        BufferUpdateType updateType =
+            wholeSize ? BufferUpdateType::ContentsUpdate : BufferUpdateType::StorageRedefined;
+
+        ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, 0, updateType));
     }
 
     return angle::Result::Continue;
@@ -461,7 +466,7 @@ angle::Result BufferVk::setSubData(const gl::Context *context,
 
     ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, offset,
-                          BufferNotificationPolicy::OnStorageChange));
+                          BufferUpdateType::ContentsUpdate));
 
     return angle::Result::Continue;
 }
@@ -588,7 +593,7 @@ angle::Result BufferVk::mapImpl(ContextVk *contextVk, void **mapPtr)
     return mapRangeImpl(contextVk, 0, static_cast<VkDeviceSize>(mState.getSize()), 0, mapPtr);
 }
 
-angle::Result BufferVk::ghostBuffer(ContextVk *contextVk, VkDeviceSize offset, void **mapPtr)
+angle::Result BufferVk::ghostMappedBuffer(ContextVk *contextVk, VkDeviceSize offset, void **mapPtr)
 {
     vk::BufferHelper *previousBuffer = nullptr;
     VkDeviceSize previousOffset      = 0;
@@ -601,7 +606,7 @@ angle::Result BufferVk::ghostBuffer(ContextVk *contextVk, VkDeviceSize offset, v
     previousBuffer = mBuffer;
     previousOffset = mBufferOffset;
     ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize()),
-                                  BufferNotificationPolicy::OnStorageChange));
+                                  BufferUpdateType::ContentsUpdate));
 
     // Before returning the new buffer, map the previous buffer and copy its entire
     // contents into the new buffer.
@@ -644,12 +649,12 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
             if ((access & GL_MAP_INVALIDATE_BUFFER_BIT) != 0)
             {
                 ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize()),
-                                              BufferNotificationPolicy::OnStorageChange));
+                                              BufferUpdateType::ContentsUpdate));
             }
             else if (!mBuffer->isCurrentlyInUseForWrite(contextVk->getLastCompletedQueueSerial()))
             {
                 // This will keep the new buffer mapped and update mapPtr, so return immediately.
-                return ghostBuffer(contextVk, offset, mapPtr);
+                return ghostMappedBuffer(contextVk, offset, mapPtr);
             }
             else if ((access & GL_MAP_UNSYNCHRONIZED_BIT) == 0)
             {
@@ -859,7 +864,7 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
                                          const uint8_t *data,
                                          size_t updateSize,
                                          size_t offset,
-                                         BufferNotificationPolicy notificationPolicy)
+                                         BufferUpdateType updateType)
 {
     // Here we acquire a new BufferHelper and directUpdate() the new buffer.
     // If the subData size was less than the buffer's size we additionally enqueue
@@ -878,7 +883,7 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
         src->retainReadOnly(&contextVk->getResourceUseList());
     }
 
-    ANGLE_TRY(acquireBufferHelper(contextVk, bufferSize, notificationPolicy));
+    ANGLE_TRY(acquireBufferHelper(contextVk, bufferSize, updateType));
     ANGLE_TRY(updateBuffer(contextVk, data, updateSize, offset));
 
     constexpr int kMaxCopyRegions = 2;
@@ -907,7 +912,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
                                     const uint8_t *data,
                                     size_t size,
                                     size_t offset,
-                                    BufferNotificationPolicy notificationPolicy)
+                                    BufferUpdateType updateType)
 {
     // Update shadow buffer
     updateShadowBuffer(data, size, offset);
@@ -922,7 +927,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         if (!mBuffer->isExternalBuffer() &&
             SubDataSizeMeetsThreshold(size, static_cast<size_t>(mState.getSize())))
         {
-            ANGLE_TRY(acquireAndUpdate(contextVk, data, size, offset, notificationPolicy));
+            ANGLE_TRY(acquireAndUpdate(contextVk, data, size, offset, updateType));
         }
         else
         {
@@ -973,7 +978,7 @@ void BufferVk::onDataChanged()
 
 angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk,
                                             size_t sizeInBytes,
-                                            BufferNotificationPolicy notificationPolicy)
+                                            BufferUpdateType updateType)
 {
     // This method should not be called if it is an ExternalBuffer
     ASSERT(mBuffer == nullptr || mBuffer->isExternalBuffer() == false);
@@ -993,7 +998,7 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk,
     mBuffer = mBufferPool.getCurrentBuffer();
     ASSERT(mBuffer);
 
-    if (notificationPolicy == BufferNotificationPolicy::OnStorageChange)
+    if (updateType == BufferUpdateType::ContentsUpdate)
     {
         // Tell the observers (front end) that a new buffer was created, so the necessary
         // dirty bits can be set. This allows the buffer views pointing to the old buffer to

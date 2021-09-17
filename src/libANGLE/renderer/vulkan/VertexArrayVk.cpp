@@ -471,6 +471,7 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
     ASSERT(dirtyBits.any());
 
     ContextVk *contextVk = vk::GetImpl(context);
+    contextVk->getPerfCounters().vertexArraySyncStateCalls++;
 
     const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
     const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
@@ -605,6 +606,11 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         mStreamingVertexAttribsMask.set(attribIndex, isStreamingVertexAttrib);
         bool compressed = false;
 
+        if (bufferGL)
+        {
+            mContentsObservers->disableForBuffer(bufferGL, static_cast<uint32_t>(attribIndex));
+        }
+
         if (!isStreamingVertexAttrib)
         {
             BufferVk *bufferVk                  = vk::GetImpl(bufferGL);
@@ -619,8 +625,13 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                 compressed = true;
             }
 
-            if (vertexFormat.getVertexLoadRequiresConversion(compressed) || !bindingIsAligned)
+            bool needsConversion =
+                vertexFormat.getVertexLoadRequiresConversion(compressed) || !bindingIsAligned;
+
+            if (needsConversion)
             {
+                mContentsObservers->enableForBuffer(bufferGL, static_cast<uint32_t>(attribIndex));
+
                 ANGLE_TRY(WarnOnVertexFormatConversion(contextVk, vertexFormat, compressed, true));
 
                 ConversionBuffer *conversion = bufferVk->getVertexConversionBuffer(
