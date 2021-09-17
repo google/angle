@@ -178,10 +178,6 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
 
     VkResult init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo);
 
-    // There is no way to know if the command buffer contains any commands.
-    static bool CanKnowIfEmpty() { return false; }
-    bool empty() const { return false; }
-
     using WrappedObject::operator=;
 
     static bool SupportsQueries(const VkPhysicalDeviceFeatures &features)
@@ -269,28 +265,11 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
               uint32_t instanceCount,
               uint32_t firstVertex,
               uint32_t firstInstance);
-    void draw(uint32_t vertexCount, uint32_t firstVertex);
-    void drawInstanced(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex);
-    void drawInstancedBaseInstance(uint32_t vertexCount,
-                                   uint32_t instanceCount,
-                                   uint32_t firstVertex,
-                                   uint32_t firstInstance);
     void drawIndexed(uint32_t indexCount,
                      uint32_t instanceCount,
                      uint32_t firstIndex,
                      int32_t vertexOffset,
                      uint32_t firstInstance);
-    void drawIndexed(uint32_t indexCount);
-    void drawIndexedBaseVertex(uint32_t indexCount, uint32_t vertexOffset);
-    void drawIndexedInstanced(uint32_t indexCount, uint32_t instanceCount);
-    void drawIndexedInstancedBaseVertex(uint32_t indexCount,
-                                        uint32_t instanceCount,
-                                        uint32_t vertexOffset);
-    void drawIndexedInstancedBaseVertexBaseInstance(uint32_t indexCount,
-                                                    uint32_t instanceCount,
-                                                    uint32_t firstIndex,
-                                                    int32_t vertexOffset,
-                                                    uint32_t firstInstance);
     void drawIndexedIndirect(const Buffer &buffer,
                              VkDeviceSize offset,
                              uint32_t drawCount,
@@ -1069,70 +1048,11 @@ ANGLE_INLINE void CommandBuffer::draw(uint32_t vertexCount,
     vkCmdDraw(mHandle, vertexCount, instanceCount, firstVertex, firstInstance);
 }
 
-ANGLE_INLINE void CommandBuffer::draw(uint32_t vertexCount, uint32_t firstVertex)
-{
-    ASSERT(valid());
-    vkCmdDraw(mHandle, vertexCount, 1, firstVertex, 0);
-}
-
-ANGLE_INLINE void CommandBuffer::drawInstanced(uint32_t vertexCount,
-                                               uint32_t instanceCount,
-                                               uint32_t firstVertex)
-{
-    ASSERT(valid());
-    vkCmdDraw(mHandle, vertexCount, instanceCount, firstVertex, 0);
-}
-
-ANGLE_INLINE void CommandBuffer::drawInstancedBaseInstance(uint32_t vertexCount,
-                                                           uint32_t instanceCount,
-                                                           uint32_t firstVertex,
-                                                           uint32_t firstInstance)
-{
-    ASSERT(valid());
-    vkCmdDraw(mHandle, vertexCount, instanceCount, firstVertex, firstInstance);
-}
-
 ANGLE_INLINE void CommandBuffer::drawIndexed(uint32_t indexCount,
                                              uint32_t instanceCount,
                                              uint32_t firstIndex,
                                              int32_t vertexOffset,
                                              uint32_t firstInstance)
-{
-    ASSERT(valid());
-    vkCmdDrawIndexed(mHandle, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
-}
-
-ANGLE_INLINE void CommandBuffer::drawIndexed(uint32_t indexCount)
-{
-    ASSERT(valid());
-    vkCmdDrawIndexed(mHandle, indexCount, 1, 0, 0, 0);
-}
-
-ANGLE_INLINE void CommandBuffer::drawIndexedBaseVertex(uint32_t indexCount, uint32_t vertexOffset)
-{
-    ASSERT(valid());
-    vkCmdDrawIndexed(mHandle, indexCount, 1, 0, vertexOffset, 0);
-}
-
-ANGLE_INLINE void CommandBuffer::drawIndexedInstanced(uint32_t indexCount, uint32_t instanceCount)
-{
-    ASSERT(valid());
-    vkCmdDrawIndexed(mHandle, indexCount, instanceCount, 0, 0, 0);
-}
-
-ANGLE_INLINE void CommandBuffer::drawIndexedInstancedBaseVertex(uint32_t indexCount,
-                                                                uint32_t instanceCount,
-                                                                uint32_t vertexOffset)
-{
-    ASSERT(valid());
-    vkCmdDrawIndexed(mHandle, indexCount, instanceCount, 0, vertexOffset, 0);
-}
-
-ANGLE_INLINE void CommandBuffer::drawIndexedInstancedBaseVertexBaseInstance(uint32_t indexCount,
-                                                                            uint32_t instanceCount,
-                                                                            uint32_t firstIndex,
-                                                                            int32_t vertexOffset,
-                                                                            uint32_t firstInstance)
 {
     ASSERT(valid());
     vkCmdDrawIndexed(mHandle, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);

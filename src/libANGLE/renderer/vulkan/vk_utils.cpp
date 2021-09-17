@@ -365,14 +365,13 @@ const char *gLoaderICDFilenamesEnv = "VK_ICD_FILENAMES";
 const char *gANGLEPreferredDevice  = "ANGLE_PREFERRED_DEVICE";
 
 #if !ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
-ANGLE_NO_DISCARD VkResult SecondaryCommandBufferInitialize(CommandBuffer *secondary,
-                                                           VkDevice device,
-                                                           vk::CommandPool *pool,
-                                                           angle::PoolAllocator *allocator)
+angle::Result VulkanSecondaryCommandBuffer::initialize(VkDevice device,
+                                                       vk::CommandPool *pool,
+                                                       angle::PoolAllocator *allocator)
 {
     // TODO: support Vulkan secondary command buffers.  http://anglebug.com/6100
     UNREACHABLE();
-    return VK_ERROR_UNKNOWN;
+    return angle::Result::Stop;
 }
 #endif
 

@@ -929,11 +929,8 @@ angle::Result CommandBufferHelper::initialize(Context *context,
 
 angle::Result CommandBufferHelper::initializeCommandBuffer(Context *context)
 {
-    ANGLE_VK_TRY(context, vk::SecondaryCommandBufferInitialize(&mCommandBuffer,
-                                                               context->getRenderer()->getDevice(),
-                                                               mCommandPool, &mAllocator));
-
-    return angle::Result::Continue;
+    return mCommandBuffer.initialize(context->getRenderer()->getDevice(), mCommandPool,
+                                     &mAllocator);
 }
 
 angle::Result CommandBufferHelper::reset(Context *context)

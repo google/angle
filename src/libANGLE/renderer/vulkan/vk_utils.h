@@ -189,20 +189,180 @@ using PrimaryCommandBuffer = priv::CommandBuffer;
 
 #if ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
 using CommandBuffer = priv::SecondaryCommandBuffer;
-ANGLE_NO_DISCARD inline VkResult SecondaryCommandBufferInitialize(CommandBuffer *secondary,
-                                                                  VkDevice device,
-                                                                  vk::CommandPool *pool,
-                                                                  angle::PoolAllocator *allocator)
-{
-    secondary->initialize(allocator);
-    return VK_SUCCESS;
-}
 #else
-using CommandBuffer = priv::CommandBuffer;
-ANGLE_NO_DISCARD VkResult SecondaryCommandBufferInitialize(CommandBuffer *secondary,
-                                                           VkDevice device,
-                                                           vk::CommandPool *pool,
-                                                           angle::PoolAllocator *allocator);
+class VulkanSecondaryCommandBuffer : public priv::CommandBuffer
+{
+  public:
+    VulkanSecondaryCommandBuffer() = default;
+
+    angle::Result initialize(VkDevice device,
+                             vk::CommandPool *pool,
+                             angle::PoolAllocator *allocator);
+
+    void draw(uint32_t vertexCount,
+              uint32_t instanceCount,
+              uint32_t firstVertex,
+              uint32_t firstInstance);
+    void draw(uint32_t vertexCount, uint32_t firstVertex);
+    void drawInstanced(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex);
+    void drawInstancedBaseInstance(uint32_t vertexCount,
+                                   uint32_t instanceCount,
+                                   uint32_t firstVertex,
+                                   uint32_t firstInstance);
+    void drawIndexed(uint32_t indexCount,
+                     uint32_t instanceCount,
+                     uint32_t firstIndex,
+                     int32_t vertexOffset,
+                     uint32_t firstInstance);
+    void drawIndexed(uint32_t indexCount);
+    void drawIndexedBaseVertex(uint32_t indexCount, uint32_t vertexOffset);
+    void drawIndexedInstanced(uint32_t indexCount, uint32_t instanceCount);
+    void drawIndexedInstancedBaseVertex(uint32_t indexCount,
+                                        uint32_t instanceCount,
+                                        uint32_t vertexOffset);
+    void drawIndexedInstancedBaseVertexBaseInstance(uint32_t indexCount,
+                                                    uint32_t instanceCount,
+                                                    uint32_t firstIndex,
+                                                    int32_t vertexOffset,
+                                                    uint32_t firstInstance);
+    void drawIndexedIndirect(const Buffer &buffer,
+                             VkDeviceSize offset,
+                             uint32_t drawCount,
+                             uint32_t stride);
+    void drawIndirect(const Buffer &buffer,
+                      VkDeviceSize offset,
+                      uint32_t drawCount,
+                      uint32_t stride);
+
+    void dispatch(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ);
+    void dispatchIndirect(const Buffer &buffer, VkDeviceSize offset);
+
+    void open() const {}
+    void close() const {}
+    bool empty() const { return mSize == 0; }
+    uint32_t getCommandSize() const { return mSize; }
+    std::string dumpCommands(const char *separator) const { return ""; }
+
+  private:
+    uint32_t mSize = 0;
+};
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::draw(uint32_t vertexCount,
+                                                     uint32_t instanceCount,
+                                                     uint32_t firstVertex,
+                                                     uint32_t firstInstance)
+{
+    ++mSize;
+    CommandBuffer::draw(vertexCount, instanceCount, firstVertex, firstInstance);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::draw(uint32_t vertexCount, uint32_t firstVertex)
+{
+    ++mSize;
+    CommandBuffer::draw(vertexCount, 1, firstVertex, 0);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawInstanced(uint32_t vertexCount,
+                                                              uint32_t instanceCount,
+                                                              uint32_t firstVertex)
+{
+    ++mSize;
+    CommandBuffer::draw(vertexCount, instanceCount, firstVertex, 0);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawInstancedBaseInstance(uint32_t vertexCount,
+                                                                          uint32_t instanceCount,
+                                                                          uint32_t firstVertex,
+                                                                          uint32_t firstInstance)
+{
+    ++mSize;
+    CommandBuffer::draw(vertexCount, instanceCount, firstVertex, firstInstance);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexed(uint32_t indexCount,
+                                                            uint32_t instanceCount,
+                                                            uint32_t firstIndex,
+                                                            int32_t vertexOffset,
+                                                            uint32_t firstInstance)
+{
+    ++mSize;
+    CommandBuffer::drawIndexed(indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexed(uint32_t indexCount)
+{
+    ++mSize;
+    CommandBuffer::drawIndexed(indexCount, 1, 0, 0, 0);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexedBaseVertex(uint32_t indexCount,
+                                                                      uint32_t vertexOffset)
+{
+    ++mSize;
+    CommandBuffer::drawIndexed(indexCount, 1, 0, vertexOffset, 0);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexedInstanced(uint32_t indexCount,
+                                                                     uint32_t instanceCount)
+{
+    ++mSize;
+    CommandBuffer::drawIndexed(indexCount, instanceCount, 0, 0, 0);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexedInstancedBaseVertex(
+    uint32_t indexCount,
+    uint32_t instanceCount,
+    uint32_t vertexOffset)
+{
+    ++mSize;
+    CommandBuffer::drawIndexed(indexCount, instanceCount, 0, vertexOffset, 0);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexedInstancedBaseVertexBaseInstance(
+    uint32_t indexCount,
+    uint32_t instanceCount,
+    uint32_t firstIndex,
+    int32_t vertexOffset,
+    uint32_t firstInstance)
+{
+    ++mSize;
+    CommandBuffer::drawIndexed(indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexedIndirect(const Buffer &buffer,
+                                                                    VkDeviceSize offset,
+                                                                    uint32_t drawCount,
+                                                                    uint32_t stride)
+{
+    ++mSize;
+    CommandBuffer::drawIndexedIndirect(buffer, offset, drawCount, stride);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndirect(const Buffer &buffer,
+                                                             VkDeviceSize offset,
+                                                             uint32_t drawCount,
+                                                             uint32_t stride)
+{
+    ++mSize;
+    CommandBuffer::drawIndirect(buffer, offset, drawCount, stride);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::dispatch(uint32_t groupCountX,
+                                                         uint32_t groupCountY,
+                                                         uint32_t groupCountZ)
+{
+    ++mSize;
+    CommandBuffer::dispatch(groupCountX, groupCountY, groupCountZ);
+}
+
+ANGLE_INLINE void VulkanSecondaryCommandBuffer::dispatchIndirect(const Buffer &buffer,
+                                                                 VkDeviceSize offset)
+{
+    ++mSize;
+    CommandBuffer::dispatchIndirect(buffer, offset);
+}
+
+using CommandBuffer                          = VulkanSecondaryCommandBuffer;
 #endif
 
 VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format);

@@ -693,7 +693,9 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     static_assert((kBlockSize % 4) == 0, "Check kBlockSize alignment");
 
     // Initialize the SecondaryCommandBuffer by setting the allocator it will use
-    void initialize(angle::PoolAllocator *allocator)
+    angle::Result initialize(VkDevice device,
+                             vk::CommandPool *pool,
+                             angle::PoolAllocator *allocator)
     {
         ASSERT(allocator);
         ASSERT(mCommands.empty());
@@ -701,6 +703,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
         allocateNewBlock();
         // Set first command to Invalid to start
         reinterpret_cast<CommandHeader *>(mCurrentWritePointer)->id = CommandID::Invalid;
+
+        return angle::Result::Continue;
     }
 
     void open() { mIsOpen = true; }
@@ -718,7 +722,6 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     // The SecondaryCommandBuffer is valid if it's been initialized
     bool valid() const { return mAllocator != nullptr; }
 
-    static bool CanKnowIfEmpty() { return true; }
     bool empty() const { return mCommands.size() == 0 || mCommands[0]->id == CommandID::Invalid; }
     // The following is used to give the size of the command buffer in bytes
     uint32_t getCommandSize() const
