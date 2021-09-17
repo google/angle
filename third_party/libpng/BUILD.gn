@@ -4,6 +4,9 @@
 
 config("libpng_config") {
   include_dirs = [ "src" ]
+  if (is_clang) {
+    cflags = [ "-Wno-tautological-constant-out-of-range-compare" ]
+  }
 }
 
 static_library("libpng") {
