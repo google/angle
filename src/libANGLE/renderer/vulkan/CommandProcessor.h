@@ -509,6 +509,11 @@ class CommandProcessor : public Context, public CommandQueueInterface
     Serial getLastCompletedQueueSerial() const override;
     Serial getCurrentQueueSerial() const override;
 
+    egl::ContextPriority getDriverPriority(egl::ContextPriority priority)
+    {
+        return mCommandQueue.getDriverPriority(priority);
+    }
+
   private:
     bool hasPendingError() const
     {
