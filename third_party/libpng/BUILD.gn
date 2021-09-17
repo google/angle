@@ -29,6 +29,7 @@ static_library("libpng") {
       "src/arm/arm_init.c",
       "src/arm/filter_neon.S",
       "src/arm/filter_neon_intrinsics.c",
+      "src/arm/palette_neon_intrinsics.c",
     ]
   }
   if (is_win) {
