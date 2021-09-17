@@ -337,7 +337,7 @@ class AutoObjCPtr : public WrappedObject<T>
         return *this;
     }
 
-    AutoObjCPtr &operator=(const std::nullptr_t &theNull)
+    AutoObjCPtr &operator=(std::nullptr_t theNull)
     {
         this->set(nil);
         return *this;
@@ -347,7 +347,9 @@ class AutoObjCPtr : public WrappedObject<T>
 
     bool operator==(T rhs) const { return this->get() == rhs; }
 
-    bool operator==(const std::nullptr_t &theNull) const { return this->get(); }
+    bool operator==(std::nullptr_t theNull) const { return this->get() == nullptr; }
+
+    bool operator!=(std::nullptr_t) const { return this->get() != nullptr; }
 
     inline operator bool() { return this->get(); }
 
