@@ -286,24 +286,14 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
 
     void getMemoryUsageStats(size_t *usedMemoryOut, size_t *allocatedMemoryOut) const;
 
-    void executionBarrier(VkPipelineStageFlags stageMask);
-
     void fillBuffer(const Buffer &dstBuffer,
                     VkDeviceSize dstOffset,
                     VkDeviceSize size,
                     uint32_t data);
 
-    void bufferBarrier(VkPipelineStageFlags srcStageMask,
-                       VkPipelineStageFlags dstStageMask,
-                       const VkBufferMemoryBarrier *bufferMemoryBarrier);
-
     void imageBarrier(VkPipelineStageFlags srcStageMask,
                       VkPipelineStageFlags dstStageMask,
                       const VkImageMemoryBarrier &imageMemoryBarrier);
-
-    void memoryBarrier(VkPipelineStageFlags srcStageMask,
-                       VkPipelineStageFlags dstStageMask,
-                       const VkMemoryBarrier *memoryBarrier);
 
     void nextSubpass(VkSubpassContents subpassContents);
 
@@ -371,6 +361,8 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void insertDebugUtilsLabelEXT(const VkDebugUtilsLabelEXT &labelInfo);
 };
 }  // namespace priv
+
+using PrimaryCommandBuffer = priv::CommandBuffer;
 
 class Image final : public WrappedObject<Image, VkImage>
 {
@@ -736,15 +728,6 @@ ANGLE_INLINE VkResult CommandBuffer::reset()
     return vkResetCommandBuffer(mHandle, 0);
 }
 
-ANGLE_INLINE void CommandBuffer::memoryBarrier(VkPipelineStageFlags srcStageMask,
-                                               VkPipelineStageFlags dstStageMask,
-                                               const VkMemoryBarrier *memoryBarrier)
-{
-    ASSERT(valid());
-    vkCmdPipelineBarrier(mHandle, srcStageMask, dstStageMask, 0, 1, memoryBarrier, 0, nullptr, 0,
-                         nullptr);
-}
-
 ANGLE_INLINE void CommandBuffer::nextSubpass(VkSubpassContents subpassContents)
 {
     ASSERT(valid());
@@ -765,21 +748,6 @@ ANGLE_INLINE void CommandBuffer::pipelineBarrier(VkPipelineStageFlags srcStageMa
     vkCmdPipelineBarrier(mHandle, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount,
                          memoryBarriers, bufferMemoryBarrierCount, bufferMemoryBarriers,
                          imageMemoryBarrierCount, imageMemoryBarriers);
-}
-
-ANGLE_INLINE void CommandBuffer::executionBarrier(VkPipelineStageFlags stageMask)
-{
-    ASSERT(valid());
-    vkCmdPipelineBarrier(mHandle, stageMask, stageMask, 0, 0, nullptr, 0, nullptr, 0, nullptr);
-}
-
-ANGLE_INLINE void CommandBuffer::bufferBarrier(VkPipelineStageFlags srcStageMask,
-                                               VkPipelineStageFlags dstStageMask,
-                                               const VkBufferMemoryBarrier *bufferMemoryBarrier)
-{
-    ASSERT(valid());
-    vkCmdPipelineBarrier(mHandle, srcStageMask, dstStageMask, 0, 0, nullptr, 1, bufferMemoryBarrier,
-                         0, nullptr);
 }
 
 ANGLE_INLINE void CommandBuffer::imageBarrier(VkPipelineStageFlags srcStageMask,

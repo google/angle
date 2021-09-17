@@ -139,8 +139,10 @@ ANGLE_INLINE const CommandHeader *NextCommand(const CommandHeader *command)
 }
 
 // Parse the cmds in this cmd buffer into given primary cmd buffer
-void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
+void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
 {
+    VkCommandBuffer cmdBuffer = primary->getHandle();
+
     ANGLE_TRACE_EVENT0("gpu.angle", "SecondaryCommandBuffer::executeCommands");
     for (const CommandHeader *command : mCommands)
     {

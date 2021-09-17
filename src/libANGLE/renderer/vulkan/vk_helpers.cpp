@@ -929,7 +929,7 @@ angle::Result CommandBufferHelper::initialize(Context *context,
 
 angle::Result CommandBufferHelper::initializeCommandBuffer(Context *context)
 {
-    return mCommandBuffer.initialize(context->getRenderer()->getDevice(), mCommandPool,
+    return mCommandBuffer.initialize(context, mCommandPool, mIsRenderPassCommandBuffer,
                                      &mAllocator);
 }
 
@@ -1634,6 +1634,11 @@ angle::Result CommandBufferHelper::beginRenderPass(
     ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(empty());
 
+    VkCommandBufferInheritanceInfo inheritanceInfo = {};
+    ANGLE_TRY(vk::CommandBuffer::InitializeRenderPassInheritanceInfo(
+        contextVk, framebuffer, renderPassDesc, &inheritanceInfo));
+    ANGLE_TRY(mCommandBuffer.begin(contextVk, inheritanceInfo));
+
     mRenderPassDesc              = renderPassDesc;
     mAttachmentOps               = renderPassAttachmentOps;
     mDepthStencilAttachmentIndex = depthStencilAttachmentIndex;
@@ -1651,6 +1656,8 @@ angle::Result CommandBufferHelper::beginRenderPass(
 
 angle::Result CommandBufferHelper::endRenderPass(ContextVk *contextVk)
 {
+    ANGLE_TRY(mCommandBuffer.end(contextVk));
+
     for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorImagesCount; ++index)
     {
         if (mColorImages[index])
@@ -1769,13 +1776,18 @@ angle::Result CommandBufferHelper::flushToPrimary(Context *context,
         beginInfo.pClearValues    = mClearValues.data();
 
         // Run commands inside the RenderPass.
-        primary->beginRenderPass(beginInfo, VK_SUBPASS_CONTENTS_INLINE);
-        mCommandBuffer.executeCommands(primary->getHandle());
+        constexpr VkSubpassContents kSubpassContents =
+            vk::CommandBuffer::ExecutesInline() ? VK_SUBPASS_CONTENTS_INLINE
+                                                : VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
+
+        primary->beginRenderPass(beginInfo, kSubpassContents);
+        mCommandBuffer.executeCommands(primary);
         primary->endRenderPass();
     }
     else
     {
-        mCommandBuffer.executeCommands(primary->getHandle());
+        ANGLE_TRY(mCommandBuffer.end(context));
+        mCommandBuffer.executeCommands(primary);
     }
 
     // Restart the command buffer.
@@ -1976,6 +1988,8 @@ void CommandBufferRecycler::onDestroy()
         SafeDelete(commandBufferHelper);
     }
     mCommandBufferHelperFreeList.clear();
+
+    ASSERT(mSecondaryCommandBuffersToReset.empty());
 }
 
 angle::Result CommandBufferRecycler::getCommandBufferHelper(
@@ -2002,21 +2016,36 @@ angle::Result CommandBufferRecycler::getCommandBufferHelper(
 }
 
 void CommandBufferRecycler::recycleCommandBufferHelper(VkDevice device,
-                                                       vk::CommandBufferHelper *commandBuffer)
+                                                       vk::CommandBufferHelper **commandBuffer)
 {
-    ASSERT(commandBuffer->empty());
-    commandBuffer->markOpen();
+    ASSERT((*commandBuffer)->empty());
+    (*commandBuffer)->markOpen();
     recycleImpl(device, commandBuffer);
 }
 
-void CommandBufferRecycler::recycleImpl(VkDevice device, CommandBufferHelper *commandBuffer)
+#if ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
+void CommandBufferRecycler::recycleImpl(VkDevice device, CommandBufferHelper **commandBuffer)
 {
-    mCommandBufferHelperFreeList.push_back(commandBuffer);
+    mCommandBufferHelperFreeList.push_back(*commandBuffer);
 }
 void CommandBufferRecycler::resetCommandBufferHelper(CommandBuffer &&commandBuffer)
 {
     commandBuffer.reset();
 }
+#else   // ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
+void CommandBufferRecycler::recycleImpl(VkDevice device, CommandBufferHelper **commandBuffer)
+{
+    CommandPool *pool = (*commandBuffer)->getCommandPool();
+
+    pool->freeCommandBuffers(device, 1, (*commandBuffer)->getCommandBuffer().ptr());
+    (*commandBuffer)->getCommandBuffer().releaseHandle();
+    SafeDelete(*commandBuffer);
+}
+void CommandBufferRecycler::resetCommandBufferHelper(CommandBuffer &&commandBuffer)
+{
+    mSecondaryCommandBuffersToReset.push_back(std::move(commandBuffer));
+}
+#endif  // ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
 
 // DynamicBuffer implementation.
 DynamicBuffer::DynamicBuffer()
@@ -5052,13 +5081,6 @@ void ImageHelper::barrierImpl(Context *context,
     mCurrentLayout           = newLayout;
     mCurrentQueueFamilyIndex = newQueueFamilyIndex;
 }
-
-template void ImageHelper::barrierImpl<priv::SecondaryCommandBuffer>(
-    Context *context,
-    VkImageAspectFlags aspectMask,
-    ImageLayout newLayout,
-    uint32_t newQueueFamilyIndex,
-    priv::SecondaryCommandBuffer *commandBuffer);
 
 bool ImageHelper::updateLayoutAndBarrier(Context *context,
                                          VkImageAspectFlags aspectMask,

@@ -98,6 +98,7 @@ class CommandProcessorTask
                                  egl::ContextPriority priority,
                                  CommandPool *commandPool,
                                  GarbageList &&currentGarbage,
+                                 std::vector<CommandBuffer> &&commandBuffersToReset,
                                  Serial submitQueueSerial);
 
     void initOneOffQueueSubmit(VkCommandBuffer commandBufferHandle,
@@ -123,6 +124,7 @@ class CommandProcessorTask
     }
     const Semaphore *getSemaphore() { return mSemaphore; }
     GarbageList &getGarbage() { return mGarbage; }
+    std::vector<CommandBuffer> &getCommandBuffersToReset() { return mCommandBuffersToReset; }
     egl::ContextPriority getPriority() const { return mPriority; }
     bool hasProtectedContent() const { return mHasProtectedContent; }
     VkCommandBuffer getOneOffCommandBufferVk() const { return mOneOffCommandBufferVk; }
@@ -147,6 +149,7 @@ class CommandProcessorTask
     const Semaphore *mSemaphore;
     CommandPool *mCommandPool;
     GarbageList mGarbage;
+    std::vector<CommandBuffer> mCommandBuffersToReset;
 
     // FinishToSerial & Flush command data
     Serial mSerial;
@@ -178,10 +181,12 @@ struct CommandBatch final : angle::NonCopyable
     CommandBatch &operator=(CommandBatch &&other);
 
     void destroy(VkDevice device);
+    void resetSecondaryCommandBuffers(VkDevice device);
 
     PrimaryCommandBuffer primaryCommands;
     // commandPool is for secondary CommandBuffer allocation
     CommandPool *commandPool;
+    std::vector<CommandBuffer> commandBuffersToReset;
     Shared<Fence> fence;
     Serial serial;
     bool hasProtectedContent;
@@ -274,6 +279,7 @@ class CommandQueueInterface : angle::NonCopyable
         const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
         const Semaphore *signalSemaphore,
         GarbageList &&currentGarbage,
+        std::vector<CommandBuffer> &&commandBuffersToReset,
         CommandPool *commandPool,
         Serial submitQueueSerial)                                      = 0;
     virtual angle::Result queueSubmitOneOff(Context *context,
@@ -332,6 +338,7 @@ class CommandQueue final : public CommandQueueInterface
                               const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
                               const Semaphore *signalSemaphore,
                               GarbageList &&currentGarbage,
+                              std::vector<CommandBuffer> &&commandBuffersToReset,
                               CommandPool *commandPool,
                               Serial submitQueueSerial) override;
 
@@ -480,6 +487,7 @@ class CommandProcessor : public Context, public CommandQueueInterface
                               const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
                               const Semaphore *signalSemaphore,
                               GarbageList &&currentGarbage,
+                              std::vector<CommandBuffer> &&commandBuffersToReset,
                               CommandPool *commandPool,
                               Serial submitQueueSerial) override;
 

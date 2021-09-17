@@ -17,8 +17,13 @@
 
 namespace rx
 {
+class ContextVk;
+
 namespace vk
 {
+class Context;
+class RenderPassDesc;
+
 namespace priv
 {
 
@@ -477,6 +482,22 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     // buffer.
     static constexpr bool ExecutesInline() { return true; }
 
+    static angle::Result InitializeCommandPool(Context *context,
+                                               CommandPool *pool,
+                                               uint32_t queueFamilyIndex,
+                                               bool hasProtectedContent)
+    {
+        return angle::Result::Continue;
+    }
+    static angle::Result InitializeRenderPassInheritanceInfo(
+        ContextVk *contextVk,
+        const Framebuffer &framebuffer,
+        const RenderPassDesc &renderPassDesc,
+        VkCommandBufferInheritanceInfo *inheritanceInfoOut)
+    {
+        return angle::Result::Continue;
+    }
+
     // Add commands
     void beginDebugUtilsLabelEXT(const VkDebugUtilsLabelEXT &label);
 
@@ -678,7 +699,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     VkResult end() { return VK_SUCCESS; }
 
     // Parse the cmds in this cmd buffer into given primary cmd buffer for execution
-    void executeCommands(VkCommandBuffer cmdBuffer);
+    void executeCommands(PrimaryCommandBuffer *primary);
 
     // Calculate memory usage of this command buffer for diagnostics.
     void getMemoryUsageStats(size_t *usedMemoryOut, size_t *allocatedMemoryOut) const;
@@ -693,8 +714,9 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     static_assert((kBlockSize % 4) == 0, "Check kBlockSize alignment");
 
     // Initialize the SecondaryCommandBuffer by setting the allocator it will use
-    angle::Result initialize(VkDevice device,
+    angle::Result initialize(vk::Context *context,
                              vk::CommandPool *pool,
+                             bool isRenderPassCommandBuffer,
                              angle::PoolAllocator *allocator)
     {
         ASSERT(allocator);
@@ -706,6 +728,12 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
         return angle::Result::Continue;
     }
+
+    angle::Result begin(Context *context, const VkCommandBufferInheritanceInfo &inheritanceInfo)
+    {
+        return angle::Result::Continue;
+    }
+    angle::Result end(Context *context) { return angle::Result::Continue; }
 
     void open() { mIsOpen = true; }
     void close() { mIsOpen = false; }
