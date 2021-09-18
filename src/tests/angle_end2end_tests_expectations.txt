@@ -99,7 +99,6 @@
 6386 MAC METAL : GLSLTest_ES3.MixedRowAndColumnMajorMatrices_ReadSideEffectOrder/ES3_Metal_DirectMetalGen = SKIP
 6386 MAC METAL : GLSLTest_ES3.MixedRowAndColumnMajorMatrices_ReadSideEffectShortCircuit/ES3_Metal_DirectMetalGen = SKIP
 6387 MAC METAL : GLSLTest_ES3.ValidIndexClampES300/ES3_Metal_DirectMetalGen = SKIP
-6388 MAC METAL : TinyDepthStencilWorkaroundTest.DepthTexturesStick/ES3_Metal_DirectMetalGen = SKIP
 
 // Direct Metal does not yet implement Transformfeedback
 6375 MAC METAL : GLSLTest_ES3.MaxVaryingWithFeedbackAndGLline/ES3_Metal_DirectMetalGen = SKIP
