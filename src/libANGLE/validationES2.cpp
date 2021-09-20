@@ -2940,7 +2940,7 @@ bool ValidateMapBufferBase(const Context *context, BufferBinding target)
         }
     }
 
-    if (context->isWebGL() && buffer->isBoundForTransformFeedbackAndOtherUse())
+    if (buffer->hasWebGLXFBBindingConflict(context->isWebGL()))
     {
         context->validationError(GL_INVALID_OPERATION, kBufferBoundForTransformFeedback);
         return false;
@@ -3429,7 +3429,7 @@ bool ValidateBufferData(const Context *context,
         return false;
     }
 
-    if (context->isWebGL() && buffer->isBoundForTransformFeedbackAndOtherUse())
+    if (buffer->hasWebGLXFBBindingConflict(context->isWebGL()))
     {
         context->validationError(GL_INVALID_OPERATION, kBufferBoundForTransformFeedback);
         return false;
@@ -3486,7 +3486,7 @@ bool ValidateBufferSubData(const Context *context,
         return false;
     }
 
-    if (context->isWebGL() && buffer->isBoundForTransformFeedbackAndOtherUse())
+    if (buffer->hasWebGLXFBBindingConflict(context->isWebGL()))
     {
         context->validationError(GL_INVALID_OPERATION, kBufferBoundForTransformFeedback);
         return false;

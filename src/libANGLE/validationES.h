@@ -486,8 +486,6 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
                                                   GLenum target,
                                                   GLeglImageOES image);
 
-bool ValidateBindVertexArrayBase(const Context *context, VertexArrayID array);
-
 bool ValidateProgramBinaryBase(const Context *context,
                                ShaderProgramID program,
                                GLenum binaryFormat,
@@ -1030,6 +1028,30 @@ ANGLE_INLINE bool ValidateDrawElementsCommon(const Context *context,
 
         // No op if there are no real indices in the index data (all are primitive restart).
         return (indexRange.vertexIndexCount > 0);
+    }
+
+    return true;
+}
+
+ANGLE_INLINE bool ValidateBindVertexArrayBase(const Context *context, VertexArrayID array)
+{
+    if (!context->isVertexArrayGenerated(array))
+    {
+        // The default VAO should always exist
+        ASSERT(array.value != 0);
+        context->validationError(GL_INVALID_OPERATION, err::kInvalidVertexArray);
+        return false;
+    }
+
+    return true;
+}
+
+ANGLE_INLINE bool ValidateVertexAttribIndex(const Context *context, GLuint index)
+{
+    if (index >= MAX_VERTEX_ATTRIBS)
+    {
+        context->validationError(GL_INVALID_VALUE, err::kIndexExceedsMaxVertexAttribute);
+        return false;
     }
 
     return true;

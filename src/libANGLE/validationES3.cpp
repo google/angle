@@ -3241,9 +3241,8 @@ bool ValidateCopyBufferSubData(const Context *context,
         return false;
     }
 
-    if (context->getExtensions().webglCompatibilityANGLE &&
-        (readBuffer->isBoundForTransformFeedbackAndOtherUse() ||
-         writeBuffer->isBoundForTransformFeedbackAndOtherUse()))
+    if (readBuffer->hasWebGLXFBBindingConflict(context->isWebGL()) ||
+        writeBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
     {
         context->validationError(GL_INVALID_OPERATION, kBufferBoundForTransformFeedback);
         return false;

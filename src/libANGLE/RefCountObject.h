@@ -187,8 +187,7 @@ class OffsetBindingPointer : public BindingPointer<ObjectType>
     void set(const ContextType *context, ObjectType *newObject, GLintptr offset, GLsizeiptr size)
     {
         set(context, newObject);
-        mOffset = offset;
-        mSize   = size;
+        updateOffsetAndSize(newObject, offset, size);
     }
 
     GLintptr getOffset() const { return mOffset; }
@@ -204,10 +203,16 @@ class OffsetBindingPointer : public BindingPointer<ObjectType>
         return !(*this == other);
     }
 
-    void assign(ObjectType *object, GLintptr offset, GLsizeiptr size)
+    void assign(ObjectType *newObject, GLintptr offset, GLsizeiptr size)
     {
-        assign(object);
-        if (object)
+        assign(newObject);
+        updateOffsetAndSize(newObject, offset, size);
+    }
+
+  private:
+    ANGLE_INLINE void updateOffsetAndSize(ObjectType *newObject, GLintptr offset, GLsizeiptr size)
+    {
+        if (newObject)
         {
             mOffset = offset;
             mSize   = size;
@@ -219,7 +224,6 @@ class OffsetBindingPointer : public BindingPointer<ObjectType>
         }
     }
 
-  private:
     // Delete the unparameterized functions. This forces an explicit offset and size.
     using BindingPointer<ObjectType>::set;
     using BindingPointer<ObjectType>::assign;

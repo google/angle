@@ -141,10 +141,15 @@ class Buffer final : public RefCountObject<BufferID>,
 
     rx::BufferImpl *getImplementation() const { return mImpl; }
 
-    ANGLE_INLINE bool isBound() const { return mState.mBindingCount > 0; }
-
-    ANGLE_INLINE bool isBoundForTransformFeedbackAndOtherUse() const
+    // Note: we pass "isWebGL" to this function to clarify it's only valid if WebGL is enabled.
+    // We pass the boolean flag instead of the pointer because this header can't read Context.h.
+    ANGLE_INLINE bool hasWebGLXFBBindingConflict(bool isWebGL) const
     {
+        if (!isWebGL)
+        {
+            return false;
+        }
+
         // The transform feedback generic binding point is not an indexed binding point but it also
         // does not count as a non-transform-feedback use of the buffer, so we subtract it from the
         // binding count when checking if the buffer is bound to a non-transform-feedback location.

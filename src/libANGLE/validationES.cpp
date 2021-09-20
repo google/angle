@@ -589,8 +589,7 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
             return gl::err::kUniformBufferTooSmall;
         }
 
-        if (extensions.webglCompatibilityANGLE &&
-            uniformBuffer->isBoundForTransformFeedbackAndOtherUse())
+        if (uniformBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
         {
             return gl::err::kUniformBufferBoundForTransformFeedback;
         }
@@ -1183,7 +1182,7 @@ bool ValidImageDataSize(const Context *context,
             context->validationError(GL_INVALID_OPERATION, kIntegerOverflow);
             return false;
         }
-        if (context->isWebGL() && pixelUnpackBuffer->isBoundForTransformFeedbackAndOtherUse())
+        if (pixelUnpackBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
         {
             context->validationError(GL_INVALID_OPERATION,
                                      kPixelUnpackBufferBoundForTransformFeedback);
@@ -3996,7 +3995,7 @@ const char *ValidateDrawStates(const Context *context)
         {
             const TransformFeedback *transformFeedbackObject = state.getCurrentTransformFeedback();
             if (state.isTransformFeedbackActive() &&
-                transformFeedbackObject->buffersBoundForOtherUse())
+                transformFeedbackObject->buffersBoundForOtherUseInWebGL())
             {
                 return kTransformFeedbackBufferDoubleBound;
             }
@@ -4196,20 +4195,14 @@ const char *ValidateDrawElementsStates(const Context *context)
 
     if (elementArrayBuffer)
     {
-        if (context->isWebGL())
+        if (elementArrayBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
         {
-            if (elementArrayBuffer->isBoundForTransformFeedbackAndOtherUse())
-            {
-                return kElementArrayBufferBoundForTransformFeedback;
-            }
+            return kElementArrayBufferBoundForTransformFeedback;
         }
-        else if (elementArrayBuffer->isMapped() &&
-                 (!elementArrayBuffer->isImmutable() ||
-                  (elementArrayBuffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) == 0))
+        if (elementArrayBuffer->isMapped() &&
+            (!elementArrayBuffer->isImmutable() ||
+             (elementArrayBuffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) == 0))
         {
-            // WebGL buffers cannot be mapped/unmapped because the MapBufferRange,
-            // FlushMappedBufferRange, and UnmapBuffer entry points are removed from the
-            // WebGL 2.0 API. https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
             return kBufferMapped;
         }
     }
@@ -4706,19 +4699,6 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
     {
         context->validationError(GL_INVALID_OPERATION,
                                  "Mismatch between Image and Context Protected Content state");
-        return false;
-    }
-
-    return true;
-}
-
-bool ValidateBindVertexArrayBase(const Context *context, VertexArrayID array)
-{
-    if (!context->isVertexArrayGenerated(array))
-    {
-        // The default VAO should always exist
-        ASSERT(array.value != 0);
-        context->validationError(GL_INVALID_OPERATION, kInvalidVertexArray);
         return false;
     }
 
@@ -6771,8 +6751,8 @@ bool ValidatePixelPack(const Context *context,
         context->validationError(GL_INVALID_OPERATION, kBufferMapped);
         return false;
     }
-    if (context->isWebGL() && pixelPackBuffer != nullptr &&
-        pixelPackBuffer->isBoundForTransformFeedbackAndOtherUse())
+    if (pixelPackBuffer != nullptr &&
+        pixelPackBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
     {
         context->validationError(GL_INVALID_OPERATION, kPixelPackBufferBoundForTransformFeedback);
         return false;
@@ -7389,17 +7369,6 @@ template bool ValidateTexParameterBase(const Context *,
                                        GLsizei,
                                        bool,
                                        const GLuint *);
-
-bool ValidateVertexAttribIndex(const Context *context, GLuint index)
-{
-    if (index >= MAX_VERTEX_ATTRIBS)
-    {
-        context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
-        return false;
-    }
-
-    return true;
-}
 
 bool ValidateGetActiveUniformBlockivBase(const Context *context,
                                          ShaderProgramID program,
