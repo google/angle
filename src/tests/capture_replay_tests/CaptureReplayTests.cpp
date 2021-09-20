@@ -146,9 +146,9 @@ class CaptureReplayTests
         {
             mTraceLibrary->replayFrame(frame);
 
-            const char *capturedSerializedState =
+            const char *replayedSerializedState =
                 reinterpret_cast<const char *>(glGetString(GL_SERIALIZED_CONTEXT_STRING_ANGLE));
-            const char *replayedSerializedState = mTraceLibrary->getSerializedContextState(frame);
+            const char *capturedSerializedState = mTraceLibrary->getSerializedContextState(frame);
 
             bool isEqual =
                 (capturedSerializedState && replayedSerializedState)
@@ -160,12 +160,15 @@ class CaptureReplayTests
             if (!isEqual)
             {
                 std::ostringstream replayName;
-                replayName << traceInfo.name << "_ContextReplayed" << frame << ".json";
+                replayName << exeDir << angle::GetPathSeparator() << traceInfo.name
+                           << "_ContextReplayed" << frame << ".json";
+
                 std::ofstream debugReplay(replayName.str());
                 debugReplay << (replayedSerializedState ? replayedSerializedState : "") << "\n";
 
                 std::ostringstream captureName;
-                captureName << traceInfo.name << "_ContextCaptured" << frame << ".json";
+                captureName << exeDir << angle::GetPathSeparator() << traceInfo.name
+                            << "_ContextCaptured" << frame << ".json";
                 std::ofstream debugCapture(captureName.str());
 
                 debugCapture << (capturedSerializedState ? capturedSerializedState : "") << "\n";
