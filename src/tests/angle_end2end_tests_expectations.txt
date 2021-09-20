@@ -35,7 +35,7 @@
 6064 WIN D3D11 : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
 6101 WIN OPENGL INTEL : BlitFramebufferTest.OOBWrite/* = SKIP
 6123 WIN AMD VULKAN : GLSLTestLoops.DoWhileContinueInSwitch/* = SKIP
-1229184 WIN NVIDIA VULKAN : SimpleStateChangeTest.RedefineFramebufferTexture/ES2_Vulkan = SKIP
+1229184 WIN NVIDIA VULKAN : SimpleStateChangeTest.RedefineFramebufferTexture/* = SKIP
 6173 WIN INTEL OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 6217 WIN INTEL OPENGL : GLSLTest_ES31.StorageBufferBoolVectorPassedToFunctions/* = SKIP
 
@@ -47,12 +47,12 @@
 6173 LINUX INTEL OPENGL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 1230024 LINUX AMD GLES : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 1230024 LINUX AMD OPENGL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
-6192 LINUX AMD OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/ES3_1_OpenGL = SKIP
+6192 LINUX AMD OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 5945 LINUX NVIDIA VULKAN : MultithreadingTest.MultiContextClear/* = SKIP
 5945 LINUX NVIDIA VULKAN : MultithreadingTest.MultiCreateContext/* = SKIP
-6367 LINUX INTEL OPENGL : ComputeShaderTest.DispatchGenerateMipmapDispatch/ES3_1_OpenGL = SKIP
-1252169 LINUX AMD OPENGL : ComputeShaderTest.ImageBufferMapWrite/ES3_1_OpenGL = SKIP
-1252169 LINUX AMD OPENGL : ComputeShaderTest.BufferImageBufferMapWrite/ES3_1_OpenGL = SKIP
+6367 LINUX INTEL OPENGL : ComputeShaderTest.DispatchGenerateMipmapDispatch/* = SKIP
+1252169 LINUX AMD OPENGL : ComputeShaderTest.ImageBufferMapWrite/* = SKIP
+1252169 LINUX AMD OPENGL : ComputeShaderTest.BufferImageBufferMapWrite/* = SKIP
 
 // Nvidia
 6115 NVIDIA OPENGL : GLSLTestLoops.DoWhileContinue/* = SKIP
@@ -145,6 +145,7 @@
 6390 MAC APPLE METAL : UniformBlockWithOneLargeArrayMemberTest.MemberTypeIsStructAndInstancedArray/ES3_Metal_DirectMetalGen = SKIP
 
 // D3D
+6432 WIN D3D9 : GLSLTest.HandleExcessiveLoopBug/* = SKIP
 6091 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 6122 WIN D3D11 : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 6150 WIN D3D11 : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
@@ -155,15 +156,15 @@
 6216 WIN D3D11 : GLSLTest_ES31.StorageBufferBoolVectorPassedToFunctions/* = SKIP
 
 // Android
-6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/ES3_OpenGLES = SKIP
-6116 ANDROID GLES : GLSLTestLoops.ForNoCondition/ES3_OpenGLES = SKIP
-6237 ANDROID GLES : BufferDataTestES3.DrawWithNotCallingBufferData/ES3_OpenGLES = SKIP
+6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
+6116 ANDROID GLES : GLSLTestLoops.ForNoCondition/* = SKIP
+6237 ANDROID GLES : BufferDataTestES3.DrawWithNotCallingBufferData/* = SKIP
 
 // Nexus 5X expectations.
 6149 NEXUS5X GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 6193 NEXUS5X GLES : GLSLTest_ES31.BuiltInsWithOutParameters/* = SKIP
-5505 NEXUS5X GLES : GLSLTest_ES3.CompareInequalityOfArrayOfVectors/ES3_OpenGLES = SKIP
-5505 NEXUS5X GLES : GLSLTest_ES3.CompareEqualityOfArrayOfVectors/ES3_OpenGLES = SKIP
+5505 NEXUS5X GLES : GLSLTest_ES3.CompareInequalityOfArrayOfVectors/* = SKIP
+5505 NEXUS5X GLES : GLSLTest_ES3.CompareEqualityOfArrayOfVectors/* = SKIP
 
 // Pixel 4 expectations.
 5981 PIXEL4ORXL GLES : BlitFramebufferTest.BlitSRGBToRGBOversizedDestArea/* = SKIP

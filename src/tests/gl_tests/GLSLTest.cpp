@@ -12551,6 +12551,17 @@ void main()
     glDeleteShader(shader);
 }
 
+// Regression test for bug in HLSL code generation where the for loop init expression was expected
+// to always have an initializer.
+TEST_P(GLSLTest, HandleExcessiveLoopBug)
+{
+    constexpr char kVS[] = R"(void main(){for(int i;i>6;);})";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kVS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
 // Test that providing more components to a matrix constructor than necessary works.  Based on a
 // clusterfuzz test that caught an OOB array write in glslang.
 TEST_P(GLSLTest, MatrixConstructor)
