@@ -73,6 +73,9 @@
 // The extension is not conformant due to a small difference in maxInterpolationOffset between GL and Vulkan.
 6190 VULKAN : KHR-GLES31.core.shader_multisample_interpolation.api.api = FAIL
 
+// Newly-added dEQP tests that are failing
+6441 VULKAN : KHR-GLES31.core.compressed* = SKIP
+
 ////
 //// Desktop Vulkan expectations
 ////
