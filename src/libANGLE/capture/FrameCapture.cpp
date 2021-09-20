@@ -5265,10 +5265,10 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(const gl::Context *context, 
         mResourceTracker.onShaderProgramAccess(shaderProgramID);
     }
 
-    updatePreCallResourceCounts(call);
+    updateResourceCounts(call);
 }
 
-void FrameCaptureShared::updatePreCallResourceCounts(const CallCapture &call)
+void FrameCaptureShared::updateResourceCounts(const CallCapture &call)
 {
     for (const ParamCapture &param : call.params.getParamCaptures())
     {
@@ -5582,6 +5582,7 @@ void FrameCaptureShared::scanSetupCalls(const gl::Context *context,
     for (CallCapture &call : setupCalls)
     {
         updateReadBufferSize(call.params.getReadBufferSize());
+        updateResourceCounts(call);
     }
 }
 

@@ -516,7 +516,7 @@ class FrameCaptureShared final : angle::NonCopyable
     void overrideProgramBinary(const gl::Context *context,
                                CallCapture &call,
                                std::vector<CallCapture> &outCalls);
-    void updatePreCallResourceCounts(const CallCapture &call);
+    void updateResourceCounts(const CallCapture &call);
 
     void runMidExecutionCapture(const gl::Context *context);
 
