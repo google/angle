@@ -101,6 +101,7 @@
 
 # ES3
 6180 : BlitFramebufferTest.BlitDepthStencilPixelByPixel/ES3_Vulkan_SwiftShader = SKIPPED_BY_GTEST
+6180 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/ES3_Vulkan_SwiftShader = SKIPPED_BY_GTEST
 
 6180 : FenceSyncTest.BasicOperations/ES3_Vulkan_SwiftShader = FAIL
 6180 : FenceSyncTest.BasicQueries/ES3_Vulkan_SwiftShader = FAIL
@@ -124,7 +125,6 @@
 6313 : CopyTextureTestES3.InvalidateBlitThenBlend3Layers/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6314 : FramebufferTest_ES3.AttachmentsWithUnequalDimensions/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6314 : FramebufferTest_ES3.ChangeAttachmentThenInvalidateAndDraw/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6314 : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBellowBaseLevelLOD/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6314 : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6314 : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
 6315 : GLSLTest_ES3.InactiveFragmentShaderOutput/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
