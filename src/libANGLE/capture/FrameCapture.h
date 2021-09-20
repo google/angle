@@ -111,6 +111,7 @@ struct CallCapture
     EntryPoint entryPoint;
     std::string customFunctionName;
     ParamBuffer params;
+    bool isActive = true;
 };
 
 class ReplayContext
@@ -330,6 +331,10 @@ class ResourceTracker final : angle::NonCopyable
 // Used by the CPP replay to filter out unnecessary code.
 using HasResourceTypeMap = angle::PackedEnumBitSet<ResourceIDType>;
 
+// Map of ResourceType to IDs and range of setup calls
+using ResourceIDToSetupCallsMap =
+    PackedEnumMap<ResourceIDType, std::map<GLuint, gl::Range<size_t>>>;
+
 // Map of buffer ID to offset and size used when mapped
 using BufferDataMap = std::map<gl::BufferID, std::pair<GLintptr, GLsizeiptr>>;
 
@@ -460,6 +465,11 @@ class FrameCaptureShared final : angle::NonCopyable
 
     gl::ContextID getWindowSurfaceContextID() const { return mWindowSurfaceContextID; }
 
+    void markResourceSetupCallsInactive(std::vector<CallCapture> *setupCalls,
+                                        ResourceIDType type,
+                                        GLuint id,
+                                        gl::Range<size_t> range);
+
     void updateReadBufferSize(size_t readBufferSize)
     {
         mReadBufferSize = std::max(mReadBufferSize, readBufferSize);
@@ -504,7 +514,10 @@ class FrameCaptureShared final : angle::NonCopyable
     void maybeOverrideEntryPoint(const gl::Context *context,
                                  CallCapture &call,
                                  std::vector<CallCapture> &newCalls);
-    void maybeCapturePreCallUpdates(const gl::Context *context, CallCapture &call);
+    void maybeCapturePreCallUpdates(const gl::Context *context,
+                                    CallCapture &call,
+                                    std::vector<CallCapture> *shareGroupSetupCalls,
+                                    ResourceIDToSetupCallsMap *resourceIDToSetupCalls);
     void maybeCapturePostCallUpdates(const gl::Context *context);
     void maybeCaptureDrawArraysClientData(const gl::Context *context,
                                           CallCapture &call,
@@ -548,6 +561,7 @@ class FrameCaptureShared final : angle::NonCopyable
     gl::AttribArray<size_t> mClientArraySizes;
     size_t mReadBufferSize;
     HasResourceTypeMap mHasResourceType;
+    ResourceIDToSetupCallsMap mResourceIDToSetupCalls;
     BufferDataMap mBufferDataMap;
     bool mValidateSerializedState = false;
     std::string mValidationExpression;
@@ -571,6 +585,8 @@ class FrameCaptureShared final : angle::NonCopyable
     TextureLevelDataMap mCachedTextureLevelData;
 
     gl::ContextID mWindowSurfaceContextID;
+
+    std::vector<CallCapture> mShareGroupSetupCalls;
 };
 
 template <typename CaptureFuncT, typename... ArgsT>
