@@ -1312,14 +1312,6 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       }
     }
 
-    if (!build_with_chromium) {
-      angle_executable("angle_deqp_${_api}_no_gtest") {
-        testonly = true
-        sources = [ "deqp_support/angle_deqp_tests_main.cpp" ]
-        deps = [ ":$shared_library_name" ]
-      }
-    }
-
     angle_test("angle_deqp_${_api}_tests") {
       deps = [
         ":${shared_library_name}",
@@ -1584,14 +1576,6 @@ group("angle_tests") {
       ":angle_deqp_gles31_tests",
       ":angle_deqp_gles3_tests",
     ]
-    if (!build_with_chromium) {
-      deps += [
-        ":angle_deqp_egl_no_gtest",
-        ":angle_deqp_gles2_no_gtest",
-        ":angle_deqp_gles31_no_gtest",
-        ":angle_deqp_gles3_no_gtest",
-      ]
-    }
   }
   if (build_angle_gles1_conform_tests) {
     deps += [
