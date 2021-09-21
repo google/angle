@@ -358,6 +358,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglInitialize";
         case EntryPoint::EGLLabelObjectKHR:
             return "eglLabelObjectKHR";
+        case EntryPoint::EGLLockSurfaceKHR:
+            return "eglLockSurfaceKHR";
         case EntryPoint::EGLMakeCurrent:
             return "eglMakeCurrent";
         case EntryPoint::EGLPostSubBufferNV:
@@ -396,6 +398,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglQueryStringiANGLE";
         case EntryPoint::EGLQuerySurface:
             return "eglQuerySurface";
+        case EntryPoint::EGLQuerySurface64KHR:
+            return "eglQuerySurface64KHR";
         case EntryPoint::EGLQuerySurfacePointerANGLE:
             return "eglQuerySurfacePointerANGLE";
         case EntryPoint::EGLReacquireHighPowerGPUANGLE:
@@ -436,6 +440,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglSwapInterval";
         case EntryPoint::EGLTerminate:
             return "eglTerminate";
+        case EntryPoint::EGLUnlockSurfaceKHR:
+            return "eglUnlockSurfaceKHR";
         case EntryPoint::EGLWaitClient:
             return "eglWaitClient";
         case EntryPoint::EGLWaitGL:

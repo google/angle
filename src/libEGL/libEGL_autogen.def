@@ -143,6 +143,11 @@ EXPORTS
     eglCreateImageKHR
     eglDestroyImageKHR
 
+    ; EGL_KHR_lock_surface3
+    eglLockSurfaceKHR
+    eglQuerySurface64KHR
+    eglUnlockSurfaceKHR
+
     ; EGL_KHR_reusable_sync
     eglSignalSyncKHR
 

@@ -258,6 +258,14 @@ bool ValidateConfigAttribute(const ValidationContext *val,
             }
             break;
 
+        case EGL_MATCH_FORMAT_KHR:
+            if (!display->getExtensions().lockSurface3KHR)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE, "EGL_KHR_lock_surface3 is not enabled.");
+                return false;
+            }
+            break;
+
         default:
             val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04" PRIxPTR "X", attribute);
             return false;
@@ -360,6 +368,22 @@ bool ValidateConfigAttributeValue(const ValidationContext *val,
                 default:
                     val->setError(EGL_BAD_ATTRIBUTE,
                                   "EGL_COLOR_COMPONENT_TYPE_EXT invalid attribute: 0x%X",
+                                  static_cast<uint32_t>(value));
+                    return false;
+            }
+            break;
+
+        case EGL_MATCH_FORMAT_KHR:
+            switch (value)
+            {
+                case EGL_FORMAT_RGB_565_KHR:
+                case EGL_FORMAT_RGBA_8888_KHR:
+                case EGL_FORMAT_RGB_565_EXACT_KHR:
+                case EGL_FORMAT_RGBA_8888_EXACT_KHR:
+                    break;
+                default:
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "EGL_KHR_lock_surface3 invalid attribute: 0x%X",
                                   static_cast<uint32_t>(value));
                     return false;
             }
@@ -5167,6 +5191,21 @@ bool ValidateQuerySurface(const ValidationContext *val,
         }
         break;
 
+        case EGL_BITMAP_PITCH_KHR:
+        case EGL_BITMAP_ORIGIN_KHR:
+        case EGL_BITMAP_PIXEL_RED_OFFSET_KHR:
+        case EGL_BITMAP_PIXEL_GREEN_OFFSET_KHR:
+        case EGL_BITMAP_PIXEL_BLUE_OFFSET_KHR:
+        case EGL_BITMAP_PIXEL_ALPHA_OFFSET_KHR:
+        case EGL_BITMAP_PIXEL_LUMINANCE_OFFSET_KHR:
+        case EGL_BITMAP_PIXEL_SIZE_KHR:
+            if (!display->getExtensions().lockSurface3KHR)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE, "EGL_KHR_lock_surface3 is not supported.");
+                return false;
+            }
+            break;
+
         default:
             val->setError(EGL_BAD_ATTRIBUTE, "Invalid surface attribute: 0x%04X", attribute);
             return false;
@@ -5981,6 +6020,106 @@ bool ValidateCreatePlatformWindowSurface(const ValidationContext *val,
         reinterpret_cast<EGLNativeWindowType>(const_cast<void *>(native_window));
     return ValidateCreateWindowSurface(val, dpyPacked, configPacked, nativeWindow,
                                        attrib_listPacked);
+}
+
+bool ValidateLockSurfaceKHR(const ValidationContext *val,
+                            const egl::Display *dpy,
+                            const Surface *surface,
+                            const EGLint *attrib_list)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, dpy));
+    ANGLE_VALIDATION_TRY(ValidateSurface(val, dpy, surface));
+
+    if (!dpy->getExtensions().lockSurface3KHR)
+    {
+        val->setError(EGL_BAD_ACCESS);
+        return false;
+    }
+
+    while (attrib_list != nullptr && attrib_list[0] != EGL_NONE)
+    {
+        EGLint attribute = *attrib_list++;
+        EGLint value     = *attrib_list++;
+        switch (attribute)
+        {
+            case EGL_MAP_PRESERVE_PIXELS_KHR:
+                if (!((value == EGL_FALSE) || (value == EGL_TRUE)))
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE, "Invalid EGL_MAP_PRESERVE_PIXELS_KHR value");
+                    return false;
+                }
+                break;
+            case EGL_LOCK_USAGE_HINT_KHR:
+                if ((value & (EGL_READ_SURFACE_BIT_KHR | EGL_WRITE_SURFACE_BIT_KHR)) != value)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE, "Invalid EGL_LOCK_USAGE_HINT_KHR value");
+                    return false;
+                }
+                break;
+            default:
+                val->setError(EGL_BAD_ATTRIBUTE, "Invalid query surface64 attribute");
+                return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateQuerySurface64KHR(const ValidationContext *val,
+                               const egl::Display *dpy,
+                               const Surface *surface,
+                               EGLint attribute,
+                               const EGLAttribKHR *value)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, dpy));
+    ANGLE_VALIDATION_TRY(ValidateSurface(val, dpy, surface));
+
+    if (!dpy->getExtensions().lockSurface3KHR)
+    {
+        val->setError(EGL_BAD_ACCESS);
+        return false;
+    }
+
+    switch (attribute)
+    {
+        case EGL_BITMAP_PITCH_KHR:
+        case EGL_BITMAP_ORIGIN_KHR:
+        case EGL_BITMAP_PIXEL_RED_OFFSET_KHR:
+        case EGL_BITMAP_PIXEL_GREEN_OFFSET_KHR:
+        case EGL_BITMAP_PIXEL_BLUE_OFFSET_KHR:
+        case EGL_BITMAP_PIXEL_ALPHA_OFFSET_KHR:
+        case EGL_BITMAP_PIXEL_LUMINANCE_OFFSET_KHR:
+        case EGL_BITMAP_PIXEL_SIZE_KHR:
+        case EGL_BITMAP_POINTER_KHR:
+            break;
+        default:
+            val->setError(EGL_BAD_ATTRIBUTE, "Invalid eglQuerySurface64 attribute");
+            return false;
+    }
+
+    if (value == nullptr)
+    {
+        val->setError(EGL_BAD_PARAMETER, "value is NULL.");
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateUnlockSurfaceKHR(const ValidationContext *val,
+                              const egl::Display *dpy,
+                              const Surface *surface)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, dpy));
+    ANGLE_VALIDATION_TRY(ValidateSurface(val, dpy, surface));
+
+    if (!dpy->getExtensions().lockSurface3KHR)
+    {
+        val->setError(EGL_BAD_ACCESS);
+        return false;
+    }
+
+    return true;
 }
 
 }  // namespace egl

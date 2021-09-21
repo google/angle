@@ -84,6 +84,7 @@ const ProcEntry g_procTable[] = {
     {"eglHandleGPUSwitchANGLE", P(EGL_HandleGPUSwitchANGLE)},
     {"eglInitialize", P(EGL_Initialize)},
     {"eglLabelObjectKHR", P(EGL_LabelObjectKHR)},
+    {"eglLockSurfaceKHR", P(EGL_LockSurfaceKHR)},
     {"eglMakeCurrent", P(EGL_MakeCurrent)},
     {"eglPostSubBufferNV", P(EGL_PostSubBufferNV)},
     {"eglPresentationTimeANDROID", P(EGL_PresentationTimeANDROID)},
@@ -103,6 +104,7 @@ const ProcEntry g_procTable[] = {
     {"eglQueryString", P(EGL_QueryString)},
     {"eglQueryStringiANGLE", P(EGL_QueryStringiANGLE)},
     {"eglQuerySurface", P(EGL_QuerySurface)},
+    {"eglQuerySurface64KHR", P(EGL_QuerySurface64KHR)},
     {"eglQuerySurfacePointerANGLE", P(EGL_QuerySurfacePointerANGLE)},
     {"eglReacquireHighPowerGPUANGLE", P(EGL_ReacquireHighPowerGPUANGLE)},
     {"eglReleaseDeviceANGLE", P(EGL_ReleaseDeviceANGLE)},
@@ -124,6 +126,7 @@ const ProcEntry g_procTable[] = {
     {"eglSwapBuffersWithFrameTokenANGLE", P(EGL_SwapBuffersWithFrameTokenANGLE)},
     {"eglSwapInterval", P(EGL_SwapInterval)},
     {"eglTerminate", P(EGL_Terminate)},
+    {"eglUnlockSurfaceKHR", P(EGL_UnlockSurfaceKHR)},
     {"eglWaitClient", P(EGL_WaitClient)},
     {"eglWaitGL", P(EGL_WaitGL)},
     {"eglWaitNative", P(EGL_WaitNative)},
@@ -919,5 +922,5 @@ const ProcEntry g_procTable[] = {
     {"glWaitSync", P(GL_WaitSync)},
     {"glWeightPointerOES", P(GL_WeightPointerOES)}};
 
-const size_t g_numProcs = 886;
+const size_t g_numProcs = 889;
 }  // namespace egl

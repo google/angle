@@ -311,6 +311,7 @@ supported_egl_extensions = [
     "EGL_KHR_fence_sync",
     "EGL_KHR_gl_colorspace",
     "EGL_KHR_image",
+    "EGL_KHR_lock_surface3",
     "EGL_KHR_mutable_render_buffer",
     "EGL_KHR_no_config_context",
     "EGL_KHR_reusable_sync",

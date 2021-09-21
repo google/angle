@@ -382,6 +382,20 @@ bool ValidateDestroyImageKHR(const ValidationContext *val,
                              const egl::Display *dpyPacked,
                              const Image *imagePacked);
 
+// EGL_KHR_lock_surface3
+bool ValidateLockSurfaceKHR(const ValidationContext *val,
+                            const egl::Display *dpyPacked,
+                            const Surface *surfacePacked,
+                            const EGLint *attrib_list);
+bool ValidateQuerySurface64KHR(const ValidationContext *val,
+                               const egl::Display *dpyPacked,
+                               const Surface *surfacePacked,
+                               EGLint attribute,
+                               const EGLAttribKHR *value);
+bool ValidateUnlockSurfaceKHR(const ValidationContext *val,
+                              const egl::Display *dpyPacked,
+                              const Surface *surfacePacked);
+
 // EGL_KHR_reusable_sync
 bool ValidateSignalSyncKHR(const ValidationContext *val,
                            const egl::Display *dpyPacked,

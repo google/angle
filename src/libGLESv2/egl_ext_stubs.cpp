@@ -793,4 +793,30 @@ EGLBoolean QueryDisplayAttribANGLE(Thread *thread,
     thread->setSuccess();
     return EGL_TRUE;
 }
+
+EGLBoolean LockSurfaceKHR(Thread *thread,
+                          egl::Display *display,
+                          Surface *surface,
+                          const EGLint *attrib_list)
+{
+    thread->setSuccess();
+    return EGL_TRUE;
+}
+
+EGLBoolean UnlockSurfaceKHR(Thread *thread, egl::Display *display, Surface *surface)
+{
+    thread->setSuccess();
+    return EGL_TRUE;
+}
+
+EGLBoolean QuerySurface64KHR(Thread *thread,
+                             egl::Display *display,
+                             Surface *surface,
+                             EGLint attribute,
+                             EGLAttribKHR *value)
+{
+    thread->setSuccess();
+    return EGL_TRUE;
+}
+
 }  // namespace egl

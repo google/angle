@@ -102,6 +102,9 @@
 #define eglGetSyncAttribKHR l_eglGetSyncAttribKHR
 #define eglCreateImageKHR l_eglCreateImageKHR
 #define eglDestroyImageKHR l_eglDestroyImageKHR
+#define eglLockSurfaceKHR l_eglLockSurfaceKHR
+#define eglQuerySurface64KHR l_eglQuerySurface64KHR
+#define eglUnlockSurfaceKHR l_eglUnlockSurfaceKHR
 #define eglSignalSyncKHR l_eglSignalSyncKHR
 #define eglCreateStreamKHR l_eglCreateStreamKHR
 #define eglDestroyStreamKHR l_eglDestroyStreamKHR
@@ -208,6 +211,9 @@ ANGLE_UTIL_EXPORT extern PFNEGLDESTROYSYNCKHRPROC l_eglDestroySyncKHR;
 ANGLE_UTIL_EXPORT extern PFNEGLGETSYNCATTRIBKHRPROC l_eglGetSyncAttribKHR;
 ANGLE_UTIL_EXPORT extern PFNEGLCREATEIMAGEKHRPROC l_eglCreateImageKHR;
 ANGLE_UTIL_EXPORT extern PFNEGLDESTROYIMAGEKHRPROC l_eglDestroyImageKHR;
+ANGLE_UTIL_EXPORT extern PFNEGLLOCKSURFACEKHRPROC l_eglLockSurfaceKHR;
+ANGLE_UTIL_EXPORT extern PFNEGLQUERYSURFACE64KHRPROC l_eglQuerySurface64KHR;
+ANGLE_UTIL_EXPORT extern PFNEGLUNLOCKSURFACEKHRPROC l_eglUnlockSurfaceKHR;
 ANGLE_UTIL_EXPORT extern PFNEGLSIGNALSYNCKHRPROC l_eglSignalSyncKHR;
 ANGLE_UTIL_EXPORT extern PFNEGLCREATESTREAMKHRPROC l_eglCreateStreamKHR;
 ANGLE_UTIL_EXPORT extern PFNEGLDESTROYSTREAMKHRPROC l_eglDestroyStreamKHR;
