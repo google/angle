@@ -728,7 +728,7 @@ class BufferHelper : public ReadWriteResource
     BufferHelper(BufferHelper &&other);
     BufferHelper &operator=(BufferHelper &&other);
 
-    angle::Result init(ContextVk *contextVk,
+    angle::Result init(vk::Context *context,
                        const VkBufferCreateInfo &createInfo,
                        VkMemoryPropertyFlags memoryPropertyFlags);
     angle::Result initExternal(ContextVk *contextVk,
@@ -787,8 +787,9 @@ class BufferHelper : public ReadWriteResource
                                  uint32_t regionCount,
                                  const VkBufferCopy *copyRegions);
 
-    angle::Result map(ContextVk *contextVk, uint8_t **ptrOut);
+    angle::Result map(Context *context, uint8_t **ptrOut);
     angle::Result mapWithOffset(ContextVk *contextVk, uint8_t **ptrOut, size_t offset);
+
     void unmap(RendererVk *renderer);
     // After a sequence of writes, call flush to ensure the data is visible to the device.
     angle::Result flush(RendererVk *renderer);
@@ -821,6 +822,8 @@ class BufferHelper : public ReadWriteResource
     bool recordWriteBarrier(VkAccessFlags writeAccessType,
                             VkPipelineStageFlags writeStage,
                             PipelineBarrier *barrier);
+    void fillWithColor(const angle::Color<uint8_t> &color,
+                       const gl::InternalFormat &internalFormat);
 
   private:
     void initializeBarrierTracker(Context *context);
@@ -1871,6 +1874,9 @@ class ImageHelper final : public Resource, public angle::Subject
                                         uint32_t layerCount) const;
     bool hasStagedUpdatesInAllocatedLevels() const;
 
+    bool removeStagedClearUpdatesAndReturnColor(gl::LevelIndex levelGL,
+                                                const VkClearColorValue **color);
+
     void recordWriteBarrier(Context *context,
                             VkImageAspectFlags aspectMask,
                             ImageLayout newLayout,
@@ -1952,6 +1958,20 @@ class ImageHelper final : public Resource, public angle::Subject
                                         const gl::Box &sourceArea,
                                         BufferHelper *dstBuffer,
                                         uint8_t **outDataPtr);
+
+    angle::Result copySurfaceImageToBuffer(DisplayVk *displayVk,
+                                           gl::LevelIndex sourceLevelGL,
+                                           uint32_t layerCount,
+                                           uint32_t baseLayer,
+                                           const gl::Box &sourceArea,
+                                           vk::BufferHelper *bufferHelperOut);
+
+    angle::Result copyBufferToSurfaceImage(DisplayVk *displayVk,
+                                           gl::LevelIndex destLevelGL,
+                                           uint32_t layerCount,
+                                           uint32_t baseLayer,
+                                           const gl::Box &destArea,
+                                           vk::BufferHelper *bufferHelper);
 
     static angle::Result GetReadPixelsParams(ContextVk *contextVk,
                                              const gl::PixelPackState &packState,

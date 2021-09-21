@@ -249,6 +249,95 @@ angle::Result DoesSurfaceSupportFormat(DisplayVk *displayVk,
             }
         }
     }
+    return angle::Result::Continue;
+}
+
+angle::Result LockSurfaceImpl(DisplayVk *displayVk,
+                              vk::ImageHelper *image,
+                              vk::BufferHelper &lockBufferHelper,
+                              EGLint width,
+                              EGLint height,
+                              EGLint usageHint,
+                              bool preservePixels,
+                              uint8_t **bufferPtrOut,
+                              EGLint *bufferPitchOut)
+{
+    const gl::InternalFormat &internalFormat =
+        gl::GetSizedInternalFormatInfo(image->getActualFormat().glInternalFormat);
+    GLuint rowStride = image->getActualFormat().pixelBytes * width;
+    VkDeviceSize bufferSize =
+        (static_cast<VkDeviceSize>(rowStride) * static_cast<VkDeviceSize>(height));
+
+    if (!lockBufferHelper.valid() || (lockBufferHelper.getSize() != bufferSize))
+    {
+        lockBufferHelper.destroy(displayVk->getRenderer());
+
+        VkBufferCreateInfo bufferCreateInfo = {};
+        bufferCreateInfo.sType              = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        bufferCreateInfo.pNext              = nullptr;
+        bufferCreateInfo.flags              = 0;
+        bufferCreateInfo.size               = bufferSize;
+        bufferCreateInfo.usage =
+            (VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT);
+        bufferCreateInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+        bufferCreateInfo.queueFamilyIndexCount = 0;
+        bufferCreateInfo.pQueueFamilyIndices   = 0;
+
+        VkMemoryPropertyFlags memoryFlags =
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+        ANGLE_TRY(lockBufferHelper.init(displayVk, bufferCreateInfo, memoryFlags));
+
+        uint8_t *bufferPtr = nullptr;
+        ANGLE_TRY(lockBufferHelper.map(displayVk, &bufferPtr));
+    }
+
+    if (lockBufferHelper.valid())
+    {
+        if (preservePixels)
+        {
+            gl::LevelIndex sourceLevelGL(0);
+            const VkClearColorValue *clearColor;
+            if (image->removeStagedClearUpdatesAndReturnColor(sourceLevelGL, &clearColor))
+            {
+                ASSERT(!image->hasStagedUpdatesForSubresource(sourceLevelGL, 0, 1));
+                angle::Color<uint8_t> color((uint8_t)(clearColor->float32[0] * 255.0),
+                                            (uint8_t)(clearColor->float32[1] * 255.0),
+                                            (uint8_t)(clearColor->float32[2] * 255.0),
+                                            (uint8_t)(clearColor->float32[3] * 255.0));
+                lockBufferHelper.fillWithColor(color, internalFormat);
+            }
+            else
+            {
+                gl::Box sourceArea(0, 0, 0, width, height, 1);
+                ANGLE_TRY(image->copySurfaceImageToBuffer(displayVk, sourceLevelGL, 1, 0,
+                                                          sourceArea, &lockBufferHelper));
+            }
+        }
+
+        *bufferPitchOut = rowStride;
+        *bufferPtrOut   = lockBufferHelper.getMappedMemory();
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result UnlockSurfaceImpl(DisplayVk *displayVk,
+                                vk::ImageHelper *image,
+                                vk::BufferHelper &lockBufferHelper,
+                                EGLint width,
+                                EGLint height,
+                                bool preservePixels)
+{
+    if (preservePixels)
+    {
+        ASSERT(image->valid());
+
+        gl::Box destArea(0, 0, 0, width, height, 1);
+        gl::LevelIndex destLevelGL(0);
+
+        ANGLE_TRY(image->copyBufferToSurfaceImage(displayVk, destLevelGL, 1, 0, destArea,
+                                                  &lockBufferHelper));
+    }
 
     return angle::Result::Continue;
 }
@@ -396,6 +485,11 @@ void OffscreenSurfaceVk::destroy(const egl::Display *display)
 {
     mColorAttachment.destroy(display);
     mDepthStencilAttachment.destroy(display);
+
+    if (mLockBufferHelper.valid())
+    {
+        mLockBufferHelper.destroy(vk::GetImpl(display)->getRenderer());
+    }
 }
 
 FramebufferImpl *OffscreenSurfaceVk::createDefaultFramebuffer(const gl::Context *context,
@@ -497,6 +591,39 @@ angle::Result OffscreenSurfaceVk::initializeContents(const gl::Context *context,
 vk::ImageHelper *OffscreenSurfaceVk::getColorAttachmentImage()
 {
     return &mColorAttachment.image;
+}
+
+egl::Error OffscreenSurfaceVk::lockSurface(const egl::Display *display,
+                                           EGLint usageHint,
+                                           bool preservePixels,
+                                           uint8_t **bufferPtrOut,
+                                           EGLint *bufferPitchOut)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "OffscreenSurfaceVk::lockSurface");
+
+    vk::ImageHelper *image = &mColorAttachment.image;
+    ASSERT(image->valid());
+
+    angle::Result result =
+        LockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper, getWidth(), getHeight(),
+                        usageHint, preservePixels, bufferPtrOut, bufferPitchOut);
+    return angle::ToEGL(result, vk::GetImpl(display), EGL_BAD_ACCESS);
+}
+
+egl::Error OffscreenSurfaceVk::unlockSurface(const egl::Display *display, bool preservePixels)
+{
+    vk::ImageHelper *image = &mColorAttachment.image;
+    ASSERT(image->valid());
+    ASSERT(mLockBufferHelper.valid());
+
+    return angle::ToEGL(UnlockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper,
+                                          getWidth(), getHeight(), preservePixels),
+                        vk::GetImpl(display), EGL_BAD_ACCESS);
+}
+
+EGLint OffscreenSurfaceVk::origin() const
+{
+    return EGL_UPPER_LEFT_KHR;
 }
 
 namespace impl
@@ -604,6 +731,11 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
 
     // flush the pipe.
     (void)renderer->finish(displayVk, mState.hasProtectedContent());
+
+    if (mLockBufferHelper.valid())
+    {
+        mLockBufferHelper.destroy(renderer);
+    }
 
     destroySwapChainImages(displayVk);
 
@@ -2189,6 +2321,47 @@ egl::Error WindowSurfaceVk::setRenderBuffer(EGLint renderBuffer)
         mDesiredSwapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
     }
     return egl::NoError();
+}
+
+egl::Error WindowSurfaceVk::lockSurface(const egl::Display *display,
+                                        EGLint usageHint,
+                                        bool preservePixels,
+                                        uint8_t **bufferPtrOut,
+                                        EGLint *bufferPitchOut)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::lockSurface");
+
+    vk::ImageHelper *image = &mSwapchainImages[mCurrentSwapchainImageIndex].image;
+    if (!image->valid())
+    {
+        if (acquireNextSwapchainImage(vk::GetImpl(display)) != VK_SUCCESS)
+        {
+            return egl::EglBadAccess();
+        }
+    }
+    image = &mSwapchainImages[mCurrentSwapchainImageIndex].image;
+    ASSERT(image->valid());
+
+    angle::Result result =
+        LockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper, getWidth(), getHeight(),
+                        usageHint, preservePixels, bufferPtrOut, bufferPitchOut);
+    return angle::ToEGL(result, vk::GetImpl(display), EGL_BAD_ACCESS);
+}
+
+egl::Error WindowSurfaceVk::unlockSurface(const egl::Display *display, bool preservePixels)
+{
+    vk::ImageHelper *image = &mSwapchainImages[mCurrentSwapchainImageIndex].image;
+    ASSERT(image->valid());
+    ASSERT(mLockBufferHelper.valid());
+
+    return angle::ToEGL(UnlockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper,
+                                          getWidth(), getHeight(), preservePixels),
+                        vk::GetImpl(display), EGL_BAD_ACCESS);
+}
+
+EGLint WindowSurfaceVk::origin() const
+{
+    return EGL_UPPER_LEFT_KHR;
 }
 
 }  // namespace rx

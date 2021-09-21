@@ -1160,6 +1160,22 @@ EGLint ComputeMaximumPBufferPixels(const VkPhysicalDeviceProperties &physicalDev
     return static_cast<EGLint>(std::min(maxDimensionsSquared, kMaxValueForEGLint));
 }
 
+EGLint GetMatchFormat(GLenum internalFormat)
+{
+    // Lock Surface match format
+    switch (internalFormat)
+    {
+        case GL_RGBA8:
+            return EGL_FORMAT_RGBA_8888_KHR;
+        case GL_BGRA8_EXT:
+            return EGL_FORMAT_RGBA_8888_EXACT_KHR;
+        case GL_RGB565:
+            return EGL_FORMAT_RGB_565_EXACT_KHR;
+        default:
+            return EGL_NONE;
+    }
+}
+
 // Generates a basic config for a combination of color format, depth stencil format and sample
 // count.
 egl::Config GenerateDefaultConfig(DisplayVk *display,
@@ -1222,6 +1238,12 @@ egl::Config GenerateDefaultConfig(DisplayVk *display,
     config.transparentBlueValue  = 0;
     config.colorComponentType =
         gl_egl::GLComponentTypeToEGLColorComponentType(colorFormat.componentType);
+    // LockSurface matching
+    config.matchFormat = GetMatchFormat(colorFormat.internalFormat);
+    if (config.matchFormat != EGL_NONE)
+    {
+        config.surfaceType |= EGL_LOCK_SURFACE_BIT_KHR;
+    }
 
     // Vulkan always supports off-screen rendering.  Check the config with display to see if it can
     // also have window support.  If not, the following call should automatically remove

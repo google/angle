@@ -78,6 +78,14 @@ class OffscreenSurfaceVk : public SurfaceVk
 
     vk::ImageHelper *getColorAttachmentImage();
 
+    egl::Error lockSurface(const egl::Display *display,
+                           EGLint usageHint,
+                           bool preservePixels,
+                           uint8_t **bufferPtrOut,
+                           EGLint *bufferPitchOut) override;
+    egl::Error unlockSurface(const egl::Display *display, bool preservePixels) override;
+    EGLint origin() const override;
+
   protected:
     struct AttachmentImage final : angle::NonCopyable
     {
@@ -106,6 +114,9 @@ class OffscreenSurfaceVk : public SurfaceVk
 
     AttachmentImage mColorAttachment;
     AttachmentImage mDepthStencilAttachment;
+
+    // EGL_KHR_lock_surface3
+    vk::BufferHelper mLockBufferHelper;
 };
 
 // Data structures used in WindowSurfaceVk
@@ -248,6 +259,14 @@ class WindowSurfaceVk : public SurfaceVk
         return (mSwapchainPresentMode == VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR);
     }
 
+    egl::Error lockSurface(const egl::Display *display,
+                           EGLint usageHint,
+                           bool preservePixels,
+                           uint8_t **bufferPtrOut,
+                           EGLint *bufferPitchOut) override;
+    egl::Error unlockSurface(const egl::Display *display, bool preservePixels) override;
+    EGLint origin() const override;
+
   protected:
     angle::Result prepareSwapImpl(const gl::Context *context);
     angle::Result swapImpl(const gl::Context *context,
@@ -376,6 +395,9 @@ class WindowSurfaceVk : public SurfaceVk
 
     // EGL_EXT_buffer_age: Track frame count.
     uint64_t mFrameCount;
+
+    // EGL_KHR_lock_surface3
+    vk::BufferHelper mLockBufferHelper;
 };
 
 }  // namespace rx

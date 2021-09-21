@@ -606,6 +606,11 @@ struct FeaturesVk : FeatureSetBase
     Feature supportsShaderFramebufferFetchNonCoherent = {
         "supportsShaderFramebufferFetchNonCoherent", FeatureCategory::VulkanFeatures,
         "Whether the Vulkan backend supports non-coherent framebuffer fetch", &members};
+
+    // Whether the Surface supports EGL_KHR_lock_surface3.
+    Feature supportsLockSurfaceExtension = {
+        "supportsLockSurfaceExtension", FeatureCategory::VulkanFeatures,
+        "Surface supports the EGL_KHR_lock_surface3 extension", &members};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

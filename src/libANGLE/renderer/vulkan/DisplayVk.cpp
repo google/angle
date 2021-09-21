@@ -324,6 +324,9 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
         getRenderer()->getFeatures().supportsSharedPresentableImageExtension.enabled;
 
     outExtensions->vulkanImageANGLE = true;
+
+    outExtensions->lockSurface3KHR =
+        getRenderer()->getFeatures().supportsLockSurfaceExtension.enabled;
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const
