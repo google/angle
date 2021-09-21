@@ -4149,6 +4149,9 @@ void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value)
         case EGL_FRAMEBUFFER_TARGET_ANDROID:
             *value = config->framebufferTarget;
             break;
+        case EGL_MATCH_FORMAT_KHR:
+            *value = config->matchFormat;
+            break;
         default:
             UNREACHABLE();
             break;
@@ -4289,6 +4292,72 @@ egl::Error QuerySurfaceAttrib(const Display *display,
             break;
         case EGL_BUFFER_AGE_EXT:
             ANGLE_TRY(surface->getBufferAge(context, value));
+            break;
+        case EGL_BITMAP_PITCH_KHR:
+            *value = surface->getBitmapPitch();
+            break;
+        case EGL_BITMAP_ORIGIN_KHR:
+            *value = surface->getBitmapOrigin();
+            break;
+        case EGL_BITMAP_PIXEL_RED_OFFSET_KHR:
+            *value = surface->getRedOffset();
+            break;
+        case EGL_BITMAP_PIXEL_GREEN_OFFSET_KHR:
+            *value = surface->getGreenOffset();
+            break;
+        case EGL_BITMAP_PIXEL_BLUE_OFFSET_KHR:
+            *value = surface->getBlueOffset();
+            break;
+        case EGL_BITMAP_PIXEL_ALPHA_OFFSET_KHR:
+            *value = surface->getAlphaOffset();
+            break;
+        case EGL_BITMAP_PIXEL_LUMINANCE_OFFSET_KHR:
+            *value = surface->getLuminanceOffset();
+            break;
+        case EGL_BITMAP_PIXEL_SIZE_KHR:
+            *value = surface->getBitmapPixelSize();
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+    return NoError();
+}
+
+egl::Error QuerySurfaceAttrib64KHR(const Display *display,
+                                   const gl::Context *context,
+                                   const Surface *surface,
+                                   EGLint attribute,
+                                   EGLAttribKHR *value)
+{
+    switch (attribute)
+    {
+        case EGL_BITMAP_PITCH_KHR:
+            *value = static_cast<EGLAttribKHR>(surface->getBitmapPitch());
+            break;
+        case EGL_BITMAP_ORIGIN_KHR:
+            *value = static_cast<EGLAttribKHR>(surface->getBitmapOrigin());
+            break;
+        case EGL_BITMAP_PIXEL_RED_OFFSET_KHR:
+            *value = static_cast<EGLAttribKHR>(surface->getRedOffset());
+            break;
+        case EGL_BITMAP_PIXEL_GREEN_OFFSET_KHR:
+            *value = static_cast<EGLAttribKHR>(surface->getGreenOffset());
+            break;
+        case EGL_BITMAP_PIXEL_BLUE_OFFSET_KHR:
+            *value = static_cast<EGLAttribKHR>(surface->getBlueOffset());
+            break;
+        case EGL_BITMAP_PIXEL_ALPHA_OFFSET_KHR:
+            *value = static_cast<EGLAttribKHR>(surface->getAlphaOffset());
+            break;
+        case EGL_BITMAP_PIXEL_LUMINANCE_OFFSET_KHR:
+            *value = static_cast<EGLAttribKHR>(surface->getLuminanceOffset());
+            break;
+        case EGL_BITMAP_PIXEL_SIZE_KHR:
+            *value = static_cast<EGLAttribKHR>(surface->getBitmapPixelSize());
+            break;
+        case EGL_BITMAP_POINTER_KHR:
+            *value = surface->getBitmapPointer();
             break;
         default:
             UNREACHABLE();

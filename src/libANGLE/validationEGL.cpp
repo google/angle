@@ -4463,6 +4463,12 @@ bool ValidateSwapBuffers(const ValidationContext *val,
         return false;
     }
 
+    if (eglSurface->isLocked())
+    {
+        val->setError(EGL_BAD_ACCESS);
+        return false;
+    }
+
     if (eglSurface == EGL_NO_SURFACE || !val->eglThread->getContext() ||
         val->eglThread->getCurrentDrawSurface() != eglSurface)
     {
@@ -4504,6 +4510,12 @@ bool ValidateSwapBuffersWithDamageKHR(const ValidationContext *val,
     if (n_rects > 0 && rects == nullptr)
     {
         val->setError(EGL_BAD_PARAMETER, "n_rects cannot be greater than zero when rects is NULL.");
+        return false;
+    }
+
+    if (surface->isLocked())
+    {
+        val->setError(EGL_BAD_ACCESS);
         return false;
     }
 
@@ -4576,6 +4588,12 @@ bool ValidateBindTexImage(const ValidationContext *val,
     if (surface->getTextureFormat() == TextureFormat::NoTexture)
     {
         val->setError(EGL_BAD_MATCH);
+        return false;
+    }
+
+    if (surface->isLocked())
+    {
+        val->setError(EGL_BAD_ACCESS);
         return false;
     }
 
@@ -6036,6 +6054,31 @@ bool ValidateLockSurfaceKHR(const ValidationContext *val,
         return false;
     }
 
+    if (surface->isLocked())
+    {
+        val->setError(EGL_BAD_ACCESS);
+        return false;
+    }
+
+    if ((surface->getConfig()->surfaceType & EGL_LOCK_SURFACE_BIT_KHR) == false)
+    {
+        val->setError(EGL_BAD_ACCESS, "Config does not support EGL_LOCK_SURFACE_BIT");
+        return false;
+    }
+
+    if (surface->isCurrentOnAnyContext())
+    {
+        val->setError(EGL_BAD_ACCESS,
+                      "Surface cannot be current to a context for eglLockSurface()");
+        return false;
+    }
+
+    if (surface->hasProtectedContent())
+    {
+        val->setError(EGL_BAD_ACCESS, "Surface cannot be protected content for eglLockSurface()");
+        return false;
+    }
+
     while (attrib_list != nullptr && attrib_list[0] != EGL_NONE)
     {
         EGLint attribute = *attrib_list++;
@@ -6103,6 +6146,12 @@ bool ValidateQuerySurface64KHR(const ValidationContext *val,
         return false;
     }
 
+    if (!surface->isLocked())
+    {
+        val->setError(EGL_BAD_ACCESS, "Surface is not locked");
+        return false;
+    }
+
     return true;
 }
 
@@ -6116,6 +6165,12 @@ bool ValidateUnlockSurfaceKHR(const ValidationContext *val,
     if (!dpy->getExtensions().lockSurface3KHR)
     {
         val->setError(EGL_BAD_ACCESS);
+        return false;
+    }
+
+    if (!surface->isLocked())
+    {
+        val->setError(EGL_BAD_PARAMETER, "Surface is not locked.");
         return false;
     }
 

@@ -93,6 +93,9 @@ Surface::Surface(EGLint surfaceType,
       mTexture(nullptr),
       mColorFormat(config->renderTargetFormat),
       mDSFormat(config->depthStencilFormat),
+      mIsCurrentOnAnyContext(false),
+      mLockBufferPtr(nullptr),
+      mLockBufferPitch(0),
       mInitState(gl::InitState::Initialized),
       mImplObserverBinding(this, kSurfaceImplSubjectIndex)
 {
@@ -244,8 +247,12 @@ Error Surface::initialize(const Display *display)
 
 Error Surface::makeCurrent(const gl::Context *context)
 {
+    if (isLocked())
+    {
+        return EglBadAccess();
+    }
     ANGLE_TRY(mImplementation->makeCurrent(context));
-
+    mIsCurrentOnAnyContext = true;
     mRefCount++;
     return NoError();
 }
@@ -253,6 +260,7 @@ Error Surface::makeCurrent(const gl::Context *context)
 Error Surface::unMakeCurrent(const gl::Context *context)
 {
     ANGLE_TRY(mImplementation->unMakeCurrent(context));
+    mIsCurrentOnAnyContext = false;
     return releaseRef(context->getDisplay());
 }
 
@@ -692,6 +700,107 @@ void Surface::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
 void Surface::setRenderBuffer(EGLint value)
 {
     mRenderBuffer = value;
+}
+
+bool Surface::isLocked() const
+{
+    return (mLockBufferPtr != nullptr);
+}
+
+EGLint Surface::getBitmapPitch() const
+{
+    return mLockBufferPitch;
+}
+
+EGLint Surface::getBitmapOrigin() const
+{
+    return mImplementation->origin();
+}
+
+EGLint Surface::getRedOffset() const
+{
+    const gl::InternalFormat &format = *mColorFormat.info;
+    if (gl::IsBGRAFormat(format.internalFormat))
+    {
+        return format.blueBits + format.greenBits;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+EGLint Surface::getGreenOffset() const
+{
+    const gl::InternalFormat &format = *mColorFormat.info;
+    if (gl::IsBGRAFormat(format.internalFormat))
+    {
+        return format.blueBits;
+    }
+    else
+    {
+        return format.redBits;
+    }
+}
+
+EGLint Surface::getBlueOffset() const
+{
+    const gl::InternalFormat &format = *mColorFormat.info;
+    if (gl::IsBGRAFormat(format.internalFormat))
+    {
+        return 0;
+    }
+    else
+    {
+        return format.redBits + format.greenBits;
+    }
+}
+
+EGLint Surface::getAlphaOffset() const
+{
+    const gl::InternalFormat &format = *mColorFormat.info;
+    if (format.isLUMA())
+    {
+        return format.luminanceBits;  // Luma always first, alpha optional
+    }
+    // For RGBA/BGRA alpha is last
+    return format.blueBits + format.greenBits + format.redBits;
+}
+
+EGLint Surface::getLuminanceOffset() const
+{
+    return 0;
+}
+
+EGLint Surface::getBitmapPixelSize() const
+{
+    constexpr EGLint kBitsPerByte    = 8;
+    const gl::InternalFormat &format = *mColorFormat.info;
+    return (format.pixelBytes * kBitsPerByte);
+}
+
+EGLAttribKHR Surface::getBitmapPointer() const
+{
+    return static_cast<EGLAttribKHR>((intptr_t)mLockBufferPtr);
+}
+
+egl::Error Surface::lockSurfaceKHR(const egl::Display *display, const AttributeMap &attributes)
+{
+    EGLint lockBufferUsageHint = attributes.getAsInt(
+        EGL_LOCK_USAGE_HINT_KHR, (EGL_READ_SURFACE_BIT_KHR | EGL_WRITE_SURFACE_BIT_KHR));
+
+    bool preservePixels = ((attributes.getAsInt(EGL_MAP_PRESERVE_PIXELS_KHR, false) == EGL_TRUE) ||
+                           (mSwapBehavior == EGL_BUFFER_PRESERVED));
+
+    return mImplementation->lockSurface(display, lockBufferUsageHint, preservePixels,
+                                        &mLockBufferPtr, &mLockBufferPitch);
+}
+
+egl::Error Surface::unlockSurfaceKHR(const egl::Display *display)
+{
+    mLockBufferPtr   = nullptr;
+    mLockBufferPitch = 0;
+    return mImplementation->unlockSurface(display, true);
 }
 
 WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,

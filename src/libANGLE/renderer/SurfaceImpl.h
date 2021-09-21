@@ -110,6 +110,14 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
                                           const EGLint *timestamps,
                                           EGLnsecsANDROID *values) const;
     virtual egl::Error getBufferAge(const gl::Context *context, EGLint *age);
+    // EGL_KHR_lock_surface3
+    virtual egl::Error lockSurface(const egl::Display *display,
+                                   EGLint usageHint,
+                                   bool preservePixels,
+                                   uint8_t **bufferPtrOut,
+                                   EGLint *bufferPitchOut);
+    virtual egl::Error unlockSurface(const egl::Display *display, bool preservePixels);
+    virtual EGLint origin() const;
 
   protected:
     const egl::SurfaceState &mState;

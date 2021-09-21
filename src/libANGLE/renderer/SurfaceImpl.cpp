@@ -120,4 +120,25 @@ egl::Error SurfaceImpl::getBufferAge(const gl::Context *context, EGLint *age)
     return egl::EglBadMatch();
 }
 
+egl::Error SurfaceImpl::lockSurface(const egl::Display *display,
+                                    EGLint usageHint,
+                                    bool preservePixels,
+                                    uint8_t **bufferPtrOut,
+                                    EGLint *bufferPitchOut)
+{
+    UNREACHABLE();
+    return egl::EglBadMatch();
+}
+
+egl::Error SurfaceImpl::unlockSurface(const egl::Display *display, bool preservePixels)
+{
+    UNREACHABLE();
+    return egl::EglBadMatch();
+}
+
+EGLint SurfaceImpl::origin() const
+{
+    return EGL_LOWER_LEFT_KHR;
+}
+
 }  // namespace rx

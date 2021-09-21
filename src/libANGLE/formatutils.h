@@ -476,6 +476,25 @@ ANGLE_INLINE bool IsPVRTC1Format(const GLenum format)
     }
 }
 
+ANGLE_INLINE bool IsBGRAFormat(const GLenum internalFormat)
+{
+    switch (internalFormat)
+    {
+        case GL_BGRA8_EXT:
+        case GL_BGRA4_ANGLEX:
+        case GL_BGR5_A1_ANGLEX:
+        case GL_BGRA8_SRGB_ANGLEX:
+        case GL_BGRX8_ANGLEX:
+        case GL_RGBX8_ANGLEX:
+        case GL_BGR565_ANGLEX:
+        case GL_BGR10_A2_ANGLEX:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
 // Check if an internal format is ever valid in ES3.  Makes no checks about support for a specific
 // context.
 bool ValidES3InternalFormat(GLenum internalFormat);

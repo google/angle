@@ -136,6 +136,22 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     EGLenum getMultisampleResolve() const;
     bool hasProtectedContent() const override;
 
+    // For lock surface buffer
+    EGLint getBitmapPitch() const;
+    EGLint getBitmapOrigin() const;
+    EGLint getRedOffset() const;
+    EGLint getGreenOffset() const;
+    EGLint getBlueOffset() const;
+    EGLint getAlphaOffset() const;
+    EGLint getLuminanceOffset() const;
+    EGLint getBitmapPixelSize() const;
+    EGLAttribKHR getBitmapPointer() const;
+    egl::Error lockSurfaceKHR(const egl::Display *display, const AttributeMap &attributes);
+    egl::Error unlockSurfaceKHR(const egl::Display *display);
+
+    bool isLocked() const;
+    bool isCurrentOnAnyContext() const { return mIsCurrentOnAnyContext; }
+
     gl::Texture *getBoundTexture() const { return mTexture; }
 
     EGLint isFixedSize() const;
@@ -247,6 +263,10 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     gl::Format mDSFormat;
 
     gl::Offset mTextureOffset;
+
+    bool mIsCurrentOnAnyContext;  // The surface is current to a context/client API
+    uint8_t *mLockBufferPtr;      // Memory owned by backend.
+    EGLint mLockBufferPitch;
 
   private:
     Error destroyImpl(const Display *display);
