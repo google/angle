@@ -51,6 +51,8 @@
 5945 LINUX NVIDIA VULKAN : MultithreadingTest.MultiContextClear/* = SKIP
 5945 LINUX NVIDIA VULKAN : MultithreadingTest.MultiCreateContext/* = SKIP
 6367 LINUX INTEL OPENGL : ComputeShaderTest.DispatchGenerateMipmapDispatch/ES3_1_OpenGL = SKIP
+1252169 LINUX AMD OPENGL : ComputeShaderTest.ImageBufferMapWrite/ES3_1_OpenGL = SKIP
+1252169 LINUX AMD OPENGL : ComputeShaderTest.BufferImageBufferMapWrite/ES3_1_OpenGL = SKIP
 
 // Nvidia
 6115 NVIDIA OPENGL : GLSLTestLoops.DoWhileContinue/* = SKIP
