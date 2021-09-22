@@ -195,7 +195,7 @@ BufferVk::VertexConversionBuffer::~VertexConversionBuffer() = default;
 
 // BufferVk implementation.
 BufferVk::BufferVk(const gl::BufferState &state)
-    : BufferImpl(state), mBuffer(nullptr), mBufferOffset(0)
+    : BufferImpl(state), mBuffer(nullptr), mBufferOffset(0), mHasValidData(false)
 {}
 
 BufferVk::~BufferVk() {}
@@ -394,6 +394,10 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
+
+    // Reset the flag since the buffer contents are being reinitialized. If the caller passed in
+    // data to fill the buffer, the flag will be updated when the data is copied to the buffer.
+    mHasValidData = false;
 
     if (size == 0)
     {
@@ -737,7 +741,7 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
 
     if (writeOperation)
     {
-        markConversionBuffersDirty();
+        dataUpdated();
     }
 
     return angle::Result::Continue;
@@ -872,8 +876,8 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
     vk::BufferHelper *src          = mBuffer;
     size_t bufferSize              = static_cast<size_t>(mState.getSize());
     size_t offsetAfterSubdata      = (offset + updateSize);
-    bool updateRegionBeforeSubData = (offset > 0);
-    bool updateRegionAfterSubData  = (offsetAfterSubdata < bufferSize);
+    bool updateRegionBeforeSubData = mHasValidData && (offset > 0);
+    bool updateRegionAfterSubData  = mHasValidData && (offsetAfterSubdata < bufferSize);
 
     // It's possible for acquireBufferHelper() to garbage collect the original (src) buffer before
     // copyFromBuffer() has a chance to retain it, so retain it now. This may end up
@@ -924,8 +928,13 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
     // else update the buffer directly
     if (mBuffer->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
     {
+        // If BufferVk does not have any valid data, which means there is no data needs to be copied
+        // from old buffer to new buffer when we acquire a new buffer, we also favor
+        // acquireAndUpdate over stagedUpdate. This could happen when app calls glBufferData with
+        // same size and we will try to reuse the existing buffer storage.
         if (!mBuffer->isExternalBuffer() &&
-            SubDataSizeMeetsThreshold(size, static_cast<size_t>(mState.getSize())))
+            (!mHasValidData ||
+             SubDataSizeMeetsThreshold(size, static_cast<size_t>(mState.getSize()))))
         {
             ANGLE_TRY(acquireAndUpdate(contextVk, data, size, offset, updateType));
         }
@@ -940,7 +949,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
     }
 
     // Update conversions
-    markConversionBuffersDirty();
+    dataUpdated();
 
     return angle::Result::Continue;
 }
@@ -963,17 +972,19 @@ ConversionBuffer *BufferVk::getVertexConversionBuffer(RendererVk *renderer,
     return &mVertexConversionBuffers.back();
 }
 
-void BufferVk::markConversionBuffersDirty()
+void BufferVk::dataUpdated()
 {
     for (VertexConversionBuffer &buffer : mVertexConversionBuffers)
     {
         buffer.dirty = true;
     }
+    // Now we have valid data
+    mHasValidData = true;
 }
 
 void BufferVk::onDataChanged()
 {
-    markConversionBuffersDirty();
+    dataUpdated();
 }
 
 angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk,

@@ -4744,6 +4744,9 @@ TEST_P(ComputeShaderTest, ImageBufferMapWriteAndBufferSubData)
     // 'GL_OES_texture_buffer' is not supported".  http://anglebug.com/5832
     ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
 
+    // angleporject:6545. Known bug.
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kComputeImageBuffer[] = R"(#version 310 es
 #extension GL_OES_texture_buffer : require
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
