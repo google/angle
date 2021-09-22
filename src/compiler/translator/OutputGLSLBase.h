@@ -89,6 +89,7 @@ class TOutputGLSLBase : public TIntermTraverser
 
     sh::GLenum getShaderType() const { return mShaderType; }
     bool isHighPrecisionSupported() const { return mHighPrecisionSupported; }
+    const char *getIndentPrefix(int extraIndentDepth = 0);
 
   private:
     void declareInterfaceBlockLayout(const TType &type);
