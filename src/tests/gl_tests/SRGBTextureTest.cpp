@@ -573,9 +573,6 @@ TEST_P(SRGBTextureTestES3, GenerateMipmaps)
 {
     ANGLE_SKIP_TEST_IF(IsOpenGL() && ((IsIntel() && IsOSX()) || IsAMD()));
 
-    // http://anglebug.com/5108
-    ANGLE_SKIP_TEST_IF(IsMetal());
-
     auto createAndReadBackTexture = [this](GLenum internalFormat, const GLColor &color) {
         constexpr GLsizei width  = 128;
         constexpr GLsizei height = 128;

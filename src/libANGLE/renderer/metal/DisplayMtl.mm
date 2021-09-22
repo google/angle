@@ -1034,9 +1034,7 @@ void DisplayMtl::initializeFeatures()
     ANGLE_FEATURE_CONDITION((&mFeatures), forceNonCSBaseMipmapGeneration, isIntel());
 
     bool defaultDirectToMetal = true;
-#if ANGLE_ENABLE_METAL_SPIRV
-    defaultDirectToMetal = false;
-#endif
+
     ANGLE_FEATURE_CONDITION((&mFeatures), directMetalGeneration, defaultDirectToMetal);
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();

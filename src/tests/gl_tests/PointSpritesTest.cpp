@@ -463,10 +463,6 @@ TEST_P(PointSpritesTest, PointSizeAboveMaxIsClamped)
     // rendered at all on AMD. http://anglebug.com/2113
     ANGLE_SKIP_TEST_IF(IsAMD() && IsVulkan());
 
-    // TODO(hqle): Metal on macbook also has problem with drawing point outside framebuffer.
-    // http://anglebug.com/4135
-    ANGLE_SKIP_TEST_IF(IsMetal());
-
     // TODO(anglebug.com/5491)
     ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
 

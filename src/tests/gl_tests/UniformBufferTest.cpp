@@ -1770,9 +1770,6 @@ TEST_P(UniformBufferTest, ManyBlocks)
     // http://anglebug.com/5039
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    // http://anglebug.com/5283
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel());
-
     constexpr char kFS[] =
         R"(#version 300 es
 

@@ -115,9 +115,6 @@ TEST_P(DXT1CompressedTextureTest, DXT1Alpha)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
-    // On Intel Metal, results would depend on the GPU Family.
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel());
-
     // On platforms without native support for DXT1 RGB or texture swizzling (such as D3D or some
     // Metal configurations), this test is allowed to succeed with transparent black instead of
     // opaque black.

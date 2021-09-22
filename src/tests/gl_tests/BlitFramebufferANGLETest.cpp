@@ -924,9 +924,6 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
     // http://anglebug.com/2205
     ANGLE_SKIP_TEST_IF(IsIntel() && IsD3D9());
 
-    // http://anglebug.com/4919
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsMetal());
-
     // http://anglebug.com/5396
     ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D9());
 
@@ -1246,9 +1243,6 @@ class BlitFramebufferTestES31 : public BlitFramebufferTest
 // Tests resolving a multisample depth buffer.
 TEST_P(BlitFramebufferTest, MultisampleDepth)
 {
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
-    ANGLE_SKIP_TEST_IF(IsMetal());
-
     // TODO(oetuaho@nvidia.com): http://crbug.com/837717
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
 
@@ -1323,9 +1317,6 @@ TEST_P(BlitFramebufferTest, BlitMultisampleStencilToDefault)
 {
     // http://anglebug.com/3496
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
-
-    // http://anglebug.com/5106
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel() && IsOSX());
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -1455,9 +1446,6 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
 {
     // Incorrect rendering results seen on AMD Windows OpenGL. http://anglebug.com/2486
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && IsWindows());
-
-    // http://anglebug.com/5106
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel() && IsOSX());
 
     GLRenderbuffer renderbuf;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
@@ -1715,9 +1703,6 @@ TEST_P(BlitFramebufferTest, NonZeroBaseSourceStencil)
     // http://anglebug.com/5001
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
 
-    // http://anglebug.com/5106
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel() && IsOSX());
-
     ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
 
     // Create a framebuffer with an attachment that has non-zero base
@@ -1781,8 +1766,7 @@ TEST_P(BlitFramebufferTest, NonZeroBaseDestinationStencil)
 {
     // http://anglebug.com/5001
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
-    // http://anglebug.com/5106
-    ANGLE_SKIP_TEST_IF(IsMetal() && (IsAMD() || IsIntel()));
+
     // http://anglebug.com/5003
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
 
@@ -1853,9 +1837,6 @@ TEST_P(BlitFramebufferTest, NonZeroBaseDestinationStencilStretch)
 
     // http://anglebug.com/5001
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
-
-    // http://anglebug.com/5106
-    ANGLE_SKIP_TEST_IF(IsMetal() && (IsAMD() || IsIntel()));
 
     ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
 
@@ -1974,9 +1955,6 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBAndScale)
 // Blit stencil, with scissor and scale it.
 TEST_P(BlitFramebufferTest, BlitStencilScissoredScaled)
 {
-    // http://anglebug.com/5106
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel() && IsOSX());
-
     constexpr GLint kSize = 256;
 
     // Create the destination framebuffer.

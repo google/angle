@@ -407,8 +407,6 @@ TEST_P(MultisampleTest, ContentPresevedAfterInterruption)
 TEST_P(MultisampleTest, AlphaToSampleCoverage)
 {
     ANGLE_SKIP_TEST_IF(!mMultisampledConfigExists);
-    // http://anglebug.com/5087
-    ANGLE_SKIP_TEST_IF(IsMetal());
     // http://anglebug.com/5727
     ANGLE_SKIP_TEST_IF(IsOzone());
 

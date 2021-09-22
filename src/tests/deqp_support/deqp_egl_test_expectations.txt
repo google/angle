@@ -4,9 +4,6 @@
 
 // See README.md for format.
 
-// Globally disable Metal testing for now
-4235 METAL : dEQP-EGL.* = SKIP
-
 // Only Vulkan and D3D11 support multithreading
 3916 OPENGL : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
 3916 OPENGL : dEQP-EGL.functional.multithread.* = SKIP
@@ -229,3 +226,106 @@
 5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb565_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb565_no_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb888_no_depth_stencil = SKIP
+
+//// Metal
+
+6485 MAC METAL : dEQP-EGL.functional.multithread.pbuffer_single_window = SKIP
+6485 MAC METAL : dEQP-EGL.functional.multithread.pbuffer_single_window_context = SKIP
+6485 MAC METAL : dEQP-EGL.functional.multithread.single_window = SKIP
+6485 MAC METAL : dEQP-EGL.functional.multithread.single_window_context = SKIP
+6485 MAC METAL : dEQP-EGL.functional.multithread.pbuffer = SKIP
+6485 MAC METAL : dEQP-EGL.functional.multithread.pbuffer_context = SKIP
+6485 MAC METAL : dEQP-EGL.functional.multithread.config = SKIP
+6485 MAC METAL : dEQP-EGL.functional.multithread.context = SKIP
+6485 MAC METAL : dEQP-EGL.functional.resize.surface_size.* = FAIL
+6485 MAC METAL : dEQP-EGL.functional.fence_sync.valid.wait* = SKIP
+
+6485 MAC METAL : dEQP-EGL.functional.color_clears.multi_context.gles2.rgba8888_pbuffer = SKIP
+6485 MAC METAL : dEQP-EGL.functional.color_clears.multi_context.gles3.rgba8888_pbuffer = SKIP
+6485 MAC METAL : dEQP-EGL.functional.color_clears.multi_thread.gles2.rgba8888_pbuffer = SKIP
+6485 MAC METAL : dEQP-EGL.functional.color_clears.multi_thread.gles3.rgba8888_pbuffer = SKIP
+6485 MAC METAL : dEQP-EGL.functional.color_clears.single_context.gles2.rgba8888_pbuffer = SKIP
+6485 MAC METAL : dEQP-EGL.functional.color_clears.single_context.gles3.rgba8888_pbuffer = SKIP
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_cubemap_neg_x_rgba = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_cubemap_neg_y_rgba = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_cubemap_neg_z_rgba = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_cubemap_pos_x_rgb = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_cubemap_pos_x_rgba_level0_only = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_cubemap_pos_y_rgba = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_cubemap_pos_z_rgba = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_cubemap_pos_x_rgba = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_renderbuffer_depth_component_16 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_renderbuffer_stencil_index8 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_renderbuffer_rgba4 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_renderbuffer_rgb565 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_renderbuffer_rgb5_a1 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_red = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_rgb = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_rgba = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_rgba_level0_only = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_luminance = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_luminance_alpha = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_rg = FAIL
+
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_cubemap* = FAIL
+
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_renderbuffer_depth16_depth_buffer = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_renderbuffer_rgb565_read_pixels = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_renderbuffer_rgb565_texture = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_renderbuffer_rgb5_a1_read_pixels = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_renderbuffer_rgb5_a1_texture = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_renderbuffer_rgba4_read_pixels = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_renderbuffer_rgba4_texture = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_renderbuffer_stencil_stencil_buffer = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_texture_rgb565_read_pixels = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_texture_rgb565_texture = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_texture_rgb5_a1_read_pixels = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_texture_rgb5_a1_texture = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_texture_rgb8_read_pixels = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_texture_rgb8_texture = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_texture_rgba4_read_pixels = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_texture_rgba4_texture = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_texture_rgba8_read_pixels = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.create.gles2_texture_rgba8_texture = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.renderbuffer_rgb565_tex_subimage_rgb565 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.renderbuffer_rgb565_tex_subimage_rgb8 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.renderbuffer_rgb5_a1_renderbuffer_clear_color = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.renderbuffer_rgb5_a1_tex_subimage_rgb5_a1 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.renderbuffer_rgba4_tex_subimage_rgba4 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.renderbuffer_rgba4_tex_subimage_rgba8 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.renderbuffer_rgb565_renderbuffer_clear_color = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.renderbuffer_depth16_renderbuffer_clear_depth = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.renderbuffer_stencil_renderbuffer_clear_stencil = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgb5_a1_renderbuffer_clear_color = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgb5_a1_tex_subimage_rgb5_a1 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgb8_renderbuffer_clear_color = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgb8_tex_subimage_rgb8 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgba4_tex_subimage_rgba4 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgba4_tex_subimage_rgba8 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgba8_renderbuffer_clear_color = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgba8_tex_subimage_rgba8 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgb565_tex_subimage_rgb8 = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgb565_renderbuffer_clear_color = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.modify.tex_rgb565_tex_subimage_rgb565 = FAIL
+
+6485 MAC METAL : dEQP-EGL.functional.image.render_multiple_contexts.gles2_cubemap* = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.render_multiple_contexts.gles2_renderbuffer* = FAIL
+6485 MAC METAL : dEQP-EGL.functional.image.render_multiple_contexts.gles2_texture* = FAIL
+
+6485 MAC METAL : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_no_stencil = FAIL
+6485 MAC METAL : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_no_depth_stencil = FAIL
+6485 MAC METAL : dEQP-EGL.functional.render.multi_context.gles2.rgba8888_pbuffer = FAIL
+6485 MAC METAL : dEQP-EGL.functional.render.multi_context.gles2_gles3.rgba8888_pbuffer = FAIL
+6485 MAC METAL : dEQP-EGL.functional.render.multi_context.gles3.rgba8888_pbuffer = FAIL
+6485 MAC METAL : dEQP-EGL.functional.render.multi_thread.gles2.rgba8888_pbuffer = FAIL
+6485 MAC METAL : dEQP-EGL.functional.render.multi_thread.gles2_gles3.rgba8888_pbuffer = FAIL
+6485 MAC METAL : dEQP-EGL.functional.render.multi_thread.gles3.rgba8888_pbuffer = FAIL
+6485 MAC METAL : dEQP-EGL.functional.render.single_context.gles2.rgba8888_pbuffer = FAIL
+6485 MAC METAL : dEQP-EGL.functional.render.single_context.gles3.rgba8888_pbuffer = FAIL
+
+6485 MAC METAL : dEQP-EGL.functional.wide_color.pbuffer_8888_colorspace_default = FAIL
+6485 MAC METAL : dEQP-EGL.functional.wide_color.pbuffer_888_colorspace_default = FAIL
+
+// Crashes
+6485 MAC METAL : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
+
