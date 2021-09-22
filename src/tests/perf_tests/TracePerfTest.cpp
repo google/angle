@@ -1078,20 +1078,6 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         }
     }
 
-    if (traceNameIs("township"))
-    {
-        addExtensionPrerequisite("GL_OES_EGL_image_external");
-    }
-
-    if (traceNameIs("mario_kart_tour"))
-    {
-        // Compile failures on Linux Intel Mesa. http://anglebug.com/6423
-        if (IsLinux() && IsIntel() && mParams.driver == GLESDriverType::SystemEGL)
-        {
-            mSkipTest = true;
-        }
-    }
-
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
     ASSERT(mParams.eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE ||
            gEnableAllTraceTests);
