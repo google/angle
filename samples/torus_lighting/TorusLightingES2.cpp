@@ -13,6 +13,8 @@
 #include "util/Matrix.h"
 #include "util/shader_utils.h"
 
+const float kDegreesPerSecond = 90.0f;
+
 class GLES2TorusLightingSample : public SampleApplication
 {
   public:
@@ -61,35 +63,8 @@ void main() {
 
         GenerateTorus(&mVertexBuffer, &mIndexBuffer, &mIndexCount);
 
-        return true;
-    }
-
-    void destroy() override
-    {
-        glDeleteProgram(mProgram);
-        glDeleteBuffers(1, &mVertexBuffer);
-        glDeleteBuffers(1, &mIndexBuffer);
-    }
-
-    void draw() override
-    {
         glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         glUseProgram(mProgram);
-
-        float ratio = (float)getWindow()->getWidth() / (float)getWindow()->getHeight();
-        Matrix4 perspectiveMatrix = Matrix4::frustum(-ratio, ratio, -1, 1, 1.0f, 20.0f);
-
-        Matrix4 modelMatrix = Matrix4::translate(angle::Vector3(0, 0, -5)) *
-                              Matrix4::rotate(mAngle, angle::Vector3(0.0f, 1.0f, 0.0f)) *
-                              Matrix4::rotate(mAngle * 0.25f, angle::Vector3(1.0f, 0.0f, 0.0f));
-
-        Matrix4 mvpMatrix = perspectiveMatrix * modelMatrix;
-
-        glUniformMatrix4fv(mMVMatrixLoc, 1, GL_FALSE, modelMatrix.data);
-        glUniformMatrix4fv(mMVPMatrixLoc, 1, GL_FALSE, mvpMatrix.data);
-
         glEnableVertexAttribArray(mPositionLoc);
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         glVertexAttribPointer(mPositionLoc, 3, GL_FLOAT, false, 6 * sizeof(GLfloat), nullptr);
@@ -99,27 +74,63 @@ void main() {
         glEnableVertexAttribArray(mNormalLoc);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-        glDrawElements(GL_TRIANGLES, mIndexCount, GL_UNSIGNED_SHORT, 0);
+
+        float ratio = static_cast<float>(getWindow()->getWidth()) /
+                      static_cast<float>(getWindow()->getHeight());
+        mPerspectiveMatrix = Matrix4::frustum(-ratio, ratio, -1, 1, 1.0f, 20.0f);
+        mTranslationMatrix = Matrix4::translate(angle::Vector3(0, 0, -5));
+
+        return true;
+    }
+
+    void destroy() override
+    {
+        glDisableVertexAttribArray(mPositionLoc);
+        glDisableVertexAttribArray(mNormalLoc);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glDeleteProgram(mProgram);
+        glDeleteBuffers(1, &mVertexBuffer);
+        glDeleteBuffers(1, &mIndexBuffer);
+    }
 
-        mAngle++;
+    void step(float dt, double totalTime) override { mAngle += kDegreesPerSecond * dt; }
+
+    void draw() override
+    {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        Matrix4 modelMatrix = mTranslationMatrix * Matrix4::rotate(mAngle, mYUnitVec) *
+                              Matrix4::rotate(mAngle * 0.25f, mXUnitVec);
+
+        Matrix4 mvpMatrix = mPerspectiveMatrix * modelMatrix;
+
+        glUniformMatrix4fv(mMVMatrixLoc, 1, GL_FALSE, modelMatrix.data);
+        glUniformMatrix4fv(mMVPMatrixLoc, 1, GL_FALSE, mvpMatrix.data);
+
+        glDrawElements(GL_TRIANGLES, mIndexCount, GL_UNSIGNED_SHORT, 0);
     }
 
   private:
-    GLuint mProgram;
+    GLuint mProgram = 0;
 
-    GLint mPositionLoc;
-    GLint mNormalLoc;
+    GLint mPositionLoc = 0;
+    GLint mNormalLoc   = 0;
 
-    GLuint mMVPMatrixLoc;
-    GLuint mMVMatrixLoc;
+    GLuint mMVPMatrixLoc = 0;
+    GLuint mMVMatrixLoc  = 0;
 
-    GLuint mVertexBuffer;
-    GLuint mIndexBuffer;
-    GLsizei mIndexCount;
+    GLuint mVertexBuffer = 0;
+    GLuint mIndexBuffer  = 0;
+    GLsizei mIndexCount  = 0;
 
     float mAngle = 0;
+
+    Matrix4 mPerspectiveMatrix;
+    Matrix4 mTranslationMatrix;
+
+    const angle::Vector3 mYUnitVec{0.0f, 1.0f, 0.0f};
+    const angle::Vector3 mXUnitVec{1.0f, 0.0f, 0.0f};
 };
 
 int main(int argc, char **argv)
