@@ -1182,15 +1182,6 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
-    if (!ReduceInterfaceBlocks(*this, *root, idGen, &getSymbolTable()))
-    {
-        return false;
-    }
-
-    if (!SeparateCompoundStructDeclarations(*this, idGen, *root, &getSymbolTable()))
-    {
-        return false;
-    }
     // This is the largest size required to pass all the tests in
     // (dEQP-GLES3.functional.shaders.large_constant_arrays)
     // This value could in principle be smaller.
@@ -1207,6 +1198,42 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
     }
 
     if (!ConvertUnsupportedConstructorsToFunctionCalls(*this, *root))
+    {
+        return false;
+    }
+
+    if (!SeparateCompoundExpressions(*this, symbolEnv, idGen, *root))
+    {
+        return false;
+    }
+
+    if ((compileOptions & SH_REWRITE_ROW_MAJOR_MATRICES) != 0 && getShaderVersion() >= 300)
+    {
+        // "Make sure every uniform buffer variable has a name.  The following transformation
+        // relies on this." This pass was removed in e196bc85ac2dda0e9f6664cfc2eca0029e33d2d1,
+        // but currently finding it still necessary for MSL.
+        if (!NameNamelessUniformBuffers(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
+        // Note: RewriteRowMajorMatrices can create temporaries moved above
+        // the statement they are used in. As such it must come after
+        // SeparateCompoundExpressions since it is not aware of short circuits
+        // and side effects.
+        if (!RewriteRowMajorMatrices(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
+    }
+
+    // Note: ReduceInterfaceBlocks removes row_major matrix layout specifiers
+    // so it must come after RewriteRowMajorMatrices.
+    if (!ReduceInterfaceBlocks(*this, *root, idGen, &getSymbolTable()))
+    {
+        return false;
+    }
+
+    if (!SeparateCompoundStructDeclarations(*this, idGen, *root, &getSymbolTable()))
     {
         return false;
     }
@@ -1228,14 +1255,11 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
     }
     if (getShaderType() == GL_VERTEX_SHADER)
     {
+        // This has to happen after RewritePipelines.
         if (!IntroduceVertexAndInstanceIndex(*this, *root))
         {
             return false;
         }
-    }
-    if (!SeparateCompoundExpressions(*this, symbolEnv, idGen, *root))
-    {
-        return false;
     }
 
     if (!RewriteCaseDeclarations(*this, *root))
@@ -1287,24 +1311,6 @@ bool TranslatorMetalDirect::translate(TIntermBlock *root,
     mValidateASTOptions.validatePrecision = false;
 
     TInfoSinkBase &sink = getInfoSink().obj;
-
-    if ((compileOptions & SH_REWRITE_ROW_MAJOR_MATRICES) != 0 && getShaderVersion() >= 300)
-    {
-        // "Make sure every uniform buffer variable has a name.  The following transformation relies
-        // on this." This pass was removed in e196bc85ac2dda0e9f6664cfc2eca0029e33d2d1, but
-        // currently finding it still necessary for MSL.
-        // TODO(jcunningham): Look into removing the NameNamelessUniformBuffers and fixing the root
-        // cause in RewriteRowMajorMatrices
-        if (!NameNamelessUniformBuffers(this, root, &getSymbolTable()))
-        {
-            return false;
-        }
-        if (!RewriteRowMajorMatrices(this, root, &getSymbolTable()))
-        {
-            return false;
-        }
-    }
-
     SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
     DriverUniformExtended driverUniforms(DriverUniformMode::Structure);
     if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst, &driverUniforms))

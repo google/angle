@@ -9452,6 +9452,213 @@ void main()
 }
 
 // Test that array UBOs are transformed correctly.
+TEST_P(GLSLTest_ES3, RowMajorMatrix_ReadMat4Test)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 outColor;
+
+layout(std140, row_major) uniform Ubo
+{
+    mat4 m1;
+};
+
+void main()
+{
+    outColor = m1[3] / 255.0;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr size_t kMatrixCount                                     = 1;
+    constexpr std::pair<uint32_t, uint32_t> kMatrixDims[kMatrixCount] = {
+        {4, 4},
+    };
+    constexpr bool kMatrixIsColMajor[kMatrixCount] = {
+        false,
+    };
+
+    float data[kMatrixCount * 4 * 4] = {};
+
+    const uint32_t size =
+        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+
+    GLBuffer ubos;
+
+    InitBuffer(program, "Ubo", ubos, 0, data, size, true);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_NEAR(0, 0, 12, 13, 14, 15, 0);
+}
+
+// Test that array UBOs are transformed correctly.
+TEST_P(GLSLTest_ES3, RowMajorMatrix_ReadMat2x3Test)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 outColor;
+
+layout(std140, row_major) uniform Ubo
+{
+    mat2x3 m1;
+};
+
+void main()
+{
+    outColor = vec4(m1[1], 0) / 255.0;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr size_t kMatrixCount                                     = 1;
+    constexpr std::pair<uint32_t, uint32_t> kMatrixDims[kMatrixCount] = {
+        {2, 3},
+    };
+    constexpr bool kMatrixIsColMajor[kMatrixCount] = {
+        false,
+    };
+
+    float data[kMatrixCount * 3 * 4] = {};
+
+    const uint32_t size =
+        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+
+    GLBuffer ubos;
+
+    InitBuffer(program, "Ubo", ubos, 0, data, size, true);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_NEAR(0, 0, 4, 5, 6, 0, 0);
+}
+
+TEST_P(GLSLTest_ES3, RowMajorMatrix_ReadMat3x2Test)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 outColor;
+
+layout(std140, row_major) uniform Ubo
+{
+    mat3x2 m1;
+};
+
+void main()
+{
+    outColor = vec4(m1[2], 0, 0) / 255.0;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr size_t kMatrixCount                                     = 1;
+    constexpr std::pair<uint32_t, uint32_t> kMatrixDims[kMatrixCount] = {
+        {3, 2},
+    };
+    constexpr bool kMatrixIsColMajor[kMatrixCount] = {
+        false,
+    };
+
+    float data[kMatrixCount * 2 * 4] = {};
+
+    const uint32_t size =
+        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+
+    GLBuffer ubos;
+
+    InitBuffer(program, "Ubo", ubos, 0, data, size, true);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_NEAR(0, 0, 8, 9, 0, 0, 0);
+}
+
+TEST_P(GLSLTest_ES3, RowMajorMatrix_NestedExpression)
+{
+    // Many OpenGL drivers seem to fail this
+    ANGLE_SKIP_TEST_IF((IsLinux() || IsOSX()) && IsOpenGL());
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+
+uniform Ubo {
+  layout(row_major) mat4 u_mat[3];
+  layout(row_major) mat4 u_ndx[3];
+} stuff;
+
+precision highp float;
+out vec4 outColor;
+
+void main() {
+  outColor = stuff.u_mat[int(stuff.u_ndx[1][1][3])][2] / 255.0;
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    EXPECT_GL_NO_ERROR();
+
+    typedef float vec4[4];
+    typedef vec4 mat4[4];
+
+    constexpr size_t kMatrixCount = 6;
+    mat4 data[]                   = {
+        {
+            {0, 1, 2, 3},      //
+            {4, 5, 6, 7},      //
+            {8, 9, 10, 11},    //
+            {12, 13, 14, 15},  //
+        },
+        {
+            //     +-- we should be looking up this column
+            //     V
+            {0, 4, 8, 12},   //
+            {1, 5, 9, 13},   //
+            {2, 6, 10, 14},  //
+            {3, 7, 11, 15},  //
+        },
+        {
+            {0, 2, 4, 6},      //
+            {8, 10, 12, 14},   //
+            {16, 18, 20, 22},  //
+            {24, 26, 28, 30},  //
+        },
+        {
+            {0, 0, 0, 0},  //
+            {0, 0, 0, 0},  //
+            {0, 0, 0, 0},  //
+            {0, 0, 0, 0},  //
+        },
+        {
+            {0, 0, 0, 0},  //
+            {0, 0, 0, 2},  //
+            {0, 0, 0, 0},  //
+            {0, 1, 0, 0},
+            //  ^
+            //  +-- we should be using this element
+        },
+        {
+            {0, 0, 0, 0},  //
+            {0, 0, 0, 0},  //
+            {0, 0, 0, 0},  //
+            {0, 0, 0, 0},  //
+        },
+    };
+
+    GLBuffer ubos;
+    InitBuffer(program, "Ubo", ubos, 0, data, kMatrixCount, true);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_NEAR(0, 0, 8, 9, 10, 11, 0);
+}
+
+// Test that array UBOs are transformed correctly.
 TEST_P(GLSLTest_ES3, MixedRowAndColumnMajorMatrices_ArrayBufferDeclaration)
 {
     // Fails to compile the shader on Android: http://anglebug.com/3839
@@ -9666,6 +9873,118 @@ void main()
         result = false;
     }
 
+    outColor = result ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr size_t kMatrixCount                                     = 3;
+    constexpr std::pair<uint32_t, uint32_t> kMatrixDims[kMatrixCount] = {
+        {4, 4},
+        {4, 4},
+        {4, 4},
+    };
+    constexpr bool kMatrixIsColMajor[kMatrixCount] = {true, false, false};
+
+    float data[kMatrixCount * 4 * 4] = {};
+
+    const uint32_t size =
+        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+
+    GLBuffer ubo;
+    InitBuffer(program, "Ubo", ubo, 0, data, size, true);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+TEST_P(GLSLTest_ES3, MixedRowAndColumnMajorMatrices_ReadSideEffectOrderSurroundedByLoop)
+{
+    // http://anglebug.com/3837
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsOpenGL());
+
+    // IntermTraverser::insertStatementsInParentBlock that's used to move side effects does not
+    // respect the order of evaluation of logical expressions.  http://anglebug.com/3829.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 outColor;
+
+layout(std140, column_major) uniform Ubo
+{
+    mat4 m1;
+    layout(row_major) mat4 m2[2];
+} ubo;
+
+void main()
+{
+    bool result = false;
+
+    for(int x = 0; x < 1; ++x)
+    {
+        if (x == 0 && ubo.m2[x = 1][1][1] == 5.0) {
+          result = true;
+        }
+    }
+    outColor = result ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr size_t kMatrixCount                                     = 3;
+    constexpr std::pair<uint32_t, uint32_t> kMatrixDims[kMatrixCount] = {
+        {4, 4},
+        {4, 4},
+        {4, 4},
+    };
+    constexpr bool kMatrixIsColMajor[kMatrixCount] = {true, false, false};
+
+    float data[kMatrixCount * 4 * 4] = {};
+
+    const uint32_t size =
+        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+
+    GLBuffer ubo;
+    InitBuffer(program, "Ubo", ubo, 0, data, size, true);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+TEST_P(GLSLTest_ES3, MixedRowAndColumnMajorMatrices_ReadSideEffectOrderInALoop)
+{
+    // http://anglebug.com/3837
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsOpenGL());
+
+    // IntermTraverser::insertStatementsInParentBlock that's used to move side effects does not
+    // respect the order of evaluation of logical expressions.  http://anglebug.com/3829.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 outColor;
+
+layout(std140, column_major) uniform Ubo
+{
+    mat4 m1;
+    layout(row_major) mat4 m2[2];
+} ubo;
+
+void main()
+{
+    bool result = false;
+
+    for(int x = 0; x == 0 && ubo.m2[x = 1][1][1] == 5.0;)
+    {
+        result = true;
+    }
     outColor = result ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
 })";
 
