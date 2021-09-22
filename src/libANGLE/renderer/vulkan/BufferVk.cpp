@@ -879,12 +879,32 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
     bool updateRegionBeforeSubData = mHasValidData && (offset > 0);
     bool updateRegionAfterSubData  = mHasValidData && (offsetAfterSubdata < bufferSize);
 
-    // It's possible for acquireBufferHelper() to garbage collect the original (src) buffer before
-    // copyFromBuffer() has a chance to retain it, so retain it now. This may end up
-    // double-retaining the buffer, which is a necessary side-effect to prevent a use-after-free.
+    uint8_t *srcMapPtrBeforeSubData = nullptr;
+    uint8_t *srcMapPtrAfterSubData  = nullptr;
     if (updateRegionBeforeSubData || updateRegionAfterSubData)
     {
+        // It's possible for acquireBufferHelper() to garbage collect the original (src) buffer
+        // before copyFromBuffer() has a chance to retain it, so retain it now. This may end up
+        // double-retaining the buffer, which is a necessary side-effect to prevent a
+        // use-after-free.
         src->retainReadOnly(&contextVk->getResourceUseList());
+
+        RendererVk *renderer = contextVk->getRenderer();
+        // If the buffer is host visible and the GPU is done writing to, we use the CPU to do the
+        // copy. We need to save the source buffer pointer before we acquire a new buffer.
+        if (src->isHostVisible() && renderer->isBusy() &&
+            (bufferSize - updateSize) <
+                renderer->getMaxCopyBytesUsingCPUWhenPreservingBufferData() &&
+            !src->isCurrentlyInUseForWrite(contextVk->getLastCompletedQueueSerial()))
+        {
+            uint8_t *mapPointer = nullptr;
+            // src buffer will be recycled (or released and unmapped) by acquireBufferHelper
+            ANGLE_TRY(
+                src->mapWithOffset(contextVk, &mapPointer, static_cast<size_t>(mBufferOffset)));
+            ASSERT(mapPointer);
+            srcMapPtrBeforeSubData = mapPointer + mBufferOffset;
+            srcMapPtrAfterSubData  = mapPointer + mBufferOffset + offsetAfterSubdata;
+        }
     }
 
     ANGLE_TRY(acquireBufferHelper(contextVk, bufferSize, updateType));
@@ -895,12 +915,30 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
 
     if (updateRegionBeforeSubData)
     {
-        copyRegions.push_back({0, mBufferOffset, offset});
+        if (srcMapPtrBeforeSubData)
+        {
+            ASSERT(mBuffer->isHostVisible());
+            ANGLE_TRY(directUpdate(contextVk, srcMapPtrBeforeSubData, offset, 0));
+        }
+        else
+        {
+            copyRegions.push_back({0, mBufferOffset, offset});
+        }
     }
+
     if (updateRegionAfterSubData)
     {
-        copyRegions.push_back({offsetAfterSubdata, mBufferOffset + offsetAfterSubdata,
-                               (bufferSize - offsetAfterSubdata)});
+        size_t copySize = bufferSize - offsetAfterSubdata;
+        if (srcMapPtrAfterSubData)
+        {
+            ASSERT(mBuffer->isHostVisible());
+            ANGLE_TRY(directUpdate(contextVk, srcMapPtrAfterSubData, copySize, offsetAfterSubdata));
+        }
+        else
+        {
+            copyRegions.push_back(
+                {offsetAfterSubdata, mBufferOffset + offsetAfterSubdata, copySize});
+        }
     }
 
     if (!copyRegions.empty())

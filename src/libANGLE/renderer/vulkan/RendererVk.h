@@ -345,6 +345,11 @@ class RendererVk : angle::NonCopyable
         }
     }
 
+    ANGLE_INLINE bool isBusy()
+    {
+        return getLastSubmittedQueueSerial() > getLastCompletedQueueSerial();
+    }
+
     egl::Display *getDisplay() const { return mDisplay; }
 
     VkResult getLastPresentResult(VkSwapchainKHR swapchain)
@@ -437,6 +442,11 @@ class RendererVk : angle::NonCopyable
                                                             uint64_t format,
                                                             uint32_t *descriptorCountOut);
 
+    VkDeviceSize getMaxCopyBytesUsingCPUWhenPreservingBufferData() const
+    {
+        return mMaxCopyBytesUsingCPUWhenPreservingBufferData;
+    }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -513,6 +523,7 @@ class RendererVk : angle::NonCopyable
     uint32_t mDefaultUniformBufferSize;
     VkDevice mDevice;
     AtomicSerialFactory mShaderSerialFactory;
+    VkDeviceSize mMaxCopyBytesUsingCPUWhenPreservingBufferData;
 
     bool mDeviceLost;
 
