@@ -251,6 +251,10 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
       "$angle_root:angle_image_util",
     ]
 
+    if (angle_has_rapidjson) {
+      deps += [ "$angle_root:angle_json_serializer" ]
+    }
+
     if (is_android) {
       include_dirs += [ "${android_ndk_root}/sysroot/usr/includes" ]
     }

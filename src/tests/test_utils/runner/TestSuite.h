@@ -139,7 +139,8 @@ class TestSuite
     static TestSuite *GetInstance() { return mInstance; }
 
     // Returns the path to the artifact in the output directory.
-    std::string addTestArtifact(const std::string &artifactName);
+    bool hasTestArtifactsDirectory() const;
+    std::string reserveTestArtifactPath(const std::string &artifactName);
 
     int getShardIndex() const { return mShardIndex; }
     int getBatchId() const { return mBatchId; }

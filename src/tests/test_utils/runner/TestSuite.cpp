@@ -48,6 +48,7 @@ constexpr char kTestTimeoutArg[]       = "--test-timeout=";
 constexpr char kDisableCrashHandler[]  = "--disable-crash-handler";
 constexpr char kIsolatedOutDir[]       = "--isolated-outdir=";
 constexpr char kMaxFailures[]          = "--max-failures=";
+constexpr char kRenderTestOutputDir[]  = "--render-test-output-dir=";
 
 constexpr char kStartedTestString[] = "[ RUN      ] ";
 constexpr char kPassedTestString[]  = "[       OK ] ";
@@ -1309,6 +1310,7 @@ bool TestSuite::parseSingleArg(const char *argument)
             // We need these overloads to work around technical debt in the Android test runner.
             ParseStringArg("--isolated-script-test-perf-output=", argument, &mHistogramJsonFile) ||
             ParseStringArg("--isolated_script_test_perf_output=", argument, &mHistogramJsonFile) ||
+            ParseStringArg(kRenderTestOutputDir, argument, &mTestArtifactDirectory) ||
             ParseStringArg(kIsolatedOutDir, argument, &mTestArtifactDirectory) ||
             ParseFlag("--bot-mode", argument, &mBotMode) ||
             ParseFlag("--debug-test-groups", argument, &mDebugTestGroups) ||
@@ -1859,7 +1861,12 @@ void TestSuite::addHistogramSample(const std::string &measurement,
     mHistogramWriter.addSample(measurement, story, value, units);
 }
 
-std::string TestSuite::addTestArtifact(const std::string &artifactName)
+bool TestSuite::hasTestArtifactsDirectory() const
+{
+    return !mTestArtifactDirectory.empty();
+}
+
+std::string TestSuite::reserveTestArtifactPath(const std::string &artifactName)
 {
     mTestResults.testArtifactPaths.push_back(artifactName);
 

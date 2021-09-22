@@ -742,6 +742,8 @@
         'android_args': [
           '--shard-timeout=180',
           '-v',
+          # We use this argument to save test artifacts.
+          '--render-test-output-dir=${ISOLATED_OUTDIR}',
         ],
         'android_swarming': {
           'shards': 4,

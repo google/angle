@@ -547,7 +547,8 @@ void dEQPTest<TestModuleIndex>::SetUpTestCase()
     logNameStream << ".qpa";
 
     std::stringstream logArgStream;
-    logArgStream << "--deqp-log-filename=" << testSuite->addTestArtifact(logNameStream.str());
+    logArgStream << "--deqp-log-filename="
+                 << testSuite->reserveTestArtifactPath(logNameStream.str());
 
     std::string logNameString = logArgStream.str();
     argv.push_back(logNameString.c_str());

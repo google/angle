@@ -1,12 +1,26 @@
 {
   "doc/SupportedExtensions.md":
-    "4e06f9a617d379fe869ac6fa515b1bb2",
+    "3a831d3b72baf1089e0e78a19b3e3374",
   "scripts/cl.xml":
     "f923201d4ea3e1130763b19fa7faa7a2",
   "scripts/egl.xml":
     "013c552e6c523abdcf268268ea47e9fe",
   "scripts/egl_angle_ext.xml":
     "5bcc01462b355d933cf3ada15198fb68",
+  "scripts/extension_data/intel_630_linux.json":
+    "ce0daa93e617ce36bffbcace2a56160e",
+  "scripts/extension_data/intel_630_win10.json":
+    "34cf383e82e7ee8f5df22e57a6a3d9e8",
+  "scripts/extension_data/nvidia_p400_linux.json":
+    "664ee9c342f0ff9c2e1f883e79946307",
+  "scripts/extension_data/nvidia_p400_win10.json":
+    "0623157acbc7ba7e8614ef60e399d3be",
+  "scripts/extension_data/pixel_4_android_11.json":
+    "3e57bd9a2368657007719c3cfe18ea7e",
+  "scripts/extension_data/swiftshader_win10.json":
+    "396fde2ceb0c833fe2ce405c9f1bd901",
+  "scripts/extension_data/swiftshader_win10_gles1.json":
+    "368aa3eef8fcfc01ba322ea34ca505e9",
   "scripts/gl.xml":
     "a442a7aeff3a2f0a1fba52ee08089500",
   "scripts/gl_angle_ext.xml":
@@ -16,7 +30,7 @@
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/libANGLE/gen_extensions.py":
-    "09abdc7e386601ea3b259cd30ec08ea0",
+    "50b566e2d23bb28448a33c485d388327",
   "src/libANGLE/gles_extensions_autogen.cpp":
     "039e36b4e6f02839e380b07fc9cb2855",
   "src/libANGLE/gles_extensions_autogen.h":

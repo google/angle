@@ -1007,7 +1007,7 @@ if (angle_has_rapidjson) {
   }
   angle_source_set("angle_json_serializer") {
     public_deps = [
-      ":libANGLE_base",
+      ":angle_common",
       "$angle_root/third_party/rapidjson",
     ]
     sources = [
