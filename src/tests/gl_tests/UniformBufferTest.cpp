@@ -1432,7 +1432,10 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifierOnStruct)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 64, 128, 32), 5);
 }
 
-constexpr char kFragmentShader[] = R"(#version 300 es
+// Regression test for a dirty bit bug in ANGLE. See http://crbug.com/792966
+TEST_P(UniformBufferTest, SimpleBindingChange)
+{
+    constexpr char kFragmentShader[] = R"(#version 300 es
 precision mediump float;
 
 layout (std140) uniform color_ubo
@@ -1446,9 +1449,6 @@ void main()
   fragColor = color;
 })";
 
-// Regression test for a dirty bit bug in ANGLE. See http://crbug.com/792966
-TEST_P(UniformBufferTest, SimpleBindingChange)
-{
     // http://anglebug.com/2287
     ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
 
@@ -1497,6 +1497,20 @@ TEST_P(UniformBufferTest, SimpleBindingChange)
 // Regression test for a dirty bit bug in ANGLE. Same as above but for the indexed bindings.
 TEST_P(UniformBufferTest, SimpleBufferChange)
 {
+    constexpr char kFragmentShader[] = R"(#version 300 es
+precision mediump float;
+
+layout (std140) uniform color_ubo
+{
+  vec4 color;
+};
+
+out vec4 fragColor;
+void main()
+{
+  fragColor = color;
+})";
+
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragmentShader);
 
     glBindAttribLocation(program, 0, essl3_shaders::PositionAttrib());
@@ -1541,6 +1555,20 @@ TEST_P(UniformBufferTest, SimpleBufferChange)
 // update in the State Manager class.
 TEST_P(UniformBufferTest, DependentBufferChange)
 {
+    constexpr char kFragmentShader[] = R"(#version 300 es
+precision mediump float;
+
+layout (std140) uniform color_ubo
+{
+  vec4 color;
+};
+
+out vec4 fragColor;
+void main()
+{
+  fragColor = color;
+})";
+
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragmentShader);
 
     glBindAttribLocation(program, 0, essl3_shaders::PositionAttrib());
@@ -1585,6 +1613,20 @@ TEST_P(UniformBufferTest, DependentBufferChange)
 // regression in http://anglebug.com/3388
 TEST_P(UniformBufferTest, SizeOverMaxBlockSize)
 {
+    constexpr char kFragmentShader[] = R"(#version 300 es
+precision mediump float;
+
+layout (std140) uniform color_ubo
+{
+  vec4 color;
+};
+
+out vec4 fragColor;
+void main()
+{
+  fragColor = color;
+})";
+
     // Test crashes on Windows AMD OpenGL
     ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsOpenGL());
     // http://anglebug.com/5382

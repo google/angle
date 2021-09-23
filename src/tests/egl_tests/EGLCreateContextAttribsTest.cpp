@@ -196,10 +196,10 @@ TEST_P(EGLCreateContextAttribsTest, IMGContextPriorityExtension)
         EXPECT_EQ(context, EGL_NO_CONTEXT);
         ASSERT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
 
-        EGLint contextAttribs[] = {EGL_CONTEXT_MAJOR_VERSION, 2, EGL_CONTEXT_MINOR_VERSION, 0,
-                                   EGL_NONE};
+        EGLint noExtensionContextAttribs[] = {EGL_CONTEXT_MAJOR_VERSION, 2,
+                                              EGL_CONTEXT_MINOR_VERSION, 0, EGL_NONE};
 
-        context = eglCreateContext(mDisplay, config, nullptr, contextAttribs);
+        context = eglCreateContext(mDisplay, config, nullptr, noExtensionContextAttribs);
         EXPECT_NE(context, EGL_NO_CONTEXT);
         ASSERT_EGL_ERROR(EGL_SUCCESS);
 

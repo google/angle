@@ -745,7 +745,6 @@ void RunShouldClearWithSemaphoresTest(bool useMemoryObjectFlags,
                                             vkReleaseSemaphore);
         uint8_t pixels[4];
         VkOffset3D offset = {};
-        VkExtent3D extent = {1, 1, 1};
         helper.readPixels(image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, format, offset, extent,
                           pixels, sizeof(pixels));
 
@@ -983,7 +982,6 @@ void VulkanExternalImageTest::runShouldDrawTest(bool isSwiftshader, bool enableD
 
         uint8_t pixels[4];
         VkOffset3D offset = {};
-        VkExtent3D extent = {1, 1, 1};
         helper.readPixels(image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, format, offset, extent,
                           pixels, sizeof(pixels));
 
@@ -1154,7 +1152,6 @@ void VulkanExternalImageTest::runWaitSemaphoresRetainsContentTest(bool isSwiftsh
 
         uint8_t pixels[4];
         VkOffset3D offset = {};
-        VkExtent3D extent = {1, 1, 1};
         helper.readPixels(image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, format, offset, extent,
                           pixels, sizeof(pixels));
 

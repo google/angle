@@ -359,7 +359,6 @@ TEST(FastIntegerMap, BasicUsage)
 
     for (KeyValuePair entry : entries)
     {
-        std::string str;
         EXPECT_TRUE(testMap.get(entry.first, &str));
         EXPECT_EQ(entry.second, str);
     }

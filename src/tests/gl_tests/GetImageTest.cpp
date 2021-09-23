@@ -171,7 +171,6 @@ TEST_P(GetImageTest, GetTexImage)
     // Verify the extension is enabled.
     ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
 
-    constexpr uint32_t kSmallSize     = 2;
     std::vector<GLColor> expectedData = {GLColor::red, GLColor::blue, GLColor::green,
                                          GLColor::yellow};
 
@@ -422,7 +421,6 @@ TEST_P(GetImageTest, GetImageRGB)
     // Verify the extension is enabled.
     ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
 
-    constexpr uint32_t kSmallSize        = 2;
     std::vector<GLColorRGB> expectedData = {GLColorRGB::red, GLColorRGB::blue, GLColorRGB::green,
                                             GLColorRGB::yellow};
 
@@ -464,8 +462,8 @@ TEST_P(GetImageTestES31, Texture2DArray)
     // Verify the extension is enabled.
     ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
 
-    constexpr GLsizei kSize   = 2;
-    constexpr GLsizei kLayers = 4;
+    constexpr GLsizei kTextureSize = 2;
+    constexpr GLsizei kLayers      = 4;
 
     std::vector<GLColor> expectedPixels = {
         GLColor::red,    GLColor::red,    GLColor::red,    GLColor::red,
@@ -476,7 +474,7 @@ TEST_P(GetImageTestES31, Texture2DArray)
 
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
-    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, kSize, kSize, kLayers, 0, GL_RGBA,
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, kTextureSize, kTextureSize, kLayers, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, expectedPixels.data());
     ASSERT_GL_NO_ERROR();
 
@@ -492,7 +490,7 @@ TEST_P(GetImageTestES31, Texture3D)
     // Verify the extension is enabled.
     ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
 
-    constexpr GLsizei kSize = 2;
+    constexpr GLsizei kTextureSize = 2;
 
     std::vector<GLColor> expectedPixels = {
         GLColor::red,  GLColor::red,  GLColor::green,  GLColor::green,
@@ -501,8 +499,8 @@ TEST_P(GetImageTestES31, Texture3D)
 
     GLTexture tex;
     glBindTexture(GL_TEXTURE_3D, tex);
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, kSize, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 expectedPixels.data());
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, kTextureSize, kTextureSize, kTextureSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, expectedPixels.data());
     ASSERT_GL_NO_ERROR();
 
     std::vector<GLColor> actualPixels(expectedPixels.size(), GLColor::white);
@@ -520,8 +518,8 @@ TEST_P(GetImageTestES31, TextureCubeMapArray)
     // Verify the extension is enabled.
     ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
 
-    constexpr GLsizei kSize   = 1;
-    constexpr GLsizei kLayers = 2;
+    constexpr GLsizei kTextureSize = 1;
+    constexpr GLsizei kLayers      = 2;
 
     std::vector<GLColor> expectedPixels = {
         GLColor::red,  GLColor::green,   GLColor::blue, GLColor::yellow,
@@ -529,12 +527,13 @@ TEST_P(GetImageTestES31, TextureCubeMapArray)
         GLColor::blue, GLColor::yellow,  GLColor::cyan, GLColor::magenta,
     };
 
-    ASSERT_EQ(expectedPixels.size(), static_cast<size_t>(6 * kSize * kSize * kLayers));
+    ASSERT_EQ(expectedPixels.size(),
+              static_cast<size_t>(6 * kTextureSize * kTextureSize * kLayers));
 
     GLTexture tex;
     glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, tex);
-    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, kSize, kSize, kLayers * 6, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, expectedPixels.data());
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, kTextureSize, kTextureSize, kLayers * 6, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, expectedPixels.data());
     ASSERT_GL_NO_ERROR();
 
     std::vector<GLColor> actualPixels(expectedPixels.size(), GLColor::white);
@@ -550,7 +549,6 @@ TEST_P(GetImageTest, InconsistentTexture2D)
     // Verify the extension is enabled.
     ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
 
-    constexpr uint32_t kSmallSize     = 2;
     std::vector<GLColor> expectedData = {GLColor::red, GLColor::blue, GLColor::green,
                                          GLColor::yellow};
 

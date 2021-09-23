@@ -2177,8 +2177,8 @@ void main(),
 {,
     gl_Position = vec4(1.0);,
 })";
-        GLuint program = CompileProgram(invalidVert.c_str(), essl1_shaders::fs::Red());
-        EXPECT_EQ(0u, program);
+        GLuint program_number = CompileProgram(invalidVert.c_str(), essl1_shaders::fs::Red());
+        EXPECT_EQ(0u, program_number);
     }
 }
 

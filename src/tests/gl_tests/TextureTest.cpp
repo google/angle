@@ -7050,15 +7050,16 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 
         char errorInfo[200];
 
-        for (GLuint y = 0; y < height; ++y)
+        for (GLuint row = 0; row < height; ++row)
         {
             GLushort *curPixel = pixelRowStart;
-            for (GLuint x = 0, len = (y == height - 1) ? width : std::min(l, width); x < len; ++x)
+            for (GLuint col = 0, len = (row == height - 1) ? width : std::min(l, width); col < len;
+                 ++col)
             {
                 snprintf(errorInfo, sizeof(errorInfo),
                          "extent: {%u, %u}, coord: (%u, %u), rowLength: %d, alignment: %d, "
                          "skipPixels: %d, skipRows: %d\n",
-                         width, height, x, y, packRowLength, packAlignment, packSkipPixels,
+                         width, height, col, row, packRowLength, packAlignment, packSkipPixels,
                          packSkipRows);
                 EXPECT_EQ(color.R, curPixel[0]) << errorInfo;
                 EXPECT_EQ(color.G, curPixel[1]) << errorInfo;
