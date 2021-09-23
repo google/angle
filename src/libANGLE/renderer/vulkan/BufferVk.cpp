@@ -866,6 +866,14 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
     bool updateRegionBeforeSubData = (offset > 0);
     bool updateRegionAfterSubData  = (offsetAfterSubdata < bufferSize);
 
+    // It's possible for acquireBufferHelper() to garbage collect the original (src) buffer before
+    // copyFromBuffer() has a chance to retain it, so retain it now. This may end up
+    // double-retaining the buffer, which is a necessary side-effect to prevent a use-after-free.
+    if (updateRegionBeforeSubData || updateRegionAfterSubData)
+    {
+        src->retainReadOnly(&contextVk->getResourceUseList());
+    }
+
     ANGLE_TRY(acquireBufferHelper(contextVk, bufferSize, false));
     ANGLE_TRY(updateBuffer(contextVk, data, updateSize, offset));
 
