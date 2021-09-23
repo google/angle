@@ -87,7 +87,7 @@ angle::Result PersistentCommandPool::collect(vk::Context *context,
 {
     // VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT NOT set, The CommandBuffer
     // can still hold the memory resource
-    ANGLE_VK_TRY(context, vkResetCommandBuffer(buffer.getHandle(), 0));
+    ANGLE_VK_TRY(context, buffer.reset());
 
     mFreeBuffers.emplace_back(std::move(buffer));
     return angle::Result::Continue;
