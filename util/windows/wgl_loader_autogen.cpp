@@ -38,6 +38,9 @@ PFNWGLUSEFONTOUTLINESAPROC l__wglUseFontOutlinesA;
 PFNWGLUSEFONTOUTLINESWPROC l__wglUseFontOutlinesW;
 PFNWGLCREATECONTEXTATTRIBSARBPROC l__wglCreateContextAttribsARB;
 PFNWGLGETEXTENSIONSSTRINGARBPROC l__wglGetExtensionsStringARB;
+PFNWGLCHOOSEPIXELFORMATARBPROC l__wglChoosePixelFormatARB;
+PFNWGLGETPIXELFORMATATTRIBFVARBPROC l__wglGetPixelFormatAttribfvARB;
+PFNWGLGETPIXELFORMATATTRIBIVARBPROC l__wglGetPixelFormatAttribivARB;
 PFNWGLGETSWAPINTERVALEXTPROC l__wglGetSwapIntervalEXT;
 PFNWGLSWAPINTERVALEXTPROC l__wglSwapIntervalEXT;
 
@@ -92,6 +95,12 @@ void LoadWGL(LoadProc loadProc)
         reinterpret_cast<PFNWGLCREATECONTEXTATTRIBSARBPROC>(loadProc("wglCreateContextAttribsARB"));
     l__wglGetExtensionsStringARB =
         reinterpret_cast<PFNWGLGETEXTENSIONSSTRINGARBPROC>(loadProc("wglGetExtensionsStringARB"));
+    l__wglChoosePixelFormatARB =
+        reinterpret_cast<PFNWGLCHOOSEPIXELFORMATARBPROC>(loadProc("wglChoosePixelFormatARB"));
+    l__wglGetPixelFormatAttribfvARB = reinterpret_cast<PFNWGLGETPIXELFORMATATTRIBFVARBPROC>(
+        loadProc("wglGetPixelFormatAttribfvARB"));
+    l__wglGetPixelFormatAttribivARB = reinterpret_cast<PFNWGLGETPIXELFORMATATTRIBIVARBPROC>(
+        loadProc("wglGetPixelFormatAttribivARB"));
     l__wglGetSwapIntervalEXT =
         reinterpret_cast<PFNWGLGETSWAPINTERVALEXTPROC>(loadProc("wglGetSwapIntervalEXT"));
     l__wglSwapIntervalEXT =

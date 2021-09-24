@@ -17,6 +17,11 @@
 
 namespace
 {
+constexpr int kColorBits   = 24;
+constexpr int kAlphaBits   = 8;
+constexpr int kDepthBits   = 24;
+constexpr int kStencilBits = 8;
+
 PIXELFORMATDESCRIPTOR GetDefaultPixelFormatDescriptor()
 {
     PIXELFORMATDESCRIPTOR pixelFormatDescriptor = {};
@@ -25,10 +30,10 @@ PIXELFORMATDESCRIPTOR GetDefaultPixelFormatDescriptor()
     pixelFormatDescriptor.dwFlags =
         PFD_DRAW_TO_WINDOW | PFD_GENERIC_ACCELERATED | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
     pixelFormatDescriptor.iPixelType   = PFD_TYPE_RGBA;
-    pixelFormatDescriptor.cColorBits   = 24;
-    pixelFormatDescriptor.cAlphaBits   = 8;
-    pixelFormatDescriptor.cDepthBits   = 24;
-    pixelFormatDescriptor.cStencilBits = 8;
+    pixelFormatDescriptor.cColorBits   = kColorBits;
+    pixelFormatDescriptor.cAlphaBits   = kAlphaBits;
+    pixelFormatDescriptor.cDepthBits   = kDepthBits;
+    pixelFormatDescriptor.cStencilBits = kStencilBits;
     pixelFormatDescriptor.iLayerType   = PFD_MAIN_PLANE;
 
     return pixelFormatDescriptor;
@@ -57,6 +62,56 @@ void DumpLastWindowsError()
 {
     std::cerr << "Last Windows error code: 0x" << std::hex << GetLastError() << std::endl;
 }
+
+// Based on GetDefaultPixelFormatAttributes from wgl_utils.cpp
+std::vector<int> GetPixelFormatAttributes(const ConfigParameters &configParams)
+{
+    std::vector<int> attribs;
+    attribs.push_back(WGL_DRAW_TO_WINDOW_ARB);
+    attribs.push_back(TRUE);
+
+    attribs.push_back(WGL_ACCELERATION_ARB);
+    attribs.push_back(WGL_FULL_ACCELERATION_ARB);
+
+    attribs.push_back(WGL_SUPPORT_OPENGL_ARB);
+    attribs.push_back(TRUE);
+
+    attribs.push_back(WGL_DOUBLE_BUFFER_ARB);
+    attribs.push_back(TRUE);
+
+    attribs.push_back(WGL_PIXEL_TYPE_ARB);
+    attribs.push_back(WGL_TYPE_RGBA_ARB);
+
+    attribs.push_back(WGL_COLOR_BITS_ARB);
+    attribs.push_back(kColorBits);
+
+    attribs.push_back(WGL_ALPHA_BITS_ARB);
+    attribs.push_back(kAlphaBits);
+
+    attribs.push_back(WGL_DEPTH_BITS_ARB);
+    attribs.push_back(kDepthBits);
+
+    attribs.push_back(WGL_STENCIL_BITS_ARB);
+    attribs.push_back(kStencilBits);
+
+    attribs.push_back(WGL_SWAP_METHOD_ARB);
+    attribs.push_back(WGL_SWAP_UNDEFINED_ARB);
+
+    attribs.push_back(WGL_COLORSPACE_EXT);
+    if (configParams.colorSpace == EGL_COLORSPACE_sRGB)
+    {
+        attribs.push_back(WGL_COLORSPACE_SRGB_EXT);
+    }
+    else
+    {
+        attribs.push_back(WGL_COLORSPACE_LINEAR_EXT);
+    }
+
+    attribs.push_back(0);
+
+    return attribs;
+}
+
 }  // namespace
 
 WGLWindow::WGLWindow(int glesMajorVersion, int glesMinorVersion)
@@ -96,7 +151,26 @@ bool WGLWindow::initializeGL(OSWindow *osWindow,
     mDeviceContext                                    = GetDC(mWindow);
     const PIXELFORMATDESCRIPTOR pixelFormatDescriptor = GetDefaultPixelFormatDescriptor();
 
-    int pixelFormat = ChoosePixelFormat(mDeviceContext, &pixelFormatDescriptor);
+    int pixelFormat = 0;
+
+    if (!_wglChoosePixelFormatARB)
+    {
+        std::cout << "Driver does not expose wglChoosePixelFormatARB." << std::endl;
+    }
+    else
+    {
+        std::vector<int> pixelFormatAttribs = GetPixelFormatAttributes(configParams);
+
+        UINT matchingFormats = 0;
+        _wglChoosePixelFormatARB(mDeviceContext, &pixelFormatAttribs[0], nullptr, 1u, &pixelFormat,
+                                 &matchingFormats);
+    }
+
+    if (pixelFormat == 0)
+    {
+        pixelFormat = ChoosePixelFormat(mDeviceContext, &pixelFormatDescriptor);
+    }
+
     if (pixelFormat == 0)
     {
         std::cerr << "Could not find a compatible pixel format." << std::endl;

@@ -6,7 +6,7 @@
   "scripts/egl_angle_ext.xml":
     "5bcc01462b355d933cf3ada15198fb68",
   "scripts/generate_loader.py":
-    "b95f0518351e08bf17240279b2681a6c",
+    "e67f4da64ba7f5cff39ba4e8926a05f8",
   "scripts/gl.xml":
     "a442a7aeff3a2f0a1fba52ee08089500",
   "scripts/gl_angle_ext.xml":
@@ -36,7 +36,7 @@
   "util/gles_loader_autogen.h":
     "062bf269cd1b9a4127c08ca21a3623e9",
   "util/windows/wgl_loader_autogen.cpp":
-    "0e305ff76ce8e855022f92105362fcdb",
+    "158e6937dd7bd2879bb440983afd5a36",
   "util/windows/wgl_loader_autogen.h":
-    "9bc9410ff7fd9fe896bbd85b553faca1"
+    "55c8eaf574db083924b7be5a8a8e5f2e"
 }

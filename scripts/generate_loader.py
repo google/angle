@@ -234,9 +234,8 @@ def gen_trace_gles_and_egl_loaders():
 def gen_util_wgl_loader():
 
     supported_wgl_extensions = [
-        "WGL_ARB_create_context",
-        "WGL_ARB_extensions_string",
-        "WGL_EXT_swap_control",
+        "WGL_ARB_create_context", "WGL_ARB_extensions_string", "WGL_ARB_pixel_format",
+        "WGL_EXT_colorspace", "WGL_EXT_swap_control"
     ]
 
     source = "wgl.xml"
