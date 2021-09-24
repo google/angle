@@ -319,6 +319,13 @@ inline PlatformParameters WithInitShaderVariables(const PlatformParameters &para
     initShaderVariables.eglParameters.forceInitShaderVariables = EGL_TRUE;
     return initShaderVariables;
 }
+
+inline PlatformParameters WithForceVulkanFallbackFormat(const PlatformParameters &paramsIn)
+{
+    PlatformParameters paramsOut                      = paramsIn;
+    paramsOut.eglParameters.forceVulkanFallbackFormat = EGL_TRUE;
+    return paramsOut;
+}
 }  // namespace angle
 
 #endif  // ANGLE_TEST_CONFIGS_H_

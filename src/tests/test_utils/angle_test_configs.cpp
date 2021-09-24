@@ -298,6 +298,11 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_InitShaderVars";
     }
 
+    if (pp.eglParameters.forceVulkanFallbackFormat == EGL_TRUE)
+    {
+        stream << "_FallbackFormat";
+    }
+
     return stream;
 }
 

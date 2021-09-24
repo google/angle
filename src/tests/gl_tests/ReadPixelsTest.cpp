@@ -658,6 +658,57 @@ TEST_P(ReadPixelsPBODrawTest, DrawWithPBO)
     EXPECT_EQ(GLColor(1, 2, 3, 4), color);
 }
 
+// Test that we can correctly update a buffer bound to the vertex stage with PBO.
+TEST_P(ReadPixelsPBODrawTest, UpdateVertexArrayWithPixelPack)
+{
+    glUseProgram(mProgram);
+    glViewport(0, 0, 1, 1);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+    ASSERT_GL_NO_ERROR();
+
+    // First draw with pre-defined data.
+    std::array<float, 2> positionData = {0.5f, 0.5f};
+
+    glBindBuffer(GL_ARRAY_BUFFER, mPositionVBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, positionData.size() * sizeof(positionData[0]),
+                    positionData.data());
+    ASSERT_GL_NO_ERROR();
+
+    GLint positionLocation = glGetAttribLocation(mProgram, "aPosition");
+    EXPECT_NE(-1, positionLocation);
+
+    GLint testLocation = glGetAttribLocation(mProgram, "aTest");
+    EXPECT_NE(-1, testLocation);
+
+    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+    ASSERT_GL_NO_ERROR();
+
+    glBindBuffer(GL_ARRAY_BUFFER, mPBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLColor), &GLColor::red);
+    glVertexAttribPointer(testLocation, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(testLocation);
+    ASSERT_GL_NO_ERROR();
+
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Update the buffer bound to the VAO with a PBO.
+    glBindTexture(GL_TEXTURE_2D, mTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+    ASSERT_GL_NO_ERROR();
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw again and verify the VAO has the updated data.
+    glDrawArrays(GL_POINTS, 0, 1);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 class ReadPixelsMultisampleTest : public ReadPixelsTest
 {
   protected:
@@ -1005,7 +1056,7 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ReadPixelsPBOTest);
 ANGLE_INSTANTIATE_TEST_ES3(ReadPixelsPBOTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ReadPixelsPBODrawTest);
-ANGLE_INSTANTIATE_TEST_ES3(ReadPixelsPBODrawTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(ReadPixelsPBODrawTest, WithForceVulkanFallbackFormat(ES3_VULKAN()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ReadPixelsMultisampleTest);
 ANGLE_INSTANTIATE_TEST_ES3(ReadPixelsMultisampleTest);

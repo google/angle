@@ -66,7 +66,7 @@ struct EGLPlatformParameters
                         hasExplicitMemBarrierFeatureMtl, hasCheapRenderPassFeatureMtl,
                         forceBufferGPUStorageFeatureMtl, supportsVulkanViewportFlip, emulatedVAOs,
                         directSPIRVGeneration, captureLimits, forceRobustResourceInit,
-                        directMetalGeneration, forceInitShaderVariables);
+                        directMetalGeneration, forceInitShaderVariables, forceVulkanFallbackFormat);
     }
 
     EGLint renderer                               = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
@@ -94,6 +94,7 @@ struct EGLPlatformParameters
     EGLint forceRobustResourceInit                = EGL_DONT_CARE;
     EGLint directMetalGeneration                  = EGL_DONT_CARE;
     EGLint forceInitShaderVariables               = EGL_DONT_CARE;
+    EGLint forceVulkanFallbackFormat              = EGL_DONT_CARE;
 
     angle::PlatformMethods *platformMethods = nullptr;
 };
