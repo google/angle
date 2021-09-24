@@ -41,6 +41,12 @@ struct ConversionBuffer
     vk::DynamicBuffer data;
 };
 
+enum BufferNotificationPolicy
+{
+    OnStorageChange,
+    DoNotNotify,
+};
+
 class BufferVk : public BufferImpl
 {
   public:
@@ -161,7 +167,8 @@ class BufferVk : public BufferImpl
     angle::Result acquireAndUpdate(ContextVk *contextVk,
                                    const uint8_t *data,
                                    size_t updateSize,
-                                   size_t offset);
+                                   size_t offset,
+                                   BufferNotificationPolicy notificationPolicy);
     angle::Result setDataWithMemoryType(const gl::Context *context,
                                         gl::BufferBinding target,
                                         const void *data,
@@ -179,13 +186,14 @@ class BufferVk : public BufferImpl
     angle::Result setDataImpl(ContextVk *contextVk,
                               const uint8_t *data,
                               size_t size,
-                              size_t offset);
+                              size_t offset,
+                              BufferNotificationPolicy notificationPolicy);
     void release(ContextVk *context);
     void markConversionBuffersDirty();
 
     angle::Result acquireBufferHelper(ContextVk *contextVk,
                                       size_t sizeInBytes,
-                                      bool notifyFrontEnd);
+                                      BufferNotificationPolicy notificationPolicy);
 
     struct VertexConversionBuffer : public ConversionBuffer
     {

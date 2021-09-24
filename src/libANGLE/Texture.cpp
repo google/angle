@@ -2244,14 +2244,7 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
     switch (message)
     {
         case angle::SubjectMessage::ContentsChanged:
-            if (index == kBufferSubjectIndex)
-            {
-                // If the contents of the buffer attached to a texture buffer has changed, mark the
-                // texture dirty.
-                signalDirtyState(DIRTY_BIT_IMPLEMENTATION);
-                onStateChange(angle::SubjectMessage::ContentsChanged);
-            }
-            else
+            if (index != kBufferSubjectIndex)
             {
                 // ContentsChange originates from TextureStorage11::resolveAndReleaseTexture
                 // which resolves the underlying multisampled texture if it exists and so
@@ -2314,8 +2307,8 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
             break;
         case angle::SubjectMessage::InternalMemoryAllocationChanged:
             // Need to mark the texture dirty to give the back end a chance to handle the new
-            // buffer. For example, the Vulan back end needs to create a new buffer view that points
-            // to the newly allocated buffer and update the texture descriptor set.
+            // buffer. For example, the Vulkan back end needs to create a new buffer view that
+            // points to the newly allocated buffer and update the texture descriptor set.
             signalDirtyState(DIRTY_BIT_IMPLEMENTATION);
             break;
         default:

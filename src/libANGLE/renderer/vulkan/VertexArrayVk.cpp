@@ -657,7 +657,7 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                     // If conversion happens, the destination buffer stride may be changed,
                     // therefore an attribute change needs to be called. Note that it may trigger
                     // unnecessary vulkan PSO update when the destination buffer stride does not
-                    // change, but for simplity just make it conservative
+                    // change, but for simplicity just make it conservative
                     bufferOnly = false;
                 }
 
