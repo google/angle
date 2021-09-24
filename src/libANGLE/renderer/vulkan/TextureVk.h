@@ -462,10 +462,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // Queues a flush of any modified image attributes. The image will be reallocated with its new
     // attributes at the next opportunity.
     angle::Result respecifyImageStorage(ContextVk *contextVk);
-    angle::Result respecifyImageStorageAndLevels(ContextVk *contextVk,
-                                                 gl::LevelIndex previousFirstAllocateLevelGL,
-                                                 gl::LevelIndex baseLevelGL,
-                                                 gl::LevelIndex maxLevelGL);
 
     // Update base and max levels, and re-create image if needed.
     angle::Result updateBaseMaxLevels(ContextVk *contextVk,

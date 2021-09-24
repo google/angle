@@ -2003,8 +2003,7 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
                               layerCount);
     }
 
-    return respecifyImageStorageAndLevels(contextVk, mImage->getFirstAllocatedLevel(), baseLevel,
-                                          maxLevel);
+    return respecifyImageStorage(contextVk);
 }
 
 angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
@@ -2179,16 +2178,9 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk,
 
 angle::Result TextureVk::respecifyImageStorage(ContextVk *contextVk)
 {
-    return respecifyImageStorageAndLevels(contextVk, mImage->getFirstAllocatedLevel(),
-                                          gl::LevelIndex(mState.getEffectiveBaseLevel()),
-                                          gl::LevelIndex(mState.getEffectiveMaxLevel()));
-}
+    gl::LevelIndex previousFirstAllocateLevel = mImage->getFirstAllocatedLevel();
+    gl::LevelIndex baseLevel                  = gl::LevelIndex(mState.getEffectiveBaseLevel());
 
-angle::Result TextureVk::respecifyImageStorageAndLevels(ContextVk *contextVk,
-                                                        gl::LevelIndex previousFirstAllocateLevel,
-                                                        gl::LevelIndex baseLevel,
-                                                        gl::LevelIndex maxLevel)
-{
     if (!mImage->valid())
     {
         ASSERT((mImage->getFirstAllocatedLevel() == gl::LevelIndex(0)) ||
