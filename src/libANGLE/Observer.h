@@ -98,6 +98,8 @@ class ObserverBindingBase
     SubjectIndex mIndex;
 };
 
+constexpr size_t kMaxFixedObservers = 8;
+
 // Maintains a list of observer bindings. Sends update messages to the observer.
 class Subject : NonCopyable
 {
@@ -124,7 +126,6 @@ class Subject : NonCopyable
   private:
     // Keep a short list of observers so we can allocate/free them quickly. But since we support
     // unlimited bindings, have a spill-over list of that uses dynamic allocation.
-    static constexpr size_t kMaxFixedObservers = 8;
     angle::FastVector<ObserverBindingBase *, kMaxFixedObservers> mObservers;
 };
 

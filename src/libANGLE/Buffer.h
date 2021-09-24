@@ -69,6 +69,18 @@ class BufferState final : angle::NonCopyable
     GLboolean mExternal;
 };
 
+// Some Vertex Array Objects track buffer data updates.
+struct ContentsObserver
+{
+    VertexArray *vertexArray = nullptr;
+    uint32_t bufferIndex     = 0;
+};
+
+ANGLE_INLINE bool operator==(const ContentsObserver &lhs, const ContentsObserver &rhs)
+{
+    return lhs.vertexArray == rhs.vertexArray && lhs.bufferIndex == rhs.bufferIndex;
+}
+
 class Buffer final : public RefCountObject<BufferID>,
                      public LabeledObject,
                      public angle::ObserverInterface,
@@ -170,6 +182,9 @@ class Buffer final : public RefCountObject<BufferID>,
     // angle::ObserverInterface implementation.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
+    void addContentsObserver(VertexArray *vertexArray, uint32_t bufferIndex);
+    void removeContentsObserver(VertexArray *vertexArray, uint32_t bufferIndex);
+
   private:
     angle::Result bufferDataImpl(Context *context,
                                  BufferBinding target,
@@ -183,10 +198,13 @@ class Buffer final : public RefCountObject<BufferID>,
                                          GLsizeiptr size,
                                          GLbitfield flags);
 
+    void onContentsChange();
+
     BufferState mState;
     rx::BufferImpl *mImpl;
     angle::ObserverBinding mImplObserver;
 
+    angle::FastVector<ContentsObserver, angle::kMaxFixedObservers> mContentsObservers;
     mutable IndexRangeCache mIndexRangeCache;
 };
 

@@ -214,7 +214,7 @@ angle::Result Buffer::bufferSubData(const Context *context,
                                      static_cast<unsigned int>(size));
 
     // Notify when data changes.
-    onStateChange(angle::SubjectMessage::ContentsChanged);
+    onContentsChange();
 
     return angle::Result::Continue;
 }
@@ -232,7 +232,7 @@ angle::Result Buffer::copyBufferSubData(const Context *context,
                                      static_cast<unsigned int>(size));
 
     // Notify when data changes.
-    onStateChange(angle::SubjectMessage::ContentsChanged);
+    onContentsChange();
 
     return angle::Result::Continue;
 }
@@ -318,7 +318,7 @@ void Buffer::onDataChanged()
     mIndexRangeCache.clear();
 
     // Notify when data changes.
-    onStateChange(angle::SubjectMessage::ContentsChanged);
+    onContentsChange();
 
     mImpl->onDataChanged();
 }
@@ -386,5 +386,23 @@ void Buffer::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessa
     ASSERT(message == angle::SubjectMessage::SubjectChanged ||
            message == angle::SubjectMessage::InternalMemoryAllocationChanged);
     onStateChange(message);
+}
+
+void Buffer::addContentsObserver(VertexArray *vertexArray, uint32_t bufferIndex)
+{
+    mContentsObservers.push_back({vertexArray, bufferIndex});
+}
+
+void Buffer::removeContentsObserver(VertexArray *vertexArray, uint32_t bufferIndex)
+{
+    mContentsObservers.remove_and_permute({vertexArray, bufferIndex});
+}
+
+void Buffer::onContentsChange()
+{
+    for (const ContentsObserver &observer : mContentsObservers)
+    {
+        observer.vertexArray->onBufferContentsChange(observer.bufferIndex);
+    }
 }
 }  // namespace gl

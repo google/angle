@@ -247,6 +247,7 @@ void State::setGenericBufferBinding<BufferBinding::ElementArray>(const Context *
     if (oldBuffer)
     {
         oldBuffer->removeObserver(&mVertexArray->mState.mElementArrayBuffer);
+        oldBuffer->removeContentsObserver(mVertexArray, kElementArrayBufferIndex);
         if (context->isWebGL())
         {
             oldBuffer->onNonTFBindingChanged(-1);
@@ -257,6 +258,7 @@ void State::setGenericBufferBinding<BufferBinding::ElementArray>(const Context *
     if (buffer)
     {
         buffer->addObserver(&mVertexArray->mState.mElementArrayBuffer);
+        buffer->addContentsObserver(mVertexArray, kElementArrayBufferIndex);
         if (context->isWebGL())
         {
             buffer->onNonTFBindingChanged(1);

@@ -6949,6 +6949,98 @@ TEST_P(SimpleStateChangeTestES31, PrimitiveBoundingBoxNegativeTest)
     glGetFloatv(GL_PRIMITIVE_BOUNDING_BOX_EXT, boundingBox);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
+
+// Update an element array buffer that is already in use.
+TEST_P(SimpleStateChangeTest, UpdateBoundElementArrayBuffer)
+{
+    constexpr char kVS[] = R"(attribute vec4 position;
+attribute float color;
+varying float colorVarying;
+void main()
+{
+    gl_Position = position;
+    colorVarying = color;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying float colorVarying;
+void main()
+{
+    if (colorVarying == 1.0)
+    {
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    }
+    else
+    {
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(testProgram, kVS, kFS);
+    glUseProgram(testProgram);
+
+    GLint posLoc = glGetAttribLocation(testProgram, "position");
+    ASSERT_NE(-1, posLoc);
+    GLint colorLoc = glGetAttribLocation(testProgram, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    std::array<GLushort, 6> quadIndices = GetQuadIndices();
+
+    std::vector<GLubyte> indices;
+    for (GLushort index : quadIndices)
+    {
+        indices.push_back(static_cast<GLubyte>(index));
+    }
+
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), indices.data(),
+                 GL_STATIC_DRAW);
+
+    std::array<Vector3, 4> quadVertices = GetIndexedQuadVertices();
+
+    std::vector<Vector3> positionVertices;
+    for (Vector3 vertex : quadVertices)
+    {
+        positionVertices.push_back(vertex);
+    }
+    for (Vector3 vertex : quadVertices)
+    {
+        positionVertices.push_back(vertex);
+    }
+
+    GLBuffer positionVertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, positionVertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, positionVertices.size() * sizeof(positionVertices[0]),
+                 positionVertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+
+    std::vector<float> colorVertices = {1, 1, 1, 1, 0, 0, 0, 0};
+
+    GLBuffer colorVertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, colorVertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, colorVertices.size() * sizeof(colorVertices[0]),
+                 colorVertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(colorLoc, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    indices.clear();
+    for (GLushort index : quadIndices)
+    {
+        indices.push_back(static_cast<GLubyte>(index + 4));
+    }
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indices.size() * sizeof(indices[0]),
+                    indices.data());
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
