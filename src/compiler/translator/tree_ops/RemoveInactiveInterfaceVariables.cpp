@@ -32,6 +32,7 @@ class RemoveInactiveInterfaceVariablesTraverser : public TIntermTraverser
         const std::vector<sh::InterfaceBlock> &interfaceBlocks);
 
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
+    bool visitBinary(Visit visit, TIntermBinary *node) override;
 
   private:
     const std::vector<sh::ShaderVariable> &mAttributes;
@@ -147,6 +148,37 @@ bool RemoveInactiveInterfaceVariablesTraverser::visitDeclaration(Visit visit,
                                         std::move(replacement));
     }
 
+    return false;
+}
+
+bool RemoveInactiveInterfaceVariablesTraverser::visitBinary(Visit visit, TIntermBinary *node)
+{
+    // Remove any code that SH_INIT_OUTPUT_VARIABLES might have added corresponding to inactive
+    // output variables.  This code is always in the form of `variable = ...;`.
+    if (node->getOp() != EOpAssign)
+    {
+        // Don't recurse, won't find the initialization nested in another expression.
+        return false;
+    }
+
+    // Get the symbol being initialized, and check if it's an inactive output.  If it is, this must
+    // necessarily be initialization code that ANGLE has added (and wasn't there in the original
+    // shader; if it was, the symbol wouldn't have been inactive).
+    TIntermSymbol *symbol = node->getLeft()->getAsSymbolNode();
+    if (symbol == nullptr)
+    {
+        return false;
+    }
+
+    const TQualifier qualifier = symbol->getType().getQualifier();
+    if (qualifier != EvqFragmentOut || IsVariableActive(mOutputVariables, symbol->getName()))
+    {
+        return false;
+    }
+
+    // Drop the initialization code.
+    TIntermSequence replacement;
+    mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node, std::move(replacement));
     return false;
 }
 

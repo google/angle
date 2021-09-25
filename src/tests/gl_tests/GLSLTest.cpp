@@ -8874,6 +8874,21 @@ foo
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
+// Test that inactive output variables compile ok in combination with SH_INIT_OUTPUT_VARIABLES
+// (which is enabled on WebGL).
+TEST_P(WebGL2GLSLTest, InactiveOutput)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 _cassgl_2_;
+void main()
+{
+})";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_NE(shader, 0u);
+}
+
 // Test that clamp applied on non-literal indices is correct on es 100 shaders.
 TEST_P(GLSLTest, ValidIndexClampES100)
 {
