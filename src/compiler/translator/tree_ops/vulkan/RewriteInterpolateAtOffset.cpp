@@ -103,14 +103,18 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
     // If pre-rotation is enabled apply the transformation else just flip the Y-coordinate
     TIntermTyped *rotatedXY;
+    TOperator mulOp = EOpMul;
     if (mUsePreRotation)
     {
         rotatedXY = mRotationSpecConst->getFragRotationMultiplyFlipXY();
+        mulOp     = EOpVectorTimesMatrix;
         if (!rotatedXY)
         {
-            TIntermTyped *flipXY       = mDriverUniforms->getFlipXYRef();
             TIntermTyped *fragRotation = mDriverUniforms->getFragRotationMatrixRef();
-            rotatedXY = new TIntermBinary(EOpMatrixTimesVector, fragRotation, flipXY);
+            offsetNode = new TIntermBinary(EOpVectorTimesMatrix, offsetNode, fragRotation);
+
+            rotatedXY = mDriverUniforms->getFlipXYRef();
+            mulOp     = EOpMul;
         }
     }
     else
@@ -122,7 +126,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
         }
     }
 
-    TIntermBinary *correctedOffset = new TIntermBinary(EOpMul, offsetNode, rotatedXY);
+    TIntermBinary *correctedOffset = new TIntermBinary(mulOp, offsetNode, rotatedXY);
     correctedOffset->setLine(offsetNode->getLine());
     interpolateAtOffsetArguments.push_back(correctedOffset);
 

@@ -117,12 +117,12 @@ constexpr Vec2EnumMap kFlipXYValue = {
 
 // Returns [[flipX*m0+flipY*m1]  [flipX*m2+flipY*m3]] where [m0 m1] is the first column of
 // kFragRotation matrix and [m2 m3] is the second column of kFragRotation matrix.
-constexpr Vec2 CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation rotation)
+constexpr Mat2x2 CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation rotation)
 {
-    return Vec2({kFlipXYValue[rotation][0] * kFragRotationMatrices[rotation][0] +
-                     kFlipXYValue[rotation][1] * kFragRotationMatrices[rotation][1],
-                 kFlipXYValue[rotation][0] * kFragRotationMatrices[rotation][2] +
-                     kFlipXYValue[rotation][1] * kFragRotationMatrices[rotation][3]});
+    return Mat2x2({kFlipXYValue[rotation][0] * kFragRotationMatrices[rotation][0],
+                   kFlipXYValue[rotation][1] * kFragRotationMatrices[rotation][1],
+                   kFlipXYValue[rotation][0] * kFragRotationMatrices[rotation][2],
+                   kFlipXYValue[rotation][1] * kFragRotationMatrices[rotation][3]});
 }
 
 // Returns vec2(vec2Values.x, vec2Values.y*yscale)
@@ -468,7 +468,7 @@ TIntermTyped *SpecConst::getFragRotationMultiplyFlipXY()
         return nullptr;
     }
 
-    constexpr Vec2EnumMap kFragRotationMultiplyFlipXY = {
+    constexpr Mat2x2EnumMap kFragRotationMultiplyFlipXY = {
         {{vk::SurfaceRotation::Identity,
           CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation::Identity)},
          {vk::SurfaceRotation::Rotated90Degrees,
@@ -488,7 +488,7 @@ TIntermTyped *SpecConst::getFragRotationMultiplyFlipXY()
 
     mUsageBits.set(vk::SpecConstUsage::YFlip);
     mUsageBits.set(vk::SpecConstUsage::Rotation);
-    return CreateVec2ArrayWithIndex(kFragRotationMultiplyFlipXY, 1.0, getFlipRotation());
+    return GenerateMat2x2ArrayWithIndex(kFragRotationMultiplyFlipXY, getFlipRotation());
 }
 
 TIntermSymbol *SpecConst::getDrawableWidth()
