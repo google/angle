@@ -1363,7 +1363,7 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
 
     // TODO: Textures other than EGLImage targets can have immutable samplers.
     // http://anglebug.com/5773
-    handleImmutableSamplerTransition(mImage, (imageVk) ? imageVk->getImage() : nullptr);
+    handleImmutableSamplerTransition(mImage, imageVk ? imageVk->getImage() : nullptr);
 
     releaseAndDeleteImageAndViews(contextVk);
 

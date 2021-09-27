@@ -158,6 +158,15 @@
 6116 ANDROID GLES : GLSLTestLoops.ForNoCondition/* = SKIP
 6237 ANDROID GLES : BufferDataTestES3.DrawWithNotCallingBufferData/* = SKIP
 
+// Reading back the contents of an RGBX image initialized with non-255 alpha returns the original alpha (instead of 255)
+6472 ANDROID GLES : ImageTestES3.RGBXAHBImportThenUpload/* = SKIP
+6474 ANDROID GLES : ImageTestES3.RGBXAHBImportMultipleLayers/* = SKIP
+
+// Unimplemented fallback path for when format is not renderable or AHB hasn't specified the GPU_FRAMEBUFFER usage.
+6151 ANDROID VULKAN : ImageTestES3.RGBXAHBImportNoFramebufferUsage/* = SKIP
+// Views of layered AHB are not layered.
+6475 ANDROID VULKAN : ImageTestES3.RGBXAHBImportMultipleLayers/* = SKIP
+
 // Nexus 5X expectations.
 6149 NEXUS5X GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 6193 NEXUS5X GLES : GLSLTest_ES31.BuiltInsWithOutParameters/* = SKIP

@@ -134,6 +134,17 @@ class UtilsVk : angle::NonCopyable
         SurfaceRotation rotation;
     };
 
+    struct ClearImageParameters
+    {
+        gl::Rectangle clearArea;
+
+        vk::LevelIndex dstMip;
+        int dstLayer;
+
+        VkColorComponentFlags colorMaskFlags;
+        VkClearColorValue colorClearValue;
+    };
+
     struct CopyImageParameters
     {
         int srcOffset[2];
@@ -244,6 +255,10 @@ class UtilsVk : angle::NonCopyable
                                                    vk::ImageHelper *src,
                                                    const vk::ImageView *srcStencilView,
                                                    const BlitResolveParameters &params);
+
+    angle::Result clearImage(ContextVk *contextVk,
+                             vk::ImageHelper *dest,
+                             const ClearImageParameters &params);
 
     angle::Result copyImage(ContextVk *contextVk,
                             vk::ImageHelper *dest,
@@ -557,7 +572,7 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper
         mConvertVertexPrograms[vk::InternalShader::ConvertVertex_comp::kArrayLen];
     vk::ShaderProgramHelper mImageClearProgramVSOnly;
-    vk::ShaderProgramHelper mImageClearProgram[vk::InternalShader::ImageClear_frag::kArrayLen];
+    vk::ShaderProgramHelper mImageClearPrograms[vk::InternalShader::ImageClear_frag::kArrayLen];
     vk::ShaderProgramHelper mImageCopyPrograms[vk::InternalShader::ImageCopy_frag::kArrayLen];
     vk::ShaderProgramHelper mBlitResolvePrograms[vk::InternalShader::BlitResolve_frag::kArrayLen];
     vk::ShaderProgramHelper mBlitResolveStencilNoExportPrograms

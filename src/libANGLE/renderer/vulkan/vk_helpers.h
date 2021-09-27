@@ -1663,14 +1663,6 @@ class ImageHelper final : public Resource, public angle::Subject
     bool hasRenderPassUsageFlag(RenderPassUsage flag) const;
     bool usedByCurrentRenderPassAsAttachmentAndSampler() const;
 
-    // Clear either color or depth/stencil based on image format.
-    void clear(VkImageAspectFlags aspectFlags,
-               const VkClearValue &value,
-               LevelIndex mipLevel,
-               uint32_t baseArrayLayer,
-               uint32_t layerCount,
-               CommandBuffer *commandBuffer);
-
     static void Copy(ImageHelper *srcImage,
                      ImageHelper *dstImage,
                      const gl::Offset &srcOffset,
@@ -1972,8 +1964,18 @@ class ImageHelper final : public Resource, public angle::Subject
   private:
     enum class UpdateSource
     {
+        // Clear an image subresource.
         Clear,
+        // Clear only the emulated channels of the subresource.  This operation is more expensive
+        // than Clear, and so is only used for emulated color formats and only for external images.
+        // Color only because depth or stencil clear is already per channel, so Clear works for
+        // them.  External only because they may contain data that needs to be preserved.
+        // Additionally, this is a one-time only clear.  Once the emulated channels are cleared,
+        // ANGLE ensures that they remain untouched.
+        ClearEmulatedChannelsOnly,
+        // The source of the copy is a buffer.
         Buffer,
+        // The source of the copy is an image.
         Image,
     };
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
@@ -1988,6 +1990,8 @@ class ImageHelper final : public Resource, public angle::Subject
         uint32_t levelIndex;
         uint32_t layerIndex;
         uint32_t layerCount;
+        // For ClearEmulatedChannelsOnly, mask of which channels to clear.
+        VkColorComponentFlags colorMaskFlags;
     };
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
     struct BufferUpdate
@@ -2014,6 +2018,9 @@ class ImageHelper final : public Resource, public angle::Subject
                           angle::FormatID formatID);
         SubresourceUpdate(VkImageAspectFlags aspectFlags,
                           const VkClearValue &clearValue,
+                          const gl::ImageIndex &imageIndex);
+        SubresourceUpdate(VkColorComponentFlags colorMaskFlags,
+                          const VkClearColorValue &clearValue,
                           const gl::ImageIndex &imageIndex);
         SubresourceUpdate(SubresourceUpdate &&other);
 
@@ -2057,7 +2064,17 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // If the image has emulated channels, we clear them once so as not to leave garbage on those
     // channels.
-    void stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled);
+    VkColorComponentFlags getEmulatedChannelsMask() const;
+    void stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled, bool isExternalImage);
+    bool verifyEmulatedClearsAreBeforeOtherUpdates(const std::vector<SubresourceUpdate> &updates);
+
+    // Clear either color or depth/stencil based on image format.
+    void clear(VkImageAspectFlags aspectFlags,
+               const VkClearValue &value,
+               LevelIndex mipLevel,
+               uint32_t baseArrayLayer,
+               uint32_t layerCount,
+               CommandBuffer *commandBuffer);
 
     void clearColor(const VkClearColorValue &color,
                     LevelIndex baseMipLevelVk,
@@ -2073,6 +2090,13 @@ class ImageHelper final : public Resource, public angle::Subject
                            uint32_t baseArrayLayer,
                            uint32_t layerCount,
                            CommandBuffer *commandBuffer);
+
+    angle::Result clearEmulatedChannels(ContextVk *contextVk,
+                                        VkColorComponentFlags colorMaskFlags,
+                                        const VkClearValue &value,
+                                        LevelIndex mipLevel,
+                                        uint32_t baseArrayLayer,
+                                        uint32_t layerCount);
 
     angle::Result initializeNonZeroMemory(Context *context,
                                           bool hasProtectedContent,

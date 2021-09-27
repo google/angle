@@ -4243,9 +4243,11 @@ angle::Result ImageHelper::initExternal(Context *context,
 
     ANGLE_VK_TRY(context, mImage.init(context->getDevice(), imageInfo));
 
-    stageClearIfEmulatedFormat(isRobustResourceInitEnabled);
+    stageClearIfEmulatedFormat(isRobustResourceInitEnabled, externalImageCreateInfo != nullptr);
 
-    if (initialLayout != ImageLayout::Undefined)
+    // Consider the contents defined for any image that has the PREINITIALIZED layout, or is
+    // imported from external.
+    if (initialLayout != ImageLayout::Undefined || externalImageCreateInfo != nullptr)
     {
         setEntireContentDefined();
     }
@@ -4678,7 +4680,7 @@ void ImageHelper::init2DWeakReference(Context *context,
 
     mImage.setHandle(handle);
 
-    stageClearIfEmulatedFormat(isRobustResourceInitEnabled);
+    stageClearIfEmulatedFormat(isRobustResourceInitEnabled, false);
 }
 
 angle::Result ImageHelper::init2DStaging(Context *context,
@@ -5213,6 +5215,38 @@ void ImageHelper::clear(VkImageAspectFlags aspectFlags,
 
         clearColor(value.color, mipLevel, 1, baseArrayLayer, layerCount, commandBuffer);
     }
+}
+
+angle::Result ImageHelper::clearEmulatedChannels(ContextVk *contextVk,
+                                                 VkColorComponentFlags colorMaskFlags,
+                                                 const VkClearValue &value,
+                                                 LevelIndex mipLevel,
+                                                 uint32_t baseArrayLayer,
+                                                 uint32_t layerCount)
+{
+    const gl::Extents levelExtents = getLevelExtents(mipLevel);
+
+    if (levelExtents.depth > 1)
+    {
+        // Currently not implemented for 3D textures
+        UNIMPLEMENTED();
+        return angle::Result::Continue;
+    }
+
+    UtilsVk::ClearImageParameters params = {};
+    params.clearArea                     = {0, 0, levelExtents.width, levelExtents.height};
+    params.dstMip                        = mipLevel;
+    params.colorMaskFlags                = colorMaskFlags;
+    params.colorClearValue               = value.color;
+
+    for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
+    {
+        params.dstLayer = baseArrayLayer + layerIndex;
+
+        ANGLE_TRY(contextVk->getUtils().clearImage(contextVk, this, params));
+    }
+
+    return angle::Result::Continue;
 }
 
 // static
@@ -6285,7 +6319,7 @@ angle::Result ImageHelper::stageRobustResourceClearWithFormat(ContextVk *context
     return angle::Result::Continue;
 }
 
-void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled)
+void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled, bool isExternalImage)
 {
     // Skip staging extra clears if robust resource init is enabled.
     if (!hasEmulatedImageChannels() || isRobustResourceInitEnabled)
@@ -6308,13 +6342,61 @@ void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled)
     // If the image has an emulated channel and robust resource init is not enabled, always clear
     // it. These channels will be masked out in future writes, and shouldn't contain uninitialized
     // values.
+    //
+    // For external images, we cannot clear the image entirely, as it may contain data in the
+    // non-emulated channels.  For depth/stencil images, clear is already per aspect, but for color
+    // images we would need to take a special path where we only clear the emulated channels.
+    const bool clearOnlyEmulatedChannels =
+        isExternalImage && !getIntendedFormat().hasDepthOrStencilBits();
+    const VkColorComponentFlags colorMaskFlags =
+        clearOnlyEmulatedChannels ? getEmulatedChannelsMask() : 0;
+
     for (LevelIndex level(0); level < LevelIndex(mLevelCount); ++level)
     {
         gl::LevelIndex updateLevelGL = toGLLevel(level);
         gl::ImageIndex index =
             gl::ImageIndex::Make2DArrayRange(updateLevelGL.get(), 0, mLayerCount);
-        prependSubresourceUpdate(updateLevelGL, SubresourceUpdate(aspectFlags, clearValue, index));
+
+        if (clearOnlyEmulatedChannels)
+        {
+            prependSubresourceUpdate(updateLevelGL,
+                                     SubresourceUpdate(colorMaskFlags, clearValue.color, index));
+        }
+        else
+        {
+            prependSubresourceUpdate(updateLevelGL,
+                                     SubresourceUpdate(aspectFlags, clearValue, index));
+        }
     }
+}
+
+bool ImageHelper::verifyEmulatedClearsAreBeforeOtherUpdates(
+    const std::vector<SubresourceUpdate> &updates)
+{
+    bool isIteratingEmulatedClears = true;
+
+    for (const SubresourceUpdate &update : updates)
+    {
+        // If anything other than ClearEmulatedChannelsOnly is visited, there cannot be any
+        // ClearEmulatedChannelsOnly updates after that.
+        if (update.updateSource != UpdateSource::ClearEmulatedChannelsOnly)
+        {
+            isIteratingEmulatedClears = false;
+        }
+        else if (!isIteratingEmulatedClears)
+        {
+            // If ClearEmulatedChannelsOnly is visited after another update, that's an error.
+            return false;
+        }
+    }
+
+    // Additionally, verify that emulated clear is not applied multiple times.
+    if (updates.size() >= 2 && updates[1].updateSource == UpdateSource::ClearEmulatedChannelsOnly)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 void ImageHelper::stageSelfAsSubresourceUpdates(ContextVk *contextVk,
@@ -6531,6 +6613,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         for (SubresourceUpdate &update : *levelUpdates)
         {
             ASSERT(update.updateSource == UpdateSource::Clear ||
+                   update.updateSource == UpdateSource::ClearEmulatedChannelsOnly ||
                    (update.updateSource == UpdateSource::Buffer &&
                     update.data.buffer.bufferHelper != nullptr) ||
                    (update.updateSource == UpdateSource::Image && update.image != nullptr &&
@@ -6558,7 +6641,8 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             // The updates were holding gl::LevelIndex values so that they would not need
             // modification when the base level of the texture changes.  Now that the update is
             // about to take effect, we need to change miplevel to LevelIndex.
-            if (update.updateSource == UpdateSource::Clear)
+            if (update.updateSource == UpdateSource::Clear ||
+                update.updateSource == UpdateSource::ClearEmulatedChannelsOnly)
             {
                 update.data.clear.levelIndex = updateMipLevelVk.get();
             }
@@ -6619,6 +6703,23 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 // setContentDefined directly.
                 setContentDefined(updateMipLevelVk, 1, updateBaseLayer, updateLayerCount,
                                   update.data.clear.aspectFlags);
+            }
+            else if (update.updateSource == UpdateSource::ClearEmulatedChannelsOnly)
+            {
+                ANGLE_TRY(clearEmulatedChannels(contextVk, update.data.clear.colorMaskFlags,
+                                                update.data.clear.value, updateMipLevelVk,
+                                                updateBaseLayer, updateLayerCount));
+
+                // Do not call onWrite.  Even though some channels of the image are cleared, don't
+                // consider the contents defined.  Also, since clearing emulated channels is a
+                // one-time thing that's superseded by Clears, |mCurrentSingleClearValue| is
+                // irrelevant and can't have a value.
+                ASSERT(!mCurrentSingleClearValue.valid());
+
+                // Refresh the command buffer because clearEmulatedChannels may have flushed it.
+                // This also transitions the image back to TransferDst, in case it's no longer in
+                // that layout.
+                ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
             }
             else if (update.updateSource == UpdateSource::Buffer)
             {
@@ -6896,6 +6997,10 @@ void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask
         {
             continue;
         }
+
+        // ClearEmulatedChannelsOnly updates can only be in the beginning of the list of updates.
+        // They don't entirely clear the image, so they cannot supersede any update.
+        ASSERT(verifyEmulatedClearsAreBeforeOtherUpdates(*levelUpdates));
 
         levelExtents                         = getLevelExtents(levelVk);
         supersededLayers[kIndexColorOrDepth] = 0;
@@ -7360,6 +7465,21 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags
     data.clear.layerIndex  = imageIndex.hasLayer() ? imageIndex.getLayerIndex() : 0;
     data.clear.layerCount =
         imageIndex.hasLayer() ? imageIndex.getLayerCount() : VK_REMAINING_ARRAY_LAYERS;
+    data.clear.colorMaskFlags = 0;
+}
+
+ImageHelper::SubresourceUpdate::SubresourceUpdate(VkColorComponentFlags colorMaskFlags,
+                                                  const VkClearColorValue &clearValue,
+                                                  const gl::ImageIndex &imageIndex)
+    : updateSource(UpdateSource::ClearEmulatedChannelsOnly), image(nullptr)
+{
+    data.clear.aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT;
+    data.clear.value.color = clearValue;
+    data.clear.levelIndex  = imageIndex.getLevelIndex();
+    data.clear.layerIndex  = imageIndex.hasLayer() ? imageIndex.getLayerIndex() : 0;
+    data.clear.layerCount =
+        imageIndex.hasLayer() ? imageIndex.getLayerCount() : VK_REMAINING_ARRAY_LAYERS;
+    data.clear.colorMaskFlags = colorMaskFlags;
 }
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(SubresourceUpdate &&other)
@@ -7368,6 +7488,7 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(SubresourceUpdate &&other)
     switch (updateSource)
     {
         case UpdateSource::Clear:
+        case UpdateSource::ClearEmulatedChannelsOnly:
             data.clear = other.data.clear;
             break;
         case UpdateSource::Buffer:
@@ -7437,7 +7558,8 @@ void ImageHelper::SubresourceUpdate::getDestSubresource(uint32_t imageLayerCount
                                                         uint32_t *baseLayerOut,
                                                         uint32_t *layerCountOut) const
 {
-    if (updateSource == UpdateSource::Clear)
+    if (updateSource == UpdateSource::Clear ||
+        updateSource == UpdateSource::ClearEmulatedChannelsOnly)
     {
         *baseLayerOut  = data.clear.layerIndex;
         *layerCountOut = data.clear.layerCount;
@@ -7461,7 +7583,8 @@ void ImageHelper::SubresourceUpdate::getDestSubresource(uint32_t imageLayerCount
 
 VkImageAspectFlags ImageHelper::SubresourceUpdate::getDestAspectFlags() const
 {
-    if (updateSource == UpdateSource::Clear)
+    if (updateSource == UpdateSource::Clear ||
+        updateSource == UpdateSource::ClearEmulatedChannelsOnly)
     {
         return data.clear.aspectFlags;
     }
@@ -7519,11 +7642,44 @@ bool ImageHelper::hasEmulatedImageChannels() const
     const angle::Format &angleFmt   = getIntendedFormat();
     const angle::Format &textureFmt = getActualFormat();
 
+    // The red channel is never emulated.
+    ASSERT((angleFmt.redBits != 0 || angleFmt.luminanceBits != 0 || angleFmt.alphaBits != 0) ==
+           (textureFmt.redBits != 0));
+
     return (angleFmt.alphaBits == 0 && textureFmt.alphaBits > 0) ||
            (angleFmt.blueBits == 0 && textureFmt.blueBits > 0) ||
            (angleFmt.greenBits == 0 && textureFmt.greenBits > 0) ||
            (angleFmt.depthBits == 0 && textureFmt.depthBits > 0) ||
            (angleFmt.stencilBits == 0 && textureFmt.stencilBits > 0);
+}
+
+VkColorComponentFlags ImageHelper::getEmulatedChannelsMask() const
+{
+    const angle::Format &angleFmt   = getIntendedFormat();
+    const angle::Format &textureFmt = getActualFormat();
+
+    ASSERT(!angleFmt.hasDepthOrStencilBits());
+
+    VkColorComponentFlags emulatedChannelsMask = 0;
+
+    if (angleFmt.alphaBits == 0 && textureFmt.alphaBits > 0)
+    {
+        emulatedChannelsMask |= VK_COLOR_COMPONENT_A_BIT;
+    }
+    if (angleFmt.blueBits == 0 && textureFmt.blueBits > 0)
+    {
+        emulatedChannelsMask |= VK_COLOR_COMPONENT_B_BIT;
+    }
+    if (angleFmt.greenBits == 0 && textureFmt.greenBits > 0)
+    {
+        emulatedChannelsMask |= VK_COLOR_COMPONENT_G_BIT;
+    }
+
+    // The red channel is never emulated.
+    ASSERT((angleFmt.redBits != 0 || angleFmt.luminanceBits != 0 || angleFmt.alphaBits != 0) ==
+           (textureFmt.redBits != 0));
+
+    return emulatedChannelsMask;
 }
 
 // FramebufferHelper implementation.

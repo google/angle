@@ -1060,7 +1060,7 @@ void UtilsVk::destroy(RendererVk *renderer)
         program.destroy(renderer);
     }
     mImageClearProgramVSOnly.destroy(renderer);
-    for (vk::ShaderProgramHelper &program : mImageClearProgram)
+    for (vk::ShaderProgramHelper &program : mImageClearPrograms)
     {
         program.destroy(renderer);
     }
@@ -2084,15 +2084,16 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
     if (params.clearColor)
     {
-        uint32_t flags = GetImageClearFlags(*params.colorFormat, params.colorAttachmentIndexGL,
-                                            params.clearDepth && !supportsDepthClamp);
+        const uint32_t flags =
+            GetImageClearFlags(*params.colorFormat, params.colorAttachmentIndexGL,
+                               params.clearDepth && !supportsDepthClamp);
         ANGLE_TRY(shaderLibrary.getImageClear_frag(contextVk, flags, &fragmentShader));
-        imageClearProgram = &mImageClearProgram[flags];
+        imageClearProgram = &mImageClearPrograms[flags];
     }
 
     // Make sure transform feedback is paused.  Needs to be done before binding the pipeline as
     // that's not allowed in Vulkan.
-    bool isTransformFeedbackActiveUnpaused =
+    const bool isTransformFeedbackActiveUnpaused =
         contextVk->getStartedRenderPassCommands().isTransformFeedbackActiveUnpaused();
     contextVk->pauseTransformFeedbackIfActiveUnpaused();
 
@@ -2115,6 +2116,101 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     }
 
     return angle::Result::Continue;
+}
+
+angle::Result UtilsVk::clearImage(ContextVk *contextVk,
+                                  vk::ImageHelper *dest,
+                                  const ClearImageParameters &params)
+{
+    ANGLE_TRY(ensureImageClearResourcesInitialized(contextVk));
+
+    const angle::Format &dstActualFormat = dest->getActualFormat();
+
+    // Currently, this function is only used to clear emulated channels of color images.
+    ASSERT(!dstActualFormat.hasDepthOrStencilBits());
+
+    // TODO: currently this function is only implemented for images that are drawable.  If needed,
+    // for images that are not drawable, the following algorithm can be used.
+    //
+    // - Copy image to temp buffer
+    // - Use convertVertexBufferImpl to overwrite the alpha channel
+    // - Copy the result back to the image
+    //
+    // Note that the following check is not enough; if the image is AHB-imported, then the draw path
+    // cannot be taken if AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER hasn't been specified, even if the
+    // format is renderable.
+    //
+    // http://anglebug.com/6151
+    if (!vk::FormatHasNecessaryFeature(contextVk->getRenderer(), dstActualFormat.id,
+                                       dest->getTilingMode(),
+                                       VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
+    {
+        UNIMPLEMENTED();
+        return angle::Result::Continue;
+    }
+
+    vk::DeviceScoped<vk::ImageView> destView(contextVk->getDevice());
+    const gl::TextureType destViewType = vk::Get2DTextureType(1, dest->getSamples());
+
+    ANGLE_TRY(dest->initLayerImageView(contextVk, destViewType, VK_IMAGE_ASPECT_COLOR_BIT,
+                                       gl::SwizzleState(), &destView.get(), params.dstMip, 1,
+                                       params.dstLayer, 1, gl::SrgbWriteControlMode::Default));
+
+    const gl::Rectangle &renderArea = params.clearArea;
+
+    ImageClearShaderParams shaderParams;
+    shaderParams.clearValue = params.colorClearValue;
+    shaderParams.clearDepth = 0;
+
+    vk::RenderPassDesc renderPassDesc;
+    renderPassDesc.setSamples(dest->getSamples());
+    renderPassDesc.packColorAttachment(0, dstActualFormat.id);
+
+    vk::GraphicsPipelineDesc pipelineDesc;
+    pipelineDesc.initDefaults(contextVk);
+    pipelineDesc.setCullMode(VK_CULL_MODE_NONE);
+    pipelineDesc.setSingleColorWriteMask(0, params.colorMaskFlags);
+    pipelineDesc.setRasterizationSamples(dest->getSamples());
+    pipelineDesc.setRenderPassDesc(renderPassDesc);
+
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(startRenderPass(contextVk, dest, &destView.get(), renderPassDesc, renderArea,
+                              &commandBuffer));
+
+    VkViewport viewport;
+    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dest->getExtents().height, &viewport);
+    commandBuffer->setViewport(0, 1, &viewport);
+
+    VkRect2D scissor = gl_vk::GetRect(renderArea);
+    commandBuffer->setScissor(0, 1, &scissor);
+
+    contextVk->invalidateViewportAndScissor();
+
+    contextVk->onImageRenderPassWrite(dest->toGLLevel(params.dstMip), params.dstLayer, 1,
+                                      VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
+                                      dest);
+
+    const uint32_t flags = GetImageClearFlags(dstActualFormat, 0, false);
+
+    vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
+    vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
+    vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
+    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
+    ANGLE_TRY(shaderLibrary.getImageClear_frag(contextVk, flags, &fragmentShader));
+
+    ANGLE_TRY(setupProgram(contextVk, Function::ImageClear, fragmentShader, vertexShader,
+                           &mImageClearPrograms[flags], &pipelineDesc, VK_NULL_HANDLE,
+                           &shaderParams, sizeof(shaderParams), commandBuffer));
+
+    // Note: this utility creates its own framebuffer, thus bypassing ContextVk::startRenderPass.
+    // As such, occlusion queries are not enabled.
+    commandBuffer->draw(3, 0);
+
+    vk::ImageView destViewObject = destView.release();
+    contextVk->addGarbage(&destViewObject);
+
+    // Close the render pass for this temporary framebuffer.
+    return contextVk->flushCommandsAndEndRenderPass();
 }
 
 angle::Result UtilsVk::colorBlitResolve(ContextVk *contextVk,
@@ -2784,9 +2880,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     descriptorPoolBinding.reset();
 
     // Close the render pass for this temporary framebuffer.
-    ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
-
-    return angle::Result::Continue;
+    return contextVk->flushCommandsAndEndRenderPass();
 }
 
 angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
