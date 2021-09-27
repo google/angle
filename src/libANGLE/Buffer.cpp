@@ -319,6 +319,7 @@ angle::Result Buffer::unmap(const Context *context, GLboolean *result)
 
     // Notify when data changes.
     onStateChange(angle::SubjectMessage::SubjectUnmapped);
+    onContentsChange();
 
     return angle::Result::Continue;
 }

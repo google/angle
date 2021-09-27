@@ -676,8 +676,6 @@ void VertexArray::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
             break;
 
         case angle::SubjectMessage::SubjectUnmapped:
-            setDependentDirtyBit(true, index);
-
             if (!IsElementArrayBufferSubjectIndex(index))
             {
                 updateCachedMappedArrayBuffersBinding(mState.mVertexBindings[index]);
