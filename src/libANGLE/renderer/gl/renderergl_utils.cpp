@@ -2005,7 +2005,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             IsAndroid() || (IsApple() && (isIntel || isAMD || isNvidia)));
     ANGLE_FEATURE_CONDITION(features, limitMax3dArrayTextureSizeTo1024, limitMaxTextureSize);
 
-    ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, IsApple());
+    ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, false);
 
     // The WebGL conformance/uniforms/out-of-bounds-uniform-array-access test has been seen to fail
     // on AMD and Android devices.
