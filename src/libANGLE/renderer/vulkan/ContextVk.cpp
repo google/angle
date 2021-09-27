@@ -5875,12 +5875,12 @@ angle::Result ContextVk::beginRenderPassQuery(QueryVk *queryVk)
     if (mRenderPassCommandBuffer)
     {
         ANGLE_TRY(queryVk->getQueryHelper()->beginRenderPassQuery(this));
+    }
 
-        // Update rasterizer discard emulation with primitives generated query if necessary.
-        if (queryVk->getType() == gl::QueryType::PrimitivesGenerated)
-        {
-            updateRasterizerDiscardEnabled(true);
-        }
+    // Update rasterizer discard emulation with primitives generated query if necessary.
+    if (queryVk->getType() == gl::QueryType::PrimitivesGenerated)
+    {
+        updateRasterizerDiscardEnabled(true);
     }
 
     gl::QueryType type = queryVk->getType();

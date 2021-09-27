@@ -3212,6 +3212,59 @@ TEST_P(TransformFeedbackTestES32, PrimitivesGeneratedVsRasterizerDiscard)
     EXPECT_EQ(primitivesGenerated, 20u);  // 10 draw calls, 2 triangles each.
 }
 
+// Test that multiple primitives generated querys and rasterizer discard interact well.
+TEST_P(TransformFeedbackTestES32, MultiPrimitivesGeneratedVsRasterizerDiscard)
+{
+    // No ES3.2 support on our bots.  http://anglebug.com/5435
+    ANGLE_SKIP_TEST_IF(IsPixel2() && IsVulkan());
+
+    // No pipelineStatisticsQuery or VK_EXT_transform_feedback support on the following
+    // configurations.  http://anglebug.com/5435
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsNVIDIA() && IsWindows7());
+
+    // http://anglebug.com/5539
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux());
+
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+
+    // Enable rasterizer discard.
+    glEnable(GL_RASTERIZER_DISCARD);
+
+    // Start first primitives generated query
+    GLQuery primitivesGeneratedQuery;
+    glBeginQuery(GL_PRIMITIVES_GENERATED, primitivesGeneratedQuery);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+    ASSERT_GL_NO_ERROR();
+
+    // End the query and verify the count.
+    glEndQuery(GL_PRIMITIVES_GENERATED);
+    ASSERT_GL_NO_ERROR();
+
+    GLuint primitivesGenerated = 0;
+    glGetQueryObjectuiv(primitivesGeneratedQuery, GL_QUERY_RESULT, &primitivesGenerated);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(primitivesGenerated, 2u);  // 1 draw call, 2 triangles each.
+
+    // Start second primitives generated query
+    glBeginQuery(GL_PRIMITIVES_GENERATED, primitivesGeneratedQuery);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.6f);
+    ASSERT_GL_NO_ERROR();
+
+    // End the query and verify the count.
+    glEndQuery(GL_PRIMITIVES_GENERATED);
+    ASSERT_GL_NO_ERROR();
+
+    primitivesGenerated = 0;
+    glGetQueryObjectuiv(primitivesGeneratedQuery, GL_QUERY_RESULT, &primitivesGenerated);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(primitivesGenerated, 2u);  // 1 draw call, 2 triangles each.
+    glDisable(GL_RASTERIZER_DISCARD);
+}
+
 // Test that primitives generated query and rasterizer discard interact well when the framebuffer
 // changes.
 TEST_P(TransformFeedbackTestES32, PrimitivesGeneratedVsRasterizerDiscardAndFramebufferChange)

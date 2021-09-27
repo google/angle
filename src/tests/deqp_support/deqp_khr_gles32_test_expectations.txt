@@ -46,7 +46,6 @@
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_quads_tessellation.* = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_triangles_tessellation.identical_triangles = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_triangles_tessellation.inner_tessellation_level_rounding = FAIL
-5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_invariance.invariance_rule* = SKIP
 // Crash on assert in libcpp. CTS passes to a function '&vector[0], size', where vector is empty.
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_point_mode.points_verification = SKIP
 
