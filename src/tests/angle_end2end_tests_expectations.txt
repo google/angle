@@ -98,7 +98,7 @@
 6347 MAC OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_CopyTexImage/* = SKIP
 6347 MAC OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_CubeTexImage/* = SKIP
 6347 MAC OPENGL : FramebufferTestWithFormatFallback.R4G4B4A4_OutOfRangeStagedUpdateReformated/* = SKIP
-6387 MAC METAL : GLSLTest_ES3.ValidIndexClampES300/ES3_Metal_DirectMetalGen = SKIP
+6387 MAC AMD METAL : GLSLTest_ES3.ValidIndexClampES300/ES3_Metal_DirectMetalGen = SKIP
 
 // Failures from Transform Feedback Enablement. Passes on BigSur
 6407 MAC NVIDIA METAL : TransformFeedbackTest.OptimizedVaryings/ES3_Metal_DirectMetalGen = SKIP
