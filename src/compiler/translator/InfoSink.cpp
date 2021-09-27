@@ -91,7 +91,14 @@ TInfoSinkBase &TInfoSinkBase::operator<<(const TType &type)
 
     if (type.getStruct() != nullptr)
     {
-        *this << " '" << type.getStruct()->name() << "'";
+        if (type.getStruct()->symbolType() == SymbolType::Empty)
+        {
+            *this << " <anonymous>";
+        }
+        else
+        {
+            *this << " '" << type.getStruct()->name() << "'";
+        }
         if (type.isStructSpecifier())
         {
             *this << " (specifier)";
