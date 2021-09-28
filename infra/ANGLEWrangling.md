@@ -19,6 +19,9 @@ If you're not an ANGLE team member, you can contact us on the public ANGLE proje
 **Note**: It's highly recommend that all wranglers install the [Chromium Flake Linker][Flaker]
 extension for inspecting bot builds. It'll save you a lot of time.
 
+**Note**: If you need to suppress test failures (e.g. to keep an auto-roller unblocked), see
+[Suppress Test Failures](../doc/TestingAndProcesses.md).
+
 [Flaker]: https://chrome.google.com/webstore/detail/flake-linker/boamnmbgmfnobomddmenbaicodgglkhc
 
 ## Task 1: Monitor ANGLE CI and Try Testers
@@ -121,6 +124,12 @@ vulkan-deps houses Vulkan-Tools, Vulkan-Loader, Vulkan-ValidationLayers, Vulkan-
 related repos. If the roll fails, you will have to determine the correct upstream repo and file
 an issue upstream. For more info on vulkan-deps see the
 [README](https://chromium.googlesource.com/vulkan-deps/+/refs/heads/main/README.md).
+
+Occasionally, a vulkan-deps AutoRoll CL will get an error in the `presubmit` bot.  For example,
+see: https://chromium-review.googlesource.com/c/angle/angle/+/3198390 where the
+`export_targets.py` script had trouble with the `loader_windows.h` file.  The `export_targets.py`
+script sometimes has difficulty with headers.  If you cannot see an obvious problem, create a CL
+that adds the header to `IGNORED_INCLUDES` in `export_targets.py`.
 
 ## Task 4: ANGLE Standalone Testing
 
