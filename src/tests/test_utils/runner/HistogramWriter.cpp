@@ -46,6 +46,9 @@ std::string UnitAndDirectionToString(proto::UnitAndDirection unit)
         case proto::COUNT:
             strstr << "count";
             break;
+        case proto::SIZE_IN_BYTES:
+            strstr << "sizeInBytes";
+            break;
         default:
             UNREACHABLE();
             strstr << "error";
@@ -80,6 +83,11 @@ proto::UnitAndDirection StringToUnitAndDirection(const std::string &str)
     {
         unitAndDirection.set_improvement_direction(proto::SMALLER_IS_BETTER);
         unitAndDirection.set_unit(proto::MS_BEST_FIT_FORMAT);
+    }
+    else if (str == "sizeInBytes_smallerIsBetter")
+    {
+        unitAndDirection.set_improvement_direction(proto::SMALLER_IS_BETTER);
+        unitAndDirection.set_unit(proto::SIZE_IN_BYTES);
     }
     else
     {
