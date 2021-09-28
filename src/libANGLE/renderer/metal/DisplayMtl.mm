@@ -401,6 +401,7 @@ void DisplayMtl::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->flexibleSurfaceCompatibility = true;
     outExtensions->iosurfaceClientBuffer        = true;
     outExtensions->surfacelessContext           = true;
+    outExtensions->noConfigContext              = true;
     outExtensions->displayTextureShareGroup     = true;
     outExtensions->displaySemaphoreShareGroup   = true;
     outExtensions->mtlTextureClientBuffer       = true;

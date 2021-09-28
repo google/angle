@@ -218,6 +218,7 @@ void DisplayNULL::generateExtensions(egl::DisplayExtensions *outExtensions) cons
     outExtensions->glRenderbufferImage                = true;
     outExtensions->getAllProcAddresses                = true;
     outExtensions->flexibleSurfaceCompatibility       = true;
+    outExtensions->noConfigContext                    = true;
     outExtensions->directComposition                  = true;
     outExtensions->createContextNoError               = true;
     outExtensions->createContextWebGLCompatibility    = true;

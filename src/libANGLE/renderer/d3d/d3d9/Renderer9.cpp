@@ -597,6 +597,7 @@ void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions)
     outExtensions->glRenderbufferImage = true;
 
     outExtensions->flexibleSurfaceCompatibility = true;
+    outExtensions->noConfigContext              = true;
 
     // Contexts are virtualized so textures and semaphores can be shared globally
     outExtensions->displayTextureShareGroup   = true;

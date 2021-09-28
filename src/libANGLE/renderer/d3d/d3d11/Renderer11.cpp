@@ -1310,6 +1310,7 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     outExtensions->streamProducerD3DTexture   = true;
 
     outExtensions->flexibleSurfaceCompatibility = true;
+    outExtensions->noConfigContext              = true;
     outExtensions->directComposition            = !!mDCompModule;
 
     // Contexts are virtualized so textures and semaphores can be shared globally
