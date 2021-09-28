@@ -4267,9 +4267,6 @@ egl::Error QuerySurfaceAttrib(const Display *display,
         case EGL_FIXED_SIZE_ANGLE:
             *value = surface->isFixedSize();
             break;
-        case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
-            *value = surface->flexibleSurfaceCompatibilityRequested();
-            break;
         case EGL_SURFACE_ORIENTATION_ANGLE:
             *value = surface->getOrientation();
             break;

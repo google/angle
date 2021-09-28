@@ -463,9 +463,6 @@ struct DisplayExtensions
     // EGL_KHR_get_all_proc_addresses
     bool getAllProcAddresses = false;
 
-    // EGL_ANGLE_flexible_surface_compatibility
-    bool flexibleSurfaceCompatibility = false;
-
     // EGL_ANGLE_direct_composition
     bool directComposition = false;
 

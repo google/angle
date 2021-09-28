@@ -135,11 +135,6 @@
 #define EGL_X11_VISUAL_ID_ANGLE 0x33A3
 #endif /* EGL_ANGLE_x11_visual */
 
-#ifndef EGL_ANGLE_flexible_surface_compatibility
-#define EGL_ANGLE_flexible_surface_compatibility 1
-#define EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE 0x33A6
-#endif /* EGL_ANGLE_flexible_surface_compatibility */
-
 #ifndef EGL_ANGLE_surface_orientation
 #define EGL_ANGLE_surface_orientation
 #define EGL_OPTIMAL_SURFACE_ORIENTATION_ANGLE 0x33A7

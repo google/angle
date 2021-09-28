@@ -1152,43 +1152,40 @@ bool ValidateCompatibleSurface(const ValidationContext *val,
         return false;
     }
 
-    if (!surface->flexibleSurfaceCompatibilityRequested())
+    // Config compatibility is defined in section 2.2 of the EGL 1.5 spec
+
+    bool colorBufferCompat = surfaceConfig->colorBufferType == contextConfig->colorBufferType;
+    if (!colorBufferCompat)
     {
-        // Config compatibility is defined in section 2.2 of the EGL 1.5 spec
+        val->setError(EGL_BAD_MATCH, "Color buffer types are not compatible.");
+        return false;
+    }
 
-        bool colorBufferCompat = surfaceConfig->colorBufferType == contextConfig->colorBufferType;
-        if (!colorBufferCompat)
-        {
-            val->setError(EGL_BAD_MATCH, "Color buffer types are not compatible.");
-            return false;
-        }
+    bool colorCompat = surfaceConfig->redSize == contextConfig->redSize &&
+                       surfaceConfig->greenSize == contextConfig->greenSize &&
+                       surfaceConfig->blueSize == contextConfig->blueSize &&
+                       surfaceConfig->alphaSize == contextConfig->alphaSize &&
+                       surfaceConfig->luminanceSize == contextConfig->luminanceSize;
+    if (!colorCompat)
+    {
+        val->setError(EGL_BAD_MATCH, "Color buffer sizes are not compatible.");
+        return false;
+    }
 
-        bool colorCompat = surfaceConfig->redSize == contextConfig->redSize &&
-                           surfaceConfig->greenSize == contextConfig->greenSize &&
-                           surfaceConfig->blueSize == contextConfig->blueSize &&
-                           surfaceConfig->alphaSize == contextConfig->alphaSize &&
-                           surfaceConfig->luminanceSize == contextConfig->luminanceSize;
-        if (!colorCompat)
-        {
-            val->setError(EGL_BAD_MATCH, "Color buffer sizes are not compatible.");
-            return false;
-        }
+    bool componentTypeCompat =
+        surfaceConfig->colorComponentType == contextConfig->colorComponentType;
+    if (!componentTypeCompat)
+    {
+        val->setError(EGL_BAD_MATCH, "Color buffer component types are not compatible.");
+        return false;
+    }
 
-        bool componentTypeCompat =
-            surfaceConfig->colorComponentType == contextConfig->colorComponentType;
-        if (!componentTypeCompat)
-        {
-            val->setError(EGL_BAD_MATCH, "Color buffer component types are not compatible.");
-            return false;
-        }
-
-        bool dsCompat = surfaceConfig->depthSize == contextConfig->depthSize &&
-                        surfaceConfig->stencilSize == contextConfig->stencilSize;
-        if (!dsCompat)
-        {
-            val->setError(EGL_BAD_MATCH, "Depth-stencil buffer types are not compatible.");
-            return false;
-        }
+    bool dsCompat = surfaceConfig->depthSize == contextConfig->depthSize &&
+                    surfaceConfig->stencilSize == contextConfig->stencilSize;
+    if (!dsCompat)
+    {
+        val->setError(EGL_BAD_MATCH, "Depth-stencil buffer types are not compatible.");
+        return false;
     }
 
     bool surfaceTypeCompat = (surfaceConfig->surfaceType & contextConfig->surfaceType) != 0;
@@ -2146,14 +2143,6 @@ bool ValidateCreateWindowSurface(const ValidationContext *val,
                 }
                 break;
 
-            case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
-                if (!displayExtensions.flexibleSurfaceCompatibility)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE);
-                    return false;
-                }
-                break;
-
             case EGL_WIDTH:
             case EGL_HEIGHT:
                 if (!displayExtensions.windowFixedSize)
@@ -2353,17 +2342,6 @@ bool ValidateCreatePbufferSurface(const ValidationContext *val,
                 break;
 
             case EGL_VG_ALPHA_FORMAT:
-                break;
-
-            case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
-                if (!displayExtensions.flexibleSurfaceCompatibility)
-                {
-                    val->setError(
-                        EGL_BAD_ATTRIBUTE,
-                        "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used "
-                        "without EGL_ANGLE_flexible_surface_compatibility support.");
-                    return false;
-                }
                 break;
 
             case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
@@ -2577,17 +2555,6 @@ bool ValidateCreatePbufferFromClientBuffer(const ValidationContext *val,
                 break;
 
             case EGL_MIPMAP_TEXTURE:
-                break;
-
-            case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
-                if (!displayExtensions.flexibleSurfaceCompatibility)
-                {
-                    val->setError(
-                        EGL_BAD_ATTRIBUTE,
-                        "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used "
-                        "without EGL_ANGLE_flexible_surface_compatibility support.");
-                    return false;
-                }
                 break;
 
             case EGL_IOSURFACE_PLANE_ANGLE:
@@ -5143,16 +5110,6 @@ bool ValidateQuerySurface(const ValidationContext *val,
                 val->setError(EGL_BAD_ATTRIBUTE,
                               "EGL_FIXED_SIZE_ANGLE cannot be used without "
                               "EGL_ANGLE_window_fixed_size support.");
-                return false;
-            }
-            break;
-
-        case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
-            if (!display->getExtensions().flexibleSurfaceCompatibility)
-            {
-                val->setError(EGL_BAD_ATTRIBUTE,
-                              "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be "
-                              "used without EGL_ANGLE_flexible_surface_compatibility support.");
                 return false;
             }
             break;

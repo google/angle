@@ -153,10 +153,6 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     void onDetach(const gl::Context *context, rx::Serial framebufferSerial) override {}
     GLuint getId() const override;
 
-    bool flexibleSurfaceCompatibilityRequested() const
-    {
-        return mFlexibleSurfaceCompatibilityRequested;
-    }
     EGLint getOrientation() const { return mOrientation; }
 
     bool directComposition() const { return mState.directComposition; }
@@ -217,7 +213,6 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     EGLenum mBuftype;
 
     bool mPostSubBufferRequested;
-    bool mFlexibleSurfaceCompatibilityRequested;
 
     bool mLargestPbuffer;
     EGLenum mGLColorspace;

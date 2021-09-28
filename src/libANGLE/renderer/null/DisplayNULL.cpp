@@ -217,7 +217,6 @@ void DisplayNULL::generateExtensions(egl::DisplayExtensions *outExtensions) cons
     outExtensions->glTexture3DImage                   = true;
     outExtensions->glRenderbufferImage                = true;
     outExtensions->getAllProcAddresses                = true;
-    outExtensions->flexibleSurfaceCompatibility       = true;
     outExtensions->noConfigContext                    = true;
     outExtensions->directComposition                  = true;
     outExtensions->createContextNoError               = true;
