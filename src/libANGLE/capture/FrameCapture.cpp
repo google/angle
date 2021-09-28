@@ -2156,6 +2156,9 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
             // Establish the relationship between currently bound buffer and the VAO
             if (context->isGLES1())
             {
+                // Track indexes that used ES1 calls
+                vertexPointerBindings.set(attribIndex);
+
                 CaptureVertexPointerES1(setupCalls, replayState, attribIndex, attrib, binding);
             }
             else if (attrib.bindingIndex == attribIndex &&
