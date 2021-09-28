@@ -182,6 +182,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdClearAttachments-baseArrayLayer-00018",
     // http://anglebug.com/6355
     "VUID-vkCmdDraw-blendEnable-04727",
+    // http://anglebug.com/6442
+    "UNASSIGNED-CoreValidation-Shader-InterfaceTypeMismatch",
 };
 
 struct SkippedSyncvalMessage

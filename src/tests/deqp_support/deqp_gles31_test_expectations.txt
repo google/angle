@@ -301,9 +301,6 @@
 5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.unused_channels.alpha = SKIP
 5978 VULKAN NVIDIA : dEQP-GLES31.functional.texture.border_clamp.unused_channels.luminance_alpha = SKIP
 
-// The following broke with a vulkan-deps autoroll (2021-09-06)
-6442 WIN VULKAN NVIDIA : dEQP-GLES31.functional.tessellation.user_defined_io.per* = FAIL
-
 // Pixel 4 expectations.
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.android_extension_pack.extensions.oes_sample_variables = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.android_extension_pack.shaders.es31.extension_directive.oes_texture_storage_multisample_2d_array = SKIP

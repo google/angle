@@ -539,9 +539,6 @@
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.array.uint* = FAIL
 3677 VULKAN : dEQP-GLES3.functional.fragment_out.random.* = FAIL
 
-// The following broke with a vulkan-deps autoroll (2021-09-06)
-6442 VULKAN : dEQP-GLES3.functional.shaders.linkage.varying.struct.* = FAIL
-
 // NVIDIA Depth/Stencil textures:
 // Fails on Quadro P400, driver 418.56, Linux
 3970 VULKAN NVIDIA LINUX : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component32f = FAIL
