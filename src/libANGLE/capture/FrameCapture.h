@@ -565,6 +565,7 @@ class FrameCaptureShared final : angle::NonCopyable
     BufferDataMap mBufferDataMap;
     bool mValidateSerializedState = false;
     std::string mValidationExpression;
+    bool mTrimEnabled = true;
     PackedEnumMap<ResourceIDType, uint32_t> mMaxAccessedResourceIDs;
 
     ResourceTracker mResourceTracker;

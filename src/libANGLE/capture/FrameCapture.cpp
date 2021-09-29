@@ -61,12 +61,13 @@ constexpr char kEnabledVarName[]        = "ANGLE_CAPTURE_ENABLED";
 constexpr char kOutDirectoryVarName[]   = "ANGLE_CAPTURE_OUT_DIR";
 constexpr char kFrameStartVarName[]     = "ANGLE_CAPTURE_FRAME_START";
 constexpr char kFrameEndVarName[]       = "ANGLE_CAPTURE_FRAME_END";
-constexpr char kCaptureTriggerVarName[] = "ANGLE_CAPTURE_TRIGGER";
+constexpr char kTriggerVarName[]        = "ANGLE_CAPTURE_TRIGGER";
 constexpr char kCaptureLabelVarName[]   = "ANGLE_CAPTURE_LABEL";
 constexpr char kCompressionVarName[]    = "ANGLE_CAPTURE_COMPRESSION";
 constexpr char kSerializeStateVarName[] = "ANGLE_CAPTURE_SERIALIZE_STATE";
 constexpr char kValidationVarName[]     = "ANGLE_CAPTURE_VALIDATION";
 constexpr char kValidationExprVarName[] = "ANGLE_CAPTURE_VALIDATION_EXPR";
+constexpr char kTrimEnabledVarName[]    = "ANGLE_CAPTURE_TRIM_ENABLED";
 
 constexpr size_t kBinaryAlignment   = 16;
 constexpr size_t kFunctionSizeLimit = 5000;
@@ -75,15 +76,16 @@ constexpr size_t kFunctionSizeLimit = 5000;
 constexpr size_t kStringLengthLimit = 16380;
 
 // Android debug properties that correspond to the above environment variables
-constexpr char kAndroidCaptureEnabled[] = "debug.angle.capture.enabled";
+constexpr char kAndroidEnabled[]        = "debug.angle.capture.enabled";
 constexpr char kAndroidOutDir[]         = "debug.angle.capture.out_dir";
 constexpr char kAndroidFrameStart[]     = "debug.angle.capture.frame_start";
 constexpr char kAndroidFrameEnd[]       = "debug.angle.capture.frame_end";
-constexpr char kAndroidCaptureTrigger[] = "debug.angle.capture.trigger";
+constexpr char kAndroidTrigger[]        = "debug.angle.capture.trigger";
 constexpr char kAndroidCaptureLabel[]   = "debug.angle.capture.label";
 constexpr char kAndroidCompression[]    = "debug.angle.capture.compression";
 constexpr char kAndroidValidation[]     = "debug.angle.capture.validation";
 constexpr char kAndroidValidationExpr[] = "debug.angle.capture.validation_expr";
+constexpr char kAndroidTrimEnabled[]    = "debug.angle.capture.trim_enabled";
 
 struct FramebufferCaptureFuncs
 {
@@ -148,7 +150,7 @@ std::string GetDefaultOutDirectory()
     constexpr char kAndroidOutputSubdir[] = "/angle_capture/";
     path += std::string(applicationId) + kAndroidOutputSubdir;
 
-    // Check for existance of output path
+    // Check for existence of output path
     struct stat dir_stat;
     if (stat(path.c_str(), &dir_stat) == -1)
     {
@@ -164,8 +166,7 @@ std::string GetDefaultOutDirectory()
 
 std::string GetCaptureTrigger()
 {
-    return GetEnvironmentVarOrUnCachedAndroidProperty(kCaptureTriggerVarName,
-                                                      kAndroidCaptureTrigger);
+    return GetEnvironmentVarOrUnCachedAndroidProperty(kTriggerVarName, kAndroidTrigger);
 }
 
 std::ostream &operator<<(std::ostream &os, gl::ContextID contextId)
@@ -4247,7 +4248,7 @@ FrameCaptureShared::FrameCaptureShared()
     reset();
 
     std::string enabledFromEnv =
-        GetEnvironmentVarOrUnCachedAndroidProperty(kEnabledVarName, kAndroidCaptureEnabled);
+        GetEnvironmentVarOrUnCachedAndroidProperty(kEnabledVarName, kAndroidEnabled);
     if (enabledFromEnv == "0")
     {
         mEnabled = false;
@@ -4290,7 +4291,7 @@ FrameCaptureShared::FrameCaptureShared()
     }
 
     std::string captureTriggerFromEnv =
-        GetEnvironmentVarOrUnCachedAndroidProperty(kCaptureTriggerVarName, kAndroidCaptureTrigger);
+        GetEnvironmentVarOrUnCachedAndroidProperty(kTriggerVarName, kAndroidTrigger);
     if (!captureTriggerFromEnv.empty())
     {
         mCaptureTrigger = atoi(captureTriggerFromEnv.c_str());
@@ -4334,6 +4335,13 @@ FrameCaptureShared::FrameCaptureShared()
     if (!mValidationExpression.empty())
     {
         INFO() << "Validation expression is " << kValidationExprVarName;
+    }
+
+    std::string trimEnabledFromEnv =
+        GetEnvironmentVarOrUnCachedAndroidProperty(kTrimEnabledVarName, kAndroidTrimEnabled);
+    if (trimEnabledFromEnv == "0")
+    {
+        mTrimEnabled = false;
     }
 
     if (mFrameIndex == mCaptureStartFrame)
@@ -6060,6 +6068,7 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
     json.addBool("IsBindGeneratesResourcesEnabled", glState.isBindGeneratesResourceEnabled());
     json.addBool("IsWebGLCompatibilityEnabled", glState.isWebGL());
     json.addBool("IsRobustResourceInitEnabled", glState.isRobustResourceInitEnabled());
+    json.addBool("IsTrimmingEnabled", mTrimEnabled);
     json.endGroup();
 
     {
@@ -6604,6 +6613,11 @@ void FrameCaptureShared::markResourceSetupCallsInactive(std::vector<CallCapture>
                                                         GLuint id,
                                                         gl::Range<size_t> range)
 {
+    if (!mTrimEnabled)
+    {
+        return;
+    }
+
     ASSERT(mResourceIDToSetupCalls[type].find(id) == mResourceIDToSetupCalls[type].end());
 
     // Mark all of the calls that were used to initialize this resource as INACTIVE
