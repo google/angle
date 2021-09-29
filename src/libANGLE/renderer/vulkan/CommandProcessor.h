@@ -96,6 +96,7 @@ class CommandProcessorTask
                                  const Semaphore *semaphore,
                                  bool hasProtectedContent,
                                  egl::ContextPriority priority,
+                                 CommandPool *commandPool,
                                  GarbageList &&currentGarbage,
                                  Serial submitQueueSerial);
 
@@ -129,6 +130,7 @@ class CommandProcessorTask
     const VkPresentInfoKHR &getPresentInfo() const { return mPresentInfo; }
     const RenderPass *getRenderPass() const { return mRenderPass; }
     CommandBufferHelper *getCommandBuffer() const { return mCommandBuffer; }
+    CommandPool *getCommandPool() const { return mCommandPool; }
 
   private:
     void copyPresentInfo(const VkPresentInfoKHR &other);
@@ -143,6 +145,7 @@ class CommandProcessorTask
     std::vector<VkSemaphore> mWaitSemaphores;
     std::vector<VkPipelineStageFlags> mWaitSemaphoreStageMasks;
     const Semaphore *mSemaphore;
+    CommandPool *mCommandPool;
     GarbageList mGarbage;
 
     // FinishToSerial & Flush command data

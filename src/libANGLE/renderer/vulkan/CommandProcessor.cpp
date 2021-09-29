@@ -102,6 +102,7 @@ void CommandProcessorTask::initTask()
     mRenderPass                  = nullptr;
     mCommandBuffer               = nullptr;
     mSemaphore                   = nullptr;
+    mCommandPool                 = nullptr;
     mOneOffFence                 = nullptr;
     mPresentInfo                 = {};
     mPresentInfo.pResults        = nullptr;
@@ -210,6 +211,7 @@ void CommandProcessorTask::initFlushAndQueueSubmit(
     const Semaphore *semaphore,
     bool hasProtectedContent,
     egl::ContextPriority priority,
+    CommandPool *commandPool,
     GarbageList &&currentGarbage,
     Serial submitQueueSerial)
 {
@@ -217,6 +219,7 @@ void CommandProcessorTask::initFlushAndQueueSubmit(
     mWaitSemaphores          = waitSemaphores;
     mWaitSemaphoreStageMasks = waitSemaphoreStageMasks;
     mSemaphore               = semaphore;
+    mCommandPool             = commandPool;
     mGarbage                 = std::move(currentGarbage);
     mPriority                = priority;
     mHasProtectedContent     = hasProtectedContent;
@@ -251,6 +254,7 @@ CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs
     std::swap(mWaitSemaphoreStageMasks, rhs.mWaitSemaphoreStageMasks);
     std::swap(mSemaphore, rhs.mSemaphore);
     std::swap(mOneOffFence, rhs.mOneOffFence);
+    std::swap(mCommandPool, rhs.mCommandPool);
     std::swap(mGarbage, rhs.mGarbage);
     std::swap(mSerial, rhs.mSerial);
     std::swap(mPriority, rhs.mPriority);
@@ -430,8 +434,7 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
             ANGLE_TRY(mCommandQueue.submitFrame(
                 this, task->hasProtectedContent(), task->getPriority(), task->getWaitSemaphores(),
                 task->getWaitSemaphoreStageMasks(), task->getSemaphore(),
-                std::move(task->getGarbage()), task->getCommandBuffer()->getCommandPool(),
-                task->getQueueSerial()));
+                std::move(task->getGarbage()), task->getCommandPool(), task->getQueueSerial()));
 
             ASSERT(task->getGarbage().empty());
             break;
@@ -654,8 +657,8 @@ angle::Result CommandProcessor::submitFrame(
 
     CommandProcessorTask task;
     task.initFlushAndQueueSubmit(waitSemaphores, waitSemaphoreStageMasks, signalSemaphore,
-                                 hasProtectedContent, priority, std::move(currentGarbage),
-                                 submitQueueSerial);
+                                 hasProtectedContent, priority, commandPool,
+                                 std::move(currentGarbage), submitQueueSerial);
 
     queueCommand(std::move(task));
 
