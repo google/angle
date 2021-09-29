@@ -728,8 +728,11 @@ angle::Result ProgramMtl::createMslShaderLib(
 
         // Convert to actual binary shader
         mtl::AutoObjCPtr<NSError *> err = nil;
-        translatedMslInfo->metalLibrary = mtl::CreateShaderLibrary(
-            mtlDevice, translatedMslInfo->metalShaderSource, substitutionMacros, &err);
+        bool disableFastMath = (context->getDisplay()->getFeatures().intelDisableFastMath.enabled &&
+                                translatedMslInfo->hasInvariantOrAtan);
+        translatedMslInfo->metalLibrary =
+            mtl::CreateShaderLibrary(mtlDevice, translatedMslInfo->metalShaderSource,
+                                     substitutionMacros, !disableFastMath, &err);
         if (err && !translatedMslInfo->metalLibrary)
         {
             std::ostringstream ss;
@@ -818,6 +821,7 @@ void ProgramMtl::saveShaderInternalInfo(gl::BinaryOutputStream *stream)
         {
             stream->writeInt<uint32_t>(uboBinding);
         }
+        stream->writeBool(mMslShaderTranslateInfo[shaderType].hasInvariantOrAtan);
     }
     for (size_t xfbBindIndex = 0; xfbBindIndex < mtl::kMaxShaderXFBs; xfbBindIndex++)
     {
@@ -861,7 +865,9 @@ void ProgramMtl::loadShaderInternalInfo(gl::BinaryInputStream *stream)
         {
             uboBinding = stream->readInt<uint32_t>();
         }
+        mMslShaderTranslateInfo[shaderType].hasInvariantOrAtan = stream->readBool();
     }
+
     for (size_t xfbBindIndex = 0; xfbBindIndex < mtl::kMaxShaderXFBs; xfbBindIndex++)
     {
         stream->readInt(

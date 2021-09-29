@@ -157,6 +157,11 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
         return mMslShaderTranslateInfo[shaderType].metalShaderSource;
     }
 
+    mtl::TranslatedShaderInfo getTranslatedShaderInfo(const gl::ShaderType shaderType) const
+    {
+        return mMslShaderTranslateInfo[shaderType];
+    }
+
     bool hasFlatAttribute() const { return programHasFlatAttributes(); }
 
   private:

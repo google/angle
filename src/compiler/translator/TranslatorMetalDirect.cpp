@@ -23,7 +23,6 @@
 #include "compiler/translator/TranslatorMetalDirect/NameEmbeddedUniformStructsMetal.h"
 #include "compiler/translator/TranslatorMetalDirect/ReduceInterfaceBlocks.h"
 #include "compiler/translator/TranslatorMetalDirect/RewriteCaseDeclarations.h"
-#include "compiler/translator/TranslatorMetalDirect/RewriteGlobalQualifierDecls.h"
 #include "compiler/translator/TranslatorMetalDirect/RewriteKeywords.h"
 #include "compiler/translator/TranslatorMetalDirect/RewriteOutArgs.h"
 #include "compiler/translator/TranslatorMetalDirect/RewritePipelines.h"
@@ -463,6 +462,13 @@ ANGLE_NO_DISCARD bool AppendVertexShaderPositionYCorrectionToMain(TCompiler *com
 }
 }  // namespace
 
+namespace mtl
+{
+TranslatorMetalReflection *getTranslatorMetalReflection(const TCompiler *compiler)
+{
+    return ((TranslatorMetalDirect *)compiler)->getTranslatorMetalReflection();
+}
+}  // namespace mtl
 TranslatorMetalDirect::TranslatorMetalDirect(sh::GLenum type,
                                              ShShaderSpec spec,
                                              ShShaderOutput output)
@@ -1143,12 +1149,6 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
-    Invariants invariants;
-    if (!RewriteGlobalQualifierDecls(*this, *root, invariants))
-    {
-        return false;
-    }
-
     if (!ConvertUnsupportedConstructorsToFunctionCalls(*this, *root))
     {
         return false;
@@ -1206,8 +1206,8 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
     mValidateASTOptions.validateQualifiers = false;
 
     PipelineStructs pipelineStructs;
-    if (!RewritePipelines(*this, *root, idGen, *driverUniforms, symbolEnv, invariants,
-                          pipelineStructs))
+    if (!RewritePipelines(*this, *root, getInputVaryings(), getOutputVaryings(), idGen,
+                          *driverUniforms, symbolEnv, pipelineStructs))
     {
         return false;
     }
@@ -1242,8 +1242,7 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
     {
         return false;
     }
-    if (!EmitMetal(*this, *root, idGen, pipelineStructs, invariants, symbolEnv, ppc,
-                   &getSymbolTable()))
+    if (!EmitMetal(*this, *root, idGen, pipelineStructs, symbolEnv, ppc, &getSymbolTable()))
     {
         return false;
     }

@@ -137,8 +137,7 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        mMetalDevice =
-            [getMetalDeviceMatchingAttribute(display->getAttributeMap()) ANGLE_MTL_AUTORELEASE];
+        mMetalDevice = getMetalDeviceMatchingAttribute(display->getAttributeMap());
         // If we can't create a device, fail initialization.
         if (!mMetalDevice.get())
         {
@@ -229,14 +228,15 @@ DeviceImpl *DisplayMtl::createDevice()
     return new DeviceMtl();
 }
 
-id<MTLDevice> DisplayMtl::getMetalDeviceMatchingAttribute(const egl::AttributeMap &attribs)
+mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
+    const egl::AttributeMap &attribs)
 {
 #if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
     const std::string anglePreferredDevice = angle::GetEnvironmentVar(kANGLEPreferredDeviceEnv);
-    NSArray<id<MTLDevice>> *deviceList     = MTLCopyAllDevices();
+    auto deviceList                        = mtl::adoptObjCObj(MTLCopyAllDevices());
     if (anglePreferredDevice != "")
     {
-        for (id<MTLDevice> device in deviceList)
+        for (id<MTLDevice> device in deviceList.get())
         {
             if ([device.name.lowercaseString
                     containsString:[NSString stringWithUTF8String:anglePreferredDevice.c_str()]
@@ -256,7 +256,7 @@ id<MTLDevice> DisplayMtl::getMetalDeviceMatchingAttribute(const egl::AttributeMa
 #endif
     // If we can't find anything, or are on a platform that doesn't support power options, create a
     // default device.
-    return MTLCreateSystemDefaultDevice();
+    return mtl::adoptObjCObj(MTLCreateSystemDefaultDevice());
 }
 
 egl::Error DisplayMtl::waitClient(const gl::Context *context)
@@ -908,6 +908,9 @@ void DisplayMtl::initializeExtensions() const
 
         // GL_OES_EGL_sync
         mNativeExtensions.EGLSyncOES = true;
+
+        // GL_ARB_sync
+        mNativeExtensions.syncARB = true;
     }
 }
 
@@ -1026,6 +1029,8 @@ void DisplayMtl::initializeFeatures()
 
     ANGLE_FEATURE_CONDITION((&mFeatures), intelExplicitBoolCastWorkaround,
                             isIntel() && GetMacOSVersion() < OSVersion(11, 0, 0));
+    ANGLE_FEATURE_CONDITION((&mFeatures), intelDisableFastMath,
+                            isIntel() && GetMacOSVersion() < OSVersion(12, 0, 0));
 
     ANGLE_FEATURE_CONDITION((&mFeatures), forceNonCSBaseMipmapGeneration, isIntel());
 
@@ -1050,22 +1055,16 @@ angle::Result DisplayMtl::initializeShaderLibrary()
 #ifdef ANGLE_METAL_XCODE_BUILDS_SHADERS
     mDefaultShadersAsyncInfo.reset(new DefaultShaderAsyncInfoMtl);
 
-    NSString *path = [NSBundle bundleWithIdentifier:@"com.apple.WebKit"].bundlePath;
-    NSError *error = nullptr;
-    mDefaultShadersAsyncInfo->defaultShaders =
-        [getMetalDevice() newDefaultLibraryWithBundle:[NSBundle bundleWithPath:path] error:&error];
-
-    if (error && !mDefaultShadersAsyncInfo->defaultShaders)
-    {
-        ANGLE_MTL_OBJC_SCOPE
-        {
-            ERR() << "Internal error: newDefaultLibraryWithBundle failed. "
-                  << error.localizedDescription.UTF8String;
-        }
-        mDefaultShadersAsyncInfo->defaultShadersCompileError = std::move(error);
-        return angle::Result::Stop;
-    }
-    mDefaultShadersAsyncInfo->compiled = true;
+    const uint8_t *compiled_shader_binary;
+    size_t compiled_shader_binary_len;
+    compiled_shader_binary                           = gMetalBinaryShaders;
+    compiled_shader_binary_len                       = gMetalBinaryShaders_len;
+    mtl::AutoObjCPtr<NSError *> err                  = nil;
+    mtl::AutoObjCPtr<id<MTLLibrary>> mDefaultShaders = mtl::CreateShaderLibraryFromBinary(
+        getMetalDevice(), compiled_shader_binary, compiled_shader_binary_len, &err);
+    mDefaultShadersAsyncInfo->defaultShaders             = std::move(mDefaultShaders.get());
+    mDefaultShadersAsyncInfo->defaultShadersCompileError = std::move(err.get());
+    mDefaultShadersAsyncInfo->compiled                   = true;
 
 #else
     mDefaultShadersAsyncInfo.reset(new DefaultShaderAsyncInfoMtl);

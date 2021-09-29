@@ -29,7 +29,7 @@ class DriverUniform;
 class DriverUniformMetal;
 class SpecConst;
 class TOutputMSL;
-
+class TranslatorMetalReflection;
 typedef std::unordered_map<size_t, std::string> originalNamesMap;
 typedef std::unordered_map<std::string, size_t> samplerBindingMap;
 typedef std::unordered_map<std::string, size_t> textureBindingMap;
@@ -41,6 +41,11 @@ struct UBOBindingInfo
     size_t arraySize = 0;
 };
 typedef std::unordered_map<std::string, UBOBindingInfo> uniformBufferBindingMap;
+
+namespace mtl
+{
+TranslatorMetalReflection *getTranslatorMetalReflection(const TCompiler *compiler);
+}
 
 class TranslatorMetalReflection
 {
@@ -127,8 +132,10 @@ class TranslatorMetalReflection
     }
     void reset()
     {
-        hasUBOs      = false;
-        hasFlatInput = false;
+        hasUBOs       = false;
+        hasFlatInput  = false;
+        hasAtan       = false;
+        hasInvariance = false;
         originalNames.clear();
         samplerBindings.clear();
         textureBindings.clear();
@@ -136,8 +143,10 @@ class TranslatorMetalReflection
         uniformBufferBindings.clear();
     }
 
-    bool hasUBOs      = false;
-    bool hasFlatInput = false;
+    bool hasUBOs       = false;
+    bool hasFlatInput  = false;
+    bool hasAtan       = false;
+    bool hasInvariance = false;
 
   private:
     originalNamesMap originalNames;

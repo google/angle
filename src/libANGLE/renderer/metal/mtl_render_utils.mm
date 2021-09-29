@@ -3067,28 +3067,5 @@ VertexFormatConversionUtils::getFloatConverstionRenderPipeline(ContextMtl *conte
     return cache.getRenderPipelineState(contextMtl, pipelineDesc);
 }
 
-AutoObjCPtr<id<MTLLibrary>> TransformFeedbackUtils::createMslXfbLibrary(
-    ContextMtl *contextMtl,
-    const std::string &translatedMsl)
-{
-    ANGLE_MTL_OBJC_SCOPE
-    {
-        DisplayMtl *display     = contextMtl->getDisplay();
-        id<MTLDevice> mtlDevice = display->getMetalDevice();
-
-        // Convert to actual binary shader
-        mtl::AutoObjCPtr<NSError *> err               = nil;
-        mtl::AutoObjCPtr<id<MTLLibrary>> mtlShaderLib = mtl::CreateShaderLibrary(
-            mtlDevice, translatedMsl, @{@"TRANSFORM_FEEDBACK_ENABLED" : @"1"}, &err);
-        if (err && !mtlShaderLib)
-        {
-            NSLog(@"%@", err.get());
-            assert(0);
-        }
-        mtlShaderLib.get().label = @"TransformFeedback";
-        return mtlShaderLib;
-    }
-}
-
 }  // namespace mtl
 }  // namespace rx

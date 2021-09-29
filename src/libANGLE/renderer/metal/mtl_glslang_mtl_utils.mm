@@ -457,6 +457,8 @@ angle::Result GlslangGetMSL(const gl::Context *glContext,
             GetAssignedSamplerBindings(reflection, originalSamplerBindings, structSamplers,
                                        &mslShaderInfoOut->at(type).actualSamplerBindings);
         }
+        (*mslShaderInfoOut)[type].hasInvariantOrAtan =
+            reflection->hasAtan || reflection->hasInvariance;
     }
     return angle::Result::Continue;
 }

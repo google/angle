@@ -216,7 +216,11 @@ class Separator : public TIntermRebuild
         {
             return true;
         }
-        ASSERT(expr.getType().getBasicType() != TBasicType::EbtVoid);
+        // https://bugs.webkit.org/show_bug.cgi?id=227723: Fix for sequence operator.
+        if ((expr.getType().getBasicType() == TBasicType::EbtVoid))
+        {
+            return true;
+        }
         return false;
     }
 
@@ -615,7 +619,8 @@ class Separator : public TIntermRebuild
 
     PostResult visitGlobalQualifierDeclarationPost(TIntermGlobalQualifierDeclaration &node) override
     {
-        ASSERT(false);  // These should be scrubbed from AST before rewriter is called.
+        // With the removal of RewriteGlobalQualifierDecls, we may encounter globals while
+        // seperating compound expressions.
         pushStmt(node);
         return node;
     }

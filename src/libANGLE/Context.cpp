@@ -47,6 +47,11 @@
 #include "libANGLE/renderer/Format.h"
 #include "libANGLE/validationES.h"
 
+#if defined(ANGLE_PLATFORM_APPLE)
+#    include <dispatch/dispatch.h>
+#    include "common/tls.h"
+#endif
+
 namespace gl
 {
 namespace
@@ -315,7 +320,35 @@ bool GetSaveAndRestoreState(const egl::AttributeMap &attribs)
 
 }  // anonymous namespace
 
+#if defined(ANGLE_PLATFORM_APPLE)
+// TODO(angleproject:6479): Due to a bug in Apple's dyld loader, `thread_local` will cause
+// excessive memory use. Temporarily avoid it by using pthread's thread
+// local storage instead.
+static TLSIndex GetCurrentValidContextTLSIndex()
+{
+    static TLSIndex CurrentValidContextIndex = TLS_INVALID_INDEX;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+      ASSERT(CurrentValidContextIndex == TLS_INVALID_INDEX);
+      CurrentValidContextIndex = CreateTLSIndex();
+    });
+    return CurrentValidContextIndex;
+}
+Context *GetCurrentValidContextTLS()
+{
+    TLSIndex CurrentValidContextIndex = GetCurrentValidContextTLSIndex();
+    ASSERT(CurrentValidContextIndex != TLS_INVALID_INDEX);
+    return static_cast<Context *>(GetTLSValue(CurrentValidContextIndex));
+}
+void SetCurrentValidContextTLS(Context *context)
+{
+    TLSIndex CurrentValidContextIndex = GetCurrentValidContextTLSIndex();
+    ASSERT(CurrentValidContextIndex != TLS_INVALID_INDEX);
+    SetTLSValue(CurrentValidContextIndex, context);
+}
+#else
 thread_local Context *gCurrentValidContext = nullptr;
+#endif
 
 Context::Context(egl::Display *display,
                  const egl::Config *config,
@@ -2775,7 +2808,11 @@ void Context::setContextLost()
     mSkipValidation = false;
 
     // Make sure we update TLS.
+#if defined(ANGLE_PLATFORM_APPLE)
+    SetCurrentValidContextTLS(nullptr);
+#else
     gCurrentValidContext = nullptr;
+#endif
 }
 
 GLenum Context::getGraphicsResetStatus()

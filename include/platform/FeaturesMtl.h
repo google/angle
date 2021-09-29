@@ -135,6 +135,10 @@ struct FeaturesMtl : FeatureSetBase
         "Insert explicit casts for float/double/unsigned/signed int on macOS 10.15 with Intel "
         "driver",
         &members};
+
+    Feature intelDisableFastMath = {
+        "intel_disable_fast_math", FeatureCategory::MetalWorkarounds,
+        "Disable fast math in atan and invariance cases when running below macOS 12.0", &members};
 };
 
 }  // namespace angle

@@ -170,11 +170,11 @@ angle::Result ProvokingVertexHelper::getSpecializedShader(
     const mtl::ProvokingVertexComputePipelineDesc &pipelineDesc,
     id<MTLFunction> *shaderOut)
 {
-    uint indexBufferKey                 = buildIndexBufferKey(pipelineDesc);
-    MTLFunctionConstantValues *fcValues = [[MTLFunctionConstantValues alloc] init];
+    uint indexBufferKey = buildIndexBufferKey(pipelineDesc);
+    auto fcValues       = mtl::adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
     [fcValues setConstantValue:&indexBufferKey type:MTLDataTypeUInt withName:@"fixIndexBufferKey"];
 
-    return CreateMslShader(context, mProvokingVertexLibrary, @"fixIndexBuffer", fcValues,
+    return CreateMslShader(context, mProvokingVertexLibrary, @"fixIndexBuffer", fcValues.get(),
                            shaderOut);
 }
 // Private command buffer

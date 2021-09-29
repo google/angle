@@ -575,10 +575,6 @@ class TransformFeedbackUtils
         ContextMtl *contextMtl,
         RenderCommandEncoder *cmdEncoder,
         mtl::RenderPipelineDesc &pipelineDesc);
-
-  private:
-    AutoObjCPtr<id<MTLLibrary>> createMslXfbLibrary(ContextMtl *contextMtl,
-                                                    const std::string &translatedMsl);
 };
 
 // RenderUtils: container class of various util classes above
