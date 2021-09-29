@@ -460,26 +460,18 @@ angle::Result InitializeDepthStencilTextureContentsGPU(const gl::Context *contex
     uint32_t layer = index.hasLayer() ? index.getLayerIndex() : 0;
     rtMTL.set(texture, level, layer, textureObjFormat);
     mtl::RenderPassDesc rpDesc;
-    // For formats such as MTLPixelFormatStencil8/GL_STENCIL_INDEX8 we only want to set the stencil
-    // attachment.
-    if (angleFormat.stencilBits && !angleFormat.depthBits)
-    {
-        rtMTL.toRenderPassAttachmentDesc(&rpDesc.stencilAttachment);
-    }
-    else
-    {
-        rtMTL.toRenderPassAttachmentDesc(&rpDesc.depthAttachment);
-    }
-    rpDesc.sampleCount = texture->samples();
     if (angleFormat.depthBits)
     {
+        rtMTL.toRenderPassAttachmentDesc(&rpDesc.depthAttachment);
         rpDesc.depthAttachment.loadAction = MTLLoadActionClear;
         rpDesc.depthAttachment.clearDepth = 1.0;
     }
     if (angleFormat.stencilBits)
     {
+        rtMTL.toRenderPassAttachmentDesc(&rpDesc.stencilAttachment);
         rpDesc.stencilAttachment.loadAction = MTLLoadActionClear;
     }
+    rpDesc.sampleCount = texture->samples();
 
     // End current render pass
     contextMtl->endEncoding(true);
