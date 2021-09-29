@@ -172,6 +172,12 @@ def reject_duplicate_keys(pairs):
     return found_keys
 
 
+def load_json_metadata(trace):
+    json_file_name = '%s/%s.json' % (trace, trace)
+    with open(json_file_name) as f:
+        return json.loads(f.read())
+
+
 # TODO(http://anglebug.com/5878): Revert back to non-autogen'ed file names for the angledata.gz.
 def get_angledata_filename(trace):
     angledata_files = glob.glob('%s/%s*angledata.gz' % (trace, trace))
@@ -187,20 +193,18 @@ def gen_gni(traces, gni_file, format_args):
         context = get_context(trace)
         angledata_file = get_angledata_filename(trace)
         txt_file = '%s/%s_capture_context%s_files.txt' % (trace, trace, context)
-        json_file_name = '%s/%s.json' % (trace, trace)
         if os.path.exists(txt_file):
             with open(txt_file) as f:
                 files = f.readlines()
                 f.close()
                 source_files = ['"%s/%s"' % (trace, file.strip()) for file in files]
         else:
-            assert os.path.exists(json_file_name), '%s does not exist' % json_file_name
-            with open(json_file_name) as f:
-                json_data = json.loads(f.read())
-                files = json_data["TraceFiles"]
+            json_data = load_json_metadata(trace)
+            files = json_data["TraceFiles"]
 
         source_files = ['"%s/%s"' % (trace, file.strip()) for file in files]
         data_files = ['"%s"' % angledata_file]
+        json_file_name = '%s/%s.json' % (trace, trace)
         if os.path.exists(json_file_name):
             data_files.append('"%s"' % json_file_name)
 
@@ -244,6 +248,7 @@ def contains_colorspace(trace):
     return contains_string(trace, 'kReplayDrawSurfaceColorSpace')
 
 
+# TODO(jmadill): Remove after retrace. http://anglebug.com/5133
 def json_metadata_exists(trace):
     return os.path.isfile('%s/%s.json' % (trace, trace))
 

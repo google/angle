@@ -1656,7 +1656,7 @@ void TracePerfTest::validateSerializedState(const char *expectedCapturedSerializ
         return;
     }
 
-    printf("Serialization mismatch!\n");
+    GTEST_NONFATAL_FAILURE_("Serialization mismatch!");
 
     char aFilePath[kMaxPath] = {};
     if (CreateTemporaryFile(aFilePath, kMaxPath))
