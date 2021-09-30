@@ -1083,6 +1083,16 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
 
+    if (traceNameIs("mini_world"))
+    {
+        // TODO: http://anglebug.com/6443 Vulkan Test failure on Pixel4XL due to vulkan validation
+        // error VUID-vkDestroyBuffer-buffer-00922
+        if (IsQualcomm() && mParams.isVulkan())
+        {
+            mSkipTest = true;
+        }
+    }
+
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
     ASSERT(mParams.eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE ||
            gEnableAllTraceTests);

@@ -121,7 +121,7 @@ namespace trace_angle
 {
 namespace
 {
-constexpr size_t kNumTraces = 104;
+constexpr size_t kNumTraces = 105;
 struct TracePair
 {
     const char name[kTraceInfoMaxNameLen];
@@ -1470,6 +1470,7 @@ constexpr TracePair kTraceInfos[kNumTraces] = {
       false,
       false,
       false}},
+    {"mini_world", {}},
     {"mobile_legends",
      {"mobile_legends",
       mobile_legends::kReplayContextClientMajorVersion,

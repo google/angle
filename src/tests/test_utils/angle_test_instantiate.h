@@ -39,6 +39,7 @@ bool IsPixelXL();
 bool IsPixel2();
 bool IsPixel2XL();
 bool IsPixel4();
+bool IsPixel4XL();
 bool IsNVIDIAShield();
 
 // GPU vendors.
