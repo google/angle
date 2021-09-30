@@ -227,6 +227,7 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
         dimensions = dimensions,
         build_numbers = True,
         resultdb_settings = resultdb.settings(enable = True),
+        test_presentation = resultdb.test_presentation(column_keys = ["v.gpu"]),
     )
 
     is_perf = "-perf" in name
@@ -279,6 +280,7 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
             dimensions = dimensions,
             build_numbers = True,
             resultdb_settings = resultdb.settings(enable = True),
+            test_presentation = resultdb.test_presentation(column_keys = ["v.gpu"]),
         )
 
         # Include all other bots in the CQ by default except the placeholder GCC configs.
@@ -328,6 +330,7 @@ luci.builder(
         "runhooks": True,
     },
     resultdb_settings = resultdb.settings(enable = True),
+    test_presentation = resultdb.test_presentation(column_keys = ["v.gpu"]),
 )
 
 luci.gitiles_poller(
