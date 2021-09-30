@@ -87,4 +87,5 @@ View the [Dev setup instructions](doc/DevSetup.md).
 * Track the [dEQP test conformance](doc/dEQP-Charts.md)
 * Read design docs on the [Vulkan back-end](src/libANGLE/renderer/vulkan/README.md)
 * Read about ANGLE's [testing infrastructure](infra/README.md)
+* View information on ANGLE's [supported extensions](doc/ExtensionSupport.md)
 * If you use ANGLE in your own project, we'd love to hear about it!

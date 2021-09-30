@@ -1,6 +1,6 @@
 {
-  "doc/SupportedExtensions.md":
-    "3a831d3b72baf1089e0e78a19b3e3374",
+  "doc/ExtensionSupport.md":
+    "27b0d3eb9282a4b7bcbe4167fd9d3cae",
   "scripts/cl.xml":
     "f923201d4ea3e1130763b19fa7faa7a2",
   "scripts/egl.xml":
@@ -30,7 +30,7 @@
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/libANGLE/gen_extensions.py":
-    "50b566e2d23bb28448a33c485d388327",
+    "31c929bbb221600a4ad33114db17364b",
   "src/libANGLE/gles_extensions_autogen.cpp":
     "039e36b4e6f02839e380b07fc9cb2855",
   "src/libANGLE/gles_extensions_autogen.h":
