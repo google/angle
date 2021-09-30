@@ -977,7 +977,6 @@ bool InlineArray(ConvertStructState &state,
     const bool isMultiDim = type.isArrayOfArrays();
 
     auto &innermostType = InnermostType(type);
-    const TField innermostField(&innermostType, field.name(), field.line(), field.symbolType());
 
     if (isMultiDim)
     {
@@ -987,6 +986,15 @@ bool InlineArray(ConvertStructState &state,
     for (unsigned i = 0; i < volume; ++i)
     {
         state.pushPath(i);
+        TType setType(innermostType);
+        if (setType.getLayoutQualifier().locationsSpecified)
+        {
+            TLayoutQualifier qualifier(innermostType.getLayoutQualifier());
+            qualifier.location           = innermostType.getLayoutQualifier().location + i;
+            qualifier.locationsSpecified = 1;
+            setType.setLayoutQualifier(qualifier);
+        }
+        const TField innermostField(&setType, field.name(), field.line(), field.symbolType());
         ModifyCommon(state, innermostField, storage, packing);
         state.popPath();
     }
