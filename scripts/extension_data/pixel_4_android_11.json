@@ -1,8 +1,8 @@
 {
     "Vendor": "Google Inc. (Qualcomm)",
-    "Version": "OpenGL ES 3.2.0 (ANGLE 2.1.16782 git hash: 368c0ce94472)",
+    "Version": "OpenGL ES 3.2.0 (ANGLE 2.1.16847 git hash: a097ee2ea7a9)",
     "Renderer": "ANGLE (Qualcomm, Vulkan 1.1.128 (Adreno (TM) 640 (0x06040001)), Qualcomm Technologies Inc. Adreno Vulkan Driver-512.490.0)",
-    "ShaderLanguageVersion": "OpenGL ES GLSL ES 3.20 (ANGLE 2.1.16782 git hash: 368c0ce94472)",
+    "ShaderLanguageVersion": "OpenGL ES GLSL ES 3.20 (ANGLE 2.1.16847 git hash: a097ee2ea7a9)",
     "Extensions": [
         "GL_ANGLE_base_vertex_base_instance",
         "GL_ANGLE_client_arrays",
@@ -142,5 +142,5 @@
         "GL_OVR_multiview",
         "GL_OVR_multiview2"
     ],
-    "DateRecorded": "September 23, 2021"
+    "DateRecorded": "October  1, 2021"
 }

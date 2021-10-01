@@ -1,8 +1,8 @@
 {
     "Vendor": "Google Inc. (NVIDIA)",
-    "Version": "OpenGL ES 3.2.0 (ANGLE 2.1.16778 git hash: c3e0eafaf38d)",
+    "Version": "OpenGL ES 3.2.0 (ANGLE 2.1.16847 git hash: a097ee2ea7a9)",
     "Renderer": "ANGLE (NVIDIA, Vulkan 1.2.133 (NVIDIA Quadro P400 (0x00001CB3)), NVIDIA-451.48.0.0)",
-    "ShaderLanguageVersion": "OpenGL ES GLSL ES 3.20 (ANGLE 2.1.16778 git hash: c3e0eafaf38d)",
+    "ShaderLanguageVersion": "OpenGL ES GLSL ES 3.20 (ANGLE 2.1.16847 git hash: a097ee2ea7a9)",
     "Extensions": [
         "GL_ANGLE_base_vertex_base_instance",
         "GL_ANGLE_client_arrays",
@@ -148,5 +148,5 @@
         "GL_OVR_multiview",
         "GL_OVR_multiview2"
     ],
-    "DateRecorded": "September 22, 2021"
+    "DateRecorded": "October  1, 2021"
 }

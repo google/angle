@@ -1,8 +1,8 @@
 {
     "Vendor": "Google Inc. (Intel)",
-    "Version": "OpenGL ES 3.2.0 (ANGLE 2.1.16778 git hash: c3e0eafaf38d)",
+    "Version": "OpenGL ES 3.2.0 (ANGLE 2.1.16847 git hash: a097ee2ea7a9)",
     "Renderer": "ANGLE (Intel, Vulkan 1.1.96 (Intel(R) HD Graphics 630 (Kaby Lake GT2) (0x00005912)), Intel open-source Mesa driver-19.0.2)",
-    "ShaderLanguageVersion": "OpenGL ES GLSL ES 3.20 (ANGLE 2.1.16778 git hash: c3e0eafaf38d)",
+    "ShaderLanguageVersion": "OpenGL ES GLSL ES 3.20 (ANGLE 2.1.16847 git hash: a097ee2ea7a9)",
     "Extensions": [
         "GL_ANGLE_base_vertex_base_instance",
         "GL_ANGLE_client_arrays",
@@ -146,5 +146,5 @@
         "GL_OES_vertex_half_float",
         "GL_OES_vertex_type_10_10_10_2"
     ],
-    "DateRecorded": "September 22, 2021"
+    "DateRecorded": "October  1, 2021"
 }

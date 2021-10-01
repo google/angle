@@ -229,16 +229,25 @@ list of supported EGL extensions in ANGLE's front-end see
 Supported extension data is stored in the ANGLE repo as JSON files in
 [`scripts/extension_data`](../scripts/extension_data). The JSON data is
 sourced from public ANGLE test runs. Look for `angle_end2end_tests` in a bot
-run: [example link]
-(https://ci.chromium.org/ui/p/angle/builders/ci/win-clang-x64-rel/8183/overview).
+run: [example link](https://ci.chromium.org/ui/p/angle/builders/ci/win-clang-x64-rel/8183/overview).
 Search for "`angle_end2end_tests`", then click on the "cas output" and find
-`GLinfo_ES3_2_Vulkan.json`. Copy and paste the file contents into a file in
-the folder above.
+`GLinfo_ES3_2_Vulkan.json`.
 
-To update or add a new configuration, first retrieve the JSON data, modify
-[`gen_extensions.py`](../src/libANGLE/gen_extensions.py) if necessary, then
-run [`scripts/run_code_generation.py`](../scripts/run_code_generation.py) to
-refresh generated files.
+The Pixel 4 and GLES 3 NVIDIA and Intel data is automatically updated using
+the [`update_extension_data.py`](../scripts/update_extension_data.py) script.
+To use it first authenticate to the `bb` and `luci-go` tools by running `bb
+auth-login` and `./tools/luci-go/swarming login`. Then run the script and
+re-run [code generation][CodeGen].
+
+The GLES 1 and SwiftShader data is currently manually updated. Find the relevant
+file from the task output (see above) and overwrite the correspoding file.
+Re-run [code generation][CodeGen] and create a CL as per our normal process.
+
+To add a new configuration, first retrieve the JSON data, modify
+[`gen_extensions.py`](../src/libANGLE/gen_extensions.py) as necessary, then
+run [`scripts/run_code_generation.py`][CodeGen] to refresh generated files.
+
+[CodeGen]: ../scripts/run_code_generation.py
 """
 
 _MD_GLES_GPU_CONFIGS = [
