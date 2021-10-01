@@ -20,7 +20,7 @@ If you're not an ANGLE team member, you can contact us on the public ANGLE proje
 extension for inspecting bot builds. It'll save you a lot of time.
 
 **Note**: If you need to suppress test failures (e.g. to keep an auto-roller unblocked), see
-[Suppress Test Failures](../doc/TestingAndProcesses.md).
+[Handling Test Failures](../doc/TestingAndProcesses.md).
 
 [Flaker]: https://chrome.google.com/webstore/detail/flake-linker/boamnmbgmfnobomddmenbaicodgglkhc
 

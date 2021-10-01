@@ -21,7 +21,7 @@ updates ANGLE to the top-of-tree (ToT) upstream Vulkan tools and SDK.  Sometimes
 are the result of bugs in the Vulkan Validation Layers, sometimes because of bugs in ANGLE.
 Therefore, investigate the cause of the error and determine if it's an ANGLE bug or a Vulkan
 Validation Layer bug.  For Vulkan Validation Layer bugs, file an
-[upstream bug](https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/new/choose), and
+[upstream bug](https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/new), and
 suppress the error.  The ANGLE Wrangler will also suppress a validation error when the
 `vulkan-deps` AutoRoller introduces a new validation error.  The ANGLE Wrangler isn't expected to
 resolve the error or diagnose an upstream bug (but it is welcome as extra credit).
@@ -75,7 +75,7 @@ You will need to contact an OWNER of the file to +1 your CL.
 You have two options for creating a CL to the expectations files:
 
 1. For trivial edits, you can edit the expectations files via
-   [Chromium Code Search](https://source.chromium.org/chromium/chromium/src/+/master:):
+   [Chromium Code Search](https://source.chromium.org/chromium/chromium/src/+/main:content/test/gpu/gpu_tests/test_expectations/):
     - In the browser, press the `Edit code` button.  This will bring up a new browser window/tab,
       in an editor mode.
     - Edit the expecations and then press the `Create change` (or `Update change` button if you

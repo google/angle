@@ -70,7 +70,7 @@ for instructions on how to run Cherry on Linux or Windows.
 ANGLE also supports the same set of targets built with GoogleTest, for running
 on the bots. We don't currently recommend using these for local debugging, but
 we do maintain lists of test expectations in `src/tests/deqp_support` (see
-[Suppress Test Failures](TestingAndProcesses.md)). When
+[Handling Test Failures](TestingAndProcesses.md)). When
 you fix tests, please remove the suppression(s) from the relevant files!
 
 ### Running dEQP on Android
