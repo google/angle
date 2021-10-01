@@ -188,6 +188,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdBeginTransformFeedbackEXT-None-02373",
     // http://anglebug.com/6491
     "VUID-RuntimeSpirv-OpImage-06377",
+    // http://anglebug.com/6492
+    "VUID-RuntimeSpirv-OpImage-06376",
 };
 
 struct SkippedSyncvalMessage
