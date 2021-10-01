@@ -320,7 +320,7 @@ void DisplayVk::populateFeatureList(angle::FeatureList *features)
     mRenderer->getFeatures().populateFeatureList(features);
 }
 
-ShareGroupVk::ShareGroupVk() : mSyncObjectPendingFlush(false) {}
+ShareGroupVk::ShareGroupVk() {}
 
 void ShareGroupVk::onDestroy(const egl::Display *display)
 {

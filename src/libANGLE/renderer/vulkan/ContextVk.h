@@ -623,9 +623,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     const vk::PerfCounters &getPerfCounters() const { return mPerfCounters; }
     vk::PerfCounters &getPerfCounters() { return mPerfCounters; }
 
-    void onSyncHelperInitialize() { getShareGroupVk()->setSyncObjectPendingFlush(); }
-    void onEGLSyncHelperInitialize() { mEGLSyncObjectPendingFlush = true; }
-
     // Implementation of MultisampleTextureInitializer
     angle::Result initializeMultisampleTextureToBlack(const gl::Context *context,
                                                       gl::Texture *glTexture) override;
@@ -1121,9 +1118,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // A list of gpu events since the last clock sync.
     std::vector<GpuEvent> mGpuEvents;
 
-    // Track SyncHelper object been added into secondary command buffer that has not been flushed to
-    // vulkan.
-    bool mEGLSyncObjectPendingFlush;
     bool mHasDeferredFlush;
 
     // GL_EXT_shader_framebuffer_fetch_non_coherent
