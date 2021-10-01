@@ -295,6 +295,9 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     gl::LevelIndex getNativeImageLevel(gl::LevelIndex frontendLevel) const;
     uint32_t getNativeImageLayer(uint32_t frontendLayer) const;
 
+    // Get the layer count for views.
+    uint32_t getImageViewLayerCount() const;
+
     void releaseAndDeleteImageAndViews(ContextVk *contextVk);
     angle::Result ensureImageAllocated(ContextVk *contextVk, const vk::Format &format);
     void setImageHelper(ContextVk *contextVk,
