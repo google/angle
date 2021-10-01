@@ -242,6 +242,8 @@ IGNORED_INCLUDES = {
     # Validation layers support building with robin hood hashing, but we are not enabling that
     # See http://anglebug.com/5791
     b'robin_hood.h',
+    # From the Vulkan-Loader
+    b'winres.h',
 }
 
 IGNORED_INCLUDE_PREFIXES = {
