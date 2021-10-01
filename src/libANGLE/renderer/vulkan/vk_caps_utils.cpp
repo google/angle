@@ -544,14 +544,10 @@ void RendererVk::ensureCapsInitialized() const
     // OES_shader_multisample_interpolation is therefore only supported if
     // maxInterpolationOffset is at least 0.5.
     //
-    // It's suspected that the GL spec is not as precise as Vulkan's in this regard and that the
-    // requirements really meant to match.  The extension is exposed as non-conformant either way to
-    // increase testing coverage).  Discussion with the GL working group ongoing at
+    // The GL spec is not as precise as Vulkan's in this regard and that the requirements really
+    // meant to match.  This is rectified in the GL spec.
     // https://gitlab.khronos.org/opengl/API/-/issues/149
-    mNativeExtensions.shaderMultisampleInterpolationOES =
-        mNativeExtensions.sampleVariablesOES &&
-        (mNativeCaps.maxInterpolationOffset >= 0.5 ||
-         mFeatures.exposeNonConformantExtensionsAndVersions.enabled);
+    mNativeExtensions.shaderMultisampleInterpolationOES = mNativeExtensions.sampleVariablesOES;
 
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;

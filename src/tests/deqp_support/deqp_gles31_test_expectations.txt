@@ -184,9 +184,6 @@
 // Geometry shader support:
 5430 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated_* = FAIL
 
-// The extension is not conformant due to a small difference in maxInterpolationOffset between GL and Vulkan.
-6190 VULKAN : dEQP-GLES31.functional.state_query.multisample_interpolation.max_fragment_interpolation_offset.get_float = FAIL
-
 ////
 //// AMD Vulkan expectations
 ////
