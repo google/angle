@@ -63,6 +63,12 @@ enum class GraphicsEventCmdBuf
     EnumCount   = 3,
 };
 
+enum QueueSubmitType
+{
+    PerformQueueSubmit,
+    SkipQueueSubmit,
+};
+
 class ContextVk : public ContextImpl, public vk::Context, public MultisampleTextureInitializer
 {
   public:
@@ -568,6 +574,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                   bool *renderPassDescChangedOut);
     void startNextSubpass();
     angle::Result flushCommandsAndEndRenderPass();
+    angle::Result flushCommandsAndEndRenderPassWithoutQueueSubmit();
 
     angle::Result syncExternalMemory();
 
@@ -914,7 +921,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // flushCommandsAndEndRenderPass() and flushDirtyGraphicsRenderPass() will set the dirty bits
     // directly or through the iterator respectively.  Outside those two functions, this shouldn't
     // be called directly.
-    angle::Result flushCommandsAndEndRenderPassImpl();
+    angle::Result flushCommandsAndEndRenderPassImpl(QueueSubmitType queueSubmit);
     angle::Result flushDirtyGraphicsRenderPass(DirtyBits::Iterator *dirtyBitsIterator,
                                                DirtyBits dirtyBitMask);
 
