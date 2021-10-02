@@ -89,7 +89,7 @@ class TextureStorage : public angle::Subject
 
   protected:
     const angle::Subject *mSubject;
-    const std::string &mTextureLabel;
+    const std::string mTextureLabel;
 };
 
 inline angle::Result TextureStorage::onDestroy(const gl::Context *context)

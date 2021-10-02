@@ -2660,12 +2660,47 @@ TEST_P(Texture2DTest, TextureKHRDebugLabelWithCopyTexImage2D)
 {
     GLTexture texture2D;
     glBindTexture(GL_TEXTURE_2D, texture2D);
+
     // Create a texture and copy into, to initialize storage object.
     glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 32, 32, 0);
 
     // Set KHR Debug Label.
-    const std::string &label = "TestKHR.DebugLabel";
+    std::string label = "TestKHR.DebugLabel";
     glObjectLabelKHR(GL_TEXTURE, texture2D, -1, label.c_str());
+
+    std::vector<char> labelBuf(label.length() + 1);
+    GLsizei labelLengthBuf = 0;
+
+    glGetObjectLabelKHR(GL_TEXTURE, texture2D, static_cast<GLsizei>(labelBuf.size()),
+                        &labelLengthBuf, labelBuf.data());
+
+    EXPECT_EQ(static_cast<GLsizei>(label.length()), labelLengthBuf);
+    EXPECT_STREQ(label.c_str(), labelBuf.data());
+
+    // Delete the texture.
+    texture2D.reset();
+    EXPECT_GL_NO_ERROR();
+
+    glObjectLabelKHR(GL_TEXTURE, texture2D, -1, label.c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glGetObjectLabelKHR(GL_TEXTURE, texture2D, static_cast<GLsizei>(labelBuf.size()),
+                        &labelLengthBuf, labelBuf.data());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Test to call labeling API before the storage texture is created.
+TEST_P(Texture2DTest, CallKHRDebugLabelBeforeTexStorageCreation)
+{
+    GLTexture texture2D;
+    glBindTexture(GL_TEXTURE_2D, texture2D);
+
+    // Set label before texture storage creation.
+    std::string label = "TestKHR.DebugLabel";
+    glObjectLabelKHR(GL_TEXTURE, texture2D, -1, label.c_str());
+
+    // Create a texture and copy into, to initialize storage object.
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 32, 32, 0);
 
     std::vector<char> labelBuf(label.length() + 1);
     GLsizei labelLengthBuf = 0;
