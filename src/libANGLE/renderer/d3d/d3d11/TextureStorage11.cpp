@@ -941,7 +941,7 @@ angle::Result TextureStorage11::getMultisampledRenderTarget(const gl::Context *c
         GLenum internalFormat = mFormatInfo.internalFormat;
         std::unique_ptr<TextureStorage11_2DMultisample> texMS(
             GetAs<TextureStorage11_2DMultisample>(mRenderer->createTextureStorage2DMultisample(
-                internalFormat, width, height, level, samples, true, "")));
+                internalFormat, width, height, level, samples, true, mTextureLabel)));
 
         // make sure multisample object has the blitted information.
         gl::Rectangle area(0, 0, width, height);
