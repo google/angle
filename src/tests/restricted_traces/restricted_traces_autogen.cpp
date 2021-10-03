@@ -121,7 +121,7 @@ namespace trace_angle
 {
 namespace
 {
-constexpr size_t kNumTraces = 106;
+constexpr size_t kNumTraces = 107;
 struct TracePair
 {
     const char name[kTraceInfoMaxNameLen];
@@ -1604,6 +1604,7 @@ constexpr TracePair kTraceInfos[kNumTraces] = {
       false,
       false,
       false}},
+    {"pokemon_unite", {}},
     {"professional_baseball_spirits",
      {"professional_baseball_spirits",
       professional_baseball_spirits::kReplayContextClientMajorVersion,

@@ -1093,6 +1093,11 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         }
     }
 
+    if (traceNameIs("pokemon_unite"))
+    {
+        addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
+    }
+
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
     ASSERT(mParams.eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE ||
            gEnableAllTraceTests);

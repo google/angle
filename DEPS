@@ -1319,6 +1319,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/pokemon_unite': {
+      'packages': [
+        {
+            'package': 'angle/traces/pokemon_unite',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/professional_baseball_spirits': {
       'packages': [
         {
