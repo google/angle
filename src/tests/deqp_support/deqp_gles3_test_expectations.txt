@@ -453,12 +453,6 @@
 6376 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.base_level.linear_nearest = FAIL
 
 // Android only failures
-1487 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.red_half_float_oes = FAIL
-1487 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rg_half_float_oes = FAIL
-1487 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.depth_stencil_unsigned_int_24_8 = FAIL
-1487 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_stencil_unsigned_int_24_8 = FAIL
-1487 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_short = FAIL
-1487 ANDROID GLES : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
 1964 ANDROID GLES : dEQP-GLES3.functional.occlusion_query.* = FAIL
 1962 ANDROID GLES : dEQP-GLES3.functional.shaders.preprocessor.conditional_inclusion.basic_2_fragment = FAIL
 1962 ANDROID GLES : dEQP-GLES3.functional.shaders.preprocessor.conditional_inclusion.basic_2_vertex = FAIL
