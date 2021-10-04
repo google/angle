@@ -82,3 +82,19 @@ You have two options for creating a CL to the expectations files:
       need to change your CL later), which will create a CL.
 2. Otherwise please [check out the code](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/get_the_code.md)
    and [upload a CL](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/contributing.md#Creating-a-change)
+
+# Requesting access to the Commit Queue and issue tracker
+
+If you need to request access for a user (or yourself) please ask a project owner to help. Googlers, email
+angle-team@google.com. External users, find a couple owners in the [OWNERS](../OWNERS) file and send a
+request via email.
+
+If you are an ANGLE owner and you want to grant a user access:
+
+ * For the Monorail issue tracker, add users via the ["People" administration console][MonorailPeople].
+ * For the ANGLE Commit Queue (CQ), grant try-job access via the [Chrome Infra Auth administration console][ChromeAdmin].
+ * The admin console also has a separate group for [CQ access][CQAccessAdmin].
+
+[MonorailPeople]: https://bugs.chromium.org/p/angleproject/people/list
+[ChromeAdmin]: https://chrome-infra-auth.appspot.com/auth/groups/project-angle-tryjob-access
+[CQAccessAdmin]: https://chrome-infra-auth.appspot.com/auth/groups/project-angle-committers

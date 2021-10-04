@@ -263,6 +263,7 @@ See also:
 * [Chromium Projects: Contributing Code][Contributing-code]
 * [depot_tools tutorial][depot-tools-tutorial]
 * [angle_perftests README][Perftest-README]
+* [ANGLE Testing and Processes](TestingAndProcesses.md)
 
 [Committer-status]: https://dev.chromium.org/getting-involved/become-a-committer
 [Contributing-code]: http://www.chromium.org/developers/contributing-code/
