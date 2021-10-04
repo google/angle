@@ -222,6 +222,7 @@
 5505 NEXUS5X GLES : GLSLTest_ES3.CompareEqualityOfArrayOfVectors/* = SKIP
 6480 NEXUS5X GLES : RobustResourceInitTestES3.CheckDepthStencilRenderbufferIsCleared/ES3_OpenGLES = SKIP
 6480 NEXUS5X GLES : RobustResourceInitTestES3.CheckMultisampleDepthStencilRenderbufferIsCleared/ES3_OpenGLES = SKIP
+200067929 NEXUS5X GLES : ShaderStorageBufferTest31.ShaderStorageBufferReadWriteAndBufferSubData/* = SKIP
 
 // Pixel 4 expectations.
 5981 PIXEL4ORXL GLES : BlitFramebufferTest.BlitSRGBToRGBOversizedDestArea/* = SKIP

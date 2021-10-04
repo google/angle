@@ -4734,6 +4734,140 @@ void main()
     EXPECT_EQ(bufferData[3], kMapData[3]);
 }
 
+// Test compute shader write to texture buffer followed by texSubData and followed by compute shader
+// write to texture buffer again.
+TEST_P(ComputeShaderTest, ImageBufferMapWriteAndBufferSubData)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
+
+    // Claims to support GL_OES_texture_buffer, but fails compilation of shader because "extension
+    // 'GL_OES_texture_buffer' is not supported".  http://anglebug.com/5832
+    ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
+
+    constexpr char kComputeImageBuffer[] = R"(#version 310 es
+#extension GL_OES_texture_buffer : require
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba32f, binding = 0) uniform highp writeonly imageBuffer dst;
+uniform vec4 uniformData;
+uniform int uniformOffset;
+void main()
+{
+    imageStore(dst, uniformOffset, uniformData);
+})";
+
+    GLProgram program;
+    program.makeCompute(kComputeImageBuffer);
+    glUseProgram(program);
+
+    for (int loop = 0; loop < 2; loop++)
+    {
+        GLBuffer textureBufferStorage;
+        GLTexture texture;
+        constexpr unsigned int kShaderUsedSize    = sizeof(float) * 4;
+        constexpr unsigned int kMiddlePaddingSize = 1024;
+        constexpr unsigned int kBufferSize = kShaderUsedSize + kMiddlePaddingSize + kShaderUsedSize;
+        constexpr unsigned int kOffset0    = 0;
+        constexpr unsigned int kOffset1    = kShaderUsedSize;
+        constexpr unsigned int kOffset2    = kShaderUsedSize + kMiddlePaddingSize;
+
+        glBindBuffer(GL_TEXTURE_BUFFER, textureBufferStorage);
+        glBufferData(GL_TEXTURE_BUFFER, kBufferSize, nullptr, GL_STATIC_DRAW);
+
+        glBindTexture(GL_TEXTURE_BUFFER, texture);
+        glTexBufferEXT(GL_TEXTURE_BUFFER, GL_RGBA32F, textureBufferStorage);
+        glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+
+        // Write to the buffer with the CS.
+        constexpr std::array<float, 4> kComputeShaderData1 = {0.0, 1.0, 0.0, 1.0};
+        GLint uniformDataLocation = glGetUniformLocation(program, "uniformData");
+        ASSERT_NE(uniformDataLocation, -1);
+        glUniform4f(uniformDataLocation, kComputeShaderData1[0], kComputeShaderData1[1],
+                    kComputeShaderData1[2], kComputeShaderData1[3]);
+        GLint uniformOffsetLocation = glGetUniformLocation(program, "uniformOffset");
+        ASSERT_NE(uniformOffsetLocation, -1);
+        glUniform1i(uniformOffsetLocation, kOffset0 / (sizeof(float) * 4));
+        glDispatchCompute(1, 1, 1);
+        // Issue the appropriate memory barrier before mapping the buffer.
+        glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+        // Write to the buffer with the CS.
+        constexpr std::array<float, 4> kComputeShaderData2 = {1.0, 0.0, 1.0, 1.0};
+        glUniform4f(uniformDataLocation, kComputeShaderData2[0], kComputeShaderData2[1],
+                    kComputeShaderData2[2], kComputeShaderData2[3]);
+        glUniform1i(uniformOffsetLocation, kOffset2 / (sizeof(float) * 4));
+        glDispatchCompute(1, 1, 1);
+
+        if (loop == 1)
+        {
+            // Make write operation finished but read operation pending. We don't care actual
+            // rendering result but just to have a unflushed rendering using the buffer so that it
+            // will appears as pending.
+            glFinish();
+            constexpr char kVS[] = R"(attribute vec3 in_attrib;
+                                    varying vec3 v_attrib;
+                                    void main()
+                                    {
+                                        v_attrib = in_attrib;
+                                        gl_Position = vec4(0.0, 0.0, 0.5, 1.0);
+                                        gl_PointSize = 100.0;
+                                    })";
+            constexpr char kFS[] = R"(precision mediump float;
+                                    varying vec3 v_attrib;
+                                    void main()
+                                    {
+                                        gl_FragColor = vec4(v_attrib, 1);
+                                    })";
+            GLuint program       = CompileProgram(kVS, kFS);
+            ASSERT_NE(program, 0U);
+            GLint attribLocation = glGetAttribLocation(program, "in_attrib");
+            ASSERT_NE(attribLocation, -1);
+            glUseProgram(program);
+            ASSERT_GL_NO_ERROR();
+            glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT | GL_ELEMENT_ARRAY_BARRIER_BIT);
+            glBindBuffer(GL_ARRAY_BUFFER, textureBufferStorage);
+            glVertexAttribPointer(attribLocation, 3, GL_UNSIGNED_BYTE, GL_TRUE, 3, nullptr);
+            glEnableVertexAttribArray(attribLocation);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, textureBufferStorage);
+            glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, nullptr);
+            ASSERT_GL_NO_ERROR();
+        }
+
+        // Use subData to update middle portion of data to trigger acquireAndUpdate code path in
+        // ANGLE
+        glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+        glBindBuffer(GL_TEXTURE_BUFFER, textureBufferStorage);
+        constexpr unsigned int kMiddlePaddingValue = 0x55555555u;
+        std::vector<unsigned int> kPaddingValues(kMiddlePaddingSize / sizeof(unsigned int),
+                                                 kMiddlePaddingValue);
+        glBufferSubData(GL_TEXTURE_BUFFER, kOffset1, kMiddlePaddingSize, kPaddingValues.data());
+
+        // Read back and verify buffer data.
+        const GLbyte *mappedBuffer = reinterpret_cast<const GLbyte *>(
+            glMapBufferRange(GL_TEXTURE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
+
+        const GLfloat *ptr0 = reinterpret_cast<const GLfloat *>(mappedBuffer);
+        EXPECT_EQ(ptr0[0], kComputeShaderData1[0]);
+        EXPECT_EQ(ptr0[1], kComputeShaderData1[1]);
+        EXPECT_EQ(ptr0[2], kComputeShaderData1[2]);
+        EXPECT_EQ(ptr0[3], kComputeShaderData1[3]);
+
+        const GLuint *ptr1 = reinterpret_cast<const GLuint *>(mappedBuffer + kOffset1);
+        for (unsigned int idx = 0; idx < kMiddlePaddingSize / sizeof(unsigned int); idx++)
+        {
+            EXPECT_EQ(ptr1[idx], kMiddlePaddingValue);
+        }
+
+        const GLfloat *ptr2 = reinterpret_cast<const GLfloat *>(mappedBuffer + kOffset2);
+        EXPECT_EQ(ptr2[0], kComputeShaderData2[0]);
+        EXPECT_EQ(ptr2[1], kComputeShaderData2[1]);
+        EXPECT_EQ(ptr2[2], kComputeShaderData2[2]);
+        EXPECT_EQ(ptr2[3], kComputeShaderData2[3]);
+
+        glUnmapBuffer(GL_TEXTURE_BUFFER);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ComputeShaderTest);
 ANGLE_INSTANTIATE_TEST_ES31_AND(ComputeShaderTest, WithDirectSPIRVGeneration(ES31_VULKAN()));
 
