@@ -117,7 +117,7 @@
 
 ## Life of a Change List
 
-### Getting started with Gerrit for ANGLE
+### <a name="getting-started-with-gerrit"></a>Getting started with Gerrit for ANGLE
 
 1. Go to [https://chromium-review.googlesource.com/new-password][CR-passwd]
 2. Log in with the email you use for your git commits.

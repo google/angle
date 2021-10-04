@@ -45,6 +45,8 @@ gclient sync
 git checkout main
 ```
 
+If you're contributing code, you will also need to set up the commit-msg hook. See [ContributingCode#getting-started-with-gerrit](ContributingCode.md#getting-started-with-gerrit) for more detailed instructions.
+
 On Linux only, you need to install all the necessary dependencies before going further by running this command:
 ```
 ./build/install-build-deps.sh
