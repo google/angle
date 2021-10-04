@@ -7,7 +7,7 @@ A basic guide to get up and running fixing bugs and performance issues in ANGLE.
 ### Windows
 
 - Download and install
-  [Visual Studio 2017 Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx).
+  [Visual Studio Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx).
   Installing takes some time.
 
 - Take the time to register a Microsoft account, otherwise you'll get nagged to death.
@@ -25,7 +25,7 @@ A basic guide to get up and running fixing bugs and performance issues in ANGLE.
   [the ANGLE wiki](https://chromium.googlesource.com/angle/angle/+/main/doc/DevSetup.md#Development-setup-Getting-the-source)
   to set up the ANGLE solution for the first time.
 
-- The VS 2017 solution will be in `c:/src/angle/out/sln/ANGLE.sln`. Open and let the installation
+- If you follow the [ANGLE wiki VS solution building and debugging guide](https://chromium.googlesource.com/angle/angle/+/main/doc/DevSetup.md#building-and-debugging-with-visual-studio), the VS solution will be in `c:/src/angle/out/Debug/angle-debug.sln`. Open and let the installation
   finish.  **Important**: set indent style to spaces, not tabs!
 
 - Building should work at this point!
