@@ -6037,14 +6037,14 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
     json.addScalar("CaptureRevision", ANGLE_REVISION);
     json.addScalar("ContextClientMajorVersion", context->getClientMajorVersion());
     json.addScalar("ContextClientMinorVersion", context->getClientMinorVersion());
-    json.addScalar("DisplayPlatformType", displayAttribs.getAsInt(EGL_PLATFORM_ANGLE_TYPE_ANGLE));
-    json.addScalar("DisplayDeviceType",
-                   displayAttribs.getAsInt(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE));
+    json.addHexValue("DisplayPlatformType", displayAttribs.getAsInt(EGL_PLATFORM_ANGLE_TYPE_ANGLE));
+    json.addHexValue("DisplayDeviceType",
+                     displayAttribs.getAsInt(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE));
     json.addScalar("FrameStart", 1);
     json.addScalar("FrameEnd", frameCount);
     json.addScalar("DrawSurfaceWidth", surfaceParams.extents.width);
     json.addScalar("DrawSurfaceHeight", surfaceParams.extents.height);
-    json.addScalar("DrawSurfaceColorSpace", ToEGLenum(surfaceParams.colorSpace));
+    json.addHexValue("DrawSurfaceColorSpace", ToEGLenum(surfaceParams.colorSpace));
     if (config)
     {
         json.addScalar("ConfigRedBits", config->redSize);

@@ -100,6 +100,8 @@ class JsonSerializer : public angle::NonCopyable
 
     void addBool(const std::string &name, bool value);
 
+    void addHexValue(const std::string &name, int value);
+
     const char *data();
 
     std::vector<uint8_t> getData();

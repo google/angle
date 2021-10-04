@@ -105,6 +105,14 @@ void JsonSerializer::addBool(const std::string &name, bool value)
     addValue(name, std::move(boolValue));
 }
 
+void JsonSerializer::addHexValue(const std::string &name, int value)
+{
+    // JSON doesn't support hex values, so write it as a string
+    std::stringstream hexStream;
+    hexStream << "0x" << std::uppercase << std::setfill('0') << std::setw(4) << std::hex << value;
+    addCString(name, hexStream.str().c_str());
+}
+
 const char *JsonSerializer::data()
 {
     ensureEndDocument();
