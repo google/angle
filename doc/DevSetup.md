@@ -169,18 +169,29 @@ On Linux and MacOS, either:
  - Link you application against `libGLESv2` and `libEGL`
  - Use `dlopen` to load the OpenGL ES and EGL entry points at runtime.
 
-## GLSL ES to GLSL Translator
-In addition to OpenGL ES 2.0 and EGL 1.4 libraries, ANGLE also provides a GLSL ES to GLSL translator. This is useful for implementing OpenGL ES emulators on top of desktop OpenGL.
+## GLSL ES Translator
+
+In addition to OpenGL ES and EGL libraries, ANGLE also provides a GLSL ES
+translator. The translator targets various back-ends, including HLSL, GLSL
+for desktop and mobile, SPIR-V and Metal SL. To build the translator, build
+the `angle_shader_translator` target. Run the translator binary without
+arguments to see a usage message.
 
 ### Source and Building
-The translator code is included with ANGLE but fully independent; it resides in `src/compiler`.
-Follow the steps above for [getting and building ANGLE](#getting-the-source) to build the translator on the platform of your choice.
+
+The translator code is included with ANGLE but fully independent; it resides
+in [`src/compiler`](../src/compiler). Follow the steps above for
+[getting and building ANGLE](#getting-the-source) to build the translator on
+the platform of your choice.
 
 ### Usage
-The basic usage is shown in `essl_to_glsl` sample under `samples/translator`. To translate a GLSL ES shader, following functions need to be called in the same order:
 
- * `ShInitialize()` initializes the translator library and must be called only once from each process using the translator.
- * `ShContructCompiler()` creates a translator object for vertex or fragment shader.
- * `ShCompile()` translates the given shader.
- * `ShDestruct()` destroys the given translator.
- * `ShFinalize()` shuts down the translator library and must be called only once from each process using the translator.
+The ANGLE [`shader_translator`](../samples/shader_translator/shader_translator.cpp)
+sample demos basic C++ API usage. To translate a GLSL ES shader, call the following
+functions in the same order:
+
+ * `sh::Initialize()` initializes the translator library and must be called only once from each process using the translator.
+ * `sh::ContructCompiler()` creates a translator object for vertex or fragment shader.
+ * `sh::Compile()` translates the given shader.
+ * `sh::Destruct()` destroys the given translator.
+ * `sh::Finalize()` shuts down the translator library and must be called only once from each process using the translator.
