@@ -321,8 +321,16 @@ Canary.
 
 1. Download and install [Google Chrome Canary](https://www.google.com/chrome/canary/).
 2. Build ANGLE x64, Release.
-3. Run `python scripts\update_canary_angle.py` to replace Canary's ANGLE with your custom ANGLE
-(note: Canary must be closed).
+3. Run `python scripts\update_chrome_angle.py` to replace Canary's ANGLE with your custom ANGLE
+   (note: Canary must be closed).
+
+#### Linux
+
+1. Install Google Chrome Dev (via apt, or otherwise).  Expected installation directory is
+   `/opt/google/chrome-unstable`.
+2. Build ANGLE for the running platform.  `is_component_build = false` is suggested in the GN args.
+3. Run `python scripts/update_chrome_angle.py` to replace Dev's ANGLE with your custom ANGLE
+4. Add ANGLE's build path to the `LD_LIBRARY_PATH` environment variable.
 
 #### macOS
 
@@ -343,7 +351,14 @@ Canary.
 
 ### Usage
 
-Run `%LOCALAPPDATA%\Google\Chrome SxS\chrome.exe` (Windows) or `./Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary` (macOS) with the following command-line options:
+Run Chrome:
+
+- On Windows: `%LOCALAPPDATA%\Google\Chrome SxS\chrome.exe`
+- On Linux: `/opt/google/chrome-unstable/google-chrome-unstable`
+- On macOS: `./Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary`
+
+With the following command-line options:
+
 * `--use-cmd-decoder=passthrough --use-gl=angle` and one of
   * `--use-angle=d3d9` (Direct3D 9 renderer, Windows only)
   * `--use-angle=d3d11` (Direct3D 11 renderer, Windows only)
@@ -353,3 +368,13 @@ Run `%LOCALAPPDATA%\Google\Chrome SxS\chrome.exe` (Windows) or `./Google\ Chrome
   * `--use-angle=vulkan` (Vulkan renderer)
   * `--use-angle=swiftshader` (SwiftShader renderer)
   * `--use-angle=metal` (Metal renderer, macOS only)
+
+Additional useful options:
+
+* `--enable-logging`: To see logs
+* `--disable-gpu-watchdog`: To disable Chromium's watchdog, killing the GPU process when slow (due
+  to a debug build for example)
+* `--disable-gpu-sandbox`: To disable Chromium's sandboxing features, if it's getting in the way of
+  testing.
+* `--disable-gpu-compositing`: To make sure only the WebGL test being debugged is run through ANGLE,
+  not the entirety of Chromium.

@@ -99,7 +99,7 @@ A basic guide to get up and running fixing bugs and performance issues in ANGLE.
 
 - Canary's install dir is usually `%APPDATA%/Local/Google/Chrome SxS/Application`
 
-- Build ANGLE x64, Release, and run 'python scripts/update_canary_angle.py' to replace Canary's
+- Build ANGLE x64, Release, and run 'python scripts/update_chrome_angle.py' to replace Canary's
   ANGLE with your custom ANGLE. (Note: Canary must be closed)
 
 - Start Canary with `--gpu-startup-dialog --disable-gpu-sandbox`, wait for the dialog.
