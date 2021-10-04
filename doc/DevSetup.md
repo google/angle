@@ -31,6 +31,9 @@ On Linux:
 On MacOS:
 
  * [XCode](https://developer.apple.com/xcode/) for Clang and development files.
+ * For Googlers on MacOS, you'll first need authorization to download macOS SDK's from Chromium
+   servers before running `gclient sync`. Obtain this authorization via `cipd auth-login`
+   and following the instructions.
 
 ### Getting the source
 
