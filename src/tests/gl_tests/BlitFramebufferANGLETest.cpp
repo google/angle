@@ -1077,9 +1077,6 @@ TEST_P(BlitFramebufferANGLETest, MultisampledRGBAToBGRA)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
 
-    // VVL report error http://anglebug.com/4694
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     if (!checkExtension("GL_ANGLE_framebuffer_multisample"))
         return;
 
@@ -1095,9 +1092,6 @@ TEST_P(BlitFramebufferANGLETest, MultisampledRGBAToBGRA)
 TEST_P(BlitFramebufferANGLETest, MultisampledBGRAToRGBA)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
-
-    // VVL report error http://anglebug.com/4694
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     if (!checkExtension("GL_ANGLE_framebuffer_multisample"))
         return;
