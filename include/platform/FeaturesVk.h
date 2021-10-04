@@ -43,13 +43,6 @@ struct FeaturesVk : FeatureSetBase
                                "Enable provoking vertex mode via VK_EXT_provoking_vertex extension",
                                &members};
 
-    // Add an extra copy region when using vkCmdCopyBuffer as the Windows Intel driver seems
-    // to have a bug where the last region is ignored.
-    Feature extraCopyBufferRegion = {
-        "extraCopyBufferRegion", FeatureCategory::VulkanWorkarounds,
-        "Some drivers seem to have a bug where the last copy region in vkCmdCopyBuffer is ignored",
-        &members};
-
     // This flag is added for the sole purpose of end2end tests, to test the correctness
     // of various algorithms when a fallback format is used, such as using a packed format to
     // emulate a depth- or stencil-only format.

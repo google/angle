@@ -2451,9 +2451,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // is enabled.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsSurfaceProtectedSwapchains, IsAndroid());
 
-    // http://anglebug.com/2838
-    ANGLE_FEATURE_CONDITION(&mFeatures, extraCopyBufferRegion, IsWindows() && isIntel);
-
     // Work around incorrect NVIDIA point size range clamping.
     // http://anglebug.com/2970#c10
     // Clamp if driver version is:

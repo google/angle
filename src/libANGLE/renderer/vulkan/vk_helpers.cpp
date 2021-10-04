@@ -3297,8 +3297,6 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
         {sourceOffset, *bufferOffsetOut, unitCount * unitSize},
         {sourceOffset, *bufferOffsetOut + unitCount * unitSize, unitSize},
     };
-    if (contextVk->getRenderer()->getFeatures().extraCopyBufferRegion.enabled)
-        copies.push_back({sourceOffset, *bufferOffsetOut + (unitCount + 1) * unitSize, 1});
 
     vk::CommandBufferAccess access;
     access.onBufferTransferWrite(*bufferOut);
