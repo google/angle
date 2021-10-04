@@ -30,7 +30,6 @@
 // Vulkan Validation error regarding buffer usage bits for transform feedback:
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.vertex.vertex_spacing = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.single.program_object_properties = FAIL
-5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_control_to_tessellation_evaluation.gl_MaxPatchVertices_Position_PointSize = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_control_to_tessellation_evaluation.gl_PatchVerticesIn = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_tessellation.gl_InvocationID_PatchVerticesIn_PrimitiveID = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_tessellation.TCS_TES = FAIL

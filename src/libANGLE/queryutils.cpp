@@ -1119,6 +1119,21 @@ bool IsTextureEnvEnumParameter(TextureEnvParameter pname)
     }
 }
 
+void GetShaderProgramId(ProgramPipeline *programPipeline, ShaderType shaderType, GLint *params)
+{
+    ASSERT(params);
+
+    *params = 0;
+    if (programPipeline)
+    {
+        const Program *program = programPipeline->getShaderProgram(shaderType);
+        if (program)
+        {
+            *params = program->id().value;
+        }
+    }
+}
+
 }  // namespace
 
 void QueryFramebufferAttachmentParameteriv(const Context *context,
@@ -3957,15 +3972,7 @@ void QueryProgramPipelineiv(const Context *context,
         {
             // the name of the current program object for the vertex shader type of the program
             // pipeline object is returned in params
-            *params = 0;
-            if (programPipeline)
-            {
-                const Program *program = programPipeline->getShaderProgram(ShaderType::Vertex);
-                if (program)
-                {
-                    *params = program->id().value;
-                }
-            }
+            GetShaderProgramId(programPipeline, ShaderType::Vertex, params);
             break;
         }
 
@@ -3973,15 +3980,23 @@ void QueryProgramPipelineiv(const Context *context,
         {
             // the name of the current program object for the fragment shader type of the program
             // pipeline object is returned in params
-            *params = 0;
-            if (programPipeline)
-            {
-                const Program *program = programPipeline->getShaderProgram(ShaderType::Fragment);
-                if (program)
-                {
-                    *params = program->id().value;
-                }
-            }
+            GetShaderProgramId(programPipeline, ShaderType::Fragment, params);
+            break;
+        }
+
+        case GL_TESS_CONTROL_SHADER:
+        {
+            // the name of the current program object for the tessellation control shader type of
+            // the program pipeline object is returned in params
+            GetShaderProgramId(programPipeline, ShaderType::TessControl, params);
+            break;
+        }
+
+        case GL_TESS_EVALUATION_SHADER:
+        {
+            // the name of the current program object for the tessellation evaluation shader type of
+            // the program pipeline object is returned in params
+            GetShaderProgramId(programPipeline, ShaderType::TessEvaluation, params);
             break;
         }
 
@@ -3989,15 +4004,15 @@ void QueryProgramPipelineiv(const Context *context,
         {
             // the name of the current program object for the compute shader type of the program
             // pipeline object is returned in params
-            *params = 0;
-            if (programPipeline)
-            {
-                const Program *program = programPipeline->getShaderProgram(ShaderType::Compute);
-                if (program)
-                {
-                    *params = program->id().value;
-                }
-            }
+            GetShaderProgramId(programPipeline, ShaderType::Compute, params);
+            break;
+        }
+
+        case GL_GEOMETRY_SHADER:
+        {
+            // the name of the current program object for the geometry shader type of the program
+            // pipeline object is returned in params
+            GetShaderProgramId(programPipeline, ShaderType::Geometry, params);
             break;
         }
 
