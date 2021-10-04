@@ -5,11 +5,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// shaders/gen/FullScreenQuad.vert.00000000.inc:
+// shaders/gen/FullScreenTri.vert.00000000.inc:
 //   Pre-generated shader for the ANGLE Vulkan back-end.
 
 #pragma once
-constexpr uint8_t kFullScreenQuad_vert_00000000[] = {
+constexpr uint8_t kFullScreenTri_vert_00000000[] = {
     0x1f,0x8b,0x08,0x00,0x00,0x00,0x00,0x00,0x02,0xff,0x4d,0x52,0xcb,0x4e,0x02,0x41,
     0x10,0xec,0xdd,0x95,0x05,0x51,0x96,0x05,0x04,0xe4,0x29,0x2f,0xc5,0xa8,0x21,0x1e,
     0xd4,0x98,0x18,0x15,0x4f,0x78,0xe0,0xa0,0xf1,0x0b,0x4c,0xb8,0x78,0xd0,0x8b,0x7e,
@@ -40,7 +40,7 @@ constexpr uint8_t kFullScreenQuad_vert_00000000[] = {
 //
 // #version 450 core
 //
-// const vec2 kQuadVertices[]= {
+// const vec2 kVertices[]= {
 //     vec2(- 1, - 1),
 //     vec2(3, - 1),
 //     vec2(- 1, 3),
@@ -48,5 +48,5 @@ constexpr uint8_t kFullScreenQuad_vert_00000000[] = {
 //
 // void main()
 // {
-//     gl_Position = vec4(kQuadVertices[gl_VertexIndex], 0, 1);
+//     gl_Position = vec4(kVertices[gl_VertexIndex], 0, 1);
 // }

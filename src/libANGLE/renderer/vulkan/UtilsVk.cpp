@@ -2081,7 +2081,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
     vk::ShaderProgramHelper *imageClearProgram          = &mImageClearProgramVSOnly;
 
-    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
+    ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
     if (params.clearColor)
     {
         const uint32_t flags =
@@ -2195,7 +2195,7 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
-    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
+    ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
     ANGLE_TRY(shaderLibrary.getImageClear_frag(contextVk, flags, &fragmentShader));
 
     ANGLE_TRY(setupProgram(contextVk, Function::ImageClear, fragmentShader, vertexShader,
@@ -2482,7 +2482,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
-    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
+    ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
     ANGLE_TRY(shaderLibrary.getBlitResolve_frag(contextVk, flags, &fragmentShader));
 
     ANGLE_TRY(setupProgram(contextVk, Function::BlitResolve, fragmentShader, vertexShader,
@@ -2866,7 +2866,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = nullptr;
-    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
+    ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
     ANGLE_TRY(shaderLibrary.getImageCopy_frag(contextVk, flags, &fragmentShader));
 
     ANGLE_TRY(setupProgram(contextVk, Function::ImageCopy, fragmentShader, vertexShader,
@@ -3340,7 +3340,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = &mUnresolveFragShaders[flags];
-    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
+    ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
     ANGLE_TRY(GetUnresolveFrag(contextVk, colorAttachmentCount, colorAttachmentTypes,
                                params.unresolveDepth, params.unresolveStencil, fragmentShader));
 

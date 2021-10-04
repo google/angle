@@ -63,7 +63,7 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000005.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000006.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000007.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/FullScreenTri.vert.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/GenerateMipmap.comp.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/GenerateMipmap.comp.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/GenerateMipmap.comp.00000002.inc"
@@ -224,8 +224,8 @@ constexpr CompressedShaderBlob kConvertVertex_comp_shaders[] = {
     {kConvertVertex_comp_00000006, sizeof(kConvertVertex_comp_00000006)},
     {kConvertVertex_comp_00000007, sizeof(kConvertVertex_comp_00000007)},
 };
-constexpr CompressedShaderBlob kFullScreenQuad_vert_shaders[] = {
-    {kFullScreenQuad_vert_00000000, sizeof(kFullScreenQuad_vert_00000000)},
+constexpr CompressedShaderBlob kFullScreenTri_vert_shaders[] = {
+    {kFullScreenTri_vert_00000000, sizeof(kFullScreenTri_vert_00000000)},
 };
 constexpr CompressedShaderBlob kGenerateMipmap_comp_shaders[] = {
     {kGenerateMipmap_comp_00000000, sizeof(kGenerateMipmap_comp_00000000)},
@@ -416,7 +416,7 @@ void ShaderLibrary::destroy(VkDevice device)
     {
         shader.get().destroy(device);
     }
-    for (RefCounted<ShaderAndSerial> &shader : mFullScreenQuad_vert_shaders)
+    for (RefCounted<ShaderAndSerial> &shader : mFullScreenTri_vert_shaders)
     {
         shader.get().destroy(device);
     }
@@ -496,12 +496,12 @@ angle::Result ShaderLibrary::getConvertVertex_comp(Context *context,
                      ArraySize(kConvertVertex_comp_shaders), shaderFlags, shaderOut);
 }
 
-angle::Result ShaderLibrary::getFullScreenQuad_vert(Context *context,
-                                                    uint32_t shaderFlags,
-                                                    RefCounted<ShaderAndSerial> **shaderOut)
+angle::Result ShaderLibrary::getFullScreenTri_vert(Context *context,
+                                                   uint32_t shaderFlags,
+                                                   RefCounted<ShaderAndSerial> **shaderOut)
 {
-    return GetShader(context, mFullScreenQuad_vert_shaders, kFullScreenQuad_vert_shaders,
-                     ArraySize(kFullScreenQuad_vert_shaders), shaderFlags, shaderOut);
+    return GetShader(context, mFullScreenTri_vert_shaders, kFullScreenTri_vert_shaders,
+                     ArraySize(kFullScreenTri_vert_shaders), shaderFlags, shaderOut);
 }
 
 angle::Result ShaderLibrary::getGenerateMipmap_comp(Context *context,

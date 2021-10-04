@@ -90,10 +90,10 @@ enum Conversion
 constexpr size_t kArrayLen = 0x00000008;
 }  // namespace ConvertVertex_comp
 
-namespace FullScreenQuad_vert
+namespace FullScreenTri_vert
 {
 constexpr size_t kArrayLen = 0x00000001;
-}  // namespace FullScreenQuad_vert
+}  // namespace FullScreenTri_vert
 
 namespace GenerateMipmap_comp
 {
@@ -216,9 +216,9 @@ class ShaderLibrary final : angle::NonCopyable
     angle::Result getConvertVertex_comp(Context *context,
                                         uint32_t shaderFlags,
                                         RefCounted<ShaderAndSerial> **shaderOut);
-    angle::Result getFullScreenQuad_vert(Context *context,
-                                         uint32_t shaderFlags,
-                                         RefCounted<ShaderAndSerial> **shaderOut);
+    angle::Result getFullScreenTri_vert(Context *context,
+                                        uint32_t shaderFlags,
+                                        RefCounted<ShaderAndSerial> **shaderOut);
     angle::Result getGenerateMipmap_comp(Context *context,
                                          uint32_t shaderFlags,
                                          RefCounted<ShaderAndSerial> **shaderOut);
@@ -249,7 +249,7 @@ class ShaderLibrary final : angle::NonCopyable
     RefCounted<ShaderAndSerial>
         mConvertVertex_comp_shaders[InternalShader::ConvertVertex_comp::kArrayLen];
     RefCounted<ShaderAndSerial>
-        mFullScreenQuad_vert_shaders[InternalShader::FullScreenQuad_vert::kArrayLen];
+        mFullScreenTri_vert_shaders[InternalShader::FullScreenTri_vert::kArrayLen];
     RefCounted<ShaderAndSerial>
         mGenerateMipmap_comp_shaders[InternalShader::GenerateMipmap_comp::kArrayLen];
     RefCounted<ShaderAndSerial>
