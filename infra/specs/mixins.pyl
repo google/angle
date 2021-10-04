@@ -23,6 +23,7 @@
   'flame': { 'swarming': { 'dimensions': { 'device_type': 'flame',
                                            'os': 'Android'}}},
   'gpu-swarming-pool': { 'swarming': { 'dimensions': { 'pool': 'chromium.tests.gpu'}}},
+  'linux-bionic': { 'swarming': { 'dimensions': { 'os': 'Ubuntu-18.04'}}},
   'linux_intel_hd_630_stable': { 'swarming': { 'dimensions': { 'gpu': '8086:5912-19.0.2',
                                                                'os': 'Ubuntu-19.04',
                                                                'pool': 'chromium.tests.gpu'}}},
@@ -45,7 +46,13 @@
                                                                   'hidpi': '1',
                                                                   'os': 'Mac-10.14.6',
                                                                   'pool': 'chromium.tests.gpu'}}},
+  'no_gpu': { 'swarming': { 'dimensions': { 'gpu': 'none'}}},
   'swarming_containment_auto': { 'swarming': { 'containment_type': 'AUTO'}},
+  'timeout_15m': { 'swarming': { 'hard_timeout': 900, 'io_timeout': 900}},
+  'win10_gce_gpu_pool': { 'swarming': { 'dimensions': { 'cpu': 'x86-64',
+                                                        'gpu': 'none',
+                                                        'os': 'Windows-10',
+                                                        'pool': 'chromium.tests.gpu'}}},
   'win10_intel_hd_630_stable': { 'swarming': { 'dimensions': { 'gpu': '8086:5912-26.20.100.8141|8086:3e92-26.20.100.8141',
                                                                'os': 'Windows-10',
                                                                'pool': 'chromium.tests.gpu'}}},
@@ -57,4 +64,5 @@
                                                      'pool': 'chromium.tests.gpu'}}},
   'win7_nvidia_quadro_p400': { 'swarming': { 'dimensions': { 'gpu': '10de:1cb3-24.21.14.1195',
                                                              'os': 'Windows-2008ServerR2-SP1',
-                                                             'pool': 'chromium.tests.gpu'}}}}
+                                                             'pool': 'chromium.tests.gpu'}}},
+  'x86-64': { 'swarming': { 'dimensions': { 'cpu': 'x86-64'}}}}
