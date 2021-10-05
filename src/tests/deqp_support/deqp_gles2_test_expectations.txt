@@ -219,10 +219,6 @@
 6223 MAC METAL AMD : dEQP-GLES2.functional.shaders.discard.basic_always = FAIL
 
 // Android GLES backend only failures
-1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.conditional_return_always_vertex = FAIL
-1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.conditional_return_always_fragment = FAIL
-1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.output_write_always_vertex = FAIL
-1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.output_write_always_fragment = FAIL
 2631 GLES ANDROID : dEQP-GLES2.functional.shaders.operator.sequence.side_effects.affect_* = FAIL
 // TODO: uncomment this when anglebug.com/5665 is fixed
 //2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = FAIL
