@@ -190,6 +190,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-RuntimeSpirv-OpImage-06377",
     // http://anglebug.com/6492
     "VUID-RuntimeSpirv-OpImage-06376",
+    // http://anglebug.com/6514
+    "vkEnumeratePhysicalDevices: One or more layers modified physical devices",
 };
 
 struct SkippedSyncvalMessage
