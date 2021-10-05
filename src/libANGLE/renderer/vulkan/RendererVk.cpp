@@ -181,8 +181,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDraw-blendEnable-04727",
     // http://anglebug.com/6442
     "UNASSIGNED-CoreValidation-Shader-InterfaceTypeMismatch",
-    // http://anglebug.com/6478
-    "VUID-vkCmdBeginTransformFeedbackEXT-None-02373",
     // http://anglebug.com/6491
     "VUID-RuntimeSpirv-OpImage-06377",
     // http://anglebug.com/6492

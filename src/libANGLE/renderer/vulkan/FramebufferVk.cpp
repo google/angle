@@ -1950,7 +1950,8 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
 {
     mRenderPassDesc = {};
     mRenderPassDesc.setSamples(getSamples());
-    mRenderPassDesc.setViewCount(mState.isMultiview() ? mState.getNumViews() : 0);
+    mRenderPassDesc.setViewCount(
+        mState.isMultiview() && mState.getNumViews() > 1 ? mState.getNumViews() : 0);
 
     // Color attachments.
     const auto &colorRenderTargets               = mRenderTargetCache.getColors();

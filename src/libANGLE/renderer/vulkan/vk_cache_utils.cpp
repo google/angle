@@ -1237,9 +1237,8 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         // For VR, the views are correlated, so this would be an optimization.  However, an
         // application can also use multiview for example to render to all 6 faces of a cubemap, in
         // which case the views are actually not so correlated.  In the absence of any hints from
-        // the application (TODO: verify that extension has no hints), we have to decide on one or
-        // the other.  Since VR is more expensive, the views are marked as correlated to optimize
-        // that use case.
+        // the application, we have to decide on one or the other.  Since VR is more expensive, the
+        // views are marked as correlated to optimize that use case.
         multiviewInfo.correlationMaskCount = 1;
         multiviewInfo.pCorrelationMasks    = viewMasks.data();
 
