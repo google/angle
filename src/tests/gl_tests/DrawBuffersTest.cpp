@@ -262,9 +262,6 @@ TEST_P(DrawBuffersTest, Gaps)
 {
     ANGLE_SKIP_TEST_IF(!setupTest());
 
-    // TODO(ynovikov): Investigate the failure (http://anglebug.com/1535)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
-
     // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
     // http://anglebug.com/3423
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
@@ -382,9 +379,6 @@ TEST_P(DrawBuffersTest, FirstAndLast)
 {
     ANGLE_SKIP_TEST_IF(!setupTest());
 
-    // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
-
     // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
     // http://anglebug.com/3423
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
@@ -416,9 +410,6 @@ TEST_P(DrawBuffersTest, FirstAndLast)
 TEST_P(DrawBuffersTest, FirstHalfNULL)
 {
     ANGLE_SKIP_TEST_IF(!setupTest());
-
-    // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
 
     // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
     // http://anglebug.com/3423
@@ -476,9 +467,6 @@ TEST_P(DrawBuffersWebGL2Test, TwoProgramsWithDifferentOutputsAndClear)
 {
     // TODO(http://anglebug.com/2872): Broken on the GL back-end.
     ANGLE_SKIP_TEST_IF(IsOpenGL());
-
-    // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
 
     // TODO(syoussefi): Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
     // http://anglebug.com/3423
