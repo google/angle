@@ -464,12 +464,6 @@
 1963 ANDROID GLES : dEQP-GLES3.functional.shaders.return.output_write_always_vertex = FAIL
 1963 ANDROID GLES : dEQP-GLES3.functional.shaders.return.output_write_in_func_always_fragment = FAIL
 1963 ANDROID GLES : dEQP-GLES3.functional.shaders.return.output_write_in_func_always_vertex = FAIL
-1529 ANDROID GLES : dEQP-GLES3.functional.texture.mipmap.2d.generate.a8_* = FAIL
-1529 ANDROID GLES : dEQP-GLES3.functional.texture.mipmap.2d.generate.l8_* = FAIL
-1529 ANDROID GLES : dEQP-GLES3.functional.texture.mipmap.2d.generate.la88_* = FAIL
-1529 ANDROID GLES : dEQP-GLES3.functional.texture.mipmap.cube.generate.a8_* = FAIL
-1529 ANDROID GLES : dEQP-GLES3.functional.texture.mipmap.cube.generate.l8_* = FAIL
-1529 ANDROID GLES : dEQP-GLES3.functional.texture.mipmap.cube.generate.la88_* = FAIL
 1531 ANDROID GLES : dEQP-GLES3.functional.transform_feedback.basic_types.interleaved.* = FAIL
 1531 ANDROID GLES : dEQP-GLES3.functional.transform_feedback.basic_types.separate.* = FAIL
 1531 ANDROID GLES : dEQP-GLES3.functional.transform_feedback.interpolation.* = FAIL
