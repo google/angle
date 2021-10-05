@@ -29,8 +29,6 @@ template_table_autogen_cpp = """// GENERATED FILE - DO NOT EDIT.
 
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 
-#include "image_util/copyimage.h"
-#include "image_util/generatemip.h"
 #include "image_util/loadimage.h"
 
 using namespace angle;
@@ -67,6 +65,7 @@ angle::FormatID GetFormatIDFromVkFormat(VkFormat vkFormat)
     {{
 {vk_format_cases}
         default:
+            UNREACHABLE();
             return angle::FormatID::NONE;
     }}
 }}

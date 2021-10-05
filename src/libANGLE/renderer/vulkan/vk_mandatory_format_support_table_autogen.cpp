@@ -105,7 +105,7 @@ constexpr FormatMap<VkFormatProperties> kFormatProperties = {
       STORAGE_TEXEL_BUFFER | UNIFORM_TEXEL_BUFFER | VERTEX_BUFFER}},
     {FormatID::R8G8B8A8_SSCALED, {0, 0, 0}},
     {FormatID::R8_UNORM_SRGB, {0, 0, 0}},
-    {FormatID::BC1_RGBA_UNORM_SRGB_BLOCK, {0, 0, 0}},
+    {FormatID::R8G8B8_UNORM, {0, 0, 0}},
     {FormatID::ASTC_10x10_SRGB_BLOCK, {0, 0, 0}},
     {FormatID::R10G10B10A2_UNORM,
      {0,
@@ -180,6 +180,7 @@ constexpr FormatMap<VkFormatProperties> kFormatProperties = {
     {FormatID::R16G16B16A16_SINT,
      {0, BLIT_DST | BLIT_SRC | COLOR_ATTACHMENT | SAMPLED_IMAGE | STORAGE_IMAGE,
       STORAGE_TEXEL_BUFFER | UNIFORM_TEXEL_BUFFER | VERTEX_BUFFER}},
+    {FormatID::BC1_RGBA_UNORM_SRGB_BLOCK, {0, 0, 0}},
     {FormatID::A1R5G5B5_UNORM,
      {0,
       BLIT_DST | BLIT_SRC | COLOR_ATTACHMENT | COLOR_ATTACHMENT_BLEND | SAMPLED_IMAGE |

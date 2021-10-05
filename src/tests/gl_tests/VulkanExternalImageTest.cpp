@@ -479,7 +479,9 @@ void RunTextureFormatCompatChromiumTest(bool useMemoryObjectFlags,
     for (const ImageFormatPair &format : kChromeFormats)
     {
         // https://crbug.com/angleproject/5046
-        if (format.vkFormat == VK_FORMAT_R4G4B4A4_UNORM_PACK16 && IsIntel())
+        if ((format.vkFormat == VK_FORMAT_R4G4B4A4_UNORM_PACK16 ||
+             format.internalFormat == GL_RGB8_OES) &&
+            IsIntel())
         {
             continue;
         }

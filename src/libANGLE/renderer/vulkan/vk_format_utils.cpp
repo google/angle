@@ -248,17 +248,29 @@ void FormatTable::initialize(RendererVk *renderer,
         format.initialize(renderer, intendedAngleFormat);
         format.mIntendedFormatID = intendedFormatID;
 
+        if (!format.valid())
+        {
+            continue;
+        }
+
+        if (intendedAngleFormat.isBlock)
+        {
+            outCompressedTextureFormats->push_back(format.mIntendedGLFormat);
+        }
+
+        // No sample-able or render-able formats, so nothing left to do. This includes skipping the
+        // rest of the loop for buffer-only formats, since they are not texturable.
+        if (format.mActualSampleOnlyImageFormatID == angle::FormatID::NONE)
+        {
+            continue;
+        }
+
         if (format.mActualRenderableImageFormatID == angle::FormatID::NONE)
         {
             // If renderable format was not set, it means there is no fallback format for
             // renderable. We populate this the same formatID as sampleOnly formatID so that
             // getActualFormatID() will be simpler.
             format.mActualRenderableImageFormatID = format.mActualSampleOnlyImageFormatID;
-        }
-
-        if (!format.valid())
-        {
-            continue;
         }
 
         gl::TextureCaps textureCaps;
@@ -286,11 +298,6 @@ void FormatTable::initialize(RendererVk *renderer,
                 format.mRenderableTextureLoadFunctions = GetLoadFunctionsMap(
                     format.mIntendedGLFormat, format.mActualRenderableImageFormatID);
             }
-        }
-
-        if (intendedAngleFormat.isBlock)
-        {
-            outCompressedTextureFormats->push_back(format.mIntendedGLFormat);
         }
     }
 }
