@@ -284,9 +284,12 @@ def parse_json_into_switch_angle_format_string(json_map, json_data):
 
 def main():
 
+    map_file_name = 'texture_format_map.json'
+    data_source_name = 'texture_format_data.json'
+
     # auto_script parameters.
     if len(sys.argv) > 1:
-        inputs = ['../../angle_format.py', 'texture_format_data.json', 'texture_format_map.json']
+        inputs = ['../../angle_format.py', data_source_name, map_file_name]
         outputs = ['texture_format_table_autogen.cpp']
 
         if sys.argv[1] == 'inputs':
@@ -298,8 +301,7 @@ def main():
             return 1
         return 0
 
-    json_map = angle_format.load_with_override(os.path.abspath('texture_format_map.json'))
-    data_source_name = 'texture_format_data.json'
+    json_map = angle_format.load_with_override(os.path.abspath(map_file_name))
     json_data = angle_format.load_json(data_source_name)
 
     angle_format_cases = parse_json_into_switch_angle_format_string(json_map, json_data)
