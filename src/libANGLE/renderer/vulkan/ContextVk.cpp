@@ -3010,35 +3010,23 @@ angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 
     VkDebugUtilsLabelEXT label;
     vk::MakeDebugUtilsLabel(GL_DEBUG_SOURCE_APPLICATION, marker, &label);
-    mOutsideRenderPassCommands->getCommandBuffer().insertDebugUtilsLabelEXT(label);
+
+    vk::CommandBuffer *commandBuffer = hasStartedRenderPass()
+                                           ? mRenderPassCommandBuffer
+                                           : &mOutsideRenderPassCommands->getCommandBuffer();
+    commandBuffer->insertDebugUtilsLabelEXT(label);
 
     return angle::Result::Continue;
 }
 
 angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
 {
-    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
-    {
-        return angle::Result::Continue;
-    }
-
-    VkDebugUtilsLabelEXT label;
-    vk::MakeDebugUtilsLabel(GL_DEBUG_SOURCE_APPLICATION, marker, &label);
-    mOutsideRenderPassCommands->getCommandBuffer().beginDebugUtilsLabelEXT(label);
-
-    return angle::Result::Continue;
+    return pushDebugGroupImpl(GL_DEBUG_SOURCE_APPLICATION, 0, marker);
 }
 
 angle::Result ContextVk::popGroupMarker()
 {
-    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
-    {
-        return angle::Result::Continue;
-    }
-
-    mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
-
-    return angle::Result::Continue;
+    return popDebugGroupImpl();
 }
 
 angle::Result ContextVk::pushDebugGroup(const gl::Context *context,
@@ -3046,26 +3034,43 @@ angle::Result ContextVk::pushDebugGroup(const gl::Context *context,
                                         GLuint id,
                                         const std::string &message)
 {
-    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
-    {
-        return angle::Result::Continue;
-    }
-
-    VkDebugUtilsLabelEXT label;
-    vk::MakeDebugUtilsLabel(source, message.c_str(), &label);
-    mOutsideRenderPassCommands->getCommandBuffer().beginDebugUtilsLabelEXT(label);
-
-    return angle::Result::Continue;
+    return pushDebugGroupImpl(source, id, message.c_str());
 }
 
 angle::Result ContextVk::popDebugGroup(const gl::Context *context)
+{
+    return popDebugGroupImpl();
+}
+
+angle::Result ContextVk::pushDebugGroupImpl(GLenum source, GLuint id, const char *message)
 {
     if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
     {
         return angle::Result::Continue;
     }
 
-    mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
+    VkDebugUtilsLabelEXT label;
+    vk::MakeDebugUtilsLabel(source, message, &label);
+
+    vk::CommandBuffer *commandBuffer = hasStartedRenderPass()
+                                           ? mRenderPassCommandBuffer
+                                           : &mOutsideRenderPassCommands->getCommandBuffer();
+    commandBuffer->beginDebugUtilsLabelEXT(label);
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::popDebugGroupImpl()
+{
+    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
+    {
+        return angle::Result::Continue;
+    }
+
+    vk::CommandBuffer *commandBuffer = hasStartedRenderPass()
+                                           ? mRenderPassCommandBuffer
+                                           : &mOutsideRenderPassCommands->getCommandBuffer();
+    commandBuffer->endDebugUtilsLabelEXT();
 
     return angle::Result::Continue;
 }

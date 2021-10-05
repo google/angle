@@ -8,6 +8,7 @@
 
 #include "common/debug.h"
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 namespace angle
 {
@@ -549,6 +550,96 @@ TEST_P(DebugTestES3, ObjectPtrLabels)
     glGetObjectPtrLabelKHR(sync, static_cast<GLsizei>(labelBuf.size()), &labelLengthBuf,
                            labelBuf.data());
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Test setting labels before, during and after rendering.  The debug markers can be validated by
+// capturing this test under a graphics debugger.
+TEST_P(DebugTestES3, Rendering)
+{
+    ANGLE_SKIP_TEST_IF(!mDebugExtensionAvailable);
+
+    // The test produces the following hierarchy:
+    //
+    // Group: Before Draw
+    // Message: Before Draw Marker
+    //   Message: In Group 1 Marker
+    //   glDrawArrays
+    //   Group: After Draw 1
+    //      glDrawArrays
+    //      Message: In Group 2 Marker
+    //
+    //      glCopyTexImage <-- this breaks the render pass
+    //
+    //      glDrawArrays
+    //   End Group
+    //
+    //   glCopyTexImage <-- this breaks the render pass
+    //
+    //   Group: After Draw 2
+    //      glDrawArrays
+    //
+    //      glCopyTexImage <-- this breaks the render pass
+    //
+    //      Message: In Group 3 Marker
+    //   End Group
+    //   Message: After Draw Marker
+    // End Group
+    const std::string beforeDrawGroup = "Before Draw";
+    const std::string drawGroup1      = "Group 1";
+    const std::string drawGroup2      = "Group 2";
+
+    const std::string beforeDrawMarker = "Before Draw Marker";
+    const std::string inGroup1Marker   = "In Group 1 Marker";
+    const std::string inGroup2Marker   = "In Group 2 Marker";
+    const std::string inGroup3Marker   = "In Group 3 Marker";
+    const std::string afterDrawMarker  = "After Draw Marker";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    glUseProgram(program);
+
+    glPushDebugGroupKHR(GL_DEBUG_SOURCE_THIRD_PARTY, 0, -1, beforeDrawGroup.c_str());
+    glDebugMessageInsertKHR(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_PERFORMANCE, 0,
+                            GL_DEBUG_SEVERITY_NOTIFICATION, -1, beforeDrawMarker.c_str());
+    {
+        glDebugMessageInsertKHR(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 0,
+                                GL_DEBUG_SEVERITY_LOW, -1, inGroup1Marker.c_str());
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glPushDebugGroupKHR(GL_DEBUG_SOURCE_APPLICATION, 0, -1, drawGroup1.c_str());
+        {
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+
+            glDebugMessageInsertKHR(GL_DEBUG_SOURCE_THIRD_PARTY, GL_DEBUG_TYPE_PORTABILITY, 0,
+                                    GL_DEBUG_SEVERITY_MEDIUM, -1, inGroup2Marker.c_str());
+
+            GLTexture texture;
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 1, 1, 0);
+
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+        glPopDebugGroupKHR();
+
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 2, 2, 0);
+
+        glPushDebugGroupKHR(GL_DEBUG_SOURCE_THIRD_PARTY, 0, -1, drawGroup2.c_str());
+        {
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+
+            glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 3, 3, 0);
+
+            glDebugMessageInsertKHR(GL_DEBUG_SOURCE_THIRD_PARTY, GL_DEBUG_TYPE_OTHER, 0,
+                                    GL_DEBUG_SEVERITY_HIGH, -1, inGroup3Marker.c_str());
+        }
+        glPopGroupMarkerEXT();
+
+        glDebugMessageInsertKHR(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, 0,
+                                GL_DEBUG_SEVERITY_HIGH, -1, afterDrawMarker.c_str());
+    }
+    glPopGroupMarkerEXT();
+
+    ASSERT_GL_NO_ERROR();
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DebugTestES3);

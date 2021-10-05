@@ -955,6 +955,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result flushCommandBuffersIfNecessary(const vk::CommandBufferAccess &access);
     bool renderPassUsesStorageResources() const;
 
+    angle::Result pushDebugGroupImpl(GLenum source, GLuint id, const char *message);
+    angle::Result popDebugGroupImpl();
+
     void outputCumulativePerfCounters();
 
     void updateSampleShadingWithRasterizationSamples(const uint32_t rasterizationSamples);
