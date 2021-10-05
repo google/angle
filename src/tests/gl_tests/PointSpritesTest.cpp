@@ -120,10 +120,6 @@ class PointSpritesTest : public ANGLETest
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance/glsl/variables/gl-pointcoord.html
 TEST_P(PointSpritesTest, PointCoordAndPointSizeCompliance)
 {
-    // TODO(jmadill): Investigate potential AMD driver bug.
-    // http://anglebug.com/1643
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
-
     constexpr char fs[] =
         R"(precision mediump float;
         void main()
@@ -142,10 +138,6 @@ TEST_P(PointSpritesTest, PointCoordAndPointSizeCompliance)
 // main function.
 TEST_P(PointSpritesTest, UsingPointCoordInsideFunction)
 {
-    // TODO(jmadill): Investigate potential AMD driver bug.
-    // http://anglebug.com/1643
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
-
     constexpr char fs[] =
         R"(precision mediump float;
         void foo() 
@@ -167,10 +159,6 @@ TEST_P(PointSpritesTest, UsingPointCoordInsideFunction)
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance/rendering/point-no-attributes.html
 TEST_P(PointSpritesTest, PointWithoutAttributesCompliance)
 {
-    // TODO(jmadill): Investigate potential AMD driver bug.
-    // http://anglebug.com/1643
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
-
     GLfloat pointSizeRange[2] = {};
     glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
     GLfloat maxPointSize = pointSizeRange[1];
@@ -198,10 +186,6 @@ TEST_P(PointSpritesTest, PointWithoutAttributesCompliance)
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance/rendering/point-with-gl-pointcoord-in-fragment-shader.html
 TEST_P(PointSpritesTest, PointCoordRegressionTest)
 {
-    // TODO(jmadill): Investigate potential AMD driver bug.
-    // http://anglebug.com/1643
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
-
     GLfloat pointSizeRange[2] = {};
     glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
     GLfloat maxPointSize = pointSizeRange[1];
@@ -274,10 +258,6 @@ void main()
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance/rendering/point-size.html
 TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
 {
-    // TODO(jmadill): Investigate potential AMD driver bug.
-    // http://anglebug.com/1643
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
-
     constexpr char kFS[] = R"(precision mediump float;
 varying vec4 color;
 
