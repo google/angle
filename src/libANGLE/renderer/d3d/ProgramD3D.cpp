@@ -454,13 +454,6 @@ bool ProgramD3DMetadata::usesPointSize() const
     return (shader && shader->usesPointSize());
 }
 
-const std::vector<int> &ProgramD3DMetadata::usedClipDistances() const
-{
-    const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Vertex];
-    ASSERT(shader);
-    return shader->usedClipDistances();
-}
-
 bool ProgramD3DMetadata::usesInsertedPointCoordValue() const
 {
     return (!usesPointSize() || !mUsesInstancedPointSpriteEmulation) && usesPointCoord() &&
@@ -2085,7 +2078,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
         {
             mGeometryShaderPreamble = mDynamicHLSL->generateGeometryShaderPreamble(
                 resources.varyingPacking, builtins, mHasANGLEMultiviewEnabled,
-                metadata.canSelectViewInVertexShader(), metadata.usedClipDistances().size());
+                metadata.canSelectViewInVertexShader());
         }
 
         initAttribLocationsToD3DSemantic();

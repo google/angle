@@ -602,7 +602,6 @@ class State : angle::NonCopyable
         DIRTY_OBJECT_IMAGES,    // Top-level dirty bit. Also see mDirtyImages.
         DIRTY_OBJECT_SAMPLERS,  // Top-level dirty bit. Also see mDirtySamplers.
         DIRTY_OBJECT_PROGRAM,
-        DIRTY_CLIP_PLANES,
         DIRTY_OBJECT_UNKNOWN,
         DIRTY_OBJECT_MAX = DIRTY_OBJECT_UNKNOWN,
     };
@@ -765,7 +764,6 @@ class State : angle::NonCopyable
     static_assert(DIRTY_OBJECT_IMAGES == 8, "check DIRTY_OBJECT_IMAGES index");
     static_assert(DIRTY_OBJECT_SAMPLERS == 9, "check DIRTY_OBJECT_SAMPLERS index");
     static_assert(DIRTY_OBJECT_PROGRAM == 10, "check DIRTY_OBJECT_PROGRAM index");
-    static_assert(DIRTY_CLIP_PLANES == 11, "check DIRTY_CLIP_PLANES index");
 
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;
@@ -927,7 +925,6 @@ class State : angle::NonCopyable
 
     // GLES1 emulation: state specific to GLES1
     GLES1State mGLES1State;
-    std::vector<bool> mClipPlaneEnabled;
 
     DirtyBits mDirtyBits;
     DirtyObjects mDirtyObjects;

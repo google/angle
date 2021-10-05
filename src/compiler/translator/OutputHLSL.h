@@ -44,7 +44,6 @@ class OutputHLSL : public TIntermTraverser
                const char *sourcePath,
                ShShaderOutput outputType,
                int numRenderTargets,
-               int maxClipDistances,
                int maxDualSourceDrawBuffers,
                const std::vector<ShaderVariable> &uniforms,
                ShCompileOptions compileOptions,
@@ -64,7 +63,6 @@ class OutputHLSL : public TIntermTraverser
     unsigned int getReadonlyImage2DRegisterIndex() const;
     unsigned int getImage2DRegisterIndex() const;
     const std::set<std::string> &getUsedImage2DFunctionNames() const;
-    const std::vector<int> &getUsedClipDistances() const;
 
     TInfoSinkBase &getInfoSink()
     {
@@ -216,10 +214,8 @@ class OutputHLSL : public TIntermTraverser
     bool mRequiresIEEEStrictCompiling;
     mutable bool mUseZeroArray;
     bool mUsesSecondaryColor;
-    std::vector<int> mUsedClipDistances;
 
     int mNumRenderTargets;
-    int mMaxClipDistances;
     int mMaxDualSourceDrawBuffers;
 
     int mUniqueIndex;  // For creating unique names

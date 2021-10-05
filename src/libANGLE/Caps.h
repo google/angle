@@ -577,9 +577,6 @@ struct Extensions
     bool gpuShader5EXT = false;
     // WEBGL_video_texture
     bool webglVideoTexture = false;
-    
-    // GL_APPLE_clip_distance
-    bool clipDistance = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct
@@ -806,9 +803,6 @@ struct Caps
     GLfloat maxSmoothPointSize                  = 0.0f;
     GLfloat minSmoothLineWidth                  = 0.0f;
     GLfloat maxSmoothLineWidth                  = 0.0f;
-
-    // GL_APPLE_clip_distance
-    GLuint maxClipDistances = 0;
 };
 
 Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensions);

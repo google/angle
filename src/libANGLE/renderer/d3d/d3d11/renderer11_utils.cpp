@@ -1639,7 +1639,6 @@ void GenerateCaps(ID3D11Device *device,
     extensions->maxDualSourceDrawBuffers = 1;
     extensions->texture3DOES             = true;
     extensions->baseVertexBaseInstance   = true;
-    extensions->clipDistance             = true;
     if (!strstr(description, "Adreno"))
     {
         extensions->multisampledRenderToTexture = true;

@@ -375,7 +375,6 @@ std::string DynamicHLSL::generateComputeShaderForImage2DBindSignature(
 void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
                                           const BuiltinInfo &builtins,
                                           bool programUsesPointSize,
-                                          int numClipDistancesUsed,
                                           std::ostringstream &hlslStream) const
 {
     ASSERT(builtins.dxPosition.enabled);
@@ -451,23 +450,6 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
     // in pixel shader inputs even when they are in vertex/geometry shader outputs, and the pixel
     // shader input struct must be a prefix of the vertex/geometry shader output struct.
 
-    for (int numClipDistancesToDeclare = numClipDistancesUsed; numClipDistancesToDeclare > 0;
-         numClipDistancesToDeclare -= 4)
-    {
-        const auto &builtin =
-            numClipDistancesToDeclare < 4 ? builtins.glClipDistance0 : builtins.glClipDistance1;
-        if (!builtin.enabled)
-        {
-            break;
-        }
-        const auto numComponents = std::min(4, numClipDistancesToDeclare);
-        hlslStream << "    float";
-        hlslStream << " gl_ClipDistance" << builtin.index;
-        if (numComponents > 1)
-            hlslStream << '[' << numComponents << ']';
-        hlslStream << " : " << builtin.str() << ";\n";
-    }
-
     if (builtins.glViewportIndex.enabled)
     {
         hlslStream << "    nointerpolation uint gl_ViewportIndex : "
@@ -517,7 +499,6 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Caps &caps,
     vertexStream << "struct VS_OUTPUT\n";
     const auto &vertexBuiltins = builtinsD3D[gl::ShaderType::Vertex];
     generateVaryingLinkHLSL(varyingPacking, vertexBuiltins, builtinsD3D.usesPointSize(),
-                            programMetadata.usedClipDistances().size(),
                             vertexStream);
 
     // Instanced PointSprite emulation requires additional entries originally generated in the
@@ -611,20 +592,6 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Caps &caps,
     if (vertexBuiltins.glFragCoord.enabled)
     {
         vertexGenerateOutput << "    output.gl_FragCoord = gl_Position;\n";
-    }
-
-    const auto &usedClipDistances = programMetadata.usedClipDistances();
-    for (size_t i = 0; i < usedClipDistances.size(); i++)
-    {
-        const auto semanticIdx  = i / 4;
-        const auto idxInOutput  = i % 4;
-        const auto clipPlaneIdx = usedClipDistances[i];
-        vertexGenerateOutput << "    output.gl_ClipDistance" << semanticIdx;
-        if (usedClipDistances.size() - semanticIdx * 4 > 1)
-        {
-            vertexGenerateOutput << '[' << idxInOutput << ']';
-        }
-        vertexGenerateOutput << " = gl_ClipDistance[" << clipPlaneIdx << "];\n";
     }
 
     const auto &registerInfos = varyingPacking.getRegisterList();
@@ -723,7 +690,6 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Caps &caps,
     std::ostringstream pixelStream;
     pixelStream << "struct PS_INPUT\n";
     generateVaryingLinkHLSL(varyingPacking, pixelBuiltins, builtinsD3D.usesPointSize(),
-                            programMetadata.usedClipDistances().size(),
                             pixelStream);
     pixelStream << "\n";
 
@@ -918,8 +884,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Caps &caps,
 std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &varyingPacking,
                                                         const BuiltinVaryingsD3D &builtinsD3D,
                                                         const bool hasANGLEMultiviewEnabled,
-                                                        const bool selectViewInVS,
-                                                        const int numClipDistancesUsed) const
+                                                        const bool selectViewInVS) const
 {
     ASSERT(mRenderer->getMajorShaderModel() >= 4);
 
@@ -929,11 +894,11 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
 
     preambleStream << "struct GS_INPUT\n";
     generateVaryingLinkHLSL(varyingPacking, vertexBuiltins, builtinsD3D.usesPointSize(),
-                            numClipDistancesUsed, preambleStream);
+                            preambleStream);
     preambleStream << "\n"
                    << "struct GS_OUTPUT\n";
     generateVaryingLinkHLSL(varyingPacking, builtinsD3D[gl::ShaderType::Geometry],
-                            builtinsD3D.usesPointSize(), numClipDistancesUsed, preambleStream);
+                            builtinsD3D.usesPointSize(), preambleStream);
     preambleStream
         << "\n"
         << "void copyVertex(inout GS_OUTPUT output, GS_INPUT input, GS_INPUT flatinput)\n"
@@ -1433,20 +1398,6 @@ void BuiltinVaryingsD3D::updateBuiltins(gl::ShaderType shaderType,
     if (metadata.usesTransformFeedbackGLPosition())
     {
         builtins->glPosition.enable(userSemantic, reservedSemanticIndex++);
-    }
-
-    if (metadata.getRendererMajorShaderModel() >= 4 && shaderType == gl::ShaderType::Vertex)
-    {
-        // optimization: exclude these from pixel shader
-        const auto numClipDistancesUsed = metadata.usedClipDistances().size();
-        if (numClipDistancesUsed > 0)
-        {
-            builtins->glClipDistance0.enable("SV_ClipDistance", 0);
-            if (numClipDistancesUsed > 4)
-            {
-                builtins->glClipDistance1.enable("SV_ClipDistance", 1);
-            }
-        }
     }
 
     if (metadata.usesFragCoord())

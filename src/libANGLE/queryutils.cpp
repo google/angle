@@ -3188,13 +3188,6 @@ bool GetQueryParameterInfo(const State &glState,
         return true;
     }
 
-    if (extensions.clipDistance && pname == GL_MAX_CLIP_DISTANCES_APPLE)
-    {
-        *type      = GL_INT;
-        *numParams = 1;
-        return true;
-    }
-
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
     switch (pname)
     {

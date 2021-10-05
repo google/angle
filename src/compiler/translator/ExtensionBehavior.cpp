@@ -24,7 +24,6 @@
     OP(EXT_shader_framebuffer_fetch)             \
     OP(EXT_shader_texture_lod)                   \
     OP(EXT_YUV_target)                           \
-    OP(APPLE_clip_distance)                      \
     OP(NV_EGL_stream_consumer_external)          \
     OP(NV_shader_framebuffer_fetch)              \
     OP(OES_EGL_image_external)                   \

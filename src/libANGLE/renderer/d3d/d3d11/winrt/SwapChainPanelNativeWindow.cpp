@@ -325,11 +325,6 @@ HRESULT SwapChainPanelNativeWindow::createSwapChain(ID3D11Device *device,
 
 HRESULT SwapChainPanelNativeWindow::scaleSwapChain(const Size &windowSize, const RECT &clientRect)
 {
-    if (!mSwapChain) 
-    {
-        return E_FAIL;
-    }
-
     Size renderScale = {windowSize.Width / (float)clientRect.right,
                         windowSize.Height / (float)clientRect.bottom};
     // Setup a scale matrix for the swap chain

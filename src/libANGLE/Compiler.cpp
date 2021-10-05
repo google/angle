@@ -87,7 +87,6 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     mResources.MaxTextureImageUnits         = caps.maxShaderTextureImageUnits[ShaderType::Fragment];
     mResources.MaxFragmentUniformVectors    = caps.maxFragmentUniformVectors;
     mResources.MaxDrawBuffers               = caps.maxDrawBuffers;
-    mResources.MaxClipDistances             = caps.maxClipDistances;
     mResources.OES_standard_derivatives     = extensions.standardDerivativesOES;
     mResources.EXT_draw_buffers             = extensions.drawBuffers;
     mResources.EXT_shader_texture_lod       = extensions.shaderTextureLOD;
@@ -102,7 +101,6 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     mResources.ANGLE_texture_multisample       = extensions.textureMultisample;
     mResources.ANGLE_multi_draw                = extensions.multiDraw;
     mResources.ANGLE_base_vertex_base_instance = extensions.baseVertexBaseInstance;
-    mResources.APPLE_clip_distance             = extensions.clipDistance;
 
     // TODO: use shader precision caps to determine if high precision is supported?
     mResources.FragmentPrecisionHigh = 1;

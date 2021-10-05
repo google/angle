@@ -638,11 +638,6 @@
                     "qualifier":"PointSize"
                 }
             },
-            "gl_ClipDistance":{
-                "essl_level":"ESSL3_BUILTINS",
-                "essl_extension":"APPLE_clip_distance",
-                "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqClipDistance); {type_name}->makeArray(resources.MaxClipDistances);"
-            },
             "gl_InstanceID":{
                 "essl_level":"ESSL3_BUILTINS",
                 "type":{

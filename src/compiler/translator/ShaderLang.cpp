@@ -147,7 +147,6 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxTextureImageUnits         = 8;
     resources->MaxFragmentUniformVectors    = 16;
     resources->MaxDrawBuffers               = 1;
-    resources->MaxClipDistances             = 1;
 
     // Extensions.
     resources->OES_standard_derivatives                 = 0;
@@ -159,7 +158,6 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->EXT_draw_buffers                         = 0;
     resources->EXT_frag_depth                           = 0;
     resources->EXT_shader_texture_lod                   = 0;
-    resources->APPLE_clip_distance                      = 0;
     resources->WEBGL_debug_shader_precision             = 0;
     resources->EXT_shader_framebuffer_fetch             = 0;
     resources->NV_shader_framebuffer_fetch              = 0;
@@ -604,18 +602,6 @@ const std::set<std::string> *GetUsedImage2DFunctionNames(const ShHandle handle)
     ASSERT(translator);
 
     return translator->getUsedImage2DFunctionNames();
-#else
-    return nullptr;
-#endif  // ANGLE_ENABLE_HLSL
-}
-
-const std::vector<int> *GetUsedClipDistances(const ShHandle handle)
-{
-#ifdef ANGLE_ENABLE_HLSL
-    TranslatorHLSL *translator = GetTranslatorHLSLFromHandle(handle);
-    ASSERT(translator);
-
-    return translator->getUsedClipDistances();
 #else
     return nullptr;
 #endif  // ANGLE_ENABLE_HLSL

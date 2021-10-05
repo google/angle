@@ -150,7 +150,6 @@ class ProgramD3DMetadata final : angle::NonCopyable
     bool usesPointCoord() const;
     bool usesFragCoord() const;
     bool usesPointSize() const;
-    const std::vector<int> &usedClipDistances() const;
     bool usesInsertedPointCoordValue() const;
     bool usesViewScale() const;
     bool hasANGLEMultiviewEnabled() const;

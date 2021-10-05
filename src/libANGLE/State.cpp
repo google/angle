@@ -464,7 +464,6 @@ void State::initialize(Context *context)
     {
         mGLES1State.initialize(context, this);
     }
-    mClipPlaneEnabled.resize(caps.maxClipDistances, false);
 }
 
 void State::reset(const Context *context)
@@ -1000,22 +999,13 @@ void State::setEnableFeature(GLenum feature, bool enabled)
         case GL_COLOR_MATERIAL:
             mGLES1State.mColorMaterialEnabled = enabled;
             break;
-        case GL_CLIP_DISTANCE0_APPLE:
-        case GL_CLIP_DISTANCE1_APPLE:
-        case GL_CLIP_DISTANCE2_APPLE:
-        case GL_CLIP_DISTANCE3_APPLE:
-        case GL_CLIP_DISTANCE4_APPLE:
-        case GL_CLIP_DISTANCE5_APPLE:
-            static_assert(GL_CLIP_PLANE0 == GL_CLIP_DISTANCE0_APPLE,
-                          "GL_APPLE_clip_distance extension is broken");
-            if (mClientVersion < Version(2, 0))
-                mGLES1State.mClipPlanes[feature - GL_CLIP_DISTANCE0_APPLE].enabled = enabled;
-            else
-                mClipPlaneEnabled[feature - GL_CLIP_DISTANCE0_APPLE] = enabled;
-            break;
-        case GL_CLIP_DISTANCE6_APPLE:
-        case GL_CLIP_DISTANCE7_APPLE:
-            mClipPlaneEnabled[feature - GL_CLIP_DISTANCE0_APPLE] = enabled;
+        case GL_CLIP_PLANE0:
+        case GL_CLIP_PLANE1:
+        case GL_CLIP_PLANE2:
+        case GL_CLIP_PLANE3:
+        case GL_CLIP_PLANE4:
+        case GL_CLIP_PLANE5:
+            mGLES1State.mClipPlanes[feature - GL_CLIP_PLANE0].enabled = enabled;
             break;
         case GL_FOG:
             mGLES1State.mFogEnabled = enabled;
@@ -1120,18 +1110,13 @@ bool State::getEnableFeature(GLenum feature) const
             return mGLES1State.mRescaleNormalEnabled;
         case GL_COLOR_MATERIAL:
             return mGLES1State.mColorMaterialEnabled;
-        case GL_CLIP_DISTANCE0_APPLE:
-        case GL_CLIP_DISTANCE1_APPLE:
-        case GL_CLIP_DISTANCE2_APPLE:
-        case GL_CLIP_DISTANCE3_APPLE:
-        case GL_CLIP_DISTANCE4_APPLE:
-        case GL_CLIP_DISTANCE5_APPLE:
-            if (mClientVersion < Version(2, 0))
-                return mGLES1State.mClipPlanes[feature - GL_CLIP_DISTANCE0_APPLE].enabled;
-            return mClipPlaneEnabled[feature - GL_CLIP_DISTANCE0_APPLE];
-        case GL_CLIP_DISTANCE6_APPLE:
-        case GL_CLIP_DISTANCE7_APPLE:
-            return mClipPlaneEnabled[feature - GL_CLIP_DISTANCE0_APPLE];
+        case GL_CLIP_PLANE0:
+        case GL_CLIP_PLANE1:
+        case GL_CLIP_PLANE2:
+        case GL_CLIP_PLANE3:
+        case GL_CLIP_PLANE4:
+        case GL_CLIP_PLANE5:
+            return mGLES1State.mClipPlanes[feature - GL_CLIP_PLANE0].enabled;
         case GL_FOG:
             return mGLES1State.mFogEnabled;
         case GL_POINT_SMOOTH:

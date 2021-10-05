@@ -30,8 +30,6 @@ class TranslatorHLSL : public TCompiler
     unsigned int getImage2DRegisterIndex() const;
     const std::set<std::string> *getUsedImage2DFunctionNames() const;
 
-    const std::vector<int> *getUsedClipDistances() const;
-
   protected:
     ANGLE_NO_DISCARD bool translate(TIntermBlock *root,
                                     ShCompileOptions compileOptions,
@@ -48,7 +46,6 @@ class TranslatorHLSL : public TCompiler
     unsigned int mReadonlyImage2DRegisterIndex;
     unsigned int mImage2DRegisterIndex;
     std::set<std::string> mUsedImage2DFunctionNames;
-    std::vector<int> mUsedClipDistances;
 };
 
 }  // namespace sh

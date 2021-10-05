@@ -169,7 +169,6 @@ void ShaderD3D::uncompile()
     mUsesDiscardRewriting        = false;
     mUsesNestedBreak             = false;
     mRequiresIEEEStrictCompiling = false;
-    mUsedClipDistances.clear();
 
     mDebugInfo.clear();
 }
@@ -253,12 +252,6 @@ const std::set<std::string> &GetUsedImage2DFunctionNames(
     return *usedImage2DFunctionNames;
 }
 
-const std::vector<int> &GetUsedClipDistances(const std::vector<int> *usedClipDistances)
-{
-    ASSERT(usedClipDistances);
-    return *usedClipDistances;
-}
-
 std::shared_ptr<WaitableCompileEvent> ShaderD3D::compile(const gl::Context *context,
                                                          gl::ShCompilerInstance *compilerInstance,
                                                          ShCompileOptions options)
@@ -318,7 +311,6 @@ std::shared_ptr<WaitableCompileEvent> ShaderD3D::compile(const gl::Context *cont
         mImage2DRegisterIndex         = sh::GetImage2DRegisterIndex(compilerHandle);
         mUsedImage2DFunctionNames =
             GetUsedImage2DFunctionNames(sh::GetUsedImage2DFunctionNames(compilerHandle));
-        mUsedClipDistances = GetUsedClipDistances(sh::GetUsedClipDistances(compilerHandle));
 
         for (const sh::InterfaceBlock &interfaceBlock : mData.getUniformBlocks())
         {

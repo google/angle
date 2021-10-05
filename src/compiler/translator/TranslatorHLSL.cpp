@@ -42,7 +42,6 @@ bool TranslatorHLSL::translate(TIntermBlock *root,
 {
     const ShBuiltInResources &resources = getResources();
     int numRenderTargets                = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
-    int maxClipDistances                = resources.APPLE_clip_distance ? resources.MaxClipDistances : 0;
     int maxDualSourceDrawBuffers =
         resources.EXT_blend_func_extended ? resources.MaxDualSourceDrawBuffers : 0;
 
@@ -198,9 +197,9 @@ bool TranslatorHLSL::translate(TIntermBlock *root,
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderSpec(), getShaderVersion(),
                               getExtensionBehavior(), getSourcePath(), getOutputType(),
-                              numRenderTargets, maxClipDistances, maxDualSourceDrawBuffers,
-                              getUniforms(), compileOptions, getComputeShaderLocalSize(),
-                              &getSymbolTable(), perfDiagnostics, mShaderStorageBlocks);
+                              numRenderTargets, maxDualSourceDrawBuffers, getUniforms(),
+                              compileOptions, getComputeShaderLocalSize(), &getSymbolTable(),
+                              perfDiagnostics, mShaderStorageBlocks);
 
     outputHLSL.output(root, getInfoSink().obj);
 
@@ -211,7 +210,6 @@ bool TranslatorHLSL::translate(TIntermBlock *root,
     mReadonlyImage2DRegisterIndex       = outputHLSL.getReadonlyImage2DRegisterIndex();
     mImage2DRegisterIndex               = outputHLSL.getImage2DRegisterIndex();
     mUsedImage2DFunctionNames           = outputHLSL.getUsedImage2DFunctionNames();
-    mUsedClipDistances                  = outputHLSL.getUsedClipDistances();
 
     return true;
 }
@@ -263,11 +261,6 @@ unsigned int TranslatorHLSL::getImage2DRegisterIndex() const
 const std::set<std::string> *TranslatorHLSL::getUsedImage2DFunctionNames() const
 {
     return &mUsedImage2DFunctionNames;
-}
-
-const std::vector<int> *TranslatorHLSL::getUsedClipDistances() const
-{
-    return &mUsedClipDistances;
 }
 
 bool TranslatorHLSL::shouldUniformBlockUseStructuredBuffer(

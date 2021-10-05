@@ -105,8 +105,6 @@ struct BuiltinInfo
     BuiltinVarying glPosition;
     BuiltinVarying glFragCoord;
     BuiltinVarying glPointCoord;
-    BuiltinVarying glClipDistance0;
-    BuiltinVarying glClipDistance1;
     BuiltinVarying glPointSize;
     BuiltinVarying glViewIDOVR;
     BuiltinVarying glViewportIndex;
@@ -172,8 +170,7 @@ class DynamicHLSL : angle::NonCopyable
     std::string generateGeometryShaderPreamble(const gl::VaryingPacking &varyingPacking,
                                                const BuiltinVaryingsD3D &builtinsD3D,
                                                const bool hasANGLEMultiviewEnabled,
-                                               const bool selectViewInVS,
-                                               const int numClipDistancesUsed) const;
+                                               const bool selectViewInVS) const;
 
     std::string generateGeometryShaderHLSL(const gl::Caps &caps,
                                            gl::PrimitiveMode primitiveType,
@@ -195,7 +192,6 @@ class DynamicHLSL : angle::NonCopyable
     void generateVaryingLinkHLSL(const gl::VaryingPacking &varyingPacking,
                                  const BuiltinInfo &builtins,
                                  bool programUsesPointSize,
-                                 int numClipDistancesUsed,
                                  std::ostringstream &hlslStream) const;
 
     static void GenerateAttributeConversionHLSL(angle::FormatID vertexFormatID,

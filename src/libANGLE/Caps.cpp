@@ -970,7 +970,6 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_draw_elements_base_vertex"] = enableableExtension(&Extensions::drawElementsBaseVertexOES);
         map["GL_EXT_draw_elements_base_vertex"] = enableableExtension(&Extensions::drawElementsBaseVertexEXT);
         map["GL_EXT_gpu_shader5"] = enableableExtension(&Extensions::gpuShader5EXT);
-        map["GL_APPLE_clip_distance"] = enableableExtension(&Extensions::clipDistance);
         // GLES1 extensions
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArrayOES);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMapOES);
@@ -1254,11 +1253,6 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxUniformBufferBindings     = 48;
         caps.maxCombinedUniformBlocks     = 36;
         caps.maxCombinedTextureImageUnits = 64;
-    }
-
-    if (extensions.clipDistance)
-    {
-        caps.maxClipDistances = 1;
     }
 
     for (ShaderType shaderType : AllShaderTypes())

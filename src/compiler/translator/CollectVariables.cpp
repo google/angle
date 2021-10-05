@@ -182,7 +182,6 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mInstanceIDAdded;
     bool mVertexIDAdded;
     bool mPointSizeAdded;
-    bool mClipDistanceAdded;
     bool mDrawIDAdded;
     bool mBaseVertexAdded;
     bool mBaseInstanceAdded;
@@ -258,7 +257,6 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mBaseVertexAdded(false),
       mBaseInstanceAdded(false),
       mPositionAdded(false),
-      mClipDistanceAdded(false),
       mPointCoordAdded(false),
       mFrontFacingAdded(false),
       mHelperInvocationAdded(false),
@@ -526,9 +524,6 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 return;
             case EvqPointSize:
                 recordBuiltInVaryingUsed(symbol->variable(), &mPointSizeAdded, mOutputVaryings);
-                return;
-            case EvqClipDistance:
-                recordBuiltInVaryingUsed(symbol->variable(), &mClipDistanceAdded, mOutputVaryings);
                 return;
             case EvqDrawID:
                 recordBuiltInAttributeUsed(symbol->variable(), &mDrawIDAdded);
