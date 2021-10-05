@@ -306,7 +306,16 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
         ImageLayout::ExternalPreInitialized,
         ImageMemoryBarrierData{
             "ExternalPreInitialized",
-            VK_IMAGE_LAYOUT_PREINITIALIZED,
+            // Binding a VkImage with an initial layout of VK_IMAGE_LAYOUT_UNDEFINED to external
+            // memory whose content has already been defined does not make the content undefined
+            // (see 12.8.1.  External Resource Sharing).
+            //
+            // Note that for external memory objects, if the content is already defined, the
+            // ownership rules imply that the first operation on the texture must be a call to
+            // glWaitSemaphoreEXT that grants ownership of the image and informs us of the true
+            // layout.  If the content is not already defined, the first operation may not be a
+            // glWaitSemaphore, but in this case undefined layout is appropriate.
+            VK_IMAGE_LAYOUT_UNDEFINED,
             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
             VK_PIPELINE_STAGE_HOST_BIT | VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
             // Transition to: we don't expect to transition into PreInitialized.
@@ -4853,7 +4862,7 @@ void ImageHelper::acquireFromExternal(ContextVk *contextVk,
     // The image must be newly allocated or have been released to the external
     // queue. If this is not the case, it's an application bug, so ASSERT might
     // eventually need to change to a warning.
-    ASSERT(mCurrentLayout == ImageLayout::Undefined ||
+    ASSERT(mCurrentLayout == ImageLayout::ExternalPreInitialized ||
            mCurrentQueueFamilyIndex == externalQueueFamilyIndex);
 
     mCurrentLayout           = currentLayout;
