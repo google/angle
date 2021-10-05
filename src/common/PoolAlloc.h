@@ -56,7 +56,7 @@ class PageHeader;
 class PoolAllocator : angle::NonCopyable
 {
   public:
-    static const int kDefaultAlignment = 16;
+    static const int kDefaultAlignment = sizeof(void *);
     //
     // Create PoolAllocator. If alignment is set to 1 byte then fastAllocate()
     //  function can be used to make allocations with less overhead.
