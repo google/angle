@@ -1795,6 +1795,41 @@ TEST_P(ImageTestES3, Source2DTarget2DTargetTextureRespecifyLevel)
     eglDestroyImageKHR(window->getDisplay(), image);
 }
 
+// Create target texture from EGL image and then trigger texture respecification which releases the
+// last image ref.
+TEST_P(ImageTest, ImageOrphanRefCountingBug)
+{
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+
+    // Create the first Image
+    GLTexture source1;
+    EGLImageKHR image1;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  static_cast<void *>(&kLinearColor), source1, &image1);
+
+    // Create the target
+    GLTexture target;
+    createEGLImageTargetTexture2D(image1, target);
+
+    // Delete the source and image. A ref is still held by the target texture
+    source1.reset();
+    eglDestroyImageKHR(window->getDisplay(), image1);
+
+    // Create the second Image
+    GLTexture source2;
+    EGLImageKHR image2;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  static_cast<void *>(&kLinearColor), source2, &image2);
+
+    // Respecify the target with the second image.
+    glBindTexture(GL_TEXTURE_2D, target);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image2);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image2);
+}
+
 // Testing source 2D texture, target 2D array texture
 TEST_P(ImageTest, Source2DTarget2DArray)
 {

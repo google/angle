@@ -59,7 +59,8 @@ class ImageSibling : public gl::FramebufferAttachmentObject
     void setTargetImage(const gl::Context *context, egl::Image *imageTarget);
 
     // Orphan all EGL image sources and targets
-    angle::Result orphanImages(const gl::Context *context);
+    angle::Result orphanImages(const gl::Context *context,
+                               RefCountObjectReleaser<Image> *outReleaseImage);
 
     void notifySiblings(angle::SubjectMessage message);
 

@@ -71,15 +71,18 @@ void ImageSibling::setTargetImage(const gl::Context *context, egl::Image *imageT
     imageTarget->addTargetSibling(this);
 }
 
-angle::Result ImageSibling::orphanImages(const gl::Context *context)
+angle::Result ImageSibling::orphanImages(const gl::Context *context,
+                                         RefCountObjectReleaser<Image> *outReleaseImage)
 {
+    ASSERT(outReleaseImage != nullptr);
+
     if (mTargetOf.get() != nullptr)
     {
         // Can't be a target and have sources.
         ASSERT(mSourcesOf.empty());
 
         ANGLE_TRY(mTargetOf->orphanSibling(context, this));
-        mTargetOf.set(DisplayFromContext(context), nullptr);
+        *outReleaseImage = mTargetOf.set(DisplayFromContext(context), nullptr);
     }
     else
     {

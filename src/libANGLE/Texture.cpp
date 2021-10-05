@@ -768,7 +768,8 @@ void Texture::onDestroy(const Context *context)
         mBoundStream = nullptr;
     }
 
-    (void)(orphanImages(context));
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    (void)orphanImages(context, &releaseImage);
 
     mState.mBuffer.set(context, nullptr, 0, 0);
 
@@ -1206,7 +1207,9 @@ angle::Result Texture::setImage(Context *context,
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
-    ANGLE_TRY(orphanImages(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level, size.depth);
 
@@ -1261,7 +1264,9 @@ angle::Result Texture::setCompressedImage(Context *context,
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
-    ANGLE_TRY(orphanImages(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level, size.depth);
 
@@ -1310,7 +1315,9 @@ angle::Result Texture::copyImage(Context *context,
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
-    ANGLE_TRY(orphanImages(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level, 1);
 
@@ -1475,7 +1482,9 @@ angle::Result Texture::copyTexture(Context *context,
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
-    ANGLE_TRY(orphanImages(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
 
     // Initialize source texture.
     // Note: we don't have a way to notify which portions of the image changed currently.
@@ -1532,7 +1541,9 @@ angle::Result Texture::copyCompressedTexture(Context *context, const Texture *so
 {
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
-    ANGLE_TRY(orphanImages(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
 
     ANGLE_TRY(mTexture->copyCompressedTexture(context, source));
 
@@ -1554,7 +1565,9 @@ angle::Result Texture::setStorage(Context *context,
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
-    ANGLE_TRY(orphanImages(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
 
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(levels);
@@ -1588,7 +1601,9 @@ angle::Result Texture::setImageExternal(Context *context,
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
-    ANGLE_TRY(orphanImages(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level, size.depth);
 
@@ -1615,7 +1630,9 @@ angle::Result Texture::setStorageMultisample(Context *context,
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
-    ANGLE_TRY(orphanImages(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
 
     // Potentially adjust "samples" to a supported value
     const TextureCaps &formatCaps = context->getTextureCaps().get(internalFormat);
@@ -1649,7 +1666,9 @@ angle::Result Texture::setStorageExternalMemory(Context *context,
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
-    ANGLE_TRY(orphanImages(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
 
     ANGLE_TRY(mTexture->setStorageExternalMemory(context, type, levels, internalFormat, size,
                                                  memoryObject, offset, createFlags, usageFlags));
@@ -1679,9 +1698,10 @@ angle::Result Texture::generateMipmap(Context *context)
 
     // EGL_KHR_gl_image states that images are only orphaned when generating mipmaps if the texture
     // is not mip complete.
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
     if (!isMipmapComplete())
     {
-        ANGLE_TRY(orphanImages(context));
+        ANGLE_TRY(orphanImages(context, &releaseImage));
     }
 
     const GLuint baseLevel = mState.getEffectiveBaseLevel();
@@ -1841,7 +1861,9 @@ angle::Result Texture::setEGLImageTarget(Context *context,
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     ANGLE_TRY(releaseTexImageInternal(context));
-    ANGLE_TRY(orphanImages(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
 
     ANGLE_TRY(mTexture->setEGLImageTarget(context, type, imageTarget));
 
