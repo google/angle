@@ -106,7 +106,7 @@ class PoolAllocator : angle::NonCopyable
 #else
         ASSERT(mAlignment == 1);
         // No multi-page allocations
-        ASSERT(numBytes <= (mPageSize - mHeaderSkip));
+        ASSERT(numBytes <= (mPageSize - mPageHeaderSkip));
         //
         // Do the allocation, most likely case inline first, for efficiency.
         //
@@ -119,16 +119,13 @@ class PoolAllocator : angle::NonCopyable
             mCurrentPageOffset += numBytes;
             return memory;
         }
-        return reinterpret_cast<uint8_t *>(allocateNewPage(numBytes, numBytes));
+        return allocateNewPage(numBytes);
 #endif
     }
 
-    //
-    // There is no deallocate.  The point of this class is that
-    // deallocation can be skipped by the user of it, as the model
-    // of use is to simultaneously deallocate everything at once
-    // by calling pop(), and to not have to solve memory leak problems.
-    //
+    // There is no deallocate.  The point of this class is that deallocation can be skipped by the
+    // user of it, as the model of use is to simultaneously deallocate everything at once by calling
+    // pop(), and to not have to solve memory leak problems.
 
     // Catch unwanted allocations.
     // TODO(jmadill): Remove this when we remove the global allocator.
@@ -138,7 +135,6 @@ class PoolAllocator : angle::NonCopyable
   private:
     size_t mAlignment;  // all returned allocations will be aligned at
                         // this granularity, which will be a power of 2
-    size_t mAlignmentMask;
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
     struct AllocState
     {
@@ -148,18 +144,27 @@ class PoolAllocator : angle::NonCopyable
     using AllocStack = std::vector<AllocState>;
 
     // Slow path of allocation when we have to get a new page.
-    void *allocateNewPage(size_t numBytes, size_t allocationSize);
+    uint8_t *allocateNewPage(size_t numBytes);
     // Track allocations if and only if we're using guard blocks
-    void *initializeAllocation(PageHeader *block, unsigned char *memory, size_t numBytes);
+    void *initializeAllocation(uint8_t *memory, size_t numBytes);
 
-    size_t mPageSize;           // granularity of allocation from the OS
-    size_t mHeaderSkip;         // amount of memory to skip to make room for the
-                                //      header (basically, size of header, rounded
-                                //      up to make it aligned
-    size_t mCurrentPageOffset;  // next offset in top of inUseList to allocate from
-    PageHeader *mFreeList;      // list of popped memory
-    PageHeader *mInUseList;     // list of all memory currently being used
-    AllocStack mStack;          // stack of where to allocate from, to partition pool
+    // Granularity of allocation from the OS
+    size_t mPageSize;
+    // Amount of memory to skip to make room for the page header (which is the size of the page
+    // header, or PageHeader in PoolAlloc.cpp)
+    size_t mPageHeaderSkip;
+    // Next offset in top of inUseList to allocate from.  This offset is not necessarily aligned to
+    // anything.  When an allocation is made, the data is aligned to mAlignment, and the header (if
+    // any) will align to pointer size by extension (since mAlignment is made aligned to at least
+    // pointer size).
+    size_t mCurrentPageOffset;
+    // List of popped memory
+    PageHeader *mFreeList;
+    // List of all memory currently being used.  The head of this list is where allocations are
+    // currently being made from.
+    PageHeader *mInUseList;
+    // Stack of where to allocate from, to partition pool
+    AllocStack mStack;
 
     int mNumCalls;       // just an interesting statistic
     size_t mTotalBytes;  // just an interesting statistic

@@ -43,33 +43,69 @@ class Allocation
 #endif
     }
 
+    void checkAllocList() const;
+
+    static size_t AlignedHeaderSize(uint8_t *allocationBasePtr, size_t alignment)
+    {
+        // Make sure that the data offset after the header is aligned to the given alignment.
+        size_t base = reinterpret_cast<size_t>(allocationBasePtr);
+        return rx::roundUpPow2(base + kGuardBlockSize + HeaderSize(), alignment) - base;
+    }
+
+    // Return total size needed to accommodate user buffer of 'size',
+    // plus our tracking data and any necessary alignments.
+    static size_t AllocationSize(uint8_t *allocationBasePtr,
+                                 size_t size,
+                                 size_t alignment,
+                                 size_t *preAllocationPaddingOut)
+    {
+        // The allocation will be laid out as such:
+        //
+        //                      Aligned to |alignment|
+        //                               ^
+        //   preAllocationPaddingOut     |
+        //        ___^___                |
+        //       /       \               |
+        //       <padding>[header][guard][data][guard]
+        //       \___________ __________/
+        //                   V
+        //              dataOffset
+        //
+        // Note that alignment is at least as much as a pointer alignment, so the pointers in the
+        // header are also necessarily aligned appropriately.
+        //
+        size_t dataOffset        = AlignedHeaderSize(allocationBasePtr, alignment);
+        *preAllocationPaddingOut = dataOffset - HeaderSize() - kGuardBlockSize;
+
+        return dataOffset + size + kGuardBlockSize;
+    }
+
+    // Given memory pointing to |header|, returns |data|.
+    static uint8_t *GetDataPointer(uint8_t *memory, size_t alignment)
+    {
+        uint8_t *alignedPtr = memory + kGuardBlockSize + HeaderSize();
+
+        // |memory| must be aligned already such that user data is aligned to |alignment|.
+        ASSERT((reinterpret_cast<uintptr_t>(alignedPtr) & (alignment - 1)) == 0);
+
+        return alignedPtr;
+    }
+
+  private:
+    void checkGuardBlock(unsigned char *blockMem, unsigned char val, const char *locText) const;
+
     void checkAlloc() const
     {
         checkGuardBlock(preGuard(), kGuardBlockBeginVal, "before");
         checkGuardBlock(postGuard(), kGuardBlockEndVal, "after");
     }
 
-    void checkAllocList() const;
-
-    // Return total size needed to accommodate user buffer of 'size',
-    // plus our tracking data.
-    static size_t AllocationSize(size_t size) { return size + 2 * kGuardBlockSize + HeaderSize(); }
-
-    // Offset from surrounding buffer to get to user data buffer.
-    static unsigned char *OffsetAllocation(unsigned char *m)
-    {
-        return m + kGuardBlockSize + HeaderSize();
-    }
-
-  private:
-    void checkGuardBlock(unsigned char *blockMem, unsigned char val, const char *locText) const;
-
     // Find offsets to pre and post guard blocks, and user data buffer
     unsigned char *preGuard() const { return mMem + HeaderSize(); }
     unsigned char *data() const { return preGuard() + kGuardBlockSize; }
     unsigned char *postGuard() const { return data() + mSize; }
     size_t mSize;            // size of the user data area
-    unsigned char *mMem;     // beginning of our allocation (pts to header)
+    unsigned char *mMem;     // beginning of our allocation (points to header)
     Allocation *mPrevAlloc;  // prior allocation in the chain
 
     static constexpr unsigned char kGuardBlockBeginVal = 0xfb;
@@ -101,7 +137,9 @@ class PageHeader
     {
 #    if defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
         if (lastAllocation)
+        {
             lastAllocation->checkAllocList();
+        }
 #    endif
     }
 
@@ -121,8 +159,8 @@ PoolAllocator::PoolAllocator(int growthIncrement, int allocationAlignment)
     : mAlignment(allocationAlignment),
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
       mPageSize(growthIncrement),
-      mFreeList(0),
-      mInUseList(0),
+      mFreeList(nullptr),
+      mInUseList(nullptr),
       mNumCalls(0),
       mTotalBytes(0),
 #endif
@@ -135,38 +173,23 @@ void PoolAllocator::initialize(int pageSize, int alignment)
 {
     mAlignment = alignment;
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
-    mPageSize = pageSize;
-    if (mAlignment == 1)
-    {
-        // This is a special fast-path where fastAllocation() is enabled
-        mAlignmentMask = 0;
-        mHeaderSkip    = sizeof(PageHeader);
-    }
-    else
+    mPageSize       = pageSize;
+    mPageHeaderSkip = sizeof(PageHeader);
+
+    // Alignment == 1 is a special fast-path where fastAllocate() is enabled
+    if (mAlignment != 1)
     {
 #endif
-        //
         // Adjust mAlignment to be at least pointer aligned and
         // power of 2.
         //
         size_t minAlign = sizeof(void *);
-        mAlignment &= ~(minAlign - 1);
         if (mAlignment < minAlign)
         {
             mAlignment = minAlign;
         }
-        mAlignment     = gl::ceilPow2(static_cast<unsigned int>(mAlignment));
-        mAlignmentMask = mAlignment - 1;
-
+        mAlignment = gl::ceilPow2(static_cast<unsigned int>(mAlignment));
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
-        //
-        // Align header skip
-        //
-        mHeaderSkip = minAlign;
-        if (mHeaderSkip < sizeof(PageHeader))
-        {
-            mHeaderSkip = rx::roundUpPow2(sizeof(PageHeader), mAlignment);
-        }
     }
     //
     // Don't allow page sizes we know are smaller than all common
@@ -176,11 +199,13 @@ void PoolAllocator::initialize(int pageSize, int alignment)
     {
         mPageSize = 4 * 1024;
     }
+
     //
     // A large mCurrentPageOffset indicates a new page needs to
     // be obtained to allocate memory.
     //
     mCurrentPageOffset = mPageSize;
+
 #else  // !defined(ANGLE_DISABLE_POOL_ALLOC)
     mStack.push_back({});
 #endif
@@ -256,13 +281,10 @@ void PoolAllocator::push()
 #endif
 }
 
-//
-// Do a mass-deallocation of all the individual allocations
-// that have occurred since the last push(), or since the
-// last pop(), or since the object's creation.
+// Do a mass-deallocation of all the individual allocations that have occurred since the last
+// push(), or since the last pop(), or since the object's creation.
 //
 // The deallocated pages are saved for future allocations.
-//
 void PoolAllocator::pop()
 {
     if (mStack.size() < 1)
@@ -323,46 +345,39 @@ void *PoolAllocator::allocate(size_t numBytes)
     ++mNumCalls;
     mTotalBytes += numBytes;
 
-    // If we are using guard blocks, all allocations are bracketed by
-    // them: [guardblock][allocation][guardblock].  numBytes is how
-    // much memory the caller asked for.  allocationSize is the total
-    // size including guard blocks.  In release build,
-    // kGuardBlockSize=0 and this all gets optimized away.
-    size_t allocationSize = Allocation::AllocationSize(numBytes) + mAlignment;
-    // Detect integer overflow.
-    if (allocationSize < numBytes)
-    {
-        return nullptr;
-    }
+    uint8_t *currentPagePtr = reinterpret_cast<uint8_t *>(mInUseList) + mCurrentPageOffset;
 
-    //
+    size_t preAllocationPadding = 0;
+    size_t allocationSize =
+        Allocation::AllocationSize(currentPagePtr, numBytes, mAlignment, &preAllocationPadding);
+
+    // Integer overflow is unexpected.
+    ASSERT(allocationSize >= numBytes);
+
     // Do the allocation, most likely case first, for efficiency.
-    // This step could be moved to be inline sometime.
-    //
     if (allocationSize <= mPageSize - mCurrentPageOffset)
     {
-        //
-        // Safe to allocate from mCurrentPageOffset.
-        //
-        uint8_t *memory = reinterpret_cast<uint8_t *>(mInUseList) + mCurrentPageOffset;
+        // There is enough room to allocate from the current page at mCurrentPageOffset.
+        uint8_t *memory = currentPagePtr + preAllocationPadding;
         mCurrentPageOffset += allocationSize;
-        mCurrentPageOffset = (mCurrentPageOffset + mAlignmentMask) & ~mAlignmentMask;
 
-        return initializeAllocation(mInUseList, memory, numBytes);
+        return initializeAllocation(memory, numBytes);
     }
 
-    if (allocationSize > mPageSize - mHeaderSkip)
+    if (allocationSize > mPageSize - mPageHeaderSkip)
     {
-        //
-        // Do a multi-page allocation.  Don't mix these with the others.
-        // The OS is efficient in allocating and freeing multiple pages.
-        //
-        size_t numBytesToAlloc = allocationSize + mHeaderSkip;
-        // Detect integer overflow.
-        if (numBytesToAlloc < allocationSize)
-        {
-            return nullptr;
-        }
+        // If the allocation is larger than a whole page, do a multi-page allocation.  These are not
+        // mixed with the others.  The OS is efficient in allocating and freeing multiple pages.
+
+        // We don't know what the alignment of the new allocated memory will be, so conservatively
+        // allocate enough memory for up to alignment extra bytes being needed.
+        allocationSize = Allocation::AllocationSize(reinterpret_cast<uint8_t *>(mPageHeaderSkip),
+                                                    numBytes, mAlignment, &preAllocationPadding);
+
+        size_t numBytesToAlloc = allocationSize + mPageHeaderSkip + mAlignment;
+
+        // Integer overflow is unexpected.
+        ASSERT(numBytesToAlloc >= allocationSize);
 
         PageHeader *memory = reinterpret_cast<PageHeader *>(::new char[numBytesToAlloc]);
         if (memory == nullptr)
@@ -374,17 +389,21 @@ void *PoolAllocator::allocate(size_t numBytes)
         new (memory) PageHeader(mInUseList, (numBytesToAlloc + mPageSize - 1) / mPageSize);
         mInUseList = memory;
 
-        mCurrentPageOffset = mPageSize;  // make next allocation come from a new page
+        // Make next allocation come from a new page
+        mCurrentPageOffset = mPageSize;
 
-        // No guard blocks for multi-page allocations (yet)
-        void *unalignedPtr =
-            reinterpret_cast<void *>(reinterpret_cast<uintptr_t>(memory) + mHeaderSkip);
-        return std::align(mAlignment, numBytes, unalignedPtr, allocationSize);
+        // Now that we actually have the pointer, make sure the data pointer will be aligned.
+        currentPagePtr = reinterpret_cast<uint8_t *>(memory) + mPageHeaderSkip;
+        Allocation::AllocationSize(currentPagePtr, numBytes, mAlignment, &preAllocationPadding);
+
+        return initializeAllocation(currentPagePtr + preAllocationPadding, numBytes);
     }
-    unsigned char *newPageAddr =
-        static_cast<unsigned char *>(allocateNewPage(numBytes, allocationSize));
-    return initializeAllocation(mInUseList, newPageAddr, numBytes);
+
+    uint8_t *newPageAddr = allocateNewPage(numBytes);
+    return initializeAllocation(newPageAddr, numBytes);
+
 #else  // !defined(ANGLE_DISABLE_POOL_ALLOC)
+
     void *alloc = malloc(numBytes + mAlignmentMask);
     mStack.back().push_back(alloc);
 
@@ -395,11 +414,10 @@ void *PoolAllocator::allocate(size_t numBytes)
 }
 
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
-void *PoolAllocator::allocateNewPage(size_t numBytes, size_t allocationSize)
+uint8_t *PoolAllocator::allocateNewPage(size_t numBytes)
 {
-    //
-    // Need a simple page to allocate from.
-    //
+    // Need a simple page to allocate from.  Pick a page from the free list, if any.  Otherwise need
+    // to make the allocation.
     PageHeader *memory;
     if (mFreeList)
     {
@@ -418,21 +436,28 @@ void *PoolAllocator::allocateNewPage(size_t numBytes, size_t allocationSize)
     new (memory) PageHeader(mInUseList, 1);
     mInUseList = memory;
 
-    unsigned char *ret = reinterpret_cast<unsigned char *>(mInUseList) + mHeaderSkip;
-    mCurrentPageOffset = (mHeaderSkip + allocationSize + mAlignmentMask) & ~mAlignmentMask;
-    return ret;
+    // Leave room for the page header.
+    mCurrentPageOffset      = mPageHeaderSkip;
+    uint8_t *currentPagePtr = reinterpret_cast<uint8_t *>(mInUseList) + mCurrentPageOffset;
+
+    size_t preAllocationPadding = 0;
+    size_t allocationSize =
+        Allocation::AllocationSize(currentPagePtr, numBytes, mAlignment, &preAllocationPadding);
+
+    mCurrentPageOffset += allocationSize;
+
+    // The new allocation is made after the page header and any alignment required before it.
+    return reinterpret_cast<uint8_t *>(mInUseList) + mPageHeaderSkip + preAllocationPadding;
 }
 
-void *PoolAllocator::initializeAllocation(PageHeader *block, unsigned char *memory, size_t numBytes)
+void *PoolAllocator::initializeAllocation(uint8_t *memory, size_t numBytes)
 {
 #    if defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
-    new (memory) Allocation(numBytes + mAlignment, memory, block->lastAllocation);
-    block->lastAllocation = reinterpret_cast<Allocation *>(memory);
+    new (memory) Allocation(numBytes, memory, mInUseList->lastAllocation);
+    mInUseList->lastAllocation = reinterpret_cast<Allocation *>(memory);
 #    endif
-    // The OffsetAllocation() call is optimized away if !defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
-    void *unalignedPtr  = Allocation::OffsetAllocation(memory);
-    size_t alignedBytes = numBytes + mAlignment;
-    return std::align(mAlignment, numBytes, unalignedPtr, alignedBytes);
+
+    return Allocation::GetDataPointer(memory, mAlignment);
 }
 #endif
 
