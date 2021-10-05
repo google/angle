@@ -2637,8 +2637,14 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, shadowBuffers, false);
 
+    // ARM does buffer copy on geometry pipeline, which may create a GPU pipeline bubble that
+    // prevents vertex shader to overlap with fragment shader. For now we always choose CPU to do
+    // copy on ARM. This may need to test with future ARM GPU architecture as well.
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferCPUForBufferSubData, isARM);
+
     // On android, we usually are GPU limited, we try to use CPU to do data copy when other
-    // conditions are the same. Set to zero will use GPU to do copy.
+    // conditions are the same. Set to zero will use GPU to do copy. This is subject to further
+    // tuning for each platform https://issuetracker.google.com/201826021
     mMaxCopyBytesUsingCPUWhenPreservingBufferData =
         IsAndroid() ? std::numeric_limits<uint32_t>::max() : 0;
 

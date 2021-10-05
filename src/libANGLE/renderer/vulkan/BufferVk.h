@@ -104,21 +104,19 @@ class BufferVk : public BufferImpl
 
     void onDataChanged() override;
 
-    const vk::BufferHelper &getBufferAndOffset(VkDeviceSize *offsetOut) const
-    {
-        ASSERT(isBufferValid());
-        *offsetOut = mBufferOffset;
-        return *mBuffer;
-    }
-
     vk::BufferHelper &getBufferAndOffset(VkDeviceSize *offsetOut)
     {
         ASSERT(isBufferValid());
         *offsetOut = mBufferOffset;
+        // Every place try to use the buffer, it will have to call this API to get hold of the
+        // underline BufferHelper object. So this is the safe place to tell that this has ever been
+        // referenced by GPU command, whether pending submission or not.
+        mHasBeenReferencedByGPU = true;
         return *mBuffer;
     }
 
     bool isBufferValid() const { return mBuffer && mBuffer->valid(); }
+    bool isCurrentlyInUse(ContextVk *contextVk) const;
 
     angle::Result mapImpl(ContextVk *contextVk, void **mapPtr);
     angle::Result mapRangeImpl(ContextVk *contextVk,
@@ -234,6 +232,14 @@ class BufferVk : public BufferImpl
 
     // Tracks if BufferVk object has valid data or not.
     bool mHasValidData;
+
+    // TODO: https://issuetracker.google.com/201826021 Remove this once we have a full fix.
+    // Tracks if BufferVk's data is ever been referenced by GPU since new storage has been
+    // allocated. Due to sub-allocation, we may get a new sub-allocated range in the same
+    // BufferHelper object. Because we track GPU progress by the BufferHelper object, this flag will
+    // help us to avoid detecting we are still GPU busy even though no one has used it yet since
+    // we got last sub-allocation.
+    bool mHasBeenReferencedByGPU;
 };
 
 }  // namespace rx
