@@ -2175,10 +2175,8 @@ def format_init_param_value_case(param_type):
 
 
 def format_write_param_type_to_stream_case(param_type):
-    # Force all enum printing to go through "const void *"
-    param_out = "voidConstPointer" if "Pointer" in param_type else param_type
     return TEMPLATE_WRITE_PARAM_TYPE_TO_STREAM_CASE.format(
-        enum_in=param_type, enum_out=param_out, union_name=get_param_type_union_name(param_out))
+        enum_in=param_type, enum_out=param_type, union_name=get_param_type_union_name(param_type))
 
 
 def get_resource_id_types(all_param_types):
