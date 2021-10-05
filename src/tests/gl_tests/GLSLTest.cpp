@@ -12886,6 +12886,29 @@ TEST_P(GLSLTest, HandleExcessiveLoopBug)
     glDeleteShader(shader);
 }
 
+// Regression test for a validation bug in the translator where func(void, int) was accepted even
+// though it's illegal, and the function was callable as if the void parameter isn't there.
+TEST_P(GLSLTest, NoParameterAfterVoid)
+{
+    constexpr char kVS[] = R"(void f(void, int a){}
+void main(){f(1);})";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kVS);
+    EXPECT_EQ(0u, shader);
+    glDeleteShader(shader);
+}
+
+// Similar to NoParameterAfterVoid, but tests func(void, void).
+TEST_P(GLSLTest, NoParameterAfterVoid2)
+{
+    constexpr char kVS[] = R"(void f(void, void){}
+void main(){f();})";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kVS);
+    EXPECT_EQ(0u, shader);
+    glDeleteShader(shader);
+}
+
 // Test that providing more components to a matrix constructor than necessary works.  Based on a
 // clusterfuzz test that caught an OOB array write in glslang.
 TEST_P(GLSLTest, MatrixConstructor)

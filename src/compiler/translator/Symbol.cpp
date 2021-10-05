@@ -196,7 +196,8 @@ TFunction::TFunction(TSymbolTable *symbolTable,
       mOp(EOpNull),
       defined(false),
       mHasPrototypeDeclaration(false),
-      mKnownToNotHaveSideEffects(knownToNotHaveSideEffects)
+      mKnownToNotHaveSideEffects(knownToNotHaveSideEffects),
+      mHasVoidParameter(false)
 {
     // Functions with an empty name are not allowed.
     ASSERT(symbolType != SymbolType::Empty);
