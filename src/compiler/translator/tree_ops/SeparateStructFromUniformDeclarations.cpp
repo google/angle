@@ -7,7 +7,6 @@
 //
 
 #include "compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.h"
-
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"
@@ -53,7 +52,7 @@ class Traverser : public TIntermTraverser
         const TVariable *variable = &symbol->variable();
         if (mVariableMap.count(variable) > 0)
         {
-            queueReplacement(mVariableMap[variable]->deepCopy(), OriginalNode::IS_DROPPED);
+            queueAccessChainReplacement(mVariableMap[variable]->deepCopy());
         }
     }
 

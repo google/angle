@@ -5802,6 +5802,30 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests nameless struct uniform arrays.
+TEST_P(GLSLTest, EmbeddedStructUniformArray)
+{
+    const char kFragmentShader[] = R"(precision mediump float;
+uniform struct { float q; } b[2];
+void main()
+{
+    gl_FragColor = vec4(1, 0, 0, 1);
+    if (b[0].q == 0.5)
+    {
+        gl_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+    glUseProgram(program);
+    GLint uniLoc = glGetUniformLocation(program, "b[0].q");
+    ASSERT_NE(-1, uniLoc);
+    glUniform1f(uniLoc, 0.5f);
+
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Tests that rewriting samplers in structs doesn't mess up indexing.
 TEST_P(GLSLTest, SamplerInStructMemberIndexing)
 {
