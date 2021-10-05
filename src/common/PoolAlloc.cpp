@@ -21,6 +21,97 @@
 
 namespace angle
 {
+// If we are using guard blocks, we must track each individual allocation.  If we aren't using guard
+// blocks, these never get instantiated, so won't have any impact.
+
+class Allocation
+{
+  public:
+    Allocation(size_t size, unsigned char *mem, Allocation *prev = 0)
+        : mSize(size), mMem(mem), mPrevAlloc(prev)
+    {
+        // Allocations are bracketed:
+        //
+        //    [allocationHeader][initialGuardBlock][userData][finalGuardBlock]
+        //
+        // This would be cleaner with if (kGuardBlockSize)..., but that makes the compiler print
+        // warnings about 0 length memsets, even with the if() protecting them.
+#if defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
+        memset(preGuard(), kGuardBlockBeginVal, kGuardBlockSize);
+        memset(data(), kUserDataFill, mSize);
+        memset(postGuard(), kGuardBlockEndVal, kGuardBlockSize);
+#endif
+    }
+
+    void checkAlloc() const
+    {
+        checkGuardBlock(preGuard(), kGuardBlockBeginVal, "before");
+        checkGuardBlock(postGuard(), kGuardBlockEndVal, "after");
+    }
+
+    void checkAllocList() const;
+
+    // Return total size needed to accommodate user buffer of 'size',
+    // plus our tracking data.
+    static size_t AllocationSize(size_t size) { return size + 2 * kGuardBlockSize + HeaderSize(); }
+
+    // Offset from surrounding buffer to get to user data buffer.
+    static unsigned char *OffsetAllocation(unsigned char *m)
+    {
+        return m + kGuardBlockSize + HeaderSize();
+    }
+
+  private:
+    void checkGuardBlock(unsigned char *blockMem, unsigned char val, const char *locText) const;
+
+    // Find offsets to pre and post guard blocks, and user data buffer
+    unsigned char *preGuard() const { return mMem + HeaderSize(); }
+    unsigned char *data() const { return preGuard() + kGuardBlockSize; }
+    unsigned char *postGuard() const { return data() + mSize; }
+    size_t mSize;            // size of the user data area
+    unsigned char *mMem;     // beginning of our allocation (pts to header)
+    Allocation *mPrevAlloc;  // prior allocation in the chain
+
+    static constexpr unsigned char kGuardBlockBeginVal = 0xfb;
+    static constexpr unsigned char kGuardBlockEndVal   = 0xfe;
+    static constexpr unsigned char kUserDataFill       = 0xcd;
+#if defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
+    static constexpr size_t kGuardBlockSize = 16;
+    static constexpr size_t HeaderSize() { return sizeof(Allocation); }
+#else
+    static constexpr size_t kGuardBlockSize = 0;
+    static constexpr size_t HeaderSize() { return 0; }
+#endif
+};
+
+#if !defined(ANGLE_DISABLE_POOL_ALLOC)
+class PageHeader
+{
+  public:
+    PageHeader(PageHeader *nextPage, size_t pageCount)
+        : nextPage(nextPage),
+          pageCount(pageCount)
+#    if defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
+          ,
+          lastAllocation(nullptr)
+#    endif
+    {}
+
+    ~PageHeader()
+    {
+#    if defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
+        if (lastAllocation)
+            lastAllocation->checkAllocList();
+#    endif
+    }
+
+    PageHeader *nextPage;
+    size_t pageCount;
+#    if defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
+    Allocation *lastAllocation;
+#    endif
+};
+#endif
 
 //
 // Implement the functionality of the PoolAllocator class, which
@@ -49,7 +140,7 @@ void PoolAllocator::initialize(int pageSize, int alignment)
     {
         // This is a special fast-path where fastAllocation() is enabled
         mAlignmentMask = 0;
-        mHeaderSkip    = sizeof(Header);
+        mHeaderSkip    = sizeof(PageHeader);
     }
     else
     {
@@ -61,7 +152,9 @@ void PoolAllocator::initialize(int pageSize, int alignment)
         size_t minAlign = sizeof(void *);
         mAlignment &= ~(minAlign - 1);
         if (mAlignment < minAlign)
+        {
             mAlignment = minAlign;
+        }
         mAlignment     = gl::ceilPow2(static_cast<unsigned int>(mAlignment));
         mAlignmentMask = mAlignment - 1;
 
@@ -70,9 +163,9 @@ void PoolAllocator::initialize(int pageSize, int alignment)
         // Align header skip
         //
         mHeaderSkip = minAlign;
-        if (mHeaderSkip < sizeof(Header))
+        if (mHeaderSkip < sizeof(PageHeader))
         {
-            mHeaderSkip = rx::roundUpPow2(sizeof(Header), mAlignment);
+            mHeaderSkip = rx::roundUpPow2(sizeof(PageHeader), mAlignment);
         }
     }
     //
@@ -80,7 +173,9 @@ void PoolAllocator::initialize(int pageSize, int alignment)
     // OS page sizes.
     //
     if (mPageSize < 4 * 1024)
+    {
         mPageSize = 4 * 1024;
+    }
     //
     // A large mCurrentPageOffset indicates a new page needs to
     // be obtained to allocate memory.
@@ -96,8 +191,8 @@ PoolAllocator::~PoolAllocator()
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
     while (mInUseList)
     {
-        Header *next = mInUseList->nextPage;
-        mInUseList->~Header();
+        PageHeader *next = mInUseList->nextPage;
+        mInUseList->~PageHeader();
         delete[] reinterpret_cast<char *>(mInUseList);
         mInUseList = next;
     }
@@ -107,7 +202,7 @@ PoolAllocator::~PoolAllocator()
     //
     while (mFreeList)
     {
-        Header *next = mFreeList->nextPage;
+        PageHeader *next = mFreeList->nextPage;
         delete[] reinterpret_cast<char *>(mFreeList);
         mFreeList = next;
     }
@@ -171,20 +266,24 @@ void PoolAllocator::push()
 void PoolAllocator::pop()
 {
     if (mStack.size() < 1)
+    {
         return;
+    }
 
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
-    Header *page       = mStack.back().page;
+    PageHeader *page   = mStack.back().page;
     mCurrentPageOffset = mStack.back().offset;
 
     while (mInUseList != page)
     {
         // invoke destructor to free allocation list
-        mInUseList->~Header();
+        mInUseList->~PageHeader();
 
-        Header *nextInUse = mInUseList->nextPage;
+        PageHeader *nextInUse = mInUseList->nextPage;
         if (mInUseList->pageCount > 1)
+        {
             delete[] reinterpret_cast<char *>(mInUseList);
+        }
         else
         {
             mInUseList->nextPage = mFreeList;
@@ -232,7 +331,9 @@ void *PoolAllocator::allocate(size_t numBytes)
     size_t allocationSize = Allocation::AllocationSize(numBytes) + mAlignment;
     // Detect integer overflow.
     if (allocationSize < numBytes)
-        return 0;
+    {
+        return nullptr;
+    }
 
     //
     // Do the allocation, most likely case first, for efficiency.
@@ -243,7 +344,7 @@ void *PoolAllocator::allocate(size_t numBytes)
         //
         // Safe to allocate from mCurrentPageOffset.
         //
-        unsigned char *memory = reinterpret_cast<unsigned char *>(mInUseList) + mCurrentPageOffset;
+        uint8_t *memory = reinterpret_cast<uint8_t *>(mInUseList) + mCurrentPageOffset;
         mCurrentPageOffset += allocationSize;
         mCurrentPageOffset = (mCurrentPageOffset + mAlignmentMask) & ~mAlignmentMask;
 
@@ -259,14 +360,18 @@ void *PoolAllocator::allocate(size_t numBytes)
         size_t numBytesToAlloc = allocationSize + mHeaderSkip;
         // Detect integer overflow.
         if (numBytesToAlloc < allocationSize)
-            return 0;
+        {
+            return nullptr;
+        }
 
-        Header *memory = reinterpret_cast<Header *>(::new char[numBytesToAlloc]);
-        if (memory == 0)
-            return 0;
+        PageHeader *memory = reinterpret_cast<PageHeader *>(::new char[numBytesToAlloc]);
+        if (memory == nullptr)
+        {
+            return nullptr;
+        }
 
         // Use placement-new to initialize header
-        new (memory) Header(mInUseList, (numBytesToAlloc + mPageSize - 1) / mPageSize);
+        new (memory) PageHeader(mInUseList, (numBytesToAlloc + mPageSize - 1) / mPageSize);
         mInUseList = memory;
 
         mCurrentPageOffset = mPageSize;  // make next allocation come from a new page
@@ -295,7 +400,7 @@ void *PoolAllocator::allocateNewPage(size_t numBytes, size_t allocationSize)
     //
     // Need a simple page to allocate from.
     //
-    Header *memory;
+    PageHeader *memory;
     if (mFreeList)
     {
         memory    = mFreeList;
@@ -303,17 +408,31 @@ void *PoolAllocator::allocateNewPage(size_t numBytes, size_t allocationSize)
     }
     else
     {
-        memory = reinterpret_cast<Header *>(::new char[mPageSize]);
-        if (memory == 0)
-            return 0;
+        memory = reinterpret_cast<PageHeader *>(::new char[mPageSize]);
+        if (memory == nullptr)
+        {
+            return nullptr;
+        }
     }
     // Use placement-new to initialize header
-    new (memory) Header(mInUseList, 1);
+    new (memory) PageHeader(mInUseList, 1);
     mInUseList = memory;
 
     unsigned char *ret = reinterpret_cast<unsigned char *>(mInUseList) + mHeaderSkip;
     mCurrentPageOffset = (mHeaderSkip + allocationSize + mAlignmentMask) & ~mAlignmentMask;
     return ret;
+}
+
+void *PoolAllocator::initializeAllocation(PageHeader *block, unsigned char *memory, size_t numBytes)
+{
+#    if defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
+    new (memory) Allocation(numBytes + mAlignment, memory, block->lastAllocation);
+    block->lastAllocation = reinterpret_cast<Allocation *>(memory);
+#    endif
+    // The OffsetAllocation() call is optimized away if !defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
+    void *unalignedPtr  = Allocation::OffsetAllocation(memory);
+    size_t alignedBytes = numBytes + mAlignment;
+    return std::align(mAlignment, numBytes, unalignedPtr, alignedBytes);
 }
 #endif
 
@@ -334,8 +453,10 @@ void PoolAllocator::unlock()
 //
 void Allocation::checkAllocList() const
 {
-    for (const Allocation *alloc = this; alloc != 0; alloc = alloc->mPrevAlloc)
+    for (const Allocation *alloc = this; alloc != nullptr; alloc = alloc->mPrevAlloc)
+    {
         alloc->checkAlloc();
+    }
 }
 
 }  // namespace angle
