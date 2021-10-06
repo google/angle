@@ -6,10 +6,13 @@
 
 #include "common.h"
 
-constant bool kSourceBufferAligned[[function_constant(0)]];
-constant bool kSourceIndexIsU8[[function_constant(1)]];
-constant bool kSourceIndexIsU16[[function_constant(2)]];
-constant bool kSourceIndexIsU32[[function_constant(3)]];
+using namespace rx::mtl_shader;
+
+// function_constant(0) is already used by common.h
+constant bool kSourceBufferAligned[[function_constant(100)]];
+constant bool kSourceIndexIsU8[[function_constant(200)]];
+constant bool kSourceIndexIsU16[[function_constant(300)]];
+constant bool kSourceIndexIsU32[[function_constant(400)]];
 constant bool kSourceBufferUnaligned = !kSourceBufferAligned;
 constant bool kUseSourceBufferU8     = kSourceIndexIsU8 || kSourceBufferUnaligned;
 constant bool kUseSourceBufferU16    = kSourceIndexIsU16 && kSourceBufferAligned;
@@ -19,6 +22,7 @@ struct IndexConversionParams
 {
     uint32_t srcOffset;  // offset in bytes
     uint32_t indexCount;
+    bool primitiveRestartEnabled;
 };
 
 #define ANGLE_IDX_CONVERSION_GUARD(IDX, OPTS) ANGLE_KERNEL_GUARD(IDX, OPTS.indexCount)
@@ -52,21 +56,32 @@ inline uint getIndexUnalignedU32(constant uchar *input, uint offset, uint idx)
     return input0 | (input1 << 8) | (input2 << 16) | (input3 << 24);
 }
 
-kernel void convertIndexU8ToU16(uint idx[[thread_position_in_grid]],
-                                constant IndexConversionParams &options[[buffer(0)]],
-                                constant uchar *input[[buffer(1)]],
-                                device ushort *output[[buffer(2)]])
+kernel void convertIndexU8ToU16(uint idx [[thread_position_in_grid]],
+                                constant IndexConversionParams &options [[buffer(0)]],
+                                constant uchar *input [[buffer(1)]],
+                                device ushort *output [[buffer(2)]])
 {
     ANGLE_IDX_CONVERSION_GUARD(idx, options);
-    output[idx] = getIndexAligned(input, options.srcOffset, idx);
+
+    uchar value = getIndexAligned(input, options.srcOffset, idx);
+
+    if (options.primitiveRestartEnabled && value == 0xff)
+    {
+        output[idx] = 0xffff;
+    }
+    else
+    {
+        output[idx] = value;
+    }
 }
 
-kernel void convertIndexU16(
-    uint idx[[thread_position_in_grid]],
-    constant IndexConversionParams &options[[buffer(0)]],
-    constant uchar *input[[ buffer(1), function_constant(kSourceBufferUnaligned) ]],
-    constant ushort *inputAligned[[ buffer(1), function_constant(kSourceBufferAligned) ]],
-    device ushort *output[[buffer(2)]])
+kernel void convertIndexU16(uint idx [[thread_position_in_grid]],
+                            constant IndexConversionParams &options [[buffer(0)]],
+                            constant uchar *input
+                            [[buffer(1), function_constant(kSourceBufferUnaligned)]],
+                            constant ushort *inputAligned
+                            [[buffer(1), function_constant(kSourceBufferAligned)]],
+                            device ushort *output [[buffer(2)]])
 {
     ANGLE_IDX_CONVERSION_GUARD(idx, options);
 
@@ -82,12 +97,13 @@ kernel void convertIndexU16(
     output[idx] = value;
 }
 
-kernel void convertIndexU32(
-    uint idx[[thread_position_in_grid]],
-    constant IndexConversionParams &options[[buffer(0)]],
-    constant uchar *input[[ buffer(1), function_constant(kSourceBufferUnaligned) ]],
-    constant uint *inputAligned[[ buffer(1), function_constant(kSourceBufferAligned) ]],
-    device uint *output[[buffer(2)]])
+kernel void convertIndexU32(uint idx [[thread_position_in_grid]],
+                            constant IndexConversionParams &options [[buffer(0)]],
+                            constant uchar *input
+                            [[buffer(1), function_constant(kSourceBufferUnaligned)]],
+                            constant uint *inputAligned
+                            [[buffer(1), function_constant(kSourceBufferAligned)]],
+                            device uint *output [[buffer(2)]])
 {
     ANGLE_IDX_CONVERSION_GUARD(idx, options);
 
@@ -103,16 +119,19 @@ kernel void convertIndexU32(
     output[idx] = value;
 }
 
-struct TriFanArrayParams
+struct IndexFromArrayParams
 {
     uint firstVertex;
-    uint vertexCountFrom3rd;  // vertex count excluding the 1st & 2nd vertices.
+    // For triangle fan: vertex count excluding the 1st & 2nd vertices.
+    uint vertexCount;
 };
-kernel void genTriFanIndicesFromArray(uint idx[[thread_position_in_grid]],
-                                      constant TriFanArrayParams &options[[buffer(0)]],
-                                      device uint *output[[buffer(2)]])
+
+// Generate triangle fan indices for glDrawArray()
+kernel void genTriFanIndicesFromArray(uint idx [[thread_position_in_grid]],
+                                      constant IndexFromArrayParams &options [[buffer(0)]],
+                                      device uint *output [[buffer(2)]])
 {
-    ANGLE_KERNEL_GUARD(idx, options.vertexCountFrom3rd);
+    ANGLE_KERNEL_GUARD(idx, options.vertexCount);
 
     uint vertexIdx = options.firstVertex + 2 + idx;
 
@@ -123,9 +142,9 @@ kernel void genTriFanIndicesFromArray(uint idx[[thread_position_in_grid]],
 
 inline uint getIndexU32(uint offset,
                         uint idx,
-                        constant uchar *inputU8[[function_constant(kUseSourceBufferU8)]],
-                        constant ushort *inputU16[[function_constant(kUseSourceBufferU16)]],
-                        constant uint *inputU32[[function_constant(kUseSourceBufferU32)]])
+                        constant uchar *inputU8 [[function_constant(kUseSourceBufferU8)]],
+                        constant ushort *inputU16 [[function_constant(kUseSourceBufferU16)]],
+                        constant uint *inputU32 [[function_constant(kUseSourceBufferU32)]])
 {
     if (kUseSourceBufferU8)
     {
@@ -150,15 +169,18 @@ inline uint getIndexU32(uint offset,
     return 0;
 }
 
+// NOTE(hqle): triangle fan indices generation doesn't support primitive restart.
 // Generate triangle fan indices from an indices buffer. indexCount options indicates number
 // of indices starting from the 3rd.
-kernel void genTriFanIndicesFromElements(
-    uint idx[[thread_position_in_grid]],
-    constant IndexConversionParams &options[[buffer(0)]],
-    constant uchar *inputU8[[ buffer(1), function_constant(kUseSourceBufferU8) ]],
-    constant ushort *inputU16[[ buffer(1), function_constant(kUseSourceBufferU16) ]],
-    constant uint *inputU32[[ buffer(1), function_constant(kUseSourceBufferU32) ]],
-    device uint *output[[buffer(2)]])
+kernel void genTriFanIndicesFromElements(uint idx [[thread_position_in_grid]],
+                                         constant IndexConversionParams &options [[buffer(0)]],
+                                         constant uchar *inputU8
+                                         [[buffer(1), function_constant(kUseSourceBufferU8)]],
+                                         constant ushort *inputU16
+                                         [[buffer(1), function_constant(kUseSourceBufferU16)]],
+                                         constant uint *inputU32
+                                         [[buffer(1), function_constant(kUseSourceBufferU32)]],
+                                         device uint *output [[buffer(2)]])
 {
     ANGLE_IDX_CONVERSION_GUARD(idx, options);
 
@@ -167,4 +189,34 @@ kernel void genTriFanIndicesFromElements(
     output[3 * idx]     = getIndexU32(options.srcOffset, 0, inputU8, inputU16, inputU32);
     output[3 * idx + 1] = getIndexU32(options.srcOffset, elemIdx - 1, inputU8, inputU16, inputU32);
     output[3 * idx + 2] = getIndexU32(options.srcOffset, elemIdx, inputU8, inputU16, inputU32);
+}
+
+// Generate line loop indices for glDrawArray()
+kernel void genLineLoopIndicesFromArray(uint idx [[thread_position_in_grid]],
+                                        constant IndexFromArrayParams &options [[buffer(0)]],
+                                        device uint *output [[buffer(2)]])
+{
+    uint totalIndices = options.vertexCount + 1;
+    ANGLE_KERNEL_GUARD(idx, totalIndices);
+
+    output[idx] = options.firstVertex + idx % options.vertexCount;
+}
+
+// NOTE(hqle): lineloop indices generation doesn't support primitive restart.
+// Generate line loop indices for glDrawElements()
+kernel void genLineLoopIndicesFromElements(uint idx [[thread_position_in_grid]],
+                                           constant IndexConversionParams &options [[buffer(0)]],
+                                           constant uchar *inputU8
+                                           [[buffer(1), function_constant(kUseSourceBufferU8)]],
+                                           constant ushort *inputU16
+                                           [[buffer(1), function_constant(kUseSourceBufferU16)]],
+                                           constant uint *inputU32
+                                           [[buffer(1), function_constant(kUseSourceBufferU32)]],
+                                           device uint *output [[buffer(2)]])
+{
+    uint totalTargetIndices = options.indexCount + 1;
+    ANGLE_KERNEL_GUARD(idx, totalTargetIndices);
+
+    output[idx] =
+        getIndexU32(options.srcOffset, idx % options.indexCount, inputU8, inputU16, inputU32);
 }

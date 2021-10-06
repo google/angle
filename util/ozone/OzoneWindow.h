@@ -19,7 +19,7 @@ class OzoneWindow : public OSWindow
     OzoneWindow();
     ~OzoneWindow() override;
 
-    bool initialize(const std::string &name, int width, int height) override;
+    void disableErrorMessageDialog() override;
     void destroy() override;
 
     void resetNativeWindow() override;
@@ -29,6 +29,7 @@ class OzoneWindow : public OSWindow
     void messageLoop() override;
 
     void setMousePosition(int x, int y) override;
+    bool setOrientation(int width, int height) override;
     bool setPosition(int x, int y) override;
     bool resize(int width, int height) override;
     void setVisible(bool isVisible) override;
@@ -36,6 +37,8 @@ class OzoneWindow : public OSWindow
     void signalTestEvent() override;
 
   private:
+    bool initializeImpl(const std::string &name, int width, int height) override;
+
     struct Native
     {
         int32_t x;

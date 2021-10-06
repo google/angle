@@ -15,8 +15,8 @@
 // So we need to include ANGLETest.h first to avoid this conflict.
 
 #include "libANGLE/Context.h"
+#include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/formatutils.h"
-#include "libANGLE/gl_enum_utils.h"
 #include "util/EGLWindow.h"
 
 using namespace angle;
@@ -108,3 +108,6 @@ TEST_P(FormatPrintTest, PrintAllSupportedFormats)
 ANGLE_INSTANTIATE_TEST(FormatPrintTest, ES2_VULKAN(), ES3_VULKAN());
 
 }  // anonymous namespace
+
+// Included here to fix a compile error due to white box tests using angle_end2end_tests_main.
+void RegisterContextCompatibilityTests() {}

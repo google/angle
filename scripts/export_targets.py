@@ -154,7 +154,13 @@ def flattened_target(target_name: str, descs: dict, stop_at_lib: bool =True) -> 
             assert dep_type in EXPECTED_TYPES, (k, dep_type)
             for (k,v) in dep.items():
                 if type(v) in (list, tuple, set):
-                    flattened[k] = sortedi(set(flattened.get(k, []) + v))
+                    # This is a workaround for
+                    # https://bugs.chromium.org/p/gn/issues/detail?id=196, where
+                    # the value of "public" can be a string instead of a list.
+                    existing = flattened.get(k, [])
+                    if isinstance(existing, str):
+                      existing = [existing]
+                    flattened[k] = sortedi(set(existing + v))
                 else:
                     #flattened.setdefault(k, v)
                     pass
@@ -174,30 +180,67 @@ assert INCLUDE_REGEX.match(b'\n#include "foo"')
 # #includes in #ifdefs properly, so they will erroneously be marked as being
 # included, but not part of the source list.
 IGNORED_INCLUDES = {
+    b'absl/container/flat_hash_map.h',
+    b'absl/container/flat_hash_set.h',
     b'compiler/translator/TranslatorESSL.h',
     b'compiler/translator/TranslatorGLSL.h',
     b'compiler/translator/TranslatorHLSL.h',
     b'compiler/translator/TranslatorMetal.h',
+    b'compiler/translator/TranslatorMetalDirect.h',
     b'compiler/translator/TranslatorVulkan.h',
+    b'contrib/optimizations/slide_hash_neon.h',
+    b'dirent_on_windows.h',
+    b'dlopen_fuchsia.h',
+    b'kernel/image.h',
+    b'libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h',
     b'libANGLE/renderer/d3d/DeviceD3D.h',
     b'libANGLE/renderer/d3d/DisplayD3D.h',
     b'libANGLE/renderer/d3d/RenderTargetD3D.h',
-    b'libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h',
-    b'libANGLE/renderer/gl/glx/DisplayGLX.h',
+    b'libANGLE/renderer/gl/apple/DisplayApple_api.h',
     b'libANGLE/renderer/gl/cgl/DisplayCGL.h',
     b'libANGLE/renderer/gl/eagl/DisplayEAGL.h',
-    b'libANGLE/renderer/gl/egl/ozone/DisplayOzone.h',
     b'libANGLE/renderer/gl/egl/android/DisplayAndroid.h',
+    b'libANGLE/renderer/gl/egl/DisplayEGL.h',
+    b'libANGLE/renderer/gl/egl/gbm/DisplayGbm.h',
+    b'libANGLE/renderer/gl/glx/DisplayGLX.h',
     b'libANGLE/renderer/gl/wgl/DisplayWGL.h',
     b'libANGLE/renderer/metal/DisplayMtl_api.h',
     b'libANGLE/renderer/null/DisplayNULL.h',
+    b'libANGLE/renderer/vulkan/android/AHBFunctions.h',
     b'libANGLE/renderer/vulkan/android/DisplayVkAndroid.h',
+    b'libANGLE/renderer/vulkan/DisplayVk_api.h',
     b'libANGLE/renderer/vulkan/fuchsia/DisplayVkFuchsia.h',
     b'libANGLE/renderer/vulkan/ggp/DisplayVkGGP.h',
     b'libANGLE/renderer/vulkan/mac/DisplayVkMac.h',
     b'libANGLE/renderer/vulkan/win32/DisplayVkWin32.h',
     b'libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h',
-    b'kernel/image.h',
+    b'loader_cmake_config.h',
+    b'optick.h',
+    b'spirv-tools/libspirv.h',
+    b'third_party/volk/volk.h',
+    b'vk_loader_extensions.c',
+    b'vk_snippets.h',
+    b'vulkan_android.h',
+    b'vulkan_beta.h',
+    b'vulkan_directfb.h',
+    b'vulkan_fuchsia.h',
+    b'vulkan_ggp.h',
+    b'vulkan_ios.h',
+    b'vulkan_macos.h',
+    b'vulkan_metal.h',
+    b'vulkan_vi.h',
+    b'vulkan_wayland.h',
+    b'vulkan_win32.h',
+    b'vulkan_xcb.h',
+    b'vulkan_xlib.h',
+    b'vulkan_xlib_xrandr.h',
+# rapidjson adds these include stubs into their documentation
+# comments. Since the script doesn't skip comments they are
+# erroneously marked as valid includes
+    b'rapidjson/...',
+    # Validation layers support building with robin hood hashing, but we are not enabling that
+    # See http://anglebug.com/5791
+    b'robin_hood.h',
 }
 
 IGNORED_INCLUDE_PREFIXES = {
@@ -216,11 +259,9 @@ IGNORED_INCLUDE_PREFIXES = {
 }
 
 IGNORED_DIRECTORIES = {
+    '//buildtools/third_party/libc++',
+    '//third_party/abseil-cpp',
     '//third_party/SwiftShader',
-    '//third_party/vulkan-headers',
-    '//third_party/vulkan-loader',
-    '//third_party/vulkan-tools',
-    '//third_party/vulkan-validation-layers',
 }
 
 def has_all_includes(target_name: str, descs: dict) -> bool:
@@ -301,8 +342,8 @@ for (k,desc) in out.items():
     for dep_name in set(desc['deps']):
         dep = descs[dep_name]
         if dep['type'] in LIBRARY_TYPES:
-            dep_libs.add(dep_name[3:])
-    desc['deps'] = sortedi(dep_libs)
+            dep_libs.add(dep_name)
+    desc['dep_libs'] = sortedi(dep_libs)
 
 json.dump(out, sys.stdout, indent='  ')
 exit(0)

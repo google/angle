@@ -201,16 +201,28 @@
   "BC3_RGBA_UNORM_SRGB_BLOCK": {
     "blockPixelBytes": "16"
   },
-  "BPTC_SRGB_ALPHA_UNORM_BLOCK": {
+  "BC4_RED_UNORM_BLOCK": {
+    "blockPixelBytes": "8"
+  },
+  "BC4_RED_SNORM_BLOCK": {
+    "blockPixelBytes": "8"
+  },
+  "BC5_RG_UNORM_BLOCK": {
     "blockPixelBytes": "16"
   },
-  "BPTC_RGB_SIGNED_FLOAT_BLOCK": {
+  "BC5_RG_SNORM_BLOCK": {
     "blockPixelBytes": "16"
   },
-  "BPTC_RGB_UNSIGNED_FLOAT_BLOCK": {
+  "BC6H_RGB_UFLOAT_BLOCK": {
     "blockPixelBytes": "16"
   },
-  "BPTC_RGBA_UNORM_BLOCK": {
+  "BC6H_RGB_SFLOAT_BLOCK": {
+    "blockPixelBytes": "16"
+  },
+  "BC7_RGBA_UNORM_BLOCK": {
+    "blockPixelBytes": "16"
+  },
+  "BC7_RGBA_UNORM_SRGB_BLOCK": {
     "blockPixelBytes": "16"
   },
   "EAC_R11_SNORM_BLOCK": {
@@ -250,27 +262,33 @@
     "blockPixelBytes": "16"
   },
   "PVRTC1_RGB_4BPP_UNORM_BLOCK": {
-    "blockPixelBytes": "1"
+    "blockPixelBytes": "8"
   },
   "PVRTC1_RGB_2BPP_UNORM_BLOCK": {
-    "blockPixelBytes": "1"
+    "blockPixelBytes": "8"
   },
   "PVRTC1_RGBA_4BPP_UNORM_BLOCK": {
-    "blockPixelBytes": "1"
+    "blockPixelBytes": "8"
   },
   "PVRTC1_RGBA_2BPP_UNORM_BLOCK": {
-    "blockPixelBytes": "1"
+    "blockPixelBytes": "8"
   },
   "PVRTC1_RGB_2BPP_UNORM_SRGB_BLOCK": {
-    "blockPixelBytes": "1"
+    "blockPixelBytes": "8"
   },
   "PVRTC1_RGB_4BPP_UNORM_SRGB_BLOCK": {
-    "blockPixelBytes": "1"
+    "blockPixelBytes": "8"
   },
   "PVRTC1_RGBA_2BPP_UNORM_SRGB_BLOCK": {
-    "blockPixelBytes": "1"
+    "blockPixelBytes": "8"
   },
   "PVRTC1_RGBA_4BPP_UNORM_SRGB_BLOCK": {
-    "blockPixelBytes": "1"
+    "blockPixelBytes": "8"
+  },
+  "G8_B8_R8_3PLANE_420_UNORM": {
+    "channelStruct": "R8G8B8"
+  },
+  "G8_B8R8_2PLANE_420_UNORM": {
+    "channelStruct": "R8G8B8"
   }
 }

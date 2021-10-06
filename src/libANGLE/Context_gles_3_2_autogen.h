@@ -52,13 +52,13 @@
     void getSamplerParameterIuiv(SamplerID samplerPacked, GLenum pname, GLuint *params);           \
     void getTexParameterIiv(TextureType targetPacked, GLenum pname, GLint *params);                \
     void getTexParameterIuiv(TextureType targetPacked, GLenum pname, GLuint *params);              \
-    void getnUniformfv(ShaderProgramID programPacked, GLint location, GLsizei bufSize,             \
-                       GLfloat *params);                                                           \
-    void getnUniformiv(ShaderProgramID programPacked, GLint location, GLsizei bufSize,             \
-                       GLint *params);                                                             \
-    void getnUniformuiv(ShaderProgramID programPacked, GLint location, GLsizei bufSize,            \
-                        GLuint *params);                                                           \
-    GLboolean isEnabledi(GLenum target, GLuint index);                                             \
+    void getnUniformfv(ShaderProgramID programPacked, UniformLocation locationPacked,              \
+                       GLsizei bufSize, GLfloat *params);                                          \
+    void getnUniformiv(ShaderProgramID programPacked, UniformLocation locationPacked,              \
+                       GLsizei bufSize, GLint *params);                                            \
+    void getnUniformuiv(ShaderProgramID programPacked, UniformLocation locationPacked,             \
+                        GLsizei bufSize, GLuint *params);                                          \
+    GLboolean isEnabledi(GLenum target, GLuint index) const;                                       \
     void minSampleShading(GLfloat value);                                                          \
     void objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label);         \
     void objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label);                     \
@@ -71,8 +71,8 @@
                      GLsizei bufSize, void *data);                                                 \
     void samplerParameterIiv(SamplerID samplerPacked, GLenum pname, const GLint *param);           \
     void samplerParameterIuiv(SamplerID samplerPacked, GLenum pname, const GLuint *param);         \
-    void texBuffer(GLenum target, GLenum internalformat, BufferID bufferPacked);                   \
-    void texBufferRange(GLenum target, GLenum internalformat, BufferID bufferPacked,               \
+    void texBuffer(TextureType targetPacked, GLenum internalformat, BufferID bufferPacked);        \
+    void texBufferRange(TextureType targetPacked, GLenum internalformat, BufferID bufferPacked,    \
                         GLintptr offset, GLsizeiptr size);                                         \
     void texParameterIiv(TextureType targetPacked, GLenum pname, const GLint *params);             \
     void texParameterIuiv(TextureType targetPacked, GLenum pname, const GLuint *params);           \

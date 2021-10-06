@@ -71,7 +71,18 @@ class VertexArrayState final : angle::NonCopyable
     // Get all the attributes in an AttributesMask that are using the given binding.
     AttributesMask getBindingToAttributesMask(GLuint bindingIndex) const;
 
+    ComponentTypeMask getVertexAttributesTypeMask() const { return mVertexAttributesTypeMask; }
+
+    AttributesMask getClientMemoryAttribsMask() const { return mClientMemoryAttribsMask; }
+
+    gl::AttributesMask getNullPointerClientMemoryAttribsMask() const
+    {
+        return mNullPointerClientMemoryAttribsMask;
+    }
+
   private:
+    void updateCachedMutableOrNonPersistentArrayBuffers(size_t index);
+
     friend class VertexArray;
     std::string mLabel;
     std::vector<VertexAttribute> mVertexAttributes;
@@ -92,7 +103,8 @@ class VertexArrayState final : angle::NonCopyable
 
     // Used for validation cache. Indexed by attribute.
     AttributesMask mCachedMappedArrayBuffers;
-    AttributesMask mCachedEnabledMappedArrayBuffers;
+    AttributesMask mCachedMutableOrImpersistentArrayBuffers;
+    AttributesMask mCachedInvalidMappedArrayBuffer;
 };
 
 class VertexArray final : public angle::ObserverInterface,
@@ -242,10 +254,14 @@ class VertexArray final : public angle::ObserverInterface,
         return mState.hasEnabledNullPointerClientArray();
     }
 
-    bool hasMappedEnabledArrayBuffer() const
+    bool hasInvalidMappedArrayBuffer() const
     {
-        return mState.mCachedEnabledMappedArrayBuffers.any();
+        return mState.mCachedInvalidMappedArrayBuffer.any();
     }
+
+    const VertexArrayState &getState() const { return mState; }
+
+    bool isBufferAccessValidationEnabled() const { return mBufferAccessValidationEnabled; }
 
     // Observer implementation
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
@@ -296,7 +312,10 @@ class VertexArray final : public angle::ObserverInterface,
     // These are used to optimize draw call validation.
     void updateCachedBufferBindingSize(VertexBinding *binding);
     void updateCachedTransformFeedbackBindingValidation(size_t bindingIndex, const Buffer *buffer);
-    void updateCachedMappedArrayBuffers(bool isMapped, const AttributesMask &boundAttributesMask);
+    void updateCachedArrayBuffersMasks(bool isMapped,
+                                       bool isImmutable,
+                                       bool isPersistent,
+                                       const AttributesMask &boundAttributesMask);
     void updateCachedMappedArrayBuffersBinding(const VertexBinding &binding);
 
     angle::Result getIndexRangeImpl(const Context *context,

@@ -11,6 +11,7 @@
 #define LIBANGLE_OVERLAYWIDGETS_H_
 
 #include "common/angleutils.h"
+#include "libANGLE/Overlay_autogen.h"
 
 namespace gl
 {
@@ -20,7 +21,7 @@ class OverlayState;
 namespace overlay_impl
 {
 class AppendWidgetDataHelper;
-}
+}  // namespace overlay_impl
 
 enum class WidgetType
 {
@@ -39,28 +40,6 @@ enum class WidgetType
     RunningGraph,
     // A histogram of the last N values (values between 0 and 1).
     RunningHistogram,
-
-    InvalidEnum,
-    EnumCount = InvalidEnum,
-};
-
-enum class WidgetId
-{
-    // Front-end widgets:
-
-    // Frames per second (PerSecond).
-    FPS,
-
-    // Vulkan backend:
-
-    // Last validation error (Text).
-    VulkanLastValidationMessage,
-    // Number of validation errors and warnings (Count).
-    VulkanValidationMessageCount,
-    // Number of nodes in command graph (RunningGraph).
-    VulkanCommandGraphSize,
-    // Secondary Command Buffer pool memory waste (RunningHistogram).
-    VulkanSecondaryCommandBufferPoolWaste,
 
     InvalidEnum,
     EnumCount = InvalidEnum,
@@ -136,17 +115,33 @@ class RunningGraph : public Widget
     // Out of line constructor to satisfy chromium-style.
     RunningGraph(size_t n);
     ~RunningGraph() override;
-    void add(size_t n) { runningValues[lastValueIndex] += n; }
+
+    void add(size_t n)
+    {
+        if (!ignoreFirstValue)
+        {
+            runningValues[lastValueIndex] += n;
+        }
+    }
+
     void next()
     {
-        lastValueIndex                = (lastValueIndex + 1) % runningValues.size();
-        runningValues[lastValueIndex] = 0;
+        if (ignoreFirstValue)
+        {
+            ignoreFirstValue = false;
+        }
+        else
+        {
+            lastValueIndex                = (lastValueIndex + 1) % runningValues.size();
+            runningValues[lastValueIndex] = 0;
+        }
     }
 
   protected:
     std::vector<size_t> runningValues;
     size_t lastValueIndex = 0;
     Text description;
+    bool ignoreFirstValue = true;
 
     friend class gl::Overlay;
     friend class gl::OverlayState;
@@ -168,9 +163,9 @@ class RunningHistogram : public RunningGraph
     }
 };
 
-// If overlay is disabled, all the above classes would be replaced with Dummy, turning them into
+// If overlay is disabled, all the above classes would be replaced with Mock, turning them into
 // noop.
-class Dummy
+class Mock
 {
   public:
     void reset() const {}

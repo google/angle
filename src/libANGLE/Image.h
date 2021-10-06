@@ -38,7 +38,7 @@ class Display;
 // Only currently Renderbuffers and Textures can be bound with images. This makes the relationship
 // explicit, and also ensures that an image sibling can determine if it's been initialized or not,
 // which is important for the robust resource init extension with Textures and EGLImages.
-class ImageSibling : public gl::FramebufferAttachmentObject, public angle::ObserverInterface
+class ImageSibling : public gl::FramebufferAttachmentObject
 {
   public:
     ImageSibling();
@@ -51,12 +51,8 @@ class ImageSibling : public gl::FramebufferAttachmentObject, public angle::Obser
     bool isRenderable(const gl::Context *context,
                       GLenum binding,
                       const gl::ImageIndex &imageIndex) const override;
-
-    // ObserverInterface implementation
-    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override
-    {
-        // default to no-op.
-    }
+    bool isYUV() const override;
+    bool hasProtectedContent() const override;
 
   protected:
     // Set the image target of this sibling
@@ -103,9 +99,11 @@ class ExternalImageSibling : public ImageSibling
                       GLenum binding,
                       const gl::ImageIndex &imageIndex) const override;
     bool isTextureable(const gl::Context *context) const;
+    bool isYUV() const override;
+    bool hasProtectedContent() const override;
 
-    void onAttach(const gl::Context *context) override;
-    void onDetach(const gl::Context *context) override;
+    void onAttach(const gl::Context *context, rx::Serial framebufferSerial) override;
+    void onDetach(const gl::Context *context, rx::Serial framebufferSerial) override;
     GLuint getId() const override;
 
     gl::InitState initState(const gl::ImageIndex &imageIndex) const override;
@@ -117,7 +115,11 @@ class ExternalImageSibling : public ImageSibling
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override;
 
   private:
+    // ObserverInterface implementation.
+    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
+
     std::unique_ptr<rx::ExternalImageSiblingImpl> mImplementation;
+    angle::ObserverBinding mImplObserverBinding;
 };
 
 struct ImageState : private angle::NonCopyable
@@ -132,9 +134,12 @@ struct ImageState : private angle::NonCopyable
     std::set<ImageSibling *> targets;
 
     gl::Format format;
+    bool yuv;
     gl::Extents size;
     size_t samples;
     EGLenum sourceType;
+    EGLenum colorspace;
+    bool hasProtectedContent;
 };
 
 class Image final : public RefCountObject, public LabeledObject
@@ -155,9 +160,12 @@ class Image final : public RefCountObject, public LabeledObject
     const gl::Format &getFormat() const;
     bool isRenderable(const gl::Context *context) const;
     bool isTexturable(const gl::Context *context) const;
+    bool isYUV() const;
     size_t getWidth() const;
     size_t getHeight() const;
+    bool isLayered() const;
     size_t getSamples() const;
+    bool hasProtectedContent() const;
 
     Error initialize(const Display *display);
 

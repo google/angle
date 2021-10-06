@@ -21,8 +21,8 @@ class Win32Window : public OSWindow
     Win32Window();
     ~Win32Window() override;
 
-    bool initialize(const std::string &name, int width, int height) override;
     void destroy() override;
+    void disableErrorMessageDialog() override;
 
     bool takeScreenshot(uint8_t *pixelData) override;
 
@@ -35,6 +35,7 @@ class Win32Window : public OSWindow
     void pushEvent(Event event) override;
 
     void setMousePosition(int x, int y) override;
+    bool setOrientation(int width, int height) override;
     bool setPosition(int x, int y) override;
     bool resize(int width, int height) override;
     void setVisible(bool isVisible) override;
@@ -42,6 +43,7 @@ class Win32Window : public OSWindow
     void signalTestEvent() override;
 
   private:
+    bool initializeImpl(const std::string &name, int width, int height) override;
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
     std::string mParentClassName;

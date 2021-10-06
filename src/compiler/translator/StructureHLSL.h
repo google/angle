@@ -32,9 +32,12 @@ class Std140PaddingHelper
     Std140PaddingHelper &operator=(const Std140PaddingHelper &other);
 
     int elementIndex() const { return mElementIndex; }
-    int prePadding(const TType &type);
-    TString prePaddingString(const TType &type);
-    TString postPaddingString(const TType &type, bool useHLSLRowMajorPacking, bool forcePadding);
+    int prePadding(const TType &type, bool forcePadding);
+    TString prePaddingString(const TType &type, bool forcePadding);
+    TString postPaddingString(const TType &type,
+                              bool useHLSLRowMajorPacking,
+                              bool isLastElement,
+                              bool forcePadding);
 
   private:
     TString next();

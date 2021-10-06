@@ -20,13 +20,13 @@ namespace rx
 
 class FunctionsGL;
 class StateManagerGL;
+struct VertexArrayStateGL;
 
 class VertexArrayGL : public VertexArrayImpl
 {
   public:
-    VertexArrayGL(const gl::VertexArrayState &data,
-                  const FunctionsGL *functions,
-                  StateManagerGL *stateManager);
+    VertexArrayGL(const gl::VertexArrayState &data, GLuint id);
+    VertexArrayGL(const gl::VertexArrayState &data, GLuint id, VertexArrayStateGL *sharedState);
     ~VertexArrayGL() override;
 
     void destroy(const gl::Context *context) override;
@@ -46,17 +46,20 @@ class VertexArrayGL : public VertexArrayImpl
                                         const void **outIndices) const;
 
     GLuint getVertexArrayID() const;
-    GLuint getAppliedElementArrayBufferID() const;
+    VertexArrayStateGL *getNativeState() const;
 
     angle::Result syncState(const gl::Context *context,
                             const gl::VertexArray::DirtyBits &dirtyBits,
                             gl::VertexArray::DirtyAttribBitsArray *attribBits,
                             gl::VertexArray::DirtyBindingBitsArray *bindingBits) override;
 
-    void applyNumViewsToDivisor(int numViews);
-    void applyActiveAttribLocationsMask(const gl::AttributesMask &activeMask);
+    void applyNumViewsToDivisor(const gl::Context *context, int numViews);
+    void applyActiveAttribLocationsMask(const gl::Context *context,
+                                        const gl::AttributesMask &activeMask);
 
-    void validateState() const;
+    void validateState(const gl::Context *context) const;
+
+    void recoverForcedStreamingAttributesForDrawArraysInstanced(const gl::Context *context) const;
 
   private:
     angle::Result syncDrawState(const gl::Context *context,
@@ -91,7 +94,8 @@ class VertexArrayGL : public VertexArrayImpl
     angle::Result streamAttributes(const gl::Context *context,
                                    const gl::AttributesMask &attribsToStream,
                                    GLsizei instanceCount,
-                                   const gl::IndexRange &indexRange) const;
+                                   const gl::IndexRange &indexRange,
+                                   bool applyExtraOffsetWorkaroundForInstancedAttributes) const;
     void syncDirtyAttrib(const gl::Context *context,
                          size_t attribIndex,
                          const gl::VertexArray::DirtyAttribBits &dirtyAttribBits);
@@ -99,43 +103,51 @@ class VertexArrayGL : public VertexArrayImpl
                           size_t bindingIndex,
                           const gl::VertexArray::DirtyBindingBits &dirtyBindingBits);
 
-    void updateAttribEnabled(size_t attribIndex);
+    void updateAttribEnabled(const gl::Context *context, size_t attribIndex);
     void updateAttribPointer(const gl::Context *context, size_t attribIndex);
 
-    bool supportVertexAttribBinding() const;
+    bool supportVertexAttribBinding(const gl::Context *context) const;
 
-    void updateAttribFormat(size_t attribIndex);
-    void updateAttribBinding(size_t attribIndex);
+    void updateAttribFormat(const gl::Context *context, size_t attribIndex);
+    void updateAttribBinding(const gl::Context *context, size_t attribIndex);
     void updateBindingBuffer(const gl::Context *context, size_t bindingIndex);
-    void updateBindingDivisor(size_t bindingIndex);
+    void updateBindingDivisor(const gl::Context *context, size_t bindingIndex);
 
     void updateElementArrayBufferBinding(const gl::Context *context) const;
 
-    void callVertexAttribPointer(GLuint attribIndex,
+    void callVertexAttribPointer(const gl::Context *context,
+                                 GLuint attribIndex,
                                  const gl::VertexAttribute &attrib,
                                  GLsizei stride,
                                  GLintptr offset) const;
 
-    const FunctionsGL *mFunctions;
-    StateManagerGL *mStateManager;
+    void recoverForcedStreamingAttributesForDrawArraysInstanced(
+        const gl::Context *context,
+        gl::AttributesMask *attributeMask) const;
 
-    GLuint mVertexArrayID;
-    int mAppliedNumViews;
+    GLuint mVertexArrayID = 0;
+    int mAppliedNumViews  = 1;
 
     // Remember the program's active attrib location mask so that attributes can be enabled/disabled
     // based on whether they are active in the program
     gl::AttributesMask mProgramActiveAttribLocationsMask;
 
-    mutable gl::BindingPointer<gl::Buffer> mAppliedElementArrayBuffer;
+    bool mOwnsNativeState            = false;
+    VertexArrayStateGL *mNativeState = nullptr;
 
-    mutable std::vector<gl::VertexAttribute> mAppliedAttributes;
-    mutable std::vector<gl::VertexBinding> mAppliedBindings;
+    mutable gl::BindingPointer<gl::Buffer> mElementArrayBuffer;
+    mutable std::array<gl::BindingPointer<gl::Buffer>, gl::MAX_VERTEX_ATTRIBS> mArrayBuffers;
 
-    mutable size_t mStreamingElementArrayBufferSize;
-    mutable GLuint mStreamingElementArrayBuffer;
+    mutable size_t mStreamingElementArrayBufferSize = 0;
+    mutable GLuint mStreamingElementArrayBuffer     = 0;
 
-    mutable size_t mStreamingArrayBufferSize;
-    mutable GLuint mStreamingArrayBuffer;
+    mutable size_t mStreamingArrayBufferSize = 0;
+    mutable GLuint mStreamingArrayBuffer     = 0;
+
+    // Used for Mac Intel instanced draw workaround
+    mutable gl::AttributesMask mForcedStreamingAttributesForDrawArraysInstancedMask;
+    mutable gl::AttributesMask mInstancedAttributesMask;
+    mutable std::array<GLint, gl::MAX_VERTEX_ATTRIBS> mForcedStreamingAttributesFirstOffsets;
 };
 
 ANGLE_INLINE angle::Result VertexArrayGL::syncDrawElementsState(

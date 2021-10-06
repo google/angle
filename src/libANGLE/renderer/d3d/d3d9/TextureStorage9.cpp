@@ -24,8 +24,9 @@
 
 namespace rx
 {
-TextureStorage9::TextureStorage9(Renderer9 *renderer, DWORD usage)
-    : mTopLevel(0),
+TextureStorage9::TextureStorage9(Renderer9 *renderer, DWORD usage, const std::string &label)
+    : TextureStorage(label),
+      mTopLevel(0),
       mMipLevels(0),
       mTextureWidth(0),
       mTextureHeight(0),
@@ -103,8 +104,10 @@ angle::Result TextureStorage9::setData(const gl::Context *context,
     return angle::Result::Stop;
 }
 
-TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, SwapChain9 *swapchain)
-    : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET)
+TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer,
+                                       SwapChain9 *swapchain,
+                                       const std::string &label)
+    : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET, label)
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture                          = surfaceTexture;
@@ -126,8 +129,9 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer,
                                        bool renderTarget,
                                        GLsizei width,
                                        GLsizei height,
-                                       int levels)
-    : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
+                                       int levels,
+                                       const std::string &label)
+    : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget), label)
 {
     mTexture = nullptr;
 
@@ -177,6 +181,18 @@ angle::Result TextureStorage9_2D::getSurfaceLevel(const gl::Context *context,
         texture->AddDirtyRect(nullptr);
     }
 
+    return angle::Result::Continue;
+}
+
+angle::Result TextureStorage9_2D::findRenderTarget(const gl::Context *context,
+                                                   const gl::ImageIndex &index,
+                                                   GLsizei samples,
+                                                   RenderTargetD3D **outRT) const
+{
+    ASSERT(index.getLevelIndex() < getLevelCount());
+
+    ASSERT(outRT);
+    *outRT = mRenderTargets[index.getLevelIndex()];
     return angle::Result::Continue;
 }
 
@@ -273,9 +289,11 @@ angle::Result TextureStorage9_2D::copyToStorage(const gl::Context *context,
 
 TextureStorage9_EGLImage::TextureStorage9_EGLImage(Renderer9 *renderer,
                                                    EGLImageD3D *image,
-                                                   RenderTarget9 *renderTarget9)
-    : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET), mImage(image)
+                                                   RenderTarget9 *renderTarget9,
+                                                   const std::string &label)
+    : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET, label), mImage(image)
 {
+
     mInternalFormat = renderTarget9->getInternalFormat();
     mTextureFormat  = renderTarget9->getD3DFormat();
     mTextureWidth   = renderTarget9->getWidth();
@@ -302,6 +320,17 @@ angle::Result TextureStorage9_EGLImage::getSurfaceLevel(const gl::Context *conte
 
     *outSurface = renderTarget9->getSurface();
     return angle::Result::Continue;
+}
+
+angle::Result TextureStorage9_EGLImage::findRenderTarget(const gl::Context *context,
+                                                         const gl::ImageIndex &index,
+                                                         GLsizei samples,
+                                                         RenderTargetD3D **outRT) const
+{
+    // Since the render target of a EGL image will be updated when orphaning, trying to find a cache
+    // of it can be rarely useful.
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
+    return angle::Result::Stop;
 }
 
 angle::Result TextureStorage9_EGLImage::getRenderTarget(const gl::Context *context,
@@ -374,8 +403,9 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer9 *renderer,
                                            bool renderTarget,
                                            int size,
                                            int levels,
-                                           bool hintLevelZeroOnly)
-    : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
+                                           bool hintLevelZeroOnly,
+                                           const std::string &label)
+    : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget), label)
 {
     mTexture = nullptr;
     for (size_t i = 0; i < gl::kCubeFaceCount; ++i)
@@ -428,6 +458,23 @@ angle::Result TextureStorage9_Cube::getSurfaceLevel(const gl::Context *context,
         texture->AddDirtyRect(face, nullptr);
     }
 
+    return angle::Result::Continue;
+}
+
+angle::Result TextureStorage9_Cube::findRenderTarget(const gl::Context *context,
+                                                     const gl::ImageIndex &index,
+                                                     GLsizei samples,
+                                                     RenderTargetD3D **outRT) const
+{
+    ASSERT(outRT);
+    ASSERT(index.getLevelIndex() == 0);
+    ASSERT(samples == 0);
+
+    ASSERT(index.getType() == gl::TextureType::CubeMap &&
+           gl::IsCubeMapFaceTarget(index.getTarget()));
+    const size_t renderTargetIndex = index.cubeMapFaceIndex();
+
+    *outRT = mRenderTarget[renderTargetIndex];
     return angle::Result::Continue;
 }
 

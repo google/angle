@@ -57,6 +57,7 @@ struct Renderer11DeviceCaps
                                                 // of textures with both the bind SRV and DSV flags
                                                 // when multisampled.  Textures will need to be
                                                 // resolved before reading. crbug.com/656989
+    bool allowES3OnFL10_0;
     UINT B5G6R5support;     // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G6R5_UNORM
     UINT B5G6R5maxSamples;  // Maximum number of samples supported by DXGI_FORMAT_B5G6R5_UNORM
     UINT B4G4R4A4support;  // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B4G4R4A4_UNORM
@@ -70,44 +71,6 @@ enum
 {
     MAX_VERTEX_UNIFORM_VECTORS_D3D11   = 1024,
     MAX_FRAGMENT_UNIFORM_VECTORS_D3D11 = 1024
-};
-
-// Possible reasons RendererD3D initialize can fail
-enum D3D11InitError
-{
-    // The renderer loaded successfully
-    D3D11_INIT_SUCCESS = 0,
-    // Failed to load the ANGLE & D3D compiler libraries
-    D3D11_INIT_COMPILER_ERROR,
-    // Failed to load a necessary DLL (non-compiler)
-    D3D11_INIT_MISSING_DEP,
-    // CreateDevice returned E_INVALIDARG
-    D3D11_INIT_CREATEDEVICE_INVALIDARG,
-    // CreateDevice failed with an error other than invalid arg
-    D3D11_INIT_CREATEDEVICE_ERROR,
-    // DXGI 1.2 required but not found
-    D3D11_INIT_INCOMPATIBLE_DXGI,
-    // Other initialization error
-    D3D11_INIT_OTHER_ERROR,
-    // CreateDevice returned E_FAIL
-    D3D11_INIT_CREATEDEVICE_FAIL,
-    // CreateDevice returned E_NOTIMPL
-    D3D11_INIT_CREATEDEVICE_NOTIMPL,
-    // CreateDevice returned E_OUTOFMEMORY
-    D3D11_INIT_CREATEDEVICE_OUTOFMEMORY,
-    // CreateDevice returned DXGI_ERROR_INVALID_CALL
-    D3D11_INIT_CREATEDEVICE_INVALIDCALL,
-    // CreateDevice returned DXGI_ERROR_SDK_COMPONENT_MISSING
-    D3D11_INIT_CREATEDEVICE_COMPONENTMISSING,
-    // CreateDevice returned DXGI_ERROR_WAS_STILL_DRAWING
-    D3D11_INIT_CREATEDEVICE_WASSTILLDRAWING,
-    // CreateDevice returned DXGI_ERROR_NOT_CURRENTLY_AVAILABLE
-    D3D11_INIT_CREATEDEVICE_NOTAVAILABLE,
-    // CreateDevice returned DXGI_ERROR_DEVICE_HUNG
-    D3D11_INIT_CREATEDEVICE_DEVICEHUNG,
-    // CreateDevice returned NULL
-    D3D11_INIT_CREATEDEVICE_NULL,
-    NUM_D3D11_INIT_ERRORS
 };
 
 class Renderer11 : public RendererD3D
@@ -146,7 +109,8 @@ class Renderer11 : public RendererD3D
                                  EGLint *height,
                                  GLsizei *samples,
                                  gl::Format *glFormat,
-                                 const angle::Format **angleFormat) const override;
+                                 const angle::Format **angleFormat,
+                                 UINT *arraySlice) const override;
     egl::Error validateShareHandle(const egl::Config *config,
                                    HANDLE shareHandle,
                                    const egl::AttributeMap &attribs) const override;
@@ -155,7 +119,6 @@ class Renderer11 : public RendererD3D
     bool testDeviceLost() override;
     bool testDeviceResettable() override;
 
-    std::string getRendererDescription() const;
     DeviceIdentifier getAdapterIdentifier() const override;
 
     unsigned int getReservedVertexUniformVectors() const;
@@ -271,48 +234,56 @@ class Renderer11 : public RendererD3D
                             bool unpackPremultiplyAlpha,
                             bool unpackUnmultiplyAlpha) override;
 
-    TextureStorage *createTextureStorage2D(SwapChainD3D *swapChain) override;
+    TextureStorage *createTextureStorage2D(SwapChainD3D *swapChain,
+                                           const std::string &label) override;
     TextureStorage *createTextureStorageEGLImage(EGLImageD3D *eglImage,
-                                                 RenderTargetD3D *renderTargetD3D) override;
-    TextureStorage *createTextureStorageExternal(
-        egl::Stream *stream,
-        const egl::Stream::GLTextureDescription &desc) override;
+                                                 RenderTargetD3D *renderTargetD3D,
+                                                 const std::string &label) override;
+    TextureStorage *createTextureStorageExternal(egl::Stream *stream,
+                                                 const egl::Stream::GLTextureDescription &desc,
+                                                 const std::string &label) override;
     TextureStorage *createTextureStorage2D(GLenum internalformat,
                                            bool renderTarget,
                                            GLsizei width,
                                            GLsizei height,
                                            int levels,
+                                           const std::string &label,
                                            bool hintLevelZeroOnly) override;
     TextureStorage *createTextureStorageCube(GLenum internalformat,
                                              bool renderTarget,
                                              int size,
                                              int levels,
-                                             bool hintLevelZeroOnly) override;
+                                             bool hintLevelZeroOnly,
+                                             const std::string &label) override;
     TextureStorage *createTextureStorage3D(GLenum internalformat,
                                            bool renderTarget,
                                            GLsizei width,
                                            GLsizei height,
                                            GLsizei depth,
-                                           int levels) override;
+                                           int levels,
+                                           const std::string &label) override;
     TextureStorage *createTextureStorage2DArray(GLenum internalformat,
                                                 bool renderTarget,
                                                 GLsizei width,
                                                 GLsizei height,
                                                 GLsizei depth,
-                                                int levels) override;
+                                                int levels,
+                                                const std::string &label) override;
     TextureStorage *createTextureStorage2DMultisample(GLenum internalformat,
                                                       GLsizei width,
                                                       GLsizei height,
                                                       int levels,
                                                       int samples,
-                                                      bool fixedSampleLocations) override;
+                                                      bool fixedSampleLocations,
+                                                      const std::string &label) override;
     TextureStorage *createTextureStorage2DMultisampleArray(GLenum internalformat,
                                                            GLsizei width,
                                                            GLsizei height,
                                                            GLsizei depth,
                                                            int levels,
                                                            int samples,
-                                                           bool fixedSampleLocations) override;
+                                                           bool fixedSampleLocations,
+                                                           const std::string &label) override;
 
     VertexBuffer *createVertexBuffer() override;
     IndexBuffer *createIndexBuffer() override;
@@ -351,6 +322,7 @@ class Renderer11 : public RendererD3D
     bool supportsFastCopyBufferToTexture(GLenum internalFormat) const override;
     angle::Result fastCopyBufferToTexture(const gl::Context *context,
                                           const gl::PixelUnpackState &unpack,
+                                          gl::Buffer *unpackBuffer,
                                           unsigned int offset,
                                           RenderTargetD3D *destRenderTarget,
                                           GLenum destinationFormat,
@@ -373,6 +345,7 @@ class Renderer11 : public RendererD3D
                                          const gl::VertexBinding &binding,
                                          size_t count,
                                          GLsizei instances,
+                                         GLuint baseInstance,
                                          unsigned int *bytesRequiredOut) const override;
 
     angle::Result readFromAttachment(const gl::Context *context,
@@ -510,6 +483,12 @@ class Renderer11 : public RendererD3D
     angle::Result getIncompleteTexture(const gl::Context *context,
                                        gl::TextureType type,
                                        gl::Texture **textureOut) override;
+
+    void setGlobalDebugAnnotator() override;
+
+    std::string getRendererDescription() const override;
+    std::string getVendorString() const override;
+    std::string getVersionString() const override;
 
   private:
     void generateCaps(gl::Caps *outCaps,

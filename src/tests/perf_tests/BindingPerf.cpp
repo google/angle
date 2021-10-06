@@ -93,8 +93,8 @@ class BindingsBenchmark : public ANGLERenderTest,
 
 BindingsBenchmark::BindingsBenchmark() : ANGLERenderTest("Bindings", GetParam())
 {
-    // Flaky on Windows Intel OpenGL. http://crbug.com/974083
-    if (IsIntel() && GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    // Flaky on OpenGL. http://anglebug.com/6264
+    if (GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         mSkipTest = true;
     }
@@ -193,14 +193,6 @@ BindingsParams D3D11Params(AllocationStyle allocationStyle)
     return params;
 }
 
-BindingsParams D3D9Params(AllocationStyle allocationStyle)
-{
-    BindingsParams params;
-    params.eglParameters   = egl_platform::D3D9_NULL();
-    params.allocationStyle = allocationStyle;
-    return params;
-}
-
 BindingsParams OpenGLOrGLESParams(AllocationStyle allocationStyle)
 {
     BindingsParams params;
@@ -225,8 +217,6 @@ TEST_P(BindingsBenchmark, Run)
 ANGLE_INSTANTIATE_TEST(BindingsBenchmark,
                        D3D11Params(EVERY_ITERATION),
                        D3D11Params(AT_INITIALIZATION),
-                       D3D9Params(EVERY_ITERATION),
-                       D3D9Params(AT_INITIALIZATION),
                        OpenGLOrGLESParams(EVERY_ITERATION),
                        OpenGLOrGLESParams(AT_INITIALIZATION),
                        VulkanParams(EVERY_ITERATION),

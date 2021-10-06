@@ -44,6 +44,9 @@ GLuint64 MergeQueryResults(gl::QueryType type, GLuint64 currentResult, GLuint64 
     }
 }
 
+// Some drivers tend to hang when flushing pending queries.  Wait until this number of queries have
+// added up before checking if results are ready.
+constexpr uint32_t kPauseResumeFlushThreshold = 5;
 }  // anonymous namespace
 
 namespace rx
@@ -57,7 +60,6 @@ StandardQueryGL::StandardQueryGL(gl::QueryType type,
                                  const FunctionsGL *functions,
                                  StateManagerGL *stateManager)
     : QueryGL(type),
-      mType(type),
       mFunctions(functions),
       mStateManager(stateManager),
       mActiveQuery(0),
@@ -159,7 +161,12 @@ angle::Result StandardQueryGL::pause(const gl::Context *context)
     }
 
     // Flush to make sure the pending queries don't add up too much.
-    return flush(context, false);
+    if (mPendingQueries.size() >= kPauseResumeFlushThreshold)
+    {
+        ANGLE_TRY(flush(context, false));
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result StandardQueryGL::resume(const gl::Context *context)
@@ -167,9 +174,16 @@ angle::Result StandardQueryGL::resume(const gl::Context *context)
     if (mActiveQuery == 0)
     {
         // Flush to make sure the pending queries don't add up too much.
-        ANGLE_TRY(flush(context, false));
+        if (mPendingQueries.size() >= kPauseResumeFlushThreshold)
+        {
+            ANGLE_TRY(flush(context, false));
+        }
+
         mFunctions->genQueries(1, &mActiveQuery);
         mStateManager->beginQuery(mType, this, mActiveQuery);
+
+        ContextGL *contextGL = GetImplAs<ContextGL>(context);
+        contextGL->markWorkSubmitted();
     }
 
     return angle::Result::Continue;
@@ -228,12 +242,19 @@ class SyncProviderGL
 class SyncProviderGLSync : public SyncProviderGL
 {
   public:
-    SyncProviderGLSync(const FunctionsGL *functions) : mFunctions(functions), mSync(nullptr)
-    {
-        mSync = mFunctions->fenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-    }
+    SyncProviderGLSync(const FunctionsGL *functions) : mFunctions(functions), mSync(nullptr) {}
 
     ~SyncProviderGLSync() override { mFunctions->deleteSync(mSync); }
+
+    angle::Result init(const gl::Context *context, gl::QueryType type) override
+    {
+        ContextGL *contextGL = GetImplAs<ContextGL>(context);
+        mSync                = mFunctions->fenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+        ANGLE_CHECK(contextGL, mSync != 0, "glFenceSync failed to create a GLsync object.",
+                    GL_OUT_OF_MEMORY);
+        contextGL->markWorkSubmitted();
+        return angle::Result::Continue;
+    }
 
     angle::Result flush(const gl::Context *context, bool force, bool *finished) override
     {
@@ -326,12 +347,12 @@ angle::Result SyncQueryGL::end(const gl::Context *context)
     else if (nativegl::SupportsOcclusionQueries(mFunctions))
     {
         mSyncProvider.reset(new SyncProviderGLQuery(mFunctions));
-        ANGLE_TRY(mSyncProvider->init(context, gl::QueryType::AnySamples));
     }
     else
     {
         ANGLE_GL_UNREACHABLE(GetImplAs<ContextGL>(context));
     }
+    ANGLE_TRY(mSyncProvider->init(context, gl::QueryType::AnySamples));
     return angle::Result::Continue;
 }
 

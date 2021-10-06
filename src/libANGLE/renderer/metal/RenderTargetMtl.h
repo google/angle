@@ -32,22 +32,35 @@ class RenderTargetMtl final : public FramebufferAttachmentRenderTarget
     // Used in std::vector initialization.
     RenderTargetMtl(RenderTargetMtl &&other);
 
-    void set(const mtl::TextureRef &texture, size_t level, size_t layer, const mtl::Format &format);
-    void set(const mtl::TextureRef &texture);
+    void set(const mtl::TextureRef &texture,
+             const mtl::MipmapNativeLevel &level,
+             uint32_t layer,
+             const mtl::Format &format);
+    void setWithImplicitMSTexture(const mtl::TextureRef &texture,
+                                  const mtl::TextureRef &implicitMSTexture,
+                                  const mtl::MipmapNativeLevel &level,
+                                  uint32_t layer,
+                                  const mtl::Format &format);
+    void setTexture(const mtl::TextureRef &texture);
+    void setImplicitMSTexture(const mtl::TextureRef &implicitMSTexture);
+    void duplicateFrom(const RenderTargetMtl &src);
     void reset();
 
-    const mtl::TextureRef &getTexture() const { return mTexture; }
-    size_t getLevelIndex() const { return mLevelIndex; }
-    size_t getLayerIndex() const { return mLayerIndex; }
+    mtl::TextureRef getTexture() const { return mTexture.lock(); }
+    mtl::TextureRef getImplicitMSTexture() const { return mImplicitMSTexture.lock(); }
+    const mtl::MipmapNativeLevel &getLevelIndex() const { return mLevelIndex; }
+    uint32_t getLayerIndex() const { return mLayerIndex; }
+    uint32_t getRenderSamples() const;
     const mtl::Format *getFormat() const { return mFormat; }
 
     void toRenderPassAttachmentDesc(mtl::RenderPassAttachmentDesc *rpaDescOut) const;
 
   private:
-    mtl::TextureRef mTexture;
-    size_t mLevelIndex         = 0;
-    size_t mLayerIndex         = 0;
-    const mtl::Format *mFormat = nullptr;
+    mtl::TextureWeakRef mTexture;
+    mtl::TextureWeakRef mImplicitMSTexture;
+    mtl::MipmapNativeLevel mLevelIndex = mtl::kZeroNativeMipLevel;
+    uint32_t mLayerIndex               = 0;
+    const mtl::Format *mFormat         = nullptr;
 };
 }  // namespace rx
 

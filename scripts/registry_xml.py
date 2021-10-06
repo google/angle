@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 #
 # Copyright 2018 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -10,11 +10,14 @@
 # List of supported extensions. Add to this list to enable new extensions
 # available in gl.xml.
 
-import sys
 import os
+import sys
 import xml.etree.ElementTree as etree
 
+from enum import Enum
+
 xml_inputs = [
+    'cl.xml',
     'gl.xml',
     'gl_angle_ext.xml',
     'egl.xml',
@@ -33,6 +36,8 @@ angle_extensions = [
     "GL_CHROMIUM_lose_context",
     "GL_ANGLE_copy_texture_3d",
     "GL_ANGLE_get_image",
+    "GL_ANGLE_get_serialized_context_string",
+    "GL_ANGLE_get_tex_level_parameter",
     "GL_ANGLE_program_binary",
     "GL_ANGLE_request_extension",
     "GL_ANGLE_robust_client_memory",
@@ -55,47 +60,83 @@ gles_extensions = [
     "GL_ANGLE_framebuffer_blit",
     "GL_ANGLE_framebuffer_multisample",
     "GL_ANGLE_instanced_arrays",
+    "GL_ANGLE_memory_object_flags",
+    "GL_ANGLE_memory_object_fuchsia",
     "GL_ANGLE_multi_draw",
     "GL_ANGLE_provoking_vertex",
+    "GL_ANGLE_semaphore_fuchsia",
     "GL_ANGLE_texture_multisample",
     "GL_ANGLE_translated_shader_source",
+    "GL_KHR_blend_equation_advanced",
     "GL_EXT_blend_func_extended",
+    "GL_EXT_buffer_storage",
+    "GL_EXT_copy_image",
+    "GL_EXT_clip_control",
+    "GL_EXT_debug_label",
     "GL_EXT_debug_marker",
     "GL_EXT_discard_framebuffer",
     "GL_EXT_disjoint_timer_query",
     "GL_EXT_draw_buffers",
+    "GL_EXT_draw_buffers_indexed",
     "GL_EXT_draw_elements_base_vertex",
+    "GL_EXT_EGL_image_array",
+    "GL_EXT_external_buffer",
     "GL_EXT_geometry_shader",
     "GL_EXT_instanced_arrays",
     "GL_EXT_map_buffer_range",
     "GL_EXT_memory_object",
     "GL_EXT_memory_object_fd",
     "GL_EXT_multisampled_render_to_texture",
+    "GL_EXT_multisampled_render_to_texture2",
     "GL_EXT_occlusion_query_boolean",
+    "GL_EXT_primitive_bounding_box",
+    "GL_EXT_protected_textures",
     "GL_EXT_read_format_bgra",
     "GL_EXT_robustness",
     "GL_EXT_semaphore",
     "GL_EXT_semaphore_fd",
+    "GL_EXT_separate_shader_objects",
+    "GL_EXT_shader_framebuffer_fetch_non_coherent",
+    "GL_EXT_shader_io_blocks",
     "GL_EXT_sRGB",
+    "GL_EXT_sRGB_write_control",
+    "GL_EXT_tessellation_shader",
+    "GL_EXT_texture_border_clamp",
+    "GL_EXT_texture_buffer",
     "GL_EXT_texture_compression_bptc",
     "GL_EXT_texture_compression_dxt1",
+    "GL_EXT_texture_compression_rgtc",
     "GL_EXT_texture_compression_s3tc",
     "GL_EXT_texture_compression_s3tc_srgb",
+    "GL_EXT_texture_cube_map_array",
     "GL_EXT_texture_filter_anisotropic",
     "GL_EXT_texture_format_BGRA8888",
     "GL_EXT_texture_storage",
+    "GL_EXT_texture_sRGB_R8",
+    "GL_EXT_texture_sRGB_RG8",
+    "GL_EXT_YUV_target",
     "GL_KHR_debug",
     "GL_KHR_parallel_shader_compile",
     "GL_NV_fence",
+    "GL_NV_framebuffer_blit",
     "GL_OES_compressed_ETC1_RGB8_texture",
+    "GL_EXT_compressed_ETC1_RGB8_sub_texture",
+    "GL_OES_copy_image",
     "GL_OES_depth32",
+    "GL_OES_draw_buffers_indexed",
     "GL_OES_draw_elements_base_vertex",
     "GL_OES_EGL_image",
+    "GL_OES_geometry_shader",
     "GL_OES_get_program_binary",
     "GL_OES_mapbuffer",
+    "GL_OES_sample_shading",
+    "GL_OES_shader_io_blocks",
     "GL_OES_texture_3D",
     "GL_OES_texture_border_clamp",
+    "GL_OES_texture_buffer",
+    "GL_OES_texture_cube_map_array",
     "GL_OES_texture_half_float",
+    "GL_OES_texture_stencil8",
     "GL_OES_texture_storage_multisample_2d_array",
     "GL_OES_vertex_array_object",
     "GL_OVR_multiview",
@@ -106,6 +147,7 @@ supported_extensions = sorted(angle_extensions + gles1_extensions + gles_extensi
 
 supported_egl_extensions = [
     "EGL_ANDROID_blob_cache",
+    "EGL_ANDROID_create_native_client_buffer",
     "EGL_ANDROID_framebuffer_target",
     "EGL_ANDROID_get_frame_timestamps",
     "EGL_ANDROID_get_native_client_buffer",
@@ -114,31 +156,39 @@ supported_egl_extensions = [
     "EGL_ANGLE_d3d_share_handle_client_buffer",
     "EGL_ANGLE_device_creation",
     "EGL_ANGLE_device_d3d",
+    "EGL_ANGLE_display_semaphore_share_group",
+    "EGL_ANGLE_display_texture_share_group",
     "EGL_ANGLE_feature_control",
     "EGL_ANGLE_ggp_stream_descriptor",
+    "EGL_ANGLE_power_preference",
     "EGL_ANGLE_program_cache_control",
     "EGL_ANGLE_query_surface_pointer",
     "EGL_ANGLE_stream_producer_d3d_texture",
     "EGL_ANGLE_surface_d3d_texture_2d_share_handle",
     "EGL_ANGLE_swap_with_frame_token",
+    "EGL_ANGLE_sync_control_rate",
     "EGL_ANGLE_window_fixed_size",
     "EGL_CHROMIUM_sync_control",
     "EGL_EXT_create_context_robustness",
     "EGL_EXT_device_query",
-    "EGL_EXT_pixel_format_float",
-    "EGL_EXT_platform_base",
-    "EGL_EXT_platform_device",
-    "EGL_IMG_context_priority",
-    "EGL_KHR_debug",
-    "EGL_KHR_fence_sync",
-    "EGL_KHR_gl_colorspace",
     "EGL_EXT_gl_colorspace_display_p3",
     "EGL_EXT_gl_colorspace_display_p3_linear",
     "EGL_EXT_gl_colorspace_display_p3_passthrough",
     "EGL_EXT_gl_colorspace_scrgb",
     "EGL_EXT_gl_colorspace_scrgb_linear",
+    "EGL_EXT_image_gl_colorspace",
+    "EGL_EXT_pixel_format_float",
+    "EGL_EXT_platform_base",
+    "EGL_EXT_platform_device",
+    "EGL_EXT_protected_content",
+    "EGL_IMG_context_priority",
+    "EGL_KHR_debug",
+    "EGL_KHR_fence_sync",
+    "EGL_KHR_gl_colorspace",
     "EGL_KHR_image",
+    "EGL_KHR_mutable_render_buffer",
     "EGL_KHR_no_config_context",
+    "EGL_KHR_reusable_sync",
     "EGL_KHR_stream",
     "EGL_KHR_stream_consumer_gltexture",
     "EGL_KHR_surfaceless_context",
@@ -146,6 +196,27 @@ supported_egl_extensions = [
     "EGL_KHR_wait_sync",
     "EGL_NV_post_sub_buffer",
     "EGL_NV_stream_consumer_gltexture_yuv",
+]
+
+supported_cl_extensions = [
+    # Since OpenCL 1.1
+    "cl_khr_byte_addressable_store",
+    "cl_khr_global_int32_base_atomics",
+    "cl_khr_global_int32_extended_atomics",
+    "cl_khr_local_int32_base_atomics",
+    "cl_khr_local_int32_extended_atomics",
+
+    # OpenCL 2.0 - 2.2
+    "cl_khr_3d_image_writes",
+    "cl_khr_depth_images",
+    "cl_khr_image2d_from_buffer",
+
+    # Optional
+    "cl_khr_extended_versioning",
+    "cl_khr_fp64",
+    "cl_khr_icd",
+    "cl_khr_int64_base_atomics",
+    "cl_khr_int64_extended_atomics",
 ]
 
 # Strip these suffixes from Context entry point names. NV is excluded (for now).
@@ -174,6 +245,24 @@ unsupported_enum_group_names = {
     'ClampColorModeARB',
 }
 
+# Versions (major, minor). Note that GLES intentionally places 1.0 last.
+DESKTOP_GL_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (3, 0),
+                       (3, 1), (3, 2), (3, 3), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5),
+                       (4, 6)]
+GLES_VERSIONS = [(2, 0), (3, 0), (3, 1), (3, 2), (1, 0)]
+EGL_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5)]
+WGL_VERSIONS = [(1, 0)]
+CL_VERSIONS = [(1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2), (3, 0)]
+
+
+# API types
+class apis:
+    GL = 'GL'
+    GLES = 'GLES'
+    WGL = 'WGL'
+    EGL = 'EGL'
+    CL = 'CL'
+
 
 def script_relative(path):
     return os.path.join(os.path.dirname(sys.argv[0]), path)
@@ -183,7 +272,17 @@ def path_to(folder, file):
     return os.path.join(script_relative(".."), "src", folder, file)
 
 
-class GLCommandNames:
+def strip_api_prefix(cmd_name):
+    return cmd_name.lstrip("cwegl")
+
+
+def get_cmd_name(command_node):
+    proto = command_node.find('proto')
+    cmd_name = proto.find('name').text
+    return cmd_name
+
+
+class CommandNames:
 
     def __init__(self):
         self.command_names = {}
@@ -194,7 +293,7 @@ class GLCommandNames:
     def get_all_commands(self):
         cmd_names = []
         # Combine all the version lists into a single list
-        for version, version_cmd_names in sorted(self.command_names.iteritems()):
+        for version, version_cmd_names in sorted(self.command_names.items()):
             cmd_names += version_cmd_names
 
         return cmd_names
@@ -215,7 +314,7 @@ class RegistryXML:
         if (ext_file):
             self._AppendANGLEExts(ext_file)
         self.all_commands = self.root.findall('commands/command')
-        self.all_cmd_names = GLCommandNames()
+        self.all_cmd_names = CommandNames()
         self.commands = {}
 
     def _AppendANGLEExts(self, ext_file):
@@ -229,6 +328,10 @@ class RegistryXML:
         insertion_point = self.root.findall("./extensions")[0]
         for extension in angle_ext_root.iter('extensions'):
             insertion_point.extend(extension)
+
+        insertion_point = self.root
+        for enums in angle_ext_root.iter('enums'):
+            insertion_point.append(enums)
 
     def AddCommands(self, feature_name, annotation):
         xpath = ".//feature[@name='%s']//command" % feature_name
@@ -250,6 +353,8 @@ class RegistryXML:
             return 'eglext'
         elif 'wgl' in supported:
             return 'wglext'
+        elif 'cl' in supported:
+            return 'clext'
         else:
             assert False
             return 'unknown'
@@ -288,7 +393,7 @@ class RegistryXML:
 
             self.ext_data[extension_name] = sorted(ext_cmd_names)
 
-        for extension_name, ext_cmd_names in sorted(self.ext_data.iteritems()):
+        for extension_name, ext_cmd_names in sorted(self.ext_data.items()):
 
             # Detect and filter duplicate extensions.
             dupes = []
@@ -302,3 +407,33 @@ class RegistryXML:
             self.ext_data[extension_name] = sorted(ext_cmd_names)
             self.ext_dupes[extension_name] = dupes
             self.all_cmd_names.add_commands(ext_annotations[extension_name], ext_cmd_names)
+
+
+class EntryPoints:
+
+    def __init__(self, api, xml, commands):
+        self.api = api
+        self._cmd_info = []
+
+        for command_node in xml.all_commands:
+            cmd_name = get_cmd_name(command_node)
+
+            if api == apis.WGL:
+                cmd_name = cmd_name if cmd_name[:3] == 'wgl' else 'wgl' + cmd_name
+
+            if cmd_name not in commands:
+                continue
+
+            param_text = ["".join(param.itertext()) for param in command_node.findall('param')]
+
+            # Treat (void) as ()
+            if len(param_text) == 1 and param_text[0].strip() == 'void':
+                param_text = []
+
+            proto = command_node.find('proto')
+            proto_text = "".join(proto.itertext())
+
+            self._cmd_info.append((cmd_name, command_node, param_text, proto_text))
+
+    def get_infos(self):
+        return self._cmd_info

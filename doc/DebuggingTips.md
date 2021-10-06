@@ -38,6 +38,95 @@ apitrace trace -o mytrace ./out/Debug/hello_triangle
 qapitrace mytrace
 ```
 
+## Enabling General Logging
+
+Normally, ANGLE only logs errors and warnings (e.g. to Android logcat).  General logging, or
+additional levels of "trace" messages will be logged when the following GN arg is set:
+```
+angle_enable_trace = true
+```
+
+## Debug Angle on Android
+
+Android is built as an Android APK, which makes it more difficult to debug an APK that is using ANGLE.  The following information can allow you to debug ANGLE with LLDB.
+* You need to build ANGLE with debug symbols enabled. Assume your build variant is called Debug. Make sure you have these lines in out/Debug/args.gn
+```
+is_component_build = false
+is_debug = true
+is_official_build = false
+symbol_level = 2
+strip_debug_info = false
+ignore_elf32_limitations = true
+angle_extract_native_libs = true
+```
+The following local patch may also be necessary:
+```
+diff --git a/build/config/compiler/compiler.gni b/build/config/compiler/compiler.gni
+index 96a18d91a3f6..ca7971fdfd48 100644
+--- a/build/config/compiler/compiler.gni
++++ b/build/config/compiler/compiler.gni
+@@ -86,7 +86,8 @@ declare_args() {
+   # Whether an error should be raised on attempts to make debug builds with
+   # is_component_build=false. Very large debug symbols can have unwanted side
+   # effects so this is enforced by default for chromium.
+-  forbid_non_component_debug_builds = build_with_chromium
++  forbid_non_component_debug_builds = false 
+```
+
+Build/install/enable ANGLE apk for your application following other instructions.
+* Modify gdbclient.py script to let it find the ANGLE symbols.
+```
+diff --git a/scripts/gdbclient.py b/scripts/gdbclient.py
+index 61fac4000..1f43f4f64 100755
+--- a/scripts/gdbclient.py
++++ b/scripts/gdbclient.py
+@@ -395,6 +395,8 @@ def generate_setup_script(debugger_path, sysroot, linker_search_dir, binary_file
+     vendor_paths = ["", "hw", "egl"]
+     solib_search_path += [os.path.join(symbols_dir, x) for x in symbols_paths]
+     solib_search_path += [os.path.join(vendor_dir, x) for x in vendor_paths]
++    solib_search_path += ["/your_path_to_chromium_src/out/Debug/lib.unstripped/"]
+     if linker_search_dir is not None:
+         solib_search_path += [linker_search_dir]
+```
+* Start your lldbclient.py from `/your_path_to_chromium_src/out/Debug` folder. This adds the ANGLE source-file paths to what is visible to LLDB, which allows LLDB to show ANGLE's source files. Refer to https://source.android.com/devices/tech/debug/gdb for how to attach the app for debugging.
+* If you are debugging angle_perftests, you can use `--shard-timeout 100000000` to disable the timeout so that the test won't get killed while you are debugging. If the test runs too fast that you don't have time to attach, use `--delay-test-start=60` to give you extra time to attach.
+
+## Enabling Debug-Utils Markers
+
+ANGLE can emit debug-utils markers for every GLES API command that are visible to both Android GPU
+Inspector (AGI) and RenderDoc.  This support requires
+[enabling general logging](#enabling-general-logging) as well as setting the following additional
+GN arg:
+```
+angle_enable_annotator_run_time_checks = true
+```
+In addition, if the following GN arg is set, the API calls will output to Android's logcat:
+```
+angle_enable_trace_android_logcat = true
+```
+Once compiled, the markers need to be turned on.
+
+### Turning on Debug Markers on Android
+
+On Android, debug markers are turned on and off with an Android debug property that is
+automatically deleted at the next reboot:
+
+```
+adb shell setprop debug.angle.markers 1
+```
+
+* 0: Turned off/disabled (default)
+* 1: Turned on/enabled
+
+### Turning on Debug Markers on Desktop
+
+On desktop, debug markers are turned on and off with the ANGLE_ENABLE_DEBUG_MARKERS environment
+variable (set in OS-specific manner):
+
+* 0: Turned off/disabled (default)
+* 1: Turned on/enabled
+
+
 ## Running ANGLE under GAPID on Linux
 
 [GAPID](https://github.com/google/gapid) can be used to capture trace of Vulkan commands on Linux.
@@ -55,8 +144,8 @@ angle_libs_suffix = "_ANGLE_DEV"
 ```
 
 All
-[NativeTest](https://chromium.googlesource.com/chromium/src/+/master/testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java)
-based tests share the same activity name, `org.chromium.native_test.NativeUnitTestNativeActivity`.
+[AngleNativeTest](https://chromium.googlesource.com/chromium/src/+/main/third_party/angle/src/tests/test_utils/runner/android/java/src/com/android/angle/test/AngleNativeTest.java)
+based tests share the same activity name, `com.android.angle.test.AngleUnitTestActivity`.
 Thus, prior to capturing your test trace, the specific test APK must be installed on the device.
 When you build the test, a test launcher is generated, for example,
 `./out/Release/bin/run_angle_end2end_tests`. The best way to install the APK is to run this test
@@ -65,14 +154,14 @@ launcher once.
 In GAPID's "Capture Trace" dialog, "Package / Action:" should be:
 
 ```
-android.intent.action.MAIN:org.chromium.native_test/org.chromium.native_test.NativeUnitTestNativeActivity
+android.intent.action.MAIN:com.android.angle.test/com.android.angle.test.AngleUnitTestActivity
 ```
 
 The mandatory [extra intent
 argument](https://developer.android.com/studio/command-line/adb.html#IntentSpec) for starting the
 activity is `org.chromium.native_test.NativeTest.StdoutFile`. Without it the test APK crashes. Test
 filters can be specified via either the `org.chromium.native_test.NativeTest.CommandLineFlags` or
-the `org.chromium.native_test.NativeTest.Shard` argument.  Example "Intent Arguments:" values in
+the `org.chromium.native_test.NativeTest.GtestFilter` argument.  Example "Intent Arguments:" values in
 GAPID's "Capture Trace" dialog:
 
 ```
@@ -82,7 +171,7 @@ GAPID's "Capture Trace" dialog:
 or
 
 ```
--e org.chromium.native_test.NativeTest.StdoutFile /sdcard/chromium_tests_root/out.txt --esal org.chromium.native_test.NativeTest.Shard RendererTest.SimpleOperation/ES2_VULKAN,SimpleOperationTest.DrawWithTexture/ES2_VULKAN
+-e org.chromium.native_test.NativeTest.StdoutFile /sdcard/chromium_tests_root/out.txt --e org.chromium.native_test.NativeTest.GtestFilter RendererTest.SimpleOperation/ES2_VULKAN:SimpleOperationTest.DrawWithTexture/ES2_VULKAN
 ```
 
 ## Running ANGLE under RenderDoc
@@ -209,8 +298,8 @@ Next, you need to install an ANGLE test apk.  When you build the test, a test la
 for example, `./out/Release/bin/run_angle_end2end_tests`. The best way to install the APK is to run
 this test launcher once.
 
-In RenderDoc, use `org.chromium.native_test` as the Executable Path, and provide the following
-arguments:
+In RenderDoc, use `com.android.angle.test/com.android.angle.test.AngleUnitTestActivity` as the
+Executable Path, and provide the following arguments:
 
 ```
 -e org.chromium.native_test.NativeTest.StdoutFile /sdcard/chromium_tests_root/out.txt -e org.chromium.native_test.NativeTest.CommandLineFlags "--gtest_filter=*ES2_VULKAN"
@@ -219,3 +308,48 @@ arguments:
 Note that in the above, only a single command line argument is supported with RenderDoc.  If testing
 dEQP on a non-default platform, the easiest way would be to modify `GetDefaultAPIName()` in
 `src/tests/deqp_support/angle_deqp_gtest.cpp` (and avoid `--use-angle=X`).
+
+## Testing with Chrome Canary
+
+Many of ANGLE's OpenGL ES entry points are exposed in Chromium as WebGL 1.0 and WebGL 2.0 APIs that
+are available via JavaScript. For testing purposes, custom ANGLE builds may be injected in Chrome
+Canary.
+
+### Setup
+
+#### Windows
+
+1. Download and install [Google Chrome Canary](https://www.google.com/chrome/canary/).
+2. Build ANGLE x64, Release.
+3. Run `python scripts\update_canary_angle.py` to replace Canary's ANGLE with your custom ANGLE
+(note: Canary must be closed).
+
+#### macOS
+
+1. Download and install [Google Chrome Canary](https://www.google.com/chrome/canary/).
+2. Clear all attributes.
+   ```
+   % xattr -cr /Applications/Google\ Chrome\ Canary.app
+   ```
+3. Build ANGLE x64 or arm64, Release.
+4. Replace ANGLE libraries, adjusting paths if needed.
+   ```
+   % cp angle/out/Release/{libEGL.dylib,libGLESv2.dylib} /Applications/Google\ Chrome\ Canary.app/Contents/Frameworks/Google\ Chrome\ Framework.framework/Libraries
+   ```
+5. Re-sign the application bundle.
+   ```
+   % codesign --force --sign - --deep /Applications/Google\ Chrome\ Canary.app
+   ```
+
+### Usage
+
+Run `%LOCALAPPDATA%\Google\Chrome SxS\chrome.exe` (Windows) or `./Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary` (macOS) with the following command-line options:
+* `--use-cmd-decoder=passthrough --use-gl=angle` and one of
+  * `--use-angle=d3d9` (Direct3D 9 renderer, Windows only)
+  * `--use-angle=d3d11` (Direct3D 11 renderer, Windows only)
+  * `--use-angle=d3d11on12` (Direct3D 11on12 renderer, Windows only)
+  * `--use-angle=gl` (OpenGL renderer)
+  * `--use-angle=gles` (OpenGL ES renderer)
+  * `--use-angle=vulkan` (Vulkan renderer)
+  * `--use-angle=swiftshader` (SwiftShader renderer)
+  * `--use-angle=metal` (Metal renderer, macOS only)

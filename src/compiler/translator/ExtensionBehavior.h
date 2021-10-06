@@ -9,41 +9,60 @@
 #ifndef COMPILER_TRANSLATOR_EXTENSIONBEHAVIOR_H_
 #define COMPILER_TRANSLATOR_EXTENSIONBEHAVIOR_H_
 
+#include <cstdint>
 #include <map>
 
 namespace sh
 {
 
-enum class TExtension
+enum class TExtension : uint8_t
 {
     UNDEFINED,  // Special value used to indicate no extension.
 
-    ARB_texture_rectangle,
+    ANGLE_base_vertex_base_instance,
+    ANGLE_multi_draw,
     ANGLE_texture_multisample,
+    APPLE_clip_distance,
+    ARB_texture_rectangle,
     ARM_shader_framebuffer_fetch,
     EXT_blend_func_extended,
+    EXT_clip_cull_distance,
     EXT_draw_buffers,
     EXT_frag_depth,
     EXT_geometry_shader,
+    OES_geometry_shader,
+    OES_shader_io_blocks,
+    EXT_shader_io_blocks,
     EXT_gpu_shader5,
+    EXT_primitive_bounding_box,
     EXT_shader_framebuffer_fetch,
+    EXT_shader_framebuffer_fetch_non_coherent,
+    EXT_shader_non_constant_global_initializers,
     EXT_shader_texture_lod,
+    EXT_shadow_samplers,
+    EXT_tessellation_shader,
+    EXT_texture_buffer,
+    EXT_texture_cube_map_array,
     EXT_YUV_target,
     NV_EGL_stream_consumer_external,
     NV_shader_framebuffer_fetch,
+    NV_shader_noperspective_interpolation,
     OES_EGL_image_external,
     OES_EGL_image_external_essl3,
+    OES_sample_variables,
+    OES_shader_multisample_interpolation,
+    OES_shader_image_atomic,
     OES_standard_derivatives,
-    OES_texture_storage_multisample_2d_array,
     OES_texture_3D,
+    OES_texture_buffer,
+    OES_texture_cube_map_array,
+    OES_texture_storage_multisample_2d_array,
     OVR_multiview,
     OVR_multiview2,
-    ANGLE_multi_draw,
-    ANGLE_base_vertex_base_instance,
     WEBGL_video_texture,
 };
 
-enum TBehavior
+enum TBehavior : uint8_t
 {
     EBhRequire,
     EBhEnable,

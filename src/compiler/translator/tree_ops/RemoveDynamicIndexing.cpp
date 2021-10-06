@@ -28,7 +28,7 @@ namespace
 
 using DynamicIndexingNodeMatcher = std::function<bool(TIntermBinary *)>;
 
-const TType *kIndexType = StaticType::Get<EbtInt, EbpHigh, EvqIn, 1, 1>();
+const TType *kIndexType = StaticType::Get<EbtInt, EbpHigh, EvqParamIn, 1, 1>();
 
 constexpr const ImmutableString kBaseName("base");
 constexpr const ImmutableString kIndexName("index");
@@ -82,23 +82,24 @@ TIntermTyped *EnsureSignedInt(TIntermTyped *node)
     if (node->getBasicType() == EbtInt)
         return node;
 
-    TIntermSequence *arguments = new TIntermSequence();
-    arguments->push_back(node);
-    return TIntermAggregate::CreateConstructor(TType(EbtInt), arguments);
+    TIntermSequence arguments;
+    arguments.push_back(node);
+    return TIntermAggregate::CreateConstructor(TType(EbtInt), &arguments);
 }
 
 TType *GetFieldType(const TType &indexedType)
 {
+    TType *fieldType = new TType(indexedType);
     if (indexedType.isMatrix())
     {
-        TType *fieldType = new TType(indexedType.getBasicType(), indexedType.getPrecision());
-        fieldType->setPrimarySize(static_cast<unsigned char>(indexedType.getRows()));
-        return fieldType;
+        fieldType->toMatrixColumnType();
     }
     else
     {
-        return new TType(indexedType.getBasicType(), indexedType.getPrecision());
+        ASSERT(indexedType.isVector());
+        fieldType->toComponentType();
     }
+    return fieldType;
 }
 
 const TType *GetBaseType(const TType &type, bool write)
@@ -109,9 +110,9 @@ const TType *GetBaseType(const TType &type, bool write)
     // highp values are being indexed in the shader. For HLSL precision doesn't matter, but in
     // principle this code could be used with multiple backends.
     baseType->setPrecision(EbpHigh);
-    baseType->setQualifier(EvqInOut);
+    baseType->setQualifier(EvqParamInOut);
     if (!write)
-        baseType->setQualifier(EvqIn);
+        baseType->setQualifier(EvqParamIn);
     return baseType;
 }
 
@@ -329,12 +330,12 @@ TIntermAggregate *CreateIndexFunctionCall(TIntermBinary *node,
                                           TFunction *indexingFunction)
 {
     ASSERT(node->getOp() == EOpIndexIndirect);
-    TIntermSequence *arguments = new TIntermSequence();
-    arguments->push_back(node->getLeft());
-    arguments->push_back(index);
+    TIntermSequence arguments;
+    arguments.push_back(node->getLeft());
+    arguments.push_back(index);
 
     TIntermAggregate *indexingCall =
-        TIntermAggregate::CreateFunctionCall(*indexingFunction, arguments);
+        TIntermAggregate::CreateFunctionCall(*indexingFunction, &arguments);
     indexingCall->setLine(node->getLine());
     return indexingCall;
 }
@@ -345,14 +346,14 @@ TIntermAggregate *CreateIndexedWriteFunctionCall(TIntermBinary *node,
                                                  TFunction *indexedWriteFunction)
 {
     ASSERT(node->getOp() == EOpIndexIndirect);
-    TIntermSequence *arguments = new TIntermSequence();
+    TIntermSequence arguments;
     // Deep copy the child nodes so that two pointers to the same node don't end up in the tree.
-    arguments->push_back(node->getLeft()->deepCopy());
-    arguments->push_back(CreateTempSymbolNode(index));
-    arguments->push_back(CreateTempSymbolNode(writtenValue));
+    arguments.push_back(node->getLeft()->deepCopy());
+    arguments.push_back(CreateTempSymbolNode(index));
+    arguments.push_back(CreateTempSymbolNode(writtenValue));
 
     TIntermAggregate *indexedWriteCall =
-        TIntermAggregate::CreateFunctionCall(*indexedWriteFunction, arguments);
+        TIntermAggregate::CreateFunctionCall(*indexedWriteFunction, &arguments);
     indexedWriteCall->setLine(node->getLine());
     return indexedWriteCall;
 }
@@ -465,7 +466,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                     indexedWriteFunction->addParameter(new TVariable(
                         mSymbolTable, kIndexName, kIndexType, SymbolType::AngleInternal));
                     TType *valueType = GetFieldType(type);
-                    valueType->setQualifier(EvqIn);
+                    valueType->setQualifier(EvqParamIn);
                     indexedWriteFunction->addParameter(new TVariable(
                         mSymbolTable, kValueName, static_cast<const TType *>(valueType),
                         SymbolType::AngleInternal));

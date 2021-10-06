@@ -82,8 +82,7 @@ void TraverseStructArrayVariable(const ShaderVariable &variable,
     // Nested arrays are processed starting from outermost (arrayNestingIndex 0u) and ending at the
     // innermost. We make a special case for unsized arrays.
     const unsigned int currentArraySize = variable.getNestedArraySize(0);
-    unsigned int count                  = std::max(currentArraySize, 1u);
-    for (unsigned int arrayElement = 0u; arrayElement < count; ++arrayElement)
+    for (unsigned int arrayElement = 0u; arrayElement < currentArraySize; ++arrayElement)
     {
         visitor->enterArrayElement(variable, arrayElement);
         ShaderVariable elementVar = variable;
@@ -126,9 +125,10 @@ void TraverseArrayOfArraysVariable(const ShaderVariable &variable,
         }
         else
         {
-            if (gl::IsSamplerType(variable.type))
+            if (gl::IsSamplerType(variable.type) || gl::IsImageType(variable.type) ||
+                variable.isFragmentInOut)
             {
-                visitor->visitSampler(elementVar);
+                visitor->visitOpaqueObject(elementVar);
             }
             else
             {
@@ -199,6 +199,35 @@ BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type,
     return memberInfo;
 }
 
+BlockMemberInfo BlockLayoutEncoder::encodeArrayOfPreEncodedStructs(
+    size_t size,
+    const std::vector<unsigned int> &arraySizes)
+{
+    const unsigned int innerArraySizeProduct = gl::InnerArraySizeProduct(arraySizes);
+    const unsigned int outermostArraySize    = gl::OutermostArraySize(arraySizes);
+
+    // The size of struct is expected to be already aligned appropriately.
+    const size_t arrayStride = size * innerArraySizeProduct;
+
+    const BlockMemberInfo memberInfo(static_cast<int>(mCurrentOffset * kBytesPerComponent),
+                                     static_cast<int>(arrayStride), -1, false);
+
+    angle::base::CheckedNumeric<size_t> checkedOffset(arrayStride);
+    checkedOffset *= outermostArraySize;
+    checkedOffset /= kBytesPerComponent;
+    checkedOffset += mCurrentOffset;
+    mCurrentOffset = checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
+
+    return memberInfo;
+}
+
+size_t BlockLayoutEncoder::getCurrentOffset() const
+{
+    angle::base::CheckedNumeric<size_t> checkedOffset(mCurrentOffset);
+    checkedOffset *= kBytesPerComponent;
+    return checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
+}
+
 size_t BlockLayoutEncoder::getShaderVariableSize(const ShaderVariable &structVar, bool isRowMajor)
 {
     size_t currentOffset = mCurrentOffset;
@@ -226,15 +255,21 @@ size_t BlockLayoutEncoder::GetBlockRegisterElement(const BlockMemberInfo &info)
 
 void BlockLayoutEncoder::align(size_t baseAlignment)
 {
-    mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, baseAlignment);
+    angle::base::CheckedNumeric<size_t> checkedOffset(mCurrentOffset);
+    checkedOffset += baseAlignment;
+    checkedOffset -= 1;
+    angle::base::CheckedNumeric<size_t> checkedAlignmentOffset = checkedOffset;
+    checkedAlignmentOffset %= baseAlignment;
+    checkedOffset -= checkedAlignmentOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
+    mCurrentOffset = checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
 }
 
-// DummyBlockEncoder implementation.
-void DummyBlockEncoder::getBlockLayoutInfo(GLenum type,
-                                           const std::vector<unsigned int> &arraySizes,
-                                           bool isRowMajorMatrix,
-                                           int *arrayStrideOut,
-                                           int *matrixStrideOut)
+// StubBlockEncoder implementation.
+void StubBlockEncoder::getBlockLayoutInfo(GLenum type,
+                                          const std::vector<unsigned int> &arraySizes,
+                                          bool isRowMajorMatrix,
+                                          int *arrayStrideOut,
+                                          int *matrixStrideOut)
 {
     *arrayStrideOut  = 0;
     *matrixStrideOut = 0;
@@ -289,7 +324,7 @@ void Std140BlockEncoder::getBlockLayoutInfo(GLenum type,
         baseAlignment              = ComponentAlignment(numComponents);
     }
 
-    mCurrentOffset = rx::roundUp(mCurrentOffset, baseAlignment);
+    align(baseAlignment);
 
     *matrixStrideOut = matrixStride;
     *arrayStrideOut  = arrayStride;
@@ -303,16 +338,23 @@ void Std140BlockEncoder::advanceOffset(GLenum type,
 {
     if (!arraySizes.empty())
     {
-        mCurrentOffset += arrayStride * gl::ArraySizeProduct(arraySizes);
+        angle::base::CheckedNumeric<size_t> checkedOffset(arrayStride);
+        checkedOffset *= gl::ArraySizeProduct(arraySizes);
+        checkedOffset += mCurrentOffset;
+        mCurrentOffset = checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
     }
     else if (gl::IsMatrixType(type))
     {
-        const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
-        mCurrentOffset += matrixStride * numRegisters;
+        angle::base::CheckedNumeric<size_t> checkedOffset(matrixStride);
+        checkedOffset *= gl::MatrixRegisterCount(type, isRowMajorMatrix);
+        checkedOffset += mCurrentOffset;
+        mCurrentOffset = checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
     }
     else
     {
-        mCurrentOffset += gl::VariableComponentCount(type);
+        angle::base::CheckedNumeric<size_t> checkedOffset(mCurrentOffset);
+        checkedOffset += gl::VariableComponentCount(type);
+        mCurrentOffset = checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
     }
 }
 
@@ -456,24 +498,24 @@ std::string VariableNameVisitor::collapseMappedNameStack() const
     return CollapseNameStack(mMappedNameStack);
 }
 
-void VariableNameVisitor::visitSampler(const sh::ShaderVariable &sampler)
+void VariableNameVisitor::visitOpaqueObject(const sh::ShaderVariable &variable)
 {
-    if (!sampler.hasParentArrayIndex())
+    if (!variable.hasParentArrayIndex())
     {
-        mNameStack.push_back(sampler.name);
-        mMappedNameStack.push_back(sampler.mappedName);
+        mNameStack.push_back(variable.name);
+        mMappedNameStack.push_back(variable.mappedName);
     }
 
     std::string name       = collapseNameStack();
     std::string mappedName = collapseMappedNameStack();
 
-    if (!sampler.hasParentArrayIndex())
+    if (!variable.hasParentArrayIndex())
     {
         mNameStack.pop_back();
         mMappedNameStack.pop_back();
     }
 
-    visitNamedSampler(sampler, name, mappedName, mArraySizeStack);
+    visitNamedOpaqueObject(variable, name, mappedName, mArraySizeStack);
 }
 
 void VariableNameVisitor::visitVariable(const ShaderVariable &variable, bool isRowMajor)
@@ -611,9 +653,10 @@ void TraverseShaderVariable(const ShaderVariable &variable,
     {
         TraverseArrayOfArraysVariable(variable, 0u, isRowMajor, visitor);
     }
-    else if (gl::IsSamplerType(variable.type))
+    else if (gl::IsSamplerType(variable.type) || gl::IsImageType(variable.type) ||
+             variable.isFragmentInOut)
     {
-        visitor->visitSampler(variable);
+        visitor->visitOpaqueObject(variable);
     }
     else
     {

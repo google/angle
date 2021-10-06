@@ -32,6 +32,8 @@ Some simple environment variables control frame capture:
 
  * `ANGLE_CAPTURE_ENABLED`:
    * Set to `0` to disable capture entirely. Default is `1`.
+ * `ANGLE_CAPTURE_COMPRESSION`:
+   * Set to `0` to disable capture compression. Default is `1`.
  * `ANGLE_CAPTURE_OUT_DIR=<path>`:
    * Can specify an alternate replay output directory.
    * Example: `ANGLE_CAPTURE_OUT_DIR=samples/capture_replay`. Default is the CWD.
@@ -71,6 +73,8 @@ Some simple environment variables control frame capture:
            foo::ReplayContext1Frame(i);
        }
        ```
+ * `ANGLE_CAPTURE_SERIALIZE_STATE`:
+   * Set to `1` to enable GL state serialization. Default is `0`.
 
 A good way to test out the capture is to use environment variables in conjunction with the sample
 template. For example:
@@ -162,3 +166,62 @@ as the GLES driver for your application.
     $ autoninja -C out/Release capture_replay_sample
     $ out/Release/capture_replay_sample
     ```
+
+### Starting capture at an arbitrary frame
+In some scenarios, you don't know which frame you want to start on. You'll only know when target
+content is being rendered.  For that we've added a trigger that can allow starting the capture at
+any time.
+
+To use it, set the following environment variable, in addition to all the setup steps above. Set
+the trigger value equal to the number of frames you'd like to capture.
+```
+adb shell setprop debug.angle.capture.trigger 20
+```
+When this value is set, `ANGLE_CAPTURE_FRAME_START` and `ANGLE_CAPTURE_FRAME_END` will be ignored.
+
+While your content is rendering, wait until you arrive at the scene you'd like to capture. Then
+set the value back to zero:
+```
+adb shell setprop debug.angle.capture.trigger 0
+```
+ANGLE will detect this change and start recording the requested number of frames.
+
+## Testing
+
+### Regression Testing Architecture
+The [python script][link_to_python_script] uses the job queue pattern. We spawn n-1 independent
+worker processes, where n is the value returned by multiprocessing.cpu_count(). Whenever a worker
+process finishes a job and becomes available, it grabs the next job from a shared job queue and
+runs that job on its CPU core. When there are no more jobs in the queue, the worker processes
+terminate and the main process reports results.
+
+![Point-in-time snapshot of the job queue](img/RegressionTestingArchitecture.png)
+
+### Job unit
+A job unit is a test batch. Each test has to go through 3 stages: capture run, replay build, and
+replay run. The test batch batches the replay build stage of multiple tests together, and the
+replay run stage of multiple tests together.
+
+![A test batch as a job unit](img/JobUnit.png)
+
+### Running tests
+From the command line, navigate to the ANGLE root folder [angle][angle_folder] then run the
+command below:
+```
+python3 src/tests/capture_replay_tests.py --use-goma --gtest_filter=*/ES2_Vulkan --keep-temp-files --output-to-file --batch-count=8
+```
+
+* `--use-goma` to turn on/off building with goma
+* `--gtest_filter` to run only specific tests
+* `--keep-temp-files` to keep the trace files
+* `--output-to-file` to write the log to results.txt at
+ [src/tests/capture_replay_tests][capture_replay_test_folder] folder.
+* `--batch-count` to set the number of tests in a batch. More tests in a batch means that
+the tests will finish faster, but also means a lower level of granularity.
+All command line arguments can be found at the top of the [python script][link_to_python_script].
+
+[angle_folder]: ../
+[capture_replay_test_folder]: ../src/tests/capture_replay_tests/
+[link_to_python_script]: ../src/tests/capture_replay_tests.py
+
+

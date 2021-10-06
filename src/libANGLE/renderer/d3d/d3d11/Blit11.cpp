@@ -60,12 +60,13 @@ void StretchedBlitNearest_RowByRow(const gl::Box &sourceArea,
                                    uint8_t *destData)
 {
     int srcHeightSubOne = (sourceArea.height - 1);
-    size_t copySize     = pixelSize * destArea.width;
+    size_t copySize     = pixelSize * clippedDestArea.width;
     size_t srcOffset    = sourceArea.x * pixelSize;
-    size_t destOffset   = destArea.x * pixelSize;
+    size_t destOffset   = clippedDestArea.x * pixelSize;
 
     for (int y = clippedDestArea.y; y < clippedDestArea.y + clippedDestArea.height; y++)
     {
+        // TODO: Fix divide by zero when height == 1. http://anglebug.com/6099
         float yPerc = static_cast<float>(y - destArea.y) / (destArea.height - 1);
 
         // Interpolate using the original source rectangle to determine which row to sample from
@@ -113,7 +114,7 @@ void StretchedBlitNearest_PixelByPixel(const gl::Box &sourceArea,
             float xPerc    = static_cast<float>(writeColumn - destArea.x) / (destArea.width - 1);
             float xRounded = floor(xPerc * (sourceArea.width - 1) + 0.5f);
             unsigned int readColumn = static_cast<unsigned int>(
-                gl::clamp(sourceArea.x + xRounded, 0, sourceSize.height - 1));
+                gl::clamp(sourceArea.x + xRounded, 0, sourceSize.width - 1));
 
             const uint8_t *sourcePixel =
                 sourceData + readRow * sourceRowPitch + readColumn * srcPixelStride + readOffset;
@@ -141,7 +142,10 @@ void StretchedBlitNearest(const gl::Box &sourceArea,
                           uint8_t *destData)
 {
     gl::Rectangle clippedDestArea(destArea.x, destArea.y, destArea.width, destArea.height);
-    gl::ClipRectangle(clippedDestArea, clipRect, &clippedDestArea);
+    if (!gl::ClipRectangle(clippedDestArea, clipRect, &clippedDestArea))
+    {
+        return;
+    }
 
     // Determine if entire rows can be copied at once instead of each individual pixel. There
     // must be no out of bounds lookups, whole rows copies, and no scale.
@@ -592,7 +596,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     Context11 *context11 = GetImplAs<Context11>(context);
 
     ANGLE_TRY(mRenderer->allocateResource(context11, vbDesc, &mVertexBuffer));
-    mVertexBuffer.setDebugName("Blit11 vertex buffer");
+    mVertexBuffer.setDebugName("Blit11VertexBuffer");
 
     D3D11_SAMPLER_DESC pointSamplerDesc;
     pointSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
@@ -610,7 +614,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     pointSamplerDesc.MaxLOD         = FLT_MAX;
 
     ANGLE_TRY(mRenderer->allocateResource(context11, pointSamplerDesc, &mPointSampler));
-    mPointSampler.setDebugName("Blit11 point sampler");
+    mPointSampler.setDebugName("Blit11PointSampler");
 
     D3D11_SAMPLER_DESC linearSamplerDesc;
     linearSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -628,7 +632,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     linearSamplerDesc.MaxLOD         = FLT_MAX;
 
     ANGLE_TRY(mRenderer->allocateResource(context11, linearSamplerDesc, &mLinearSampler));
-    mLinearSampler.setDebugName("Blit11 linear sampler");
+    mLinearSampler.setDebugName("Blit11LinearSampler");
 
     // Use a rasterizer state that will not cull so that inverted quads will not be culled
     D3D11_RASTERIZER_DESC rasterDesc;
@@ -644,11 +648,11 @@ angle::Result Blit11::initResources(const gl::Context *context)
 
     rasterDesc.ScissorEnable = TRUE;
     ANGLE_TRY(mRenderer->allocateResource(context11, rasterDesc, &mScissorEnabledRasterizerState));
-    mScissorEnabledRasterizerState.setDebugName("Blit11 scissoring rasterizer state");
+    mScissorEnabledRasterizerState.setDebugName("Blit11ScissoringRasterizerState");
 
     rasterDesc.ScissorEnable = FALSE;
     ANGLE_TRY(mRenderer->allocateResource(context11, rasterDesc, &mScissorDisabledRasterizerState));
-    mScissorDisabledRasterizerState.setDebugName("Blit11 no scissoring rasterizer state");
+    mScissorDisabledRasterizerState.setDebugName("Blit11NoScissoringRasterizerState");
 
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     depthStencilDesc.DepthEnable                  = TRUE;
@@ -667,7 +671,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     depthStencilDesc.BackFace.StencilFunc         = D3D11_COMPARISON_ALWAYS;
 
     ANGLE_TRY(mRenderer->allocateResource(context11, depthStencilDesc, &mDepthStencilState));
-    mDepthStencilState.setDebugName("Blit11 depth stencil state");
+    mDepthStencilState.setDebugName("Blit11DepthStencilState");
 
     D3D11_BUFFER_DESC swizzleBufferDesc;
     swizzleBufferDesc.ByteWidth           = sizeof(unsigned int) * 4;
@@ -678,7 +682,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     swizzleBufferDesc.StructureByteStride = 0;
 
     ANGLE_TRY(mRenderer->allocateResource(context11, swizzleBufferDesc, &mSwizzleCB));
-    mSwizzleCB.setDebugName("Blit11 swizzle constant buffer");
+    mSwizzleCB.setDebugName("Blit11SwizzleConstantBuffer");
 
     mResourcesInitialized = true;
 
@@ -1414,11 +1418,7 @@ Blit11::BlitShaderOperation Blit11::getBlitShaderOperation(GLenum destinationFor
                 {
                     return RGBAF_TOI;
                 }
-                else
-                {
-                    return unpackPremultiplyAlpha ? RGBAF_TOI_PREMULTIPLY : RGBAF_TOI_UNMULTIPLY;
-                }
-                break;
+                return unpackPremultiplyAlpha ? RGBAF_TOI_PREMULTIPLY : RGBAF_TOI_UNMULTIPLY;
             case GL_RGB_INTEGER:
             case GL_RG_INTEGER:
             case GL_RED_INTEGER:
@@ -1426,11 +1426,7 @@ Blit11::BlitShaderOperation Blit11::getBlitShaderOperation(GLenum destinationFor
                 {
                     return RGBF_TOI;
                 }
-                else
-                {
-                    return unpackPremultiplyAlpha ? RGBF_TOI_PREMULTIPLY : RGBF_TOI_UNMULTIPLY;
-                }
-                break;
+                return unpackPremultiplyAlpha ? RGBF_TOI_PREMULTIPLY : RGBF_TOI_UNMULTIPLY;
             default:
                 UNREACHABLE();
                 return OPERATION_INVALID;

@@ -1718,4 +1718,18 @@ void LoadR32ToR24G8(size_t width,
     }
 }
 
+void LoadYuvToNative(size_t width,
+                     size_t height,
+                     size_t depth,
+                     const uint8_t *input,
+                     size_t inputRowPitch,
+                     size_t inputDepthPitch,
+                     uint8_t *output,
+                     size_t outputRowPitch,
+                     size_t outputDepthPitch)
+{
+    // For YUV formats it is assumed that source has tightly packed data.
+    memcpy(output, input, inputDepthPitch);
+}
+
 }  // namespace angle

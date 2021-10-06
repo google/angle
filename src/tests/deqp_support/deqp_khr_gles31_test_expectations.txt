@@ -2,77 +2,21 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// This file contains a list of defective dEQP conformance tests. The expected
-// format is:
-//  {BUG#} {MODIFIERS} : {TEST_NAME} = {PASS,FAIL,FLAKY,TIMEOUT,SKIP}
-//
-// MODIFIERS can be a combination of the below list, combined with a logical AND:
-//  WIN XP VISTA WIN7 WIN8 WIN10
-//  MAC LEOPARD SNOWLEOPARD LION MOUNTAINLION MAVERICKS YOSEMITE ELCAPITAN SIERRA HIGHSIERRA MOJAVE
-//  LINUX CHROMEOS ANDROID
-//  NVIDIA AMD INTEL
-//  DEBUG RELEASE
-//  D3D9 D3D11 OPENGL GLES VULKAN
-//  NEXUS5X PIXEL2ORXL
-//  QUADROP400
-//
-//
-// TEST_NAME can be a specific test name, or have a '*' in the end, which
-// indicates a prefix matching.
-//
-// Examples:
-// fails on both windows and mac (crash)
-//  91530 WIN : context_lost_restored = SKIP
-//  91530 MAC : context_lost_restored = SKIP
-// fails on windows using NVIDIA GPUs
-//  91533 WIN NVIDIA : gl_min_uniforms = FAIL
-// fails on Nexus5X with GLES backend (hangs)
-//  91531 NEXUS5X GLES : conformance_more_* = SKIP
+// See README.md for format.
 
 // For now we only log Vulkan test expectations. More back-ends can follow as we need them.
-
 
 ////
 //// Failures blocking an official GLES 3.1 conformance run on SwiftShader
 ////
 
-// Dispatch indirect:
-3570 VULKAN : KHR-GLES31.core.compute_shader.build-separable = SKIP
-3570 VULKAN : KHR-GLES31.core.compute_shader.sso-compute-pipeline = SKIP
-3570 VULKAN : KHR-GLES31.core.compute_shader.sso-case2 = SKIP
-3570 VULKAN : KHR-GLES31.core.compute_shader.sso-case3 = SKIP
-// Program Pipeline Objects:
-3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-draw-calls2 = FAIL
-3570 VULKAN : KHR-GLES31.core.shader_atomic_counters.advanced-usage-many-dispatches = FAIL
-3570 VULKAN : KHR-GLES31.core.vertex_attrib_binding.basic-usage = FAIL
-3570 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-sso-simple = FAIL
-// Separate shader objects:
-3570 VULKAN : KHR-GLES31.core.sepshaderobjs* = FAIL
-
-// Shader support:
-3596 : KHR-GLES31.core.shader_bitfield_operation.frexp.* = SKIP
-3596 : KHR-GLES31.core.shader_bitfield_operation.uaddCarry.* = SKIP
-3596 : KHR-GLES31.core.shader_bitfield_operation.usubBorrow.* = SKIP
-3596 : KHR-GLES31.core.shader_bitfield_operation.umulExtended.* = SKIP
-3596 : KHR-GLES31.core.shader_bitfield_operation.imulExtended.* = SKIP
-// Program interface query.
-3596 VULKAN : KHR-GLES31.core.program_interface_query.* = FAIL
-
 // Image related failures
 
-4312 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-sync-imageAccess = SKIP
 4315 VULKAN : KHR-GLES31.core.shader_image_load_store.advanced-memory-order-vsfs = FAIL
-4108 VULKAN : KHR-GLES31.core.shader_image_size.*-nonMS-* = SKIP
 
-// Unimplemented glValidateCreateShaderProgramv:
-4146 : KHR-GLES31.core.shader_storage_buffer_object.basic-syntaxSSO = FAIL
-4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-bindingUpdate = FAIL
-4146 : KHR-GLES31.core.vertex_attrib_binding.advanced-largeStrideAndOffsetsNewAndLegacyAPI = FAIL
-
-// Multisampled textures:
-// --gtest_filter=dEQP.KHR_GLES31/core_texture_storage_multisample_FunctionalTests_verify_sample_masking_for_non_integer_color_renderable_internalformats* --use-angle=swiftshader
-4259 SWIFTSHADER : KHR-GLES31.core.texture_storage_multisample.FunctionalTests.verify_sample_masking_for_non_integer_color_renderable_internalformats = FAIL
-
+// Failing on SwiftShader
+4414 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-allMips-cs = SKIP
+4414 SWIFTSHADER : KHR-GLES31.core.shader_image_load_store.advanced-allMips-fs = SKIP
 
 ////
 //// General Vulkan expectations
@@ -84,22 +28,56 @@
 // Blend equations:
 3586 VULKAN : KHR-GLES31.core.blend_equation_advanced.* = SKIP
 
-// Limits:
-// GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.
-3605 VULKAN : KHR-GLES31.core.texture_gather.* = FAIL
+// No known implementation supports STORAGE_TEXEL_BUFFER support for RGB32 formats
+3573 VULKAN : KHR-GLES31.core.texture_buffer.texture_buffer_texture_buffer_range = SKIP
+
+// Geometry shader support (conditioned to windows as that's our only bot capable of running these
+// tests)
+// Translator's lack of support for redefining gl_PerVertex
+5579 VULKAN : KHR-GLES31.core.geometry_shader.api.getProgramiv3 = FAIL
+// Wrong results
+5579 VULKAN : KHR-GLES31.core.geometry_shader.adjacency.adjacency_indiced_triangle_strip = FAIL
+5579 VULKAN : KHR-GLES31.core.geometry_shader.adjacency.adjacency_non_indiced_triangle_strip = FAIL
+5579 VULKAN : KHR-GLES31.core.geometry_shader.rendering.rendering.triangles_input_line_strip_output_triangle_*_drawcall = FAIL
+5579 VULKAN : KHR-GLES31.core.geometry_shader.rendering.rendering.triangles_input_triangle_strip_output_triangle_*_drawcall = FAIL
+5579 VULKAN : KHR-GLES31.core.geometry_shader.rendering.rendering.triangles_with_adjacency_input_*_strip_output_triangle_strip_adjacency_drawcall = FAIL
+// Crashes on ASSERT due to mismatch between shader resources and pipeline layout
+5579 VULKAN : KHR-GLES31.core.geometry_shader.api.max_image_uniforms = SKIP
+// Failures on windows nvidia
+5579 VULKAN NVIDIA : KHR-GLES31.core.geometry_shader.limits.max_invocations = FAIL
 
 // Dispatch indirect:
-4188 VULKAN : KHR-GLES31.core.compute_shader.resource-image = FAIL
-4189 VULKAN : KHR-GLES31.core.compute_shader.shared-struct = SKIP
-4191 VULKAN : KHR-GLES31.core.compute_shader.resources-max = FAIL
-4192 VULKAN : KHR-GLES31.core.compute_shader.pipeline-post-xfb = FAIL
-3726 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.pipeline-compute-chain = FAIL
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.resource-ubo = FAIL
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.built-in-variables = FAIL
 
-// Arrays-of-arrays as vertex inputs:
-4148 : KHR-GLES31.core.arrays_of_arrays.InteractionInterfaceArrays2 = FAIL
+// XFB array elements capture:
+// These tests only fail with VK_EXT_transform_feedback
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case1 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case2 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case3 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case4 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case5 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case6 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case8 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case9 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case11 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-input-case12 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-inputI-case1 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-inputI-case2 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.vertex_attrib_binding.basic-inputI-case3 = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.shader_image_size.basic-nonMS-vs-float = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.shader_image_size.basic-nonMS-vs-int = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.shader_image_size.basic-nonMS-vs-uint = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.shader_image_size.advanced-nonMS-vs-float = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.shader_image_size.advanced-nonMS-vs-int = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.shader_image_size.advanced-nonMS-vs-uint = SKIP
+4723 VULKAN NVIDIA : KHR-GLES31.core.program_interface_query.transform-feedback-types = SKIP
 
+// New failures with latest dEQP roll (2021-03-05)
+5722 VULKAN : KHR-GLES31.core.framebuffer_completeness.rbo_and_texture_expect_zero_numsamples = FAIL
+
+// The extension is not conformant due to a small difference in maxInterpolationOffset between GL and Vulkan.
+6190 VULKAN : KHR-GLES31.core.shader_multisample_interpolation.api.api = FAIL
 
 ////
 //// Desktop Vulkan expectations
@@ -116,17 +94,24 @@
 4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matR* = SKIP
 4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matR* = SKIP
 
+// GL_EXT_texture_border_clamp related test failures on NVIDIA
+5978 VULKAN NVIDIA : KHR-GLES31.core.texture_border_clamp.Texture2DDC16Linear = SKIP
+5978 VULKAN NVIDIA : KHR-GLES31.core.texture_border_clamp.Texture2DDC32FLinear = SKIP
+
+////
+//// SwANGLE expectations
+////
+
+// Flaky on Windows SwANGLE
+5755 WIN SWIFTSHADER : KHR-GLES31.core.arrays_of_arrays.SizedDeclarationsPrimitive = SKIP
+
 
 ////
 //// Android (i.e. Pixel*) Vulkan expectations
 ////
 
 // Crashes on Android
-3520 VULKAN ANDROID : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength* = SKIP
-
-// Passing on recent drivers:
-3726 VULKAN ANDROID : KHR-GLES31.core.shader_atomic_counters.* = FAIL
-3726 VULKAN ANDROID : KHR-GLES31.core.shader_atomic_counters.advanced-usage-* = SKIP
+4107 VULKAN ANDROID : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength* = SKIP
 
 // Explicit uniform locations:
 4219 VULKAN PIXEL2ORXL : KHR-GLES31.core.explicit_uniform_location.uniform-loc-mix-with-implicit-max = FAIL
@@ -135,3 +120,179 @@
 // Fails on Pixel2 and Pixel2 XL
 4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-elements = FAIL
 4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-arrays = FAIL
+
+// Fails to link the shader program on Pixel2 and Pixel2 XL
+5572 VULKAN PIXEL2ORXL : KHR-GLES31.core.sample_variables.mask.rgba8*.samples_*.mask_* = FAIL
+
+// Failing on Android with SwiftShader
+4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-bvec4 = FAIL
+4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-ivec4 = FAIL
+4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-uvec4 = FAIL
+
+// Crashing on Android with SwiftShader
+4108 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_image_size.basic-nonMS* = SKIP
+4108 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_image_size.advanced-nonMS* = SKIP
+
+// Crashing on Android with SwiftShader
+4188 SWIFTSHADER ANDROID : KHR-GLES31.core.compute_shader.resource-image = SKIP
+
+// Crashing on Android with SwiftShader
+4190 SWIFTSHADER ANDROID : KHR-GLES31.core.compute_shader.pipeline-compute-chain = SKIP
+
+// Crashing on Android with SwiftShader
+4240 SWIFTSHADER ANDROID : KHR-GLES31.core.texture_storage_multisample.FunctionalTests.blitting_multisampled_depth_attachment = SKIP
+
+// New failures with latest dEQP roll (2020-04-28)
+4593 SWIFTSHADER : KHR-GLES31.core.nearest_edge.offset_left = FAIL
+
+// Test timeout due to it loops so many glTexStorageMultisample calls
+5806 VULKAN NVIDIA : KHR-GLES31.core.texture_storage_multisample.APIDependencies.fbo_with_renderbuffer_and_multisample_texture_attachments_with_different_number_of_samples = SKIP
+
+// Pixel 4 expectations.
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.compute_shader.built-in-variables = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.compute_shader.resource-ubo = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.draw_buffers_indexed.color_masks = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_0.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_0.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_0.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_0.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_0.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_0.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_0.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_0.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_0.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_1.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_1.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_1.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_1.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_1.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_1.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_1.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_1.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_1.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_2.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_2.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_2.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_2.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_2.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_2.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_2.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_2.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_2.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_4.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_4.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_4.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_4.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_4.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_4.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_4.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_4.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba32f.samples_4.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_0.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_0.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_0.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_0.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_0.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_0.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_0.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_0.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_0.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_1.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_1.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_1.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_1.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_1.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_1.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_1.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_1.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_1.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_2.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_2.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_2.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_2.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_2.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_2.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_2.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_2.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_2.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_4.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_4.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_4.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_4.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_4.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_4.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_4.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_4.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8.samples_4.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_0.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_0.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_0.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_0.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_0.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_0.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_0.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_0.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_0.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_1.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_1.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_1.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_1.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_1.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_1.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_1.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_1.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_1.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_2.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_2.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_2.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_2.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_2.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_2.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_2.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_2.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_2.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_4.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_4.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_4.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_4.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_4.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_4.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_4.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_4.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8i.samples_4.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_0.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_0.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_0.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_0.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_0.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_0.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_0.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_0.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_0.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_1.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_1.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_1.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_1.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_1.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_1.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_1.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_1.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_1.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_2.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_2.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_2.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_2.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_2.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_2.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_2.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_2.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_2.mask_zero = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_0 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_1 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_2 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_3 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_4 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_5 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_6 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_7 = SKIP
+5990 PIXEL4ORXL VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_4.mask_zero = SKIP

@@ -277,7 +277,7 @@ X11Window::~X11Window()
     destroy();
 }
 
-bool X11Window::initialize(const std::string &name, int width, int height)
+bool X11Window::initializeImpl(const std::string &name, int width, int height)
 {
     destroy();
 
@@ -371,6 +371,8 @@ bool X11Window::initialize(const std::string &name, int width, int height)
     return true;
 }
 
+void X11Window::disableErrorMessageDialog() {}
+
 void X11Window::destroy()
 {
     if (mWindow)
@@ -396,7 +398,7 @@ EGLNativeWindowType X11Window::getNativeWindow() const
 
 EGLNativeDisplayType X11Window::getNativeDisplay() const
 {
-    return mDisplay;
+    return reinterpret_cast<EGLNativeDisplayType>(mDisplay);
 }
 
 void X11Window::messageLoop()
@@ -415,6 +417,12 @@ void X11Window::setMousePosition(int x, int y)
     XWarpPointer(mDisplay, None, mWindow, 0, 0, 0, 0, x, y);
 }
 
+bool X11Window::setOrientation(int width, int height)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool X11Window::setPosition(int x, int y)
 {
     XMoveWindow(mDisplay, mWindow, x, y);
@@ -430,7 +438,7 @@ bool X11Window::resize(int width, int height)
     Timer timer;
     timer.start();
 
-    // Wait until the window as actually been resized so that the code calling resize
+    // Wait until the window has actually been resized so that the code calling resize
     // can assume the window has been resized.
     const double kResizeWaitDelay = 0.2;
     while ((mHeight != height || mWidth != width) && timer.getElapsedTime() < kResizeWaitDelay)
@@ -457,8 +465,9 @@ void X11Window::setVisible(bool isVisible)
         // code calling setVisible can assume the window is visible.
         // This is important when creating a framebuffer as the framebuffer content
         // is undefined when the window is not visible.
-        XEvent dummyEvent;
-        XIfEvent(mDisplay, &dummyEvent, WaitForMapNotify, reinterpret_cast<XPointer>(mWindow));
+        XEvent placeholderEvent;
+        XIfEvent(mDisplay, &placeholderEvent, WaitForMapNotify,
+                 reinterpret_cast<XPointer>(mWindow));
     }
     else
     {

@@ -13,6 +13,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
+#include "libANGLE/trace.h"
 #include "platform/FeaturesGL.h"
 
 #include <iostream>
@@ -38,6 +39,7 @@ class TranslateTaskGL : public angle::Closure
 
     void operator()() override
     {
+        ANGLE_TRACE_EVENT1("gpu.angle", "TranslateTaskGL::run", "source", mSource);
         const char *source = mSource.c_str();
         mResult            = sh::Compile(mHandle, &source, 1, mOptions);
         if (mResult)
@@ -245,7 +247,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
     ShCompileOptions additionalOptions = SH_INIT_GL_POSITION;
 
     bool isWebGL = context->getExtensions().webglCompatibility;
-    if (isWebGL && (mData.getShaderType() != gl::ShaderType::Compute))
+    if (isWebGL && mState.getShaderType() != gl::ShaderType::Compute)
     {
         additionalOptions |= SH_INIT_OUTPUT_VARIABLES;
     }
@@ -256,6 +258,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
     }
 
     const angle::FeaturesGL &features = GetFeaturesGL(context);
+
+    if (features.initFragmentOutputVariables.enabled)
+    {
+        additionalOptions |= SH_INIT_FRAGMENT_OUTPUT_VARIABLES;
+    }
 
     if (features.doWhileGLSLCausesGPUHang.enabled)
     {
@@ -305,11 +312,6 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
     if (features.clampPointSize.enabled)
     {
         additionalOptions |= SH_CLAMP_POINT_SIZE;
-    }
-
-    if (features.rewriteVectorScalarArithmetic.enabled)
-    {
-        additionalOptions |= SH_REWRITE_VECTOR_SCALAR_ARITHMETIC;
     }
 
     if (features.dontUseLoopsToInitializeVariables.enabled)
@@ -372,7 +374,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
 
     auto workerThreadPool = context->getWorkerThreadPool();
 
-    const std::string &source = mData.getSource();
+    const std::string &source = mState.getSource();
 
     auto postTranslateFunctor = [this](std::string *infoLog) {
         if (mCompileStatus == GL_FALSE)
@@ -435,7 +437,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderGL::compile(const gl::Context *conte
 
 std::string ShaderGL::getDebugInfo() const
 {
-    return mData.getTranslatedSource();
+    return mState.getTranslatedSource();
 }
 
 GLuint ShaderGL::getShaderID() const

@@ -12,6 +12,7 @@
 
 #include "common/debug.h"
 #include "libANGLE/renderer/Format.h"
+#include "libANGLE/renderer/load_functions_table.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 
 namespace rx
@@ -27,13 +28,6 @@ bool OverrideTextureCaps(const DisplayMtl *display, angle::FormatID formatId, gl
     // NOTE(hqle): Auto generate this.
     switch (formatId)
     {
-        case angle::FormatID::R8G8_UNORM:
-        case angle::FormatID::R8G8B8_UNORM:
-        case angle::FormatID::R8G8B8_UNORM_SRGB:
-        case angle::FormatID::R8G8B8A8_UNORM:
-        case angle::FormatID::R8G8B8A8_UNORM_SRGB:
-        case angle::FormatID::B8G8R8A8_UNORM:
-        case angle::FormatID::B8G8R8A8_UNORM_SRGB:
         // NOTE: even though iOS devices don't support filtering depth textures, we still report as
         // supported here in order for the OES_depth_texture extension to be enabled.
         // During draw call, the filter modes will be converted to nearest.
@@ -54,107 +48,51 @@ bool OverrideTextureCaps(const DisplayMtl *display, angle::FormatID formatId, gl
 void GenerateTextureCapsMap(const FormatTable &formatTable,
                             const DisplayMtl *display,
                             gl::TextureCapsMap *capsMapOut,
-                            std::vector<GLenum> *compressedFormatsOut)
+                            std::vector<GLenum> *compressedFormatsOut,
+                            uint32_t *maxSamplesOut)
 {
     auto &textureCapsMap    = *capsMapOut;
     auto &compressedFormats = *compressedFormatsOut;
 
     compressedFormats.clear();
 
-    // Metal doesn't have programmatical way to determine texture format support.
-    // What is available is the online documents from Apple. What we can do here
-    // is manually set certain extension flag to true then let angle decide the supported formats.
-    //
-    // TODO(hqle): The proper way of doing this is creating a detailed "format support table" json
-    // file with info parsed from https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf.
-    // Then using that json file to generate a table in C++ file.
-    gl::Extensions tmpTextureExtensions;
-
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    // https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf
-    // Requires depth24Stencil8PixelFormatSupported=YES for these extensions
-    bool packedDepthStencil24Support =
-        display->getMetalDevice().depth24Stencil8PixelFormatSupported;
-    tmpTextureExtensions.packedDepthStencilOES  = true;  // We support this reguardless
-    tmpTextureExtensions.colorBufferHalfFloat   = packedDepthStencil24Support;
-    tmpTextureExtensions.colorBufferFloat       = packedDepthStencil24Support;
-    tmpTextureExtensions.colorBufferFloatRGB    = packedDepthStencil24Support;
-    tmpTextureExtensions.colorBufferFloatRGBA   = packedDepthStencil24Support;
-    tmpTextureExtensions.textureHalfFloat       = packedDepthStencil24Support;
-    tmpTextureExtensions.textureFloatOES        = packedDepthStencil24Support;
-    tmpTextureExtensions.textureHalfFloatLinear = packedDepthStencil24Support;
-    tmpTextureExtensions.textureFloatLinearOES  = packedDepthStencil24Support;
-    tmpTextureExtensions.textureRG              = packedDepthStencil24Support;
-    tmpTextureExtensions.textureFormatBGRA8888  = packedDepthStencil24Support;
-
-    tmpTextureExtensions.textureCompressionDXT3 = true;
-    tmpTextureExtensions.textureCompressionDXT5 = true;
-
-    // We can only fully support DXT1 without alpha using texture swizzle support from MacOs 10.15
-    tmpTextureExtensions.textureCompressionDXT1 = display->getFeatures().hasTextureSwizzle.enabled;
-
-    tmpTextureExtensions.textureCompressionS3TCsRGB = tmpTextureExtensions.textureCompressionDXT1;
-#else
-    tmpTextureExtensions.packedDepthStencilOES  = true;  // override to D32_FLOAT_S8X24_UINT
-    tmpTextureExtensions.colorBufferHalfFloat   = true;
-    tmpTextureExtensions.colorBufferFloat       = true;
-    tmpTextureExtensions.colorBufferFloatRGB    = true;
-    tmpTextureExtensions.colorBufferFloatRGBA   = true;
-    tmpTextureExtensions.textureHalfFloat       = true;
-    tmpTextureExtensions.textureHalfFloatLinear = true;
-    tmpTextureExtensions.textureFloatOES        = true;
-    tmpTextureExtensions.textureRG              = true;
-    tmpTextureExtensions.textureFormatBGRA8888  = true;
-    if ([display->getMetalDevice() supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily1_v1])
-    {
-        tmpTextureExtensions.compressedETC1RGB8Texture        = true;
-        tmpTextureExtensions.compressedETC2RGB8Texture        = true;
-        tmpTextureExtensions.compressedETC2sRGB8Texture       = true;
-        tmpTextureExtensions.compressedETC2RGBA8Texture       = true;
-        tmpTextureExtensions.compressedETC2sRGB8Alpha8Texture = true;
-        tmpTextureExtensions.compressedEACR11UnsignedTexture  = true;
-        tmpTextureExtensions.compressedEACR11SignedTexture    = true;
-        tmpTextureExtensions.compressedEACRG11UnsignedTexture = true;
-        tmpTextureExtensions.compressedEACRG11SignedTexture   = true;
-        tmpTextureExtensions.compressedTexturePVRTC           = true;
-        tmpTextureExtensions.compressedTexturePVRTCsRGB       = true;
-    }
-#endif
-    tmpTextureExtensions.sRGB              = true;
-    tmpTextureExtensions.depth32OES        = true;
-    tmpTextureExtensions.depth24OES        = true;
-    tmpTextureExtensions.rgb8rgba8OES      = true;
-    tmpTextureExtensions.textureStorage    = true;
-    tmpTextureExtensions.depthTextureOES   = true;
-    tmpTextureExtensions.depthTextureANGLE = true;
-
     auto formatVerifier = [&](const gl::InternalFormat &internalFormatInfo) {
         angle::FormatID angleFormatId =
             angle::Format::InternalFormatToID(internalFormatInfo.sizedInternalFormat);
         const Format &mtlFormat = formatTable.getPixelFormat(angleFormatId);
-
         if (!mtlFormat.valid())
         {
             return;
         }
+        const FormatCaps &formatCaps = mtlFormat.getCaps();
 
         const angle::Format &intendedAngleFormat = mtlFormat.intendedAngleFormat();
         gl::TextureCaps textureCaps;
 
-        const auto &clientVersion = kMaxSupportedGLVersion;
-
-        // First let check whether we can determine programmatically.
+        // First let check whether we can override certain special cases.
         if (!OverrideTextureCaps(display, mtlFormat.intendedFormatId, &textureCaps))
         {
-            // Let angle decide based on extensions we enabled above.
-            textureCaps = gl::GenerateMinimumTextureCaps(internalFormatInfo.sizedInternalFormat,
-                                                         clientVersion, tmpTextureExtensions);
+            // Fill the texture caps using pixel format's caps
+            textureCaps.filterable = mtlFormat.getCaps().filterable;
+            textureCaps.renderbuffer =
+                mtlFormat.getCaps().colorRenderable || mtlFormat.getCaps().depthRenderable;
+            textureCaps.texturable        = true;
+            textureCaps.textureAttachment = textureCaps.renderbuffer;
+            textureCaps.blendable         = mtlFormat.getCaps().blendable;
         }
 
-        // NOTE(hqle): Support MSAA.
-        textureCaps.sampleCounts.clear();
-        textureCaps.sampleCounts.insert(0);
-        textureCaps.sampleCounts.insert(1);
+        if (formatCaps.multisample)
+        {
+            constexpr uint32_t sampleCounts[] = {2, 4, 8};
+            for (auto sampleCount : sampleCounts)
+            {
+                if ([display->getMetalDevice() supportsTextureSampleCount:sampleCount])
+                {
+                    textureCaps.sampleCounts.insert(sampleCount);
+                    *maxSamplesOut = std::max(*maxSamplesOut, sampleCount);
+                }
+            }
+        }
 
         textureCapsMap.set(mtlFormat.intendedFormatId, textureCaps);
 
@@ -162,11 +100,6 @@ void GenerateTextureCapsMap(const FormatTable &formatTable,
         {
             compressedFormats.push_back(intendedAngleFormat.glInternalFormat);
         }
-
-        // Verify implementation mismatch
-        ASSERT(!textureCaps.renderbuffer || mtl::Format::FormatRenderable(mtlFormat.metalFormat));
-        ASSERT(!textureCaps.textureAttachment ||
-               mtl::Format::FormatRenderable(mtlFormat.metalFormat));
     };
 
     // Texture caps map.
@@ -194,77 +127,73 @@ const angle::Format &FormatBase::intendedAngleFormat() const
 }
 
 // Format implementation
-/** static */
-bool Format::FormatRenderable(MTLPixelFormat format)
-{
-    switch (format)
-    {
-        case MTLPixelFormatR8Unorm:
-        case MTLPixelFormatRG8Unorm:
-        case MTLPixelFormatR16Float:
-        case MTLPixelFormatRG16Float:
-        case MTLPixelFormatRGBA16Float:
-        case MTLPixelFormatR32Float:
-        case MTLPixelFormatRG32Float:
-        case MTLPixelFormatRGBA32Float:
-        case MTLPixelFormatBGRA8Unorm:
-        case MTLPixelFormatBGRA8Unorm_sRGB:
-        case MTLPixelFormatRGBA8Unorm:
-        case MTLPixelFormatRGBA8Unorm_sRGB:
-        case MTLPixelFormatDepth32Float:
-        case MTLPixelFormatStencil8:
-        case MTLPixelFormatDepth32Float_Stencil8:
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case MTLPixelFormatDepth16Unorm:
-        case MTLPixelFormatDepth24Unorm_Stencil8:
-#else
-        case MTLPixelFormatR8Unorm_sRGB:
-        case MTLPixelFormatRG8Unorm_sRGB:
-        case MTLPixelFormatB5G6R5Unorm:
-        case MTLPixelFormatA1BGR5Unorm:
-        case MTLPixelFormatABGR4Unorm:
-        case MTLPixelFormatBGR5A1Unorm:
-#endif
-            // NOTE(hqle): we may add more formats support here in future.
-            return true;
-        default:
-            return false;
-    }
-    return false;
-}
-
-/** static */
-bool Format::FormatCPUReadable(MTLPixelFormat format)
-{
-    switch (format)
-    {
-        case MTLPixelFormatDepth32Float:
-        case MTLPixelFormatStencil8:
-        case MTLPixelFormatDepth32Float_Stencil8:
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case MTLPixelFormatDepth16Unorm:
-        case MTLPixelFormatDepth24Unorm_Stencil8:
-#endif
-            // NOTE(hqle): we may add more formats support here in future.
-            return false;
-        default:
-            return true;
-    }
-}
-
 const gl::InternalFormat &Format::intendedInternalFormat() const
 {
     return gl::GetSizedInternalFormatInfo(intendedAngleFormat().glInternalFormat);
 }
 
+const gl::InternalFormat &Format::actualInternalFormat() const
+{
+    return gl::GetSizedInternalFormatInfo(actualAngleFormat().glInternalFormat);
+}
+
+bool Format::needConversion(angle::FormatID srcFormatId) const
+{
+    if ((srcFormatId == angle::FormatID::BC1_RGB_UNORM_BLOCK &&
+         actualFormatId == angle::FormatID::BC1_RGBA_UNORM_BLOCK) ||
+        (srcFormatId == angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK &&
+         actualFormatId == angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK))
+    {
+        // When texture swizzling is available, DXT1 RGB format will be swizzled with RGB1.
+        // WebGL allows unswizzled mapping when swizzling is not available. No need to convert.
+        return false;
+    }
+    return srcFormatId != actualFormatId;
+}
+
+bool Format::isPVRTC() const
+{
+    switch (metalFormat)
+    {
+#if (TARGET_OS_IOS && !TARGET_OS_MACCATALYST) || \
+    (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))
+        case MTLPixelFormatPVRTC_RGB_2BPP:
+        case MTLPixelFormatPVRTC_RGB_2BPP_sRGB:
+        case MTLPixelFormatPVRTC_RGB_4BPP:
+        case MTLPixelFormatPVRTC_RGB_4BPP_sRGB:
+        case MTLPixelFormatPVRTC_RGBA_2BPP:
+        case MTLPixelFormatPVRTC_RGBA_2BPP_sRGB:
+        case MTLPixelFormatPVRTC_RGBA_4BPP:
+        case MTLPixelFormatPVRTC_RGBA_4BPP_sRGB:
+            return true;
+#endif
+        default:
+            return false;
+    }
+}
+
 // FormatTable implementation
 angle::Result FormatTable::initialize(const DisplayMtl *display)
 {
+    mMaxSamples = 0;
+
+    // Initialize native format caps
+    initNativeFormatCaps(display);
+
     for (size_t i = 0; i < angle::kNumANGLEFormats; ++i)
     {
         const auto formatId = static_cast<angle::FormatID>(i);
 
         mPixelFormatTable[i].init(display, formatId);
+        mPixelFormatTable[i].caps = &mNativePixelFormatCapsTable[mPixelFormatTable[i].metalFormat];
+
+        if (mPixelFormatTable[i].actualFormatId != mPixelFormatTable[i].intendedFormatId)
+        {
+            mPixelFormatTable[i].textureLoadFunctions = angle::GetLoadFunctionsMap(
+                mPixelFormatTable[i].intendedAngleFormat().glInternalFormat,
+                mPixelFormatTable[i].actualFormatId);
+        }
+
         mVertexFormatTables[0][i].init(formatId, false);
         mVertexFormatTables[1][i].init(formatId, true);
     }
@@ -274,20 +203,220 @@ angle::Result FormatTable::initialize(const DisplayMtl *display)
 
 void FormatTable::generateTextureCaps(const DisplayMtl *display,
                                       gl::TextureCapsMap *capsMapOut,
-                                      std::vector<GLenum> *compressedFormatsOut) const
+                                      std::vector<GLenum> *compressedFormatsOut)
 {
-    GenerateTextureCapsMap(*this, display, capsMapOut, compressedFormatsOut);
+    GenerateTextureCapsMap(*this, display, capsMapOut, compressedFormatsOut, &mMaxSamples);
 }
 
 const Format &FormatTable::getPixelFormat(angle::FormatID angleFormatId) const
 {
     return mPixelFormatTable[static_cast<size_t>(angleFormatId)];
 }
+const FormatCaps &FormatTable::getNativeFormatCaps(MTLPixelFormat mtlFormat) const
+{
+    ASSERT(mNativePixelFormatCapsTable.count(mtlFormat));
+    return mNativePixelFormatCapsTable.at(mtlFormat);
+}
 const VertexFormat &FormatTable::getVertexFormat(angle::FormatID angleFormatId,
                                                  bool tightlyPacked) const
 {
     auto tableIdx = tightlyPacked ? 1 : 0;
     return mVertexFormatTables[tableIdx][static_cast<size_t>(angleFormatId)];
+}
+
+void FormatTable::setFormatCaps(MTLPixelFormat formatId,
+                                bool filterable,
+                                bool writable,
+                                bool blendable,
+                                bool multisample,
+                                bool resolve,
+                                bool colorRenderable)
+{
+    setFormatCaps(formatId, filterable, writable, blendable, multisample, resolve, colorRenderable,
+                  false, 0);
+}
+void FormatTable::setFormatCaps(MTLPixelFormat formatId,
+                                bool filterable,
+                                bool writable,
+                                bool blendable,
+                                bool multisample,
+                                bool resolve,
+                                bool colorRenderable,
+                                NSUInteger pixelBytes,
+                                NSUInteger channels)
+{
+    setFormatCaps(formatId, filterable, writable, blendable, multisample, resolve, colorRenderable,
+                  false, pixelBytes, channels);
+}
+
+void FormatTable::setFormatCaps(MTLPixelFormat formatId,
+                                bool filterable,
+                                bool writable,
+                                bool blendable,
+                                bool multisample,
+                                bool resolve,
+                                bool colorRenderable,
+                                bool depthRenderable)
+{
+    setFormatCaps(formatId, filterable, writable, blendable, multisample, resolve, colorRenderable,
+                  depthRenderable, 0, 0);
+}
+void FormatTable::setFormatCaps(MTLPixelFormat id,
+                                bool filterable,
+                                bool writable,
+                                bool blendable,
+                                bool multisample,
+                                bool resolve,
+                                bool colorRenderable,
+                                bool depthRenderable,
+                                NSUInteger pixelBytes,
+                                NSUInteger channels)
+{
+    mNativePixelFormatCapsTable[id].filterable      = filterable;
+    mNativePixelFormatCapsTable[id].writable        = writable;
+    mNativePixelFormatCapsTable[id].colorRenderable = colorRenderable;
+    mNativePixelFormatCapsTable[id].depthRenderable = depthRenderable;
+    mNativePixelFormatCapsTable[id].blendable       = blendable;
+    mNativePixelFormatCapsTable[id].multisample     = multisample;
+    mNativePixelFormatCapsTable[id].resolve         = resolve;
+    mNativePixelFormatCapsTable[id].pixelBytes      = pixelBytes;
+    mNativePixelFormatCapsTable[id].pixelBytesMSAA  = pixelBytes;
+    mNativePixelFormatCapsTable[id].channels        = channels;
+    if (channels != 0)
+        mNativePixelFormatCapsTable[id].alignment = MAX(pixelBytes / channels, 1U);
+}
+
+void FormatTable::setCompressedFormatCaps(MTLPixelFormat formatId, bool filterable)
+{
+    setFormatCaps(formatId, filterable, false, false, false, false, false, false);
+}
+
+void FormatTable::adjustFormatCapsForDevice(id<MTLDevice> device,
+                                            MTLPixelFormat id,
+                                            bool supportsiOS2,
+                                            bool supportsiOS4)
+{
+#if !(TARGET_OS_OSX || TARGET_OS_MACCATALYST)
+
+    NSUInteger pixelBytesRender     = mNativePixelFormatCapsTable[id].pixelBytes;
+    NSUInteger pixelBytesRenderMSAA = mNativePixelFormatCapsTable[id].pixelBytesMSAA;
+    NSUInteger alignment            = mNativePixelFormatCapsTable[id].alignment;
+
+// Override the current pixelBytesRender
+#    define SPECIFIC(_pixelFormat, _pixelBytesRender)                                            \
+        case _pixelFormat:                                                                       \
+            pixelBytesRender     = _pixelBytesRender;                                            \
+            pixelBytesRenderMSAA = _pixelBytesRender;                                            \
+            alignment =                                                                          \
+                supportsiOS4 ? _pixelBytesRender / mNativePixelFormatCapsTable[id].channels : 4; \
+            break
+// Override the current pixel bytes render, and MSAA
+#    define SPECIFIC_MSAA(_pixelFormat, _pixelBytesRender, _pixelBytesRenderMSAA)                \
+        case _pixelFormat:                                                                       \
+            pixelBytesRender     = _pixelBytesRender;                                            \
+            pixelBytesRenderMSAA = _pixelBytesRenderMSAA;                                        \
+            alignment =                                                                          \
+                supportsiOS4 ? _pixelBytesRender / mNativePixelFormatCapsTable[id].channels : 4; \
+            break
+// Override the current pixelBytesRender, and alignment
+#    define SPECIFIC_ALIGN(_pixelFormat, _pixelBytesRender, _alignment) \
+        case _pixelFormat:                                              \
+            pixelBytesRender     = _pixelBytesRender;                   \
+            pixelBytesRenderMSAA = _pixelBytesRender;                   \
+            alignment            = _alignment;                          \
+            break
+
+    if (!mNativePixelFormatCapsTable[id].compressed)
+    {
+        // On AppleGPUFamily4+, there is no 4byte minimum requirement for render targets
+        uint32_t minSize     = supportsiOS4 ? 1U : 4U;
+        pixelBytesRender     = MAX(mNativePixelFormatCapsTable[id].pixelBytes, minSize);
+        pixelBytesRenderMSAA = pixelBytesRender;
+        alignment =
+            supportsiOS4 ? MAX(pixelBytesRender / mNativePixelFormatCapsTable[id].channels, 1U) : 4;
+    }
+
+    // This list of tables starts from a general multi-platform table,
+    // to specific platforms (i.e. ios2, ios4) inheriting from the previous tables
+
+    // Start off with the general case
+    switch ((NSUInteger)id)
+    {
+        SPECIFIC(MTLPixelFormatB5G6R5Unorm, 4U);
+        SPECIFIC(MTLPixelFormatA1BGR5Unorm, 4U);
+        SPECIFIC(MTLPixelFormatABGR4Unorm, 4U);
+        SPECIFIC(MTLPixelFormatBGR5A1Unorm, 4U);
+
+        SPECIFIC(MTLPixelFormatRGBA8Unorm, 4U);
+        SPECIFIC(MTLPixelFormatBGRA8Unorm, 4U);
+
+        SPECIFIC_MSAA(MTLPixelFormatRGBA8Unorm_sRGB, 4U, 8U);
+        SPECIFIC_MSAA(MTLPixelFormatBGRA8Unorm_sRGB, 4U, 8U);
+        SPECIFIC_MSAA(MTLPixelFormatRGBA8Snorm, 4U, 8U);
+        SPECIFIC_MSAA(MTLPixelFormatRGB10A2Uint, 4U, 8U);
+
+        SPECIFIC(MTLPixelFormatRGB10A2Unorm, 8U);
+        SPECIFIC(MTLPixelFormatBGR10A2Unorm, 8U);
+
+        SPECIFIC(MTLPixelFormatRG11B10Float, 8U);
+
+        SPECIFIC(MTLPixelFormatRGB9E5Float, 8U);
+
+        SPECIFIC(MTLPixelFormatStencil8, 1U);
+    }
+
+    // Override based ios2
+    if (supportsiOS2)
+    {
+        switch ((NSUInteger)id)
+        {
+            SPECIFIC(MTLPixelFormatB5G6R5Unorm, 8U);
+            SPECIFIC(MTLPixelFormatA1BGR5Unorm, 8U);
+            SPECIFIC(MTLPixelFormatABGR4Unorm, 8U);
+            SPECIFIC(MTLPixelFormatBGR5A1Unorm, 8U);
+            SPECIFIC_MSAA(MTLPixelFormatRGBA8Unorm, 4U, 8U);
+            SPECIFIC_MSAA(MTLPixelFormatBGRA8Unorm, 4U, 8U);
+        }
+    }
+
+    // Override based on ios4
+    if (supportsiOS4)
+    {
+        switch ((NSUInteger)id)
+        {
+            SPECIFIC_ALIGN(MTLPixelFormatB5G6R5Unorm, 6U, 2U);
+            SPECIFIC(MTLPixelFormatRGBA8Unorm, 4U);
+            SPECIFIC(MTLPixelFormatBGRA8Unorm, 4U);
+
+            SPECIFIC(MTLPixelFormatRGBA8Unorm_sRGB, 4U);
+            SPECIFIC(MTLPixelFormatBGRA8Unorm_sRGB, 4U);
+
+            SPECIFIC(MTLPixelFormatRGBA8Snorm, 4U);
+
+            SPECIFIC_ALIGN(MTLPixelFormatRGB10A2Unorm, 4U, 4U);
+            SPECIFIC_ALIGN(MTLPixelFormatBGR10A2Unorm, 4U, 4U);
+            SPECIFIC(MTLPixelFormatRGB10A2Uint, 8U);
+
+            SPECIFIC_ALIGN(MTLPixelFormatRG11B10Float, 4U, 4U);
+
+            SPECIFIC_ALIGN(MTLPixelFormatRGB9E5Float, 4U, 4U);
+        }
+    }
+    mNativePixelFormatCapsTable[id].pixelBytes     = pixelBytesRender;
+    mNativePixelFormatCapsTable[id].pixelBytesMSAA = pixelBytesRenderMSAA;
+    mNativePixelFormatCapsTable[id].alignment      = alignment;
+
+#    undef SPECIFIC
+#    undef SPECIFIC_ALIGN
+#    undef SPECIFIC_MSAA
+#endif
+    // macOS does not need to perform any additoinal adjustment. These values are only used to check
+    // valid MRT sizes on iOS.
+}
+
+void FormatTable::initNativeFormatCaps(const DisplayMtl *display)
+{
+    initNativeFormatCapsAutogen(display);
 }
 
 }  // namespace mtl

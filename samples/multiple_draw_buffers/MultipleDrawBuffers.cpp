@@ -29,7 +29,7 @@ class MultipleDrawBuffersSample : public SampleApplication
         : SampleApplication("MultipleDrawBuffers", argc, argv)
     {}
 
-    virtual bool initialize()
+    bool initialize() override
     {
         // Check EXT_draw_buffers is supported
         char *extensionString = (char *)glGetString(GL_EXTENSIONS);
@@ -56,7 +56,7 @@ class MultipleDrawBuffersSample : public SampleApplication
         fsStream << angle::GetExecutableDirectory() << "/multiple_draw_buffers_fs.glsl";
 
         std::stringstream copyFsStream;
-        fsStream << angle::GetExecutableDirectory() << "/multiple_draw_buffers_copy_fs.glsl";
+        copyFsStream << angle::GetExecutableDirectory() << "/multiple_draw_buffers_copy_fs.glsl";
 
         mMRTProgram = CompileProgramFromFiles(vsStream.str(), fsStream.str());
         if (!mMRTProgram)
@@ -107,7 +107,7 @@ class MultipleDrawBuffersSample : public SampleApplication
         return true;
     }
 
-    virtual void destroy()
+    void destroy() override
     {
         glDeleteProgram(mCopyProgram);
         glDeleteProgram(mMRTProgram);
@@ -116,7 +116,7 @@ class MultipleDrawBuffersSample : public SampleApplication
         glDeleteFramebuffers(1, &mFramebuffer);
     }
 
-    virtual void draw()
+    void draw() override
     {
         GLfloat vertices[] = {
             -0.8f, 0.8f,  0.0f,  // Position 0

@@ -78,34 +78,14 @@ void main()
     GLint mAttribLocation;
 };
 
-// Disabled in debug because it's way too slow.
-#if !defined(NDEBUG)
-#    define MAYBE_NULLData DISABLED_NULLData
-#else
-#    define MAYBE_NULLData NULLData
-#endif  // !defined(NDEBUG)
-
-TEST_P(BufferDataTest, MAYBE_NULLData)
+// If glBufferData was not called yet the capturing must not try to
+// read the data. http://anglebug.com/6093
+TEST_P(BufferDataTest, Uninitialized)
 {
+    // Trigger frame capture to try capturing the
+    // generated but uninitialized buffer
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-    EXPECT_GL_NO_ERROR();
-
-    const int numIterations = 128;
-    for (int i = 0; i < numIterations; ++i)
-    {
-        GLsizei bufferSize = sizeof(GLfloat) * (i + 1);
-        glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_STATIC_DRAW);
-        EXPECT_GL_NO_ERROR();
-
-        for (int j = 0; j < bufferSize; j++)
-        {
-            for (int k = 0; k < bufferSize - j; k++)
-            {
-                glBufferSubData(GL_ARRAY_BUFFER, k, j, nullptr);
-                ASSERT_GL_NO_ERROR();
-            }
-        }
-    }
+    swapBuffers();
 }
 
 TEST_P(BufferDataTest, ZeroNonNULLData)
@@ -411,6 +391,166 @@ TEST_P(BufferDataTestES3, BufferResizing)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test to verify mapping a buffer after copying to it contains flushed/updated data
+TEST_P(BufferDataTestES3, CopyBufferSubDataMapReadTest)
+{
+    const char simpleVertex[]   = R"(attribute vec2 position;
+attribute vec4 color;
+varying vec4 vColor;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    vColor = color;
+}
+)";
+    const char simpleFragment[] = R"(precision mediump float;
+varying vec4 vColor;
+void main()
+{
+    gl_FragColor = vColor;
+}
+)";
+
+    const uint32_t numComponents = 3;
+    const uint32_t width         = 4;
+    const uint32_t height        = 4;
+    const size_t numElements     = width * height * numComponents;
+    std::vector<uint8_t> srcData(numElements);
+    std::vector<uint8_t> dstData(numElements);
+
+    for (uint8_t i = 0; i < srcData.size(); i++)
+    {
+        srcData[i] = 128;
+    }
+    for (uint8_t i = 0; i < dstData.size(); i++)
+    {
+        dstData[i] = 0;
+    }
+
+    GLBuffer srcBuffer;
+    GLBuffer dstBuffer;
+
+    glBindBuffer(GL_ARRAY_BUFFER, srcBuffer);
+    glBufferData(GL_ARRAY_BUFFER, srcData.size(), srcData.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, dstBuffer);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, dstData.size(), dstData.data(), GL_STATIC_READ);
+    ASSERT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, simpleVertex, simpleFragment);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetAttribLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    glBindBuffer(GL_ARRAY_BUFFER, srcBuffer);
+    glVertexAttribPointer(colorLoc, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    glCopyBufferSubData(GL_ARRAY_BUFFER, GL_PIXEL_UNPACK_BUFFER, 0, 0, numElements);
+
+    // With GL_MAP_READ_BIT, we expect the data to be flushed and updated to match srcData
+    uint8_t *data = reinterpret_cast<uint8_t *>(
+        glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, numElements, GL_MAP_READ_BIT));
+    EXPECT_GL_NO_ERROR();
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        EXPECT_EQ(srcData[i], data[i]);
+    }
+    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test to verify mapping a buffer after copying to it contains expected data
+// with GL_MAP_UNSYNCHRONIZED_BIT
+TEST_P(BufferDataTestES3, MapBufferUnsynchronizedReadTest)
+{
+    const char simpleVertex[]   = R"(attribute vec2 position;
+attribute vec4 color;
+varying vec4 vColor;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    vColor = color;
+}
+)";
+    const char simpleFragment[] = R"(precision mediump float;
+varying vec4 vColor;
+void main()
+{
+    gl_FragColor = vColor;
+}
+)";
+
+    const uint32_t numComponents = 3;
+    const uint32_t width         = 4;
+    const uint32_t height        = 4;
+    const size_t numElements     = width * height * numComponents;
+    std::vector<uint8_t> srcData(numElements);
+    std::vector<uint8_t> dstData(numElements);
+
+    for (uint8_t i = 0; i < srcData.size(); i++)
+    {
+        srcData[i] = 128;
+    }
+    for (uint8_t i = 0; i < dstData.size(); i++)
+    {
+        dstData[i] = 0;
+    }
+
+    GLBuffer srcBuffer;
+    GLBuffer dstBuffer;
+
+    glBindBuffer(GL_ARRAY_BUFFER, srcBuffer);
+    glBufferData(GL_ARRAY_BUFFER, srcData.size(), srcData.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, dstBuffer);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, dstData.size(), dstData.data(), GL_STATIC_READ);
+    ASSERT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, simpleVertex, simpleFragment);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetAttribLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    glBindBuffer(GL_ARRAY_BUFFER, srcBuffer);
+    glVertexAttribPointer(colorLoc, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    glCopyBufferSubData(GL_ARRAY_BUFFER, GL_PIXEL_UNPACK_BUFFER, 0, 0, numElements);
+
+    // Synchronize.
+    glFinish();
+
+    // Map with GL_MAP_UNSYNCHRONIZED_BIT and overwrite buffers data with srcData
+    uint8_t *data = reinterpret_cast<uint8_t *>(glMapBufferRange(
+        GL_PIXEL_UNPACK_BUFFER, 0, numElements, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+    EXPECT_GL_NO_ERROR();
+    memcpy(data, srcData.data(), srcData.size());
+    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    EXPECT_GL_NO_ERROR();
+
+    // Map without GL_MAP_UNSYNCHRONIZED_BIT and read data. We expect it to be srcData
+    data = reinterpret_cast<uint8_t *>(
+        glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, numElements, GL_MAP_READ_BIT));
+    EXPECT_GL_NO_ERROR();
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        EXPECT_EQ(srcData[i], data[i]);
+    }
+    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Verify the functionality of glMapBufferRange()'s GL_MAP_UNSYNCHRONIZED_BIT
 // NOTE: On Vulkan, if we ever use memory that's not `VK_MEMORY_PROPERTY_HOST_COHERENT_BIT`, then
 // this could incorrectly pass.
@@ -456,7 +596,11 @@ TEST_P(BufferDataTestES3, MapBufferRangeUnsynchronizedBit)
     EXPECT_GL_NO_ERROR();
     for (size_t i = 0; i < numElements; ++i)
     {
-        EXPECT_EQ(dstData[i], data[i]);
+        // Allow for the possibility that data matches either "dstData" or "srcData"
+        if (dstData[i] != data[i])
+        {
+            EXPECT_EQ(srcData[i], data[i]);
+        }
     }
     glUnmapBuffer(GL_COPY_WRITE_BUFFER);
     EXPECT_GL_NO_ERROR();
@@ -521,6 +665,105 @@ TEST_P(BufferDataTest, MapBufferOES)
     EXPECT_EQ(data, actualData);
 }
 
+// Test to verify mapping a dynamic buffer with GL_MAP_UNSYNCHRONIZED_BIT to modify a portion
+// won't affect draw calls using other portions.
+TEST_P(BufferDataTest, MapDynamicBufferUnsynchronizedEXTTest)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+
+    const char simpleVertex[]   = R"(attribute vec2 position;
+attribute vec4 color;
+varying vec4 vColor;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    vColor = color;
+}
+)";
+    const char simpleFragment[] = R"(precision mediump float;
+varying vec4 vColor;
+void main()
+{
+    gl_FragColor = vColor;
+}
+)";
+
+    constexpr int kNumVertices = 6;
+
+    std::vector<GLubyte> color(8 * kNumVertices);
+    for (int i = 0; i < kNumVertices; ++i)
+    {
+        color[4 * i]     = 255;
+        color[4 * i + 3] = 255;
+    }
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
+    glBufferData(GL_ARRAY_BUFFER, color.size(), color.data(), GL_DYNAMIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, simpleVertex, simpleFragment);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetAttribLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+
+    glViewport(0, 0, 2, 2);
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    // Map with GL_MAP_UNSYNCHRONIZED_BIT and overwrite buffers data at offset 24
+    uint8_t *data = reinterpret_cast<uint8_t *>(
+        glMapBufferRangeEXT(GL_ARRAY_BUFFER, 4 * kNumVertices, 4 * kNumVertices,
+                            GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+    EXPECT_GL_NO_ERROR();
+    for (int i = 0; i < kNumVertices; ++i)
+    {
+        data[4 * i]     = 0;
+        data[4 * i + 1] = 255;
+        data[4 * i + 2] = 0;
+        data[4 * i + 3] = 255;
+    }
+    glUnmapBufferOES(GL_ARRAY_BUFFER);
+    EXPECT_GL_NO_ERROR();
+
+    // Re-draw using offset = 0 but to different viewport
+    glViewport(0, 2, 2, 2);
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    // Change vertex attribute to use buffer starting from offset 24
+    glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0,
+                          reinterpret_cast<void *>(4 * kNumVertices));
+
+    glViewport(2, 2, 2, 2);
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(1, 3, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3, 3, GLColor::green);
+}
+
+// Tests a null crash bug caused by copying from null back-end buffer pointer
+// when calling bufferData again after drawing without calling bufferData in D3D11.
+TEST_P(BufferDataTestES3, DrawWithNotCallingBufferData)
+{
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    glUseProgram(drawRed);
+
+    GLint mem = 0;
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindBuffer(GL_COPY_WRITE_BUFFER, buffer);
+    glBufferData(GL_COPY_WRITE_BUFFER, 1, &mem, GL_STREAM_DRAW);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests a bug where copying buffer data immediately after creation hit a nullptr in D3D11.
 TEST_P(BufferDataTestES3, NoBufferInitDataCopyBug)
 {
@@ -538,10 +781,361 @@ TEST_P(BufferDataTestES3, NoBufferInitDataCopyBug)
     ASSERT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
+// Ensures that calling glBufferData on a mapped buffer results in an unmapped buffer
+TEST_P(BufferDataTestES3, BufferDataUnmap)
+{
+    // Per the OpenGL ES 3.0 spec, buffers are implicity unmapped when a call to
+    // BufferData happens on a mapped buffer:
+    //
+    //    If any portion of the buffer object is mapped in the current context or
+    //    any context current to another thread, it is as though UnmapBuffer
+    //    (see section 2.10.3) is executed in each such context prior to deleting
+    //    the existing data store.
+    //
+
+    std::vector<uint8_t> data1(16);
+    std::vector<uint8_t> data2(16);
+
+    GLBuffer dataBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, dataBuffer);
+    glBufferData(GL_ARRAY_BUFFER, data1.size(), data1.data(), GL_STATIC_DRAW);
+
+    // Map the buffer once
+    glMapBufferRange(GL_ARRAY_BUFFER, 0, data1.size(),
+                     GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_FLUSH_EXPLICIT_BIT |
+                         GL_MAP_UNSYNCHRONIZED_BIT);
+
+    // Then repopulate the buffer. This should cause the buffer to become unmapped.
+    glBufferData(GL_ARRAY_BUFFER, data2.size(), data2.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    // Try to unmap the buffer, this should fail
+    bool result = glUnmapBuffer(GL_ARRAY_BUFFER);
+    ASSERT_EQ(result, false);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Try to map the buffer again, which should succeed
+    glMapBufferRange(GL_ARRAY_BUFFER, 0, data2.size(),
+                     GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_FLUSH_EXPLICIT_BIT |
+                         GL_MAP_UNSYNCHRONIZED_BIT);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Ensures that mapping buffer with GL_MAP_INVALIDATE_BUFFER_BIT followed by glBufferSubData calls
+// works.  Regression test for the Vulkan backend where that flag caused use after free.
+TEST_P(BufferDataTestES3, MapInvalidateThenBufferSubData)
+{
+    // http://anglebug.com/5984
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsOpenGL() && IsIntel());
+
+    // http://anglebug.com/5985
+    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
+
+    const std::array<GLColor, 4> kInitialData = {GLColor::red, GLColor::red, GLColor::red,
+                                                 GLColor::red};
+    const std::array<GLColor, 4> kUpdateData1 = {GLColor::white, GLColor::white, GLColor::white,
+                                                 GLColor::white};
+    const std::array<GLColor, 4> kUpdateData2 = {GLColor::blue, GLColor::blue, GLColor::blue,
+                                                 GLColor::blue};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kInitialData), kInitialData.data(), GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw
+    constexpr char kVerifyUBO[] = R"(#version 300 es
+precision mediump float;
+uniform block {
+    uvec4 data;
+} ubo;
+uniform uint expect;
+uniform vec4 successOutput;
+out vec4 colorOut;
+void main()
+{
+    if (all(equal(ubo.data, uvec4(expect))))
+        colorOut = successOutput;
+    else
+        colorOut = vec4(1.0, 0, 0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(verifyUbo, essl3_shaders::vs::Simple(), kVerifyUBO);
+    glUseProgram(verifyUbo);
+
+    GLint expectLoc = glGetUniformLocation(verifyUbo, "expect");
+    EXPECT_NE(-1, expectLoc);
+    GLint successLoc = glGetUniformLocation(verifyUbo, "successOutput");
+    EXPECT_NE(-1, successLoc);
+
+    glUniform1ui(expectLoc, kInitialData[0].asUint());
+    glUniform4f(successLoc, 0, 1, 0, 1);
+
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    // Dont't verify the buffer.  This is testing GL_MAP_INVALIDATE_BUFFER_BIT while the buffer is
+    // in use by the GPU.
+
+    // Map the buffer and update it.
+    void *mappedBuffer = glMapBufferRange(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData),
+                                          GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+
+    memcpy(mappedBuffer, kUpdateData1.data(), sizeof(kInitialData));
+
+    glUnmapBuffer(GL_UNIFORM_BUFFER);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the buffer has the updated value.
+    glUniform1ui(expectLoc, kUpdateData1[0].asUint());
+    glUniform4f(successLoc, 0, 0, 1, 1);
+
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Update the buffer with glBufferSubData
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(kUpdateData2), kUpdateData2.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the buffer has the updated value.
+    glUniform1ui(expectLoc, kUpdateData2[0].asUint());
+    glUniform4f(successLoc, 0, 1, 1, 1);
+
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
+class BufferStorageTestES3 : public BufferDataTest
+{};
+
+// Tests that proper error value is returned when bad size is passed in
+TEST_P(BufferStorageTestES3, BufferStorageInvalidSize)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_buffer_storage"));
+
+    std::vector<GLfloat> data(6, 1.0f);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferStorageEXT(GL_ARRAY_BUFFER, 0, data.data(), 0);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Tests that buffer storage can be allocated with the GL_MAP_PERSISTENT_BIT_EXT and
+// GL_MAP_COHERENT_BIT_EXT flags
+TEST_P(BufferStorageTestES3, BufferStorageFlagsPersistentCoherentWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_buffer_storage"));
+
+    std::vector<GLfloat> data(6, 1.0f);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferStorageEXT(GL_ARRAY_BUFFER, data.size(), data.data(),
+                       GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Verify that glBufferStorage makes a buffer immutable
+TEST_P(BufferStorageTestES3, StorageBufferBufferData)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage"));
+
+    std::vector<GLfloat> data(6, 1.0f);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferStorageEXT(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), data.data(), 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that calling glBufferStorageEXT again produces an error.
+    glBufferStorageEXT(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), data.data(), 0);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Verify that calling glBufferData after calling glBufferStorageEXT produces an error.
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), data.data(), GL_STATIC_DRAW);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Verify that glBufferStorageEXT can be called after glBufferData
+TEST_P(BufferStorageTestES3, BufferDataStorageBuffer)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage"));
+
+    std::vector<GLfloat> data(6, 1.0f);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), data.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that calling glBufferStorageEXT again produces an error.
+    glBufferStorageEXT(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), data.data(), 0);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Verify that we can perform subdata updates to a buffer marked with GL_DYNAMIC_STORAGE_BIT_EXT
+// usage flag
+TEST_P(BufferStorageTestES3, StorageBufferSubData)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage"));
+
+    std::vector<GLfloat> data(6, 0.0f);
+
+    glUseProgram(mProgram);
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    glBufferStorageEXT(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), nullptr,
+                       GL_DYNAMIC_STORAGE_BIT_EXT);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * data.size(), data.data());
+    glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(mAttribLocation);
+
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(8, 8, GLColor::black);
+    EXPECT_GL_NO_ERROR();
+
+    std::vector<GLfloat> data2(6, 1.0f);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * data2.size(), data2.data());
+
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(8, 8, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test interaction between GL_OES_mapbuffer and GL_EXT_buffer_storage extensions.
+TEST_P(BufferStorageTestES3, StorageBufferMapBufferOES)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage") ||
+                       !IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+
+    std::vector<uint8_t> data(1024);
+    FillVectorWithRandomUBytes(&data);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
+    glBufferStorageEXT(GL_ARRAY_BUFFER, data.size(), nullptr, GL_MAP_READ_BIT | GL_MAP_WRITE_BIT);
+
+    // Validate that other map flags don't work.
+    void *badMapPtr = glMapBufferOES(GL_ARRAY_BUFFER, GL_MAP_READ_BIT);
+    EXPECT_EQ(nullptr, badMapPtr);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    // Map and write.
+    void *mapPtr = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    ASSERT_NE(nullptr, mapPtr);
+    ASSERT_GL_NO_ERROR();
+    memcpy(mapPtr, data.data(), data.size());
+    glUnmapBufferOES(GL_ARRAY_BUFFER);
+
+    // Validate data with EXT_map_buffer_range
+    void *readMapPtr = glMapBufferRangeEXT(GL_ARRAY_BUFFER, 0, data.size(), GL_MAP_READ_BIT_EXT);
+    ASSERT_NE(nullptr, readMapPtr);
+    ASSERT_GL_NO_ERROR();
+    std::vector<uint8_t> actualData(data.size());
+    memcpy(actualData.data(), readMapPtr, data.size());
+    glUnmapBufferOES(GL_ARRAY_BUFFER);
+
+    EXPECT_EQ(data, actualData);
+}
+
+// Verify persistently mapped buffers can use glCopyBufferSubData
+// Tests a pattern used by Fortnite's GLES backend
+TEST_P(BufferStorageTestES3, StorageCopyBufferSubDataMapped)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage") ||
+                       !IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+
+    const std::array<GLColor, 4> kInitialData = {GLColor::red, GLColor::green, GLColor::blue,
+                                                 GLColor::yellow};
+
+    // Set up the read buffer
+    GLBuffer readBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, readBuffer.get());
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kInitialData), kInitialData.data(), GL_DYNAMIC_DRAW);
+
+    // Set up the write buffer to be persistently mapped
+    GLBuffer writeBuffer;
+    glBindBuffer(GL_COPY_WRITE_BUFFER, writeBuffer.get());
+    glBufferStorageEXT(GL_COPY_WRITE_BUFFER, 16, nullptr,
+                       GL_MAP_READ_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+    void *readMapPtr =
+        glMapBufferRange(GL_COPY_WRITE_BUFFER, 0, 16,
+                         GL_MAP_READ_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+    ASSERT_NE(nullptr, readMapPtr);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify we can copy into the write buffer
+    glBindBuffer(GL_COPY_READ_BUFFER, readBuffer.get());
+    glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, 16);
+    ASSERT_GL_NO_ERROR();
+
+    // Flush the buffer.
+    glFinish();
+
+    // Check the contents
+    std::array<GLColor, 4> resultingData;
+    memcpy(resultingData.data(), readMapPtr, resultingData.size() * sizeof(GLColor));
+    glUnmapBuffer(GL_COPY_WRITE_BUFFER);
+    EXPECT_EQ(kInitialData, resultingData);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Verify persistently mapped buffers can use glBufferSubData
+TEST_P(BufferStorageTestES3, StorageBufferSubDataMapped)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage") ||
+                       !IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+
+    const std::array<GLColor, 4> kUpdateData1 = {GLColor::red, GLColor::green, GLColor::blue,
+                                                 GLColor::yellow};
+
+    // Set up the buffer to be persistently mapped and dynamic
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
+    glBufferStorageEXT(GL_ARRAY_BUFFER, 16, nullptr,
+                       GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT |
+                           GL_MAP_COHERENT_BIT_EXT | GL_DYNAMIC_STORAGE_BIT_EXT);
+    void *readMapPtr = glMapBufferRange(
+        GL_ARRAY_BUFFER, 0, 16,
+        GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+    ASSERT_NE(nullptr, readMapPtr);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify we can push new data into the buffer
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLColor) * kUpdateData1.size(), kUpdateData1.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Flush the buffer.
+    glFinish();
+
+    // Check the contents
+    std::array<GLColor, 4> persistentData1;
+    memcpy(persistentData1.data(), readMapPtr, persistentData1.size() * sizeof(GLColor));
+    EXPECT_EQ(kUpdateData1, persistentData1);
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2(BufferDataTest);
-ANGLE_INSTANTIATE_TEST_ES3(BufferDataTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BufferDataTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(BufferDataTestES3, WithDirectSPIRVGeneration(ES3_VULKAN()));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BufferStorageTestES3);
+ANGLE_INSTANTIATE_TEST_ES3(BufferStorageTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(IndexedBufferCopyTest);
 ANGLE_INSTANTIATE_TEST_ES3(IndexedBufferCopyTest);
 
 #ifdef _WIN64
@@ -559,11 +1153,6 @@ class BufferDataOverflowTest : public ANGLETest
 // See description above.
 TEST_P(BufferDataOverflowTest, VertexBufferIntegerOverflow)
 {
-    // http://anglebug.com/3786: flaky timeout on Win10 FYI x64 Release (NVIDIA GeForce GTX 1660)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsD3D11());
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsWindows() && (IsVulkan() || IsOpenGL()));
-
     // These values are special, to trigger the rounding bug.
     unsigned int numItems       = 0x7FFFFFE;
     constexpr GLsizei bufferCnt = 8;

@@ -14,12 +14,13 @@
 #include <algorithm>
 #include <array>
 
+#include "RenderDoc.h"
 #include "angle_test_configs.h"
 #include "angle_test_platform.h"
 #include "common/angleutils.h"
 #include "common/system_utils.h"
 #include "common/vector_utils.h"
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 #include "util/EGLWindow.h"
 #include "util/shader_utils.h"
 #include "util/util_gl.h"
@@ -27,6 +28,7 @@
 namespace angle
 {
 struct SystemInfo;
+class RNG;
 }  // namespace angle
 
 #define ASSERT_GL_TRUE(a) ASSERT_EQ(static_cast<GLboolean>(GL_TRUE), (a))
@@ -93,6 +95,30 @@ struct GLColorRGB
     static const GLColorRGB yellow;
 };
 
+struct GLColorRG
+{
+    constexpr GLColorRG() : R(0), G(0) {}
+    constexpr GLColorRG(GLubyte r, GLubyte g) : R(r), G(g) {}
+    GLColorRG(const angle::Vector2 &floatColor);
+
+    const GLubyte *data() const { return &R; }
+    GLubyte *data() { return &R; }
+
+    GLubyte R, G;
+};
+
+struct GLColorR
+{
+    constexpr GLColorR() : R(0) {}
+    constexpr GLColorR(GLubyte r) : R(r) {}
+    GLColorR(const float floatColor);
+
+    const GLubyte *data() const { return &R; }
+    GLubyte *data() { return &R; }
+
+    GLubyte R;
+};
+
 struct GLColor
 {
     constexpr GLColor() : R(0), G(0), B(0), A(0) {}
@@ -108,6 +134,8 @@ struct GLColor
 
     const GLubyte *data() const { return &R; }
     GLubyte *data() { return &R; }
+
+    GLuint asUint() const;
 
     testing::AssertionResult ExpectNear(const GLColor &expected, const GLColor &err) const;
 
@@ -141,6 +169,7 @@ struct GLColor32F
     GLfloat R, G, B, A;
 };
 
+static constexpr GLColor32F kFloatBlack = {0.0f, 0.0f, 0.0f, 1.0f};
 static constexpr GLColor32F kFloatRed   = {1.0f, 0.0f, 0.0f, 1.0f};
 static constexpr GLColor32F kFloatGreen = {0.0f, 1.0f, 0.0f, 1.0f};
 static constexpr GLColor32F kFloatBlue  = {0.0f, 0.0f, 1.0f, 1.0f};
@@ -161,10 +190,16 @@ GLColor MakeGLColor(TR r, TG g, TB b, TA a)
                    static_cast<GLubyte>(a));
 }
 
+GLColor RandomColor(angle::RNG *rng);
+
 bool operator==(const GLColor &a, const GLColor &b);
 bool operator!=(const GLColor &a, const GLColor &b);
 std::ostream &operator<<(std::ostream &ostream, const GLColor &color);
 GLColor ReadColor(GLint x, GLint y);
+
+bool operator==(const GLColorRGB &a, const GLColorRGB &b);
+bool operator!=(const GLColorRGB &a, const GLColorRGB &b);
+std::ostream &operator<<(std::ostream &ostream, const GLColorRGB &color);
 
 // Useful to cast any type to GLfloat.
 template <typename TR, typename TG, typename TB, typename TA>
@@ -182,6 +217,8 @@ constexpr std::array<GLenum, 6> kCubeFaces = {
     {GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
      GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
      GL_TEXTURE_CUBE_MAP_NEGATIVE_Z}};
+
+void LoadEntryPointsWithUtilLoader(angle::GLESDriverType driver);
 
 }  // namespace angle
 
@@ -208,9 +245,9 @@ constexpr std::array<GLenum, 6> kCubeFaces = {
 #define EXPECT_PIXEL_RECT_EQ(x, y, width, height, color)                                           \
     do                                                                                             \
     {                                                                                              \
-        std::vector<GLColor> actualColors(width *height);                                          \
+        std::vector<GLColor> actualColors((width) * (height));                                     \
         glReadPixels((x), (y), (width), (height), GL_RGBA, GL_UNSIGNED_BYTE, actualColors.data()); \
-        std::vector<GLColor> expectedColors(width *height, color);                                 \
+        std::vector<GLColor> expectedColors((width) * (height), color);                            \
         EXPECT_EQ(expectedColors, actualColors);                                                   \
     } while (0)
 
@@ -238,17 +275,6 @@ constexpr std::array<GLenum, 6> kCubeFaces = {
         EXPECT_EQ((a), pixel[3]);                                     \
     } while (0)
 
-#define EXPECT_PIXEL_RGB_EQ_HELPER(x, y, r, g, b, ctype, format, type) \
-    do                                                                 \
-    {                                                                  \
-        ctype pixel[4];                                                \
-        glReadPixels((x), (y), 1, 1, format, type, pixel);             \
-        EXPECT_GL_NO_ERROR();                                          \
-        EXPECT_EQ((r), pixel[0]);                                      \
-        EXPECT_EQ((g), pixel[1]);                                      \
-        EXPECT_EQ((b), pixel[2]);                                      \
-    } while (0)
-
 #define EXPECT_PIXEL_NEAR(x, y, r, g, b, a, abs_error) \
     EXPECT_PIXEL_NEAR_HELPER(x, y, r, g, b, a, abs_error, GLubyte, GL_RGBA, GL_UNSIGNED_BYTE)
 
@@ -266,9 +292,6 @@ constexpr std::array<GLenum, 6> kCubeFaces = {
 
 #define EXPECT_PIXEL_16UI_COLOR(x, y, color) \
     EXPECT_PIXEL_16UI(x, y, color.R, color.G, color.B, color.A)
-
-#define EXPECT_PIXEL_RGB_EQUAL(x, y, r, g, b) \
-    EXPECT_PIXEL_RGB_EQ_HELPER(x, y, r, g, b, GLubyte, GL_RGBA, GL_UNSIGNED_BYTE)
 
 // TODO(jmadill): Figure out how we can use GLColor's nice printing with EXPECT_NEAR.
 #define EXPECT_PIXEL_COLOR_NEAR(x, y, angleColor, abs_error) \
@@ -300,6 +323,15 @@ constexpr std::array<GLenum, 6> kCubeFaces = {
 #define EXPECT_PIXEL_COLOR32F_NEAR(x, y, angleColor, abs_error) \
     EXPECT_PIXEL32F_NEAR(x, y, angleColor.R, angleColor.G, angleColor.B, angleColor.A, abs_error)
 
+#define EXPECT_PIXEL_STENCIL_EQ(x, y, expected)                                    \
+    do                                                                             \
+    {                                                                              \
+        GLubyte actual;                                                            \
+        glReadPixels((x), (y), 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &actual); \
+        EXPECT_GL_NO_ERROR();                                                      \
+        EXPECT_EQ((expected), actual);                                             \
+    } while (0)
+
 class ANGLETestBase;
 class EGLWindow;
 class GLWindowBase;
@@ -320,7 +352,7 @@ class ANGLETestBase
     virtual ~ANGLETestBase();
 
   public:
-    void setWindowVisible(bool isVisible);
+    void setWindowVisible(OSWindow *osWindow, bool isVisible);
 
     virtual void overrideWorkaroundsD3D(angle::FeaturesD3D *featuresD3D) {}
     virtual void overrideFeaturesVk(angle::FeaturesVk *featuresVulkan) {}
@@ -329,12 +361,18 @@ class ANGLETestBase
 
     bool isSwiftshader() const
     {
-        return mCurrentParams->eglParameters.deviceType ==
-               EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
+        // Renderer might be swiftshader even if local swiftshader not used.
+        return mCurrentParams->isSwiftshader() || angle::IsSwiftshaderDevice();
+    }
+
+    bool enableDebugLayers() const
+    {
+        return mCurrentParams->eglParameters.debugLayersEnabled != EGL_FALSE;
     }
 
   protected:
     void ANGLETestSetUp();
+    void ANGLETestPreTearDown();
     void ANGLETestTearDown();
 
     virtual void swapBuffers();
@@ -359,6 +397,16 @@ class ANGLETestBase
                            GLfloat positionAttribXYScale,
                            bool useVertexBuffer,
                            GLuint numInstances);
+    void drawPatches(GLuint program,
+                     const std::string &positionAttribName,
+                     GLfloat positionAttribZ,
+                     GLfloat positionAttribXYScale,
+                     bool useVertexBuffer);
+
+    void drawQuadPPO(GLuint vertProgram,
+                     const std::string &positionAttribName,
+                     const GLfloat positionAttribZ,
+                     const GLfloat positionAttribXYScale);
 
     static std::array<angle::Vector3, 6> GetQuadVertices();
     static std::array<GLushort, 6> GetQuadIndices();
@@ -427,7 +475,7 @@ class ANGLETestBase
     EGLWindow *getEGLWindow() const;
     int getWindowWidth() const;
     int getWindowHeight() const;
-    bool isMultisampleEnabled() const;
+    bool isEmulatedPrerotation() const;
 
     EGLint getPlatformRenderer() const;
 
@@ -474,10 +522,22 @@ class ANGLETestBase
     bool isVulkanSwiftshaderRenderer() const
     {
         return mCurrentParams->getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
-               mCurrentParams->getDeviceType() == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
+               mCurrentParams->isSwiftshader();
+    }
+
+    bool isAsyncCommandQueueFeatureEnabled() const
+    {
+        return mCurrentParams->eglParameters.asyncCommandQueueFeatureVulkan == EGL_TRUE;
     }
 
     bool platformSupportsMultithreading() const;
+
+    bool isAllocateNonZeroMemoryEnabled() const
+    {
+        return mCurrentParams->getAllocateNonZeroMemoryFeature() == EGL_TRUE;
+    }
+
+    bool mIsSetUp = false;
 
   private:
     void checkD3D11SDKLayersMessages();
@@ -488,6 +548,7 @@ class ANGLETestBase
                   GLfloat positionAttribXYScale,
                   bool useVertexBuffer,
                   bool useInstancedDrawCalls,
+                  bool useTessellationPatches,
                   GLuint numInstances);
 
     void initOSWindow();
@@ -524,17 +585,25 @@ class ANGLETestBase
     bool mSetUpCalled;
     bool mTearDownCalled;
 
-    // On most systems we force a new display on every test instance. For these configs we can
-    // share a single OSWindow instance. With display reuse we need a separate OSWindow for each
-    // different config. This OSWindow sharing seemed to lead to driver bugs on some platforms.
+    // Usually, we use an OS Window per "fixture" (a frontend and backend combination).
+    // This allows:
+    // 1. Reusing EGL Display on Windows.
+    //    Other platforms have issues with display reuse even if a window per fixture is used.
+    // 2. Hiding only SwiftShader OS Window on Linux.
+    //    OS Windows for other backends must be visible, to allow driver to communicate with X11.
+    // However, we must use a single OS Window for all backends on Android,
+    // since test Application can have only one window.
     static OSWindow *mOSWindowSingleton;
 
     static std::map<angle::PlatformParameters, TestFixture> gFixtures;
     const angle::PlatformParameters *mCurrentParams;
     TestFixture *mFixture;
 
+    RenderDoc mRenderDoc;
+
     // Workaround for NVIDIA not being able to share a window with OpenGL and Vulkan.
     static Optional<EGLint> mLastRendererType;
+    static Optional<angle::GLESDriverType> mLastLoadedDriver;
 };
 
 template <typename Params = angle::PlatformParameters>
@@ -556,12 +625,19 @@ class ANGLETestWithParam : public ANGLETestBase, public ::testing::TestWithParam
     void SetUp() final
     {
         ANGLETestBase::ANGLETestSetUp();
-        testSetUp();
+        if (mIsSetUp)
+        {
+            testSetUp();
+        }
     }
 
     void TearDown() final
     {
-        testTearDown();
+        ANGLETestBase::ANGLETestPreTearDown();
+        if (mIsSetUp)
+        {
+            testTearDown();
+        }
         ANGLETestBase::ANGLETestTearDown();
     }
 };
@@ -586,13 +662,17 @@ class ANGLETestEnvironment : public testing::Environment
     void SetUp() override;
     void TearDown() override;
 
-    static angle::Library *GetEGLLibrary();
-    static angle::Library *GetWGLLibrary();
+    static angle::Library *GetDriverLibrary(angle::GLESDriverType driver);
 
   private:
+    static angle::Library *GetAngleEGLLibrary();
+    static angle::Library *GetSystemEGLLibrary();
+    static angle::Library *GetSystemWGLLibrary();
+
     // For loading entry points.
-    static std::unique_ptr<angle::Library> gEGLLibrary;
-    static std::unique_ptr<angle::Library> gWGLLibrary;
+    static std::unique_ptr<angle::Library> gAngleEGLLibrary;
+    static std::unique_ptr<angle::Library> gSystemEGLLibrary;
+    static std::unique_ptr<angle::Library> gSystemWGLLibrary;
 };
 
 extern angle::PlatformMethods gDefaultPlatformMethods;

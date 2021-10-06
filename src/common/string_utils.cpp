@@ -7,7 +7,7 @@
 //   String helper functions.
 //
 
-#include "string_utils.h"
+#include "common/string_utils.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -16,6 +16,20 @@
 #include <sstream>
 
 #include "common/platform.h"
+#include "common/system_utils.h"
+
+namespace
+{
+
+bool EndsWithSuffix(const char *str,
+                    const size_t strLen,
+                    const char *suffix,
+                    const size_t suffixLen)
+{
+    return suffixLen <= strLen && strncmp(str + strLen - suffixLen, suffix, suffixLen) == 0;
+}
+
+}  // anonymous namespace
 
 namespace angle
 {
@@ -177,22 +191,59 @@ bool BeginsWith(const std::string &str, const std::string &prefix, const size_t 
     return strncmp(str.c_str(), prefix.c_str(), prefixLength) == 0;
 }
 
+bool EndsWith(const std::string &str, const std::string &suffix)
+{
+    return EndsWithSuffix(str.c_str(), str.length(), suffix.c_str(), suffix.length());
+}
+
 bool EndsWith(const std::string &str, const char *suffix)
 {
-    const auto len = strlen(suffix);
-    if (len > str.size())
+    return EndsWithSuffix(str.c_str(), str.length(), suffix, strlen(suffix));
+}
+
+bool EndsWith(const char *str, const char *suffix)
+{
+    return EndsWithSuffix(str, strlen(str), suffix, strlen(suffix));
+}
+
+bool ContainsToken(const std::string &tokenStr, char delimiter, const std::string &token)
+{
+    if (token.empty())
+    {
         return false;
-
-    const char *end = str.c_str() + str.size() - len;
-
-    return memcmp(end, suffix, len) == 0;
+    }
+    // Compare token with all sub-strings terminated by delimiter or end of string
+    std::string::size_type start = 0u;
+    do
+    {
+        std::string::size_type end = tokenStr.find(delimiter, start);
+        if (end == std::string::npos)
+        {
+            end = tokenStr.length();
+        }
+        const std::string::size_type length = end - start;
+        if (length == token.length() && tokenStr.compare(start, length, token) == 0)
+        {
+            return true;
+        }
+        start = end + 1u;
+    } while (start < tokenStr.size());
+    return false;
 }
 
 void ToLower(std::string *str)
 {
-    for (auto &ch : *str)
+    for (char &ch : *str)
     {
         ch = static_cast<char>(::tolower(ch));
+    }
+}
+
+void ToUpper(std::string *str)
+{
+    for (char &ch : *str)
+    {
+        ch = static_cast<char>(::toupper(ch));
     }
 }
 
@@ -207,6 +258,63 @@ bool ReplaceSubstring(std::string *str,
     }
     str->replace(replacePos, substring.size(), replacement);
     return true;
+}
+
+std::vector<std::string> GetStringsFromEnvironmentVarOrAndroidProperty(const char *varName,
+                                                                       const char *propertyName,
+                                                                       const char *separator)
+{
+    std::string environment = GetEnvironmentVarOrAndroidProperty(varName, propertyName);
+    return SplitString(environment, separator, TRIM_WHITESPACE, SPLIT_WANT_NONEMPTY);
+}
+
+std::vector<std::string> GetCachedStringsFromEnvironmentVarOrAndroidProperty(
+    const char *varName,
+    const char *propertyName,
+    const char *separator)
+{
+    std::string environment = GetEnvironmentVarOrAndroidProperty(varName, propertyName);
+    return SplitString(environment, separator, TRIM_WHITESPACE, SPLIT_WANT_NONEMPTY);
+}
+
+// reference name can have *.
+bool NamesMatchWithWildcard(const char *ref, const char *testName)
+{
+    // Find the first * in ref.
+    const char *firstWildcard = strchr(ref, '*');
+
+    // If there are no wildcards, match the strings precisely.
+    if (firstWildcard == nullptr)
+    {
+        return strcmp(ref, testName) == 0;
+    }
+
+    // Otherwise, match up to the wildcard first.
+    size_t preWildcardLen = firstWildcard - ref;
+    if (strncmp(ref, testName, preWildcardLen) != 0)
+    {
+        return false;
+    }
+
+    const char *postWildcardRef = ref + preWildcardLen + 1;
+
+    // As a small optimization, if the wildcard is the last character in ref, accept the match
+    // already.
+    if (postWildcardRef[0] == '\0')
+    {
+        return true;
+    }
+
+    // Try to match the wildcard with a number of characters.
+    for (size_t matchSize = 0; testName[matchSize] != '\0'; ++matchSize)
+    {
+        if (NamesMatchWithWildcard(postWildcardRef, testName + matchSize))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 }  // namespace angle

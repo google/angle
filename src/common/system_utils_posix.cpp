@@ -9,6 +9,7 @@
 #include "system_utils.h"
 
 #include <array>
+#include <iostream>
 
 #include <dlfcn.h>
 #include <sys/stat.h>
@@ -18,6 +19,21 @@
 
 namespace angle
 {
+
+namespace
+{
+std::string GetModulePath(void *moduleOrSymbol)
+{
+    Dl_info dlInfo;
+    if (dladdr(moduleOrSymbol, &dlInfo) == 0)
+    {
+        return "";
+    }
+
+    return dlInfo.dli_fname;
+}
+}  // namespace
+
 Optional<std::string> GetCWD()
 {
     std::array<char, 4096> pathBuf;
@@ -55,26 +71,31 @@ const char *GetPathSeparatorForEnvironmentVar()
     return ":";
 }
 
+std::string GetModuleDirectory()
+{
+    std::string directory;
+    static int placeholderSymbol = 0;
+    std::string moduleName       = GetModulePath(&placeholderSymbol);
+    if (!moduleName.empty())
+    {
+        directory = moduleName.substr(0, moduleName.find_last_of('/') + 1);
+    }
+
+    // Ensure we return the full path to the module, not the relative path
+    Optional<std::string> cwd = GetCWD();
+    if (cwd.valid() && !IsFullPath(directory))
+    {
+        directory = ConcatenatePath(cwd.value(), directory);
+    }
+    return directory;
+}
+
 class PosixLibrary : public Library
 {
   public:
-    PosixLibrary(const char *libraryName, SearchType searchType)
-    {
-        std::string directory;
-        if (searchType == SearchType::ApplicationDir)
-        {
-            static int dummySymbol = 0;
-            Dl_info dlInfo;
-            if (dladdr(&dummySymbol, &dlInfo) != 0)
-            {
-                std::string moduleName = dlInfo.dli_fname;
-                directory              = moduleName.substr(0, moduleName.find_last_of('/') + 1);
-            }
-        }
-
-        std::string fullPath = directory + libraryName + "." + GetSharedLibraryExtension();
-        mModule              = dlopen(fullPath.c_str(), RTLD_NOW);
-    }
+    PosixLibrary(const std::string &fullPath, int extraFlags)
+        : mModule(dlopen(fullPath.c_str(), RTLD_NOW | extraFlags))
+    {}
 
     ~PosixLibrary() override
     {
@@ -96,13 +117,51 @@ class PosixLibrary : public Library
 
     void *getNative() const override { return mModule; }
 
+    std::string getPath() const override
+    {
+        if (!mModule)
+        {
+            return "";
+        }
+
+        return GetModulePath(mModule);
+    }
+
   private:
     void *mModule = nullptr;
 };
 
 Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
 {
-    return new PosixLibrary(libraryName, searchType);
+    std::string libraryWithExtension = std::string(libraryName) + "." + GetSharedLibraryExtension();
+    return OpenSharedLibraryWithExtension(libraryWithExtension.c_str(), searchType);
+}
+
+Library *OpenSharedLibraryWithExtension(const char *libraryName, SearchType searchType)
+{
+    std::string directory;
+    if (searchType == SearchType::ModuleDir)
+    {
+#if ANGLE_PLATFORM_IOS
+        // On iOS, shared libraries must be loaded from within the app bundle.
+        directory = GetExecutableDirectory() + "/Frameworks/";
+#else
+        directory = GetModuleDirectory();
+#endif
+    }
+
+    int extraFlags = 0;
+    if (searchType == SearchType::AlreadyLoaded)
+    {
+        extraFlags = RTLD_NOLOAD;
+    }
+
+    std::string fullPath = directory + libraryName;
+#if ANGLE_PLATFORM_IOS
+    // On iOS, dlopen needs a suffix on the framework name to work.
+    fullPath = fullPath + "/" + libraryName;
+#endif
+    return new PosixLibrary(fullPath, extraFlags);
 }
 
 bool IsDirectory(const char *filename)
@@ -134,5 +193,10 @@ const char *GetExecutableExtension()
 char GetPathSeparator()
 {
     return '/';
+}
+
+std::string GetRootDirectory()
+{
+    return "/";
 }
 }  // namespace angle

@@ -1,28 +1,42 @@
 {
+  "scripts/cl.xml":
+    "f923201d4ea3e1130763b19fa7faa7a2",
   "scripts/egl.xml":
-    "842e24514c4cfe09fba703c17a0fd292",
+    "013c552e6c523abdcf268268ea47e9fe",
   "scripts/egl_angle_ext.xml":
-    "63f18dc9b7183ead4ddd3dfd1571973a",
+    "5bcc01462b355d933cf3ada15198fb68",
   "scripts/generate_loader.py":
-    "48c60c668bec42a80378179aae2acc61",
+    "22eee9c55261d30f7718123c89549c55",
+  "scripts/gl.xml":
+    "4fcbd11300c8edcb3ed50826780cd57e",
+  "scripts/gl_angle_ext.xml":
+    "08f74b35d908b7c02b45fdf45572c434",
   "scripts/registry_xml.py":
-    "467ae1a9988049a429d8202e5d2cf73c",
+    "44a6f8c6713b39de5427da86b6c64595",
   "scripts/wgl.xml":
-    "aa96419c582af2f6673430e2847693f4",
+    "c36001431919e1c435f1215a85f7e1db",
   "src/libEGL/egl_loader_autogen.cpp":
-    "6de27557530d1dff3780d83745c0a0fd",
+    "3740eb7bd4928f17c4239ab294930469",
   "src/libEGL/egl_loader_autogen.h":
-    "2fca11a29bb6e5cadb25d4862360ddd8",
+    "9cbf4d491497058a32642865eb032276",
+  "src/tests/restricted_traces/trace_egl_loader_autogen.cpp":
+    "ab1ce9e72e1e248b13302349f2228a89",
+  "src/tests/restricted_traces/trace_egl_loader_autogen.h":
+    "c912fbb18f691ab4b2694089cfd668d5",
+  "src/tests/restricted_traces/trace_gles_loader_autogen.cpp":
+    "a8629018bc1abd495c29bfcfdaec3a07",
+  "src/tests/restricted_traces/trace_gles_loader_autogen.h":
+    "3deef846019511bb5ad15c9d4e6c276f",
   "util/egl_loader_autogen.cpp":
-    "780b317fbd6ac03e300a7ee0122ab3cf",
+    "ad2bc908fbd69d8a1406320a4f5142c8",
   "util/egl_loader_autogen.h":
-    "55b54071e61b3e7beab28178dc20fd28",
+    "dd280caf858b39f1ef0c89d55bdcc559",
   "util/gles_loader_autogen.cpp":
-    "6e5c9c20677fb0957c84fcc909f07496",
+    "c146b62c70ebb217ee71bc730913a0aa",
   "util/gles_loader_autogen.h":
-    "11c4005b8e8729353037e3a6bd4e8a70",
+    "69c808de46e7d68f1e9c978484532f86",
   "util/windows/wgl_loader_autogen.cpp":
-    "c0d9a65eaa9aac356c6fd3f88638d2be",
+    "0e305ff76ce8e855022f92105362fcdb",
   "util/windows/wgl_loader_autogen.h":
-    "36857be5c303b13eba2ee91d7c127207"
+    "9bc9410ff7fd9fe896bbd85b553faca1"
 }

@@ -193,7 +193,7 @@ void TextureUploadBenchmarkBase::initializeBenchmark()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
 
-    if (params.webgl)
+    if (mIsTimestampQueryAvailable && params.webgl)
     {
         glRequestExtensionANGLE("GL_EXT_disjoint_timer_query");
     }
@@ -418,13 +418,14 @@ ANGLE_INSTANTIATE_TEST(TextureUploadFullMipBenchmark,
                        OpenGLOrGLESParams(false),
                        OpenGLOrGLESParams(true),
                        VulkanParams(false),
-                       NullDevice(VulkanParams(false)),
                        VulkanParams(true));
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PBOSubImageBenchmark);
 ANGLE_INSTANTIATE_TEST(PBOSubImageBenchmark,
                        ES3OpenGLPBOParams(1024, 128),
                        VulkanPBOParams(1024, 128));
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PBOCompressedSubImageBenchmark);
 ANGLE_INSTANTIATE_TEST(PBOCompressedSubImageBenchmark,
                        ES3OpenGLPBOParams(128, 128),
                        VulkanPBOParams(128, 128));

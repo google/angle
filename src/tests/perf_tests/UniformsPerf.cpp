@@ -89,11 +89,6 @@ std::string UniformsParams::story() const
 
     strstr << RenderTestParams::story();
 
-    if (eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
-    {
-        strstr << "_null";
-    }
-
     if (dataType == DataType::VEC4)
     {
         strstr << "_" << (numVertexUniforms + numFragmentUniforms) << "_vec4";
@@ -176,8 +171,8 @@ std::vector<Matrix4> GenMatrixData(size_t count, int parity)
 
 UniformsBenchmark::UniformsBenchmark() : ANGLERenderTest("Uniforms", GetParam()), mPrograms({})
 {
-    // Fails on Windows NVIDIA Vulkan. http://crbug.com/1041672
-    if (IsWindows() && IsNVIDIA() &&
+    // Fails on Windows7 NVIDIA Vulkan, presumably due to old drivers. http://crbug.com/1096510
+    if (IsWindows7() && IsNVIDIA() &&
         GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
     {
         mSkipTest = true;

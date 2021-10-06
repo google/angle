@@ -11,6 +11,7 @@
 #ifndef COMMON_FASTVECTOR_H_
 #define COMMON_FASTVECTOR_H_
 
+#include "bitset_utils.h"
 #include "common/debug.h"
 
 #include <algorithm>
@@ -40,6 +41,9 @@ class FastVector final
     FastVector(FastVector<T, N, Storage> &&other);
     FastVector(std::initializer_list<value_type> init);
 
+    template <class InputIt, std::enable_if_t<!std::is_integral<InputIt>::value, bool> = true>
+    FastVector(InputIt first, InputIt last);
+
     FastVector<T, N, Storage> &operator=(const FastVector<T, N, Storage> &other);
     FastVector<T, N, Storage> &operator=(FastVector<T, N, Storage> &&other);
     FastVector<T, N, Storage> &operator=(std::initializer_list<value_type> init);
@@ -68,6 +72,9 @@ class FastVector final
 
     void push_back(const value_type &value);
     void push_back(value_type &&value);
+
+    template <typename... Args>
+    void emplace_back(Args &&... args);
 
     void pop_back();
 
@@ -135,11 +142,8 @@ FastVector<T, N, Storage>::FastVector(size_type count)
 
 template <class T, size_t N, class Storage>
 FastVector<T, N, Storage>::FastVector(const FastVector<T, N, Storage> &other)
-{
-    ensure_capacity(other.mSize);
-    mSize = other.mSize;
-    std::copy(other.begin(), other.end(), begin());
-}
+    : FastVector(other.begin(), other.end())
+{}
 
 template <class T, size_t N, class Storage>
 FastVector<T, N, Storage>::FastVector(FastVector<T, N, Storage> &&other) : FastVector()
@@ -151,6 +155,15 @@ template <class T, size_t N, class Storage>
 FastVector<T, N, Storage>::FastVector(std::initializer_list<value_type> init)
 {
     assign_from_initializer_list(init);
+}
+
+template <class T, size_t N, class Storage>
+template <class InputIt, std::enable_if_t<!std::is_integral<InputIt>::value, bool>>
+FastVector<T, N, Storage>::FastVector(InputIt first, InputIt last)
+{
+    mSize = last - first;
+    ensure_capacity(mSize);
+    std::copy(first, last, begin());
 }
 
 template <class T, size_t N, class Storage>
@@ -212,9 +225,8 @@ ANGLE_INLINE typename FastVector<T, N, Storage>::reference FastVector<T, N, Stor
 }
 
 template <class T, size_t N, class Storage>
-ANGLE_INLINE
-    typename FastVector<T, N, Storage>::const_reference FastVector<T, N, Storage>::operator[](
-        size_type pos) const
+ANGLE_INLINE typename FastVector<T, N, Storage>::const_reference
+FastVector<T, N, Storage>::operator[](size_type pos) const
 {
     ASSERT(pos < mSize);
     return mData[pos];
@@ -288,9 +300,16 @@ ANGLE_INLINE void FastVector<T, N, Storage>::push_back(const value_type &value)
 template <class T, size_t N, class Storage>
 ANGLE_INLINE void FastVector<T, N, Storage>::push_back(value_type &&value)
 {
+    emplace_back(std::move(value));
+}
+
+template <class T, size_t N, class Storage>
+template <typename... Args>
+ANGLE_INLINE void FastVector<T, N, Storage>::emplace_back(Args &&... args)
+{
     if (mSize == mReservedSize)
         ensure_capacity(mSize + 1);
-    mData[mSize++] = std::move(value);
+    mData[mSize++] = std::move(T(std::forward<Args>(args)...));
 }
 
 template <class T, size_t N, class Storage>
@@ -427,6 +446,248 @@ void FastVector<T, N, Storage>::ensure_capacity(size_t capacity)
         mReservedSize = newSize;
     }
 }
+
+template <class Key, class Value, size_t N>
+class FastUnorderedMap final
+{
+  public:
+    using Pair = std::pair<Key, Value>;
+
+    FastUnorderedMap() {}
+    ~FastUnorderedMap() {}
+
+    void insert(Key key, Value value)
+    {
+        ASSERT(!contains(key));
+        mData.push_back(Pair(key, value));
+    }
+
+    bool contains(Key key) const
+    {
+        for (size_t index = 0; index < mData.size(); ++index)
+        {
+            if (mData[index].first == key)
+                return true;
+        }
+        return false;
+    }
+
+    void clear() { mData.clear(); }
+
+    bool get(Key key, Value *value) const
+    {
+        for (size_t index = 0; index < mData.size(); ++index)
+        {
+            const Pair &item = mData[index];
+            if (item.first == key)
+            {
+                *value = item.second;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool empty() const { return mData.empty(); }
+    size_t size() const { return mData.size(); }
+
+  private:
+    FastVector<Pair, N> mData;
+};
+
+template <class T, size_t N>
+class FastUnorderedSet final
+{
+  public:
+    FastUnorderedSet() {}
+    ~FastUnorderedSet() {}
+
+    bool empty() const { return mData.empty(); }
+
+    void insert(T value)
+    {
+        ASSERT(!contains(value));
+        mData.push_back(value);
+    }
+
+    bool contains(T needle) const
+    {
+        for (T value : mData)
+        {
+            if (value == needle)
+                return true;
+        }
+        return false;
+    }
+
+    void clear() { mData.clear(); }
+
+  private:
+    FastVector<T, N> mData;
+};
+
+class FastIntegerSet final
+{
+  public:
+    static constexpr size_t kWindowSize             = 64;
+    static constexpr size_t kOneLessThanKWindowSize = kWindowSize - 1;
+    static constexpr size_t kShiftForDivision =
+        static_cast<size_t>(rx::Log2(static_cast<unsigned int>(kWindowSize)));
+    using KeyBitSet = angle::BitSet64<kWindowSize>;
+
+    ANGLE_INLINE FastIntegerSet();
+    ANGLE_INLINE ~FastIntegerSet();
+
+    ANGLE_INLINE void ensureCapacity(size_t size)
+    {
+        if (capacity() <= size)
+        {
+            reserve(size * 2);
+        }
+    }
+
+    ANGLE_INLINE void insert(uint64_t key)
+    {
+        size_t sizedKey = static_cast<size_t>(key);
+
+        ASSERT(!contains(sizedKey));
+        ensureCapacity(sizedKey);
+        ASSERT(capacity() > sizedKey);
+
+        size_t index  = sizedKey >> kShiftForDivision;
+        size_t offset = sizedKey & kOneLessThanKWindowSize;
+
+        mKeyData[index].set(offset, true);
+    }
+
+    ANGLE_INLINE bool contains(uint64_t key) const
+    {
+        size_t sizedKey = static_cast<size_t>(key);
+
+        size_t index  = sizedKey >> kShiftForDivision;
+        size_t offset = sizedKey & kOneLessThanKWindowSize;
+
+        return (sizedKey < capacity()) && (mKeyData[index].test(offset));
+    }
+
+    ANGLE_INLINE void clear()
+    {
+        for (KeyBitSet &it : mKeyData)
+        {
+            it.reset();
+        }
+    }
+
+    ANGLE_INLINE bool empty() const
+    {
+        for (const KeyBitSet &it : mKeyData)
+        {
+            if (it.any())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    ANGLE_INLINE size_t size() const
+    {
+        size_t valid_entries = 0;
+        for (const KeyBitSet &it : mKeyData)
+        {
+            valid_entries += it.count();
+        }
+        return valid_entries;
+    }
+
+  private:
+    ANGLE_INLINE size_t capacity() const { return kWindowSize * mKeyData.size(); }
+
+    ANGLE_INLINE void reserve(size_t newSize)
+    {
+        size_t alignedSize = rx::roundUpPow2(newSize, kWindowSize);
+        size_t count       = alignedSize >> kShiftForDivision;
+
+        mKeyData.resize(count, KeyBitSet::Zero());
+    }
+
+    std::vector<KeyBitSet> mKeyData;
+};
+
+// This is needed to accommodate the chromium style guide error -
+//      [chromium-style] Complex constructor has an inlined body.
+ANGLE_INLINE FastIntegerSet::FastIntegerSet() {}
+ANGLE_INLINE FastIntegerSet::~FastIntegerSet() {}
+
+template <typename Value>
+class FastIntegerMap final
+{
+  public:
+    FastIntegerMap() {}
+    ~FastIntegerMap() {}
+
+    ANGLE_INLINE void ensureCapacity(size_t size)
+    {
+        // Ensure key set has capacity
+        mKeySet.ensureCapacity(size);
+
+        // Ensure value vector has capacity
+        ensureCapacityImpl(size);
+    }
+
+    ANGLE_INLINE void insert(uint64_t key, Value value)
+    {
+        // Insert key
+        ASSERT(!mKeySet.contains(key));
+        mKeySet.insert(key);
+
+        // Insert value
+        size_t sizedKey = static_cast<size_t>(key);
+        ensureCapacityImpl(sizedKey);
+        ASSERT(capacity() > sizedKey);
+        mValueData[sizedKey] = value;
+    }
+
+    ANGLE_INLINE bool contains(uint64_t key) const { return mKeySet.contains(key); }
+
+    ANGLE_INLINE bool get(uint64_t key, Value *out) const
+    {
+        if (!mKeySet.contains(key))
+        {
+            return false;
+        }
+
+        size_t sizedKey = static_cast<size_t>(key);
+        *out            = mValueData[sizedKey];
+        return true;
+    }
+
+    ANGLE_INLINE void clear() { mKeySet.clear(); }
+
+    ANGLE_INLINE bool empty() const { return mKeySet.empty(); }
+
+    ANGLE_INLINE size_t size() const { return mKeySet.size(); }
+
+  private:
+    ANGLE_INLINE size_t capacity() const { return mValueData.size(); }
+
+    ANGLE_INLINE void ensureCapacityImpl(size_t size)
+    {
+        if (capacity() <= size)
+        {
+            reserve(size * 2);
+        }
+    }
+
+    ANGLE_INLINE void reserve(size_t newSize)
+    {
+        size_t alignedSize = rx::roundUpPow2(newSize, FastIntegerSet::kWindowSize);
+        mValueData.resize(alignedSize);
+    }
+
+    FastIntegerSet mKeySet;
+    std::vector<Value> mValueData;
+};
 }  // namespace angle
 
 #endif  // COMMON_FASTVECTOR_H_

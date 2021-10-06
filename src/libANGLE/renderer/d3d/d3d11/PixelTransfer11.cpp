@@ -89,7 +89,7 @@ angle::Result PixelTransfer11::loadResources(const gl::Context *context)
     ANGLE_TRY(mRenderer->allocateResource(context11, depthStencilDesc, &mCopyDepthStencilState));
 
     D3D11_BUFFER_DESC constantBufferDesc   = {};
-    constantBufferDesc.ByteWidth           = roundUp<UINT>(sizeof(CopyShaderParams), 32u);
+    constantBufferDesc.ByteWidth           = roundUpPow2<UINT>(sizeof(CopyShaderParams), 32u);
     constantBufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
     constantBufferDesc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
     constantBufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
@@ -97,16 +97,16 @@ angle::Result PixelTransfer11::loadResources(const gl::Context *context)
     constantBufferDesc.StructureByteStride = 0;
 
     ANGLE_TRY(mRenderer->allocateResource(context11, constantBufferDesc, &mParamsConstantBuffer));
-    mParamsConstantBuffer.setDebugName("PixelTransfer11 constant buffer");
+    mParamsConstantBuffer.setDebugName("PixelTransfer11ConstantBuffer");
 
     // init shaders
     ANGLE_TRY(mRenderer->allocateResource(context11, ShaderData(g_VS_BufferToTexture),
                                           &mBufferToTextureVS));
-    mBufferToTextureVS.setDebugName("BufferToTexture VS");
+    mBufferToTextureVS.setDebugName("BufferToTextureVS");
 
     ANGLE_TRY(mRenderer->allocateResource(context11, ShaderData(g_GS_BufferToTexture),
                                           &mBufferToTextureGS));
-    mBufferToTextureGS.setDebugName("BufferToTexture GS");
+    mBufferToTextureGS.setDebugName("BufferToTextureGS");
 
     ANGLE_TRY(buildShaderMap(context));
 
@@ -150,12 +150,15 @@ void PixelTransfer11::setBufferToTextureCopyParams(const gl::Box &destArea,
 
 angle::Result PixelTransfer11::copyBufferToTexture(const gl::Context *context,
                                                    const gl::PixelUnpackState &unpack,
+                                                   gl::Buffer *unpackBuffer,
                                                    unsigned int offset,
                                                    RenderTargetD3D *destRenderTarget,
                                                    GLenum destinationFormat,
                                                    GLenum sourcePixelsType,
                                                    const gl::Box &destArea)
 {
+    ASSERT(unpackBuffer);
+
     ANGLE_TRY(loadResources(context));
 
     gl::Extents destSize = destRenderTarget->getExtents();
@@ -163,9 +166,6 @@ angle::Result PixelTransfer11::copyBufferToTexture(const gl::Context *context,
     ASSERT(destArea.x >= 0 && destArea.x + destArea.width <= destSize.width && destArea.y >= 0 &&
            destArea.y + destArea.height <= destSize.height && destArea.z >= 0 &&
            destArea.z + destArea.depth <= destSize.depth);
-
-    const gl::Buffer &sourceBuffer =
-        *context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
     ASSERT(mRenderer->supportsFastCopyBufferToTexture(destinationFormat));
 
@@ -182,7 +182,7 @@ angle::Result PixelTransfer11::copyBufferToTexture(const gl::Context *context,
         sourceglFormatInfo.sizedInternalFormat, mRenderer->getRenderer11DeviceCaps());
     DXGI_FORMAT srvFormat = sourceFormatInfo.srvFormat;
     ASSERT(srvFormat != DXGI_FORMAT_UNKNOWN);
-    Buffer11 *bufferStorage11                  = GetAs<Buffer11>(sourceBuffer.getImplementation());
+    Buffer11 *bufferStorage11                  = GetAs<Buffer11>(unpackBuffer->getImplementation());
     const d3d11::ShaderResourceView *bufferSRV = nullptr;
     ANGLE_TRY(bufferStorage11->getSRV(context, srvFormat, &bufferSRV));
     ASSERT(bufferSRV != nullptr);
@@ -245,9 +245,9 @@ angle::Result PixelTransfer11::buildShaderMap(const gl::Context *context)
     ANGLE_TRY(mRenderer->allocateResource(context11, ShaderData(g_PS_BufferToTexture_4UI),
                                           &bufferToTextureUint));
 
-    bufferToTextureFloat.setDebugName("BufferToTexture RGBA ps");
-    bufferToTextureInt.setDebugName("BufferToTexture RGBA-I ps");
-    bufferToTextureUint.setDebugName("BufferToTexture RGBA-UI ps");
+    bufferToTextureFloat.setDebugName("BufferToTextureRGBA.ps");
+    bufferToTextureInt.setDebugName("BufferToTextureRGBA-I.ps");
+    bufferToTextureUint.setDebugName("BufferToTextureRGBA-UI.ps");
 
     mBufferToTexturePSMap[GL_FLOAT]        = std::move(bufferToTextureFloat);
     mBufferToTexturePSMap[GL_INT]          = std::move(bufferToTextureInt);

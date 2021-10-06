@@ -6,7 +6,7 @@ You can also build your own dashboards. For example, a comparison of ANGLE's bac
 
 ## Running the Tests
 
-You can follow the usual instructions to [check out and build ANGLE](../../../doc/DevSetup.md). Build the `angle_perftests` target. Note that all test scores are higher-is-better. You should also ensure `is_debug=false` in your build. Running with `dcheck_always_on` or debug validation enabled is not recommended.
+You can follow the usual instructions to [check out and build ANGLE](../../../doc/DevSetup.md). Build the `angle_perftests` target. Note that all test scores are higher-is-better. You should also ensure `is_debug=false` in your build. Running with `angle_assert_always_on` or debug validation enabled is not recommended.
 
 Variance can be a problem when benchmarking. We have a test harness to run a single test in an infinite loop and print some statistics to help mitigate variance. See [`scripts/perf_test_runner.py`](https://chromium.googlesource.com/angle/angle/+/master/scripts/perf_test_runner.py). To use the script first compile `angle_perftests` into a folder with the word `Release` in it. Then provide the name of the test as the argument to the script. The script will automatically pick up the most current `angle_perftests` and run in an infinite loop.
 
@@ -17,6 +17,36 @@ You can choose individual tests to run with `--gtest_filter=*TestName*`. To sele
 ### Null/No-op Configurations
 
 ANGLE implements a no-op driver for OpenGL, D3D11 and Vulkan. To run on these configurations use the `gl_null`, `d3d11_null` or `vulkan_null` test configurations. These null drivers will not do any GPU work. They will skip the driver entirely. These null configs are useful for diagnosing performance overhead in ANGLE code.
+
+### Command-line Arguments
+
+Several command-line arguments control how the tests run:
+
+* `--one-frame-only`: Runs tests once and quickly exits. Used as a quick smoke test.
+* `--enable-trace`: Write a JSON event log that can be loaded in Chrome.
+* `--trace-file file`: Name of the JSON event log for `--enable-trace`.
+* `--calibration`: Prints the number of steps a test runs in a fixed time. Used by `perf_test_runner.py`.
+* `--steps-per-trial x`: Fixed number of steps to run for each test trial.
+* `--max-steps-performed x`: Upper maximum on total number of steps for the entire test run.
+* `--screenshot-dir dir`: Directory to store test screenshots. Only implemented in `TracePerfTest`.
+* `--screenshot-frame <frame>`: Which frame to capture a screenshot of. Defaults to first frame (1). Only implemented in `TracePerfTest`.
+* `--render-test-output-dir=dir`: Equivalent to `--screenshot-dir dir`.
+* `--verbose`: Print extra timing information.
+* `--warmup-loops x`: Number of times to warm up the test before starting timing. Defaults to 3.
+* `--no-warmup`: Skip warming up the tests. Equivalent to `--warmup-steps 0`.
+* `--calibration-time`: Run each test calibration step in a fixed time. Defaults to 1 second.
+* `--max-trial-time x`: Run each test trial under this max time. Defaults to 10 seconds.
+* `--fixed-test-time x`: Run the tests until this much time has elapsed.
+* `--trials`: Number of times to repeat testing. Defaults to 3.
+* `--no-finish`: Don't call glFinish after each test trial.
+* `--enable-all-trace-tests`: Offscreen and vsync-limited trace tests are disabled by default to reduce test time.
+* `--minimize-gpu-work`: Modify API calls so that GPU work is reduced to minimum.
+
+For example, for an endless run with no warmup, run:
+
+`angle_perftests --gtest_filter=TracePerfTest.Run/vulkan_trex_200 --steps 1000000 --no-warmup`
+
+The command line arguments implementations are located in [`ANGLEPerfTestArgs.cpp`](ANGLEPerfTestArgs.cpp).
 
 ## Test Breakdown
 
@@ -40,6 +70,6 @@ ANGLE implements a no-op driver for OpenGL, D3D11 and Vulkan. To run on these co
 * [`TextureBenchmark`](TexturesPerf.cpp): Tests Texture state change performance.
 * [`LinkProgramBenchmark`](LinkProgramPerfTest.cpp): Tests performance of `glLinkProgram`.
 * [`glmark2`](glmark2.cpp): Runs the glmark2 benchmark.
-* [`TracePerfTest`](TracePerfTest.cpp): Runs replays of restricted traces, not available publicly. To enable, read more in [`RestrictedTraceTests`](restricted_traces/RestrictedTraceTests.md)
+* [`TracePerfTest`](TracePerfTest.cpp): Runs replays of restricted traces, not available publicly. To enable, read more in [`RestrictedTraceTests`](../restricted_traces/README.md)
 
 Many other tests can be found that have documentation in their classes.

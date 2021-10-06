@@ -13,7 +13,17 @@ namespace angle
 class ContextLostTest : public ANGLETest
 {
   protected:
-    ContextLostTest() { setContextResetStrategy(EGL_LOSE_CONTEXT_ON_RESET_EXT); }
+    ContextLostTest()
+    {
+        if (IsEGLClientExtensionEnabled("EGL_EXT_create_context_robustness"))
+        {
+            setContextResetStrategy(EGL_LOSE_CONTEXT_ON_RESET_EXT);
+        }
+        else
+        {
+            setContextResetStrategy(EGL_NO_RESET_NOTIFICATION_EXT);
+        }
+    }
 };
 
 // GL_CHROMIUM_lose_context is implemented in the frontend
@@ -26,14 +36,19 @@ TEST_P(ContextLostTest, ExtensionStringExposed)
 TEST_P(ContextLostTest, BasicUsage)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_lose_context"));
-    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_robustness"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_robustness") ||
+                       !IsEGLClientExtensionEnabled("EGL_EXT_create_context_robustness"));
 
     glLoseContextCHROMIUM(GL_GUILTY_CONTEXT_RESET, GL_INNOCENT_CONTEXT_RESET);
     EXPECT_GL_NO_ERROR();
     EXPECT_GLENUM_EQ(glGetGraphicsResetStatusEXT(), GL_GUILTY_CONTEXT_RESET);
 
-    glBindTexture(GL_TEXTURE_2D, 0);
-    EXPECT_GL_ERROR(GL_OUT_OF_MEMORY);
+    // Errors should be continually generated
+    for (size_t i = 0; i < 10; i++)
+    {
+        glBindTexture(GL_TEXTURE_2D, 0);
+        EXPECT_GL_ERROR(GL_CONTEXT_LOST);
+    }
 }
 
 // When context is lost, polling queries such as glGetSynciv with GL_SYNC_STATUS should always
@@ -108,8 +123,15 @@ class ContextLostSkipValidationTest : public ANGLETest
   protected:
     ContextLostSkipValidationTest()
     {
-        setContextResetStrategy(EGL_LOSE_CONTEXT_ON_RESET_EXT);
-        setNoErrorEnabled(true);
+        if (IsEGLClientExtensionEnabled("EGL_EXT_create_context_robustness"))
+        {
+            setContextResetStrategy(EGL_LOSE_CONTEXT_ON_RESET_EXT);
+            setNoErrorEnabled(true);
+        }
+        else
+        {
+            setContextResetStrategy(EGL_NO_RESET_NOTIFICATION_EXT);
+        }
     }
 };
 
@@ -129,19 +151,19 @@ TEST_P(ContextLostSkipValidationTest, LostNoErrorGetProgram)
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(ContextLostTest,
-                       ES2_NULL(),
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES3_D3D11(),
-                       ES2_VULKAN(),
-                       ES3_VULKAN());
+                       WithRobustness(ES2_NULL()),
+                       WithRobustness(ES2_D3D9()),
+                       WithRobustness(ES2_D3D11()),
+                       WithRobustness(ES3_D3D11()),
+                       WithRobustness(ES2_VULKAN()),
+                       WithRobustness(ES3_VULKAN()));
 
 ANGLE_INSTANTIATE_TEST(ContextLostSkipValidationTest,
-                       ES2_NULL(),
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES3_D3D11(),
-                       ES2_VULKAN(),
-                       ES3_VULKAN());
+                       WithRobustness(ES2_NULL()),
+                       WithRobustness(ES2_D3D9()),
+                       WithRobustness(ES2_D3D11()),
+                       WithRobustness(ES3_D3D11()),
+                       WithRobustness(ES2_VULKAN()),
+                       WithRobustness(ES3_VULKAN()));
 
 }  // namespace angle

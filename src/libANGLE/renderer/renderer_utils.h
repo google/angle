@@ -15,6 +15,8 @@
 #include <limits>
 #include <map>
 
+#include "GLSLANG/ShaderLang.h"
+#include "common/Color.h"
 #include "common/angleutils.h"
 #include "common/utilities.h"
 #include "libANGLE/angletypes.h"
@@ -42,6 +44,32 @@ struct DisplayState;
 namespace rx
 {
 class ContextImpl;
+
+// The possible rotations of the surface/draw framebuffer, particularly for the Vulkan back-end on
+// Android.
+enum class SurfaceRotation
+{
+    Identity,
+    Rotated90Degrees,
+    Rotated180Degrees,
+    Rotated270Degrees,
+    FlippedIdentity,
+    FlippedRotated90Degrees,
+    FlippedRotated180Degrees,
+    FlippedRotated270Degrees,
+
+    InvalidEnum,
+    EnumCount = InvalidEnum,
+};
+
+using SpecConstUsageBits = angle::PackedEnumBitSet<sh::vk::SpecConstUsage, uint32_t>;
+
+void RotateRectangle(const SurfaceRotation rotation,
+                     const bool flipY,
+                     const int framebufferWidth,
+                     const int framebufferHeight,
+                     const gl::Rectangle &incoming,
+                     gl::Rectangle *outgoing);
 
 using MipGenerationFunction = void (*)(size_t sourceWidth,
                                        size_t sourceHeight,
@@ -94,6 +122,7 @@ struct PackPixelsParams
     gl::Buffer *packBuffer;
     bool reverseRowOrder;
     ptrdiff_t offset;
+    SurfaceRotation rotation;
 };
 
 void PackPixels(const PackPixelsParams &params,
@@ -130,7 +159,19 @@ struct LoadImageFunctionInfo
     bool requiresConversion;
 };
 
-using LoadFunctionMap = LoadImageFunctionInfo (*)(GLenum);
+using LoadFunctionMap           = LoadImageFunctionInfo (*)(GLenum);
+using LoadTextureBorderFunction = void (*)(angle::ColorF &mBorderColor);
+struct LoadTextureBorderFunctionInfo
+{
+    LoadTextureBorderFunctionInfo() : loadFunction(nullptr) {}
+    LoadTextureBorderFunctionInfo(LoadTextureBorderFunction loadFunction)
+        : loadFunction(loadFunction)
+    {}
+
+    LoadTextureBorderFunction loadFunction;
+};
+
+using LoadTextureBorderFunctionMap = LoadTextureBorderFunctionInfo (*)();
 
 bool ShouldUseDebugLayers(const egl::AttributeMap &attribs);
 bool ShouldUseVirtualizedContexts(const egl::AttributeMap &attribs, bool defaultValue);
@@ -179,11 +220,15 @@ class IncompleteTextureSet final : angle::NonCopyable
 
     angle::Result getIncompleteTexture(const gl::Context *context,
                                        gl::TextureType type,
+                                       gl::SamplerFormat format,
                                        MultisampleTextureInitializer *multisampleInitializer,
                                        gl::Texture **textureOut);
 
   private:
-    gl::TextureMap mIncompleteTextures;
+    using TextureMapWithSamplerFormat = angle::PackedEnumMap<gl::SamplerFormat, gl::TextureMap>;
+
+    TextureMapWithSamplerFormat mIncompleteTextures;
+    gl::Buffer *mIncompleteTextureBufferAttachment;
 };
 
 // Helpers to set a matrix uniform value based on GLSL or HLSL semantics.
@@ -235,8 +280,7 @@ angle::Result GetVertexRangeInfo(const gl::Context *context,
 gl::Rectangle ClipRectToScissor(const gl::State &glState, const gl::Rectangle &rect, bool invertY);
 
 // Helper method to intialize a FeatureSet with overrides from the DisplayState
-void OverrideFeaturesWithDisplayState(angle::FeatureSetBase *features,
-                                      const egl::DisplayState &state);
+void ApplyFeatureOverrides(angle::FeatureSetBase *features, const egl::DisplayState &state);
 
 template <typename In>
 uint32_t LineLoopRestartIndexCountHelper(GLsizei indexCount, const uint8_t *srcPtr)
@@ -325,6 +369,105 @@ void CopyLineLoopIndicesWithRestart(GLsizei indexCount, const uint8_t *srcPtr, u
 }
 
 void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy);
+
+angle::Result MultiDrawArraysGeneral(ContextImpl *contextImpl,
+                                     const gl::Context *context,
+                                     gl::PrimitiveMode mode,
+                                     const GLint *firsts,
+                                     const GLsizei *counts,
+                                     GLsizei drawcount);
+angle::Result MultiDrawArraysInstancedGeneral(ContextImpl *contextImpl,
+                                              const gl::Context *context,
+                                              gl::PrimitiveMode mode,
+                                              const GLint *firsts,
+                                              const GLsizei *counts,
+                                              const GLsizei *instanceCounts,
+                                              GLsizei drawcount);
+angle::Result MultiDrawElementsGeneral(ContextImpl *contextImpl,
+                                       const gl::Context *context,
+                                       gl::PrimitiveMode mode,
+                                       const GLsizei *counts,
+                                       gl::DrawElementsType type,
+                                       const GLvoid *const *indices,
+                                       GLsizei drawcount);
+angle::Result MultiDrawElementsInstancedGeneral(ContextImpl *contextImpl,
+                                                const gl::Context *context,
+                                                gl::PrimitiveMode mode,
+                                                const GLsizei *counts,
+                                                gl::DrawElementsType type,
+                                                const GLvoid *const *indices,
+                                                const GLsizei *instanceCounts,
+                                                GLsizei drawcount);
+angle::Result MultiDrawArraysInstancedBaseInstanceGeneral(ContextImpl *contextImpl,
+                                                          const gl::Context *context,
+                                                          gl::PrimitiveMode mode,
+                                                          const GLint *firsts,
+                                                          const GLsizei *counts,
+                                                          const GLsizei *instanceCounts,
+                                                          const GLuint *baseInstances,
+                                                          GLsizei drawcount);
+angle::Result MultiDrawElementsInstancedBaseVertexBaseInstanceGeneral(ContextImpl *contextImpl,
+                                                                      const gl::Context *context,
+                                                                      gl::PrimitiveMode mode,
+                                                                      const GLsizei *counts,
+                                                                      gl::DrawElementsType type,
+                                                                      const GLvoid *const *indices,
+                                                                      const GLsizei *instanceCounts,
+                                                                      const GLint *baseVertices,
+                                                                      const GLuint *baseInstances,
+                                                                      GLsizei drawcount);
+
+// RAII object making sure reset uniforms is called no matter whether there's an error in draw calls
+class ResetBaseVertexBaseInstance : angle::NonCopyable
+{
+  public:
+    ResetBaseVertexBaseInstance(gl::Program *programObject,
+                                bool resetBaseVertex,
+                                bool resetBaseInstance);
+
+    ~ResetBaseVertexBaseInstance();
+
+  private:
+    gl::Program *mProgramObject;
+    bool mResetBaseVertex;
+    bool mResetBaseInstance;
+};
+
+angle::FormatID ConvertToSRGB(angle::FormatID formatID);
+angle::FormatID ConvertToLinear(angle::FormatID formatID);
+bool IsOverridableLinearFormat(angle::FormatID formatID);
 }  // namespace rx
+
+// MultiDraw macro patterns
+// These macros are to avoid too much code duplication as we don't want to have if detect for
+// hasDrawID/BaseVertex/BaseInstance inside for loop in a multiDraw call Part of these are put in
+// the header as we want to share with specialized context impl on some platforms for multidraw
+#define ANGLE_SET_DRAW_ID_UNIFORM_0(drawID) \
+    {}
+#define ANGLE_SET_DRAW_ID_UNIFORM_1(drawID) programObject->setDrawIDUniform(drawID)
+#define ANGLE_SET_DRAW_ID_UNIFORM(cond) ANGLE_SET_DRAW_ID_UNIFORM_##cond
+
+#define ANGLE_SET_BASE_VERTEX_UNIFORM_0(baseVertex) \
+    {}
+#define ANGLE_SET_BASE_VERTEX_UNIFORM_1(baseVertex) programObject->setBaseVertexUniform(baseVertex);
+#define ANGLE_SET_BASE_VERTEX_UNIFORM(cond) ANGLE_SET_BASE_VERTEX_UNIFORM_##cond
+
+#define ANGLE_SET_BASE_INSTANCE_UNIFORM_0(baseInstance) \
+    {}
+#define ANGLE_SET_BASE_INSTANCE_UNIFORM_1(baseInstance) \
+    programObject->setBaseInstanceUniform(baseInstance)
+#define ANGLE_SET_BASE_INSTANCE_UNIFORM(cond) ANGLE_SET_BASE_INSTANCE_UNIFORM_##cond
+
+#define ANGLE_NOOP_DRAW_ context->noopDraw(mode, counts[drawID])
+#define ANGLE_NOOP_DRAW_INSTANCED \
+    context->noopDrawInstanced(mode, counts[drawID], instanceCounts[drawID])
+#define ANGLE_NOOP_DRAW(_instanced) ANGLE_NOOP_DRAW##_instanced
+
+#define ANGLE_MARK_TRANSFORM_FEEDBACK_USAGE_ \
+    gl::MarkTransformFeedbackBufferUsage(context, counts[drawID], 1)
+#define ANGLE_MARK_TRANSFORM_FEEDBACK_USAGE_INSTANCED \
+    gl::MarkTransformFeedbackBufferUsage(context, counts[drawID], instanceCounts[drawID])
+#define ANGLE_MARK_TRANSFORM_FEEDBACK_USAGE(instanced) \
+    ANGLE_MARK_TRANSFORM_FEEDBACK_USAGE##instanced
 
 #endif  // LIBANGLE_RENDERER_RENDERER_UTILS_H_

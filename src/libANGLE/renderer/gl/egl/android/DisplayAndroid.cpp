@@ -19,9 +19,8 @@
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/egl/ContextEGL.h"
 #include "libANGLE/renderer/gl/egl/FunctionsEGLDL.h"
-#include "libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h"
 #include "libANGLE/renderer/gl/egl/RendererEGL.h"
-#include "libANGLE/renderer/gl/egl/WindowSurfaceEGL.h"
+#include "libANGLE/renderer/gl/egl/SurfaceEGL.h"
 #include "libANGLE/renderer/gl/egl/android/NativeBufferImageSiblingAndroid.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 
@@ -46,7 +45,7 @@ DisplayAndroid::DisplayAndroid(const egl::DisplayState &state)
     : DisplayEGL(state),
       mVirtualizedContexts(kDefaultEGLVirtualizedContexts),
       mSupportsSurfaceless(false),
-      mDummyPbuffer(EGL_NO_SURFACE)
+      mMockPbuffer(EGL_NO_SURFACE)
 {}
 
 DisplayAndroid::~DisplayAndroid() {}
@@ -66,94 +65,81 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
     gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
     ASSERT(eglVersion >= gl::Version(1, 4));
 
+    std::vector<EGLint> renderableTypes;
     static_assert(EGL_OPENGL_ES3_BIT == EGL_OPENGL_ES3_BIT_KHR, "Extension define must match core");
-    EGLint esBit = (eglVersion >= gl::Version(1, 5) || mEGL->hasExtension("EGL_KHR_create_context"))
-                       ? EGL_OPENGL_ES3_BIT
-                       : EGL_OPENGL_ES2_BIT;
-
-    // clang-format off
-    std::vector<EGLint> configAttribListBase =
+    if (eglVersion >= gl::Version(1, 5) || mEGL->hasExtension("EGL_KHR_create_context"))
     {
-        EGL_COLOR_BUFFER_TYPE, EGL_RGB_BUFFER,
-        // Android doesn't support pixmaps
-        EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
-        EGL_CONFIG_CAVEAT, EGL_NONE,
-        EGL_CONFORMANT, esBit,
-        EGL_RENDERABLE_TYPE, esBit,
-    };
-    // clang-format on
-
-    if (mEGL->hasExtension("EGL_EXT_pixel_format_float"))
-    {
-        // Don't request floating point configs
-        configAttribListBase.push_back(EGL_COLOR_COMPONENT_TYPE_EXT);
-        configAttribListBase.push_back(EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
+        renderableTypes.push_back(EGL_OPENGL_ES3_BIT);
     }
+    renderableTypes.push_back(EGL_OPENGL_ES2_BIT);
 
-    std::vector<EGLint> configAttribListWithFormat = configAttribListBase;
+    egl::AttributeMap baseConfigAttribs;
+    baseConfigAttribs.insert(EGL_COLOR_BUFFER_TYPE, EGL_RGB_BUFFER);
+    // Android doesn't support pixmaps
+    baseConfigAttribs.insert(EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT);
+
+    egl::AttributeMap configAttribsWithFormat(baseConfigAttribs);
+    // Choose RGBA8888
+    configAttribsWithFormat.insert(EGL_RED_SIZE, 8);
+    configAttribsWithFormat.insert(EGL_GREEN_SIZE, 8);
+    configAttribsWithFormat.insert(EGL_BLUE_SIZE, 8);
+    configAttribsWithFormat.insert(EGL_ALPHA_SIZE, 8);
+
+    // Choose D24S8
     // EGL1.5 spec Section 2.2 says that depth, multisample and stencil buffer depths
     // must match for contexts to be compatible.
-    // Choose RGBA8888
-    configAttribListWithFormat.push_back(EGL_RED_SIZE);
-    configAttribListWithFormat.push_back(8);
-    configAttribListWithFormat.push_back(EGL_GREEN_SIZE);
-    configAttribListWithFormat.push_back(8);
-    configAttribListWithFormat.push_back(EGL_BLUE_SIZE);
-    configAttribListWithFormat.push_back(8);
-    configAttribListWithFormat.push_back(EGL_ALPHA_SIZE);
-    configAttribListWithFormat.push_back(8);
-    // Choose DEPTH24_STENCIL8
-    configAttribListWithFormat.push_back(EGL_DEPTH_SIZE);
-    configAttribListWithFormat.push_back(24);
-    configAttribListWithFormat.push_back(EGL_STENCIL_SIZE);
-    configAttribListWithFormat.push_back(8);
-    // Choose no multisampling
-    configAttribListWithFormat.push_back(EGL_SAMPLE_BUFFERS);
-    configAttribListWithFormat.push_back(0);
+    configAttribsWithFormat.insert(EGL_DEPTH_SIZE, 24);
+    configAttribsWithFormat.insert(EGL_STENCIL_SIZE, 8);
 
-    // Complete the attrib lists
-    configAttribListBase.push_back(EGL_NONE);
-    configAttribListWithFormat.push_back(EGL_NONE);
+    EGLConfig configWithFormat = EGL_NO_CONFIG_KHR;
+    for (EGLint renderableType : renderableTypes)
+    {
+        baseConfigAttribs.insert(EGL_RENDERABLE_TYPE, renderableType);
+        configAttribsWithFormat.insert(EGL_RENDERABLE_TYPE, renderableType);
 
-    EGLint numConfig;
-    EGLConfig configWithFormat;
+        std::vector<EGLint> attribVector = configAttribsWithFormat.toIntVector();
 
-    EGLBoolean success =
-        mEGL->chooseConfig(configAttribListWithFormat.data(), &configWithFormat, 1, &numConfig);
-    if (success == EGL_FALSE)
+        EGLint numConfig = 0;
+        if (mEGL->chooseConfig(attribVector.data(), &configWithFormat, 1, &numConfig) == EGL_TRUE)
+        {
+            break;
+        }
+    }
+
+    if (configWithFormat == EGL_NO_CONFIG_KHR)
     {
         return egl::EglNotInitialized()
                << "eglChooseConfig failed with " << egl::Error(mEGL->getError());
     }
 
-    // A dummy pbuffer is only needed if surfaceless contexts are not supported.
+    // A mock pbuffer is only needed if surfaceless contexts are not supported.
     mSupportsSurfaceless = mEGL->hasExtension("EGL_KHR_surfaceless_context");
     if (!mSupportsSurfaceless)
     {
-        int dummyPbufferAttribs[] = {
+        int mockPbufferAttribs[] = {
             EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE,
         };
-        mDummyPbuffer = mEGL->createPbufferSurface(configWithFormat, dummyPbufferAttribs);
-        if (mDummyPbuffer == EGL_NO_SURFACE)
+        mMockPbuffer = mEGL->createPbufferSurface(configWithFormat, mockPbufferAttribs);
+        if (mMockPbuffer == EGL_NO_SURFACE)
         {
             return egl::EglNotInitialized()
                    << "eglCreatePbufferSurface failed with " << egl::Error(mEGL->getError());
         }
     }
 
-    // Create mDummyPbuffer with a normal config, but create a no_config mContext, if possible
+    // Create mMockPbuffer with a normal config, but create a no_config mContext, if possible
     if (mEGL->hasExtension("EGL_KHR_no_config_context"))
     {
-        mConfigAttribList = configAttribListBase;
+        mConfigAttribList = baseConfigAttribs.toIntVector();
         mConfig           = EGL_NO_CONFIG_KHR;
     }
     else
     {
-        mConfigAttribList = configAttribListWithFormat;
+        mConfigAttribList = configAttribsWithFormat.toIntVector();
         mConfig           = configWithFormat;
     }
 
-    ANGLE_TRY(createRenderer(EGL_NO_CONTEXT, true, &mRenderer));
+    ANGLE_TRY(createRenderer(EGL_NO_CONTEXT, true, false, &mRenderer));
 
     const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
     if (maxVersion < gl::Version(2, 0))
@@ -163,7 +149,7 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
 
     ANGLE_TRY(DisplayGL::initialize(display));
 
-    std::string rendererDescription = mRenderer->getRendererDescription();
+    std::string rendererDescription = getRendererDescription();
     __android_log_print(ANDROID_LOG_INFO, "ANGLE", "%s", rendererDescription.c_str());
     return egl::NoError();
 }
@@ -178,10 +164,10 @@ void DisplayAndroid::terminate()
         ERR() << "eglMakeCurrent error " << egl::Error(mEGL->getError());
     }
 
-    if (mDummyPbuffer != EGL_NO_SURFACE)
+    if (mMockPbuffer != EGL_NO_SURFACE)
     {
-        success       = mEGL->destroySurface(mDummyPbuffer);
-        mDummyPbuffer = EGL_NO_SURFACE;
+        success      = mEGL->destroySurface(mMockPbuffer);
+        mMockPbuffer = EGL_NO_SURFACE;
         if (success == EGL_FALSE)
         {
             ERR() << "eglDestroySurface error " << egl::Error(mEGL->getError());
@@ -189,7 +175,6 @@ void DisplayAndroid::terminate()
     }
 
     mRenderer.reset();
-    mCurrentNativeContext.clear();
 
     egl::Error result = mEGL->terminate();
     if (result.isError())
@@ -200,52 +185,6 @@ void DisplayAndroid::terminate()
     SafeDelete(mEGL);
 }
 
-SurfaceImpl *DisplayAndroid::createWindowSurface(const egl::SurfaceState &state,
-                                                 EGLNativeWindowType window,
-                                                 const egl::AttributeMap &attribs)
-{
-    EGLConfig config;
-    EGLint numConfig;
-    EGLBoolean success;
-
-    const EGLint configAttribList[] = {EGL_CONFIG_ID, mConfigIds[state.config->configID], EGL_NONE};
-    success                         = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
-    ASSERT(success && numConfig == 1);
-
-    return new WindowSurfaceEGL(state, mEGL, config, window);
-}
-
-SurfaceImpl *DisplayAndroid::createPbufferSurface(const egl::SurfaceState &state,
-                                                  const egl::AttributeMap &attribs)
-{
-    EGLConfig config;
-    EGLint numConfig;
-    EGLBoolean success;
-
-    const EGLint configAttribList[] = {EGL_CONFIG_ID, mConfigIds[state.config->configID], EGL_NONE};
-    success                         = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
-    ASSERT(success && numConfig == 1);
-
-    return new PbufferSurfaceEGL(state, mEGL, config);
-}
-
-SurfaceImpl *DisplayAndroid::createPbufferFromClientBuffer(const egl::SurfaceState &state,
-                                                           EGLenum buftype,
-                                                           EGLClientBuffer clientBuffer,
-                                                           const egl::AttributeMap &attribs)
-{
-    UNIMPLEMENTED();
-    return nullptr;
-}
-
-SurfaceImpl *DisplayAndroid::createPixmapSurface(const egl::SurfaceState &state,
-                                                 NativePixmapType nativePixmap,
-                                                 const egl::AttributeMap &attribs)
-{
-    UNIMPLEMENTED();
-    return nullptr;
-}
-
 ContextImpl *DisplayAndroid::createContext(const gl::State &state,
                                            gl::ErrorSet *errorSet,
                                            const egl::Config *configuration,
@@ -253,14 +192,19 @@ ContextImpl *DisplayAndroid::createContext(const gl::State &state,
                                            const egl::AttributeMap &attribs)
 {
     std::shared_ptr<RendererEGL> renderer;
-    if (mVirtualizedContexts)
+    bool usingExternalContext = attribs.get(EGL_EXTERNAL_CONTEXT_ANGLE, EGL_FALSE) == EGL_TRUE;
+    if (mVirtualizedContexts && !usingExternalContext)
     {
         renderer = mRenderer;
     }
     else
     {
         EGLContext nativeShareContext = EGL_NO_CONTEXT;
-        if (shareContext)
+        if (usingExternalContext)
+        {
+            ASSERT(!shareContext);
+        }
+        else if (shareContext)
         {
             ContextEGL *shareContextEGL = GetImplAs<ContextEGL>(shareContext);
             nativeShareContext          = shareContextEGL->getContext();
@@ -269,7 +213,8 @@ ContextImpl *DisplayAndroid::createContext(const gl::State &state,
         // Create a new renderer for this context.  It only needs to share with the user's requested
         // share context because there are no internal resources in DisplayAndroid that are shared
         // at the GL level.
-        egl::Error error = createRenderer(nativeShareContext, false, &renderer);
+        egl::Error error =
+            createRenderer(nativeShareContext, false, usingExternalContext, &renderer);
         if (error.isError())
         {
             ERR() << "Failed to create a shared renderer: " << error.getMessage();
@@ -277,179 +222,69 @@ ContextImpl *DisplayAndroid::createContext(const gl::State &state,
         }
     }
 
-    return new ContextEGL(state, errorSet, renderer);
+    return new ContextEGL(state, errorSet, renderer,
+                          RobustnessVideoMemoryPurgeStatus::NOT_REQUESTED);
 }
 
-template <typename T>
-void DisplayAndroid::getConfigAttrib(EGLConfig config, EGLint attribute, T *value) const
+class ExternalSurfaceEGL : public SurfaceEGL
 {
-    EGLint tmp;
-    EGLBoolean success = mEGL->getConfigAttrib(config, attribute, &tmp);
-    ASSERT(success == EGL_TRUE);
-    *value = tmp;
-}
+  public:
+    ExternalSurfaceEGL(const egl::SurfaceState &state,
+                       const FunctionsEGL *egl,
+                       EGLConfig config,
+                       EGLint width,
+                       EGLint height)
+        : SurfaceEGL(state, egl, config), mWidth(width), mHeight(height)
+    {}
+    ~ExternalSurfaceEGL() override = default;
 
-template <typename T, typename U>
-void DisplayAndroid::getConfigAttribIfExtension(EGLConfig config,
-                                                EGLint attribute,
-                                                T *value,
-                                                const char *extension,
-                                                const U &defaultValue) const
+    egl::Error initialize(const egl::Display *display) override { return egl::NoError(); }
+    EGLint getSwapBehavior() const override { return EGL_BUFFER_DESTROYED; }
+    EGLint getWidth() const override { return mWidth; }
+    EGLint getHeight() const override { return mHeight; }
+    bool isExternal() const override { return true; }
+
+  private:
+    const EGLint mWidth;
+    const EGLint mHeight;
+};
+
+SurfaceImpl *DisplayAndroid::createPbufferFromClientBuffer(const egl::SurfaceState &state,
+                                                           EGLenum buftype,
+                                                           EGLClientBuffer clientBuffer,
+                                                           const egl::AttributeMap &attribs)
 {
-    if (mEGL->hasExtension(extension))
+    if (buftype == EGL_EXTERNAL_SURFACE_ANGLE)
     {
-        getConfigAttrib(config, attribute, value);
-    }
-    else
-    {
-        *value = static_cast<T>(defaultValue);
-    }
-}
+        ASSERT(clientBuffer == nullptr);
 
-egl::ConfigSet DisplayAndroid::generateConfigs()
-{
-    egl::ConfigSet configSet;
-    mConfigIds.clear();
+        EGLint width  = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
+        EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
 
-    EGLint numConfigs;
-    EGLBoolean success = mEGL->chooseConfig(mConfigAttribList.data(), nullptr, 0, &numConfigs);
-    ASSERT(success == EGL_TRUE && numConfigs > 0);
-
-    std::vector<EGLConfig> configs(numConfigs);
-    EGLint numConfigs2;
-    success =
-        mEGL->chooseConfig(mConfigAttribList.data(), configs.data(), numConfigs, &numConfigs2);
-    ASSERT(success == EGL_TRUE && numConfigs2 == numConfigs);
-
-    for (int i = 0; i < numConfigs; i++)
-    {
-        egl::Config config;
-
-        getConfigAttrib(configs[i], EGL_BUFFER_SIZE, &config.bufferSize);
-        getConfigAttrib(configs[i], EGL_RED_SIZE, &config.redSize);
-        getConfigAttrib(configs[i], EGL_GREEN_SIZE, &config.greenSize);
-        getConfigAttrib(configs[i], EGL_BLUE_SIZE, &config.blueSize);
-        getConfigAttrib(configs[i], EGL_LUMINANCE_SIZE, &config.luminanceSize);
-        getConfigAttrib(configs[i], EGL_ALPHA_SIZE, &config.alphaSize);
-        getConfigAttrib(configs[i], EGL_ALPHA_MASK_SIZE, &config.alphaMaskSize);
-        getConfigAttrib(configs[i], EGL_BIND_TO_TEXTURE_RGB, &config.bindToTextureRGB);
-        getConfigAttrib(configs[i], EGL_BIND_TO_TEXTURE_RGBA, &config.bindToTextureRGBA);
-        getConfigAttrib(configs[i], EGL_COLOR_BUFFER_TYPE, &config.colorBufferType);
-        getConfigAttrib(configs[i], EGL_CONFIG_CAVEAT, &config.configCaveat);
-        getConfigAttrib(configs[i], EGL_CONFIG_ID, &config.configID);
-        getConfigAttrib(configs[i], EGL_CONFORMANT, &config.conformant);
-        getConfigAttrib(configs[i], EGL_DEPTH_SIZE, &config.depthSize);
-        getConfigAttrib(configs[i], EGL_LEVEL, &config.level);
-        getConfigAttrib(configs[i], EGL_MAX_PBUFFER_WIDTH, &config.maxPBufferWidth);
-        getConfigAttrib(configs[i], EGL_MAX_PBUFFER_HEIGHT, &config.maxPBufferHeight);
-        getConfigAttrib(configs[i], EGL_MAX_PBUFFER_PIXELS, &config.maxPBufferPixels);
-        getConfigAttrib(configs[i], EGL_MAX_SWAP_INTERVAL, &config.maxSwapInterval);
-        getConfigAttrib(configs[i], EGL_MIN_SWAP_INTERVAL, &config.minSwapInterval);
-        getConfigAttrib(configs[i], EGL_NATIVE_RENDERABLE, &config.nativeRenderable);
-        getConfigAttrib(configs[i], EGL_NATIVE_VISUAL_ID, &config.nativeVisualID);
-        getConfigAttrib(configs[i], EGL_NATIVE_VISUAL_TYPE, &config.nativeVisualType);
-        getConfigAttrib(configs[i], EGL_RENDERABLE_TYPE, &config.renderableType);
-        getConfigAttrib(configs[i], EGL_SAMPLE_BUFFERS, &config.sampleBuffers);
-        getConfigAttrib(configs[i], EGL_SAMPLES, &config.samples);
-        getConfigAttrib(configs[i], EGL_STENCIL_SIZE, &config.stencilSize);
-        getConfigAttrib(configs[i], EGL_SURFACE_TYPE, &config.surfaceType);
-        getConfigAttrib(configs[i], EGL_TRANSPARENT_TYPE, &config.transparentType);
-        getConfigAttrib(configs[i], EGL_TRANSPARENT_RED_VALUE, &config.transparentRedValue);
-        getConfigAttrib(configs[i], EGL_TRANSPARENT_GREEN_VALUE, &config.transparentGreenValue);
-        getConfigAttrib(configs[i], EGL_TRANSPARENT_BLUE_VALUE, &config.transparentBlueValue);
-        getConfigAttribIfExtension(configs[i], EGL_COLOR_COMPONENT_TYPE_EXT,
-                                   &config.colorComponentType, "EGL_EXT_pixel_format_float",
-                                   EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
-
-        if (config.colorBufferType == EGL_RGB_BUFFER)
-        {
-            ASSERT(config.colorComponentType == EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
-            if (config.redSize == 8 && config.greenSize == 8 && config.blueSize == 8 &&
-                config.alphaSize == 8)
-            {
-                config.renderTargetFormat = GL_RGBA8;
-            }
-            else if (config.redSize == 8 && config.greenSize == 8 && config.blueSize == 8 &&
-                     config.alphaSize == 0)
-            {
-                config.renderTargetFormat = GL_RGB8;
-            }
-            else if (config.redSize == 5 && config.greenSize == 6 && config.blueSize == 5 &&
-                     config.alphaSize == 0)
-            {
-                config.renderTargetFormat = GL_RGB565;
-            }
-            else if (config.redSize == 5 && config.greenSize == 5 && config.blueSize == 5 &&
-                     config.alphaSize == 1)
-            {
-                config.renderTargetFormat = GL_RGB5_A1;
-            }
-            else if (config.redSize == 4 && config.greenSize == 4 && config.blueSize == 4 &&
-                     config.alphaSize == 4)
-            {
-                config.renderTargetFormat = GL_RGBA4;
-            }
-            else
-            {
-                ERR() << "RGBA(" << config.redSize << "," << config.greenSize << ","
-                      << config.blueSize << "," << config.alphaSize << ") not handled";
-                UNREACHABLE();
-            }
-        }
-        else
-        {
-            UNREACHABLE();
-        }
-
-        if (config.depthSize == 0 && config.stencilSize == 0)
-        {
-            config.depthStencilFormat = GL_ZERO;
-        }
-        else if (config.depthSize == 16 && config.stencilSize == 0)
-        {
-            config.depthStencilFormat = GL_DEPTH_COMPONENT16;
-        }
-        else if (config.depthSize == 24 && config.stencilSize == 0)
-        {
-            config.depthStencilFormat = GL_DEPTH_COMPONENT24;
-        }
-        else if (config.depthSize == 24 && config.stencilSize == 8)
-        {
-            config.depthStencilFormat = GL_DEPTH24_STENCIL8;
-        }
-        else if (config.depthSize == 0 && config.stencilSize == 8)
-        {
-            config.depthStencilFormat = GL_STENCIL_INDEX8;
-        }
-        else
-        {
-            UNREACHABLE();
-        }
-
-        config.matchNativePixmap  = EGL_NONE;
-        config.optimalOrientation = 0;
-
-        int internalId         = configSet.add(config);
-        mConfigIds[internalId] = config.configID;
+        // Use the ExternalSurfaceEGL, so ANGLE can know the framebuffer size.
+        return new ExternalSurfaceEGL(state, mEGL, EGL_NO_CONFIG_KHR, width, height);
     }
 
-    return configSet;
-}
-
-bool DisplayAndroid::testDeviceLost()
-{
-    return false;
-}
-
-egl::Error DisplayAndroid::restoreLostDevice(const egl::Display *display)
-{
-    UNIMPLEMENTED();
-    return egl::NoError();
+    return DisplayEGL::createPbufferFromClientBuffer(state, buftype, clientBuffer, attribs);
 }
 
 bool DisplayAndroid::isValidNativeWindow(EGLNativeWindowType window) const
 {
     return ANativeWindow_getFormat(window) >= 0;
+}
+
+egl::Error DisplayAndroid::validateClientBuffer(const egl::Config *configuration,
+                                                EGLenum buftype,
+                                                EGLClientBuffer clientBuffer,
+                                                const egl::AttributeMap &attribs) const
+{
+
+    if (buftype == EGL_EXTERNAL_SURFACE_ANGLE)
+    {
+        ASSERT(clientBuffer == nullptr);
+        return egl::NoError();
+    }
+    return DisplayEGL::validateClientBuffer(configuration, buftype, clientBuffer, attribs);
 }
 
 egl::Error DisplayAndroid::validateImageClientBuffer(const gl::Context *context,
@@ -483,29 +318,12 @@ ExternalImageSiblingImpl *DisplayAndroid::createExternalImageSibling(
     }
 }
 
-DeviceImpl *DisplayAndroid::createDevice()
-{
-    UNIMPLEMENTED();
-    return nullptr;
-}
-
-egl::Error DisplayAndroid::waitClient(const gl::Context *context)
-{
-    UNIMPLEMENTED();
-    return egl::NoError();
-}
-
-egl::Error DisplayAndroid::waitNative(const gl::Context *context, EGLint engine)
-{
-    UNIMPLEMENTED();
-    return egl::NoError();
-}
-
-egl::Error DisplayAndroid::makeCurrent(egl::Surface *drawSurface,
+egl::Error DisplayAndroid::makeCurrent(egl::Display *display,
+                                       egl::Surface *drawSurface,
                                        egl::Surface *readSurface,
                                        gl::Context *context)
 {
-    CurrentNativeContext &currentContext = mCurrentNativeContext[std::this_thread::get_id()];
+    CurrentNativeContext &currentContext = mCurrentNativeContexts[std::this_thread::get_id()];
 
     EGLSurface newSurface = EGL_NO_SURFACE;
     if (drawSurface)
@@ -521,12 +339,51 @@ egl::Error DisplayAndroid::makeCurrent(egl::Surface *drawSurface,
         newContext             = contextEGL->getContext();
     }
 
-    // The context should never change when context virtualization is being used, even when a null
-    // context is being bound.
-    if (mVirtualizedContexts)
+    if (currentContext.isExternalContext || (context && context->isExternal()))
     {
-        ASSERT(newContext == EGL_NO_CONTEXT || currentContext.context == EGL_NO_CONTEXT ||
-               newContext == currentContext.context);
+        ASSERT(currentContext.surface == EGL_NO_SURFACE);
+        if (!currentContext.isExternalContext)
+        {
+            // Switch to an ANGLE external context.
+            ASSERT(context);
+            ASSERT(currentContext.context == EGL_NO_CONTEXT);
+            currentContext.context           = newContext;
+            currentContext.isExternalContext = true;
+
+            // We only support using external surface with external context.
+            ASSERT(GetImplAs<SurfaceEGL>(drawSurface)->isExternal());
+            ASSERT(GetImplAs<SurfaceEGL>(drawSurface)->getSurface() == EGL_NO_SURFACE);
+        }
+        else if (context)
+        {
+            // Switch surface but not context.
+            ASSERT(currentContext.context == newContext);
+            ASSERT(newSurface == EGL_NO_SURFACE);
+            ASSERT(newContext != EGL_NO_CONTEXT);
+            // We only support using external surface with external context.
+            ASSERT(GetImplAs<SurfaceEGL>(drawSurface)->isExternal());
+            ASSERT(GetImplAs<SurfaceEGL>(drawSurface)->getSurface() == EGL_NO_SURFACE);
+        }
+        else
+        {
+            // Release the ANGLE external context.
+            ASSERT(newSurface == EGL_NO_SURFACE);
+            ASSERT(newContext == EGL_NO_CONTEXT);
+            ASSERT(currentContext.context != EGL_NO_CONTEXT);
+            currentContext.context           = EGL_NO_CONTEXT;
+            currentContext.isExternalContext = false;
+        }
+
+        // Do not need to call eglMakeCurrent(), since we don't support swtiching EGLSurface for
+        // external context.
+        return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
+    }
+
+    // The context should never change when context virtualization is being used unless binding a
+    // null context.
+    if (mVirtualizedContexts && newContext != EGL_NO_CONTEXT)
+    {
+        ASSERT(currentContext.context == EGL_NO_CONTEXT || newContext == currentContext.context);
 
         newContext = mRenderer->getContext();
 
@@ -539,10 +396,10 @@ egl::Error DisplayAndroid::makeCurrent(egl::Surface *drawSurface,
         }
 
         // It's possible that no surface has been created yet and the driver doesn't support
-        // surfaceless, bind the dummy pbuffer.
+        // surfaceless, bind the mock pbuffer.
         if (newSurface == EGL_NO_SURFACE && !mSupportsSurfaceless)
         {
-            newSurface = mDummyPbuffer;
+            newSurface = mMockPbuffer;
             ASSERT(newSurface != EGL_NO_SURFACE);
         }
     }
@@ -557,73 +414,69 @@ egl::Error DisplayAndroid::makeCurrent(egl::Surface *drawSurface,
         currentContext.context = newContext;
     }
 
-    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
-}
-
-gl::Version DisplayAndroid::getMaxSupportedESVersion() const
-{
-    return mRenderer->getMaxSupportedESVersion();
+    return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
 }
 
 void DisplayAndroid::destroyNativeContext(EGLContext context)
 {
-    mEGL->destroyContext(context);
-
-    // If this context is current, remove it from the tracking of current contexts to make sure we
-    // don't try to make it current again.
-    for (auto &currentContext : mCurrentNativeContext)
-    {
-        if (currentContext.second.context == context)
-        {
-            currentContext.second.surface = EGL_NO_SURFACE;
-            currentContext.second.context = EGL_NO_CONTEXT;
-        }
-    }
+    DisplayEGL::destroyNativeContext(context);
 }
 
 void DisplayAndroid::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
+    DisplayEGL::generateExtensions(outExtensions);
+
     // Surfaceless can be support if the native driver supports it or we know that we are running on
     // a single thread (mVirtualizedContexts == true)
     outExtensions->surfacelessContext = mSupportsSurfaceless || mVirtualizedContexts;
 
-    DisplayEGL::generateExtensions(outExtensions);
-}
-
-egl::Error DisplayAndroid::makeCurrentSurfaceless(gl::Context *context)
-{
-    // Nothing to do because EGL always uses the same context and the previous surface can be left
-    // current.
-    return egl::NoError();
+    outExtensions->externalContextAndSurface = true;
 }
 
 egl::Error DisplayAndroid::createRenderer(EGLContext shareContext,
                                           bool makeNewContextCurrent,
+                                          bool isExternalContext,
                                           std::shared_ptr<RendererEGL> *outRenderer)
 {
     EGLContext context = EGL_NO_CONTEXT;
     native_egl::AttributeVector attribs;
-    ANGLE_TRY(initializeContext(shareContext, mDisplayAttributes, &context, &attribs));
 
-    if (mEGL->makeCurrent(mDummyPbuffer, context) == EGL_FALSE)
+    // If isExternalContext is true, the external context is current, so we don't need to make the
+    // mMockPbuffer current.
+    if (isExternalContext)
     {
-        return egl::EglNotInitialized()
-               << "eglMakeCurrent failed with " << egl::Error(mEGL->getError());
+        ASSERT(shareContext == EGL_NO_CONTEXT);
+        ASSERT(!makeNewContextCurrent);
+        // Should we consider creating a share context to avoid querying and restoring GL context
+        // state?
+        context = mEGL->getCurrentContext();
+        ASSERT(context != EGL_NO_CONTEXT);
+        // TODO: get the version from the current context.
+        attribs = {EGL_CONTEXT_MAJOR_VERSION, 2, EGL_CONTEXT_MINOR_VERSION, 0, EGL_NONE};
+    }
+    else
+    {
+        ANGLE_TRY(initializeContext(shareContext, mDisplayAttributes, &context, &attribs));
+        if (mEGL->makeCurrent(mMockPbuffer, context) == EGL_FALSE)
+        {
+            return egl::EglNotInitialized()
+                   << "eglMakeCurrent failed with " << egl::Error(mEGL->getError());
+        }
     }
 
     std::unique_ptr<FunctionsGL> functionsGL(mEGL->makeFunctionsGL());
     functionsGL->initialize(mDisplayAttributes);
 
-    outRenderer->reset(
-        new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context, attribs));
+    outRenderer->reset(new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context,
+                                       attribs, isExternalContext));
 
-    CurrentNativeContext &currentContext = mCurrentNativeContext[std::this_thread::get_id()];
+    CurrentNativeContext &currentContext = mCurrentNativeContexts[std::this_thread::get_id()];
     if (makeNewContextCurrent)
     {
-        currentContext.surface = mDummyPbuffer;
+        currentContext.surface = mMockPbuffer;
         currentContext.context = context;
     }
-    else
+    else if (!isExternalContext)
     {
         // Reset the current context back to the previous state
         if (mEGL->makeCurrent(currentContext.surface, currentContext.context) == EGL_FALSE)
@@ -687,17 +540,7 @@ WorkerContext *DisplayAndroid::createWorkerContext(std::string *infoLog,
         *infoLog += "Unable to create the EGL context.";
         return nullptr;
     }
-    return new WorkerContextAndroid(context, mEGL, mDummyPbuffer);
-}
-
-void DisplayAndroid::initializeFrontendFeatures(angle::FrontendFeatures *features) const
-{
-    mRenderer->initializeFrontendFeatures(features);
-}
-
-void DisplayAndroid::populateFeatureList(angle::FeatureList *features)
-{
-    mRenderer->getFeatures().populateFeatureList(features);
+    return new WorkerContextAndroid(context, mEGL, mMockPbuffer);
 }
 
 }  // namespace rx

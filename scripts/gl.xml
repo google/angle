@@ -501,6 +501,7 @@ typedef unsigned int GLhandleARB;
             <enum name="GL_FRAGMENT_LIGHT6_SGIX"/>
             <enum name="GL_FRAGMENT_LIGHT7_SGIX"/>
             <enum name="GL_FRAGMENT_LIGHTING_SGIX"/>
+            <enum name="GL_FRAMEBUFFER_SRGB_EXT"/>
             <enum name="GL_FRAMEZOOM_SGIX"/>
             <enum name="GL_HISTOGRAM_EXT"/>
             <enum name="GL_INDEX_ARRAY"/>
@@ -1830,7 +1831,9 @@ typedef unsigned int GLhandleARB;
             <enum name="GL_COMPRESSED_R11_EAC"/>
             <enum name="GL_COMPRESSED_SIGNED_R11_EAC"/>
             <enum name="GL_COMPRESSED_RG_RGTC2"/>
+            <enum name="GL_COMPRESSED_RED_GREEN_RGTC2_EXT"/>
             <enum name="GL_COMPRESSED_SIGNED_RG_RGTC2"/>
+            <enum name="GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT"/>
             <enum name="GL_COMPRESSED_RGBA_BPTC_UNORM"/>
             <enum name="GL_COMPRESSED_RGBA_BPTC_UNORM_ARB"/>
             <enum name="GL_COMPRESSED_RGBA_BPTC_UNORM_EXT"/>
@@ -14031,9 +14034,9 @@ typedef unsigned int GLhandleARB;
         </command>
         <command>
             <proto>void <name>glDiscardFramebufferEXT</name></proto>
-            <param><ptype>GLenum</ptype> <name>target</name></param>
+            <param group="FramebufferTarget"><ptype>GLenum</ptype> <name>target</name></param>
             <param><ptype>GLsizei</ptype> <name>numAttachments</name></param>
-            <param len="numAttachments">const <ptype>GLenum</ptype> *<name>attachments</name></param>
+            <param len="numAttachments" group="FramebufferAttachment">const <ptype>GLenum</ptype> *<name>attachments</name></param>
         </command>
         <command>
             <proto>void <name>glDispatchCompute</name></proto>
@@ -16768,6 +16771,12 @@ typedef unsigned int GLhandleARB;
             <param len="COMPSIZE(target)"><ptype>GLint</ptype> *<name>data</name></param>
             <alias name="glGetIntegeri_v"/>
             <glx type="single" opcode="211"/>
+        </command>
+        <command>
+            <proto>void <name>glGetInteger64vEXT</name></proto>
+            <param group="GetPName"><ptype>GLenum</ptype> <name>pname</name></param>
+            <param len="COMPSIZE(pname)"><ptype>GLint64</ptype> *<name>data</name></param>
+            <alias name="glGetInteger64v"/>
         </command>
         <command>
             <proto>void <name>glGetIntegeri_v</name></proto>
@@ -43339,6 +43348,7 @@ typedef unsigned int GLhandleARB;
                 <command name="glGetQueryObjectuivEXT"/>
                 <command name="glGetQueryObjecti64vEXT"/>
                 <command name="glGetQueryObjectui64vEXT"/>
+                <command name="glGetInteger64vEXT"/>
             </require>
         </extension>
         <extension name="GL_EXT_draw_buffers" supported="gles2">
@@ -44245,7 +44255,6 @@ typedef unsigned int GLhandleARB;
                 <command name="glProgramUniform2uivEXT"/>
                 <command name="glProgramUniform3uivEXT"/>
                 <command name="glProgramUniform4uivEXT"/>
-                <command name="glProgramUniformMatrix4fvEXT"/>
                 <command name="glProgramUniformMatrix2x3fvEXT"/>
                 <command name="glProgramUniformMatrix3x2fvEXT"/>
                 <command name="glProgramUniformMatrix2x4fvEXT"/>

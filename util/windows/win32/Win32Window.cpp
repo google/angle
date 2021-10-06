@@ -8,6 +8,7 @@
 
 #include "util/windows/win32/Win32Window.h"
 
+#include <crtdbg.h>
 #include <sstream>
 
 #include "common/debug.h"
@@ -276,6 +277,9 @@ LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 
             case WM_SIZE:
             {
+                if (window->mIgnoreSizeEvents)
+                    break;
+
                 RECT winRect;
                 GetClientRect(hWnd, &winRect);
 
@@ -497,7 +501,7 @@ Win32Window::~Win32Window()
     destroy();
 }
 
-bool Win32Window::initialize(const std::string &name, int width, int height)
+bool Win32Window::initializeImpl(const std::string &name, int width, int height)
 {
     destroy();
 
@@ -570,6 +574,12 @@ bool Win32Window::initialize(const std::string &name, int width, int height)
     }
 
     return true;
+}
+
+void Win32Window::disableErrorMessageDialog()
+{
+    _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG);
+    _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 }
 
 void Win32Window::destroy()
@@ -734,6 +744,12 @@ void Win32Window::setMousePosition(int x, int y)
     ClientToScreen(mNativeWindow, &topLeft);
 
     SetCursorPos(topLeft.x + x, topLeft.y + y);
+}
+
+bool Win32Window::setOrientation(int width, int height)
+{
+    UNIMPLEMENTED();
+    return false;
 }
 
 bool Win32Window::setPosition(int x, int y)

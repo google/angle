@@ -9,14 +9,21 @@
 #ifndef LIBANGLE_RENDERER_GL_EAGL_DISPLAYEAGL_H_
 #define LIBANGLE_RENDERER_GL_EAGL_DISPLAYEAGL_H_
 
-#include "libANGLE/renderer/gl/DisplayGL.h"
+#include <thread>
+#include <unordered_set>
 
-#ifdef __OBJC__
+#import "common/platform.h"
+
+#if defined(ANGLE_ENABLE_EAGL)
+
+#    include "libANGLE/renderer/gl/DisplayGL.h"
+
+#    ifdef __OBJC__
 @class EAGLContext;
 typedef EAGLContext *EAGLContextObj;
-#else
+#    else
 typedef void *EAGLContextObj;
-#endif
+#    endif
 
 namespace rx
 {
@@ -31,6 +38,8 @@ class DisplayEAGL : public DisplayGL
 
     egl::Error initialize(egl::Display *display) override;
     void terminate() override;
+    egl::Error prepareForCall() override;
+    egl::Error releaseThread() override;
 
     SurfaceImpl *createWindowSurface(const egl::SurfaceState &state,
                                      EGLNativeWindowType window,
@@ -64,8 +73,6 @@ class DisplayEAGL : public DisplayGL
 
     DeviceImpl *createDevice() override;
 
-    std::string getVendorString() const override;
-
     egl::Error waitClient(const gl::Context *context) override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) override;
 
@@ -79,6 +86,8 @@ class DisplayEAGL : public DisplayGL
 
     void populateFeatureList(angle::FeatureList *features) override;
 
+    RendererGL *getRenderer() const override;
+
   private:
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;
 
@@ -89,8 +98,12 @@ class DisplayEAGL : public DisplayGL
 
     egl::Display *mEGLDisplay;
     EAGLContextObj mContext;
+    std::unordered_set<std::thread::id> mThreadsWithContextCurrent;
+    bool mDeviceContextIsVolatile = false;
 };
 
 }  // namespace rx
+
+#endif  // defined(ANGLE_ENABLE_EAGL)
 
 #endif  // LIBANGLE_RENDERER_GL_EAGL_DISPLAYEAGL_H_

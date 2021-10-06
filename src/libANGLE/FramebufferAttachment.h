@@ -15,6 +15,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/ImageIndex.h"
 #include "libANGLE/Observer.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/FramebufferAttachmentObjectImpl.h"
 
@@ -43,12 +44,6 @@ class FramebufferAttachmentObject;
 class Renderbuffer;
 class Texture;
 
-enum class InitState
-{
-    MayNeedInit,
-    Initialized,
-};
-
 // FramebufferAttachment implements a GL framebuffer attachment.
 // Attachments are "light" containers, which store pointers to ref-counted GL objects.
 // We support GL texture (2D/3D/Cube/2D array) and renderbuffer object attachments.
@@ -64,14 +59,15 @@ class FramebufferAttachment final
                           GLenum type,
                           GLenum binding,
                           const ImageIndex &textureIndex,
-                          FramebufferAttachmentObject *resource);
+                          FramebufferAttachmentObject *resource,
+                          rx::Serial framebufferSerial);
 
     FramebufferAttachment(FramebufferAttachment &&other);
     FramebufferAttachment &operator=(FramebufferAttachment &&other);
 
     ~FramebufferAttachment();
 
-    void detach(const Context *context);
+    void detach(const Context *context, rx::Serial framebufferSerial);
     void attach(const Context *context,
                 GLenum type,
                 GLenum binding,
@@ -80,7 +76,8 @@ class FramebufferAttachment final
                 GLsizei numViews,
                 GLuint baseViewIndex,
                 bool isMultiview,
-                GLsizei samples);
+                GLsizei samples,
+                rx::Serial framebufferSerial);
 
     // Helper methods
     GLuint getRedSize() const;
@@ -95,6 +92,10 @@ class FramebufferAttachment final
     bool isTextureWithId(TextureID textureId) const
     {
         return mType == GL_TEXTURE && id() == textureId.value;
+    }
+    bool isExternalTexture() const
+    {
+        return mType == GL_TEXTURE && getTextureImageIndex().getType() == gl::TextureType::External;
     }
     bool isRenderbufferWithId(GLuint renderbufferId) const
     {
@@ -116,6 +117,10 @@ class FramebufferAttachment final
     bool isMultiview() const;
     GLint getBaseViewIndex() const;
 
+    bool isRenderToTexture() const
+    {
+        return mRenderToTextureSamples != kDefaultRenderToTextureSamples;
+    }
     GLsizei getRenderToTextureSamples() const { return mRenderToTextureSamples; }
 
     // The size of the underlying resource the attachment points to. The 'depth' value will
@@ -130,6 +135,7 @@ class FramebufferAttachment final
     GLenum type() const { return mType; }
     bool isAttached() const { return mType != GL_NONE; }
     bool isRenderable(const Context *context) const;
+    bool isYUV() const;
 
     Renderbuffer *getRenderbuffer() const;
     Texture *getTexture() const;
@@ -193,7 +199,7 @@ class FramebufferAttachment final
 };
 
 // A base class for objects that FBO Attachments may point to.
-class FramebufferAttachmentObject : public angle::Subject
+class FramebufferAttachmentObject : public angle::Subject, public angle::ObserverInterface
 {
   public:
     FramebufferAttachmentObject();
@@ -205,10 +211,12 @@ class FramebufferAttachmentObject : public angle::Subject
     virtual bool isRenderable(const Context *context,
                               GLenum binding,
                               const ImageIndex &imageIndex) const                          = 0;
+    virtual bool isYUV() const                                                             = 0;
+    virtual bool hasProtectedContent() const                                               = 0;
 
-    virtual void onAttach(const Context *context) = 0;
-    virtual void onDetach(const Context *context) = 0;
-    virtual GLuint getId() const                  = 0;
+    virtual void onAttach(const Context *context, rx::Serial framebufferSerial) = 0;
+    virtual void onDetach(const Context *context, rx::Serial framebufferSerial) = 0;
+    virtual GLuint getId() const                                                = 0;
 
     // These are used for robust resource initialization.
     virtual InitState initState(const ImageIndex &imageIndex) const              = 0;
@@ -270,6 +278,12 @@ inline bool FramebufferAttachment::isRenderable(const Context *context) const
 {
     ASSERT(mResource);
     return mResource->isRenderable(context, mTarget.binding(), mTarget.textureIndex());
+}
+
+inline bool FramebufferAttachment::isYUV() const
+{
+    ASSERT(mResource);
+    return mResource->isYUV();
 }
 
 }  // namespace gl

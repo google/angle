@@ -45,6 +45,7 @@ struct FunctionsEGL::EGLDispatchTable
           destroyContextPtr(nullptr),
           destroySurfacePtr(nullptr),
           getConfigAttribPtr(nullptr),
+          getCurrentSurfacePtr(nullptr),
           getDisplayPtr(nullptr),
           getErrorPtr(nullptr),
           initializePtr(nullptr),
@@ -58,6 +59,8 @@ struct FunctionsEGL::EGLDispatchTable
           releaseTexImagePtr(nullptr),
           surfaceAttribPtr(nullptr),
           swapIntervalPtr(nullptr),
+
+          getCurrentContextPtr(nullptr),
 
           createImageKHRPtr(nullptr),
           destroyImageKHRPtr(nullptr),
@@ -93,6 +96,7 @@ struct FunctionsEGL::EGLDispatchTable
     PFNEGLDESTROYCONTEXTPROC destroyContextPtr;
     PFNEGLDESTROYSURFACEPROC destroySurfacePtr;
     PFNEGLGETCONFIGATTRIBPROC getConfigAttribPtr;
+    PFNEGLGETCURRENTSURFACEPROC getCurrentSurfacePtr;
     PFNEGLGETDISPLAYPROC getDisplayPtr;
     PFNEGLGETERRORPROC getErrorPtr;
     PFNEGLINITIALIZEPROC initializePtr;
@@ -107,6 +111,9 @@ struct FunctionsEGL::EGLDispatchTable
     PFNEGLRELEASETEXIMAGEPROC releaseTexImagePtr;
     PFNEGLSURFACEATTRIBPROC surfaceAttribPtr;
     PFNEGLSWAPINTERVALPROC swapIntervalPtr;
+
+    // 1.4
+    PFNEGLGETCURRENTCONTEXTPROC getCurrentContextPtr;
 
     // EGL_KHR_image
     PFNEGLCREATEIMAGEKHRPROC createImageKHRPtr;
@@ -169,6 +176,7 @@ egl::Error FunctionsEGL::initialize(EGLNativeDisplayType nativeDisplay)
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->destroyContextPtr, eglDestroyContext);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->destroySurfacePtr, eglDestroySurface);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getConfigAttribPtr, eglGetConfigAttrib);
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getCurrentSurfacePtr, eglGetCurrentSurface);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getDisplayPtr, eglGetDisplay);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getErrorPtr, eglGetError);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->initializePtr, eglInitialize);
@@ -200,6 +208,8 @@ egl::Error FunctionsEGL::initialize(EGLNativeDisplayType nativeDisplay)
     {
         return egl::Error(mFnPtrs->getErrorPtr(), "Failed to bind API in system egl");
     }
+
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getCurrentContextPtr, eglGetCurrentContext);
 
     const char *extensions = queryString(EGL_EXTENSIONS);
     if (!extensions)
@@ -333,6 +343,11 @@ EGLBoolean FunctionsEGL::getConfigAttrib(EGLConfig config, EGLint attribute, EGL
     return mFnPtrs->getConfigAttribPtr(mEGLDisplay, config, attribute, value);
 }
 
+EGLSurface FunctionsEGL::getCurrentSurface(EGLint readdraw) const
+{
+    return mFnPtrs->getCurrentSurfacePtr(readdraw);
+}
+
 EGLContext FunctionsEGL::createContext(EGLConfig config,
                                        EGLContext share_context,
                                        EGLint const *attrib_list) const
@@ -402,6 +417,11 @@ EGLBoolean FunctionsEGL::swapInterval(EGLint interval) const
     return mFnPtrs->swapIntervalPtr(mEGLDisplay, interval);
 }
 
+EGLContext FunctionsEGL::getCurrentContext() const
+{
+    return mFnPtrs->getCurrentContextPtr();
+}
+
 EGLImageKHR FunctionsEGL::createImageKHR(EGLContext context,
                                          EGLenum target,
                                          EGLClientBuffer buffer,
@@ -441,7 +461,7 @@ EGLint FunctionsEGL::waitSyncKHR(EGLSyncKHR sync, EGLint flags) const
 }
 
 EGLBoolean FunctionsEGL::swapBuffersWithDamageKHR(EGLSurface surface,
-                                                  EGLint *rects,
+                                                  const EGLint *rects,
                                                   EGLint n_rects) const
 {
     return mFnPtrs->swapBuffersWithDamageKHRPtr(mEGLDisplay, surface, rects, n_rects);

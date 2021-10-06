@@ -33,7 +33,7 @@ using SubjectIndex = size_t;
 enum class SubjectMessage
 {
     // Used by gl::VertexArray to notify gl::Context of a gl::Buffer binding count change. Triggers
-    // a validation cache update.
+    // a validation cache update. Also used by gl::Texture to notify gl::Framebuffer of loops.
     BindingChanged,
 
     // Only the contents (pixels, bytes, etc) changed in this Subject. Distinct from the object
@@ -51,6 +51,19 @@ enum class SubjectMessage
     // gl::VertexArray, into gl::Context. Used to track validation.
     SubjectMapped,
     SubjectUnmapped,
+
+    // Indicates an external change to the default framebuffer.
+    SurfaceChanged,
+
+    // Indicates a separable program's textures or images changed in the ProgramExecutable.
+    ProgramTextureOrImageBindingChanged,
+    // Indicates a separable program was successfully re-linked.
+    ProgramRelinked,
+    // Indicates a separable program's sampler uniforms were updated.
+    SamplerUniformsUpdated,
+
+    // Indicates a Storage of back-end in gl::Texture has been released.
+    StorageReleased,
 };
 
 // The observing class inherits from this interface class.

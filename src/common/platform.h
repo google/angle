@@ -82,8 +82,16 @@
 #        endif
 #    endif
 
+// Macros 'near', 'far', 'NEAR' and 'FAR' are defined by 'shared/minwindef.h' in the Windows SDK.
+// Macros 'near' and 'far' are empty. They are not used by other Windows headers and are undefined
+// here to avoid identifier conflicts. Macros 'NEAR' and 'FAR' contain 'near' and 'far'. They are
+// used by other Windows headers and are cleared here to avoid compilation errors.
 #    undef near
 #    undef far
+#    undef NEAR
+#    undef FAR
+#    define NEAR
+#    define FAR
 #endif
 
 #if defined(_MSC_VER) && !defined(_M_ARM) && !defined(_M_ARM64)
@@ -120,13 +128,27 @@
 #        define ANGLE_PLATFORM_MACOS 1
 #    elif TARGET_OS_IPHONE
 #        define ANGLE_PLATFORM_IOS 1
-#        define GLES_SILENCE_DEPRECATION
 #        if TARGET_OS_SIMULATOR
 #            define ANGLE_PLATFORM_IOS_SIMULATOR 1
 #        endif
 #        if TARGET_OS_MACCATALYST
-#            define ANGLE_PLATFORM_MACCATALYST
+#            define ANGLE_PLATFORM_MACCATALYST 1
 #        endif
+#    endif
+#    // This might be useful globally. At the moment it is used
+#    // to differentiate MacCatalyst on Intel and Apple Silicon.
+#    if defined(__arm64__) || defined(__aarch64__)
+#        define ANGLE_CPU_ARM64 1
+#    endif
+#    // EAGL should be enabled on iOS, but not Mac Catalyst unless it is running on Apple Silicon.
+#    if (defined(ANGLE_PLATFORM_IOS) && !defined(ANGLE_PLATFORM_MACCATALYST)) || \
+        (defined(ANGLE_PLATFORM_MACCATALYST) && defined(ANGLE_CPU_ARM64))
+#        define ANGLE_ENABLE_EAGL
+#    endif
+#    // Identify Metal API >= what shipped on macOS Catalina.
+#    if (defined(ANGLE_PLATFORM_MACOS) && __MAC_OS_X_VERSION_MAX_ALLOWED >= 101500) || \
+        (defined(ANGLE_PLATFORM_IOS) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000)
+#        define ANGLE_WITH_MODERN_METAL_API 1
 #    endif
 #endif
 
@@ -135,6 +157,13 @@
 #    if __has_feature(address_sanitizer)
 #        define ANGLE_WITH_ASAN 1
 #    endif
+#endif
+
+#include <cstdint>
+#if INTPTR_MAX == INT64_MAX
+#    define ANGLE_IS_64_BIT_CPU 1
+#else
+#    define ANGLE_IS_32_BIT_CPU 1
 #endif
 
 #endif  // COMMON_PLATFORM_H_

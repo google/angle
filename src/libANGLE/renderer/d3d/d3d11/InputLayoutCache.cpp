@@ -59,7 +59,7 @@ struct PackedAttribute
     uint8_t attribType;
     uint8_t semanticIndex;
     uint8_t vertexFormatType;
-    uint8_t dummyPadding;
+    uint8_t unusedPadding;
     uint32_t divisor;
 };
 
@@ -80,7 +80,7 @@ void PackedAttributeLayout::addAttributeData(GLenum glType,
     packedAttrib.attribType       = static_cast<uint8_t>(attribType);
     packedAttrib.semanticIndex    = static_cast<uint8_t>(semanticIndex);
     packedAttrib.vertexFormatType = static_cast<uint8_t>(vertexFormatID);
-    packedAttrib.dummyPadding     = 0u;
+    packedAttrib.unusedPadding    = 0u;
     packedAttrib.divisor          = static_cast<uint32_t>(divisor);
 
     ASSERT(static_cast<gl::AttributeType>(packedAttrib.attribType) == attribType);
@@ -149,7 +149,7 @@ angle::Result InputLayoutCache::getInputLayout(
     const auto &locationToSemantic = programD3D->getAttribLocationToD3DSemantics();
     int divisorMultiplier          = program->usesMultiview() ? program->getNumViews() : 1;
 
-    for (size_t attribIndex : program->getActiveAttribLocationsMask())
+    for (size_t attribIndex : state.getProgramExecutable()->getActiveAttribLocationsMask())
     {
         // Record the type of the associated vertex shader vector in our key
         // This will prevent mismatched vertex shaders from using the same input layout

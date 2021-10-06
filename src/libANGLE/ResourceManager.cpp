@@ -13,9 +13,9 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/MemoryObject.h"
-#include "libANGLE/Path.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/ProgramPipeline.h"
+#include "libANGLE/Query.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Sampler.h"
 #include "libANGLE/Semaphore.h"
@@ -33,25 +33,23 @@ template <typename ResourceType, typename IDType>
 IDType AllocateEmptyObject(HandleAllocator *handleAllocator,
                            ResourceMap<ResourceType, IDType> *objectMap)
 {
-    IDType handle = FromGL<IDType>(handleAllocator->allocate());
+    IDType handle = PackParam<IDType>(handleAllocator->allocate());
     objectMap->assign(handle, nullptr);
     return handle;
 }
 
 }  // anonymous namespace
 
-template <typename HandleAllocatorType>
-ResourceManagerBase<HandleAllocatorType>::ResourceManagerBase() : mRefCount(1)
-{}
+ResourceManagerBase::ResourceManagerBase() : mRefCount(1) {}
 
-template <typename HandleAllocatorType>
-void ResourceManagerBase<HandleAllocatorType>::addRef()
+ResourceManagerBase::~ResourceManagerBase() = default;
+
+void ResourceManagerBase::addRef()
 {
     mRefCount++;
 }
 
-template <typename HandleAllocatorType>
-void ResourceManagerBase<HandleAllocatorType>::release(const Context *context)
+void ResourceManagerBase::release(const Context *context)
 {
     if (--mRefCount == 0)
     {
@@ -60,15 +58,14 @@ void ResourceManagerBase<HandleAllocatorType>::release(const Context *context)
     }
 }
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
-TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::~TypedResourceManager()
+template <typename ResourceType, typename ImplT, typename IDType>
+TypedResourceManager<ResourceType, ImplT, IDType>::~TypedResourceManager()
 {
     ASSERT(mObjectMap.empty());
 }
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
-void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::reset(
-    const Context *context)
+template <typename ResourceType, typename ImplT, typename IDType>
+void TypedResourceManager<ResourceType, ImplT, IDType>::reset(const Context *context)
 {
     this->mHandleAllocator.reset();
     for (const auto &resource : mObjectMap)
@@ -81,10 +78,9 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::res
     mObjectMap.clear();
 }
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
-void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::deleteObject(
-    const Context *context,
-    IDType handle)
+template <typename ResourceType, typename ImplT, typename IDType>
+void TypedResourceManager<ResourceType, ImplT, IDType>::deleteObject(const Context *context,
+                                                                     IDType handle)
 {
     ResourceType *resource = nullptr;
     if (!mObjectMap.erase(handle, &resource))
@@ -101,26 +97,19 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::del
     }
 }
 
-template class ResourceManagerBase<HandleAllocator>;
-template class ResourceManagerBase<HandleRangeAllocator>;
-template class TypedResourceManager<Buffer, HandleAllocator, BufferManager, BufferID>;
-template class TypedResourceManager<Texture, HandleAllocator, TextureManager, TextureID>;
-template class TypedResourceManager<Renderbuffer,
-                                    HandleAllocator,
-                                    RenderbufferManager,
-                                    RenderbufferID>;
-template class TypedResourceManager<Sampler, HandleAllocator, SamplerManager, SamplerID>;
-template class TypedResourceManager<Sync, HandleAllocator, SyncManager, GLuint>;
-template class TypedResourceManager<Framebuffer,
-                                    HandleAllocator,
-                                    FramebufferManager,
-                                    FramebufferID>;
-template class TypedResourceManager<ProgramPipeline,
-                                    HandleAllocator,
-                                    ProgramPipelineManager,
-                                    ProgramPipelineID>;
+// Unclear why Clang warns about weak vtables in this case.
+ANGLE_DISABLE_WEAK_TEMPLATE_VTABLES_WARNING
+template class TypedResourceManager<Buffer, BufferManager, BufferID>;
+template class TypedResourceManager<Texture, TextureManager, TextureID>;
+template class TypedResourceManager<Renderbuffer, RenderbufferManager, RenderbufferID>;
+template class TypedResourceManager<Sampler, SamplerManager, SamplerID>;
+template class TypedResourceManager<Sync, SyncManager, GLuint>;
+template class TypedResourceManager<Framebuffer, FramebufferManager, FramebufferID>;
+template class TypedResourceManager<ProgramPipeline, ProgramPipelineManager, ProgramPipelineID>;
+ANGLE_REENABLE_WEAK_TEMPLATE_VTABLES_WARNING
 
 // BufferManager Implementation.
+BufferManager::~BufferManager() = default;
 
 // static
 Buffer *BufferManager::AllocateNewObject(rx::GLImplFactory *factory, BufferID handle)
@@ -227,6 +216,8 @@ void ShaderProgramManager::deleteObject(const Context *context,
 
 // TextureManager Implementation.
 
+TextureManager::~TextureManager() = default;
+
 // static
 Texture *TextureManager::AllocateNewObject(rx::GLImplFactory *factory,
                                            TextureID handle,
@@ -268,6 +259,8 @@ void TextureManager::enableHandleAllocatorLogging()
 
 // RenderbufferManager Implementation.
 
+RenderbufferManager::~RenderbufferManager() = default;
+
 // static
 Renderbuffer *RenderbufferManager::AllocateNewObject(rx::GLImplFactory *factory,
                                                      RenderbufferID handle)
@@ -294,6 +287,8 @@ Renderbuffer *RenderbufferManager::getRenderbuffer(RenderbufferID handle) const
 }
 
 // SamplerManager Implementation.
+
+SamplerManager::~SamplerManager() = default;
 
 // static
 Sampler *SamplerManager::AllocateNewObject(rx::GLImplFactory *factory, SamplerID handle)
@@ -326,6 +321,8 @@ bool SamplerManager::isSampler(SamplerID sampler) const
 
 // SyncManager Implementation.
 
+SyncManager::~SyncManager() = default;
+
 // static
 void SyncManager::DeleteObject(const Context *context, Sync *sync)
 {
@@ -346,90 +343,19 @@ Sync *SyncManager::getSync(GLuint handle) const
     return mObjectMap.query(handle);
 }
 
-// PathManager Implementation.
-
-PathManager::PathManager() = default;
-
-angle::Result PathManager::createPaths(Context *context, GLsizei range, PathID *createdOut)
-{
-    *createdOut = {0};
-
-    // Allocate client side handles.
-    const GLuint client = mHandleAllocator.allocateRange(static_cast<GLuint>(range));
-    if (client == HandleRangeAllocator::kInvalidHandle)
-    {
-        context->handleError(GL_OUT_OF_MEMORY, "Failed to allocate path handle range.", __FILE__,
-                             ANGLE_FUNCTION, __LINE__);
-        return angle::Result::Stop;
-    }
-
-    const auto &paths = context->getImplementation()->createPaths(range);
-    if (paths.empty())
-    {
-        mHandleAllocator.releaseRange(client, range);
-        context->handleError(GL_OUT_OF_MEMORY, "Failed to allocate path objects.", __FILE__,
-                             ANGLE_FUNCTION, __LINE__);
-        return angle::Result::Stop;
-    }
-
-    for (GLsizei i = 0; i < range; ++i)
-    {
-        rx::PathImpl *impl = paths[static_cast<unsigned>(i)];
-        PathID id          = PathID{client + i};
-        mPaths.assign(id, new Path(impl));
-    }
-    *createdOut = PathID{client};
-    return angle::Result::Continue;
-}
-
-void PathManager::deletePaths(PathID first, GLsizei range)
-{
-    GLuint firstHandle = first.value;
-    for (GLsizei i = 0; i < range; ++i)
-    {
-        GLuint id = firstHandle + i;
-        Path *p   = nullptr;
-        if (!mPaths.erase({id}, &p))
-            continue;
-        delete p;
-    }
-    mHandleAllocator.releaseRange(firstHandle, static_cast<GLuint>(range));
-}
-
-Path *PathManager::getPath(PathID handle) const
-{
-    return mPaths.query(handle);
-}
-
-bool PathManager::hasPath(PathID handle) const
-{
-    return mHandleAllocator.isUsed(GetIDValue(handle));
-}
-
-PathManager::~PathManager()
-{
-    ASSERT(mPaths.empty());
-}
-
-void PathManager::reset(const Context *context)
-{
-    for (auto path : mPaths)
-    {
-        SafeDelete(path.second);
-    }
-    mPaths.clear();
-}
-
 // FramebufferManager Implementation.
+
+FramebufferManager::~FramebufferManager() = default;
 
 // static
 Framebuffer *FramebufferManager::AllocateNewObject(rx::GLImplFactory *factory,
                                                    FramebufferID handle,
-                                                   const Caps &caps)
+                                                   const Caps &caps,
+                                                   egl::ShareGroup *shareGroup)
 {
     // Make sure the caller isn't using a reserved handle.
     ASSERT(handle != Framebuffer::kDefaultDrawFramebufferHandle);
-    return new Framebuffer(caps, factory, handle);
+    return new Framebuffer(caps, factory, handle, shareGroup);
 }
 
 // static
@@ -455,6 +381,11 @@ void FramebufferManager::setDefaultFramebuffer(Framebuffer *framebuffer)
     mObjectMap.assign(Framebuffer::kDefaultDrawFramebufferHandle, framebuffer);
 }
 
+Framebuffer *FramebufferManager::getDefaultFramebuffer() const
+{
+    return getFramebuffer(Framebuffer::kDefaultDrawFramebufferHandle);
+}
+
 void FramebufferManager::invalidateFramebufferCompletenessCache() const
 {
     for (const auto &framebuffer : mObjectMap)
@@ -467,6 +398,8 @@ void FramebufferManager::invalidateFramebufferCompletenessCache() const
 }
 
 // ProgramPipelineManager Implementation.
+
+ProgramPipelineManager::~ProgramPipelineManager() = default;
 
 // static
 ProgramPipeline *ProgramPipelineManager::AllocateNewObject(rx::GLImplFactory *factory,
@@ -590,5 +523,4 @@ Semaphore *SemaphoreManager::getSemaphore(SemaphoreID handle) const
 {
     return mSemaphores.query(handle);
 }
-
 }  // namespace gl

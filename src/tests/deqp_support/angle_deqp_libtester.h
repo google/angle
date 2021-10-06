@@ -10,6 +10,8 @@
 #ifndef ANGLE_DEQP_LIBTESTER_H_
 #define ANGLE_DEQP_LIBTESTER_H_
 
+#include <stdint.h>
+
 #if defined(_WIN32)
 #    if defined(ANGLE_DEQP_LIBTESTER_IMPLEMENTATION)
 #        define ANGLE_LIBTESTER_EXPORT __declspec(dllexport)
@@ -27,7 +29,7 @@
 #endif
 
 // Possible results of deqp_libtester_run
-enum class TestResult
+enum class dEQPTestResult
 {
     Pass,
     Fail,
@@ -35,12 +37,20 @@ enum class TestResult
     Exception,
 };
 
+struct dEQPOptions
+{
+    uint32_t preRotation;
+    bool enableDirectSPIRVGen;  // TODO: remove when no longer needed.  http://anglebug.com/6210
+    bool enableRenderDocCapture;
+};
+
 // Exported to the tester app.
 ANGLE_LIBTESTER_EXPORT int deqp_libtester_main(int argc, const char *argv[]);
 ANGLE_LIBTESTER_EXPORT bool deqp_libtester_init_platform(int argc,
                                                          const char *argv[],
-                                                         void *logErrorFunc);
+                                                         void *logErrorFunc,
+                                                         const dEQPOptions &options);
 ANGLE_LIBTESTER_EXPORT void deqp_libtester_shutdown_platform();
-ANGLE_LIBTESTER_EXPORT TestResult deqp_libtester_run(const char *caseName);
+ANGLE_LIBTESTER_EXPORT dEQPTestResult deqp_libtester_run(const char *caseName);
 
 #endif  // ANGLE_DEQP_LIBTESTER_H_

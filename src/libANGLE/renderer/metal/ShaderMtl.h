@@ -11,22 +11,35 @@
 
 #include <map>
 
+#include "compiler/translator/TranslatorMetalDirect.h"
 #include "libANGLE/renderer/ShaderImpl.h"
-
 namespace rx
 {
 
 class ShaderMtl : public ShaderImpl
 {
   public:
-    ShaderMtl(const gl::ShaderState &data);
+    ShaderMtl(const gl::ShaderState &state);
     ~ShaderMtl() override;
 
     std::shared_ptr<WaitableCompileEvent> compile(const gl::Context *context,
                                                   gl::ShCompilerInstance *compilerInstance,
                                                   ShCompileOptions options) override;
 
+    sh::TranslatorMetalReflection *getTranslatorMetalReflection()
+    {
+        return &translatorMetalReflection;
+    }
+
     std::string getDebugInfo() const override;
+
+    sh::TranslatorMetalReflection translatorMetalReflection = {};
+
+  private:
+    std::shared_ptr<WaitableCompileEvent> compileImplMtl(const gl::Context *context,
+                                                         gl::ShCompilerInstance *compilerInstance,
+                                                         const std::string &source,
+                                                         ShCompileOptions compileOptions);
 };
 
 }  // namespace rx

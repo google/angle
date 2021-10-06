@@ -18,8 +18,8 @@
  *
  */
 
-#ifndef TCU_ANGLE_WIN32_PLATFORM_H_
-#define TCU_ANGLE_WIN32_PLATFORM_H_
+#ifndef TCU_ANGLE_PLATFORM_H_
+#define TCU_ANGLE_PLATFORM_H_
 
 #include "gluPlatform.hpp"
 #include "tcuDefs.hpp"
@@ -29,7 +29,7 @@
 #    include "egluPlatform.hpp"
 #endif
 
-#include "platform/Platform.h"
+#include "platform/PlatformMethods.h"
 #include "tcuANGLENativeDisplayFactory.h"
 
 namespace tcu
@@ -38,7 +38,9 @@ namespace tcu
 class ANGLEPlatform : public tcu::Platform, private glu::Platform, private eglu::Platform
 {
   public:
-    ANGLEPlatform(angle::LogErrorFunc logErrorFunc);
+    ANGLEPlatform(angle::LogErrorFunc logErrorFunc,
+                  uint32_t preRotation,
+                  bool enableDirectSPIRVGen);
     ~ANGLEPlatform();
 
     bool processEvents() override;
@@ -61,8 +63,13 @@ class ANGLEPlatform : public tcu::Platform, private glu::Platform, private eglu:
 
     EventState mEvents;
     angle::PlatformMethods mPlatformMethods;
+    std::vector<const char *> mEnableFeatureOverrides;
 };
 
 }  // namespace tcu
 
-#endif  // TCU_ANGLE_WIN32_PLATFORM_H_
+tcu::Platform *CreateANGLEPlatform(angle::LogErrorFunc logErrorFunc,
+                                   uint32_t preRotation,
+                                   bool enableDirectSPIRVGen);
+
+#endif  // TCU_ANGLE_PLATFORM_H_

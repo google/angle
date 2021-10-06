@@ -7,13 +7,12 @@
 
 #include "common/platform.h"
 #include "gpu_info_util/SystemInfo.h"
-#include "util/EGLWindow.h"
-#include "util/OSWindow.h"
-#include "util/test_utils.h"
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
 #    include <VersionHelpers.h>
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
+
+using namespace angle;
 
 bool IsAdreno()
 {
@@ -78,7 +77,12 @@ bool IsMetal()
 {
     const char *renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
     std::string rendererString(renderer);
-    return (rendererString.find("Metal") != std::string::npos);
+    return (rendererString.find("ANGLE Metal") != std::string::npos);
+}
+
+bool IsD3D()
+{
+    return IsD3D9() || IsD3D11();
 }
 
 bool IsDebug()

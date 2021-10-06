@@ -9,8 +9,12 @@
 #ifndef LIBANGLE_RENDERER_GL_EAGL_DEVICEEAGL_H_
 #define LIBANGLE_RENDERER_GL_EAGL_DEVICEEAGL_H_
 
-#include "libANGLE/Device.h"
-#include "libANGLE/renderer/DeviceImpl.h"
+#import "common/platform.h"
+
+#if defined(ANGLE_ENABLE_EAGL)
+
+#    include "libANGLE/Device.h"
+#    include "libANGLE/renderer/DeviceImpl.h"
 
 namespace rx
 {
@@ -29,5 +33,7 @@ class DeviceEAGL : public DeviceImpl
 };
 
 }  // namespace rx
+
+#endif  // defined(ANGLE_ENABLE_EAGL)
 
 #endif  // LIBANGLE_RENDERER_GL_EAGL_DEVICEEAGL_H_

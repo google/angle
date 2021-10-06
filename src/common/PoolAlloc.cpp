@@ -37,7 +37,14 @@ PoolAllocator::PoolAllocator(int growthIncrement, int allocationAlignment)
 #endif
       mLocked(false)
 {
+    initialize(growthIncrement, allocationAlignment);
+}
+
+void PoolAllocator::initialize(int pageSize, int alignment)
+{
+    mAlignment = alignment;
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
+    mPageSize = pageSize;
     if (mAlignment == 1)
     {
         // This is a special fast-path where fastAllocation() is enabled
@@ -328,7 +335,7 @@ void PoolAllocator::unlock()
 void Allocation::checkAllocList() const
 {
     for (const Allocation *alloc = this; alloc != 0; alloc = alloc->mPrevAlloc)
-        alloc->check();
+        alloc->checkAlloc();
 }
 
 }  // namespace angle

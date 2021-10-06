@@ -82,41 +82,14 @@ angle::Result FramebufferNULL::clearBufferfi(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-GLenum FramebufferNULL::getImplementationColorReadFormat(const gl::Context *context) const
-{
-    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
-    if (readAttachment == nullptr)
-    {
-        return GL_NONE;
-    }
-
-    const gl::Format &format = readAttachment->getFormat();
-    ASSERT(format.info != nullptr);
-    return format.info->getReadPixelsFormat(context->getExtensions());
-}
-
-GLenum FramebufferNULL::getImplementationColorReadType(const gl::Context *context) const
-{
-    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
-    if (readAttachment == nullptr)
-    {
-        return GL_NONE;
-    }
-
-    const gl::Format &format = readAttachment->getFormat();
-    ASSERT(format.info != nullptr);
-    return format.info->getReadPixelsType(context->getClientVersion());
-}
-
 angle::Result FramebufferNULL::readPixels(const gl::Context *context,
                                           const gl::Rectangle &origArea,
                                           GLenum format,
                                           GLenum type,
+                                          const gl::PixelPackState &pack,
+                                          gl::Buffer *packBuffer,
                                           void *ptrOrOffset)
 {
-    const gl::PixelPackState &packState = context->getState().getPackState();
-    gl::Buffer *packBuffer = context->getState().getTargetBuffer(gl::BufferBinding::PixelPack);
-
     // Get the pointer to write to from the argument or the pack buffer
     GLubyte *pixels = nullptr;
     if (packBuffer != nullptr)
@@ -131,7 +104,7 @@ angle::Result FramebufferNULL::readPixels(const gl::Context *context,
     }
 
     // Clip read area to framebuffer.
-    const gl::Extents fbSize = getState().getReadAttachment()->getSize();
+    const gl::Extents fbSize = getState().getReadPixelsAttachment(format)->getSize();
     const gl::Rectangle fbRect(0, 0, fbSize.width, fbSize.height);
     gl::Rectangle area;
     if (!ClipRectangle(origArea, fbRect, &area))
@@ -146,13 +119,12 @@ angle::Result FramebufferNULL::readPixels(const gl::Context *context,
     ContextNULL *contextNull = GetImplAs<ContextNULL>(context);
 
     GLuint rowBytes = 0;
-    ANGLE_CHECK_GL_MATH(contextNull,
-                        glFormat.computeRowPitch(type, origArea.width, packState.alignment,
-                                                 packState.rowLength, &rowBytes));
+    ANGLE_CHECK_GL_MATH(contextNull, glFormat.computeRowPitch(type, origArea.width, pack.alignment,
+                                                              pack.rowLength, &rowBytes));
 
     GLuint skipBytes = 0;
     ANGLE_CHECK_GL_MATH(contextNull,
-                        glFormat.computeSkipBytes(type, rowBytes, 0, packState, false, &skipBytes));
+                        glFormat.computeSkipBytes(type, rowBytes, 0, pack, false, &skipBytes));
     pixels += skipBytes;
 
     // Skip OOB region up to first in bounds pixel
@@ -179,13 +151,15 @@ angle::Result FramebufferNULL::blit(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-bool FramebufferNULL::checkStatus(const gl::Context *context) const
+gl::FramebufferStatus FramebufferNULL::checkStatus(const gl::Context *context) const
 {
-    return true;
+    return gl::FramebufferStatus::Complete();
 }
 
 angle::Result FramebufferNULL::syncState(const gl::Context *context,
-                                         const gl::Framebuffer::DirtyBits &dirtyBits)
+                                         GLenum binding,
+                                         const gl::Framebuffer::DirtyBits &dirtyBits,
+                                         gl::Command command)
 {
     return angle::Result::Continue;
 }

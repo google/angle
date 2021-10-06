@@ -681,11 +681,11 @@ void Blit9::render()
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
-    HRESULT hr = device->SetStreamSource(0, mQuadVertexBuffer, 0, 2 * sizeof(float));
-    hr         = device->SetVertexDeclaration(mQuadVertexDeclaration);
+    device->SetStreamSource(0, mQuadVertexBuffer, 0, 2 * sizeof(float));
+    device->SetVertexDeclaration(mQuadVertexDeclaration);
 
     mRenderer->startScene();
-    hr = device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+    device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 }
 
 void Blit9::saveState()
@@ -704,22 +704,22 @@ void Blit9::saveState()
 
         setCommonBlitState();
 
-        static const float dummyConst[8] = {0};
+        static const float mockConst[8] = {0};
 
         device->SetVertexShader(nullptr);
-        device->SetVertexShaderConstantF(0, dummyConst, 2);
+        device->SetVertexShaderConstantF(0, mockConst, 2);
         device->SetPixelShader(nullptr);
-        device->SetPixelShaderConstantF(0, dummyConst, 2);
+        device->SetPixelShaderConstantF(0, mockConst, 2);
 
-        D3DVIEWPORT9 dummyVp;
-        dummyVp.X      = 0;
-        dummyVp.Y      = 0;
-        dummyVp.Width  = 1;
-        dummyVp.Height = 1;
-        dummyVp.MinZ   = 0;
-        dummyVp.MaxZ   = 1;
+        D3DVIEWPORT9 mockVp;
+        mockVp.X      = 0;
+        mockVp.Y      = 0;
+        mockVp.Width  = 1;
+        mockVp.Height = 1;
+        mockVp.MinZ   = 0;
+        mockVp.MaxZ   = 1;
 
-        device->SetViewport(&dummyVp);
+        device->SetViewport(&mockVp);
 
         device->SetTexture(0, nullptr);
 

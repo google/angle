@@ -39,6 +39,10 @@ bool CheckShaderType(Shader expected, GLenum actual)
             return actual == GL_GEOMETRY_SHADER;
         case Shader::GEOMETRY_EXT:
             return actual == GL_GEOMETRY_SHADER_EXT;
+        case Shader::TESS_CONTROL_EXT:
+            return actual == GL_TESS_CONTROL_SHADER_EXT;
+        case Shader::TESS_EVALUATION_EXT:
+            return actual == GL_TESS_EVALUATION_SHADER_EXT;
         case Shader::NOT_COMPUTE:
             return actual != GL_COMPUTE_SHADER;
         default:
@@ -312,7 +316,10 @@ const TSymbol *TSymbolTable::findBuiltInWithConversion(const std::vector<Immutab
 bool TSymbolTable::declare(TSymbol *symbol)
 {
     ASSERT(!mTable.empty());
-    ASSERT(symbol->symbolType() == SymbolType::UserDefined);
+    // The following built-ins may be redeclared by the shader: gl_ClipDistance, gl_CullDistance and
+    // gl_LastFragData.
+    ASSERT(symbol->symbolType() == SymbolType::UserDefined ||
+           (symbol->symbolType() == SymbolType::BuiltIn && IsRedeclarableBuiltIn(symbol->name())));
     ASSERT(!symbol->isFunction());
     return mTable.back()->insert(symbol);
 }
@@ -411,6 +418,8 @@ void TSymbolTable::initializeBuiltIns(sh::GLenum type,
             case GL_VERTEX_SHADER:
             case GL_COMPUTE_SHADER:
             case GL_GEOMETRY_SHADER_EXT:
+            case GL_TESS_CONTROL_SHADER_EXT:
+            case GL_TESS_EVALUATION_SHADER_EXT:
                 setDefaultPrecision(EbtInt, EbpHigh);
                 setDefaultPrecision(EbtFloat, EbpHigh);
                 break;
@@ -430,6 +439,13 @@ void TSymbolTable::initializeBuiltIns(sh::GLenum type,
     initSamplerDefaultPrecision(EbtSamplerExternal2DY2YEXT);
     // It isn't specified whether Sampler2DRect has default precision.
     initSamplerDefaultPrecision(EbtSampler2DRect);
+
+    if (spec < SH_GLES3_SPEC)
+    {
+        // Only set the default precision of shadow samplers in ESLL1. They become core in ESSL3
+        // where they do not have a defalut precision.
+        initSamplerDefaultPrecision(EbtSampler2DShadow);
+    }
 
     setDefaultPrecision(EbtAtomicCounter, EbpHigh);
 
@@ -510,10 +526,10 @@ bool UnmangledEntry::matches(const ImmutableString &name,
         if (mGLSLVersion > shaderVersion)
             return false;
 
-        if (static_cast<TExtension>(mGLSLExtension) == TExtension::UNDEFINED)
+        if (mGLSLExtension == TExtension::UNDEFINED)
             return true;
 
-        return IsExtensionEnabled(extensions, static_cast<TExtension>(mGLSLExtension));
+        return IsExtensionEnabled(extensions, mGLSLExtension);
     }
     else
     {
@@ -523,10 +539,21 @@ bool UnmangledEntry::matches(const ImmutableString &name,
         if (mESSLVersion > shaderVersion)
             return false;
 
-        if (static_cast<TExtension>(mESSLExtension) == TExtension::UNDEFINED)
+        bool anyExtension        = false;
+        bool anyExtensionEnabled = false;
+        for (TExtension ext : mESSLExtensions)
+        {
+            if (ext != TExtension::UNDEFINED)
+            {
+                anyExtension        = true;
+                anyExtensionEnabled = anyExtensionEnabled || IsExtensionEnabled(extensions, ext);
+            }
+        }
+
+        if (!anyExtension)
             return true;
 
-        return IsExtensionEnabled(extensions, static_cast<TExtension>(mESSLExtension));
+        return anyExtensionEnabled;
     }
 }
 }  // namespace sh

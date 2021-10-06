@@ -100,6 +100,7 @@ using EglBadDevice         = priv::ErrorStream<EGL_BAD_DEVICE_EXT>;
 using EglBadDisplay        = priv::ErrorStream<EGL_BAD_DISPLAY>;
 using EglBadMatch          = priv::ErrorStream<EGL_BAD_MATCH>;
 using EglBadNativeWindow   = priv::ErrorStream<EGL_BAD_NATIVE_WINDOW>;
+using EglBadNativePixmap   = priv::ErrorStream<EGL_BAD_NATIVE_PIXMAP>;
 using EglBadParameter      = priv::ErrorStream<EGL_BAD_PARAMETER>;
 using EglBadState          = priv::ErrorStream<EGL_BAD_STATE_KHR>;
 using EglBadStream         = priv::ErrorStream<EGL_BAD_STREAM_KHR>;
@@ -184,6 +185,22 @@ inline bool IsError(const egl::Error &err)
 {
     return err.isError();
 }
+
+// TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/3041
+inline bool IsError(bool value)
+{
+    return !value;
+}
+
+// Utility macro for handling implementation methods inside Validation.
+#define ANGLE_HANDLE_VALIDATION_ERR(X) \
+    do                                 \
+    {                                  \
+        (void)(X);                     \
+        return false;                  \
+    } while (0)
+
+#define ANGLE_VALIDATION_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_HANDLE_VALIDATION_ERR)
 
 #include "Error.inc"
 

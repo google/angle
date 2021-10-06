@@ -25,6 +25,7 @@ angle::Result TextureNULL::setImage(const gl::Context *context,
                                     GLenum format,
                                     GLenum type,
                                     const gl::PixelUnpackState &unpack,
+                                    gl::Buffer *unpackBuffer,
                                     const uint8_t *pixels)
 {
     // TODO(geofflang): Read all incoming pixel data (maybe hash it?) to make sure we don't read out
@@ -88,7 +89,7 @@ angle::Result TextureNULL::copyTexture(const gl::Context *context,
                                        const gl::ImageIndex &index,
                                        GLenum internalFormat,
                                        GLenum type,
-                                       size_t sourceLevel,
+                                       GLint sourceLevel,
                                        bool unpackFlipY,
                                        bool unpackPremultiplyAlpha,
                                        bool unpackUnmultiplyAlpha,
@@ -100,12 +101,46 @@ angle::Result TextureNULL::copyTexture(const gl::Context *context,
 angle::Result TextureNULL::copySubTexture(const gl::Context *context,
                                           const gl::ImageIndex &index,
                                           const gl::Offset &destOffset,
-                                          size_t sourceLevel,
+                                          GLint sourceLevel,
                                           const gl::Box &sourceBox,
                                           bool unpackFlipY,
                                           bool unpackPremultiplyAlpha,
                                           bool unpackUnmultiplyAlpha,
                                           const gl::Texture *source)
+{
+    return angle::Result::Continue;
+}
+
+angle::Result TextureNULL::copyRenderbufferSubData(const gl::Context *context,
+                                                   const gl::Renderbuffer *srcBuffer,
+                                                   GLint srcLevel,
+                                                   GLint srcX,
+                                                   GLint srcY,
+                                                   GLint srcZ,
+                                                   GLint dstLevel,
+                                                   GLint dstX,
+                                                   GLint dstY,
+                                                   GLint dstZ,
+                                                   GLsizei srcWidth,
+                                                   GLsizei srcHeight,
+                                                   GLsizei srcDepth)
+{
+    return angle::Result::Continue;
+}
+
+angle::Result TextureNULL::copyTextureSubData(const gl::Context *context,
+                                              const gl::Texture *srcTexture,
+                                              GLint srcLevel,
+                                              GLint srcX,
+                                              GLint srcY,
+                                              GLint srcZ,
+                                              GLint dstLevel,
+                                              GLint dstX,
+                                              GLint dstY,
+                                              GLint dstZ,
+                                              GLsizei srcWidth,
+                                              GLsizei srcHeight,
+                                              GLsizei srcDepth)
 {
     return angle::Result::Continue;
 }
@@ -131,7 +166,9 @@ angle::Result TextureNULL::setStorageExternalMemory(const gl::Context *context,
                                                     GLenum internalFormat,
                                                     const gl::Extents &size,
                                                     gl::MemoryObject *memoryObject,
-                                                    GLuint64 offset)
+                                                    GLuint64 offset,
+                                                    GLbitfield createFlags,
+                                                    GLbitfield usageFlags)
 {
     return angle::Result::Continue;
 }
@@ -172,7 +209,8 @@ angle::Result TextureNULL::releaseTexImage(const gl::Context *context)
 }
 
 angle::Result TextureNULL::syncState(const gl::Context *context,
-                                     const gl::Texture::DirtyBits &dirtyBits)
+                                     const gl::Texture::DirtyBits &dirtyBits,
+                                     gl::Command source)
 {
     return angle::Result::Continue;
 }

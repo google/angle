@@ -158,7 +158,6 @@ static void LogGles2Capabilities(std::ostream &stream)
     constexpr int kMaxViewPortDimsReturnValuesSize = 2;
     QUERY_AND_LOG_CAPABILITY_ARRAY(GL_MAX_VIEWPORT_DIMS, kMaxViewPortDimsReturnValuesSize, stream);
     QUERY_AND_LOG_CAPABILITY(GL_NUM_COMPRESSED_TEXTURE_FORMATS, stream);
-    QUERY_AND_LOG_CAPABILITY(GL_NUM_PROGRAM_BINARY_FORMATS, stream);
     QUERY_AND_LOG_CAPABILITY(GL_NUM_SHADER_BINARY_FORMATS, stream);
 }
 
@@ -191,7 +190,7 @@ static void LogGles3Capabilities(std::ostream &stream)
     QUERY_AND_LOG_CAPABILITY(GL_MAX_VERTEX_UNIFORM_BLOCKS, stream);
     QUERY_AND_LOG_CAPABILITY(GL_MAX_VERTEX_UNIFORM_COMPONENTS, stream);
     QUERY_AND_LOG_CAPABILITY(GL_MIN_PROGRAM_TEXEL_OFFSET, stream);
-
+    QUERY_AND_LOG_CAPABILITY(GL_NUM_PROGRAM_BINARY_FORMATS, stream);
     // GLES3 capabilities are a superset of GLES2
     LogGles2Capabilities(stream);
 }
@@ -252,6 +251,9 @@ static void LogGles31Capabilities(std::ostream &stream)
 
 static void LogGles32Capabilities(std::ostream &stream)
 {
+    // Most of these capabilities are not implemented yet.
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     QUERY_AND_LOG_CAPABILITY(GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS, stream);
     QUERY_AND_LOG_CAPABILITY(GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS, stream);
     QUERY_AND_LOG_CAPABILITY(GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS, stream);
@@ -483,4 +485,7 @@ TEST_P(EGLPrintEGLinfoTest, PrintConfigInfo)
     }
 }
 
-ANGLE_INSTANTIATE_TEST(EGLPrintEGLinfoTest, ES2_VULKAN(), ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST(EGLPrintEGLinfoTest, ES2_VULKAN(), ES3_VULKAN(), ES32_VULKAN());
+
+// This test suite is not instantiated on some OSes.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPrintEGLinfoTest);

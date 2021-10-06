@@ -9,10 +9,10 @@
 
 #include "libANGLE/renderer/vulkan/fuchsia/WindowSurfaceVkFuchsia.h"
 
-#include <fuchsia_egl.h>
-#include <fuchsia_egl_backend.h>
 #include <zircon/syscalls.h>
 #include <zircon/syscalls/object.h>
+#include "common/fuchsia_egl/fuchsia_egl.h"
+#include "common/fuchsia_egl/fuchsia_egl_backend.h"
 
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
@@ -36,6 +36,9 @@ bool WindowSurfaceVkFuchsia::isValidNativeWindow(EGLNativeWindowType window)
 
 angle::Result WindowSurfaceVkFuchsia::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {
+#if !defined(ANGLE_SHARED_LIBVULKAN)
+    InitImagePipeSurfaceFUCHSIAFunctions(context->getRenderer()->getInstance());
+#endif  // !defined(ANGLE_SHARED_LIBVULKAN)
     fuchsia_egl_window *egl_window = reinterpret_cast<fuchsia_egl_window *>(mNativeWindowType);
 
     VkImagePipeSurfaceCreateInfoFUCHSIA createInfo = {};

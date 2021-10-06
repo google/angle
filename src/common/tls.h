@@ -9,7 +9,13 @@
 #ifndef COMMON_TLS_H_
 #define COMMON_TLS_H_
 
+#include "common/angleutils.h"
 #include "common/platform.h"
+
+namespace gl
+{
+class Context;
+}
 
 #ifdef ANGLE_PLATFORM_WINDOWS
 

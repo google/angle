@@ -128,12 +128,12 @@ LOGGER = logging.getLogger('generate_stats')
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 BOT_NAMES = [
-    'Win10 FYI x64 dEQP Release (NVIDIA)',
-    'Win10 FYI x64 dEQP Release (Intel HD 630)',
-    'Win7 FYI dEQP Release (AMD)',
-    'Win7 FYI x64 dEQP Release (NVIDIA)',
-    'Mac FYI dEQP Release Intel',
-    'Mac FYI dEQP Release AMD',
+    'mac-angle-amd',
+    'mac-angle-intel',
+    'win10-angle-x64-nvidia',
+    'win10-angle-x64-intel',
+    'win7-angle-x64-nvidia',
+    'win7-angle-x86-amd',
     'Linux FYI dEQP Release (Intel HD 630)',
     'Linux FYI dEQP Release (NVIDIA)',
     'Android FYI dEQP Release (Nexus 5X)',
@@ -360,13 +360,16 @@ def get_step_info(build_name, step_name):
 def get_bot_info(bot_name):
     info = get_latest_success_build_info(bot_name)
     info['step_names'] = get_step_names(info['build_name'])
+    broken_step_names = []
     for step_name in info['step_names']:
         LOGGER.info("Parsing step '" + step_name + "'...")
         step_info = get_step_info(info['build_name'], step_name)
         if validate_step_info(step_info, info['build_name'], step_name):
             info[step_name] = step_info
         else:
-            info['step_names'].remove(step_name)
+            broken_step_names += step_name
+    for step_name in broken_step_names:
+        info['step_names'].remove(step_name)
     return info
 
 
@@ -563,6 +566,8 @@ def update_headers(service, spreadsheet_id, headers, info):
     sheet_names = []
     for bot_name in info:
         for step_name in info[bot_name]['step_names']:
+            if not step_name in info[bot_name]:
+                LOGGER.error("Missing info for step name: '" + step_name + "'")
             sheet_name = format_sheet_name(bot_name, step_name)
             headers_stale = False
             # Headers should always contain the following columns
@@ -587,7 +592,6 @@ def update_headers(service, spreadsheet_id, headers, info):
     if data:
         LOGGER.info('Updating sheet headers...')
         batch_update_values(service, spreadsheet_id, data)
-
 
 # Calls values().append() to append a list of values to a given sheet.
 def append_values(service, spreadsheet_id, sheet_name, values):

@@ -6,21 +6,20 @@
 
 // SystemInfo_android.cpp: implementation of the Android-specific parts of SystemInfo.h
 
-#include <dlfcn.h>
-#include <vulkan/vulkan.h>
 #include "gpu_info_util/SystemInfo_internal.h"
-#include "gpu_info_util/SystemInfo_vulkan.h"
 
 #include <sys/system_properties.h>
 #include <cstring>
 #include <fstream>
+#include <string>
 
 #include "common/angleutils.h"
 #include "common/debug.h"
 
 namespace angle
 {
-
+namespace
+{
 bool GetAndroidSystemProperty(const std::string &propertyName, std::string *value)
 {
     // PROP_VALUE_MAX from <sys/system_properties.h>
@@ -33,6 +32,7 @@ bool GetAndroidSystemProperty(const std::string &propertyName, std::string *valu
     *value = std::string(propertyBuf.data());
     return true;
 }
+}  // namespace
 
 bool GetSystemInfo(SystemInfo *info)
 {
@@ -43,6 +43,11 @@ bool GetSystemInfo(SystemInfo *info)
         isFullyPopulated;
     isFullyPopulated =
         GetAndroidSystemProperty("ro.product.model", &info->machineModelName) && isFullyPopulated;
+
+    std::string androidSdkLevel;
+    isFullyPopulated =
+        GetAndroidSystemProperty("ro.build.version.sdk", &androidSdkLevel) && isFullyPopulated;
+    info->androidSdkLevel = std::stoi(androidSdkLevel);
 
     return GetSystemInfoVulkan(info) && isFullyPopulated;
 }

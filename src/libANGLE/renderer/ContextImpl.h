@@ -115,73 +115,73 @@ class ContextImpl : public GLImplFactory
                                                gl::DrawElementsType type,
                                                const void *indirect) = 0;
 
-    // CHROMIUM_path_rendering path drawing methods.
-    virtual void stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask);
-    virtual void stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask);
-    virtual void coverFillPath(const gl::Path *path, GLenum coverMode);
-    virtual void coverStrokePath(const gl::Path *path, GLenum coverMode);
-    virtual void stencilThenCoverFillPath(const gl::Path *path,
-                                          GLenum fillMode,
-                                          GLuint mask,
-                                          GLenum coverMode);
-
-    virtual void stencilThenCoverStrokePath(const gl::Path *path,
-                                            GLint reference,
-                                            GLuint mask,
-                                            GLenum coverMode);
-
-    virtual void coverFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                        GLenum coverMode,
-                                        GLenum transformType,
-                                        const GLfloat *transformValues);
-    virtual void coverStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                          GLenum coverMode,
-                                          GLenum transformType,
-                                          const GLfloat *transformValues);
-    virtual void stencilFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                          GLenum fillMode,
-                                          GLuint mask,
-                                          GLenum transformType,
-                                          const GLfloat *transformValues);
-    virtual void stencilStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                            GLint reference,
-                                            GLuint mask,
-                                            GLenum transformType,
-                                            const GLfloat *transformValues);
-    virtual void stencilThenCoverFillPathInstanced(const std::vector<gl::Path *> &paths,
-                                                   GLenum coverMode,
-                                                   GLenum fillMode,
-                                                   GLuint mask,
-                                                   GLenum transformType,
-                                                   const GLfloat *transformValues);
-    virtual void stencilThenCoverStrokePathInstanced(const std::vector<gl::Path *> &paths,
-                                                     GLenum coverMode,
-                                                     GLint reference,
-                                                     GLuint mask,
-                                                     GLenum transformType,
-                                                     const GLfloat *transformValues);
+    // MultiDraw* impl added as we need workaround for promoting dynamic attributes in D3D backend
+    virtual angle::Result multiDrawArrays(const gl::Context *context,
+                                          gl::PrimitiveMode mode,
+                                          const GLint *firsts,
+                                          const GLsizei *counts,
+                                          GLsizei drawcount)                      = 0;
+    virtual angle::Result multiDrawArraysInstanced(const gl::Context *context,
+                                                   gl::PrimitiveMode mode,
+                                                   const GLint *firsts,
+                                                   const GLsizei *counts,
+                                                   const GLsizei *instanceCounts,
+                                                   GLsizei drawcount)             = 0;
+    virtual angle::Result multiDrawElements(const gl::Context *context,
+                                            gl::PrimitiveMode mode,
+                                            const GLsizei *counts,
+                                            gl::DrawElementsType type,
+                                            const GLvoid *const *indices,
+                                            GLsizei drawcount)                    = 0;
+    virtual angle::Result multiDrawElementsInstanced(const gl::Context *context,
+                                                     gl::PrimitiveMode mode,
+                                                     const GLsizei *counts,
+                                                     gl::DrawElementsType type,
+                                                     const GLvoid *const *indices,
+                                                     const GLsizei *instanceCounts,
+                                                     GLsizei drawcount)           = 0;
+    virtual angle::Result multiDrawArraysInstancedBaseInstance(const gl::Context *context,
+                                                               gl::PrimitiveMode mode,
+                                                               const GLint *firsts,
+                                                               const GLsizei *counts,
+                                                               const GLsizei *instanceCounts,
+                                                               const GLuint *baseInstances,
+                                                               GLsizei drawcount) = 0;
+    virtual angle::Result multiDrawElementsInstancedBaseVertexBaseInstance(
+        const gl::Context *context,
+        gl::PrimitiveMode mode,
+        const GLsizei *counts,
+        gl::DrawElementsType type,
+        const GLvoid *const *indices,
+        const GLsizei *instanceCounts,
+        const GLint *baseVertices,
+        const GLuint *baseInstances,
+        GLsizei drawcount) = 0;
 
     // Device loss
     virtual gl::GraphicsResetStatus getResetStatus() = 0;
 
-    // Vendor and description strings.
-    virtual std::string getVendorString() const        = 0;
-    virtual std::string getRendererDescription() const = 0;
-
     // EXT_debug_marker
-    virtual void insertEventMarker(GLsizei length, const char *marker) = 0;
-    virtual void pushGroupMarker(GLsizei length, const char *marker)   = 0;
-    virtual void popGroupMarker()                                      = 0;
+    virtual angle::Result insertEventMarker(GLsizei length, const char *marker) = 0;
+    virtual angle::Result pushGroupMarker(GLsizei length, const char *marker)   = 0;
+    virtual angle::Result popGroupMarker()                                      = 0;
 
     // KHR_debug
-    virtual void pushDebugGroup(GLenum source, GLuint id, const std::string &message) = 0;
-    virtual void popDebugGroup()                                                      = 0;
+    virtual angle::Result pushDebugGroup(const gl::Context *context,
+                                         GLenum source,
+                                         GLuint id,
+                                         const std::string &message) = 0;
+    virtual angle::Result popDebugGroup(const gl::Context *context)  = 0;
+    virtual angle::Result handleNoopDrawEvent();
 
     // KHR_parallel_shader_compile
     virtual void setMaxShaderCompilerThreads(GLuint count) {}
 
     // GL_ANGLE_texture_storage_external
     virtual void invalidateTexture(gl::TextureType target);
+
+    // EXT_shader_framebuffer_fetch_non_coherent
+    virtual void framebufferFetchBarrier() {}
 
     // State sync with dirty bits.
     virtual angle::Result syncState(const gl::Context *context,
@@ -233,6 +233,10 @@ class ContextImpl : public GLImplFactory
                      unsigned int line);
 
     virtual egl::ContextPriority getContextPriority() const;
+
+    // EGL_ANGLE_power_preference implementation.
+    virtual egl::Error releaseHighPowerGPU(gl::Context *context);
+    virtual egl::Error reacquireHighPowerGPU(gl::Context *context);
 
   protected:
     const gl::State &mState;

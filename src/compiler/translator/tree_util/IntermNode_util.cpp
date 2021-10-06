@@ -86,7 +86,7 @@ TIntermTyped *CreateZeroNode(const TType &type)
         return node;
     }
 
-    TIntermSequence *arguments = new TIntermSequence();
+    TIntermSequence arguments;
 
     if (type.isArray())
     {
@@ -96,7 +96,7 @@ TIntermTyped *CreateZeroNode(const TType &type)
         size_t arraySize = type.getOutermostArraySize();
         for (size_t i = 0; i < arraySize; ++i)
         {
-            arguments->push_back(CreateZeroNode(elementType));
+            arguments.push_back(CreateZeroNode(elementType));
         }
     }
     else
@@ -106,11 +106,11 @@ TIntermTyped *CreateZeroNode(const TType &type)
         const TStructure *structure = type.getStruct();
         for (const auto &field : structure->fields())
         {
-            arguments->push_back(CreateZeroNode(*field->type()));
+            arguments.push_back(CreateZeroNode(*field->type()));
         }
     }
 
-    return TIntermAggregate::CreateConstructor(constType, arguments);
+    return TIntermAggregate::CreateConstructor(constType, &arguments);
 }
 
 TIntermConstantUnion *CreateFloatNode(float value)
@@ -128,6 +128,15 @@ TIntermConstantUnion *CreateIndexNode(int index)
     u[0].setIConst(index);
 
     TType type(EbtInt, EbpUndefined, EvqConst, 1);
+    return new TIntermConstantUnion(u, type);
+}
+
+TIntermConstantUnion *CreateUIntNode(unsigned int value)
+{
+    TConstantUnion *u = new TConstantUnion[1];
+    u[0].setUConst(value);
+
+    TType type(EbtUInt, EbpUndefined, EvqConst, 1);
     return new TIntermConstantUnion(u, type);
 }
 
@@ -215,18 +224,62 @@ TVariable *DeclareTempVariable(TSymbolTable *symbolTable,
     return variable;
 }
 
+std::pair<const TVariable *, const TVariable *> DeclareStructure(
+    TIntermBlock *root,
+    TSymbolTable *symbolTable,
+    TFieldList *fieldList,
+    TQualifier qualifier,
+    const TMemoryQualifier &memoryQualifier,
+    uint32_t arraySize,
+    const ImmutableString &structTypeName,
+    const ImmutableString *structInstanceName)
+{
+    TStructure *structure =
+        new TStructure(symbolTable, structTypeName, fieldList, SymbolType::AngleInternal);
+
+    auto makeStructureType = [&](bool isStructSpecifier) {
+        TType *structureType = new TType(structure, isStructSpecifier);
+        structureType->setQualifier(qualifier);
+        structureType->setMemoryQualifier(memoryQualifier);
+        if (arraySize > 0)
+        {
+            structureType->makeArray(arraySize);
+        }
+        return structureType;
+    };
+
+    TIntermSequence insertSequence;
+
+    TVariable *typeVar = new TVariable(symbolTable, kEmptyImmutableString, makeStructureType(true),
+                                       SymbolType::Empty);
+    insertSequence.push_back(new TIntermDeclaration{typeVar});
+
+    TVariable *instanceVar = nullptr;
+    if (structInstanceName)
+    {
+        instanceVar = new TVariable(symbolTable, *structInstanceName, makeStructureType(false),
+                                    SymbolType::AngleInternal);
+        insertSequence.push_back(new TIntermDeclaration{instanceVar});
+    }
+
+    size_t firstFunctionIndex = FindFirstFunctionDefinitionIndex(root);
+    root->insertChildNodes(firstFunctionIndex, insertSequence);
+
+    return {typeVar, instanceVar};
+}
+
 const TVariable *DeclareInterfaceBlock(TIntermBlock *root,
                                        TSymbolTable *symbolTable,
                                        TFieldList *fieldList,
                                        TQualifier qualifier,
+                                       const TLayoutQualifier &layoutQualifier,
                                        const TMemoryQualifier &memoryQualifier,
                                        uint32_t arraySize,
                                        const ImmutableString &blockTypeName,
                                        const ImmutableString &blockVariableName)
 {
     // Define an interface block.
-    TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
-    TInterfaceBlock *interfaceBlock  = new TInterfaceBlock(
+    TInterfaceBlock *interfaceBlock = new TInterfaceBlock(
         symbolTable, blockTypeName, fieldList, layoutQualifier, SymbolType::AngleInternal);
 
     // Turn the inteface block into a declaration.
@@ -238,17 +291,18 @@ const TVariable *DeclareInterfaceBlock(TIntermBlock *root,
     }
 
     TIntermDeclaration *interfaceBlockDecl = new TIntermDeclaration;
-    TVariable *interfaceBlockVar = new TVariable(symbolTable, blockVariableName, interfaceBlockType,
-                                                 SymbolType::AngleInternal);
+    TVariable *interfaceBlockVar =
+        new TVariable(symbolTable, blockVariableName, interfaceBlockType,
+                      blockVariableName.empty() ? SymbolType::Empty : SymbolType::AngleInternal);
     TIntermSymbol *interfaceBlockDeclarator = new TIntermSymbol(interfaceBlockVar);
     interfaceBlockDecl->appendDeclarator(interfaceBlockDeclarator);
 
     // Insert the declarations before the first function.
-    TIntermSequence *insertSequence = new TIntermSequence;
-    insertSequence->push_back(interfaceBlockDecl);
+    TIntermSequence insertSequence;
+    insertSequence.push_back(interfaceBlockDecl);
 
     size_t firstFunctionIndex = FindFirstFunctionDefinitionIndex(root);
-    root->insertChildNodes(firstFunctionIndex, *insertSequence);
+    root->insertChildNodes(firstFunctionIndex, insertSequence);
 
     return interfaceBlockVar;
 }
@@ -292,11 +346,20 @@ TIntermTyped *CreateBuiltInFunctionCallNode(const char *name,
     const TFunction *fn = LookUpBuiltInFunction(name, arguments, symbolTable, shaderVersion);
     ASSERT(fn);
     TOperator op = fn->getBuiltInOp();
-    if (op != EOpCallBuiltInFunction && arguments->size() == 1)
+    if (BuiltInGroup::IsMath(op) && arguments->size() == 1)
     {
         return new TIntermUnary(op, arguments->at(0)->getAsTyped(), fn);
     }
     return TIntermAggregate::CreateBuiltInFunctionCall(*fn, arguments);
+}
+
+TIntermTyped *CreateBuiltInUnaryFunctionCallNode(const char *name,
+                                                 TIntermTyped *argument,
+                                                 const TSymbolTable &symbolTable,
+                                                 int shaderVersion)
+{
+    TIntermSequence seq = {argument};
+    return CreateBuiltInFunctionCallNode(name, &seq, symbolTable, shaderVersion);
 }
 
 }  // namespace sh

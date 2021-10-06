@@ -1,12 +1,12 @@
 {
   "src/libANGLE/es3_format_type_combinations.json":
-    "b44b222c27eea6839c0da3076ee540fc",
+    "30346b958cd180089e137daf69b21ab5",
   "src/libANGLE/format_map_autogen.cpp":
-    "4b9927afc6cc47fcea6bfcbcd602b6e5",
+    "fe6dd8e61e9b7b77f8b10266a2d8115f",
   "src/libANGLE/format_map_data.json":
-    "2dd1986f49c441ad9a71b82410f57d6e",
+    "2e5db33b6d6b142b569123f614f3ddb7",
   "src/libANGLE/gen_format_map.py":
-    "38320d844e6629e09afc5ccdc484e9aa",
+    "2421e2cfb4e074ae3fa6baa031c6394e",
   "src/libANGLE/renderer/angle_format.py":
-    "32ba71942c0fd00e6807104f1bb80a3c"
+    "74d6c9842128293118ccf128aeae896a"
 }

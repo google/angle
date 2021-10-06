@@ -25,6 +25,7 @@ constexpr const ImmutableString kMainName("main");
 constexpr const ImmutableString kImageLoadName("imageLoad");
 constexpr const ImmutableString kImageStoreName("imageStore");
 constexpr const ImmutableString kImageSizeName("imageSize");
+constexpr const ImmutableString kImageAtomicExchangeName("imageAtomicExchange");
 constexpr const ImmutableString kAtomicCounterName("atomicCounter");
 
 static const char kFunctionMangledNameSeparator = '(';
@@ -38,11 +39,28 @@ TSymbol::TSymbol(TSymbolTable *symbolTable,
                  TExtension extension)
     : mName(name),
       mUniqueId(symbolTable->nextUniqueId()),
+      mExtensions(
+          std::array<TExtension, 3u>{{extension, TExtension::UNDEFINED, TExtension::UNDEFINED}}),
       mSymbolType(symbolType),
-      mExtension(extension),
       mSymbolClass(symbolClass)
 {
-    ASSERT(mSymbolType == SymbolType::BuiltIn || mExtension == TExtension::UNDEFINED);
+    ASSERT(mSymbolType == SymbolType::BuiltIn || extension == TExtension::UNDEFINED);
+    ASSERT(mName != "" || mSymbolType == SymbolType::AngleInternal ||
+           mSymbolType == SymbolType::Empty);
+}
+
+TSymbol::TSymbol(TSymbolTable *symbolTable,
+                 const ImmutableString &name,
+                 SymbolType symbolType,
+                 SymbolClass symbolClass,
+                 const std::array<TExtension, 3u> &extensions)
+    : mName(name),
+      mUniqueId(symbolTable->nextUniqueId()),
+      mExtensions(extensions),
+      mSymbolType(symbolType),
+      mSymbolClass(symbolClass)
+{
+    ASSERT(mSymbolType == SymbolType::BuiltIn || extensions[0] == TExtension::UNDEFINED);
     ASSERT(mName != "" || mSymbolType == SymbolType::AngleInternal ||
            mSymbolType == SymbolType::Empty);
 }
@@ -88,19 +106,24 @@ TVariable::TVariable(TSymbolTable *symbolTable,
     ASSERT(name.empty() || symbolType != SymbolType::Empty);
 }
 
+TVariable::TVariable(TSymbolTable *symbolTable,
+                     const ImmutableString &name,
+                     const TType *type,
+                     SymbolType symbolType,
+                     const std::array<TExtension, 3u> &extensions)
+    : TSymbol(symbolTable, name, symbolType, SymbolClass::Variable, extensions),
+      mType(type),
+      unionArray(nullptr)
+{
+    ASSERT(mType);
+    ASSERT(name.empty() || symbolType != SymbolType::Empty);
+}
+
 TStructure::TStructure(TSymbolTable *symbolTable,
                        const ImmutableString &name,
                        const TFieldList *fields,
                        SymbolType symbolType)
     : TSymbol(symbolTable, name, symbolType, SymbolClass::Struct), TFieldListCollection(fields)
-{}
-
-TStructure::TStructure(const TSymbolUniqueId &id,
-                       const ImmutableString &name,
-                       TExtension extension,
-                       const TFieldList *fields)
-    : TSymbol(id, name, SymbolType::BuiltIn, extension, SymbolClass::Struct),
-      TFieldListCollection(fields)
 {}
 
 void TStructure::createSamplerSymbols(const char *namePrefix,
@@ -145,15 +168,19 @@ TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
     ASSERT(name != nullptr);
 }
 
-TInterfaceBlock::TInterfaceBlock(const TSymbolUniqueId &id,
+TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
                                  const ImmutableString &name,
-                                 TExtension extension,
-                                 const TFieldList *fields)
-    : TSymbol(id, name, SymbolType::BuiltIn, extension, SymbolClass::InterfaceBlock),
+                                 const TFieldList *fields,
+                                 const TLayoutQualifier &layoutQualifier,
+                                 SymbolType symbolType,
+                                 const std::array<TExtension, 3u> &extensions)
+    : TSymbol(symbolTable, name, symbolType, SymbolClass::InterfaceBlock, extensions),
       TFieldListCollection(fields),
-      mBlockStorage(EbsUnspecified),
-      mBinding(0)
-{}
+      mBlockStorage(layoutQualifier.blockStorage),
+      mBinding(layoutQualifier.binding)
+{
+    ASSERT(name != nullptr);
+}
 
 TFunction::TFunction(TSymbolTable *symbolTable,
                      const ImmutableString &name,
@@ -163,9 +190,9 @@ TFunction::TFunction(TSymbolTable *symbolTable,
     : TSymbol(symbolTable, name, symbolType, SymbolClass::Function, TExtension::UNDEFINED),
       mParametersVector(new TParamVector()),
       mParameters(nullptr),
-      mParamCount(0u),
       returnType(retType),
       mMangledName(""),
+      mParamCount(0u),
       mOp(EOpNull),
       defined(false),
       mHasPrototypeDeclaration(false),
@@ -196,7 +223,8 @@ void TFunction::shareParameters(const TFunction &parametersSource)
 
 ImmutableString TFunction::buildMangledName() const
 {
-    std::string newName(name().data(), name().length());
+    ImmutableString name = this->name();
+    std::string newName(name.data(), name.length());
     newName += kFunctionMangledNameSeparator;
 
     for (size_t i = 0u; i < mParamCount; ++i)
@@ -214,41 +242,12 @@ bool TFunction::isMain() const
 bool TFunction::isImageFunction() const
 {
     return symbolType() == SymbolType::BuiltIn &&
-           (name() == kImageSizeName || name() == kImageLoadName || name() == kImageStoreName);
+           (name() == kImageSizeName || name() == kImageLoadName || name() == kImageStoreName ||
+            name() == kImageAtomicExchangeName);
 }
 
 bool TFunction::isAtomicCounterFunction() const
 {
     return SymbolType() == SymbolType::BuiltIn && name().beginsWith(kAtomicCounterName);
-}
-
-bool TFunction::hasSamplerInStructOrArrayParams() const
-{
-    for (size_t paramIndex = 0; paramIndex < mParamCount; ++paramIndex)
-    {
-        const TVariable *param = getParam(paramIndex);
-        if (param->getType().isStructureContainingSamplers() ||
-            (param->getType().isArray() && param->getType().isSampler()))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool TFunction::hasSamplerInStructOrArrayOfArrayParams() const
-{
-    for (size_t paramIndex = 0; paramIndex < mParamCount; ++paramIndex)
-    {
-        const TVariable *param = getParam(paramIndex);
-        if (param->getType().isStructureContainingSamplers() ||
-            (param->getType().isArrayOfArrays() && param->getType().isSampler()))
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 }  // namespace sh

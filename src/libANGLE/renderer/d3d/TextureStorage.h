@@ -40,7 +40,7 @@ constexpr size_t kTextureStorageObserverMessageIndex = 0;
 class TextureStorage : public angle::Subject
 {
   public:
-    TextureStorage() {}
+    TextureStorage(const std::string &label) : mTextureLabel(label) {}
     ~TextureStorage() override {}
 
     virtual angle::Result onDestroy(const gl::Context *context);
@@ -51,6 +51,10 @@ class TextureStorage : public angle::Subject
     virtual bool supportsNativeMipmapFunction() const = 0;
     virtual int getLevelCount() const                 = 0;
 
+    virtual angle::Result findRenderTarget(const gl::Context *context,
+                                           const gl::ImageIndex &index,
+                                           GLsizei samples,
+                                           RenderTargetD3D **outRT) const = 0;
     virtual angle::Result getRenderTarget(const gl::Context *context,
                                           const gl::ImageIndex &index,
                                           GLsizei samples,
@@ -81,8 +85,11 @@ class TextureStorage : public angle::Subject
     virtual angle::Result resolveTexture(const gl::Context *context);
     virtual GLsizei getRenderToTextureSamples() const;
 
+    virtual void onLabelUpdate() {}
+
   protected:
     const angle::Subject *mSubject;
+    const std::string &mTextureLabel;
 };
 
 inline angle::Result TextureStorage::onDestroy(const gl::Context *context)

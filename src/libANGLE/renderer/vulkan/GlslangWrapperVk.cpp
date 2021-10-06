@@ -13,51 +13,59 @@
 
 namespace rx
 {
-namespace
-{
-angle::Result ErrorHandler(vk::Context *context, GlslangError)
-{
-    ANGLE_VK_CHECK(context, false, VK_ERROR_INVALID_SHADER_NV);
-    return angle::Result::Stop;
-}
-
-GlslangSourceOptions CreateSourceOptions(const angle::FeaturesVk &features)
+// static
+GlslangSourceOptions GlslangWrapperVk::CreateSourceOptions(const angle::FeaturesVk &features)
 {
     GlslangSourceOptions options;
-    options.uniformsAndXfbDescriptorSetIndex = kUniformsAndXfbDescriptorSetIndex;
-    options.textureDescriptorSetIndex        = kTextureDescriptorSetIndex;
-    options.shaderResourceDescriptorSetIndex = kShaderResourceDescriptorSetIndex;
-    options.driverUniformsDescriptorSetIndex = kDriverUniformsDescriptorSetIndex;
-    options.xfbBindingIndexStart             = kXfbBindingIndexStart;
-    options.useOldRewriteStructSamplers      = features.forceOldRewriteStructSamplers.enabled;
+
     options.supportsTransformFeedbackExtension =
         features.supportsTransformFeedbackExtension.enabled;
-    options.emulateTransformFeedback = features.emulateTransformFeedback.enabled;
-    options.emulateBresenhamLines    = features.basicGLLineRasterization.enabled;
+    options.supportsTransformFeedbackEmulation = features.emulateTransformFeedback.enabled;
+    options.enableTransformFeedbackEmulation   = options.supportsTransformFeedbackEmulation;
+    options.emulateBresenhamLines              = features.basicGLLineRasterization.enabled;
+
     return options;
 }
-}  // namespace
 
 // static
-void GlslangWrapperVk::GetShaderSource(const angle::FeaturesVk &features,
-                                       const gl::ProgramState &programState,
-                                       const gl::ProgramLinkedResources &resources,
-                                       gl::ShaderMap<std::string> *shaderSourcesOut,
-                                       ShaderInterfaceVariableInfoMap *variableInfoMapOut)
+void GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(
+    GlslangProgramInterfaceInfo *glslangProgramInterfaceInfo)
 {
-    GlslangGetShaderSource(CreateSourceOptions(features), programState, resources, shaderSourcesOut,
-                           variableInfoMapOut);
+    glslangProgramInterfaceInfo->uniformsAndXfbDescriptorSetIndex =
+        ToUnderlying(DescriptorSetIndex::UniformsAndXfb);
+    glslangProgramInterfaceInfo->currentUniformBindingIndex = 0;
+    glslangProgramInterfaceInfo->textureDescriptorSetIndex =
+        ToUnderlying(DescriptorSetIndex::Texture);
+    glslangProgramInterfaceInfo->currentTextureBindingIndex = 0;
+    glslangProgramInterfaceInfo->shaderResourceDescriptorSetIndex =
+        ToUnderlying(DescriptorSetIndex::ShaderResource);
+    glslangProgramInterfaceInfo->currentShaderResourceBindingIndex = 0;
+    glslangProgramInterfaceInfo->driverUniformsDescriptorSetIndex =
+        ToUnderlying(DescriptorSetIndex::Internal);
+
+    glslangProgramInterfaceInfo->locationsUsedForXfbExtension = 0;
 }
 
 // static
-angle::Result GlslangWrapperVk::GetShaderCode(vk::Context *context,
-                                              const gl::Caps &glCaps,
-                                              const gl::ShaderMap<std::string> &shaderSources,
-                                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                                              gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
+void GlslangWrapperVk::GetShaderCode(const angle::FeaturesVk &features,
+                                     const gl::ProgramState &programState,
+                                     const gl::ProgramLinkedResources &resources,
+                                     GlslangProgramInterfaceInfo *programInterfaceInfo,
+                                     gl::ShaderMap<const angle::spirv::Blob *> *spirvBlobsOut,
+                                     ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
-    return GlslangGetShaderSpirvCode(
-        [context](GlslangError error) { return ErrorHandler(context, error); }, glCaps,
-        shaderSources, variableInfoMap, shaderCodeOut);
+    GlslangSourceOptions options = CreateSourceOptions(features);
+    GlslangGetShaderSpirvCode(options, programState, resources, programInterfaceInfo, spirvBlobsOut,
+                              variableInfoMapOut);
+}
+
+// static
+angle::Result GlslangWrapperVk::TransformSpirV(
+    const GlslangSpirvOptions &options,
+    const ShaderInterfaceVariableInfoMap &variableInfoMap,
+    const angle::spirv::Blob &initialSpirvBlob,
+    angle::spirv::Blob *shaderCodeOut)
+{
+    return GlslangTransformSpirvCode(options, variableInfoMap, initialSpirvBlob, shaderCodeOut);
 }
 }  // namespace rx

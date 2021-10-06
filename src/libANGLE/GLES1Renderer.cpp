@@ -455,6 +455,29 @@ int GLES1Renderer::VertexArrayIndex(ClientVertexArrayType type, const GLES1State
 }
 
 // static
+ClientVertexArrayType GLES1Renderer::VertexArrayType(int attribIndex)
+{
+    switch (attribIndex)
+    {
+        case kVertexAttribIndex:
+            return ClientVertexArrayType::Vertex;
+        case kNormalAttribIndex:
+            return ClientVertexArrayType::Normal;
+        case kColorAttribIndex:
+            return ClientVertexArrayType::Color;
+        case kPointSizeAttribIndex:
+            return ClientVertexArrayType::PointSize;
+        default:
+            if (attribIndex < kTextureCoordAttribIndexBase + kTexUnitCount)
+            {
+                return ClientVertexArrayType::TextureCoord;
+            }
+            UNREACHABLE();
+            return ClientVertexArrayType::InvalidEnum;
+    }
+}
+
+// static
 int GLES1Renderer::TexCoordArrayIndex(unsigned int unit)
 {
     return kTextureCoordAttribIndexBase + unit;
@@ -549,7 +572,7 @@ angle::Result GLES1Renderer::linkProgram(Context *context,
                                          State *glState,
                                          ShaderProgramID vertexShader,
                                          ShaderProgramID fragmentShader,
-                                         const std::unordered_map<GLint, std::string> &attribLocs,
+                                         const angle::HashMap<GLint, std::string> &attribLocs,
                                          ShaderProgramID *programOut)
 {
     ShaderProgramID program = mShaderPrograms->createProgram(context->getImplementation());
@@ -576,9 +599,9 @@ angle::Result GLES1Renderer::linkProgram(Context *context,
 
     if (!programObject->isLinked())
     {
-        GLint infoLogLength = programObject->getInfoLogLength();
+        GLint infoLogLength = programObject->getExecutable().getInfoLogLength();
         std::vector<char> infoLog(infoLogLength, 0);
-        programObject->getInfoLog(infoLogLength - 1, nullptr, infoLog.data());
+        programObject->getExecutable().getInfoLog(infoLogLength - 1, nullptr, infoLog.data());
 
         ERR() << "Internal GLES 1 shader link failed. Info log: " << infoLog.data();
         ANGLE_CHECK(context, false, "GLES1Renderer program link failed.", GL_INVALID_OPERATION);
@@ -595,6 +618,14 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
 {
     if (mRendererProgramInitialized)
     {
+        // If we're already done the initialization/compilation, but there has been some
+        // state change, just reload the compiled program.
+        GLES1State &gles1State = glState->gles1();
+        if (gles1State.shouldHandleDirtyProgram())
+        {
+            Program *programObject = getProgram(mProgramState.program);
+            ANGLE_TRY(glState->setProgram(context, programObject));
+        }
         return angle::Result::Continue;
     }
 
@@ -615,7 +646,7 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
     ANGLE_TRY(compileShader(context, ShaderType::Fragment, fragmentStream.str().c_str(),
                             &fragmentShader));
 
-    std::unordered_map<GLint, std::string> attribLocs;
+    angle::HashMap<GLint, std::string> attribLocs;
 
     attribLocs[(GLint)kVertexAttribIndex]    = "pos";
     attribLocs[(GLint)kNormalAttribIndex]    = "normal";
@@ -761,80 +792,83 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
     return angle::Result::Continue;
 }
 
-void GLES1Renderer::setUniform1i(Context *context, Program *programObject, GLint loc, GLint value)
+void GLES1Renderer::setUniform1i(Context *context,
+                                 Program *programObject,
+                                 UniformLocation location,
+                                 GLint value)
 {
-    if (loc == -1)
+    if (location.value == -1)
         return;
-    programObject->setUniform1iv(context, loc, 1, &value);
+    programObject->setUniform1iv(context, location, 1, &value);
 }
 
 void GLES1Renderer::setUniform1iv(Context *context,
                                   Program *programObject,
-                                  GLint loc,
+                                  UniformLocation location,
                                   GLint count,
                                   const GLint *value)
 {
-    if (loc == -1)
+    if (location.value == -1)
         return;
-    programObject->setUniform1iv(context, loc, count, value);
+    programObject->setUniform1iv(context, location, count, value);
 }
 
 void GLES1Renderer::setUniformMatrix4fv(Program *programObject,
-                                        GLint loc,
+                                        UniformLocation location,
                                         GLint count,
                                         GLboolean transpose,
                                         const GLfloat *value)
 {
-    if (loc == -1)
+    if (location.value == -1)
         return;
-    programObject->setUniformMatrix4fv(loc, count, transpose, value);
+    programObject->setUniformMatrix4fv(location, count, transpose, value);
 }
 
 void GLES1Renderer::setUniform4fv(Program *programObject,
-                                  GLint loc,
+                                  UniformLocation location,
                                   GLint count,
                                   const GLfloat *value)
 {
-    if (loc == -1)
+    if (location.value == -1)
         return;
-    programObject->setUniform4fv(loc, count, value);
+    programObject->setUniform4fv(location, count, value);
 }
 
 void GLES1Renderer::setUniform3fv(Program *programObject,
-                                  GLint loc,
+                                  UniformLocation location,
                                   GLint count,
                                   const GLfloat *value)
 {
-    if (loc == -1)
+    if (location.value == -1)
         return;
-    programObject->setUniform3fv(loc, count, value);
+    programObject->setUniform3fv(location, count, value);
 }
 
 void GLES1Renderer::setUniform2fv(Program *programObject,
-                                  GLint loc,
+                                  UniformLocation location,
                                   GLint count,
                                   const GLfloat *value)
 {
-    if (loc == -1)
+    if (location.value == -1)
         return;
-    programObject->setUniform2fv(loc, count, value);
+    programObject->setUniform2fv(location, count, value);
 }
 
-void GLES1Renderer::setUniform1f(Program *programObject, GLint loc, GLfloat value)
+void GLES1Renderer::setUniform1f(Program *programObject, UniformLocation location, GLfloat value)
 {
-    if (loc == -1)
+    if (location.value == -1)
         return;
-    programObject->setUniform1fv(loc, 1, &value);
+    programObject->setUniform1fv(location, 1, &value);
 }
 
 void GLES1Renderer::setUniform1fv(Program *programObject,
-                                  GLint loc,
+                                  UniformLocation location,
                                   GLint count,
                                   const GLfloat *value)
 {
-    if (loc == -1)
+    if (location.value == -1)
         return;
-    programObject->setUniform1fv(loc, count, value);
+    programObject->setUniform1fv(location, count, value);
 }
 
 void GLES1Renderer::setAttributesEnabled(Context *context, State *glState, AttributesMask mask)

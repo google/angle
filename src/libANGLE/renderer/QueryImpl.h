@@ -39,7 +39,7 @@ class QueryImpl : angle::NonCopyable
 
     gl::QueryType getType() const { return mType; }
 
-  private:
+  protected:
     gl::QueryType mType;
 };
 }  // namespace rx

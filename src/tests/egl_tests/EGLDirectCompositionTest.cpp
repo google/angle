@@ -7,22 +7,24 @@
 // EGLDirectCompositionTest.cpp:
 //   Tests pertaining to DirectComposition and WindowsUIComposition.
 
-#include <d3d11.h>
-#include "test_utils/ANGLETest.h"
+#ifdef ANGLE_ENABLE_D3D11_COMPOSITOR_NATIVE_WINDOW
 
-#include <DispatcherQueue.h>
-#include <VersionHelpers.h>
-#include <Windows.Foundation.h>
-#include <windows.ui.composition.Desktop.h>
-#include <windows.ui.composition.h>
-#include <windows.ui.composition.interop.h>
-#include <wrl.h>
-#include <memory>
+#    include <d3d11.h>
+#    include "test_utils/ANGLETest.h"
 
-#include "libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.h"
-#include "util/OSWindow.h"
-#include "util/com_utils.h"
-#include "util/test_utils.h"
+#    include <DispatcherQueue.h>
+#    include <VersionHelpers.h>
+#    include <Windows.Foundation.h>
+#    include <windows.ui.composition.Desktop.h>
+#    include <windows.ui.composition.h>
+#    include <windows.ui.composition.interop.h>
+#    include <wrl.h>
+#    include <memory>
+
+#    include "libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.h"
+#    include "util/OSWindow.h"
+#    include "util/com_utils.h"
+#    include "util/test_utils.h"
 
 using namespace angle;
 using namespace ABI::Windows::System;
@@ -51,7 +53,7 @@ class EGLDirectCompositionTest : public ANGLETest
 
         mOSWindow->initialize("EGLDirectCompositionTest", WINDOWWIDTH, WINDOWHEIGHT);
         auto nativeWindow = mOSWindow->getNativeWindow();
-        mOSWindow->setVisible(true);
+        setWindowVisible(mOSWindow, true);
 
         // Create DispatcherQueue for window to process compositor callbacks
         CreateDispatcherQueue(mDispatcherController);
@@ -256,6 +258,9 @@ TEST_P(EGLDirectCompositionTest, RenderSolidColor)
     // Only attempt this test when on Windows 10 1803+
     ANGLE_SKIP_TEST_IF(!mRoHelper.SupportedWindowsRelease());
 
+    // http://crbug.com/1063962
+    ANGLE_SKIP_TEST_IF(isD3D11Renderer() && IsIntel());
+
     EGLSurface s{nullptr};
     CreateSurface(mAngleHost, s);
 
@@ -291,3 +296,5 @@ TEST_P(EGLDirectCompositionTest, RenderSolidColor)
 }
 
 ANGLE_INSTANTIATE_TEST(EGLDirectCompositionTest, WithNoFixture(ES2_D3D11()));
+
+#endif  // ANGLE_ENABLE_D3D11_COMPOSITOR_NATIVE_WINDOW

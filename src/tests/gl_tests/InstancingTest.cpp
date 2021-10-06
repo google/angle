@@ -486,31 +486,36 @@ TEST_P(InstancingTest, LineLoop)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_instanced_arrays"));
 
-    // TODO(hqle): D3D9 seems to draw very slow here, probably due to invariant
-    ANGLE_SKIP_TEST_IF(IsD3D9());
-
     constexpr char kVS[] = R"(
 attribute vec2 a_position;
 // x,y = offset, z = scale
 attribute vec3 a_transform;
+
+attribute vec4 a_color;
+
+varying vec4 v_color;
 
 invariant gl_Position;
 void main()
 {
     vec2 v_position = a_transform.z * a_position + a_transform.xy;
     gl_Position = vec4(v_position, 0.0, 1.0);
+
+    v_color = a_color;
 })";
 
     constexpr char kFS[] = R"(
 precision highp float;
+varying vec4 v_color;
 void main()
 {
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    gl_FragColor = v_color;
 })";
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glBindAttribLocation(program, 0, "a_position");
     glBindAttribLocation(program, 1, "a_transform");
+    glBindAttribLocation(program, 2, "a_color");
     glLinkProgram(program);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -523,13 +528,18 @@ void main()
         0, 0, 9, 0.2, 0.1, 2, 0.5, -0.2, 3, -0.8, -0.5, 1, -0.4, 0.4, 6,
     };
 
-    constexpr GLushort lineloopAsStripIndices[] = {0, 1, 2, 3, 0};
-
     constexpr GLsizei instances = ArraySize(transform) / 3;
+
+    const GLfloat colors[instances * 3] = {
+        1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0,
+    };
+
+    constexpr GLushort lineloopAsStripIndices[] = {0, 1, 2, 3, 0};
 
     std::vector<GLColor> expectedPixels(getWindowWidth() * getWindowHeight());
 
     // Draw in non-instanced way
+    glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glEnableVertexAttribArray(0);
@@ -544,6 +554,7 @@ void main()
     for (size_t i = 0; i < instances; ++i)
     {
         glVertexAttrib3fv(1, transform + 3 * i);
+        glVertexAttrib3fv(2, colors + 3 * i);
 
         glDrawElements(GL_LINE_STRIP, ArraySize(lineloopAsStripIndices), GL_UNSIGNED_SHORT,
                        lineloopAsStripIndices);
@@ -556,7 +567,7 @@ void main()
     // Draw in instanced way:
     glClear(GL_COLOR_BUFFER_BIT);
 
-    GLBuffer vertexBuffer[2];
+    GLBuffer vertexBuffer[3];
     GLBuffer indexBuffer;
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -575,33 +586,26 @@ void main()
     glVertexAttribDivisorANGLE(1, 1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer[2]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(2);
+    glVertexAttribDivisorANGLE(2, 1);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
     glDrawArraysInstancedANGLE(GL_LINE_LOOP, 0, ArraySize(vertices) / 2, instances);
 
-    for (int y = 0; y < getWindowHeight(); ++y)
-    {
-        for (int x = 0; x < getWindowWidth(); ++x)
-        {
-            int idx               = y * getWindowWidth() + x;
-            GLColor expectedColor = expectedPixels[idx];
-
-            EXPECT_PIXEL_COLOR_EQ(x, y, expectedColor) << std::endl;
-        }
-    }
+    std::vector<GLColor> actualPixels(getWindowWidth() * getWindowHeight());
+    glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                 actualPixels.data());
+    EXPECT_EQ(expectedPixels, actualPixels);
 
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawElementsInstancedANGLE(GL_LINE_LOOP, ArraySize(lineloopAsStripIndices) - 1,
                                  GL_UNSIGNED_SHORT, 0, instances);
 
-    for (int y = 0; y < getWindowHeight(); ++y)
-    {
-        for (int x = 0; x < getWindowWidth(); ++x)
-        {
-            int idx               = y * getWindowWidth() + x;
-            GLColor expectedColor = expectedPixels[idx];
-
-            EXPECT_PIXEL_COLOR_EQ(x, y, expectedColor) << std::endl;
-        }
-    }
+    glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                 actualPixels.data());
+    EXPECT_EQ(expectedPixels, actualPixels);
 }
 
 class InstancingTestES3 : public InstancingTest
@@ -812,8 +816,10 @@ TEST_P(InstancingTestES3, LargestDivisor)
         << "Vertex attrib divisor read was not the same that was passed in.";
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(InstancingTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(InstancingTestES3);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(InstancingTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(InstancingTestES31);
 
 ANGLE_INSTANTIATE_TEST_ES2(InstancingTest);

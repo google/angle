@@ -35,6 +35,7 @@ namespace mtl
 class CommandBuffer;
 class CommandEncoder;
 class RenderCommandEncoder;
+class OcclusionQueryPool;
 
 class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::NonCopyable
 {
@@ -59,6 +60,9 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
     }
     bool isResourceBeingUsedByGPU(const Resource *resource) const;
 
+    // Checks whether the last command buffer that uses the given resource has been committed or not
+    bool resourceHasPendingWorks(const Resource *resource) const;
+
     CommandQueue &operator=(id<MTLCommandQueue> metalQueue)
     {
         set(metalQueue);
@@ -66,6 +70,7 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
     }
 
     AutoObjCPtr<id<MTLCommandBuffer>> makeMetalCommandBuffer(uint64_t *queueSerialOut);
+    void onCommandBufferCommitted(id<MTLCommandBuffer> buf, uint64_t serial);
 
   private:
     void onCommandBufferCompleted(id<MTLCommandBuffer> buf, uint64_t serial);
@@ -80,6 +85,7 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
     std::deque<CmdBufferQueueEntry> mMetalCmdBuffersTmp;
 
     uint64_t mQueueSerialCounter = 1;
+    std::atomic<uint64_t> mCommittedBufferSerial{0};
     std::atomic<uint64_t> mCompletedBufferSerial{0};
 
     mutable std::mutex mLock;
@@ -91,19 +97,32 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     CommandBuffer(CommandQueue *cmdQueue);
     ~CommandBuffer();
 
+    // This method must be called so that command encoder can be used.
     void restart();
 
-    bool valid() const;
+    // Return true if command buffer can be encoded into. Return false if it has been committed
+    // and hasn't been restarted.
+    bool ready() const;
     void commit();
+    // wait for committed command buffer to finish.
     void finish();
 
     void present(id<CAMetalDrawable> presentationDrawable);
 
     void setWriteDependency(const ResourceRef &resource);
     void setReadDependency(const ResourceRef &resource);
+    void setReadDependency(Resource *resourcePtr);
+
+    void queueEventSignal(const mtl::SharedEventRef &event, uint64_t value);
+    void serverWaitEvent(const mtl::SharedEventRef &event, uint64_t value);
+
+    void insertDebugSign(const std::string &marker);
+    void pushDebugGroup(const std::string &marker);
+    void popDebugGroup();
 
     CommandQueue &cmdQueue() { return mCmdQueue; }
 
+    // Private use only
     void setActiveCommandEncoder(CommandEncoder *encoder);
     void invalidateActiveCommandEncoder(CommandEncoder *encoder);
 
@@ -111,18 +130,31 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     void set(id<MTLCommandBuffer> metalBuffer);
     void cleanup();
 
-    bool validImpl() const;
+    bool readyImpl() const;
     void commitImpl();
+    void forceEndingCurrentEncoder();
+
+    void setPendingEvents();
+    void setEventImpl(const mtl::SharedEventRef &event, uint64_t value);
+    void waitEventImpl(const mtl::SharedEventRef &event, uint64_t value);
+
+    void pushDebugGroupImpl(const std::string &marker);
+    void popDebugGroupImpl();
 
     using ParentClass = WrappedObject<id<MTLCommandBuffer>>;
 
     CommandQueue &mCmdQueue;
 
-    std::atomic<CommandEncoder *> mActiveCommandEncoder{nullptr};
+    CommandEncoder *mActiveCommandEncoder = nullptr;
 
     uint64_t mQueueSerial = 0;
 
     mutable std::mutex mLock;
+
+    std::vector<std::string> mPendingDebugSigns;
+    std::vector<std::pair<mtl::SharedEventRef, uint64_t>> mPendingSignalEvents;
+
+    std::vector<std::string> mDebugGroups;
 
     bool mCommitted = false;
 };
@@ -141,11 +173,16 @@ class CommandEncoder : public WrappedObject<id<MTLCommandEncoder>>, angle::NonCo
 
     virtual void endEncoding();
 
-    void reset();
+    virtual void reset();
     Type getType() const { return mType; }
 
     CommandEncoder &markResourceBeingWrittenByGPU(const BufferRef &buffer);
     CommandEncoder &markResourceBeingWrittenByGPU(const TextureRef &texture);
+
+    void insertDebugSign(NSString *label);
+
+    virtual void pushDebugGroup(NSString *label);
+    virtual void popDebugGroup();
 
   protected:
     using ParentClass = WrappedObject<id<MTLCommandEncoder>>;
@@ -157,19 +194,133 @@ class CommandEncoder : public WrappedObject<id<MTLCommandEncoder>>, angle::NonCo
 
     void set(id<MTLCommandEncoder> metalCmdEncoder);
 
+    virtual void insertDebugSignImpl(NSString *marker);
+
   private:
     const Type mType;
     CommandBuffer &mCmdBuffer;
 };
 
+// Stream to store commands before encoding them into the real MTLCommandEncoder
+class IntermediateCommandStream
+{
+  public:
+    template <typename T>
+    inline IntermediateCommandStream &push(const T &val)
+    {
+        auto ptr = reinterpret_cast<const uint8_t *>(&val);
+        mBuffer.insert(mBuffer.end(), ptr, ptr + sizeof(T));
+        return *this;
+    }
+
+    inline IntermediateCommandStream &push(const uint8_t *bytes, size_t len)
+    {
+        mBuffer.insert(mBuffer.end(), bytes, bytes + len);
+        return *this;
+    }
+
+    template <typename T>
+    inline T peek()
+    {
+        ASSERT(mReadPtr <= mBuffer.size() - sizeof(T));
+        T re;
+        auto ptr = reinterpret_cast<uint8_t *>(&re);
+        std::copy(mBuffer.data() + mReadPtr, mBuffer.data() + mReadPtr + sizeof(T), ptr);
+        return re;
+    }
+
+    template <typename T>
+    inline T fetch()
+    {
+        auto re = peek<T>();
+        mReadPtr += sizeof(T);
+        return re;
+    }
+
+    inline const uint8_t *fetch(size_t bytes)
+    {
+        ASSERT(mReadPtr <= mBuffer.size() - bytes);
+        auto cur = mReadPtr;
+        mReadPtr += bytes;
+        return mBuffer.data() + cur;
+    }
+
+    inline void clear()
+    {
+        mBuffer.clear();
+        mReadPtr = 0;
+    }
+
+    inline void resetReadPtr(size_t readPtr)
+    {
+        ASSERT(readPtr <= mBuffer.size());
+        mReadPtr = readPtr;
+    }
+
+    inline bool good() const { return mReadPtr < mBuffer.size(); }
+
+  private:
+    std::vector<uint8_t> mBuffer;
+    size_t mReadPtr = 0;
+};
+
+// Per shader stage's states
+struct RenderCommandEncoderShaderStates
+{
+    RenderCommandEncoderShaderStates();
+
+    void reset();
+
+    std::array<id<MTLBuffer>, kMaxShaderBuffers> buffers;
+    std::array<uint32_t, kMaxShaderBuffers> bufferOffsets;
+    std::array<id<MTLSamplerState>, kMaxShaderSamplers> samplers;
+    std::array<Optional<std::pair<float, float>>, kMaxShaderSamplers> samplerLodClamps;
+    std::array<id<MTLTexture>, kMaxShaderSamplers> textures;
+};
+
+// Per render pass's states
+struct RenderCommandEncoderStates
+{
+    RenderCommandEncoderStates();
+
+    void reset();
+
+    id<MTLRenderPipelineState> renderPipeline;
+
+    MTLTriangleFillMode triangleFillMode;
+    MTLWinding winding;
+    MTLCullMode cullMode;
+
+    id<MTLDepthStencilState> depthStencilState;
+    float depthBias, depthSlopeScale, depthClamp;
+
+    uint32_t stencilFrontRef, stencilBackRef;
+
+    Optional<MTLViewport> viewport;
+    Optional<MTLScissorRect> scissorRect;
+
+    std::array<float, 4> blendColor;
+
+    gl::ShaderMap<RenderCommandEncoderShaderStates> perShaderStates;
+
+    MTLVisibilityResultMode visibilityResultMode;
+    size_t visibilityResultBufferOffset;
+};
+
+// Encoder for encoding render commands
 class RenderCommandEncoder final : public CommandEncoder
 {
   public:
-    RenderCommandEncoder(CommandBuffer *cmdBuffer);
+    RenderCommandEncoder(CommandBuffer *cmdBuffer, const OcclusionQueryPool &queryPool);
     ~RenderCommandEncoder() override;
 
+    // override CommandEncoder
+    bool valid() const { return mRecording; }
+    void reset() override;
     void endEncoding() override;
 
+    // Restart the encoder so that new commands can be encoded.
+    // NOTE: parent CommandBuffer's restart() must be called before this.
     RenderCommandEncoder &restart(const RenderPassDesc &desc);
 
     RenderCommandEncoder &setRenderPipelineState(id<MTLRenderPipelineState> state);
@@ -187,8 +338,14 @@ class RenderCommandEncoder final : public CommandEncoder
 
     RenderCommandEncoder &setBlendColor(float r, float g, float b, float a);
 
-    RenderCommandEncoder &setVertexBuffer(const BufferRef &buffer, uint32_t offset, uint32_t index);
-    RenderCommandEncoder &setVertexBytes(const uint8_t *bytes, size_t size, uint32_t index);
+    RenderCommandEncoder &setVertexBuffer(const BufferRef &buffer, uint32_t offset, uint32_t index)
+    {
+        return setBuffer(gl::ShaderType::Vertex, buffer, offset, index);
+    }
+    RenderCommandEncoder &setVertexBytes(const uint8_t *bytes, size_t size, uint32_t index)
+    {
+        return setBytes(gl::ShaderType::Vertex, bytes, size, index);
+    }
     template <typename T>
     RenderCommandEncoder &setVertexData(const T &data, uint32_t index)
     {
@@ -197,13 +354,25 @@ class RenderCommandEncoder final : public CommandEncoder
     RenderCommandEncoder &setVertexSamplerState(id<MTLSamplerState> state,
                                                 float lodMinClamp,
                                                 float lodMaxClamp,
-                                                uint32_t index);
-    RenderCommandEncoder &setVertexTexture(const TextureRef &texture, uint32_t index);
+                                                uint32_t index)
+    {
+        return setSamplerState(gl::ShaderType::Vertex, state, lodMinClamp, lodMaxClamp, index);
+    }
+    RenderCommandEncoder &setVertexTexture(const TextureRef &texture, uint32_t index)
+    {
+        return setTexture(gl::ShaderType::Vertex, texture, index);
+    }
 
     RenderCommandEncoder &setFragmentBuffer(const BufferRef &buffer,
                                             uint32_t offset,
-                                            uint32_t index);
-    RenderCommandEncoder &setFragmentBytes(const uint8_t *bytes, size_t size, uint32_t index);
+                                            uint32_t index)
+    {
+        return setBuffer(gl::ShaderType::Fragment, buffer, offset, index);
+    }
+    RenderCommandEncoder &setFragmentBytes(const uint8_t *bytes, size_t size, uint32_t index)
+    {
+        return setBytes(gl::ShaderType::Fragment, bytes, size, index);
+    }
     template <typename T>
     RenderCommandEncoder &setFragmentData(const T &data, uint32_t index)
     {
@@ -212,8 +381,40 @@ class RenderCommandEncoder final : public CommandEncoder
     RenderCommandEncoder &setFragmentSamplerState(id<MTLSamplerState> state,
                                                   float lodMinClamp,
                                                   float lodMaxClamp,
-                                                  uint32_t index);
-    RenderCommandEncoder &setFragmentTexture(const TextureRef &texture, uint32_t index);
+                                                  uint32_t index)
+    {
+        return setSamplerState(gl::ShaderType::Fragment, state, lodMinClamp, lodMaxClamp, index);
+    }
+    RenderCommandEncoder &setFragmentTexture(const TextureRef &texture, uint32_t index)
+    {
+        return setTexture(gl::ShaderType::Fragment, texture, index);
+    }
+
+    RenderCommandEncoder &setBuffer(gl::ShaderType shaderType,
+                                    const BufferRef &buffer,
+                                    uint32_t offset,
+                                    uint32_t index);
+    RenderCommandEncoder &setBufferForWrite(gl::ShaderType shaderType,
+                                            const BufferRef &buffer,
+                                            uint32_t offset,
+                                            uint32_t index);
+    RenderCommandEncoder &setBytes(gl::ShaderType shaderType,
+                                   const uint8_t *bytes,
+                                   size_t size,
+                                   uint32_t index);
+    template <typename T>
+    RenderCommandEncoder &setData(gl::ShaderType shaderType, const T &data, uint32_t index)
+    {
+        return setBytes(shaderType, reinterpret_cast<const uint8_t *>(&data), sizeof(T), index);
+    }
+    RenderCommandEncoder &setSamplerState(gl::ShaderType shaderType,
+                                          id<MTLSamplerState> state,
+                                          float lodMinClamp,
+                                          float lodMaxClamp,
+                                          uint32_t index);
+    RenderCommandEncoder &setTexture(gl::ShaderType shaderType,
+                                     const TextureRef &texture,
+                                     uint32_t index);
 
     RenderCommandEncoder &draw(MTLPrimitiveType primitiveType,
                                uint32_t vertexStart,
@@ -241,6 +442,16 @@ class RenderCommandEncoder final : public CommandEncoder
                                                          uint32_t instances,
                                                          uint32_t baseVertex);
 
+    RenderCommandEncoder &setVisibilityResultMode(MTLVisibilityResultMode mode, size_t offset);
+
+    RenderCommandEncoder &useResource(const BufferRef &resource,
+                                      MTLResourceUsage usage,
+                                      mtl::RenderStages states);
+
+    RenderCommandEncoder &memoryBarrierWithResource(const BufferRef &resource,
+                                                    mtl::RenderStages after,
+                                                    mtl::RenderStages before);
+
     RenderCommandEncoder &setColorStoreAction(MTLStoreAction action, uint32_t colorAttachmentIndex);
     // Set store action for every color attachment.
     RenderCommandEncoder &setColorStoreAction(MTLStoreAction action);
@@ -250,20 +461,69 @@ class RenderCommandEncoder final : public CommandEncoder
     RenderCommandEncoder &setDepthStoreAction(MTLStoreAction action);
     RenderCommandEncoder &setStencilStoreAction(MTLStoreAction action);
 
+    // Set storeaction for every color & depth & stencil attachment.
+    RenderCommandEncoder &setStoreAction(MTLStoreAction action);
+
+    // Change the render pass's loadAction. Note that this operation is only allowed when there
+    // is no draw call recorded yet.
+    RenderCommandEncoder &setColorLoadAction(MTLLoadAction action,
+                                             const MTLClearColor &clearValue,
+                                             uint32_t colorAttachmentIndex);
+    RenderCommandEncoder &setDepthLoadAction(MTLLoadAction action, double clearValue);
+    RenderCommandEncoder &setStencilLoadAction(MTLLoadAction action, uint32_t clearValue);
+
+    void setLabel(NSString *label);
+
+    void pushDebugGroup(NSString *label) override;
+    void popDebugGroup() override;
+
     const RenderPassDesc &renderPassDesc() const { return mRenderPassDesc; }
+    bool hasDrawCalls() const { return mHasDrawCalls; }
 
   private:
+    // Override CommandEncoder
     id<MTLRenderCommandEncoder> get()
     {
         return static_cast<id<MTLRenderCommandEncoder>>(CommandEncoder::get());
     }
-    inline void initWriteDependencyAndStoreAction(const TextureRef &texture,
-                                                  MTLStoreAction *storeActionOut);
+    void insertDebugSignImpl(NSString *label) override;
+
+    void initAttachmentWriteDependencyAndScissorRect(const RenderPassAttachmentDesc &attachment);
+    void initWriteDependency(const TextureRef &texture);
+
+    void finalizeLoadStoreAction(MTLRenderPassAttachmentDescriptor *objCRenderPassAttachment);
+
+    void encodeMetalEncoder();
+    void simulateDiscardFramebuffer();
+    void endEncodingImpl(bool considerDiscardSimulation);
+
+    RenderCommandEncoder &commonSetBuffer(gl::ShaderType shaderType,
+                                          id<MTLBuffer> mtlBuffer,
+                                          uint32_t offset,
+                                          uint32_t index);
 
     RenderPassDesc mRenderPassDesc;
-    MTLStoreAction mColorInitialStoreActions[kMaxRenderTargets];
-    MTLStoreAction mDepthInitialStoreAction;
-    MTLStoreAction mStencilInitialStoreAction;
+    // Cached Objective-C render pass desc to avoid re-allocate every frame.
+    mtl::AutoObjCObj<MTLRenderPassDescriptor> mCachedRenderPassDescObjC;
+
+    mtl::AutoObjCObj<NSString> mLabel;
+
+    MTLScissorRect mRenderPassMaxScissorRect;
+
+    const OcclusionQueryPool &mOcclusionQueryPool;
+    bool mRecording    = false;
+    bool mHasDrawCalls = false;
+    IntermediateCommandStream mCommands;
+
+    gl::ShaderMap<uint8_t> mSetBufferCmds;
+    gl::ShaderMap<uint8_t> mSetBufferOffsetCmds;
+    gl::ShaderMap<uint8_t> mSetBytesCmds;
+    gl::ShaderMap<uint8_t> mSetTextureCmds;
+    gl::ShaderMap<uint8_t> mSetSamplerCmds;
+
+    RenderCommandEncoderStates mStateCache = {};
+
+    bool mPipelineStateSet = false;
 };
 
 class BlitCommandEncoder final : public CommandEncoder
@@ -272,7 +532,15 @@ class BlitCommandEncoder final : public CommandEncoder
     BlitCommandEncoder(CommandBuffer *cmdBuffer);
     ~BlitCommandEncoder() override;
 
+    // Restart the encoder so that new commands can be encoded.
+    // NOTE: parent CommandBuffer's restart() must be called before this.
     BlitCommandEncoder &restart();
+
+    BlitCommandEncoder &copyBuffer(const BufferRef &src,
+                                   size_t srcOffset,
+                                   const BufferRef &dst,
+                                   size_t dstOffset,
+                                   size_t size);
 
     BlitCommandEncoder &copyBufferToTexture(const BufferRef &src,
                                             size_t srcOffset,
@@ -281,22 +549,35 @@ class BlitCommandEncoder final : public CommandEncoder
                                             MTLSize srcSize,
                                             const TextureRef &dst,
                                             uint32_t dstSlice,
-                                            uint32_t dstLevel,
+                                            MipmapNativeLevel dstLevel,
                                             MTLOrigin dstOrigin,
                                             MTLBlitOption blitOption);
 
-    BlitCommandEncoder &copyTexture(const TextureRef &dst,
-                                    uint32_t dstSlice,
-                                    uint32_t dstLevel,
-                                    MTLOrigin dstOrigin,
-                                    MTLSize dstSize,
-                                    const TextureRef &src,
+    BlitCommandEncoder &copyTextureToBuffer(const TextureRef &src,
+                                            uint32_t srcSlice,
+                                            MipmapNativeLevel srcLevel,
+                                            MTLOrigin srcOrigin,
+                                            MTLSize srcSize,
+                                            const BufferRef &dst,
+                                            size_t dstOffset,
+                                            size_t dstBytesPerRow,
+                                            size_t dstBytesPerImage,
+                                            MTLBlitOption blitOption);
+
+    BlitCommandEncoder &copyTexture(const TextureRef &src,
                                     uint32_t srcSlice,
-                                    uint32_t srcLevel,
-                                    MTLOrigin srcOrigin);
+                                    MipmapNativeLevel srcLevel,
+                                    const TextureRef &dst,
+                                    uint32_t dstSlice,
+                                    MipmapNativeLevel dstLevel,
+                                    uint32_t sliceCount,
+                                    uint32_t levelCount);
+
+    BlitCommandEncoder &fillBuffer(const BufferRef &buffer, NSRange range, uint8_t value);
 
     BlitCommandEncoder &generateMipmapsForTexture(const TextureRef &texture);
-    BlitCommandEncoder &synchronizeResource(const TextureRef &texture);
+    BlitCommandEncoder &synchronizeResource(Buffer *bufferPtr);
+    BlitCommandEncoder &synchronizeResource(Texture *texturePtr);
 
   private:
     id<MTLBlitCommandEncoder> get()
@@ -311,11 +592,16 @@ class ComputeCommandEncoder final : public CommandEncoder
     ComputeCommandEncoder(CommandBuffer *cmdBuffer);
     ~ComputeCommandEncoder() override;
 
+    // Restart the encoder so that new commands can be encoded.
+    // NOTE: parent CommandBuffer's restart() must be called before this.
     ComputeCommandEncoder &restart();
 
     ComputeCommandEncoder &setComputePipelineState(id<MTLComputePipelineState> state);
 
     ComputeCommandEncoder &setBuffer(const BufferRef &buffer, uint32_t offset, uint32_t index);
+    ComputeCommandEncoder &setBufferForWrite(const BufferRef &buffer,
+                                             uint32_t offset,
+                                             uint32_t index);
     ComputeCommandEncoder &setBytes(const uint8_t *bytes, size_t size, uint32_t index);
     template <typename T>
     ComputeCommandEncoder &setData(const T &data, uint32_t index)
@@ -327,10 +613,13 @@ class ComputeCommandEncoder final : public CommandEncoder
                                            float lodMaxClamp,
                                            uint32_t index);
     ComputeCommandEncoder &setTexture(const TextureRef &texture, uint32_t index);
+    ComputeCommandEncoder &setTextureForWrite(const TextureRef &texture, uint32_t index);
 
-    ComputeCommandEncoder &dispatch(MTLSize threadGroupsPerGrid, MTLSize threadsPerGroup);
+    ComputeCommandEncoder &dispatch(const MTLSize &threadGroupsPerGrid,
+                                    const MTLSize &threadsPerGroup);
 
-    ComputeCommandEncoder &dispatchNonUniform(MTLSize threadsPerGrid, MTLSize threadsPerGroup);
+    ComputeCommandEncoder &dispatchNonUniform(const MTLSize &threadsPerGrid,
+                                              const MTLSize &threadsPerGroup);
 
   private:
     id<MTLComputeCommandEncoder> get()

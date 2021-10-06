@@ -9,7 +9,7 @@
 
 #include <string>
 
-#include "util/EGLWindow.h"
+#include "util/util_gl.h"
 
 // Driver vendors
 bool IsAdreno();
@@ -28,6 +28,7 @@ bool IsOpenGL();
 bool IsNULL();
 bool IsVulkan();
 bool IsMetal();
+bool IsD3D();
 
 // Debug/Release
 bool IsDebug();

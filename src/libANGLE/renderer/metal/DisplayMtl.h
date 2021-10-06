@@ -27,7 +27,12 @@ class Surface;
 
 namespace rx
 {
+class ShareGroupMtl : public ShareGroupImpl
+{};
+
 class ContextMtl;
+
+struct DefaultShaderAsyncInfoMtl;
 
 class DisplayMtl : public DisplayImpl
 {
@@ -41,7 +46,9 @@ class DisplayMtl : public DisplayImpl
     bool testDeviceLost() override;
     egl::Error restoreLostDevice(const egl::Display *display) override;
 
-    std::string getVendorString() const override;
+    std::string getRendererDescription() override;
+    std::string getVendorString() override;
+    std::string getVersionString() override;
 
     DeviceImpl *createDevice() override;
 
@@ -75,12 +82,19 @@ class DisplayMtl : public DisplayImpl
     StreamProducerImpl *createStreamProducerD3DTexture(egl::Stream::ConsumerType consumerType,
                                                        const egl::AttributeMap &attribs) override;
 
+    ShareGroupImpl *createShareGroup() override;
+
+    ExternalImageSiblingImpl *createExternalImageSibling(const gl::Context *context,
+                                                         EGLenum target,
+                                                         EGLClientBuffer buffer,
+                                                         const egl::AttributeMap &attribs) override;
     gl::Version getMaxSupportedESVersion() const override;
     gl::Version getMaxConformantESVersion() const override;
 
     EGLSyncImpl *createSync(const egl::AttributeMap &attribs) override;
 
-    egl::Error makeCurrent(egl::Surface *drawSurface,
+    egl::Error makeCurrent(egl::Display *display,
+                           egl::Surface *drawSurface,
                            egl::Surface *readSurface,
                            gl::Context *context) override;
 
@@ -88,14 +102,31 @@ class DisplayMtl : public DisplayImpl
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
 
+    egl::Error validateClientBuffer(const egl::Config *configuration,
+                                    EGLenum buftype,
+                                    EGLClientBuffer clientBuffer,
+                                    const egl::AttributeMap &attribs) const override;
+
+    egl::Error validateImageClientBuffer(const gl::Context *context,
+                                         EGLenum target,
+                                         EGLClientBuffer clientBuffer,
+                                         const egl::AttributeMap &attribs) const override;
+
     egl::ConfigSet generateConfigs() override;
 
-    std::string getRendererDescription() const;
     gl::Caps getNativeCaps() const;
     const gl::TextureCapsMap &getNativeTextureCaps() const;
     const gl::Extensions &getNativeExtensions() const;
-    const gl::Limitations &getNativeLimitations() const { return mNativeLimitations; }
+    const gl::Limitations &getNativeLimitations() const;
     const angle::FeaturesMtl &getFeatures() const { return mFeatures; }
+
+    // Check whether either of the specified iOS or Mac GPU family is supported
+    bool supportsEitherGPUFamily(uint8_t iOSFamily, uint8_t macFamily) const;
+    bool supportsAppleGPUFamily(uint8_t iOSFamily) const;
+    bool supportsMacGPUFamily(uint8_t macFamily) const;
+    bool isAMD() const;
+    bool isIntel() const;
+    bool isNVIDIA() const;
 
     id<MTLDevice> getMetalDevice() const { return mMetalDevice; }
 
@@ -103,6 +134,8 @@ class DisplayMtl : public DisplayImpl
     const mtl::FormatTable &getFormatTable() const { return mFormatTable; }
     mtl::RenderUtils &getUtils() { return mUtils; }
     mtl::StateCache &getStateCache() { return mStateCache; }
+
+    id<MTLLibrary> getDefaultShadersLib();
 
     id<MTLDepthStencilState> getDepthStencilState(const mtl::DepthStencilDesc &desc)
     {
@@ -113,11 +146,13 @@ class DisplayMtl : public DisplayImpl
         return mStateCache.getSamplerState(getMetalDevice(), desc);
     }
 
-    const mtl::TextureRef &getNullTexture(const gl::Context *context, gl::TextureType type);
-
     const mtl::Format &getPixelFormat(angle::FormatID angleFormatId) const
     {
         return mFormatTable.getPixelFormat(angleFormatId);
+    }
+    const mtl::FormatCaps &getNativeFormatCaps(MTLPixelFormat mtlFormat) const
+    {
+        return mFormatTable.getNativeFormatCaps(mtlFormat);
     }
 
     // See mtl::FormatTable::getVertexFormat()
@@ -126,6 +161,11 @@ class DisplayMtl : public DisplayImpl
     {
         return mFormatTable.getVertexFormat(angleFormatId, tightlyPacked);
     }
+#if ANGLE_MTL_EVENT_AVAILABLE
+    mtl::AutoObjCObj<MTLSharedEventListener> getOrCreateSharedEventListener();
+#endif
+
+    bool useDirectToMetalCompiler();
 
   protected:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
@@ -138,16 +178,24 @@ class DisplayMtl : public DisplayImpl
     void initializeExtensions() const;
     void initializeTextureCaps() const;
     void initializeFeatures();
+    void initializeLimitations();
+    id<MTLDevice> getMetalDeviceMatchingAttribute(const egl::AttributeMap &attribs);
+    angle::Result initializeShaderLibrary();
 
     mtl::AutoObjCPtr<id<MTLDevice>> mMetalDevice = nil;
+    uint32_t mMetalDeviceVendorId                = 0;
 
     mtl::CommandQueue mCmdQueue;
 
-    mtl::FormatTable mFormatTable;
+    mutable mtl::FormatTable mFormatTable;
     mtl::StateCache mStateCache;
     mtl::RenderUtils mUtils;
 
-    angle::PackedEnumMap<gl::TextureType, mtl::TextureRef> mNullTextures;
+    // Built-in Shaders
+    std::shared_ptr<DefaultShaderAsyncInfoMtl> mDefaultShadersAsyncInfo;
+#if ANGLE_MTL_EVENT_AVAILABLE
+    mtl::AutoObjCObj<MTLSharedEventListener> mSharedEventListener;
+#endif
 
     mutable bool mCapsInitialized;
     mutable gl::TextureCapsMap mNativeTextureCaps;

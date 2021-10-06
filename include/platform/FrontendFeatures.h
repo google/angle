@@ -48,7 +48,38 @@ struct FrontendFeatures : angle::FeatureSetBase
     angle::Feature scalarizeVecAndMatConstructorArgs = {
         "scalarize_vec_and_mat_constructor_args", angle::FeatureCategory::FrontendWorkarounds,
         "Always rewrite vec/mat constructors to be consistent", &members,
-        "http://crbug.com/398694"};
+        "http://crbug.com/1165751"};
+
+    // Disable support for GL_OES_get_program_binary
+    angle::Feature disableProgramBinary = {
+        "disable_program_binary", angle::FeatureCategory::FrontendFeatures,
+        "Disable support for GL_OES_get_program_binary", &members, "http://anglebug.com/5007"};
+
+    // Allow disabling of GL_EXT_texture_filter_anisotropic through a runtime feature for
+    // performance comparisons.
+    angle::Feature disableAnisotropicFiltering = {
+        "disable_anisotropic_filtering", angle::FeatureCategory::FrontendWorkarounds,
+        "Disable support for anisotropic filtering", &members};
+
+    // We can use this feature to override compressed format support for portability.
+    angle::Feature allowCompressedFormats = {"allow_compressed_formats",
+                                             angle::FeatureCategory::FrontendWorkarounds,
+                                             "Allow compressed formats", &members};
+
+    angle::Feature captureLimits = {"enable_capture_limits",
+                                    angle::FeatureCategory::FrontendFeatures,
+                                    "Set the context limits like frame capturing was enabled",
+                                    &members, "http://anglebug.com/5750"};
+
+    // Whether we should compress pipeline cache in thread pool before it's stored in blob cache.
+    // http://anglebug.com/4722
+    angle::Feature enableCompressingPipelineCacheInThreadPool = {
+        "enableCompressingPipelineCacheInThreadPool", angle::FeatureCategory::FrontendWorkarounds,
+        "Enable compressing pipeline cache in thread pool.", &members, "http://anglebug.com/4722"};
+
+    angle::Feature forceRobustResourceInit = {
+        "forceRobustResourceInit", angle::FeatureCategory::FrontendWorkarounds,
+        "Force-enable robust resource init", &members, "http://anglebug.com/6041"};
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;

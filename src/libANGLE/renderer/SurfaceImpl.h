@@ -56,7 +56,9 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual egl::Error makeCurrent(const gl::Context *context);
     virtual egl::Error unMakeCurrent(const gl::Context *context);
     virtual egl::Error swap(const gl::Context *context) = 0;
-    virtual egl::Error swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects);
+    virtual egl::Error swapWithDamage(const gl::Context *context,
+                                      const EGLint *rects,
+                                      EGLint n_rects);
     virtual egl::Error swapWithFrameToken(const gl::Context *context,
                                           EGLFrameTokenANGLE frameToken);
     virtual egl::Error postSubBuffer(const gl::Context *context,
@@ -79,6 +81,15 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     // width and height can change with client window resizing
     virtual EGLint getWidth() const  = 0;
     virtual EGLint getHeight() const = 0;
+    // Note: windows cannot be resized on Android.  The approach requires
+    // calling vkGetPhysicalDeviceSurfaceCapabilitiesKHR.  However, that is
+    // expensive; and there are troublesome timing issues for other parts of
+    // ANGLE (which cause test failures and crashes).  Therefore, a
+    // special-Android-only path is created just for the querying of EGL_WIDTH
+    // and EGL_HEIGHT.
+    // https://issuetracker.google.com/issues/153329980
+    virtual egl::Error getUserWidth(const egl::Display *display, EGLint *value) const;
+    virtual egl::Error getUserHeight(const egl::Display *display, EGLint *value) const;
 
     virtual EGLint isPostSubBufferSupported() const = 0;
     virtual EGLint getSwapBehavior() const          = 0;
@@ -98,6 +109,7 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
                                           EGLint numTimestamps,
                                           const EGLint *timestamps,
                                           EGLnsecsANDROID *values) const;
+    virtual egl::Error getBufferAge(const gl::Context *context, EGLint *age);
 
   protected:
     const egl::SurfaceState &mState;

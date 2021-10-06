@@ -20,7 +20,7 @@ namespace rx
 class MockFramebufferImpl : public rx::FramebufferImpl
 {
   public:
-    MockFramebufferImpl() : rx::FramebufferImpl(gl::FramebufferState()) {}
+    MockFramebufferImpl() : rx::FramebufferImpl(gl::FramebufferState(rx::Serial())) {}
     virtual ~MockFramebufferImpl() { destructor(); }
 
     MOCK_METHOD3(discard, angle::Result(const gl::Context *, size_t, const GLenum *));
@@ -34,10 +34,14 @@ class MockFramebufferImpl : public rx::FramebufferImpl
     MOCK_METHOD4(clearBufferiv, angle::Result(const gl::Context *, GLenum, GLint, const GLint *));
     MOCK_METHOD5(clearBufferfi, angle::Result(const gl::Context *, GLenum, GLint, GLfloat, GLint));
 
-    MOCK_CONST_METHOD1(getImplementationColorReadFormat, GLenum(const gl::Context *));
-    MOCK_CONST_METHOD1(getImplementationColorReadType, GLenum(const gl::Context *));
-    MOCK_METHOD5(readPixels,
-                 angle::Result(const gl::Context *, const gl::Rectangle &, GLenum, GLenum, void *));
+    MOCK_METHOD7(readPixels,
+                 angle::Result(const gl::Context *,
+                               const gl::Rectangle &,
+                               GLenum,
+                               GLenum,
+                               const gl::PixelPackState &,
+                               gl::Buffer *,
+                               void *));
 
     MOCK_CONST_METHOD3(getSamplePosition, angle::Result(const gl::Context *, size_t, GLfloat *));
 
@@ -48,9 +52,13 @@ class MockFramebufferImpl : public rx::FramebufferImpl
                                GLbitfield,
                                GLenum));
 
-    MOCK_CONST_METHOD1(checkStatus, bool(const gl::Context *));
+    MOCK_CONST_METHOD1(checkStatus, gl::FramebufferStatus(const gl::Context *));
 
-    MOCK_METHOD2(syncState, angle::Result(const gl::Context *, const gl::Framebuffer::DirtyBits &));
+    MOCK_METHOD4(syncState,
+                 angle::Result(const gl::Context *,
+                               GLenum,
+                               const gl::Framebuffer::DirtyBits &,
+                               gl::Command command));
 
     MOCK_METHOD0(destructor, void());
 };
@@ -60,7 +68,8 @@ inline ::testing::NiceMock<MockFramebufferImpl> *MakeFramebufferMock()
     ::testing::NiceMock<MockFramebufferImpl> *framebufferImpl =
         new ::testing::NiceMock<MockFramebufferImpl>();
     // TODO(jmadill): add ON_CALLS for other returning methods
-    ON_CALL(*framebufferImpl, checkStatus(testing::_)).WillByDefault(::testing::Return(true));
+    ON_CALL(*framebufferImpl, checkStatus(testing::_))
+        .WillByDefault(::testing::Return(gl::FramebufferStatus::Complete()));
 
     // We must mock the destructor since NiceMock doesn't work for destructors.
     EXPECT_CALL(*framebufferImpl, destructor()).Times(1).RetiresOnSaturation();

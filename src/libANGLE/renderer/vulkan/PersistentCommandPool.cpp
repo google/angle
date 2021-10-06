@@ -22,15 +22,24 @@ PersistentCommandPool::~PersistentCommandPool()
     ASSERT(!mCommandPool.valid() && mFreeBuffers.empty());
 }
 
-angle::Result PersistentCommandPool::init(vk::Context *context, uint32_t queueFamilyIndex)
+angle::Result PersistentCommandPool::init(vk::Context *context,
+                                          bool hasProtectedContent,
+                                          uint32_t queueFamilyIndex)
 {
     ASSERT(!mCommandPool.valid());
 
     // Initialize the command pool now that we know the queue family index.
     VkCommandPoolCreateInfo commandPoolInfo = {};
     commandPoolInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    commandPoolInfo.flags                   = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-    commandPoolInfo.queueFamilyIndex        = queueFamilyIndex;
+    // TODO (https://issuetracker.google.com/issues/166793850) We currently reset individual
+    //  command buffers from this pool. Alternatively we could reset the entire command pool.
+    commandPoolInfo.flags =
+        VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    if (hasProtectedContent)
+    {
+        commandPoolInfo.flags |= VK_COMMAND_POOL_CREATE_PROTECTED_BIT;
+    }
+    commandPoolInfo.queueFamilyIndex = queueFamilyIndex;
 
     ANGLE_VK_TRY(context, mCommandPool.init(context->getDevice(), commandPoolInfo));
 

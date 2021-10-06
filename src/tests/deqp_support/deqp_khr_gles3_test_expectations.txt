@@ -2,38 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// This file contains a list of defective dEQP conformance tests. The expected
-// format is:
-//  {BUG#} {MODIFIERS} : {TEST_NAME} = {PASS,FAIL,FLAKY,TIMEOUT,SKIP}
-//
-// MODIFIERS can be a combination of the below list, combined with a logical AND:
-//  WIN XP VISTA WIN7 WIN8 WIN10
-//  MAC LEOPARD SNOWLEOPARD LION MOUNTAINLION MAVERICKS YOSEMITE ELCAPITAN SIERRA HIGHSIERRA MOJAVE
-//  LINUX CHROMEOS ANDROID
-//  NVIDIA AMD INTEL
-//  DEBUG RELEASE
-//  D3D9 D3D11 OPENGL GLES VULKAN
-//  NEXUS5X PIXEL2ORXL
-//  QUADROP400
-//
-//
-// TEST_NAME can be a specific test name, or have a '*' in the end, which
-// indicates a prefix matching.
-//
-// Examples:
-// fails on both windows and mac (crash)
-//  91530 WIN : context_lost_restored = SKIP
-//  91530 MAC : context_lost_restored = SKIP
-// fails on windows using NVIDIA GPUs
-//  91533 WIN NVIDIA : gl_min_uniforms = FAIL
-// fails on Nexus5X with GLES backend (hangs)
-//  91531 NEXUS5X GLES : conformance_more_* = SKIP
+// See README.md for format.
 
 // For now we only log Vulkan test expectations. More back-ends can follow as we need them.
 
 // Depth/stencil related failures due to Vulkan driver bugs.
 3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth24_stencil8 = FAIL
 3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth32f_stencil8 = FAIL
+
+// Pixel 2 crashes
+5340 PIXEL2ORXL VULKAN : KHR-GLES3.copy_tex_image_conversions.* = SKIP
 
 // CopyTexImage conversion failing due to Vulkan validation error re: UINT/SINT-descriptor-set issue.
 3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_texture2d = FAIL
@@ -139,6 +117,10 @@
 3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rgba = FAIL
 3836 VULKAN : KHR-GLES3.packed_pixels.varied_rectangle.rgba4 = FAIL
 
+// New failures with latest dEQP roll (2021-03-05)
+5722 VULKAN : KHR-GLES3.framebuffer_completeness.rbo_and_texture_expect_zero_numsamples = FAIL
+
+5976 LINUX VULKAN NVIDIA : KHR-GLES3.shaders.indexing.tmp_array.vertexid = FAIL
 
 // Fails only with SwiftShader:
 
@@ -179,3 +161,6 @@
 4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_dynamic_read_vertex = FAIL
 4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_static_loop_read_fragment = FAIL
 4019 SWIFTSHADER : KHR-GLES3.shaders.indexing.matrix_subscript.mat4_static_write_static_loop_read_vertex = FAIL
+
+// New failures with latest dEQP roll (2020-04-28)
+4593 SWIFTSHADER : KHR-GLES3.core.nearest_edge.offset_left = FAIL

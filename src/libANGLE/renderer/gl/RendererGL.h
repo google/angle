@@ -86,65 +86,6 @@ class RendererGL : angle::NonCopyable
     angle::Result flush();
     angle::Result finish();
 
-    // CHROMIUM_path_rendering implementation
-    void stencilFillPath(const gl::State &state,
-                         const gl::Path *path,
-                         GLenum fillMode,
-                         GLuint mask);
-    void stencilStrokePath(const gl::State &state,
-                           const gl::Path *path,
-                           GLint reference,
-                           GLuint mask);
-    void coverFillPath(const gl::State &state, const gl::Path *path, GLenum coverMode);
-    void coverStrokePath(const gl::State &state, const gl::Path *path, GLenum coverMode);
-    void stencilThenCoverFillPath(const gl::State &state,
-                                  const gl::Path *path,
-                                  GLenum fillMode,
-                                  GLuint mask,
-                                  GLenum coverMode);
-    void stencilThenCoverStrokePath(const gl::State &state,
-                                    const gl::Path *path,
-                                    GLint reference,
-                                    GLuint mask,
-                                    GLenum coverMode);
-    void coverFillPathInstanced(const gl::State &state,
-                                const std::vector<gl::Path *> &paths,
-                                GLenum coverMode,
-                                GLenum transformType,
-                                const GLfloat *transformValues);
-    void coverStrokePathInstanced(const gl::State &state,
-                                  const std::vector<gl::Path *> &paths,
-                                  GLenum coverMode,
-                                  GLenum transformType,
-                                  const GLfloat *transformValues);
-    void stencilFillPathInstanced(const gl::State &state,
-                                  const std::vector<gl::Path *> &paths,
-                                  GLenum fillMode,
-                                  GLuint mask,
-                                  GLenum transformType,
-                                  const GLfloat *transformValues);
-    void stencilStrokePathInstanced(const gl::State &state,
-                                    const std::vector<gl::Path *> &paths,
-                                    GLint reference,
-                                    GLuint mask,
-                                    GLenum transformType,
-                                    const GLfloat *transformValues);
-
-    void stencilThenCoverFillPathInstanced(const gl::State &state,
-                                           const std::vector<gl::Path *> &paths,
-                                           GLenum coverMode,
-                                           GLenum fillMode,
-                                           GLuint mask,
-                                           GLenum transformType,
-                                           const GLfloat *transformValues);
-    void stencilThenCoverStrokePathInstanced(const gl::State &state,
-                                             const std::vector<gl::Path *> &paths,
-                                             GLenum coverMode,
-                                             GLint reference,
-                                             GLuint mask,
-                                             GLenum transformType,
-                                             const GLfloat *transformValues);
-
     gl::GraphicsResetStatus getResetStatus();
 
     // EXT_debug_marker
@@ -155,9 +96,6 @@ class RendererGL : angle::NonCopyable
     // KHR_debug
     void pushDebugGroup(GLenum source, GLuint id, const std::string &message);
     void popDebugGroup();
-
-    std::string getVendorString() const;
-    std::string getRendererDescription() const;
 
     GLint getGPUDisjoint();
     GLint64 getTimestamp();
@@ -197,6 +135,10 @@ class RendererGL : angle::NonCopyable
     void setNeedsFlushBeforeDeleteTextures();
     void flushIfNecessaryBeforeDeleteTextures();
 
+    void markWorkSubmitted();
+
+    void handleGPUSwitch();
+
   protected:
     virtual WorkerContext *createWorkerContext(std::string *infoLog) = 0;
 
@@ -224,8 +166,10 @@ class RendererGL : angle::NonCopyable
     mutable gl::Limitations mNativeLimitations;
     mutable MultiviewImplementationTypeGL mMultiviewImplementationType;
 
+    bool mWorkDoneSinceLastFlush = false;
+
     // The thread-to-context mapping for the currently active worker threads.
-    std::unordered_map<std::thread::id, std::unique_ptr<WorkerContext>> mCurrentWorkerContexts;
+    angle::HashMap<std::thread::id, std::unique_ptr<WorkerContext>> mCurrentWorkerContexts;
     // The worker contexts available to use.
     std::list<std::unique_ptr<WorkerContext>> mWorkerContextPool;
     // Protect the concurrent accesses to worker contexts.

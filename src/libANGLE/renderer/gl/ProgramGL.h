@@ -33,7 +33,6 @@ class ProgramGL : public ProgramImpl
               const FunctionsGL *functions,
               const angle::FeaturesGL &features,
               StateManagerGL *stateManager,
-              bool enablePathRendering,
               const std::shared_ptr<RendererGL> &renderer);
     ~ProgramGL() override;
 
@@ -46,7 +45,8 @@ class ProgramGL : public ProgramImpl
 
     std::unique_ptr<LinkEvent> link(const gl::Context *contextImpl,
                                     const gl::ProgramLinkedResources &resources,
-                                    gl::InfoLog &infoLog) override;
+                                    gl::InfoLog &infoLog,
+                                    const gl::ProgramMergedVaryings &mergedVaryings) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
@@ -102,11 +102,6 @@ class ProgramGL : public ProgramImpl
     void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
     void getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const override;
 
-    void setPathFragmentInputGen(const std::string &inputName,
-                                 GLenum genMode,
-                                 GLint components,
-                                 const GLfloat *coeffs) override;
-
     void markUnusedUniformLocations(std::vector<gl::VariableLocation> *uniformLocations,
                                     std::vector<gl::SamplerBinding> *samplerBindings,
                                     std::vector<gl::ImageBinding> *imageBindings) override;
@@ -157,14 +152,6 @@ class ProgramGL : public ProgramImpl
     std::vector<GLint> mUniformRealLocationMap;
     std::vector<GLuint> mUniformBlockRealLocationMap;
 
-    struct PathRenderingFragmentInput
-    {
-        std::string mappedName;
-        GLint location;
-    };
-    std::vector<PathRenderingFragmentInput> mPathRenderingFragmentInputs;
-
-    bool mEnablePathRendering;
     GLint mMultiviewBaseViewLayerIndexUniformLocation;
 
     GLuint mProgramID;

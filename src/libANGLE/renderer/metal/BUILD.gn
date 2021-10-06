@@ -6,7 +6,7 @@
 
 import("../../../../gni/angle.gni")
 
-assert(is_mac)
+assert(is_mac || is_ios)
 assert(angle_enable_metal)
 
 _metal_backend_sources = [
@@ -16,23 +16,37 @@ _metal_backend_sources = [
   "CompilerMtl.mm",
   "ContextMtl.h",
   "ContextMtl.mm",
+  "DeviceMtl.h",
+  "DeviceMtl.mm",
   "DisplayMtl.h",
-  "DisplayMtl_api.h",
   "DisplayMtl.mm",
+  "DisplayMtl_api.h",
   "FrameBufferMtl.h",
   "FrameBufferMtl.mm",
+  "IOSurfaceSurfaceMtl.h",
+  "IOSurfaceSurfaceMtl.mm",
+  "ImageMtl.h",
+  "ImageMtl.mm",
   "ProgramMtl.h",
   "ProgramMtl.mm",
+  "QueryMtl.h",
+  "QueryMtl.mm",
   "RenderBufferMtl.h",
   "RenderBufferMtl.mm",
   "RenderTargetMtl.h",
   "RenderTargetMtl.mm",
+  "SamplerMtl.h",
+  "SamplerMtl.mm",
   "ShaderMtl.h",
   "ShaderMtl.mm",
   "SurfaceMtl.h",
   "SurfaceMtl.mm",
+  "SyncMtl.h",
+  "SyncMtl.mm",
   "TextureMtl.h",
   "TextureMtl.mm",
+  "TransformFeedbackMtl.h",
+  "TransformFeedbackMtl.mm",
   "VertexArrayMtl.h",
   "VertexArrayMtl.mm",
   "mtl_buffer_pool.h",
@@ -44,8 +58,12 @@ _metal_backend_sources = [
   "mtl_format_table_autogen.mm",
   "mtl_format_utils.h",
   "mtl_format_utils.mm",
+  "mtl_glslang_mtl_utils.h",
+  "mtl_glslang_mtl_utils.mm",
   "mtl_glslang_utils.h",
   "mtl_glslang_utils.mm",
+  "mtl_occlusion_query_pool.h",
+  "mtl_occlusion_query_pool.mm",
   "mtl_render_utils.h",
   "mtl_render_utils.mm",
   "mtl_resources.h",
@@ -54,12 +72,16 @@ _metal_backend_sources = [
   "mtl_state_cache.mm",
   "mtl_utils.h",
   "mtl_utils.mm",
+  "shaders/constants.h",
+  "shaders/format_autogen.h",
   "shaders/mtl_default_shaders_src_autogen.inc",
-  "shaders/compiled/mtl_default_shaders.inc",
 ]
 
 config("angle_metal_backend_config") {
-  defines = [ "ANGLE_ENABLE_METAL" ]
+  defines = [
+    "ANGLE_ENABLE_METAL",
+    "ANGLE_ENABLE_METAL_SPIRV",
+  ]
   ldflags = [
     "-weak_framework",
     "Metal",
@@ -79,13 +101,15 @@ angle_source_set("angle_metal_backend") {
   libs = []
 
   public_deps = [
+    "${angle_root}:angle_common",
     "${angle_root}:angle_glslang_wrapper",
+    "${angle_root}:angle_gpu_info_util",
+    "${angle_root}:angle_image_util",
     "${angle_root}:libANGLE_headers",
+    "${angle_root}:translator",
   ]
 
-  deps = [
-    "${angle_spirv_cross_dir}/gn:spirv_cross_sources",
-  ]
+  deps = [ "${angle_spirv_cross_dir}/gn:spirv_cross_sources" ]
 
   objc_flags = [
     "-Wno-nullability-completeness",
@@ -96,7 +120,7 @@ angle_source_set("angle_metal_backend") {
   cflags_objcc += objc_flags
 
   if (is_mac) {
-    libs += [
+    frameworks = [
       "Cocoa.framework",
       "IOSurface.framework",
       "QuartzCore.framework",

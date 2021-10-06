@@ -33,7 +33,8 @@ void ProgramNULL::setSeparable(bool separable) {}
 
 std::unique_ptr<LinkEvent> ProgramNULL::link(const gl::Context *contextImpl,
                                              const gl::ProgramLinkedResources &resources,
-                                             gl::InfoLog &infoLog)
+                                             gl::InfoLog &infoLog,
+                                             const gl::ProgramMergedVaryings & /*mergedVaryings*/)
 {
     return std::make_unique<LinkEventDone>(angle::Result::Continue);
 }
@@ -135,11 +136,5 @@ void ProgramNULL::getUniformuiv(const gl::Context *context, GLint location, GLui
 {
     // TODO(jmadill): Write some values.
 }
-
-void ProgramNULL::setPathFragmentInputGen(const std::string &inputName,
-                                          GLenum genMode,
-                                          GLint components,
-                                          const GLfloat *coeffs)
-{}
 
 }  // namespace rx

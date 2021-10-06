@@ -50,6 +50,9 @@ TEST_P(TextureRectangleTest, TexImage2D)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
 
+    // http://anglebug.com/5651
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsOpenGL());
+
     GLTexture tex;
     glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
 
@@ -118,6 +121,9 @@ TEST_P(TextureRectangleTest, TexStorage2D)
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
                        !IsGLExtensionEnabled("GL_EXT_texture_storage"));
+
+    // http://anglebug.com/5651
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsOpenGL());
 
     bool useES3       = getClientMajorVersion() >= 3;
     auto TexStorage2D = [useES3](GLenum target, GLint levels, GLenum format, GLint width,
@@ -453,6 +459,10 @@ TEST_P(TextureRectangleTestES3, CopyTexSubImage)
 }
 
 ANGLE_INSTANTIATE_TEST_ES2(TextureRectangleTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureRectangleTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(TextureRectangleTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureRectangleTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(TextureRectangleTestES31);
 }  // anonymous namespace

@@ -13,28 +13,95 @@
 #include <ostream>
 
 #include "ANGLEPerfTest.h"
+#include "test_utils/angle_test_configs.h"
 
 struct DrawCallPerfParams : public RenderTestParams
 {
     // Common default options
     DrawCallPerfParams();
-    virtual ~DrawCallPerfParams();
+    ~DrawCallPerfParams() override;
 
     std::string story() const override;
 
     double runTimeSeconds;
     int numTris;
-    bool offscreen;
 };
 
 namespace params
 {
-DrawCallPerfParams DrawCallD3D11();
-DrawCallPerfParams DrawCallD3D9();
-DrawCallPerfParams DrawCallOpenGL();
-DrawCallPerfParams DrawCallValidation();
-DrawCallPerfParams DrawCallVulkan();
-DrawCallPerfParams DrawCallWGL();
+template <typename ParamsT>
+ParamsT D3D11(const ParamsT &in)
+{
+    ParamsT out       = in;
+    out.eglParameters = angle::egl_platform::D3D11();
+    return out;
+}
+
+template <typename ParamsT>
+ParamsT GL(const ParamsT &in)
+{
+    ParamsT out       = in;
+    out.eglParameters = angle::egl_platform::OPENGL_OR_GLES();
+    return out;
+}
+
+template <typename ParamsT>
+ParamsT GL3(const ParamsT &in)
+{
+    ParamsT out       = in;
+    out.eglParameters = angle::egl_platform::OPENGL_OR_GLES(3, 0);
+    return out;
+}
+
+template <typename ParamsT>
+ParamsT Vulkan(const ParamsT &in)
+{
+    ParamsT out       = in;
+    out.eglParameters = angle::egl_platform::VULKAN();
+    return out;
+}
+
+template <typename ParamsT>
+ParamsT VulkanMockICD(const ParamsT &in)
+{
+    ParamsT out       = in;
+    out.eglParameters = angle::egl_platform::VULKAN_NULL();
+    return out;
+}
+
+template <typename ParamsT>
+ParamsT VulkanSwiftShader(const ParamsT &in)
+{
+    ParamsT out       = in;
+    out.eglParameters = angle::egl_platform::VULKAN_SWIFTSHADER();
+    return out;
+}
+
+template <typename ParamsT>
+ParamsT WGL(const ParamsT &in)
+{
+    ParamsT out = in;
+    out.driver  = angle::GLESDriverType::SystemWGL;
+    return out;
+}
+
+template <typename ParamsT>
+ParamsT EGL(const ParamsT &in)
+{
+    ParamsT out = in;
+    out.driver  = angle::GLESDriverType::SystemEGL;
+    return out;
+}
+
+template <typename ParamsT>
+ParamsT Native(const ParamsT &in)
+{
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    return WGL(in);
+#else
+    return EGL(in);
+#endif
+}
 }  // namespace params
 
 #endif  // TESTS_PERF_TESTS_DRAW_CALL_PERF_PARAMS_H_

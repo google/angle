@@ -24,15 +24,26 @@
 
 #include "common/debug.h"
 #include "common/platform.h"
+#include "common/system_utils.h"
 
 #if !defined(ANGLE_PLATFORM_FUCHSIA)
 #    include <sys/resource.h>
+#endif
+
+#if defined(ANGLE_PLATFORM_MACOS)
+#    include <crt_externs.h>
 #endif
 
 namespace angle
 {
 namespace
 {
+
+#if defined(ANGLE_PLATFORM_MACOS)
+// Argument to skip the file hooking step. Might be automatically added by InitMetalFileAPIHooking()
+constexpr char kSkipFileHookingArg[] = "--skip-file-hooking";
+#endif
+
 struct ScopedPipe
 {
     ~ScopedPipe()
@@ -58,33 +69,36 @@ struct ScopedPipe
     };
 };
 
-bool ReadFromFile(int fd, std::string *out)
+enum class ReadResult
 {
-    char buffer[256];
+    NoData,
+    GotData,
+};
+
+ReadResult ReadFromFile(int fd, std::string *out)
+{
+    constexpr size_t kBufSize = 2048;
+    char buffer[kBufSize];
     ssize_t bytesRead = read(fd, buffer, sizeof(buffer));
 
-    // If interrupted, retry.
     if (bytesRead < 0 && errno == EINTR)
     {
-        return true;
+        return ReadResult::GotData;
     }
 
-    // If failed, or nothing to read, we are done.
     if (bytesRead <= 0)
     {
-        return false;
+        return ReadResult::NoData;
     }
 
     out->append(buffer, bytesRead);
-    return true;
+    return ReadResult::GotData;
 }
 
 void ReadEntireFile(int fd, std::string *out)
 {
-    while (true)
+    while (ReadFromFile(fd, out) == ReadResult::GotData)
     {
-        if (!ReadFromFile(fd, out))
-            break;
     }
 }
 
@@ -92,16 +106,22 @@ class PosixProcess : public Process
 {
   public:
     PosixProcess(const std::vector<const char *> &commandLineArgs,
-                 bool captureStdOut,
-                 bool captureStdErr)
+                 ProcessOutputCapture captureOutput)
     {
         if (commandLineArgs.empty())
         {
             return;
         }
 
+        const bool captureStdout = captureOutput != ProcessOutputCapture::Nothing;
+        const bool captureStderr =
+            captureOutput == ProcessOutputCapture::StdoutAndStderrInterleaved ||
+            captureOutput == ProcessOutputCapture::StdoutAndStderrSeparately;
+        const bool pipeStderrToStdout =
+            captureOutput == ProcessOutputCapture::StdoutAndStderrInterleaved;
+
         // Create pipes for stdout and stderr.
-        if (captureStdOut)
+        if (captureStdout)
         {
             if (pipe(mStdoutPipe.fds) != 0)
             {
@@ -114,7 +134,7 @@ class PosixProcess : public Process
                 return;
             }
         }
-        if (captureStdErr)
+        if (captureStderr && !pipeStderrToStdout)
         {
             if (pipe(mStderrPipe.fds) != 0)
             {
@@ -142,7 +162,7 @@ class PosixProcess : public Process
             // Child.  Execute the application.
 
             // Redirect stdout and stderr to the pipe fds.
-            if (captureStdOut)
+            if (captureStdout)
             {
                 if (dup2(mStdoutPipe.fds[1], STDOUT_FILENO) < 0)
                 {
@@ -150,7 +170,14 @@ class PosixProcess : public Process
                 }
                 mStdoutPipe.closeEndPoint(1);
             }
-            if (captureStdErr)
+            if (pipeStderrToStdout)
+            {
+                if (dup2(STDOUT_FILENO, STDERR_FILENO) < 0)
+                {
+                    _exit(errno);
+                }
+            }
+            else if (captureStderr)
             {
                 if (dup2(mStderrPipe.fds[1], STDERR_FILENO) < 0)
                 {
@@ -244,12 +271,12 @@ class PosixProcess : public Process
 
         if (mStdoutPipe.valid())
         {
-            ReadFromFile(mStdoutPipe.fds[0], &mStdout);
+            ReadEntireFile(mStdoutPipe.fds[0], &mStdout);
         }
 
         if (mStderrPipe.valid())
         {
-            ReadFromFile(mStderrPipe.fds[0], &mStderr);
+            ReadEntireFile(mStderrPipe.fds[0], &mStderr);
         }
 
         return false;
@@ -311,9 +338,10 @@ void Sleep(unsigned int milliseconds)
     }
     else
     {
-        timespec sleepTime = {
-            .tv_sec  = milliseconds / 1000,
-            .tv_nsec = (milliseconds % 1000) * 1000000,
+        long milliseconds_long = milliseconds;
+        timespec sleepTime     = {
+            .tv_sec  = milliseconds_long / 1000,
+            .tv_nsec = (milliseconds_long % 1000) * 1000000,
         };
 
         nanosleep(&sleepTime, nullptr);
@@ -380,7 +408,7 @@ bool GetTempDir(char *tempDirOut, uint32_t maxDirNameLen)
     }
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    // TODO(jmadill): Android support. http://anglebug.com/3162
+    // Not used right now in the ANGLE test runner.
     // return PathService::Get(DIR_CACHE, path);
     return false;
 #else
@@ -403,11 +431,9 @@ bool DeleteFile(const char *path)
     return unlink(path) == 0;
 }
 
-Process *LaunchProcess(const std::vector<const char *> &args,
-                       bool captureStdout,
-                       bool captureStderr)
+Process *LaunchProcess(const std::vector<const char *> &args, ProcessOutputCapture captureOutput)
 {
-    return new PosixProcess(args, captureStdout, captureStderr);
+    return new PosixProcess(args, captureOutput);
 }
 
 int NumberOfProcessors()
@@ -433,4 +459,84 @@ int NumberOfProcessors()
 
     return static_cast<int>(res);
 }
+
+const char *GetNativeEGLLibraryNameWithExtension()
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    return "libEGL.so";
+#elif defined(ANGLE_PLATFORM_LINUX)
+    return "libEGL.so.1";
+#else
+    return "unknown_libegl";
+#endif
+}
+
+#if defined(ANGLE_PLATFORM_MACOS)
+void InitMetalFileAPIHooking(int argc, char **argv)
+{
+    if (argc < 1)
+    {
+        return;
+    }
+
+    for (int i = 0; i < argc; ++i)
+    {
+        if (strncmp(argv[i], kSkipFileHookingArg, strlen(kSkipFileHookingArg)) == 0)
+        {
+            return;
+        }
+    }
+
+    constexpr char kInjectLibVarName[]    = "DYLD_INSERT_LIBRARIES";
+    constexpr size_t kInjectLibVarNameLen = sizeof(kInjectLibVarName) - 1;
+
+    std::string exeDir = GetExecutableDirectory();
+    if (!exeDir.empty() && exeDir.back() != '/')
+    {
+        exeDir += "/";
+    }
+
+    // Intercept Metal shader cache access and return as if the cache doesn't exist.
+    // This is to avoid slow shader cache mechanism that caused the test timeout in the past.
+    // In order to do that, we need to hook the file API functions by making sure
+    // libmetal_shader_cache_file_hooking.dylib library is loaded first before any other libraries.
+    std::string injectLibsVar =
+        std::string(kInjectLibVarName) + "=" + exeDir + "libmetal_shader_cache_file_hooking.dylib";
+
+    char skipHookOption[sizeof(kSkipFileHookingArg)];
+    memcpy(skipHookOption, kSkipFileHookingArg, sizeof(kSkipFileHookingArg));
+
+    // Construct environment variables
+    std::vector<char *> newEnv;
+    char **environ = *_NSGetEnviron();
+    for (int i = 0; environ[i]; ++i)
+    {
+        if (strncmp(environ[i], kInjectLibVarName, kInjectLibVarNameLen) == 0)
+        {
+            injectLibsVar += ':';
+            injectLibsVar += environ[i] + kInjectLibVarNameLen + 1;
+        }
+        else
+        {
+            newEnv.push_back(environ[i]);
+        }
+    }
+    newEnv.push_back(strdup(injectLibsVar.data()));
+    newEnv.push_back(nullptr);
+
+    // Construct arguments with kSkipFileHookingArg flag to skip the hooking after re-launching.
+    std::vector<char *> newArgs;
+    newArgs.push_back(argv[0]);
+    newArgs.push_back(skipHookOption);
+    for (int i = 1; i < argc; ++i)
+    {
+        newArgs.push_back(argv[i]);
+    }
+    newArgs.push_back(nullptr);
+
+    // Re-launch the app with file API hooked.
+    ASSERT(-1 != execve(argv[0], newArgs.data(), newEnv.data()));
+}
+#endif
+
 }  // namespace angle

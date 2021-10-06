@@ -8,7 +8,7 @@
 
 #import "common/platform.h"
 
-#if defined(ANGLE_PLATFORM_IOS) && !defined(ANGLE_PLATFORM_MACCATALYST)
+#if defined(ANGLE_ENABLE_EAGL)
 
 #    import "libANGLE/renderer/gl/eagl/DisplayEAGL.h"
 
@@ -17,17 +17,15 @@
 #    import "libANGLE/Display.h"
 #    import "libANGLE/renderer/gl/eagl/ContextEAGL.h"
 #    import "libANGLE/renderer/gl/eagl/DeviceEAGL.h"
+#    import "libANGLE/renderer/gl/eagl/FunctionsEAGL.h"
 #    import "libANGLE/renderer/gl/eagl/IOSurfaceSurfaceEAGL.h"
 #    import "libANGLE/renderer/gl/eagl/PbufferSurfaceEAGL.h"
 #    import "libANGLE/renderer/gl/eagl/RendererEAGL.h"
 #    import "libANGLE/renderer/gl/eagl/WindowSurfaceEAGL.h"
 
 #    import <Foundation/Foundation.h>
-#    import <OpenGLES/EAGL.h>
 #    import <QuartzCore/QuartzCore.h>
 #    import <dlfcn.h>
-
-#    define GLES_SILENCE_DEPRECATION
 
 namespace
 {
@@ -66,17 +64,21 @@ egl::Error DisplayEAGL::initialize(egl::Display *display)
     mEGLDisplay = display;
 
     angle::SystemInfo info;
-    if (!angle::GetSystemInfo(&info))
-    {
-        return egl::EglNotInitialized() << "Unable to query ANGLE's SystemInfo.";
-    }
+    // It's legal for GetSystemInfo to return false and thereby
+    // contain incomplete information.
+    (void)angle::GetSystemInfo(&info);
 
-    mContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+    mContext = [allocEAGLContextInstance() initWithAPI:kEAGLRenderingAPIOpenGLES3];
     if (mContext == nullptr)
     {
         return egl::EglNotInitialized() << "Could not create the EAGL context.";
     }
-    [EAGLContext setCurrentContext:mContext];
+
+    if (![getEAGLContextClass() setCurrentContext:mContext])
+    {
+        return egl::EglNotInitialized() << "Could set the EAGL context current.";
+    }
+    mThreadsWithContextCurrent.insert(std::this_thread::get_id());
 
     // There is no equivalent getProcAddress in EAGL so we open the dylib directly
     void *handle = dlopen(kOpenGLESDylibName, RTLD_NOW);
@@ -96,6 +98,10 @@ egl::Error DisplayEAGL::initialize(egl::Display *display)
         return egl::EglNotInitialized() << "OpenGL ES 2.0 is not supportable.";
     }
 
+    auto &attributes = display->getAttributeMap();
+    mDeviceContextIsVolatile =
+        attributes.get(EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_EAGL_ANGLE, GL_FALSE);
+
     return DisplayGL::initialize(display);
 }
 
@@ -106,9 +112,40 @@ void DisplayEAGL::terminate()
     mRenderer.reset();
     if (mContext != nullptr)
     {
-        [EAGLContext setCurrentContext:nil];
+        [getEAGLContextClass() setCurrentContext:nil];
+        [mContext release];
         mContext = nullptr;
+        mThreadsWithContextCurrent.clear();
     }
+}
+
+egl::Error DisplayEAGL::prepareForCall()
+{
+    auto threadId = std::this_thread::get_id();
+    if (mDeviceContextIsVolatile ||
+        mThreadsWithContextCurrent.find(threadId) == mThreadsWithContextCurrent.end())
+    {
+        if (![getEAGLContextClass() setCurrentContext:mContext])
+        {
+            return egl::EglBadAlloc() << "Could not make device EAGL context current.";
+        }
+        mThreadsWithContextCurrent.insert(threadId);
+    }
+    return egl::NoError();
+}
+
+egl::Error DisplayEAGL::releaseThread()
+{
+    auto threadId = std::this_thread::get_id();
+    if (mThreadsWithContextCurrent.find(threadId) != mThreadsWithContextCurrent.end())
+    {
+        if (![getEAGLContextClass() setCurrentContext:nil])
+        {
+            return egl::EglBadAlloc() << "Could not release device EAGL context.";
+        }
+        mThreadsWithContextCurrent.erase(threadId);
+    }
+    return egl::NoError();
 }
 
 SurfaceImpl *DisplayEAGL::createWindowSurface(const egl::SurfaceState &state,
@@ -204,6 +241,8 @@ egl::ConfigSet DisplayEAGL::generateConfigs()
     config.bindToTextureRGB  = EGL_FALSE;
     config.bindToTextureRGBA = EGL_FALSE;
 
+    config.bindToTextureTarget = EGL_TEXTURE_2D;
+
     config.surfaceType = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
 
     config.minSwapInterval = 1;
@@ -237,7 +276,7 @@ egl::Error DisplayEAGL::restoreLostDevice(const egl::Display *display)
 
 bool DisplayEAGL::isValidNativeWindow(EGLNativeWindowType window) const
 {
-    NSObject *layer = (__bridge NSObject *)window;
+    NSObject *layer = reinterpret_cast<NSObject *>(window);
     return [layer isKindOfClass:[CALayer class]];
 }
 
@@ -256,12 +295,6 @@ egl::Error DisplayEAGL::validateClientBuffer(const egl::Config *configuration,
     return egl::NoError();
 }
 
-std::string DisplayEAGL::getVendorString() const
-{
-    // TODO(cwallez) find a useful vendor string
-    return "";
-}
-
 EAGLContextObj DisplayEAGL::getEAGLContext() const
 {
     return mContext;
@@ -271,10 +304,10 @@ void DisplayEAGL::generateExtensions(egl::DisplayExtensions *outExtensions) cons
 {
     outExtensions->iosurfaceClientBuffer = true;
     outExtensions->surfacelessContext    = true;
-    outExtensions->deviceQuery           = true;
 
-    // Contexts are virtualized so textures can be shared globally
-    outExtensions->displayTextureShareGroup = true;
+    // Contexts are virtualized so textures and semaphores can be shared globally
+    outExtensions->displayTextureShareGroup   = true;
+    outExtensions->displaySemaphoreShareGroup = true;
 
     outExtensions->powerPreference = false;
 
@@ -327,13 +360,13 @@ WorkerContextEAGL::WorkerContextEAGL(EAGLContextObj context) : mContext(context)
 
 WorkerContextEAGL::~WorkerContextEAGL()
 {
-    [EAGLContext setCurrentContext:nil];
+    [getEAGLContextClass() setCurrentContext:nil];
     mContext = nullptr;
 }
 
 bool WorkerContextEAGL::makeCurrent()
 {
-    if (![EAGLContext setCurrentContext:static_cast<EAGLContext *>(mContext)])
+    if (![getEAGLContextClass() setCurrentContext:static_cast<EAGLContext *>(mContext)])
     {
         ERR() << "Unable to make gl context current.";
         return false;
@@ -343,13 +376,13 @@ bool WorkerContextEAGL::makeCurrent()
 
 void WorkerContextEAGL::unmakeCurrent()
 {
-    [EAGLContext setCurrentContext:nil];
+    [getEAGLContextClass() setCurrentContext:nil];
 }
 
 WorkerContext *DisplayEAGL::createWorkerContext(std::string *infoLog)
 {
     EAGLContextObj context = nullptr;
-    context                = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+    context                = [allocEAGLContextInstance() initWithAPI:kEAGLRenderingAPIOpenGLES3];
     if (!context)
     {
         *infoLog += "Could not create the EAGL context.";
@@ -368,6 +401,12 @@ void DisplayEAGL::populateFeatureList(angle::FeatureList *features)
 {
     mRenderer->getFeatures().populateFeatureList(features);
 }
+
+RendererGL *DisplayEAGL::getRenderer() const
+{
+    return mRenderer.get();
 }
 
-#endif  // defined(ANGLE_PLATFORM_IOS)
+}
+
+#endif  // defined(ANGLE_ENABLE_EAGL)

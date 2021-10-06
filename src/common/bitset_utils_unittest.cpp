@@ -7,6 +7,8 @@
 //   Tests bitset helpers and custom classes.
 //
 
+#include <array>
+
 #include <gtest/gtest.h>
 
 #include "common/bitset_utils.h"
@@ -15,14 +17,22 @@ using namespace angle;
 
 namespace
 {
+template <typename T>
 class BitSetTest : public testing::Test
 {
   protected:
-    BitSet<12> mBits;
+    T mBits;
+    typedef T BitSet;
 };
 
-TEST_F(BitSetTest, Basic)
+using BitSetTypes = ::testing::Types<BitSet<12>, BitSet32<12>, BitSet64<12>>;
+TYPED_TEST_SUITE(BitSetTest, BitSetTypes);
+
+TYPED_TEST(BitSetTest, Basic)
 {
+    EXPECT_EQ(TypeParam::Zero().bits(), 0u);
+
+    TypeParam mBits = this->mBits;
     EXPECT_FALSE(mBits.all());
     EXPECT_FALSE(mBits.any());
     EXPECT_TRUE(mBits.none());
@@ -74,12 +84,14 @@ TEST_F(BitSetTest, Basic)
     EXPECT_TRUE(mBits.any());
     EXPECT_FALSE(mBits.none());
     EXPECT_EQ(mBits.count(), mBits.size() / 2);
+    EXPECT_EQ(mBits.first(), 1u);
 
     mBits.set();
     EXPECT_TRUE(mBits.all());
     EXPECT_TRUE(mBits.any());
     EXPECT_FALSE(mBits.none());
     EXPECT_EQ(mBits.count(), mBits.size());
+    EXPECT_EQ(mBits.first(), 0u);
 
     mBits.reset();
     EXPECT_FALSE(mBits.all());
@@ -96,8 +108,9 @@ TEST_F(BitSetTest, Basic)
     EXPECT_EQ(mBits.flip(13).bits() & ~kMask, 0u);
 }
 
-TEST_F(BitSetTest, BitwiseOperators)
+TYPED_TEST(BitSetTest, BitwiseOperators)
 {
+    TypeParam mBits = this->mBits;
     // Use a value that has a 1 in the 12th and 13th bits, to make sure masking to exactly 12 bits
     // does not have an off-by-one error.
     constexpr uint32_t kSelfValue  = 0xF9E4;
@@ -112,10 +125,10 @@ TEST_F(BitSetTest, BitwiseOperators)
     constexpr uint32_t kSelfShiftedRight = kSelfMaskedValue >> kShift & kMask;
 
     mBits |= kSelfValue;
-    BitSet<12> other(kOtherValue);
-    BitSet<12> anded(kSelfMaskedValue & kOtherMaskedValue);
-    BitSet<12> ored(kSelfMaskedValue | kOtherMaskedValue);
-    BitSet<12> xored(kSelfMaskedValue ^ kOtherMaskedValue);
+    typename TestFixture::BitSet other(kOtherValue);
+    typename TestFixture::BitSet anded(kSelfMaskedValue & kOtherMaskedValue);
+    typename TestFixture::BitSet ored(kSelfMaskedValue | kOtherMaskedValue);
+    typename TestFixture::BitSet xored(kSelfMaskedValue ^ kOtherMaskedValue);
 
     EXPECT_EQ(mBits.bits(), kSelfMaskedValue);
     EXPECT_EQ(other.bits(), kOtherMaskedValue);
@@ -137,18 +150,18 @@ TEST_F(BitSetTest, BitwiseOperators)
 
     mBits ^= other;
     mBits ^= anded;
-    EXPECT_EQ(mBits, BitSet<12>(kSelfValue));
+    EXPECT_EQ(mBits, typename TestFixture::BitSet(kSelfValue));
 
-    EXPECT_EQ(mBits << kShift, BitSet<12>(kSelfShiftedLeft));
-    EXPECT_EQ(mBits >> kShift, BitSet<12>(kSelfShiftedRight));
+    EXPECT_EQ(mBits << kShift, typename TestFixture::BitSet(kSelfShiftedLeft));
+    EXPECT_EQ(mBits >> kShift, typename TestFixture::BitSet(kSelfShiftedRight));
 
     mBits <<= kShift;
-    EXPECT_EQ(mBits, BitSet<12>(kSelfShiftedLeft));
+    EXPECT_EQ(mBits, typename TestFixture::BitSet(kSelfShiftedLeft));
     EXPECT_EQ(mBits.bits() & ~kMask, 0u);
 
-    mBits = BitSet<12>(kSelfValue);
+    mBits = typename TestFixture::BitSet(kSelfValue);
     mBits >>= kShift;
-    EXPECT_EQ(mBits, BitSet<12>(kSelfShiftedRight));
+    EXPECT_EQ(mBits, typename TestFixture::BitSet(kSelfShiftedRight));
     EXPECT_EQ(mBits.bits() & ~kMask, 0u);
 
     mBits |= kSelfMaskedValue;
@@ -157,15 +170,21 @@ TEST_F(BitSetTest, BitwiseOperators)
     EXPECT_EQ(mBits.bits() & ~kMask, 0u);
 }
 
+template <typename T>
 class BitSetIteratorTest : public testing::Test
 {
   protected:
-    BitSet<40> mStateBits;
+    T mStateBits;
+    typedef T BitSet;
 };
 
+using BitSetIteratorTypes = ::testing::Types<BitSet<40>, BitSet64<40>>;
+TYPED_TEST_SUITE(BitSetIteratorTest, BitSetIteratorTypes);
+
 // Simple iterator test.
-TEST_F(BitSetIteratorTest, Iterator)
+TYPED_TEST(BitSetIteratorTest, Iterator)
 {
+    TypeParam mStateBits = this->mStateBits;
     std::set<size_t> originalValues;
     originalValues.insert(2);
     originalValues.insert(6);
@@ -188,9 +207,32 @@ TEST_F(BitSetIteratorTest, Iterator)
     EXPECT_EQ(originalValues.size(), readValues.size());
 }
 
-// Test an empty iterator.
-TEST_F(BitSetIteratorTest, EmptySet)
+// Ensure lsb->msb iteration order.
+TYPED_TEST(BitSetIteratorTest, IterationOrder)
 {
+    TypeParam mStateBits                   = this->mStateBits;
+    const std::array<size_t, 8> writeOrder = {20, 25, 16, 31, 10, 14, 36, 19};
+    const std::array<size_t, 8> fetchOrder = {10, 14, 16, 19, 20, 25, 31, 36};
+
+    for (size_t value : writeOrder)
+    {
+        mStateBits.set(value);
+    }
+    EXPECT_EQ(writeOrder.size(), mStateBits.count());
+
+    size_t i = 0;
+    for (size_t bit : mStateBits)
+    {
+        EXPECT_EQ(fetchOrder[i], bit);
+        i++;
+    }
+    EXPECT_EQ(fetchOrder.size(), mStateBits.count());
+}
+
+// Test an empty iterator.
+TYPED_TEST(BitSetIteratorTest, EmptySet)
+{
+    TypeParam mStateBits = this->mStateBits;
     // We don't use the FAIL gtest macro here since it returns immediately,
     // causing an unreachable code warning in MSVS
     bool sawBit = false;
@@ -203,9 +245,10 @@ TEST_F(BitSetIteratorTest, EmptySet)
 }
 
 // Test iterating a result of combining two bitsets.
-TEST_F(BitSetIteratorTest, NonLValueBitset)
+TYPED_TEST(BitSetIteratorTest, NonLValueBitset)
 {
-    BitSet<40> otherBits;
+    TypeParam mStateBits = this->mStateBits;
+    typename TestFixture::BitSet otherBits;
 
     mStateBits.set(1);
     mStateBits.set(2);
@@ -219,7 +262,7 @@ TEST_F(BitSetIteratorTest, NonLValueBitset)
 
     std::set<size_t> seenBits;
 
-    angle::BitSet<40> maskedBits = (mStateBits & otherBits);
+    typename TestFixture::BitSet maskedBits = (mStateBits & otherBits);
     for (size_t bit : maskedBits)
     {
         EXPECT_EQ(0u, seenBits.count(bit));
@@ -232,8 +275,9 @@ TEST_F(BitSetIteratorTest, NonLValueBitset)
 }
 
 // Test bit assignments.
-TEST_F(BitSetIteratorTest, BitAssignment)
+TYPED_TEST(BitSetIteratorTest, BitAssignment)
 {
+    TypeParam mStateBits = this->mStateBits;
     std::set<size_t> originalValues;
     originalValues.insert(2);
     originalValues.insert(6);
@@ -252,9 +296,11 @@ TEST_F(BitSetIteratorTest, BitAssignment)
 }
 
 // Tests adding bits to the iterator during iteration.
-TEST_F(BitSetIteratorTest, SetLaterBit)
+TYPED_TEST(BitSetIteratorTest, SetLaterBit)
 {
-    std::set<size_t> expectedValues = {1, 3, 5, 7, 9};
+    TypeParam mStateBits            = this->mStateBits;
+    std::set<size_t> expectedValues = {0, 1, 3, 5, 6, 7, 9, 35};
+    mStateBits.set(0);
     mStateBits.set(1);
 
     std::set<size_t> actualValues;
@@ -265,8 +311,13 @@ TEST_F(BitSetIteratorTest, SetLaterBit)
         {
             iter.setLaterBit(3);
             iter.setLaterBit(5);
+        }
+        if (*iter == 5)
+        {
+            iter.setLaterBit(6);
             iter.setLaterBit(7);
             iter.setLaterBit(9);
+            iter.setLaterBit(35);
         }
 
         actualValues.insert(*iter);
@@ -276,8 +327,9 @@ TEST_F(BitSetIteratorTest, SetLaterBit)
 }
 
 // Tests removing bits from the iterator during iteration.
-TEST_F(BitSetIteratorTest, ResetLaterBit)
+TYPED_TEST(BitSetIteratorTest, ResetLaterBit)
 {
+    TypeParam mStateBits            = this->mStateBits;
     std::set<size_t> expectedValues = {1, 3, 5, 7, 9};
 
     for (size_t index = 1; index <= 9; ++index)
@@ -299,5 +351,251 @@ TEST_F(BitSetIteratorTest, ResetLaterBit)
     }
 
     EXPECT_EQ(expectedValues, actualValues);
+}
+
+// Tests adding bitsets to the iterator during iteration.
+TYPED_TEST(BitSetIteratorTest, SetLaterBits)
+{
+    TypeParam mStateBits            = this->mStateBits;
+    std::set<size_t> expectedValues = {1, 2, 3, 4, 5, 7, 9};
+    mStateBits.set(1);
+    mStateBits.set(2);
+    mStateBits.set(3);
+
+    TypeParam laterBits;
+    laterBits.set(4);
+    laterBits.set(5);
+    laterBits.set(7);
+    laterBits.set(9);
+
+    std::set<size_t> actualValues;
+
+    for (auto iter = mStateBits.begin(), end = mStateBits.end(); iter != end; ++iter)
+    {
+        if (*iter == 3)
+        {
+            iter.setLaterBits(laterBits);
+        }
+
+        EXPECT_EQ(actualValues.count(*iter), 0u);
+        actualValues.insert(*iter);
+    }
+
+    EXPECT_EQ(expectedValues, actualValues);
+}
+
+template <typename T>
+class BitSetArrayTest : public testing::Test
+{
+  protected:
+    T mBitSet;
+};
+
+using BitSetArrayTypes =
+    ::testing::Types<BitSetArray<65>, BitSetArray<128>, BitSetArray<130>, BitSetArray<511>>;
+TYPED_TEST_SUITE(BitSetArrayTest, BitSetArrayTypes);
+
+TYPED_TEST(BitSetArrayTest, BasicTest)
+{
+    TypeParam &mBits = this->mBitSet;
+
+    EXPECT_FALSE(mBits.all());
+    EXPECT_FALSE(mBits.any());
+    EXPECT_TRUE(mBits.none());
+    EXPECT_EQ(mBits.count(), 0u);
+    EXPECT_EQ(mBits.bits(0), 0u);
+
+    // Verify set on a single bit
+    mBits.set(45);
+    for (auto bit : mBits)
+    {
+        EXPECT_EQ(bit, 45u);
+    }
+
+    EXPECT_EQ(mBits.first(), 45u);
+    EXPECT_EQ(mBits.last(), 45u);
+
+    mBits.reset(45);
+
+    // Set every bit to 1.
+    for (size_t i = 0; i < mBits.size(); ++i)
+    {
+        mBits.set(i);
+
+        EXPECT_EQ(mBits.all(), i + 1 == mBits.size());
+        EXPECT_TRUE(mBits.any());
+        EXPECT_FALSE(mBits.none());
+        EXPECT_EQ(mBits.count(), i + 1);
+    }
+
+    // Reset odd bits to 0.
+    for (size_t i = 1; i < mBits.size(); i += 2)
+    {
+        mBits.reset(i);
+
+        EXPECT_FALSE(mBits.all());
+        EXPECT_TRUE(mBits.any());
+        EXPECT_FALSE(mBits.none());
+        EXPECT_EQ(mBits.count(), mBits.size() - i / 2 - 1);
+    }
+
+    // Make sure the bit pattern is what we expect at this point.
+    // All even bits should be set
+    for (size_t i = 0; i < mBits.size(); ++i)
+    {
+        EXPECT_EQ(mBits.test(i), i % 2 == 0);
+        EXPECT_EQ(static_cast<bool>(mBits[i]), i % 2 == 0);
+    }
+
+    // Reset everything.
+    mBits.reset();
+    EXPECT_FALSE(mBits.all());
+    EXPECT_FALSE(mBits.any());
+    EXPECT_TRUE(mBits.none());
+    EXPECT_EQ(mBits.count(), 0u);
+
+    // Test intersection logic
+    TypeParam testBitSet;
+    testBitSet.set(1);
+    EXPECT_EQ(testBitSet.bits(0), (1ul << 1ul));
+    testBitSet.set(3);
+    EXPECT_EQ(testBitSet.bits(0), (1ul << 1ul) | (1ul << 3ul));
+    testBitSet.set(5);
+    EXPECT_EQ(testBitSet.bits(0), (1ul << 1ul) | (1ul << 3ul) | (1ul << 5ul));
+    EXPECT_FALSE(mBits.intersects(testBitSet));
+    mBits.set(3);
+    EXPECT_TRUE(mBits.intersects(testBitSet));
+    mBits.set(4);
+    EXPECT_TRUE(mBits.intersects(testBitSet));
+    mBits.reset(3);
+    EXPECT_FALSE(mBits.intersects(testBitSet));
+    testBitSet.set(4);
+    EXPECT_TRUE(mBits.intersects(testBitSet));
+
+    // Test that flip works.
+    // Reset everything.
+    mBits.reset();
+    EXPECT_EQ(mBits.count(), 0u);
+    mBits.flip();
+    EXPECT_EQ(mBits.count(), mBits.size());
+
+    // Test operators
+
+    // Assignment operators - "=", "&=", "|=" and "^="
+    mBits.reset();
+    mBits = testBitSet;
+    for (auto bit : testBitSet)
+    {
+        EXPECT_TRUE(mBits.test(bit));
+    }
+
+    mBits &= testBitSet;
+    for (auto bit : testBitSet)
+    {
+        EXPECT_TRUE(mBits.test(bit));
+    }
+    EXPECT_EQ(mBits.count(), testBitSet.count());
+
+    mBits.reset();
+    mBits |= testBitSet;
+    for (auto bit : testBitSet)
+    {
+        EXPECT_TRUE(mBits.test(bit));
+    }
+
+    mBits ^= testBitSet;
+    EXPECT_TRUE(mBits.none());
+
+    // Bitwise operators - "&", "|" and "^"
+    std::set<std::size_t> bits1         = {0, 45, 60};
+    std::set<std::size_t> bits2         = {5, 45, 50, 63};
+    std::set<std::size_t> bits1Andbits2 = {45};
+    std::set<std::size_t> bits1Orbits2  = {0, 5, 45, 50, 60, 63};
+    std::set<std::size_t> bits1Xorbits2 = {0, 5, 50, 60, 63};
+    std::set<std::size_t> actualValues;
+    TypeParam testBitSet1;
+    TypeParam testBitSet2;
+
+    for (std::size_t bit : bits1)
+    {
+        testBitSet1.set(bit);
+    }
+    for (std::size_t bit : bits2)
+    {
+        testBitSet2.set(bit);
+    }
+
+    EXPECT_EQ(testBitSet1.first(), 0u);
+    EXPECT_EQ(testBitSet1.last(), 60u);
+
+    EXPECT_EQ(testBitSet2.first(), 5u);
+    EXPECT_EQ(testBitSet2.last(), 63u);
+
+    actualValues.clear();
+    for (auto bit : (testBitSet1 & testBitSet2))
+    {
+        actualValues.insert(bit);
+    }
+    EXPECT_EQ(bits1Andbits2, actualValues);
+
+    actualValues.clear();
+    for (auto bit : (testBitSet1 | testBitSet2))
+    {
+        actualValues.insert(bit);
+    }
+    EXPECT_EQ(bits1Orbits2, actualValues);
+
+    actualValues.clear();
+    for (auto bit : (testBitSet1 ^ testBitSet2))
+    {
+        actualValues.insert(bit);
+    }
+    EXPECT_EQ(bits1Xorbits2, actualValues);
+
+    // Relational operators - "==" and "!="
+    EXPECT_FALSE(testBitSet1 == testBitSet2);
+    EXPECT_TRUE(testBitSet1 != testBitSet2);
+
+    // Unary operators - "~" and "[]"
+    mBits.reset();
+    mBits = ~testBitSet;
+    for (auto bit : mBits)
+    {
+        EXPECT_FALSE(testBitSet.test(bit));
+    }
+    EXPECT_EQ(mBits.count(), (mBits.size() - testBitSet.count()));
+
+    mBits.reset();
+    for (auto bit : testBitSet)
+    {
+        mBits[bit] = true;
+    }
+    for (auto bit : mBits)
+    {
+        EXPECT_TRUE(testBitSet.test(bit));
+    }
+}
+
+// Unit test for angle::Bit
+TEST(Bit, Test)
+{
+    EXPECT_EQ(Bit<uint32_t>(0), 1u);
+    EXPECT_EQ(Bit<uint32_t>(1), 2u);
+    EXPECT_EQ(Bit<uint32_t>(2), 4u);
+    EXPECT_EQ(Bit<uint32_t>(3), 8u);
+    EXPECT_EQ(Bit<uint32_t>(31), 0x8000'0000u);
+    EXPECT_EQ(Bit<uint64_t>(63), static_cast<uint64_t>(0x8000'0000'0000'0000llu));
+}
+
+// Unit test for angle::BitMask
+TEST(BitMask, Test)
+{
+    EXPECT_EQ(BitMask<uint32_t>(1), 1u);
+    EXPECT_EQ(BitMask<uint32_t>(2), 3u);
+    EXPECT_EQ(BitMask<uint32_t>(3), 7u);
+    EXPECT_EQ(BitMask<uint32_t>(31), 0x7FFF'FFFFu);
+    EXPECT_EQ(BitMask<uint32_t>(32), 0xFFFF'FFFFu);
+    EXPECT_EQ(BitMask<uint64_t>(63), static_cast<uint64_t>(0x7FFF'FFFF'FFFF'FFFFllu));
+    EXPECT_EQ(BitMask<uint64_t>(64), static_cast<uint64_t>(0xFFFF'FFFF'FFFF'FFFFllu));
 }
 }  // anonymous namespace

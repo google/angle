@@ -9,8 +9,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_FORMAT_UTILS_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_FORMAT_UTILS_H_
 
-#include "volk.h"
-
+#include "common/vulkan/vk_headers.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/Format.h"
 #include "libANGLE/renderer/copyvertex.h"
@@ -38,18 +37,19 @@ constexpr uint32_t kNumVkFormats = 185;
 struct ImageFormatInitInfo final
 {
     angle::FormatID format;
-    VkFormat vkFormat;
     InitializeTextureDataFunction initializer;
 };
 
 struct BufferFormatInitInfo final
 {
     angle::FormatID format;
-    VkFormat vkFormat;
     bool vkFormatIsPacked;
     VertexCopyFunction vertexLoadFunction;
     bool vertexLoadRequiresConversion;
 };
+
+VkFormat GetVkFormatFromFormatID(angle::FormatID formatID);
+angle::FormatID GetFormatIDFromVkFormat(VkFormat vkFormat);
 
 // Describes a Vulkan format. For more information on formats in the Vulkan back-end please see
 // https://chromium.googlesource.com/angle/angle/+/master/src/libANGLE/renderer/vulkan/doc/FormatTablesAndEmulation.md
@@ -57,7 +57,7 @@ struct Format final : private angle::NonCopyable
 {
     Format();
 
-    bool valid() const { return internalFormat != 0; }
+    bool valid() const { return intendedGLFormat != 0; }
 
     // The intended format is the front-end format. For Textures this usually correponds to a
     // GLenum in the headers. Buffer formats don't always have a corresponding GLenum type.
@@ -70,45 +70,77 @@ struct Format final : private angle::NonCopyable
         return angle::Format::Get(actualImageFormatID);
     }
 
-    // The actual Buffer format is used to implement the front-end format for Buffers.
-    const angle::Format &actualBufferFormat() const
+    VkFormat actualImageVkFormat() const { return GetVkFormatFromFormatID(actualImageFormatID); }
+
+    // The actual Buffer format is used to implement the front-end format for Buffers.  This format
+    // is used by vertex buffers as well as texture buffers.  Note that all formats required for
+    // GL_EXT_texture_buffer have mandatory support for vertex buffers in Vulkan, so they won't be
+    // using an emulated format.
+    const angle::Format &actualBufferFormat(bool compressed) const
     {
-        return angle::Format::Get(actualBufferFormatID);
+        return angle::Format::Get(compressed ? actualCompressedBufferFormatID
+                                             : actualBufferFormatID);
     }
 
-    // The |internalFormat| always correponds to a valid GLenum type. For types that don't have a
+    VkFormat actualBufferVkFormat(bool compressed) const
+    {
+        return GetVkFormatFromFormatID(compressed ? actualCompressedBufferFormatID
+                                                  : actualBufferFormatID);
+    }
+
+    VertexCopyFunction getVertexLoadFunction(bool compressed) const
+    {
+        return compressed ? compressedVertexLoadFunction : vertexLoadFunction;
+    }
+
+    bool getVertexLoadRequiresConversion(bool compressed) const
+    {
+        return compressed ? compressedVertexLoadRequiresConversion : vertexLoadRequiresConversion;
+    }
+
+    // |intendedGLFormat| always correponds to a valid GLenum type. For types that don't have a
     // corresponding GLenum we do our best to specify a GLenum that is "close".
     const gl::InternalFormat &getInternalFormatInfo(GLenum type) const
     {
-        return gl::GetInternalFormatInfo(internalFormat, type);
+        return gl::GetInternalFormatInfo(intendedGLFormat, type);
     }
 
     // Returns buffer alignment for image-copy operations (to or from a buffer).
     size_t getImageCopyBufferAlignment() const;
+    size_t getValidImageCopyBufferAlignment() const;
 
-    // Returns true if the Image format has more channels than the ANGLE format.
+    // Returns true if the image format has more channels than the ANGLE format.
     bool hasEmulatedImageChannels() const;
+
+    // Returns true if the image has a different image format than intended.
+    bool hasEmulatedImageFormat() const { return actualImageFormatID != intendedFormatID; }
 
     // This is an auto-generated method in vk_format_table_autogen.cpp.
     void initialize(RendererVk *renderer, const angle::Format &angleFormat);
 
     // These are used in the format table init.
     void initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *info, int numInfo);
-    void initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo *info, int numInfo);
+    void initBufferFallback(RendererVk *renderer,
+                            const BufferFormatInitInfo *fallbackInfo,
+                            int numInfo,
+                            int compressedStartIndex);
 
     angle::FormatID intendedFormatID;
-    GLenum internalFormat;
+    GLenum intendedGLFormat;
     angle::FormatID actualImageFormatID;
-    VkFormat vkImageFormat;
     angle::FormatID actualBufferFormatID;
-    VkFormat vkBufferFormat;
+    angle::FormatID actualCompressedBufferFormatID;
 
     InitializeTextureDataFunction imageInitializerFunction;
     LoadFunctionMap textureLoadFunctions;
+    LoadTextureBorderFunctionMap textureBorderLoadFunctions;
     VertexCopyFunction vertexLoadFunction;
+    VertexCopyFunction compressedVertexLoadFunction;
 
     bool vertexLoadRequiresConversion;
+    bool compressedVertexLoadRequiresConversion;
     bool vkBufferFormatIsPacked;
+    bool vkCompressedBufferFormatIsPacked;
     bool vkFormatIsInt;
     bool vkFormatIsUnsigned;
 };
@@ -147,28 +179,30 @@ class FormatTable final : angle::NonCopyable
 // if the format is a mandatory format described in section 31.3.3. Required Format Support
 // of the Vulkan spec. If the vkFormat isn't mandatory, it will return a VkFormatProperties
 // initialized to 0.
-const VkFormatProperties &GetMandatoryFormatSupport(VkFormat vkFormat);
+const VkFormatProperties &GetMandatoryFormatSupport(angle::FormatID formatID);
 
-VkImageUsageFlags GetMaximalImageUsageFlags(RendererVk *renderer, VkFormat format);
+VkImageUsageFlags GetMaximalImageUsageFlags(RendererVk *renderer, angle::FormatID formatID);
 
 }  // namespace vk
 
-// Checks if a vkFormat supports all the features needed to use it as a GL texture format
-bool HasFullTextureFormatSupport(RendererVk *renderer, VkFormat vkFormat);
-// Checks if a vkFormat supports all the features except texture filtering
-bool HasNonFilterableTextureFormatSupport(RendererVk *renderer, VkFormat vkFormat);
-// Checks if a vkFormat supports all the features except rendering
-bool HasNonRenderableTextureFormatSupport(RendererVk *renderer, VkFormat vkFormat);
+// Checks if a Vulkan format supports all the features needed to use it as a GL texture format.
+bool HasFullTextureFormatSupport(RendererVk *renderer, angle::FormatID formatID);
+// Checks if a Vulkan format supports all the features except rendering.
+bool HasNonRenderableTextureFormatSupport(RendererVk *renderer, angle::FormatID formatID);
 
 // Returns the alignment for a buffer to be used with the vertex input stage in Vulkan. This
 // calculation is listed in the Vulkan spec at the end of the section 'Vertex Input Description'.
-size_t GetVertexInputAlignment(const vk::Format &format);
+size_t GetVertexInputAlignment(const vk::Format &format, bool compressed);
 
-void MapSwizzleState(const ContextVk *contextVk,
-                     const vk::Format &format,
-                     const bool sized,
-                     const gl::SwizzleState &swizzleState,
-                     gl::SwizzleState *swizzleStateOut);
+// Get the swizzle state based on format's requirements and emulations.
+gl::SwizzleState GetFormatSwizzle(const ContextVk *contextVk,
+                                  const vk::Format &format,
+                                  const bool sized);
+
+// Apply application's swizzle to the swizzle implied by format as received from GetFormatSwizzle.
+gl::SwizzleState ApplySwizzle(const gl::SwizzleState &formatSwizzle,
+                              const gl::SwizzleState &toApply);
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_FORMAT_UTILS_H_

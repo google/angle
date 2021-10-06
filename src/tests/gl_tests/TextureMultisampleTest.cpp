@@ -298,8 +298,6 @@ TEST_P(TextureMultisampleTest, MultisampleTargetGetInternalFormativBase)
 TEST_P(TextureMultisampleTest, MultisampleTargetFramebufferTexture2D)
 {
     ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     GLint samples = 1;
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTexture);
     texStorageMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA8, 64, 64, GL_FALSE);
@@ -314,8 +312,6 @@ TEST_P(TextureMultisampleTest, MultisampleTargetFramebufferTexture2D)
 // Tests basic functionality of glTexStorage2DMultisample.
 TEST_P(TextureMultisampleTest, ValidateTextureStorageMultisampleParameters)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
 
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTexture);
@@ -358,6 +354,10 @@ TEST_P(TextureMultisampleTest, ValidateTextureStorageMultisampleParameters)
 TEST_P(TextureMultisampleTest, MaxIntegerSamples)
 {
     ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
+
+    // Fixed in recent mesa.  http://crbug.com/1071142
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux() && (IsIntel() || IsAMD()));
+
     GLint maxIntegerSamples;
     glGetIntegerv(GL_MAX_INTEGER_SAMPLES, &maxIntegerSamples);
     EXPECT_GE(maxIntegerSamples, 1);
@@ -390,8 +390,6 @@ TEST_P(TextureMultisampleTest, MaxDepthTextureSamples)
 TEST_P(TextureMultisampleTest, GetTexLevelParameter)
 {
     ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTexture);
     texStorageMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, 1, 1, GL_TRUE);
@@ -505,6 +503,44 @@ TEST_P(TextureMultisampleTest, SampleMaski)
     glGetIntegerv(GL_MAX_SAMPLE_MASK_WORDS, &maxSampleMaskWords);
     sampleMaski(maxSampleMaskWords, 0x1);
     ASSERT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+TEST_P(TextureMultisampleTest, ResolveToDefaultFramebuffer)
+{
+    ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
+
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTexture);
+    texStorageMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, getWindowWidth(),
+                          getWindowHeight(), GL_TRUE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
+                           mTexture, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear the framebuffer
+    glClearColor(0.25, 0.5, 0.75, 0.25);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Resolve into default framebuffer
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glClearColor(1, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(),
+                      getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    const GLColor kResult = GLColor(63, 127, 191, 63);
+    const int w           = getWindowWidth() - 1;
+    const int h           = getWindowHeight() - 1;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(w, 0, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, h, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(w, h, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(w / 2, h / 2, kResult, 1);
 }
 
 // Negative tests of multisample texture. When context less than ES 3.1 and ANGLE_texture_multsample
@@ -1032,7 +1068,129 @@ TEST_P(TextureMultisampleArrayWebGLTest, IntegerTexelFetch)
     }
 }
 
+class TextureSampleShadingTest : public ANGLETest
+{
+  protected:
+    TextureSampleShadingTest() {}
+};
+
+// Test that sample shading actually produces different interpolations per sample.  Note that
+// variables such as gl_SampleID and gl_SamplePosition are avoided, as well as the |sample|
+// qualifier as they automatically enable sample shading.
+TEST_P(TextureSampleShadingTest, Basic)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_sample_shading"));
+
+    // http://anglebug.com/5410
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+    // http://anglebug.com/5412
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsVulkan());
+
+    constexpr GLsizei kSize        = 1;
+    constexpr GLsizei kSampleCount = 4;
+
+    // Create a multisampled texture and framebuffer.
+    GLFramebuffer msaaFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, msaaFBO);
+
+    GLTexture msaaTexture;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msaaTexture);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, kSampleCount, GL_RGBA8, kSize, kSize,
+                              false);
+    ASSERT_GL_NO_ERROR();
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
+                           msaaTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Enable sample shading and draw a gradient.
+    glEnable(GL_SAMPLE_SHADING_OES);
+    glMinSampleShadingOES(1.0f);
+
+    ANGLE_GL_PROGRAM(gradientProgram, essl31_shaders::vs::Passthrough(),
+                     essl31_shaders::fs::RedGreenGradient());
+    glViewport(0, 0, kSize, kSize);
+    drawQuad(gradientProgram, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a buffer for verification.
+    constexpr GLsizei kPixelChannels = 4;
+    constexpr GLsizei kBufferSize =
+        kSize * kSize * kSampleCount * kPixelChannels * sizeof(uint32_t);
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
+
+    // Issue a dispatch call that copies the multisampled texture into a buffer.
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=4, local_size_y=1, local_size_z=1) in;
+
+uniform highp sampler2DMS imageIn;
+layout(std430, binding = 0) buffer dataOut {
+    uint data[];
+};
+
+void main()
+{
+    int sampleIndex = int(gl_GlobalInvocationID.x) % 4;
+
+    vec4 color = texelFetch(imageIn, ivec2(0), sampleIndex);
+    uvec4 unnormalized = uvec4(color * 255.0);
+
+    int outIndex = sampleIndex * 4;
+
+    data[outIndex    ] = unnormalized.r;
+    data[outIndex + 1] = unnormalized.g;
+    data[outIndex + 2] = unnormalized.b;
+    data[outIndex + 3] = unnormalized.a;
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    // Bind the multisampled texture as sampler.
+    GLint imageLocation = glGetUniformLocation(program, "imageIn");
+    ASSERT_GE(imageLocation, 0);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msaaTexture);
+    glUniform1i(imageLocation, 0);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the buffer has correct data.
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    const uint32_t *ptr = reinterpret_cast<uint32_t *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
+    constexpr GLColor kExpectedColors[4] = {
+        GLColor(96, 32, 0, 255),
+        GLColor(223, 96, 0, 255),
+        GLColor(32, 159, 0, 255),
+        GLColor(159, 223, 0, 255),
+    };
+    for (GLsizei pixel = 0; pixel < kSampleCount; ++pixel)
+    {
+        for (GLsizei channel = 0; channel < kPixelChannels; ++channel)
+        {
+            EXPECT_NEAR(ptr[pixel * kPixelChannels + channel], kExpectedColors[pixel][channel], 1)
+                << pixel << " " << channel;
+        }
+    }
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureMultisampleTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(TextureMultisampleTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(NegativeTextureMultisampleTest);
 ANGLE_INSTANTIATE_TEST_ES3(NegativeTextureMultisampleTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureMultisampleArrayWebGLTest);
 ANGLE_INSTANTIATE_TEST_ES31(TextureMultisampleArrayWebGLTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureSampleShadingTest);
+ANGLE_INSTANTIATE_TEST_ES31(TextureSampleShadingTest);
 }  // anonymous namespace

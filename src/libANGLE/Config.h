@@ -43,6 +43,7 @@ struct Config
     EGLint alphaMaskSize;          // Bits of Alpha Mask in the mask buffer
     EGLBoolean bindToTextureRGB;   // True if bindable to RGB textures.
     EGLBoolean bindToTextureRGBA;  // True if bindable to RGBA textures.
+    EGLenum bindToTextureTarget;   // Which texture target should be used for pbuffers
     EGLenum colorBufferType;       // Color buffer type
     EGLenum configCaveat;          // Any caveats for the configuration
     EGLint configID;               // Unique EGLConfig identifier
@@ -73,6 +74,9 @@ struct Config
     EGLBoolean framebufferTarget;  // EGL_TRUE if the config supports rendering to a ANativeWindow
                                    // for which the buffers are passed to the HWComposer HAL as a
                                    // framebuffer target layer.
+    EGLBoolean yInverted;  // True if the drawable's framebuffer is y-inverted.  This can be used to
+                           // determine if y-inverted texture coordinates need to be used when
+                           // texturing from this drawable when it is bound to a texture target.
 };
 
 class ConfigSet

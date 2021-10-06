@@ -17,9 +17,24 @@ namespace angle
 void InitTestHarness(int *argc, char **argv);
 }  // namespace angle
 
+// If we ever move to a text-based expectations format, we should move this list in that file.
+namespace
+{
+const char *kSlowTests[] = {
+    "dEQP.KHR_GLES31/core_arrays_of_arrays_ConstructorsAndUnsizedDeclConstructors1",
+    "dEQP.GLES31/functional_ssbo_layout_random_all_shared_buffer_36"};
+}  // namespace
+
 int main(int argc, char **argv)
 {
+#if defined(ANGLE_PLATFORM_MACOS)
+    // By default, we should hook file API functions on macOS to avoid slow Metal shader caching
+    // file access.
+    angle::InitMetalFileAPIHooking(argc, argv);
+#endif
+
     angle::InitTestHarness(&argc, argv);
     angle::TestSuite testSuite(&argc, argv);
+    testSuite.registerSlowTests(kSlowTests, ArraySize(kSlowTests));
     return testSuite.run();
 }

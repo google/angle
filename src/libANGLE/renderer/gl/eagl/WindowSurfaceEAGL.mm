@@ -8,7 +8,7 @@
 
 #import "common/platform.h"
 
-#if defined(ANGLE_PLATFORM_IOS) && !defined(ANGLE_PLATFORM_MACCATALYST)
+#if defined(ANGLE_ENABLE_EAGL)
 
 #    import "libANGLE/renderer/gl/eagl/WindowSurfaceEAGL.h"
 
@@ -18,13 +18,22 @@
 #    import "libANGLE/renderer/gl/RendererGL.h"
 #    import "libANGLE/renderer/gl/StateManagerGL.h"
 #    import "libANGLE/renderer/gl/eagl/DisplayEAGL.h"
+#    import "libANGLE/renderer/gl/eagl/FunctionsEAGL.h"
 
-#    import <OpenGLES/EAGL.h>
 #    import <QuartzCore/QuartzCore.h>
 
-// TODO(anglebug.com/4275): It's not clear why this needs to be an EAGLLayer.
+#    if defined(ANGLE_PLATFORM_MACCATALYST) && defined(ANGLE_CPU_ARM64)
 
-@interface WebSwapLayer : CAEAGLLayer {
+// TODO(dino): Necessary because CAEAGLLayer is not in the public QuartzCore headers in this
+// configuration.
+// TODO(dino): Check that this won't cause an application using ANGLE directly to be flagged
+// for non-public API use on Apple's App Store.
+@interface CAEAGLLayer : CALayer
+@end
+
+#    endif
+
+@interface SwapLayerEAGL : CAEAGLLayer {
     EAGLContextObj mDisplayContext;
 
     bool initialized;
@@ -38,7 +47,7 @@
             withFunctions:(const rx::FunctionsGL *)functions;
 @end
 
-@implementation WebSwapLayer
+@implementation SwapLayerEAGL
 - (id)initWithSharedState:(rx::SharedSwapState *)swapState
               withContext:(EAGLContextObj)displayContext
             withFunctions:(const rx::FunctionsGL *)functions
@@ -69,7 +78,7 @@
     }
     pthread_mutex_unlock(&mSwapState->mutex);
 
-    [EAGLContext setCurrentContext:mDisplayContext];
+    [getEAGLContextClass() setCurrentContext:mDisplayContext];
 
     if (!initialized)
     {
@@ -105,7 +114,7 @@
 
     mFunctions->bindRenderbuffer(GL_RENDERBUFFER, texture.texture);
     [mDisplayContext presentRenderbuffer:GL_RENDERBUFFER];
-    [EAGLContext setCurrentContext:nil];
+    [getEAGLContextClass() setCurrentContext:nil];
 }
 @end
 
@@ -173,10 +182,11 @@ egl::Error WindowSurfaceEAGL::initialize(const egl::Display *display)
     mSwapState.lastRendered   = &mSwapState.textures[1];
     mSwapState.beingPresented = &mSwapState.textures[2];
 
-    mSwapLayer = [[WebSwapLayer alloc] initWithSharedState:&mSwapState
-                                               withContext:mContext
-                                             withFunctions:mFunctions];
+    mSwapLayer = [[SwapLayerEAGL alloc] initWithSharedState:&mSwapState
+                                                withContext:mContext
+                                              withFunctions:mFunctions];
     [mLayer addSublayer:mSwapLayer];
+    [mSwapLayer setContentsScale:[mLayer contentsScale]];
 
     mFunctions->genRenderbuffers(1, &mDSRenderbuffer);
     mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mDSRenderbuffer);
@@ -266,12 +276,12 @@ void WindowSurfaceEAGL::setSwapInterval(EGLint interval)
 
 EGLint WindowSurfaceEAGL::getWidth() const
 {
-    return (EGLint)CGRectGetWidth([mLayer frame]);
+    return static_cast<EGLint>(CGRectGetWidth([mLayer frame]) * [mLayer contentsScale]);
 }
 
 EGLint WindowSurfaceEAGL::getHeight() const
 {
-    return (EGLint)CGRectGetHeight([mLayer frame]);
+    return static_cast<EGLint>(CGRectGetHeight([mLayer frame]) * [mLayer contentsScale]);
 }
 
 EGLint WindowSurfaceEAGL::isPostSubBufferSupported() const
@@ -304,4 +314,4 @@ FramebufferImpl *WindowSurfaceEAGL::createDefaultFramebuffer(const gl::Context *
 
 }  // namespace rx
 
-#endif  // defined(ANGLE_PLATFORM_IOS)
+#endif  // defined(ANGLE_ENABLE_EAGL)

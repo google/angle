@@ -22,30 +22,37 @@
 
 static inline bool operator==(const MTLClearColor &lhs, const MTLClearColor &rhs);
 
+namespace angle
+{
+struct FeaturesMtl;
+}
+
 namespace rx
 {
 class ContextMtl;
 
 namespace mtl
 {
-struct StencilDesc
+struct alignas(1) StencilDesc
 {
     bool operator==(const StencilDesc &rhs) const;
 
     // Set default values
     void reset();
 
-    MTLStencilOperation stencilFailureOperation;
-    MTLStencilOperation depthFailureOperation;
-    MTLStencilOperation depthStencilPassOperation;
+    // Use uint8_t instead of MTLStencilOperation to compact space
+    uint8_t stencilFailureOperation : 3;
+    uint8_t depthFailureOperation : 3;
+    uint8_t depthStencilPassOperation : 3;
 
-    MTLCompareFunction stencilCompareFunction;
+    // Use uint8_t instead of MTLCompareFunction to compact space
+    uint8_t stencilCompareFunction : 3;
 
-    uint32_t readMask;
-    uint32_t writeMask;
+    uint8_t readMask : 8;
+    uint8_t writeMask : 8;
 };
 
-struct DepthStencilDesc
+struct alignas(4) DepthStencilDesc
 {
     DepthStencilDesc();
     DepthStencilDesc(const DepthStencilDesc &src);
@@ -75,11 +82,12 @@ struct DepthStencilDesc
     StencilDesc backFaceStencil;
     StencilDesc frontFaceStencil;
 
-    MTLCompareFunction depthCompareFunction;
-    bool depthWriteEnabled;
+    // Use uint8_t instead of MTLCompareFunction to compact space
+    uint8_t depthCompareFunction : 3;
+    bool depthWriteEnabled : 1;
 };
 
-struct SamplerDesc
+struct alignas(4) SamplerDesc
 {
     SamplerDesc();
     SamplerDesc(const SamplerDesc &src);
@@ -96,15 +104,20 @@ struct SamplerDesc
 
     size_t hash() const;
 
-    MTLSamplerAddressMode rAddressMode;
-    MTLSamplerAddressMode sAddressMode;
-    MTLSamplerAddressMode tAddressMode;
+    // Use uint8_t instead of MTLSamplerAddressMode to compact space
+    uint8_t rAddressMode : 3;
+    uint8_t sAddressMode : 3;
+    uint8_t tAddressMode : 3;
 
-    MTLSamplerMinMagFilter minFilter;
-    MTLSamplerMinMagFilter magFilter;
-    MTLSamplerMipFilter mipFilter;
+    // Use uint8_t instead of MTLSamplerMinMagFilter to compact space
+    uint8_t minFilter : 1;
+    uint8_t magFilter : 1;
+    uint8_t mipFilter : 2;
 
-    uint32_t maxAnisotropy;
+    uint8_t maxAnisotropy : 5;
+
+    // Use uint8_t instead of MTLCompareFunction to compact space
+    uint8_t compareFunction : 3;
 };
 
 struct VertexAttributeDesc
@@ -114,9 +127,12 @@ struct VertexAttributeDesc
         return format == rhs.format && offset == rhs.offset && bufferIndex == rhs.bufferIndex;
     }
     inline bool operator!=(const VertexAttributeDesc &rhs) const { return !(*this == rhs); }
-    MTLVertexFormat format;
-    NSUInteger offset;
-    NSUInteger bufferIndex;
+
+    // Use uint8_t instead of MTLVertexFormat to compact space
+    uint8_t format : 6;
+    // Offset is only used for default attributes buffer. So 8 bits are enough.
+    uint8_t offset : 8;
+    uint8_t bufferIndex : 5;
 };
 
 struct VertexBufferLayoutDesc
@@ -127,9 +143,11 @@ struct VertexBufferLayoutDesc
     }
     inline bool operator!=(const VertexBufferLayoutDesc &rhs) const { return !(*this == rhs); }
 
-    MTLVertexStepFunction stepFunction;
-    NSUInteger stepRate;
-    NSUInteger stride;
+    uint32_t stepRate;
+    uint32_t stride;
+
+    // Use uint8_t instead of MTLVertexStepFunction to compact space
+    uint8_t stepFunction;
 };
 
 struct VertexDesc
@@ -150,25 +168,29 @@ struct BlendDesc
     void reset();
     void reset(MTLColorWriteMask writeMask);
 
-    void updateWriteMask(const gl::BlendState &blendState);
-    void updateBlendFactors(const gl::BlendState &blendState);
-    void updateBlendOps(const gl::BlendState &blendState);
-    void updateBlendEnabled(const gl::BlendState &blendState);
+    void updateWriteMask(const uint8_t angleMask);
 
-    MTLColorWriteMask writeMask;
+    // Use uint8_t instead of MTLColorWriteMask to compact space
+    uint8_t writeMask : 4;
 
-    MTLBlendOperation alphaBlendOperation;
-    MTLBlendOperation rgbBlendOperation;
+    // Use uint8_t instead of MTLBlendOperation to compact space
+    uint8_t alphaBlendOperation : 3;
+    uint8_t rgbBlendOperation : 3;
 
-    MTLBlendFactor destinationAlphaBlendFactor;
-    MTLBlendFactor destinationRGBBlendFactor;
-    MTLBlendFactor sourceAlphaBlendFactor;
-    MTLBlendFactor sourceRGBBlendFactor;
+    // Use uint8_t instead of MTLBlendFactor to compact space
+    // NOTE(hqle): enum MTLBlendFactorSource1Color and above are unused.
+    uint8_t destinationAlphaBlendFactor : 4;
+    uint8_t destinationRGBBlendFactor : 4;
+    uint8_t sourceAlphaBlendFactor : 4;
+    uint8_t sourceRGBBlendFactor : 4;
 
-    bool blendingEnabled;
+    bool blendingEnabled : 1;
 };
 
-struct RenderPipelineColorAttachmentDesc : public BlendDesc
+using BlendDescArray = std::array<BlendDesc, kMaxRenderTargets>;
+using WriteMaskArray = std::array<uint8_t, kMaxRenderTargets>;
+
+struct alignas(2) RenderPipelineColorAttachmentDesc : public BlendDesc
 {
     bool operator==(const RenderPipelineColorAttachmentDesc &rhs) const;
     inline bool operator!=(const RenderPipelineColorAttachmentDesc &rhs) const
@@ -180,26 +202,34 @@ struct RenderPipelineColorAttachmentDesc : public BlendDesc
     void reset();
     void reset(MTLPixelFormat format);
     void reset(MTLPixelFormat format, MTLColorWriteMask writeMask);
-    void reset(MTLPixelFormat format, const BlendDesc &blendState);
+    void reset(MTLPixelFormat format, const BlendDesc &blendDesc);
 
-    void update(const BlendDesc &blendState);
+    void update(const BlendDesc &blendDesc);
 
-    MTLPixelFormat pixelFormat;
+    // Use uint16_t instead of MTLPixelFormat to compact space
+    uint16_t pixelFormat : 16;
 };
 
 struct RenderPipelineOutputDesc
 {
     bool operator==(const RenderPipelineOutputDesc &rhs) const;
 
-    RenderPipelineColorAttachmentDesc colorAttachments[kMaxRenderTargets];
-    MTLPixelFormat depthAttachmentPixelFormat;
-    MTLPixelFormat stencilAttachmentPixelFormat;
+    void updateEnabledDrawBuffers(gl::DrawBufferMask enabledBuffers);
 
-    uint8_t numColorAttachments;
+    RenderPipelineColorAttachmentDesc colorAttachments[kMaxRenderTargets];
+
+    // Use uint16_t instead of MTLPixelFormat to compact space
+    uint16_t depthAttachmentPixelFormat : 16;
+    uint16_t stencilAttachmentPixelFormat : 16;
+
+    static_assert(kMaxRenderTargets <= 4, "kMaxRenderTargets must be <= 4");
+    uint8_t numColorAttachments : 3;
+    uint8_t sampleCount : 5;
 };
 
 // Some SDK levels don't declare MTLPrimitiveTopologyClass. Needs to do compile time check here:
-#if !(TARGET_OS_OSX || TARGET_OS_MACCATALYST) && ANGLE_IOS_DEPLOY_TARGET < __IPHONE_12_0
+#if !(TARGET_OS_OSX || TARGET_OS_MACCATALYST) && \
+    (!defined(__IPHONE_12_0) || ANGLE_IOS_DEPLOY_TARGET < __IPHONE_12_0)
 #    define ANGLE_MTL_PRIMITIVE_TOPOLOGY_CLASS_AVAILABLE 0
 using PrimitiveTopologyClass                                     = uint32_t;
 constexpr PrimitiveTopologyClass kPrimitiveTopologyClassTriangle = 0;
@@ -212,7 +242,29 @@ constexpr PrimitiveTopologyClass kPrimitiveTopologyClassTriangle =
 constexpr PrimitiveTopologyClass kPrimitiveTopologyClassPoint = MTLPrimitiveTopologyClassPoint;
 #endif
 
-struct RenderPipelineDesc
+enum class RenderPipelineRasterization : uint32_t
+{
+    // This flag is used for vertex shader not writing any stage output (e.g gl_Position).
+    // This will disable fragment shader stage. This is useful for transform feedback ouput vertex
+    // shader.
+    Disabled,
+
+    // Fragment shader is enabled.
+    Enabled,
+
+    // This flag is for rasterization discard emulation when vertex shader still writes to stage
+    // output. Disabled flag cannot be used in this case since Metal doesn't allow that. The
+    // emulation would insert a code snippet to move gl_Position out of clip space's visible area to
+    // simulate the discard.
+    EmulatedDiscard,
+
+    EnumCount,
+};
+
+template <typename T>
+using RenderPipelineRasterStateMap = angle::PackedEnumMap<RenderPipelineRasterization, T>;
+
+struct alignas(4) RenderPipelineDesc
 {
     RenderPipelineDesc();
     RenderPipelineDesc(const RenderPipelineDesc &src);
@@ -221,16 +273,23 @@ struct RenderPipelineDesc
     RenderPipelineDesc &operator=(const RenderPipelineDesc &src);
 
     bool operator==(const RenderPipelineDesc &rhs) const;
-
     size_t hash() const;
+    bool rasterizationEnabled() const;
 
     VertexDesc vertexDescriptor;
 
     RenderPipelineOutputDesc outputDescriptor;
 
-    PrimitiveTopologyClass inputPrimitiveTopology;
+    // Use uint8_t instead of PrimitiveTopologyClass to compact space.
+    uint8_t inputPrimitiveTopology : 2;
 
-    bool rasterizationEnabled;
+    bool alphaToCoverageEnabled : 1;
+
+    // These flags are for emulation and do not correspond to any flags in
+    // MTLRenderPipelineDescriptor descriptor. These flags should be used by
+    // RenderPipelineCacheSpecializeShaderFactory.
+    RenderPipelineRasterization rasterizationType : 2;
+    bool emulateCoverageMask : 1;
 };
 
 struct RenderPassAttachmentDesc
@@ -242,9 +301,17 @@ struct RenderPassAttachmentDesc
     bool equalIgnoreLoadStoreOptions(const RenderPassAttachmentDesc &other) const;
     bool operator==(const RenderPassAttachmentDesc &other) const;
 
+    ANGLE_INLINE bool hasImplicitMSTexture() const { return implicitMSTexture.get(); }
+
     TextureRef texture;
-    uint32_t level;
-    uint32_t slice;
+    // Implicit multisample texture that will be rendered into and discarded at the end of
+    // a render pass. Its result will be resolved into normal texture above.
+    TextureRef implicitMSTexture;
+    MipmapNativeLevel level;
+    uint32_t sliceOrDepth;
+
+    // This attachment is blendable or not.
+    bool blendable;
     MTLLoadAction loadAction;
     MTLStoreAction storeAction;
     MTLStoreActionOptions storeActionOptions;
@@ -290,21 +357,28 @@ struct RenderPassStencilAttachmentDesc : public RenderPassAttachmentDesc
     uint32_t clearStencil = 0;
 };
 
+//
+// This is C++ equivalent of Objective-C MTLRenderPassDescriptor.
+// We could use MTLRenderPassDescriptor directly, however, using C++ struct has benefits of fast
+// copy, stack allocation, inlined comparing function, etc.
+//
 struct RenderPassDesc
 {
     RenderPassColorAttachmentDesc colorAttachments[kMaxRenderTargets];
     RenderPassDepthAttachmentDesc depthAttachment;
     RenderPassStencilAttachmentDesc stencilAttachment;
 
+    void convertToMetalDesc(MTLRenderPassDescriptor *objCDesc) const;
+
     // This will populate the RenderPipelineOutputDesc with default blend state and
     // MTLColorWriteMaskAll
     void populateRenderPipelineOutputDesc(RenderPipelineOutputDesc *outDesc) const;
     // This will populate the RenderPipelineOutputDesc with default blend state and the specified
     // MTLColorWriteMask
-    void populateRenderPipelineOutputDesc(MTLColorWriteMask colorWriteMask,
+    void populateRenderPipelineOutputDesc(const WriteMaskArray &writeMaskArray,
                                           RenderPipelineOutputDesc *outDesc) const;
     // This will populate the RenderPipelineOutputDesc with the specified blend state
-    void populateRenderPipelineOutputDesc(const BlendDesc &blendState,
+    void populateRenderPipelineOutputDesc(const BlendDescArray &blendDescArray,
                                           RenderPipelineOutputDesc *outDesc) const;
 
     bool equalIgnoreLoadStoreOptions(const RenderPassDesc &other) const;
@@ -312,10 +386,9 @@ struct RenderPassDesc
     inline bool operator!=(const RenderPassDesc &other) const { return !(*this == other); }
 
     uint32_t numColorAttachments = 0;
+    uint32_t sampleCount         = 1;
 };
 
-// convert to Metal object
-AutoObjCObj<MTLRenderPassDescriptor> ToMetalObj(const RenderPassDesc &desc);
 }  // namespace mtl
 }  // namespace rx
 
@@ -346,18 +419,42 @@ namespace rx
 {
 namespace mtl
 {
-// render pipeline state cache per shader program
+
+// Abstract factory to create specialized vertex & fragment shaders based on RenderPipelineDesc.
+class RenderPipelineCacheSpecializeShaderFactory
+{
+  public:
+    virtual ~RenderPipelineCacheSpecializeShaderFactory() = default;
+    // Get specialized shader for the render pipeline cache.
+    virtual angle::Result getSpecializedShader(Context *context,
+                                               gl::ShaderType shaderType,
+                                               const RenderPipelineDesc &renderPipelineDesc,
+                                               id<MTLFunction> *shaderOut) = 0;
+    // Check whether specialized shaders is required for the specified RenderPipelineDesc.
+    // If not, the render pipeline cache will use the supplied non-specialized shaders.
+    virtual bool hasSpecializedShader(gl::ShaderType shaderType,
+                                      const RenderPipelineDesc &renderPipelineDesc) = 0;
+};
+
+// Render pipeline state cache per shader program.
 class RenderPipelineCache final : angle::NonCopyable
 {
   public:
     RenderPipelineCache();
+    RenderPipelineCache(RenderPipelineCacheSpecializeShaderFactory *specializedShaderFactory);
     ~RenderPipelineCache();
 
+    // Set non-specialized vertex/fragment shader to be used by render pipeline cache to create
+    // render pipeline state. If the internal
+    // RenderPipelineCacheSpecializeShaderFactory.hasSpecializedShader() returns false for a
+    // particular RenderPipelineDesc, the render pipeline cache will use the non-specialized
+    // shaders.
     void setVertexShader(Context *context, id<MTLFunction> shader);
     void setFragmentShader(Context *context, id<MTLFunction> shader);
 
-    id<MTLFunction> getVertexShader() { return mVertexShader.get(); }
-    id<MTLFunction> getFragmentShader() { return mFragmentShader.get(); }
+    // Get non-specialized shaders supplied via set*Shader().
+    id<MTLFunction> getVertexShader() { return mVertexShader; }
+    id<MTLFunction> getFragmentShader() { return mFragmentShader; }
 
     AutoObjCPtr<id<MTLRenderPipelineState>> getRenderPipelineState(ContextMtl *context,
                                                                    const RenderPipelineDesc &desc);
@@ -365,8 +462,10 @@ class RenderPipelineCache final : angle::NonCopyable
     void clear();
 
   protected:
-    AutoObjCPtr<id<MTLFunction>> mVertexShader   = nil;
-    AutoObjCPtr<id<MTLFunction>> mFragmentShader = nil;
+    // Non-specialized vertex shader
+    AutoObjCPtr<id<MTLFunction>> mVertexShader;
+    // Non-specialized fragment shader
+    AutoObjCPtr<id<MTLFunction>> mFragmentShader;
 
   private:
     void clearPipelineStates();
@@ -383,14 +482,15 @@ class RenderPipelineCache final : angle::NonCopyable
     bool hasDefaultAttribs(const RenderPipelineDesc &desc) const;
 
     // One table with default attrib and one table without.
-    std::unordered_map<RenderPipelineDesc, AutoObjCPtr<id<MTLRenderPipelineState>>>
+    angle::HashMap<RenderPipelineDesc, AutoObjCPtr<id<MTLRenderPipelineState>>>
         mRenderPipelineStates[2];
+    RenderPipelineCacheSpecializeShaderFactory *mSpecializedShaderFactory;
 };
 
 class StateCache final : angle::NonCopyable
 {
   public:
-    StateCache();
+    StateCache(const angle::FeaturesMtl &features);
     ~StateCache();
 
     // Null depth stencil state has depth/stecil read & write disabled.
@@ -408,9 +508,11 @@ class StateCache final : angle::NonCopyable
     void clear();
 
   private:
+    const angle::FeaturesMtl &mFeatures;
+
     AutoObjCPtr<id<MTLDepthStencilState>> mNullDepthStencilState = nil;
-    std::unordered_map<DepthStencilDesc, AutoObjCPtr<id<MTLDepthStencilState>>> mDepthStencilStates;
-    std::unordered_map<SamplerDesc, AutoObjCPtr<id<MTLSamplerState>>> mSamplerStates;
+    angle::HashMap<DepthStencilDesc, AutoObjCPtr<id<MTLDepthStencilState>>> mDepthStencilStates;
+    angle::HashMap<SamplerDesc, AutoObjCPtr<id<MTLSamplerState>>> mSamplerStates;
 };
 
 }  // namespace mtl

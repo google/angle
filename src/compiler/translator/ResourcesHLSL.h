@@ -24,7 +24,6 @@ class ResourcesHLSL : angle::NonCopyable
   public:
     ResourcesHLSL(StructureHLSL *structureHLSL,
                   ShShaderOutput outputType,
-                  ShCompileOptions compileOptions,
                   const std::vector<ShaderVariable> &uniforms,
                   unsigned int firstUniformRegister);
 
@@ -39,7 +38,9 @@ class ResourcesHLSL : angle::NonCopyable
     void samplerMetadataUniforms(TInfoSinkBase &out, unsigned int regIndex);
     unsigned int getSamplerCount() const { return mSamplerCount; }
     void imageMetadataUniforms(TInfoSinkBase &out, unsigned int regIndex);
-    TString uniformBlocksHeader(const ReferencedInterfaceBlocks &referencedInterfaceBlocks);
+    TString uniformBlocksHeader(
+        const ReferencedInterfaceBlocks &referencedInterfaceBlocks,
+        const std::map<int, const TInterfaceBlock *> &uniformBlockOptimizedMap);
     TString shaderStorageBlocksHeader(const ReferencedInterfaceBlocks &referencedInterfaceBlocks);
 
     // Used for direct index references
@@ -75,7 +76,9 @@ class ResourcesHLSL : angle::NonCopyable
                                unsigned int registerIndex,
                                unsigned int arrayIndex);
     TString uniformBlockWithOneLargeArrayMemberString(const TInterfaceBlock &interfaceBlock,
-                                                      unsigned int registerIndex);
+                                                      const TVariable *instanceVariable,
+                                                      unsigned int registerIndex,
+                                                      unsigned int arrayIndex);
 
     TString shaderStorageBlockString(const TInterfaceBlock &interfaceBlock,
                                      const TVariable *instanceVariable,
@@ -125,7 +128,6 @@ class ResourcesHLSL : angle::NonCopyable
                                      const HLSLRWTextureGroup textureGroup,
                                      const TVector<const TVariable *> &group,
                                      unsigned int *groupTextureRegisterIndex);
-    bool shouldTranslateUniformBlockToStructuredBuffer(const TInterfaceBlock &interfaceBlock);
 
     unsigned int mUniformRegister;
     unsigned int mUniformBlockRegister;
@@ -136,7 +138,6 @@ class ResourcesHLSL : angle::NonCopyable
     unsigned int mImageCount;
     StructureHLSL *mStructureHLSL;
     ShShaderOutput mOutputType;
-    ShCompileOptions mCompileOptions;
 
     const std::vector<ShaderVariable> &mUniforms;
     std::map<std::string, unsigned int> mUniformBlockRegisterMap;

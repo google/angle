@@ -293,7 +293,7 @@ void ProgramBinaryES3Test::testBinaryAndUBOBlockIndexes(bool drawWithProgramFirs
     // We can't run the test if no program binary formats are supported.
     GLint binaryFormatCount = 0;
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
-    ANGLE_SKIP_TEST_IF(!binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(binaryFormatCount == 0);
 
     constexpr char kVS[] =
         "#version 300 es\n"
@@ -381,13 +381,147 @@ TEST_P(ProgramBinaryES3Test, UniformBlockBindingNoDraw)
     testBinaryAndUBOBlockIndexes(false);
 }
 
+// Test the shaders with arrays-of-struct uniforms are properly saved and restored
+TEST_P(ProgramBinaryES3Test, TestArrayOfStructUniform)
+{
+    // We can't run the test if no program binary formats are supported.
+    GLint binaryFormatCount = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(binaryFormatCount == 0);
+
+    constexpr char kVS[] =
+        "#version 300 es\n"
+        "in highp vec4 position;\n"
+        "out mediump float v_vtxOut;\n"
+        "\n"
+        "struct structType\n"
+        "{\n"
+        "    mediump vec4 m0;\n"
+        "    mediump vec4 m1;\n"
+        "};\n"
+        "uniform structType u_var[3];\n"
+        "\n"
+        "mediump float compare_float(mediump float a, mediump float b)\n"
+        "{\n"
+        "    return abs(a - b) < 0.05 ? 1.0 : 0.0;\n"
+        "}\n"
+        "mediump float compare_vec4(mediump vec4 a, mediump vec4 b)\n"
+        "{\n"
+        "    return compare_float(a.x, b.x)*compare_float(a.y, b.y)*\n"
+        "           compare_float(a.z, b.z)*compare_float(a.w, b.w);\n"
+        "}\n"
+        "\n"
+        "void main (void)\n"
+        "{\n"
+        "    gl_Position = position;\n"
+        "    v_vtxOut = 1.0;\n"
+        "    v_vtxOut *= compare_vec4(u_var[0].m0, vec4(0.15, 0.52, 0.26, 0.35));\n"
+        "    v_vtxOut *= compare_vec4(u_var[0].m1, vec4(0.88, 0.09, 0.30, 0.61));\n"
+        "    v_vtxOut *= compare_vec4(u_var[1].m0, vec4(0.85, 0.59, 0.33, 0.71));\n"
+        "    v_vtxOut *= compare_vec4(u_var[1].m1, vec4(0.62, 0.89, 0.09, 0.99));\n"
+        "    v_vtxOut *= compare_vec4(u_var[2].m0, vec4(0.53, 0.89, 0.01, 0.08));\n"
+        "    v_vtxOut *= compare_vec4(u_var[2].m1, vec4(0.26, 0.72, 0.60, 0.12));\n"
+        "}";
+
+    constexpr char kFS[] =
+        "#version 300 es\n"
+        "in mediump float v_vtxOut;\n"
+        "\n"
+        "layout(location = 0) out mediump vec4 dEQP_FragColor;\n"
+        "\n"
+        "void main (void)\n"
+        "{\n"
+        "    mediump float result = v_vtxOut;\n"
+        "    dEQP_FragColor = vec4(result, result, result, 1.0);\n"
+        "}";
+
+    // Init and draw with the program.
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    glUseProgram(program.get());
+
+    int location = glGetUniformLocation(program.get(), "u_var[0].m0");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.15, 0.52, 0.26, 0.35);
+    location = glGetUniformLocation(program.get(), "u_var[0].m1");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.88, 0.09, 0.30, 0.61);
+    location = glGetUniformLocation(program.get(), "u_var[1].m0");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.85, 0.59, 0.33, 0.71);
+    location = glGetUniformLocation(program.get(), "u_var[1].m1");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.62, 0.89, 0.09, 0.99);
+    location = glGetUniformLocation(program.get(), "u_var[2].m0");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.53, 0.89, 0.01, 0.08);
+    location = glGetUniformLocation(program.get(), "u_var[2].m1");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.26, 0.72, 0.60, 0.12);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear and draw with the original program:
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    drawQuad(program.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+
+    // Read back the binary.
+    GLint programLength = 0;
+    glGetProgramiv(program.get(), GL_PROGRAM_BINARY_LENGTH_OES, &programLength);
+    ASSERT_GL_NO_ERROR();
+
+    GLsizei readLength  = 0;
+    GLenum binaryFormat = GL_NONE;
+    std::vector<uint8_t> binary(programLength);
+    glGetProgramBinary(program.get(), programLength, &readLength, &binaryFormat, binary.data());
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(static_cast<GLsizei>(programLength), readLength);
+
+    // Load a new program with the binary and draw.
+    ANGLE_GL_BINARY_ES3_PROGRAM(binaryProgram, binary, binaryFormat);
+
+    glUseProgram(binaryProgram.get());
+
+    location = glGetUniformLocation(binaryProgram.get(), "u_var[0].m0");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.15, 0.52, 0.26, 0.35);
+    location = glGetUniformLocation(binaryProgram.get(), "u_var[0].m1");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.88, 0.09, 0.30, 0.61);
+    location = glGetUniformLocation(binaryProgram.get(), "u_var[1].m0");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.85, 0.59, 0.33, 0.71);
+    location = glGetUniformLocation(binaryProgram.get(), "u_var[1].m1");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.62, 0.89, 0.09, 0.99);
+    location = glGetUniformLocation(binaryProgram.get(), "u_var[2].m0");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.53, 0.89, 0.01, 0.08);
+    location = glGetUniformLocation(binaryProgram.get(), "u_var[2].m1");
+    ASSERT_NE(location, -1);
+    glUniform4f(location, 0.26, 0.72, 0.60, 0.12);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear and draw with the restored program:
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    drawQuad(binaryProgram.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
 // Tests the difference between uniform static and active use
 TEST_P(ProgramBinaryES3Test, ActiveUniformShader)
 {
     // We can't run the test if no program binary formats are supported.
     GLint binaryFormatCount = 0;
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
-    ANGLE_SKIP_TEST_IF(!binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(binaryFormatCount == 0);
 
     constexpr char kVS[] =
         "#version 300 es\n"
@@ -470,7 +604,7 @@ TEST_P(ProgramBinaryES3Test, BinaryWithLargeUniformCount)
     // We can't run the test if no program binary formats are supported.
     GLint binaryFormatCount = 0;
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
-    ANGLE_SKIP_TEST_IF(!binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(binaryFormatCount == 0);
 
     constexpr char kVS[] =
         "#version 300 es\n"
@@ -613,6 +747,81 @@ TEST_P(ProgramBinaryES3Test, BinaryWithLargeUniformCount)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
 }
 
+// Test that sampler texelFetch references are saved and loaded correctly
+TEST_P(ProgramBinaryTest, SRGBDecodeWithSamplerAndTexelFetchTest)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_decode") ||
+                       getClientMajorVersion() < 3);
+
+    // These OpenGL drivers appear not to respect the texelFetch exception
+    // http://anglebug.com/4991
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAMD() && IsWindows());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && (IsNVIDIA() || IsARM64()) && IsOSX());
+    ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsNexus5X());
+
+    constexpr char kVS[] =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "in vec4 position;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+        "}\n";
+
+    constexpr char kFS[] =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "uniform sampler2D tex;\n"
+        "in vec2 texcoord;\n"
+        "out vec4 out_color;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "   out_color = texelFetch(tex, ivec2(0, 0), 0);\n"
+        "}\n";
+
+    GLProgram program;
+    program.makeRaster(kVS, kFS);
+    ASSERT_NE(0u, program.get());
+
+    GLuint reloadedProgram = glCreateProgram();
+    saveAndLoadProgram(program.get(), reloadedProgram);
+
+    GLint textureLocation = glGetUniformLocation(reloadedProgram, "tex");
+    ASSERT_NE(-1, textureLocation);
+
+    GLColor linearColor(64, 127, 191, 255);
+    GLColor srgbColor(13, 54, 133, 255);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 &linearColor);
+    ASSERT_GL_NO_ERROR();
+
+    GLSampler sampler;
+    glBindSampler(0, sampler.get());
+    glSamplerParameteri(sampler.get(), GL_TEXTURE_SRGB_DECODE_EXT, GL_DECODE_EXT);
+
+    glUseProgram(reloadedProgram);
+    glUniform1i(textureLocation, 0);
+
+    glDisable(GL_DEPTH_TEST);
+    drawQuad(reloadedProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, srgbColor, 1.0);
+
+    glSamplerParameteri(sampler.get(), GL_TEXTURE_SRGB_DECODE_EXT, GL_SKIP_DECODE_EXT);
+    drawQuad(reloadedProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, srgbColor, 1.0);
+
+    glDeleteProgram(reloadedProgram);
+}
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinaryES3Test);
 ANGLE_INSTANTIATE_TEST_ES3(ProgramBinaryES3Test);
 
 class ProgramBinaryES31Test : public ANGLETest
@@ -638,7 +847,7 @@ TEST_P(ProgramBinaryES31Test, ProgramBinaryWithComputeShader)
     // We can't run the test if no program binary formats are supported.
     GLint binaryFormatCount = 0;
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
-    ANGLE_SKIP_TEST_IF(!binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(binaryFormatCount == 0);
     // http://anglebug.com/4092
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
@@ -682,8 +891,6 @@ TEST_P(ProgramBinaryES31Test, ProgramBinaryWithComputeShader)
 // Tests that saving and loading a program attached with computer shader.
 TEST_P(ProgramBinaryES31Test, ProgramBinaryWithAtomicCounterComputeShader)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
     // We can't run the test if no program binary formats are supported.
     GLint binaryFormatCount = 0;
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
@@ -750,7 +957,7 @@ TEST_P(ProgramBinaryES31Test, ImageTextureBinding)
     // We can't run the test if no program binary formats are supported.
     GLint binaryFormatCount = 0;
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
-    ANGLE_SKIP_TEST_IF(!binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(binaryFormatCount == 0);
 
     const char kComputeShader[] =
         R"(#version 310 es
@@ -804,6 +1011,7 @@ TEST_P(ProgramBinaryES31Test, ImageTextureBinding)
     ASSERT_GL_NO_ERROR();
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinaryES31Test);
 ANGLE_INSTANTIATE_TEST_ES31(ProgramBinaryES31Test);
 
 class ProgramBinaryTransformFeedbackTest : public ANGLETest
@@ -915,8 +1123,7 @@ TEST_P(ProgramBinaryTransformFeedbackTest, GetTransformFeedbackVarying)
     EXPECT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinaryTransformFeedbackTest);
 ANGLE_INSTANTIATE_TEST_ES3(ProgramBinaryTransformFeedbackTest);
 
 // For the ProgramBinariesAcrossPlatforms tests, we need two sets of params:
@@ -967,15 +1174,15 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
         }
 
         mEntryPointsLib.reset(
-            angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ApplicationDir));
+            angle::OpenSharedLibrary(ANGLE_EGL_LIBRARY_NAME, angle::SearchType::ModuleDir));
     }
 
     EGLWindow *createAndInitEGLWindow(angle::PlatformParameters &param)
     {
         EGLWindow *eglWindow = EGLWindow::New(param.majorVersion, param.minorVersion);
         ConfigParameters configParams;
-        bool result = eglWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), param.eglParameters,
-                                              configParams);
+        bool result = eglWindow->initializeGL(mOSWindow, mEntryPointsLib.get(), param.driver,
+                                              param.eglParameters, configParams);
         if (!result)
         {
             EGLWindow::Delete(&eglWindow);
@@ -1066,7 +1273,6 @@ TEST_P(ProgramBinariesAcrossPlatforms, CreateAndReloadBinary)
     if (eglWindow == nullptr)
     {
         FAIL() << "Failed to create EGL window";
-        return;
     }
 
     // If the test is trying to use both the default GPU and WARP, but the default GPU *IS* WARP,
@@ -1123,7 +1329,6 @@ TEST_P(ProgramBinariesAcrossPlatforms, CreateAndReloadBinary)
     if (eglWindow == nullptr)
     {
         FAIL() << "Failed to create EGL window";
-        return;
     }
 
     program = glCreateProgram();
@@ -1147,6 +1352,7 @@ TEST_P(ProgramBinariesAcrossPlatforms, CreateAndReloadBinary)
 }
 
 // clang-format off
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinariesAcrossPlatforms);
 ANGLE_INSTANTIATE_TEST(ProgramBinariesAcrossPlatforms,
                        //                     | Save the program   | Load the program      | Expected
                        //                     | using these params | using these params    | link result
@@ -1155,5 +1361,6 @@ ANGLE_INSTANTIATE_TEST(ProgramBinariesAcrossPlatforms,
                        PlatformsWithLinkResult(ES2_D3D11(),         ES2_D3D9(),             false        ), // Switching from D3D11 to D3D9 shouldn't work
                        PlatformsWithLinkResult(ES2_D3D9(),          ES2_D3D11(),            false        ), // Switching from D3D9 to D3D11 shouldn't work
                        PlatformsWithLinkResult(ES2_D3D11(),         ES3_D3D11(),            false        ), // Switching to newer client version shouldn't work
+                       PlatformsWithLinkResult(ES3_VULKAN(),        ES31_VULKAN(),          false        ), // Switching to newer client version shouldn't work with Vulkan
                        );
 // clang-format on

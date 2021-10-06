@@ -23,15 +23,54 @@
 
 namespace rx
 {
+
+class ContextMtl;
+
+void StartFrameCapture(id<MTLDevice> metalDevice, id<MTLCommandQueue> metalCmdQueue);
+void StartFrameCapture(ContextMtl *context);
+void StopFrameCapture();
+
 namespace mtl
 {
 
 NS_ASSUME_NONNULL_BEGIN
 
+// Initialize texture content to black.
 angle::Result InitializeTextureContents(const gl::Context *context,
                                         const TextureRef &texture,
                                         const Format &textureObjFormat,
-                                        const gl::ImageIndex &index);
+                                        const ImageNativeIndex &index);
+// Same as above but using GPU clear operation instead of CPU.
+// - channelsToInit parameter controls which channels will get their content initialized.
+angle::Result InitializeTextureContentsGPU(const gl::Context *context,
+                                           const TextureRef &texture,
+                                           const Format &textureObjFormat,
+                                           const ImageNativeIndex &index,
+                                           MTLColorWriteMask channelsToInit);
+
+// Same as above but for a depth/stencil texture.
+angle::Result InitializeDepthStencilTextureContentsGPU(const gl::Context *context,
+                                                       const TextureRef &texture,
+                                                       const Format &textureObjFormat,
+                                                       const ImageNativeIndex &index);
+
+// Unified texture's per slice/depth texel reading function
+angle::Result ReadTexturePerSliceBytes(const gl::Context *context,
+                                       const TextureRef &texture,
+                                       size_t bytesPerRow,
+                                       const gl::Rectangle &fromRegion,
+                                       const MipmapNativeLevel &mipLevel,
+                                       uint32_t sliceOrDepth,
+                                       uint8_t *dataOut);
+
+angle::Result ReadTexturePerSliceBytesToBuffer(const gl::Context *context,
+                                               const TextureRef &texture,
+                                               size_t bytesPerRow,
+                                               const gl::Rectangle &fromRegion,
+                                               const MipmapNativeLevel &mipLevel,
+                                               uint32_t sliceOrDepth,
+                                               uint32_t dstOffset,
+                                               const BufferRef &dstBuffer);
 
 MTLViewport GetViewport(const gl::Rectangle &rect, double znear = 0, double zfar = 1);
 MTLViewport GetViewportFlipY(const gl::Rectangle &rect,
@@ -47,19 +86,35 @@ MTLScissorRect GetScissorRect(const gl::Rectangle &rect,
                               NSUInteger screenHeight = 0,
                               bool flipY              = false);
 
+uint32_t GetDeviceVendorId(id<MTLDevice> metalDevice);
+
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
+    id<MTLDevice> metalDevice,
+    const std::string &source,
+    NSDictionary<NSString *, NSObject *> *substitutionDictionary,
+    AutoObjCPtr<NSError *> *error);
+
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
                                                 const std::string &source,
                                                 AutoObjCPtr<NSError *> *error);
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
-                                                const char *source,
-                                                size_t sourceLen,
-                                                AutoObjCPtr<NSError *> *error);
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
+    id<MTLDevice> metalDevice,
+    const char *source,
+    size_t sourceLen,
+    NSDictionary<NSString *, NSObject *> *substitutionDictionary,
+    AutoObjCPtr<NSError *> *error);
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
-                                                          const uint8_t *binarySource,
-                                                          size_t binarySourceLen,
-                                                          AutoObjCPtr<NSError *> *error);
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(
+    id<MTLDevice> metalDevice,
+    const uint8_t *binarySource,
+    size_t binarySourceLen,
+    NSDictionary<NSString *, NSObject *> *substitutionDictionary,
+    AutoObjCPtr<NSError *> *error);
+
+bool supportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily);
+
+bool SupportsMacGPUFamily(id<MTLDevice> device, uint8_t macFamily);
 
 // Need to define invalid enum value since Metal doesn't define it
 constexpr MTLTextureType MTLTextureTypeInvalid = static_cast<MTLTextureType>(NSUIntegerMax);
@@ -92,9 +147,45 @@ PrimitiveTopologyClass GetPrimitiveTopologyClass(gl::PrimitiveMode mode);
 MTLPrimitiveType GetPrimitiveType(gl::PrimitiveMode mode);
 MTLIndexType GetIndexType(gl::DrawElementsType type);
 
+#if ANGLE_MTL_SWIZZLE_AVAILABLE
+MTLTextureSwizzle GetTextureSwizzle(GLenum swizzle);
+#endif
+
+// Get color write mask for a specified format. Some formats such as RGB565 doesn't have alpha
+// channel but is emulated by a RGBA8 format, we need to disable alpha write for this format.
+// - emulatedChannelsOut: if the format is emulated, this pointer will store a true value.
+MTLColorWriteMask GetEmulatedColorWriteMask(const mtl::Format &mtlFormat,
+                                            bool *emulatedChannelsOut);
+MTLColorWriteMask GetEmulatedColorWriteMask(const mtl::Format &mtlFormat);
+bool IsFormatEmulated(const mtl::Format &mtlFormat);
+
+NSUInteger GetMaxRenderTargetSizeForDeviceInBytes(id<MTLDevice> device);
+NSUInteger GetMaxNumberOfRenderTargetsForDevice(id<MTLDevice> device);
+bool DeviceHasMaximumRenderTargetSize(id<MTLDevice> device);
+
 // Useful to set clear color for texture originally having no alpha in GL, but backend's format
 // has alpha channel.
 MTLClearColor EmulatedAlphaClearColor(MTLClearColor color, MTLColorWriteMask colorMask);
+
+NSUInteger ComputeTotalSizeUsedForMTLRenderPassDescriptor(const MTLRenderPassDescriptor *descriptor,
+                                                          const Context *context,
+                                                          id<MTLDevice> device);
+
+NSUInteger ComputeTotalSizeUsedForMTLRenderPipelineDescriptor(
+    const MTLRenderPipelineDescriptor *descriptor,
+    const Context *context,
+    id<MTLDevice> device);
+
+gl::Box MTLRegionToGLBox(const MTLRegion &mtlRegion);
+
+MipmapNativeLevel GetNativeMipLevel(GLuint level, GLuint base);
+GLuint GetGLMipLevel(const MipmapNativeLevel &nativeLevel, GLuint base);
+
+angle::Result TriangleFanBoundCheck(ContextMtl *context, size_t numTris);
+
+angle::Result GetTriangleFanIndicesCount(ContextMtl *context,
+                                         GLsizei vetexCount,
+                                         uint32_t *numElemsOut);
 
 NS_ASSUME_NONNULL_END
 }  // namespace mtl

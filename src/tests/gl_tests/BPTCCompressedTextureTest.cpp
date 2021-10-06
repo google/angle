@@ -21,6 +21,10 @@ const unsigned int kPixelTolerance = 1u;
 const std::array<GLubyte, 16> kBC7Data4x4 = {0x50, 0x1f, 0xfc, 0xf, 0x0,  0xf0, 0xe3, 0xe1,
                                              0xe1, 0xe1, 0xc1, 0xf, 0xfc, 0xc0, 0xf,  0xfc};
 
+// The pixel data represents a 4x4 pixel image with the transparent black solid color.
+// Sampling from a zero-filled block is undefined, so use a valid one.
+const std::array<GLubyte, 16> kBC7BlackData4x4 = {0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 }  // anonymous namespace
 
 class BPTCCompressedTextureTest : public ANGLETest
@@ -150,7 +154,7 @@ TEST_P(BPTCCompressedTextureTest, CompressedTexImageBC6HNoCrash)
     GLTexture texture;
     setupTextureParameters(texture);
 
-    // This dummy pixel data represents a 4x4 pixel image.
+    // This fake pixel data represents a 4x4 pixel image.
     // TODO(http://anglebug.com/2869): Add pixel tests for these formats. These need HDR source
     // images.
     std::vector<GLubyte> data;
@@ -293,6 +297,83 @@ TEST_P(BPTCCompressedTextureTestES3, PBOCompressedTexImage)
     EXPECT_PIXEL_COLOR_NEAR(getWindowWidth() - 1, 0, GLColor::green, kPixelTolerance);
     EXPECT_PIXEL_COLOR_NEAR(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green,
                             kPixelTolerance);
+
+    // Destroy the data
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, kBC7BlackData4x4.size(), kBC7BlackData4x4.data(),
+                 GL_STREAM_DRAW);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, 4, 4, 0,
+                           kBC7BlackData4x4.size(), nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    drawTexture();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+
+    // Initialize again.  This time, the texture's image is already allocated, so the PBO data
+    // upload could be directly done.
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, kBC7Data4x4.size(), kBC7Data4x4.data(), GL_STREAM_DRAW);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, 4, 4, 0,
+                           kBC7Data4x4.size(), nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    drawTexture();
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::red, kPixelTolerance);
+    EXPECT_PIXEL_COLOR_NEAR(0, getWindowHeight() - 1, GLColor::red, kPixelTolerance);
+    EXPECT_PIXEL_COLOR_NEAR(getWindowWidth() - 1, 0, GLColor::green, kPixelTolerance);
+    EXPECT_PIXEL_COLOR_NEAR(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green,
+                            kPixelTolerance);
+}
+
+// Test uploading texture data from a PBO to a non-zero base texture.
+TEST_P(BPTCCompressedTextureTestES3, PBOCompressedTexImageNonZeroBase)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_bptc"));
+
+    GLTexture texture;
+    setupTextureParameters(texture);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, kBC7Data4x4.size(), kBC7Data4x4.data(), GL_STREAM_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, 4, 4, 0,
+                           kBC7Data4x4.size(), nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    ASSERT_GL_NO_ERROR();
+
+    drawTexture();
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::red, kPixelTolerance);
+    EXPECT_PIXEL_COLOR_NEAR(0, getWindowHeight() - 1, GLColor::red, kPixelTolerance);
+    EXPECT_PIXEL_COLOR_NEAR(getWindowWidth() - 1, 0, GLColor::green, kPixelTolerance);
+    EXPECT_PIXEL_COLOR_NEAR(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green,
+                            kPixelTolerance);
+
+    // Destroy the data
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, kBC7BlackData4x4.size(), kBC7BlackData4x4.data(),
+                 GL_STREAM_DRAW);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, 4, 4, 0,
+                           kBC7BlackData4x4.size(), nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    drawTexture();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+
+    // Initialize again.  This time, the texture's image is already allocated, so the PBO data
+    // upload could be directly done.
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, kBC7Data4x4.size(), kBC7Data4x4.data(), GL_STREAM_DRAW);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, 4, 4, 0,
+                           kBC7Data4x4.size(), nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    drawTexture();
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::red, kPixelTolerance);
+    EXPECT_PIXEL_COLOR_NEAR(0, getWindowHeight() - 1, GLColor::red, kPixelTolerance);
+    EXPECT_PIXEL_COLOR_NEAR(getWindowWidth() - 1, 0, GLColor::green, kPixelTolerance);
+    EXPECT_PIXEL_COLOR_NEAR(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green,
+                            kPixelTolerance);
 }
 
 // Test uploading texture data from a PBO to a texture allocated with texStorage2D.
@@ -369,4 +450,5 @@ TEST_P(BPTCCompressedTextureTestES3, CompressedTexSubImage3DValidation)
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(BPTCCompressedTextureTest);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BPTCCompressedTextureTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(BPTCCompressedTextureTestES3);
