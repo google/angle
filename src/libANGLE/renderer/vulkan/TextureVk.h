@@ -303,7 +303,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                         const vk::Format &format,
                         uint32_t imageLevelOffset,
                         uint32_t imageLayerOffset,
-                        gl::LevelIndex imageBaseLevel,
                         bool selfOwned);
     void updateImageHelper(ContextVk *contextVk, size_t imageCopyBufferAlignment);
     vk::ImageViewHelper &getImageViews()
