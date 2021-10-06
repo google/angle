@@ -299,6 +299,7 @@ inline unsigned short float32ToFloat11(float fp32)
             // Convert it to a denormalized value.
             const unsigned int shift = (float32ExponentBias - float11ExponentBias) -
                                        (float32Val >> float32ExponentFirstBit);
+            ASSERT(shift < 32);
             float32Val =
                 ((1 << float32ExponentFirstBit) | (float32Val & float32MantissaMask)) >> shift;
         }
@@ -378,6 +379,7 @@ inline unsigned short float32ToFloat10(float fp32)
             // Convert it to a denormalized value.
             const unsigned int shift = (float32ExponentBias - float10ExponentBias) -
                                        (float32Val >> float32ExponentFirstBit);
+            ASSERT(shift < 32);
             float32Val =
                 ((1 << float32ExponentFirstBit) | (float32Val & float32MantissaMask)) >> shift;
         }
