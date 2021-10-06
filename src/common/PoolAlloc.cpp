@@ -207,6 +207,7 @@ void PoolAllocator::initialize(int pageSize, int alignment)
     mCurrentPageOffset = mPageSize;
 
 #else  // !defined(ANGLE_DISABLE_POOL_ALLOC)
+    mAlignmentMask = mAlignment - 1;
     mStack.push_back({});
 #endif
 }
