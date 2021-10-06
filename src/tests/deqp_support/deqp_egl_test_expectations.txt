@@ -329,3 +329,18 @@
 // Crashes
 6485 MAC METAL : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
 
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_s8_stencil_buffer = SKIP
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.image.modify.android_native_s8_renderbuffer_clear_stencil = SKIP
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.get_frame_timestamps.* = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.image.create.gles3_android_native_array_rgb565_texture_array = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.image.create.gles3_android_native_array_rgb8_texture_array = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.image.create.gles3_android_native_array_rgba8_texture_array = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.wide_color.* = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_red_value = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_green_value = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_blue_value = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_red_value = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_green_value = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_blue_value = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.thread_cleanup.multi_context_* = FAIL
+6528 PIXEL4ORXL GLES : dEQP-EGL.functional.thread_cleanup.single_context_* = FAIL

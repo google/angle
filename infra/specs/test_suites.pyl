@@ -44,27 +44,26 @@
       },
     },
 
-    # Android-only. Temporarily disabled.
-    # 'angle_deqp_egl_gles_gtests': {
-    #   'angle_deqp_egl_gles_tests': {
-    #     'args': [
-    #       'angle_deqp_egl_tests',
-    #       '--use-angle=gles',
-    #     ],
-    #     'android_args': [
-    #       '-v',
-    #       '--shard-timeout=500',
-    #     ],
-    #     'android_swarming': {
-    #       'shards': 4,
-    #     },
-    #     'merge': {
-    #       'script': '//scripts/angle_deqp_test_merge.py',
-    #     },
-    #     'test': 'angle_deqp_egl_tests',
-    #     'use_isolated_scripts_api': True,
-    #   },
-    # },
+    'angle_deqp_egl_gles_gtests': {
+      'angle_deqp_egl_gles_tests': {
+        'args': [
+          'angle_deqp_egl_tests',
+          '--use-angle=gles',
+        ],
+        'android_args': [
+          '-v',
+          '--shard-timeout=500',
+        ],
+        'android_swarming': {
+          'shards': 4,
+        },
+        'merge': {
+          'script': '//scripts/angle_deqp_test_merge.py',
+        },
+        'test': 'angle_deqp_egl_tests',
+        'use_isolated_scripts_api': True,
+      },
+    },
 
     'angle_deqp_egl_metal_gtests': {
       'angle_deqp_egl_metal_tests': {
@@ -138,30 +137,26 @@
       },
     },
 
-    # Android-only. Temporarily disabled.
-    # 'angle_deqp_gles2_gles_gtests': {
-    #   'angle_deqp_gles2_gles_tests': {
-    #     'args': [
-    #       'angle_deqp_gles2_tests',
-    #       '--use-angle=gles',
-    #     ],
-    #     'android_args': [
-    #       '-v',
-    #       '--shard-timeout=500',
-    #     ],
-    #     'android_swarming': {
-    #       'shards': 4,
-    #     },
-    #     'desktop_args': [
-    #       '--bot-mode',
-    #     ],
-    #     'merge': {
-    #       'script': '//scripts/angle_deqp_test_merge.py',
-    #     },
-    #     'test': 'angle_deqp_gles2_tests',
-    #     'use_isolated_scripts_api': True,
-    #   },
-    # },
+    'angle_deqp_gles2_gles_gtests': {
+      'angle_deqp_gles2_gles_tests': {
+        'args': [
+          'angle_deqp_gles2_tests',
+          '--use-angle=gles',
+        ],
+        'android_args': [
+          '-v',
+          '--shard-timeout=500',
+        ],
+        'android_swarming': {
+          'shards': 4,
+        },
+        'merge': {
+          'script': '//scripts/angle_deqp_test_merge.py',
+        },
+        'test': 'angle_deqp_gles2_tests',
+        'use_isolated_scripts_api': True,
+      },
+    },
 
     'angle_deqp_gles2_metal_gtests': {
       'angle_deqp_gles2_metal_tests': {
@@ -416,27 +411,26 @@
       },
     },
 
-    # Android-only. Temporarily disabled.
-    # 'angle_deqp_gles3_gles_gtests': {
-    #   'angle_deqp_gles3_gles_tests': {
-    #     'args': [
-    #       'angle_deqp_gles3_tests',
-    #       '--use-angle=gles',
-    #     ],
-    #     'android_args': [
-    #       '-v',
-    #       '--shard-timeout=500',
-    #     ],
-    #     'android_swarming': {
-    #       'shards': 12,
-    #     },
-    #     'merge': {
-    #       'script': '//scripts/angle_deqp_test_merge.py',
-    #     },
-    #     'test': 'angle_deqp_gles3_tests',
-    #     'use_isolated_scripts_api': True,
-    #   },
-    # },
+    'angle_deqp_gles3_gles_gtests': {
+      'angle_deqp_gles3_gles_tests': {
+        'args': [
+          'angle_deqp_gles3_tests',
+          '--use-angle=gles',
+        ],
+        'android_args': [
+          '-v',
+          '--shard-timeout=500',
+        ],
+        'android_swarming': {
+          'shards': 12,
+        },
+        'merge': {
+          'script': '//scripts/angle_deqp_test_merge.py',
+        },
+        'test': 'angle_deqp_gles3_tests',
+        'use_isolated_scripts_api': True,
+      },
+    },
 
     'angle_deqp_gles3_metal_gtests': {
       'angle_deqp_gles3_metal_tests': {
@@ -1057,11 +1051,14 @@
 
   'compound_suites': {
     'android_gtests': [
+      'angle_deqp_egl_gles_gtests',
       'angle_deqp_egl_vulkan_gtests',
+      'angle_deqp_gles2_gles_gtests',
       'angle_deqp_gles2_vulkan_gtests',
       'angle_deqp_gles2_vulkan_spirvgen_gtests',
       'angle_deqp_gles31_vulkan_gtests',
       'angle_deqp_gles31_vulkan_spirvgen_gtests',
+      'angle_deqp_gles3_gles_gtests',
       'angle_deqp_gles3_vulkan_gtests',
       'angle_deqp_gles3_vulkan_spirvgen_gtests',
       'angle_deqp_khr_gles2_vulkan_gtests',

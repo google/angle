@@ -750,3 +750,6 @@
 5990 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.output_types.user_ptr_0_0_fixed4_vec3_dynamic_draw_quads_256 = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.output_types.user_ptr_0_0_float4_vec2_dynamic_draw_quads_256 = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_fixed2_vec2_static_draw_quads_256 = SKIP
+
+6528 PIXEL4ORXL GLES : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_vertex = FAIL
+6528 PIXEL4ORXL GLES : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_vertex = FAIL

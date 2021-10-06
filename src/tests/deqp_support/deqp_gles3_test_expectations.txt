@@ -1892,3 +1892,10 @@
 5990 PIXEL4ORXL VULKAN : dEQP-GLES3.functional.texture.wrap.etc2_srgb8_punchthrough_alpha1.repeat_repeat_linear_pot = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES3.functional.texture.wrap.etc2_srgb8_punchthrough_alpha1.repeat_repeat_nearest_npot = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES3.functional.texture.wrap.etc2_srgb8_punchthrough_alpha1.repeat_repeat_nearest_pot = SKIP
+
+6528 PIXEL4ORXL GLES : dEQP-GLES3.functional.multisample.fbo_4_samples.* = FAIL
+6528 PIXEL4ORXL GLES : dEQP-GLES3.functional.multisample.fbo_max_samples.* = FAIL
+6528 PIXEL4ORXL GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.lines.3 = FAIL
+6528 PIXEL4ORXL GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.triangles.8 = FAIL
+6528 PIXEL4ORXL GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.triangles.10 = FAIL
+6528 PIXEL4ORXL GLES : dEQP-GLES3.functional.transform_feedback.random_full_array_capture.* = FAIL
