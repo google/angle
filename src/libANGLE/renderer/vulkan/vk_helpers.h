@@ -1633,13 +1633,41 @@ class ImageHelper final : public Resource, public angle::Subject
     VkImageType getType() const { return mImageType; }
     const VkExtent3D &getExtents() const { return mExtents; }
     const VkExtent3D getRotatedExtents() const;
-    uint32_t getLayerCount() const { return mLayerCount; }
-    uint32_t getLevelCount() const { return mLevelCount; }
-    angle::FormatID getIntendedFormatID() const { return mIntendedFormatID; }
-    const angle::Format &getIntendedFormat() const { return angle::Format::Get(mIntendedFormatID); }
-    angle::FormatID getActualFormatID() const { return mActualFormatID; }
-    VkFormat getActualVkFormat() const { return GetVkFormatFromFormatID(mActualFormatID); }
-    const angle::Format &getActualFormat() const { return angle::Format::Get(mActualFormatID); }
+    uint32_t getLayerCount() const
+    {
+        ASSERT(valid());
+        return mLayerCount;
+    }
+    uint32_t getLevelCount() const
+    {
+        ASSERT(valid());
+        return mLevelCount;
+    }
+    angle::FormatID getIntendedFormatID() const
+    {
+        ASSERT(valid());
+        return mIntendedFormatID;
+    }
+    const angle::Format &getIntendedFormat() const
+    {
+        ASSERT(valid());
+        return angle::Format::Get(mIntendedFormatID);
+    }
+    angle::FormatID getActualFormatID() const
+    {
+        ASSERT(valid());
+        return mActualFormatID;
+    }
+    VkFormat getActualVkFormat() const
+    {
+        ASSERT(valid());
+        return GetVkFormatFromFormatID(mActualFormatID);
+    }
+    const angle::Format &getActualFormat() const
+    {
+        ASSERT(valid());
+        return angle::Format::Get(mActualFormatID);
+    }
     bool hasEmulatedImageChannels() const;
     bool hasEmulatedImageFormat() const { return mActualFormatID != mIntendedFormatID; }
     GLint getSamples() const { return mSamples; }
@@ -1877,8 +1905,11 @@ class ImageHelper final : public Resource, public angle::Subject
     // Returns true if the image is owned by an external API or instance.
     bool isReleasedToExternal() const;
 
-    gl::LevelIndex getFirstAllocatedLevel() const { return mFirstAllocatedLevel; }
-    void setFirstAllocatedLevel(gl::LevelIndex firstLevel);
+    gl::LevelIndex getFirstAllocatedLevel() const
+    {
+        ASSERT(valid());
+        return mFirstAllocatedLevel;
+    }
     gl::LevelIndex getLastAllocatedLevel() const;
     LevelIndex toVkLevel(gl::LevelIndex levelIndexGL) const;
     gl::LevelIndex toGLLevel(LevelIndex levelIndexVk) const;

@@ -4760,7 +4760,7 @@ angle::Result ImageHelper::initStaging(Context *context,
     imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.flags                 = hasProtectedContent ? VK_IMAGE_CREATE_PROTECTED_BIT : 0;
     imageInfo.imageType             = mImageType;
-    imageInfo.format                = getActualVkFormat();
+    imageInfo.format                = GetVkFormatFromFormatID(actualFormatID);
     imageInfo.extent                = mExtents;
     imageInfo.mipLevels             = mLevelCount;
     imageInfo.arrayLayers           = mLayerCount;
@@ -4844,7 +4844,7 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
 
 VkImageAspectFlags ImageHelper::getAspectFlags() const
 {
-    return GetFormatAspectFlags(getActualFormat());
+    return GetFormatAspectFlags(angle::Format::Get(mActualFormatID));
 }
 
 bool ImageHelper::isCombinedDepthStencilFormat() const
@@ -5005,12 +5005,6 @@ bool ImageHelper::isReleasedToExternal() const
     // TODO(anglebug.com/4635): Implement external memory barriers on Mac/Android.
     return false;
 #endif
-}
-
-void ImageHelper::setFirstAllocatedLevel(gl::LevelIndex firstLevel)
-{
-    ASSERT(!valid());
-    mFirstAllocatedLevel = firstLevel;
 }
 
 LevelIndex ImageHelper::toVkLevel(gl::LevelIndex levelIndexGL) const
