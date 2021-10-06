@@ -469,9 +469,8 @@ inline float float10ToFloat32(unsigned short fp10)
     }
 }
 
-// Convers to and from float and 16.16 fixed point format.
-
-inline float ConvertFixedToFloat(uint32_t fixedInput)
+// Converts to and from float and 16.16 fixed point format.
+inline float ConvertFixedToFloat(int32_t fixedInput)
 {
     return static_cast<float>(fixedInput) / 65536.0f;
 }
