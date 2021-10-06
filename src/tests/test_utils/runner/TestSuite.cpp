@@ -176,6 +176,7 @@ const char *ResultTypeToString(TestResultType type)
         case TestResultType::Timeout:
             return "TIMEOUT";
         case TestResultType::Unknown:
+        default:
             return "UNKNOWN";
     }
 }
@@ -2001,6 +2002,7 @@ const char *TestResultTypeToString(TestResultType type)
         case TestResultType::Timeout:
             return "Timeout";
         case TestResultType::Unknown:
+        default:
             return "Unknown";
     }
 }

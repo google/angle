@@ -61,6 +61,9 @@ config("glmark2_common_config") {
 
         # A warning generated in scene-effect-2d in vec2::calc_offset
         "/wd4146",
+
+        # Needs to be explicitly disabled after http://crrev.com/c/3189512
+        "/wd4312",
       ]
     }
   }

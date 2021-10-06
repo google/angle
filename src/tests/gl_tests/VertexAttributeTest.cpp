@@ -2615,8 +2615,9 @@ TEST_P(VertexAttributeTestES31, OnlyUpdateBindingByVertexAttribPointer)
                  GL_STATIC_DRAW);
 
     // Only update the binding kTestBinding in the second draw by VertexAttribPointer.
-    glVertexAttribPointer(kTestBinding, 1, GL_FLOAT, GL_FALSE, 0,
-                          reinterpret_cast<const void *>(kTestFloatOffset2 * kFloatStride));
+    glVertexAttribPointer(
+        kTestBinding, 1, GL_FLOAT, GL_FALSE, 0,
+        reinterpret_cast<const void *>(static_cast<uintptr_t>(kTestFloatOffset2 * kFloatStride)));
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
     checkPixels();
@@ -3311,7 +3312,7 @@ void main()
     glVertexAttribPointer(posLoc, 4, GL_FLOAT, GL_FALSE, stride, nullptr);
     glEnableVertexAttribArray(posLoc);
     glVertexAttribPointer(colorLoc, 2, GL_FLOAT, GL_FALSE, stride,
-                          reinterpret_cast<GLvoid *>(kColorOffset));
+                          reinterpret_cast<GLvoid *>(static_cast<uintptr_t>(kColorOffset)));
     glEnableVertexAttribArray(colorLoc);
 
     glDrawArrays(GL_POINTS, 0, numVertices);

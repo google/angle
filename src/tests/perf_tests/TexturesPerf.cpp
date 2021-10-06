@@ -13,6 +13,7 @@
 #include <random>
 #include <sstream>
 
+#include "common/debug.h"
 #include "util/shader_utils.h"
 
 namespace angle
@@ -36,6 +37,9 @@ size_t GetFrequencyValue(Frequency frequency, size_t sometimesValue)
             return std::numeric_limits<size_t>::max();
         case Frequency::Sometimes:
             return sometimesValue;
+        default:
+            UNREACHABLE();
+            return 0;
     }
 }
 
@@ -49,6 +53,9 @@ std::string FrequencyToString(Frequency frequency)
             return "sometimes";
         case Frequency::Never:
             return "never";
+        default:
+            UNREACHABLE();
+            return "";
     }
 }
 

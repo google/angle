@@ -3009,12 +3009,14 @@ void main()
         glUniform1i(uniLoc, 1);
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo1);
         glDrawArrays(GL_TRIANGLES, 0, 6);
-        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid *>(offset));
+        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                     reinterpret_cast<GLvoid *>(static_cast<uintptr_t>(offset)));
         offset += sizeof(GLColor);
         glUniform1i(uniLoc, 2);
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo2);
         glDrawArrays(GL_TRIANGLES, 0, 6);
-        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid *>(offset));
+        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                     reinterpret_cast<GLvoid *>(static_cast<uintptr_t>(offset)));
         offset += sizeof(GLColor);
 
         // Capture the allocations counter after the first run.

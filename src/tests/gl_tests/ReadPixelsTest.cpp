@@ -274,7 +274,7 @@ TEST_P(ReadPixelsPBONVTest, ReadFromFBOWithDataOffset)
 
     // Read (height - 1) rows offset by width * 4.
     glReadPixels(0, 0, mFBOWidth, mFBOHeight - 1, GL_RGBA, GL_UNSIGNED_BYTE,
-                 reinterpret_cast<void *>(mFBOWidth * 4));
+                 reinterpret_cast<void *>(mFBOWidth * static_cast<uintptr_t>(4)));
 
     void *mappedPtr =
         glMapBufferRangeEXT(GL_PIXEL_PACK_BUFFER, 0, 4 * mFBOWidth * mFBOHeight, GL_MAP_READ_BIT);

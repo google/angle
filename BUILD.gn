@@ -224,7 +224,10 @@ config("extra_warnings") {
   }
 
   if (angle_is_winuwp) {
-    cflags += [ "/wd4447" ]  # 'main' signature found without threading model.
+    cflags += [
+      "/wd4091",  # keyword ignored on left of type when no variable is declared
+      "/wd4447",  # 'main' signature found without threading model.
+    ]
   }
 }
 
