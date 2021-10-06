@@ -96,10 +96,6 @@
 // Validation error from EXT_gpu_shader5
 5361 VULKAN : KHR-GLES32.core.gpu_shader5.precise_qualifier = FAIL
 
-// Constant propagaion error with textureGatherOffsets
-5362 VULKAN : KHR-GLES32.core.gpu_shader5.texture_gather_offsets_color = FAIL
-5362 VULKAN : KHR-GLES32.core.gpu_shader5.texture_gather_offsets_depth = FAIL
-
 // Validation error from EXT_copy_image
 5363 VULKAN : KHR-GLES32.core.copy_image.r32i_texture = FAIL
 5363 VULKAN : KHR-GLES32.core.copy_image.r32ui_texture = FAIL

@@ -6609,10 +6609,13 @@ void TParseContext::checkTextureOffset(TIntermAggregate *functionCall)
     if (isTextureGatherOffsets)
     {
         // If textureGatherOffsets, the offsets parameter is an array, which is expected as an
-        // aggregate constructor node.
+        // aggregate constructor node or as a symbol node with a constant value.
         TIntermAggregate *offsetAggregate = offset->getAsAggregate();
+        TIntermSymbol *offsetSymbol       = offset->getAsSymbolNode();
+
         const TConstantUnion *offsetValues =
-            offsetAggregate ? offsetAggregate->getConstantValue() : nullptr;
+            offsetAggregate ? offsetAggregate->getConstantValue()
+                            : offsetSymbol ? offsetSymbol->getConstantValue() : nullptr;
 
         if (offsetValues == nullptr)
         {
@@ -6622,17 +6625,16 @@ void TParseContext::checkTextureOffset(TIntermAggregate *functionCall)
         }
 
         constexpr unsigned int kOffsetsCount = 4;
-        const TType &offsetAggregateType     = offsetAggregate->getType();
-        if (offsetAggregateType.getNumArraySizes() != 1 ||
-            offsetAggregateType.getArraySizes()[0] != kOffsetsCount)
+        const TType &offsetType =
+            offsetAggregate != nullptr ? offsetAggregate->getType() : offsetSymbol->getType();
+        if (offsetType.getNumArraySizes() != 1 || offsetType.getArraySizes()[0] != kOffsetsCount)
         {
             error(functionCall->getLine(), "Texture offsets must be an array of 4 elements",
                   func->name());
             return;
         }
 
-        TIntermNode *firstOffset = offsetAggregate->getSequence()->front();
-        size_t size              = firstOffset->getAsTyped()->getType().getObjectSize();
+        size_t size = offsetType.getObjectSize() / kOffsetsCount;
         for (unsigned int i = 0; i < kOffsetsCount; ++i)
         {
             checkSingleTextureOffset(offset->getLine(), &offsetValues[i * size], size,
