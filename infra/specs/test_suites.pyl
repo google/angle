@@ -933,6 +933,28 @@
         'use_isolated_scripts_api': True,
       },
     },
+
+    'swangle_isolated_scripts': {
+      'angle_restricted_trace_gold_tests': {
+        'args': [
+          '--test-machine-name',
+          '${buildername}',
+          '--swiftshader',
+        ],
+        'linux_args': [
+          '--xvfb',
+          # An X Windows bug sometimes causes flaky connection errors.
+          '--flaky-retries=2',
+        ],
+        'mixins': [
+          'angle_skia_gold_test',
+          'chrome-gpu-gold-service-account',
+        ],
+        'swarming': {
+          'shards': 2,
+        },
+      },
+    },
   },
 
   'compound_suites': {

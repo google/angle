@@ -1047,6 +1047,12 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         {
             mSkipTest = true;
         }
+
+        // Genshin is too large to handle in 32-bit mode.
+        if (!Is64Bit())
+        {
+            mSkipTest = true;
+        }
     }
 
     if (traceNameIs("pubg_mobile_skydive") || traceNameIs("pubg_mobile_battle_royale"))
