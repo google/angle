@@ -389,8 +389,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     angle::Result copySubTextureImpl(ContextVk *contextVk,
                                      const gl::ImageIndex &index,
-                                     const gl::Offset &destOffset,
-                                     const gl::InternalFormat &destFormat,
+                                     const gl::Offset &dstOffset,
+                                     const gl::InternalFormat &dstFormat,
                                      gl::LevelIndex sourceLevelGL,
                                      const gl::Box &sourceBox,
                                      bool unpackFlipY,
@@ -400,8 +400,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     angle::Result copySubImageImplWithTransfer(ContextVk *contextVk,
                                                const gl::ImageIndex &index,
-                                               const gl::Offset &destOffset,
-                                               const vk::Format &destFormat,
+                                               const gl::Offset &dstOffset,
+                                               const vk::Format &dstFormat,
                                                gl::LevelIndex sourceLevelGL,
                                                size_t sourceLayer,
                                                const gl::Box &sourceBox,
@@ -409,8 +409,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     angle::Result copySubImageImplWithDraw(ContextVk *contextVk,
                                            const gl::ImageIndex &index,
-                                           const gl::Offset &destOffset,
-                                           const vk::Format &destFormat,
+                                           const gl::Offset &dstOffset,
+                                           const vk::Format &dstFormat,
                                            gl::LevelIndex sourceLevelGL,
                                            const gl::Box &sourceBox,
                                            bool isSrcFlipY,

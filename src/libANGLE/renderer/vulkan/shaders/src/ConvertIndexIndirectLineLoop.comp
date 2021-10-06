@@ -109,7 +109,7 @@ void PutIndexValue(uint index, uint value)
 #elif Is16Bits || Is8Bits
     // Compute index into dstData for our index value
     uint dstIndex = dstOffsetDiv4 + (index >> IDXSHIFT);
-    // Get dest index value
+    // Get dst index value
     uint srcBlock = dstData[dstIndex];
     // Compute the shift for our index value
     uint srcShift = SRCSHIFT(index);

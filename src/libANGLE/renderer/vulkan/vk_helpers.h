@@ -1457,8 +1457,8 @@ bool FormatHasNecessaryFeature(RendererVk *renderer,
 bool CanCopyWithTransfer(RendererVk *renderer,
                          angle::FormatID srcFormatID,
                          VkImageTiling srcTilingMode,
-                         angle::FormatID destFormatID,
-                         VkImageTiling destTilingMode);
+                         angle::FormatID dstFormatID,
+                         VkImageTiling dstTilingMode);
 
 class ImageHelper final : public Resource, public angle::Subject
 {
@@ -1699,7 +1699,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Resolve this image into a destination image.  This image should be in the TransferSrc layout.
     // The destination image is automatically transitioned into TransferDst.
-    void resolve(ImageHelper *dest, const VkImageResolve &region, CommandBuffer *commandBuffer);
+    void resolve(ImageHelper *dst, const VkImageResolve &region, CommandBuffer *commandBuffer);
 
     // Data staging
     void removeSingleSubresourceStagedUpdates(ContextVk *contextVk,

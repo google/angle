@@ -89,9 +89,9 @@ bool CanCopyWithTransferForTexImage(RendererVk *renderer,
                                     angle::FormatID srcIntendedFormatID,
                                     angle::FormatID srcActualFormatID,
                                     VkImageTiling srcTilingMode,
-                                    angle::FormatID destIntendedFormatID,
-                                    angle::FormatID destActualFormatID,
-                                    VkImageTiling destTilingMode)
+                                    angle::FormatID dstIntendedFormatID,
+                                    angle::FormatID dstActualFormatID,
+                                    VkImageTiling dstTilingMode)
 {
     // For glTex[Sub]Image, only accept same-format transfers.
     // There are cases that two images' actual format is the same, but intended formats are
@@ -99,10 +99,10 @@ bool CanCopyWithTransferForTexImage(RendererVk *renderer,
     // these situations CanCopyWithTransfer will say yes. But if we use transfer to do copy, the
     // alpha channel will be also be copied with source data which is wrong.
     bool isFormatCompatible =
-        srcIntendedFormatID == destIntendedFormatID && srcActualFormatID == destActualFormatID;
+        srcIntendedFormatID == dstIntendedFormatID && srcActualFormatID == dstActualFormatID;
 
     return isFormatCompatible && vk::CanCopyWithTransfer(renderer, srcActualFormatID, srcTilingMode,
-                                                         destActualFormatID, destTilingMode);
+                                                         dstActualFormatID, dstTilingMode);
 }
 
 bool CanCopyWithTransferForCopyTexture(RendererVk *renderer,
@@ -161,14 +161,14 @@ bool CanCopyWithTransferForCopyTexture(RendererVk *renderer,
 bool CanCopyWithDraw(RendererVk *renderer,
                      const angle::FormatID srcFormatID,
                      VkImageTiling srcTilingMode,
-                     const angle::FormatID destFormatID,
+                     const angle::FormatID dstFormatID,
                      VkImageTiling destTilingMode)
 {
     // Checks that the formats in copy by drawing have the appropriate feature bits
     bool srcFormatHasNecessaryFeature = vk::FormatHasNecessaryFeature(
         renderer, srcFormatID, srcTilingMode, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
     bool dstFormatHasNecessaryFeature = vk::FormatHasNecessaryFeature(
-        renderer, destFormatID, destTilingMode, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
+        renderer, dstFormatID, destTilingMode, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
 
     return srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
 }
@@ -603,24 +603,24 @@ angle::Result TextureVk::copyTexture(const gl::Context *context,
     RendererVk *renderer = vk::GetImpl(context)->getRenderer();
 
     TextureVk *sourceVk = vk::GetImpl(source);
-    const gl::ImageDesc &sourceImageDesc =
+    const gl::ImageDesc &srcImageDesc =
         sourceVk->mState.getImageDesc(NonCubeTextureTypeToTarget(source->getType()), sourceLevelGL);
-    gl::Box sourceBox(gl::kOffsetZero, sourceImageDesc.size);
+    gl::Box sourceBox(gl::kOffsetZero, srcImageDesc.size);
 
-    const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
-    const vk::Format &destVkFormat = renderer->getFormat(destFormatInfo.sizedInternalFormat);
+    const gl::InternalFormat &dstFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
+    const vk::Format &dstVkFormat = renderer->getFormat(dstFormatInfo.sizedInternalFormat);
 
-    ANGLE_TRY(redefineLevel(context, index, destVkFormat, sourceImageDesc.size));
+    ANGLE_TRY(redefineLevel(context, index, dstVkFormat, srcImageDesc.size));
 
-    return copySubTextureImpl(vk::GetImpl(context), index, gl::kOffsetZero, destFormatInfo,
+    return copySubTextureImpl(vk::GetImpl(context), index, gl::kOffsetZero, dstFormatInfo,
                               gl::LevelIndex(sourceLevelGL), sourceBox, unpackFlipY,
                               unpackPremultiplyAlpha, unpackUnmultiplyAlpha, sourceVk);
 }
 
 angle::Result TextureVk::copySubTexture(const gl::Context *context,
                                         const gl::ImageIndex &index,
-                                        const gl::Offset &destOffset,
-                                        GLint sourceLevelGL,
+                                        const gl::Offset &dstOffset,
+                                        GLint srcLevelGL,
                                         const gl::Box &sourceBox,
                                         bool unpackFlipY,
                                         bool unpackPremultiplyAlpha,
@@ -628,11 +628,11 @@ angle::Result TextureVk::copySubTexture(const gl::Context *context,
                                         const gl::Texture *source)
 {
     gl::TextureTarget target = index.getTarget();
-    gl::LevelIndex destLevelGL(index.getLevelIndex());
-    const gl::InternalFormat &destFormatInfo =
-        *mState.getImageDesc(target, destLevelGL.get()).format.info;
-    return copySubTextureImpl(vk::GetImpl(context), index, destOffset, destFormatInfo,
-                              gl::LevelIndex(sourceLevelGL), sourceBox, unpackFlipY,
+    gl::LevelIndex dstLevelGL(index.getLevelIndex());
+    const gl::InternalFormat &dstFormatInfo =
+        *mState.getImageDesc(target, dstLevelGL.get()).format.info;
+    return copySubTextureImpl(vk::GetImpl(context), index, dstOffset, dstFormatInfo,
+                              gl::LevelIndex(srcLevelGL), sourceBox, unpackFlipY,
                               unpackPremultiplyAlpha, unpackUnmultiplyAlpha, vk::GetImpl(source));
 }
 
@@ -746,14 +746,13 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
 
     RenderTargetVk *colorReadRT = framebufferVk->getColorReadRenderTarget();
 
-    angle::FormatID srcIntendedFormatID  = colorReadRT->getImageIntendedFormatID();
-    angle::FormatID srcActualFormatID    = colorReadRT->getImageActualFormatID();
-    VkImageTiling srcTilingMode          = colorReadRT->getImageForCopy().getTilingMode();
-    const vk::Format &destFormat         = renderer->getFormat(internalFormat.sizedInternalFormat);
-    angle::FormatID destIntendedFormatID = destFormat.getIntendedFormatID();
-    angle::FormatID destActualFormatID =
-        destFormat.getActualImageFormatID(getRequiredImageAccess());
-    VkImageTiling destTilingMode = getTilingMode();
+    angle::FormatID srcIntendedFormatID = colorReadRT->getImageIntendedFormatID();
+    angle::FormatID srcActualFormatID   = colorReadRT->getImageActualFormatID();
+    VkImageTiling srcTilingMode         = colorReadRT->getImageForCopy().getTilingMode();
+    const vk::Format &dstFormat         = renderer->getFormat(internalFormat.sizedInternalFormat);
+    angle::FormatID dstIntendedFormatID = dstFormat.getIntendedFormatID();
+    angle::FormatID dstActualFormatID = dstFormat.getActualImageFormatID(getRequiredImageAccess());
+    VkImageTiling destTilingMode      = getTilingMode();
 
     bool isViewportFlipY = contextVk->isViewportFlipEnabledForReadFBO();
 
@@ -763,16 +762,16 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     // If it's possible to perform the copy with a transfer, that's the best option.
     if (!isViewportFlipY && CanCopyWithTransferForTexImage(
                                 renderer, srcIntendedFormatID, srcActualFormatID, srcTilingMode,
-                                destIntendedFormatID, destActualFormatID, destTilingMode))
+                                dstIntendedFormatID, dstActualFormatID, destTilingMode))
     {
         return copySubImageImplWithTransfer(contextVk, offsetImageIndex, modifiedDestOffset,
-                                            destFormat, colorReadRT->getLevelIndex(),
+                                            dstFormat, colorReadRT->getLevelIndex(),
                                             colorReadRT->getLayerIndex(), clippedSourceBox,
                                             &colorReadRT->getImageForCopy());
     }
 
     // If it's possible to perform the copy with a draw call, do that.
-    if (CanCopyWithDraw(renderer, srcActualFormatID, srcTilingMode, destActualFormatID,
+    if (CanCopyWithDraw(renderer, srcActualFormatID, srcTilingMode, dstActualFormatID,
                         destTilingMode))
     {
         // Layer count can only be 1 as the source is a framebuffer.
@@ -781,7 +780,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         const vk::ImageView *copyImageView = nullptr;
         ANGLE_TRY(colorReadRT->getAndRetainCopyImageView(contextVk, &copyImageView));
 
-        return copySubImageImplWithDraw(contextVk, offsetImageIndex, modifiedDestOffset, destFormat,
+        return copySubImageImplWithDraw(contextVk, offsetImageIndex, modifiedDestOffset, dstFormat,
                                         colorReadRT->getLevelIndex(), clippedSourceBox,
                                         isViewportFlipY, false, false, false,
                                         &colorReadRT->getImageForCopy(), copyImageView,
@@ -794,7 +793,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     // Use context's staging buffer if possible
     vk::DynamicBuffer *contextStagingBuffer = nullptr;
     if (mImage->valid() &&
-        !shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex()), destActualFormatID))
+        !shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex()), dstActualFormatID))
     {
         contextStagingBuffer = contextVk->getStagingBuffer();
     }
@@ -815,8 +814,8 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
 
 angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
                                             const gl::ImageIndex &index,
-                                            const gl::Offset &destOffset,
-                                            const gl::InternalFormat &destFormat,
+                                            const gl::Offset &dstOffset,
+                                            const gl::InternalFormat &dstFormat,
                                             gl::LevelIndex sourceLevelGL,
                                             const gl::Box &sourceBox,
                                             bool unpackFlipY,
@@ -828,31 +827,31 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
 
     ANGLE_TRY(source->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
-    const angle::Format &sourceIntendedFormat = source->getImage().getIntendedFormat();
-    angle::FormatID sourceFormatID            = source->getImage().getActualFormatID();
-    VkImageTiling srcTilingMode               = source->getImage().getTilingMode();
-    const vk::Format &destVkFormat            = renderer->getFormat(destFormat.sizedInternalFormat);
-    angle::FormatID destFormatID = destVkFormat.getActualImageFormatID(getRequiredImageAccess());
-    VkImageTiling destTilingMode = getTilingMode();
+    const angle::Format &srcIntendedFormat = source->getImage().getIntendedFormat();
+    angle::FormatID srcFormatID            = source->getImage().getActualFormatID();
+    VkImageTiling srcTilingMode            = source->getImage().getTilingMode();
+    const vk::Format &dstVkFormat          = renderer->getFormat(dstFormat.sizedInternalFormat);
+    angle::FormatID dstFormatID = dstVkFormat.getActualImageFormatID(getRequiredImageAccess());
+    VkImageTiling dstTilingMode = getTilingMode();
 
     const gl::ImageIndex offsetImageIndex = getNativeImageIndex(index);
 
     // If it's possible to perform the copy with a transfer, that's the best option.
     if (!unpackFlipY && !unpackPremultiplyAlpha && !unpackUnmultiplyAlpha &&
         CanCopyWithTransferForCopyTexture(renderer, source->getImage(), srcTilingMode,
-                                          destVkFormat.getIntendedFormatID(), destFormatID,
-                                          destTilingMode))
+                                          dstVkFormat.getIntendedFormatID(), dstFormatID,
+                                          dstTilingMode))
     {
-        return copySubImageImplWithTransfer(contextVk, offsetImageIndex, destOffset, destVkFormat,
+        return copySubImageImplWithTransfer(contextVk, offsetImageIndex, dstOffset, dstVkFormat,
                                             sourceLevelGL, sourceBox.z, sourceBox,
                                             &source->getImage());
     }
 
     // If it's possible to perform the copy with a draw call, do that.
-    if (CanCopyWithDraw(renderer, sourceFormatID, srcTilingMode, destFormatID, destTilingMode))
+    if (CanCopyWithDraw(renderer, srcFormatID, srcTilingMode, dstFormatID, dstTilingMode))
     {
         return copySubImageImplWithDraw(
-            contextVk, offsetImageIndex, destOffset, destVkFormat, sourceLevelGL, sourceBox, false,
+            contextVk, offsetImageIndex, dstOffset, dstVkFormat, sourceLevelGL, sourceBox, false,
             unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha, &source->getImage(),
             &source->getCopyImageViewAndRecordUse(contextVk), SurfaceRotation::Identity);
     }
@@ -865,17 +864,17 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     ANGLE_TRY(source->copyImageDataToBufferAndGetData(contextVk, sourceLevelGL, sourceBox.depth,
                                                       sourceBox, &sourceData));
 
-    const angle::Format &sourceTextureFormat = source->getImage().getActualFormat();
-    const angle::Format &destTextureFormat =
-        destVkFormat.getActualImageFormat(getRequiredImageAccess());
+    const angle::Format &srcTextureFormat = source->getImage().getActualFormat();
+    const angle::Format &dstTextureFormat =
+        dstVkFormat.getActualImageFormat(getRequiredImageAccess());
     size_t destinationAllocationSize =
-        sourceBox.width * sourceBox.height * sourceBox.depth * destTextureFormat.pixelBytes;
+        sourceBox.width * sourceBox.height * sourceBox.depth * dstTextureFormat.pixelBytes;
 
     // Allocate memory in the destination texture for the copy/conversion
     uint32_t stagingBaseLayer =
-        offsetImageIndex.hasLayer() ? offsetImageIndex.getLayerIndex() : destOffset.z;
+        offsetImageIndex.hasLayer() ? offsetImageIndex.getLayerIndex() : dstOffset.z;
     uint32_t stagingLayerCount = sourceBox.depth;
-    gl::Offset stagingOffset   = destOffset;
+    gl::Offset stagingOffset   = dstOffset;
     gl::Extents stagingExtents(sourceBox.width, sourceBox.height, sourceBox.depth);
     bool is3D = gl_vk::GetImageType(mState.getType()) == VK_IMAGE_TYPE_3D;
 
@@ -896,7 +895,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     // Use context's staging buffer if possible
     vk::DynamicBuffer *contextStagingBuffer = nullptr;
     if (mImage->valid() &&
-        !shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex()), destFormatID))
+        !shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex()), dstFormatID))
     {
         contextStagingBuffer = contextVk->getStagingBuffer();
     }
@@ -904,36 +903,35 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     uint8_t *destData = nullptr;
     ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
         contextVk, destinationAllocationSize, stagingIndex, stagingExtents, stagingOffset,
-        &destData, contextStagingBuffer, destFormatID));
+        &destData, contextStagingBuffer, dstFormatID));
 
-    // Source and dest data is tightly packed
-    GLuint sourceDataRowPitch = sourceBox.width * sourceTextureFormat.pixelBytes;
-    GLuint destDataRowPitch   = sourceBox.width * destTextureFormat.pixelBytes;
+    // Source and dst data is tightly packed
+    GLuint srcDataRowPitch = sourceBox.width * srcTextureFormat.pixelBytes;
+    GLuint dstDataRowPitch = sourceBox.width * dstTextureFormat.pixelBytes;
 
-    GLuint sourceDataDepthPitch = sourceDataRowPitch * sourceBox.height;
-    GLuint destDataDepthPitch   = destDataRowPitch * sourceBox.height;
+    GLuint srcDataDepthPitch = srcDataRowPitch * sourceBox.height;
+    GLuint dstDataDepthPitch = dstDataRowPitch * sourceBox.height;
 
-    rx::PixelReadFunction pixelReadFunction   = sourceTextureFormat.pixelReadFunction;
-    rx::PixelWriteFunction pixelWriteFunction = destTextureFormat.pixelWriteFunction;
+    rx::PixelReadFunction pixelReadFunction   = srcTextureFormat.pixelReadFunction;
+    rx::PixelWriteFunction pixelWriteFunction = dstTextureFormat.pixelWriteFunction;
 
     // Fix up the read/write functions for the sake of luminance/alpha that are emulated with
     // formats whose channels don't correspond to the original format (alpha is emulated with red,
     // and luminance/alpha is emulated with red/green).
-    if (sourceIntendedFormat.isLUMA())
+    if (srcIntendedFormat.isLUMA())
     {
-        pixelReadFunction = sourceIntendedFormat.pixelReadFunction;
+        pixelReadFunction = srcIntendedFormat.pixelReadFunction;
     }
-    if (destVkFormat.getIntendedFormat().isLUMA())
+    if (dstVkFormat.getIntendedFormat().isLUMA())
     {
-        pixelWriteFunction = destVkFormat.getIntendedFormat().pixelWriteFunction;
+        pixelWriteFunction = dstVkFormat.getIntendedFormat().pixelWriteFunction;
     }
 
-    CopyImageCHROMIUM(sourceData, sourceDataRowPitch, sourceTextureFormat.pixelBytes,
-                      sourceDataDepthPitch, pixelReadFunction, destData, destDataRowPitch,
-                      destTextureFormat.pixelBytes, destDataDepthPitch, pixelWriteFunction,
-                      destFormat.format, destFormat.componentType, sourceBox.width,
-                      sourceBox.height, sourceBox.depth, unpackFlipY, unpackPremultiplyAlpha,
-                      unpackUnmultiplyAlpha);
+    CopyImageCHROMIUM(sourceData, srcDataRowPitch, srcTextureFormat.pixelBytes, srcDataDepthPitch,
+                      pixelReadFunction, destData, dstDataRowPitch, dstTextureFormat.pixelBytes,
+                      dstDataDepthPitch, pixelWriteFunction, dstFormat.format,
+                      dstFormat.componentType, sourceBox.width, sourceBox.height, sourceBox.depth,
+                      unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 
     if (contextStagingBuffer)
     {
@@ -945,8 +943,8 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
 
 angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
                                                       const gl::ImageIndex &index,
-                                                      const gl::Offset &destOffset,
-                                                      const vk::Format &destFormat,
+                                                      const gl::Offset &dstOffset,
+                                                      const vk::Format &dstFormat,
                                                       gl::LevelIndex sourceLevelGL,
                                                       size_t sourceLayer,
                                                       const gl::Box &sourceBox,
@@ -955,7 +953,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     gl::LevelIndex level(index.getLevelIndex());
-    uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : destOffset.z;
+    uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : dstOffset.z;
     uint32_t layerCount = sourceBox.depth;
 
     gl::Offset srcOffset = {sourceBox.x, sourceBox.y, sourceBox.z};
@@ -984,11 +982,11 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
         srcOffset.z = 0;
     }
 
-    gl::Offset destOffsetModified = destOffset;
+    gl::Offset dstOffsetModified = dstOffset;
     if (!isDest3D)
     {
         // If destination is not 3D, destination offset must be 0.
-        destOffsetModified.z = 0;
+        dstOffsetModified.z = 0;
     }
 
     // Perform self-copies through a staging buffer.
@@ -997,7 +995,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
 
     // If destination is valid, copy the source directly into it.
     if (mImage->valid() &&
-        !shouldUpdateBeStaged(level, destFormat.getActualImageFormatID(getRequiredImageAccess())) &&
+        !shouldUpdateBeStaged(level, dstFormat.getActualImageFormatID(getRequiredImageAccess())) &&
         !isSelfCopy)
     {
         // Make sure any updates to the image are already flushed.
@@ -1025,7 +1023,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
             extents.depth = 1;
         }
 
-        vk::ImageHelper::Copy(srcImage, mImage, srcOffset, destOffsetModified, extents,
+        vk::ImageHelper::Copy(srcImage, mImage, srcOffset, dstOffsetModified, extents,
                               srcSubresource, destSubresource, commandBuffer);
     }
     else
@@ -1036,8 +1034,8 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
 
         ANGLE_TRY(stagingImage->get().init2DStaging(
             contextVk, mState.hasProtectedContent(), renderer->getMemoryProperties(),
-            gl::Extents(sourceBox.width, sourceBox.height, 1), destFormat.getIntendedFormatID(),
-            destFormat.getActualImageFormatID(getRequiredImageAccess()), kTransferStagingImageFlags,
+            gl::Extents(sourceBox.width, sourceBox.height, 1), dstFormat.getIntendedFormatID(),
+            dstFormat.getActualImageFormatID(getRequiredImageAccess()), kTransferStagingImageFlags,
             layerCount));
 
         access.onImageTransferWrite(gl::LevelIndex(0), 1, 0, layerCount, VK_IMAGE_ASPECT_COLOR_BIT,
@@ -1066,7 +1064,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
         const gl::ImageIndex stagingIndex =
             gl::ImageIndex::Make2DArrayRange(level.get(), baseLayer, layerCount);
         mImage->stageSubresourceUpdateFromImage(stagingImage.release(), stagingIndex,
-                                                vk::LevelIndex(0), destOffsetModified, extents,
+                                                vk::LevelIndex(0), dstOffsetModified, extents,
                                                 imageType);
     }
 
@@ -1075,8 +1073,8 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
 
 angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
                                                   const gl::ImageIndex &index,
-                                                  const gl::Offset &destOffset,
-                                                  const vk::Format &destFormat,
+                                                  const gl::Offset &dstOffset,
+                                                  const vk::Format &dstFormat,
                                                   gl::LevelIndex sourceLevelGL,
                                                   const gl::Box &sourceBox,
                                                   bool isSrcFlipY,
@@ -1137,18 +1135,18 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
     params.srcOffset[1]        = rotatedSourceBox.y;
     params.srcExtents[0]       = rotatedSourceBox.width;
     params.srcExtents[1]       = rotatedSourceBox.height;
-    params.destOffset[0]       = destOffset.x;
-    params.destOffset[1]       = destOffset.y;
+    params.dstOffset[0]        = dstOffset.x;
+    params.dstOffset[1]        = dstOffset.y;
     params.srcMip              = srcImage->toVkLevel(sourceLevelGL).get();
     params.srcHeight           = srcExtents.height;
     params.dstMip              = level;
     params.srcPremultiplyAlpha = unpackPremultiplyAlpha && !unpackUnmultiplyAlpha;
     params.srcUnmultiplyAlpha  = unpackUnmultiplyAlpha && !unpackPremultiplyAlpha;
     params.srcFlipY            = isSrcFlipY;
-    params.destFlipY           = unpackFlipY;
+    params.dstFlipY            = unpackFlipY;
     params.srcRotation         = srcFramebufferRotation;
 
-    uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : destOffset.z;
+    uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : dstOffset.z;
     uint32_t layerCount = sourceBox.depth;
 
     gl::Extents extents = {sourceBox.width, sourceBox.height, sourceBox.depth};
@@ -1162,13 +1160,13 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
     params.srcColorEncoding =
         gl::GetSizedInternalFormatInfo(srcImage->getIntendedFormat().glInternalFormat)
             .colorEncoding;
-    params.destColorEncoding =
-        gl::GetSizedInternalFormatInfo(destFormat.getIntendedFormat().glInternalFormat)
+    params.dstColorEncoding =
+        gl::GetSizedInternalFormatInfo(dstFormat.getIntendedFormat().glInternalFormat)
             .colorEncoding;
 
     // If destination is valid, copy the source directly into it.
     if (mImage->valid() &&
-        !shouldUpdateBeStaged(level, destFormat.getActualImageFormatID(getRequiredImageAccess())) &&
+        !shouldUpdateBeStaged(level, dstFormat.getActualImageFormatID(getRequiredImageAccess())) &&
         !isSelfCopy)
     {
         // Make sure any updates to the image are already flushed.
@@ -1196,12 +1194,12 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
 
         ANGLE_TRY(stagingImage->get().init2DStaging(
             contextVk, mState.hasProtectedContent(), renderer->getMemoryProperties(),
-            gl::Extents(sourceBox.width, sourceBox.height, 1), destFormat.getIntendedFormatID(),
-            destFormat.getActualImageFormatID(getRequiredImageAccess()), kDrawStagingImageFlags,
+            gl::Extents(sourceBox.width, sourceBox.height, 1), dstFormat.getIntendedFormatID(),
+            dstFormat.getActualImageFormatID(getRequiredImageAccess()), kDrawStagingImageFlags,
             layerCount));
 
-        params.destOffset[0] = 0;
-        params.destOffset[1] = 0;
+        params.dstOffset[0] = 0;
+        params.dstOffset[1] = 0;
 
         for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
         {
@@ -1230,11 +1228,11 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
             extents.depth = 1;
         }
 
-        gl::Offset destOffsetModified = destOffset;
+        gl::Offset dstOffsetModified = dstOffset;
         if (!isDest3D)
         {
             // If destination is not 3D, destination offset must be 0.
-            destOffsetModified.z = 0;
+            dstOffsetModified.z = 0;
         }
 
         // Stage the copy for when the image storage is actually created.
@@ -1242,7 +1240,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
         const gl::ImageIndex stagingIndex =
             gl::ImageIndex::Make2DArrayRange(level.get(), baseLayer, layerCount);
         mImage->stageSubresourceUpdateFromImage(stagingImage.release(), stagingIndex,
-                                                vk::LevelIndex(0), destOffsetModified, extents,
+                                                vk::LevelIndex(0), dstOffsetModified, extents,
                                                 imageType);
     }
 
@@ -1785,17 +1783,16 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
 
     // If the image has more levels than supported, generate as many mips as possible at a time.
     const vk::LevelIndex maxGenerateLevels(UtilsVk::GetGenerateMipmapMaxLevels(contextVk));
-    vk::LevelIndex destMaxLevelVk = mImage->toVkLevel(gl::LevelIndex(mState.getMipmapMaxLevel()));
-    for (vk::LevelIndex destBaseLevelVk =
+    vk::LevelIndex dstMaxLevelVk = mImage->toVkLevel(gl::LevelIndex(mState.getMipmapMaxLevel()));
+    for (vk::LevelIndex dstBaseLevelVk =
              mImage->toVkLevel(gl::LevelIndex(mState.getEffectiveBaseLevel() + 1));
-         destBaseLevelVk <= destMaxLevelVk;
-         destBaseLevelVk = destBaseLevelVk + maxGenerateLevels.get())
+         dstBaseLevelVk <= dstMaxLevelVk; dstBaseLevelVk = dstBaseLevelVk + maxGenerateLevels.get())
     {
         vk::CommandBufferAccess access;
 
         uint32_t writeLevelCount =
-            std::min(maxGenerateLevels.get(), destMaxLevelVk.get() + 1 - destBaseLevelVk.get());
-        access.onImageComputeShaderWrite(mImage->toGLLevel(destBaseLevelVk), writeLevelCount, 0,
+            std::min(maxGenerateLevels.get(), dstMaxLevelVk.get() + 1 - dstBaseLevelVk.get());
+        access.onImageComputeShaderWrite(mImage->toGLLevel(dstBaseLevelVk), writeLevelCount, 0,
                                          mImage->getLayerCount(), VK_IMAGE_ASPECT_COLOR_BIT,
                                          mImage);
 
@@ -1809,31 +1806,31 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
             const vk::ImageView *srcView                         = nullptr;
             UtilsVk::GenerateMipmapDestLevelViews destLevelViews = {};
 
-            const vk::LevelIndex srcLevelVk = destBaseLevelVk - 1;
+            const vk::LevelIndex srcLevelVk = dstBaseLevelVk - 1;
             ANGLE_TRY(getImageViews().getLevelLayerDrawImageView(
                 contextVk, *mImage, srcLevelVk, layer, gl::SrgbWriteControlMode::Default,
                 &srcView));
 
-            vk::LevelIndex destLevelCount = maxGenerateLevels;
+            vk::LevelIndex dstLevelCount = maxGenerateLevels;
             for (vk::LevelIndex levelVk(0); levelVk < maxGenerateLevels; ++levelVk)
             {
-                vk::LevelIndex destLevelVk = destBaseLevelVk + levelVk.get();
+                vk::LevelIndex dstLevelVk = dstBaseLevelVk + levelVk.get();
 
                 // If fewer levels left than maxGenerateLevels, cut the loop short.
-                if (destLevelVk > destMaxLevelVk)
+                if (dstLevelVk > dstMaxLevelVk)
                 {
-                    destLevelCount = levelVk;
+                    dstLevelCount = levelVk;
                     break;
                 }
 
                 ANGLE_TRY(getImageViews().getLevelLayerDrawImageView(
-                    contextVk, *mImage, destLevelVk, layer, gl::SrgbWriteControlMode::Default,
+                    contextVk, *mImage, dstLevelVk, layer, gl::SrgbWriteControlMode::Default,
                     &destLevelViews[levelVk.get()]));
             }
 
             // If the image has fewer than maximum levels, fill the last views with a unused view.
-            ASSERT(destLevelCount > vk::LevelIndex(0));
-            for (vk::LevelIndex levelVk = destLevelCount;
+            ASSERT(dstLevelCount > vk::LevelIndex(0));
+            for (vk::LevelIndex levelVk = dstLevelCount;
                  levelVk < vk::LevelIndex(UtilsVk::kGenerateMipmapMaxLevels); ++levelVk)
             {
                 destLevelViews[levelVk.get()] = destLevelViews[levelVk.get() - 1];
@@ -1842,7 +1839,7 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
             // Generate mipmaps.
             UtilsVk::GenerateMipmapParameters params = {};
             params.srcLevel                          = srcLevelVk.get();
-            params.destLevelCount                    = destLevelCount.get();
+            params.dstLevelCount                     = dstLevelCount.get();
 
             ANGLE_TRY(contextVk->getUtils().generateMipmap(
                 contextVk, mImage, srcView, mImage, destLevelViews, sampler.get().get(), params));
@@ -2148,7 +2145,7 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk,
             contextVk, dstBufferSize, index, mImage->getLevelExtents(levelVk), gl::kOffsetZero,
             &dstData, nullptr, dstFormat.id));
 
-        // Source and dest data is tightly packed
+        // Source and destination data is tightly packed
         GLuint srcDataRowPitch = sourceBox.width * srcFormat.pixelBytes;
         GLuint dstDataRowPitch = sourceBox.width * dstFormat.pixelBytes;
 
@@ -2161,14 +2158,14 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk,
         rx::PixelReadFunction pixelReadFunction   = srcFormat.pixelReadFunction;
         rx::PixelWriteFunction pixelWriteFunction = dstFormat.pixelWriteFunction;
 
-        const gl::InternalFormat &destFormatInfo = *mState.getImageDesc(index).format.info;
+        const gl::InternalFormat &dstFormatInfo = *mState.getImageDesc(index).format.info;
         for (uint32_t layer = 0; layer < layerCount; layer++)
         {
             CopyImageCHROMIUM(srcData + layer * srcDataLayerPitch, srcDataRowPitch,
                               srcFormat.pixelBytes, srcDataDepthPitch, pixelReadFunction,
                               dstData + layer * dstDataLayerPitch, dstDataRowPitch,
                               dstFormat.pixelBytes, dstDataDepthPitch, pixelWriteFunction,
-                              destFormatInfo.format, destFormatInfo.componentType, sourceBox.width,
+                              dstFormatInfo.format, dstFormatInfo.componentType, sourceBox.width,
                               sourceBox.height, sourceBox.depth, false, false, false);
         }
     }

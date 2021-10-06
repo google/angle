@@ -110,7 +110,7 @@ constexpr uint8_t kBlitResolveStencilNoExport_comp_00000000[] = {
 //     bool rotateXY;
 // } params;
 //
-// layout(set = 0, binding = 0)buffer dest
+// layout(set = 0, binding = 0)buffer dst
 // {
 //
 //     uint destData[];

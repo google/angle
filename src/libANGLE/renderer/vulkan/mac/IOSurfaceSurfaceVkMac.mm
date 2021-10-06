@@ -212,14 +212,14 @@ egl::Error IOSurfaceSurfaceVkMac::releaseTexImage(const gl::Context *context, EG
 
     gl::Rectangle bounds(0, 0, mWidth, mHeight);
 
-    const angle::Format &destFormat = angle::Format::Get(angle::Format::InternalFormatToID(
+    const angle::Format &dstFormat = angle::Format::Get(angle::Format::InternalFormatToID(
         kIOSurfaceFormats[mFormatIndex].nativeSizedExternalFormat));
 
     IOSurfaceLock(mIOSurface, 0, nullptr);
 
     size_t outputRowPitchInBytes = IOSurfaceGetBytesPerRowOfPlane(mIOSurface, mPlane);
 
-    PackPixelsParams params(bounds, destFormat, static_cast<GLuint>(outputRowPitchInBytes),
+    PackPixelsParams params(bounds, dstFormat, static_cast<GLuint>(outputRowPitchInBytes),
                             contextVk->isViewportFlipEnabledForDrawFBO(), nullptr, 0);
 
     result = mColorAttachment.image.readPixels(
