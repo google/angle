@@ -224,14 +224,6 @@
 1349 D3D11 INTEL : dEQP-GLES3.functional.texture.units.2_units.mixed.8 = FAIL
 1349 D3D11 INTEL : dEQP-GLES3.functional.texture.units.2_units.mixed.9 = FAIL
 1349 D3D11 INTEL : dEQP-GLES3.functional.texture.units.4_units.only_3d.3 = FAIL
-2349 D3D11 INTEL : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.nearest_nearest = FAIL
-2349 D3D11 INTEL : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.linear_nearest = FAIL
-2349 D3D11 INTEL : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
-2349 D3D11 INTEL : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.linear_nearest = FAIL
-2349 D3D11 INTEL : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_4.primitives.lines = FAIL
-2349 D3D11 INTEL : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_4.interpolation.lines = FAIL
-2349 D3D11 INTEL : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.primitives.lines = FAIL
-2349 D3D11 INTEL : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.interpolation.lines = FAIL
 
 // Failing Tests on Windows and Mac on Intel HD 630
 2137 WIN INTEL : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.* = FAIL
@@ -303,9 +295,6 @@
 
 // Flaky test
 3305 LINUX OPENGL : dEQP-GLES3.functional.shaders.builtin_functions.common.uintbitstofloat.uint_highp_vertex = FAIL
-
-// Linux Intel specific
-2349 LINUX OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.default_framebuffer* = FAIL
 
 // Mac failures (overbroad suppresions)
 3466 MAC OPENGL : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = SKIP
