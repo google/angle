@@ -27,7 +27,7 @@ namespace angle
 namespace
 {
 
-#if defined(ANGLE_PLATFORM_APPLE)
+#if defined(ANGLE_PLATFORM_MACOS)
 // Generic function call to get the OS version information from any platform
 // defined below. This function will also cache the OS version info in static
 // variables.
