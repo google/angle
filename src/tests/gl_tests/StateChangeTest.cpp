@@ -5069,9 +5069,6 @@ TEST_P(ValidationStateChangeTest, MapImmutablePersistentBufferThenVAPAndDraw)
 // Tests that changing a vertex binding with glVertexAttribDivisor updates the mapped buffer check.
 TEST_P(ValidationStateChangeTestES31, MapBufferAndDrawWithDivisor)
 {
-    // Seems to trigger a GL error in some edge cases. http://anglebug.com/2755
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA());
-
     // Initialize program and set up state.
     ANGLE_GL_PROGRAM(program, kColorVS, kColorFS);
 

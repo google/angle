@@ -354,3 +354,5 @@
 
 // Direct MSL compilation bug.
 6540 METAL : GLSLTest_ES3.ComplexCrossExpression/* = SKIP
+
+2755 LINUX NVIDIA OPENGL : ValidationStateChangeTestES31.MapBufferAndDrawWithDivisor/* = SKIP
