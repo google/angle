@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '8db0ca66018adc0d15e8c81fb552c34278720885',
+  'chromium_revision': '85479eaa91b74ecb4429c446f38a0b0036acc88a',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -84,7 +84,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
   # and whatever else without interference from each other.
-  'luci_go': 'git_revision:ec7a06c4fcde59629839f8e89c52a08d647e75f4',
+  'luci_go': 'git_revision:4d27a30eafb95ffb43c55cce949d5ce225ba92f4',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling android_sdk_build-tools_version
@@ -161,7 +161,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@fd29545e5e44be805142e4b7949529355e725c09',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@fdbb91939fd5a443f954ba942053ea2fb58d3801',
     'condition': 'not build_with_chromium',
   },
 
@@ -327,7 +327,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@281edf7577c0e85f6abed10c2c36f029e864f319',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@2ee0ca7fbb4a763319b037d761a861927f723a09',
     'condition': 'not build_with_chromium',
   },
 
