@@ -207,7 +207,6 @@ void PoolAllocator::initialize(int pageSize, int alignment)
     mCurrentPageOffset = mPageSize;
 
 #else  // !defined(ANGLE_DISABLE_POOL_ALLOC)
-    mAlignmentMask = mAlignment - 1;
     mStack.push_back({});
 #endif
 }
@@ -405,11 +404,11 @@ void *PoolAllocator::allocate(size_t numBytes)
 
 #else  // !defined(ANGLE_DISABLE_POOL_ALLOC)
 
-    void *alloc = malloc(numBytes + mAlignmentMask);
+    void *alloc = malloc(numBytes + mAlignment - 1);
     mStack.back().push_back(alloc);
 
     intptr_t intAlloc = reinterpret_cast<intptr_t>(alloc);
-    intAlloc          = (intAlloc + mAlignmentMask) & ~mAlignmentMask;
+    intAlloc          = rx::roundUpPow2<intptr_t>(intAlloc, mAlignment);
     return reinterpret_cast<void *>(intAlloc);
 #endif
 }

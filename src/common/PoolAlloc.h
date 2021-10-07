@@ -170,7 +170,6 @@ class PoolAllocator : angle::NonCopyable
     size_t mTotalBytes;  // just an interesting statistic
 
 #else  // !defined(ANGLE_DISABLE_POOL_ALLOC)
-    size_t mAlignmentMask;
     std::vector<std::vector<void *>> mStack;
 #endif
 
