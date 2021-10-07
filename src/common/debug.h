@@ -23,6 +23,12 @@
 #include "common/entry_points_enum_autogen.h"
 #include "common/platform.h"
 
+#if defined(ANGLE_PLATFORM_WINDOWS)
+#    include <sal.h>
+typedef unsigned long DWORD;
+typedef _Return_type_success_(return >= 0) long HRESULT;
+#endif
+
 #if !defined(TRACE_OUTPUT_FILE)
 #    define TRACE_OUTPUT_FILE "angle_debug.txt"
 #endif

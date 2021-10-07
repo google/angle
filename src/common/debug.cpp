@@ -25,6 +25,10 @@
 #    include <os/log.h>
 #endif
 
+#if defined(ANGLE_PLATFORM_WINDOWS)
+#    include <windows.h>
+#endif
+
 #include "anglebase/no_destructor.h"
 #include "common/Optional.h"
 #include "common/angleutils.h"
