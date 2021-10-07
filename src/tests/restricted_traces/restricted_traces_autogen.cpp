@@ -121,7 +121,7 @@ namespace trace_angle
 {
 namespace
 {
-constexpr size_t kNumTraces = 105;
+constexpr size_t kNumTraces = 106;
 struct TracePair
 {
     const char name[kTraceInfoMaxNameLen];
@@ -282,6 +282,7 @@ constexpr TracePair kTraceInfos[kNumTraces] = {
       false,
       false,
       false}},
+    {"badland", {}},
     {"beach_buggy_racing",
      {"beach_buggy_racing",
       beach_buggy_racing::kReplayContextClientMajorVersion,

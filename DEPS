@@ -699,6 +699,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/badland': {
+      'packages': [
+        {
+            'package': 'angle/traces/badland',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/beach_buggy_racing': {
       'packages': [
         {
