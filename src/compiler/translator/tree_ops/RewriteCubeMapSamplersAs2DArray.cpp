@@ -953,18 +953,15 @@ class RewriteCubeMapSamplersAs2DArrayTraverser : public TIntermTraverser
     TIntermFunctionDefinition *mCoordTranslationFunctionDecl;
     TIntermFunctionDefinition *mCoordTranslationFunctionImplicitDecl;
 };
+}  // anonymous namespace
 
-bool RewriteCubeMapSamplersAs2DArrayImpl(TCompiler *compiler,
-                                         TIntermBlock *root,
-                                         TSymbolTable *symbolTable,
-                                         bool isFragmentShader)
+bool RewriteCubeMapSamplersAs2DArray(TCompiler *compiler,
+                                     TIntermBlock *root,
+                                     TSymbolTable *symbolTable,
+                                     bool isFragmentShader)
 {
     RewriteCubeMapSamplersAs2DArrayTraverser traverser(symbolTable, isFragmentShader);
     root->traverse(&traverser);
-    if (!traverser.updateTree(compiler, root))
-    {
-        return false;
-    }
 
     TIntermFunctionDefinition *coordTranslationFunctionDecl =
         traverser.getCoordTranslationFunctionDecl();
@@ -980,24 +977,8 @@ bool RewriteCubeMapSamplersAs2DArrayImpl(TCompiler *compiler,
         root->insertChildNodes(firstFunctionIndex,
                                TIntermSequence({coordTranslationFunctionDeclImplicit}));
     }
-    return true;
-}
-}  // anonymous namespace
 
-bool RewriteCubeMapSamplersAs2DArray(TCompiler *compiler,
-                                     TIntermBlock *root,
-                                     TSymbolTable *symbolTable,
-                                     bool isFragmentShader)
-{
-    // This transformation adds function declarations after the fact and so some validation is
-    // momentarily disabled.
-    bool enableValidateFunctionCall = compiler->disableValidateFunctionCall();
-
-    bool result =
-        RewriteCubeMapSamplersAs2DArrayImpl(compiler, root, symbolTable, isFragmentShader);
-
-    compiler->restoreValidateFunctionCall(enableValidateFunctionCall);
-    return result && compiler->validateAST(root);
+    return traverser.updateTree(compiler, root);
 }
 
 }  // namespace sh
