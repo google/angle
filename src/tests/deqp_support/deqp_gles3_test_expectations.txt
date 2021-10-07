@@ -663,10 +663,6 @@
 // FBO with distinct attachment's sizes is not supported yet
 6467 MAC METAL : dEQP-GLES3.functional.fbo.completeness.size.distinct = FAIL
 
-// primitive restart AMD driver bug (except line loops & triangle fans which are emulated)
-6467 MAC METAL : dEQP-GLES3.*primitive_restart*points* = FAIL
-6467 MAC METAL : dEQP-GLES3.*primitive_restart*triangles* = FAIL
-6467 MAC METAL : dEQP-GLES3.*primitive_restart*lines* = FAIL
 
 // FBO blit bugs (failed a few pixels)
 6467 MAC METAL : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_linear = FAIL

@@ -762,12 +762,15 @@ std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *
         if (range.restartBegin > currentIndexOffset)
         {
             int64_t nIndicesInSlice =
-                ((int64_t)range.restartBegin - currentIndexOffset) -
-                ((int64_t)range.restartBegin - currentIndexOffset) % nIndicesPerPrimitive;
+                MIN(((int64_t)range.restartBegin - currentIndexOffset) -
+                        ((int64_t)range.restartBegin - currentIndexOffset) % nIndicesPerPrimitive,
+                    indicesLeft);
             size_t restartSize = (range.restartEnd - range.restartBegin) + 1;
-            if (nIndicesInSlice > nIndicesPerPrimitive)
+            if (nIndicesInSlice >= nIndicesPerPrimitive)
+            {
                 drawCommands.push_back(
                     {(uint32_t)nIndicesInSlice, currentIndexOffset * indexTypeBytes});
+            }
             // Account for dropped indices due to incomplete primitives.
             size_t indicesUsed = ((range.restartBegin + restartSize) - currentIndexOffset);
             if (indicesLeft <= indicesUsed)
