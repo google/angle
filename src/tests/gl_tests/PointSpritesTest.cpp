@@ -22,8 +22,7 @@ constexpr char kVertexShaderSource[] =
             gl_Position  = vPosition;
         })";
 
-// TODO(ynovikov): Improve the tests to work with point size 1. http://anglebug.com/2553
-constexpr GLfloat kMinMaxPointSize = 2.0f;
+constexpr GLfloat kMinMaxPointSize = 1.0f;
 
 class PointSpritesTest : public ANGLETest
 {
