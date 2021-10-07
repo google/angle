@@ -37,6 +37,8 @@
 
 # ES2
 
+6538 : AddMockTextureNoRenderTargetTest.NoProgramOutputWorkaround/ES2_Vulkan_SwiftShader = FLAKY
+
 6266 : ContextLostSkipValidationTest.LostNoErrorGetProgram/ES2_Vulkan = FAIL
 6266 : ContextLostTest.ParallelCompileReadyQuery/ES2_Vulkan = FAIL
 
@@ -74,6 +76,8 @@
 6180 : MipmapTest.RenderOntoLevelZeroAfterGenerateMipmap/ES2_Vulkan = FAIL
 
 6180 : PbufferTest.BindTexImage/* = FAIL
+6180 : PbufferTest.ClearAndBindTexImageSrgb/* = FAIL
+6180 : PbufferTest.ClearAndBindTexImageSrgbSkipDecode/* = FAIL
 6180 : PbufferTest.Clearing/* = FAIL
 6180 : PbufferTest.TextureSizeReset/* = FAIL
 
@@ -113,9 +117,11 @@
 6286 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3/ES3_Vulkan_SwiftShader = FAIL
 6425 : ObjectAllocationTest.BindFramebufferAfterGen/ES3_Vulkan_SwiftShader = FAIL
 6425 : ObjectAllocationTest.BindFramebufferBeforeGen/ES3_Vulkan_SwiftShader = FAIL
+6425 : ObjectAllocationTestES3.BindFramebufferAfterGen/ES3_Vulkan_SwiftShader = FAIL
+6425 : ObjectAllocationTestES3.BindFramebufferBeforeGen/ES3_Vulkan_SwiftShader = FAIL
 6512 : RobustResourceInitTestES3.BindTexImage/ES3_Vulkan_SwiftShader = FAIL
 6180 WIN : TransformFeedbackTest.DrawWithoutTransformFeedbackThenWith/ES3_Vulkan_SwiftShader = FAIL
-6513 : TransformFeedbackTest.MultiContext/ES3_Vulkan_SwiftShader = FAIL
+6513 : TransformFeedbackTest.MultiContext/ES3_Vulkan_SwiftShader = FLAKY
 
 6180 : UniformBufferTest.BlockArrayContainingArrayOfStructs/ES3_Vulkan_SwiftShader = FAIL
 6180 : UniformBufferTest.ManyBlocks/ES3_Vulkan_SwiftShader = FAIL
