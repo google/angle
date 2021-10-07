@@ -55,19 +55,6 @@ constexpr Mat2x2EnumMap kFragRotationMatrices = {
      {vk::SurfaceRotation::FlippedRotated180Degrees, {{1.0f, 0.0f, 0.0f, 1.0f}}},
      {vk::SurfaceRotation::FlippedRotated270Degrees, {{0.0f, 1.0f, 1.0f, 0.0f}}}}};
 
-// TODO: https://issuetracker.google.com/174066134. This is to make sure the specialization constant
-// code path behaves exactly the same as driver uniform code path. Not sure why this has to be
-// different from kFragRotationMatrices.
-constexpr Mat2x2EnumMap kHalfRenderAreaRotationMatrices = {
-    {{vk::SurfaceRotation::Identity, {{1.0f, 0.0f, 0.0f, 1.0f}}},
-     {vk::SurfaceRotation::Rotated90Degrees, {{0.0f, 1.0f, 1.0f, 0.0f}}},
-     {vk::SurfaceRotation::Rotated180Degrees, {{1.0f, 0.0f, 0.0f, 1.0f}}},
-     {vk::SurfaceRotation::Rotated270Degrees, {{1.0f, 0.0f, 0.0f, 1.0f}}},
-     {vk::SurfaceRotation::FlippedIdentity, {{1.0f, 0.0f, 0.0f, 1.0f}}},
-     {vk::SurfaceRotation::FlippedRotated90Degrees, {{0.0f, 1.0f, 1.0f, 0.0f}}},
-     {vk::SurfaceRotation::FlippedRotated180Degrees, {{1.0f, 0.0f, 0.0f, 1.0f}}},
-     {vk::SurfaceRotation::FlippedRotated270Degrees, {{1.0f, 0.0f, 0.0f, 1.0f}}}}};
-
 // Returns mat2(m0, m1, m2, m3)
 TIntermAggregate *CreateMat2x2(const Mat2x2EnumMap &matrix, vk::SurfaceRotation rotation)
 {
@@ -411,16 +398,6 @@ TIntermTyped *SpecConst::getFragRotationMatrix()
     return GenerateMat2x2ArrayWithIndex(kFragRotationMatrices, getFlipRotation());
 }
 
-TIntermTyped *SpecConst::getHalfRenderAreaRotationMatrix()
-{
-    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
-    {
-        return nullptr;
-    }
-    mUsageBits.set(vk::SpecConstUsage::Rotation);
-    return GenerateMat2x2ArrayWithIndex(kHalfRenderAreaRotationMatrices, getFlipRotation());
-}
-
 TIntermTyped *SpecConst::getFlipXY()
 {
     if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
@@ -537,11 +514,7 @@ TIntermBinary *SpecConst::getHalfRenderArea()
         new TIntermBinary(EOpVectorTimesScalar, drawableSize, CreateFloatNode(0.5, EbpMedium));
     mUsageBits.set(vk::SpecConstUsage::DrawableSize);
 
-    // drawableSize * 0.5f * halfRenderAreaRotationMatrix (See comment in
-    // kHalfRenderAreaRotationMatrices)
-    TIntermBinary *rotatedHalfRenderArea =
-        new TIntermBinary(EOpMatrixTimesVector, getHalfRenderAreaRotationMatrix(), halfRenderArea);
-
-    return rotatedHalfRenderArea;
+    // No rotation needed because drawableSize is already rotated.
+    return halfRenderArea;
 }
 }  // namespace sh
