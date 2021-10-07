@@ -14187,6 +14187,24 @@ TEST_P(WebGL2GLSLTest, UnsuccessfulRelinkWithBindAttribLocation)
     glDrawArrays(GL_TRIANGLES, 79, 16);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
+
+// Covers a HLSL compiler bug.
+TEST_P(GLSLTest_ES3, ComplexCrossExpression)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+vec3 a = vec3(0.0);
+out vec4 color;
+void main()
+{
+    cross(max(vec3(0.0), reflect(dot(a, vec3(0.0)), 0.0)), vec3(0.0));
+})";
+
+    ANGLE_GL_PROGRAM(testProgram, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(testProgram, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest, WithDirectSPIRVGeneration(ES2_VULKAN()));
