@@ -784,9 +784,6 @@ TEST_P(WebGLCompatibilityTest, EnableBlendMinMaxExtension)
 // Test enabling the query extensions
 TEST_P(WebGLCompatibilityTest, EnableQueryExtensions)
 {
-    // Seems to be causing a device lost. http://anglebug.com/2423
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsOpenGL());
-
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
     EXPECT_FALSE(IsGLExtensionEnabled("GL_CHROMIUM_sync_query"));
