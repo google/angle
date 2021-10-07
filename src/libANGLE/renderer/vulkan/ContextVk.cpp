@@ -3545,7 +3545,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition,
                                                               glState.getDepthStencilState(),
                                                               glState.getDrawFramebuffer());
-                ANGLE_TRY(updateRenderPassDepthStencilAccess());
+                iter.setLaterBit(gl::State::DIRTY_BIT_DEPTH_MASK);
                 break;
             }
             case gl::State::DIRTY_BIT_DEPTH_FUNC:

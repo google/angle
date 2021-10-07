@@ -1634,7 +1634,7 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     mRasterizationAndMultisampleStateInfo.bits.alphaToOneEnable      = 0;
 
     mDepthStencilStateInfo.enable.depthTest  = 0;
-    mDepthStencilStateInfo.enable.depthWrite = 1;
+    mDepthStencilStateInfo.enable.depthWrite = 0;
     SetBitField(mDepthStencilStateInfo.depthCompareOpAndSurfaceRotation.depthCompareOp,
                 VK_COMPARE_OP_LESS);
     mDepthStencilStateInfo.enable.depthBoundsTest = 0;
@@ -2505,8 +2505,13 @@ void GraphicsPipelineDesc::updateDepthWriteEnabled(GraphicsPipelineTransitionBit
                                                    const gl::Framebuffer *drawFramebuffer)
 {
     // Don't write to depth buffers that should not exist
-    setDepthWriteEnabled(drawFramebuffer->hasDepth() ? depthStencilState.depthMask : false);
-    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, enable));
+    const bool depthWriteEnabled =
+        drawFramebuffer->hasDepth() && depthStencilState.depthTest && depthStencilState.depthMask;
+    if (static_cast<bool>(mDepthStencilStateInfo.enable.depthWrite) != depthWriteEnabled)
+    {
+        setDepthWriteEnabled(depthWriteEnabled);
+        transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, enable));
+    }
 }
 
 void GraphicsPipelineDesc::updateStencilTestEnabled(GraphicsPipelineTransitionBits *transition,
