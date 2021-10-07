@@ -92,8 +92,6 @@ const char *GetCommandString(CommandID id)
             return "EndQuery";
         case CommandID::EndTransformFeedback:
             return "EndTransformFeedback";
-        case CommandID::ExecutionBarrier:
-            return "ExecutionBarrier";
         case CommandID::FillBuffer:
             return "FillBuffer";
         case CommandID::ImageBarrier:
@@ -434,14 +432,6 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     offsets.fill(0);
                     vkCmdEndTransformFeedbackEXT(cmdBuffer, 0, params->bufferCount, counterBuffers,
                                                  offsets.data());
-                    break;
-                }
-                case CommandID::ExecutionBarrier:
-                {
-                    const ExecutionBarrierParams *params =
-                        getParamPtr<ExecutionBarrierParams>(currentCommand);
-                    vkCmdPipelineBarrier(cmdBuffer, params->stageMask, params->stageMask, 0, 0,
-                                         nullptr, 0, nullptr, 0, nullptr);
                     break;
                 }
                 case CommandID::FillBuffer:
