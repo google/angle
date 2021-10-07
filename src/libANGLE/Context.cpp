@@ -456,12 +456,6 @@ void Context::initializeDefaultResources()
 
     initCaps();
 
-    if (mDisplay->getFrontendFeatures().syncFramebufferBindingsOnTexImage.enabled)
-    {
-        mTexImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-        mTexImageDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
-    }
-
     mState.initialize(this);
 
     mFenceNVHandleAllocator.setBaseHandle(0);

@@ -2204,7 +2204,6 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
 
     ANGLE_FEATURE_CONDITION(features, disableProgramCachingForTransformFeedback,
                             IsAndroid() && isQualcomm);
-    ANGLE_FEATURE_CONDITION(features, syncFramebufferBindingsOnTexImage, false);
     // https://crbug.com/480992
     // Disable shader program cache to workaround PowerVR Rogue issues.
     ANGLE_FEATURE_CONDITION(features, disableProgramBinary, IsPowerVrRogue(functions));
