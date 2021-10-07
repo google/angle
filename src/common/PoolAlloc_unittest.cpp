@@ -50,6 +50,7 @@ TEST(PoolAllocatorTest, Interface)
     poolAllocator.popAll();
 }
 
+#if !defined(ANGLE_POOL_ALLOC_GUARD_BLOCKS)
 // Verify allocations are correctly aligned for different alignments
 class PoolAllocatorAlignmentTest : public testing::TestWithParam<int>
 {};
@@ -75,4 +76,5 @@ INSTANTIATE_TEST_SUITE_P(,
                          PoolAllocatorAlignmentTest,
                          testing::Values(2, 4, 8, 16, 32, 64, 128),
                          testing::PrintToStringParamName());
+#endif
 }  // namespace angle
