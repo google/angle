@@ -80,9 +80,8 @@ struct BlitParams
 
 struct ColorBlitParams : public BlitParams
 {
-    ColorBlitParams() { blitWriteMaskArray.fill(MTLColorWriteMaskAll); }
+    ColorBlitParams() {}
 
-    WriteMaskArray blitWriteMaskArray;
     gl::DrawBufferMask enabledBuffers;
     GLenum filter               = GL_NEAREST;
     bool unpackPremultiplyAlpha = false;
