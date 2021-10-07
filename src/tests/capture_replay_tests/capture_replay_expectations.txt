@@ -161,3 +161,4 @@
 6510 : FenceSyncTest.IsSync/ES3_Vulkan_SwiftShader = FLAKY
 6510 : FenceSyncTest.Errors/ES3_Vulkan_SwiftShader = FLAKY
 6510 : FenceSyncTest.MultipleFenceDraw/ES3_Vulkan_SwiftShader = FLAKY
+6543 : GLSLTest_ES3.ComplexCrossExpression/ES3_Vulkan_SwiftShader = FLAKY
