@@ -156,7 +156,6 @@
 
 
 // Not failing in last official run, but failed recently:
-4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.* = FAIL
 5662 SWIFTSHADER : dEQP-GLES31.functional.copy_image.compressed.* = FAIL
 5662 SWIFTSHADER : dEQP-GLES31.functional.copy_image.mixed.* = FAIL
 
@@ -188,21 +187,6 @@
 ////
 //// Android (i.e. Pixel*) Vulkan expectations
 ////
-
-// Vulkan Android failures
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.lines_8_samples_dfdx = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.lines_8_samples_fwidth = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.points_8_samples_dfdx = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.points_8_samples_dfdy = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.points_8_samples_fwidth = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.triangles_8_samples_dfdy = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.triangles_max_samples_dfdx = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.wide_lines_8_samples_dfdy = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.wide_lines_max_samples_dfdy = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.derivate.wide_points_8_samples_dfdy = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.lines_8_samples = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.points_8_samples = FAIL
-4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.triangles_max_samples = FAIL
 
 // Seem to trigger LowMemoryKiller when run in a certain sequence
 5185 VULKAN ANDROID : dEQP-GLES31.functional.atomic_counter.* = SKIP
