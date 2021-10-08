@@ -40,6 +40,7 @@ angle_source_set("angle_cl_backend") {
   sources = _cl_backend_sources
 
   public_deps = [
+    "$angle_root:angle_version_info",
     "$angle_root:libANGLE_headers",
     "$angle_root/third_party/OpenCL-ICD-Loader:opencl_icd_loader",
   ]

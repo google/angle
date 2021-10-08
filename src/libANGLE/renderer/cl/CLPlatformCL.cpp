@@ -7,15 +7,13 @@
 
 #include "libANGLE/renderer/cl/CLPlatformCL.h"
 
-#include "libANGLE/renderer/cl/CLContextCL.h"
-#include "libANGLE/renderer/cl/CLDeviceCL.h"
-#include "libANGLE/renderer/cl/cl_util.h"
-
+#include "common/angle_version_info.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
 #include "libANGLE/CLPlatform.h"
-
-#include "common/angle_version.h"
+#include "libANGLE/renderer/cl/CLContextCL.h"
+#include "libANGLE/renderer/cl/CLDeviceCL.h"
+#include "libANGLE/renderer/cl/cl_util.h"
 
 extern "C" {
 #include "icd.h"
@@ -173,7 +171,7 @@ CLPlatformImpl::Info CLPlatformCL::createInfo() const
     }
 
     // Customize version string and name
-    info.versionStr += " (ANGLE " ANGLE_VERSION_STRING ")";
+    info.versionStr += std::string(" (ANGLE ") + angle::GetANGLEVersionString() + ")";
     info.name.insert(0u, "ANGLE pass-through -> ");
 
     if (version >= CL_MAKE_VERSION(2, 1, 0) &&

@@ -12,7 +12,7 @@
 #include "libANGLE/CLPlatform.h"
 
 #include "anglebase/no_destructor.h"
-#include "common/angle_version.h"
+#include "common/angle_version_info.h"
 
 namespace rx
 {
@@ -98,7 +98,8 @@ const std::string &CLPlatformVk::GetVersionString()
 {
     static const angle::base::NoDestructor<const std::string> sVersion(
         "OpenCL " + std::to_string(CL_VERSION_MAJOR(GetVersion())) + "." +
-        std::to_string(CL_VERSION_MINOR(GetVersion())) + " ANGLE " ANGLE_VERSION_STRING);
+        std::to_string(CL_VERSION_MINOR(GetVersion())) + " ANGLE " +
+        angle::GetANGLEVersionString());
     return *sVersion;
 }
 

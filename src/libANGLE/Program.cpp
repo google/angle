@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <utility>
 
-#include "common/angle_version.h"
+#include "common/angle_version_info.h"
 #include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "common/platform.h"
@@ -4635,8 +4635,8 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
 {
     BinaryOutputStream stream;
 
-    stream.writeBytes(reinterpret_cast<const unsigned char *>(ANGLE_COMMIT_HASH),
-                      ANGLE_COMMIT_HASH_SIZE);
+    stream.writeBytes(reinterpret_cast<const unsigned char *>(angle::GetANGLECommitHash()),
+                      angle::GetANGLECommitHashSize());
 
     // nullptr context is supported when computing binary length.
     if (context)
@@ -4716,7 +4716,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
             }
             else
             {
-                // If we dont have an attached shader, which would occur if this program was
+                // If we don't have an attached shader, which would occur if this program was
                 // created via glProgramBinary, pull from our cached copy
                 const angle::ProgramSources &cachedLinkedSources =
                     context->getShareGroup()->getFrameCaptureShared()->getProgramSources(id());
@@ -4744,10 +4744,9 @@ angle::Result Program::deserialize(const Context *context,
                                    BinaryInputStream &stream,
                                    InfoLog &infoLog)
 {
-    unsigned char commitString[ANGLE_COMMIT_HASH_SIZE];
-    stream.readBytes(commitString, ANGLE_COMMIT_HASH_SIZE);
-    if (memcmp(commitString, ANGLE_COMMIT_HASH, sizeof(unsigned char) * ANGLE_COMMIT_HASH_SIZE) !=
-        0)
+    std::vector<uint8_t> commitString(angle::GetANGLECommitHashSize(), 0);
+    stream.readBytes(commitString.data(), commitString.size());
+    if (memcmp(commitString.data(), angle::GetANGLECommitHash(), commitString.size()) != 0)
     {
         infoLog << "Invalid program binary version.";
         return angle::Result::Stop;

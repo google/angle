@@ -16,7 +16,7 @@
 
 #include "sys/stat.h"
 
-#include "common/angle_version.h"
+#include "common/angle_version_info.h"
 #include "common/mathutil.h"
 #include "common/serializer/JsonSerializer.h"
 #include "common/string_utils.h"
@@ -6034,7 +6034,7 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
 
     JsonSerializer json;
     json.startGroup("TraceMetadata");
-    json.addScalar("CaptureRevision", ANGLE_REVISION);
+    json.addScalar("CaptureRevision", GetANGLERevision());
     json.addScalar("ContextClientMajorVersion", context->getClientMajorVersion());
     json.addScalar("ContextClientMinorVersion", context->getClientMinorVersion());
     json.addHexValue("DisplayPlatformType", displayAttribs.getAsInt(EGL_PLATFORM_ANGLE_TYPE_ANGLE));
