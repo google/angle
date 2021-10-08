@@ -82,19 +82,8 @@ enum ShShaderOutput
 // Compile options.
 // The Compile options type is defined in ShaderVars.h, to allow ANGLE to import the ShaderVars
 // header without needing the ShaderLang header. This avoids some conflicts with glslang.
-// SH_VALIDATE_LOOP_INDEXING: Validates loop and indexing in the shader to
-//                            ensure that they do not exceed the minimum
-//                            functionality mandated in GLSL 1.0 spec,
-//                            Appendix A, Section 4 and 5.
-//                            There is no need to specify this parameter when
-//                            compiling for WebGL - it is implied.
-// SH_OBJECT_CODE: Translates intermediate tree to glsl or hlsl shader, or SPIR-V binary.
-//                 Can be queried by calling sh::GetObjectCode().
-// SH_VARIABLES: Extracts attributes, uniforms, and varyings.
-//               Can be queried by calling ShGetVariableInfo().
-// SH_LINE_DIRECTIVES: Emits #line directives in HLSL.
-// SH_SOURCE_PATH: Tracks the source path for shaders.
-//                 Can be queried with getSourcePath().
+
+const ShCompileOptions SH_VALIDATE               = 0;
 const ShCompileOptions SH_VALIDATE_LOOP_INDEXING = UINT64_C(1) << 0;
 const ShCompileOptions SH_INTERMEDIATE_TREE      = UINT64_C(1) << 1;
 const ShCompileOptions SH_OBJECT_CODE            = UINT64_C(1) << 2;
@@ -656,7 +645,22 @@ void Destruct(ShHandle handle);
 // shaderStrings: Specifies an array of pointers to null-terminated strings containing the shader
 // source code.
 // numStrings: Specifies the number of elements in shaderStrings array.
-// compileOptions: A mask of compile options defined above.
+// compileOptions: A mask containing the following parameters:
+// SH_VALIDATE: Validates shader to ensure that it conforms to the spec
+//              specified during compiler construction.
+// SH_VALIDATE_LOOP_INDEXING: Validates loop and indexing in the shader to
+//                            ensure that they do not exceed the minimum
+//                            functionality mandated in GLSL 1.0 spec,
+//                            Appendix A, Section 4 and 5.
+//                            There is no need to specify this parameter when
+//                            compiling for WebGL - it is implied.
+// SH_INTERMEDIATE_TREE: Writes intermediate tree to info log.
+//                       Can be queried by calling sh::GetInfoLog().
+// SH_OBJECT_CODE: Translates intermediate tree to glsl or hlsl shader, or SPIR-V binary.
+//                 Can be queried by calling sh::GetObjectCode().
+// SH_VARIABLES: Extracts attributes, uniforms, and varyings.
+//               Can be queried by calling ShGetVariableInfo().
+//
 bool Compile(const ShHandle handle,
              const char *const shaderStrings[],
              size_t numStrings,
