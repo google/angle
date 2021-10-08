@@ -397,9 +397,6 @@ void main()
 // Binds a storage buffer to slot 0, then binds a storage image to slot 0, then buffer again.
 TEST_P(ComputeShaderTest, BufferImageBuffer)
 {
-    // See http://anglebug.com/3536
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
-
     constexpr char kCS0[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(binding = 0, offset = 4) uniform atomic_uint ac[2];
@@ -469,9 +466,6 @@ void main()
 // buffer when it's mapped.
 TEST_P(ComputeShaderTest, BufferImageBufferMapWrite)
 {
-    // See http://anglebug.com/3536
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
-
     constexpr char kCS0[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(binding = 0, offset = 4) uniform atomic_uint ac[2];
