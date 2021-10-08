@@ -376,12 +376,6 @@ EGLPlatformParameters D3D11_FL10_0()
                                  EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 }
 
-EGLPlatformParameters D3D11_FL9_3()
-{
-    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 9, 3,
-                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
-}
-
 EGLPlatformParameters D3D11_NULL()
 {
     return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
@@ -418,12 +412,6 @@ EGLPlatformParameters D3D11_FL10_0_WARP()
                                  EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE);
 }
 
-EGLPlatformParameters D3D11_FL9_3_WARP()
-{
-    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 9, 3,
-                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE);
-}
-
 EGLPlatformParameters D3D11_REFERENCE()
 {
     return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
@@ -451,12 +439,6 @@ EGLPlatformParameters D3D11_FL10_1_REFERENCE()
 EGLPlatformParameters D3D11_FL10_0_REFERENCE()
 {
     return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 10, 0,
-                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE);
-}
-
-EGLPlatformParameters D3D11_FL9_3_REFERENCE()
-{
-    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 9, 3,
                                  EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE);
 }
 
@@ -584,11 +566,6 @@ PlatformParameters ES2_D3D11_FL10_0()
     return PlatformParameters(2, 0, egl_platform::D3D11_FL10_0());
 }
 
-PlatformParameters ES2_D3D11_FL9_3()
-{
-    return PlatformParameters(2, 0, egl_platform::D3D11_FL9_3());
-}
-
 PlatformParameters ES2_D3D11_WARP()
 {
     return PlatformParameters(2, 0, egl_platform::D3D11_WARP());
@@ -609,11 +586,6 @@ PlatformParameters ES2_D3D11_FL10_0_WARP()
     return PlatformParameters(2, 0, egl_platform::D3D11_FL10_0_WARP());
 }
 
-PlatformParameters ES2_D3D11_FL9_3_WARP()
-{
-    return PlatformParameters(2, 0, egl_platform::D3D11_FL9_3_WARP());
-}
-
 PlatformParameters ES2_D3D11_REFERENCE()
 {
     return PlatformParameters(2, 0, egl_platform::D3D11_REFERENCE());
@@ -632,11 +604,6 @@ PlatformParameters ES2_D3D11_FL10_1_REFERENCE()
 PlatformParameters ES2_D3D11_FL10_0_REFERENCE()
 {
     return PlatformParameters(2, 0, egl_platform::D3D11_FL10_0_REFERENCE());
-}
-
-PlatformParameters ES2_D3D11_FL9_3_REFERENCE()
-{
-    return PlatformParameters(2, 0, egl_platform::D3D11_FL9_3_REFERENCE());
 }
 
 PlatformParameters ES3_D3D11()

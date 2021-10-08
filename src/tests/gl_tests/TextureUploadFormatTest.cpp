@@ -143,7 +143,7 @@ void EncodeThenZeroAndCopy(DestT &dest, const float srcVals[4])
 // Test all internalFormat/unpackFormat/unpackType combinations from ES3.0.
 TEST_P(TextureUploadFormatTest, All)
 {
-    ANGLE_SKIP_TEST_IF(IsD3D9() || IsD3D11_FL93());
+    ANGLE_SKIP_TEST_IF(IsD3D9());
 
     constexpr char kVertShaderES2[]     = R"(
         void main()

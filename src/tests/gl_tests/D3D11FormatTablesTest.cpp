@@ -180,7 +180,6 @@ TEST_P(D3D11FormatTablesTest, TestFormatMakeValidSize)
 }
 
 ANGLE_INSTANTIATE_TEST(D3D11FormatTablesTest,
-                       ES2_D3D11_FL9_3(),
                        ES2_D3D11_FL10_0(),
                        ES2_D3D11_FL10_1(),
                        ES2_D3D11_FL11_0());

@@ -95,16 +95,6 @@ ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc,
                                                           d3d9Attribs, &mEvents);
         m_nativeDisplayFactoryRegistry.registerFactory(d3d9Factory);
     }
-
-    {
-        std::vector<eglw::EGLAttrib> d3d1193Attribs =
-            initAttribs(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-                        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE, 9, 3);
-
-        auto *d3d1193Factory = new ANGLENativeDisplayFactory(
-            "angle-d3d11-fl93", "ANGLE D3D11 FL9_3 Display", d3d1193Attribs, &mEvents);
-        m_nativeDisplayFactoryRegistry.registerFactory(d3d1193Factory);
-    }
 #endif  // (DE_OS == DE_OS_WIN32)
 
 #if defined(ANGLE_USE_GBM) || (DE_OS == DE_OS_ANDROID) || (DE_OS == DE_OS_WIN32)

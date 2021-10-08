@@ -75,7 +75,6 @@ EGLPlatformParameters D3D11_FL11_1();
 EGLPlatformParameters D3D11_FL11_0();
 EGLPlatformParameters D3D11_FL10_1();
 EGLPlatformParameters D3D11_FL10_0();
-EGLPlatformParameters D3D11_FL9_3();
 
 EGLPlatformParameters D3D11_NULL();
 
@@ -84,14 +83,12 @@ EGLPlatformParameters D3D11_FL11_1_WARP();
 EGLPlatformParameters D3D11_FL11_0_WARP();
 EGLPlatformParameters D3D11_FL10_1_WARP();
 EGLPlatformParameters D3D11_FL10_0_WARP();
-EGLPlatformParameters D3D11_FL9_3_WARP();
 
 EGLPlatformParameters D3D11_REFERENCE();
 EGLPlatformParameters D3D11_FL11_1_REFERENCE();
 EGLPlatformParameters D3D11_FL11_0_REFERENCE();
 EGLPlatformParameters D3D11_FL10_1_REFERENCE();
 EGLPlatformParameters D3D11_FL10_0_REFERENCE();
-EGLPlatformParameters D3D11_FL9_3_REFERENCE();
 
 EGLPlatformParameters OPENGL();
 EGLPlatformParameters OPENGL(EGLint major, EGLint minor);
@@ -121,19 +118,16 @@ PlatformParameters ES2_D3D11_PRESENT_PATH_FAST();
 PlatformParameters ES2_D3D11_FL11_0();
 PlatformParameters ES2_D3D11_FL10_1();
 PlatformParameters ES2_D3D11_FL10_0();
-PlatformParameters ES2_D3D11_FL9_3();
 
 PlatformParameters ES2_D3D11_WARP();
 PlatformParameters ES2_D3D11_FL11_0_WARP();
 PlatformParameters ES2_D3D11_FL10_1_WARP();
 PlatformParameters ES2_D3D11_FL10_0_WARP();
-PlatformParameters ES2_D3D11_FL9_3_WARP();
 
 PlatformParameters ES2_D3D11_REFERENCE();
 PlatformParameters ES2_D3D11_FL11_0_REFERENCE();
 PlatformParameters ES2_D3D11_FL10_1_REFERENCE();
 PlatformParameters ES2_D3D11_FL10_0_REFERENCE();
-PlatformParameters ES2_D3D11_FL9_3_REFERENCE();
 
 PlatformParameters ES3_D3D11();
 PlatformParameters ES3_D3D11_FL11_1();

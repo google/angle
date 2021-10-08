@@ -462,14 +462,14 @@ TEST_P(AttributeLayoutNonIndexed, Test)
 TEST_P(AttributeLayoutMemoryIndexed, Test)
 {
     Run(true);
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && (IsOpenGL() || IsD3D11_FL93()));
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
     Run(false);
 }
 
 TEST_P(AttributeLayoutBufferIndexed, Test)
 {
     Run(true);
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && (IsOpenGL() || IsD3D11_FL93()));
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
     Run(false);
 }
 

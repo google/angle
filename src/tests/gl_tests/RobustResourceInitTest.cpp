@@ -313,8 +313,8 @@ class RobustResourceInitTestES31 : public RobustResourceInitTest
 // it only works on the implemented renderers
 TEST_P(RobustResourceInitTest, ExpectedRendererSupport)
 {
-    bool shouldHaveSupport = IsD3D11() || IsD3D11_FL93() || IsD3D9() || IsOpenGL() ||
-                             IsOpenGLES() || IsVulkan() || IsMetal();
+    bool shouldHaveSupport =
+        IsD3D11() || IsD3D9() || IsOpenGL() || IsOpenGLES() || IsVulkan() || IsMetal();
     EXPECT_EQ(shouldHaveSupport, hasGLExtension());
     EXPECT_EQ(shouldHaveSupport, hasEGLExtension());
     EXPECT_EQ(shouldHaveSupport, hasRobustSurfaceInit());
@@ -1625,7 +1625,6 @@ void RobustResourceInitTest::maskedStencilClear(ClearFunc clearFunc)
 TEST_P(RobustResourceInitTest, MaskedStencilClear)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
-    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
     // http://anglebug.com/2407, but only fails on Nexus devices
     ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
@@ -1689,7 +1688,6 @@ void VerifyRGBA8PixelRect(InitializedTest inInitialized)
 TEST_P(RobustResourceInitTest, CopyTexSubImage2D)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
-    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
     static constexpr int kDestSize = 4;
     constexpr int kSrcSize         = kDestSize / 2;

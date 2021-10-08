@@ -114,14 +114,6 @@ class InstancingTest : public ANGLETest
         ANGLE_SKIP_TEST_IF(IsD3D9() && draw == Indexed && geometry == Point);
         ANGLE_SKIP_TEST_IF(IsD3D9() && IsAMD());
 
-        // D3D11 FL9_3 has a special codepath that emulates instanced points rendering
-        // but it has bugs and was only implemented for vertex positions in a buffer object,
-        // not client memory as used in this test.
-        ANGLE_SKIP_TEST_IF(IsD3D11_FL93() && geometry == Point);
-
-        // Unknown problem.  FL9_3 is not officially supported anyway.
-        ANGLE_SKIP_TEST_IF(IsD3D11_FL93() && geometry == Quad && draw == NonIndexed);
-
         // The window is divided into kMaxDrawn slices of size kDrawSize.
         // The slice drawn into is determined by the instance datum.
         // The instance data array selects all the slices in order.
@@ -345,7 +337,7 @@ constexpr GLushort InstancingTest::kPointIndices[];
         runTest(numInstance, divisor, 1, Quad, NonIndexed, Buffer, Angle, 0); \
     }
 
-// D3D9 and D3D11 FL9_3, have a special codepath that rearranges the input layout sent to D3D,
+// D3D9 has a special codepath that rearranges the input layout sent to D3D,
 // to ensure that slot/stream zero of the input layout doesn't contain per-instance data, so
 // we test with attribute 0 being instanced, as will as attribute 1 being instanced.
 //

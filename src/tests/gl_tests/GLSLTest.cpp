@@ -2013,7 +2013,7 @@ TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 // Disabled because of a failure in D3D9
 TEST_P(GLSLTest, MaxVaryingVec2Arrays)
 {
-    ANGLE_SKIP_TEST_IF(IsD3DSM3());
+    ANGLE_SKIP_TEST_IF(IsD3D9());
 
     // TODO(geofflang): Figure out why this fails on NVIDIA's GLES driver
     ANGLE_SKIP_TEST_IF(IsOpenGLES());
@@ -2457,11 +2457,7 @@ TEST_P(GLSLTest, PowOfSmallConstant)
     }
 }
 
-// Test that fragment shaders which contain non-constant loop indexers and compiled for FL9_3 and
-// below
-// fail with a specific error message.
-// Additionally test that the same fragment shader compiles successfully with feature levels greater
-// than FL9_3.
+// Test fragment shaders which contain non-constant loop indexers
 TEST_P(GLSLTest, LoopIndexingValidation)
 {
     constexpr char kFS[] = R"(precision mediump float;
@@ -2492,7 +2488,7 @@ void main()
     // If the test is configured to run limited to Feature Level 9_3, then it is
     // assumed that shader compilation will fail with an expected error message containing
     // "Loop index cannot be compared with non-constant expression"
-    if ((GetParam() == ES2_D3D11_FL9_3() || GetParam() == ES2_D3D9()))
+    if (GetParam() == ES2_D3D9())
     {
         if (compileResult != 0)
         {
@@ -3161,8 +3157,6 @@ TEST_P(GLSLTest_ES3, InitGlobalArrayWithArrayIndexing)
 // Test that index-constant sampler array indexing is supported.
 TEST_P(GLSLTest, IndexConstantSamplerArrayIndexing)
 {
-    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
-
     constexpr char kFS[] =
         "precision mediump float;\n"
         "uniform sampler2D uni[2];\n"
@@ -9021,7 +9015,6 @@ TEST_P(GLSLTest, FragData)
 // Test angle can handle big initial stack size with dynamic stack allocation.
 TEST_P(GLSLTest, MemoryExhaustedTest)
 {
-    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
     GLuint program =
         CompileProgram(essl1_shaders::vs::Simple(), BuildBigInitialStackShader(36).c_str());
     EXPECT_NE(0u, program);
