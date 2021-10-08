@@ -10,66 +10,6 @@
 3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth24_stencil8 = FAIL
 3683 VULKAN ANDROID : KHR-GLES3.packed_depth_stencil.*.depth32f_stencil8 = FAIL
 
-// CopyTexImage conversion failing due to Vulkan validation error re: UINT/SINT-descriptor-set issue.
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_texture2d = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_cubemap_negx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_cubemap_negy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_cubemap_negz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_cubemap_posx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_cubemap_posy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture_array_cubemap_posz = FAIL
-
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture2d_texture2d = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture2d_cubemap_negx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture2d_cubemap_negy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture2d_cubemap_negz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture2d_cubemap_posx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture2d_cubemap_posy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture2d_cubemap_posz = FAIL
-
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negx_texture2d = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negx_cubemap_negx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negx_cubemap_negy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negx_cubemap_negz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negx_cubemap_posx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negx_cubemap_posy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negx_cubemap_posz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negy_texture2d = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negy_cubemap_negx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negy_cubemap_negy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negy_cubemap_negz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negy_cubemap_posx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negy_cubemap_posy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negy_cubemap_posz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negz_texture2d = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negz_cubemap_negx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negz_cubemap_negy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negz_cubemap_negz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negz_cubemap_posx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negz_cubemap_posy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_negz_cubemap_posz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posx_texture2d = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posx_cubemap_negx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posx_cubemap_negy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posx_cubemap_negz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posx_cubemap_posx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posx_cubemap_posy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posx_cubemap_posz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posy_texture2d = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posy_cubemap_negx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posy_cubemap_negy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posy_cubemap_negz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posy_cubemap_posx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posy_cubemap_posy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posy_cubemap_posz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posz_texture2d = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posz_cubemap_negx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posz_cubemap_negy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posz_cubemap_negz = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posz_cubemap_posx = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posz_cubemap_posy = FAIL
-3817 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.cubemap_posz_cubemap_posz = FAIL
-
 // glCopyTexImage from 3D textures is failing and getting the following Vulkan Validation errors:
 //
 //  ImageView must not be a 2D or 2DArray view of a 3D image. The Vulkan spec states:
