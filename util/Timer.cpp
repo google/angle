@@ -14,13 +14,13 @@ Timer::Timer() : mRunning(false), mStartTime(0), mStopTime(0) {}
 
 void Timer::start()
 {
-    mStartTime = angle::GetCurrentTime();
+    mStartTime = angle::GetCurrentSystemTime();
     mRunning   = true;
 }
 
 void Timer::stop()
 {
-    mStopTime = angle::GetCurrentTime();
+    mStopTime = angle::GetCurrentSystemTime();
     mRunning  = false;
 }
 
@@ -29,7 +29,7 @@ double Timer::getElapsedTime() const
     double endTime;
     if (mRunning)
     {
-        endTime = angle::GetCurrentTime();
+        endTime = angle::GetCurrentSystemTime();
     }
     else
     {

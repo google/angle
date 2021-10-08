@@ -16,10 +16,6 @@
 #include "common/angleutils.h"
 #include "util/Timer.h"
 
-// DeleteFile is defined in the Windows headers to either DeleteFileA or DeleteFileW. Make sure
-// there are no conflicts.
-#undef DeleteFile
-
 namespace angle
 {
 // Cross platform equivalent of the Windows Sleep function
@@ -53,7 +49,7 @@ bool CreateTemporaryFile(char *tempFileNameOut, uint32_t maxFileNameLen);
 bool CreateTemporaryFileInDir(const char *dir, char *tempFileNameOut, uint32_t maxFileNameLen);
 
 // Deletes a file or directory.
-bool DeleteFile(const char *path);
+bool DeleteSystemFile(const char *path);
 
 // Reads a file contents into a string.
 bool ReadEntireFileToString(const char *filePath, char *contentsOut, uint32_t maxLen);

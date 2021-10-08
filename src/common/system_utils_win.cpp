@@ -72,7 +72,7 @@ const char *GetPathSeparatorForEnvironmentVar()
     return ";";
 }
 
-double GetCurrentTime()
+double GetCurrentSystemTime()
 {
     LARGE_INTEGER frequency = {};
     QueryPerformanceFrequency(&frequency);

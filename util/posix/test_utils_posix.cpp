@@ -426,7 +426,7 @@ bool CreateTemporaryFileInDir(const char *dir, char *tempFileNameOut, uint32_t m
     return fd != -1;
 }
 
-bool DeleteFile(const char *path)
+bool DeleteSystemFile(const char *path)
 {
     return unlink(path) == 0;
 }

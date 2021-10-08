@@ -98,7 +98,7 @@ TEST(TestUtils, MAYBE_CreateAndDeleteTemporaryFile)
     EXPECT_EQ(strcmp(actualString, kOutputString), 0);
 
     // Delete the temporary file.
-    EXPECT_TRUE(angle::DeleteFile(path));
+    EXPECT_TRUE(angle::DeleteSystemFile(path));
 }
 
 // Tests creating and deleting a file in the system temp dir.
@@ -126,7 +126,7 @@ TEST(TestUtils, MAYBE_CreateAndDeleteFileInTempDir)
     EXPECT_EQ(strcmp(actualString, kOutputString), 0);
 
     // Delete the temporary file.
-    EXPECT_TRUE(angle::DeleteFile(path));
+    EXPECT_TRUE(angle::DeleteSystemFile(path));
 }
 
 // TODO: android support. http://anglebug.com/3125

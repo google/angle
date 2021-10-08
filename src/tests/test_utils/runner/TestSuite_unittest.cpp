@@ -37,7 +37,7 @@ class TestSuiteTest : public testing::Test
     {
         if (!mTempFileName.empty())
         {
-            angle::DeleteFile(mTempFileName.c_str());
+            angle::DeleteSystemFile(mTempFileName.c_str());
         }
     }
 
@@ -209,7 +209,7 @@ TEST(MockFlakyTestSuiteTest, DISABLED_Flaky)
 
     if (fails >= kFlakyRetries - 1)
     {
-        angle::DeleteFile(tempFileName.c_str());
+        angle::DeleteSystemFile(tempFileName.c_str());
     }
     else
     {
