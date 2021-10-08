@@ -621,7 +621,7 @@ rx::VertexArrayStateGL *VertexArrayGL::getNativeState() const
 
 angle::Result VertexArrayGL::updateAttribEnabled(const gl::Context *context, size_t attribIndex)
 {
-    const bool enabled = mState.getVertexAttribute(attribIndex).enabled &
+    const bool enabled = mState.getVertexAttribute(attribIndex).enabled &&
                          mProgramActiveAttribLocationsMask.test(attribIndex);
     if (mNativeState->attributes[attribIndex].enabled == enabled)
     {
