@@ -1147,9 +1147,6 @@ TEST_P(VertexAttributeTest, MaxAttribs)
     // TODO(jmadill): Figure out why we get this error on AMD/OpenGL.
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
-    // TODO: Support this test on Vulkan.  http://anglebug.com/2797
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsVulkan() && IsIntel());
-
     GLint maxAttribs;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttribs);
     ASSERT_GL_NO_ERROR();
@@ -1603,9 +1600,6 @@ TEST_P(VertexAttributeTest, DisabledAttribArrays)
 {
     // Known failure on Retina MBP: http://crbug.com/635081
     ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
-
-    // TODO: Support this test on Vulkan.  http://anglebug.com/2797
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsVulkan() && IsIntel());
 
     constexpr char kVS[] =
         "attribute vec4 a_position;\n"
