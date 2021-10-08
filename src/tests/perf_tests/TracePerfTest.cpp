@@ -1096,6 +1096,12 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
     if (traceNameIs("pokemon_unite"))
     {
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
+
+        // http://anglebug.com/6548 - nondeterministic on Intel+Windows
+        if (IsWindows() && IsIntel())
+        {
+            mSkipTest = true;
+        }
     }
 
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
