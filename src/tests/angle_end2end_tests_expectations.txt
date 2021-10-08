@@ -106,6 +106,8 @@
 6407 MAC NVIDIA METAL : TransformFeedbackTest.OptimizedVaryings/ES3_Metal = SKIP
 6415 MAC INTEL METAL : CompressedTextureBPTCTest.Test/RGB_BPTC_SIGNED_FLOAT__ES3_Metal = SKIP
 6415 MAC INTEL METAL : CompressedTexturePVRTC1SRGBTest.Test/SRGB_PVRTC_2BPPV1__ES3_Metal = SKIP
+5345 MAC METAL AMD : TransformFeedbackTest.BufferOutOfMemory/ES3_Metal = SKIP
+5345 MAC METAL INTEL : TransformFeedbackTest.BufferOutOfMemory/ES3_Metal = SKIP
 
 // Direct Metal does not yet implement vertex attribute aliasing
 // Attribute aliasing is only allowed in GLSL ES 1.0 but disallowed by WebGL
