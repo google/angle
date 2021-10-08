@@ -857,9 +857,6 @@ TEST_P(Texture3DCopy, FloatFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
 
-    // http://anglebug.com/4756
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
     testFloatFormats(GL_TEXTURE_3D);
 }
 
