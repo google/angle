@@ -264,6 +264,10 @@ angle_source_set("angle_vulkan_backend") {
     "$angle_spirv_headers_dir:spv_headers",
   ]
 
+  if (angle_enable_cl || is_android) {
+    deps += [ "$angle_root:angle_version_info" ]
+  }
+
   public_deps = [
     "$angle_root:angle_glslang_wrapper",
     "$angle_root:libANGLE_headers",
