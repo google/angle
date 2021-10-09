@@ -1098,7 +1098,8 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
 
         // http://anglebug.com/6548 - nondeterministic on Intel+Windows
-        if (IsWindows() && IsIntel())
+        // Crashes on Linux Intel
+        if (IsIntel())
         {
             mSkipTest = true;
         }
