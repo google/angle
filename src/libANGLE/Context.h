@@ -98,7 +98,7 @@ class ErrorSet : angle::NonCopyable
                      const char *function,
                      unsigned int line);
 
-    void validationError(GLenum errorCode, const char *message);
+    void validationError(angle::EntryPoint entryPoint, GLenum errorCode, const char *message);
 
   private:
     Context *mContext;
@@ -455,7 +455,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                      const char *function,
                      unsigned int line);
 
-    void validationError(GLenum errorCode, const char *message) const;
+    void validationError(angle::EntryPoint entryPoint, GLenum errorCode, const char *message) const;
 
     void markContextLost(GraphicsResetStatus status);
 

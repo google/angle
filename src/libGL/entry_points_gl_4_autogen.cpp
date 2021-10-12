@@ -40,8 +40,10 @@ void GL_APIENTRY GL_BeginQueryIndexed(GLenum target, GLuint index, GLuint id)
     {
         QueryID idPacked                                      = PackParam<QueryID>(id);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateBeginQueryIndexed(context, target, index, idPacked));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBeginQueryIndexed(context, angle::EntryPoint::GLBeginQueryIndexed, target,
+                                       index, idPacked));
         if (isCallValid)
         {
             context->beginQueryIndexed(target, index, idPacked);
@@ -65,7 +67,9 @@ void GL_APIENTRY GL_BindTransformFeedback(GLenum target, GLuint id)
         TransformFeedbackID idPacked                          = PackParam<TransformFeedbackID>(id);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateBindTransformFeedback(context, target, idPacked));
+            (context->skipValidation() ||
+             ValidateBindTransformFeedback(context, angle::EntryPoint::GLBindTransformFeedback,
+                                           target, idPacked));
         if (isCallValid)
         {
             context->bindTransformFeedback(target, idPacked);
@@ -88,8 +92,10 @@ void GL_APIENTRY GL_BlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum mo
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateBlendEquationSeparatei(context, buf, modeRGB, modeAlpha));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBlendEquationSeparatei(context, angle::EntryPoint::GLBlendEquationSeparatei,
+                                            buf, modeRGB, modeAlpha));
         if (isCallValid)
         {
             context->blendEquationSeparatei(buf, modeRGB, modeAlpha);
@@ -112,7 +118,8 @@ void GL_APIENTRY GL_BlendEquationi(GLuint buf, GLenum mode)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateBlendEquationi(context, buf, mode));
+            (context->skipValidation() ||
+             ValidateBlendEquationi(context, angle::EntryPoint::GLBlendEquationi, buf, mode));
         if (isCallValid)
         {
             context->blendEquationi(buf, mode);
@@ -141,7 +148,8 @@ GL_BlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateBlendFuncSeparatei(context, buf, srcRGB, dstRGB, srcAlpha, dstAlpha));
+             ValidateBlendFuncSeparatei(context, angle::EntryPoint::GLBlendFuncSeparatei, buf,
+                                        srcRGB, dstRGB, srcAlpha, dstAlpha));
         if (isCallValid)
         {
             context->blendFuncSeparatei(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
@@ -166,7 +174,8 @@ void GL_APIENTRY GL_BlendFunci(GLuint buf, GLenum src, GLenum dst)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateBlendFunci(context, buf, src, dst));
+            (context->skipValidation() ||
+             ValidateBlendFunci(context, angle::EntryPoint::GLBlendFunci, buf, src, dst));
         if (isCallValid)
         {
             context->blendFunci(buf, src, dst);
@@ -190,7 +199,9 @@ void GL_APIENTRY GL_DeleteTransformFeedbacks(GLsizei n, const GLuint *ids)
         const TransformFeedbackID *idsPacked = PackParam<const TransformFeedbackID *>(ids);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateDeleteTransformFeedbacks(context, n, idsPacked));
+            (context->skipValidation() ||
+             ValidateDeleteTransformFeedbacks(
+                 context, angle::EntryPoint::GLDeleteTransformFeedbacks, n, idsPacked));
         if (isCallValid)
         {
             context->deleteTransformFeedbacks(n, idsPacked);
@@ -213,8 +224,10 @@ void GL_APIENTRY GL_DrawArraysIndirect(GLenum mode, const void *indirect)
     {
         PrimitiveMode modePacked                              = PackParam<PrimitiveMode>(mode);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateDrawArraysIndirect(context, modePacked, indirect));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateDrawArraysIndirect(context, angle::EntryPoint::GLDrawArraysIndirect,
+                                        modePacked, indirect));
         if (isCallValid)
         {
             context->drawArraysIndirect(modePacked, indirect);
@@ -242,7 +255,8 @@ void GL_APIENTRY GL_DrawElementsIndirect(GLenum mode, GLenum type, const void *i
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateDrawElementsIndirect(context, modePacked, typePacked, indirect));
+             ValidateDrawElementsIndirect(context, angle::EntryPoint::GLDrawElementsIndirect,
+                                          modePacked, typePacked, indirect));
         if (isCallValid)
         {
             context->drawElementsIndirect(modePacked, typePacked, indirect);
@@ -266,7 +280,9 @@ void GL_APIENTRY GL_DrawTransformFeedback(GLenum mode, GLuint id)
         TransformFeedbackID idPacked                          = PackParam<TransformFeedbackID>(id);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateDrawTransformFeedback(context, mode, idPacked));
+            (context->skipValidation() ||
+             ValidateDrawTransformFeedback(context, angle::EntryPoint::GLDrawTransformFeedback,
+                                           mode, idPacked));
         if (isCallValid)
         {
             context->drawTransformFeedback(mode, idPacked);
@@ -290,7 +306,9 @@ void GL_APIENTRY GL_DrawTransformFeedbackStream(GLenum mode, GLuint id, GLuint s
         TransformFeedbackID idPacked                          = PackParam<TransformFeedbackID>(id);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateDrawTransformFeedbackStream(context, mode, idPacked, stream));
+                            ValidateDrawTransformFeedbackStream(
+                                context, angle::EntryPoint::GLDrawTransformFeedbackStream, mode,
+                                idPacked, stream));
         if (isCallValid)
         {
             context->drawTransformFeedbackStream(mode, idPacked, stream);
@@ -313,7 +331,8 @@ void GL_APIENTRY GL_EndQueryIndexed(GLenum target, GLuint index)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateEndQueryIndexed(context, target, index));
+            (context->skipValidation() ||
+             ValidateEndQueryIndexed(context, angle::EntryPoint::GLEndQueryIndexed, target, index));
         if (isCallValid)
         {
             context->endQueryIndexed(target, index);
@@ -336,8 +355,9 @@ void GL_APIENTRY GL_GenTransformFeedbacks(GLsizei n, GLuint *ids)
     {
         TransformFeedbackID *idsPacked = PackParam<TransformFeedbackID *>(ids);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGenTransformFeedbacks(context, n, idsPacked));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGenTransformFeedbacks(
+                                context, angle::EntryPoint::GLGenTransformFeedbacks, n, idsPacked));
         if (isCallValid)
         {
             context->genTransformFeedbacks(n, idsPacked);
@@ -369,8 +389,9 @@ void GL_APIENTRY GL_GetActiveSubroutineName(GLuint program,
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetActiveSubroutineName(context, programPacked, shadertype,
-                                                            index, bufsize, length, name));
+                            ValidateGetActiveSubroutineName(
+                                context, angle::EntryPoint::GLGetActiveSubroutineName,
+                                programPacked, shadertype, index, bufsize, length, name));
         if (isCallValid)
         {
             context->getActiveSubroutineName(programPacked, shadertype, index, bufsize, length,
@@ -405,7 +426,8 @@ void GL_APIENTRY GL_GetActiveSubroutineUniformName(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateGetActiveSubroutineUniformName(
-                                context, programPacked, shadertype, index, bufsize, length, name));
+                                context, angle::EntryPoint::GLGetActiveSubroutineUniformName,
+                                programPacked, shadertype, index, bufsize, length, name));
         if (isCallValid)
         {
             context->getActiveSubroutineUniformName(programPacked, shadertype, index, bufsize,
@@ -438,8 +460,9 @@ void GL_APIENTRY GL_GetActiveSubroutineUniformiv(GLuint program,
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetActiveSubroutineUniformiv(context, programPacked, shadertype,
-                                                                 index, pname, values));
+                            ValidateGetActiveSubroutineUniformiv(
+                                context, angle::EntryPoint::GLGetActiveSubroutineUniformiv,
+                                programPacked, shadertype, index, pname, values));
         if (isCallValid)
         {
             context->getActiveSubroutineUniformiv(programPacked, shadertype, index, pname, values);
@@ -470,7 +493,8 @@ void GL_APIENTRY GL_GetProgramStageiv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetProgramStageiv(context, programPacked, shadertype, pname, values));
+             ValidateGetProgramStageiv(context, angle::EntryPoint::GLGetProgramStageiv,
+                                       programPacked, shadertype, pname, values));
         if (isCallValid)
         {
             context->getProgramStageiv(programPacked, shadertype, pname, values);
@@ -495,8 +519,10 @@ void GL_APIENTRY GL_GetQueryIndexediv(GLenum target, GLuint index, GLenum pname,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetQueryIndexediv(context, target, index, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetQueryIndexediv(context, angle::EntryPoint::GLGetQueryIndexediv, target,
+                                       index, pname, params));
         if (isCallValid)
         {
             context->getQueryIndexediv(target, index, pname, params);
@@ -521,8 +547,10 @@ GLuint GL_APIENTRY GL_GetSubroutineIndex(GLuint program, GLenum shadertype, cons
     {
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetSubroutineIndex(context, programPacked, shadertype, name));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetSubroutineIndex(context, angle::EntryPoint::GLGetSubroutineIndex,
+                                        programPacked, shadertype, name));
         if (isCallValid)
         {
             returnValue = context->getSubroutineIndex(programPacked, shadertype, name);
@@ -556,9 +584,10 @@ GLint GL_APIENTRY GL_GetSubroutineUniformLocation(GLuint program,
     {
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetSubroutineUniformLocation(context, programPacked, shadertype, name));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetSubroutineUniformLocation(
+                                context, angle::EntryPoint::GLGetSubroutineUniformLocation,
+                                programPacked, shadertype, name));
         if (isCallValid)
         {
             returnValue = context->getSubroutineUniformLocation(programPacked, shadertype, name);
@@ -590,8 +619,10 @@ void GL_APIENTRY GL_GetUniformSubroutineuiv(GLenum shadertype, GLint location, G
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetUniformSubroutineuiv(context, shadertype, location, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetUniformSubroutineuiv(context, angle::EntryPoint::GLGetUniformSubroutineuiv,
+                                             shadertype, location, params));
         if (isCallValid)
         {
             context->getUniformSubroutineuiv(shadertype, location, params);
@@ -617,7 +648,8 @@ void GL_APIENTRY GL_GetUniformdv(GLuint program, GLint location, GLdouble *param
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetUniformdv(context, programPacked, locationPacked, params));
+                            ValidateGetUniformdv(context, angle::EntryPoint::GLGetUniformdv,
+                                                 programPacked, locationPacked, params));
         if (isCallValid)
         {
             context->getUniformdv(programPacked, locationPacked, params);
@@ -640,8 +672,9 @@ GLboolean GL_APIENTRY GL_IsTransformFeedback(GLuint id)
     {
         TransformFeedbackID idPacked                          = PackParam<TransformFeedbackID>(id);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateIsTransformFeedback(context, idPacked));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateIsTransformFeedback(
+                                context, angle::EntryPoint::GLIsTransformFeedback, idPacked));
         if (isCallValid)
         {
             returnValue = context->isTransformFeedback(idPacked);
@@ -669,7 +702,9 @@ void GL_APIENTRY GL_MinSampleShading(GLfloat value)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateMinSampleShading(context, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateMinSampleShading(context, angle::EntryPoint::GLMinSampleShading, value));
         if (isCallValid)
         {
             context->minSampleShading(value);
@@ -691,8 +726,9 @@ void GL_APIENTRY GL_PatchParameterfv(GLenum pname, const GLfloat *values)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidatePatchParameterfv(context, pname, values));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidatePatchParameterfv(context, angle::EntryPoint::GLPatchParameterfv,
+                                                     pname, values));
         if (isCallValid)
         {
             context->patchParameterfv(pname, values);
@@ -715,7 +751,8 @@ void GL_APIENTRY GL_PatchParameteri(GLenum pname, GLint value)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidatePatchParameteri(context, pname, value));
+            (context->skipValidation() ||
+             ValidatePatchParameteri(context, angle::EntryPoint::GLPatchParameteri, pname, value));
         if (isCallValid)
         {
             context->patchParameteri(pname, value);
@@ -736,7 +773,9 @@ void GL_APIENTRY GL_PauseTransformFeedback()
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidatePauseTransformFeedback(context));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidatePauseTransformFeedback(context, angle::EntryPoint::GLPauseTransformFeedback));
         if (isCallValid)
         {
             context->pauseTransformFeedback();
@@ -757,7 +796,9 @@ void GL_APIENTRY GL_ResumeTransformFeedback()
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateResumeTransformFeedback(context));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateResumeTransformFeedback(
+                                context, angle::EntryPoint::GLResumeTransformFeedback));
         if (isCallValid)
         {
             context->resumeTransformFeedback();
@@ -780,7 +821,8 @@ void GL_APIENTRY GL_Uniform1d(GLint location, GLdouble x)
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateUniform1d(context, locationPacked, x));
+            (context->skipValidation() ||
+             ValidateUniform1d(context, angle::EntryPoint::GLUniform1d, locationPacked, x));
         if (isCallValid)
         {
             context->uniform1d(locationPacked, x);
@@ -805,7 +847,8 @@ void GL_APIENTRY GL_Uniform1dv(GLint location, GLsizei count, const GLdouble *va
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniform1dv(context, locationPacked, count, value));
+                            ValidateUniform1dv(context, angle::EntryPoint::GLUniform1dv,
+                                               locationPacked, count, value));
         if (isCallValid)
         {
             context->uniform1dv(locationPacked, count, value);
@@ -829,7 +872,8 @@ void GL_APIENTRY GL_Uniform2d(GLint location, GLdouble x, GLdouble y)
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateUniform2d(context, locationPacked, x, y));
+            (context->skipValidation() ||
+             ValidateUniform2d(context, angle::EntryPoint::GLUniform2d, locationPacked, x, y));
         if (isCallValid)
         {
             context->uniform2d(locationPacked, x, y);
@@ -854,7 +898,8 @@ void GL_APIENTRY GL_Uniform2dv(GLint location, GLsizei count, const GLdouble *va
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniform2dv(context, locationPacked, count, value));
+                            ValidateUniform2dv(context, angle::EntryPoint::GLUniform2dv,
+                                               locationPacked, count, value));
         if (isCallValid)
         {
             context->uniform2dv(locationPacked, count, value);
@@ -878,7 +923,8 @@ void GL_APIENTRY GL_Uniform3d(GLint location, GLdouble x, GLdouble y, GLdouble z
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateUniform3d(context, locationPacked, x, y, z));
+            (context->skipValidation() ||
+             ValidateUniform3d(context, angle::EntryPoint::GLUniform3d, locationPacked, x, y, z));
         if (isCallValid)
         {
             context->uniform3d(locationPacked, x, y, z);
@@ -903,7 +949,8 @@ void GL_APIENTRY GL_Uniform3dv(GLint location, GLsizei count, const GLdouble *va
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniform3dv(context, locationPacked, count, value));
+                            ValidateUniform3dv(context, angle::EntryPoint::GLUniform3dv,
+                                               locationPacked, count, value));
         if (isCallValid)
         {
             context->uniform3dv(locationPacked, count, value);
@@ -927,7 +974,8 @@ void GL_APIENTRY GL_Uniform4d(GLint location, GLdouble x, GLdouble y, GLdouble z
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateUniform4d(context, locationPacked, x, y, z, w));
+            (context->skipValidation() || ValidateUniform4d(context, angle::EntryPoint::GLUniform4d,
+                                                            locationPacked, x, y, z, w));
         if (isCallValid)
         {
             context->uniform4d(locationPacked, x, y, z, w);
@@ -952,7 +1000,8 @@ void GL_APIENTRY GL_Uniform4dv(GLint location, GLsizei count, const GLdouble *va
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniform4dv(context, locationPacked, count, value));
+                            ValidateUniform4dv(context, angle::EntryPoint::GLUniform4dv,
+                                               locationPacked, count, value));
         if (isCallValid)
         {
             context->uniform4dv(locationPacked, count, value);
@@ -979,9 +1028,9 @@ void GL_APIENTRY GL_UniformMatrix2dv(GLint location,
     {
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateUniformMatrix2dv(context, locationPacked, count, transpose, value));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateUniformMatrix2dv(context, angle::EntryPoint::GLUniformMatrix2dv,
+                                                     locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->uniformMatrix2dv(locationPacked, count, transpose, value);
@@ -1011,7 +1060,8 @@ void GL_APIENTRY GL_UniformMatrix2x3dv(GLint location,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateUniformMatrix2x3dv(context, locationPacked, count, transpose, value));
+             ValidateUniformMatrix2x3dv(context, angle::EntryPoint::GLUniformMatrix2x3dv,
+                                        locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->uniformMatrix2x3dv(locationPacked, count, transpose, value);
@@ -1041,7 +1091,8 @@ void GL_APIENTRY GL_UniformMatrix2x4dv(GLint location,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateUniformMatrix2x4dv(context, locationPacked, count, transpose, value));
+             ValidateUniformMatrix2x4dv(context, angle::EntryPoint::GLUniformMatrix2x4dv,
+                                        locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->uniformMatrix2x4dv(locationPacked, count, transpose, value);
@@ -1069,9 +1120,9 @@ void GL_APIENTRY GL_UniformMatrix3dv(GLint location,
     {
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateUniformMatrix3dv(context, locationPacked, count, transpose, value));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateUniformMatrix3dv(context, angle::EntryPoint::GLUniformMatrix3dv,
+                                                     locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->uniformMatrix3dv(locationPacked, count, transpose, value);
@@ -1101,7 +1152,8 @@ void GL_APIENTRY GL_UniformMatrix3x2dv(GLint location,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateUniformMatrix3x2dv(context, locationPacked, count, transpose, value));
+             ValidateUniformMatrix3x2dv(context, angle::EntryPoint::GLUniformMatrix3x2dv,
+                                        locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->uniformMatrix3x2dv(locationPacked, count, transpose, value);
@@ -1131,7 +1183,8 @@ void GL_APIENTRY GL_UniformMatrix3x4dv(GLint location,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateUniformMatrix3x4dv(context, locationPacked, count, transpose, value));
+             ValidateUniformMatrix3x4dv(context, angle::EntryPoint::GLUniformMatrix3x4dv,
+                                        locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->uniformMatrix3x4dv(locationPacked, count, transpose, value);
@@ -1159,9 +1212,9 @@ void GL_APIENTRY GL_UniformMatrix4dv(GLint location,
     {
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateUniformMatrix4dv(context, locationPacked, count, transpose, value));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateUniformMatrix4dv(context, angle::EntryPoint::GLUniformMatrix4dv,
+                                                     locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->uniformMatrix4dv(locationPacked, count, transpose, value);
@@ -1191,7 +1244,8 @@ void GL_APIENTRY GL_UniformMatrix4x2dv(GLint location,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateUniformMatrix4x2dv(context, locationPacked, count, transpose, value));
+             ValidateUniformMatrix4x2dv(context, angle::EntryPoint::GLUniformMatrix4x2dv,
+                                        locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->uniformMatrix4x2dv(locationPacked, count, transpose, value);
@@ -1221,7 +1275,8 @@ void GL_APIENTRY GL_UniformMatrix4x3dv(GLint location,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateUniformMatrix4x3dv(context, locationPacked, count, transpose, value));
+             ValidateUniformMatrix4x3dv(context, angle::EntryPoint::GLUniformMatrix4x3dv,
+                                        locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->uniformMatrix4x3dv(locationPacked, count, transpose, value);
@@ -1245,8 +1300,10 @@ void GL_APIENTRY GL_UniformSubroutinesuiv(GLenum shadertype, GLsizei count, cons
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformSubroutinesuiv(context, shadertype, count, indices));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformSubroutinesuiv(context, angle::EntryPoint::GLUniformSubroutinesuiv,
+                                           shadertype, count, indices));
         if (isCallValid)
         {
             context->uniformSubroutinesuiv(shadertype, count, indices);
@@ -1271,8 +1328,10 @@ void GL_APIENTRY GL_ActiveShaderProgram(GLuint pipeline, GLuint program)
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         ShaderProgramID programPacked    = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateActiveShaderProgram(context, pipelinePacked, programPacked));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateActiveShaderProgram(context, angle::EntryPoint::GLActiveShaderProgram,
+                                         pipelinePacked, programPacked));
         if (isCallValid)
         {
             context->activeShaderProgram(pipelinePacked, programPacked);
@@ -1294,8 +1353,9 @@ void GL_APIENTRY GL_BindProgramPipeline(GLuint pipeline)
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateBindProgramPipeline(context, pipelinePacked));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBindProgramPipeline(
+                                context, angle::EntryPoint::GLBindProgramPipeline, pipelinePacked));
         if (isCallValid)
         {
             context->bindProgramPipeline(pipelinePacked);
@@ -1316,7 +1376,8 @@ void GL_APIENTRY GL_ClearDepthf(GLfloat d)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateClearDepthf(context, d));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateClearDepthf(context, angle::EntryPoint::GLClearDepthf, d));
         if (isCallValid)
         {
             context->clearDepthf(d);
@@ -1341,8 +1402,10 @@ GLuint GL_APIENTRY GL_CreateShaderProgramv(GLenum type, GLsizei count, const GLc
     {
         ShaderType typePacked                                 = PackParam<ShaderType>(type);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateCreateShaderProgramv(context, typePacked, count, strings));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateCreateShaderProgramv(context, angle::EntryPoint::GLCreateShaderProgramv,
+                                          typePacked, count, strings));
         if (isCallValid)
         {
             returnValue = context->createShaderProgramv(typePacked, count, strings);
@@ -1373,8 +1436,10 @@ void GL_APIENTRY GL_DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
     {
         const ProgramPipelineID *pipelinesPacked = PackParam<const ProgramPipelineID *>(pipelines);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateDeleteProgramPipelines(context, n, pipelinesPacked));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateDeleteProgramPipelines(context, angle::EntryPoint::GLDeleteProgramPipelines, n,
+                                            pipelinesPacked));
         if (isCallValid)
         {
             context->deleteProgramPipelines(n, pipelinesPacked);
@@ -1397,8 +1462,9 @@ void GL_APIENTRY GL_DepthRangeArrayv(GLuint first, GLsizei count, const GLdouble
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateDepthRangeArrayv(context, first, count, v));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateDepthRangeArrayv(context, angle::EntryPoint::GLDepthRangeArrayv,
+                                                     first, count, v));
         if (isCallValid)
         {
             context->depthRangeArrayv(first, count, v);
@@ -1420,8 +1486,9 @@ void GL_APIENTRY GL_DepthRangeIndexed(GLuint index, GLdouble n, GLdouble f)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateDepthRangeIndexed(context, index, n, f));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateDepthRangeIndexed(
+                                context, angle::EntryPoint::GLDepthRangeIndexed, index, n, f));
         if (isCallValid)
         {
             context->depthRangeIndexed(index, n, f);
@@ -1442,7 +1509,8 @@ void GL_APIENTRY GL_DepthRangef(GLfloat n, GLfloat f)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateDepthRangef(context, n, f));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateDepthRangef(context, angle::EntryPoint::GLDepthRangef, n, f));
         if (isCallValid)
         {
             context->depthRangef(n, f);
@@ -1466,7 +1534,9 @@ void GL_APIENTRY GL_GenProgramPipelines(GLsizei n, GLuint *pipelines)
         ProgramPipelineID *pipelinesPacked = PackParam<ProgramPipelineID *>(pipelines);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGenProgramPipelines(context, n, pipelinesPacked));
+            (context->skipValidation() ||
+             ValidateGenProgramPipelines(context, angle::EntryPoint::GLGenProgramPipelines, n,
+                                         pipelinesPacked));
         if (isCallValid)
         {
             context->genProgramPipelines(n, pipelinesPacked);
@@ -1490,7 +1560,8 @@ void GL_APIENTRY GL_GetDoublei_v(GLenum target, GLuint index, GLdouble *data)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGetDoublei_v(context, target, index, data));
+            (context->skipValidation() ||
+             ValidateGetDoublei_v(context, angle::EntryPoint::GLGetDoublei_v, target, index, data));
         if (isCallValid)
         {
             context->getDoublei_v(target, index, data);
@@ -1513,7 +1584,8 @@ void GL_APIENTRY GL_GetFloati_v(GLenum target, GLuint index, GLfloat *data)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGetFloati_v(context, target, index, data));
+            (context->skipValidation() ||
+             ValidateGetFloati_v(context, angle::EntryPoint::GLGetFloati_v, target, index, data));
         if (isCallValid)
         {
             context->getFloati_v(target, index, data);
@@ -1544,8 +1616,9 @@ void GL_APIENTRY GL_GetProgramBinary(GLuint program,
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGetProgramBinary(context, programPacked, bufSize,
-                                                                   length, binaryFormat, binary));
+            (context->skipValidation() ||
+             ValidateGetProgramBinary(context, angle::EntryPoint::GLGetProgramBinary, programPacked,
+                                      bufSize, length, binaryFormat, binary));
         if (isCallValid)
         {
             context->getProgramBinary(programPacked, bufSize, length, binaryFormat, binary);
@@ -1574,9 +1647,10 @@ void GL_APIENTRY GL_GetProgramPipelineInfoLog(GLuint pipeline,
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetProgramPipelineInfoLog(context, pipelinePacked, bufSize, length, infoLog));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetProgramPipelineInfoLog(
+                                context, angle::EntryPoint::GLGetProgramPipelineInfoLog,
+                                pipelinePacked, bufSize, length, infoLog));
         if (isCallValid)
         {
             context->getProgramPipelineInfoLog(pipelinePacked, bufSize, length, infoLog);
@@ -1601,8 +1675,10 @@ void GL_APIENTRY GL_GetProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *p
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetProgramPipelineiv(context, pipelinePacked, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetProgramPipelineiv(context, angle::EntryPoint::GLGetProgramPipelineiv,
+                                          pipelinePacked, pname, params));
         if (isCallValid)
         {
             context->getProgramPipelineiv(pipelinePacked, pname, params);
@@ -1632,8 +1708,9 @@ void GL_APIENTRY GL_GetShaderPrecisionFormat(GLenum shadertype,
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetShaderPrecisionFormat(context, shadertype, precisiontype,
-                                                             range, precision));
+                            ValidateGetShaderPrecisionFormat(
+                                context, angle::EntryPoint::GLGetShaderPrecisionFormat, shadertype,
+                                precisiontype, range, precision));
         if (isCallValid)
         {
             context->getShaderPrecisionFormat(shadertype, precisiontype, range, precision);
@@ -1657,8 +1734,10 @@ void GL_APIENTRY GL_GetVertexAttribLdv(GLuint index, GLenum pname, GLdouble *par
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetVertexAttribLdv(context, index, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetVertexAttribLdv(context, angle::EntryPoint::GLGetVertexAttribLdv, index,
+                                        pname, params));
         if (isCallValid)
         {
             context->getVertexAttribLdv(index, pname, params);
@@ -1681,8 +1760,9 @@ GLboolean GL_APIENTRY GL_IsProgramPipeline(GLuint pipeline)
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateIsProgramPipeline(context, pipelinePacked));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateIsProgramPipeline(
+                                context, angle::EntryPoint::GLIsProgramPipeline, pipelinePacked));
         if (isCallValid)
         {
             returnValue = context->isProgramPipeline(pipelinePacked);
@@ -1717,9 +1797,9 @@ void GL_APIENTRY GL_ProgramBinary(GLuint program,
     {
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramBinary(context, programPacked, binaryFormat, binary, length));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateProgramBinary(context, angle::EntryPoint::GLProgramBinary,
+                                                  programPacked, binaryFormat, binary, length));
         if (isCallValid)
         {
             context->programBinary(programPacked, binaryFormat, binary, length);
@@ -1743,8 +1823,10 @@ void GL_APIENTRY GL_ProgramParameteri(GLuint program, GLenum pname, GLint value)
     {
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramParameteri(context, programPacked, pname, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateProgramParameteri(context, angle::EntryPoint::GLProgramParameteri,
+                                       programPacked, pname, value));
         if (isCallValid)
         {
             context->programParameteri(programPacked, pname, value);
@@ -1769,7 +1851,8 @@ void GL_APIENTRY GL_ProgramUniform1d(GLuint program, GLint location, GLdouble v0
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramUniform1d(context, programPacked, locationPacked, v0));
+                            ValidateProgramUniform1d(context, angle::EntryPoint::GLProgramUniform1d,
+                                                     programPacked, locationPacked, v0));
         if (isCallValid)
         {
             context->programUniform1d(programPacked, locationPacked, v0);
@@ -1799,7 +1882,8 @@ void GL_APIENTRY GL_ProgramUniform1dv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform1dv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform1dv(context, angle::EntryPoint::GLProgramUniform1dv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform1dv(programPacked, locationPacked, count, value);
@@ -1825,7 +1909,8 @@ void GL_APIENTRY GL_ProgramUniform1f(GLuint program, GLint location, GLfloat v0)
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramUniform1f(context, programPacked, locationPacked, v0));
+                            ValidateProgramUniform1f(context, angle::EntryPoint::GLProgramUniform1f,
+                                                     programPacked, locationPacked, v0));
         if (isCallValid)
         {
             context->programUniform1f(programPacked, locationPacked, v0);
@@ -1855,7 +1940,8 @@ void GL_APIENTRY GL_ProgramUniform1fv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform1fv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform1fv(context, angle::EntryPoint::GLProgramUniform1fv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform1fv(programPacked, locationPacked, count, value);
@@ -1881,7 +1967,8 @@ void GL_APIENTRY GL_ProgramUniform1i(GLuint program, GLint location, GLint v0)
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramUniform1i(context, programPacked, locationPacked, v0));
+                            ValidateProgramUniform1i(context, angle::EntryPoint::GLProgramUniform1i,
+                                                     programPacked, locationPacked, v0));
         if (isCallValid)
         {
             context->programUniform1i(programPacked, locationPacked, v0);
@@ -1911,7 +1998,8 @@ void GL_APIENTRY GL_ProgramUniform1iv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform1iv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform1iv(context, angle::EntryPoint::GLProgramUniform1iv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform1iv(programPacked, locationPacked, count, value);
@@ -1936,8 +2024,10 @@ void GL_APIENTRY GL_ProgramUniform1ui(GLuint program, GLint location, GLuint v0)
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramUniform1ui(context, programPacked, locationPacked, v0));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateProgramUniform1ui(context, angle::EntryPoint::GLProgramUniform1ui,
+                                       programPacked, locationPacked, v0));
         if (isCallValid)
         {
             context->programUniform1ui(programPacked, locationPacked, v0);
@@ -1967,7 +2057,8 @@ void GL_APIENTRY GL_ProgramUniform1uiv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform1uiv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform1uiv(context, angle::EntryPoint::GLProgramUniform1uiv,
+                                        programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform1uiv(programPacked, locationPacked, count, value);
@@ -1993,9 +2084,9 @@ void GL_APIENTRY GL_ProgramUniform2d(GLuint program, GLint location, GLdouble v0
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform2d(context, programPacked, locationPacked, v0, v1));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateProgramUniform2d(context, angle::EntryPoint::GLProgramUniform2d,
+                                                     programPacked, locationPacked, v0, v1));
         if (isCallValid)
         {
             context->programUniform2d(programPacked, locationPacked, v0, v1);
@@ -2026,7 +2117,8 @@ void GL_APIENTRY GL_ProgramUniform2dv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform2dv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform2dv(context, angle::EntryPoint::GLProgramUniform2dv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform2dv(programPacked, locationPacked, count, value);
@@ -2052,9 +2144,9 @@ void GL_APIENTRY GL_ProgramUniform2f(GLuint program, GLint location, GLfloat v0,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform2f(context, programPacked, locationPacked, v0, v1));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateProgramUniform2f(context, angle::EntryPoint::GLProgramUniform2f,
+                                                     programPacked, locationPacked, v0, v1));
         if (isCallValid)
         {
             context->programUniform2f(programPacked, locationPacked, v0, v1);
@@ -2085,7 +2177,8 @@ void GL_APIENTRY GL_ProgramUniform2fv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform2fv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform2fv(context, angle::EntryPoint::GLProgramUniform2fv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform2fv(programPacked, locationPacked, count, value);
@@ -2111,9 +2204,9 @@ void GL_APIENTRY GL_ProgramUniform2i(GLuint program, GLint location, GLint v0, G
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform2i(context, programPacked, locationPacked, v0, v1));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateProgramUniform2i(context, angle::EntryPoint::GLProgramUniform2i,
+                                                     programPacked, locationPacked, v0, v1));
         if (isCallValid)
         {
             context->programUniform2i(programPacked, locationPacked, v0, v1);
@@ -2144,7 +2237,8 @@ void GL_APIENTRY GL_ProgramUniform2iv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform2iv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform2iv(context, angle::EntryPoint::GLProgramUniform2iv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform2iv(programPacked, locationPacked, count, value);
@@ -2172,7 +2266,8 @@ void GL_APIENTRY GL_ProgramUniform2ui(GLuint program, GLint location, GLuint v0,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform2ui(context, programPacked, locationPacked, v0, v1));
+             ValidateProgramUniform2ui(context, angle::EntryPoint::GLProgramUniform2ui,
+                                       programPacked, locationPacked, v0, v1));
         if (isCallValid)
         {
             context->programUniform2ui(programPacked, locationPacked, v0, v1);
@@ -2203,7 +2298,8 @@ void GL_APIENTRY GL_ProgramUniform2uiv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform2uiv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform2uiv(context, angle::EntryPoint::GLProgramUniform2uiv,
+                                        programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform2uiv(programPacked, locationPacked, count, value);
@@ -2230,9 +2326,9 @@ GL_ProgramUniform3d(GLuint program, GLint location, GLdouble v0, GLdouble v1, GL
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform3d(context, programPacked, locationPacked, v0, v1, v2));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateProgramUniform3d(context, angle::EntryPoint::GLProgramUniform3d,
+                                                     programPacked, locationPacked, v0, v1, v2));
         if (isCallValid)
         {
             context->programUniform3d(programPacked, locationPacked, v0, v1, v2);
@@ -2263,7 +2359,8 @@ void GL_APIENTRY GL_ProgramUniform3dv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform3dv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform3dv(context, angle::EntryPoint::GLProgramUniform3dv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform3dv(programPacked, locationPacked, count, value);
@@ -2290,9 +2387,9 @@ GL_ProgramUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfl
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform3f(context, programPacked, locationPacked, v0, v1, v2));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateProgramUniform3f(context, angle::EntryPoint::GLProgramUniform3f,
+                                                     programPacked, locationPacked, v0, v1, v2));
         if (isCallValid)
         {
             context->programUniform3f(programPacked, locationPacked, v0, v1, v2);
@@ -2323,7 +2420,8 @@ void GL_APIENTRY GL_ProgramUniform3fv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform3fv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform3fv(context, angle::EntryPoint::GLProgramUniform3fv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform3fv(programPacked, locationPacked, count, value);
@@ -2349,9 +2447,9 @@ void GL_APIENTRY GL_ProgramUniform3i(GLuint program, GLint location, GLint v0, G
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform3i(context, programPacked, locationPacked, v0, v1, v2));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateProgramUniform3i(context, angle::EntryPoint::GLProgramUniform3i,
+                                                     programPacked, locationPacked, v0, v1, v2));
         if (isCallValid)
         {
             context->programUniform3i(programPacked, locationPacked, v0, v1, v2);
@@ -2382,7 +2480,8 @@ void GL_APIENTRY GL_ProgramUniform3iv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform3iv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform3iv(context, angle::EntryPoint::GLProgramUniform3iv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform3iv(programPacked, locationPacked, count, value);
@@ -2411,7 +2510,8 @@ GL_ProgramUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuin
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform3ui(context, programPacked, locationPacked, v0, v1, v2));
+             ValidateProgramUniform3ui(context, angle::EntryPoint::GLProgramUniform3ui,
+                                       programPacked, locationPacked, v0, v1, v2));
         if (isCallValid)
         {
             context->programUniform3ui(programPacked, locationPacked, v0, v1, v2);
@@ -2442,7 +2542,8 @@ void GL_APIENTRY GL_ProgramUniform3uiv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform3uiv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform3uiv(context, angle::EntryPoint::GLProgramUniform3uiv,
+                                        programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform3uiv(programPacked, locationPacked, count, value);
@@ -2475,7 +2576,8 @@ void GL_APIENTRY GL_ProgramUniform4d(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform4d(context, programPacked, locationPacked, v0, v1, v2, v3));
+             ValidateProgramUniform4d(context, angle::EntryPoint::GLProgramUniform4d, programPacked,
+                                      locationPacked, v0, v1, v2, v3));
         if (isCallValid)
         {
             context->programUniform4d(programPacked, locationPacked, v0, v1, v2, v3);
@@ -2506,7 +2608,8 @@ void GL_APIENTRY GL_ProgramUniform4dv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform4dv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform4dv(context, angle::EntryPoint::GLProgramUniform4dv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform4dv(programPacked, locationPacked, count, value);
@@ -2535,7 +2638,8 @@ GL_ProgramUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfl
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform4f(context, programPacked, locationPacked, v0, v1, v2, v3));
+             ValidateProgramUniform4f(context, angle::EntryPoint::GLProgramUniform4f, programPacked,
+                                      locationPacked, v0, v1, v2, v3));
         if (isCallValid)
         {
             context->programUniform4f(programPacked, locationPacked, v0, v1, v2, v3);
@@ -2566,7 +2670,8 @@ void GL_APIENTRY GL_ProgramUniform4fv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform4fv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform4fv(context, angle::EntryPoint::GLProgramUniform4fv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform4fv(programPacked, locationPacked, count, value);
@@ -2595,7 +2700,8 @@ GL_ProgramUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform4i(context, programPacked, locationPacked, v0, v1, v2, v3));
+             ValidateProgramUniform4i(context, angle::EntryPoint::GLProgramUniform4i, programPacked,
+                                      locationPacked, v0, v1, v2, v3));
         if (isCallValid)
         {
             context->programUniform4i(programPacked, locationPacked, v0, v1, v2, v3);
@@ -2626,7 +2732,8 @@ void GL_APIENTRY GL_ProgramUniform4iv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform4iv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform4iv(context, angle::EntryPoint::GLProgramUniform4iv,
+                                       programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform4iv(programPacked, locationPacked, count, value);
@@ -2655,7 +2762,8 @@ GL_ProgramUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuin
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform4ui(context, programPacked, locationPacked, v0, v1, v2, v3));
+             ValidateProgramUniform4ui(context, angle::EntryPoint::GLProgramUniform4ui,
+                                       programPacked, locationPacked, v0, v1, v2, v3));
         if (isCallValid)
         {
             context->programUniform4ui(programPacked, locationPacked, v0, v1, v2, v3);
@@ -2686,7 +2794,8 @@ void GL_APIENTRY GL_ProgramUniform4uiv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateProgramUniform4uiv(context, programPacked, locationPacked, count, value));
+             ValidateProgramUniform4uiv(context, angle::EntryPoint::GLProgramUniform4uiv,
+                                        programPacked, locationPacked, count, value));
         if (isCallValid)
         {
             context->programUniform4uiv(programPacked, locationPacked, count, value);
@@ -2718,8 +2827,9 @@ void GL_APIENTRY GL_ProgramUniformMatrix2dv(GLuint program,
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix2dv(context, programPacked, locationPacked,
-                                                            count, transpose, value));
+                            ValidateProgramUniformMatrix2dv(
+                                context, angle::EntryPoint::GLProgramUniformMatrix2dv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix2dv(programPacked, locationPacked, count, transpose,
@@ -2752,8 +2862,9 @@ void GL_APIENTRY GL_ProgramUniformMatrix2fv(GLuint program,
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix2fv(context, programPacked, locationPacked,
-                                                            count, transpose, value));
+                            ValidateProgramUniformMatrix2fv(
+                                context, angle::EntryPoint::GLProgramUniformMatrix2fv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix2fv(programPacked, locationPacked, count, transpose,
@@ -2787,7 +2898,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix2x3dv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix2x3dv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix2x3dv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix2x3dv(programPacked, locationPacked, count, transpose,
@@ -2821,7 +2933,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix2x3fv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix2x3fv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix2x3fv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix2x3fv(programPacked, locationPacked, count, transpose,
@@ -2855,7 +2968,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix2x4dv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix2x4dv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix2x4dv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix2x4dv(programPacked, locationPacked, count, transpose,
@@ -2889,7 +3003,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix2x4fv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix2x4fv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix2x4fv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix2x4fv(programPacked, locationPacked, count, transpose,
@@ -2922,8 +3037,9 @@ void GL_APIENTRY GL_ProgramUniformMatrix3dv(GLuint program,
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix3dv(context, programPacked, locationPacked,
-                                                            count, transpose, value));
+                            ValidateProgramUniformMatrix3dv(
+                                context, angle::EntryPoint::GLProgramUniformMatrix3dv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix3dv(programPacked, locationPacked, count, transpose,
@@ -2956,8 +3072,9 @@ void GL_APIENTRY GL_ProgramUniformMatrix3fv(GLuint program,
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix3fv(context, programPacked, locationPacked,
-                                                            count, transpose, value));
+                            ValidateProgramUniformMatrix3fv(
+                                context, angle::EntryPoint::GLProgramUniformMatrix3fv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix3fv(programPacked, locationPacked, count, transpose,
@@ -2991,7 +3108,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix3x2dv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix3x2dv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix3x2dv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix3x2dv(programPacked, locationPacked, count, transpose,
@@ -3025,7 +3143,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix3x2fv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix3x2fv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix3x2fv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix3x2fv(programPacked, locationPacked, count, transpose,
@@ -3059,7 +3178,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix3x4dv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix3x4dv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix3x4dv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix3x4dv(programPacked, locationPacked, count, transpose,
@@ -3093,7 +3213,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix3x4fv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix3x4fv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix3x4fv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix3x4fv(programPacked, locationPacked, count, transpose,
@@ -3126,8 +3247,9 @@ void GL_APIENTRY GL_ProgramUniformMatrix4dv(GLuint program,
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix4dv(context, programPacked, locationPacked,
-                                                            count, transpose, value));
+                            ValidateProgramUniformMatrix4dv(
+                                context, angle::EntryPoint::GLProgramUniformMatrix4dv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix4dv(programPacked, locationPacked, count, transpose,
@@ -3160,8 +3282,9 @@ void GL_APIENTRY GL_ProgramUniformMatrix4fv(GLuint program,
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix4fv(context, programPacked, locationPacked,
-                                                            count, transpose, value));
+                            ValidateProgramUniformMatrix4fv(
+                                context, angle::EntryPoint::GLProgramUniformMatrix4fv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix4fv(programPacked, locationPacked, count, transpose,
@@ -3195,7 +3318,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix4x2dv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix4x2dv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix4x2dv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix4x2dv(programPacked, locationPacked, count, transpose,
@@ -3229,7 +3353,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix4x2fv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix4x2fv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix4x2fv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix4x2fv(programPacked, locationPacked, count, transpose,
@@ -3263,7 +3388,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix4x3dv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix4x3dv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix4x3dv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix4x3dv(programPacked, locationPacked, count, transpose,
@@ -3297,7 +3423,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix4x3fv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateProgramUniformMatrix4x3fv(
-                                context, programPacked, locationPacked, count, transpose, value));
+                                context, angle::EntryPoint::GLProgramUniformMatrix4x3fv,
+                                programPacked, locationPacked, count, transpose, value));
         if (isCallValid)
         {
             context->programUniformMatrix4x3fv(programPacked, locationPacked, count, transpose,
@@ -3320,7 +3447,9 @@ void GL_APIENTRY GL_ReleaseShaderCompiler()
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateReleaseShaderCompiler(context));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateReleaseShaderCompiler(context, angle::EntryPoint::GLReleaseShaderCompiler));
         if (isCallValid)
         {
             context->releaseShaderCompiler();
@@ -3343,7 +3472,8 @@ void GL_APIENTRY GL_ScissorArrayv(GLuint first, GLsizei count, const GLint *v)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateScissorArrayv(context, first, count, v));
+            (context->skipValidation() ||
+             ValidateScissorArrayv(context, angle::EntryPoint::GLScissorArrayv, first, count, v));
         if (isCallValid)
         {
             context->scissorArrayv(first, count, v);
@@ -3368,7 +3498,8 @@ GL_ScissorIndexed(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateScissorIndexed(context, index, left, bottom, width, height));
+                            ValidateScissorIndexed(context, angle::EntryPoint::GLScissorIndexed,
+                                                   index, left, bottom, width, height));
         if (isCallValid)
         {
             context->scissorIndexed(index, left, bottom, width, height);
@@ -3391,7 +3522,8 @@ void GL_APIENTRY GL_ScissorIndexedv(GLuint index, const GLint *v)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateScissorIndexedv(context, index, v));
+            (context->skipValidation() ||
+             ValidateScissorIndexedv(context, angle::EntryPoint::GLScissorIndexedv, index, v));
         if (isCallValid)
         {
             context->scissorIndexedv(index, v);
@@ -3421,9 +3553,9 @@ void GL_APIENTRY GL_ShaderBinary(GLsizei count,
     {
         const ShaderProgramID *shadersPacked = PackParam<const ShaderProgramID *>(shaders);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateShaderBinary(context, count, shadersPacked, binaryformat, binary, length));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateShaderBinary(context, angle::EntryPoint::GLShaderBinary, count,
+                                                 shadersPacked, binaryformat, binary, length));
         if (isCallValid)
         {
             context->shaderBinary(count, shadersPacked, binaryformat, binary, length);
@@ -3449,9 +3581,9 @@ void GL_APIENTRY GL_UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint 
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         ShaderProgramID programPacked    = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateUseProgramStages(context, pipelinePacked, stages, programPacked));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateUseProgramStages(context, angle::EntryPoint::GLUseProgramStages,
+                                                     pipelinePacked, stages, programPacked));
         if (isCallValid)
         {
             context->useProgramStages(pipelinePacked, stages, programPacked);
@@ -3476,7 +3608,9 @@ void GL_APIENTRY GL_ValidateProgramPipeline(GLuint pipeline)
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateValidateProgramPipeline(context, pipelinePacked));
+            (context->skipValidation() ||
+             ValidateValidateProgramPipeline(context, angle::EntryPoint::GLValidateProgramPipeline,
+                                             pipelinePacked));
         if (isCallValid)
         {
             context->validateProgramPipeline(pipelinePacked);
@@ -3498,7 +3632,8 @@ void GL_APIENTRY GL_VertexAttribL1d(GLuint index, GLdouble x)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribL1d(context, index, x));
+            (context->skipValidation() ||
+             ValidateVertexAttribL1d(context, angle::EntryPoint::GLVertexAttribL1d, index, x));
         if (isCallValid)
         {
             context->vertexAttribL1d(index, x);
@@ -3521,7 +3656,8 @@ void GL_APIENTRY GL_VertexAttribL1dv(GLuint index, const GLdouble *v)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribL1dv(context, index, v));
+            (context->skipValidation() ||
+             ValidateVertexAttribL1dv(context, angle::EntryPoint::GLVertexAttribL1dv, index, v));
         if (isCallValid)
         {
             context->vertexAttribL1dv(index, v);
@@ -3544,7 +3680,8 @@ void GL_APIENTRY GL_VertexAttribL2d(GLuint index, GLdouble x, GLdouble y)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribL2d(context, index, x, y));
+            (context->skipValidation() ||
+             ValidateVertexAttribL2d(context, angle::EntryPoint::GLVertexAttribL2d, index, x, y));
         if (isCallValid)
         {
             context->vertexAttribL2d(index, x, y);
@@ -3567,7 +3704,8 @@ void GL_APIENTRY GL_VertexAttribL2dv(GLuint index, const GLdouble *v)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribL2dv(context, index, v));
+            (context->skipValidation() ||
+             ValidateVertexAttribL2dv(context, angle::EntryPoint::GLVertexAttribL2dv, index, v));
         if (isCallValid)
         {
             context->vertexAttribL2dv(index, v);
@@ -3589,8 +3727,9 @@ void GL_APIENTRY GL_VertexAttribL3d(GLuint index, GLdouble x, GLdouble y, GLdoub
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribL3d(context, index, x, y, z));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateVertexAttribL3d(context, angle::EntryPoint::GLVertexAttribL3d,
+                                                    index, x, y, z));
         if (isCallValid)
         {
             context->vertexAttribL3d(index, x, y, z);
@@ -3613,7 +3752,8 @@ void GL_APIENTRY GL_VertexAttribL3dv(GLuint index, const GLdouble *v)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribL3dv(context, index, v));
+            (context->skipValidation() ||
+             ValidateVertexAttribL3dv(context, angle::EntryPoint::GLVertexAttribL3dv, index, v));
         if (isCallValid)
         {
             context->vertexAttribL3dv(index, v);
@@ -3635,8 +3775,9 @@ void GL_APIENTRY GL_VertexAttribL4d(GLuint index, GLdouble x, GLdouble y, GLdoub
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribL4d(context, index, x, y, z, w));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateVertexAttribL4d(context, angle::EntryPoint::GLVertexAttribL4d,
+                                                    index, x, y, z, w));
         if (isCallValid)
         {
             context->vertexAttribL4d(index, x, y, z, w);
@@ -3659,7 +3800,8 @@ void GL_APIENTRY GL_VertexAttribL4dv(GLuint index, const GLdouble *v)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateVertexAttribL4dv(context, index, v));
+            (context->skipValidation() ||
+             ValidateVertexAttribL4dv(context, angle::EntryPoint::GLVertexAttribL4dv, index, v));
         if (isCallValid)
         {
             context->vertexAttribL4dv(index, v);
@@ -3687,7 +3829,8 @@ GL_VertexAttribLPointer(GLuint index, GLint size, GLenum type, GLsizei stride, c
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttribLPointer(context, index, size, type, stride, pointer));
+             ValidateVertexAttribLPointer(context, angle::EntryPoint::GLVertexAttribLPointer, index,
+                                          size, type, stride, pointer));
         if (isCallValid)
         {
             context->vertexAttribLPointer(index, size, type, stride, pointer);
@@ -3711,7 +3854,8 @@ void GL_APIENTRY GL_ViewportArrayv(GLuint first, GLsizei count, const GLfloat *v
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateViewportArrayv(context, first, count, v));
+            (context->skipValidation() ||
+             ValidateViewportArrayv(context, angle::EntryPoint::GLViewportArrayv, first, count, v));
         if (isCallValid)
         {
             context->viewportArrayv(first, count, v);
@@ -3733,8 +3877,9 @@ void GL_APIENTRY GL_ViewportIndexedf(GLuint index, GLfloat x, GLfloat y, GLfloat
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateViewportIndexedf(context, index, x, y, w, h));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateViewportIndexedf(context, angle::EntryPoint::GLViewportIndexedf,
+                                                     index, x, y, w, h));
         if (isCallValid)
         {
             context->viewportIndexedf(index, x, y, w, h);
@@ -3757,7 +3902,8 @@ void GL_APIENTRY GL_ViewportIndexedfv(GLuint index, const GLfloat *v)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateViewportIndexedfv(context, index, v));
+            (context->skipValidation() ||
+             ValidateViewportIndexedfv(context, angle::EntryPoint::GLViewportIndexedfv, index, v));
         if (isCallValid)
         {
             context->viewportIndexedfv(index, v);
@@ -3791,9 +3937,10 @@ void GL_APIENTRY GL_BindImageTexture(GLuint unit,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateBindImageTexture(context, unit, texturePacked, level, layered,
-                                                     layer, access, format));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBindImageTexture(context, angle::EntryPoint::GLBindImageTexture, unit,
+                                      texturePacked, level, layered, layer, access, format));
         if (isCallValid)
         {
             context->bindImageTexture(unit, texturePacked, level, layered, layer, access, format);
@@ -3825,7 +3972,8 @@ void GL_APIENTRY GL_DrawArraysInstancedBaseInstance(GLenum mode,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateDrawArraysInstancedBaseInstance(
-                                context, modePacked, first, count, instancecount, baseinstance));
+                                context, angle::EntryPoint::GLDrawArraysInstancedBaseInstance,
+                                modePacked, first, count, instancecount, baseinstance));
         if (isCallValid)
         {
             context->drawArraysInstancedBaseInstance(modePacked, first, count, instancecount,
@@ -3860,7 +4008,8 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseInstance(GLenum mode,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateDrawElementsInstancedBaseInstance(
-                                context, mode, count, type, indices, instancecount, baseinstance));
+                                context, angle::EntryPoint::GLDrawElementsInstancedBaseInstance,
+                                mode, count, type, indices, instancecount, baseinstance));
         if (isCallValid)
         {
             context->drawElementsInstancedBaseInstance(mode, count, type, indices, instancecount,
@@ -3897,9 +4046,10 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseVertexBaseInstance(GLenum mode,
         DrawElementsType typePacked                           = PackParam<DrawElementsType>(type);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateDrawElementsInstancedBaseVertexBaseInstance(
-                                              context, modePacked, count, typePacked, indices,
-                                              instancecount, basevertex, baseinstance));
+            (context->skipValidation() ||
+             ValidateDrawElementsInstancedBaseVertexBaseInstance(
+                 context, angle::EntryPoint::GLDrawElementsInstancedBaseVertexBaseInstance,
+                 modePacked, count, typePacked, indices, instancecount, basevertex, baseinstance));
         if (isCallValid)
         {
             context->drawElementsInstancedBaseVertexBaseInstance(
@@ -3925,9 +4075,10 @@ void GL_APIENTRY GL_DrawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsiz
     {
         TransformFeedbackID idPacked                          = PackParam<TransformFeedbackID>(id);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDrawTransformFeedbackInstanced(context, mode, idPacked, instancecount));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateDrawTransformFeedbackInstanced(
+                                context, angle::EntryPoint::GLDrawTransformFeedbackInstanced, mode,
+                                idPacked, instancecount));
         if (isCallValid)
         {
             context->drawTransformFeedbackInstanced(mode, idPacked, instancecount);
@@ -3955,9 +4106,10 @@ void GL_APIENTRY GL_DrawTransformFeedbackStreamInstanced(GLenum mode,
     {
         TransformFeedbackID idPacked                          = PackParam<TransformFeedbackID>(id);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateDrawTransformFeedbackStreamInstanced(
-                                              context, mode, idPacked, stream, instancecount));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateDrawTransformFeedbackStreamInstanced(
+                                context, angle::EntryPoint::GLDrawTransformFeedbackStreamInstanced,
+                                mode, idPacked, stream, instancecount));
         if (isCallValid)
         {
             context->drawTransformFeedbackStreamInstanced(mode, idPacked, stream, instancecount);
@@ -3986,9 +4138,10 @@ void GL_APIENTRY GL_GetActiveAtomicCounterBufferiv(GLuint program,
     {
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetActiveAtomicCounterBufferiv(
-                                              context, programPacked, bufferIndex, pname, params));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetActiveAtomicCounterBufferiv(
+                                context, angle::EntryPoint::GLGetActiveAtomicCounterBufferiv,
+                                programPacked, bufferIndex, pname, params));
         if (isCallValid)
         {
             context->getActiveAtomicCounterBufferiv(programPacked, bufferIndex, pname, params);
@@ -4021,7 +4174,8 @@ void GL_APIENTRY GL_GetInternalformativ(GLenum target,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetInternalformativ(context, target, internalformat, pname, bufSize, params));
+             ValidateGetInternalformativ(context, angle::EntryPoint::GLGetInternalformativ, target,
+                                         internalformat, pname, bufSize, params));
         if (isCallValid)
         {
             context->getInternalformativ(target, internalformat, pname, bufSize, params);
@@ -4044,7 +4198,9 @@ void GL_APIENTRY GL_MemoryBarrier(GLbitfield barriers)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateMemoryBarrier(context, barriers));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateMemoryBarrier(context, angle::EntryPoint::GLMemoryBarrier, barriers));
         if (isCallValid)
         {
             context->memoryBarrier(barriers);
@@ -4072,7 +4228,8 @@ void GL_APIENTRY GL_TexStorage1D(GLenum target,
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTexStorage1D(context, target, levels, internalformat, width));
+                            ValidateTexStorage1D(context, angle::EntryPoint::GLTexStorage1D, target,
+                                                 levels, internalformat, width));
         if (isCallValid)
         {
             context->texStorage1D(target, levels, internalformat, width);
@@ -4100,7 +4257,8 @@ GL_TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei wi
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateTexStorage2D(context, targetPacked, levels, internalformat, width, height));
+             ValidateTexStorage2D(context, angle::EntryPoint::GLTexStorage2D, targetPacked, levels,
+                                  internalformat, width, height));
         if (isCallValid)
         {
             context->texStorage2D(targetPacked, levels, internalformat, width, height);
@@ -4132,9 +4290,10 @@ void GL_APIENTRY GL_TexStorage3D(GLenum target,
     {
         TextureType targetPacked                              = PackParam<TextureType>(target);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTexStorage3D(context, targetPacked, levels, internalformat,
-                                                 width, height, depth));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTexStorage3D(context, angle::EntryPoint::GLTexStorage3D, targetPacked, levels,
+                                  internalformat, width, height, depth));
         if (isCallValid)
         {
             context->texStorage3D(targetPacked, levels, internalformat, width, height, depth);
@@ -4163,9 +4322,9 @@ void GL_APIENTRY GL_BindVertexBuffer(GLuint bindingindex,
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateBindVertexBuffer(context, bindingindex, bufferPacked, offset, stride));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBindVertexBuffer(context, angle::EntryPoint::GLBindVertexBuffer,
+                                                     bindingindex, bufferPacked, offset, stride));
         if (isCallValid)
         {
             context->bindVertexBuffer(bindingindex, bufferPacked, offset, stride);
@@ -4197,9 +4356,9 @@ void GL_APIENTRY GL_ClearBufferData(GLenum target,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateClearBufferData(context, target, internalformat, format, type, data));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateClearBufferData(context, angle::EntryPoint::GLClearBufferData,
+                                                    target, internalformat, format, type, data));
         if (isCallValid)
         {
             context->clearBufferData(target, internalformat, format, type, data);
@@ -4234,9 +4393,10 @@ void GL_APIENTRY GL_ClearBufferSubData(GLenum target,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateClearBufferSubData(context, target, internalformat, offset,
-                                                       size, format, type, data));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateClearBufferSubData(context, angle::EntryPoint::GLClearBufferSubData, target,
+                                        internalformat, offset, size, format, type, data));
         if (isCallValid)
         {
             context->clearBufferSubData(target, internalformat, offset, size, format, type, data);
@@ -4279,10 +4439,11 @@ void GL_APIENTRY GL_CopyImageSubData(GLuint srcName,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateCopyImageSubData(context, srcName, srcTarget, srcLevel, srcX,
-                                                     srcY, srcZ, dstName, dstTarget, dstLevel, dstX,
-                                                     dstY, dstZ, srcWidth, srcHeight, srcDepth));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateCopyImageSubData(context, angle::EntryPoint::GLCopyImageSubData, srcName,
+                                      srcTarget, srcLevel, srcX, srcY, srcZ, dstName, dstTarget,
+                                      dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight, srcDepth));
         if (isCallValid)
         {
             context->copyImageSubData(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName,
@@ -4309,8 +4470,10 @@ void GL_APIENTRY GL_DebugMessageCallback(GLDEBUGPROC callback, const void *userP
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateDebugMessageCallback(context, callback, userParam));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateDebugMessageCallback(context, angle::EntryPoint::GLDebugMessageCallback,
+                                          callback, userParam));
         if (isCallValid)
         {
             context->debugMessageCallback(callback, userParam);
@@ -4344,7 +4507,8 @@ void GL_APIENTRY GL_DebugMessageControl(GLenum source,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateDebugMessageControl(context, source, type, severity, count, ids, enabled));
+             ValidateDebugMessageControl(context, angle::EntryPoint::GLDebugMessageControl, source,
+                                         type, severity, count, ids, enabled));
         if (isCallValid)
         {
             context->debugMessageControl(source, type, severity, count, ids, enabled);
@@ -4378,7 +4542,8 @@ void GL_APIENTRY GL_DebugMessageInsert(GLenum source,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateDebugMessageInsert(context, source, type, id, severity, length, buf));
+             ValidateDebugMessageInsert(context, angle::EntryPoint::GLDebugMessageInsert, source,
+                                        type, id, severity, length, buf));
         if (isCallValid)
         {
             context->debugMessageInsert(source, type, id, severity, length, buf);
@@ -4402,9 +4567,9 @@ void GL_APIENTRY GL_DispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GL
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDispatchCompute(context, num_groups_x, num_groups_y, num_groups_z));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateDispatchCompute(context, angle::EntryPoint::GLDispatchCompute,
+                                                    num_groups_x, num_groups_y, num_groups_z));
         if (isCallValid)
         {
             context->dispatchCompute(num_groups_x, num_groups_y, num_groups_z);
@@ -4427,8 +4592,9 @@ void GL_APIENTRY GL_DispatchComputeIndirect(GLintptr indirect)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateDispatchComputeIndirect(context, indirect));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateDispatchComputeIndirect(
+                                context, angle::EntryPoint::GLDispatchComputeIndirect, indirect));
         if (isCallValid)
         {
             context->dispatchComputeIndirect(indirect);
@@ -4451,8 +4617,10 @@ void GL_APIENTRY GL_FramebufferParameteri(GLenum target, GLenum pname, GLint par
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateFramebufferParameteri(context, target, pname, param));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateFramebufferParameteri(context, angle::EntryPoint::GLFramebufferParameteri,
+                                           target, pname, param));
         if (isCallValid)
         {
             context->framebufferParameteri(target, pname, param);
@@ -4487,8 +4655,9 @@ GLuint GL_APIENTRY GL_GetDebugMessageLog(GLuint count,
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetDebugMessageLog(context, count, bufSize, sources, types, ids,
-                                                       severities, lengths, messageLog));
+                            ValidateGetDebugMessageLog(
+                                context, angle::EntryPoint::GLGetDebugMessageLog, count, bufSize,
+                                sources, types, ids, severities, lengths, messageLog));
         if (isCallValid)
         {
             returnValue = context->getDebugMessageLog(count, bufSize, sources, types, ids,
@@ -4521,8 +4690,10 @@ void GL_APIENTRY GL_GetFramebufferParameteriv(GLenum target, GLenum pname, GLint
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetFramebufferParameteriv(context, target, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetFramebufferParameteriv(
+                 context, angle::EntryPoint::GLGetFramebufferParameteriv, target, pname, params));
         if (isCallValid)
         {
             context->getFramebufferParameteriv(target, pname, params);
@@ -4552,9 +4723,10 @@ void GL_APIENTRY GL_GetInternalformati64v(GLenum target,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetInternalformati64v(context, target, internalformat, pname,
-                                                          bufSize, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetInternalformati64v(context, angle::EntryPoint::GLGetInternalformati64v,
+                                           target, internalformat, pname, bufSize, params));
         if (isCallValid)
         {
             context->getInternalformati64v(target, internalformat, pname, bufSize, params);
@@ -4581,9 +4753,9 @@ GL_GetObjectLabel(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *leng
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetObjectLabel(context, identifier, name, bufSize, length, label));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetObjectLabel(context, angle::EntryPoint::GLGetObjectLabel,
+                                                   identifier, name, bufSize, length, label));
         if (isCallValid)
         {
             context->getObjectLabel(identifier, name, bufSize, length, label);
@@ -4611,8 +4783,10 @@ void GL_APIENTRY GL_GetObjectPtrLabel(const void *ptr,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetObjectPtrLabel(context, ptr, bufSize, length, label));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetObjectPtrLabel(context, angle::EntryPoint::GLGetObjectPtrLabel, ptr,
+                                       bufSize, length, label));
         if (isCallValid)
         {
             context->getObjectPtrLabel(ptr, bufSize, length, label);
@@ -4641,9 +4815,10 @@ void GL_APIENTRY GL_GetProgramInterfaceiv(GLuint program,
     {
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetProgramInterfaceiv(context, programPacked, programInterface,
-                                                          pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetProgramInterfaceiv(context, angle::EntryPoint::GLGetProgramInterfaceiv,
+                                           programPacked, programInterface, pname, params));
         if (isCallValid)
         {
             context->getProgramInterfaceiv(programPacked, programInterface, pname, params);
@@ -4674,7 +4849,8 @@ GLuint GL_APIENTRY GL_GetProgramResourceIndex(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetProgramResourceIndex(context, programPacked, programInterface, name));
+             ValidateGetProgramResourceIndex(context, angle::EntryPoint::GLGetProgramResourceIndex,
+                                             programPacked, programInterface, name));
         if (isCallValid)
         {
             returnValue = context->getProgramResourceIndex(programPacked, programInterface, name);
@@ -4710,9 +4886,10 @@ GLint GL_APIENTRY GL_GetProgramResourceLocation(GLuint program,
     {
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetProgramResourceLocation(context, programPacked, programInterface, name));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetProgramResourceLocation(
+                                context, angle::EntryPoint::GLGetProgramResourceLocation,
+                                programPacked, programInterface, name));
         if (isCallValid)
         {
             returnValue =
@@ -4750,9 +4927,10 @@ GLint GL_APIENTRY GL_GetProgramResourceLocationIndex(GLuint program,
     {
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetProgramResourceLocationIndex(
-                                              context, programPacked, programInterface, name));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetProgramResourceLocationIndex(
+                                context, angle::EntryPoint::GLGetProgramResourceLocationIndex,
+                                programPacked, programInterface, name));
         if (isCallValid)
         {
             returnValue =
@@ -4795,8 +4973,9 @@ void GL_APIENTRY GL_GetProgramResourceName(GLuint program,
         ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetProgramResourceName(context, programPacked, programInterface,
-                                                           index, bufSize, length, name));
+                            ValidateGetProgramResourceName(
+                                context, angle::EntryPoint::GLGetProgramResourceName, programPacked,
+                                programInterface, index, bufSize, length, name));
         if (isCallValid)
         {
             context->getProgramResourceName(programPacked, programInterface, index, bufSize, length,
@@ -4833,8 +5012,9 @@ void GL_APIENTRY GL_GetProgramResourceiv(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetProgramResourceiv(context, programPacked, programInterface, index,
-                                          propCount, props, bufSize, length, params));
+             ValidateGetProgramResourceiv(context, angle::EntryPoint::GLGetProgramResourceiv,
+                                          programPacked, programInterface, index, propCount, props,
+                                          bufSize, length, params));
         if (isCallValid)
         {
             context->getProgramResourceiv(programPacked, programInterface, index, propCount, props,
@@ -4858,8 +5038,9 @@ void GL_APIENTRY GL_InvalidateBufferData(GLuint buffer)
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateInvalidateBufferData(context, bufferPacked));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateInvalidateBufferData(
+                                context, angle::EntryPoint::GLInvalidateBufferData, bufferPacked));
         if (isCallValid)
         {
             context->invalidateBufferData(bufferPacked);
@@ -4883,8 +5064,10 @@ void GL_APIENTRY GL_InvalidateBufferSubData(GLuint buffer, GLintptr offset, GLsi
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateInvalidateBufferSubData(context, bufferPacked, offset, length));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateInvalidateBufferSubData(context, angle::EntryPoint::GLInvalidateBufferSubData,
+                                             bufferPacked, offset, length));
         if (isCallValid)
         {
             context->invalidateBufferSubData(bufferPacked, offset, length);
@@ -4912,7 +5095,8 @@ void GL_APIENTRY GL_InvalidateFramebuffer(GLenum target,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateInvalidateFramebuffer(context, target, numAttachments, attachments));
+             ValidateInvalidateFramebuffer(context, angle::EntryPoint::GLInvalidateFramebuffer,
+                                           target, numAttachments, attachments));
         if (isCallValid)
         {
             context->invalidateFramebuffer(target, numAttachments, attachments);
@@ -4945,8 +5129,9 @@ void GL_APIENTRY GL_InvalidateSubFramebuffer(GLenum target,
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateInvalidateSubFramebuffer(context, target, numAttachments,
-                                                             attachments, x, y, width, height));
+                            ValidateInvalidateSubFramebuffer(
+                                context, angle::EntryPoint::GLInvalidateSubFramebuffer, target,
+                                numAttachments, attachments, x, y, width, height));
         if (isCallValid)
         {
             context->invalidateSubFramebuffer(target, numAttachments, attachments, x, y, width,
@@ -4971,8 +5156,10 @@ void GL_APIENTRY GL_InvalidateTexImage(GLuint texture, GLint level)
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateInvalidateTexImage(context, texturePacked, level));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateInvalidateTexImage(context, angle::EntryPoint::GLInvalidateTexImage,
+                                        texturePacked, level));
         if (isCallValid)
         {
             context->invalidateTexImage(texturePacked, level);
@@ -5005,8 +5192,9 @@ void GL_APIENTRY GL_InvalidateTexSubImage(GLuint texture,
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateInvalidateTexSubImage(context, texturePacked, level, xoffset,
-                                                          yoffset, zoffset, width, height, depth));
+                            ValidateInvalidateTexSubImage(
+                                context, angle::EntryPoint::GLInvalidateTexSubImage, texturePacked,
+                                level, xoffset, yoffset, zoffset, width, height, depth));
         if (isCallValid)
         {
             context->invalidateTexSubImage(texturePacked, level, xoffset, yoffset, zoffset, width,
@@ -5037,7 +5225,8 @@ void GL_APIENTRY GL_MultiDrawArraysIndirect(GLenum mode,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateMultiDrawArraysIndirect(context, mode, indirect, drawcount, stride));
+             ValidateMultiDrawArraysIndirect(context, angle::EntryPoint::GLMultiDrawArraysIndirect,
+                                             mode, indirect, drawcount, stride));
         if (isCallValid)
         {
             context->multiDrawArraysIndirect(mode, indirect, drawcount, stride);
@@ -5068,9 +5257,10 @@ void GL_APIENTRY GL_MultiDrawElementsIndirect(GLenum mode,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateMultiDrawElementsIndirect(context, mode, type, indirect, drawcount, stride));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateMultiDrawElementsIndirect(
+                                context, angle::EntryPoint::GLMultiDrawElementsIndirect, mode, type,
+                                indirect, drawcount, stride));
         if (isCallValid)
         {
             context->multiDrawElementsIndirect(mode, type, indirect, drawcount, stride);
@@ -5096,7 +5286,8 @@ void GL_APIENTRY GL_ObjectLabel(GLenum identifier, GLuint name, GLsizei length, 
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateObjectLabel(context, identifier, name, length, label));
+                            ValidateObjectLabel(context, angle::EntryPoint::GLObjectLabel,
+                                                identifier, name, length, label));
         if (isCallValid)
         {
             context->objectLabel(identifier, name, length, label);
@@ -5119,8 +5310,9 @@ void GL_APIENTRY GL_ObjectPtrLabel(const void *ptr, GLsizei length, const GLchar
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateObjectPtrLabel(context, ptr, length, label));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateObjectPtrLabel(context, angle::EntryPoint::GLObjectPtrLabel,
+                                                   ptr, length, label));
         if (isCallValid)
         {
             context->objectPtrLabel(ptr, length, label);
@@ -5141,7 +5333,8 @@ void GL_APIENTRY GL_PopDebugGroup()
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidatePopDebugGroup(context));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidatePopDebugGroup(context, angle::EntryPoint::GLPopDebugGroup));
         if (isCallValid)
         {
             context->popDebugGroup();
@@ -5166,7 +5359,8 @@ void GL_APIENTRY GL_PushDebugGroup(GLenum source, GLuint id, GLsizei length, con
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidatePushDebugGroup(context, source, id, length, message));
+                            ValidatePushDebugGroup(context, angle::EntryPoint::GLPushDebugGroup,
+                                                   source, id, length, message));
         if (isCallValid)
         {
             context->pushDebugGroup(source, id, length, message);
@@ -5194,7 +5388,8 @@ void GL_APIENTRY GL_ShaderStorageBlockBinding(GLuint program,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateShaderStorageBlockBinding(
-                                context, programPacked, storageBlockIndex, storageBlockBinding));
+                                context, angle::EntryPoint::GLShaderStorageBlockBinding,
+                                programPacked, storageBlockIndex, storageBlockBinding));
         if (isCallValid)
         {
             context->shaderStorageBlockBinding(programPacked, storageBlockIndex,
@@ -5227,9 +5422,10 @@ void GL_APIENTRY GL_TexBufferRange(GLenum target,
         TextureType targetPacked                              = PackParam<TextureType>(target);
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTexBufferRange(context, targetPacked, internalformat,
-                                                   bufferPacked, offset, size));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTexBufferRange(context, angle::EntryPoint::GLTexBufferRange, targetPacked,
+                                    internalformat, bufferPacked, offset, size));
         if (isCallValid)
         {
             context->texBufferRange(targetPacked, internalformat, bufferPacked, offset, size);
@@ -5262,10 +5458,10 @@ void GL_APIENTRY GL_TexStorage2DMultisample(GLenum target,
     {
         TextureType targetPacked                              = PackParam<TextureType>(target);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateTexStorage2DMultisample(context, targetPacked, samples, internalformat, width,
-                                             height, fixedsamplelocations));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateTexStorage2DMultisample(
+                                context, angle::EntryPoint::GLTexStorage2DMultisample, targetPacked,
+                                samples, internalformat, width, height, fixedsamplelocations));
         if (isCallValid)
         {
             context->texStorage2DMultisample(targetPacked, samples, internalformat, width, height,
@@ -5302,8 +5498,9 @@ void GL_APIENTRY GL_TexStorage3DMultisample(GLenum target,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateTexStorage3DMultisample(context, targetPacked, samples, internalformat, width,
-                                             height, depth, fixedsamplelocations));
+             ValidateTexStorage3DMultisample(context, angle::EntryPoint::GLTexStorage3DMultisample,
+                                             targetPacked, samples, internalformat, width, height,
+                                             depth, fixedsamplelocations));
         if (isCallValid)
         {
             context->texStorage3DMultisample(targetPacked, samples, internalformat, width, height,
@@ -5339,10 +5536,10 @@ void GL_APIENTRY GL_TextureView(GLuint texture,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateTextureView(context, texturePacked, target, origtexture, internalformat,
-                                 minlevel, numlevels, minlayer, numlayers));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateTextureView(context, angle::EntryPoint::GLTextureView,
+                                                texturePacked, target, origtexture, internalformat,
+                                                minlevel, numlevels, minlayer, numlayers));
         if (isCallValid)
         {
             context->textureView(texturePacked, target, origtexture, internalformat, minlevel,
@@ -5366,8 +5563,10 @@ void GL_APIENTRY GL_VertexAttribBinding(GLuint attribindex, GLuint bindingindex)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexAttribBinding(context, attribindex, bindingindex));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateVertexAttribBinding(context, angle::EntryPoint::GLVertexAttribBinding,
+                                         attribindex, bindingindex));
         if (isCallValid)
         {
             context->vertexAttribBinding(attribindex, bindingindex);
@@ -5397,9 +5596,10 @@ void GL_APIENTRY GL_VertexAttribFormat(GLuint attribindex,
     {
         VertexAttribType typePacked                           = PackParam<VertexAttribType>(type);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexAttribFormat(context, attribindex, size, typePacked,
-                                                       normalized, relativeoffset));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateVertexAttribFormat(context, angle::EntryPoint::GLVertexAttribFormat,
+                                        attribindex, size, typePacked, normalized, relativeoffset));
         if (isCallValid)
         {
             context->vertexAttribFormat(attribindex, size, typePacked, normalized, relativeoffset);
@@ -5429,7 +5629,8 @@ void GL_APIENTRY GL_VertexAttribIFormat(GLuint attribindex,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttribIFormat(context, attribindex, size, typePacked, relativeoffset));
+             ValidateVertexAttribIFormat(context, angle::EntryPoint::GLVertexAttribIFormat,
+                                         attribindex, size, typePacked, relativeoffset));
         if (isCallValid)
         {
             context->vertexAttribIFormat(attribindex, size, typePacked, relativeoffset);
@@ -5458,7 +5659,8 @@ void GL_APIENTRY GL_VertexAttribLFormat(GLuint attribindex,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateVertexAttribLFormat(context, attribindex, size, type, relativeoffset));
+             ValidateVertexAttribLFormat(context, angle::EntryPoint::GLVertexAttribLFormat,
+                                         attribindex, size, type, relativeoffset));
         if (isCallValid)
         {
             context->vertexAttribLFormat(attribindex, size, type, relativeoffset);
@@ -5481,8 +5683,10 @@ void GL_APIENTRY GL_VertexBindingDivisor(GLuint bindingindex, GLuint divisor)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexBindingDivisor(context, bindingindex, divisor));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateVertexBindingDivisor(context, angle::EntryPoint::GLVertexBindingDivisor,
+                                          bindingindex, divisor));
         if (isCallValid)
         {
             context->vertexBindingDivisor(bindingindex, divisor);
@@ -5512,7 +5716,8 @@ void GL_APIENTRY GL_BindBuffersBase(GLenum target,
         const BufferID *buffersPacked = PackParam<const BufferID *>(buffers);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateBindBuffersBase(context, target, first, count, buffersPacked));
+                            ValidateBindBuffersBase(context, angle::EntryPoint::GLBindBuffersBase,
+                                                    target, first, count, buffersPacked));
         if (isCallValid)
         {
             context->bindBuffersBase(target, first, count, buffersPacked);
@@ -5544,8 +5749,9 @@ void GL_APIENTRY GL_BindBuffersRange(GLenum target,
         const BufferID *buffersPacked = PackParam<const BufferID *>(buffers);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateBindBuffersRange(context, target, first, count,
-                                                                   buffersPacked, offsets, sizes));
+            (context->skipValidation() ||
+             ValidateBindBuffersRange(context, angle::EntryPoint::GLBindBuffersRange, target, first,
+                                      count, buffersPacked, offsets, sizes));
         if (isCallValid)
         {
             context->bindBuffersRange(target, first, count, buffersPacked, offsets, sizes);
@@ -5569,8 +5775,10 @@ void GL_APIENTRY GL_BindImageTextures(GLuint first, GLsizei count, const GLuint 
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateBindImageTextures(context, first, count, textures));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateBindImageTextures(context, angle::EntryPoint::GLBindImageTextures, first,
+                                       count, textures));
         if (isCallValid)
         {
             context->bindImageTextures(first, count, textures);
@@ -5593,8 +5801,9 @@ void GL_APIENTRY GL_BindSamplers(GLuint first, GLsizei count, const GLuint *samp
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateBindSamplers(context, first, count, samplers));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBindSamplers(context, angle::EntryPoint::GLBindSamplers, first,
+                                                 count, samplers));
         if (isCallValid)
         {
             context->bindSamplers(first, count, samplers);
@@ -5617,8 +5826,9 @@ void GL_APIENTRY GL_BindTextures(GLuint first, GLsizei count, const GLuint *text
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateBindTextures(context, first, count, textures));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBindTextures(context, angle::EntryPoint::GLBindTextures, first,
+                                                 count, textures));
         if (isCallValid)
         {
             context->bindTextures(first, count, textures);
@@ -5649,7 +5859,8 @@ void GL_APIENTRY GL_BindVertexBuffers(GLuint first,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateBindVertexBuffers(context, first, count, buffersPacked, offsets, strides));
+             ValidateBindVertexBuffers(context, angle::EntryPoint::GLBindVertexBuffers, first,
+                                       count, buffersPacked, offsets, strides));
         if (isCallValid)
         {
             context->bindVertexBuffers(first, count, buffersPacked, offsets, strides);
@@ -5680,7 +5891,8 @@ void GL_APIENTRY GL_BufferStorage(GLenum target,
         BufferBinding targetPacked                            = PackParam<BufferBinding>(target);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateBufferStorage(context, targetPacked, size, data, flags));
+                            ValidateBufferStorage(context, angle::EntryPoint::GLBufferStorage,
+                                                  targetPacked, size, data, flags));
         if (isCallValid)
         {
             context->bufferStorage(targetPacked, size, data, flags);
@@ -5707,9 +5919,9 @@ GL_ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const 
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateClearTexImage(context, texturePacked, level, format, type, data));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateClearTexImage(context, angle::EntryPoint::GLClearTexImage,
+                                                  texturePacked, level, format, type, data));
         if (isCallValid)
         {
             context->clearTexImage(texturePacked, level, format, type, data);
@@ -5749,8 +5961,9 @@ void GL_APIENTRY GL_ClearTexSubImage(GLuint texture,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateClearTexSubImage(context, texturePacked, level, xoffset, yoffset, zoffset,
-                                      width, height, depth, format, type, data));
+             ValidateClearTexSubImage(context, angle::EntryPoint::GLClearTexSubImage, texturePacked,
+                                      level, xoffset, yoffset, zoffset, width, height, depth,
+                                      format, type, data));
         if (isCallValid)
         {
             context->clearTexSubImage(texturePacked, level, xoffset, yoffset, zoffset, width,
@@ -5776,8 +5989,9 @@ void GL_APIENTRY GL_BindTextureUnit(GLuint unit, GLuint texture)
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateBindTextureUnit(context, unit, texturePacked));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBindTextureUnit(context, angle::EntryPoint::GLBindTextureUnit,
+                                                    unit, texturePacked));
         if (isCallValid)
         {
             context->bindTextureUnit(unit, texturePacked);
@@ -5817,8 +6031,9 @@ void GL_APIENTRY GL_BlitNamedFramebuffer(GLuint readFramebuffer,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateBlitNamedFramebuffer(context, readFramebuffer, drawFramebuffer, srcX0, srcY0,
-                                          srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter));
+             ValidateBlitNamedFramebuffer(context, angle::EntryPoint::GLBlitNamedFramebuffer,
+                                          readFramebuffer, drawFramebuffer, srcX0, srcY0, srcX1,
+                                          srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter));
         if (isCallValid)
         {
             context->blitNamedFramebuffer(readFramebuffer, drawFramebuffer, srcX0, srcY0, srcX1,
@@ -5844,8 +6059,10 @@ GLenum GL_APIENTRY GL_CheckNamedFramebufferStatus(GLuint framebuffer, GLenum tar
     {
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateCheckNamedFramebufferStatus(
-                                                             context, framebufferPacked, target));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateCheckNamedFramebufferStatus(
+                                context, angle::EntryPoint::GLCheckNamedFramebufferStatus,
+                                framebufferPacked, target));
         if (isCallValid)
         {
             returnValue = context->checkNamedFramebufferStatus(framebufferPacked, target);
@@ -5885,9 +6102,10 @@ void GL_APIENTRY GL_ClearNamedBufferData(GLuint buffer,
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateClearNamedBufferData(context, bufferPacked, internalformat,
-                                                         format, type, data));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateClearNamedBufferData(context, angle::EntryPoint::GLClearNamedBufferData,
+                                          bufferPacked, internalformat, format, type, data));
         if (isCallValid)
         {
             context->clearNamedBufferData(bufferPacked, internalformat, format, type, data);
@@ -5923,8 +6141,9 @@ void GL_APIENTRY GL_ClearNamedBufferSubData(GLuint buffer,
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateClearNamedBufferSubData(context, bufferPacked, internalformat,
-                                                            offset, size, format, type, data));
+                            ValidateClearNamedBufferSubData(
+                                context, angle::EntryPoint::GLClearNamedBufferSubData, bufferPacked,
+                                internalformat, offset, size, format, type, data));
         if (isCallValid)
         {
             context->clearNamedBufferSubData(bufferPacked, internalformat, offset, size, format,
@@ -5956,8 +6175,9 @@ void GL_APIENTRY GL_ClearNamedFramebufferfi(GLuint framebuffer,
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateClearNamedFramebufferfi(context, framebufferPacked, buffer,
-                                                            drawbuffer, depth, stencil));
+                            ValidateClearNamedFramebufferfi(
+                                context, angle::EntryPoint::GLClearNamedFramebufferfi,
+                                framebufferPacked, buffer, drawbuffer, depth, stencil));
         if (isCallValid)
         {
             context->clearNamedFramebufferfi(framebufferPacked, buffer, drawbuffer, depth, stencil);
@@ -5986,9 +6206,10 @@ void GL_APIENTRY GL_ClearNamedFramebufferfv(GLuint framebuffer,
     {
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateClearNamedFramebufferfv(context, framebufferPacked, buffer,
-                                                            drawbuffer, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateClearNamedFramebufferfv(context, angle::EntryPoint::GLClearNamedFramebufferfv,
+                                             framebufferPacked, buffer, drawbuffer, value));
         if (isCallValid)
         {
             context->clearNamedFramebufferfv(framebufferPacked, buffer, drawbuffer, value);
@@ -6017,9 +6238,10 @@ void GL_APIENTRY GL_ClearNamedFramebufferiv(GLuint framebuffer,
     {
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateClearNamedFramebufferiv(context, framebufferPacked, buffer,
-                                                            drawbuffer, value));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateClearNamedFramebufferiv(context, angle::EntryPoint::GLClearNamedFramebufferiv,
+                                             framebufferPacked, buffer, drawbuffer, value));
         if (isCallValid)
         {
             context->clearNamedFramebufferiv(framebufferPacked, buffer, drawbuffer, value);
@@ -6049,8 +6271,9 @@ void GL_APIENTRY GL_ClearNamedFramebufferuiv(GLuint framebuffer,
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateClearNamedFramebufferuiv(context, framebufferPacked, buffer,
-                                                             drawbuffer, value));
+                            ValidateClearNamedFramebufferuiv(
+                                context, angle::EntryPoint::GLClearNamedFramebufferuiv,
+                                framebufferPacked, buffer, drawbuffer, value));
         if (isCallValid)
         {
             context->clearNamedFramebufferuiv(framebufferPacked, buffer, drawbuffer, value);
@@ -6075,7 +6298,8 @@ void GL_APIENTRY GL_ClipControl(GLenum origin, GLenum depth)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateClipControl(context, origin, depth));
+            (context->skipValidation() ||
+             ValidateClipControl(context, angle::EntryPoint::GLClipControl, origin, depth));
         if (isCallValid)
         {
             context->clipControl(origin, depth);
@@ -6107,9 +6331,10 @@ void GL_APIENTRY GL_CompressedTextureSubImage1D(GLuint texture,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateCompressedTextureSubImage1D(
-                                                             context, texturePacked, level, xoffset,
-                                                             width, format, imageSize, data));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateCompressedTextureSubImage1D(
+                                context, angle::EntryPoint::GLCompressedTextureSubImage1D,
+                                texturePacked, level, xoffset, width, format, imageSize, data));
         if (isCallValid)
         {
             context->compressedTextureSubImage1D(texturePacked, level, xoffset, width, format,
@@ -6147,8 +6372,9 @@ void GL_APIENTRY GL_CompressedTextureSubImage2D(GLuint texture,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateCompressedTextureSubImage2D(context, texturePacked, level, xoffset, yoffset,
-                                                 width, height, format, imageSize, data));
+             ValidateCompressedTextureSubImage2D(
+                 context, angle::EntryPoint::GLCompressedTextureSubImage2D, texturePacked, level,
+                 xoffset, yoffset, width, height, format, imageSize, data));
         if (isCallValid)
         {
             context->compressedTextureSubImage2D(texturePacked, level, xoffset, yoffset, width,
@@ -6186,10 +6412,11 @@ void GL_APIENTRY GL_CompressedTextureSubImage3D(GLuint texture,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateCompressedTextureSubImage3D(
-                                context, texturePacked, level, xoffset, yoffset, zoffset, width,
-                                height, depth, format, imageSize, data));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateCompressedTextureSubImage3D(
+                 context, angle::EntryPoint::GLCompressedTextureSubImage3D, texturePacked, level,
+                 xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data));
         if (isCallValid)
         {
             context->compressedTextureSubImage3D(texturePacked, level, xoffset, yoffset, zoffset,
@@ -6221,8 +6448,9 @@ void GL_APIENTRY GL_CopyNamedBufferSubData(GLuint readBuffer,
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateCopyNamedBufferSubData(context, readBuffer, writeBuffer,
-                                                           readOffset, writeOffset, size));
+                            ValidateCopyNamedBufferSubData(
+                                context, angle::EntryPoint::GLCopyNamedBufferSubData, readBuffer,
+                                writeBuffer, readOffset, writeOffset, size));
         if (isCallValid)
         {
             context->copyNamedBufferSubData(readBuffer, writeBuffer, readOffset, writeOffset, size);
@@ -6254,7 +6482,8 @@ void GL_APIENTRY GL_CopyTextureSubImage1D(GLuint texture,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateCopyTextureSubImage1D(context, texturePacked, level, xoffset, x, y, width));
+             ValidateCopyTextureSubImage1D(context, angle::EntryPoint::GLCopyTextureSubImage1D,
+                                           texturePacked, level, xoffset, x, y, width));
         if (isCallValid)
         {
             context->copyTextureSubImage1D(texturePacked, level, xoffset, x, y, width);
@@ -6288,8 +6517,9 @@ void GL_APIENTRY GL_CopyTextureSubImage2D(GLuint texture,
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateCopyTextureSubImage2D(context, texturePacked, level, xoffset,
-                                                          yoffset, x, y, width, height));
+                            ValidateCopyTextureSubImage2D(
+                                context, angle::EntryPoint::GLCopyTextureSubImage2D, texturePacked,
+                                level, xoffset, yoffset, x, y, width, height));
         if (isCallValid)
         {
             context->copyTextureSubImage2D(texturePacked, level, xoffset, yoffset, x, y, width,
@@ -6325,8 +6555,9 @@ void GL_APIENTRY GL_CopyTextureSubImage3D(GLuint texture,
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateCopyTextureSubImage3D(context, texturePacked, level, xoffset,
-                                                          yoffset, zoffset, x, y, width, height));
+                            ValidateCopyTextureSubImage3D(
+                                context, angle::EntryPoint::GLCopyTextureSubImage3D, texturePacked,
+                                level, xoffset, yoffset, zoffset, x, y, width, height));
         if (isCallValid)
         {
             context->copyTextureSubImage3D(texturePacked, level, xoffset, yoffset, zoffset, x, y,
@@ -6352,7 +6583,8 @@ void GL_APIENTRY GL_CreateBuffers(GLsizei n, GLuint *buffers)
         BufferID *buffersPacked                               = PackParam<BufferID *>(buffers);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateCreateBuffers(context, n, buffersPacked));
+            (context->skipValidation() ||
+             ValidateCreateBuffers(context, angle::EntryPoint::GLCreateBuffers, n, buffersPacked));
         if (isCallValid)
         {
             context->createBuffers(n, buffersPacked);
@@ -6374,8 +6606,9 @@ void GL_APIENTRY GL_CreateFramebuffers(GLsizei n, GLuint *framebuffers)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateCreateFramebuffers(context, n, framebuffers));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateCreateFramebuffers(
+                                context, angle::EntryPoint::GLCreateFramebuffers, n, framebuffers));
         if (isCallValid)
         {
             context->createFramebuffers(n, framebuffers);
@@ -6398,7 +6631,9 @@ void GL_APIENTRY GL_CreateProgramPipelines(GLsizei n, GLuint *pipelines)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateCreateProgramPipelines(context, n, pipelines));
+            (context->skipValidation() ||
+             ValidateCreateProgramPipelines(context, angle::EntryPoint::GLCreateProgramPipelines, n,
+                                            pipelines));
         if (isCallValid)
         {
             context->createProgramPipelines(n, pipelines);
@@ -6421,7 +6656,8 @@ void GL_APIENTRY GL_CreateQueries(GLenum target, GLsizei n, GLuint *ids)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateCreateQueries(context, target, n, ids));
+            (context->skipValidation() ||
+             ValidateCreateQueries(context, angle::EntryPoint::GLCreateQueries, target, n, ids));
         if (isCallValid)
         {
             context->createQueries(target, n, ids);
@@ -6444,8 +6680,10 @@ void GL_APIENTRY GL_CreateRenderbuffers(GLsizei n, GLuint *renderbuffers)
     {
         RenderbufferID *renderbuffersPacked = PackParam<RenderbufferID *>(renderbuffers);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateCreateRenderbuffers(context, n, renderbuffersPacked));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateCreateRenderbuffers(context, angle::EntryPoint::GLCreateRenderbuffers, n,
+                                         renderbuffersPacked));
         if (isCallValid)
         {
             context->createRenderbuffers(n, renderbuffersPacked);
@@ -6468,7 +6706,8 @@ void GL_APIENTRY GL_CreateSamplers(GLsizei n, GLuint *samplers)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateCreateSamplers(context, n, samplers));
+            (context->skipValidation() ||
+             ValidateCreateSamplers(context, angle::EntryPoint::GLCreateSamplers, n, samplers));
         if (isCallValid)
         {
             context->createSamplers(n, samplers);
@@ -6491,8 +6730,9 @@ void GL_APIENTRY GL_CreateTextures(GLenum target, GLsizei n, GLuint *textures)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateCreateTextures(context, target, n, textures));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateCreateTextures(context, angle::EntryPoint::GLCreateTextures,
+                                                   target, n, textures));
         if (isCallValid)
         {
             context->createTextures(target, n, textures);
@@ -6514,8 +6754,9 @@ void GL_APIENTRY GL_CreateTransformFeedbacks(GLsizei n, GLuint *ids)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateCreateTransformFeedbacks(context, n, ids));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateCreateTransformFeedbacks(
+                                context, angle::EntryPoint::GLCreateTransformFeedbacks, n, ids));
         if (isCallValid)
         {
             context->createTransformFeedbacks(n, ids);
@@ -6538,8 +6779,9 @@ void GL_APIENTRY GL_CreateVertexArrays(GLsizei n, GLuint *arrays)
     {
         VertexArrayID *arraysPacked                           = PackParam<VertexArrayID *>(arrays);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateCreateVertexArrays(context, n, arraysPacked));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateCreateVertexArrays(
+                                context, angle::EntryPoint::GLCreateVertexArrays, n, arraysPacked));
         if (isCallValid)
         {
             context->createVertexArrays(n, arraysPacked);
@@ -6562,8 +6804,10 @@ void GL_APIENTRY GL_DisableVertexArrayAttrib(GLuint vaobj, GLuint index)
     {
         VertexArrayID vaobjPacked                             = PackParam<VertexArrayID>(vaobj);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateDisableVertexArrayAttrib(context, vaobjPacked, index));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateDisableVertexArrayAttrib(
+                 context, angle::EntryPoint::GLDisableVertexArrayAttrib, vaobjPacked, index));
         if (isCallValid)
         {
             context->disableVertexArrayAttrib(vaobjPacked, index);
@@ -6586,8 +6830,10 @@ void GL_APIENTRY GL_EnableVertexArrayAttrib(GLuint vaobj, GLuint index)
     {
         VertexArrayID vaobjPacked                             = PackParam<VertexArrayID>(vaobj);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateEnableVertexArrayAttrib(context, vaobjPacked, index));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateEnableVertexArrayAttrib(context, angle::EntryPoint::GLEnableVertexArrayAttrib,
+                                             vaobjPacked, index));
         if (isCallValid)
         {
             context->enableVertexArrayAttrib(vaobjPacked, index);
@@ -6611,9 +6857,10 @@ void GL_APIENTRY GL_FlushMappedNamedBufferRange(GLuint buffer, GLintptr offset, 
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFlushMappedNamedBufferRange(context, bufferPacked, offset, length));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateFlushMappedNamedBufferRange(
+                                context, angle::EntryPoint::GLFlushMappedNamedBufferRange,
+                                bufferPacked, offset, length));
         if (isCallValid)
         {
             context->flushMappedNamedBufferRange(bufferPacked, offset, length);
@@ -6637,7 +6884,9 @@ void GL_APIENTRY GL_GenerateTextureMipmap(GLuint texture)
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGenerateTextureMipmap(context, texturePacked));
+            (context->skipValidation() ||
+             ValidateGenerateTextureMipmap(context, angle::EntryPoint::GLGenerateTextureMipmap,
+                                           texturePacked));
         if (isCallValid)
         {
             context->generateTextureMipmap(texturePacked);
@@ -6664,9 +6913,10 @@ void GL_APIENTRY GL_GetCompressedTextureImage(GLuint texture,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetCompressedTextureImage(context, texturePacked, level, bufSize, pixels));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetCompressedTextureImage(
+                                context, angle::EntryPoint::GLGetCompressedTextureImage,
+                                texturePacked, level, bufSize, pixels));
         if (isCallValid)
         {
             context->getCompressedTextureImage(texturePacked, level, bufSize, pixels);
@@ -6704,8 +6954,9 @@ void GL_APIENTRY GL_GetCompressedTextureSubImage(GLuint texture,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetCompressedTextureSubImage(context, texturePacked, level, xoffset, yoffset,
-                                                  zoffset, width, height, depth, bufSize, pixels));
+             ValidateGetCompressedTextureSubImage(
+                 context, angle::EntryPoint::GLGetCompressedTextureSubImage, texturePacked, level,
+                 xoffset, yoffset, zoffset, width, height, depth, bufSize, pixels));
         if (isCallValid)
         {
             context->getCompressedTextureSubImage(texturePacked, level, xoffset, yoffset, zoffset,
@@ -6729,7 +6980,9 @@ GLenum GL_APIENTRY GL_GetGraphicsResetStatus()
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateGetGraphicsResetStatus(context));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetGraphicsResetStatus(context, angle::EntryPoint::GLGetGraphicsResetStatus));
         if (isCallValid)
         {
             returnValue = context->getGraphicsResetStatus();
@@ -6760,8 +7013,10 @@ void GL_APIENTRY GL_GetNamedBufferParameteri64v(GLuint buffer, GLenum pname, GLi
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateGetNamedBufferParameteri64v(
-                                                             context, bufferPacked, pname, params));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetNamedBufferParameteri64v(
+                                context, angle::EntryPoint::GLGetNamedBufferParameteri64v,
+                                bufferPacked, pname, params));
         if (isCallValid)
         {
             context->getNamedBufferParameteri64v(bufferPacked, pname, params);
@@ -6786,8 +7041,10 @@ void GL_APIENTRY GL_GetNamedBufferParameteriv(GLuint buffer, GLenum pname, GLint
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateGetNamedBufferParameteriv(
-                                                             context, bufferPacked, pname, params));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetNamedBufferParameteriv(
+                                context, angle::EntryPoint::GLGetNamedBufferParameteriv,
+                                bufferPacked, pname, params));
         if (isCallValid)
         {
             context->getNamedBufferParameteriv(bufferPacked, pname, params);
@@ -6811,8 +7068,10 @@ void GL_APIENTRY GL_GetNamedBufferPointerv(GLuint buffer, GLenum pname, void **p
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetNamedBufferPointerv(context, bufferPacked, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetNamedBufferPointerv(context, angle::EntryPoint::GLGetNamedBufferPointerv,
+                                            bufferPacked, pname, params));
         if (isCallValid)
         {
             context->getNamedBufferPointerv(bufferPacked, pname, params);
@@ -6842,7 +7101,8 @@ void GL_APIENTRY GL_GetNamedBufferSubData(GLuint buffer,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetNamedBufferSubData(context, bufferPacked, offset, size, data));
+             ValidateGetNamedBufferSubData(context, angle::EntryPoint::GLGetNamedBufferSubData,
+                                           bufferPacked, offset, size, data));
         if (isCallValid)
         {
             context->getNamedBufferSubData(bufferPacked, offset, size, data);
@@ -6872,9 +7132,11 @@ void GL_APIENTRY GL_GetNamedFramebufferAttachmentParameteriv(GLuint framebuffer,
     {
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetNamedFramebufferAttachmentParameteriv(
-                                context, framebufferPacked, attachment, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetNamedFramebufferAttachmentParameteriv(
+                 context, angle::EntryPoint::GLGetNamedFramebufferAttachmentParameteriv,
+                 framebufferPacked, attachment, pname, params));
         if (isCallValid)
         {
             context->getNamedFramebufferAttachmentParameteriv(framebufferPacked, attachment, pname,
@@ -6901,9 +7163,10 @@ void GL_APIENTRY GL_GetNamedFramebufferParameteriv(GLuint framebuffer, GLenum pn
     {
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetNamedFramebufferParameteriv(context, framebufferPacked, pname, param));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetNamedFramebufferParameteriv(
+                                context, angle::EntryPoint::GLGetNamedFramebufferParameteriv,
+                                framebufferPacked, pname, param));
         if (isCallValid)
         {
             context->getNamedFramebufferParameteriv(framebufferPacked, pname, param);
@@ -6931,9 +7194,10 @@ void GL_APIENTRY GL_GetNamedRenderbufferParameteriv(GLuint renderbuffer,
     {
         RenderbufferID renderbufferPacked = PackParam<RenderbufferID>(renderbuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetNamedRenderbufferParameteriv(context, renderbufferPacked, pname, params));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetNamedRenderbufferParameteriv(
+                                context, angle::EntryPoint::GLGetNamedRenderbufferParameteriv,
+                                renderbufferPacked, pname, params));
         if (isCallValid)
         {
             context->getNamedRenderbufferParameteriv(renderbufferPacked, pname, params);
@@ -6962,9 +7226,10 @@ void GL_APIENTRY GL_GetQueryBufferObjecti64v(GLuint id,
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetQueryBufferObjecti64v(context, id, bufferPacked, pname, offset));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetQueryBufferObjecti64v(
+                                context, angle::EntryPoint::GLGetQueryBufferObjecti64v, id,
+                                bufferPacked, pname, offset));
         if (isCallValid)
         {
             context->getQueryBufferObjecti64v(id, bufferPacked, pname, offset);
@@ -6992,7 +7257,8 @@ void GL_APIENTRY GL_GetQueryBufferObjectiv(GLuint id, GLuint buffer, GLenum pnam
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetQueryBufferObjectiv(context, id, bufferPacked, pname, offset));
+             ValidateGetQueryBufferObjectiv(context, angle::EntryPoint::GLGetQueryBufferObjectiv,
+                                            id, bufferPacked, pname, offset));
         if (isCallValid)
         {
             context->getQueryBufferObjectiv(id, bufferPacked, pname, offset);
@@ -7021,9 +7287,10 @@ void GL_APIENTRY GL_GetQueryBufferObjectui64v(GLuint id,
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetQueryBufferObjectui64v(context, id, bufferPacked, pname, offset));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetQueryBufferObjectui64v(
+                                context, angle::EntryPoint::GLGetQueryBufferObjectui64v, id,
+                                bufferPacked, pname, offset));
         if (isCallValid)
         {
             context->getQueryBufferObjectui64v(id, bufferPacked, pname, offset);
@@ -7051,7 +7318,8 @@ void GL_APIENTRY GL_GetQueryBufferObjectuiv(GLuint id, GLuint buffer, GLenum pna
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetQueryBufferObjectuiv(context, id, bufferPacked, pname, offset));
+             ValidateGetQueryBufferObjectuiv(context, angle::EntryPoint::GLGetQueryBufferObjectuiv,
+                                             id, bufferPacked, pname, offset));
         if (isCallValid)
         {
             context->getQueryBufferObjectuiv(id, bufferPacked, pname, offset);
@@ -7085,7 +7353,8 @@ void GL_APIENTRY GL_GetTextureImage(GLuint texture,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetTextureImage(context, texturePacked, level, format, type, bufSize, pixels));
+             ValidateGetTextureImage(context, angle::EntryPoint::GLGetTextureImage, texturePacked,
+                                     level, format, type, bufSize, pixels));
         if (isCallValid)
         {
             context->getTextureImage(texturePacked, level, format, type, bufSize, pixels);
@@ -7114,9 +7383,10 @@ void GL_APIENTRY GL_GetTextureLevelParameterfv(GLuint texture,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetTextureLevelParameterfv(context, texturePacked, level, pname, params));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetTextureLevelParameterfv(
+                                context, angle::EntryPoint::GLGetTextureLevelParameterfv,
+                                texturePacked, level, pname, params));
         if (isCallValid)
         {
             context->getTextureLevelParameterfv(texturePacked, level, pname, params);
@@ -7145,9 +7415,10 @@ void GL_APIENTRY GL_GetTextureLevelParameteriv(GLuint texture,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetTextureLevelParameteriv(context, texturePacked, level, pname, params));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetTextureLevelParameteriv(
+                                context, angle::EntryPoint::GLGetTextureLevelParameteriv,
+                                texturePacked, level, pname, params));
         if (isCallValid)
         {
             context->getTextureLevelParameteriv(texturePacked, level, pname, params);
@@ -7172,8 +7443,10 @@ void GL_APIENTRY GL_GetTextureParameterIiv(GLuint texture, GLenum pname, GLint *
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetTextureParameterIiv(context, texturePacked, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTextureParameterIiv(context, angle::EntryPoint::GLGetTextureParameterIiv,
+                                            texturePacked, pname, params));
         if (isCallValid)
         {
             context->getTextureParameterIiv(texturePacked, pname, params);
@@ -7197,8 +7470,10 @@ void GL_APIENTRY GL_GetTextureParameterIuiv(GLuint texture, GLenum pname, GLuint
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetTextureParameterIuiv(context, texturePacked, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTextureParameterIuiv(context, angle::EntryPoint::GLGetTextureParameterIuiv,
+                                             texturePacked, pname, params));
         if (isCallValid)
         {
             context->getTextureParameterIuiv(texturePacked, pname, params);
@@ -7222,8 +7497,10 @@ void GL_APIENTRY GL_GetTextureParameterfv(GLuint texture, GLenum pname, GLfloat 
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetTextureParameterfv(context, texturePacked, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTextureParameterfv(context, angle::EntryPoint::GLGetTextureParameterfv,
+                                           texturePacked, pname, params));
         if (isCallValid)
         {
             context->getTextureParameterfv(texturePacked, pname, params);
@@ -7247,8 +7524,10 @@ void GL_APIENTRY GL_GetTextureParameteriv(GLuint texture, GLenum pname, GLint *p
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetTextureParameteriv(context, texturePacked, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTextureParameteriv(context, angle::EntryPoint::GLGetTextureParameteriv,
+                                           texturePacked, pname, params));
         if (isCallValid)
         {
             context->getTextureParameteriv(texturePacked, pname, params);
@@ -7290,8 +7569,9 @@ void GL_APIENTRY GL_GetTextureSubImage(GLuint texture,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetTextureSubImage(context, texturePacked, level, xoffset, yoffset, zoffset,
-                                        width, height, depth, format, type, bufSize, pixels));
+             ValidateGetTextureSubImage(context, angle::EntryPoint::GLGetTextureSubImage,
+                                        texturePacked, level, xoffset, yoffset, zoffset, width,
+                                        height, depth, format, type, bufSize, pixels));
         if (isCallValid)
         {
             context->getTextureSubImage(texturePacked, level, xoffset, yoffset, zoffset, width,
@@ -7320,7 +7600,9 @@ void GL_APIENTRY GL_GetTransformFeedbacki64_v(GLuint xfb,
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetTransformFeedbacki64_v(context, xfb, pname, index, param));
+                            ValidateGetTransformFeedbacki64_v(
+                                context, angle::EntryPoint::GLGetTransformFeedbacki64_v, xfb, pname,
+                                index, param));
         if (isCallValid)
         {
             context->getTransformFeedbacki64_v(xfb, pname, index, param);
@@ -7343,8 +7625,10 @@ void GL_APIENTRY GL_GetTransformFeedbacki_v(GLuint xfb, GLenum pname, GLuint ind
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetTransformFeedbacki_v(context, xfb, pname, index, param));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTransformFeedbacki_v(context, angle::EntryPoint::GLGetTransformFeedbacki_v,
+                                             xfb, pname, index, param));
         if (isCallValid)
         {
             context->getTransformFeedbacki_v(xfb, pname, index, param);
@@ -7367,8 +7651,10 @@ void GL_APIENTRY GL_GetTransformFeedbackiv(GLuint xfb, GLenum pname, GLint *para
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetTransformFeedbackiv(context, xfb, pname, param));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTransformFeedbackiv(context, angle::EntryPoint::GLGetTransformFeedbackiv,
+                                            xfb, pname, param));
         if (isCallValid)
         {
             context->getTransformFeedbackiv(xfb, pname, param);
@@ -7396,9 +7682,10 @@ void GL_APIENTRY GL_GetVertexArrayIndexed64iv(GLuint vaobj,
     {
         VertexArrayID vaobjPacked                             = PackParam<VertexArrayID>(vaobj);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetVertexArrayIndexed64iv(context, vaobjPacked, index, pname, param));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetVertexArrayIndexed64iv(
+                                context, angle::EntryPoint::GLGetVertexArrayIndexed64iv,
+                                vaobjPacked, index, pname, param));
         if (isCallValid)
         {
             context->getVertexArrayIndexed64iv(vaobjPacked, index, pname, param);
@@ -7426,7 +7713,8 @@ void GL_APIENTRY GL_GetVertexArrayIndexediv(GLuint vaobj, GLuint index, GLenum p
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetVertexArrayIndexediv(context, vaobjPacked, index, pname, param));
+             ValidateGetVertexArrayIndexediv(context, angle::EntryPoint::GLGetVertexArrayIndexediv,
+                                             vaobjPacked, index, pname, param));
         if (isCallValid)
         {
             context->getVertexArrayIndexediv(vaobjPacked, index, pname, param);
@@ -7452,7 +7740,8 @@ void GL_APIENTRY GL_GetVertexArrayiv(GLuint vaobj, GLenum pname, GLint *param)
         VertexArrayID vaobjPacked                             = PackParam<VertexArrayID>(vaobj);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetVertexArrayiv(context, vaobjPacked, pname, param));
+                            ValidateGetVertexArrayiv(context, angle::EntryPoint::GLGetVertexArrayiv,
+                                                     vaobjPacked, pname, param));
         if (isCallValid)
         {
             context->getVertexArrayiv(vaobjPacked, pname, param);
@@ -7480,7 +7769,8 @@ GL_GetnColorTable(GLenum target, GLenum format, GLenum type, GLsizei bufSize, vo
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetnColorTable(context, target, format, type, bufSize, table));
+                            ValidateGetnColorTable(context, angle::EntryPoint::GLGetnColorTable,
+                                                   target, format, type, bufSize, table));
         if (isCallValid)
         {
             context->getnColorTable(target, format, type, bufSize, table);
@@ -7504,8 +7794,10 @@ void GL_APIENTRY GL_GetnCompressedTexImage(GLenum target, GLint lod, GLsizei buf
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetnCompressedTexImage(context, target, lod, bufSize, pixels));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetnCompressedTexImage(context, angle::EntryPoint::GLGetnCompressedTexImage,
+                                            target, lod, bufSize, pixels));
         if (isCallValid)
         {
             context->getnCompressedTexImage(target, lod, bufSize, pixels);
@@ -7534,7 +7826,8 @@ GL_GetnConvolutionFilter(GLenum target, GLenum format, GLenum type, GLsizei bufS
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetnConvolutionFilter(context, target, format, type, bufSize, image));
+             ValidateGetnConvolutionFilter(context, angle::EntryPoint::GLGetnConvolutionFilter,
+                                           target, format, type, bufSize, image));
         if (isCallValid)
         {
             context->getnConvolutionFilter(target, format, type, bufSize, image);
@@ -7566,9 +7859,9 @@ void GL_APIENTRY GL_GetnHistogram(GLenum target,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetnHistogram(context, target, reset, format, type, bufSize, values));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetnHistogram(context, angle::EntryPoint::GLGetnHistogram,
+                                                  target, reset, format, type, bufSize, values));
         if (isCallValid)
         {
             context->getnHistogram(target, reset, format, type, bufSize, values);
@@ -7594,7 +7887,8 @@ void GL_APIENTRY GL_GetnMapdv(GLenum target, GLenum query, GLsizei bufSize, GLdo
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGetnMapdv(context, target, query, bufSize, v));
+            (context->skipValidation() ||
+             ValidateGetnMapdv(context, angle::EntryPoint::GLGetnMapdv, target, query, bufSize, v));
         if (isCallValid)
         {
             context->getnMapdv(target, query, bufSize, v);
@@ -7619,7 +7913,8 @@ void GL_APIENTRY GL_GetnMapfv(GLenum target, GLenum query, GLsizei bufSize, GLfl
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGetnMapfv(context, target, query, bufSize, v));
+            (context->skipValidation() ||
+             ValidateGetnMapfv(context, angle::EntryPoint::GLGetnMapfv, target, query, bufSize, v));
         if (isCallValid)
         {
             context->getnMapfv(target, query, bufSize, v);
@@ -7644,7 +7939,8 @@ void GL_APIENTRY GL_GetnMapiv(GLenum target, GLenum query, GLsizei bufSize, GLin
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGetnMapiv(context, target, query, bufSize, v));
+            (context->skipValidation() ||
+             ValidateGetnMapiv(context, angle::EntryPoint::GLGetnMapiv, target, query, bufSize, v));
         if (isCallValid)
         {
             context->getnMapiv(target, query, bufSize, v);
@@ -7675,9 +7971,9 @@ void GL_APIENTRY GL_GetnMinmax(GLenum target,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetnMinmax(context, target, reset, format, type, bufSize, values));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetnMinmax(context, angle::EntryPoint::GLGetnMinmax, target,
+                                               reset, format, type, bufSize, values));
         if (isCallValid)
         {
             context->getnMinmax(target, reset, format, type, bufSize, values);
@@ -7701,8 +7997,9 @@ void GL_APIENTRY GL_GetnPixelMapfv(GLenum map, GLsizei bufSize, GLfloat *values)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetnPixelMapfv(context, map, bufSize, values));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetnPixelMapfv(context, angle::EntryPoint::GLGetnPixelMapfv,
+                                                   map, bufSize, values));
         if (isCallValid)
         {
             context->getnPixelMapfv(map, bufSize, values);
@@ -7725,8 +8022,9 @@ void GL_APIENTRY GL_GetnPixelMapuiv(GLenum map, GLsizei bufSize, GLuint *values)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetnPixelMapuiv(context, map, bufSize, values));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetnPixelMapuiv(context, angle::EntryPoint::GLGetnPixelMapuiv,
+                                                    map, bufSize, values));
         if (isCallValid)
         {
             context->getnPixelMapuiv(map, bufSize, values);
@@ -7749,8 +8047,9 @@ void GL_APIENTRY GL_GetnPixelMapusv(GLenum map, GLsizei bufSize, GLushort *value
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateGetnPixelMapusv(context, map, bufSize, values));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetnPixelMapusv(context, angle::EntryPoint::GLGetnPixelMapusv,
+                                                    map, bufSize, values));
         if (isCallValid)
         {
             context->getnPixelMapusv(map, bufSize, values);
@@ -7773,7 +8072,9 @@ void GL_APIENTRY GL_GetnPolygonStipple(GLsizei bufSize, GLubyte *pattern)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateGetnPolygonStipple(context, bufSize, pattern));
+            (context->skipValidation() ||
+             ValidateGetnPolygonStipple(context, angle::EntryPoint::GLGetnPolygonStipple, bufSize,
+                                        pattern));
         if (isCallValid)
         {
             context->getnPolygonStipple(bufSize, pattern);
@@ -7808,8 +8109,9 @@ void GL_APIENTRY GL_GetnSeparableFilter(GLenum target,
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetnSeparableFilter(context, target, format, type, rowBufSize,
-                                                        row, columnBufSize, column, span));
+                            ValidateGetnSeparableFilter(
+                                context, angle::EntryPoint::GLGetnSeparableFilter, target, format,
+                                type, rowBufSize, row, columnBufSize, column, span));
         if (isCallValid)
         {
             context->getnSeparableFilter(target, format, type, rowBufSize, row, columnBufSize,
@@ -7842,9 +8144,9 @@ void GL_APIENTRY GL_GetnTexImage(GLenum target,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetnTexImage(context, target, level, format, type, bufSize, pixels));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetnTexImage(context, angle::EntryPoint::GLGetnTexImage, target,
+                                                 level, format, type, bufSize, pixels));
         if (isCallValid)
         {
             context->getnTexImage(target, level, format, type, bufSize, pixels);
@@ -7870,9 +8172,9 @@ void GL_APIENTRY GL_GetnUniformdv(GLuint program, GLint location, GLsizei bufSiz
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetnUniformdv(context, programPacked, locationPacked, bufSize, params));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetnUniformdv(context, angle::EntryPoint::GLGetnUniformdv,
+                                                  programPacked, locationPacked, bufSize, params));
         if (isCallValid)
         {
             context->getnUniformdv(programPacked, locationPacked, bufSize, params);
@@ -7898,9 +8200,9 @@ void GL_APIENTRY GL_GetnUniformfv(GLuint program, GLint location, GLsizei bufSiz
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetnUniformfv(context, programPacked, locationPacked, bufSize, params));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetnUniformfv(context, angle::EntryPoint::GLGetnUniformfv,
+                                                  programPacked, locationPacked, bufSize, params));
         if (isCallValid)
         {
             context->getnUniformfv(programPacked, locationPacked, bufSize, params);
@@ -7926,9 +8228,9 @@ void GL_APIENTRY GL_GetnUniformiv(GLuint program, GLint location, GLsizei bufSiz
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetnUniformiv(context, programPacked, locationPacked, bufSize, params));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetnUniformiv(context, angle::EntryPoint::GLGetnUniformiv,
+                                                  programPacked, locationPacked, bufSize, params));
         if (isCallValid)
         {
             context->getnUniformiv(programPacked, locationPacked, bufSize, params);
@@ -7954,9 +8256,9 @@ void GL_APIENTRY GL_GetnUniformuiv(GLuint program, GLint location, GLsizei bufSi
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetnUniformuiv(context, programPacked, locationPacked, bufSize, params));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateGetnUniformuiv(context, angle::EntryPoint::GLGetnUniformuiv,
+                                                   programPacked, locationPacked, bufSize, params));
         if (isCallValid)
         {
             context->getnUniformuiv(programPacked, locationPacked, bufSize, params);
@@ -7984,8 +8286,9 @@ void GL_APIENTRY GL_InvalidateNamedFramebufferData(GLuint framebuffer,
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateInvalidateNamedFramebufferData(context, framebufferPacked,
-                                                                   numAttachments, attachments));
+                            ValidateInvalidateNamedFramebufferData(
+                                context, angle::EntryPoint::GLInvalidateNamedFramebufferData,
+                                framebufferPacked, numAttachments, attachments));
         if (isCallValid)
         {
             context->invalidateNamedFramebufferData(framebufferPacked, numAttachments, attachments);
@@ -8019,8 +8322,9 @@ void GL_APIENTRY GL_InvalidateNamedFramebufferSubData(GLuint framebuffer,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateInvalidateNamedFramebufferSubData(context, framebufferPacked, numAttachments,
-                                                       attachments, x, y, width, height));
+             ValidateInvalidateNamedFramebufferSubData(
+                 context, angle::EntryPoint::GLInvalidateNamedFramebufferSubData, framebufferPacked,
+                 numAttachments, attachments, x, y, width, height));
         if (isCallValid)
         {
             context->invalidateNamedFramebufferSubData(framebufferPacked, numAttachments,
@@ -8046,8 +8350,9 @@ void *GL_APIENTRY GL_MapNamedBuffer(GLuint buffer, GLenum access)
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateMapNamedBuffer(context, bufferPacked, access));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateMapNamedBuffer(context, angle::EntryPoint::GLMapNamedBuffer,
+                                                   bufferPacked, access));
         if (isCallValid)
         {
             returnValue = context->mapNamedBuffer(bufferPacked, access);
@@ -8084,7 +8389,8 @@ void *GL_APIENTRY GL_MapNamedBufferRange(GLuint buffer,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateMapNamedBufferRange(context, bufferPacked, offset, length, access));
+             ValidateMapNamedBufferRange(context, angle::EntryPoint::GLMapNamedBufferRange,
+                                         bufferPacked, offset, length, access));
         if (isCallValid)
         {
             returnValue = context->mapNamedBufferRange(bufferPacked, offset, length, access);
@@ -8113,8 +8419,9 @@ void GL_APIENTRY GL_MemoryBarrierByRegion(GLbitfield barriers)
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateMemoryBarrierByRegion(context, barriers));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateMemoryBarrierByRegion(
+                                context, angle::EntryPoint::GLMemoryBarrierByRegion, barriers));
         if (isCallValid)
         {
             context->memoryBarrierByRegion(barriers);
@@ -8140,7 +8447,8 @@ void GL_APIENTRY GL_NamedBufferData(GLuint buffer, GLsizeiptr size, const void *
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateNamedBufferData(context, bufferPacked, size, data, usage));
+                            ValidateNamedBufferData(context, angle::EntryPoint::GLNamedBufferData,
+                                                    bufferPacked, size, data, usage));
         if (isCallValid)
         {
             context->namedBufferData(bufferPacked, size, data, usage);
@@ -8168,8 +8476,10 @@ void GL_APIENTRY GL_NamedBufferStorage(GLuint buffer,
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateNamedBufferStorage(context, bufferPacked, size, data, flags));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateNamedBufferStorage(context, angle::EntryPoint::GLNamedBufferStorage,
+                                        bufferPacked, size, data, flags));
         if (isCallValid)
         {
             context->namedBufferStorage(bufferPacked, size, data, flags);
@@ -8197,8 +8507,10 @@ void GL_APIENTRY GL_NamedBufferSubData(GLuint buffer,
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateNamedBufferSubData(context, bufferPacked, offset, size, data));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateNamedBufferSubData(context, angle::EntryPoint::GLNamedBufferSubData,
+                                        bufferPacked, offset, size, data));
         if (isCallValid)
         {
             context->namedBufferSubData(bufferPacked, offset, size, data);
@@ -8221,8 +8533,10 @@ void GL_APIENTRY GL_NamedFramebufferDrawBuffer(GLuint framebuffer, GLenum buf)
     {
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateNamedFramebufferDrawBuffer(context, framebufferPacked, buf));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateNamedFramebufferDrawBuffer(
+                 context, angle::EntryPoint::GLNamedFramebufferDrawBuffer, framebufferPacked, buf));
         if (isCallValid)
         {
             context->namedFramebufferDrawBuffer(framebufferPacked, buf);
@@ -8246,8 +8560,10 @@ void GL_APIENTRY GL_NamedFramebufferDrawBuffers(GLuint framebuffer, GLsizei n, c
     {
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateNamedFramebufferDrawBuffers(
-                                                             context, framebufferPacked, n, bufs));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateNamedFramebufferDrawBuffers(
+                                context, angle::EntryPoint::GLNamedFramebufferDrawBuffers,
+                                framebufferPacked, n, bufs));
         if (isCallValid)
         {
             context->namedFramebufferDrawBuffers(framebufferPacked, n, bufs);
@@ -8272,9 +8588,10 @@ void GL_APIENTRY GL_NamedFramebufferParameteri(GLuint framebuffer, GLenum pname,
     {
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateNamedFramebufferParameteri(context, framebufferPacked, pname, param));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateNamedFramebufferParameteri(
+                                context, angle::EntryPoint::GLNamedFramebufferParameteri,
+                                framebufferPacked, pname, param));
         if (isCallValid)
         {
             context->namedFramebufferParameteri(framebufferPacked, pname, param);
@@ -8298,8 +8615,10 @@ void GL_APIENTRY GL_NamedFramebufferReadBuffer(GLuint framebuffer, GLenum src)
     {
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateNamedFramebufferReadBuffer(context, framebufferPacked, src));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateNamedFramebufferReadBuffer(
+                 context, angle::EntryPoint::GLNamedFramebufferReadBuffer, framebufferPacked, src));
         if (isCallValid)
         {
             context->namedFramebufferReadBuffer(framebufferPacked, src);
@@ -8331,8 +8650,9 @@ void GL_APIENTRY GL_NamedFramebufferRenderbuffer(GLuint framebuffer,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateNamedFramebufferRenderbuffer(context, framebufferPacked, attachment,
-                                                  renderbuffertarget, renderbufferPacked));
+             ValidateNamedFramebufferRenderbuffer(
+                 context, angle::EntryPoint::GLNamedFramebufferRenderbuffer, framebufferPacked,
+                 attachment, renderbuffertarget, renderbufferPacked));
         if (isCallValid)
         {
             context->namedFramebufferRenderbuffer(framebufferPacked, attachment, renderbuffertarget,
@@ -8363,9 +8683,10 @@ void GL_APIENTRY GL_NamedFramebufferTexture(GLuint framebuffer,
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         TextureID texturePacked         = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateNamedFramebufferTexture(context, framebufferPacked, attachment,
-                                                            texturePacked, level));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateNamedFramebufferTexture(context, angle::EntryPoint::GLNamedFramebufferTexture,
+                                             framebufferPacked, attachment, texturePacked, level));
         if (isCallValid)
         {
             context->namedFramebufferTexture(framebufferPacked, attachment, texturePacked, level);
@@ -8396,9 +8717,10 @@ void GL_APIENTRY GL_NamedFramebufferTextureLayer(GLuint framebuffer,
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         TextureID texturePacked         = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateNamedFramebufferTextureLayer(
-                                                             context, framebufferPacked, attachment,
-                                                             texturePacked, level, layer));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateNamedFramebufferTextureLayer(
+                                context, angle::EntryPoint::GLNamedFramebufferTextureLayer,
+                                framebufferPacked, attachment, texturePacked, level, layer));
         if (isCallValid)
         {
             context->namedFramebufferTextureLayer(framebufferPacked, attachment, texturePacked,
@@ -8429,8 +8751,9 @@ void GL_APIENTRY GL_NamedRenderbufferStorage(GLuint renderbuffer,
         RenderbufferID renderbufferPacked = PackParam<RenderbufferID>(renderbuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateNamedRenderbufferStorage(context, renderbufferPacked,
-                                                             internalformat, width, height));
+                            ValidateNamedRenderbufferStorage(
+                                context, angle::EntryPoint::GLNamedRenderbufferStorage,
+                                renderbufferPacked, internalformat, width, height));
         if (isCallValid)
         {
             context->namedRenderbufferStorage(renderbufferPacked, internalformat, width, height);
@@ -8461,10 +8784,10 @@ void GL_APIENTRY GL_NamedRenderbufferStorageMultisample(GLuint renderbuffer,
     {
         RenderbufferID renderbufferPacked = PackParam<RenderbufferID>(renderbuffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateNamedRenderbufferStorageMultisample(context, renderbufferPacked, samples,
-                                                         internalformat, width, height));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateNamedRenderbufferStorageMultisample(
+                                context, angle::EntryPoint::GLNamedRenderbufferStorageMultisample,
+                                renderbufferPacked, samples, internalformat, width, height));
         if (isCallValid)
         {
             context->namedRenderbufferStorageMultisample(renderbufferPacked, samples,
@@ -8498,9 +8821,9 @@ void GL_APIENTRY GL_ReadnPixels(GLint x,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateReadnPixels(context, x, y, width, height, format, type, bufSize, data));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateReadnPixels(context, angle::EntryPoint::GLReadnPixels, x, y,
+                                                width, height, format, type, bufSize, data));
         if (isCallValid)
         {
             context->readnPixels(x, y, width, height, format, type, bufSize, data);
@@ -8522,7 +8845,8 @@ void GL_APIENTRY GL_TextureBarrier()
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid = (context->skipValidation() || ValidateTextureBarrier(context));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateTextureBarrier(context, angle::EntryPoint::GLTextureBarrier));
         if (isCallValid)
         {
             context->textureBarrier();
@@ -8547,9 +8871,9 @@ void GL_APIENTRY GL_TextureBuffer(GLuint texture, GLenum internalformat, GLuint 
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateTextureBuffer(context, texturePacked, internalformat, bufferPacked));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateTextureBuffer(context, angle::EntryPoint::GLTextureBuffer,
+                                                  texturePacked, internalformat, bufferPacked));
         if (isCallValid)
         {
             context->textureBuffer(texturePacked, internalformat, bufferPacked);
@@ -8581,9 +8905,10 @@ void GL_APIENTRY GL_TextureBufferRange(GLuint texture,
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTextureBufferRange(context, texturePacked, internalformat,
-                                                       bufferPacked, offset, size));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTextureBufferRange(context, angle::EntryPoint::GLTextureBufferRange,
+                                        texturePacked, internalformat, bufferPacked, offset, size));
         if (isCallValid)
         {
             context->textureBufferRange(texturePacked, internalformat, bufferPacked, offset, size);
@@ -8608,8 +8933,10 @@ void GL_APIENTRY GL_TextureParameterIiv(GLuint texture, GLenum pname, const GLin
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTextureParameterIiv(context, texturePacked, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTextureParameterIiv(context, angle::EntryPoint::GLTextureParameterIiv,
+                                         texturePacked, pname, params));
         if (isCallValid)
         {
             context->textureParameterIiv(texturePacked, pname, params);
@@ -8633,8 +8960,10 @@ void GL_APIENTRY GL_TextureParameterIuiv(GLuint texture, GLenum pname, const GLu
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTextureParameterIuiv(context, texturePacked, pname, params));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTextureParameterIuiv(context, angle::EntryPoint::GLTextureParameterIuiv,
+                                          texturePacked, pname, params));
         if (isCallValid)
         {
             context->textureParameterIuiv(texturePacked, pname, params);
@@ -8657,8 +8986,10 @@ void GL_APIENTRY GL_TextureParameterf(GLuint texture, GLenum pname, GLfloat para
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTextureParameterf(context, texturePacked, pname, param));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTextureParameterf(context, angle::EntryPoint::GLTextureParameterf,
+                                       texturePacked, pname, param));
         if (isCallValid)
         {
             context->textureParameterf(texturePacked, pname, param);
@@ -8682,8 +9013,10 @@ void GL_APIENTRY GL_TextureParameterfv(GLuint texture, GLenum pname, const GLflo
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTextureParameterfv(context, texturePacked, pname, param));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTextureParameterfv(context, angle::EntryPoint::GLTextureParameterfv,
+                                        texturePacked, pname, param));
         if (isCallValid)
         {
             context->textureParameterfv(texturePacked, pname, param);
@@ -8706,8 +9039,10 @@ void GL_APIENTRY GL_TextureParameteri(GLuint texture, GLenum pname, GLint param)
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTextureParameteri(context, texturePacked, pname, param));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTextureParameteri(context, angle::EntryPoint::GLTextureParameteri,
+                                       texturePacked, pname, param));
         if (isCallValid)
         {
             context->textureParameteri(texturePacked, pname, param);
@@ -8731,8 +9066,10 @@ void GL_APIENTRY GL_TextureParameteriv(GLuint texture, GLenum pname, const GLint
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTextureParameteriv(context, texturePacked, pname, param));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTextureParameteriv(context, angle::EntryPoint::GLTextureParameteriv,
+                                        texturePacked, pname, param));
         if (isCallValid)
         {
             context->textureParameteriv(texturePacked, pname, param);
@@ -8759,9 +9096,9 @@ void GL_APIENTRY GL_TextureStorage1D(GLuint texture,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateTextureStorage1D(context, texturePacked, levels, internalformat, width));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateTextureStorage1D(context, angle::EntryPoint::GLTextureStorage1D,
+                                                     texturePacked, levels, internalformat, width));
         if (isCallValid)
         {
             context->textureStorage1D(texturePacked, levels, internalformat, width);
@@ -8792,8 +9129,9 @@ void GL_APIENTRY GL_TextureStorage2D(GLuint texture,
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
-            (context->skipValidation() || ValidateTextureStorage2D(context, texturePacked, levels,
-                                                                   internalformat, width, height));
+            (context->skipValidation() ||
+             ValidateTextureStorage2D(context, angle::EntryPoint::GLTextureStorage2D, texturePacked,
+                                      levels, internalformat, width, height));
         if (isCallValid)
         {
             context->textureStorage2D(texturePacked, levels, internalformat, width, height);
@@ -8828,8 +9166,9 @@ void GL_APIENTRY GL_TextureStorage2DMultisample(GLuint texture,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateTextureStorage2DMultisample(context, texturePacked, samples, internalformat,
-                                                 width, height, fixedsamplelocations));
+             ValidateTextureStorage2DMultisample(
+                 context, angle::EntryPoint::GLTextureStorage2DMultisample, texturePacked, samples,
+                 internalformat, width, height, fixedsamplelocations));
         if (isCallValid)
         {
             context->textureStorage2DMultisample(texturePacked, samples, internalformat, width,
@@ -8862,9 +9201,10 @@ void GL_APIENTRY GL_TextureStorage3D(GLuint texture,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTextureStorage3D(context, texturePacked, levels, internalformat,
-                                                     width, height, depth));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTextureStorage3D(context, angle::EntryPoint::GLTextureStorage3D, texturePacked,
+                                      levels, internalformat, width, height, depth));
         if (isCallValid)
         {
             context->textureStorage3D(texturePacked, levels, internalformat, width, height, depth);
@@ -8900,8 +9240,9 @@ void GL_APIENTRY GL_TextureStorage3DMultisample(GLuint texture,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateTextureStorage3DMultisample(context, texturePacked, samples, internalformat,
-                                                 width, height, depth, fixedsamplelocations));
+             ValidateTextureStorage3DMultisample(
+                 context, angle::EntryPoint::GLTextureStorage3DMultisample, texturePacked, samples,
+                 internalformat, width, height, depth, fixedsamplelocations));
         if (isCallValid)
         {
             context->textureStorage3DMultisample(texturePacked, samples, internalformat, width,
@@ -8936,9 +9277,10 @@ void GL_APIENTRY GL_TextureSubImage1D(GLuint texture,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTextureSubImage1D(context, texturePacked, level, xoffset, width,
-                                                      format, type, pixels));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTextureSubImage1D(context, angle::EntryPoint::GLTextureSubImage1D,
+                                       texturePacked, level, xoffset, width, format, type, pixels));
         if (isCallValid)
         {
             context->textureSubImage1D(texturePacked, level, xoffset, width, format, type, pixels);
@@ -8974,10 +9316,10 @@ void GL_APIENTRY GL_TextureSubImage2D(GLuint texture,
     {
         TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateTextureSubImage2D(context, texturePacked, level, xoffset, yoffset, width,
-                                       height, format, type, pixels));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateTextureSubImage2D(
+                                context, angle::EntryPoint::GLTextureSubImage2D, texturePacked,
+                                level, xoffset, yoffset, width, height, format, type, pixels));
         if (isCallValid)
         {
             context->textureSubImage2D(texturePacked, level, xoffset, yoffset, width, height,
@@ -9018,8 +9360,9 @@ void GL_APIENTRY GL_TextureSubImage3D(GLuint texture,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateTextureSubImage3D(context, texturePacked, level, xoffset, yoffset, zoffset,
-                                       width, height, depth, format, type, pixels));
+             ValidateTextureSubImage3D(context, angle::EntryPoint::GLTextureSubImage3D,
+                                       texturePacked, level, xoffset, yoffset, zoffset, width,
+                                       height, depth, format, type, pixels));
         if (isCallValid)
         {
             context->textureSubImage3D(texturePacked, level, xoffset, yoffset, zoffset, width,
@@ -9045,7 +9388,9 @@ void GL_APIENTRY GL_TransformFeedbackBufferBase(GLuint xfb, GLuint index, GLuint
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTransformFeedbackBufferBase(context, xfb, index, bufferPacked));
+                            ValidateTransformFeedbackBufferBase(
+                                context, angle::EntryPoint::GLTransformFeedbackBufferBase, xfb,
+                                index, bufferPacked));
         if (isCallValid)
         {
             context->transformFeedbackBufferBase(xfb, index, bufferPacked);
@@ -9074,9 +9419,10 @@ void GL_APIENTRY GL_TransformFeedbackBufferRange(GLuint xfb,
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateTransformFeedbackBufferRange(context, xfb, index, bufferPacked, offset, size));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateTransformFeedbackBufferRange(
+                                context, angle::EntryPoint::GLTransformFeedbackBufferRange, xfb,
+                                index, bufferPacked, offset, size));
         if (isCallValid)
         {
             context->transformFeedbackBufferRange(xfb, index, bufferPacked, offset, size);
@@ -9100,8 +9446,9 @@ GLboolean GL_APIENTRY GL_UnmapNamedBuffer(GLuint buffer)
     {
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() || ValidateUnmapNamedBuffer(context, bufferPacked));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateUnmapNamedBuffer(context, angle::EntryPoint::GLUnmapNamedBuffer,
+                                                     bufferPacked));
         if (isCallValid)
         {
             returnValue = context->unmapNamedBuffer(bufferPacked);
@@ -9131,9 +9478,10 @@ void GL_APIENTRY GL_VertexArrayAttribBinding(GLuint vaobj, GLuint attribindex, G
     {
         VertexArrayID vaobjPacked                             = PackParam<VertexArrayID>(vaobj);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateVertexArrayAttribBinding(context, vaobjPacked, attribindex, bindingindex));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateVertexArrayAttribBinding(
+                                context, angle::EntryPoint::GLVertexArrayAttribBinding, vaobjPacked,
+                                attribindex, bindingindex));
         if (isCallValid)
         {
             context->vertexArrayAttribBinding(vaobjPacked, attribindex, bindingindex);
@@ -9167,8 +9515,9 @@ void GL_APIENTRY GL_VertexArrayAttribFormat(GLuint vaobj,
         VertexArrayID vaobjPacked                             = PackParam<VertexArrayID>(vaobj);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexArrayAttribFormat(context, vaobjPacked, attribindex, size,
-                                                            type, normalized, relativeoffset));
+                            ValidateVertexArrayAttribFormat(
+                                context, angle::EntryPoint::GLVertexArrayAttribFormat, vaobjPacked,
+                                attribindex, size, type, normalized, relativeoffset));
         if (isCallValid)
         {
             context->vertexArrayAttribFormat(vaobjPacked, attribindex, size, type, normalized,
@@ -9200,8 +9549,9 @@ void GL_APIENTRY GL_VertexArrayAttribIFormat(GLuint vaobj,
         VertexArrayID vaobjPacked                             = PackParam<VertexArrayID>(vaobj);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexArrayAttribIFormat(context, vaobjPacked, attribindex,
-                                                             size, type, relativeoffset));
+                            ValidateVertexArrayAttribIFormat(
+                                context, angle::EntryPoint::GLVertexArrayAttribIFormat, vaobjPacked,
+                                attribindex, size, type, relativeoffset));
         if (isCallValid)
         {
             context->vertexArrayAttribIFormat(vaobjPacked, attribindex, size, type, relativeoffset);
@@ -9232,8 +9582,9 @@ void GL_APIENTRY GL_VertexArrayAttribLFormat(GLuint vaobj,
         VertexArrayID vaobjPacked                             = PackParam<VertexArrayID>(vaobj);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexArrayAttribLFormat(context, vaobjPacked, attribindex,
-                                                             size, type, relativeoffset));
+                            ValidateVertexArrayAttribLFormat(
+                                context, angle::EntryPoint::GLVertexArrayAttribLFormat, vaobjPacked,
+                                attribindex, size, type, relativeoffset));
         if (isCallValid)
         {
             context->vertexArrayAttribLFormat(vaobjPacked, attribindex, size, type, relativeoffset);
@@ -9258,9 +9609,10 @@ void GL_APIENTRY GL_VertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex,
     {
         VertexArrayID vaobjPacked                             = PackParam<VertexArrayID>(vaobj);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateVertexArrayBindingDivisor(context, vaobjPacked, bindingindex, divisor));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateVertexArrayBindingDivisor(
+                                context, angle::EntryPoint::GLVertexArrayBindingDivisor,
+                                vaobjPacked, bindingindex, divisor));
         if (isCallValid)
         {
             context->vertexArrayBindingDivisor(vaobjPacked, bindingindex, divisor);
@@ -9286,7 +9638,9 @@ void GL_APIENTRY GL_VertexArrayElementBuffer(GLuint vaobj, GLuint buffer)
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexArrayElementBuffer(context, vaobjPacked, bufferPacked));
+                            ValidateVertexArrayElementBuffer(
+                                context, angle::EntryPoint::GLVertexArrayElementBuffer, vaobjPacked,
+                                bufferPacked));
         if (isCallValid)
         {
             context->vertexArrayElementBuffer(vaobjPacked, bufferPacked);
@@ -9317,8 +9671,9 @@ void GL_APIENTRY GL_VertexArrayVertexBuffer(GLuint vaobj,
         BufferID bufferPacked                                 = PackParam<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexArrayVertexBuffer(context, vaobjPacked, bindingindex,
-                                                            bufferPacked, offset, stride));
+                            ValidateVertexArrayVertexBuffer(
+                                context, angle::EntryPoint::GLVertexArrayVertexBuffer, vaobjPacked,
+                                bindingindex, bufferPacked, offset, stride));
         if (isCallValid)
         {
             context->vertexArrayVertexBuffer(vaobjPacked, bindingindex, bufferPacked, offset,
@@ -9353,8 +9708,9 @@ void GL_APIENTRY GL_VertexArrayVertexBuffers(GLuint vaobj,
         const BufferID *buffersPacked = PackParam<const BufferID *>(buffers);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateVertexArrayVertexBuffers(context, vaobjPacked, first, count,
-                                                             buffersPacked, offsets, strides));
+                            ValidateVertexArrayVertexBuffers(
+                                context, angle::EntryPoint::GLVertexArrayVertexBuffers, vaobjPacked,
+                                first, count, buffersPacked, offsets, strides));
         if (isCallValid)
         {
             context->vertexArrayVertexBuffers(vaobjPacked, first, count, buffersPacked, offsets,
@@ -9387,8 +9743,9 @@ void GL_APIENTRY GL_MultiDrawArraysIndirectCount(GLenum mode,
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateMultiDrawArraysIndirectCount(context, mode, indirect, drawcount,
-                                                                 maxdrawcount, stride));
+                            ValidateMultiDrawArraysIndirectCount(
+                                context, angle::EntryPoint::GLMultiDrawArraysIndirectCount, mode,
+                                indirect, drawcount, maxdrawcount, stride));
         if (isCallValid)
         {
             context->multiDrawArraysIndirectCount(mode, indirect, drawcount, maxdrawcount, stride);
@@ -9422,7 +9779,8 @@ void GL_APIENTRY GL_MultiDrawElementsIndirectCount(GLenum mode,
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateMultiDrawElementsIndirectCount(
-                                context, mode, type, indirect, drawcount, maxdrawcount, stride));
+                                context, angle::EntryPoint::GLMultiDrawElementsIndirectCount, mode,
+                                type, indirect, drawcount, maxdrawcount, stride));
         if (isCallValid)
         {
             context->multiDrawElementsIndirectCount(mode, type, indirect, drawcount, maxdrawcount,
@@ -9446,8 +9804,10 @@ void GL_APIENTRY GL_PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat cl
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidatePolygonOffsetClamp(context, factor, units, clamp));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidatePolygonOffsetClamp(context, angle::EntryPoint::GLPolygonOffsetClamp, factor,
+                                        units, clamp));
         if (isCallValid)
         {
             context->polygonOffsetClamp(factor, units, clamp);
@@ -9477,10 +9837,10 @@ void GL_APIENTRY GL_SpecializeShader(GLuint shader,
     if (context)
     {
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateSpecializeShader(context, shader, pEntryPoint, numSpecializationConstants,
-                                      pConstantIndex, pConstantValue));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateSpecializeShader(
+                                context, angle::EntryPoint::GLSpecializeShader, shader, pEntryPoint,
+                                numSpecializationConstants, pConstantIndex, pConstantValue));
         if (isCallValid)
         {
             context->specializeShader(shader, pEntryPoint, numSpecializationConstants,

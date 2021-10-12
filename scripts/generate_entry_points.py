@@ -182,7 +182,7 @@ void GL_APIENTRY GL_{name}({params})
         {{
             context->{name_lower_no_suffix}({internal_params});
         }}
-        ANGLE_CAPTURE({name}, isCallValid, {validate_params});
+        ANGLE_CAPTURE({name}, isCallValid, {capture_params});
     }}
     else
     {{
@@ -210,7 +210,7 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
         {{
             returnValue = GetDefaultReturnValue<angle::EntryPoint::GL{name}, {return_type}>();
     }}
-        ANGLE_CAPTURE({name}, isCallValid, {validate_params}, returnValue);
+        ANGLE_CAPTURE({name}, isCallValid, {capture_params}, returnValue);
     }}
     else
     {{
@@ -435,6 +435,7 @@ TEMPLATE_GL_VALIDATION_HEADER = """\
 #ifndef LIBANGLE_VALIDATION_{annotation}_AUTOGEN_H_
 #define LIBANGLE_VALIDATION_{annotation}_AUTOGEN_H_
 
+#include "common/entry_points_enum_autogen.h"
 #include "common/PackedEnums.h"
 
 namespace gl
@@ -1528,6 +1529,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
     initialization = "InitBackEnds(%s);\n" % INIT_DICT[cmd_name] if cmd_name in INIT_DICT else ""
     event_comment = TEMPLATE_EVENT_COMMENT if cmd_name in NO_EVENT_MARKER_EXCEPTIONS_LIST else ""
     name_lower_no_suffix = strip_suffix(api, cmd_name[2:3].lower() + cmd_name[3:])
+    entry_point_name = "angle::EntryPoint::GL" + strip_api_prefix(cmd_name)
 
     format_params = {
         "name":
@@ -1548,8 +1550,10 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             ", ".join(pass_params),
         "comma_if_needed":
             ", " if len(params) > 0 else "",
-        "validate_params":
+        "capture_params":
             ", ".join(["context"] + internal_params),
+        "validate_params":
+            ", ".join(["context"] + [entry_point_name] + internal_params),
         "format_params":
             ", ".join(format_params),
         "context_getter":
@@ -1730,7 +1734,7 @@ def format_validation_proto(api, cmd_name, proto, params, cmd_packed_gl_enums, p
     else:
         return_type = "bool"
     if api in [apis.GL, apis.GLES]:
-        with_extra_params = ["Context *context"] + params
+        with_extra_params = ["Context *context"] + ["angle::EntryPoint entryPoint"] + params
     elif api == apis.EGL:
         with_extra_params = ["ValidationContext *val"] + params
     else:
