@@ -569,20 +569,25 @@ void WriteResourceIDPointerParamReplay(DataTracker *dataTracker,
     ASSERT(resourceIDType != ResourceIDType::InvalidEnum);
     const char *name = GetResourceIDTypeName(resourceIDType);
 
-    ASSERT(param.dataNElements > 0);
-    ASSERT(param.data.size() == 1);
-
-    const ParamT *returnedIDs = reinterpret_cast<const ParamT *>(param.data[0].data());
-    for (GLsizei resIndex = 0; resIndex < param.dataNElements; ++resIndex)
+    if (param.dataNElements > 0)
     {
-        ParamT id = returnedIDs[resIndex];
-        if (resIndex > 0)
-        {
-            header << ", ";
-        }
-        header << "g" << name << "Map2[" << id.value << "]";
-    }
+        ASSERT(param.data.size() == 1);
 
+        const ParamT *returnedIDs = reinterpret_cast<const ParamT *>(param.data[0].data());
+        for (GLsizei resIndex = 0; resIndex < param.dataNElements; ++resIndex)
+        {
+            ParamT id = returnedIDs[resIndex];
+            if (resIndex > 0)
+            {
+                header << ", ";
+            }
+            header << "g" << name << "Map2[" << id.value << "]";
+        }
+    }
+    else
+    {
+        header << "0";
+    }
     header << " };\n    ";
 
     WriteParamStaticVarName(call, param, counter, out);
