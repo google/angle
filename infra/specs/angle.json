@@ -1872,6 +1872,7 @@
       }
     ]
   },
+  "linux-swiftshader-asan": {},
   "mac-amd": {
     "gtest_tests": [
       {
@@ -4194,6 +4195,7 @@
       }
     ]
   },
+  "win10-x86-swiftshader-asan": {},
   "win7-x64-nvidia": {
     "gtest_tests": [
       {

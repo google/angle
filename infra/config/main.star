@@ -202,6 +202,7 @@ def angle_builder(name, cpu):
         dimensions["builderless"] = "1"
         goma_props["enable_ats"] = True
 
+    is_asan = "-asan" in name
     is_debug = "-dbg" in name
     is_perf = name.endswith("-perf")
     is_trace = name.endswith("-trace")
@@ -243,6 +244,8 @@ def angle_builder(name, cpu):
 
     if is_perf:
         short_name = get_gpu_type_from_builder_name(name)
+    elif is_asan:
+        short_name = "asan"
     elif is_debug:
         short_name = "dbg"
     else:
@@ -280,7 +283,7 @@ def angle_builder(name, cpu):
     )
 
     # Do not include perf tests in "try".
-    if not is_perf:
+    if not is_perf and not is_asan:
         luci.list_view_entry(
             list_view = "try",
             builder = "try/" + name,
@@ -301,6 +304,7 @@ def angle_builder(name, cpu):
             ),
         )
 
+        # Do not add ASAN tests to CQ (yet). http://anglebug.com/5795
         luci.cq_tryjob_verifier(
             cq_group = "master",
             builder = "angle:try/" + name,
@@ -367,6 +371,7 @@ angle_builder("android-arm-compile", cpu = "arm")
 angle_builder("android-arm-dbg-compile", cpu = "arm")
 angle_builder("android-arm64-dbg-compile", cpu = "arm64")
 angle_builder("android-arm64-test", cpu = "arm64")
+angle_builder("linux-asan-test", cpu = "x64")
 angle_builder("linux-dbg-compile", cpu = "x64")
 angle_builder("linux-test", cpu = "x64")
 angle_builder("mac-dbg-compile", cpu = "x64")
@@ -377,6 +382,7 @@ angle_builder("win-msvc-dbg-compile", cpu = "x64")
 angle_builder("win-msvc-x86-compile", cpu = "x86")
 angle_builder("win-msvc-x86-dbg-compile", cpu = "x86")
 angle_builder("win-test", cpu = "x64")
+angle_builder("win-x86-asan-test", cpu = "x64")
 angle_builder("win-x86-dbg-compile", cpu = "x86")
 angle_builder("win-x86-test", cpu = "x86")
 angle_builder("winuwp-compile", cpu = "x64")

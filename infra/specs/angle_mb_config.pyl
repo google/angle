@@ -19,6 +19,7 @@
       'android-arm64-dbg-compile': 'angle_goma_android_arm64_debug_bot',
       'android-arm64-test': 'angle_goma_android_arm64_release_bot',
       'android-pixel4-perf': 'angle_goma_android_perf_bot',
+      'linux-asan-test': 'angle_asan_bot',
       'linux-dbg-compile': 'angle_goma_debug_bot',
       'linux-intel-hd630-perf': 'angle_goma_perf_bot',
       'linux-nvidia-p400-perf': 'angle_goma_perf_bot',
@@ -31,6 +32,7 @@
       'win-msvc-x86-compile': 'angle_non_clang_x86_release_bot',
       'win-msvc-x86-dbg-compile': 'angle_non_clang_x86_debug_bot',
       'win-test': 'angle_goma_release_bot',
+      'win-x86-asan-test': 'angle_asan_bot',
       'win-x86-dbg-compile': 'angle_goma_x86_debug_bot',
       'win-x86-test': 'angle_goma_x86_release_bot',
       'win10-intel-hd630-perf': 'angle_goma_perf_bot',
@@ -46,6 +48,7 @@
   # is not necessarily so (i.e., we might have mac, win, and linux
   # bots all using the 'release_bot' config).
   'configs': {
+    'angle_asan_bot': ['angle', 'opencl', 'traces', 'goma', 'asan', 'release'],
     'angle_goma_android_arm_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm', 'debug'],
     'angle_goma_android_arm_release_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm', 'release'],
     'angle_goma_android_arm64_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm64', 'debug'],
@@ -72,6 +75,9 @@
     },
     'angle': {
       'gn_args': 'build_angle_gles1_conform_tests=true is_component_build=true',
+    },
+    'asan': {
+      'gn_args': 'is_asan=true',
     },
     'opencl': {
       'gn_args': 'angle_enable_cl=true',
