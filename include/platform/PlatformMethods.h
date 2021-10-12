@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <array>
 
-#define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x3482
+#define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x6AFB
 
 #if !defined(ANGLE_PLATFORM_EXPORT)
 #    if defined(_WIN32)
