@@ -117,7 +117,10 @@ void CaptureGetProgramPipelineInfoLog_length(const State &glState,
                                              GLchar *infoLog,
                                              ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    if (length)
+    {
+        CaptureMemory(length, sizeof(GLsizei), paramCapture);
+    }
 }
 
 void CaptureGetProgramPipelineInfoLog_infoLog(const State &glState,
@@ -128,7 +131,18 @@ void CaptureGetProgramPipelineInfoLog_infoLog(const State &glState,
                                               GLchar *infoLog,
                                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    if (bufSize > 0)
+    {
+        ASSERT(infoLog);
+        if (length)
+        {
+            CaptureArray(infoLog, *length, paramCapture);
+        }
+        else
+        {
+            CaptureString(infoLog, paramCapture);
+        }
+    }
 }
 
 void CaptureGetProgramPipelineiv_params(const State &glState,
@@ -138,7 +152,7 @@ void CaptureGetProgramPipelineiv_params(const State &glState,
                                         GLint *params,
                                         ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLint), paramCapture);
 }
 
 void CaptureGetProgramResourceIndex_name(const State &glState,
