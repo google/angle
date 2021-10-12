@@ -158,6 +158,16 @@
           'isolated_scripts': 'angle_perf_isolated_scripts',
         },
       },
+      'win10-x64-swiftshader': {
+        'os_type': 'win',
+        'mixins': [
+          'win10_gce_gpu_pool',
+          'timeout_15m',
+        ],
+        'test_suites': {
+          'gtest_tests': 'swangle_gtests',
+        },
+      },
       'win10-x86-swiftshader': {
         'os_type': 'win',
         'mixins': [

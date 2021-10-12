@@ -10,6 +10,7 @@
 *.gn                                       eol=lf
 *.gni                                      eol=lf
 *.star                                     eol=lf
+infra/config/generated/*.cfg               eol=lf
 src/compiler/preprocessor/preprocessor_*.* eol=lf
 src/compiler/translator/glslang_*.*        eol=lf
 
