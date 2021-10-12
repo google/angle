@@ -12,6 +12,7 @@
 
 #include "common/MemoryBuffer.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/d3d11/Context11.h"
@@ -155,7 +156,11 @@ class Buffer11::BufferStorage : angle::NonCopyable
 class Buffer11::NativeStorage : public Buffer11::BufferStorage
 {
   public:
-    NativeStorage(Renderer11 *renderer, BufferUsage usage, const angle::Subject *onStorageChanged);
+    NativeStorage(Renderer11 *renderer,
+                  BufferUsage usage,
+                  const angle::Subject *onStorageChanged,
+                  d3d11::Buffer *buffer = nullptr,
+                  size_t bufferSize     = 0);
     ~NativeStorage() override;
 
     bool isCPUAccessible(GLbitfield access) const override;
@@ -381,6 +386,94 @@ angle::Result Buffer11::setData(const gl::Context *context,
 {
     updateD3DBufferUsage(context, usage);
     return setSubData(context, target, data, size, 0);
+}
+
+angle::Result Buffer11::setDataWithUsageFlags(const gl::Context *context,
+                                              gl::BufferBinding target,
+                                              GLeglClientBufferEXT clientBuffer,
+                                              const void *data,
+                                              size_t size,
+                                              gl::BufferUsage usage,
+                                              GLbitfield flags)
+{
+    if (clientBuffer)
+    {
+        // Table 6.3 in specification of EXT_buffer_storage states that
+        // calling BufferStorage() (and as consequence BufferStorageExternal())
+        // modifies the buffer object state such that BUFFER_USAGE is set to
+        // DYNAMIC_DRAW.
+        updateD3DBufferUsage(context, gl::BufferUsage::DynamicDraw);
+
+        auto *contextD3D     = GetImplAs<ContextD3D>(context);
+        auto *clientBuffer11 = static_cast<ID3D11Buffer *>(clientBuffer);
+
+        D3D11_BUFFER_DESC clientBufferDesc11;
+        clientBuffer11->GetDesc(&clientBufferDesc11);
+
+        bool clientBufferSizeValid = clientBufferDesc11.ByteWidth >= size;
+        ANGLE_CHECK(contextD3D, clientBufferSizeValid, gl::err::kClientBufferInvalid,
+                    GL_INVALID_VALUE);
+
+        bool clientBufferPermitsSharedAccess = true;
+
+        ID3D11Device *device;
+        clientBuffer11->GetDevice(&device);
+        if (mRenderer->getDevice() != device)
+        {
+            clientBufferPermitsSharedAccess = false;
+        }
+        SafeRelease(device);
+
+        if (flags & (GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_READ_BIT))
+        {
+            clientBufferPermitsSharedAccess = false;
+        }
+        if ((flags & GL_MAP_WRITE_BIT) &&
+            !(clientBufferDesc11.Usage == D3D11_USAGE_DYNAMIC &&
+              clientBufferDesc11.CPUAccessFlags & D3D11_CPU_ACCESS_WRITE))
+        {
+            clientBufferPermitsSharedAccess = false;
+        }
+        if (target == gl::BufferBinding::Array &&
+            !(clientBufferDesc11.BindFlags & D3D11_BIND_VERTEX_BUFFER))
+        {
+            clientBufferPermitsSharedAccess = false;
+        }
+        if (target == gl::BufferBinding::ElementArray &&
+            !(clientBufferDesc11.BindFlags & D3D11_BIND_INDEX_BUFFER))
+        {
+            clientBufferPermitsSharedAccess = false;
+        }
+
+        ANGLE_CHECK(contextD3D, clientBufferPermitsSharedAccess,
+                    gl::err::kClientBufferNoSharedAccess, GL_INVALID_OPERATION);
+
+        rx::BufferUsage bufferUsage;
+        switch (target)
+        {
+            case gl::BufferBinding::Array:
+                bufferUsage = BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK;
+                break;
+            case gl::BufferBinding::ElementArray:
+                bufferUsage = BUFFER_USAGE_INDEX;
+                break;
+            default:
+                ANGLE_CHECK(contextD3D, false, "Unsupported target", GL_INVALID_OPERATION);
+        }
+
+        d3d11::Buffer buffer(clientBuffer11, nullptr);
+        BufferStorage *storage = new NativeStorage(mRenderer, bufferUsage, nullptr, &buffer, size);
+        onStorageUpdate(storage);
+        mBufferStorages[bufferUsage] = storage;
+
+        mSize = size;
+
+        return angle::Result::Continue;
+    }
+    else
+    {
+        return setData(context, target, data, size, usage);
+    }
 }
 
 angle::Result Buffer11::getData(const gl::Context *context, const uint8_t **outData)
@@ -1127,9 +1220,17 @@ angle::Result Buffer11::BufferStorage::setData(const gl::Context *context,
 
 Buffer11::NativeStorage::NativeStorage(Renderer11 *renderer,
                                        BufferUsage usage,
-                                       const angle::Subject *onStorageChanged)
+                                       const angle::Subject *onStorageChanged,
+                                       d3d11::Buffer *buffer,
+                                       size_t bufferSize)
     : BufferStorage(renderer, usage), mBuffer(), mOnStorageChanged(onStorageChanged)
-{}
+{
+    if (buffer)
+    {
+        mBuffer     = std::move(*buffer);
+        mBufferSize = bufferSize;
+    }
+}
 
 Buffer11::NativeStorage::~NativeStorage()
 {

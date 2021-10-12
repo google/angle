@@ -254,6 +254,7 @@ class Resource11 : public Resource11Base<ResourceT, UniquePtr, TypedData<Resourc
     template <typename T>
     friend class SharedResource11;
     friend class ResourceManager11;
+    friend class Buffer11;
 
     Resource11(ResourceT *object, ResourceManager11 *manager)
     {

@@ -1634,6 +1634,7 @@ void GenerateCaps(ID3D11Device *device,
     extensions->unpackSubimage                      = true;
     extensions->packSubimage                        = true;
     extensions->lossyETCDecode                      = true;
+    extensions->externalBufferEXT                   = true;
     extensions->syncQuery                           = GetEventQuerySupport(featureLevel);
     extensions->copyTexture                         = true;
     extensions->copyCompressedTexture               = true;

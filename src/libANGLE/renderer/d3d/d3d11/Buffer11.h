@@ -96,6 +96,13 @@ class Buffer11 : public BufferD3D
     void invalidateStaticData(const gl::Context *context) override;
 
     // BufferImpl implementation
+    angle::Result setDataWithUsageFlags(const gl::Context *context,
+                                        gl::BufferBinding target,
+                                        GLeglClientBufferEXT clientBuffer,
+                                        const void *data,
+                                        size_t size,
+                                        gl::BufferUsage usage,
+                                        GLbitfield flags) override;
     angle::Result setData(const gl::Context *context,
                           gl::BufferBinding target,
                           const void *data,

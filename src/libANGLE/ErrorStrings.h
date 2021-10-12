@@ -65,6 +65,7 @@ MSG kBufferOffsetOverflow = "Buffer offset overflow.";
 MSG kBufferPointerNotAvailable = "Can not get pointer for reserved buffer name zero.";
 MSG kCannotPopDefaultDebugGroup = "Cannot pop the default debug group.";
 MSG kClientBufferInvalid = "Size must not exceed the size of clientbuffer";
+MSG kClientBufferNoSharedAccess = "Clientbuffer must be allocated in a way which permits shared access by the GPU";
 MSG kClientDataInVertexArray = "Client data cannot be used with a non-default vertex array object.";
 MSG kColorNumberGreaterThanMaxDrawBuffers = "Color number for primary color greater than or equal to MAX_DRAW_BUFFERS";
 MSG kColorNumberGreaterThanMaxDualSourceDrawBuffers = "Color number for secondary color greater than or equal to MAX_DUAL_SOURCE_DRAW_BUFFERS";
