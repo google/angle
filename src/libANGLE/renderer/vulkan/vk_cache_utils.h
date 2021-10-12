@@ -1515,8 +1515,9 @@ class RenderPassCache final : angle::NonCopyable
 
     // Use a two-layer caching scheme. The top level matches the "compatible" RenderPass elements.
     // The second layer caches the attachment load/store ops and initial/final layout.
-    using InnerCache = angle::HashMap<vk::AttachmentOpsArray, vk::RenderPassHelper>;
-    using OuterCache = angle::HashMap<vk::RenderPassDesc, InnerCache>;
+    // Switch to `std::unordered_map` to retain pointer stability.
+    using InnerCache = std::unordered_map<vk::AttachmentOpsArray, vk::RenderPassHelper>;
+    using OuterCache = std::unordered_map<vk::RenderPassDesc, InnerCache>;
 
     OuterCache mPayload;
     CacheStats mCompatibleRenderPassCacheStats;
