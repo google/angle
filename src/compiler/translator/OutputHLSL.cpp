@@ -969,14 +969,17 @@ void OutputHLSL::header(TInfoSinkBase &out,
                 out << "    float multiviewSelectViewportIndex : packoffset(c3.z);\n";
             }
 
+            out << "    float clipControlOrigin : packoffset(c3.w);\n";
+            out << "    float clipControlZeroToOne : packoffset(c4);\n";
+
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
-                mResourcesHLSL->samplerMetadataUniforms(out, 4);
+                mResourcesHLSL->samplerMetadataUniforms(out, 5);
             }
 
             if (mUsesVertexID)
             {
-                out << "    uint dx_VertexID : packoffset(c3.w);\n";
+                out << "    uint dx_VertexID : packoffset(c4.y);\n";
             }
 
             out << "};\n"
@@ -990,8 +993,12 @@ void OutputHLSL::header(TInfoSinkBase &out,
             }
 
             out << "uniform float4 dx_ViewAdjust : register(c1);\n";
-            out << "uniform float2 dx_ViewCoords : register(c2);\n"
-                   "\n";
+            out << "uniform float2 dx_ViewCoords : register(c2);\n";
+
+            out << "static const float clipControlOrigin = -1.0f;\n";
+            out << "static const float clipControlZeroToOne = 0.0f;\n";
+
+            out << "\n";
         }
 
         if (mUsesDepthRange)
