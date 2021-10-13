@@ -1660,10 +1660,12 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
     }
 }
 
-void CaptureUpdateCurrentProgram(const CallCapture &call, std::vector<CallCapture> *callsOut)
+void CaptureUpdateCurrentProgram(const CallCapture &call,
+                                 int programParamPos,
+                                 std::vector<CallCapture> *callsOut)
 {
     const ParamCapture &param =
-        call.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
+        call.params.getParam("programPacked", ParamType::TShaderProgramID, programParamPos);
     gl::ShaderProgramID programID = param.value.ShaderProgramIDVal;
 
     ParamBuffer paramBuffer;
@@ -1804,7 +1806,7 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
     if (!replayState.getProgram() || replayState.getProgram()->id() != program->id())
     {
         Capture(callsOut, CaptureUseProgram(replayState, true, program->id()));
-        CaptureUpdateCurrentProgram(callsOut->back(), callsOut);
+        CaptureUpdateCurrentProgram(callsOut->back(), 0, callsOut);
     }
 
     const std::vector<gl::LinkedUniform> &uniforms = program->getState().getUniforms();
@@ -3493,7 +3495,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         if (apiState.getProgram())
         {
             cap(CaptureUseProgram(replayState, true, apiState.getProgram()->id()));
-            CaptureUpdateCurrentProgram(setupCalls->back(), setupCalls);
+            CaptureUpdateCurrentProgram(setupCalls->back(), 0, setupCalls);
             (void)replayState.setProgram(context, apiState.getProgram());
 
             // Set this program as active so it will be generated in Setup
@@ -3503,7 +3505,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         else if (replayState.getProgram())
         {
             cap(CaptureUseProgram(replayState, true, {0}));
-            CaptureUpdateCurrentProgram(setupCalls->back(), setupCalls);
+            CaptureUpdateCurrentProgram(setupCalls->back(), 0, setupCalls);
             (void)replayState.setProgram(context, nullptr);
         }
 
@@ -5453,7 +5455,10 @@ void FrameCaptureShared::maybeCapturePostCallUpdates(const gl::Context *context)
             break;
         }
         case EntryPoint::GLUseProgram:
-            CaptureUpdateCurrentProgram(lastCall, &mFrameCalls);
+            CaptureUpdateCurrentProgram(lastCall, 0, &mFrameCalls);
+            break;
+        case EntryPoint::GLActiveShaderProgram:
+            CaptureUpdateCurrentProgram(lastCall, 1, &mFrameCalls);
             break;
         case EntryPoint::GLDeleteProgram:
         {
