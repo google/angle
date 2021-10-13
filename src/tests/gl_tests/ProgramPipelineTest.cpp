@@ -81,6 +81,7 @@ class ProgramPipelineTest31 : public ProgramPipelineTest
     void drawQuadWithPPO(const std::string &positionAttribName,
                          const GLfloat positionAttribZ,
                          const GLfloat positionAttribXYScale);
+    GLint getAvailableProgramBinaryFormatCount() const;
 
     GLuint mVertProg;
     GLuint mFragProg;
@@ -277,6 +278,13 @@ void ProgramPipelineTest31::drawQuadWithPPO(const std::string &positionAttribNam
                                             const GLfloat positionAttribXYScale)
 {
     return drawQuadPPO(mVertProg, positionAttribName, positionAttribZ, positionAttribXYScale);
+}
+
+GLint ProgramPipelineTest31::getAvailableProgramBinaryFormatCount() const
+{
+    GLint formatCount = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS_OES, &formatCount);
+    return formatCount;
 }
 
 // Test glUseProgramStages
@@ -925,6 +933,7 @@ TEST_P(ProgramPipelineTest31, ModifyAndRelinkShader)
 TEST_P(ProgramPipelineTest31, ProgramBinary)
 {
     ANGLE_SKIP_TEST_IF(!IsVulkan());
+    ANGLE_SKIP_TEST_IF(getAvailableProgramBinaryFormatCount() == 0);
 
     const GLchar *vertString = R"(#version 310 es
 precision highp float;
