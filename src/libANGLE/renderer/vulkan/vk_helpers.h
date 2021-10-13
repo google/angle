@@ -2637,25 +2637,9 @@ class ShaderProgramHelper : angle::NonCopyable
         ANGLE_TRY(renderPassCache->getCompatibleRenderPass(
             contextVk, pipelineDesc.getRenderPassDesc(), &compatibleRenderPass));
 
-        ShaderModule *vertexShader   = &mShaders[gl::ShaderType::Vertex].get().get();
-        ShaderModule *fragmentShader = mShaders[gl::ShaderType::Fragment].valid()
-                                           ? &mShaders[gl::ShaderType::Fragment].get().get()
-                                           : nullptr;
-        ShaderModule *geometryShader = mShaders[gl::ShaderType::Geometry].valid()
-                                           ? &mShaders[gl::ShaderType::Geometry].get().get()
-                                           : nullptr;
-        ShaderModule *tessControlShader = mShaders[gl::ShaderType::TessControl].valid()
-                                              ? &mShaders[gl::ShaderType::TessControl].get().get()
-                                              : nullptr;
-        ShaderModule *tessEvaluationShader =
-            mShaders[gl::ShaderType::TessEvaluation].valid()
-                ? &mShaders[gl::ShaderType::TessEvaluation].get().get()
-                : nullptr;
-
         return mGraphicsPipelines.getPipeline(
             contextVk, pipelineCache, *compatibleRenderPass, pipelineLayout,
-            activeAttribLocationsMask, programAttribsTypeMask, vertexShader, fragmentShader,
-            geometryShader, tessControlShader, tessEvaluationShader, mSpecializationConstants,
+            activeAttribLocationsMask, programAttribsTypeMask, mShaders, mSpecializationConstants,
             pipelineDesc, descPtrOut, pipelineOut);
     }
 
@@ -2664,7 +2648,7 @@ class ShaderProgramHelper : angle::NonCopyable
                                      PipelineAndSerial **pipelineOut);
 
   private:
-    gl::ShaderMap<BindingPointer<ShaderAndSerial>> mShaders;
+    ShaderAndSerialMap mShaders;
     GraphicsPipelineCache mGraphicsPipelines;
 
     // We should probably use PipelineHelper here so we can remove PipelineAndSerial.
