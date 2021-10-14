@@ -90,6 +90,7 @@
 6124 MAC OPENGL : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 6144 MAC OPENGL : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
 6236 MAC OPENGL : BufferDataTestES3.DrawWithNotCallingBufferData/* = SKIP
+6570 MAC NVIDIA OPENGL : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB/* = SKIP
 772651 MAC NVIDIA OPENGL : GLSLTest.VectorScalarDivideAndAddInLoop/* = SKIP
 772651 MAC NVIDIA OPENGL : GLSLTest.VectorScalarMultiplyAndAddInLoop/* = SKIP
 6318 MAC NVIDIA METAL : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
@@ -101,6 +102,9 @@
 6525 MAC METAL : GLSLTest.EmbeddedStructUniformArray/* = SKIP
 6525 MAC NVIDIA METAL : GLSLTest.VectorScalarDivideAndAddInLoop/* = SKIP
 6525 MAC NVIDIA METAL : GLSLTest.VectorScalarMultiplyAndAddInLoop/* = SKIP
+6570 MAC INTEL OPENGL : WebGLCompatibilityTest.L32FTextures/* = SKIP
+6570 MAC INTEL OPENGL : WebGLCompatibilityTest.R32FTextures/* = SKIP
+6570 MAC INTEL OPENGL : WebGLCompatibilityTest.RGB32FTextures/* = SKIP
 
 // Failures from Transform Feedback Enablement. Passes on BigSur
 6407 MAC NVIDIA METAL : TransformFeedbackTest.OptimizedVaryings/ES3_Metal = SKIP
