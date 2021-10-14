@@ -96,6 +96,7 @@ class SwapChain11 final : public SwapChainD3D
     NativeWindow11 *mNativeWindow;  // Handler for the Window that the surface is created for.
 
     bool mFirstSwap;
+    bool mIsSwapEffectDiscarding;
     IDXGISwapChain *mSwapChain;
     IDXGISwapChain1 *mSwapChain1;
     IDXGIKeyedMutex *mKeyedMutex;

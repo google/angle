@@ -264,6 +264,8 @@ if (angle_enable_d3d11) {
       "d3d11/winrt/NativeWindow11WinRT.h",
       "d3d11/winrt/SwapChainPanelNativeWindow.cpp",
       "d3d11/winrt/SwapChainPanelNativeWindow.h",
+      "d3d11/winrt/SwapChainNativeWindow.cpp",
+      "d3d11/winrt/SwapChainNativeWindow.h",
     ]
   } else {
     _d3d11_backend_sources += [

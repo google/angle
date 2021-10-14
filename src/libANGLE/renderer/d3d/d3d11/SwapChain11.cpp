@@ -69,6 +69,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mPassThroughResourcesInit(false),
       mNativeWindow(nativeWindow),
       mFirstSwap(true),
+      mIsSwapEffectDiscarding(false),
       mSwapChain(nullptr),
       mSwapChain1(nullptr),
       mKeyedMutex(nullptr),
@@ -503,7 +504,7 @@ EGLint SwapChain11::resize(DisplayD3D *displayD3D, EGLint backbufferWidth, EGLin
     }
 
     hr = mSwapChain->ResizeBuffers(desc.BufferCount, backbufferWidth, backbufferHeight,
-                                   getSwapChainNativeFormat(), 0);
+                                   getSwapChainNativeFormat(), desc.Flags);
 
     if (FAILED(hr))
     {
@@ -534,15 +535,21 @@ EGLint SwapChain11::resize(DisplayD3D *displayD3D, EGLint backbufferWidth, EGLin
         mBackBufferTexture.set(backbufferTexture, format);
         mBackBufferTexture.setDebugName("BackBufferTexture");
 
-        angle::Result result = mRenderer->allocateResourceNoDesc(
-            displayD3D, mBackBufferTexture.get(), &mBackBufferRTView);
-        ASSERT(result != angle::Result::Stop);
-        mBackBufferRTView.setDebugName("BackBufferRTV");
+        if (desc.BufferUsage & DXGI_USAGE_RENDER_TARGET_OUTPUT)
+        {
+            angle::Result result = mRenderer->allocateResourceNoDesc(
+                displayD3D, mBackBufferTexture.get(), &mBackBufferRTView);
+            ASSERT(result != angle::Result::Stop);
+            mBackBufferRTView.setDebugName("BackBufferRTV");
+        }
 
-        result = mRenderer->allocateResourceNoDesc(displayD3D, mBackBufferTexture.get(),
-                                                   &mBackBufferSRView);
-        ASSERT(result != angle::Result::Stop);
-        mBackBufferSRView.setDebugName("BackBufferSRV");
+        if (desc.BufferUsage & DXGI_USAGE_SHADER_INPUT)
+        {
+            angle::Result result = mRenderer->allocateResourceNoDesc(
+                displayD3D, mBackBufferTexture.get(), &mBackBufferSRView);
+            ASSERT(result != angle::Result::Stop);
+            mBackBufferSRView.setDebugName("BackBufferSRV");
+        }
     }
 
     mFirstSwap = true;
@@ -649,6 +656,27 @@ EGLint SwapChain11::reset(DisplayD3D *displayD3D,
             mSwapChain1 = d3d11::DynamicCastComObject<IDXGISwapChain1>(mSwapChain);
         }
 
+        DXGI_SWAP_CHAIN_DESC swapChainDesc;
+        hr = mSwapChain->GetDesc(&swapChainDesc);
+        if (FAILED(hr))
+        {
+            ERR() << "Error reading swap chain description, " << gl::FmtHR(hr);
+            release();
+            return EGL_BAD_ALLOC;
+        }
+
+        switch (swapChainDesc.SwapEffect)
+        {
+            case DXGI_SWAP_EFFECT_DISCARD:
+            case DXGI_SWAP_EFFECT_FLIP_DISCARD:
+                mIsSwapEffectDiscarding = true;
+                break;
+            case DXGI_SWAP_EFFECT_SEQUENTIAL:
+            case DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL:
+                mIsSwapEffectDiscarding = false;
+                break;
+        }
+
         ID3D11Texture2D *backbufferTex = nullptr;
         hr                             = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
                                    reinterpret_cast<LPVOID *>(&backbufferTex));
@@ -658,15 +686,21 @@ EGLint SwapChain11::reset(DisplayD3D *displayD3D,
         mBackBufferTexture.set(backbufferTex, format);
         mBackBufferTexture.setDebugName("BackBufferTexture");
 
-        angle::Result result = mRenderer->allocateResourceNoDesc(
-            displayD3D, mBackBufferTexture.get(), &mBackBufferRTView);
-        ASSERT(result != angle::Result::Stop);
-        mBackBufferRTView.setDebugName("BackBufferRTV");
+        if (swapChainDesc.BufferUsage & DXGI_USAGE_RENDER_TARGET_OUTPUT)
+        {
+            angle::Result result = mRenderer->allocateResourceNoDesc(
+                displayD3D, mBackBufferTexture.get(), &mBackBufferRTView);
+            ASSERT(result != angle::Result::Stop);
+            mBackBufferRTView.setDebugName("BackBufferRTV");
+        }
 
-        result = mRenderer->allocateResourceNoDesc(displayD3D, mBackBufferTexture.get(),
-                                                   &mBackBufferSRView);
-        ASSERT(result != angle::Result::Stop);
-        mBackBufferSRView.setDebugName("BackBufferSRV");
+        if (swapChainDesc.BufferUsage & DXGI_USAGE_SHADER_INPUT)
+        {
+            angle::Result result = mRenderer->allocateResourceNoDesc(
+                displayD3D, mBackBufferTexture.get(), &mBackBufferSRView);
+            ASSERT(result != angle::Result::Stop);
+            mBackBufferSRView.setDebugName("BackBufferSRV");
+        }
     }
 
     mFirstSwap = true;
@@ -909,7 +943,9 @@ EGLint SwapChain11::present(DisplayD3D *displayD3D, EGLint x, EGLint y, EGLint w
 
     // Use IDXGISwapChain1::Present1 with a dirty rect if DXGI 1.2 is available.
     // Dirty rect present is not supported with a multisampled swapchain.
-    if (mSwapChain1 != nullptr && mEGLSamples <= 1)
+    // Partial Presentation (using a dirty rects or scroll) is not supported for SwapChains created
+    // with DXGI_SWAP_EFFECT_DISCARD or DXGI_SWAP_EFFECT_FLIP_DISCARD
+    if (mSwapChain1 != nullptr && mEGLSamples <= 1 && !mIsSwapEffectDiscarding)
     {
         if (mFirstSwap)
         {

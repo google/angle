@@ -123,6 +123,7 @@ bool IsCoreWindow(EGLNativeWindowType window,
 bool IsSwapChainPanel(
     EGLNativeWindowType window,
     ComPtr<ABI::Windows::UI::Xaml::Controls::ISwapChainPanel> *swapChainPanel = nullptr);
+bool IsSwapChain(EGLNativeWindowType window, ComPtr<IDXGISwapChain> *swapChain = nullptr);
 bool IsEGLConfiguredPropertySet(
     EGLNativeWindowType window,
     ABI::Windows::Foundation::Collections::IPropertySet **propertySet = nullptr,

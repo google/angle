@@ -57,6 +57,26 @@ bool IsSwapChainPanel(EGLNativeWindowType window,
     return false;
 }
 
+bool IsSwapChain(EGLNativeWindowType window, ComPtr<IDXGISwapChain>* swapChain) {
+    if (!window)
+    {
+        return false;
+    }
+
+    ComPtr<IInspectable> win = window;
+    ComPtr<IDXGISwapChain> sc;
+    if (SUCCEEDED(win.As(&sc)))
+    {
+        if (swapChain != nullptr)
+        {
+            *swapChain = std::move(sc);
+        }
+        return true;
+    }
+
+    return false;
+}
+
 bool IsEGLConfiguredPropertySet(EGLNativeWindowType window,
                                 ABI::Windows::Foundation::Collections::IPropertySet **propertySet,
                                 IInspectable **eglNativeWindow)
