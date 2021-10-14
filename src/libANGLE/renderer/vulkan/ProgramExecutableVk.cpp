@@ -890,7 +890,7 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(
 }
 
 angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,
-                                                      vk::PipelineAndSerial **pipelineOut)
+                                                      vk::PipelineHelper **pipelineOut)
 {
     const gl::State &glState                  = contextVk->getState();
     const gl::ProgramExecutable *glExecutable = glState.getProgramExecutable();

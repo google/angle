@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 // vk_helpers:
-//   Helper utilitiy classes that manage Vulkan resources.
+//   Helper utility classes that manage Vulkan resources.
 
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/driver_utils.h"
@@ -2721,31 +2721,35 @@ DynamicallyGrowingPool<Pool>::~DynamicallyGrowingPool() = default;
 template <typename Pool>
 angle::Result DynamicallyGrowingPool<Pool>::initEntryPool(Context *contextVk, uint32_t poolSize)
 {
-    ASSERT(mPools.empty() && mPoolStats.empty());
-    mPoolSize = poolSize;
+    ASSERT(mPools.empty());
+    mPoolSize         = poolSize;
+    mCurrentFreeEntry = poolSize;
     return angle::Result::Continue;
 }
 
 template <typename Pool>
-void DynamicallyGrowingPool<Pool>::destroyEntryPool()
+void DynamicallyGrowingPool<Pool>::destroyEntryPool(VkDevice device)
 {
+    for (PoolResource &resource : mPools)
+    {
+        destroyPoolImpl(device, resource.pool);
+    }
     mPools.clear();
-    mPoolStats.clear();
 }
 
 template <typename Pool>
 bool DynamicallyGrowingPool<Pool>::findFreeEntryPool(ContextVk *contextVk)
 {
     Serial lastCompletedQueueSerial = contextVk->getLastCompletedQueueSerial();
-    for (size_t i = 0; i < mPools.size(); ++i)
+    for (size_t poolIndex = 0; poolIndex < mPools.size(); ++poolIndex)
     {
-        if (mPoolStats[i].freedCount == mPoolSize &&
-            mPoolStats[i].serial <= lastCompletedQueueSerial)
+        PoolResource &pool = mPools[poolIndex];
+        if (pool.freedCount == mPoolSize && !pool.isCurrentlyInUse(lastCompletedQueueSerial))
         {
-            mCurrentPool      = i;
+            mCurrentPool      = poolIndex;
             mCurrentFreeEntry = 0;
 
-            mPoolStats[i].freedCount = 0;
+            pool.freedCount = 0;
 
             return true;
         }
@@ -2757,10 +2761,7 @@ bool DynamicallyGrowingPool<Pool>::findFreeEntryPool(ContextVk *contextVk)
 template <typename Pool>
 angle::Result DynamicallyGrowingPool<Pool>::allocateNewEntryPool(ContextVk *contextVk, Pool &&pool)
 {
-    mPools.push_back(std::move(pool));
-
-    PoolStats poolStats = {0, Serial()};
-    mPoolStats.push_back(poolStats);
+    mPools.emplace_back(std::move(pool), 0);
 
     mCurrentPool      = mPools.size() - 1;
     mCurrentFreeEntry = 0;
@@ -2771,12 +2772,44 @@ angle::Result DynamicallyGrowingPool<Pool>::allocateNewEntryPool(ContextVk *cont
 template <typename Pool>
 void DynamicallyGrowingPool<Pool>::onEntryFreed(ContextVk *contextVk, size_t poolIndex)
 {
-    ASSERT(poolIndex < mPoolStats.size() && mPoolStats[poolIndex].freedCount < mPoolSize);
-
-    // Take note of the current serial to avoid reallocating a query in the same pool
-    mPoolStats[poolIndex].serial = contextVk->getCurrentQueueSerial();
-    ++mPoolStats[poolIndex].freedCount;
+    ASSERT(poolIndex < mPools.size() && mPools[poolIndex].freedCount < mPoolSize);
+    mPools[poolIndex].retain(&contextVk->getResourceUseList());
+    ++mPools[poolIndex].freedCount;
 }
+
+template <typename Pool>
+angle::Result DynamicallyGrowingPool<Pool>::allocatePoolEntries(ContextVk *contextVk,
+                                                                uint32_t entryCount,
+                                                                uint32_t *poolIndex,
+                                                                uint32_t *currentEntryOut)
+{
+    if (mCurrentFreeEntry + entryCount > mPoolSize)
+    {
+        if (!findFreeEntryPool(contextVk))
+        {
+            Pool newPool;
+            ANGLE_TRY(allocatePoolImpl(contextVk, newPool, mPoolSize));
+            ANGLE_TRY(allocateNewEntryPool(contextVk, std::move(newPool)));
+        }
+    }
+
+    *poolIndex       = static_cast<uint32_t>(mCurrentPool);
+    *currentEntryOut = mCurrentFreeEntry;
+
+    mCurrentFreeEntry += entryCount;
+
+    return angle::Result::Continue;
+}
+
+template <typename Pool>
+DynamicallyGrowingPool<Pool>::PoolResource::PoolResource(Pool &&poolIn, uint32_t freedCountIn)
+    : pool(std::move(poolIn)), freedCount(freedCountIn)
+{}
+
+template <typename Pool>
+DynamicallyGrowingPool<Pool>::PoolResource::PoolResource(PoolResource &&other)
+    : pool(std::move(other.pool)), freedCount(other.freedCount)
+{}
 
 // DynamicQueryPool implementation
 DynamicQueryPool::DynamicQueryPool() = default;
@@ -2786,21 +2819,18 @@ DynamicQueryPool::~DynamicQueryPool() = default;
 angle::Result DynamicQueryPool::init(ContextVk *contextVk, VkQueryType type, uint32_t poolSize)
 {
     ANGLE_TRY(initEntryPool(contextVk, poolSize));
-
     mQueryType = type;
-    ANGLE_TRY(allocateNewPool(contextVk));
-
     return angle::Result::Continue;
 }
 
 void DynamicQueryPool::destroy(VkDevice device)
 {
-    for (QueryPool &queryPool : mPools)
-    {
-        queryPool.destroy(device);
-    }
+    destroyEntryPool(device);
+}
 
-    destroyEntryPool();
+void DynamicQueryPool::destroyPoolImpl(VkDevice device, QueryPool &poolToDestroy)
+{
+    poolToDestroy.destroy(device);
 }
 
 angle::Result DynamicQueryPool::allocateQuery(ContextVk *contextVk,
@@ -2809,17 +2839,32 @@ angle::Result DynamicQueryPool::allocateQuery(ContextVk *contextVk,
 {
     ASSERT(!queryOut->valid());
 
-    if (mCurrentFreeEntry + queryCount > mPoolSize)
+    uint32_t currentPool = 0;
+    uint32_t queryIndex  = 0;
+    ANGLE_TRY(allocatePoolEntries(contextVk, queryCount, &currentPool, &queryIndex));
+
+    queryOut->init(this, currentPool, queryIndex, queryCount);
+
+    return angle::Result::Continue;
+}
+
+angle::Result DynamicQueryPool::allocatePoolImpl(ContextVk *contextVk,
+                                                 QueryPool &poolToAllocate,
+                                                 uint32_t entriesToAllocate)
+{
+    VkQueryPoolCreateInfo queryPoolInfo = {};
+    queryPoolInfo.sType                 = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+    queryPoolInfo.flags                 = 0;
+    queryPoolInfo.queryType             = this->mQueryType;
+    queryPoolInfo.queryCount            = entriesToAllocate;
+    queryPoolInfo.pipelineStatistics    = 0;
+
+    if (this->mQueryType == VK_QUERY_TYPE_PIPELINE_STATISTICS)
     {
-        // No more queries left in this pool, create another one.
-        ANGLE_TRY(allocateNewPool(contextVk));
+        queryPoolInfo.pipelineStatistics = VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT;
     }
 
-    uint32_t queryIndex = mCurrentFreeEntry;
-    mCurrentFreeEntry += queryCount;
-
-    queryOut->init(this, mCurrentPool, queryIndex, queryCount);
-
+    ANGLE_VK_TRY(contextVk, poolToAllocate.init(contextVk->getDevice(), queryPoolInfo));
     return angle::Result::Continue;
 }
 
@@ -2834,32 +2879,6 @@ void DynamicQueryPool::freeQuery(ContextVk *contextVk, QueryHelper *query)
 
         query->deinit();
     }
-}
-
-angle::Result DynamicQueryPool::allocateNewPool(ContextVk *contextVk)
-{
-    if (findFreeEntryPool(contextVk))
-    {
-        return angle::Result::Continue;
-    }
-
-    VkQueryPoolCreateInfo queryPoolInfo = {};
-    queryPoolInfo.sType                 = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
-    queryPoolInfo.flags                 = 0;
-    queryPoolInfo.queryType             = mQueryType;
-    queryPoolInfo.queryCount            = mPoolSize;
-    queryPoolInfo.pipelineStatistics    = 0;
-
-    if (mQueryType == VK_QUERY_TYPE_PIPELINE_STATISTICS)
-    {
-        queryPoolInfo.pipelineStatistics = VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT;
-    }
-
-    QueryPool queryPool;
-
-    ANGLE_VK_TRY(contextVk, queryPool.init(contextVk->getDevice(), queryPoolInfo));
-
-    return allocateNewEntryPool(contextVk, std::move(queryPool));
 }
 
 // QueryResult implementation
@@ -3113,21 +3132,12 @@ DynamicSemaphorePool::~DynamicSemaphorePool() = default;
 angle::Result DynamicSemaphorePool::init(ContextVk *contextVk, uint32_t poolSize)
 {
     ANGLE_TRY(initEntryPool(contextVk, poolSize));
-    ANGLE_TRY(allocateNewPool(contextVk));
     return angle::Result::Continue;
 }
 
 void DynamicSemaphorePool::destroy(VkDevice device)
 {
-    for (auto &semaphorePool : mPools)
-    {
-        for (Semaphore &semaphore : semaphorePool)
-        {
-            semaphore.destroy(device);
-        }
-    }
-
-    destroyEntryPool();
+    destroyEntryPool(device);
 }
 
 angle::Result DynamicSemaphorePool::allocateSemaphore(ContextVk *contextVk,
@@ -3135,13 +3145,11 @@ angle::Result DynamicSemaphorePool::allocateSemaphore(ContextVk *contextVk,
 {
     ASSERT(!semaphoreOut->getSemaphore());
 
-    if (mCurrentFreeEntry >= mPoolSize)
-    {
-        // No more queries left in this pool, create another one.
-        ANGLE_TRY(allocateNewPool(contextVk));
-    }
+    uint32_t currentPool  = 0;
+    uint32_t currentEntry = 0;
+    ANGLE_TRY(allocatePoolEntries(contextVk, 1, &currentPool, &currentEntry));
 
-    semaphoreOut->init(mCurrentPool, &mPools[mCurrentPool][mCurrentFreeEntry++]);
+    semaphoreOut->init(currentPool, &getPool(currentPool)[currentEntry]);
 
     return angle::Result::Continue;
 }
@@ -3155,29 +3163,24 @@ void DynamicSemaphorePool::freeSemaphore(ContextVk *contextVk, SemaphoreHelper *
     }
 }
 
-angle::Result DynamicSemaphorePool::allocateNewPool(ContextVk *contextVk)
+angle::Result DynamicSemaphorePool::allocatePoolImpl(ContextVk *contextVk,
+                                                     std::vector<Semaphore> &poolToAllocate,
+                                                     uint32_t entriesToAllocate)
 {
-    if (findFreeEntryPool(contextVk))
-    {
-        return angle::Result::Continue;
-    }
-
-    std::vector<Semaphore> newPool(mPoolSize);
-
-    for (Semaphore &semaphore : newPool)
+    poolToAllocate.resize(entriesToAllocate);
+    for (Semaphore &semaphore : poolToAllocate)
     {
         ANGLE_VK_TRY(contextVk, semaphore.init(contextVk->getDevice()));
     }
-
-    // This code is safe as long as the growth of the outer vector in vector<vector<T>> is done by
-    // moving the inner vectors, making sure references to the inner vector remain intact.
-    Semaphore *assertMove = mPools.size() > 0 ? mPools[0].data() : nullptr;
-
-    ANGLE_TRY(allocateNewEntryPool(contextVk, std::move(newPool)));
-
-    ASSERT(assertMove == nullptr || assertMove == mPools[0].data());
-
     return angle::Result::Continue;
+}
+
+void DynamicSemaphorePool::destroyPoolImpl(VkDevice device, std::vector<Semaphore> &poolToDestroy)
+{
+    for (Semaphore &semaphore : poolToDestroy)
+    {
+        semaphore.destroy(device);
+    }
 }
 
 // SemaphoreHelper implementation
@@ -8336,7 +8339,7 @@ void ShaderProgramHelper::destroy(RendererVk *rendererVk)
 void ShaderProgramHelper::release(ContextVk *contextVk)
 {
     mGraphicsPipelines.release(contextVk);
-    contextVk->addGarbage(&mComputePipeline.get());
+    contextVk->addGarbage(&mComputePipeline.getPipeline());
     for (BindingPointer<ShaderAndSerial> &shader : mShaders)
     {
         shader.reset();
@@ -8374,7 +8377,7 @@ void ShaderProgramHelper::setSpecializationConstant(sh::vk::SpecializationConsta
 
 angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
                                                       const PipelineLayout &pipelineLayout,
-                                                      PipelineAndSerial **pipelineOut)
+                                                      PipelineHelper **pipelineOut)
 {
     if (mComputePipeline.valid())
     {
@@ -8403,8 +8406,8 @@ angle::Result ShaderProgramHelper::getComputePipeline(Context *context,
 
     PipelineCache *pipelineCache = nullptr;
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
-    ANGLE_VK_TRY(context, mComputePipeline.get().initCompute(context->getDevice(), createInfo,
-                                                             *pipelineCache));
+    ANGLE_VK_TRY(context, mComputePipeline.getPipeline().initCompute(context->getDevice(),
+                                                                     createInfo, *pipelineCache));
 
     *pipelineOut = &mComputePipeline;
     return angle::Result::Continue;

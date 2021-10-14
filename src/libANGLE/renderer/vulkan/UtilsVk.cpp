@@ -1453,16 +1453,13 @@ angle::Result UtilsVk::setupProgram(ContextVk *contextVk,
 
     const vk::BindingPointer<vk::PipelineLayout> &pipelineLayout = mPipelineLayouts[function];
 
-    Serial serial = contextVk->getCurrentQueueSerial();
-
     if (isCompute)
     {
-        vk::PipelineAndSerial *pipelineAndSerial;
+        vk::PipelineHelper *pipeline;
         program->setShader(gl::ShaderType::Compute, fsCsShader);
-        ANGLE_TRY(program->getComputePipeline(contextVk, pipelineLayout.get(), &pipelineAndSerial));
-        // TODO: https://issuetracker.google.com/issues/169788986: Update serial handling.
-        pipelineAndSerial->updateSerial(serial);
-        commandBuffer->bindComputePipeline(pipelineAndSerial->get());
+        ANGLE_TRY(program->getComputePipeline(contextVk, pipelineLayout.get(), &pipeline));
+        pipeline->retain(&contextVk->getResourceUseList());
+        commandBuffer->bindComputePipeline(pipeline->getPipeline());
 
         contextVk->invalidateComputePipelineBinding();
     }
@@ -1482,7 +1479,7 @@ angle::Result UtilsVk::setupProgram(ContextVk *contextVk,
         ANGLE_TRY(program->getGraphicsPipeline(
             contextVk, &contextVk->getRenderPassCache(), *pipelineCache, pipelineLayout.get(),
             *pipelineDesc, gl::AttributesMask(), gl::ComponentTypeMask(), &descPtr, &helper));
-        helper->updateSerial(serial);
+        helper->retain(&contextVk->getResourceUseList());
         commandBuffer->bindGraphicsPipeline(helper->getPipeline());
 
         contextVk->invalidateGraphicsPipelineBinding();

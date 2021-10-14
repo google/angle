@@ -13,6 +13,7 @@
 
 #include "common/Color.h"
 #include "common/FixedVector.h"
+#include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
@@ -51,8 +52,6 @@ namespace vk
 class DynamicDescriptorPool;
 class ImageHelper;
 enum class ImageLayout;
-
-using PipelineAndSerial = ObjectAndSerial<Pipeline>;
 
 using RefCountedDescriptorSetLayout    = RefCounted<DescriptorSetLayout>;
 using RefCountedPipelineLayout         = RefCounted<PipelineLayout>;
@@ -964,18 +963,16 @@ ANGLE_INLINE bool GraphicsPipelineTransitionMatch(GraphicsPipelineTransitionBits
     return true;
 }
 
-class PipelineHelper final : angle::NonCopyable
+class PipelineHelper final : public Resource
 {
   public:
     PipelineHelper();
-    ~PipelineHelper();
+    ~PipelineHelper() override;
     inline explicit PipelineHelper(Pipeline &&pipeline);
 
     void destroy(VkDevice device);
 
-    void updateSerial(Serial serial) { mSerial = serial; }
     bool valid() const { return mPipeline.valid(); }
-    Serial getSerial() const { return mSerial; }
     Pipeline &getPipeline() { return mPipeline; }
 
     ANGLE_INLINE bool findTransition(GraphicsPipelineTransitionBits bits,
@@ -1001,7 +998,6 @@ class PipelineHelper final : angle::NonCopyable
 
   private:
     std::vector<GraphicsPipelineTransition> mTransitions;
-    Serial mSerial;
     Pipeline mPipeline;
 };
 

@@ -339,19 +339,6 @@ class RendererVk : angle::NonCopyable
 
     uint64_t getMaxFenceWaitTimeNs() const;
 
-    ANGLE_INLINE Serial getCurrentQueueSerial()
-    {
-        if (mFeatures.asyncCommandQueue.enabled)
-        {
-            return mCommandProcessor.getCurrentQueueSerial();
-        }
-        else
-        {
-            std::lock_guard<std::mutex> lock(mCommandQueueMutex);
-            return mCommandQueue.getCurrentQueueSerial();
-        }
-    }
-
     ANGLE_INLINE Serial getLastCompletedQueueSerial()
     {
         if (mFeatures.asyncCommandQueue.enabled)

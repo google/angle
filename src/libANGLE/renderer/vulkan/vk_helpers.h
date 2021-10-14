@@ -4,15 +4,16 @@
 // found in the LICENSE file.
 //
 // vk_helpers:
-//   Helper utilitiy classes that manage Vulkan resources.
+//   Helper utility classes that manage Vulkan resources.
 
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
 
 #include "common/MemoryBuffer.h"
-#include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
+
+#include <functional>
 
 namespace gl
 {
@@ -358,7 +359,9 @@ class DynamicallyGrowingPool : angle::NonCopyable
 
   protected:
     angle::Result initEntryPool(Context *contextVk, uint32_t poolSize);
-    void destroyEntryPool();
+
+    virtual void destroyPoolImpl(VkDevice device, Pool &poolToDestroy) = 0;
+    void destroyEntryPool(VkDevice device);
 
     // Checks to see if any pool is already free, in which case it sets it as current pool and
     // returns true.
@@ -370,24 +373,46 @@ class DynamicallyGrowingPool : angle::NonCopyable
     // Called by the implementation whenever an entry is freed.
     void onEntryFreed(ContextVk *contextVk, size_t poolIndex);
 
+    const Pool &getPool(size_t index) const
+    {
+        return const_cast<DynamicallyGrowingPool *>(this)->getPool(index);
+    }
+
+    Pool &getPool(size_t index)
+    {
+        ASSERT(index < mPools.size());
+        return mPools[index].pool;
+    }
+
+    uint32_t getPoolSize() const { return mPoolSize; }
+
+    virtual angle::Result allocatePoolImpl(ContextVk *contextVk,
+                                           Pool &poolToAllocate,
+                                           uint32_t entriesToAllocate) = 0;
+    angle::Result allocatePoolEntries(ContextVk *contextVk,
+                                      uint32_t entryCount,
+                                      uint32_t *poolIndexOut,
+                                      uint32_t *currentEntryOut);
+
+  private:
     // The pool size, to know when a pool is completely freed.
     uint32_t mPoolSize;
 
-    std::vector<Pool> mPools;
-
-    struct PoolStats
+    struct PoolResource : public Resource
     {
+        PoolResource(Pool &&poolIn, uint32_t freedCountIn);
+        PoolResource(PoolResource &&other);
+
+        Pool pool;
+
         // A count corresponding to each pool indicating how many of its allocated entries
         // have been freed. Once that value reaches mPoolSize for each pool, that pool is considered
         // free and reusable.  While keeping a bitset would allow allocation of each index, the
         // slight runtime overhead of finding free indices is not worth the slight memory overhead
         // of creating new pools when unnecessary.
         uint32_t freedCount;
-        // The serial of the renderer is stored on each object free to make sure no
-        // new allocations are made from the pool until it's not in use.
-        Serial serial;
     };
-    std::vector<PoolStats> mPoolStats;
+    std::vector<PoolResource> mPools;
 
     // Index into mPools indicating pool we are currently allocating from.
     size_t mCurrentPool;
@@ -418,10 +443,13 @@ class DynamicQueryPool final : public DynamicallyGrowingPool<QueryPool>
     angle::Result allocateQuery(ContextVk *contextVk, QueryHelper *queryOut, uint32_t queryCount);
     void freeQuery(ContextVk *contextVk, QueryHelper *query);
 
-    const QueryPool &getQueryPool(size_t index) const { return mPools[index]; }
+    const QueryPool &getQueryPool(size_t index) const { return getPool(index); }
 
   private:
-    angle::Result allocateNewPool(ContextVk *contextVk);
+    angle::Result allocatePoolImpl(ContextVk *contextVk,
+                                   QueryPool &poolToAllocate,
+                                   uint32_t entriesToAllocate) override;
+    void destroyPoolImpl(VkDevice device, QueryPool &poolToDestroy) override;
 
     // Information required to create new query pools
     VkQueryType mQueryType;
@@ -545,15 +573,16 @@ class DynamicSemaphorePool final : public DynamicallyGrowingPool<std::vector<Sem
     angle::Result init(ContextVk *contextVk, uint32_t poolSize);
     void destroy(VkDevice device);
 
-    bool isValid() { return mPoolSize > 0; }
-
     // autoFree can be used to allocate a semaphore that's expected to be freed at the end of the
     // frame.  This renders freeSemaphore unnecessary and saves an eventual search.
     angle::Result allocateSemaphore(ContextVk *contextVk, SemaphoreHelper *semaphoreOut);
     void freeSemaphore(ContextVk *contextVk, SemaphoreHelper *semaphore);
 
   private:
-    angle::Result allocateNewPool(ContextVk *contextVk);
+    angle::Result allocatePoolImpl(ContextVk *contextVk,
+                                   std::vector<Semaphore> &poolToAllocate,
+                                   uint32_t entriesToAllocate) override;
+    void destroyPoolImpl(VkDevice device, std::vector<Semaphore> &poolToDestroy) override;
 };
 
 // Semaphores that are allocated from the semaphore pool are encapsulated in a helper object,
@@ -2605,14 +2634,14 @@ class ShaderProgramHelper : angle::NonCopyable
 
     angle::Result getComputePipeline(Context *context,
                                      const PipelineLayout &pipelineLayout,
-                                     PipelineAndSerial **pipelineOut);
+                                     PipelineHelper **pipelineOut);
 
   private:
     ShaderAndSerialMap mShaders;
     GraphicsPipelineCache mGraphicsPipelines;
 
     // We should probably use PipelineHelper here so we can remove PipelineAndSerial.
-    PipelineAndSerial mComputePipeline;
+    PipelineHelper mComputePipeline;
 
     // Specialization constants, currently only used by the graphics queue.
     SpecializationConstants mSpecializationConstants;

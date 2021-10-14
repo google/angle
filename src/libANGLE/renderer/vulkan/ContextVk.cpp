@@ -1387,9 +1387,8 @@ angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *di
     }
     // Update the queue serial for the pipeline object.
     ASSERT(mCurrentGraphicsPipeline && mCurrentGraphicsPipeline->valid());
-    // TODO: https://issuetracker.google.com/issues/169788986: Need to change this so that we get
-    // the actual serial used when this work is submitted.
-    mCurrentGraphicsPipeline->updateSerial(getCurrentQueueSerial());
+
+    mCurrentGraphicsPipeline->retain(&mResourceUseList);
 
     const VkPipeline newPipeline = mCurrentGraphicsPipeline->getPipeline().getHandle();
 
@@ -1472,10 +1471,8 @@ angle::Result ContextVk::handleDirtyComputePipelineBinding()
     ASSERT(mCurrentComputePipeline);
 
     mOutsideRenderPassCommands->getCommandBuffer().bindComputePipeline(
-        mCurrentComputePipeline->get());
-    // TODO: https://issuetracker.google.com/issues/169788986: Need to change this so that we get
-    // the actual serial used when this work is submitted.
-    mCurrentComputePipeline->updateSerial(getCurrentQueueSerial());
+        mCurrentComputePipeline->getPipeline());
+    mCurrentComputePipeline->retain(&mResourceUseList);
 
     return angle::Result::Continue;
 }

@@ -407,7 +407,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     const vk::CommandPool &getCommandPool() const;
 
-    Serial getCurrentQueueSerial() const { return mRenderer->getCurrentQueueSerial(); }
     Serial getLastCompletedQueueSerial() const { return mRenderer->getLastCompletedQueueSerial(); }
 
     bool isSerialInUse(Serial serial) const;
@@ -977,7 +976,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     vk::CommandBuffer *mRenderPassCommandBuffer;
 
     vk::PipelineHelper *mCurrentGraphicsPipeline;
-    vk::PipelineAndSerial *mCurrentComputePipeline;
+    vk::PipelineHelper *mCurrentComputePipeline;
     gl::PrimitiveMode mCurrentDrawMode;
 
     WindowSurfaceVk *mCurrentWindowSurface;
@@ -991,7 +990,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     std::unique_ptr<vk::GraphicsPipelineDesc> mGraphicsPipelineDesc;
     vk::GraphicsPipelineTransitionBits mGraphicsPipelineTransition;
 
-    // These pools are externally sychronized, so cannot be accessed from different
+    // These pools are externally synchronized, so cannot be accessed from different
     // threads simultaneously. Hence, we keep them in the ContextVk instead of the RendererVk.
     // Note that this implementation would need to change in shared resource scenarios. Likely
     // we'd instead share a single set of pools between the share groups.

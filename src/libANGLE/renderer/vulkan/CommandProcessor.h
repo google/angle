@@ -320,7 +320,6 @@ class CommandQueueInterface : angle::NonCopyable
     virtual angle::Result ensureNoPendingWork(Context *context) = 0;
 
     virtual Serial getLastCompletedQueueSerial() const = 0;
-    virtual Serial getCurrentQueueSerial() const       = 0;
     virtual bool isBusy() const                        = 0;
 };
 
@@ -381,7 +380,6 @@ class CommandQueue final : public CommandQueueInterface
     angle::Result ensureNoPendingWork(Context *context) override { return angle::Result::Continue; }
 
     Serial getLastCompletedQueueSerial() const override;
-    Serial getCurrentQueueSerial() const override;
     bool isBusy() const override;
 
     angle::Result queueSubmit(Context *context,
@@ -528,7 +526,6 @@ class CommandProcessor : public Context, public CommandQueueInterface
     angle::Result ensureNoPendingWork(Context *context) override;
 
     Serial getLastCompletedQueueSerial() const override;
-    Serial getCurrentQueueSerial() const override;
     bool isBusy() const override;
 
     egl::ContextPriority getDriverPriority(egl::ContextPriority priority)
