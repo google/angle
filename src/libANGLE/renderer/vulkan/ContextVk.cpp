@@ -2148,7 +2148,7 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffe
     }
 }
 
-angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore)
+angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore, Serial *submitSerialOut)
 {
     if (mCurrentWindowSurface)
     {
@@ -2167,10 +2167,11 @@ angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore)
     }
 
     getShareGroupVk()->acquireResourceUseList(std::move(mResourceUseList));
-    ANGLE_TRY(mRenderer->submitFrame(
-        this, hasProtectedContent(), mContextPriority, std::move(mWaitSemaphores),
-        std::move(mWaitSemaphoreStageMasks), signalSemaphore,
-        getShareGroupVk()->releaseResourceUseLists(), std::move(mCurrentGarbage), &mCommandPool));
+    ANGLE_TRY(mRenderer->submitFrame(this, hasProtectedContent(), mContextPriority,
+                                     std::move(mWaitSemaphores),
+                                     std::move(mWaitSemaphoreStageMasks), signalSemaphore,
+                                     getShareGroupVk()->releaseResourceUseLists(),
+                                     std::move(mCurrentGarbage), &mCommandPool, submitSerialOut));
 
     onRenderPassFinished();
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
@@ -2307,13 +2308,13 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
 
         ANGLE_VK_TRY(this, commandBuffer.end());
 
-        Serial throwAwaySerial;
+        Serial submitSerial;
         // vkEvent's are externally synchronized, therefore need work to be submitted before calling
         // vkGetEventStatus
-        ANGLE_TRY(mRenderer->queueSubmitOneOff(
-            this, std::move(commandBuffer), hasProtectedContent(), mContextPriority, nullptr,
-            vk::SubmitPolicy::EnsureSubmitted, &throwAwaySerial));
-        scratchResourceUseList.releaseResourceUsesAndUpdateSerials(throwAwaySerial);
+        ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer),
+                                               hasProtectedContent(), mContextPriority, nullptr,
+                                               vk::SubmitPolicy::EnsureSubmitted, &submitSerial));
+        scratchResourceUseList.releaseResourceUsesAndUpdateSerials(submitSerial);
 
         // Wait for GPU to be ready.  This is a short busy wait.
         VkResult result = VK_EVENT_RESET;
@@ -2345,9 +2346,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         double TeS = platform->monotonicallyIncreasingTime(platform);
 
         // Get the query results
-        // Note: This LastSubmittedQueueSerial may include more work then was submitted above if
-        // another thread had submitted work.
-        ANGLE_TRY(finishToSerial(getLastSubmittedQueueSerial()));
+        ANGLE_TRY(finishToSerial(submitSerial));
 
         vk::QueryResult gpuTimestampCycles(1);
         ANGLE_TRY(timestampQuery.getUint64Result(this, &gpuTimestampCycles));
@@ -2950,7 +2949,7 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
     RenderTargetVk *depthStencilRenderTarget = mDrawFramebuffer->getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
-        // Change depthstencil attachment storeOp to DONT_CARE
+        // Change depth/stencil attachment storeOp to DONT_CARE
         const gl::DepthStencilState &dsState = mState.getDepthStencilState();
         mRenderPassCommands->invalidateRenderPassStencilAttachment(
             dsState, mRenderPassCommands->getRenderArea());
@@ -3345,7 +3344,7 @@ void ContextVk::updateDepthStencil(const gl::State &glState)
 }
 
 // If the target is a single-sampled target, sampleShading should be disabled, to use Bresenham line
-// raterization feature.
+// rasterization feature.
 void ContextVk::updateSampleShadingWithRasterizationSamples(const uint32_t rasterizationSamples)
 {
     bool sampleShadingEnable =
@@ -5256,6 +5255,13 @@ bool ContextVk::hasRecordedCommands()
 
 angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 {
+    Serial unusedSerial;
+    return flushAndGetSerial(signalSemaphore, &unusedSerial);
+}
+
+angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
+                                           Serial *submitSerialOut)
+{
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushImpl");
 
     // We must set this to false before calling flushCommandsAndEndRenderPass to prevent it from
@@ -5298,7 +5304,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
     mDefaultUniformStorage.releaseInFlightBuffersToResourceUseList(this);
     mStagingBuffer.releaseInFlightBuffersToResourceUseList(this);
 
-    ANGLE_TRY(submitFrame(signalSemaphore));
+    ANGLE_TRY(submitFrame(signalSemaphore, submitSerialOut));
 
     mPerfCounters.renderPasses                           = 0;
     mPerfCounters.writeDescriptorSets                    = 0;

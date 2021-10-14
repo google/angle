@@ -319,19 +319,6 @@ class RendererVk : angle::NonCopyable
         }
     }
 
-    ANGLE_INLINE Serial getLastSubmittedQueueSerial()
-    {
-        if (mFeatures.asyncCommandQueue.enabled)
-        {
-            return mCommandProcessor.getLastSubmittedQueueSerial();
-        }
-        else
-        {
-            std::lock_guard<std::mutex> lock(mCommandQueueMutex);
-            return mCommandQueue.getLastSubmittedQueueSerial();
-        }
-    }
-
     ANGLE_INLINE Serial getLastCompletedQueueSerial()
     {
         if (mFeatures.asyncCommandQueue.enabled)
@@ -345,9 +332,17 @@ class RendererVk : angle::NonCopyable
         }
     }
 
-    ANGLE_INLINE bool isBusy()
+    ANGLE_INLINE bool isCommandQueueBusy()
     {
-        return getLastSubmittedQueueSerial() > getLastCompletedQueueSerial();
+        std::lock_guard<std::mutex> lock(mCommandQueueMutex);
+        if (mFeatures.asyncCommandQueue.enabled)
+        {
+            return mCommandProcessor.isBusy();
+        }
+        else
+        {
+            return mCommandQueue.isBusy();
+        }
     }
 
     egl::Display *getDisplay() const { return mDisplay; }
@@ -385,7 +380,8 @@ class RendererVk : angle::NonCopyable
                               const vk::Semaphore *signalSemaphore,
                               std::vector<vk::ResourceUseList> &&resourceUseLists,
                               vk::GarbageList &&currentGarbage,
-                              vk::CommandPool *commandPool);
+                              vk::CommandPool *commandPool,
+                              Serial *submitSerialOut);
 
     void handleDeviceLost();
     angle::Result finishToSerial(vk::Context *context, Serial serial);

@@ -160,7 +160,7 @@ ANGLE_INLINE bool ShouldUseCPUToCopyData(ContextVk *contextVk, size_t copySize, 
     // bubbles. If GPU is currently busy and data copy size is less than certain threshold, we
     // choose to use CPU to do data copy over GPU to achieve better parallelism.
     return renderer->getFeatures().preferCPUForBufferSubData.enabled ||
-           (renderer->isBusy() &&
+           (renderer->isCommandQueueBusy() &&
             copySize < renderer->getMaxCopyBytesUsingCPUWhenPreservingBufferData());
 }
 

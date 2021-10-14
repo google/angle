@@ -63,6 +63,8 @@ enum class CustomTask
     OneOffQueueSubmit,
     // Finish queue commands up to given serial value, process garbage
     FinishToSerial,
+    // Finish all pending work
+    WaitIdle,
     // Execute QueuePresent
     Present,
     // do cleanup processing on completed commands
@@ -90,6 +92,8 @@ class CommandProcessorTask
     void initPresent(egl::ContextPriority priority, const VkPresentInfoKHR &presentInfo);
 
     void initFinishToSerial(Serial serial);
+
+    void initWaitIdle();
 
     void initFlushAndQueueSubmit(const std::vector<VkSemaphore> &waitSemaphores,
                                  const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
@@ -269,8 +273,9 @@ class CommandQueueInterface : angle::NonCopyable
     // Wait until the desired serial has been completed.
     virtual angle::Result finishToSerial(Context *context,
                                          Serial finishSerial,
-                                         uint64_t timeout) = 0;
-    virtual Serial reserveSubmitSerial()                   = 0;
+                                         uint64_t timeout)             = 0;
+    virtual angle::Result waitIdle(Context *context, uint64_t timeout) = 0;
+    virtual Serial reserveSubmitSerial()                               = 0;
     virtual angle::Result submitFrame(
         Context *context,
         bool hasProtectedContent,
@@ -310,9 +315,9 @@ class CommandQueueInterface : angle::NonCopyable
                                                   const RenderPass &renderPass,
                                                   CommandBufferHelper **renderPassCommands) = 0;
 
-    virtual Serial getLastSubmittedQueueSerial() const = 0;
     virtual Serial getLastCompletedQueueSerial() const = 0;
     virtual Serial getCurrentQueueSerial() const       = 0;
+    virtual bool isBusy() const                        = 0;
 };
 
 class CommandQueue final : public CommandQueueInterface
@@ -328,6 +333,7 @@ class CommandQueue final : public CommandQueueInterface
     void handleDeviceLost(RendererVk *renderer) override;
 
     angle::Result finishToSerial(Context *context, Serial finishSerial, uint64_t timeout) override;
+    angle::Result waitIdle(Context *context, uint64_t timeout) override;
 
     Serial reserveSubmitSerial() override;
 
@@ -368,9 +374,9 @@ class CommandQueue final : public CommandQueueInterface
                                           const RenderPass &renderPass,
                                           CommandBufferHelper **renderPassCommands) override;
 
-    Serial getLastSubmittedQueueSerial() const override;
     Serial getLastCompletedQueueSerial() const override;
     Serial getCurrentQueueSerial() const override;
+    bool isBusy() const override;
 
     angle::Result queueSubmit(Context *context,
                               egl::ContextPriority contextPriority,
@@ -478,6 +484,8 @@ class CommandProcessor : public Context, public CommandQueueInterface
 
     angle::Result finishToSerial(Context *context, Serial finishSerial, uint64_t timeout) override;
 
+    angle::Result waitIdle(Context *context, uint64_t timeout) override;
+
     Serial reserveSubmitSerial() override;
 
     angle::Result submitFrame(Context *context,
@@ -516,9 +524,9 @@ class CommandProcessor : public Context, public CommandQueueInterface
                                           const RenderPass &renderPass,
                                           CommandBufferHelper **renderPassCommands) override;
 
-    Serial getLastSubmittedQueueSerial() const override;
     Serial getLastCompletedQueueSerial() const override;
     Serial getCurrentQueueSerial() const override;
+    bool isBusy() const override;
 
     egl::ContextPriority getDriverPriority(egl::ContextPriority priority)
     {

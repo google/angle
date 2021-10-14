@@ -399,6 +399,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result onIndexBufferChange(const vk::BufferHelper *currentIndexBuffer);
 
     angle::Result flushImpl(const vk::Semaphore *semaphore);
+    angle::Result flushAndGetSerial(const vk::Semaphore *semaphore, Serial *submitSerialOut);
     angle::Result finishImpl();
 
     void addWaitSemaphore(VkSemaphore semaphore, VkPipelineStageFlags stageMask);
@@ -406,7 +407,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     const vk::CommandPool &getCommandPool() const;
 
     Serial getCurrentQueueSerial() const { return mRenderer->getCurrentQueueSerial(); }
-    Serial getLastSubmittedQueueSerial() const { return mRenderer->getLastSubmittedQueueSerial(); }
     Serial getLastCompletedQueueSerial() const { return mRenderer->getLastCompletedQueueSerial(); }
 
     bool isSerialInUse(Serial serial) const;
@@ -890,7 +890,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void writeAtomicCounterBufferDriverUniformOffsets(uint32_t *offsetsOut, size_t offsetsSize);
 
-    angle::Result submitFrame(const vk::Semaphore *signalSemaphore);
+    angle::Result submitFrame(const vk::Semaphore *signalSemaphore, Serial *submitSerialOut);
 
     angle::Result synchronizeCpuGpuTime();
     angle::Result traceGpuEventImpl(vk::CommandBuffer *commandBuffer,

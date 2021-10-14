@@ -1448,7 +1448,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     image.currentPresentHistoryIndex =
         (image.currentPresentHistoryIndex + 1) % image.presentHistory.size();
 
-    ANGLE_TRY(contextVk->flushImpl(presentSemaphore));
+    ANGLE_TRY(contextVk->flushAndGetSerial(presentSemaphore, swapSerial));
 
     VkPresentInfoKHR presentInfo   = {};
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -1493,8 +1493,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         presentInfo.pNext = &presentRegions;
     }
 
-    // TODO(jmadill): Fix potential serial race. b/172704839
-    *swapSerial = renderer->getLastSubmittedQueueSerial();
     ASSERT(!mAcquireImageSemaphore.valid());
 
     ++mCurrentSwapHistoryIndex;

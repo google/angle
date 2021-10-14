@@ -3278,38 +3278,37 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
                                       const vk::Semaphore *signalSemaphore,
                                       std::vector<vk::ResourceUseList> &&resourceUseLists,
                                       vk::GarbageList &&currentGarbage,
-                                      vk::CommandPool *commandPool)
+                                      vk::CommandPool *commandPool,
+                                      Serial *submitSerialOut)
 {
     std::lock_guard<std::mutex> commandQueueLock(mCommandQueueMutex);
 
-    Serial submitQueueSerial;
-
     if (mFeatures.asyncCommandQueue.enabled)
     {
-        submitQueueSerial = mCommandProcessor.reserveSubmitSerial();
+        *submitSerialOut = mCommandProcessor.reserveSubmitSerial();
 
         ANGLE_TRY(mCommandProcessor.submitFrame(
             context, hasProtectedContent, contextPriority, waitSemaphores, waitSemaphoreStageMasks,
             signalSemaphore, std::move(currentGarbage),
             std::move(mCommandBufferRecycler.getCommandBuffersToReset()), commandPool,
-            submitQueueSerial));
+            *submitSerialOut));
     }
     else
     {
-        submitQueueSerial = mCommandQueue.reserveSubmitSerial();
+        *submitSerialOut = mCommandQueue.reserveSubmitSerial();
 
         ANGLE_TRY(mCommandQueue.submitFrame(
             context, hasProtectedContent, contextPriority, waitSemaphores, waitSemaphoreStageMasks,
             signalSemaphore, std::move(currentGarbage),
             std::move(mCommandBufferRecycler.getCommandBuffersToReset()), commandPool,
-            submitQueueSerial));
+            *submitSerialOut));
     }
 
     waitSemaphores.clear();
     waitSemaphoreStageMasks.clear();
     for (vk::ResourceUseList &it : resourceUseLists)
     {
-        it.releaseResourceUsesAndUpdateSerials(submitQueueSerial);
+        it.releaseResourceUsesAndUpdateSerials(*submitSerialOut);
     }
     resourceUseLists.clear();
 
@@ -3368,7 +3367,18 @@ angle::Result RendererVk::waitForSerialWithUserTimeout(vk::Context *context,
 
 angle::Result RendererVk::finish(vk::Context *context, bool hasProtectedContent)
 {
-    return finishToSerial(context, getLastSubmittedQueueSerial());
+    std::lock_guard<std::mutex> lock(mCommandQueueMutex);
+
+    if (mFeatures.asyncCommandQueue.enabled)
+    {
+        ANGLE_TRY(mCommandProcessor.waitIdle(context, getMaxFenceWaitTimeNs()));
+    }
+    else
+    {
+        ANGLE_TRY(mCommandQueue.waitIdle(context, getMaxFenceWaitTimeNs()));
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
