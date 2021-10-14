@@ -4827,13 +4827,12 @@ void OutputSPIRVTraverser::visitConstantUnion(TIntermConstantUnion *node)
     {
         TIntermAggregate *parentAggregate = parent->getAsAggregate();
 
-        // There are three possibilities:
+        // Note that only constructors can cast a type.  There are two possibilities:
         //
         // - It's a struct constructor: The basic type must match that of the corresponding field of
         //   the struct.
         // - It's a non struct constructor: The basic type must match that of the type being
         //   constructed.
-        // - It's a function call: The basic type must match that of the corresponding argument.
         if (parentAggregate->isConstructor())
         {
             const TStructure *structure = parentAggregate->getType().getStruct();
@@ -4846,13 +4845,7 @@ void OutputSPIRVTraverser::visitConstantUnion(TIntermConstantUnion *node)
                 expectedBasicType = parentAggregate->getType().getBasicType();
             }
         }
-        else
-        {
-            expectedBasicType =
-                parentAggregate->getFunction()->getParam(childIndex)->getType().getBasicType();
-        }
     }
-    // TODO: other node types such as binary, ternary etc.  http://anglebug.com/4889
 
     const spirv::IdRef typeId  = mBuilder.getTypeData(type, {}).id;
     const spirv::IdRef constId = createConstant(type, expectedBasicType, node->getConstantValue(),
@@ -5036,7 +5029,6 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
             const spirv::IdRef result = visitOperator(node, resultTypeId);
             mNodeData.pop_back();
             nodeDataInitRValue(&mNodeData.back(), result, resultTypeId);
-            // TODO: Handle NoContraction decoration.  http://anglebug.com/4889
             break;
     }
 
