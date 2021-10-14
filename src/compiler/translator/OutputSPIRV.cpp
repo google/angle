@@ -249,6 +249,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
                             const SpirvTypeSpec &typeSpec) const;
     void nodeDataInitRValue(NodeData *data, spirv::IdRef baseId, spirv::IdRef typeId) const;
 
+    void declareConst(TIntermDeclaration *decl);
     void declareSpecConst(TIntermDeclaration *decl);
     spirv::IdRef createConstant(const TType &type,
                                 TBasicType expectedBasicType,
@@ -1117,6 +1118,41 @@ spirv::IdRef OutputSPIRVTraverser::getAccessChainTypeId(NodeData *data)
     return accessChain.preSwizzleTypeId;
 }
 
+void OutputSPIRVTraverser::declareConst(TIntermDeclaration *decl)
+{
+    const TIntermSequence &sequence = *decl->getSequence();
+    ASSERT(sequence.size() == 1);
+
+    TIntermBinary *assign = sequence.front()->getAsBinaryNode();
+    ASSERT(assign != nullptr && assign->getOp() == EOpInitialize);
+
+    TIntermSymbol *symbol = assign->getLeft()->getAsSymbolNode();
+    ASSERT(symbol != nullptr && symbol->getType().getQualifier() == EvqConst);
+
+    TIntermTyped *initializer = assign->getRight();
+    ASSERT(initializer->getAsConstantUnion() != nullptr || initializer->hasConstantValue());
+
+    const TType &type         = symbol->getType();
+    const TVariable *variable = &symbol->variable();
+
+    const spirv::IdRef typeId = mBuilder.getTypeData(type, {}).id;
+    const spirv::IdRef constId =
+        createConstant(type, type.getBasicType(), initializer->getConstantValue(),
+                       initializer->isConstantNullValue());
+
+    // Remember the id of the variable for future look up.
+    ASSERT(mSymbolIdMap.count(&symbol->variable()) == 0);
+    mSymbolIdMap[&symbol->variable()] = constId;
+
+    mBuilder.declareNamedConst(constId, mBuilder.hashName(variable).data());
+
+    if (!mInGlobalScope)
+    {
+        mNodeData.emplace_back();
+        nodeDataInitRValue(&mNodeData.back(), constId, typeId);
+    }
+}
+
 void OutputSPIRVTraverser::declareSpecConst(TIntermDeclaration *decl)
 {
     const TIntermSequence &sequence = *decl->getSequence();
@@ -1167,7 +1203,21 @@ spirv::IdRef OutputSPIRVTraverser::createConstant(const TType &type,
         return mBuilder.getNullConstant(typeId);
     }
 
-    if (type.getBasicType() == EbtStruct)
+    if (type.isArray())
+    {
+        TType elementType(type);
+        elementType.toArrayElementType();
+
+        // If it's an array constant, get the constant id of each element.
+        for (unsigned int elementIndex = 0; elementIndex < type.getOutermostArraySize();
+             ++elementIndex)
+        {
+            componentIds.push_back(
+                createConstant(elementType, expectedBasicType, constUnion, false));
+            constUnion += elementType.getObjectSize();
+        }
+    }
+    else if (type.getBasicType() == EbtStruct)
     {
         // If it's a struct constant, get the constant id for each field.
         for (const TField *field : type.getStruct()->fields())
@@ -1216,7 +1266,7 @@ spirv::IdRef OutputSPIRVTraverser::createConstant(const TType &type,
     }
 
     // If this is a composite, create a composite constant from the components.
-    if (type.getBasicType() == EbtStruct || componentIds.size() > 1)
+    if (type.isArray() || type.getBasicType() == EbtStruct || componentIds.size() > 1)
     {
         return createComplexConstant(type, typeId, componentIds);
     }
@@ -4723,9 +4773,10 @@ void OutputSPIRVTraverser::visitSymbol(TIntermSymbol *node)
 
     const spirv::IdRef typeId = mBuilder.getTypeData(type, typeSpec).id;
 
-    // If the symbol is a const variable, such as a const function parameter or specialization
-    // constant, create an rvalue.
-    if (type.getQualifier() == EvqParamConst || type.getQualifier() == EvqSpecConst)
+    // If the symbol is a const variable, a const function parameter or specialization constant,
+    // create an rvalue.
+    if (type.getQualifier() == EvqConst || type.getQualifier() == EvqParamConst ||
+        type.getQualifier() == EvqSpecConst)
     {
         ASSERT(interfaceBlock == nullptr);
         ASSERT(mSymbolIdMap.count(symbol) > 0);
@@ -5757,6 +5808,12 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
     if (qualifier == EvqSpecConst)
     {
         declareSpecConst(node);
+        return false;
+    }
+    // Similarly, constant declarations are turned into actual constants.
+    if (qualifier == EvqConst)
+    {
+        declareConst(node);
         return false;
     }
 
