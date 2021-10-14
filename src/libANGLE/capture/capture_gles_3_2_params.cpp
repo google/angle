@@ -20,7 +20,7 @@ void CaptureDebugMessageCallback_userParam(const State &glState,
                                            const void *userParam,
                                            ParamCapture *userParamParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureDebugMessageControl_ids(const State &glState,
@@ -33,7 +33,7 @@ void CaptureDebugMessageControl_ids(const State &glState,
                                     GLboolean enabled,
                                     ParamCapture *idsParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureDebugMessageInsert_buf(const State &glState,
@@ -46,7 +46,7 @@ void CaptureDebugMessageInsert_buf(const State &glState,
                                    const GLchar *buf,
                                    ParamCapture *bufParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureDrawElementsBaseVertex_indices(const State &glState,
@@ -101,7 +101,7 @@ void CaptureGetDebugMessageLog_sources(const State &glState,
                                        GLchar *messageLog,
                                        ParamCapture *sourcesParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetDebugMessageLog_types(const State &glState,
@@ -116,7 +116,7 @@ void CaptureGetDebugMessageLog_types(const State &glState,
                                      GLchar *messageLog,
                                      ParamCapture *typesParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetDebugMessageLog_ids(const State &glState,
@@ -131,7 +131,7 @@ void CaptureGetDebugMessageLog_ids(const State &glState,
                                    GLchar *messageLog,
                                    ParamCapture *idsParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetDebugMessageLog_severities(const State &glState,
@@ -146,7 +146,7 @@ void CaptureGetDebugMessageLog_severities(const State &glState,
                                           GLchar *messageLog,
                                           ParamCapture *severitiesParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetDebugMessageLog_lengths(const State &glState,
@@ -161,7 +161,7 @@ void CaptureGetDebugMessageLog_lengths(const State &glState,
                                        GLchar *messageLog,
                                        ParamCapture *lengthsParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetDebugMessageLog_messageLog(const State &glState,
@@ -176,7 +176,7 @@ void CaptureGetDebugMessageLog_messageLog(const State &glState,
                                           GLchar *messageLog,
                                           ParamCapture *messageLogParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetObjectLabel_length(const State &glState,
@@ -188,7 +188,7 @@ void CaptureGetObjectLabel_length(const State &glState,
                                   GLchar *label,
                                   ParamCapture *lengthParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetObjectLabel_label(const State &glState,
@@ -200,7 +200,7 @@ void CaptureGetObjectLabel_label(const State &glState,
                                  GLchar *label,
                                  ParamCapture *labelParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetObjectPtrLabel_ptr(const State &glState,
@@ -211,7 +211,7 @@ void CaptureGetObjectPtrLabel_ptr(const State &glState,
                                   GLchar *label,
                                   ParamCapture *ptrParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetObjectPtrLabel_length(const State &glState,
@@ -222,7 +222,7 @@ void CaptureGetObjectPtrLabel_length(const State &glState,
                                      GLchar *label,
                                      ParamCapture *lengthParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetObjectPtrLabel_label(const State &glState,
@@ -233,7 +233,7 @@ void CaptureGetObjectPtrLabel_label(const State &glState,
                                     GLchar *label,
                                     ParamCapture *labelParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureGetPointerv_params(const State &glState,
@@ -332,7 +332,7 @@ void CaptureObjectLabel_label(const State &glState,
                               const GLchar *label,
                               ParamCapture *labelParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureObjectPtrLabel_ptr(const State &glState,
@@ -342,7 +342,7 @@ void CaptureObjectPtrLabel_ptr(const State &glState,
                                const GLchar *label,
                                ParamCapture *ptrParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureObjectPtrLabel_label(const State &glState,
@@ -352,7 +352,7 @@ void CaptureObjectPtrLabel_label(const State &glState,
                                  const GLchar *label,
                                  ParamCapture *labelParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CapturePushDebugGroup_message(const State &glState,
@@ -363,7 +363,7 @@ void CapturePushDebugGroup_message(const State &glState,
                                    const GLchar *message,
                                    ParamCapture *messageParam)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
 void CaptureReadnPixels_data(const State &glState,
