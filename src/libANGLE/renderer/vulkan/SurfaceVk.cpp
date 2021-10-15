@@ -503,6 +503,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mEmulatedPreTransform(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR),
       mCompositeAlpha(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR),
       mCurrentSwapchainImageIndex(0),
+      mAcquireImageSemaphore(nullptr),
       mDepthStencilImageBinding(this, kAnySurfaceImageSubjectIndex),
       mColorImageMSBinding(this, kAnySurfaceImageSubjectIndex),
       mNeedToAcquireNextSwapchainImage(false),
@@ -542,6 +543,10 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
         mSwapchain = VK_NULL_HANDLE;
     }
 
+    for (vk::Semaphore &semaphore : mAcquireImageSemaphores)
+    {
+        semaphore.destroy(device);
+    }
     for (SwapchainCleanupData &oldSwapchain : mOldSwapchains)
     {
         oldSwapchain.destroy(device, &mPresentSemaphoreRecycler);
@@ -554,7 +559,6 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
         mSurface = VK_NULL_HANDLE;
     }
 
-    mAcquireImageSemaphore.destroy(device);
     mPresentSemaphoreRecycler.destroy(device);
 }
 
@@ -801,6 +805,12 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
                    VK_ERROR_INITIALIZATION_FAILED);
 
     ANGLE_TRY(createSwapChain(displayVk, extents, VK_NULL_HANDLE));
+
+    // Create the semaphores that will be used for vkAcquireNextImageKHR.
+    for (vk::Semaphore &semaphore : mAcquireImageSemaphores)
+    {
+        ANGLE_VK_TRY(displayVk, semaphore.init(displayVk->getDevice()));
+    }
 
     VkResult vkResult = acquireNextSwapchainImage(displayVk);
     ASSERT(vkResult != VK_SUBOPTIMAL_KHR);
@@ -1499,7 +1509,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         presentInfo.pNext = &presentRegions;
     }
 
-    ASSERT(!mAcquireImageSemaphore.valid());
+    ASSERT(mAcquireImageSemaphore == nullptr);
 
     VkResult result = renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo);
 
@@ -1610,16 +1620,12 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
 {
     VkDevice device = context->getDevice();
 
-    vk::DeviceScoped<vk::Semaphore> acquireImageSemaphore(device);
-    VkResult result = acquireImageSemaphore.get().init(device);
-    if (ANGLE_UNLIKELY(result != VK_SUCCESS))
-    {
-        return result;
-    }
+    const vk::Semaphore *acquireImageSemaphore = &mAcquireImageSemaphores.front();
+    ASSERT(acquireImageSemaphore->valid());
 
-    result = vkAcquireNextImageKHR(device, mSwapchain, UINT64_MAX,
-                                   acquireImageSemaphore.get().getHandle(), VK_NULL_HANDLE,
-                                   &mCurrentSwapchainImageIndex);
+    VkResult result =
+        vkAcquireNextImageKHR(device, mSwapchain, UINT64_MAX, acquireImageSemaphore->getHandle(),
+                              VK_NULL_HANDLE, &mCurrentSwapchainImageIndex);
     // VK_SUBOPTIMAL_KHR is ok since we still have an Image that can be presented successfully
     if (ANGLE_UNLIKELY(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR))
     {
@@ -1627,7 +1633,8 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
     }
 
     // The semaphore will be waited on in the next flush.
-    mAcquireImageSemaphore = acquireImageSemaphore.release();
+    mAcquireImageSemaphores.next();
+    mAcquireImageSemaphore = acquireImageSemaphore;
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
@@ -1887,9 +1894,11 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-vk::Semaphore WindowSurfaceVk::getAcquireImageSemaphore()
+const vk::Semaphore *WindowSurfaceVk::getAndResetAcquireImageSemaphore()
 {
-    return std::move(mAcquireImageSemaphore);
+    const vk::Semaphore *acquireSemaphore = mAcquireImageSemaphore;
+    mAcquireImageSemaphore                = nullptr;
+    return acquireSemaphore;
 }
 
 angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,

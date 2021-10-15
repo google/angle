@@ -2152,12 +2152,12 @@ angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore, Seria
 {
     if (mCurrentWindowSurface)
     {
-        vk::Semaphore waitSemaphore = mCurrentWindowSurface->getAcquireImageSemaphore();
-        if (waitSemaphore.valid())
+        const vk::Semaphore *waitSemaphore =
+            mCurrentWindowSurface->getAndResetAcquireImageSemaphore();
+        if (waitSemaphore != nullptr)
         {
-            addWaitSemaphore(waitSemaphore.getHandle(),
+            addWaitSemaphore(waitSemaphore->getHandle(),
                              VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
-            addGarbage(&waitSemaphore);
         }
     }
 
