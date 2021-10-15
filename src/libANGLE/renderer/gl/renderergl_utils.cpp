@@ -2126,10 +2126,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // http://crbug.com/1137851
     // Speculative fix for above issue, users can enable it via flags.
     // http://crbug.com/1187475
-    // Disable on Intel due to crashes in Mesa.
-    // http://anglebug.com/6174
-    // Disabled everywhere due to a bug in detecting Intel platforms on dual-GPU systems.
-    ANGLE_FEATURE_CONDITION(features, disableSyncControlSupport, IsLinux());
+    // Disable on Mesa 20 / Intel
+    ANGLE_FEATURE_CONDITION(features, disableSyncControlSupport,
+                            IsLinux() && isIntel && isMesa && mesaVersion[0] == 20);
 
     ANGLE_FEATURE_CONDITION(features, keepBufferShadowCopy, !CanMapBufferForRead(functions));
 
