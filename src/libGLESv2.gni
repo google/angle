@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 libangle_common_sources = [
+  "src/common/CircularBuffer.h",
   "src/common/Color.h",
   "src/common/Color.inc",
   "src/common/FastVector.h",

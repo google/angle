@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_SURFACEVK_H_
 #define LIBANGLE_RENDERER_VULKAN_SURFACEVK_H_
 
+#include "common/CircularBuffer.h"
 #include "common/vulkan/vk_headers.h"
 #include "libANGLE/renderer/SurfaceImpl.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
@@ -149,6 +150,7 @@ struct ImagePresentHistory : angle::NonCopyable
 {
     ImagePresentHistory();
     ImagePresentHistory(ImagePresentHistory &&other);
+    ImagePresentHistory &operator=(ImagePresentHistory &&other);
     ~ImagePresentHistory();
 
     vk::Semaphore semaphore;
@@ -168,9 +170,8 @@ struct SwapchainImage : angle::NonCopyable
 
     // A circular array of semaphores used for presenting this image.
     static constexpr size_t kPresentHistorySize = kSwapHistorySize + 1;
-    std::array<ImagePresentHistory, kPresentHistorySize> presentHistory;
-    size_t currentPresentHistoryIndex = 0;
-    uint64_t mFrameNumber             = 0;
+    angle::CircularBuffer<ImagePresentHistory, kPresentHistorySize> presentHistory;
+    uint64_t mFrameNumber = 0;
 };
 }  // namespace impl
 
@@ -314,8 +315,7 @@ class WindowSurfaceVk : public SurfaceVk
 
     // A circular buffer that stores the serial of the submission fence of the context on every
     // swap. The CPU is throttled by waiting for the 2nd previous serial to finish.
-    std::array<Serial, impl::kSwapHistorySize> mSwapHistory;
-    size_t mCurrentSwapHistoryIndex;
+    angle::CircularBuffer<Serial, impl::kSwapHistorySize> mSwapHistory;
 
     // The previous swapchain which needs to be scheduled for destruction when appropriate.  This
     // will be done when the first image of the current swapchain is presented.  If there were

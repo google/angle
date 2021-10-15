@@ -470,6 +470,13 @@ ImagePresentHistory::ImagePresentHistory(ImagePresentHistory &&other)
     : semaphore(std::move(other.semaphore)), oldSwapchains(std::move(other.oldSwapchains))
 {}
 
+ImagePresentHistory &ImagePresentHistory::operator=(ImagePresentHistory &&other)
+{
+    std::swap(semaphore, other.semaphore);
+    std::swap(oldSwapchains, other.oldSwapchains);
+    return *this;
+}
+
 SwapchainImage::SwapchainImage()  = default;
 SwapchainImage::~SwapchainImage() = default;
 
@@ -477,8 +484,7 @@ SwapchainImage::SwapchainImage(SwapchainImage &&other)
     : image(std::move(other.image)),
       imageViews(std::move(other.imageViews)),
       framebuffer(std::move(other.framebuffer)),
-      presentHistory(std::move(other.presentHistory)),
-      currentPresentHistoryIndex(other.currentPresentHistoryIndex)
+      presentHistory(std::move(other.presentHistory))
 {}
 }  // namespace impl
 
@@ -496,7 +502,6 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mPreTransform(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR),
       mEmulatedPreTransform(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR),
       mCompositeAlpha(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR),
-      mCurrentSwapHistoryIndex(0),
       mCurrentSwapchainImageIndex(0),
       mDepthStencilImageBinding(this, kAnySurfaceImageSubjectIndex),
       mColorImageMSBinding(this, kAnySurfaceImageSubjectIndex),
@@ -1362,7 +1367,9 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     // Throttle the submissions to avoid getting too far ahead of the GPU.
-    Serial *swapSerial = &mSwapHistory[mCurrentSwapHistoryIndex];
+    Serial *swapSerial = &mSwapHistory.front();
+    mSwapHistory.next();
+
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present: Throttle CPU");
         ANGLE_TRY(renderer->finishToSerial(contextVk, *swapSerial));
@@ -1431,8 +1438,10 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     // semaphore can be reused.  See doc/PresentSemaphores.md for details.
     //
     // This also means the swapchain(s) scheduled to be deleted at the same time can be deleted.
-    ImagePresentHistory &presentHistory = image.presentHistory[image.currentPresentHistoryIndex];
-    vk::Semaphore *presentSemaphore     = &presentHistory.semaphore;
+    ImagePresentHistory &presentHistory = image.presentHistory.front();
+    image.presentHistory.next();
+
+    vk::Semaphore *presentSemaphore = &presentHistory.semaphore;
     ASSERT(presentSemaphore->valid());
 
     for (SwapchainCleanupData &oldSwapchain : presentHistory.oldSwapchains)
@@ -1444,9 +1453,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     // Schedule pending old swapchains to be destroyed at the same time the semaphore for this
     // present can be destroyed.
     presentHistory.oldSwapchains = std::move(mOldSwapchains);
-
-    image.currentPresentHistoryIndex =
-        (image.currentPresentHistoryIndex + 1) % image.presentHistory.size();
 
     ANGLE_TRY(contextVk->flushAndGetSerial(presentSemaphore, swapSerial));
 
@@ -1494,10 +1500,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     }
 
     ASSERT(!mAcquireImageSemaphore.valid());
-
-    ++mCurrentSwapHistoryIndex;
-    mCurrentSwapHistoryIndex =
-        mCurrentSwapHistoryIndex == mSwapHistory.size() ? 0 : mCurrentSwapHistoryIndex;
 
     VkResult result = renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo);
 

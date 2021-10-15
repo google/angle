@@ -5,6 +5,7 @@
 angle_unittests_sources = [
   "../../util/test_utils_unittest.cpp",
   "../../util/test_utils_unittest_helper.h",
+  "../common/CircularBuffer_unittest.cpp",
   "../common/FastVector_unittest.cpp",
   "../common/FixedVector_unittest.cpp",
   "../common/Optional_unittest.cpp",
