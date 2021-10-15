@@ -259,7 +259,7 @@ bool ValidateConfigAttribute(const ValidationContext *val,
             break;
 
         default:
-            val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04X", attribute);
+            val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04" PRIxPTR "X", attribute);
             return false;
     }
 
@@ -1060,8 +1060,7 @@ bool ValidateDisplayPointer(const ValidationContext *val, const Display *display
     {
         if (val)
         {
-            val->setError(EGL_BAD_DISPLAY, "display is not a valid display: 0x%04" PRIXPTR,
-                          display);
+            val->setError(EGL_BAD_DISPLAY, "display is not a valid display: 0x%p", display);
         }
         return false;
     }
@@ -2006,7 +2005,7 @@ bool ValidateCreateContext(const ValidationContext *val,
                 break;
 
             default:
-                val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04X", attribute);
+                val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04" PRIxPTR "X", attribute);
                 return false;
         }
     }
@@ -2061,7 +2060,12 @@ bool ValidateCreateContext(const ValidationContext *val,
                 gl::Version(static_cast<GLuint>(clientMajorVersion),
                             static_cast<GLuint>(clientMinorVersion)))
             {
-                val->setError(EGL_BAD_ATTRIBUTE, "Requested GLES version is not supported.");
+                gl::Version max = display->getMaxSupportedESVersion();
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Requested GLES version (%" PRIxPTR ".%" PRIxPTR
+                              ") is greater than "
+                              "max supported (%d, %d).",
+                              clientMajorVersion, clientMinorVersion, max.major, max.minor);
                 return false;
             }
             break;
@@ -2816,7 +2820,7 @@ bool ValidateCreatePixmapSurface(const ValidationContext *val,
                 break;
 
             default:
-                val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute");
+                val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04" PRIxPTR "X", attribute);
                 return false;
         }
     }
@@ -3179,7 +3183,7 @@ bool ValidateCreateImage(const ValidationContext *val,
                 break;
 
             default:
-                val->setError(EGL_BAD_PARAMETER, "invalid attribute: 0x%X", attribute);
+                val->setError(EGL_BAD_PARAMETER, "invalid attribute: 0x%04" PRIxPTR "X", attribute);
                 return false;
         }
     }
@@ -5282,7 +5286,7 @@ bool ValidateQueryDebugKHR(const ValidationContext *val, EGLint attribute, const
             break;
 
         default:
-            val->setError(EGL_BAD_ATTRIBUTE, "unknown attribute.");
+            val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04X", attribute);
             return false;
     }
 

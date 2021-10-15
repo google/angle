@@ -44,6 +44,7 @@ struct ValidationContext
 
     // We should remove the message-less overload once we have messages for all EGL errors.
     void setError(EGLint error) const;
+    ANGLE_FORMAT_PRINTF(3, 4)
     void setError(EGLint error, const char *message...) const;
 
     Thread *eglThread;
