@@ -162,7 +162,7 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
         return mMslShaderTranslateInfo[shaderType];
     }
 
-    bool hasFlatAttribute() const { return programHasFlatAttributes(); }
+    bool hasFlatAttribute() const { return mProgramHasFlatAttributes; }
 
   private:
     template <int cols, int rows>
@@ -214,6 +214,8 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
     void saveShaderInternalInfo(gl::BinaryOutputStream *stream);
     void loadShaderInternalInfo(gl::BinaryInputStream *stream);
 
+    void linkUpdateHasFlatAttributes();
+
 #if ANGLE_ENABLE_METAL_SPIRV
 
     angle::Result linkImplSpirv(const gl::Context *glContext,
@@ -236,8 +238,6 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
 
     mtl::BufferPool *getBufferPool(ContextMtl *context);
 
-    bool programHasFlatAttributes() const;
-
     // State for the default uniform blocks.
     struct DefaultUniformBlock final : private angle::NonCopyable
     {
@@ -252,6 +252,7 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
         std::vector<sh::BlockMemberInfo> uniformLayout;
     };
 
+    bool mProgramHasFlatAttributes;
     gl::ShaderBitSet mDefaultUniformBlocksDirty;
     gl::ShaderBitSet mSamplerBindingsDirty;
     gl::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;

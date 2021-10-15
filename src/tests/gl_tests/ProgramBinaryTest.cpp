@@ -276,7 +276,7 @@ TEST_P(ProgramBinaryTest, ZeroSizedUnlinkedBinary)
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ProgramBinaryTest);
 
-class ProgramBinaryES3Test : public ANGLETest
+class ProgramBinaryES3Test : public ProgramBinaryTest
 {
   protected:
     ProgramBinaryES3Test()
@@ -513,6 +513,113 @@ TEST_P(ProgramBinaryES3Test, TestArrayOfStructUniform)
     drawQuad(binaryProgram.get(), "position", 0.5f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Verify that saving/loading binary with detached shaders followed by indexed
+// drawing works.
+TEST_P(ProgramBinaryES3Test, SaveAndLoadDetachedShaders)
+{
+    // We use shaders with the "flat" qualifier, to ensure that "flat" behaves
+    // across save/load. This is primarily to catch possible bugs in the Metal
+    // backend, where it needs to detect "flat" at shader link time and
+    // preserve that detection across binary save/load.
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+
+in vec4 a_position;
+flat out vec4 v_color;
+
+const vec4 colors[4] = vec4[](
+    vec4(0.0f, 0.0f, 1.0f, 1.0f),
+    vec4(0.0f, 0.0f, 1.0f, 1.0f),
+    vec4(0.0f, 1.0f, 0.0f, 1.0f),
+    vec4(0.0f, 1.0f, 0.0f, 1.0f)
+);
+
+void main()
+{
+    v_color = colors[gl_VertexID];
+    gl_Position = a_position;
+}
+)";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+
+flat in vec4 v_color;
+out vec4 o_color;
+
+void main()
+{
+    o_color = v_color;
+}
+)";
+
+    const auto &vertices = GetIndexedQuadVertices();
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+
+    GLBuffer indexBuffer;
+    const auto &indices = GetQuadIndices();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), indices.data(),
+                 GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    GLuint vertexShader   = CompileShader(GL_VERTEX_SHADER, kVS);
+    GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    ASSERT_NE(0u, vertexShader);
+    ASSERT_NE(0u, fragmentShader);
+
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+
+    glLinkProgram(program);
+
+    GLint linkStatus;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_EQ(GL_TRUE, linkStatus);
+
+    glDetachShader(program, vertexShader);
+    glDetachShader(program, fragmentShader);
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+    ASSERT_GL_NO_ERROR();
+
+    GLuint loadedProgram = glCreateProgram();
+    saveAndLoadProgram(program, loadedProgram);
+    glDeleteProgram(program);
+
+    ASSERT_EQ(glIsProgram(loadedProgram), GL_TRUE);
+    glUseProgram(loadedProgram);
+    ASSERT_GL_NO_ERROR();
+
+    GLint posLocation = glGetAttribLocation(loadedProgram, "a_position");
+    ASSERT_NE(-1, posLocation);
+
+    GLVertexArray vertexArray;
+    glBindVertexArray(vertexArray);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(posLocation);
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glDeleteProgram(loadedProgram);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Tests the difference between uniform static and active use

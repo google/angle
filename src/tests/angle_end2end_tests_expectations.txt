@@ -106,6 +106,7 @@
 6570 MAC INTEL OPENGL : WebGLCompatibilityTest.L32FTextures/* = SKIP
 6570 MAC INTEL OPENGL : WebGLCompatibilityTest.R32FTextures/* = SKIP
 6570 MAC INTEL OPENGL : WebGLCompatibilityTest.RGB32FTextures/* = SKIP
+6603 MAC OPENGL : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
 
 // Failures from Transform Feedback Enablement. Passes on BigSur
 6407 MAC NVIDIA METAL : TransformFeedbackTest.OptimizedVaryings/ES3_Metal = SKIP
@@ -365,3 +366,13 @@
 
 // Direct MSL compilation bug.
 6540 METAL : GLSLTest_ES3.ComplexCrossExpression/* = SKIP
+
+// Bots missing drivers with VK_EXT_provoking_vertex
+6526 WIN INTEL VULKAN : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
+6526 WIN NVIDIA VULKAN : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
+6526 WIN AMD VULKAN : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
+6526 LINUX INTEL VULKAN : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
+6526 LINUX NVIDIA VULKAN : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
+
+// Metal internal compiler error
+6581 MAC AMD METAL : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP

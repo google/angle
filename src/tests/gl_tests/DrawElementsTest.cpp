@@ -279,6 +279,63 @@ TEST_P(DrawElementsTest, DeletingAfterStreamingIndexes)
     ASSERT_GL_NO_ERROR();
 }
 
+// Verify that detaching shaders after linking doesn't break draw calls
+TEST_P(DrawElementsTest, DrawWithDetachedShaders)
+{
+    const auto &vertices = GetIndexedQuadVertices();
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+
+    GLBuffer indexBuffer;
+    const auto &indices = GetQuadIndices();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), indices.data(),
+                 GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    GLuint vertexShader   = CompileShader(GL_VERTEX_SHADER, essl3_shaders::vs::Simple());
+    GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, essl3_shaders::fs::Red());
+    ASSERT_NE(0u, vertexShader);
+    ASSERT_NE(0u, fragmentShader);
+
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+
+    glLinkProgram(program);
+
+    GLint linkStatus;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_EQ(GL_TRUE, linkStatus);
+
+    glDetachShader(program, vertexShader);
+    glDetachShader(program, fragmentShader);
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    GLint posLocation = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLocation);
+
+    GLVertexArray vertexArray;
+    glBindVertexArray(vertexArray);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(posLocation);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test drawing to part of the indices in an index buffer, and then all of them.
 TEST_P(DrawElementsTest, PartOfIndexBufferThenAll)
 {
