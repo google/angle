@@ -511,6 +511,7 @@
                                   GLsizei *length, GLint64 *params);                               \
     void getQueryObjectui64vRobust(QueryID idPacked, GLenum pname, GLsizei bufSize,                \
                                    GLsizei *length, GLuint64 *params);                             \
+    /* GL_ANGLE_robust_fragment_shader_output */                                                   \
     /* GL_ANGLE_robust_resource_initialization */                                                  \
     /* GL_ANGLE_semaphore_fuchsia */                                                               \
     void importSemaphoreZirconHandle(SemaphoreID semaphorePacked, HandleType handleTypePacked,     \

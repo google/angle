@@ -52,6 +52,7 @@ angle_requestable_extensions = [
     "GL_ANGLE_multi_draw",
     "GL_ANGLE_multiview_multisample",
     "GL_ANGLE_provoking_vertex",
+    "GL_ANGLE_robust_fragment_shader_output",
     "GL_ANGLE_semaphore_fuchsia",
     "GL_ANGLE_texture_compression_dxt3",
     "GL_ANGLE_texture_compression_dxt5",
