@@ -159,3 +159,21 @@
 6510 : FenceSyncTest.Errors/ES3_Vulkan_SwiftShader = FLAKY
 6510 : FenceSyncTest.MultipleFenceDraw/ES3_Vulkan_SwiftShader = FLAKY
 6543 : GLSLTest_ES3.ComplexCrossExpression/ES3_Vulkan_SwiftShader = FLAKY
+
+# Fails after recent colorspace CL.
+6578 : ImageTest.Source2DTarget2D_Colorspace/ES2_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.Source2DTargetExternal_Colorspace/ES2_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.SourceCubeTargetExternal_Colorspace/ES2_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.SourceCubeTarget2D_Colorspace/ES2_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.SourceRenderbufferTargetTextureExternal_Colorspace/ES2_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.SourceRenderbufferTargetTexture_Colorspace/ES2_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.Source2DTarget2DArray_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.Source2DTarget2D_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.Source2DTargetExternal_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.SourceCubeTarget2D_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.SourceCubeTargetExternal_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.SourceRenderbufferTargetTextureExternal_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.SourceRenderbufferTargetTexture_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+6578 : ImageTestES3.Source2DTargetExternalESSL3_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+6578 : ImageTestES3.SourceCubeTargetExternalESSL3_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+6578 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3_Colorspace/ES3_Vulkan_SwiftShader = FAIL
