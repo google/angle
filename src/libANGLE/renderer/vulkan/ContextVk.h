@@ -383,7 +383,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                        gl::TextureType type,
                                        gl::SamplerFormat format,
                                        gl::Texture **textureOut);
-    void updateColorMasks(const gl::BlendStateExt &blendStateExt);
+    void updateColorMasks();
+    void updateBlendFuncsAndEquations();
     void updateSampleMaskWithRasterizationSamples(const uint32_t rasterizationSamples);
 
     void handleError(VkResult errorCode,
@@ -1117,6 +1118,12 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     std::vector<GpuEventQuery> mInFlightGpuEventQueries;
     // A list of gpu events since the last clock sync.
     std::vector<GpuEvent> mGpuEvents;
+
+    // Cached value of the color attachment mask of the current draw framebuffer.  This is used to
+    // know which attachment indices have their blend state set in |mGraphicsPipelineDesc|, and
+    // subsequently is used to clear the blend state for attachments that no longer exist when a new
+    // framebuffer is bound.
+    gl::DrawBufferMask mCachedDrawFramebufferColorAttachmentMask;
 
     bool mHasDeferredFlush;
 

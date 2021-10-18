@@ -1645,8 +1645,6 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
 angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
                                                    uint32_t colorIndexGL)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
-
     ANGLE_TRY(mRenderTargetCache.updateColorRenderTarget(context, mState, colorIndexGL));
 
     // Update cached masks for masked clears.
@@ -1660,8 +1658,6 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
         const angle::Format &intendedFormat = renderTarget->getImageIntendedFormat();
         mEmulatedAlphaAttachmentMask.set(
             colorIndexGL, intendedFormat.alphaBits == 0 && actualFormat.alphaBits > 0);
-
-        contextVk->updateColorMasks(context->getState().getBlendStateExt());
     }
     else
     {
@@ -1813,7 +1809,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     gl::DrawBufferMask dirtyColorAttachments;
     bool dirtyDepthStencilAttachment = false;
 
-    bool shouldUpdateColorMask            = false;
+    bool shouldUpdateColorMaskAndBlend    = false;
     bool shouldUpdateLayerCount           = false;
     bool shouldUpdateSrgbWriteControlMode = false;
 
@@ -1835,8 +1831,8 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
                 break;
             case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
-                shouldUpdateColorMask  = true;
-                shouldUpdateLayerCount = true;
+                shouldUpdateColorMaskAndBlend = true;
+                shouldUpdateLayerCount        = true;
                 break;
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_WIDTH:
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_HEIGHT:
@@ -1871,8 +1867,8 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
 
                 ANGLE_TRY(updateColorAttachment(context, colorIndexGL));
 
-                shouldUpdateColorMask  = true;
-                shouldUpdateLayerCount = true;
+                shouldUpdateColorMaskAndBlend = true;
+                shouldUpdateLayerCount        = true;
                 dirtyColorAttachments.set(colorIndexGL);
 
                 break;
@@ -1889,9 +1885,10 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
         mRenderPassDesc.setWriteControlMode(newSrgbWriteControlMode);
     }
 
-    if (shouldUpdateColorMask)
+    if (shouldUpdateColorMaskAndBlend)
     {
-        contextVk->updateColorMasks(context->getState().getBlendStateExt());
+        contextVk->updateColorMasks();
+        contextVk->updateBlendFuncsAndEquations();
     }
 
     if (shouldUpdateLayerCount)

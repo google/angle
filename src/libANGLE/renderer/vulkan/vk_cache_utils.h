@@ -626,9 +626,14 @@ class GraphicsPipelineDesc final
                             gl::DrawBufferMask blendEnabledMask);
     void updateBlendColor(GraphicsPipelineTransitionBits *transition, const gl::ColorF &color);
     void updateBlendFuncs(GraphicsPipelineTransitionBits *transition,
-                          const gl::BlendStateExt &blendStateExt);
+                          const gl::BlendStateExt &blendStateExt,
+                          gl::DrawBufferMask attachmentMask);
     void updateBlendEquations(GraphicsPipelineTransitionBits *transition,
-                              const gl::BlendStateExt &blendStateExt);
+                              const gl::BlendStateExt &blendStateExt,
+                              gl::DrawBufferMask attachmentMask);
+    void resetBlendFuncsAndEquations(GraphicsPipelineTransitionBits *transition,
+                                     gl::DrawBufferMask previousAttachmentsMask,
+                                     gl::DrawBufferMask newAttachmentsMask);
     void setColorWriteMasks(gl::BlendStateExt::ColorMaskStorage::Type colorMasks,
                             const gl::DrawBufferMask &alphaMask,
                             const gl::DrawBufferMask &enabledDrawBuffers);

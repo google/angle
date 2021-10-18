@@ -2270,12 +2270,12 @@ void GraphicsPipelineDesc::updateBlendColor(GraphicsPipelineTransitionBits *tran
     mInputAssemblyAndColorBlendStateInfo.blendConstants[1] = color.green;
     mInputAssemblyAndColorBlendStateInfo.blendConstants[2] = color.blue;
     mInputAssemblyAndColorBlendStateInfo.blendConstants[3] = color.alpha;
-    constexpr size_t kSize = sizeof(mInputAssemblyAndColorBlendStateInfo.blendConstants[0]) * 8;
+    constexpr size_t kSizeBits = sizeof(mInputAssemblyAndColorBlendStateInfo.blendConstants[0]) * 8;
 
     for (int index = 0; index < 4; ++index)
     {
         const size_t kBit = ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
-                                                             blendConstants, index, kSize);
+                                                             blendConstants, index, kSizeBits);
         transition->set(kBit);
     }
 }
@@ -2290,12 +2290,12 @@ void GraphicsPipelineDesc::updateBlendEnabled(GraphicsPipelineTransitionBits *tr
 }
 
 void GraphicsPipelineDesc::updateBlendEquations(GraphicsPipelineTransitionBits *transition,
-                                                const gl::BlendStateExt &blendStateExt)
+                                                const gl::BlendStateExt &blendStateExt,
+                                                gl::DrawBufferMask attachmentMask)
 {
-    constexpr size_t kSize = sizeof(PackedColorBlendAttachmentState) * 8;
+    constexpr size_t kSizeBits = sizeof(PackedColorBlendAttachmentState) * 8;
 
-    for (size_t attachmentIndex = 0; attachmentIndex < blendStateExt.mMaxDrawBuffers;
-         ++attachmentIndex)
+    for (size_t attachmentIndex : attachmentMask)
     {
         PackedColorBlendAttachmentState &blendAttachmentState =
             mInputAssemblyAndColorBlendStateInfo.attachments[attachmentIndex];
@@ -2304,16 +2304,16 @@ void GraphicsPipelineDesc::updateBlendEquations(GraphicsPipelineTransitionBits *
         blendAttachmentState.alphaBlendOp =
             PackGLBlendOp(blendStateExt.getEquationAlphaIndexed(attachmentIndex));
         transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
-                                                         attachments, attachmentIndex, kSize));
+                                                         attachments, attachmentIndex, kSizeBits));
     }
 }
 
 void GraphicsPipelineDesc::updateBlendFuncs(GraphicsPipelineTransitionBits *transition,
-                                            const gl::BlendStateExt &blendStateExt)
+                                            const gl::BlendStateExt &blendStateExt,
+                                            gl::DrawBufferMask attachmentMask)
 {
-    constexpr size_t kSize = sizeof(PackedColorBlendAttachmentState) * 8;
-    for (size_t attachmentIndex = 0; attachmentIndex < blendStateExt.mMaxDrawBuffers;
-         ++attachmentIndex)
+    constexpr size_t kSizeBits = sizeof(PackedColorBlendAttachmentState) * 8;
+    for (size_t attachmentIndex : attachmentMask)
     {
         PackedColorBlendAttachmentState &blendAttachmentState =
             mInputAssemblyAndColorBlendStateInfo.attachments[attachmentIndex];
@@ -2326,7 +2326,34 @@ void GraphicsPipelineDesc::updateBlendFuncs(GraphicsPipelineTransitionBits *tran
         blendAttachmentState.dstAlphaBlendFactor =
             PackGLBlendFactor(blendStateExt.getDstAlphaIndexed(attachmentIndex));
         transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
-                                                         attachments, attachmentIndex, kSize));
+                                                         attachments, attachmentIndex, kSizeBits));
+    }
+}
+
+void GraphicsPipelineDesc::resetBlendFuncsAndEquations(GraphicsPipelineTransitionBits *transition,
+                                                       gl::DrawBufferMask previousAttachmentsMask,
+                                                       gl::DrawBufferMask newAttachmentsMask)
+{
+    // A framebuffer with attachments in P was bound, and now one with attachments in N is bound.
+    // We need to clear blend funcs and equations for attachments in P that are not in N.  That is
+    // attachments in P&~N.
+    const gl::DrawBufferMask attachmentsToClear = previousAttachmentsMask & ~newAttachmentsMask;
+    constexpr size_t kSizeBits                  = sizeof(PackedColorBlendAttachmentState) * 8;
+
+    for (size_t attachmentIndex : attachmentsToClear)
+    {
+        PackedColorBlendAttachmentState &blendAttachmentState =
+            mInputAssemblyAndColorBlendStateInfo.attachments[attachmentIndex];
+
+        blendAttachmentState.colorBlendOp        = VK_BLEND_OP_ADD;
+        blendAttachmentState.alphaBlendOp        = VK_BLEND_OP_ADD;
+        blendAttachmentState.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+        blendAttachmentState.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
+        blendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+        blendAttachmentState.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+
+        transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
+                                                         attachments, attachmentIndex, kSizeBits));
     }
 }
 
