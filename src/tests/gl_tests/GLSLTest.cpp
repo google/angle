@@ -14198,6 +14198,30 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Regression test for a crash in SPIR-V output when faced with an array of struct constant.
+TEST_P(GLSLTest_ES3, ArrayOfStructConstantBug)
+{
+    constexpr char kFS[] = R"(#version 300 es
+struct S {
+    int foo;
+};
+void main() {
+    S a[3];
+    a = S[3](S(0), S(1), S(2));
+})";
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = {kFS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kFS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest, WithGlslang(ES2_VULKAN()));

@@ -4835,8 +4835,10 @@ void OutputSPIRVTraverser::visitConstantUnion(TIntermConstantUnion *node)
         //   constructed.
         if (parentAggregate->isConstructor())
         {
-            const TStructure *structure = parentAggregate->getType().getStruct();
-            if (structure != nullptr)
+            const TType &parentType     = parentAggregate->getType();
+            const TStructure *structure = parentType.getStruct();
+
+            if (structure != nullptr && !parentType.isArray())
             {
                 expectedBasicType = structure->fields()[childIndex]->type()->getBasicType();
             }
