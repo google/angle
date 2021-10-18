@@ -14222,6 +14222,36 @@ void main() {
     EXPECT_NE(compileResult, 0);
 }
 
+// Regression test for a bug in SPIR-V output where a transformation creates float(constant) without
+// folding it into a TIntermConstantUnion.  This transformation is clamping non-constant indices in
+// WebGL.  The |false ? i : 5| as index caused the transformation to consider this a non-constant
+// index.
+TEST_P(WebGL2GLSLTest, IndexClampConstantIndexBug)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+
+layout(location=0) out float f;
+
+uniform int i;
+
+void main()
+{
+    float data[10];
+    f = data[false ? i : 5];
+})";
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = {kFS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kFS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest, WithGlslang(ES2_VULKAN()));

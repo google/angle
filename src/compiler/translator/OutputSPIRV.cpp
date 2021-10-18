@@ -1280,6 +1280,8 @@ spirv::IdRef OutputSPIRVTraverser::createComplexConstant(const TType &type,
                                                          spirv::IdRef typeId,
                                                          const spirv::IdRefList &parameters)
 {
+    ASSERT(!type.isScalar());
+
     if (type.isMatrix() && !type.isArray())
     {
         // Matrices are constructed from their columns.
@@ -1309,9 +1311,9 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
     const TIntermSequence &arguments = *node->getSequence();
     const TType &arg0Type            = arguments[0]->getAsTyped()->getType();
 
-    // In some cases, constructors with constant value are not folded.  If the constructor is a null
-    // value, use OpConstantNull to avoid creating a bunch of instructions.  Otherwise, the constant
-    // is created below.
+    // In some cases, constructors-with-constant values are not folded.  If the constructor is a
+    // null value, use OpConstantNull to avoid creating a bunch of instructions.  Otherwise, the
+    // constant is created below.
     if (node->isConstantNullValue())
     {
         return mBuilder.getNullConstant(typeId);
@@ -1353,10 +1355,22 @@ spirv::IdRef OutputSPIRVTraverser::createConstructor(TIntermAggregate *node, spi
     // Additionally, array and structs are constructed by OpCompositeConstruct followed by ids of
     // each parameter which must enumerate every individual element / field.
 
-    // In some cases, constructors with constant value are not folded.  That is handled here.
+    // In some cases, constructors-with-constant values are not folded such as for large constants.
+    // Some transformations may also produce constructors-with-constants instead of constants even
+    // for basic types.  These are handled here.
     if (node->hasConstantValue())
     {
-        return createComplexConstant(node->getType(), typeId, parameters);
+        if (!type.isScalar())
+        {
+            return createComplexConstant(node->getType(), typeId, parameters);
+        }
+
+        // If a transformation creates scalar(constant), return the constant as-is.
+        // visitConstantUnion has already cast it to the right type.
+        if (arguments[0]->getAsConstantUnion() != nullptr)
+        {
+            return parameters[0];
+        }
     }
 
     if (type.isArray() || type.getStruct() != nullptr)
