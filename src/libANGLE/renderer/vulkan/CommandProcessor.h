@@ -315,6 +315,10 @@ class CommandQueueInterface : angle::NonCopyable
                                                   const RenderPass &renderPass,
                                                   CommandBufferHelper **renderPassCommands) = 0;
 
+    // For correct synchronization with external, in particular when asked to signal an external
+    // semaphore, we need to ensure that there are no pending submissions.
+    virtual angle::Result ensureNoPendingWork(Context *context) = 0;
+
     virtual Serial getLastCompletedQueueSerial() const = 0;
     virtual Serial getCurrentQueueSerial() const       = 0;
     virtual bool isBusy() const                        = 0;
@@ -373,6 +377,8 @@ class CommandQueue final : public CommandQueueInterface
                                           bool hasProtectedContent,
                                           const RenderPass &renderPass,
                                           CommandBufferHelper **renderPassCommands) override;
+
+    angle::Result ensureNoPendingWork(Context *context) override { return angle::Result::Continue; }
 
     Serial getLastCompletedQueueSerial() const override;
     Serial getCurrentQueueSerial() const override;
@@ -459,11 +465,6 @@ class CommandProcessor : public Context, public CommandQueueInterface
     CommandProcessor(RendererVk *renderer);
     ~CommandProcessor() override;
 
-    // Used by main thread to wait for worker thread to complete all outstanding work.
-    // TODO(jmadill): Make private. b/172704839
-    angle::Result waitForWorkComplete(Context *context);
-    angle::Result finishAllWork(Context *context);
-
     VkResult getLastPresentResult(VkSwapchainKHR swapchain)
     {
         return getLastAndClearPresentResult(swapchain);
@@ -524,6 +525,8 @@ class CommandProcessor : public Context, public CommandQueueInterface
                                           const RenderPass &renderPass,
                                           CommandBufferHelper **renderPassCommands) override;
 
+    angle::Result ensureNoPendingWork(Context *context) override;
+
     Serial getLastCompletedQueueSerial() const override;
     Serial getCurrentQueueSerial() const override;
     bool isBusy() const override;
@@ -559,6 +562,9 @@ class CommandProcessor : public Context, public CommandQueueInterface
 
     VkResult getLastAndClearPresentResult(VkSwapchainKHR swapchain);
     VkResult present(egl::ContextPriority priority, const VkPresentInfoKHR &presentInfo);
+
+    // Used by main thread to wait for worker thread to complete all outstanding work.
+    angle::Result waitForWorkComplete(Context *context);
 
     std::queue<CommandProcessorTask> mTasks;
     mutable std::mutex mWorkerMutex;

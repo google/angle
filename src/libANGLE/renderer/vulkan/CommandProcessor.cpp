@@ -646,13 +646,6 @@ void CommandProcessor::handleDeviceLost(RendererVk *renderer)
     mCommandQueue.handleDeviceLost(renderer);
 }
 
-angle::Result CommandProcessor::finishAllWork(Context *context)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::finishAllWork");
-    // Wait for GPU work to finish
-    return finishToSerial(context, Serial::Infinite(), mRenderer->getMaxFenceWaitTimeNs());
-}
-
 VkResult CommandProcessor::getLastAndClearPresentResult(VkSwapchainKHR swapchain)
 {
     std::unique_lock<std::mutex> lock(mSwapchainStatusMutex);
@@ -786,6 +779,11 @@ angle::Result CommandProcessor::flushRenderPassCommands(Context *context,
     queueCommand(std::move(task));
     return mRenderer->getCommandBufferHelper(context, true, (*renderPassCommands)->getCommandPool(),
                                              renderPassCommands);
+}
+
+angle::Result CommandProcessor::ensureNoPendingWork(Context *context)
+{
+    return waitForWorkComplete(context);
 }
 
 // CommandQueue implementation.

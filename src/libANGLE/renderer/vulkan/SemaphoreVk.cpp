@@ -160,8 +160,9 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
                                   const gl::TextureBarrierVector &textureBarriers)
 {
     ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
 
-    uint32_t rendererQueueFamilyIndex = contextVk->getRenderer()->getQueueFamilyIndex();
+    uint32_t rendererQueueFamilyIndex = renderer->getQueueFamilyIndex();
 
     if (!bufferBarriers.empty())
     {
@@ -218,7 +219,19 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
         ANGLE_TRY(contextVk->syncExternalMemory());
     }
 
-    return contextVk->flushImpl(&mSemaphore);
+    ANGLE_TRY(contextVk->flushImpl(&mSemaphore));
+
+    // The external has asked for the semaphore to be signaled.  It will wait on this semaphore and
+    // so we must ensure that the above flush (resulting in vkQueueSubmit) has actually been
+    // submitted (as opposed to simply being scheduled as a task for another thread).  Per the
+    // Vulkan spec:
+    //
+    // > ... when a semaphore wait operation is submitted to a queue:
+    // >
+    // > - A binary semaphore must be signaled, or have an associated semaphore signal operation
+    // >   that is pending execution.
+    //
+    return renderer->ensureNoPendingWork(contextVk);
 }
 
 angle::Result SemaphoreVk::importOpaqueFd(ContextVk *contextVk, GLint fd)

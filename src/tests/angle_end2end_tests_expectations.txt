@@ -25,9 +25,6 @@
 4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/* = SKIP
 4889 VULKAN : GLSLTest_ES31.VaryingTessellationSampleInAndOut/* = SKIP
 
-// Async queue defers submission that signals external semaphore, which is incorrect
-6574 VULKAN : VulkanExternalImageTest.*AsyncQueue = SKIP
-
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 4092 WIN VULKAN : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
