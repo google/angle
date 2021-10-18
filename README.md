@@ -84,7 +84,7 @@ View the [Dev setup instructions](doc/DevSetup.md).
 
 
 * Read about WebGL on the [Khronos WebGL Wiki](http://khronos.org/webgl/wiki/Main_Page).
-* Learn about the initial ANGLE implementation details in the [OpenGL Insights chapter on ANGLE](http://www.seas.upenn.edu/~pcozzi/OpenGLInsights/OpenGLInsights-ANGLE.pdf) (this is not the most up-to-date ANGLE implementation details, it is listed here for historical reference only) and this [ANGLE presentation](https://drive.google.com/file/d/0Bw29oYeC09QbbHoxNE5EUFh0RGs/view?usp=sharing).
+* Learn about the initial ANGLE implementation details in the [OpenGL Insights chapter on ANGLE](http://www.seas.upenn.edu/~pcozzi/OpenGLInsights/OpenGLInsights-ANGLE.pdf) (this is not the most up-to-date ANGLE implementation details, it is listed here for historical reference only) and this [ANGLE presentation](https://drive.google.com/file/d/0Bw29oYeC09QbbHoxNE5EUFh0RGs/view?usp=sharing&resourcekey=0-CNvGnQGgFSvbXgX--Y_Iyg).
 * Learn about the past, present, and future of the ANGLE implementation in [this presentation](https://docs.google.com/presentation/d/1CucIsdGVDmdTWRUbg68IxLE5jXwCb2y1E9YVhQo0thg/pub?start=false&loop=false).
 * Watch a [short presentation](https://youtu.be/QrIKdjmpmaA) on the Vulkan back-end.
 * Track the [dEQP test conformance](doc/dEQP-Charts.md)
