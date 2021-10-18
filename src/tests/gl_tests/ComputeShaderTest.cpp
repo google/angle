@@ -4814,11 +4814,11 @@ void main()
                                     {
                                         gl_FragColor = v_attrib;
                                     })";
-            GLuint program       = CompileProgram(kVS, kFS);
-            ASSERT_NE(program, 0U);
-            GLint attribLocation = glGetAttribLocation(program, "in_attrib");
+            GLuint readProgram   = CompileProgram(kVS, kFS);
+            ASSERT_NE(readProgram, 0U);
+            GLint attribLocation = glGetAttribLocation(readProgram, "in_attrib");
             ASSERT_NE(attribLocation, -1);
-            glUseProgram(program);
+            glUseProgram(readProgram);
             ASSERT_GL_NO_ERROR();
             glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT | GL_ELEMENT_ARRAY_BARRIER_BIT);
             glBindBuffer(GL_ARRAY_BUFFER, textureBufferStorage);
