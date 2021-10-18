@@ -111,8 +111,7 @@ lucicfg.generator(_generate_project_pyl)
 
 luci.milo(
     logo = "https://storage.googleapis.com/chrome-infra/OpenGL%20ES_RGB_June16.svg",
-    monorail_project = "angleproject",
-    monorail_components = ["Infra"],
+    bug_url_template = "https://bugs.chromium.org/p/angleproject/issues/entry?components=Infra",
 )
 
 luci.logdog(gs_bucket = "chromium-luci-logdog")
