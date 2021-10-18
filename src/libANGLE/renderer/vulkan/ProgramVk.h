@@ -106,7 +106,7 @@ class ProgramVk : public ProgramImpl
     angle::Result updateUniforms(ContextVk *contextVk);
 
     void setAllDefaultUniformsDirty();
-    bool dirtyUniforms() const { return mDefaultUniformBlocksDirty.any(); }
+    bool hasDirtyUniforms() const { return mDefaultUniformBlocksDirty.any(); }
     bool isShaderUniformDirty(gl::ShaderType shaderType) const
     {
         return mDefaultUniformBlocksDirty[shaderType];

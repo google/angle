@@ -252,7 +252,6 @@ class ProgramState final : angle::NonCopyable
     {
         return mExecutable->getProgramInputs();
     }
-    DrawBufferMask getActiveOutputVariables() const { return mActiveOutputVariables; }
     const std::vector<sh::ShaderVariable> &getOutputVariables() const
     {
         return mExecutable->getOutputVariables();
@@ -352,12 +351,6 @@ class ProgramState final : angle::NonCopyable
 
     uint32_t getLocationsUsedForXfbExtension() const { return mLocationsUsedForXfbExtension; }
 
-    const std::vector<GLenum> &getOutputVariableTypes() const { return mOutputVariableTypes; }
-
-    ComponentTypeMask getDrawBufferTypeMask() const { return mDrawBufferTypeMask; }
-
-    bool isYUVOutput() const { return mYUVOutput; }
-
     bool hasBinaryRetrieveableHint() const { return mBinaryRetrieveableHint; }
 
     bool isSeparable() const { return mSeparable; }
@@ -393,16 +386,6 @@ class ProgramState final : angle::NonCopyable
     std::vector<VariableLocation> mUniformLocations;
     std::vector<BufferVariable> mBufferVariables;
     RangeUI mAtomicCounterUniformRange;
-
-    DrawBufferMask mActiveOutputVariables;
-
-    // Fragment output variable base types: FLOAT, INT, or UINT.  Ordered by location.
-    std::vector<GLenum> mOutputVariableTypes;
-    ComponentTypeMask mDrawBufferTypeMask;
-
-    // GL_EXT_YUV_target. YUV output shaders can only have one ouput and can only write to YUV
-    // framebuffers.
-    bool mYUVOutput;
 
     bool mBinaryRetrieveableHint;
     bool mSeparable;
@@ -479,7 +462,7 @@ class Program final : public LabeledObject, public angle::Subject
     void bindFragmentOutputIndex(GLuint index, const char *name);
 
     // KHR_parallel_shader_compile
-    // Try to link the program asynchrously. As a result, background threads may be launched to
+    // Try to link the program asynchronously. As a result, background threads may be launched to
     // execute the linking tasks concurrently.
     angle::Result link(const Context *context);
 
@@ -525,12 +508,6 @@ class Program final : public LabeledObject, public angle::Subject
 
     GLint getFragDataLocation(const std::string &name) const;
     size_t getOutputResourceCount() const;
-    const std::vector<GLenum> &getOutputVariableTypes() const;
-    DrawBufferMask getActiveOutputVariables() const
-    {
-        ASSERT(!mLinkingState);
-        return mState.mActiveOutputVariables;
-    }
 
     // EXT_blend_func_extended
     GLint getFragDataIndex(const std::string &name) const;
@@ -768,14 +745,6 @@ class Program final : public LabeledObject, public angle::Subject
 
     bool usesMultiview() const { return mState.usesMultiview(); }
 
-    ComponentTypeMask getDrawBufferTypeMask() const;
-
-    bool isYUVOutput() const
-    {
-        ASSERT(!mLinkingState);
-        return mState.isYUVOutput();
-    }
-
     const std::vector<GLsizei> &getTransformFeedbackStrides() const;
 
     // Program dirty bits.
@@ -843,14 +812,6 @@ class Program final : public LabeledObject, public angle::Subject
     bool linkAtomicCounterBuffers();
 
     void updateLinkedShaderStages();
-
-    int getOutputLocationForLink(const sh::ShaderVariable &outputVariable) const;
-    bool isOutputSecondaryForLink(const sh::ShaderVariable &outputVariable) const;
-    bool linkOutputVariables(const Caps &caps,
-                             const Extensions &extensions,
-                             const Version &version,
-                             GLuint combinedImageUniformsCount,
-                             GLuint combinedShaderStorageBlocksCount);
 
     void setUniformValuesFromBindingQualifiers();
     bool shouldIgnoreUniform(UniformLocation location) const;

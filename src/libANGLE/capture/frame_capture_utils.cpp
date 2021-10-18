@@ -1019,9 +1019,6 @@ void SerializeProgramState(JsonSerializer *json, const gl::ProgramState &program
     SerializeRange(json, programState.getAtomicCounterUniformRange());
     SerializeVariableLocationsVector(json, "SecondaryOutputLocations",
                                      programState.getSecondaryOutputLocations());
-    json->addScalar("ActiveOutputVariables", programState.getActiveOutputVariables().to_ulong());
-    json->addVector("OutputVariableTypes", programState.getOutputVariableTypes());
-    json->addScalar("DrawBufferTypeMask", programState.getDrawBufferTypeMask().to_ulong());
     json->addScalar("BinaryRetrieveableHint", programState.hasBinaryRetrieveableHint());
     json->addScalar("Separable", programState.isSeparable());
     json->addScalar("EarlyFragmentTestsOptimization",

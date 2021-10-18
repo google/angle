@@ -311,7 +311,7 @@ angle::Result FramebufferD3D::syncState(const gl::Context *context,
 const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl::Context *context)
 {
     gl::DrawBufferMask activeProgramOutputs =
-        context->getState().getProgram()->getActiveOutputVariables();
+        context->getState().getProgram()->getExecutable().getActiveOutputVariablesMask();
 
     if (mColorAttachmentsForRender.valid() && mCurrentActiveProgramOutputs == activeProgramOutputs)
     {

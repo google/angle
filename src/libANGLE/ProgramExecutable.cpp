@@ -8,6 +8,7 @@
 
 #include "libANGLE/ProgramExecutable.h"
 
+#include "common/string_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Shader.h"
@@ -61,6 +62,94 @@ const sh::ShaderVariable *FindOutputVaryingOrField(const ProgramMergedVaryings &
     }
     return var;
 }
+
+bool FindUsedOutputLocation(std::vector<VariableLocation> &outputLocations,
+                            unsigned int baseLocation,
+                            unsigned int elementCount,
+                            const std::vector<VariableLocation> &reservedLocations,
+                            unsigned int variableIndex)
+{
+    if (baseLocation + elementCount > outputLocations.size())
+    {
+        elementCount = baseLocation < outputLocations.size()
+                           ? static_cast<unsigned int>(outputLocations.size() - baseLocation)
+                           : 0;
+    }
+    for (unsigned int elementIndex = 0; elementIndex < elementCount; elementIndex++)
+    {
+        const unsigned int location = baseLocation + elementIndex;
+        if (outputLocations[location].used())
+        {
+            VariableLocation locationInfo(elementIndex, variableIndex);
+            if (std::find(reservedLocations.begin(), reservedLocations.end(), locationInfo) ==
+                reservedLocations.end())
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void AssignOutputLocations(std::vector<VariableLocation> &outputLocations,
+                           unsigned int baseLocation,
+                           unsigned int elementCount,
+                           const std::vector<VariableLocation> &reservedLocations,
+                           unsigned int variableIndex,
+                           sh::ShaderVariable &outputVariable)
+{
+    if (baseLocation + elementCount > outputLocations.size())
+    {
+        outputLocations.resize(baseLocation + elementCount);
+    }
+    for (unsigned int elementIndex = 0; elementIndex < elementCount; elementIndex++)
+    {
+        VariableLocation locationInfo(elementIndex, variableIndex);
+        if (std::find(reservedLocations.begin(), reservedLocations.end(), locationInfo) ==
+            reservedLocations.end())
+        {
+            outputVariable.location     = baseLocation;
+            const unsigned int location = baseLocation + elementIndex;
+            outputLocations[location]   = locationInfo;
+        }
+    }
+}
+
+int GetOutputLocationForLink(const ProgramAliasedBindings &fragmentOutputLocations,
+                             const sh::ShaderVariable &outputVariable)
+{
+    if (outputVariable.location != -1)
+    {
+        return outputVariable.location;
+    }
+    int apiLocation = fragmentOutputLocations.getBinding(outputVariable);
+    if (apiLocation != -1)
+    {
+        return apiLocation;
+    }
+    return -1;
+}
+
+bool IsOutputSecondaryForLink(const ProgramAliasedBindings &fragmentOutputIndexes,
+                              const sh::ShaderVariable &outputVariable)
+{
+    if (outputVariable.index != -1)
+    {
+        ASSERT(outputVariable.index == 0 || outputVariable.index == 1);
+        return (outputVariable.index == 1);
+    }
+    int apiIndex = fragmentOutputIndexes.getBinding(outputVariable);
+    if (apiIndex != -1)
+    {
+        // Index layout qualifier from the shader takes precedence, so the index from the API is
+        // checked only if the index was not set in the shader. This is not specified in the EXT
+        // spec, but is specified in desktop OpenGL specs.
+        return (apiIndex == 1);
+    }
+    // EXT_blend_func_extended: Outputs get index 0 by default.
+    return false;
+}
+
 }  // anonymous namespace
 
 ProgramExecutable::ProgramExecutable()
@@ -165,6 +254,7 @@ void ProgramExecutable::reset()
     mAtomicCounterBuffers.clear();
     mOutputVariables.clear();
     mOutputLocations.clear();
+    mActiveOutputVariablesMask.reset();
     mSecondaryOutputLocations.clear();
     mYUVOutput = false;
     mSamplerBindings.clear();
@@ -186,6 +276,9 @@ void ProgramExecutable::reset()
     mTessGenSpacing            = GL_NONE;
     mTessGenVertexOrder        = GL_NONE;
     mTessGenPointMode          = GL_NONE;
+
+    mOutputVariableTypes.clear();
+    mDrawBufferTypeMask.reset();
 }
 
 void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
@@ -324,6 +417,22 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         stream->readBool(&locationData.ignored);
         mOutputLocations.push_back(locationData);
     }
+
+    mActiveOutputVariablesMask =
+        gl::DrawBufferMask(stream->readInt<gl::DrawBufferMask::value_type>());
+
+    size_t outputTypeCount = stream->readInt<size_t>();
+    for (size_t outputIndex = 0; outputIndex < outputTypeCount; ++outputIndex)
+    {
+        mOutputVariableTypes.push_back(stream->readInt<GLenum>());
+    }
+
+    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
+                  "All bits of mDrawBufferTypeMask and mActiveOutputVariables types and mask fit "
+                  "into 32 bits each");
+    mDrawBufferTypeMask = gl::ComponentTypeMask(stream->readInt<uint32_t>());
+
+    stream->readBool(&mYUVOutput);
 
     size_t secondaryOutputVarCount = stream->readInt<size_t>();
     ASSERT(getSecondaryOutputLocations().empty());
@@ -503,6 +612,21 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         stream->writeIntOrNegOne(outputVar.index);
         stream->writeBool(outputVar.ignored);
     }
+
+    stream->writeInt(static_cast<int>(mActiveOutputVariablesMask.to_ulong()));
+
+    stream->writeInt(mOutputVariableTypes.size());
+    for (const auto &outputVariableType : mOutputVariableTypes)
+    {
+        stream->writeInt(outputVariableType);
+    }
+
+    static_assert(
+        IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
+        "All bits of mDrawBufferTypeMask and mActiveOutputVariables can be contained in 32 bits");
+    stream->writeInt(static_cast<int>(mDrawBufferTypeMask.to_ulong()));
+
+    stream->writeBool(mYUVOutput);
 
     stream->writeInt(getSecondaryOutputLocations().size());
     for (const auto &outputVar : getSecondaryOutputLocations())
@@ -1046,6 +1170,262 @@ bool ProgramExecutable::validateSamplersImpl(InfoLog *infoLog, const Caps &caps)
     }
 
     mCachedValidateSamplersResult = true;
+    return true;
+}
+
+bool ProgramExecutable::linkValidateOutputVariables(
+    const Caps &caps,
+    const Extensions &extensions,
+    const Version &version,
+    GLuint combinedImageUniformsCount,
+    GLuint combinedShaderStorageBlocksCount,
+    const std::vector<sh::ShaderVariable> &outputVariables,
+    int fragmentShaderVersion,
+    const ProgramAliasedBindings &fragmentOutputLocations,
+    const ProgramAliasedBindings &fragmentOutputIndices)
+{
+    ASSERT(mOutputVariableTypes.empty());
+    ASSERT(mActiveOutputVariablesMask.none());
+    ASSERT(mDrawBufferTypeMask.none());
+    ASSERT(!mYUVOutput);
+
+    // Gather output variable types
+    for (const sh::ShaderVariable &outputVariable : outputVariables)
+    {
+        if (outputVariable.isBuiltIn() && outputVariable.name != "gl_FragColor" &&
+            outputVariable.name != "gl_FragData")
+        {
+            continue;
+        }
+
+        unsigned int baseLocation =
+            (outputVariable.location == -1 ? 0u
+                                           : static_cast<unsigned int>(outputVariable.location));
+
+        // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
+        // structures, so we may use getBasicTypeElementCount().
+        unsigned int elementCount = outputVariable.getBasicTypeElementCount();
+        for (unsigned int elementIndex = 0; elementIndex < elementCount; elementIndex++)
+        {
+            const unsigned int location = baseLocation + elementIndex;
+            if (location >= mOutputVariableTypes.size())
+            {
+                mOutputVariableTypes.resize(location + 1, GL_NONE);
+            }
+            ASSERT(location < mActiveOutputVariablesMask.size());
+            mActiveOutputVariablesMask.set(location);
+            mOutputVariableTypes[location] = VariableComponentType(outputVariable.type);
+            ComponentType componentType    = GLenumToComponentType(mOutputVariableTypes[location]);
+            SetComponentTypeMask(componentType, location, &mDrawBufferTypeMask);
+        }
+
+        if (outputVariable.yuv)
+        {
+            ASSERT(outputVariables.size() == 1);
+            mYUVOutput = true;
+        }
+    }
+
+    if (version >= ES_3_1)
+    {
+        // [OpenGL ES 3.1] Chapter 8.22 Page 203:
+        // A link error will be generated if the sum of the number of active image uniforms used in
+        // all shaders, the number of active shader storage blocks, and the number of active
+        // fragment shader outputs exceeds the implementation-dependent value of
+        // MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
+        if (combinedImageUniformsCount + combinedShaderStorageBlocksCount +
+                mActiveOutputVariablesMask.count() >
+            static_cast<GLuint>(caps.maxCombinedShaderOutputResources))
+        {
+            mInfoLog
+                << "The sum of the number of active image uniforms, active shader storage blocks "
+                   "and active fragment shader outputs exceeds "
+                   "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
+                << caps.maxCombinedShaderOutputResources << ")";
+            return false;
+        }
+    }
+
+    if (fragmentShaderVersion == 100)
+        return true;
+
+    mOutputVariables = outputVariables;
+
+    // EXT_blend_func_extended doesn't specify anything related to binding specific elements of an
+    // output array in explicit terms.
+    //
+    // Assuming fragData is an output array, you can defend the position that:
+    // P1) you must support binding "fragData" because it's specified
+    // P2) you must support querying "fragData[x]" because it's specified
+    // P3) you must support binding "fragData[0]" because it's a frequently used pattern
+    //
+    // Then you can make the leap of faith:
+    // P4) you must support binding "fragData[x]" because you support "fragData[0]"
+    // P5) you must support binding "fragData[x]" because you support querying "fragData[x]"
+    //
+    // The spec brings in the "world of arrays" when it mentions binding the arrays and the
+    // automatic binding. Thus it must be interpreted that the thing is not undefined, rather you
+    // must infer the only possible interpretation (?). Note again: this need of interpretation
+    // might be completely off of what GL spec logic is.
+    //
+    // The other complexity is that unless you implement this feature, it's hard to understand what
+    // should happen when the client invokes the feature. You cannot add an additional error as it
+    // is not specified. One can ignore it, but obviously it creates the discrepancies...
+
+    std::vector<VariableLocation> reservedLocations;
+
+    // Process any output API bindings for arrays that don't alias to the first element.
+    for (const auto &bindingPair : fragmentOutputLocations)
+    {
+        const std::string &name       = bindingPair.first;
+        const ProgramBinding &binding = bindingPair.second;
+
+        size_t nameLengthWithoutArrayIndex;
+        unsigned int arrayIndex = ParseArrayIndex(name, &nameLengthWithoutArrayIndex);
+        if (arrayIndex == 0 || arrayIndex == GL_INVALID_INDEX)
+        {
+            continue;
+        }
+        for (unsigned int outputVariableIndex = 0; outputVariableIndex < mOutputVariables.size();
+             outputVariableIndex++)
+        {
+            const sh::ShaderVariable &outputVariable = mOutputVariables[outputVariableIndex];
+            // Check that the binding corresponds to an output array and its array index fits.
+            if (outputVariable.isBuiltIn() || !outputVariable.isArray() ||
+                !angle::BeginsWith(outputVariable.name, name, nameLengthWithoutArrayIndex) ||
+                arrayIndex >= outputVariable.getOutermostArraySize())
+            {
+                continue;
+            }
+
+            // Get the API index that corresponds to this exact binding.
+            // This index may differ from the index used for the array's base.
+            std::vector<VariableLocation> &outputLocations =
+                fragmentOutputIndices.getBindingByName(name) == 1 ? mSecondaryOutputLocations
+                                                                  : mOutputLocations;
+            unsigned int location = binding.location;
+            VariableLocation locationInfo(arrayIndex, outputVariableIndex);
+            if (location >= outputLocations.size())
+            {
+                outputLocations.resize(location + 1);
+            }
+            if (outputLocations[location].used())
+            {
+                mInfoLog << "Location of variable " << outputVariable.name
+                         << " conflicts with another variable.";
+                return false;
+            }
+            outputLocations[location] = locationInfo;
+
+            // Note the array binding location so that it can be skipped later.
+            reservedLocations.push_back(locationInfo);
+        }
+    }
+
+    // Reserve locations for output variables whose location is fixed in the shader or through the
+    // API. Otherwise, the remaining unallocated outputs will be processed later.
+    for (unsigned int outputVariableIndex = 0; outputVariableIndex < mOutputVariables.size();
+         outputVariableIndex++)
+    {
+        const sh::ShaderVariable &outputVariable = mOutputVariables[outputVariableIndex];
+
+        // Don't store outputs for gl_FragDepth, gl_FragColor, etc.
+        if (outputVariable.isBuiltIn())
+            continue;
+
+        int fixedLocation = GetOutputLocationForLink(fragmentOutputLocations, outputVariable);
+        if (fixedLocation == -1)
+        {
+            // Here we're only reserving locations for variables whose location is fixed.
+            continue;
+        }
+        unsigned int baseLocation = static_cast<unsigned int>(fixedLocation);
+
+        std::vector<VariableLocation> &outputLocations =
+            IsOutputSecondaryForLink(fragmentOutputIndices, outputVariable)
+                ? mSecondaryOutputLocations
+                : mOutputLocations;
+
+        // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
+        // structures, so we may use getBasicTypeElementCount().
+        unsigned int elementCount = outputVariable.getBasicTypeElementCount();
+        if (FindUsedOutputLocation(outputLocations, baseLocation, elementCount, reservedLocations,
+                                   outputVariableIndex))
+        {
+            mInfoLog << "Location of variable " << outputVariable.name
+                     << " conflicts with another variable.";
+            return false;
+        }
+        AssignOutputLocations(outputLocations, baseLocation, elementCount, reservedLocations,
+                              outputVariableIndex, mOutputVariables[outputVariableIndex]);
+    }
+
+    // Here we assign locations for the output variables that don't yet have them. Note that we're
+    // not necessarily able to fit the variables optimally, since then we might have to try
+    // different arrangements of output arrays. Now we just assign the locations in the order that
+    // we got the output variables. The spec isn't clear on what kind of algorithm is required for
+    // finding locations for the output variables, so this should be acceptable at least for now.
+    GLuint maxLocation = static_cast<GLuint>(caps.maxDrawBuffers);
+    if (!mSecondaryOutputLocations.empty())
+    {
+        // EXT_blend_func_extended: Program outputs will be validated against
+        // MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT if there's even one output with index one.
+        maxLocation = caps.maxDualSourceDrawBuffers;
+    }
+
+    for (unsigned int outputVariableIndex = 0; outputVariableIndex < mOutputVariables.size();
+         outputVariableIndex++)
+    {
+        const sh::ShaderVariable &outputVariable = mOutputVariables[outputVariableIndex];
+
+        // Don't store outputs for gl_FragDepth, gl_FragColor, etc.
+        if (outputVariable.isBuiltIn())
+            continue;
+
+        int fixedLocation = GetOutputLocationForLink(fragmentOutputLocations, outputVariable);
+        std::vector<VariableLocation> &outputLocations =
+            IsOutputSecondaryForLink(fragmentOutputIndices, outputVariable)
+                ? mSecondaryOutputLocations
+                : mOutputLocations;
+        unsigned int baseLocation = 0;
+        unsigned int elementCount = outputVariable.getBasicTypeElementCount();
+        if (fixedLocation != -1)
+        {
+            // Secondary inputs might have caused the max location to drop below what has already
+            // been explicitly assigned locations. Check for any fixed locations above the max
+            // that should cause linking to fail.
+            baseLocation = static_cast<unsigned int>(fixedLocation);
+        }
+        else
+        {
+            // No fixed location, so try to fit the output in unassigned locations.
+            // Try baseLocations starting from 0 one at a time and see if the variable fits.
+            while (FindUsedOutputLocation(outputLocations, baseLocation, elementCount,
+                                          reservedLocations, outputVariableIndex))
+            {
+                baseLocation++;
+            }
+            AssignOutputLocations(outputLocations, baseLocation, elementCount, reservedLocations,
+                                  outputVariableIndex, mOutputVariables[outputVariableIndex]);
+        }
+
+        // Check for any elements assigned above the max location that are actually used.
+        if (baseLocation + elementCount > maxLocation &&
+            (baseLocation >= maxLocation ||
+             FindUsedOutputLocation(outputLocations, maxLocation,
+                                    baseLocation + elementCount - maxLocation, reservedLocations,
+                                    outputVariableIndex)))
+        {
+            // EXT_blend_func_extended: Linking can fail:
+            // "if the explicit binding assignments do not leave enough space for the linker to
+            // automatically assign a location for a varying out array, which requires multiple
+            // contiguous locations."
+            mInfoLog << "Could not fit output variable into available locations: "
+                     << outputVariable.name;
+            return false;
+        }
+    }
+
     return true;
 }
 

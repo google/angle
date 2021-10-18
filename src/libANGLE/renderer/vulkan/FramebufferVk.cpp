@@ -1929,7 +1929,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
         // optimize that path which requires modifying the current render pass.
         // We're deferring the resolve check to FramebufferVk::blit(), since if the read buffer is
         // multisampled-render-to-texture, then srcFramebuffer->getSamples(context) gives > 1, but
-        // there's no resolve happening as the read buffer's singlesampled image will be used as
+        // there's no resolve happening as the read buffer's single sampled image will be used as
         // blit src. FramebufferVk::blit() will handle those details for us.
         ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
     }

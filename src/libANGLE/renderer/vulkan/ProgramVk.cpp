@@ -199,7 +199,7 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
         return std::make_unique<LinkEventDone>(status);
     }
 
-    status = mExecutable.createPipelineLayout(context, nullptr);
+    status = mExecutable.createPipelineLayout(contextVk, mState.getExecutable(), nullptr);
     return std::make_unique<LinkEventDone>(status);
 }
 
@@ -294,7 +294,7 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
 
     // TODO(jie.a.chen@intel.com): Parallelize linking.
     // http://crbug.com/849576
-    status = mExecutable.createPipelineLayout(context, nullptr);
+    status = mExecutable.createPipelineLayout(contextVk, mState.getExecutable(), nullptr);
     return std::make_unique<LinkEventDone>(status);
 }
 
@@ -715,7 +715,7 @@ size_t ProgramVk::calcUniformUpdateRequiredSpace(ContextVk *contextVk,
 
 angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
 {
-    ASSERT(dirtyUniforms());
+    ASSERT(hasDirtyUniforms());
 
     bool anyNewBufferAllocated                = false;
     uint8_t *bufferData                       = nullptr;

@@ -461,19 +461,19 @@ bool ValidateFragmentShaderColorBufferMaskMatch(const Context *context)
     const Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
 
     auto drawBufferMask     = framebuffer->getDrawBufferMask().to_ulong();
-    auto fragmentOutputMask = program->getActiveOutputVariables().to_ulong();
+    auto fragmentOutputMask = program->getExecutable().getActiveOutputVariablesMask().to_ulong();
 
     return drawBufferMask == (drawBufferMask & fragmentOutputMask);
 }
 
 bool ValidateFragmentShaderColorBufferTypeMatch(const Context *context)
 {
-    const Program *program         = context->getActiveLinkedProgram();
-    const Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
+    const ProgramExecutable *executable = context->getState().getProgramExecutable();
+    const Framebuffer *framebuffer      = context->getState().getDrawFramebuffer();
 
-    return ValidateComponentTypeMasks(program->getDrawBufferTypeMask().to_ulong(),
+    return ValidateComponentTypeMasks(executable->getFragmentOutputsTypeMask().to_ulong(),
                                       framebuffer->getDrawBufferTypeMask().to_ulong(),
-                                      program->getActiveOutputVariables().to_ulong(),
+                                      executable->getActiveOutputVariablesMask().to_ulong(),
                                       framebuffer->getDrawBufferMask().to_ulong());
 }
 
@@ -4036,7 +4036,7 @@ const char *ValidateDrawStates(const Context *context)
                 return errorMsg;
             }
 
-            programIsYUVOutput = program->isYUVOutput();
+            programIsYUVOutput = executable->isYUVOutput();
         }
         else if (programPipeline)
         {
@@ -4052,10 +4052,7 @@ const char *ValidateDrawStates(const Context *context)
                 return errorMsg;
             }
 
-            bool goodResult = programPipeline->link(context) == angle::Result::Continue;
-
-            ASSERT(executable);
-            if (!goodResult)
+            if (!programPipeline->isLinked())
             {
                 return kProgramPipelineLinkFailed;
             }

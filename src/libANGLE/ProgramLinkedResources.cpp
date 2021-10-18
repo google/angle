@@ -1423,7 +1423,7 @@ LinkingVariables::LinkingVariables(const ProgramState &state)
 
 LinkingVariables::LinkingVariables(const ProgramPipelineState &state)
 {
-    for (ShaderType shaderType : state.getProgramExecutable().getLinkedShaderStages())
+    for (ShaderType shaderType : state.getExecutable().getLinkedShaderStages())
     {
         const Program *program = state.getShaderProgram(shaderType);
         ASSERT(program);

@@ -2003,12 +2003,13 @@ angle::Result StateManager11::syncFramebuffer(const gl::Context *context)
     RTVArray framebufferRTVs = {{}};
     const auto &colorRTs     = mFramebuffer11->getCachedColorRenderTargets();
 
-    size_t appliedRTIndex                   = 0;
-    bool skipInactiveRTs                    = mRenderer->getFeatures().mrtPerfWorkaround.enabled;
-    const auto &drawStates                  = mFramebuffer11->getState().getDrawBufferStates();
-    gl::DrawBufferMask activeProgramOutputs = mProgramD3D->getState().getActiveOutputVariables();
-    UINT maxExistingRT                      = 0;
-    const auto &colorAttachments            = mFramebuffer11->getState().getColorAttachments();
+    size_t appliedRTIndex  = 0;
+    bool skipInactiveRTs   = mRenderer->getFeatures().mrtPerfWorkaround.enabled;
+    const auto &drawStates = mFramebuffer11->getState().getDrawBufferStates();
+    gl::DrawBufferMask activeProgramOutputs =
+        mProgramD3D->getState().getExecutable().getActiveOutputVariablesMask();
+    UINT maxExistingRT           = 0;
+    const auto &colorAttachments = mFramebuffer11->getState().getColorAttachments();
 
     for (size_t rtIndex = 0; rtIndex < colorRTs.size(); ++rtIndex)
     {

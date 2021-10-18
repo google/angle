@@ -411,10 +411,6 @@ class State : angle::NonCopyable
     Query *getActiveQuery(QueryType type) const;
 
     // Program Pipeline binding manipulation
-    angle::Result useProgramStages(const Context *context,
-                                   ProgramPipeline *programPipeline,
-                                   GLbitfield stages,
-                                   Program *shaderProgram);
     angle::Result setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline);
     void detachProgramPipeline(const Context *context, ProgramPipelineID pipeline);
 
@@ -605,8 +601,7 @@ class State : angle::NonCopyable
     // Sets the dirty bit for the program executable.
     angle::Result onProgramExecutableChange(const Context *context, Program *program);
     // Sets the dirty bit for the program pipeline executable.
-    angle::Result onProgramPipelineExecutableChange(const Context *context,
-                                                    ProgramPipeline *program);
+    angle::Result onProgramPipelineExecutableChange(const Context *context);
 
     enum DirtyBitType
     {

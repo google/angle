@@ -2008,17 +2008,6 @@ bool State::removeTransformFeedbackBinding(const Context *context,
     return false;
 }
 
-angle::Result State::useProgramStages(const Context *context,
-                                      ProgramPipeline *programPipeline,
-                                      GLbitfield stages,
-                                      Program *shaderProgram)
-{
-    programPipeline->useProgramStages(context, stages, shaderProgram);
-    ANGLE_TRY(onProgramPipelineExecutableChange(context, programPipeline));
-
-    return angle::Result::Continue;
-}
-
 angle::Result State::setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline)
 {
     if (mProgramPipeline.get() == pipeline)
@@ -2046,11 +2035,6 @@ angle::Result State::setProgramPipelineBinding(const Context *context, ProgramPi
         {
             mExecutable = nullptr;
         }
-    }
-
-    if (mProgramPipeline.get())
-    {
-        ANGLE_TRY(onProgramPipelineExecutableChange(context, mProgramPipeline.get()));
     }
 
     return angle::Result::Continue;
@@ -3280,8 +3264,8 @@ void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data) const
     }
 }
 
-// TODO(https://anglebug.com/3889): Remove this helper function after blink and chromium part
-// refactory done.
+// TODO(http://anglebug.com/3889): Remove this helper function after blink and chromium part
+// refactor done.
 Texture *State::getTextureForActiveSampler(TextureType type, size_t index)
 {
     if (type != TextureType::VideoImage)
@@ -3575,15 +3559,15 @@ angle::Result State::onProgramExecutableChange(const Context *context, Program *
     return angle::Result::Continue;
 }
 
-angle::Result State::onProgramPipelineExecutableChange(const Context *context,
-                                                       ProgramPipeline *programPipeline)
+angle::Result State::onProgramPipelineExecutableChange(const Context *context)
 {
     mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
 
     // Set any bound textures.
-    const ActiveTextureTypeArray &textureTypes =
-        programPipeline->getExecutable().getActiveSamplerTypes();
-    for (size_t textureIndex : programPipeline->getExecutable().getActiveSamplersMask())
+    const ProgramExecutable &executable        = mProgramPipeline->getExecutable();
+    const ActiveTextureTypeArray &textureTypes = executable.getActiveSamplerTypes();
+
+    for (size_t textureIndex : executable.getActiveSamplersMask())
     {
         TextureType type = textureTypes[textureIndex];
 
@@ -3595,7 +3579,7 @@ angle::Result State::onProgramPipelineExecutableChange(const Context *context,
         updateTextureBinding(context, textureIndex, texture);
     }
 
-    for (size_t imageUnitIndex : programPipeline->getExecutable().getActiveImagesMask())
+    for (size_t imageUnitIndex : executable.getActiveImagesMask())
     {
         Texture *image = mImageUnits[imageUnitIndex].texture.get();
         if (!image)

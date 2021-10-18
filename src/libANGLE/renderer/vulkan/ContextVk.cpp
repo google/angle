@@ -835,12 +835,12 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     }
 
-    if (mProgram && mProgram->dirtyUniforms())
+    if (mProgram && mProgram->hasDirtyUniforms())
     {
         ANGLE_TRY(mProgram->updateUniforms(this));
         mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
-    else if (mProgramPipeline && mProgramPipeline->dirtyUniforms(getState()))
+    else if (mProgramPipeline && mProgramPipeline->hasDirtyUniforms())
     {
         ANGLE_TRY(mProgramPipeline->updateUniforms(this));
         mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
@@ -1076,12 +1076,12 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context)
     // TODO: Remove this and fix tests.  http://anglebug.com/5070
     ANGLE_TRY(flushOutsideRenderPassCommands());
 
-    if (mProgram && mProgram->dirtyUniforms())
+    if (mProgram && mProgram->hasDirtyUniforms())
     {
         ANGLE_TRY(mProgram->updateUniforms(this));
         mComputeDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
-    else if (mProgramPipeline && mProgramPipeline->dirtyUniforms(getState()))
+    else if (mProgramPipeline && mProgramPipeline->hasDirtyUniforms())
     {
         ANGLE_TRY(mProgramPipeline->updateUniforms(this));
         mComputeDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
@@ -3421,7 +3421,7 @@ void ContextVk::invalidateProgramBindingHelper(const gl::State &glState)
     }
     else if (mProgramPipeline)
     {
-        mProgramPipeline->onProgramBind(this);
+        mProgramPipeline->onProgramBind();
     }
 }
 
@@ -5123,8 +5123,10 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
             }
         }
 
-        recreatePipelineLayout =
-            textureVk->getAndResetImmutableSamplerDirtyState() || recreatePipelineLayout;
+        if (textureVk->getAndResetImmutableSamplerDirtyState())
+        {
+            recreatePipelineLayout = true;
+        }
     }
 
     if (!mExecutable->isImmutableSamplerFormatCompatible(externalFormatIndexMap, vkFormatIndexMap))
@@ -5135,7 +5137,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
     // Recreate the pipeline layout, if necessary.
     if (recreatePipelineLayout)
     {
-        ANGLE_TRY(mExecutable->createPipelineLayout(context, &mActiveTextures));
+        ANGLE_TRY(mExecutable->createPipelineLayout(this, *executable, &mActiveTextures));
 
         // The default uniforms descriptor set was reset during createPipelineLayout(), so mark them
         // dirty to get everything reallocated/rebound before the next draw.
@@ -5147,7 +5149,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
             }
             else if (mProgramPipeline)
             {
-                mProgramPipeline->setAllDefaultUniformsDirty(context->getState());
+                mProgramPipeline->setAllDefaultUniformsDirty();
             }
         }
     }
