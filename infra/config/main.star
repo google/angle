@@ -190,10 +190,7 @@ def get_gpu_type_from_builder_name(name):
     return name.split("-")[1]
 
 # Adds both the CI and Try standalone builders.
-def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode = None):
-    properties = {
-        "builder_group": "angle",
-    }
+def angle_builder(name, cpu):
     config_os = get_os_from_name(name)
     dimensions = {}
     dimensions["os"] = config_os.dimension
@@ -205,22 +202,35 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
         dimensions["builderless"] = "1"
         goma_props["enable_ats"] = True
 
-    properties["$build/goma"] = goma_props
-    properties["platform"] = config_os.console_name
-    properties["toolchain"] = toolchain
+    is_debug = "-dbg" in name
+    is_perf = name.endswith("-perf")
+    is_trace = name.endswith("-trace")
+    is_uwp = "winuwp" in name
+    is_msvc = is_uwp or "-msvc" in name
 
-    if not test_mode:
-        if "-compile" in name:
-            test_mode = "compile_only"
-        else:
-            test_mode = "compile_and_test"
-
-    if toolchain == "gcc":
-        properties["test_mode"] = "checkout_only"
-    elif debug or toolchain == "msvc" or (config_os.category == os_category.ANDROID and cpu == "arm"):
-        properties["test_mode"] = "compile_only"
+    if name.endswith("-compile"):
+        test_mode = "compile_only"
+    elif name.endswith("-test"):
+        test_mode = "compile_and_test"
+    elif is_trace:
+        test_mode = "trace_tests"
+    elif is_perf:
+        test_mode = "compile_and_test"
     else:
-        properties["test_mode"] = test_mode
+        print("Test mode unknown for %s" % name)
+
+    if is_msvc:
+        toolchain = "msvc"
+    else:
+        toolchain = "clang"
+
+    properties = {
+        "builder_group": "angle",
+        "$build/goma": goma_props,
+        "platform": config_os.console_name,
+        "toolchain": toolchain,
+        "test_mode": test_mode,
+    }
 
     luci.builder(
         name = name,
@@ -238,10 +248,8 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
         ),
     )
 
-    is_perf = "-perf" in name
-
     # Trace tests are only included automatically if files in the capture folder change.
-    if test_mode == "trace_tests":
+    if is_trace:
         config = "trace"
         location_regexp = [
             ".+/[+]/src/libANGLE/capture/.+",
@@ -253,14 +261,14 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
         config = "angle"
         location_regexp = None
 
-    if uwp:
+    if is_uwp:
         os_name = "winuwp"
     else:
         os_name = config_os.console_name
 
     if is_perf:
         short_name = get_gpu_type_from_builder_name(name)
-    elif debug:
+    elif is_debug:
         short_name = "dbg"
     else:
         short_name = "rel"
@@ -294,14 +302,11 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
             ),
         )
 
-        # TODO(jmadill): Finish transition by removing old configs. http://anglebug.com/6496
-        is_new_config = name.endswith("-test") or name.endswith("-compile") or name.endswith("-trace")
-        if is_new_config:
-            luci.cq_tryjob_verifier(
-                cq_group = "master",
-                builder = "angle:try/" + name,
-                location_regexp = location_regexp,
-            )
+        luci.cq_tryjob_verifier(
+            cq_group = "master",
+            builder = "angle:try/" + name,
+            location_regexp = location_regexp,
+        )
 
 luci.bucket(
     name = "ci",
@@ -359,56 +364,33 @@ luci.gitiles_poller(
 )
 
 # name, clang, debug, cpu, uwp, trace_tests
-# TODO(jmadill): De-duplicate. http://anglebug.com/6496
-angle_builder("android-arm-compile", debug = False, cpu = "arm")
-angle_builder("android-arm-dbg", debug = True, cpu = "arm")
-angle_builder("android-arm-dbg-compile", debug = True, cpu = "arm")
-angle_builder("android-arm-rel", debug = False, cpu = "arm")
-angle_builder("android-arm64-dbg", debug = True, cpu = "arm64")
-angle_builder("android-arm64-dbg-compile", debug = True, cpu = "arm64")
-angle_builder("android-arm64-rel", debug = False, cpu = "arm64")
-angle_builder("android-arm64-test", debug = False, cpu = "arm64")
-angle_builder("linux-clang-dbg", debug = True, cpu = "x64")
-angle_builder("linux-clang-rel", debug = False, cpu = "x64")
-angle_builder("linux-dbg-compile", debug = True, cpu = "x64")
-angle_builder("linux-gcc-dbg", debug = True, cpu = "x64", toolchain = "gcc")
-angle_builder("linux-gcc-rel", debug = False, cpu = "x64", toolchain = "gcc")
-angle_builder("linux-test", debug = False, cpu = "x64")
-angle_builder("mac-dbg", debug = True, cpu = "x64")
-angle_builder("mac-dbg-compile", debug = True, cpu = "x64")
-angle_builder("mac-rel", debug = False, cpu = "x64")
-angle_builder("mac-test", debug = False, cpu = "x64")
-angle_builder("win-clang-x64-dbg", debug = True, cpu = "x64")
-angle_builder("win-clang-x64-rel", debug = False, cpu = "x64")
-angle_builder("win-clang-x86-dbg", debug = True, cpu = "x86")
-angle_builder("win-clang-x86-rel", debug = False, cpu = "x86")
-angle_builder("win-dbg-compile", debug = True, cpu = "x64")
-angle_builder("win-msvc-compile", debug = False, cpu = "x64", toolchain = "msvc")
-angle_builder("win-msvc-dbg-compile", debug = True, cpu = "x64", toolchain = "msvc")
-angle_builder("win-msvc-x64-dbg", debug = True, cpu = "x64", toolchain = "msvc")
-angle_builder("win-msvc-x64-rel", debug = False, cpu = "x64", toolchain = "msvc")
-angle_builder("win-msvc-x86-compile", debug = False, cpu = "x86", toolchain = "msvc")
-angle_builder("win-msvc-x86-dbg", debug = True, cpu = "x86", toolchain = "msvc")
-angle_builder("win-msvc-x86-dbg-compile", debug = True, cpu = "x86", toolchain = "msvc")
-angle_builder("win-msvc-x86-rel", debug = False, cpu = "x64", toolchain = "msvc")
-angle_builder("win-test", debug = False, cpu = "x64")
-angle_builder("win-x86-dbg-compile", debug = True, cpu = "x86")
-angle_builder("win-x86-test", debug = False, cpu = "x86")
-angle_builder("winuwp-compile", debug = False, cpu = "x64", toolchain = "msvc", uwp = True)
-angle_builder("winuwp-dbg-compile", debug = True, cpu = "x64", toolchain = "msvc", uwp = True)
-angle_builder("winuwp-x64-dbg", debug = True, cpu = "x64", toolchain = "msvc", uwp = True)
-angle_builder("winuwp-x64-rel", debug = False, cpu = "x64", toolchain = "msvc", uwp = True)
+angle_builder("android-arm-compile", cpu = "arm")
+angle_builder("android-arm-dbg-compile", cpu = "arm")
+angle_builder("android-arm64-dbg-compile", cpu = "arm64")
+angle_builder("android-arm64-test", cpu = "arm64")
+angle_builder("linux-dbg-compile", cpu = "x64")
+angle_builder("linux-test", cpu = "x64")
+angle_builder("mac-dbg-compile", cpu = "x64")
+angle_builder("mac-test", cpu = "x64")
+angle_builder("win-dbg-compile", cpu = "x64")
+angle_builder("win-msvc-compile", cpu = "x64")
+angle_builder("win-msvc-dbg-compile", cpu = "x64")
+angle_builder("win-msvc-x86-compile", cpu = "x86")
+angle_builder("win-msvc-x86-dbg-compile", cpu = "x86")
+angle_builder("win-test", cpu = "x64")
+angle_builder("win-x86-dbg-compile", cpu = "x86")
+angle_builder("win-x86-test", cpu = "x86")
+angle_builder("winuwp-compile", cpu = "x64")
+angle_builder("winuwp-dbg-compile", cpu = "x64")
 
-angle_builder("linux-trace", debug = False, cpu = "x64", test_mode = "trace_tests")
-angle_builder("linux-trace-rel", debug = False, cpu = "x64", test_mode = "trace_tests")
-angle_builder("win-trace", debug = False, cpu = "x64", test_mode = "trace_tests")
-angle_builder("win-trace-rel", debug = False, cpu = "x64", test_mode = "trace_tests")
+angle_builder("linux-trace", cpu = "x64")
+angle_builder("win-trace", cpu = "x64")
 
-angle_builder("android-pixel4-perf", debug = False, cpu = "arm64")
-angle_builder("linux-intel-hd630-perf", debug = False, cpu = "x64")
-angle_builder("linux-nvidia-p400-perf", debug = False, cpu = "x64")
-angle_builder("win10-intel-hd630-perf", debug = False, cpu = "x64")
-angle_builder("win10-nvidia-p400-perf", debug = False, cpu = "x64")
+angle_builder("android-pixel4-perf", cpu = "arm64")
+angle_builder("linux-intel-hd630-perf", cpu = "x64")
+angle_builder("linux-nvidia-p400-perf", cpu = "x64")
+angle_builder("win10-intel-hd630-perf", cpu = "x64")
+angle_builder("win10-nvidia-p400-perf", cpu = "x64")
 
 # Views
 
