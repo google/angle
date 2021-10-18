@@ -106,7 +106,7 @@ precision mediump float;
 varying mediump vec2 texCoord;
 uniform mediump samplerVideoWEBGL s;
 
-vec4 wrapTextureVideoWEBGL(samplerVideoWEBGL sampler, vec2 coord)
+vec4 wrapTextureVideoWEBGL(mediump samplerVideoWEBGL sampler, vec2 coord)
 {
     return textureVideoWEBGL(sampler, coord);
 }

@@ -3959,17 +3959,20 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     for (size_t i = 0u; i < function->getParamCount(); ++i)
     {
         const TVariable *param = function->getParam(i);
-        if (param->getType().isStructSpecifier())
+        const TType &paramType = param->getType();
+
+        if (paramType.isStructSpecifier())
         {
             // ESSL 3.00.6 section 12.10.
             error(location, "Function parameter type cannot be a structure definition",
                   function->name());
         }
+
+        checkPrecisionSpecified(location, paramType.getPrecision(), paramType.getBasicType());
     }
 
     if (getShaderVersion() >= 300)
     {
-
         if (symbolTable.isUnmangledBuiltInName(function->name(), getShaderVersion(),
                                                extensionBehavior()))
         {

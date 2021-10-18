@@ -4611,7 +4611,7 @@ layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 layout(binding = 0, r32f) uniform highp image2D image1[2][3];
 layout(binding = 6, r32f) uniform highp image2D image2;
 
-void testFunction(image2D imageOut[2][3])
+void testFunction(highp image2D imageOut[2][3])
 {
     // image1 is an array of 1x1 images.
     // image2 is a 1x4 image with the following data:
@@ -5079,8 +5079,8 @@ TEST_P(GLSLTest_ES31, ParameterArraysOfArraysSampler)
         "uniform mediump isampler2D test[2][3];\n"
         "const vec2 ZERO = vec2(0.0, 0.0);\n"
         "\n"
-        "bool check(isampler2D data[2][3]);\n"
-        "bool check(isampler2D data[2][3]) {\n"
+        "bool check(mediump isampler2D data[2][3]);\n"
+        "bool check(mediump isampler2D data[2][3]) {\n"
         "#define DO_CHECK(i,j) \\\n"
         "    if (texture(data[i][j], ZERO) != ivec4(i+1, j+1, 0, 1)) { \\\n"
         "        return false; \\\n"
@@ -5284,20 +5284,20 @@ TEST_P(GLSLTest_ES31, ParameterArrayArrayArraySampler)
         "uniform mediump isampler2D test2[4];\n"
         "const vec2 ZERO = vec2(0.0, 0.0);\n"
         "\n"
-        "bool check1D(isampler2D arr[4], int x, int y) {\n"
+        "bool check1D(mediump isampler2D arr[4], int x, int y) {\n"
         "    if (texture(arr[0], ZERO) != ivec4(x, y, 0, 0)+1) return false;\n"
         "    if (texture(arr[1], ZERO) != ivec4(x, y, 1, 0)+1) return false;\n"
         "    if (texture(arr[2], ZERO) != ivec4(x, y, 2, 0)+1) return false;\n"
         "    if (texture(arr[3], ZERO) != ivec4(x, y, 3, 0)+1) return false;\n"
         "    return true;\n"
         "}\n"
-        "bool check2D(isampler2D arr[3][4], int x) {\n"
+        "bool check2D(mediump isampler2D arr[3][4], int x) {\n"
         "    if (!check1D(arr[0], x, 0)) return false;\n"
         "    if (!check1D(arr[1], x, 1)) return false;\n"
         "    if (!check1D(arr[2], x, 2)) return false;\n"
         "    return true;\n"
         "}\n"
-        "bool check3D(isampler2D arr[2][3][4]) {\n"
+        "bool check3D(mediump isampler2D arr[2][3][4]) {\n"
         "    if (!check2D(arr[0], 0)) return false;\n"
         "    if (!check2D(arr[1], 1)) return false;\n"
         "    return true;\n"
