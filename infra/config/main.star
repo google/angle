@@ -294,10 +294,9 @@ def angle_builder(name, debug, cpu, toolchain = "clang", uwp = False, test_mode 
             ),
         )
 
-        # Include all other bots in the CQ by default except the placeholder GCC configs.
-        # TODO(jmadill): Include new bots in CQ. http://anglebug.com/6496
+        # TODO(jmadill): Finish transition by removing old configs. http://anglebug.com/6496
         is_new_config = name.endswith("-test") or name.endswith("-compile") or name.endswith("-trace")
-        if toolchain != "gcc" and not is_new_config:
+        if is_new_config:
             luci.cq_tryjob_verifier(
                 cq_group = "master",
                 builder = "angle:try/" + name,
