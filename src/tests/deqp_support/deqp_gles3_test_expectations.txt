@@ -815,8 +815,8 @@
 
 // Failures introduced after switching to the direct Metal backend
 
-6467 MAC METAL : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
-6467 MAC METAL : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
+6297 MAC METAL : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
+6297 MAC METAL : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 
 6467 MAC METAL : dEQP-GLES3.functional.fragment_ops.scissor.outside_render_line = FAIL
 
@@ -849,11 +849,10 @@
 6571 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.linear_nearest = FAIL
 6571 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.nearest_linear = FAIL
 6571 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.nearest_nearest = FAIL
-
-6467 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.2d.max_lod.linear_linear = FAIL
-6467 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.2d.max_lod.nearest_linear = FAIL
-6467 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.3d.max_lod.linear_linear = FAIL
-6467 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.3d.max_lod.nearest_linear = FAIL
+6571 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.2d.max_lod.linear_linear = FAIL
+6571 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.2d.max_lod.nearest_linear = FAIL
+6571 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.3d.max_lod.linear_linear = FAIL
+6571 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.3d.max_lod.nearest_linear = FAIL
 
 /////////////////////////////////////
 
