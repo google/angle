@@ -558,11 +558,6 @@
 
 /////////// Metal ////////////////
 
-// shadow sampler doesn't support bias & gradient & lod versions
-5107 MAC METAL AMD : dEQP-GLES3.*texturegrad*shadow* = SKIP
-5107 MAC METAL AMD : dEQP-GLES3.*textureprojgrad*shadow* = SKIP
-
-
 // last provoking vertex (for flat shading) is not supported
 5232 MAC METAL : dEQP-GLES3.*flatshading* = FAIL
 5232 MAC METAL AMD : dEQP-GLES3.functional.shaders.builtin_functions.pack_unpack.unpacksnorm2x16_fragment = FAIL
