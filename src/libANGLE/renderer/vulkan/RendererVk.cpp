@@ -213,6 +213,15 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_FRAGMENT_TESTS_DEPTH_"
      "STENCIL_ATTACHMENT_READ, command: vkCmdPipelineBarrier",
      "", false},
+    // http://angkebug.com/6584
+    {"SYNC-HAZARD-WRITE_AFTER_WRITE",
+     "aspect depth during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
+     "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
+     "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: "
+     "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_FRAGMENT_TESTS_DEPTH_"
+     "STENCIL_ATTACHMENT_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_"
+     "ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, command: vkCmdPipelineBarrier",
+     "", false},
     // http://anglebug.com/6416
     // http://anglebug.com/6421
     {"SYNC-HAZARD-WRITE_AFTER_WRITE",
