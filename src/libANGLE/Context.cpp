@@ -15,7 +15,7 @@
 #include <vector>
 
 #include "common/PackedEnums.h"
-#include "common/angle_version_info.h"
+#include "common/angle_version.h"
 #include "common/matrix_utils.h"
 #include "common/platform.h"
 #include "common/system_utils.h"
@@ -3210,7 +3210,7 @@ void Context::initVersionStrings()
         versionString << "OpenGL ES ";
     }
     versionString << clientVersion.major << "." << clientVersion.minor << ".0 (ANGLE "
-                  << angle::GetANGLEVersionString() << ")";
+                  << ANGLE_VERSION_STRING << ")";
     mVersionString = MakeStaticString(versionString.str());
 
     std::ostringstream shadingLanguageVersionString;
@@ -3224,8 +3224,8 @@ void Context::initVersionStrings()
         shadingLanguageVersionString << "OpenGL GLSL ";
     }
     shadingLanguageVersionString << (clientVersion.major == 2 ? 1 : clientVersion.major) << "."
-                                 << clientVersion.minor << "0 (ANGLE "
-                                 << angle::GetANGLEVersionString() << ")";
+                                 << clientVersion.minor << "0 (ANGLE " << ANGLE_VERSION_STRING
+                                 << ")";
     mShadingLanguageString = MakeStaticString(shadingLanguageVersionString.str());
 }
 

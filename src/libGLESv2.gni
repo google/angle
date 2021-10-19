@@ -626,6 +626,10 @@ libglesv2_cl_sources = [
   "src/libGLESv2/proc_table_cl_autogen.cpp",
 ]
 
+if (is_win) {
+  libglesv2_sources += [ "src/libGLESv2/libGLESv2.rc" ]
+}
+
 libglesv1_cm_sources = [
   "src/libGLESv1_CM/libGLESv1_CM.cpp",
   "src/libGLESv1_CM/resource.h",
@@ -642,3 +646,7 @@ libegl_sources = [
   "src/libGLESv2/entry_points_egl_autogen.h",
   "src/libGLESv2/entry_points_egl_ext_autogen.h",
 ]
+
+if (is_win) {
+  libegl_sources += [ "src/libEGL/libEGL.rc" ]
+}

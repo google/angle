@@ -8,7 +8,7 @@
 
 #include "libGLESv2/egl_stubs_autogen.h"
 
-#include "common/angle_version_info.h"
+#include "common/angle_version.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/EGLSync.h"
@@ -534,12 +534,8 @@ const char *QueryString(Thread *thread, Display *display, EGLint name)
             result = display->getVendorString().c_str();
             break;
         case EGL_VERSION:
-        {
-            static const char *sVersionString =
-                MakeStaticString(std::string("1.5 (ANGLE ") + angle::GetANGLEVersionString() + ")");
-            result = sVersionString;
+            result = "1.5 (ANGLE " ANGLE_VERSION_STRING ")";
             break;
-        }
         default:
             UNREACHABLE();
             break;

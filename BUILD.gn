@@ -376,6 +376,7 @@ angle_static_library("angle_common") {
 
   public_deps = [
     ":angle_abseil",
+    ":angle_version",
     ":includes",
   ]
   public_configs += [ ":angle_common_config" ]
@@ -662,12 +663,10 @@ config("angle_commit_id_config") {
   visibility = [ ":angle_commit_id" ]
 }
 
+_commit_id_output_file = "$root_gen_dir/angle/angle_commit.h"
 action("angle_commit_id") {
-  _commit_id_header = "$root_gen_dir/angle/angle_commit.h"
   script = "src/commit_id.py"
-  outputs = [ _commit_id_header ]
-
-  visibility = [ ":angle_version" ]
+  outputs = [ _commit_id_output_file ]
 
   # Add git as a dependency if it is available.
   if (angle_enable_commit_id &&
@@ -693,7 +692,7 @@ action("angle_commit_id") {
 
   args = [
     "gen",
-    rebase_path(_commit_id_header, root_build_dir),
+    rebase_path(_commit_id_output_file, root_build_dir),
   ]
 
   public_configs = [ ":angle_commit_id_config" ]
@@ -702,30 +701,6 @@ action("angle_commit_id") {
 angle_source_set("angle_version") {
   sources = [ "src/common/angle_version.h" ]
   public_deps = [ ":angle_commit_id" ]
-  visibility = [
-    ":angle_version_info",
-    ":libEGL",
-    ":libGL",
-    ":libGLESv1_CM",
-    ":libGLESv2",
-    ":libGLESv2_capture_complement",
-  ]
-
-  # TODO(jmadill): Remove once headers isolated. http://anglebug.com/2551
-  if (build_with_chromium) {
-    visibility += [
-      "//content/browser:browser",
-      "//gpu/command_buffer/service:gles2_sources",
-    ]
-  }
-}
-
-angle_source_set("angle_version_info") {
-  sources = [
-    "src/common/angle_version_info.cpp",
-    "src/common/angle_version_info.h",
-  ]
-  deps = [ ":angle_version" ]
 }
 
 config("angle_backend_config") {
@@ -879,7 +854,7 @@ angle_source_set("libANGLE_base") {
   public_deps = [
     ":angle_common",
     ":angle_gpu_info_util",
-    ":angle_version_info",
+    ":angle_version",
     ":libANGLE_headers",
     ":translator",
   ]
@@ -1142,11 +1117,9 @@ template("angle_libGLESv2") {
     if (angle_enable_cl) {
       sources += libglesv2_cl_sources
     }
+
     if (is_win) {
-      sources += [
-        "src/libGLESv2/${invoker.output_name}_autogen.def",
-        "src/libGLESv2/libGLESv2.rc",
-      ]
+      sources += [ "src/libGLESv2/${invoker.output_name}_autogen.def" ]
     }
 
     output_name = "${invoker.output_name}${angle_libs_suffix}"
@@ -1159,10 +1132,9 @@ template("angle_libGLESv2") {
 
     defines = [ "LIBGLESV2_IMPLEMENTATION" ]
 
-    deps = invoker.deps + [
-             ":angle_version",
-             ":includes",
-           ]
+    deps = invoker.deps + [ ":includes" ]
+
+    public_deps = [ ":angle_version" ]
   }
 }
 
@@ -1206,10 +1178,11 @@ if (is_win && !angle_is_winuwp) {
     ]
 
     deps = [
-      ":angle_version",
       ":includes",
       ":libANGLE",
     ]
+
+    public_deps = [ ":angle_version" ]
   }
 }
 
@@ -1238,7 +1211,6 @@ angle_shared_library("libGLESv1_CM") {
   defines = []
 
   deps = [
-    ":angle_version",
     ":includes",
     ":libGLESv2",
   ]
@@ -1268,10 +1240,6 @@ angle_source_set("libEGL_egl_loader") {
 
 angle_shared_library("libEGL") {
   sources = libegl_sources
-  if (is_win) {
-    sources += [ "src/libEGL/libEGL.rc" ]
-  }
-
   output_name = "libEGL${angle_libs_suffix}"
 
   configs += [

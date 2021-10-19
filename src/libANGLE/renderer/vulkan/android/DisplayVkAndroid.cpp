@@ -13,7 +13,7 @@
 #include <android/native_window.h>
 #include <vulkan/vulkan.h>
 
-#include "common/angle_version_info.h"
+#include "common/angle_version.h"
 #include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.h"
@@ -30,7 +30,7 @@ egl::Error DisplayVkAndroid::initialize(egl::Display *display)
     ANGLE_TRY(DisplayVk::initialize(display));
 
     std::stringstream strstr;
-    strstr << "Version (" << angle::GetANGLEVersionString() << "), ";
+    strstr << "Version (" << ANGLE_VERSION_STRING << "), ";
     strstr << "Renderer (" << mRenderer->getRendererDescription() << ")";
     __android_log_print(ANDROID_LOG_INFO, "ANGLE", "%s", strstr.str().c_str());
 

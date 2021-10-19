@@ -7,6 +7,7 @@
 
 #include "entry_points_wgl.h"
 
+#include "common/angle_version.h"
 #include "common/debug.h"
 #include "common/event_tracer.h"
 #include "common/utilities.h"
