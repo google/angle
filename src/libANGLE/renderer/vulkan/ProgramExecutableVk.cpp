@@ -835,13 +835,11 @@ void ProgramExecutableVk::updateEarlyFragmentTestsOptimization(ContextVk *contex
     }
 }
 
-angle::Result ProgramExecutableVk::getGraphicsPipeline(
-    ContextVk *contextVk,
-    gl::PrimitiveMode mode,
-    const vk::GraphicsPipelineDesc &desc,
-    const gl::AttributesMask &activeAttribLocations,
-    const vk::GraphicsPipelineDesc **descPtrOut,
-    vk::PipelineHelper **pipelineOut)
+angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
+                                                       gl::PrimitiveMode mode,
+                                                       const vk::GraphicsPipelineDesc &desc,
+                                                       const vk::GraphicsPipelineDesc **descPtrOut,
+                                                       vk::PipelineHelper **pipelineOut)
 {
     const gl::State &glState                  = contextVk->getState();
     RendererVk *renderer                      = contextVk->getRenderer();
@@ -882,10 +880,20 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(
     shaderProgram->setSpecializationConstant(sh::vk::SpecializationConstantId::DrawableHeight,
                                              dimensions.height);
 
+    // Compare the fragment output interface with the framebuffer interface.
+    const gl::ProgramExecutable &executable = *glState.getProgramExecutable();
+
+    const gl::AttributesMask &activeAttribLocations = executable.getNonBuiltinAttribLocationsMask();
+
+    // Calculate missing shader outputs.
+    const gl::DrawBufferMask &shaderOutMask = executable.getActiveOutputVariablesMask();
+    gl::DrawBufferMask framebufferMask      = glState.getDrawFramebuffer()->getDrawBufferMask();
+    gl::DrawBufferMask missingOutputsMask   = ~shaderOutMask & framebufferMask;
+
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
     return shaderProgram->getGraphicsPipeline(
         contextVk, &contextVk->getRenderPassCache(), *pipelineCache, getPipelineLayout(), desc,
-        activeAttribLocations, glState.getProgramExecutable()->getAttributesTypeMask(), descPtrOut,
+        activeAttribLocations, executable.getAttributesTypeMask(), missingOutputsMask, descPtrOut,
         pipelineOut);
 }
 

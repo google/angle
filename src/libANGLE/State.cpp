@@ -2476,6 +2476,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params) const
         case GL_CLIP_DEPTH_MODE_EXT:
             *params = GL_TRUE;
             break;
+        case GL_ROBUST_FRAGMENT_SHADER_OUTPUT_ANGLE:
+            *params = mExtensions.robustFragmentShaderOutputANGLE ? GL_TRUE : GL_FALSE;
+            break;
         default:
             UNREACHABLE();
             break;

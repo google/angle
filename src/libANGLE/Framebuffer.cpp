@@ -775,6 +775,11 @@ bool FramebufferState::isDefault() const
     return mId == Framebuffer::kDefaultDrawFramebufferHandle;
 }
 
+bool FramebufferState::isBoundAsDrawFramebuffer(const Context *context) const
+{
+    return context->getState().getDrawFramebuffer()->id() == mId;
+}
+
 const FramebufferID Framebuffer::kDefaultDrawFramebufferHandle = {0};
 
 Framebuffer::Framebuffer(const Caps &caps,

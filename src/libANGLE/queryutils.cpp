@@ -3427,6 +3427,14 @@ bool GetQueryParameterInfo(const State &glState,
         return true;
     }
 
+    if (extensions.robustFragmentShaderOutputANGLE &&
+        pname == GL_ROBUST_FRAGMENT_SHADER_OUTPUT_ANGLE)
+    {
+        *type      = GL_BOOL;
+        *numParams = 1;
+        return true;
+    }
+
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
     switch (pname)
     {

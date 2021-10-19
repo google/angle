@@ -138,6 +138,8 @@ class FramebufferState final : angle::NonCopyable
 
     rx::Serial getFramebufferSerial() const { return mFramebufferSerial; }
 
+    bool isBoundAsDrawFramebuffer(const Context *context) const;
+
   private:
     const FramebufferAttachment *getWebGLDepthStencilAttachment() const;
     const FramebufferAttachment *getWebGLDepthAttachment() const;

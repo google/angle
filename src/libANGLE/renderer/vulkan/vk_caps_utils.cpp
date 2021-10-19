@@ -529,6 +529,9 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxInterpolationOffset          = limitsVk.maxInterpolationOffset;
     mNativeCaps.subPixelInterpolationOffsetBits = limitsVk.subPixelInterpolationOffsetBits;
 
+    // Enable GL_ANGLE_robust_fragment_shader_output
+    mNativeExtensions.robustFragmentShaderOutputANGLE = true;
+
     // From the Vulkan spec:
     //
     // > The values minInterpolationOffset and maxInterpolationOffset describe the closed interval

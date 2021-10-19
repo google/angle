@@ -2618,6 +2618,7 @@ class ShaderProgramHelper : angle::NonCopyable
         const GraphicsPipelineDesc &pipelineDesc,
         const gl::AttributesMask &activeAttribLocationsMask,
         const gl::ComponentTypeMask &programAttribsTypeMask,
+        const gl::DrawBufferMask &missingOutputsMask,
         const GraphicsPipelineDesc **descPtrOut,
         PipelineHelper **pipelineOut)
     {
@@ -2628,8 +2629,8 @@ class ShaderProgramHelper : angle::NonCopyable
 
         return mGraphicsPipelines.getPipeline(
             contextVk, pipelineCache, *compatibleRenderPass, pipelineLayout,
-            activeAttribLocationsMask, programAttribsTypeMask, mShaders, mSpecializationConstants,
-            pipelineDesc, descPtrOut, pipelineOut);
+            activeAttribLocationsMask, programAttribsTypeMask, missingOutputsMask, mShaders,
+            mSpecializationConstants, pipelineDesc, descPtrOut, pipelineOut);
     }
 
     angle::Result getComputePipeline(Context *context,

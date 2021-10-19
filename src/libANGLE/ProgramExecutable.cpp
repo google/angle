@@ -1246,10 +1246,12 @@ bool ProgramExecutable::linkValidateOutputVariables(
         }
     }
 
-    if (fragmentShaderVersion == 100)
-        return true;
-
     mOutputVariables = outputVariables;
+
+    if (fragmentShaderVersion == 100)
+    {
+        return true;
+    }
 
     // EXT_blend_func_extended doesn't specify anything related to binding specific elements of an
     // output array in explicit terms.
