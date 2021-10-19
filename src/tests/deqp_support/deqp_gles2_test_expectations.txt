@@ -364,9 +364,9 @@
 6534 MAC METAL AMD : dEQP-GLES2.functional.texture.vertex.cube.filtering.nearest_mipmap_linear* = FAIL
 6534 MAC METAL AMD : dEQP-GLES2.functional.texture.vertex.cube.filtering.nearest_mipmap_nearest_linear* = FAIL
 6534 MAC METAL AMD : dEQP-GLES2.functional.texture.vertex.cube.wrap.* = FAIL
-6466 MAC METAL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip = FAIL
-6466 MAC METAL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_center = FAIL
-6466 MAC METAL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
+6589 MAC METAL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip = FAIL
+6589 MAC METAL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_center = FAIL
+6589 MAC METAL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
 5206 MAC METAL : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgb_half_float_oes = FAIL
 5206 MAC METAL : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgba_half_float_oes = FAIL
 

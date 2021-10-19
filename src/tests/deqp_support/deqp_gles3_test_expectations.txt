@@ -674,9 +674,9 @@
 6467 MAC METAL : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_y_linear = FAIL
 
 // Wide point out of clip space issue on AMD
-6467 MAC METAL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip = FAIL
-6467 MAC METAL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_center = FAIL
-6467 MAC METAL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
+6589 MAC METAL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip = FAIL
+6589 MAC METAL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_center = FAIL
+6589 MAC METAL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
 
 // Polygon offset bug
 6467 MAC METAL : dEQP-GLES3.functional.polygon_offset.fixed16_render_with_units = FAIL
