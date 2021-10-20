@@ -103,10 +103,6 @@
 6180 WIN : TransformFeedbackTest.BufferOutOfMemory/* = FLAKY
 6180 : VertexAttributeTestES3.DrawWithUnalignedData/* = FLAKY
 
-6180 : UniformBufferTest.BlockArrayContainingArrayOfStructs/* = FAIL
-6180 : UniformBufferTest.ManyBlocks/* = FAIL
-
-
 # Skip because crashes
 6313 : CopyTextureTestES3.InvalidateBlitThenBlend1000Layers/* = CRASH
 6313 : CopyTextureTestES3.InvalidateBlitThenBlend3Layers/* = CRASH
