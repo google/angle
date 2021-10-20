@@ -118,42 +118,6 @@
 6533 ANDROID : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
 6533 ANDROID : dEQP-EGL.functional.native_coord_mapping.native_window.* = SKIP
 
-// Nexus 5x failures
-6527 NEXUS5X : dEQP-EGL.functional.buffer_age.* = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_red_value = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_green_value = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_blue_value = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_red_value = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_green_value = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_blue_value = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.color_clears.multi_context.* = SKIP
-6527 NEXUS5X : dEQP-EGL.functional.color_clears.single_context.* = SKIP
-6527 NEXUS5X : dEQP-EGL.functional.negative_api.copy_buffers = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.partial_update.odd_clear_* = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.partial_update.odd_render_* = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.partial_update.render_* = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.render.multi_context.* = SKIP
-6527 NEXUS5X : dEQP-EGL.functional.render.single_context.* = SKIP
-6527 NEXUS5X : dEQP-EGL.functional.thread_cleanup.multi_context_* = SKIP
-6527 NEXUS5X : dEQP-EGL.functional.thread_cleanup.single_context_* = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.query_context.get_current_context.* = SKIP
-6527 NEXUS5X : dEQP-EGL.functional.query_context.get_current_display.* = SKIP
-6527 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.r* = FAIL
-6527 NEXUS5X : dEQP-EGL.functional.query_context.query_context.* = SKIP
-
-// Nexus 5x Vulkan
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.image.create.gles2_renderbuffer_depth16_depth_buffer = SKIP
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.image.create.gles2_renderbuffer_stencil_stencil_buffer = SKIP
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.image.modify.renderbuffer_depth16_renderbuffer_clear_depth = SKIP
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.image.modify.renderbuffer_stencil_renderbuffer_clear_stencil = SKIP
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_renderbuffer_depth16_depth_buffer = SKIP
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_renderbuffer_stencil_stencil_buffer = SKIP
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.create_surface.window.other = SKIP
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.query_context.get_current_surface.other = SKIP
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.query_surface.set_attribute.window.other = SKIP
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.query_surface.simple.window.other = SKIP
-6527 NEXUS5X VULKAN : dEQP-EGL.functional.resize.pixel_density.* = SKIP
-
 // Android Vulkan
 6277 ANDROID VULKAN : dEQP-EGL.functional.image.api.create_image_gles2_android_native_rgb8 = FAIL
 6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles2_android_native_rgb8_read_pixels = FAIL
@@ -192,40 +156,6 @@
 // Very slow on Vulkan Linux
 5170 VULKAN LINUX : dEQP-EGL.functional.swap_buffers_with_damage.resize_after_swap.* = SKIP
 5170 VULKAN LINUX : dEQP-EGL.functional.swap_buffers_with_damage.resize_before_swap.* = SKIP
-
-// AddressSanitizer:DEADLYSIGNAL on Nexus 5X
-5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb565_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb565_no_depth_no_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb565_no_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb888_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb888_no_depth_no_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb888_no_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_context.rgba4444_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_context.rgba4444_no_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_context.rgba8888_no_depth_no_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_surface.pbuffer.rgb888_depth_no_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_surface.platform_ext_window.rgb888_no_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_surface.platform_ext_window.rgba8888_no_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_surface.window.other = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_surface.window.rgb565_no_depth_no_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_surface.window.rgb888_no_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_surface.window.rgba4444_no_depth_no_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.create_surface.window.rgba8888_depth_no_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgb565_pbuffer = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgb565_pixmap = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgb565_window = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgb888_pbuffer = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgb888_pixmap = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgba4444_pbuffer = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgba8888_window = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_surface.simple.window.rgb565_depth_no_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_surface.simple.window.rgb565_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_surface.simple.window.rgb565_no_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.query_surface.simple.window.rgb888_no_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb565_depth_no_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb565_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb565_no_depth_stencil = SKIP
-5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb888_no_depth_stencil = SKIP
 
 //// Metal
 

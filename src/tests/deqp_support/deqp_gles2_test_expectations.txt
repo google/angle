@@ -48,9 +48,6 @@
 3467 D3D9 : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 3467 D3D11 : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = FAIL
 
-// Shader failures.
-3434 NEXUS5X GLES : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_* = FAIL
-
 // The fragment_ops.depth_stencil.random tests all seem to fail on D3D11.
 3282 D3D11 : dEQP-GLES2.functional.fragment_ops.depth_stencil.random.* = FAIL
 
@@ -221,25 +218,6 @@
 //2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = FAIL
 //2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = FAIL
 
-// Nexus 5x failures
-3309 NEXUS5X GLES : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = FAIL
-3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
-3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_short = FAIL
-3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_stencil_unsigned_int_24_8 = FAIL
-3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.depth_stencil_unsigned_int_24_8 = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.after_render_tex2d_rgb = FAIL
-3715 NEXUS5X GLES : dEQP-GLES2.functional.shaders.builtin_variable.max_draw_buffers_vertex = FAIL
-3715 NEXUS5X GLES : dEQP-GLES2.functional.shaders.builtin_variable.max_draw_buffers_fragment = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.shaders.return.output_write_in_func_always_vertex = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.shaders.return.output_write_in_func_always_fragment = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.texture.mipmap.cube.* = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_* = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.texture.vertex.cube.wrap.clamp_* = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.texture.vertex.cube.wrap.mirror_* = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.uniform_api.random.3 = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.uniform_api.random.54 = FAIL
-
 // D3D11 AMD already covered by Line 148
 3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL
 3243 D3D11 INTEL : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_linear = FAIL
@@ -403,49 +381,6 @@
 4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_depthbuffer.no_rebind_rbo_rgba4_depth_component16 = FAIL
 4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.rebind_rbo_rgba4_stencil_index8 = FAIL
 4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_rbo_rgba4_stencil_index8 = FAIL
-
-// Fails on N5X for unknown test ordering reasons.
-5169 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.after_render_tex2d_rgba = FAIL
-5169 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.between_render_tex2d_rgb = FAIL
-5169 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.between_render_tex2d_rgba = FAIL
-
-// AddressSanitizer:DEADLYSIGNAL on Nexus 5X
-5665 NEXUS5X : dEQP-GLES2.functional.clip_control.depth_mode_one_to_one = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.clip_control.depth_mode_zero_to_one = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.clip_control.errors = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.clip_control.face_culling = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.clip_control.initial = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.clip_control.modify_get = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.clip_control.origin = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.clip_control.viewport_bounds = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_rbo_none_tex = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_rbo_rbo_tex = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgb_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.rebind_tex2d_rgb_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.resize.rbo_rgb565_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.resize.tex2d_rgba_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.resize.tex2d_rgb_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.rbo_rgb565_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.tex2d_rgba_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.tex2d_rgb_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_depthbuffer.rbo_rgb565_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_depthbuffer.rbo_rgb5_a1_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_depthbuffer.rbo_rgba4_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_depthbuffer.tex2d_rgb_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.stencil_clear.tex2d_rgb_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.stencil.rbo_rgb5_a1_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.stencil.tex2d_rgba_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.stencil.tex2d_rgb_depth_component16_stencil_index8 = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.multisample.common_edge_big_quad = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.multisample.common_edge_small_quads = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.multisample.num_samples_line = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.multisample.num_samples_polygon = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.multisample.stencil = SKIP
-// TODO: Uncomment suppression for anglebug.com/2630 when this one is lifted
-5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_fragment = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_vertex = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_fragment = SKIP
-5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_vertex = SKIP
 
 // Pixel 4 test expectations.
 5990 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.attribute_location.bind.float = SKIP
