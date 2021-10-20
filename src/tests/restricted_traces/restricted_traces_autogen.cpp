@@ -121,7 +121,7 @@ namespace trace_angle
 {
 namespace
 {
-constexpr size_t kNumTraces = 107;
+constexpr size_t kNumTraces = 108;
 struct TracePair
 {
     const char name[kTraceInfoMaxNameLen];
@@ -2418,7 +2418,8 @@ constexpr TracePair kTraceInfos[kNumTraces] = {
       false,
       false,
       false,
-      false}}};
+      false}},
+    {"zillow", {}}};
 }  // namespace
 
 const TraceInfo &GetTraceInfo(const char *traceName)
