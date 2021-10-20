@@ -1125,7 +1125,7 @@ TEST_P(ColorMaskForDrawBuffersTest, Clear)
     // Clear attachment1. Buffer0 should retain red and buffer1 should be blue
     drawBuffers[1] = GL_COLOR_ATTACHMENT1;
     setDrawBuffers(4, drawBuffers);
-    GLfloat *clearColor = GLColor::blue.toNormalizedVector().data();
+    angle::Vector4 clearColor = GLColor::blue.toNormalizedVector();
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
     glClear(GL_COLOR_BUFFER_BIT);
     verifyAttachment2DColor(0, mTextures[0], GL_TEXTURE_2D, 0, GLColor::red);
@@ -1142,14 +1142,14 @@ TEST_P(ColorMaskForDrawBuffersTest, ScissoredClear)
     // Clear attachment1. Buffer0 should retain red and buffer1 should be blue
     drawBuffers[1] = GL_COLOR_ATTACHMENT1;
     setDrawBuffers(4, drawBuffers);
-    GLfloat *clearColor = GLColor::blue.toNormalizedVector().data();
+    angle::Vector4 clearColor = GLColor::blue.toNormalizedVector();
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
     glScissor(0, 0, getWindowWidth() / 2, getWindowHeight() / 2);
     glEnable(GL_SCISSOR_TEST);
     glClear(GL_COLOR_BUFFER_BIT);
 
     resetDrawBuffers();
-    clearColor = GLColor::magenta.toNormalizedVector().data();
+    clearColor = GLColor::magenta.toNormalizedVector();
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
     glScissor(getWindowWidth() / 2, 0, getWindowWidth() / 2, getWindowHeight() / 2);
     glClear(GL_COLOR_BUFFER_BIT);
