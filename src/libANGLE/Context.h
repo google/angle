@@ -369,8 +369,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                            egl::Surface *readSurface);
     egl::Error unMakeCurrent(const egl::Display *display);
 
-    // These create  and destroy methods are merely pass-throughs to
-    // ResourceManager, which owns these object types
+    // These create and destroy methods pass through to ResourceManager, which owns these objects.
     BufferID createBuffer();
     TextureID createTexture();
     RenderbufferID createRenderbuffer();
@@ -640,8 +639,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     angle::Result syncState(const State::DirtyBits &bitMask,
                             const State::DirtyObjects &objectMask,
                             Command command);
-    angle::Result syncDirtyBits();
-    angle::Result syncDirtyBits(const State::DirtyBits &bitMask);
+    angle::Result syncDirtyBits(Command command);
+    angle::Result syncDirtyBits(const State::DirtyBits &bitMask, Command command);
     angle::Result syncDirtyObjects(const State::DirtyObjects &objectMask, Command command);
     angle::Result syncStateForReadPixels();
     angle::Result syncStateForTexImage();
