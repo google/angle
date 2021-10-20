@@ -1154,19 +1154,18 @@ void MaybeResetOpaqueTypeObjects(std::stringstream &out,
     MaybeResetFenceSyncObjects(out, dataTracker, header, resourceTracker, binaryData);
 }
 
-bool FindShaderProgramIDInCall(const CallCapture &call, gl::ShaderProgramID *idOut)
+bool FindShaderProgramIDsInCall(const CallCapture &call, std::vector<gl::ShaderProgramID> &idsOut)
 {
     for (const ParamCapture &param : call.params.getParamCaptures())
     {
         // Only checking for programs right now, but could be expanded to all ResourceTypes
         if (param.type == ParamType::TShaderProgramID)
         {
-            *idOut = param.value.ShaderProgramIDVal;
-            return true;
+            idsOut.push_back(param.value.ShaderProgramIDVal);
         }
     }
 
-    return false;
+    return !idsOut.empty();
 }
 
 void MarkResourceIDActive(ResourceIDType resourceType,
@@ -5295,16 +5294,19 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
 
     updateReadBufferSize(call.params.getReadBufferSize());
 
-    gl::ShaderProgramID shaderProgramID;
-    if (FindShaderProgramIDInCall(call, &shaderProgramID))
+    std::vector<gl::ShaderProgramID> shaderProgramIDs;
+    if (FindShaderProgramIDsInCall(call, shaderProgramIDs))
     {
-        mResourceTracker.onShaderProgramAccess(shaderProgramID);
-
-        if (isCaptureActive())
+        for (gl::ShaderProgramID shaderProgramID : shaderProgramIDs)
         {
-            // Track that this call referenced a ShaderProgram, setting it active for Setup
-            MarkResourceIDActive(ResourceIDType::ShaderProgram, shaderProgramID.value,
-                                 shareGroupSetupCalls, resourceIDToSetupCalls);
+            mResourceTracker.onShaderProgramAccess(shaderProgramID);
+
+            if (isCaptureActive())
+            {
+                // Track that this call referenced a ShaderProgram, setting it active for Setup
+                MarkResourceIDActive(ResourceIDType::ShaderProgram, shaderProgramID.value,
+                                     shareGroupSetupCalls, resourceIDToSetupCalls);
+            }
         }
     }
 
@@ -6983,10 +6985,11 @@ void WriteParamValueReplay<ParamType::TUniformLocation>(std::ostream &os,
     os << "gUniformLocations2[";
 
     // Find the program from the call parameters.
-    gl::ShaderProgramID programID;
-    if (FindShaderProgramIDInCall(call, &programID))
+    std::vector<gl::ShaderProgramID> programIDs;
+    if (FindShaderProgramIDsInCall(call, programIDs))
     {
-        os << "gShaderProgramMap2[" << programID.value << "]";
+        ASSERT(programIDs.size() == 1);
+        os << "gShaderProgramMap2[" << programIDs[0].value << "]";
     }
     else
     {
@@ -7002,11 +7005,11 @@ void WriteParamValueReplay<ParamType::TUniformBlockIndex>(std::ostream &os,
                                                           gl::UniformBlockIndex value)
 {
     // Find the program from the call parameters.
-    gl::ShaderProgramID programID;
-    bool foundProgram = FindShaderProgramIDInCall(call, &programID);
-    ASSERT(foundProgram);
+    std::vector<gl::ShaderProgramID> programIDs;
+    bool foundProgram = FindShaderProgramIDsInCall(call, programIDs);
+    ASSERT(foundProgram && programIDs.size() == 1);
 
-    os << "gUniformBlockIndexes[gShaderProgramMap2[" << programID.value << "]][" << value.value
+    os << "gUniformBlockIndexes[gShaderProgramMap2[" << programIDs[0].value << "]][" << value.value
        << "]";
 }
 
