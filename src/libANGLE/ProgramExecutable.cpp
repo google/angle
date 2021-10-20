@@ -75,19 +75,12 @@ ProgramExecutable::ProgramExecutable()
       mSamplerUniformRange(0, 0),
       mImageUniformRange(0, 0),
       mFragmentInoutRange(0, 0),
-      mPipelineHasGraphicsUniformBuffers(false),
-      mPipelineHasComputeUniformBuffers(false),
-      mPipelineHasGraphicsStorageBuffers(false),
-      mPipelineHasComputeStorageBuffers(false),
-      mPipelineHasGraphicsAtomicCounterBuffers(false),
-      mPipelineHasComputeAtomicCounterBuffers(false),
-      mPipelineHasGraphicsDefaultUniforms(false),
-      mPipelineHasComputeDefaultUniforms(false),
-      mPipelineHasGraphicsTextures(false),
-      mPipelineHasComputeTextures(false),
-      mPipelineHasGraphicsImages(false),
-      mPipelineHasComputeImages(false),
-      mIsCompute(false),
+      mPipelineHasUniformBuffers(false),
+      mPipelineHasStorageBuffers(false),
+      mPipelineHasAtomicCounterBuffers(false),
+      mPipelineHasDefaultUniforms(false),
+      mPipelineHasTextures(false),
+      mPipelineHasImages(false),
       // [GL_EXT_geometry_shader] Table 20.22
       mGeometryShaderInputPrimitiveType(PrimitiveMode::Triangles),
       mGeometryShaderOutputPrimitiveType(PrimitiveMode::TriangleStrip),
@@ -103,8 +96,7 @@ ProgramExecutable::ProgramExecutable()
 }
 
 ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
-    : mLinkedGraphicsShaderStages(other.mLinkedGraphicsShaderStages),
-      mLinkedComputeShaderStages(other.mLinkedComputeShaderStages),
+    : mLinkedShaderStages(other.mLinkedShaderStages),
       mActiveAttribLocationsMask(other.mActiveAttribLocationsMask),
       mMaxActiveAttribLocation(other.mMaxActiveAttribLocation),
       mAttributesTypeMask(other.mAttributesTypeMask),
@@ -133,22 +125,14 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mActiveUniformBlockBindings(other.mActiveUniformBlockBindings),
       mAtomicCounterBuffers(other.mAtomicCounterBuffers),
       mImageUniformRange(other.mImageUniformRange),
-      mComputeShaderStorageBlocks(other.mComputeShaderStorageBlocks),
-      mGraphicsShaderStorageBlocks(other.mGraphicsShaderStorageBlocks),
+      mShaderStorageBlocks(other.mShaderStorageBlocks),
       mFragmentInoutRange(other.mFragmentInoutRange),
-      mPipelineHasGraphicsUniformBuffers(other.mPipelineHasGraphicsUniformBuffers),
-      mPipelineHasComputeUniformBuffers(other.mPipelineHasComputeUniformBuffers),
-      mPipelineHasGraphicsStorageBuffers(other.mPipelineHasGraphicsStorageBuffers),
-      mPipelineHasComputeStorageBuffers(other.mPipelineHasComputeStorageBuffers),
-      mPipelineHasGraphicsAtomicCounterBuffers(other.mPipelineHasGraphicsAtomicCounterBuffers),
-      mPipelineHasComputeAtomicCounterBuffers(other.mPipelineHasComputeAtomicCounterBuffers),
-      mPipelineHasGraphicsDefaultUniforms(other.mPipelineHasGraphicsDefaultUniforms),
-      mPipelineHasComputeDefaultUniforms(other.mPipelineHasComputeDefaultUniforms),
-      mPipelineHasGraphicsTextures(other.mPipelineHasGraphicsTextures),
-      mPipelineHasComputeTextures(other.mPipelineHasComputeTextures),
-      mPipelineHasGraphicsImages(other.mPipelineHasGraphicsImages),
-      mPipelineHasComputeImages(other.mPipelineHasComputeImages),
-      mIsCompute(other.mIsCompute)
+      mPipelineHasUniformBuffers(other.mPipelineHasUniformBuffers),
+      mPipelineHasStorageBuffers(other.mPipelineHasStorageBuffers),
+      mPipelineHasAtomicCounterBuffers(other.mPipelineHasAtomicCounterBuffers),
+      mPipelineHasDefaultUniforms(other.mPipelineHasDefaultUniforms),
+      mPipelineHasTextures(other.mPipelineHasTextures),
+      mPipelineHasImages(other.mPipelineHasImages)
 {
     reset();
 }
@@ -177,27 +161,20 @@ void ProgramExecutable::reset()
     mUniforms.clear();
     mUniformBlocks.clear();
     mActiveUniformBlockBindings.reset();
-    mComputeShaderStorageBlocks.clear();
-    mGraphicsShaderStorageBlocks.clear();
+    mShaderStorageBlocks.clear();
     mAtomicCounterBuffers.clear();
     mOutputVariables.clear();
     mOutputLocations.clear();
     mSecondaryOutputLocations.clear();
     mYUVOutput = false;
     mSamplerBindings.clear();
-    mComputeImageBindings.clear();
-    mGraphicsImageBindings.clear();
+    mImageBindings.clear();
 
-    mPipelineHasGraphicsUniformBuffers       = false;
-    mPipelineHasComputeUniformBuffers        = false;
-    mPipelineHasGraphicsStorageBuffers       = false;
-    mPipelineHasComputeStorageBuffers        = false;
-    mPipelineHasGraphicsAtomicCounterBuffers = false;
-    mPipelineHasComputeAtomicCounterBuffers  = false;
-    mPipelineHasGraphicsDefaultUniforms      = false;
-    mPipelineHasComputeDefaultUniforms       = false;
-    mPipelineHasGraphicsTextures             = false;
-    mPipelineHasComputeTextures              = false;
+    mPipelineHasUniformBuffers       = false;
+    mPipelineHasStorageBuffers       = false;
+    mPipelineHasAtomicCounterBuffers = false;
+    mPipelineHasDefaultUniforms      = false;
+    mPipelineHasTextures             = false;
 
     mGeometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
     mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
@@ -225,20 +202,13 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     unsigned int fragmentInoutRangeHigh = stream->readInt<uint32_t>();
     mFragmentInoutRange                 = RangeUI(fragmentInoutRangeLow, fragmentInoutRangeHigh);
 
-    mLinkedGraphicsShaderStages = ShaderBitSet(stream->readInt<uint8_t>());
-    mLinkedComputeShaderStages  = ShaderBitSet(stream->readInt<uint8_t>());
-    mIsCompute                  = stream->readBool();
+    mLinkedShaderStages = ShaderBitSet(stream->readInt<uint8_t>());
 
-    mPipelineHasGraphicsUniformBuffers       = stream->readBool();
-    mPipelineHasComputeUniformBuffers        = stream->readBool();
-    mPipelineHasGraphicsStorageBuffers       = stream->readBool();
-    mPipelineHasComputeStorageBuffers        = stream->readBool();
-    mPipelineHasGraphicsAtomicCounterBuffers = stream->readBool();
-    mPipelineHasComputeAtomicCounterBuffers  = stream->readBool();
-    mPipelineHasGraphicsDefaultUniforms      = stream->readBool();
-    mPipelineHasComputeDefaultUniforms       = stream->readBool();
-    mPipelineHasGraphicsTextures             = stream->readBool();
-    mPipelineHasComputeTextures              = stream->readBool();
+    mPipelineHasUniformBuffers       = stream->readBool();
+    mPipelineHasStorageBuffers       = stream->readBool();
+    mPipelineHasAtomicCounterBuffers = stream->readBool();
+    mPipelineHasDefaultUniforms      = stream->readBool();
+    mPipelineHasTextures             = stream->readBool();
 
     mGeometryShaderInputPrimitiveType  = stream->readEnum<PrimitiveMode>();
     mGeometryShaderOutputPrimitiveType = stream->readEnum<PrimitiveMode>();
@@ -302,14 +272,7 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     {
         InterfaceBlock shaderStorageBlock;
         LoadInterfaceBlock(stream, &shaderStorageBlock);
-        if (isCompute())
-        {
-            mComputeShaderStorageBlocks.push_back(shaderStorageBlock);
-        }
-        else
-        {
-            mGraphicsShaderStorageBlocks.push_back(shaderStorageBlock);
-        }
+        mShaderStorageBlocks.push_back(shaderStorageBlock);
     }
 
     size_t atomicCounterBufferCount = stream->readInt<size_t>();
@@ -405,45 +368,14 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         {
             imageBinding.boundImageUnits[elementIndex] = stream->readInt<unsigned int>();
         }
-        if (isCompute())
-        {
-            mComputeImageBindings.emplace_back(imageBinding);
-        }
-        else
-        {
-            mGraphicsImageBindings.emplace_back(imageBinding);
-        }
+        mImageBindings.emplace_back(imageBinding);
     }
 
     // These values are currently only used by PPOs, so only load them when the program is marked
     // separable to save memory.
     if (isSeparable)
     {
-        for (ShaderType shaderType : mLinkedGraphicsShaderStages)
-        {
-            mLinkedOutputVaryings[shaderType].resize(stream->readInt<size_t>());
-            for (sh::ShaderVariable &variable : mLinkedOutputVaryings[shaderType])
-            {
-                LoadShaderVar(stream, &variable);
-            }
-            mLinkedInputVaryings[shaderType].resize(stream->readInt<size_t>());
-            for (sh::ShaderVariable &variable : mLinkedInputVaryings[shaderType])
-            {
-                LoadShaderVar(stream, &variable);
-            }
-            mLinkedUniforms[shaderType].resize(stream->readInt<size_t>());
-            for (sh::ShaderVariable &variable : mLinkedUniforms[shaderType])
-            {
-                LoadShaderVar(stream, &variable);
-            }
-            mLinkedUniformBlocks[shaderType].resize(stream->readInt<size_t>());
-            for (sh::InterfaceBlock &shaderStorageBlock : mLinkedUniformBlocks[shaderType])
-            {
-                LoadShInterfaceBlock(stream, &shaderStorageBlock);
-            }
-            mLinkedShaderVersions[shaderType] = stream->readInt<int>();
-        }
-        for (ShaderType shaderType : mLinkedComputeShaderStages)
+        for (ShaderType shaderType : mLinkedShaderStages)
         {
             mLinkedOutputVaryings[shaderType].resize(stream->readInt<size_t>());
             for (sh::ShaderVariable &variable : mLinkedOutputVaryings[shaderType])
@@ -482,20 +414,13 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
     stream->writeInt(mFragmentInoutRange.low());
     stream->writeInt(mFragmentInoutRange.high());
 
-    stream->writeInt(mLinkedGraphicsShaderStages.bits());
-    stream->writeInt(mLinkedComputeShaderStages.bits());
-    stream->writeBool(mIsCompute);
+    stream->writeInt(mLinkedShaderStages.bits());
 
-    stream->writeBool(mPipelineHasGraphicsUniformBuffers);
-    stream->writeBool(mPipelineHasComputeUniformBuffers);
-    stream->writeBool(mPipelineHasGraphicsStorageBuffers);
-    stream->writeBool(mPipelineHasComputeStorageBuffers);
-    stream->writeBool(mPipelineHasGraphicsAtomicCounterBuffers);
-    stream->writeBool(mPipelineHasComputeAtomicCounterBuffers);
-    stream->writeBool(mPipelineHasGraphicsDefaultUniforms);
-    stream->writeBool(mPipelineHasComputeDefaultUniforms);
-    stream->writeBool(mPipelineHasGraphicsTextures);
-    stream->writeBool(mPipelineHasComputeTextures);
+    stream->writeBool(mPipelineHasUniformBuffers);
+    stream->writeBool(mPipelineHasStorageBuffers);
+    stream->writeBool(mPipelineHasAtomicCounterBuffers);
+    stream->writeBool(mPipelineHasDefaultUniforms);
+    stream->writeBool(mPipelineHasTextures);
 
     ASSERT(mGeometryShaderInvocations >= 1 && mGeometryShaderMaxVertices >= 0);
     stream->writeEnum(mGeometryShaderInputPrimitiveType);
@@ -620,31 +545,7 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
     // separable to save memory.
     if (isSeparable)
     {
-        for (ShaderType shaderType : mLinkedGraphicsShaderStages)
-        {
-            stream->writeInt(mLinkedOutputVaryings[shaderType].size());
-            for (const sh::ShaderVariable &shaderVariable : mLinkedOutputVaryings[shaderType])
-            {
-                WriteShaderVar(stream, shaderVariable);
-            }
-            stream->writeInt(mLinkedInputVaryings[shaderType].size());
-            for (const sh::ShaderVariable &shaderVariable : mLinkedInputVaryings[shaderType])
-            {
-                WriteShaderVar(stream, shaderVariable);
-            }
-            stream->writeInt(mLinkedUniforms[shaderType].size());
-            for (const sh::ShaderVariable &shaderVariable : mLinkedUniforms[shaderType])
-            {
-                WriteShaderVar(stream, shaderVariable);
-            }
-            stream->writeInt(mLinkedUniformBlocks[shaderType].size());
-            for (const sh::InterfaceBlock &shaderStorageBlock : mLinkedUniformBlocks[shaderType])
-            {
-                WriteShInterfaceBlock(stream, shaderStorageBlock);
-            }
-            stream->writeInt(mLinkedShaderVersions[shaderType]);
-        }
-        for (ShaderType shaderType : mLinkedComputeShaderStages)
+        for (ShaderType shaderType : mLinkedShaderStages)
         {
             stream->writeInt(mLinkedOutputVaryings[shaderType].size());
             for (const sh::ShaderVariable &shaderVariable : mLinkedOutputVaryings[shaderType])
@@ -703,59 +604,34 @@ AttributesMask ProgramExecutable::getAttributesMask() const
 
 bool ProgramExecutable::hasDefaultUniforms() const
 {
-    return !getDefaultUniformRange().empty() ||
-           (isCompute() ? mPipelineHasComputeDefaultUniforms : mPipelineHasGraphicsDefaultUniforms);
+    return !getDefaultUniformRange().empty() || mPipelineHasDefaultUniforms;
 }
 
 bool ProgramExecutable::hasTextures() const
 {
-    return !getSamplerBindings().empty() ||
-           (isCompute() ? mPipelineHasComputeTextures : mPipelineHasGraphicsTextures);
+    return !getSamplerBindings().empty() || mPipelineHasTextures;
 }
 
 // TODO: http://anglebug.com/3570: Remove mHas*UniformBuffers once PPO's have valid data in
 // mUniformBlocks
 bool ProgramExecutable::hasUniformBuffers() const
 {
-    return !getUniformBlocks().empty() ||
-           (isCompute() ? mPipelineHasComputeUniformBuffers : mPipelineHasGraphicsUniformBuffers);
+    return !mUniformBlocks.empty() || mPipelineHasUniformBuffers;
 }
 
 bool ProgramExecutable::hasStorageBuffers() const
 {
-    return (isCompute() ? hasComputeStorageBuffers() : hasGraphicsStorageBuffers());
-}
-
-bool ProgramExecutable::hasGraphicsStorageBuffers() const
-{
-    return !mGraphicsShaderStorageBlocks.empty() || mPipelineHasGraphicsStorageBuffers;
-}
-
-bool ProgramExecutable::hasComputeStorageBuffers() const
-{
-    return !mComputeShaderStorageBlocks.empty() || mPipelineHasComputeStorageBuffers;
+    return !mShaderStorageBlocks.empty() || mPipelineHasStorageBuffers;
 }
 
 bool ProgramExecutable::hasAtomicCounterBuffers() const
 {
-    return !getAtomicCounterBuffers().empty() ||
-           (isCompute() ? mPipelineHasComputeAtomicCounterBuffers
-                        : mPipelineHasGraphicsAtomicCounterBuffers);
+    return !mAtomicCounterBuffers.empty() || mPipelineHasAtomicCounterBuffers;
 }
 
 bool ProgramExecutable::hasImages() const
 {
-    return (isCompute() ? hasComputeImages() : hasGraphicsImages());
-}
-
-bool ProgramExecutable::hasGraphicsImages() const
-{
-    return !mGraphicsImageBindings.empty() || mPipelineHasGraphicsImages;
-}
-
-bool ProgramExecutable::hasComputeImages() const
-{
-    return !mComputeImageBindings.empty() || mPipelineHasComputeImages;
+    return !mImageBindings.empty() || mPipelineHasImages;
 }
 
 bool ProgramExecutable::usesFramebufferFetch() const
@@ -823,14 +699,7 @@ void ProgramExecutable::updateActiveImages(const ProgramExecutable &executable)
         for (GLint imageUnit : imageBinding.boundImageUnits)
         {
             mActiveImagesMask.set(imageUnit);
-            if (isCompute())
-            {
-                mActiveImageShaderBits[imageUnit].set(gl::ShaderType::Compute);
-            }
-            else
-            {
-                mActiveImageShaderBits[imageUnit] |= shaderBits;
-            }
+            mActiveImageShaderBits[imageUnit] |= shaderBits;
         }
     }
 }
@@ -904,12 +773,12 @@ void ProgramExecutable::saveLinkedStateInfo(const ProgramState &state)
 
 bool ProgramExecutable::isYUVOutput() const
 {
-    return !isCompute() && mYUVOutput;
+    return mYUVOutput;
 }
 
 ShaderType ProgramExecutable::getLinkedTransformFeedbackStage() const
 {
-    return GetLastPreFragmentStage(mLinkedGraphicsShaderStages);
+    return GetLastPreFragmentStage(mLinkedShaderStages);
 }
 
 bool ProgramExecutable::linkMergedVaryings(

@@ -4115,10 +4115,6 @@ ANGLE_INLINE angle::Result Context::prepareForCopyImage()
 
 ANGLE_INLINE angle::Result Context::prepareForDispatch()
 {
-    // We always assume PPOs are used for draws, until they aren't. If we are executing a dispatch
-    // with a PPO, we need to convert it from a "draw"-type to "dispatch"-type.
-    convertPpoToComputeOrDraw(true);
-
     // Converting a PPO from graphics to compute requires re-linking it.
     // The compute shader must have successfully linked before being included in the PPO, so no link
     // errors that would have been caught during validation should be possible when re-linking the
@@ -6376,36 +6372,9 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
     // before convertPpoToComputeOrDraw() reverts the PPO back to graphics.
     MarkShaderStorageUsage(this);
 
-    // We always assume PPOs are used for draws, until they aren't. If we just executed a dispatch
-    // with a PPO, we need to convert it back to a "draw"-type.
-    // We don't re-link the PPO again, since it's possible for that link to generate validation
-    // errors due to bad VS/FS, and we want to catch those errors during validation of the draw
-    // command: 11.1.3.11 Validation It is not always possible to determine at link time if a
-    // program object can execute successfully, given that LinkProgram can not know the state of the
-    // remainder of the pipeline. Therefore validation is done when the first rendering command
-    // which triggers shader invocations is issued, to determine if the set of active program
-    // objects can be executed.
-    convertPpoToComputeOrDraw(false);
-
     if (ANGLE_UNLIKELY(IsError(result)))
     {
         return;
-    }
-}
-
-void Context::convertPpoToComputeOrDraw(bool isCompute)
-{
-    Program *program          = mState.getProgram();
-    ProgramPipeline *pipeline = mState.getProgramPipeline();
-    if (!program && pipeline)
-    {
-        pipeline->getExecutable().setIsCompute(isCompute);
-        pipeline->resetIsLinked();
-
-        // The PPO's isCompute() has changed, so its ProgramExecutable will produce different
-        // results for things like getShaderStorageBlocks() or getImageBindings().
-        mState.mDirtyBits.set(State::DirtyBitType::DIRTY_BIT_PROGRAM_EXECUTABLE);
-        mStateCache.onProgramExecutableChange(this);
     }
 }
 

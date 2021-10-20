@@ -124,51 +124,25 @@ class ProgramExecutable final : public angle::Subject
     std::string getInfoLogString() const;
     void resetInfoLog() { mInfoLog.reset(); }
 
-    void resetLinkedShaderStages()
-    {
-        mLinkedComputeShaderStages.reset();
-        mLinkedGraphicsShaderStages.reset();
-    }
-    const ShaderBitSet &getLinkedShaderStages() const
-    {
-        return isCompute() ? mLinkedComputeShaderStages : mLinkedGraphicsShaderStages;
-    }
+    void resetLinkedShaderStages() { mLinkedShaderStages.reset(); }
+    const ShaderBitSet &getLinkedShaderStages() const { return mLinkedShaderStages; }
     void setLinkedShaderStages(ShaderType shaderType)
     {
-        if (shaderType == ShaderType::Compute)
-        {
-            mLinkedComputeShaderStages.set(ShaderType::Compute);
-        }
-        else
-        {
-            mLinkedGraphicsShaderStages.set(shaderType);
-        }
-
+        mLinkedShaderStages.set(shaderType);
         updateCanDrawWith();
     }
     bool hasLinkedShaderStage(ShaderType shaderType) const
     {
         ASSERT(shaderType != ShaderType::InvalidEnum);
-        return (shaderType == ShaderType::Compute) ? mLinkedComputeShaderStages[shaderType]
-                                                   : mLinkedGraphicsShaderStages[shaderType];
+        return mLinkedShaderStages[shaderType];
     }
-    size_t getLinkedShaderStageCount() const
-    {
-        return isCompute() ? mLinkedComputeShaderStages.count()
-                           : mLinkedGraphicsShaderStages.count();
-    }
+    size_t getLinkedShaderStageCount() const { return mLinkedShaderStages.count(); }
     bool hasLinkedTessellationShader() const
     {
-        return mLinkedGraphicsShaderStages[ShaderType::TessControl] ||
-               mLinkedGraphicsShaderStages[ShaderType::TessEvaluation];
+        return mLinkedShaderStages[ShaderType::TessEvaluation];
     }
 
     ShaderType getLinkedTransformFeedbackStage() const;
-
-    // A PPO can have both graphics and compute programs attached, so
-    // we don't know if the PPO is a 'graphics' or 'compute' PPO until the
-    // actual draw/dispatch call.
-    void setIsCompute(bool isCompute) { mIsCompute = isCompute; }
 
     const AttributesMask &getActiveAttribLocationsMask() const
     {
@@ -210,12 +184,8 @@ class ProgramExecutable final : public angle::Subject
     bool hasTextures() const;
     bool hasUniformBuffers() const;
     bool hasStorageBuffers() const;
-    bool hasGraphicsStorageBuffers() const;
-    bool hasComputeStorageBuffers() const;
     bool hasAtomicCounterBuffers() const;
     bool hasImages() const;
-    bool hasGraphicsImages() const;
-    bool hasComputeImages() const;
     bool hasTransformFeedbackOutput() const
     {
         return !getLinkedTransformFeedbackVaryings().empty();
@@ -242,14 +212,8 @@ class ProgramExecutable final : public angle::Subject
         return mActiveUniformBlockBindings;
     }
     const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
-    const std::vector<ImageBinding> &getImageBindings() const
-    {
-        return isCompute() ? mComputeImageBindings : mGraphicsImageBindings;
-    }
-    std::vector<ImageBinding> *getImageBindings()
-    {
-        return isCompute() ? &mComputeImageBindings : &mGraphicsImageBindings;
-    }
+    const std::vector<ImageBinding> &getImageBindings() const { return mImageBindings; }
+    std::vector<ImageBinding> *getImageBindings() { return &mImageBindings; }
     const RangeUI &getDefaultUniformRange() const { return mDefaultUniformRange; }
     const RangeUI &getSamplerUniformRange() const { return mSamplerUniformRange; }
     const RangeUI &getImageUniformRange() const { return mImageUniformRange; }
@@ -266,10 +230,8 @@ class ProgramExecutable final : public angle::Subject
     }
     GLuint getShaderStorageBlockBinding(GLuint blockIndex) const
     {
-        ASSERT((isCompute() && (blockIndex < mComputeShaderStorageBlocks.size())) ||
-               (!isCompute() && (blockIndex < mGraphicsShaderStorageBlocks.size())));
-        return isCompute() ? mComputeShaderStorageBlocks[blockIndex].binding
-                           : mGraphicsShaderStorageBlocks[blockIndex].binding;
+        ASSERT(blockIndex < mShaderStorageBlocks.size());
+        return mShaderStorageBlocks[blockIndex].binding;
     }
     const std::vector<GLsizei> &getTransformFeedbackStrides() const
     {
@@ -281,7 +243,7 @@ class ProgramExecutable final : public angle::Subject
     }
     const std::vector<InterfaceBlock> &getShaderStorageBlocks() const
     {
-        return isCompute() ? mComputeShaderStorageBlocks : mGraphicsShaderStorageBlocks;
+        return mShaderStorageBlocks;
     }
     const LinkedUniform &getUniformByIndex(GLuint index) const
     {
@@ -301,8 +263,7 @@ class ProgramExecutable final : public angle::Subject
 
     ANGLE_INLINE GLuint getActiveShaderStorageBlockCount() const
     {
-        size_t shaderStorageBlocksSize =
-            isCompute() ? mComputeShaderStorageBlocks.size() : mGraphicsShaderStorageBlocks.size();
+        size_t shaderStorageBlocksSize = mShaderStorageBlocks.size();
         return static_cast<GLuint>(shaderStorageBlocksSize);
     }
 
@@ -372,8 +333,6 @@ class ProgramExecutable final : public angle::Subject
     friend class ProgramPipeline;
     friend class ProgramState;
 
-    bool isCompute() const { return mIsCompute; }
-
     void updateActiveImages(const ProgramExecutable &executable);
 
     // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
@@ -404,8 +363,7 @@ class ProgramExecutable final : public angle::Subject
 
     InfoLog mInfoLog;
 
-    ShaderBitSet mLinkedGraphicsShaderStages;
-    ShaderBitSet mLinkedComputeShaderStages;
+    ShaderBitSet mLinkedShaderStages;
 
     angle::BitSet<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
     unsigned int mMaxActiveAttribLocation;
@@ -462,33 +420,23 @@ class ProgramExecutable final : public angle::Subject
 
     std::vector<AtomicCounterBuffer> mAtomicCounterBuffers;
     RangeUI mImageUniformRange;
-    std::vector<InterfaceBlock> mComputeShaderStorageBlocks;
-    std::vector<InterfaceBlock> mGraphicsShaderStorageBlocks;
+    std::vector<InterfaceBlock> mShaderStorageBlocks;
     RangeUI mFragmentInoutRange;
 
     // An array of the samplers that are used by the program
     std::vector<SamplerBinding> mSamplerBindings;
 
     // An array of the images that are used by the program
-    std::vector<ImageBinding> mComputeImageBindings;
-    std::vector<ImageBinding> mGraphicsImageBindings;
+    std::vector<ImageBinding> mImageBindings;
 
     // TODO: http://anglebug.com/3570: Remove mPipelineHas*UniformBuffers once PPO's have valid data
     // in mUniformBlocks
-    bool mPipelineHasGraphicsUniformBuffers;
-    bool mPipelineHasComputeUniformBuffers;
-    bool mPipelineHasGraphicsStorageBuffers;
-    bool mPipelineHasComputeStorageBuffers;
-    bool mPipelineHasGraphicsAtomicCounterBuffers;
-    bool mPipelineHasComputeAtomicCounterBuffers;
-    bool mPipelineHasGraphicsDefaultUniforms;
-    bool mPipelineHasComputeDefaultUniforms;
-    bool mPipelineHasGraphicsTextures;
-    bool mPipelineHasComputeTextures;
-    bool mPipelineHasGraphicsImages;
-    bool mPipelineHasComputeImages;
-
-    bool mIsCompute;
+    bool mPipelineHasUniformBuffers;
+    bool mPipelineHasStorageBuffers;
+    bool mPipelineHasAtomicCounterBuffers;
+    bool mPipelineHasDefaultUniforms;
+    bool mPipelineHasTextures;
+    bool mPipelineHasImages;
 
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedOutputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;

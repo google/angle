@@ -687,8 +687,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                             GLsizei height,
                                             MultisamplingMode mode);
 
-    void convertPpoToComputeOrDraw(bool isCompute);
-
     State mState;
     bool mShared;
     bool mSkipValidation;
