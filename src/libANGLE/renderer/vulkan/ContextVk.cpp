@@ -347,7 +347,7 @@ constexpr ContextVk::DirtyBits ContextVk::kResourcesAndDescSetDirtyBits;
 constexpr ContextVk::DirtyBits ContextVk::kXfbBuffersAndDescSetDirtyBits;
 constexpr ContextVk::DirtyBits ContextVk::kDriverUniformsAndBindingDirtyBits;
 
-void ContextVk::flushDescriptorSetUpdates()
+ANGLE_INLINE void ContextVk::flushDescriptorSetUpdates()
 {
     if (mWriteDescriptorSets.empty())
     {
@@ -370,6 +370,17 @@ ANGLE_INLINE void ContextVk::onRenderPassFinished()
     mRenderPassCommandBuffer = nullptr;
     mGraphicsDirtyBits.set(DIRTY_BIT_RENDER_PASS);
 }
+
+// ContextVk::ScopedDescriptorSetUpdates implementation.
+class ContextVk::ScopedDescriptorSetUpdates final : angle::NonCopyable
+{
+  public:
+    ANGLE_INLINE ScopedDescriptorSetUpdates(ContextVk *contextVk) : mContextVk(contextVk) {}
+    ANGLE_INLINE ~ScopedDescriptorSetUpdates() { mContextVk->flushDescriptorSetUpdates(); }
+
+  private:
+    ContextVk *mContextVk;
+};
 
 ContextVk::DriverUniformsDescriptorSet::DriverUniformsDescriptorSet()
     : descriptorSet(VK_NULL_HANDLE), dynamicOffset(0)
@@ -840,6 +851,10 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     }
 
+    // Create a local object to ensure we flush the descriptor updates to device when we leave this
+    // function
+    ScopedDescriptorSetUpdates descriptorSetUpdates(this);
+
     if (mProgram && mProgram->dirtyUniforms())
     {
         ANGLE_TRY(mProgram->updateUniforms(this));
@@ -1080,6 +1095,10 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context)
     // the dispatch call.  Flush the outside render pass command buffer as a workaround.
     // TODO: Remove this and fix tests.  http://anglebug.com/5070
     ANGLE_TRY(flushOutsideRenderPassCommands());
+
+    // Create a local object to ensure we flush the descriptor updates to device when we leave this
+    // function
+    ScopedDescriptorSetUpdates descriptorSetUpdates(this);
 
     if (mProgram && mProgram->dirtyUniforms())
     {
@@ -5702,7 +5721,6 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassImpl()
     ANGLE_TRY(getRenderPassWithOps(mRenderPassCommands->getRenderPassDesc(),
                                    mRenderPassCommands->getAttachmentOps(), &renderPass));
 
-    flushDescriptorSetUpdates();
     ANGLE_TRY(mRenderer->flushRenderPassCommands(this, hasProtectedContent(), *renderPass,
                                                  &mRenderPassCommands));
 
@@ -5852,7 +5870,6 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
         mOutsideRenderPassCommands->addCommandDiagnostics(this);
     }
 
-    flushDescriptorSetUpdates();
     ANGLE_TRY(mRenderer->flushOutsideRPCommands(this, hasProtectedContent(),
                                                 &mOutsideRenderPassCommands));
 

@@ -1467,7 +1467,7 @@ void TextureVk::releaseAndDeleteImageAndViews(ContextVk *contextVk)
         mImageCreateFlags       = 0;
         SafeDelete(mImage);
     }
-    mBufferViews.release(contextVk);
+    mBufferViews.release(contextVk->getRenderer());
     mRedefinedLevels.reset();
 }
 
@@ -2539,7 +2539,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         const VkDeviceSize offset = bufferBinding.getOffset();
         const VkDeviceSize size   = gl::GetBoundBufferAvailableSize(bufferBinding);
 
-        mBufferViews.release(contextVk);
+        mBufferViews.release(renderer);
         mBufferViews.init(renderer, offset, size);
         return angle::Result::Continue;
     }

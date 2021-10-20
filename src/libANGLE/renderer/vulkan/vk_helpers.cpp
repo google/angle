@@ -8205,10 +8205,8 @@ void BufferViewHelper::init(RendererVk *renderer, VkDeviceSize offset, VkDeviceS
     }
 }
 
-void BufferViewHelper::release(ContextVk *contextVk)
+void BufferViewHelper::release(RendererVk *renderer)
 {
-    contextVk->flushDescriptorSetUpdates();
-
     std::vector<GarbageObject> garbage;
 
     for (auto &formatAndView : mViews)
@@ -8221,14 +8219,13 @@ void BufferViewHelper::release(ContextVk *contextVk)
 
     if (!garbage.empty())
     {
-        RendererVk *rendererVk = contextVk->getRenderer();
-        rendererVk->collectGarbage(std::move(mUse), std::move(garbage));
+        renderer->collectGarbage(std::move(mUse), std::move(garbage));
 
         // Ensure the resource use is always valid.
         mUse.init();
 
         // Update image view serial.
-        mViewSerial = rendererVk->getResourceSerialFactory().generateImageOrBufferViewSerial();
+        mViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
     }
 
     mViews.clear();
