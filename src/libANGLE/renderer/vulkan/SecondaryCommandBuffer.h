@@ -870,7 +870,7 @@ ANGLE_INLINE void SecondaryCommandBuffer::commonDebugUtilsLabel(CommandID cmd,
     paramStruct->color[1] = label.color[1];
     paramStruct->color[2] = label.color[2];
     paramStruct->color[3] = label.color[3];
-    storePointerParameter(writePtr, label.pLabelName, alignedStringSize);
+    storePointerParameter(writePtr, label.pLabelName, stringSize);
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::beginDebugUtilsLabelEXT(const VkDebugUtilsLabelEXT &label)
