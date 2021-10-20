@@ -944,7 +944,9 @@ angle::Result StateManager11::updateStateForCompute(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-void StateManager11::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
+void StateManager11::syncState(const gl::Context *context,
+                               const gl::State::DirtyBits &dirtyBits,
+                               gl::Command command)
 {
     if (!dirtyBits.any())
     {
@@ -1182,7 +1184,7 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 invalidateProgramShaderStorageBuffers();
                 invalidateDriverUniforms();
                 const gl::ProgramExecutable *executable = state.getProgramExecutable();
-                if (!executable || !executable->isCompute())
+                if (!executable || command != gl::Command::Dispatch)
                 {
                     mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
                     invalidateVertexBuffer();

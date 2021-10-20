@@ -174,7 +174,9 @@ class ProgramExecutableVk
                                                      ContextVk *contextVk,
                                                      FramebufferVk *framebufferVk);
 
-    angle::Result updateDescriptorSets(ContextVk *contextVk, vk::CommandBuffer *commandBuffer);
+    angle::Result updateDescriptorSets(ContextVk *contextVk,
+                                       vk::CommandBuffer *commandBuffer,
+                                       PipelineType pipelineType);
 
     void updateEarlyFragmentTestsOptimization(ContextVk *contextVk);
 

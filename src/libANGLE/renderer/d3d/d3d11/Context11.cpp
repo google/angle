@@ -770,7 +770,7 @@ angle::Result Context11::syncState(const gl::Context *context,
                                    const gl::State::DirtyBits &bitMask,
                                    gl::Command command)
 {
-    mRenderer->getStateManager()->syncState(context, dirtyBits);
+    mRenderer->getStateManager()->syncState(context, dirtyBits, command);
     return angle::Result::Continue;
 }
 

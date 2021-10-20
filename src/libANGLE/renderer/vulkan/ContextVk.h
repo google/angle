@@ -245,7 +245,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     }
 
     void invalidateProgramBindingHelper(const gl::State &glState);
-    angle::Result invalidateProgramExecutableHelper(const gl::Context *context);
 
     // State sync with dirty bits.
     angle::Result syncState(const gl::Context *context,
@@ -348,7 +347,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
-    angle::Result onFramebufferChange(FramebufferVk *framebufferVk);
+    angle::Result onFramebufferChange(FramebufferVk *framebufferVk, gl::Command command);
     void onDrawFramebufferRenderPassDescChange(FramebufferVk *framebufferVk,
                                                bool *renderPassDescChangedOut);
     void onHostVisibleBufferWrite() { mIsAnyHostVisibleBufferWritten = true; }
@@ -453,8 +452,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     RenderPassCache &getRenderPassCache() { return mRenderPassCache; }
 
-    vk::DescriptorSetLayoutDesc getDriverUniformsDescriptorSetDesc(
-        VkShaderStageFlags shaderStages) const;
+    vk::DescriptorSetLayoutDesc getDriverUniformsDescriptorSetDesc() const;
 
     void updateScissor(const gl::State &glState);
 
@@ -793,7 +791,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void updateSurfaceRotationDrawFramebuffer(const gl::State &glState);
     void updateSurfaceRotationReadFramebuffer(const gl::State &glState);
 
-    angle::Result updateActiveTextures(const gl::Context *context);
+    angle::Result updateActiveTextures(const gl::Context *context, gl::Command command);
     angle::Result updateActiveImages(vk::CommandBufferHelper *commandBufferHelper);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
@@ -809,9 +807,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mCurrentComputePipeline = nullptr;
     }
 
+    angle::Result invalidateProgramExecutableHelper(const gl::Context *context);
+
     void invalidateCurrentDefaultUniforms();
-    angle::Result invalidateCurrentTextures(const gl::Context *context);
-    angle::Result invalidateCurrentShaderResources();
+    angle::Result invalidateCurrentTextures(const gl::Context *context, gl::Command command);
+    angle::Result invalidateCurrentShaderResources(gl::Command command);
     void invalidateGraphicsDriverUniforms();
     void invalidateDriverUniforms();
 
@@ -874,12 +874,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result handleDirtyMemoryBarrierImpl(DirtyBits::Iterator *dirtyBitsIterator,
                                                DirtyBits dirtyBitMask);
     angle::Result handleDirtyEventLogImpl(vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyTexturesImpl(vk::CommandBufferHelper *commandBufferHelper);
+    angle::Result handleDirtyTexturesImpl(vk::CommandBufferHelper *commandBufferHelper,
+                                          PipelineType pipelineType);
     angle::Result handleDirtyShaderResourcesImpl(vk::CommandBufferHelper *commandBufferHelper);
     void handleDirtyDriverUniformsBindingImpl(vk::CommandBuffer *commandBuffer,
                                               VkPipelineBindPoint bindPoint,
                                               DriverUniformsDescriptorSet *driverUniforms);
-    angle::Result handleDirtyDescriptorSetsImpl(vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyDescriptorSetsImpl(vk::CommandBuffer *commandBuffer,
+                                                PipelineType pipelineType);
     void handleDirtyGraphicsScissorImpl(bool isPrimitivesGeneratedQueryActive);
 
     angle::Result allocateDriverUniforms(size_t driverUniformsSize,
@@ -888,7 +890,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                          bool *newBufferOut);
     angle::Result updateDriverUniformsDescriptorSet(bool newBuffer,
                                                     size_t driverUniformsSize,
-                                                    DriverUniformsDescriptorSet *driverUniforms);
+                                                    PipelineType pipelineType);
 
     void writeAtomicCounterBufferDriverUniformOffsets(uint32_t *offsetsOut, size_t offsetsSize);
 
@@ -947,8 +949,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void growDesciptorCapacity(std::vector<T> *descriptorVector, size_t newSize);
 
     angle::Result updateRenderPassDepthStencilAccess();
-    bool shouldSwitchToReadOnlyDepthFeedbackLoopMode(const gl::Context *context,
-                                                     gl::Texture *texture) const;
+    bool shouldSwitchToReadOnlyDepthFeedbackLoopMode(gl::Texture *texture,
+                                                     gl::Command command) const;
 
     angle::Result onResourceAccess(const vk::CommandBufferAccess &access);
     angle::Result flushCommandBuffersIfNecessary(const vk::CommandBufferAccess &access);

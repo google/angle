@@ -189,7 +189,9 @@ class StateManager11 final : angle::NonCopyable
 
     void deinitialize();
 
-    void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits);
+    void syncState(const gl::Context *context,
+                   const gl::State::DirtyBits &dirtyBits,
+                   gl::Command command);
 
     angle::Result updateStateForCompute(const gl::Context *context,
                                         GLuint numGroupsX,

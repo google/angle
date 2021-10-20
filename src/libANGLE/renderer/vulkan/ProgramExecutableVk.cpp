@@ -847,7 +847,7 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(
     RendererVk *renderer                      = contextVk->getRenderer();
     vk::PipelineCache *pipelineCache          = nullptr;
     const gl::ProgramExecutable *glExecutable = glState.getProgramExecutable();
-    ASSERT(glExecutable && !glExecutable->isCompute());
+    ASSERT(glExecutable && glExecutable->hasLinkedShaderStage(gl::ShaderType::Vertex));
 
     mTransformOptions.enableLineRasterEmulation = contextVk->isBresenhamEmulationEnabled(mode);
     mTransformOptions.surfaceRotation           = ToUnderlying(desc.getSurfaceRotation());
@@ -894,7 +894,7 @@ angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,
 {
     const gl::State &glState                  = contextVk->getState();
     const gl::ProgramExecutable *glExecutable = glState.getProgramExecutable();
-    ASSERT(glExecutable && glExecutable->isCompute());
+    ASSERT(glExecutable && glExecutable->hasLinkedShaderStage(gl::ShaderType::Compute));
 
     ProgramVk *programVk = getShaderProgram(glState, gl::ShaderType::Compute);
     ASSERT(programVk);
@@ -1084,11 +1084,9 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     ANGLE_TRY(contextVk->getDescriptorSetLayoutCache().getDescriptorSetLayout(
         contextVk, texturesSetDesc, &mDescriptorSetLayouts[DescriptorSetIndex::Texture]));
 
-    // Driver uniforms:
-    VkShaderStageFlags driverUniformsStages =
-        glExecutable.isCompute() ? VK_SHADER_STAGE_COMPUTE_BIT : VK_SHADER_STAGE_ALL_GRAPHICS;
+    // Driver uniforms
     vk::DescriptorSetLayoutDesc driverUniformsSetDesc =
-        contextVk->getDriverUniformsDescriptorSetDesc(driverUniformsStages);
+        contextVk->getDriverUniformsDescriptorSetDesc();
     ANGLE_TRY(contextVk->getDescriptorSetLayoutCache().getDescriptorSetLayout(
         contextVk, driverUniformsSetDesc, &mDescriptorSetLayouts[DescriptorSetIndex::Internal]));
 
@@ -1868,7 +1866,8 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
 }
 
 angle::Result ProgramExecutableVk::updateDescriptorSets(ContextVk *contextVk,
-                                                        vk::CommandBuffer *commandBuffer)
+                                                        vk::CommandBuffer *commandBuffer,
+                                                        PipelineType pipelineType)
 {
     // Can probably use better dirty bits here.
 
@@ -1888,8 +1887,7 @@ angle::Result ProgramExecutableVk::updateDescriptorSets(ContextVk *contextVk,
         }
     }
 
-    const gl::State &glState                    = contextVk->getState();
-    const VkPipelineBindPoint pipelineBindPoint = glState.getProgramExecutable()->isCompute()
+    const VkPipelineBindPoint pipelineBindPoint = pipelineType == PipelineType::Compute
                                                       ? VK_PIPELINE_BIND_POINT_COMPUTE
                                                       : VK_PIPELINE_BIND_POINT_GRAPHICS;
 

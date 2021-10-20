@@ -168,7 +168,6 @@ class ProgramExecutable final : public angle::Subject
     // A PPO can have both graphics and compute programs attached, so
     // we don't know if the PPO is a 'graphics' or 'compute' PPO until the
     // actual draw/dispatch call.
-    bool isCompute() const { return mIsCompute; }
     void setIsCompute(bool isCompute) { mIsCompute = isCompute; }
 
     const AttributesMask &getActiveAttribLocationsMask() const
@@ -372,6 +371,8 @@ class ProgramExecutable final : public angle::Subject
     friend class Program;
     friend class ProgramPipeline;
     friend class ProgramState;
+
+    bool isCompute() const { return mIsCompute; }
 
     void updateActiveImages(const ProgramExecutable &executable);
 
