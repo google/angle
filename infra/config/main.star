@@ -208,14 +208,26 @@ def angle_builder(name, cpu):
     is_uwp = "winuwp" in name
     is_msvc = is_uwp or "-msvc" in name
 
+    location_regexp = None
+
     if name.endswith("-compile"):
         test_mode = "compile_only"
+        category = "compile"
     elif name.endswith("-test"):
         test_mode = "compile_and_test"
+        category = "test"
     elif is_trace:
         test_mode = "trace_tests"
+        category = "trace"
+
+        # Trace tests are only run on CQ if files in the capture folders change.
+        location_regexp = [
+            ".+/[+]/src/libANGLE/capture/.+",
+            ".+/[+]/src/tests/capture.+",
+        ]
     elif is_perf:
         test_mode = "compile_and_test"
+        category = "perf"
     else:
         print("Test mode unknown for %s" % name)
 
@@ -223,6 +235,18 @@ def angle_builder(name, cpu):
         toolchain = "msvc"
     else:
         toolchain = "clang"
+
+    if is_uwp:
+        os_name = "winuwp"
+    else:
+        os_name = config_os.console_name
+
+    if is_perf:
+        short_name = get_gpu_type_from_builder_name(name)
+    elif is_debug:
+        short_name = "dbg"
+    else:
+        short_name = "rel"
 
     properties = {
         "builder_group": "angle",
@@ -248,35 +272,10 @@ def angle_builder(name, cpu):
         ),
     )
 
-    # Trace tests are only included automatically if files in the capture folder change.
-    if is_trace:
-        config = "trace"
-        location_regexp = [
-            ".+/[+]/src/libANGLE/capture/.+",
-            ".+/[+]/src/tests/capture.+",
-        ]
-    elif is_perf:
-        config = "perf"
-    else:
-        config = "angle"
-        location_regexp = None
-
-    if is_uwp:
-        os_name = "winuwp"
-    else:
-        os_name = config_os.console_name
-
-    if is_perf:
-        short_name = get_gpu_type_from_builder_name(name)
-    elif is_debug:
-        short_name = "dbg"
-    else:
-        short_name = "rel"
-
     luci.console_view_entry(
         console_view = "ci",
         builder = "ci/" + name,
-        category = config + "|" + os_name + "|" + toolchain + "|" + cpu,
+        category = category + "|" + os_name + "|" + toolchain + "|" + cpu,
         short_name = short_name,
     )
 
