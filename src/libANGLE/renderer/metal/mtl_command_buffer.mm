@@ -1444,11 +1444,6 @@ RenderCommandEncoder &RenderCommandEncoder::setScissorRect(const MTLScissorRect 
         return *this;
     }
 
-    if (ANGLE_UNLIKELY(clampedRect.width == 0 || clampedRect.height == 0))
-    {
-        // An empty rectangle isn't a valid scissor.
-        return *this;
-    }
     mStateCache.scissorRect = clampedRect;
 
     mCommands.push(CmdType::SetScissorRect).push(clampedRect);

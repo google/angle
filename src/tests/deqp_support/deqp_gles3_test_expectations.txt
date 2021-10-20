@@ -720,14 +720,10 @@
 
 6467 MAC METAL : dEQP-GLES3.functional.fbo.msaa.*_samples.depth* = FAIL
 
-6467 MAC METAL : dEQP-GLES3.functional.fragment_ops.scissor.outside_render_* = FAIL
-
 // Failures introduced after switching to the direct Metal backend
 
 6297 MAC METAL : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
 6297 MAC METAL : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
-
-6467 MAC METAL : dEQP-GLES3.functional.fragment_ops.scissor.outside_render_line = FAIL
 
 6467 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.normalize.*.vec* = FAIL
 
