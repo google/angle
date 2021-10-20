@@ -623,20 +623,18 @@ TEST_P(FramebufferTest_ES3, TextureAttachmentMipLevels)
 
 TEST_P(FramebufferTest_ES3, TextureAttachmentMipLevelsReadBack)
 {
-#if defined(ADDRESS_SANITIZER)
-    // http://anglebug.com/4737
-    ANGLE_SKIP_TEST_IF(IsOSX());
-#endif
-
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    const std::array<GLColor, 2 * 2> mip0Data = {GLColor::red, GLColor::red, GLColor::red,
-                                                 GLColor::red};
-    const std::array<GLColor, 1 * 1> mip1Data = {GLColor::green};
+    const std::array<GLColor, 4 * 4> mip0Data = {
+        GLColor::red, GLColor::red, GLColor::red, GLColor::red, GLColor::red, GLColor::red,
+        GLColor::red, GLColor::red, GLColor::red, GLColor::red, GLColor::red, GLColor::red,
+        GLColor::red, GLColor::red, GLColor::red, GLColor::red};
+    const std::array<GLColor, 2 * 2> mip1Data = {GLColor::green, GLColor::green, GLColor::green,
+                                                 GLColor::green};
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, mip0Data.data());
     glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, mip1Data.data());
@@ -656,11 +654,6 @@ TEST_P(FramebufferTest_ES3, TextureAttachmentMipLevelsReadBack)
 // and Vulkan level in referring to that rendertarget.
 TEST_P(FramebufferTest_ES3, TextureAttachmentMipLevelsReadBackWithDraw)
 {
-#if defined(ADDRESS_SANITIZER)
-    // http://anglebug.com/4737
-    ANGLE_SKIP_TEST_IF(IsOSX());
-#endif
-
     ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
 
     GLFramebuffer framebuffer;
@@ -669,9 +662,12 @@ TEST_P(FramebufferTest_ES3, TextureAttachmentMipLevelsReadBackWithDraw)
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    const std::array<GLColor, 2 * 2> mip0Data = {GLColor::red, GLColor::red, GLColor::red,
-                                                 GLColor::red};
-    const std::array<GLColor, 1 * 1> mip1Data = {GLColor::green};
+    const std::array<GLColor, 4 * 4> mip0Data = {
+        GLColor::red, GLColor::red, GLColor::red, GLColor::red, GLColor::red, GLColor::red,
+        GLColor::red, GLColor::red, GLColor::red, GLColor::red, GLColor::red, GLColor::red,
+        GLColor::red, GLColor::red, GLColor::red, GLColor::red};
+    const std::array<GLColor, 2 * 2> mip1Data = {GLColor::green, GLColor::green, GLColor::green,
+                                                 GLColor::green};
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, mip0Data.data());
     glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, mip1Data.data());
