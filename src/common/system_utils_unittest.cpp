@@ -8,10 +8,15 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+#include "common/mathutil.h"
 #include "common/system_utils.h"
 #include "util/test_utils.h"
 
 #include <vector>
+
+#if defined(ANGLE_PLATFORM_POSIX)
+#    include <signal.h>
+#endif
 
 using namespace angle;
 
@@ -201,6 +206,143 @@ TEST(SystemUtils, IsFullPath)
     EXPECT_TRUE(IsFullPath(path1));
     EXPECT_FALSE(IsFullPath(path2));
 }
+#endif
+
+// Test retrieving page size
+TEST(SystemUtils, PageSize)
+{
+    size_t pageSize = GetPageSize();
+    EXPECT_TRUE(pageSize > 0);
+}
+
+// Test initializing and cleaning up page fault handler.
+TEST(SystemUtils, PageFaultHandlerInit)
+{
+    PageFaultCallback callback = [](uintptr_t address) {
+        return PageFaultHandlerRangeType::InRange;
+    };
+
+    std::unique_ptr<PageFaultHandler> handler(CreatePageFaultHandler(callback));
+
+    EXPECT_TRUE(handler->enable());
+    EXPECT_TRUE(handler->disable());
+}
+
+// Test write protecting and unprotecting memory
+TEST(SystemUtils, PageFaultHandlerProtect)
+{
+    size_t pageSize = GetPageSize();
+    EXPECT_TRUE(pageSize > 0);
+
+    std::vector<float> data   = std::vector<float>(100);
+    size_t dataSize           = sizeof(float) * data.size();
+    uintptr_t dataStart       = reinterpret_cast<uintptr_t>(data.data());
+    uintptr_t protectionStart = rx::roundDownPow2(dataStart, pageSize);
+    uintptr_t protectionEnd   = rx::roundUpPow2(dataStart + dataSize, pageSize);
+
+    std::mutex mutex;
+    bool handlerCalled = false;
+
+    PageFaultCallback callback = [&mutex, pageSize, dataStart, dataSize,
+                                  &handlerCalled](uintptr_t address) {
+        if (address >= dataStart && address < dataStart + dataSize)
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+            uintptr_t pageStart = rx::roundDownPow2(address, pageSize);
+            EXPECT_TRUE(UnprotectMemory(pageStart, pageSize));
+            handlerCalled = true;
+            return PageFaultHandlerRangeType::InRange;
+        }
+        else
+        {
+            return PageFaultHandlerRangeType::OutOfRange;
+        }
+    };
+
+    std::unique_ptr<PageFaultHandler> handler(CreatePageFaultHandler(callback));
+    handler->enable();
+
+    size_t protectionSize = protectionEnd - protectionStart;
+
+    // Test Protect
+    EXPECT_TRUE(ProtectMemory(protectionStart, protectionSize));
+
+    data[0] = 0.0;
+
+    {
+        std::lock_guard<std::mutex> lock(mutex);
+        EXPECT_TRUE(handlerCalled);
+    }
+
+    // Test Protect and unprotect
+    EXPECT_TRUE(ProtectMemory(protectionStart, protectionSize));
+    EXPECT_TRUE(UnprotectMemory(protectionStart, protectionSize));
+
+    handlerCalled = false;
+    data[0]       = 0.0;
+    EXPECT_FALSE(handlerCalled);
+
+    // Clean up
+    EXPECT_TRUE(handler->disable());
+}
+
+#if defined(ANGLE_PLATFORM_POSIX)
+std::mutex gCustomHandlerMutex;
+bool gCustomHandlerCalled = false;
+
+void CustomSegfaultHandlerFunction(int sig, siginfo_t *info, void *unused)
+{
+    std::lock_guard<std::mutex> lock(gCustomHandlerMutex);
+    gCustomHandlerCalled = true;
+}
+
+// Test if the default page fault handler is called on OutOfRange.
+TEST(SystemUtils, PageFaultHandlerDefaultHandler)
+{
+    size_t pageSize = GetPageSize();
+    EXPECT_TRUE(pageSize > 0);
+
+    std::vector<float> data   = std::vector<float>(100);
+    size_t dataSize           = sizeof(float) * data.size();
+    uintptr_t dataStart       = reinterpret_cast<uintptr_t>(data.data());
+    uintptr_t protectionStart = rx::roundDownPow2(dataStart, pageSize);
+    uintptr_t protectionEnd   = rx::roundUpPow2(dataStart + dataSize, pageSize);
+
+    // Create custom handler
+    struct sigaction sigAction = {};
+    sigAction.sa_flags         = SA_SIGINFO;
+    sigAction.sa_sigaction     = &CustomSegfaultHandlerFunction;
+    sigemptyset(&sigAction.sa_mask);
+
+    ASSERT(sigaction(SIGSEGV, &sigAction, nullptr) == 0);
+    ASSERT(sigaction(SIGBUS, &sigAction, nullptr) == 0);
+
+    PageFaultCallback callback = [pageSize](uintptr_t address) {
+        uintptr_t pageStart = rx::roundDownPow2(address, pageSize);
+        EXPECT_TRUE(UnprotectMemory(pageStart, pageSize));
+        return PageFaultHandlerRangeType::OutOfRange;
+    };
+
+    std::unique_ptr<PageFaultHandler> handler(CreatePageFaultHandler(callback));
+    handler->enable();
+
+    size_t protectionSize = protectionEnd - protectionStart;
+
+    // Test Protect
+    EXPECT_TRUE(ProtectMemory(protectionStart, protectionSize));
+
+    data[0] = 0.0;
+
+    {
+        std::lock_guard<std::mutex> lock(gCustomHandlerMutex);
+        EXPECT_TRUE(gCustomHandlerCalled);
+    }
+
+    // Clean up
+    EXPECT_TRUE(handler->disable());
+}
+#else
+TEST(SystemUtils, PageFaultHandlerDefaultHandler) {}
 #endif
 
 }  // anonymous namespace
