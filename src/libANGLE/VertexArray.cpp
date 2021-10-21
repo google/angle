@@ -144,8 +144,14 @@ void VertexArray::onDestroy(const Context *context)
         }
         binding.setBuffer(context, nullptr);
     }
-    if (isBound && mState.mElementArrayBuffer.get())
-        mState.mElementArrayBuffer->onNonTFBindingChanged(-1);
+    if (mState.mElementArrayBuffer.get())
+    {
+        if (isBound)
+        {
+            mState.mElementArrayBuffer->onNonTFBindingChanged(-1);
+        }
+        mState.mElementArrayBuffer->removeContentsObserver(this, kElementArrayBufferIndex);
+    }
     mState.mElementArrayBuffer.bind(context, nullptr);
     mVertexArray->destroy(context);
     SafeDelete(mVertexArray);
