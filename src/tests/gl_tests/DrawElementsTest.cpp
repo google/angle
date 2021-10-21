@@ -109,6 +109,49 @@ TEST_P(DrawElementsTest, ClientSideNullptrArrayZeroCount)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test uploading part of an index buffer after deleting a vertex array
+// previously used for DrawElements.
+TEST_P(DrawElementsTest, DeleteVertexArrayAndUploadIndex)
+{
+    const auto &vertices = GetIndexedQuadVertices();
+    const auto &indices  = GetQuadIndices();
+
+    ANGLE_GL_PROGRAM(programDrawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    glUseProgram(programDrawRed);
+
+    GLint posLocation = glGetAttribLocation(programDrawRed, essl3_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLocation);
+
+    GLuint vertexArray;
+    glGenVertexArrays(1, &vertexArray);
+    glBindVertexArray(vertexArray);
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+
+    glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(posLocation);
+
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), indices.data(),
+                 GL_STATIC_DRAW);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+
+    glDeleteVertexArrays(1, &vertexArray);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+
+    // Could crash here if the observer binding from the vertex array doesn't get
+    // removed on vertex array destruction.
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(indices[0]) * 3, indices.data());
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test a state desync that can occur when using a streaming index buffer in GL in concert with
 // deleting the applied index buffer.
 TEST_P(DrawElementsTest, DeletingAfterStreamingIndexes)
