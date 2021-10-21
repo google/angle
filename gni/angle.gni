@@ -167,11 +167,9 @@ if (!angle_enable_cl) {
 
 declare_args() {
   # Currently SwiftShader's Vulkan front-end doesn't build on Android.
-  # SwiftShader is not needed on Fuchsia because Vulkan is supported on all
-  # devices that run Fuchsia.
   # Disabled by default on MSVC because of compiler warnings/errors.
   angle_enable_swiftshader =
-      angle_enable_vulkan && !is_android && !is_fuchsia && !is_ggp && is_clang
+      angle_enable_vulkan && !is_android && !is_ggp && is_clang
 
   # Translator frontend support:
   angle_enable_desktop_glsl = angle_enable_gl_desktop
