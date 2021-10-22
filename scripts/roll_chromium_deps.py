@@ -38,6 +38,7 @@ ANGLE_CHROMIUM_DEPS = [
     'buildtools/mac',
     'buildtools/third_party/libc++/trunk',
     'buildtools/third_party/libc++abi/trunk',
+    'buildtools/third_party/libunwind/trunk',
     'buildtools/win',
     'testing',
     'third_party/abseil-cpp',
