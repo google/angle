@@ -70,18 +70,10 @@ egl::ConfigSet DisplayVkAndroid::generateConfigs()
 
 void DisplayVkAndroid::enableRecordableIfSupported(egl::Config *config)
 {
-    const VkPhysicalDeviceProperties &physicalDeviceProperties =
-        getRenderer()->getPhysicalDeviceProperties();
-
     // TODO(b/181163023): Determine how to properly query for support. This is a hack to unblock
     // launching SwANGLE on Cuttlefish.
-    bool isSwiftShader =
-        IsSwiftshader(physicalDeviceProperties.vendorID, physicalDeviceProperties.deviceID);
-
-    if (isSwiftShader)
-    {
-        config->recordable = true;
-    }
+    // anglebug.com/6612: This is also required for app compatiblity.
+    config->recordable = true;
 }
 
 void DisplayVkAndroid::checkConfigSupport(egl::Config *config)
