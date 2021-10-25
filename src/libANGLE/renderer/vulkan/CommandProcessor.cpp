@@ -278,11 +278,11 @@ CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs
 }
 
 // CommandBatch implementation.
-CommandBatch::CommandBatch() = default;
+CommandBatch::CommandBatch() : commandPool(nullptr), hasProtectedContent(false) {}
 
 CommandBatch::~CommandBatch() = default;
 
-CommandBatch::CommandBatch(CommandBatch &&other)
+CommandBatch::CommandBatch(CommandBatch &&other) : CommandBatch()
 {
     *this = std::move(other);
 }
