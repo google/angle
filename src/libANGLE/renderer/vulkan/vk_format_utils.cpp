@@ -253,16 +253,16 @@ void FormatTable::initialize(RendererVk *renderer,
             continue;
         }
 
-        if (intendedAngleFormat.isBlock)
-        {
-            outCompressedTextureFormats->push_back(format.mIntendedGLFormat);
-        }
-
         // No sample-able or render-able formats, so nothing left to do. This includes skipping the
         // rest of the loop for buffer-only formats, since they are not texturable.
         if (format.mActualSampleOnlyImageFormatID == angle::FormatID::NONE)
         {
             continue;
+        }
+
+        if (intendedAngleFormat.isBlock)
+        {
+            outCompressedTextureFormats->push_back(format.mIntendedGLFormat);
         }
 
         if (format.mActualRenderableImageFormatID == angle::FormatID::NONE)
