@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '75578cc5e47dbb08fe455623937d5fc51443398d',
+  'chromium_revision': '9d26607df45ddcc32133c2b1f9f42f3cd95af5fb',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@4d4596dc668ecab4879b024d2d027634f3c6fa95',
+    'url': '{chromium_git}/chromium/src/build.git@acad0f2115f6a79e82bde9f2d4d06969b37453e1',
     'condition': 'not build_with_chromium',
   },
 
@@ -161,12 +161,12 @@ deps = {
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@be63497336e46a3882a16e2d4e5b817abe7c661d',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@9b8228b4a9be26e0881f36089d9a8d62df851acc',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@6f77fbf9fa51d9696b48151709e90f03364243de',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@21acd3f62203c561edc54fedf549eb38da6081c5',
     'condition': 'not build_with_chromium',
   },
 
@@ -182,7 +182,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@93811b76abbe290958f122777034b4015d1ab61a',
+    'url': '{chromium_git}/chromium/src/testing@e7d33e11b8b8c4af92cd8604dd1992e3b07fc2ed',
     'condition': 'not build_with_chromium',
   },
 
@@ -332,7 +332,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@7a6ff9824d74a90f7d9a6811b00a35598c8cf3ef',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@372190eb3d2aafa1fab96b8fa4e5b254131a7516',
     'condition': 'not build_with_chromium',
   },
 
