@@ -118,7 +118,7 @@ class BufferVk : public BufferImpl
     bool isBufferValid() const { return mBuffer && mBuffer->valid(); }
     bool isCurrentlyInUse(ContextVk *contextVk) const;
 
-    angle::Result mapImpl(ContextVk *contextVk, void **mapPtr);
+    angle::Result mapImpl(ContextVk *contextVk, GLbitfield access, void **mapPtr);
     angle::Result mapRangeImpl(ContextVk *contextVk,
                                VkDeviceSize offset,
                                VkDeviceSize length,

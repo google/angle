@@ -514,7 +514,7 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
     {
         // Map the source buffer.
         void *mapPtr;
-        ANGLE_TRY(sourceVk->mapRangeImpl(contextVk, sourceOffset, size, 0, &mapPtr));
+        ANGLE_TRY(sourceVk->mapRangeImpl(contextVk, sourceOffset, size, GL_MAP_READ_BIT, &mapPtr));
 
         // Update the shadow buffer with data from source buffer
         updateShadowBuffer(static_cast<uint8_t *>(mapPtr), size, destOffset);
@@ -598,8 +598,9 @@ angle::Result BufferVk::handleDeviceLocalBufferUnmap(ContextVk *contextVk,
 angle::Result BufferVk::map(const gl::Context *context, GLenum access, void **mapPtr)
 {
     ASSERT(mBuffer && mBuffer->valid());
+    ASSERT(access == GL_WRITE_ONLY_OES);
 
-    return mapImpl(vk::GetImpl(context), mapPtr);
+    return mapImpl(vk::GetImpl(context), GL_MAP_WRITE_BIT, mapPtr);
 }
 
 angle::Result BufferVk::mapRange(const gl::Context *context,
@@ -612,9 +613,9 @@ angle::Result BufferVk::mapRange(const gl::Context *context,
     return mapRangeImpl(vk::GetImpl(context), offset, length, access, mapPtr);
 }
 
-angle::Result BufferVk::mapImpl(ContextVk *contextVk, void **mapPtr)
+angle::Result BufferVk::mapImpl(ContextVk *contextVk, GLbitfield access, void **mapPtr)
 {
-    return mapRangeImpl(contextVk, 0, static_cast<VkDeviceSize>(mState.getSize()), 0, mapPtr);
+    return mapRangeImpl(contextVk, 0, static_cast<VkDeviceSize>(mState.getSize()), access, mapPtr);
 }
 
 angle::Result BufferVk::ghostMappedBuffer(ContextVk *contextVk, VkDeviceSize offset, void **mapPtr)
@@ -662,7 +663,22 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     {
         ASSERT(mBuffer && mBuffer->valid());
 
-        if (isCurrentlyInUse(contextVk) && !mBuffer->isExternalBuffer() && mBuffer->isHostVisible())
+        if ((access & GL_MAP_WRITE_BIT) == 0)
+        {
+            // If app is not going to write, all we need is to ensure GPU write is finished.
+            // Concurrent reads from CPU and GPU is allowed.
+            if (mBuffer->isCurrentlyInUseForWrite(contextVk->getLastCompletedQueueSerial()))
+            {
+                // If there are pending commands for the resource, flush them.
+                if (mBuffer->usedInRecordedCommands())
+                {
+                    ANGLE_TRY(contextVk->flushImpl(nullptr));
+                }
+                ANGLE_TRY(mBuffer->finishGPUWriteCommands(contextVk));
+            }
+        }
+        else if (isCurrentlyInUse(contextVk) && !mBuffer->isExternalBuffer() &&
+                 mBuffer->isHostVisible())
         {
             // We try to map the buffer, but it's busy. Instead of waiting for the GPU to
             // finish, we just allocate a new buffer if:
@@ -777,7 +793,7 @@ angle::Result BufferVk::getSubData(const gl::Context *context,
         ASSERT(mBuffer && mBuffer->valid());
         ContextVk *contextVk = vk::GetImpl(context);
         void *mapPtr;
-        ANGLE_TRY(mapRangeImpl(contextVk, offset, size, 0, &mapPtr));
+        ANGLE_TRY(mapRangeImpl(contextVk, offset, size, GL_MAP_READ_BIT, &mapPtr));
         memcpy(outData, mapPtr, size);
         ANGLE_TRY(unmapImpl(contextVk));
     }
@@ -810,7 +826,7 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
     ANGLE_TRACE_EVENT0("gpu.angle", "BufferVk::getIndexRange");
 
     void *mapPtr;
-    ANGLE_TRY(mapRangeImpl(contextVk, offset, getSize(), 0, &mapPtr));
+    ANGLE_TRY(mapRangeImpl(contextVk, offset, getSize(), GL_MAP_READ_BIT, &mapPtr));
     *outRange = gl::ComputeIndexRange(type, mapPtr, count, primitiveRestartEnabled);
     ANGLE_TRY(unmapImpl(contextVk));
 

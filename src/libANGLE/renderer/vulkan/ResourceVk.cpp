@@ -94,7 +94,14 @@ ReadWriteResource::~ReadWriteResource()
 
 angle::Result ReadWriteResource::finishRunningCommands(ContextVk *contextVk)
 {
+    ASSERT(!mReadOnlyUse.usedInRecordedCommands());
     return FinishRunningCommands(contextVk, mReadOnlyUse.getSerial());
+}
+
+angle::Result ReadWriteResource::finishGPUWriteCommands(ContextVk *contextVk)
+{
+    ASSERT(!mReadWriteUse.usedInRecordedCommands());
+    return FinishRunningCommands(contextVk, mReadWriteUse.getSerial());
 }
 
 angle::Result ReadWriteResource::waitForIdle(ContextVk *contextVk, const char *debugMessage)

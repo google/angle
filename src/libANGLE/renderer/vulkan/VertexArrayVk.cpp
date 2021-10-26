@@ -447,7 +447,7 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
     }
 
     void *src = nullptr;
-    ANGLE_TRY(srcBuffer->mapImpl(contextVk, &src));
+    ANGLE_TRY(srcBuffer->mapImpl(contextVk, GL_MAP_READ_BIT, &src));
     const uint8_t *srcBytes = reinterpret_cast<const uint8_t *>(src);
     srcBytes += binding.getOffset() + relativeOffset;
     ASSERT(vertexFormat.getVertexInputAlignment(compressed) <= vk::kVertexBufferAlignment);
@@ -824,7 +824,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
                     // Map buffer to expand attribs for divisor emulation
                     bufferVk      = vk::GetImpl(binding.getBuffer().get());
                     void *buffSrc = nullptr;
-                    ANGLE_TRY(bufferVk->mapImpl(contextVk, &buffSrc));
+                    ANGLE_TRY(bufferVk->mapImpl(contextVk, GL_MAP_READ_BIT, &buffSrc));
                     src = reinterpret_cast<const uint8_t *>(buffSrc) + binding.getOffset();
                 }
                 // Divisor will be set to 1 & so update buffer to have 1 attrib per instance
