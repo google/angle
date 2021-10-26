@@ -312,12 +312,6 @@ void AppendBufferVectorToDesc(vk::ShaderBuffersDescriptorDesc *desc,
 
             BufferVk *bufferVk = vk::GetImpl(bufferGL);
 
-            // We cache descriptotSets in mShaderBufferDescriptorsCache and use desc to look up the
-            // cached descriptorSet. This is to tell BufferVk object that this bufferVk object is
-            // being used as descriptorSet cache key so that BufferVk has an opportunity to optimize
-            // future allocations.
-            bufferVk->onUsedInDescriptorSet();
-
             if (!bufferVk->isBufferValid())
             {
                 desc->append32BitValue(0);
