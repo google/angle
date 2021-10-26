@@ -99,6 +99,12 @@ TType *GetFieldType(const TType &indexedType)
         ASSERT(indexedType.isVector());
         fieldType->toComponentType();
     }
+    // Default precision to highp if not specified.  For example in |vec3(0)[i], i < 0|, there is no
+    // precision assigned to vec3(0).
+    if (fieldType->getPrecision() == EbpUndefined)
+    {
+        fieldType->setPrecision(EbpHigh);
+    }
     return fieldType;
 }
 
