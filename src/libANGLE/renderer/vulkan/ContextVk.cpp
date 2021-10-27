@@ -5631,8 +5631,8 @@ uint32_t ContextVk::getCurrentSubpassIndex() const
 
 uint32_t ContextVk::getCurrentViewCount() const
 {
-    ASSERT(mDrawFramebuffer);
-    return mDrawFramebuffer->getRenderPassDesc().viewCount();
+    FramebufferVk *drawFBO = vk::GetImpl(mState.getDrawFramebuffer());
+    return drawFBO->getRenderPassDesc().viewCount();
 }
 
 angle::Result ContextVk::flushCommandsAndEndRenderPassImpl()
