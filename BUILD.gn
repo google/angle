@@ -713,14 +713,6 @@ angle_source_set("angle_version") {
       ":libGLESv2_capture_complement",
     ]
   }
-
-  # TODO(jmadill): Remove once headers isolated. http://anglebug.com/2551
-  if (build_with_chromium) {
-    visibility += [
-      "//content/browser:browser",
-      "//gpu/command_buffer/service:gles2_sources",
-    ]
-  }
 }
 
 angle_source_set("angle_version_info") {
