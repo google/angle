@@ -7035,6 +7035,37 @@ void main()
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
+
+// Covers a bug where we would use a stale cache variable in the Vulkan back-end.
+TEST_P(SimpleStateChangeTestES3, DeleteFramebufferBeforeQuery)
+{
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Zero(), essl1_shaders::fs::Red());
+    glUseProgram(testProgram);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, 16, 16);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+    GLfloat floatArray[] = {1, 2, 3, 4};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLfloat) * 4, floatArray, GL_DYNAMIC_COPY);
+    glDrawElements(GL_TRIANGLE_FAN, 5, GL_UNSIGNED_SHORT, 0);
+
+    fbo.reset();
+
+    GLQuery query2;
+    glBeginQuery(GL_ANY_SAMPLES_PASSED_CONSERVATIVE, query2);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
