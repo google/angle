@@ -2358,18 +2358,23 @@ void GenerateLinkedProgram(const gl::Context *context,
                            std::vector<CallCapture> *setupCalls,
                            gl::Program *program,
                            gl::ShaderProgramID id,
+                           gl::ShaderProgramID tempIDStart,
                            const ProgramSources &linkedSources)
 {
-    // Bump up our max program ID before creating temp shaders
-    resourceTracker->onShaderProgramAccess(id);
-
-    // Use max ID as a temporary shader ID.
-    // Note this isn't the real ID of the shader, just a lookup into the gShaderProgram map.
-    gl::ShaderProgramID tempShaderID = {resourceTracker->getMaxShaderPrograms()};
+    // A map to store the gShaderProgram map lookup index of the temp shaders we attached below. We
+    // need this map to retrieve the lookup index to pass to CaptureDetachShader calls at the end of
+    // GenerateLinkedProgram.
+    PackedEnumMap<gl::ShaderType, gl::ShaderProgramID> tempShaderIDTracker;
 
     // Compile with last linked sources.
     for (gl::ShaderType shaderType : program->getExecutable().getLinkedShaderStages())
     {
+        // Bump the max shader program id for each new tempIDStart we use to create, compile, and
+        // attach the temp shader object.
+        resourceTracker->onShaderProgramAccess(tempIDStart);
+        // Store the tempIDStart in the tempShaderIDTracker to retrieve for CaptureDetachShader
+        // calls later.
+        tempShaderIDTracker[shaderType] = tempIDStart;
         const std::string &sourceString = linkedSources[shaderType];
         const char *sourcePointer       = sourceString.c_str();
 
@@ -2386,12 +2391,15 @@ void GenerateLinkedProgram(const gl::Context *context,
         }
 
         // Compile and attach the temporary shader. Then free it immediately.
-        Capture(setupCalls, CaptureCreateShader(replayState, true, shaderType, tempShaderID.value));
+        Capture(setupCalls, CaptureCreateShader(replayState, true, shaderType, tempIDStart.value));
         Capture(setupCalls,
-                CaptureShaderSource(replayState, true, tempShaderID, 1, &sourcePointer, nullptr));
-        Capture(setupCalls, CaptureCompileShader(replayState, true, tempShaderID));
-        Capture(setupCalls, CaptureAttachShader(replayState, true, id, tempShaderID));
-        Capture(setupCalls, CaptureDeleteShader(replayState, true, tempShaderID));
+                CaptureShaderSource(replayState, true, tempIDStart, 1, &sourcePointer, nullptr));
+        Capture(setupCalls, CaptureCompileShader(replayState, true, tempIDStart));
+        Capture(setupCalls, CaptureAttachShader(replayState, true, id, tempIDStart));
+        // Increment tempIDStart to get a new gShaderProgram map index for the next linked stage
+        // shader object. We can't reuse the same tempIDStart as we need to retrieve the index of
+        // each attached shader object later to pass to CaptureDetachShader calls.
+        tempIDStart.value += 1;
     }
 
     // Gather XFB varyings
@@ -2456,6 +2464,22 @@ void GenerateLinkedProgram(const gl::Context *context,
         GLuint blockBinding = program->getUniformBlockBinding(uniformBlockIndex);
         Capture(setupCalls, CaptureUniformBlockBinding(replayState, true, id, {uniformBlockIndex},
                                                        blockBinding));
+    }
+
+    // Add DetachShader call if that's what the app does, so that the
+    // ResourceManagerBase::mHandleAllocator can release the ShaderProgramID handle assigned to the
+    // shader object when glDeleteShader is called. This ensures the ShaderProgramID handles used in
+    // SetupReplayContextShared() are consistent with the ShaderProgramID handles used by the app.
+    for (gl::ShaderType shaderType : program->getExecutable().getLinkedShaderStages())
+    {
+        gl::Shader *attachedShader = program->getAttachedShader(shaderType);
+        if (attachedShader == nullptr)
+        {
+            Capture(setupCalls,
+                    CaptureDetachShader(replayState, true, id, tempShaderIDTracker[shaderType]));
+        }
+        Capture(setupCalls,
+                CaptureDeleteShader(replayState, true, tempShaderIDTracker[shaderType]));
     }
 }
 
@@ -3016,6 +3040,7 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
         shadersAndPrograms.getProgramsForCaptureAndPerf();
 
     // Capture Program binary state.
+    gl::ShaderProgramID tempShaderStartID = {resourceTracker->getMaxShaderPrograms()};
     for (const auto &programIter : programs)
     {
         gl::ShaderProgramID id = {programIter.first};
@@ -3037,7 +3062,7 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
         cap(CaptureCreateProgram(replayState, true, id.value));
 
         GenerateLinkedProgram(context, replayState, resourceTracker, setupCalls, program, id,
-                              linkedSources);
+                              tempShaderStartID, linkedSources);
 
         // Update the program in replayState
         if (!replayState.getProgram() || replayState.getProgram()->id() != program->id())
@@ -4787,8 +4812,10 @@ void FrameCaptureShared::overrideProgramBinary(const gl::Context *context,
     gl::Program *program = context->getProgramResolveLink(id);
     ASSERT(program);
 
+    mResourceTracker.onShaderProgramAccess(id);
+    gl::ShaderProgramID tempShaderStartID = {mResourceTracker.getMaxShaderPrograms()};
     GenerateLinkedProgram(context, context->getState(), &mResourceTracker, &outCalls, program, id,
-                          getProgramSources(id));
+                          tempShaderStartID, getProgramSources(id));
 }
 
 void FrameCaptureShared::maybeOverrideEntryPoint(const gl::Context *context,
