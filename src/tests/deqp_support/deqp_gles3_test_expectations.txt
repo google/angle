@@ -725,7 +725,6 @@
 6297 MAC METAL : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
 6297 MAC METAL : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 
-6467 MAC METAL : dEQP-GLES3.functional.shaders.builtin_functions.precision.normalize.*.vec* = FAIL
 
 // Metal/Intel
 

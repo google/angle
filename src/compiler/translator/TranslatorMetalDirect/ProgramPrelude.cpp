@@ -517,7 +517,7 @@ struct ANGLE_normalize_impl
 {
     static ANGLE_ALWAYS_INLINE T exec(T x)
     {
-        return metal::normalize(x);
+        return metal::fast::normalize(x);
     }
 };
 template <typename T>
