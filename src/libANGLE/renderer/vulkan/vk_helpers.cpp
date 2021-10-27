@@ -2900,7 +2900,11 @@ void QueryResult::setResults(uint64_t *results, uint32_t queryCount)
 
 // QueryHelper implementation
 QueryHelper::QueryHelper()
-    : mDynamicQueryPool(nullptr), mQueryPoolIndex(0), mQuery(0), mQueryCount(0)
+    : mDynamicQueryPool(nullptr),
+      mQueryPoolIndex(0),
+      mQuery(0),
+      mQueryCount(0),
+      mStatus(QueryStatus::Inactive)
 {}
 
 QueryHelper::~QueryHelper() {}
@@ -2949,21 +2953,25 @@ void QueryHelper::deinit()
     mQueryCount       = 0;
     mUse.release();
     mUse.init();
+    mStatus = QueryStatus::Inactive;
 }
 
 void QueryHelper::beginQueryImpl(ContextVk *contextVk,
                                  CommandBuffer *resetCommandBuffer,
                                  CommandBuffer *commandBuffer)
 {
+    ASSERT(mStatus != QueryStatus::Active);
     const QueryPool &queryPool = getQueryPool();
     resetCommandBuffer->resetQueryPool(queryPool, mQuery, mQueryCount);
     commandBuffer->beginQuery(queryPool, mQuery, 0);
+    mStatus = QueryStatus::Active;
 }
 
 void QueryHelper::endQueryImpl(ContextVk *contextVk, CommandBuffer *commandBuffer)
 {
+    ASSERT(mStatus != QueryStatus::Ended);
     commandBuffer->endQuery(getQueryPool(), mQuery);
-
+    mStatus = QueryStatus::Ended;
     // Query results are available after endQuery, retain this query so that we get its serial
     // updated which is used to indicate that query results are (or will be) available.
     retain(&contextVk->getResourceUseList());
@@ -3018,7 +3026,10 @@ angle::Result QueryHelper::beginRenderPassQuery(ContextVk *contextVk)
 
 void QueryHelper::endRenderPassQuery(ContextVk *contextVk)
 {
-    endQueryImpl(contextVk, &contextVk->getStartedRenderPassCommands().getCommandBuffer());
+    if (mStatus == QueryStatus::Active)
+    {
+        endQueryImpl(contextVk, &contextVk->getStartedRenderPassCommands().getCommandBuffer());
+    }
 }
 
 angle::Result QueryHelper::flushAndWriteTimestamp(ContextVk *contextVk)

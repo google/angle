@@ -553,6 +553,14 @@ class QueryHelper final : public Resource
     size_t mQueryPoolIndex;
     uint32_t mQuery;
     uint32_t mQueryCount;
+
+    enum class QueryStatus
+    {
+        Inactive,
+        Active,
+        Ended
+    };
+    QueryStatus mStatus;
 };
 
 // DynamicSemaphorePool allocates semaphores as needed.  It uses a std::vector

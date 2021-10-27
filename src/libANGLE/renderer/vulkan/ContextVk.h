@@ -592,6 +592,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result endRenderPassQuery(QueryVk *queryVk);
     void pauseRenderPassQueriesIfActive();
     angle::Result resumeRenderPassQueriesIfActive();
+    angle::Result resumeXfbRenderPassQueriesIfActive();
     bool doesPrimitivesGeneratedQuerySupportRasterizerDiscard() const;
     bool isEmulatingRasterizerDiscardDuringPrimitivesGeneratedQuery(
         bool isPrimitivesGeneratedQueryActive) const;
