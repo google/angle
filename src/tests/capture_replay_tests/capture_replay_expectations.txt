@@ -177,3 +177,9 @@
 6578 : ImageTestES3.Source2DTargetExternalESSL3_Colorspace/ES3_Vulkan_SwiftShader = FAIL
 6578 : ImageTestES3.SourceCubeTargetExternalESSL3_Colorspace/ES3_Vulkan_SwiftShader = FAIL
 6578 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+
+6631 : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+6631 : MultithreadingTest.MultiContextCreateAndDeleteResources/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+6631 : MultithreadingTestES3.MultithreadFenceDraw/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+6631 : MultithreadingTestES3.MultithreadFenceTexImage/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+6631 : MultithreadingTest.MultiContextDrawWithSwapBuffers/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
