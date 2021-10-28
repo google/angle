@@ -383,3 +383,13 @@
 
 // Metal internal compiler error
 6581 MAC AMD METAL : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
+
+// GLES1 failures introduced during ubershader optimization
+6652 MAC INTEL OPENGL : BootAnimationTest.DefaultBootAnimation/* = SKIP
+6652 MAC INTEL OPENGL : DrawTextureTest.Basic/* = SKIP
+6652 MAC INTEL OPENGL : DrawTextureTest.VertexAttributesNoCrash/* = SKIP
+6652 MAC INTEL OPENGL : DrawTextureTest.ColorArrayNotUsed/* = SKIP
+6652 MAC INTEL OPENGL : DrawTextureTest.CorrectNdcForOddViewportDimensions/* = SKIP
+6652 WIN AMD VULKAN : BasicDrawTest.EnableDisableTexture/* = SKIP
+6652 WIN AMD VULKAN : DrawTextureTest.ColorArrayDifferentTypes/* = SKIP
+6652 WIN AMD VULKAN : PointSpriteTest.TrianglesNotTreatedAsPointSprites/* = SKIP

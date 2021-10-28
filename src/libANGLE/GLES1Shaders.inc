@@ -6,10 +6,31 @@
 
 // GLES1Shaders.inc: Defines GLES1 emulation shader.
 
-constexpr char kGLES1DrawVShader[] = R"(#version 300 es
+// The following variables are added in GLES1Renderer::initializeRendererProgram
+// clip_plane_enables
+// enable_alpha_test
+// enable_clip_planes
+// enable_color_material
+// enable_draw_texture
+// enable_fog
+// enable_lighting
+// enable_normalize
+// enable_rescale_normal
+// enable_texture_2d
+// enable_texture_cube_map
+// light_enables
+// light_model_two_sided
+// point_rasterization
+// point_sprite_coord_replace
+// point_sprite_enabled
+// shade_model_flat
+
+constexpr char kGLES1DrawVShaderHeader[] = R"(#version 300 es
 precision highp float;
 
-#define kMaxTexUnits 4
+#define kMaxTexUnits 4)";
+
+constexpr char kGLES1DrawVShader[] = R"(
 
 in vec4 pos;
 in vec3 normal;
@@ -25,19 +46,14 @@ uniform mat4 modelview;
 uniform mat4 modelview_invtr;
 uniform mat4 texture_matrix[kMaxTexUnits];
 
-uniform bool enable_rescale_normal;
-uniform bool enable_normalize;
-
 // Point rasterization//////////////////////////////////////////////////////////
 
-uniform bool point_rasterization;
 uniform float point_size_min;
 uniform float point_size_max;
 uniform vec3 point_distance_attenuation;
 
 // GL_OES_draw_texture uniforms/////////////////////////////////////////////////
 
-uniform bool enable_draw_texture;
 uniform vec4 draw_texture_coords;
 uniform vec2 draw_texture_dims;
 uniform vec4 draw_texture_normalized_crop_rect[kMaxTexUnits];
@@ -259,9 +275,6 @@ constexpr char kGLES1DrawFShaderUniformDefs[] = R"(
 
 // Texture units ///////////////////////////////////////////////////////////////
 
-uniform bool enable_texture_2d[kMaxTexUnits];
-uniform bool enable_texture_cube_map[kMaxTexUnits];
-
 // These are not arrays because hw support for arrays
 // of samplers is rather lacking.
 
@@ -297,7 +310,6 @@ uniform int op2_alpha[kMaxTexUnits];
 uniform vec4 texture_env_color[kMaxTexUnits];
 uniform float texture_env_rgb_scale[kMaxTexUnits];
 uniform float texture_env_alpha_scale[kMaxTexUnits];
-uniform bool point_sprite_coord_replace[kMaxTexUnits];
 
 // Vertex attributes////////////////////////////////////////////////////////////
 
@@ -312,15 +324,10 @@ in vec4 texcoord3_varying;
 
 // Alpha test///////////////////////////////////////////////////////////////////
 
-uniform bool enable_alpha_test;
 uniform int alpha_func;
 uniform float alpha_test_ref;
 
 // Shading: flat shading, lighting, and materials///////////////////////////////
-
-uniform bool shade_model_flat;
-uniform bool enable_lighting;
-uniform bool enable_color_material;
 
 uniform vec4 material_ambient;
 uniform vec4 material_diffuse;
@@ -329,9 +336,7 @@ uniform vec4 material_emissive;
 uniform float material_specular_exponent;
 
 uniform vec4 light_model_scene_ambient;
-uniform bool light_model_two_sided;
 
-uniform bool light_enables[kMaxLights];
 uniform vec4 light_ambients[kMaxLights];
 uniform vec4 light_diffuses[kMaxLights];
 uniform vec4 light_speculars[kMaxLights];
@@ -345,7 +350,6 @@ uniform float light_attenuation_quadratics[kMaxLights];
 
 // Fog /////////////////////////////////////////////////////////////////////////
 
-uniform bool enable_fog;
 uniform int fog_mode;
 uniform float fog_density;
 uniform float fog_start;
@@ -354,18 +358,11 @@ uniform vec4 fog_color;
 
 // User clip plane /////////////////////////////////////////////////////////////
 
-uniform bool enable_clip_planes;
-uniform bool clip_plane_enables[kMaxClipPlanes];
 uniform vec4 clip_planes[kMaxClipPlanes];
 
 // Point rasterization//////////////////////////////////////////////////////////
 
-uniform bool point_rasterization;
-uniform bool point_sprite_enabled;
-
 // GL_OES_draw_texture//////////////////////////////////////////////////////////
-
-uniform bool enable_draw_texture;
 
 // Outgoing fragment////////////////////////////////////////////////////////////
 
