@@ -226,17 +226,7 @@
 6605 : TextureBufferTestES31.UseAsUBOThenUpdateThenAsTextureBuffer/* = SKIP_FOR_CAPTURE
 
 # ES3_1 CompileFailed
-6180 : GeometryShaderTest.ReferencedByGeometryShaderWithoutExtensionEnabled/* = SKIP_FOR_CAPTURE
-6180 : ProgramInterfaceTestES31.GetAtomicCounterProperties/* = SKIP_FOR_CAPTURE
-6180 : ProgramInterfaceTestES31.GetBufferVariableProperties/* = SKIP_FOR_CAPTURE
-6180 : ProgramInterfaceTestES31.GetResourceIndex/* = SKIP_FOR_CAPTURE
-6180 : ProgramInterfaceTestES31.GetResourceName/* = SKIP_FOR_CAPTURE
-6180 : ProgramInterfaceTestES31.GetShaderStorageBlockProperties/* = SKIP_FOR_CAPTURE
-6180 : ProgramInterfaceTestES31.GetStd430BufferVariableProperties/* = SKIP_FOR_CAPTURE
-6180 : ProgramInterfaceTestES31.GetUniformBlockProperties/* = SKIP_FOR_CAPTURE
 6180 : ProgramInterfaceTestES31.GetUniformProperties/* = SKIP_FOR_CAPTURE
-6180 : ProgramInterfaceTestES31.QueryTransformFeedbackVarying/* = SKIP_FOR_CAPTURE
-6180 : ProgramInterfaceTestES31.TopLevelArrayStrideWithAggregateType/* = SKIP_FOR_CAPTURE
 6180 : ShaderStorageBufferTest31.BigStructUnsizedFloatArraySize/* = SKIP_FOR_CAPTURE
 6180 : ShaderStorageBufferTest31.BigStructUnsizedStructArraySize/* = SKIP_FOR_CAPTURE
 6180 : ShaderStorageBufferTest31.MultiStorageBuffersForMultiPrograms/* = SKIP_FOR_CAPTURE
