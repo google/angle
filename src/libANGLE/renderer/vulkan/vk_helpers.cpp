@@ -4729,20 +4729,19 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
                            resolveImage.getLevelCount(), resolveImage.getLayerCount(),
                            isRobustResourceInitEnabled, nullptr, hasProtectedContent));
 
+    // Remove the emulated format clear from the multisampled image if any.  There is one already
+    // staged on the resolve image if needed.
+    removeStagedUpdates(context, getFirstAllocatedLevel(), getLastAllocatedLevel());
+
     const VkMemoryPropertyFlags kMultisampledMemoryFlags =
         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
         (hasLazilyAllocatedMemory ? VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT : 0) |
         (hasProtectedContent ? VK_MEMORY_PROPERTY_PROTECTED_BIT : 0);
 
-    // If this ever fails, this code should be modified to retry creating the image without the
-    // TRANSIENT flag.
-    ANGLE_TRY(initMemory(context, hasProtectedContent, memoryProperties, kMultisampledMemoryFlags));
-
-    // Remove the emulated format clear from the multisampled image if any.  There is one already
-    // staged on the resolve image if needed.
-    removeStagedUpdates(context, getFirstAllocatedLevel(), getLastAllocatedLevel());
-
-    return angle::Result::Continue;
+    // If this ever fails, it can be retried without the LAZILY_ALLOCATED flag (which will probably
+    // still fail), but ideally that means GL_EXT_multisampled_render_to_texture should not be
+    // advertized on this platform in the first place.
+    return initMemory(context, hasProtectedContent, memoryProperties, kMultisampledMemoryFlags);
 }
 
 VkImageAspectFlags ImageHelper::getAspectFlags() const
