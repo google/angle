@@ -199,7 +199,6 @@ config("extra_warnings") {
       "-Wtautological-type-limit-compare",
       "-Wundefined-reinterpret-cast",
       "-Wunneeded-internal-declaration",
-      "-Wweak-template-vtables",
       "-Wunused-but-set-variable",
 
       # The below warnings are used by WebKit. We enable them to make rolling

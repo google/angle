@@ -3986,8 +3986,6 @@ void DescriptorSetCache<Key, CacheType>::destroy(RendererVk *rendererVk)
 
 // RendererVk's methods are not accessible in vk_cache_utils.h
 // Below declarations are needed to avoid linker errors.
-// Unclear why Clang warns about weak vtables in this case.
-ANGLE_DISABLE_WEAK_TEMPLATE_VTABLES_WARNING
 template class DescriptorSetCache<vk::TextureDescriptorDesc, VulkanCacheType::TextureDescriptors>;
 
 template class DescriptorSetCache<vk::UniformsAndXfbDescriptorDesc,
@@ -3995,5 +3993,4 @@ template class DescriptorSetCache<vk::UniformsAndXfbDescriptorDesc,
 
 template class DescriptorSetCache<vk::ShaderBuffersDescriptorDesc,
                                   VulkanCacheType::ShaderBuffersDescriptors>;
-ANGLE_REENABLE_WEAK_TEMPLATE_VTABLES_WARNING
 }  // namespace rx

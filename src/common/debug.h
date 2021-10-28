@@ -448,16 +448,6 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #endif
 
 #if defined(__clang__)
-#    define ANGLE_DISABLE_WEAK_TEMPLATE_VTABLES_WARNING \
-        _Pragma("clang diagnostic push")                \
-            _Pragma("clang diagnostic ignored \"-Wweak-template-vtables\"")
-#    define ANGLE_REENABLE_WEAK_TEMPLATE_VTABLES_WARNING _Pragma("clang diagnostic pop")
-#else
-#    define ANGLE_DISABLE_WEAK_TEMPLATE_VTABLES_WARNING
-#    define ANGLE_REENABLE_WEAK_TEMPLATE_VTABLES_WARNING
-#endif
-
-#if defined(__clang__)
 #    define ANGLE_DISABLE_UNUSED_FUNCTION_WARNING \
         _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wunused-function\"")
 #    define ANGLE_REENABLE_UNUSED_FUNCTION_WARNING _Pragma("clang diagnostic pop")
