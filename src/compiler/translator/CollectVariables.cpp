@@ -596,19 +596,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 recordBuiltInFragmentOutputUsed(symbol->variable(), &mFragColorAdded);
                 return;
             case EvqFragData:
-                if (!mFragDataAdded)
-                {
-                    ShaderVariable info;
-                    setBuiltInInfoFromSymbol(symbol->variable(), &info);
-                    if (!IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_draw_buffers))
-                    {
-                        ASSERT(info.arraySizes.size() == 1u);
-                        info.arraySizes.back() = 1u;
-                    }
-                    info.active = true;
-                    mOutputVariables->push_back(info);
-                    mFragDataAdded = true;
-                }
+                recordBuiltInFragmentOutputUsed(symbol->variable(), &mFragDataAdded);
                 return;
             case EvqFragDepth:
                 recordBuiltInFragmentOutputUsed(symbol->variable(), &mFragDepthAdded);

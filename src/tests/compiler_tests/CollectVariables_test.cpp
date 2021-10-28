@@ -634,6 +634,32 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragData)
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
 }
 
+// Test that gl_FragData built-in usage in ESSL1 fragment shader is reflected in the output
+// variables list, even if the EXT_draw_buffers extension isn't exposed. This covers the
+// usage in the dEQP test dEQP-GLES3.functional.shaders.fragdata.draw_buffers.
+TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDataUniform)
+{
+    const std::string &fragDataShader =
+        "precision mediump float;\n"
+        "uniform int uniIndex;"
+        "void main() {\n"
+        "   gl_FragData[uniIndex] = vec4(1.0);\n"
+        "}\n";
+
+    ShBuiltInResources resources       = mTranslator->getResources();
+    const unsigned int kMaxDrawBuffers = 3u;
+    resources.MaxDrawBuffers           = kMaxDrawBuffers;
+    initTranslator(resources);
+
+    const ShaderVariable *outputVariable = nullptr;
+    validateOutputVariableForShader(fragDataShader, 0u, "gl_FragData", &outputVariable);
+    ASSERT_NE(outputVariable, nullptr);
+    ASSERT_EQ(1u, outputVariable->arraySizes.size());
+    EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySizes.back());
+    EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
+}
+
 // Test that gl_FragDataEXT built-in usage in ESSL1 fragment shader is reflected in the output
 // variables list. Also test that the precision is mediump.
 TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthMediump)
