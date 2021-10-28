@@ -172,7 +172,7 @@ void CaptureGetProgramResourceLocation_name(const State &glState,
                                             const GLchar *name,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureGetProgramResourceName_length(const State &glState,
