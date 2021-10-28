@@ -23,7 +23,6 @@
 #include "compiler/translator/TranslatorMetalDirect/NameEmbeddedUniformStructsMetal.h"
 #include "compiler/translator/TranslatorMetalDirect/ReduceInterfaceBlocks.h"
 #include "compiler/translator/TranslatorMetalDirect/RewriteCaseDeclarations.h"
-#include "compiler/translator/TranslatorMetalDirect/RewriteKeywords.h"
 #include "compiler/translator/TranslatorMetalDirect/RewriteOutArgs.h"
 #include "compiler/translator/TranslatorMetalDirect/RewritePipelines.h"
 #include "compiler/translator/TranslatorMetalDirect/RewriteUnaddressableReferences.h"
@@ -65,8 +64,8 @@ namespace
 {
 
 constexpr Name kSampleMaskWriteFuncName("writeSampleMask", SymbolType::AngleInternal);
-constexpr Name kFlippedPointCoordName("flippedPointCoord", SymbolType::UserDefined);
-constexpr Name kFlippedFragCoordName("flippedFragCoord", SymbolType::UserDefined);
+constexpr Name kFlippedPointCoordName("flippedPointCoord", SymbolType::AngleInternal);
+constexpr Name kFlippedFragCoordName("flippedFragCoord", SymbolType::AngleInternal);
 
 constexpr const TVariable kgl_VertexIDMetal(BuiltInId::gl_VertexID,
                                             ImmutableString("gl_VertexID"),
@@ -631,91 +630,6 @@ bool TranslatorMetalDirect::appendVertexShaderDepthCorrectionToMain(TIntermBlock
     return RunAtTheEndOfShader(this, root, assignment, &getSymbolTable());
 }
 
-static std::set<ImmutableString> GetMslKeywords()
-{
-    std::set<ImmutableString> keywords;
-
-    keywords.emplace("alignas");
-    keywords.emplace("alignof");
-    keywords.emplace("as_type");
-    keywords.emplace("auto");
-    keywords.emplace("catch");
-    keywords.emplace("char");
-    keywords.emplace("class");
-    keywords.emplace("const_cast");
-    keywords.emplace("constant");
-    keywords.emplace("constexpr");
-    keywords.emplace("decltype");
-    keywords.emplace("delete");
-    keywords.emplace("device");
-    keywords.emplace("dynamic_cast");
-    keywords.emplace("enum");
-    keywords.emplace("explicit");
-    keywords.emplace("export");
-    keywords.emplace("extern");
-    keywords.emplace("fragment");
-    keywords.emplace("friend");
-    keywords.emplace("goto");
-    keywords.emplace("half");
-    keywords.emplace("inline");
-    keywords.emplace("int16_t");
-    keywords.emplace("int32_t");
-    keywords.emplace("int64_t");
-    keywords.emplace("int8_t");
-    keywords.emplace("kernel");
-    keywords.emplace("long");
-    keywords.emplace("main0");
-    keywords.emplace("metal");
-    keywords.emplace("mutable");
-    keywords.emplace("namespace");
-    keywords.emplace("new");
-    keywords.emplace("noexcept");
-    keywords.emplace("nullptr_t");
-    keywords.emplace("nullptr");
-    keywords.emplace("operator");
-    keywords.emplace("override");
-    keywords.emplace("private");
-    keywords.emplace("protected");
-    keywords.emplace("ptrdiff_t");
-    keywords.emplace("public");
-    keywords.emplace("ray_data");
-    keywords.emplace("register");
-    keywords.emplace("short");
-    keywords.emplace("signed");
-    keywords.emplace("size_t");
-    keywords.emplace("sizeof");
-    keywords.emplace("stage_in");
-    keywords.emplace("static_assert");
-    keywords.emplace("static_cast");
-    keywords.emplace("static");
-    keywords.emplace("template");
-    keywords.emplace("this");
-    keywords.emplace("thread_local");
-    keywords.emplace("thread");
-    keywords.emplace("threadgroup_imageblock");
-    keywords.emplace("threadgroup");
-    keywords.emplace("throw");
-    keywords.emplace("try");
-    keywords.emplace("typedef");
-    keywords.emplace("typeid");
-    keywords.emplace("typename");
-    keywords.emplace("uchar");
-    keywords.emplace("uint16_t");
-    keywords.emplace("uint32_t");
-    keywords.emplace("uint64_t");
-    keywords.emplace("uint8_t");
-    keywords.emplace("union");
-    keywords.emplace("unsigned");
-    keywords.emplace("ushort");
-    keywords.emplace("using");
-    keywords.emplace("vertex");
-    keywords.emplace("virtual");
-    keywords.emplace("volatile");
-    keywords.emplace("wchar_t");
-    keywords.emplace("NAN");
-    return keywords;
-}
-
 static inline MetalShaderType metalShaderTypeFromGLSL(sh::GLenum shaderType)
 {
     switch (shaderType)
@@ -756,7 +670,7 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
     // is inactive.
     if (!RemoveInactiveInterfaceVariables(this, root, &getSymbolTable(), getAttributes(),
                                           getInputVaryings(), getOutputVariables(), getUniforms(),
-                                          getInterfaceBlocks()))
+                                          getInterfaceBlocks(), false))
     {
         return false;
     }
@@ -1131,11 +1045,6 @@ bool TranslatorMetalDirect::translateImpl(TInfoSinkBase &sink,
     }
 
     if (!validateAST(root))
-    {
-        return false;
-    }
-
-    if (!RewriteKeywords(*this, *root, idGen, GetMslKeywords()))
     {
         return false;
     }

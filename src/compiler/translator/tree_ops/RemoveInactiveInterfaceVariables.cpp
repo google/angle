@@ -29,7 +29,8 @@ class RemoveInactiveInterfaceVariablesTraverser : public TIntermTraverser
         const std::vector<sh::ShaderVariable> &inputVaryings,
         const std::vector<sh::ShaderVariable> &outputVariables,
         const std::vector<sh::ShaderVariable> &uniforms,
-        const std::vector<sh::InterfaceBlock> &interfaceBlocks);
+        const std::vector<sh::InterfaceBlock> &interfaceBlocks,
+        bool removeFragmentOutputs);
 
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
     bool visitBinary(Visit visit, TIntermBinary *node) override;
@@ -40,6 +41,7 @@ class RemoveInactiveInterfaceVariablesTraverser : public TIntermTraverser
     const std::vector<sh::ShaderVariable> &mOutputVariables;
     const std::vector<sh::ShaderVariable> &mUniforms;
     const std::vector<sh::InterfaceBlock> &mInterfaceBlocks;
+    bool mRemoveFragmentOutputs;
 };
 
 RemoveInactiveInterfaceVariablesTraverser::RemoveInactiveInterfaceVariablesTraverser(
@@ -48,13 +50,15 @@ RemoveInactiveInterfaceVariablesTraverser::RemoveInactiveInterfaceVariablesTrave
     const std::vector<sh::ShaderVariable> &inputVaryings,
     const std::vector<sh::ShaderVariable> &outputVariables,
     const std::vector<sh::ShaderVariable> &uniforms,
-    const std::vector<sh::InterfaceBlock> &interfaceBlocks)
+    const std::vector<sh::InterfaceBlock> &interfaceBlocks,
+    bool removeFragmentOutputs)
     : TIntermTraverser(true, false, false, symbolTable),
       mAttributes(attributes),
       mInputVaryings(inputVaryings),
       mOutputVariables(outputVariables),
       mUniforms(uniforms),
-      mInterfaceBlocks(interfaceBlocks)
+      mInterfaceBlocks(interfaceBlocks),
+      mRemoveFragmentOutputs(removeFragmentOutputs)
 {}
 
 template <typename Variable>
@@ -126,7 +130,8 @@ bool RemoveInactiveInterfaceVariablesTraverser::visitDeclaration(Visit visit,
     }
     else if (qualifier == EvqFragmentOut)
     {
-        removeDeclaration = !IsVariableActive(mOutputVariables, asSymbol->getName());
+        removeDeclaration =
+            !IsVariableActive(mOutputVariables, asSymbol->getName()) && mRemoveFragmentOutputs;
     }
 
     if (removeDeclaration)
@@ -191,10 +196,12 @@ bool RemoveInactiveInterfaceVariables(TCompiler *compiler,
                                       const std::vector<sh::ShaderVariable> &inputVaryings,
                                       const std::vector<sh::ShaderVariable> &outputVariables,
                                       const std::vector<sh::ShaderVariable> &uniforms,
-                                      const std::vector<sh::InterfaceBlock> &interfaceBlocks)
+                                      const std::vector<sh::InterfaceBlock> &interfaceBlocks,
+                                      bool removeFragmentOutputs)
 {
     RemoveInactiveInterfaceVariablesTraverser traverser(symbolTable, attributes, inputVaryings,
-                                                        outputVariables, uniforms, interfaceBlocks);
+                                                        outputVariables, uniforms, interfaceBlocks,
+                                                        removeFragmentOutputs);
     root->traverse(&traverser);
     return traverser.updateTree(compiler, root);
 }

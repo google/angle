@@ -856,7 +856,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
     // is inactive.
     if (!RemoveInactiveInterfaceVariables(this, root, &getSymbolTable(), getAttributes(),
                                           getInputVaryings(), getOutputVariables(), getUniforms(),
-                                          getInterfaceBlocks()))
+                                          getInterfaceBlocks(), true))
     {
         return false;
     }

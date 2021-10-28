@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "compiler/translator/TranslatorMetalDirect/RewriteKeywords.h"
+#include "compiler/translator/TranslatorMetalDirect/IdGen.h"
 
 using namespace sh;
 
