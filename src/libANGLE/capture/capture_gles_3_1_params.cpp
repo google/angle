@@ -257,7 +257,7 @@ void CaptureGetTexLevelParameterfv_params(const State &glState,
                                           GLfloat *params,
                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLfloat), paramCapture);
 }
 
 void CaptureGetTexLevelParameteriv_params(const State &glState,
@@ -268,7 +268,7 @@ void CaptureGetTexLevelParameteriv_params(const State &glState,
                                           GLint *params,
                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLint), paramCapture);
 }
 
 void CaptureProgramUniform1fv_value(const State &glState,

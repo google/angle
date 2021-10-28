@@ -225,9 +225,6 @@
 6605 : TextureBufferTestES31.MapTextureBufferInvalidateThenWrite/* = SKIP_FOR_CAPTURE
 6605 : TextureBufferTestES31.UseAsUBOThenUpdateThenAsTextureBuffer/* = SKIP_FOR_CAPTURE
 
-# ES3_1 CompileFailed
-6180 : TextureBufferTestES31.QueryWidthAfterBufferResize/* = SKIP_FOR_CAPTURE
-
 # ES3_1 gtest skips
 6180 : GLSLTest_ES31.InterpolateAtWithSwizzle/ES3_1_Vulkan_SwiftShader = SKIPPED_BY_GTEST
 6180 : GLSLTest_ES31.VaryingTessellationSampleInAndOut/ES3_1_Vulkan_SwiftShader = SKIPPED_BY_GTEST
