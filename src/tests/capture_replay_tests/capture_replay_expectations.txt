@@ -237,9 +237,6 @@
 6605 : TextureBufferTestES31.UseAsUBOThenUpdateThenAsTextureBuffer/* = SKIP_FOR_CAPTURE
 
 # ES3_1 CompileFailed
-6180 : GLSLTest_ES31.ArraysOfArraysBlockBasicType/* = SKIP_FOR_CAPTURE
-6180 : GLSLTest_ES31.InactiveAtomicCounters/* = SKIP_FOR_CAPTURE
-6180 : GLSLTest_ES31.InactiveImages/* = SKIP_FOR_CAPTURE
 6180 : GeometryShaderTest.ReferencedByGeometryShaderWithoutExtensionEnabled/* = SKIP_FOR_CAPTURE
 6180 : ProgramInterfaceTestES31.GetAtomicCounterProperties/* = SKIP_FOR_CAPTURE
 6180 : ProgramInterfaceTestES31.GetBufferVariableProperties/* = SKIP_FOR_CAPTURE

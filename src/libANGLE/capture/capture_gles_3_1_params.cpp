@@ -162,7 +162,7 @@ void CaptureGetProgramResourceIndex_name(const State &glState,
                                          const GLchar *name,
                                          ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureString(name, paramCapture);
 }
 
 void CaptureGetProgramResourceLocation_name(const State &glState,
