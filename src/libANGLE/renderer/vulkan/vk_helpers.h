@@ -219,7 +219,7 @@ class DynamicShadowBuffer : public angle::NonCopyable
     }
 
     // Map the CPU only buffer and return the pointer. We map the entire buffer for now.
-    ANGLE_INLINE void map(size_t offset, void **mapPtr)
+    ANGLE_INLINE void map(size_t offset, uint8_t **mapPtr)
     {
         ASSERT(mapPtr);
         ASSERT(!mBuffer.empty());

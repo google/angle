@@ -125,7 +125,11 @@ class BufferVk : public BufferImpl
                                GLbitfield access,
                                void **mapPtr);
     angle::Result unmapImpl(ContextVk *contextVk);
-    angle::Result ghostMappedBuffer(ContextVk *contextVk, VkDeviceSize offset, void **mapPtr);
+    angle::Result ghostMappedBuffer(ContextVk *contextVk,
+                                    VkDeviceSize offset,
+                                    VkDeviceSize length,
+                                    GLbitfield access,
+                                    void **mapPtr);
 
     ConversionBuffer *getVertexConversionBuffer(RendererVk *renderer,
                                                 angle::FormatID formatID,
@@ -162,6 +166,16 @@ class BufferVk : public BufferImpl
                                const uint8_t *data,
                                size_t size,
                                size_t offset);
+    angle::Result allocMappedStagingBuffer(ContextVk *contextVk,
+                                           size_t size,
+                                           vk::DynamicBuffer **stagingBuffer,
+                                           VkDeviceSize *stagingBufferOffset,
+                                           uint8_t **mapPtr);
+    angle::Result flushMappedStagingBuffer(ContextVk *contextVk,
+                                           vk::DynamicBuffer *stagingBuffer,
+                                           VkDeviceSize stagingBufferOffset,
+                                           size_t size,
+                                           size_t offset);
     angle::Result acquireAndUpdate(ContextVk *contextVk,
                                    const uint8_t *data,
                                    size_t updateSize,
@@ -226,6 +240,11 @@ class BufferVk : public BufferImpl
     // operation by elimnating the need to wait on any recorded or in-flight GPU commands.
     // We use DynamicShadowBuffer class to encapsulate all the bookeeping logic.
     vk::DynamicShadowBuffer mShadowBuffer;
+
+    // A buffer pool to service GL_MAP_INVALIDATE_RANGE_BIT -style uploads.
+    vk::DynamicBuffer *mMapInvalidateRangeStagingBuffer;
+    VkDeviceSize mMapInvalidateRangeStagingBufferOffset;
+    uint8_t *mMapInvalidateRangeMappedPtr;
 
     // A cache of converted vertex data.
     std::vector<VertexConversionBuffer> mVertexConversionBuffers;
