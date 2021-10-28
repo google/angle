@@ -2945,8 +2945,11 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
 
         const SpirvDecorations operandDecorations = mBuilder.getDecorations(firstOperandType);
 
+        const TType &matrixType =
+            firstOperandType.isMatrix() ? firstOperandType : secondChild->getType();
+
         const spirv::IdRef columnTypeId =
-            mBuilder.getBasicTypeId(firstOperandType.getBasicType(), firstOperandType.getRows());
+            mBuilder.getBasicTypeId(matrixType.getBasicType(), matrixType.getRows());
 
         if (binarySwapOperands)
         {
@@ -2959,7 +2962,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
         }
 
         // Extract and apply the operator to each column.
-        for (int columnIndex = 0; columnIndex < firstOperandType.getCols(); ++columnIndex)
+        for (int columnIndex = 0; columnIndex < matrixType.getCols(); ++columnIndex)
         {
             spirv::IdRef columnIdA = parameters[0];
             if (firstOperandType.isMatrix())

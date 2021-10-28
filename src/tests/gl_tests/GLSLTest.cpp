@@ -14222,6 +14222,35 @@ void main() {
     EXPECT_NE(compileResult, 0);
 }
 
+// Regression test for a bug in SPIR-V output where float+matrix was mishandled.
+TEST_P(GLSLTest_ES3, FloatPlusMatrix)
+{
+    constexpr char kFS[] = R"(#version 300 es
+
+precision mediump float;
+
+layout(location=0) out vec4 color;
+
+uniform float f;
+
+void main()
+{
+    mat3x2 m = f + mat3x2(0);
+    color = vec4(m[0][0]);
+})";
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = {kFS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kFS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
 // Regression test for a bug in SPIR-V output where a transformation creates float(constant) without
 // folding it into a TIntermConstantUnion.  This transformation is clamping non-constant indices in
 // WebGL.  The |false ? i : 5| as index caused the transformation to consider this a non-constant
