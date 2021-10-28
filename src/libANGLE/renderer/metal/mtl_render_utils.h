@@ -50,6 +50,14 @@ struct ClearRectParams
     bool flipY = false;
 };
 
+struct NormalizedCoords
+{
+    NormalizedCoords();
+    NormalizedCoords(float x, float y, float width, float height, const gl::Rectangle &rect);
+    NormalizedCoords(const gl::Rectangle &rect, const gl::Extents &extents);
+    float v[4];
+};
+
 struct BlitParams
 {
     gl::Extents dstTextureSize;
@@ -71,7 +79,7 @@ struct BlitParams
     // Source rectangle:
     // NOTE: if srcYFlipped=true, this rectangle will be converted internally to flipped rect before
     // blitting.
-    gl::Rectangle srcRect;
+    NormalizedCoords srcNormalizedCoords;
 
     bool srcYFlipped = false;  // source texture has data flipped in Y direction
     bool unpackFlipX = false;  // flip texture data copying process in X direction

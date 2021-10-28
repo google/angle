@@ -191,9 +191,7 @@ struct ScopedDisableOcclusionQuery
     angle::Result *mResultOut;
 };
 
-void GetBlitTexCoords(uint32_t srcWidth,
-                      uint32_t srcHeight,
-                      const gl::Rectangle &srcRect,
+void GetBlitTexCoords(const NormalizedCoords &normalizedCoords,
                       bool srcYFlipped,
                       bool unpackFlipX,
                       bool unpackFlipY,
@@ -202,33 +200,26 @@ void GetBlitTexCoords(uint32_t srcWidth,
                       float *u1,
                       float *v1)
 {
-    int x0 = srcRect.x0();  // left
-    int x1 = srcRect.x1();  // right
-    int y0 = srcRect.y0();  // lower
-    int y1 = srcRect.y1();  // upper
+    *u0 = normalizedCoords.v[0];
+    *v0 = normalizedCoords.v[1];
+    *u1 = normalizedCoords.v[2];
+    *v1 = normalizedCoords.v[3];
+
     if (srcYFlipped)
     {
-        // If source's Y has been flipped, such as default framebuffer, then adjust the real source
-        // rectangle.
-        y0 = srcHeight - y1;
-        y1 = y0 + srcRect.height;
-        std::swap(y0, y1);
+        *v0 = 1.0 - *v0;
+        *v1 = 1.0 - *v1;
     }
 
     if (unpackFlipX)
     {
-        std::swap(x0, x1);
+        std::swap(*u0, *u1);
     }
 
     if (unpackFlipY)
     {
-        std::swap(y0, y1);
+        std::swap(*v0, *v1);
     }
-
-    *u0 = static_cast<float>(x0) / srcWidth;
-    *u1 = static_cast<float>(x1) / srcWidth;
-    *v0 = static_cast<float>(y0) / srcHeight;
-    *v1 = static_cast<float>(y1) / srcHeight;
 }
 
 template <typename T>
@@ -772,27 +763,8 @@ void SetupBlitWithDrawUniformData(RenderCommandEncoder *cmdEncoder,
         uniformParams.dstLuminance         = colorParams->dstLuminance ? 1 : 0;
     }
 
-    // Compute source texCoords
-    uint32_t srcWidth = 0, srcHeight = 0;
-    if (params.src)
-    {
-        srcWidth  = params.src->width(params.srcLevel);
-        srcHeight = params.src->height(params.srcLevel);
-    }
-    else if (!isColorBlit)
-    {
-        const DepthStencilBlitParams *dsParams =
-            static_cast<const DepthStencilBlitParams *>(&params);
-        srcWidth  = dsParams->srcStencil->width(dsParams->srcLevel);
-        srcHeight = dsParams->srcStencil->height(dsParams->srcLevel);
-    }
-    else
-    {
-        UNREACHABLE();
-    }
-
     float u0, v0, u1, v1;
-    GetBlitTexCoords(srcWidth, srcHeight, params.srcRect, params.srcYFlipped, params.unpackFlipX,
+    GetBlitTexCoords(params.srcNormalizedCoords, params.srcYFlipped, params.unpackFlipX,
                      params.unpackFlipY, &u0, &v0, &u1, &v1);
 
     float du = u1 - u0;
@@ -897,20 +869,44 @@ ANGLE_INLINE void SetPipelineState(ComputeCommandEncoder *encoder,
 
 }  // namespace
 
+NormalizedCoords::NormalizedCoords() : v{0.0f, 0.0f, 1.0f, 1.0f} {}
+
+NormalizedCoords::NormalizedCoords(float x,
+                                   float y,
+                                   float width,
+                                   float height,
+                                   const gl::Rectangle &rect)
+    : v{
+          x / rect.width,
+          y / rect.height,
+          (x + width) / rect.width,
+          (y + height) / rect.height,
+      }
+{}
+
+NormalizedCoords::NormalizedCoords(const gl::Rectangle &rect, const gl::Extents &extents)
+    : v{
+          static_cast<float>(rect.x0()) / extents.width,
+          static_cast<float>(rect.y0()) / extents.height,
+          static_cast<float>(rect.x1()) / extents.width,
+          static_cast<float>(rect.y1()) / extents.height,
+      }
+{}
+
 // StencilBlitViaBufferParams implementation
 StencilBlitViaBufferParams::StencilBlitViaBufferParams() {}
 
 StencilBlitViaBufferParams::StencilBlitViaBufferParams(const DepthStencilBlitParams &srcParams)
 {
-    dstTextureSize = srcParams.dstTextureSize;
-    dstRect        = srcParams.dstRect;
-    dstScissorRect = srcParams.dstScissorRect;
-    dstFlipY       = srcParams.dstFlipY;
-    dstFlipX       = srcParams.dstFlipX;
-    srcRect        = srcParams.srcRect;
-    srcYFlipped    = srcParams.srcYFlipped;
-    unpackFlipX    = srcParams.unpackFlipX;
-    unpackFlipY    = srcParams.unpackFlipY;
+    dstTextureSize      = srcParams.dstTextureSize;
+    dstRect             = srcParams.dstRect;
+    dstScissorRect      = srcParams.dstScissorRect;
+    dstFlipY            = srcParams.dstFlipY;
+    dstFlipX            = srcParams.dstFlipX;
+    srcNormalizedCoords = srcParams.srcNormalizedCoords;
+    srcYFlipped         = srcParams.srcYFlipped;
+    unpackFlipX         = srcParams.unpackFlipX;
+    unpackFlipY         = srcParams.unpackFlipY;
 
     srcStencil = srcParams.srcStencil;
 }
@@ -1025,8 +1021,9 @@ angle::Result RenderUtils::blitColorWithDraw(const gl::Context *context,
     params.dstTextureSize = gl::Extents(static_cast<int>(srcTexture->widthAt0()),
                                         static_cast<int>(srcTexture->heightAt0()),
                                         static_cast<int>(srcTexture->depthAt0()));
-    params.dstRect = params.dstScissorRect = params.srcRect =
+    params.dstRect        = params.dstScissorRect =
         gl::Rectangle(0, 0, params.dstTextureSize.width, params.dstTextureSize.height);
+    params.srcNormalizedCoords = NormalizedCoords();
 
     return blitColorWithDraw(context, cmdEncoder, srcAngleFormat, params);
 }
@@ -1839,9 +1836,6 @@ angle::Result DepthStencilBlitUtils::blitStencilViaCopyBuffer(
 
     cmdEncoder->setComputePipelineState(pipeline);
 
-    uint32_t srcWidth  = params.srcStencil->width(params.srcLevel);
-    uint32_t srcHeight = params.srcStencil->height(params.srcLevel);
-
     float u0, v0, u1, v1;
     bool unpackFlipX = params.unpackFlipX;
     bool unpackFlipY = params.unpackFlipY;
@@ -1853,8 +1847,8 @@ angle::Result DepthStencilBlitUtils::blitStencilViaCopyBuffer(
     {
         unpackFlipY = !unpackFlipY;
     }
-    GetBlitTexCoords(srcWidth, srcHeight, params.srcRect, params.srcYFlipped, unpackFlipX,
-                     unpackFlipY, &u0, &v0, &u1, &v1);
+    GetBlitTexCoords(params.srcNormalizedCoords, params.srcYFlipped, unpackFlipX, unpackFlipY, &u0,
+                     &v0, &u1, &v1);
 
     BlitStencilToBufferParamsUniform uniform;
     uniform.srcTexCoordSteps[0]  = (u1 - u0) / params.dstRect.width;

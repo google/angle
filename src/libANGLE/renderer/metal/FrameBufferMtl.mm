@@ -7,6 +7,7 @@
 //    Implements the class methods for FramebufferMtl.
 //
 
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 
 #include <TargetConditionals.h>
@@ -266,6 +267,166 @@ angle::Result FramebufferMtl::readPixels(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+namespace
+{
+
+// Naming FloatRectangle instead of Rectangle because it seems like it would be confused with
+// gl::Rectangle
+struct FloatRectangle
+{
+    FloatRectangle() : x(0.0f), y(0.0f), width(0.0f), height(0.0f) {}
+    constexpr FloatRectangle(int x_in, int y_in, int width_in, int height_in)
+        : x(x_in), y(y_in), width(width_in), height(height_in)
+    {}
+    explicit constexpr FloatRectangle(const gl::Rectangle &rect)
+        : x(rect.x), y(rect.y), width(rect.width), height(rect.height)
+    {}
+    explicit constexpr FloatRectangle(const float corners[4])
+        : x(corners[0]),
+          y(corners[1]),
+          width(corners[2] - corners[0]),
+          height(corners[3] - corners[1])
+    {}
+
+    float x0() const { return x; }
+    float y0() const { return y; }
+    float x1() const { return x + width; }
+    float y1() const { return y + height; }
+
+    bool isReversedX() const { return width < 0.0f; }
+    bool isReversedY() const { return height < 0.0f; }
+
+    // Returns a rectangle with the same area but flipped in X, Y, neither or both.
+    FloatRectangle flip(bool flipX, bool flipY) const;
+
+    // Returns a rectangle with the same area but with height and width guaranteed to be positive.
+    FloatRectangle removeReversal() const;
+
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
+FloatRectangle FloatRectangle::flip(bool flipX, bool flipY) const
+{
+    FloatRectangle flipped = *this;
+    if (flipX)
+    {
+        flipped.x     = flipped.x + flipped.width;
+        flipped.width = -flipped.width;
+    }
+    if (flipY)
+    {
+        flipped.y      = flipped.y + flipped.height;
+        flipped.height = -flipped.height;
+    }
+    return flipped;
+}
+
+FloatRectangle FloatRectangle::removeReversal() const
+{
+    return flip(isReversedX(), isReversedY());
+}
+
+float clamp0Max(float v, float max)
+{
+    return std::max(0.0f, std::min(max, v));
+}
+
+void ClampToBoundsAndAdjustCorrespondingValue(float a,
+                                              float originalASize,
+                                              float maxSize,
+                                              float b,
+                                              float originalBSize,
+                                              float *newA,
+                                              float *newB)
+{
+    float clippedA = clamp0Max(a, maxSize);
+    float delta    = clippedA - a;
+    *newA          = clippedA;
+    *newB          = b + delta * originalBSize / originalASize;
+}
+
+void ClipRectToBoundsAndAdjustCorrespondingRect(const FloatRectangle &a,
+                                                const gl::Rectangle &originalA,
+                                                const gl::Rectangle &clipDimensions,
+                                                const FloatRectangle &b,
+                                                const gl::Rectangle &originalB,
+                                                FloatRectangle *newA,
+                                                FloatRectangle *newB)
+{
+    float newAValues[4];
+    float newBValues[4];
+    ClampToBoundsAndAdjustCorrespondingValue(a.x0(), originalA.width, clipDimensions.width, b.x0(),
+                                             originalB.width, &newAValues[0], &newBValues[0]);
+    ClampToBoundsAndAdjustCorrespondingValue(a.y0(), originalA.height, clipDimensions.height,
+                                             b.y0(), originalB.height, &newAValues[1],
+                                             &newBValues[1]);
+    ClampToBoundsAndAdjustCorrespondingValue(a.x1(), originalA.width, clipDimensions.width, b.x1(),
+                                             originalB.width, &newAValues[2], &newBValues[2]);
+    ClampToBoundsAndAdjustCorrespondingValue(a.y1(), originalA.height, clipDimensions.height,
+                                             b.y1(), originalB.height, &newAValues[3],
+                                             &newBValues[3]);
+
+    *newA = FloatRectangle(newAValues);
+    *newB = FloatRectangle(newBValues);
+}
+
+void ClipRectsToBoundsAndAdjustCorrespondingRect(const FloatRectangle &a,
+                                                 const gl::Rectangle &originalA,
+                                                 const gl::Rectangle &aClipDimensions,
+                                                 const FloatRectangle &b,
+                                                 const gl::Rectangle &originalB,
+                                                 const gl::Rectangle &bClipDimensions,
+                                                 FloatRectangle *newA,
+                                                 FloatRectangle *newB)
+{
+    FloatRectangle tempA;
+    FloatRectangle tempB;
+    ClipRectToBoundsAndAdjustCorrespondingRect(a, originalA, aClipDimensions, b, originalB, &tempA,
+                                               &tempB);
+    ClipRectToBoundsAndAdjustCorrespondingRect(tempB, originalB, bClipDimensions, tempA, originalA,
+                                               newB, newA);
+}
+
+void RoundValueAndAdjustCorrespondingValue(float a,
+                                           float originalASize,
+                                           float b,
+                                           float originalBSize,
+                                           int *newA,
+                                           float *newB)
+{
+    float roundedA = std::round(a);
+    float delta    = roundedA - a;
+    *newA          = static_cast<int>(roundedA);
+    *newB          = b + delta * originalBSize / originalASize;
+}
+
+gl::Rectangle RoundRectToPixelsAndAdjustCorrespondingRectToMatch(const FloatRectangle &a,
+                                                                 const gl::Rectangle &originalA,
+                                                                 const FloatRectangle &b,
+                                                                 const gl::Rectangle &originalB,
+                                                                 FloatRectangle *newB)
+{
+    int newAValues[4];
+    float newBValues[4];
+    RoundValueAndAdjustCorrespondingValue(a.x0(), originalA.width, b.x0(), originalB.width,
+                                          &newAValues[0], &newBValues[0]);
+    RoundValueAndAdjustCorrespondingValue(a.y0(), originalA.height, b.y0(), originalB.height,
+                                          &newAValues[1], &newBValues[1]);
+    RoundValueAndAdjustCorrespondingValue(a.x1(), originalA.width, b.x1(), originalB.width,
+                                          &newAValues[2], &newBValues[2]);
+    RoundValueAndAdjustCorrespondingValue(a.y1(), originalA.height, b.y1(), originalB.height,
+                                          &newAValues[3], &newBValues[3]);
+
+    *newB = FloatRectangle(newBValues);
+    return gl::Rectangle(newAValues[0], newAValues[1], newAValues[2] - newAValues[0],
+                         newAValues[3] - newAValues[1]);
+}
+
+}  // namespace
+
 angle::Result FramebufferMtl::blit(const gl::Context *context,
                                    const gl::Rectangle &sourceAreaIn,
                                    const gl::Rectangle &destAreaIn,
@@ -292,87 +453,38 @@ angle::Result FramebufferMtl::blit(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    gl::Rectangle sourceArea = sourceAreaIn;
-    gl::Rectangle destArea   = destAreaIn;
-
     const gl::Rectangle srcFramebufferDimensions = srcFrameBuffer->getCompleteRenderArea();
+    const gl::Rectangle dstFramebufferDimensions = this->getCompleteRenderArea();
 
-    // If the destination is flipped in either direction, we will flip the source instead so that
-    // the destination area is always unflipped.
-    sourceArea = sourceArea.flip(destArea.isReversedX(), destArea.isReversedY());
-    destArea   = destArea.removeReversal();
+    FloatRectangle srcRect(sourceAreaIn);
+    FloatRectangle dstRect(destAreaIn);
 
-    // Calculate the stretch factor prior to any clipping, as it needs to remain constant.
-    const float stretch[2] = {
-        std::abs(sourceArea.width / static_cast<float>(destArea.width)),
-        std::abs(sourceArea.height / static_cast<float>(destArea.height)),
-    };
+    FloatRectangle clippedSrcRect;
+    FloatRectangle clippedDstRect;
+    ClipRectsToBoundsAndAdjustCorrespondingRect(srcRect, sourceAreaIn, srcFramebufferDimensions,
+                                                dstRect, destAreaIn, dstFramebufferDimensions,
+                                                &clippedSrcRect, &clippedDstRect);
 
-    // First, clip the source area to framebuffer.  That requires transforming the dest area to
-    // match the clipped source.
-    gl::Rectangle absSourceArea = sourceArea.removeReversal();
-    gl::Rectangle clippedSourceArea;
-    if (!gl::ClipRectangle(srcFramebufferDimensions, absSourceArea, &clippedSourceArea))
-    {
-        return angle::Result::Continue;
-    }
-
-    // Resize the destination area based on the new size of source.  Note again that stretch is
-    // calculated as SrcDimension/DestDimension.
-    gl::Rectangle srcClippedDestArea;
-    if (clippedSourceArea == absSourceArea)
-    {
-        // If there was no clipping, keep dest area as is.
-        srcClippedDestArea = destArea;
-    }
-    else
-    {
-        // Shift dest area's x0,y0,x1,y1 by as much as the source area's got shifted (taking
-        // stretching into account)
-        float x0Shift = std::round((clippedSourceArea.x - absSourceArea.x) / stretch[0]);
-        float y0Shift = std::round((clippedSourceArea.y - absSourceArea.y) / stretch[1]);
-        float x1Shift = std::round((absSourceArea.x1() - clippedSourceArea.x1()) / stretch[0]);
-        float y1Shift = std::round((absSourceArea.y1() - clippedSourceArea.y1()) / stretch[1]);
-
-        // If the source area was reversed in any direction, the shift should be applied in the
-        // opposite direction as well.
-        if (sourceArea.isReversedX())
-        {
-            std::swap(x0Shift, x1Shift);
-        }
-
-        if (sourceArea.isReversedY())
-        {
-            std::swap(y0Shift, y1Shift);
-        }
-
-        srcClippedDestArea.x = destArea.x0() + static_cast<int>(x0Shift);
-        srcClippedDestArea.y = destArea.y0() + static_cast<int>(y0Shift);
-        int x1               = destArea.x1() - static_cast<int>(x1Shift);
-        int y1               = destArea.y1() - static_cast<int>(y1Shift);
-
-        srcClippedDestArea.width  = x1 - srcClippedDestArea.x;
-        srcClippedDestArea.height = y1 - srcClippedDestArea.y;
-    }
-
-    // Flip source area if necessary
-    clippedSourceArea = srcFrameBuffer->getCorrectFlippedReadArea(context, clippedSourceArea);
-
-    bool unpackFlipX = sourceArea.isReversedX();
-    bool unpackFlipY = sourceArea.isReversedY();
+    FloatRectangle adjustedSrcRect;
+    gl::Rectangle srcClippedDestArea = RoundRectToPixelsAndAdjustCorrespondingRectToMatch(
+        clippedDstRect, destAreaIn, clippedSrcRect, sourceAreaIn, &adjustedSrcRect);
 
     if (srcFrameBuffer->flipY())
     {
-        // The rectangle already flipped by calling getCorrectFlippedReadArea(). So reverse the
-        // unpackFlipY flag.
-        unpackFlipY = !unpackFlipY;
+        adjustedSrcRect.y =
+            srcFramebufferDimensions.height - adjustedSrcRect.y - adjustedSrcRect.height;
+        adjustedSrcRect = adjustedSrcRect.flip(false, true);
     }
 
-    ASSERT(!destArea.isReversedX() && !destArea.isReversedY());
+    // If the destination is flipped in either direction, we will flip the source instead so that
+    // the destination area is always unflipped.
+    adjustedSrcRect =
+        adjustedSrcRect.flip(srcClippedDestArea.isReversedX(), srcClippedDestArea.isReversedY());
+    srcClippedDestArea = srcClippedDestArea.removeReversal();
 
     // Clip the destination area to the framebuffer size and scissor.
     gl::Rectangle scissoredDestArea;
-    if (!gl::ClipRectangle(ClipRectToScissor(glState, this->getCompleteRenderArea(), false),
+    if (!gl::ClipRectangle(ClipRectToScissor(glState, dstFramebufferDimensions, false),
                            srcClippedDestArea, &scissoredDestArea))
     {
         return angle::Result::Continue;
@@ -380,17 +492,20 @@ angle::Result FramebufferMtl::blit(const gl::Context *context,
 
     // Use blit with draw
     mtl::BlitParams baseParams;
-    baseParams.dstTextureSize = mState.getExtents();
+    baseParams.dstTextureSize =
+        gl::Extents(dstFramebufferDimensions.width, dstFramebufferDimensions.height, 1);
     baseParams.dstRect        = srcClippedDestArea;
     baseParams.dstScissorRect = scissoredDestArea;
     baseParams.dstFlipY       = this->flipY();
 
-    baseParams.srcRect = clippedSourceArea;
+    baseParams.srcNormalizedCoords =
+        mtl::NormalizedCoords(adjustedSrcRect.x, adjustedSrcRect.y, adjustedSrcRect.width,
+                              adjustedSrcRect.height, srcFramebufferDimensions);
     // This flag is for auto flipping the rect inside RenderUtils. Since we already flip it using
     // getCorrectFlippedReadArea(). This flag is not needed.
     baseParams.srcYFlipped = false;
-    baseParams.unpackFlipX = unpackFlipX;
-    baseParams.unpackFlipY = unpackFlipY;
+    baseParams.unpackFlipX = false;
+    baseParams.unpackFlipY = false;
 
     return blitWithDraw(context, srcFrameBuffer, blitColorBuffer, blitDepthBuffer,
                         blitStencilBuffer, filter, baseParams);

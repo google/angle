@@ -2142,10 +2142,12 @@ angle::Result TextureMtl::copySubImageWithDraw(const gl::Context *context,
 
     blitParams.enabledBuffers.set(0);
 
-    blitParams.src          = colorReadRT->getTexture();
-    blitParams.srcLevel     = colorReadRT->getLevelIndex();
-    blitParams.srcLayer     = colorReadRT->getLayerIndex();
-    blitParams.srcRect      = clippedSourceArea;
+    blitParams.src      = colorReadRT->getTexture();
+    blitParams.srcLevel = colorReadRT->getLevelIndex();
+    blitParams.srcLayer = colorReadRT->getLayerIndex();
+
+    blitParams.srcNormalizedCoords = mtl::NormalizedCoords(
+        clippedSourceArea, colorReadRT->getTexture()->size(blitParams.srcLevel));
     blitParams.srcYFlipped  = source->flipY();
     blitParams.dstLuminance = internalFormat.isLUMA();
 
@@ -2291,7 +2293,8 @@ angle::Result TextureMtl::copySubTextureWithDraw(const gl::Context *context,
     blitParams.src      = sourceTexture;
     blitParams.srcLevel = sourceNativeLevel;
     blitParams.srcLayer = 0;
-    blitParams.srcRect = gl::Rectangle(sourceBox.x, sourceBox.y, sourceBox.width, sourceBox.height);
+    blitParams.srcNormalizedCoords =
+        mtl::NormalizedCoords(sourceBox.toRect(), sourceTexture->size(sourceNativeLevel));
     blitParams.srcYFlipped            = false;
     blitParams.dstLuminance           = internalFormat.isLUMA();
     blitParams.unpackFlipY            = unpackFlipY;
