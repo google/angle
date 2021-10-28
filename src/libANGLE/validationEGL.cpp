@@ -5813,6 +5813,17 @@ bool ValidateQueryDeviceAttribEXT(const ValidationContext *val,
                 return false;
             }
             break;
+        case EGL_VULKAN_DEVICE_ANGLE:
+        case EGL_VULKAN_EXTENSIONS_ANGLE:
+        case EGL_VULKAN_PHYSICAL_DEVICE_ANGLE:
+        case EGL_VULKAN_QUEUE_ANGLE:
+        case EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE:
+            if (!device->getExtensions().deviceVulkan)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE);
+                return false;
+            }
+            break;
         case EGL_CGL_CONTEXT_ANGLE:
         case EGL_CGL_PIXEL_FORMAT_ANGLE:
             if (!device->getExtensions().deviceCGL)

@@ -355,6 +355,15 @@ EGLAPI EGLBoolean EGLAPIENTRY eglSwapBuffersWithFrameTokenANGLE(EGLDisplay dpy, 
 #define EGL_SWAP_INTERVAL_ANGLE 0x322F
 #endif /* EGL_ANGLE_create_surface_swap_interval */
 
+#ifndef EGL_ANGLE_device_vulkan
+#define EGL_ANGLE_device_vulkan 1
+#define EGL_VULKAN_DEVICE_ANGLE 0x34A8
+#define EGL_VULKAN_EXTENSIONS_ANGLE 0x34A9
+#define EGL_VULKAN_PHYSICAL_DEVICE_ANGLE 0x34AA
+#define EGL_VULKAN_QUEUE_ANGLE 0x34AB
+#define EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE 0x34AC
+#endif /* EGL_ANGLE_device_vulkan */
+
 // clang-format on
 
 #endif  // INCLUDE_EGL_EGLEXT_ANGLE_

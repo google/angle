@@ -656,6 +656,9 @@ struct DeviceExtensions
 
     // EGL_ANGLE_device_metal
     bool deviceMetal = false;
+
+    // EGL_ANGLE_device_vulkan
+    bool deviceVulkan = false;
 };
 
 struct ClientExtensions

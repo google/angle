@@ -394,6 +394,8 @@ class CommandQueue final : public CommandQueueInterface
     }
     uint32_t getDeviceQueueIndex() const { return mQueueMap.getIndex(); }
 
+    VkQueue getQueue(egl::ContextPriority priority) { return mQueueMap[priority]; }
+
   private:
     void releaseToCommandBatch(bool hasProtectedContent,
                                PrimaryCommandBuffer &&commandBuffer,
@@ -403,8 +405,6 @@ class CommandQueue final : public CommandQueueInterface
     angle::Result ensurePrimaryCommandBufferValid(Context *context, bool hasProtectedContent);
 
     bool allInFlightCommandsAreAfterSerial(Serial serial);
-
-    VkQueue getQueue(egl::ContextPriority priority) { return mQueueMap[priority]; }
 
     PrimaryCommandBuffer &getCommandBuffer(bool hasProtectedContent)
     {
@@ -533,6 +533,7 @@ class CommandProcessor : public Context, public CommandQueueInterface
         return mCommandQueue.getDriverPriority(priority);
     }
     uint32_t getDeviceQueueIndex() const { return mCommandQueue.getDeviceQueueIndex(); }
+    VkQueue getQueue(egl::ContextPriority priority) { return mCommandQueue.getQueue(priority); }
 
   private:
     bool hasPendingError() const

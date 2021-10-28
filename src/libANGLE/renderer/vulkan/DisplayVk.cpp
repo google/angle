@@ -13,6 +13,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/DeviceVk.h"
 #include "libANGLE/renderer/vulkan/ImageVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/SurfaceVk.h"
@@ -99,6 +100,11 @@ std::string DisplayVk::getVersionString()
         return mRenderer->getVersionString();
     }
     return std::string();
+}
+
+DeviceImpl *DisplayVk::createDevice()
+{
+    return new DeviceVk();
 }
 
 egl::Error DisplayVk::waitClient(const gl::Context *context)
