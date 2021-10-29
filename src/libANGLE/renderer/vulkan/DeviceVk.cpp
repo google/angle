@@ -34,6 +34,17 @@ egl::Error DeviceVk::getAttribute(const egl::Display *display, EGLint attribute,
         static_cast<rx::DisplayVk *>(display->getImplementation())->getRenderer();
     switch (attribute)
     {
+        case EGL_VULKAN_VERSION_ANGLE:
+        {
+            auto version = static_cast<intptr_t>(renderer->getApiVersion());
+            *outValue    = reinterpret_cast<void *>(version);
+            return egl::NoError();
+        }
+        case EGL_VULKAN_INSTANCE_ANGLE:
+        {
+            *outValue = renderer->getInstance();
+            return egl::NoError();
+        }
         case EGL_VULKAN_DEVICE_ANGLE:
         {
             *outValue = renderer->getDevice();
@@ -56,10 +67,23 @@ egl::Error DeviceVk::getAttribute(const egl::Display *display, EGLint attribute,
             *outValue      = reinterpret_cast<void *>(index);
             return egl::NoError();
         }
-        case EGL_VULKAN_EXTENSIONS_ANGLE:
+        case EGL_VULKAN_DEVICE_EXTENSIONS_ANGLE:
         {
             char **extensions = const_cast<char **>(renderer->getEnabledDeviceExtensions().data());
             *outValue         = reinterpret_cast<void *>(extensions);
+            return egl::NoError();
+        }
+        case EGL_VULKAN_INSTANCE_EXTENSIONS_ANGLE:
+        {
+            char **extensions =
+                const_cast<char **>(renderer->getEnabledInstanceExtensions().data());
+            *outValue = reinterpret_cast<void *>(extensions);
+            return egl::NoError();
+        }
+        case EGL_VULKAN_FEATURES_ANGLE:
+        {
+            const auto *features = &renderer->getEnabledFeatures();
+            *outValue            = const_cast<void *>(reinterpret_cast<const void *>(features));
             return egl::NoError();
         }
         default:

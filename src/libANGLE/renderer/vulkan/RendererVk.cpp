@@ -932,6 +932,7 @@ constexpr char kEnableDebugMarkersPropertyName[] = "debug.angle.markers";
 RendererVk::RendererVk()
     : mDisplay(nullptr),
       mCapsInitialized(false),
+      mApiVersion(0),
       mInstance(VK_NULL_HANDLE),
       mEnableValidationLayers(false),
       mEnableDebugUtils(false),
@@ -1177,14 +1178,13 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         std::sort(instanceExtensionNames.begin(), instanceExtensionNames.end(), StrLess);
     }
 
-    vk::ExtensionNameList enabledInstanceExtensions;
     if (displayVk->isUsingSwapchain())
     {
-        enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+        mEnabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
     }
     if (wsiExtension)
     {
-        enabledInstanceExtensions.push_back(wsiExtension);
+        mEnabledInstanceExtensions.push_back(wsiExtension);
     }
 
     mEnableDebugUtils = canLoadDebugUtils && mEnableValidationLayers &&
@@ -1196,42 +1196,43 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     if (mEnableDebugUtils)
     {
-        enabledInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+        mEnabledInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
     }
     else if (enableDebugReport)
     {
-        enabledInstanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+        mEnabledInstanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
     }
 
     if (ExtensionFound(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME, instanceExtensionNames))
     {
-        enabledInstanceExtensions.push_back(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
+        mEnabledInstanceExtensions.push_back(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
         ANGLE_FEATURE_CONDITION(&mFeatures, supportsSwapchainColorspace, true);
     }
 
     if (ExtensionFound(VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME, instanceExtensionNames))
     {
-        enabledInstanceExtensions.push_back(VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME);
+        mEnabledInstanceExtensions.push_back(VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME);
         ANGLE_FEATURE_CONDITION(&mFeatures, supportsSurfaceCapabilities2Extension, true);
     }
 
     if (ExtensionFound(VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME,
                        instanceExtensionNames))
     {
-        enabledInstanceExtensions.push_back(VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME);
+        mEnabledInstanceExtensions.push_back(VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME);
         ANGLE_FEATURE_CONDITION(&mFeatures, supportsSurfaceProtectedCapabilitiesExtension, true);
     }
 
     // Verify the required extensions are in the extension names set. Fail if not.
-    std::sort(enabledInstanceExtensions.begin(), enabledInstanceExtensions.end(), StrLess);
+    std::sort(mEnabledInstanceExtensions.begin(), mEnabledInstanceExtensions.end(), StrLess);
     ANGLE_VK_TRY(displayVk,
-                 VerifyExtensionsPresent(instanceExtensionNames, enabledInstanceExtensions));
+                 VerifyExtensionsPresent(instanceExtensionNames, mEnabledInstanceExtensions));
 
     // Enable VK_KHR_get_physical_device_properties_2 if available.
     if (ExtensionFound(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME,
                        instanceExtensionNames))
     {
-        enabledInstanceExtensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+        mEnabledInstanceExtensions.push_back(
+            VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
     }
 
     VkApplicationInfo applicationInfo  = {};
@@ -1246,7 +1247,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         vkGetInstanceProcAddr(mInstance, "vkEnumerateInstanceVersion"));
     if (!enumerateInstanceVersion)
     {
-        applicationInfo.apiVersion = VK_API_VERSION_1_0;
+        mApiVersion = VK_API_VERSION_1_0;
     }
     else
     {
@@ -1258,14 +1259,15 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         if ((VK_VERSION_MAJOR(apiVersion) > 1) || (VK_VERSION_MINOR(apiVersion) >= 1))
         {
             // This is the highest version of core Vulkan functionality that ANGLE uses.
-            applicationInfo.apiVersion = kPreferredVulkanAPIVersion;
+            mApiVersion = kPreferredVulkanAPIVersion;
         }
         else
         {
             // Since only 1.0 instance-level functionality is available, this must set to 1.0.
-            applicationInfo.apiVersion = VK_API_VERSION_1_0;
+            mApiVersion = VK_API_VERSION_1_0;
         }
     }
+    applicationInfo.apiVersion = mApiVersion;
 
     VkInstanceCreateInfo instanceInfo = {};
     instanceInfo.sType                = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -1273,9 +1275,11 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     instanceInfo.pApplicationInfo     = &applicationInfo;
 
     // Enable requested layers and extensions.
-    instanceInfo.enabledExtensionCount = static_cast<uint32_t>(enabledInstanceExtensions.size());
+    instanceInfo.enabledExtensionCount = static_cast<uint32_t>(mEnabledInstanceExtensions.size());
     instanceInfo.ppEnabledExtensionNames =
-        enabledInstanceExtensions.empty() ? nullptr : enabledInstanceExtensions.data();
+        mEnabledInstanceExtensions.empty() ? nullptr : mEnabledInstanceExtensions.data();
+    mEnabledInstanceExtensions.push_back(nullptr);
+
     instanceInfo.enabledLayerCount   = static_cast<uint32_t>(enabledInstanceLayerNames.size());
     instanceInfo.ppEnabledLayerNames = enabledInstanceLayerNames.data();
 
@@ -1344,9 +1348,9 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
                                                                &mDebugReportCallback));
     }
 
-    if (std::find(enabledInstanceExtensions.begin(), enabledInstanceExtensions.end(),
+    if (std::find(mEnabledInstanceExtensions.begin(), mEnabledInstanceExtensions.end(),
                   VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME) !=
-        enabledInstanceExtensions.end())
+        mEnabledInstanceExtensions.end())
     {
 #if !defined(ANGLE_SHARED_LIBVULKAN)
         InitGetPhysicalDeviceProperties2KHRFunctions(mInstance);
@@ -1368,7 +1372,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     mGarbageCollectionFlushThreshold =
         static_cast<uint32_t>(mPhysicalDeviceProperties.limits.maxMemoryAllocationCount *
                               kPercentMaxMemoryAllocationCount);
-
     vkGetPhysicalDeviceFeatures(mPhysicalDevice, &mPhysicalDeviceFeatures);
 
     // Ensure we can find a graphics queue family.
@@ -1904,53 +1907,53 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
                  VerifyExtensionsPresent(deviceExtensionNames, mEnabledDeviceExtensions));
 
     // Select additional features to be enabled.
-    VkPhysicalDeviceFeatures2KHR enabledFeatures = {};
-    enabledFeatures.sType                        = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+    mEnabledFeatures       = {};
+    mEnabledFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
     // Used to support cubemap array:
-    enabledFeatures.features.imageCubeArray = getFeatures().supportsImageCubeArray.enabled;
+    mEnabledFeatures.features.imageCubeArray = getFeatures().supportsImageCubeArray.enabled;
     // Used to support framebuffers with multiple attachments:
-    enabledFeatures.features.independentBlend = mPhysicalDeviceFeatures.independentBlend;
+    mEnabledFeatures.features.independentBlend = mPhysicalDeviceFeatures.independentBlend;
     // Used to support robust buffer access:
-    enabledFeatures.features.robustBufferAccess = mPhysicalDeviceFeatures.robustBufferAccess;
+    mEnabledFeatures.features.robustBufferAccess = mPhysicalDeviceFeatures.robustBufferAccess;
     // Used to support Anisotropic filtering:
-    enabledFeatures.features.samplerAnisotropy = mPhysicalDeviceFeatures.samplerAnisotropy;
+    mEnabledFeatures.features.samplerAnisotropy = mPhysicalDeviceFeatures.samplerAnisotropy;
     // Used to support wide lines:
-    enabledFeatures.features.wideLines = mPhysicalDeviceFeatures.wideLines;
+    mEnabledFeatures.features.wideLines = mPhysicalDeviceFeatures.wideLines;
     // Used to emulate transform feedback:
-    enabledFeatures.features.vertexPipelineStoresAndAtomics =
+    mEnabledFeatures.features.vertexPipelineStoresAndAtomics =
         mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics;
     // Used to implement storage buffers and images in the fragment shader:
-    enabledFeatures.features.fragmentStoresAndAtomics =
+    mEnabledFeatures.features.fragmentStoresAndAtomics =
         mPhysicalDeviceFeatures.fragmentStoresAndAtomics;
     // Used to emulate the primitives generated query:
-    enabledFeatures.features.pipelineStatisticsQuery =
+    mEnabledFeatures.features.pipelineStatisticsQuery =
         getFeatures().supportsPipelineStatisticsQuery.enabled;
     // Used to support geometry shaders:
-    enabledFeatures.features.geometryShader = mPhysicalDeviceFeatures.geometryShader;
+    mEnabledFeatures.features.geometryShader = mPhysicalDeviceFeatures.geometryShader;
     // Used to support EXT_gpu_shader5:
-    enabledFeatures.features.shaderImageGatherExtended =
+    mEnabledFeatures.features.shaderImageGatherExtended =
         mPhysicalDeviceFeatures.shaderImageGatherExtended;
     // Used to support EXT_gpu_shader5:
-    enabledFeatures.features.shaderUniformBufferArrayDynamicIndexing =
+    mEnabledFeatures.features.shaderUniformBufferArrayDynamicIndexing =
         mPhysicalDeviceFeatures.shaderUniformBufferArrayDynamicIndexing;
-    enabledFeatures.features.shaderSampledImageArrayDynamicIndexing =
+    mEnabledFeatures.features.shaderSampledImageArrayDynamicIndexing =
         mPhysicalDeviceFeatures.shaderSampledImageArrayDynamicIndexing;
     // Used to support APPLE_clip_distance
-    enabledFeatures.features.shaderClipDistance = mPhysicalDeviceFeatures.shaderClipDistance;
+    mEnabledFeatures.features.shaderClipDistance = mPhysicalDeviceFeatures.shaderClipDistance;
     // Used to support OES_sample_shading
-    enabledFeatures.features.sampleRateShading = mPhysicalDeviceFeatures.sampleRateShading;
+    mEnabledFeatures.features.sampleRateShading = mPhysicalDeviceFeatures.sampleRateShading;
     // Used to support depth clears through draw calls.
-    enabledFeatures.features.depthClamp = mPhysicalDeviceFeatures.depthClamp;
+    mEnabledFeatures.features.depthClamp = mPhysicalDeviceFeatures.depthClamp;
     // Used to support EXT_clip_cull_distance
-    enabledFeatures.features.shaderCullDistance = mPhysicalDeviceFeatures.shaderCullDistance;
+    mEnabledFeatures.features.shaderCullDistance = mPhysicalDeviceFeatures.shaderCullDistance;
     // Used to support tessellation Shader:
-    enabledFeatures.features.tessellationShader = mPhysicalDeviceFeatures.tessellationShader;
+    mEnabledFeatures.features.tessellationShader = mPhysicalDeviceFeatures.tessellationShader;
     // Used to support EXT_blend_func_extended
-    enabledFeatures.features.dualSrcBlend = mPhysicalDeviceFeatures.dualSrcBlend;
+    mEnabledFeatures.features.dualSrcBlend = mPhysicalDeviceFeatures.dualSrcBlend;
 
     if (!vk::CommandBuffer::ExecutesInline())
     {
-        enabledFeatures.features.inheritedQueries = mPhysicalDeviceFeatures.inheritedQueries;
+        mEnabledFeatures.features.inheritedQueries = mPhysicalDeviceFeatures.inheritedQueries;
     }
 
     // Setup device initialization struct
@@ -1961,19 +1964,19 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     if (mLineRasterizationFeatures.bresenhamLines)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_LINE_RASTERIZATION_EXTENSION_NAME);
-        vk::AddToPNextChain(&createInfo, &mLineRasterizationFeatures);
+        vk::AddToPNextChain(&mEnabledFeatures, &mLineRasterizationFeatures);
     }
 
     if (mProvokingVertexFeatures.provokingVertexLast)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_PROVOKING_VERTEX_EXTENSION_NAME);
-        vk::AddToPNextChain(&createInfo, &mProvokingVertexFeatures);
+        vk::AddToPNextChain(&mEnabledFeatures, &mProvokingVertexFeatures);
     }
 
     if (mVertexAttributeDivisorFeatures.vertexAttributeInstanceRateDivisor)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME);
-        vk::AddToPNextChain(&createInfo, &mVertexAttributeDivisorFeatures);
+        vk::AddToPNextChain(&mEnabledFeatures, &mVertexAttributeDivisorFeatures);
 
         // We only store 8 bit divisor in GraphicsPipelineDesc so capping value & we emulate if
         // exceeded
@@ -1985,19 +1988,19 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     if (getFeatures().supportsTransformFeedbackExtension.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME);
-        vk::AddToPNextChain(&createInfo, &mTransformFeedbackFeatures);
+        vk::AddToPNextChain(&mEnabledFeatures, &mTransformFeedbackFeatures);
     }
 
     if (getFeatures().supportsCustomBorderColorEXT.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_CUSTOM_BORDER_COLOR_EXTENSION_NAME);
-        vk::AddToPNextChain(&createInfo, &mCustomBorderColorFeatures);
+        vk::AddToPNextChain(&mEnabledFeatures, &mCustomBorderColorFeatures);
     }
 
     if (getFeatures().supportsIndexTypeUint8.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_INDEX_TYPE_UINT8_EXTENSION_NAME);
-        vk::AddToPNextChain(&createInfo, &mIndexTypeUint8Features);
+        vk::AddToPNextChain(&mEnabledFeatures, &mIndexTypeUint8Features);
     }
 
     if (getFeatures().supportsDepthStencilResolve.enabled)
@@ -2009,7 +2012,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         mEnabledDeviceExtensions.push_back(
             VK_EXT_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_EXTENSION_NAME);
-        vk::AddToPNextChain(&createInfo, &mMultisampledRenderToSingleSampledFeatures);
+        vk::AddToPNextChain(&mEnabledFeatures, &mMultisampledRenderToSingleSampledFeatures);
     }
 
     if (getFeatures().supportsMultiview.enabled)
@@ -2019,7 +2022,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         mMultiviewFeatures.multiviewGeometryShader     = VK_FALSE;
         mMultiviewFeatures.multiviewTessellationShader = VK_FALSE;
         mEnabledDeviceExtensions.push_back(VK_KHR_MULTIVIEW_EXTENSION_NAME);
-        vk::AddToPNextChain(&createInfo, &mMultiviewFeatures);
+        vk::AddToPNextChain(&mEnabledFeatures, &mMultiviewFeatures);
     }
 
     if (getFeatures().logMemoryReportCallbacks.enabled ||
@@ -2072,18 +2075,18 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     if (getFeatures().supportsYUVSamplerConversion.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_SAMPLER_YCBCR_CONVERSION_EXTENSION_NAME);
-        vk::AddToPNextChain(&createInfo, &mSamplerYcbcrConversionFeatures);
+        vk::AddToPNextChain(&mEnabledFeatures, &mSamplerYcbcrConversionFeatures);
     }
 
     if (getFeatures().supportsShaderFloat16.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME);
-        vk::AddToPNextChain(&createInfo, &mShaderFloat16Int8Features);
+        vk::AddToPNextChain(&mEnabledFeatures, &mShaderFloat16Int8Features);
     }
 
     if (getFeatures().supportsProtectedMemory.enabled)
     {
-        vk::AddToPNextChain(&createInfo, &mProtectedMemoryFeatures);
+        vk::AddToPNextChain(&mEnabledFeatures, &mProtectedMemoryFeatures);
     }
 
     mCurrentQueueFamilyIndex = queueFamilyIndex;
@@ -2115,10 +2118,17 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     createInfo.enabledExtensionCount = static_cast<uint32_t>(mEnabledDeviceExtensions.size());
     createInfo.ppEnabledExtensionNames =
         mEnabledDeviceExtensions.empty() ? nullptr : mEnabledDeviceExtensions.data();
+    mEnabledDeviceExtensions.push_back(nullptr);
 
     // Enable core features without assuming VkPhysicalDeviceFeatures2KHR is accepted in the
     // pNext chain of VkDeviceCreateInfo.
-    createInfo.pEnabledFeatures = &enabledFeatures.features;
+    createInfo.pEnabledFeatures = &mEnabledFeatures.features;
+
+    // Append the feature structs chain to the end of createInfo structs chain.
+    if (mEnabledFeatures.pNext)
+    {
+        vk::AppendToPNextChain(&createInfo, mEnabledFeatures.pNext);
+    }
 
     ANGLE_VK_TRY(displayVk, vkCreateDevice(mPhysicalDevice, &createInfo, nullptr, &mDevice));
 #if defined(ANGLE_SHARED_LIBVULKAN)
@@ -2194,7 +2204,6 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         unsupportedStages |= VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT;
     }
     mSupportedVulkanPipelineStageMask = ~unsupportedStages;
-    mEnabledDeviceExtensions.push_back(nullptr);
     return angle::Result::Continue;
 }
 

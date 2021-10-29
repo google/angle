@@ -177,6 +177,7 @@ class RendererVk : angle::NonCopyable
     gl::Version getMaxSupportedESVersion() const;
     gl::Version getMaxConformantESVersion() const;
 
+    uint32_t getApiVersion() const { return mApiVersion; }
     VkInstance getInstance() const { return mInstance; }
     VkPhysicalDevice getPhysicalDevice() const { return mPhysicalDevice; }
     const VkPhysicalDeviceProperties &getPhysicalDeviceProperties() const
@@ -191,6 +192,7 @@ class RendererVk : angle::NonCopyable
     {
         return mPhysicalDeviceFeatures;
     }
+    const VkPhysicalDeviceFeatures2KHR &getEnabledFeatures() const { return mEnabledFeatures; }
     VkDevice getDevice() const { return mDevice; }
 
     vk::BufferMemoryAllocator &getBufferMemoryAllocator() { return mBufferMemoryAllocator; }
@@ -487,6 +489,11 @@ class RendererVk : angle::NonCopyable
         return mMaxCopyBytesUsingCPUWhenPreservingBufferData;
     }
 
+    const vk::ExtensionNameList &getEnabledInstanceExtensions() const
+    {
+        return mEnabledInstanceExtensions;
+    }
+
     const vk::ExtensionNameList &getEnabledDeviceExtensions() const
     {
         return mEnabledDeviceExtensions;
@@ -522,6 +529,7 @@ class RendererVk : angle::NonCopyable
     mutable gl::Limitations mNativeLimitations;
     mutable angle::FeaturesVk mFeatures;
 
+    uint32_t mApiVersion;
     VkInstance mInstance;
     bool mEnableValidationLayers;
     // True if ANGLE is enabling the VK_EXT_debug_utils extension.
@@ -552,6 +560,7 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT
         mMultisampledRenderToSingleSampledFeatures;
     VkPhysicalDeviceMultiviewFeatures mMultiviewFeatures;
+    VkPhysicalDeviceFeatures2KHR mEnabledFeatures;
     VkPhysicalDeviceMultiviewProperties mMultiviewProperties;
     VkPhysicalDeviceDriverPropertiesKHR mDriverProperties;
     VkPhysicalDeviceCustomBorderColorFeaturesEXT mCustomBorderColorFeatures;
@@ -652,6 +661,7 @@ class RendererVk : angle::NonCopyable
     // Use thread pool to compress cache data.
     std::shared_ptr<rx::WaitableCompressEvent> mCompressEvent;
 
+    vk::ExtensionNameList mEnabledInstanceExtensions;
     vk::ExtensionNameList mEnabledDeviceExtensions;
 };
 

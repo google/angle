@@ -59,11 +59,15 @@ New Tokens
 
     Accepted as a queried <attribute> in eglQueryDeviceAttribEXT:
 
-        EGL_VULKAN_DEVICE_ANGLE              0x34A8
-        EGL_VULKAN_EXTENSIONS_ANGLE          0x34A9
-        EGL_VULKAN_PHYSICAL_DEVICE_ANGLE     0x34AA
-        EGL_VULKAN_QUEUE_ANGLE               0x34AB
-        EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE 0x34AC
+        EGL_VULKAN_VERSION_ANGLE             0x34A8
+        EGL_VULKAN_INSTANCE_ANGLE            0x34A9
+        EGL_VULKAN_INSTANCE_EXTENSIONS_ANGLE 0x34AA
+        EGL_VULKAN_PHYSICAL_DEVICE_ANGLE     0x34AB
+        EGL_VULKAN_DEVICE_ANGLE              0x34AC
+        EGL_VULKAN_DEVICE_EXTENSIONS_ANGLE   0x34AD
+        EGL_VULKAN_FEATURES_ANGLE            0x34AE
+        EGL_VULKAN_QUEUE_ANGLE               0x34AF
+        EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE 0x34D0
 
 Add a new section 2.1.3 (Vulkan Devices) after 2.1.2 (Devices)
 
@@ -77,43 +81,72 @@ Changes to section 3.2 (Devices)
     Replace the paragraph immediately following the prototype for
     eglQueryDeviceAttribEXT:
 
-    <attribute> may be EGL_VULKAN_DEVICE_ANGLE.
-    On success, EGL_TRUE is returned, and a valid Vulkan device handle VkDevice
-    corresponding to the EGL device is returned in <value>. This handle
-    is compatible with Vulkan API functions. If the EGL device is not currently
-    associated with a Vulkan device and <attribute> is EGL_VULKAN_DEVICE_ANGLE,
+    <attribute> may be EGL_VULKAN_VERSION_ANGLE.
+    On success, EGL_TRUE is returned, and the Vulkan versionbcorresponding to
+    the EGL device is returned in <value>. If the EGL device is not currently
+    associated with a Vulkan device and <attribute> is EGL_VULKAN_VERSION_ANGLE,
     EGL_BAD_ATTRIBUTE is returned, and <value> is left unchanged.
 
-    <attribute> may be EGL_VULKAN_EXTENSIONS_ANGLE.
+    <attribute> may be EGL_VULKAN_INSTANCE_ANGLE.
+    On success, EGL_TRUE is returned, and a valid Vulkan instance handle
+    VkInstance corresponding to the EGL device is returned in <value>.
+    This handle is compatible with Vulkan API functions. If the EGL device is
+    not currently associated with a Vulkan device and <attribute> is
+    EGL_VULKAN_INSTANCE_ANGLE, EGL_BAD_ATTRIBUTE is returned, and <value> is
+    left unchanged.
+
+    <attribute> may be EGL_VULKAN_INSTANCE_EXTENSIONS_ANGLE.
     On success, EGL_TRUE is returned, and a pointer to a null terminated static
     string array is returned in <value>. The array contains enabled Vulkan
-    device extensions for the Vulkan device used by the display.
+    instance extensions for the Vulkan device used by the display.
     If the EGL device is not currently associated with a Vulkan device and
-    <attribute> is EGL_VULKAN_EXTENSIONS_ANGLE, EGL_BAD_ATTRIBUTE is returned,
-    and <value> is left unchanged.
+    <attribute> is EGL_VULKAN_INSTANCE_EXTENSIONS_ANGLE, EGL_BAD_ATTRIBUTE is
+    returned, and <value> is left unchanged.
 
     <attribute> may be EGL_VULKAN_PHYSICAL_DEVICE_ANGLE.
     On success, EGL_TRUE is returned, and a valid Vulkan physical device handle
     VkPhysicalDevice corresponding to the EGL device is returned in <value>.
-    This handle is compatible with Vulkan API functions.
-    If the EGL device is not currently associated with a Vulkan device and
-    <attribute> is EGL_VULKAN_PHYSICAL_DEVICE_ANGLE, EGL_BAD_ATTRIBUTE
-    is returned, and <value> is left unchanged.
+    This handle is compatible with Vulkan API functions. If the EGL device is
+    not currently associated with a Vulkan device and <attribute> is
+    EGL_VULKAN_PHYSICAL_DEVICE_ANGLE, EGL_BAD_ATTRIBUTE is returned,
+    and <value> is left unchanged.
+
+    <attribute> may be EGL_VULKAN_DEVICE_ANGLE.
+    On success, EGL_TRUE is returned, and a valid Vulkan device handle VkDevice
+    corresponding to the EGL device is returned in <value>. This handle is
+    compatible with Vulkan API functions. If the EGL device is not currently
+    associated with a Vulkan device and <attribute> is EGL_VULKAN_DEVICE_ANGLE,
+    EGL_BAD_ATTRIBUTE is returned, and <value> is left unchanged.
+
+    <attribute> may be EGL_VULKAN_DEVICE_EXTENSIONS_ANGLE.
+    On success, EGL_TRUE is returned, and a pointer to a null terminated static
+    string array is returned in <value>. The array contains enabled Vulkan
+    device extensions for the Vulkan device used by the display. If the EGL
+    device is not currently associated with a Vulkan device and <attribute> is
+    EGL_VULKAN_DEVICE_EXTENSIONS_ANGLE, EGL_BAD_ATTRIBUTE is returned, and
+    <value> is left unchanged.
+
+    <attribute> may be EGL_VULKAN_FEATURES_ANGLE.
+    On success, EGL_TRUE is returned, and a pointer to a static
+    VkPhysicalDeviceFeatures2KHR struct is returned in <value>. The structure
+    contains enabled Vulkan device features for the Vulkan device used by the
+    display. If the EGL device is not currently associated with a Vulkan device
+    and <attribute> is EGL_VULKAN_FEATURES_ANGLE, EGL_BAD_ATTRIBUTE is returned,
+    and <value> is left unchanged.
 
     <attribute> may be EGL_VULKAN_QUEUE_ANGLE.
     On success, EGL_TRUE is returned, and a valid Vulkan device queue handle
-    VkQueue corresponding to the EGL device is returned in <value>.
-    This handle is compatible with Vulkan API functions.
-    If the EGL device is not currently associated with a Vulkan device and
-    <attribute> is EGL_VULKAN_QUEUE_ANGLE, EGL_BAD_ATTRIBUTE is returned,
-    and <value> is left unchanged.
+    VkQueue corresponding to the EGL device is returned in <value>. This handle
+    is compatible with Vulkan API functions. If the EGL device is not currently
+    associated with a Vulkan device and <attribute> is EGL_VULKAN_QUEUE_ANGLE,
+    EGL_BAD_ATTRIBUTE is returned, and <value> is left unchanged.
 
     <attribute> may be EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE.
     On success, EGL_TRUE is returned, and the Vulkan queue familiy index
-    corresponding to the EGL device is returned in <value>.
-    If the EGL device is not currently associated with a Vulkan device and
-    <attribute> is EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE, EGL_BAD_ATTRIBUTE
-    is returned, and <value> is left unchanged.
+    corresponding to the EGL device is returned in <value>. If the EGL device
+    is not currently associated with a Vulkan device and <attribute> is
+    EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE, EGL_BAD_ATTRIBUTE is returned, and
+    <value> is left unchanged.
 
 Issues
 

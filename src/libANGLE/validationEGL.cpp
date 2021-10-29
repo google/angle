@@ -5813,9 +5813,13 @@ bool ValidateQueryDeviceAttribEXT(const ValidationContext *val,
                 return false;
             }
             break;
-        case EGL_VULKAN_DEVICE_ANGLE:
-        case EGL_VULKAN_EXTENSIONS_ANGLE:
+        case EGL_VULKAN_VERSION_ANGLE:
+        case EGL_VULKAN_INSTANCE_ANGLE:
+        case EGL_VULKAN_INSTANCE_EXTENSIONS_ANGLE:
         case EGL_VULKAN_PHYSICAL_DEVICE_ANGLE:
+        case EGL_VULKAN_DEVICE_ANGLE:
+        case EGL_VULKAN_DEVICE_EXTENSIONS_ANGLE:
+        case EGL_VULKAN_FEATURES_ANGLE:
         case EGL_VULKAN_QUEUE_ANGLE:
         case EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE:
             if (!device->getExtensions().deviceVulkan)
