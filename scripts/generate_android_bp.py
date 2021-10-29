@@ -290,7 +290,7 @@ def gn_cflags_to_blueprint_cflags(target_info):
     result.append('-Wno-unknown-warning-option')
 
     # Override AOSP build flags to match ANGLE's CQ testing and reduce binary size
-    result.append('-Oz')
+    result.append('-Os')
     result.append('-fno-unwind-tables')
 
     if 'defines' in target_info:
