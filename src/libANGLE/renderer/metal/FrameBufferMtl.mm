@@ -270,64 +270,7 @@ angle::Result FramebufferMtl::readPixels(const gl::Context *context,
 namespace
 {
 
-// Naming FloatRectangle instead of Rectangle because it seems like it would be confused with
-// gl::Rectangle
-struct FloatRectangle
-{
-    FloatRectangle() : x(0.0f), y(0.0f), width(0.0f), height(0.0f) {}
-    constexpr FloatRectangle(int x_in, int y_in, int width_in, int height_in)
-        : x(x_in), y(y_in), width(width_in), height(height_in)
-    {}
-    explicit constexpr FloatRectangle(const gl::Rectangle &rect)
-        : x(rect.x), y(rect.y), width(rect.width), height(rect.height)
-    {}
-    explicit constexpr FloatRectangle(const float corners[4])
-        : x(corners[0]),
-          y(corners[1]),
-          width(corners[2] - corners[0]),
-          height(corners[3] - corners[1])
-    {}
-
-    float x0() const { return x; }
-    float y0() const { return y; }
-    float x1() const { return x + width; }
-    float y1() const { return y + height; }
-
-    bool isReversedX() const { return width < 0.0f; }
-    bool isReversedY() const { return height < 0.0f; }
-
-    // Returns a rectangle with the same area but flipped in X, Y, neither or both.
-    FloatRectangle flip(bool flipX, bool flipY) const;
-
-    // Returns a rectangle with the same area but with height and width guaranteed to be positive.
-    FloatRectangle removeReversal() const;
-
-    float x;
-    float y;
-    float width;
-    float height;
-};
-
-FloatRectangle FloatRectangle::flip(bool flipX, bool flipY) const
-{
-    FloatRectangle flipped = *this;
-    if (flipX)
-    {
-        flipped.x     = flipped.x + flipped.width;
-        flipped.width = -flipped.width;
-    }
-    if (flipY)
-    {
-        flipped.y      = flipped.y + flipped.height;
-        flipped.height = -flipped.height;
-    }
-    return flipped;
-}
-
-FloatRectangle FloatRectangle::removeReversal() const
-{
-    return flip(isReversedX(), isReversedY());
-}
+using FloatRectangle = gl::RectangleImpl<float>;
 
 float clamp0Max(float v, float max)
 {

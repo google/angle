@@ -49,39 +49,72 @@ enum class InitState
     Initialized,
 };
 
-struct Rectangle
+template <typename T>
+struct RectangleImpl
 {
-    Rectangle() : x(0), y(0), width(0), height(0) {}
-    constexpr Rectangle(int x_in, int y_in, int width_in, int height_in)
+    RectangleImpl() : x(T(0)), y(T(0)), width(T(0)), height(T(0)) {}
+    constexpr RectangleImpl(T x_in, T y_in, T width_in, T height_in)
         : x(x_in), y(y_in), width(width_in), height(height_in)
     {}
+    explicit constexpr RectangleImpl(const T corners[4])
+        : x(corners[0]),
+          y(corners[1]),
+          width(corners[2] - corners[0]),
+          height(corners[3] - corners[1])
+    {}
+    template <typename S>
+    explicit constexpr RectangleImpl(const RectangleImpl<S> rect)
+        : x(rect.x), y(rect.y), width(rect.width), height(rect.height)
+    {}
 
-    int x0() const { return x; }
-    int y0() const { return y; }
-    int x1() const { return x + width; }
-    int y1() const { return y + height; }
+    T x0() const { return x; }
+    T y0() const { return y; }
+    T x1() const { return x + width; }
+    T y1() const { return y + height; }
 
-    bool isReversedX() const { return width < 0; }
-    bool isReversedY() const { return height < 0; }
+    bool isReversedX() const { return width < T(0); }
+    bool isReversedY() const { return height < T(0); }
 
     // Returns a rectangle with the same area but flipped in X, Y, neither or both.
-    Rectangle flip(bool flipX, bool flipY) const;
+    RectangleImpl<T> flip(bool flipX, bool flipY) const
+    {
+        RectangleImpl flipped = *this;
+        if (flipX)
+        {
+            flipped.x     = flipped.x + flipped.width;
+            flipped.width = -flipped.width;
+        }
+        if (flipY)
+        {
+            flipped.y      = flipped.y + flipped.height;
+            flipped.height = -flipped.height;
+        }
+        return flipped;
+    }
 
     // Returns a rectangle with the same area but with height and width guaranteed to be positive.
-    Rectangle removeReversal() const;
+    RectangleImpl<T> removeReversal() const { return flip(isReversedX(), isReversedY()); }
 
-    bool encloses(const gl::Rectangle &inside) const;
+    bool encloses(const RectangleImpl<T> &inside) const
+    {
+        return x0() <= inside.x0() && y0() <= inside.y0() && x1() >= inside.x1() &&
+               y1() >= inside.y1();
+    }
 
-    bool empty() const { return width == 0 && height == 0; }
+    bool empty() const;
 
-    int x;
-    int y;
-    int width;
-    int height;
+    T x;
+    T y;
+    T width;
+    T height;
 };
 
-bool operator==(const Rectangle &a, const Rectangle &b);
-bool operator!=(const Rectangle &a, const Rectangle &b);
+template <typename T>
+bool operator==(const RectangleImpl<T> &a, const RectangleImpl<T> &b);
+template <typename T>
+bool operator!=(const RectangleImpl<T> &a, const RectangleImpl<T> &b);
+
+using Rectangle = RectangleImpl<int>;
 
 enum class ClipSpaceOrigin
 {

@@ -22,6 +22,7 @@
 #include "libANGLE/Observer.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/State.h"
+#include "libANGLE/angletypes.h"
 
 namespace rx
 {
@@ -44,10 +45,7 @@ class Context;
 struct Extensions;
 class Framebuffer;
 class ImageIndex;
-struct Rectangle;
 class Renderbuffer;
-class State;
-class Texture;
 class TextureCapsMap;
 
 struct FramebufferStatus

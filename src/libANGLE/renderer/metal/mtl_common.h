@@ -95,7 +95,6 @@ class Surface;
 
 namespace gl
 {
-struct Rectangle;
 ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_OBJECT)
 }  // namespace gl
 
