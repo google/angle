@@ -373,6 +373,7 @@
 6526 WIN AMD VULKAN : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
 6526 LINUX INTEL VULKAN : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
 6526 LINUX NVIDIA VULKAN : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
+6526 LINUX AMD VULKAN : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
 
 // Metal internal compiler error
 6581 MAC AMD METAL : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
