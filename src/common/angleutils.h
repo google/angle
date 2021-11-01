@@ -436,4 +436,31 @@ inline bool IsLittleEndian()
 #    define ANGLE_FALLTHROUGH
 #endif
 
+// Compiler configs.
+inline bool IsASan()
+{
+#if defined(ANGLE_WITH_ASAN)
+    return true;
+#else
+    return false;
+#endif  // defined(ANGLE_WITH_ASAN)
+}
+
+inline bool IsTSan()
+{
+#if defined(THREAD_SANITIZER)
+    return true;
+#else
+    return false;
+#endif  // defined(THREAD_SANITIZER)
+}
+
+inline bool IsUBSan()
+{
+#if defined(ANGLE_WITH_UBSAN)
+    return true;
+#else
+    return false;
+#endif  // defined(ANGLE_WITH_UBSAN)
+}
 #endif  // COMMON_ANGLEUTILS_H_

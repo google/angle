@@ -35,6 +35,9 @@ class GPUTestConfigTest : public ANGLETest
         EXPECT_EQ(IsNVIDIA(), config.getConditions()[GPUTestConfig::kConditionNVIDIA]);
         EXPECT_EQ(IsDebug(), config.getConditions()[GPUTestConfig::kConditionDebug]);
         EXPECT_EQ(IsRelease(), config.getConditions()[GPUTestConfig::kConditionRelease]);
+        EXPECT_EQ(IsASan(), config.getConditions()[GPUTestConfig::kConditionASan]);
+        EXPECT_EQ(IsTSan(), config.getConditions()[GPUTestConfig::kConditionTSan]);
+        EXPECT_EQ(IsUBSan(), config.getConditions()[GPUTestConfig::kConditionUBSan]);
     }
 
     void validateConfigAPI(const GPUTestConfig &config,

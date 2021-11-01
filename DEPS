@@ -629,6 +629,11 @@ deps = {
       'condition': 'checkout_mac and not build_with_chromium',
   },
 
+  'tools/valgrind': {
+    'url': '{chromium_git}/chromium/src/tools/valgrind@daf835c78a60f21632eee90e671a6870b4e1dada',
+    'condition': 'not build_with_chromium',
+  },
+
   # === ANGLE Restricted Trace Generated Code Start ===
   'src/tests/restricted_traces/aliexpress': {
       'packages': [

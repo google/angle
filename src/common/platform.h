@@ -158,6 +158,13 @@
 #    endif
 #endif
 
+// Define ANGLE_WITH_UBSAN macro.
+#if defined(__has_feature)
+#    if __has_feature(undefined_behavior_sanitizer)
+#        define ANGLE_WITH_UBSAN 1
+#    endif
+#endif
+
 #include <cstdint>
 #if INTPTR_MAX == INT64_MAX
 #    define ANGLE_IS_64_BIT_CPU 1

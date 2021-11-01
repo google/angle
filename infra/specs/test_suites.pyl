@@ -732,7 +732,7 @@
       },
     },
 
-    'swangle_gtests': {
+    'swangle_deqp_egl_tests': {
       'angle_deqp_egl_tests': {
         'args': [
           'angle_deqp_egl_tests',
@@ -744,6 +744,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_gles2_tests': {
       'angle_deqp_gles2_tests': {
         'args': [
           'angle_deqp_gles2_tests',
@@ -755,6 +758,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_gles31_rotate180_tests': {
       'angle_deqp_gles31_rotate180_tests': {
         'args': [
           'angle_deqp_gles31_rotate180_tests',
@@ -766,6 +772,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_gles31_rotate270_tests': {
       'angle_deqp_gles31_rotate270_tests': {
         'args': [
           'angle_deqp_gles31_rotate270_tests',
@@ -777,6 +786,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_gles31_rotate90_tests': {
       'angle_deqp_gles31_rotate90_tests': {
         'args': [
           'angle_deqp_gles31_rotate90_tests',
@@ -788,6 +800,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_gles31_tests': {
       'angle_deqp_gles31_tests': {
         'args': [
           'angle_deqp_gles31_tests',
@@ -802,6 +817,9 @@
         },
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_gles3_rotate180_tests': {
       'angle_deqp_gles3_rotate180_tests': {
         'args': [
           'angle_deqp_gles3_rotate180_tests',
@@ -813,6 +831,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_gles3_rotate270_tests': {
       'angle_deqp_gles3_rotate270_tests': {
         'args': [
           'angle_deqp_gles3_rotate270_tests',
@@ -824,6 +845,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_gles3_rotate90_tests': {
       'angle_deqp_gles3_rotate90_tests': {
         'args': [
           'angle_deqp_gles3_rotate90_tests',
@@ -835,6 +859,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_gles3_tests': {
       'angle_deqp_gles3_tests': {
         'args': [
           'angle_deqp_gles3_tests',
@@ -849,6 +876,9 @@
         },
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_khr_gles2_tests': {
       'angle_deqp_khr_gles2_tests': {
         'args': [
           'angle_deqp_khr_gles2_tests',
@@ -860,6 +890,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_khr_gles31_tests': {
       'angle_deqp_khr_gles31_tests': {
         'args': [
           'angle_deqp_khr_gles31_tests',
@@ -871,6 +904,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_deqp_khr_gles3_tests': {
       'angle_deqp_khr_gles3_tests': {
         'args': [
           'angle_deqp_khr_gles3_tests',
@@ -882,6 +918,9 @@
         ],
         'use_isolated_scripts_api': True,
       },
+    },
+
+    'swangle_end2end_tests': {
       'angle_end2end_tests': {
         'args': [
           'angle_end2end_tests',
@@ -963,6 +1002,27 @@
     'mac_nvidia_gtests': [
       'angle_end2end_gtests',
       'angle_unit_gtests',
+    ],
+
+    'swangle_gtests': [
+      'swangle_deqp_egl_tests',
+      'swangle_deqp_gles2_tests',
+      'swangle_deqp_gles31_rotate180_tests',
+      'swangle_deqp_gles31_rotate270_tests',
+      'swangle_deqp_gles31_rotate90_tests',
+      'swangle_deqp_gles31_tests',
+      'swangle_deqp_gles3_rotate180_tests',
+      'swangle_deqp_gles3_rotate270_tests',
+      'swangle_deqp_gles3_rotate90_tests',
+      'swangle_deqp_gles3_tests',
+      'swangle_deqp_khr_gles2_tests',
+      'swangle_deqp_khr_gles31_tests',
+      'swangle_deqp_khr_gles3_tests',
+      'swangle_end2end_tests',
+    ],
+
+    'swangle_non_deqp_gtests': [
+      'swangle_end2end_tests',
     ],
 
     'win10_intel_gtests': [
