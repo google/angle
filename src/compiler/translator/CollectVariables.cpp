@@ -519,7 +519,8 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 break;
             case EvqFragmentOut:
             case EvqFragmentInOut:
-                var = FindVariable(symbolName, mOutputVariables);
+                var                  = FindVariable(symbolName, mOutputVariables);
+                var->isFragmentInOut = qualifier == EvqFragmentInOut;
                 break;
             case EvqUniform:
             {

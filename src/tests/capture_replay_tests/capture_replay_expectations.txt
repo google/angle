@@ -210,17 +210,6 @@
 6605 : ComputeShaderTest.ImageBufferMapWrite/* = SKIP_FOR_CAPTURE
 6180 : EGLMultiContextTest.ComputeShaderOkayWithRendering/* = SKIP_FOR_CAPTURE
 6180 : EGLMultiContextTest.TestContextDestroySimple/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.BasicInout_NonCoherent/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.DrawFetchBlitDrawFetch_NonCoherent/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.DrawFetchDrawNonFetch_NonCoherent/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.DrawNonFetchDrawFetchWithDifferentAttachments_NonCoherent/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.DrawNonFetchDrawFetchWithDifferentPrograms_NonCoherent/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.DrawNonFetchDrawFetch_NonCoherent/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.FixedUniformLocation/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.MultipleDraw_NonCoherent/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.MultipleRenderTargetWithInoutArray_NonCoherent/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.MultipleRenderTarget_NonCoherent/* = SKIP_FOR_CAPTURE
-6608 : FramebufferFetchES31.ProgramPipeline_NonCoherent/* = SKIP_FOR_CAPTURE
 6611 : TextureMultisampleArrayWebGLTest.FramebufferColorClearAndBlit/* = SKIP_FOR_CAPTURE
 6611 : TextureMultisampleArrayWebGLTest.FramebufferCompleteness/* = SKIP_FOR_CAPTURE
 6611 : TextureMultisampleArrayWebGLTest.IntegerTexelFetch/* = SKIP_FOR_CAPTURE
