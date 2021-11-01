@@ -109,11 +109,10 @@
 6525 MAC NVIDIA METAL : GLSLTest.VectorScalarMultiplyAndAddInLoop/* = SKIP
 6570 MAC INTEL OPENGL : WebGLCompatibilityTest.L32FTextures/* = SKIP
 6570 MAC INTEL OPENGL : WebGLCompatibilityTest.R32FTextures/* = SKIP
+6570 MAC INTEL OPENGL : WebGLCompatibilityTest.RG32FTextures/* = SKIP
 6570 MAC INTEL OPENGL : WebGLCompatibilityTest.RGB32FTextures/* = SKIP
 6603 MAC OPENGL : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
 6643 MAC AMD OPENGL : TransformFeedbackTest.TransformFeedbackQueryPausedDrawThenResume/* = SKIP
-6641 MAC METAL : UniformTest.UnusedStructInlineUniform/* = SKIP
-6641 MAC METAL : UniformTest.UnusedStructInlineUniformWithSampler/* = SKIP
 
 // Failures from Transform Feedback Enablement. Passes on BigSur
 6407 MAC NVIDIA METAL : TransformFeedbackTest.OptimizedVaryings/ES3_Metal = SKIP

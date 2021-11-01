@@ -40,7 +40,7 @@ class Traverser : public TIntermTraverser
         TIntermTyped *declarator = sequence.front()->getAsTyped();
         const TType &type        = declarator->getType();
 
-        if (type.isStructSpecifier() && type.getQualifier() == EvqUniform)
+        if (type.isStructSpecifier())
         {
             const TStructure *structure = type.getStruct();
 
