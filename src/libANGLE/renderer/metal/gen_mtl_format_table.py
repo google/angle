@@ -360,6 +360,7 @@ def gen_image_map_switch_astc_case(angle_format, angle_to_gl, angle_to_mtl_map):
 
 def gen_image_map_switch_string(image_table, angle_to_gl):
     angle_override = image_table["override"]
+    mac_override = image_table["override_mac"]
     mac_override_es3 = image_table["override_mac_es3"]
     mac_override_bc1 = image_table["override_mac_bc1"]
     ios_override = image_table["override_ios"]
@@ -393,6 +394,9 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
     for angle_format in sorted(mac_specific_map.keys()):
         switch_data += gen_image_map_switch_mac_case(angle_format, angle_format, angle_to_gl,
                                                      mac_angle_to_mtl, mac_d24s8_fallbacks)
+    for angle_format in sorted(mac_override.keys()):
+        switch_data += gen_image_map_switch_simple_case(angle_format, mac_override[angle_format],
+                                                        angle_to_gl, mac_angle_to_mtl)
     for angle_format in sorted(mac_override_bc1.keys()):
         switch_data += gen_image_map_switch_simple_case(angle_format,
                                                         mac_override_bc1[angle_format],

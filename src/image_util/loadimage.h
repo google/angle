@@ -588,6 +588,26 @@ inline void Load32FTo16F(size_t width,
                          size_t outputRowPitch,
                          size_t outputDepthPitch);
 
+void LoadUNorm16To32F(size_t width,
+                      size_t height,
+                      size_t depth,
+                      const uint8_t *input,
+                      size_t inputRowPitch,
+                      size_t inputDepthPitch,
+                      uint8_t *output,
+                      size_t outputRowPitch,
+                      size_t outputDepthPitch);
+
+void LoadUNorm32To32F(size_t width,
+                      size_t height,
+                      size_t depth,
+                      const uint8_t *input,
+                      size_t inputRowPitch,
+                      size_t inputDepthPitch,
+                      uint8_t *output,
+                      size_t outputRowPitch,
+                      size_t outputDepthPitch);
+
 void LoadRGB32FToRGBA16F(size_t width,
                          size_t height,
                          size_t depth,

@@ -38,8 +38,6 @@ angle::FormatID Format::MetalToAngleFormatID(MTLPixelFormat formatMtl)
             return angle::FormatID::B8G8R8A8_UNORM;
         case MTLPixelFormatBGRA8Unorm_sRGB:
             return angle::FormatID::B8G8R8A8_UNORM_SRGB;
-        case MTLPixelFormatDepth16Unorm:
-            return angle::FormatID::D16_UNORM;
         case MTLPixelFormatDepth32Float:
             return angle::FormatID::D32_FLOAT;
         case MTLPixelFormatDepth32Float_Stencil8:
@@ -339,15 +337,6 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
 
             this->metalFormat    = MTLPixelFormatBGRA8Unorm_sRGB;
             this->actualFormatId = angle::FormatID::B8G8R8A8_UNORM_SRGB;
-            this->initFunction   = nullptr;
-
-            this->swizzled = false;
-            break;
-
-        case angle::FormatID::D16_UNORM:
-
-            this->metalFormat    = MTLPixelFormatDepth16Unorm;
-            this->actualFormatId = angle::FormatID::D16_UNORM;
             this->initFunction   = nullptr;
 
             this->swizzled = false;
@@ -1113,6 +1102,15 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
                 this->actualFormatId = angle::FormatID::D32_FLOAT_S8X24_UINT;
                 this->initFunction   = nullptr;
             }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::D16_UNORM:
+
+            this->metalFormat    = MTLPixelFormatDepth32Float;
+            this->actualFormatId = angle::FormatID::D32_FLOAT;
+            this->initFunction   = nullptr;
 
             this->swizzled = false;
             break;

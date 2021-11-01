@@ -563,8 +563,6 @@
 5232 MAC METAL AMD : dEQP-GLES3.functional.shaders.builtin_functions.pack_unpack.unpacksnorm2x16_fragment = FAIL
 5232 MAC METAL AMD : dEQP-GLES3.functional.shaders.builtin_functions.pack_unpack.unpackunorm2x16_fragment = FAIL
 
-// Metal doesn't support attribute alias yet
-
 // Texture swizzle is not always available on host machine
 // Depth sampling requires texture swizzle to correctly return (red, 0, 0, 1) per GLES3 spec
 5243 MAC METAL : dEQP-GLES3.*texture.specification*depth* = FAIL
@@ -576,9 +574,6 @@
 6589 MAC METAL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip = FAIL
 6589 MAC METAL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_center = FAIL
 6589 MAC METAL AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
-
-// Polygon offset bug
-6467 MAC METAL : dEQP-GLES3.functional.polygon_offset.fixed16_render_with_units = FAIL
 
 // Texture filtering bug (mostly failing a few pixels)
 6467 MAC METAL : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.isampler3d_vertex = FAIL
@@ -712,6 +707,7 @@
 
 // Failures introduced after switching to the direct Metal backend
 
+// Metal doesn't support attribute alias yet
 6297 MAC METAL : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
 6297 MAC METAL : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 
