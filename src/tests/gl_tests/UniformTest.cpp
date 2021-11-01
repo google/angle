@@ -1461,6 +1461,58 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+TEST_P(UniformTest, UnusedStructInlineUniform)
+{
+    constexpr char kVS[] = R"(precision highp float;
+attribute vec4 position;
+void main()
+{
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(precision highp float;
+uniform struct {
+  vec3  aVec3;
+  vec2 aVec2;
+}aUniform;
+varying vec2 texcoord;
+void main()
+{
+    gl_FragColor = vec4(0,1,0,1);
+})";
+
+    mProgram = CompileProgram(kVS, kFS);
+    ASSERT_NE(mProgram, 0u);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+TEST_P(UniformTest, UnusedStructInlineUniformWithSampler)
+{
+    constexpr char kVS[] = R"(precision highp float;
+attribute vec4 position;
+void main()
+{
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(precision highp float;
+uniform struct {
+  sampler2D  aSampler;
+  vec3 aVec3;
+}aUniform;
+varying vec2 texcoord;
+void main()
+{
+    gl_FragColor = vec4(0,1,0,1);
+})";
+
+    mProgram = CompileProgram(kVS, kFS);
+    ASSERT_NE(mProgram, 0u);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(SimpleUniformTest);

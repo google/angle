@@ -25,6 +25,10 @@
 4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/* = SKIP
 4889 VULKAN : GLSLTest_ES31.VaryingTessellationSampleInAndOut/* = SKIP
 
+// Vulkan generic
+6641 VULKAN : UniformTest.UnusedStructInlineUniform/* = SKIP
+6641 VULKAN : UniformTest.UnusedStructInlineUniformWithSampler/* = SKIP
+
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 4092 WIN VULKAN : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
@@ -108,6 +112,8 @@
 6570 MAC INTEL OPENGL : WebGLCompatibilityTest.RGB32FTextures/* = SKIP
 6603 MAC OPENGL : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
 6643 MAC AMD OPENGL : TransformFeedbackTest.TransformFeedbackQueryPausedDrawThenResume/* = SKIP
+6641 MAC METAL : UniformTest.UnusedStructInlineUniform/* = SKIP
+6641 MAC METAL : UniformTest.UnusedStructInlineUniformWithSampler/* = SKIP
 
 // Failures from Transform Feedback Enablement. Passes on BigSur
 6407 MAC NVIDIA METAL : TransformFeedbackTest.OptimizedVaryings/ES3_Metal = SKIP
