@@ -377,7 +377,6 @@ TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
 // Test that uploading data to buffer that's in use then using it for transform feedback works.
 TEST_P(TransformFeedbackTest, UseAsUBOThenUpdateThenCapture)
 {
-
     // http://anglebug.com/5833
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsQualcomm());
 
@@ -3673,6 +3672,114 @@ void main() {
     // in transform feedback mode does not have a buffer object bound.
     glBeginTransformFeedback(GL_TRIANGLES);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Test that transform feedback query works when render pass is started while transform feedback is
+// paused.
+TEST_P(TransformFeedbackTest, TransformFeedbackQueryPausedDrawThenResume)
+{
+    constexpr char kVS[] = R"(
+attribute vec4 pos;
+varying vec4 v;
+
+void main()
+{
+    v = vec4(0.25, 0.5, 0.75, 1.0);
+    gl_Position = pos;
+})";
+
+    constexpr char kFS[] = R"(
+precision mediump float;
+varying vec4 v;
+void main()
+{
+    gl_FragColor = v;
+})";
+
+    const std::vector<std::string> tfVaryings = {"v"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program, kVS, kFS, tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    const GLfloat vertices[] = {
+        -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f,
+    };
+    GLint positionLocation = glGetAttribLocation(program, "pos");
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClearDepthf(0.1f);
+    glClearStencil(0x5A);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    // Test the following:
+    //
+    // - Start xfb and query
+    // - Draw
+    // - Pause query
+    // - break the render pass
+    //
+    // - Draw without xfb, starts a new render pass
+    // - Without breaking the render pass, resume xfb
+    // - Draw with xfb
+    // - End query and xfb
+    //
+    // The test ensures that the query is made active on resume.
+
+    glUseProgram(program);
+    glBeginTransformFeedback(GL_POINTS);
+    EXPECT_GL_NO_ERROR();
+
+    GLQuery xfbQuery;
+    glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, xfbQuery);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw with xfb.
+    glDrawArrays(GL_POINTS, 0, 3);
+
+    glPauseTransformFeedback();
+
+    // Issue a copy to make sure the render pass is broken.
+    GLTexture copyTex;
+    glBindTexture(GL_TEXTURE_2D, copyTex);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 1, 1, 0);
+
+    // Start a render pass without xfb.
+    glUseProgram(drawRed);
+    glDrawArrays(GL_POINTS, 0, 3);
+
+    // Resume xfb and issue another draw call.
+    glUseProgram(program);
+    glResumeTransformFeedback();
+    glDrawArrays(GL_POINTS, 0, 3);
+
+    // End the query and verify results.
+    glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
+    glEndTransformFeedback();
+
+    GLuint primitivesWritten = 0;
+    glGetQueryObjectuiv(xfbQuery, GL_QUERY_RESULT_EXT, &primitivesWritten);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(primitivesWritten, 6u);
+
+    void *mappedBuffer = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                          sizeof(float) * 4 * 3 * 2, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedBuffer);
+
+    float *mappedFloats = static_cast<float *>(mappedBuffer);
+    for (unsigned int cnt = 0; cnt < 6; ++cnt)
+    {
+        EXPECT_NEAR(mappedFloats[4 * cnt + 0], 0.25f, 0.01f) << cnt;
+        EXPECT_NEAR(mappedFloats[4 * cnt + 1], 0.5f, 0.01f) << cnt;
+        EXPECT_NEAR(mappedFloats[4 * cnt + 2], 0.75f, 0.01f) << cnt;
+        EXPECT_NEAR(mappedFloats[4 * cnt + 3], 1.0f, 0.01f) << cnt;
+    }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+
+    EXPECT_GL_NO_ERROR();
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTest);
