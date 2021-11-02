@@ -2298,6 +2298,8 @@
       }
     ]
   },
+  "linux-swiftshader-tsan": {},
+  "linux-swiftshader-ubsan": {},
   "mac-amd": {
     "gtest_tests": [
       {

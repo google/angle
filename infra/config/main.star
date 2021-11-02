@@ -203,6 +203,8 @@ def angle_builder(name, cpu):
         goma_props["enable_ats"] = True
 
     is_asan = "-asan" in name
+    is_tsan = "-tsan" in name
+    is_ubsan = "-ubsan" in name
     is_debug = "-dbg" in name
     is_perf = name.endswith("-perf")
     is_trace = name.endswith("-trace")
@@ -246,6 +248,10 @@ def angle_builder(name, cpu):
         short_name = get_gpu_type_from_builder_name(name)
     elif is_asan:
         short_name = "asan"
+    elif is_tsan:
+        short_name = "tsan"
+    elif is_ubsan:
+        short_name = "ubsan"
     elif is_debug:
         short_name = "dbg"
     else:
@@ -304,11 +310,13 @@ def angle_builder(name, cpu):
             ),
         )
 
-        luci.cq_tryjob_verifier(
-            cq_group = "main",
-            builder = "angle:try/" + name,
-            location_regexp = location_regexp,
-        )
+        # Don't add TSAN/UBSAN to CQ (yet). http://anglebug.com/5795
+        if not is_tsan and not is_ubsan:
+            luci.cq_tryjob_verifier(
+                cq_group = "main",
+                builder = "angle:try/" + name,
+                location_regexp = location_regexp,
+            )
 
 luci.bucket(
     name = "ci",
@@ -371,6 +379,8 @@ angle_builder("android-arm-dbg-compile", cpu = "arm")
 angle_builder("android-arm64-dbg-compile", cpu = "arm64")
 angle_builder("android-arm64-test", cpu = "arm64")
 angle_builder("linux-asan-test", cpu = "x64")
+angle_builder("linux-tsan-test", cpu = "x64")
+angle_builder("linux-ubsan-test", cpu = "x64")
 angle_builder("linux-dbg-compile", cpu = "x64")
 angle_builder("linux-test", cpu = "x64")
 angle_builder("mac-dbg-compile", cpu = "x64")

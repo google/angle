@@ -24,6 +24,8 @@
       'linux-intel-hd630-perf': 'angle_goma_perf_bot',
       'linux-nvidia-p400-perf': 'angle_goma_perf_bot',
       'linux-test': 'angle_goma_release_bot',
+      'linux-tsan-test': 'angle_tsan_bot',
+      'linux-ubsan-test': 'angle_ubsan_bot',
       'mac-dbg-compile': 'angle_goma_debug_bot',
       'mac-test': 'angle_goma_release_bot',
       'win-asan-test': 'angle_asan_bot',
@@ -49,10 +51,10 @@
   # bots all using the 'release_bot' config).
   'configs': {
     'angle_asan_bot': ['angle', 'opencl', 'traces', 'goma', 'asan', 'release'],
-    'angle_goma_android_arm_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm', 'debug'],
-    'angle_goma_android_arm_release_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm', 'release'],
     'angle_goma_android_arm64_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm64', 'debug'],
     'angle_goma_android_arm64_release_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm64', 'release'],
+    'angle_goma_android_arm_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm', 'debug'],
+    'angle_goma_android_arm_release_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm', 'release'],
     'angle_goma_android_perf_bot': ['angle', 'traces', 'goma', 'android', 'arm64', 'perf'],
     'angle_goma_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'debug'],
     'angle_goma_perf_bot': ['angle', 'traces', 'goma', 'perf'],
@@ -63,6 +65,8 @@
     'angle_non_clang_release_bot': ['angle', 'opencl', 'non_clang', 'release'],
     'angle_non_clang_x86_debug_bot': ['angle', 'opencl', 'non_clang', 'x86', 'debug'],
     'angle_non_clang_x86_release_bot': ['angle', 'opencl', 'non_clang', 'x86', 'release'],
+    'angle_tsan_bot': ['angle', 'opencl', 'traces', 'goma', 'tsan', 'release'],
+    'angle_ubsan_bot': ['angle', 'opencl', 'traces', 'goma', 'ubsan', 'release'],
     'angle_winuwp_non_clang_debug_bot': ['angle', 'winuwp', 'non_clang', 'debug'],
     'angle_winuwp_non_clang_release_bot': ['angle', 'winuwp', 'non_clang', 'release'],
   },
@@ -105,6 +109,12 @@
     },
     'traces': {
       'gn_args': 'build_angle_trace_perf_tests=true',
+    },
+    'tsan': {
+      'gn_args': 'is_tsan=true',
+    },
+    'ubsan': {
+      'gn_args': 'is_ubsan=true',
     },
     'winuwp': {
       'gn_args': 'target_os="winuwp"',
