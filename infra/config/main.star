@@ -305,13 +305,11 @@ def angle_builder(name, cpu):
             ),
         )
 
-        # Don't add TSAN/UBSAN to CQ (yet). http://anglebug.com/5795
-        if not is_tsan and not is_ubsan:
-            luci.cq_tryjob_verifier(
-                cq_group = "main",
-                builder = "angle:try/" + name,
-                location_regexp = location_regexp,
-            )
+        luci.cq_tryjob_verifier(
+            cq_group = "main",
+            builder = "angle:try/" + name,
+            location_regexp = location_regexp,
+        )
 
 luci.bucket(
     name = "ci",
