@@ -11,6 +11,7 @@
 
 #include <type_traits>
 
+#include "common/system_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/formatutils.h"
@@ -23,6 +24,13 @@
 namespace
 {
 constexpr unsigned int kComponentsPerVector = 4;
+
+// Environment variable and Android property to remove the restriction on exposing
+// GL_EXT_shader_framebuffer_fetch_non_coherent on ARM and Qualcomm.
+constexpr char kEnableExtShaderFramebufferFetchNonCoherentOverrideVarName[] =
+    "ANGLE_ENABLE_EXT_SHADER_FRAMEBUFFER_FETCH_NON_COHERENT_OVERRIDE";
+constexpr char kEnableExtShaderFramebufferFetchNonCoherentOverridePropertyName[] =
+    "debug.angle.enable.ext_shader_framebuffer_fetch_non_coherent_override";
 }  // anonymous namespace
 
 namespace rx
@@ -901,10 +909,16 @@ void RendererVk::ensureCapsInitialized() const
 
     // Important games are not checking supported extensions properly, and are confusing the
     // GL_EXT_shader_framebuffer_fetch_non_coherent as the GL_EXT_shader_framebuffer_fetch
-    // extension.  Therefore, don't enable the extension on Arm and Qualcomm.
+    // extension.  Therefore, don't enable the extension on Arm and Qualcomm by default.
     // https://issuetracker.google.com/issues/186643966
-    if (!(IsARM(mPhysicalDeviceProperties.vendorID) ||
-          IsQualcomm(mPhysicalDeviceProperties.vendorID)))
+    // However, it can be enabled by using an environment variable or Android property as below.
+    const std::string enableOverrideValue = angle::GetEnvironmentVarOrAndroidProperty(
+        kEnableExtShaderFramebufferFetchNonCoherentOverrideVarName,
+        kEnableExtShaderFramebufferFetchNonCoherentOverridePropertyName);
+    const bool enableOverride =
+        !enableOverrideValue.empty() && enableOverrideValue.compare("0") != 0;
+    if (enableOverride || (!(IsARM(mPhysicalDeviceProperties.vendorID) ||
+                             IsQualcomm(mPhysicalDeviceProperties.vendorID))))
     {
         // Enable GL_EXT_shader_framebuffer_fetch_non_coherent
         // For supporting this extension, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS is used.
