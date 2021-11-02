@@ -15,13 +15,13 @@
 //  ImageView must not be a 2D or 2DArray view of a 3D image. The Vulkan spec states:
 //  imageView must not be 2D or 2D array image view created from a 3D image
 //
-3836 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_texture2d = FAIL
-3836 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_negx = FAIL
-3836 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_negy = FAIL
-3836 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_negz = FAIL
-3836 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_posx = FAIL
-3836 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_posy = FAIL
-3836 VULKAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_posz = FAIL
+3836 VULKAN NOSAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_texture2d = FAIL
+3836 VULKAN NOSAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_negx = FAIL
+3836 VULKAN NOSAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_negy = FAIL
+3836 VULKAN NOSAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_negz = FAIL
+3836 VULKAN NOSAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_posx = FAIL
+3836 VULKAN NOSAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_posy = FAIL
+3836 VULKAN NOSAN : KHR-GLES3.copy_tex_image_conversions.required.texture3d_cubemap_posz = FAIL
 
 // Test bug - fails in ASAN
 6678 : KHR-GLES3.packed_pixels.varied_rectangle.* = SKIP
@@ -73,3 +73,7 @@
 
 // New failures with latest dEQP roll (2020-04-28)
 4593 SWIFTSHADER : KHR-GLES3.core.nearest_edge.offset_left = FAIL
+
+6678 UBSAN : KHR-GLES3.core.internalformat.texture2d.*half_float* = SKIP
+6678 UBSAN : KHR-GLES3.packed_pixels.* = SKIP
+6678 UBSAN : KHR-GLES3.copy_tex_image_conversions.required.* = SKIP

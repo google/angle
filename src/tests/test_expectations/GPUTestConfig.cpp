@@ -562,6 +562,7 @@ GPUTestConfig::GPUTestConfig(bool isSwiftShader)
     mConditions[kConditionPreRotation180] = false;
     mConditions[kConditionPreRotation270] = false;
 
+    mConditions[kConditionNoSan] = !IsASan() && !IsTSan() && !IsUBSan();
     mConditions[kConditionASan]  = IsASan();
     mConditions[kConditionTSan]  = IsTSan();
     mConditions[kConditionUBSan] = IsUBSan();

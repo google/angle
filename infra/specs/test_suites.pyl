@@ -732,6 +732,21 @@
       },
     },
 
+    'swangle_deqp_egl_slow_tests': {
+      'angle_deqp_egl_tests': {
+        'args': [
+          'angle_deqp_egl_tests',
+          '--use-angle=swiftshader',
+          '--bot-mode',
+          '--batch-timeout=600',
+        ],
+        'linux_args': [
+          '--xvfb',
+        ],
+        'use_isolated_scripts_api': True,
+      },
+    },
+
     'swangle_deqp_egl_tests': {
       'angle_deqp_egl_tests': {
         'args': [
@@ -743,6 +758,23 @@
           '--xvfb',
         ],
         'use_isolated_scripts_api': True,
+      },
+    },
+
+    'swangle_deqp_gles2_slow_tests': {
+      'angle_deqp_gles2_tests': {
+        'args': [
+          'angle_deqp_gles2_tests',
+          '--use-angle=swiftshader',
+          '--bot-mode',
+        ],
+        'linux_args': [
+          '--xvfb',
+        ],
+        'use_isolated_scripts_api': True,
+        'swarming': {
+          'shards': 4,
+        },
       },
     },
 
@@ -802,6 +834,24 @@
       },
     },
 
+    'swangle_deqp_gles31_slow_tests': {
+      'angle_deqp_gles31_tests': {
+        'args': [
+          'angle_deqp_gles31_tests',
+          '--use-angle=swiftshader',
+          '--bot-mode',
+          '--batch-timeout=600',
+        ],
+        'linux_args': [
+          '--xvfb',
+        ],
+        'swarming': {
+          'shards': 30,
+        },
+        'use_isolated_scripts_api': True,
+      },
+    },
+
     'swangle_deqp_gles31_tests': {
       'angle_deqp_gles31_tests': {
         'args': [
@@ -857,6 +907,23 @@
         'linux_args': [
           '--xvfb',
         ],
+        'use_isolated_scripts_api': True,
+      },
+    },
+
+    'swangle_deqp_gles3_slow_tests': {
+      'angle_deqp_gles3_tests': {
+        'args': [
+          'angle_deqp_gles3_tests',
+          '--use-angle=swiftshader',
+          '--bot-mode',
+        ],
+        'linux_args': [
+          '--xvfb',
+        ],
+        'swarming': {
+          'shards': 8,
+        },
         'use_isolated_scripts_api': True,
       },
     },
@@ -1044,6 +1111,23 @@
     ],
 
     'swangle_non_deqp_gtests': [
+      'swangle_end2end_tests',
+    ],
+
+    'swangle_slow_gtests': [
+      'swangle_deqp_egl_slow_tests',
+      'swangle_deqp_gles2_slow_tests',
+      'swangle_deqp_gles31_rotate180_tests',
+      'swangle_deqp_gles31_rotate270_tests',
+      'swangle_deqp_gles31_rotate90_tests',
+      'swangle_deqp_gles31_slow_tests',
+      'swangle_deqp_gles3_rotate180_tests',
+      'swangle_deqp_gles3_rotate270_tests',
+      'swangle_deqp_gles3_rotate90_tests',
+      'swangle_deqp_gles3_slow_tests',
+      'swangle_deqp_khr_gles2_tests',
+      'swangle_deqp_khr_gles31_tests',
+      'swangle_deqp_khr_gles3_tests',
       'swangle_end2end_tests',
     ],
 

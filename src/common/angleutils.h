@@ -448,11 +448,11 @@ inline bool IsASan()
 
 inline bool IsTSan()
 {
-#if defined(THREAD_SANITIZER)
+#if defined(ANGLE_WITH_TSAN)
     return true;
 #else
     return false;
-#endif  // defined(THREAD_SANITIZER)
+#endif  // defined(ANGLE_WITH_TSAN)
 }
 
 inline bool IsUBSan()

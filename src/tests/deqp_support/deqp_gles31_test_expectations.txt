@@ -203,14 +203,14 @@
 4371 SWIFTSHADER : dEQP-GLES31.functional.shaders.implicit_conversions.* = FAIL
 
 // Swiftshader fails to create a correct source/destination srgb8_alpha8_astc image before copy, however 5x4 is correct
-5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*rgba*srgb8_alpha8_astc_*_khr.*_to_texture2d* = FAIL
-5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*rgba*srgb8_alpha8_astc_*_khr.*_to_cubemap* = FAIL
-5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_*_khr_rgba*.*cubemap_to* = FAIL
-5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_*_khr_rgba*.*texture2d*_to* = FAIL
-5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*texture2d*_to_texture2d* = PASS
-5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*texture2d*_to_cubemap = PASS
-5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*cubemap*_to_texture2d* = PASS
-5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*cubemap_to_cubemap = PASS
+5275 SWIFTSHADER NOSAN : dEQP-GLES31.functional.copy_image.*rgba*srgb8_alpha8_astc_*_khr.*_to_texture2d* = FAIL
+5275 SWIFTSHADER NOSAN : dEQP-GLES31.functional.copy_image.*rgba*srgb8_alpha8_astc_*_khr.*_to_cubemap* = FAIL
+5275 SWIFTSHADER NOSAN : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_*_khr_rgba*.*cubemap_to* = FAIL
+5275 SWIFTSHADER NOSAN : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_*_khr_rgba*.*texture2d*_to* = FAIL
+5275 SWIFTSHADER NOSAN : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*texture2d*_to_texture2d* = PASS
+5275 SWIFTSHADER NOSAN : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*texture2d*_to_cubemap = PASS
+5275 SWIFTSHADER NOSAN : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*cubemap*_to_texture2d* = PASS
+5275 SWIFTSHADER NOSAN : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*cubemap_to_cubemap = PASS
 
 // Desktop cards without native etc support, angle emulated format fails
 5276 AMD VULKAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_eac* = FAIL
@@ -1390,3 +1390,14 @@
 6678 ASAN : dEQP-GLES31.functional.debug.error_filters.case_11 = SKIP
 6678 ASAN : dEQP-GLES31.functional.debug.error_filters.case_18 = SKIP
 6678 ASAN : dEQP-GLES31.functional.debug.error_groups.case_11 = SKIP
+
+6705 TSAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_astc* = SKIP
+
+6678 UBSAN : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_* = SKIP
+6678 UBSAN : dEQP-GLES31.functional.texture.multisample.samples_* = SKIP
+6678 UBSAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.* = SKIP
+6678 UBSAN : dEQP-GLES31.functional.shaders.builtin_functions.common.* = SKIP
+6678 UBSAN : dEQP-GLES31.functional.draw_indirect.random.* = SKIP
+6678 UBSAN : dEQP-GLES31.functional.draw_buffers_indexed.random.*  = SKIP
+6678 UBSAN : dEQP-GLES31.functional.shaders.builtin_functions.integer.bitfield* = SKIP
+6678 UBSAN : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.distribution.* = SKIP

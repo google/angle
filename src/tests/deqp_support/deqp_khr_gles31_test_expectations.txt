@@ -282,3 +282,7 @@
 6709 NVIDIA GTX1660 VULKAN : KHR-GLES31.core.compute_shader.max = FAIL
 6709 NVIDIA GTX1660 VULKAN : KHR-GLES31.core.shader_multisample_interpolation.render.interpolate_at_offset* = FAIL
 6709 NVIDIA GTX1660 VULKAN LINUX : KHR-GLES31.core.shader_image_load_store.advanced-memory-order-vsfs = FAIL
+
+6678 UBSAN : KHR-GLES31.core.internalformat.texture2d.r*half_float* = SKIP
+6678 UBSAN : KHR-GLES31.core.shader_bitfield_operation.bitfield* = SKIP
+6729 UBSAN : KHR-GLES31.core.compute_shader.shared-max = SKIP

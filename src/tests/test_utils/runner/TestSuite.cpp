@@ -57,9 +57,13 @@ constexpr char kSkippedTestString[] = "[  SKIPPED ] ";
 
 constexpr char kArtifactsFakeTestName[] = "TestArtifactsFakeTest";
 
+constexpr char kTSanOptionsEnvVar[]  = "TSAN_OPTIONS";
+constexpr char kUBSanOptionsEnvVar[] = "UBSAN_OPTIONS";
+
 // Note: we use a fairly high test timeout to allow for the first test in a batch to be slow.
 // Ideally we could use a separate timeout for the slow first test.
-#if defined(NDEBUG)
+// Allow sanitized tests to run more slowly.
+#if defined(NDEBUG) && !defined(ANGLE_WITH_SANITIZER)
 constexpr int kDefaultTestTimeout = 60;
 #else
 constexpr int kDefaultTestTimeout  = 120;
@@ -1156,6 +1160,21 @@ TestSuite::TestSuite(int *argc, char **argv)
         {
             SetEnvironmentVar(kPreferredDeviceEnvVar, "apple");
         }
+    }
+
+    // Special handling for TSAN and UBSAN to force crashes when run in automated testing.
+    if (IsTSan())
+    {
+        std::string tsanOptions = GetEnvironmentVar(kTSanOptionsEnvVar);
+        tsanOptions += " halt_on_error=1";
+        SetEnvironmentVar(kTSanOptionsEnvVar, tsanOptions.c_str());
+    }
+
+    if (IsUBSan())
+    {
+        std::string ubsanOptions = GetEnvironmentVar(kUBSanOptionsEnvVar);
+        ubsanOptions += " halt_on_error=1";
+        SetEnvironmentVar(kUBSanOptionsEnvVar, ubsanOptions.c_str());
     }
 
     if ((mShardIndex == -1) != (mShardCount == -1))

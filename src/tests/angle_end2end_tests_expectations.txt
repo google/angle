@@ -398,3 +398,5 @@
 6652 WIN AMD VULKAN : BasicDrawTest.EnableDisableTexture/* = SKIP
 6652 WIN AMD VULKAN : DrawTextureTest.ColorArrayDifferentTypes/* = SKIP
 6652 WIN AMD VULKAN : PointSpriteTest.TrianglesNotTreatedAsPointSprites/* = SKIP
+
+6718 TSAN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP

@@ -158,12 +158,23 @@
 #    endif
 #endif
 
+// Define ANGLE_WITH_TSAN macro.
+#if defined(__has_feature)
+#    if __has_feature(thread_sanitizer)
+#        define ANGLE_WITH_TSAN 1
+#    endif
+#endif
+
 // Define ANGLE_WITH_UBSAN macro.
 #if defined(__has_feature)
 #    if __has_feature(undefined_behavior_sanitizer)
 #        define ANGLE_WITH_UBSAN 1
 #    endif
 #endif
+
+#if defined(ANGLE_WITH_ASAN) || defined(ANGLE_WITH_TSAN) || defined(ANGLE_WITH_UBSAN)
+#    define ANGLE_WITH_SANITIZER 1
+#endif  // defined(ANGLE_WITH_ASAN) || defined(ANGLE_WITH_TSAN) || defined(ANGLE_WITH_UBSAN)
 
 #include <cstdint>
 #if INTPTR_MAX == INT64_MAX

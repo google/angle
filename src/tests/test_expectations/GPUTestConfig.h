@@ -73,6 +73,7 @@ struct GPUTestConfig
         kConditionPreRotation90,
         kConditionPreRotation180,
         kConditionPreRotation270,
+        kConditionNoSan,
         kConditionASan,
         kConditionTSan,
         kConditionUBSan,

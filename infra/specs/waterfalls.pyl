@@ -117,6 +117,7 @@
           'x86-64',
         ],
         'test_suites': {
+          'gtest_tests': 'swangle_slow_gtests',
         },
       },
       'linux-swiftshader-ubsan': {
@@ -129,6 +130,7 @@
           'x86-64',
         ],
         'test_suites': {
+          'gtest_tests': 'swangle_gtests',
         },
       },
       'mac-amd': {
