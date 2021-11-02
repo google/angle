@@ -121,7 +121,7 @@ namespace trace_angle
 {
 namespace
 {
-constexpr size_t kNumTraces = 108;
+constexpr size_t kNumTraces = 109;
 struct TracePair
 {
     const char name[kTraceInfoMaxNameLen];
@@ -2331,6 +2331,7 @@ constexpr TracePair kTraceInfos[kNumTraces] = {
       false,
       false,
       false}},
+    {"world_cricket_championship_2", {}},
     {"world_of_kings",
      {"world_of_kings",
       world_of_kings::kReplayContextClientMajorVersion,
