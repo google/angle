@@ -430,4 +430,10 @@ inline bool IsLittleEndian()
 #    define ANGLE_REQUIRE_CONSTANT_INIT
 #endif  // __has_cpp_attribute(require_constant_initialization)
 
+#if __has_cpp_attribute(clang::fallthrough)
+#    define ANGLE_FALLTHROUGH [[clang::fallthrough]]
+#else
+#    define ANGLE_FALLTHROUGH
+#endif
+
 #endif  // COMMON_ANGLEUTILS_H_

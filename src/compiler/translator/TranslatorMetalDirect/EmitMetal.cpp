@@ -779,7 +779,7 @@ void GenMetalTraverser::emitPostQualifier(const EmitVariableDeclarationConfig &e
     {
         case TQualifier::EvqPosition:
             isInvariant = decl.type().isInvariant();
-            ABSL_FALLTHROUGH_INTENDED;
+            ANGLE_FALLTHROUGH;
         case TQualifier::EvqFragCoord:
             mOut << " [[position]]";
             break;
