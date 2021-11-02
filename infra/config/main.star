@@ -304,13 +304,11 @@ def angle_builder(name, cpu):
             ),
         )
 
-        # Do not add ASAN tests to CQ (yet). http://anglebug.com/5795
-        if not is_asan:
-            luci.cq_tryjob_verifier(
-                cq_group = "main",
-                builder = "angle:try/" + name,
-                location_regexp = location_regexp,
-            )
+        luci.cq_tryjob_verifier(
+            cq_group = "main",
+            builder = "angle:try/" + name,
+            location_regexp = location_regexp,
+        )
 
 luci.bucket(
     name = "ci",
