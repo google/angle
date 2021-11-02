@@ -283,7 +283,7 @@ def angle_builder(name, cpu):
     )
 
     # Do not include perf tests in "try".
-    if not is_perf and not is_asan:
+    if not is_perf:
         luci.list_view_entry(
             list_view = "try",
             builder = "try/" + name,
@@ -305,11 +305,12 @@ def angle_builder(name, cpu):
         )
 
         # Do not add ASAN tests to CQ (yet). http://anglebug.com/5795
-        luci.cq_tryjob_verifier(
-            cq_group = "master",
-            builder = "angle:try/" + name,
-            location_regexp = location_regexp,
-        )
+        if not is_asan:
+            luci.cq_tryjob_verifier(
+                cq_group = "master",
+                builder = "angle:try/" + name,
+                location_regexp = location_regexp,
+            )
 
 luci.bucket(
     name = "ci",
