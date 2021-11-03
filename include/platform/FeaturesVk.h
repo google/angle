@@ -588,6 +588,11 @@ struct FeaturesVk : FeatureSetBase
     Feature supportsSurfaceProtectedSwapchains = {
         "supportsSurfaceProtectedSwapchains", FeatureCategory::VulkanFeatures,
         "VkSurface supportsProtected for protected swapchains", &members};
+
+    // Whether surface format GL_RGB8 should be overridden to GL_RGBA8.
+    Feature overrideSurfaceFormatRGB8toRGBA8 = {
+        "overrideSurfaceFormatRGB8toRGBA8", FeatureCategory::VulkanWorkarounds,
+        "Override surface format GL_RGB8 to GL_RGBA8", &members, "http://anglebug.com/6651"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

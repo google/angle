@@ -362,13 +362,55 @@ TEST_P(ClearTestRGB, InvalidateDefaultFramebufferRGB)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    // Verify that even though Alpha is cleared to 0.0 for this RGB FBO, it should be read back as
+    // 1.0, since the glReadPixels() is issued with GL_RGBA.
+    // OpenGL ES 3.2 spec:
+    // 16.1.3 Obtaining Pixels from the Framebuffer
+    // If G, B, or A values are not present in the internal format, they are taken to be zero,
+    // zero, and one respectively.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
     const GLenum discards[] = {GL_COLOR};
     glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, discards);
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);
 
     // Don't explicitly clear, but draw blue (make sure alpha is not cleared)
     drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.5f);
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 255, 255, 1.0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
+// Draw with a shader that outputs alpha=0.5. Readback and ensure that alpha=1.
+TEST_P(ClearTestRGB, ShaderOutputsAlphaVerifyReadingAlphaIsOne)
+{
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(blueProgram);
+
+    // Some GPUs don't support RGB format default framebuffer,
+    // so skip if the back buffer has alpha bits.
+    EGLWindow *window          = getEGLWindow();
+    EGLDisplay display         = window->getDisplay();
+    EGLConfig config           = window->getConfig();
+    EGLint backbufferAlphaBits = 0;
+    eglGetConfigAttrib(display, config, EGL_ALPHA_SIZE, &backbufferAlphaBits);
+    ANGLE_SKIP_TEST_IF(backbufferAlphaBits != 0);
+    // glInvalidateFramebuffer() isn't supported with GLES 2.0
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    GLint colorUniformLocation =
+        glGetUniformLocation(blueProgram, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Don't explicitly clear, but draw blue (make sure alpha is not cleared)
+    drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 }
 
 // Test clearing a RGBA8 Framebuffer

@@ -4599,7 +4599,8 @@ void ImageHelper::init2DWeakReference(Context *context,
                                       VkImage handle,
                                       const gl::Extents &glExtents,
                                       bool rotatedAspectRatio,
-                                      const Format &format,
+                                      angle::FormatID intendedFormatID,
+                                      angle::FormatID actualFormatID,
                                       GLint samples,
                                       bool isRobustResourceInitEnabled)
 {
@@ -4609,8 +4610,8 @@ void ImageHelper::init2DWeakReference(Context *context,
 
     gl_vk::GetExtent(glExtents, &mExtents);
     mRotatedAspectRatio = rotatedAspectRatio;
-    mIntendedFormatID   = format.getIntendedFormatID();
-    mActualFormatID     = format.getActualRenderableImageFormatID();
+    mIntendedFormatID   = intendedFormatID;
+    mActualFormatID     = actualFormatID;
     mSamples            = std::max(samples, 1);
     mImageSerial        = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
     mCurrentLayout      = ImageLayout::Undefined;

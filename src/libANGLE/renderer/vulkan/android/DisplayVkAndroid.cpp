@@ -54,7 +54,7 @@ egl::ConfigSet DisplayVkAndroid::generateConfigs()
     // https://cs.android.com/android/platform/superproject/+/master:frameworks/native/vulkan/libvulkan/swapchain.cpp;l=465-486?q=GetNativePixelFormat
     // TODO (Issue 4062): Add conditional support for GL_RGB10_A2 and GL_RGBA16F when the
     // Android Vulkan loader adds conditional support for them.
-    const std::array<GLenum, 2> kColorFormats = {GL_RGBA8, GL_RGB565};
+    const std::array<GLenum, 3> kColorFormats = {GL_RGBA8, GL_RGB8, GL_RGB565};
 
     std::vector<GLenum> depthStencilFormats(
         egl_vk::kConfigDepthStencilFormats,

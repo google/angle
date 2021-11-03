@@ -1612,7 +1612,8 @@ class ImageHelper final : public Resource, public angle::Subject
                              VkImage handle,
                              const gl::Extents &glExtents,
                              bool rotatedAspectRatio,
-                             const Format &format,
+                             angle::FormatID intendedFormatID,
+                             angle::FormatID actualFormatID,
                              GLint samples,
                              bool isRobustResourceInitEnabled);
     void resetImageWeakReference();
