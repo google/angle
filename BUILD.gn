@@ -200,6 +200,8 @@ config("extra_warnings") {
       "-Wundefined-reinterpret-cast",
       "-Wunneeded-internal-declaration",
       "-Wunused-but-set-variable",
+      "-Wsuggest-destructor-override",
+      "-Wsuggest-override",
 
       # The below warnings are used by WebKit. We enable them to make rolling
       # ANGLE in WebKit easier.
@@ -209,13 +211,6 @@ config("extra_warnings") {
       "-Wunreachable-code-aggressive",
       "-Wshorten-64-to-32",
     ]
-    if (!use_xcode_clang) {
-      # Mac catalyst uses a clang version that doesn't have these.
-      cflags += [
-        "-Wsuggest-destructor-override",
-        "-Wsuggest-override",
-      ]
-    }
   }
 
   if (is_gcc) {

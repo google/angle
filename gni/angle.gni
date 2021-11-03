@@ -55,7 +55,6 @@ if (angle_has_build) {
     ozone_platform_gbm = false
     ozone_platform_headless = false
     use_fuzzing_engine = false
-    use_xcode_clang = false
     is_apple = is_mac || is_ios
   }
 
