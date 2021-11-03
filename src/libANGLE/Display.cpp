@@ -536,7 +536,7 @@ void ShareGroup::finishAllContexts()
 {
     for (gl::Context *shareContext : mContexts)
     {
-        if (shareContext->hasBeenCurrent())
+        if (shareContext->hasBeenCurrent() && !shareContext->isDestroyed())
         {
             shareContext->finish();
         }
