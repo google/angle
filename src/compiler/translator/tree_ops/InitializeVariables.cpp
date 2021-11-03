@@ -59,18 +59,16 @@ void AddZeroInitSequence(const TIntermTyped *initializedNode,
     }
     else if (initializedNode->getType().isInterfaceBlock())
     {
-        const ImmutableString &name =
-            static_cast<const TIntermSymbol *>(initializedNode)->getName();
         const TType &type                     = initializedNode->getType();
         const TInterfaceBlock &interfaceBlock = *type.getInterfaceBlock();
         const TFieldList &fieldList           = interfaceBlock.fields();
         for (size_t fieldIndex = 0; fieldIndex < fieldList.size(); ++fieldIndex)
         {
-            const TField &field          = *fieldList[fieldIndex];
-            TIntermTyped *blockReference = ReferenceGlobalVariable(name, *symbolTable);
-            TIntermTyped *fieldIndexRef  = CreateIndexNode(static_cast<int>(fieldIndex));
-            TIntermTyped *fieldReference = new TIntermBinary(
-                TOperator::EOpIndexDirectInterfaceBlock, blockReference, fieldIndexRef);
+            const TField &field         = *fieldList[fieldIndex];
+            TIntermTyped *fieldIndexRef = CreateIndexNode(static_cast<int>(fieldIndex));
+            TIntermTyped *fieldReference =
+                new TIntermBinary(TOperator::EOpIndexDirectInterfaceBlock,
+                                  initializedNode->deepCopy(), fieldIndexRef);
             TIntermTyped *fieldZero = CreateZeroNode(*field.type());
             TIntermTyped *assignment =
                 new TIntermBinary(TOperator::EOpAssign, fieldReference, fieldZero);
