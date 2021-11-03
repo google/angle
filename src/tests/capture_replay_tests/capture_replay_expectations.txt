@@ -94,6 +94,9 @@
 
 6180 WIN : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/ES2_Vulkan_SwiftShader = FAIL
 
+6654 : UniformTest.UnusedStructInlineUniform/* = SKIP_FOR_CAPTURE
+6654 : UniformTest.UnusedStructInlineUniformWithSampler/* = SKIP_FOR_CAPTURE
+
 # Fails because of unsupported combined depth/stencil GetImage.
 4688 ASAN : DepthStencilTest.DepthOnlyEmulatedWithPacked/ES2_Vulkan_SwiftShader = FAIL
 
