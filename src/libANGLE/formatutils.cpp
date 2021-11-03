@@ -1376,6 +1376,13 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     //                 | Internal format                             | sized | Cr | Y | Cb | A | S | Format                              | Type            | Comp                  | SRGB | Texture supported                                       | Filterable                                              | Texture attachment                                      | Renderbuffer  | Blend
     AddYUVFormat(&map,  GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,            true,   8,   8,  8,   0,  0,  GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,    GL_UNSIGNED_BYTE, GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::yuvInternalFormatANGLE>,          RequireExt<&Extensions::yuvInternalFormatANGLE>,          RequireExt<&Extensions::yuvInternalFormatANGLE>,          NeverSupported, NeverSupported);
     AddYUVFormat(&map,  GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE,           true,   8,   8,  8,   0,  0,  GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE,   GL_UNSIGNED_BYTE, GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::yuvInternalFormatANGLE>,          RequireExt<&Extensions::yuvInternalFormatANGLE>,          RequireExt<&Extensions::yuvInternalFormatANGLE>,          NeverSupported, NeverSupported);
+
+#if defined(ANGLE_PLATFORM_LINUX)
+    // From GL_OES_required_internalformat
+    // The |shared| bit shouldn't be 2. But given this hits assertion when bits
+    // are checked, it's fine to have this bit set as 2 as a workaround.
+    AddRGBAFormat(&map, GL_RGB10_EXT,        true, 10, 10, 10, 0, 2, GL_RGB, GL_UNSIGNED_INT_2_10_10_10_REV,    GL_UNSIGNED_NORMALIZED,        false, RequireES<1, 0>,                                      NeverSupported,  RequireES<1, 0>,                                         RequireES<1, 0>,                                 NeverSupported);
+#endif
     // clang-format on
 
     return map;
