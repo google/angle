@@ -213,7 +213,30 @@ void InsertInitCode(TCompiler *compiler,
         }
         else
         {
-            initializedSymbol = ReferenceGlobalVariable(tempVariableName, *symbolTable);
+            if (tempVariableName != "")
+            {
+                initializedSymbol = ReferenceGlobalVariable(tempVariableName, *symbolTable);
+            }
+            else
+            {
+                // Must be a nameless interface block.
+                ASSERT(var.structOrBlockName != "");
+                const TSymbol *symbol = symbolTable->findGlobal(var.structOrBlockName);
+                ASSERT(symbol && symbol->isInterfaceBlock());
+                const TInterfaceBlock *block = static_cast<const TInterfaceBlock *>(symbol);
+
+                for (const TField *field : block->fields())
+                {
+                    initializedSymbol = ReferenceGlobalVariable(field->name(), *symbolTable);
+
+                    TIntermSequence initCode;
+                    CreateInitCode(initializedSymbol, canUseLoopsToInitialize,
+                                   highPrecisionSupported, &initCode, symbolTable);
+                    mainBody->insert(mainBody->begin(), initCode.begin(), initCode.end());
+                }
+                // Already inserted init code in this case
+                continue;
+            }
         }
         ASSERT(initializedSymbol != nullptr);
 
