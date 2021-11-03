@@ -36,27 +36,30 @@ namespace gl
 namespace
 {
 
+// Check the |checkAttachment| in reference to |firstAttachment| for the sake of multiview
+// framebuffer completeness.
 FramebufferStatus CheckMultiviewStateMatchesForCompleteness(
     const FramebufferAttachment *firstAttachment,
-    const FramebufferAttachment *secondAttachment)
+    const FramebufferAttachment *checkAttachment)
 {
-    ASSERT(firstAttachment && secondAttachment);
-    ASSERT(firstAttachment->isAttached() && secondAttachment->isAttached());
+    ASSERT(firstAttachment && checkAttachment);
+    ASSERT(firstAttachment->isAttached() && checkAttachment->isAttached());
 
-    if (firstAttachment->getNumViews() != secondAttachment->getNumViews())
+    if (firstAttachment->isMultiview() != checkAttachment->isMultiview())
+    {
+        return FramebufferStatus::Incomplete(GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_OVR,
+                                             err::kFramebufferIncompleteMultiviewMismatch);
+    }
+    if (firstAttachment->getNumViews() != checkAttachment->getNumViews())
     {
         return FramebufferStatus::Incomplete(GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_OVR,
                                              err::kFramebufferIncompleteMultiviewViewsMismatch);
     }
-    if (firstAttachment->getBaseViewIndex() != secondAttachment->getBaseViewIndex())
+    if (checkAttachment->getBaseViewIndex() + checkAttachment->getNumViews() >
+        checkAttachment->getSize().depth)
     {
         return FramebufferStatus::Incomplete(GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_OVR,
                                              err::kFramebufferIncompleteMultiviewBaseViewMismatch);
-    }
-    if (firstAttachment->isMultiview() != secondAttachment->isMultiview())
-    {
-        return FramebufferStatus::Incomplete(GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_OVR,
-                                             err::kFramebufferIncompleteMultiviewMismatch);
     }
 
     return FramebufferStatus::Complete();
