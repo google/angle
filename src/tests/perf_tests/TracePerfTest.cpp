@@ -1115,6 +1115,16 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
     {
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
+
+    if (traceNameIs("zillow"))
+    {
+        // http://anglebug.com/6658 - Crashing in Vulkan backend
+        if ((IsLinux() || IsWindows()) && IsNVIDIA() && mParams.driver == GLESDriverType::AngleEGL)
+        {
+            mSkipTest = true;
+        }
+    }
+
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
     ASSERT(mParams.eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE ||
            gEnableAllTraceTests);
