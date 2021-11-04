@@ -169,22 +169,7 @@
 6631 : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = CRASH
 
 # ES3_1
-6180 : ProgramPipelineTest31.DifferentTextureTypes/* = FAIL
-6180 : ProgramPipelineTest31.DrawWith2DTexture/* = FAIL
-6180 : ProgramPipelineTest31.FragmentStageUniformTest/* = FAIL
-6180 : ProgramPipelineTest31.ImageUniforms/* = FAIL
-6180 : ProgramPipelineTest31.MaxFragmentShaderStorageBufferObjects/* = FAIL
-6180 : ProgramPipelineTest31.MaxFragmentUniformBufferObjects/* = FAIL
-6180 : ProgramPipelineTest31.PipelineWithoutVertexShader/* = FAIL
-6180 : ProgramPipelineTest31.ProgramPipelineVaryings/* = FAIL
-6180 : ProgramPipelineTest31.SampleTextureAThenTextureB/* = FAIL
-6180 : ProgramPipelineTest31.UseCreateShaderProgramv/* = FAIL
-6180 : ProgramPipelineTest31.VaryingIOBlockSeparableProgram/* = FAIL
-6180 : ProgramPipelineTest31.VaryingLocationMismatch/* = FAIL
 6180 : ProgramPipelineTest31.VerifyPpoLinkErrorSignalledCorrectly/* = FAIL
-6180 : SimpleStateChangeTestComputeES31PPO.DeleteImageTextureInUse/* = FAIL
-6180 : Texture2DTestES31PPO.TexStorage/* = FAIL
-6180 : Texture2DTestES31PPO.SingleTextureMultipleSamplers/* = FAIL
 
 # ES3_1 Crashed
 6180 : EGLMultiContextTest.ComputeShaderOkayWithRendering/* = CRASH

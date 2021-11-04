@@ -916,14 +916,7 @@ GLuint Context::createShaderProgramv(ShaderType type, GLsizei count, const GLcha
                     return 0u;
                 }
 
-                // If frame capture is enabled, don't detach the shader since we need the following
-                // to recreate the Shader and Program during MEC setup:
-                // 1.) Shader ID
-                // 2.) Shader source
-                if (!getShareGroup()->getFrameCaptureShared()->enabled())
-                {
-                    programObject->detachShader(this, shaderObject);
-                }
+                programObject->detachShader(this, shaderObject);
             }
 
             InfoLog &programInfoLog = programObject->getExecutable().getInfoLog();

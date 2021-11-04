@@ -5476,13 +5476,20 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             gl::ShaderProgramID programID = {call.params.getReturnValue().value.GLuintVal};
             const ParamCapture &paramCapture =
                 call.params.getParam("typePacked", ParamType::TShaderType, 0);
+            const ParamCapture &lineCount = call.params.getParam("count", ParamType::TGLsizei, 1);
+            const ParamCapture &strings =
+                call.params.getParam("strings", ParamType::TGLcharConstPointerPointer, 2);
+
+            std::ostringstream sourceString;
+            for (int i = 0; i < lineCount.value.GLsizeiVal; ++i)
+            {
+                sourceString << strings.value.GLcharConstPointerPointerVal[i];
+            }
+
             gl::ShaderType shaderType = paramCapture.value.ShaderTypeVal;
-            gl::Program *program      = context->getProgramResolveLink(programID);
-            ASSERT(program);
-            const gl::Shader *shader = program->getAttachedShader(shaderType);
-            ASSERT(shader);
-            setShaderSource(shader->getHandle(), shader->getSourceString());
-            setProgramSources(programID, GetAttachedProgramSources(program));
+            ProgramSources source;
+            source[shaderType] = sourceString.str();
+            setProgramSources(programID, source);
             handleGennedResource(programID);
             break;
         }
