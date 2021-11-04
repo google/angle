@@ -869,7 +869,6 @@ class BufferHelper : public ReadWriteResource
     {
         return mSubAllocation.valid() ? mSubAllocation.getBlock() : nullptr;
     }
-    const Buffer &getBufferAndOffset(VkDeviceSize *offsetOut) const;
     VkDeviceSize getOffset() const
     {
         return mSubAllocation.valid() ? mSubAllocation.getOffset() : 0;

@@ -396,8 +396,7 @@ angle::Result VertexArrayVk::convertVertexBufferGPU(ContextVk *contextVk,
     ASSERT(conversion->dirty);
     conversion->dirty = false;
 
-    VkDeviceSize srcBufferOffset      = 0;
-    vk::BufferHelper *srcBufferHelper = &srcBuffer->getBufferAndOffset(&srcBufferOffset);
+    vk::BufferHelper *srcBufferHelper = &srcBuffer->getBuffer();
 
     UtilsVk::ConvertVertexParameters params;
     params.vertexCount = numVertices;
@@ -682,9 +681,9 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                 }
                 else
                 {
-                    VkDeviceSize bufferOffset         = 0;
-                    vk::BufferHelper &bufferHelper    = bufferVk->getBufferAndOffset(&bufferOffset);
-                    mCurrentArrayBuffers[attribIndex] = &bufferHelper;
+                    vk::BufferHelper &bufferHelper          = bufferVk->getBuffer();
+                    VkDeviceSize bufferOffset               = bufferHelper.getOffset();
+                    mCurrentArrayBuffers[attribIndex]       = &bufferHelper;
                     mCurrentArrayBufferHandles[attribIndex] = bufferHelper.getBuffer().getHandle();
 
                     // Vulkan requires the offset is within the buffer. We use robust access

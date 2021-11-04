@@ -107,17 +107,6 @@ class BufferVk : public BufferImpl
 
     void onDataChanged() override;
 
-    vk::BufferHelper &getBufferAndOffset(VkDeviceSize *offsetOut)
-    {
-        ASSERT(isBufferValid());
-        *offsetOut = mBufferOffset + mBuffer->getOffset();
-        // Every place try to use the buffer, it will have to call this API to get hold of the
-        // underline BufferHelper object. So this is the safe place to tell that this has ever been
-        // referenced by GPU command, whether pending submission or not.
-        mHasBeenReferencedByGPU = true;
-        return *mBuffer;
-    }
-
     vk::BufferHelper &getBuffer()
     {
         ASSERT(isBufferValid());
@@ -238,7 +227,6 @@ class BufferVk : public BufferImpl
     };
 
     std::unique_ptr<vk::BufferHelper> mBuffer;
-    VkDeviceSize mBufferOffset;
 
     uint32_t mMemoryTypeIndex;
     // Memory/Usage property that will be used for memory allocation.
