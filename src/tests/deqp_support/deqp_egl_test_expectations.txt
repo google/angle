@@ -68,7 +68,6 @@
 1340 WIN : dEQP-EGL.functional.render.multi_context.gles3.rgba5551_pbuffer = FAIL
 1340 WIN : dEQP-EGL.functional.render.multi_context.gles2_gles3.rgba5551_window = FAIL
 1340 WIN : dEQP-EGL.functional.render.multi_context.gles2_gles3.rgba5551_pbuffer = FAIL
-1340 WIN : dEQP-EGL.functional.negative_api.choose_config = SKIP
 1340 WIN : dEQP-EGL.functional.negative_api.surface_attrib = SKIP
 1340 WIN : dEQP-EGL.functional.negative_api.swap_interval = FAIL
 2382 WIN : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
@@ -91,7 +90,6 @@
 2546 LINUX : dEQP-EGL.functional.thread_cleanup.* = SKIP
 2546 LINUX : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
 2546 LINUX : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
-2546 LINUX : dEQP-EGL.functional.negative_api.choose_config = FAIL
 2546 LINUX : dEQP-EGL.functional.negative_api.swap_interval = FAIL
 2546 LINUX : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
 2546 LINUX : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_no_depth_no_stencil = FAIL
@@ -103,7 +101,6 @@
 // Mac failures
 2546 MAC : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
 2546 MAC : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
-2546 MAC : dEQP-EGL.functional.negative_api.choose_config = FAIL
 2546 MAC : dEQP-EGL.functional.negative_api.copy_buffers = FAIL
 2546 MAC : dEQP-EGL.functional.negative_api.swap_interval = FAIL
 2546 MAC : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL

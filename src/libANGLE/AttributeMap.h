@@ -11,11 +11,14 @@
 
 #include <EGL/egl.h>
 
+#include <functional>
 #include <map>
 #include <vector>
 
 namespace egl
 {
+class Display;
+struct ValidationContext;
 
 class AttributeMap final
 {
@@ -42,8 +45,8 @@ class AttributeMap final
     template <typename PackedEnumT>
     PackedEnumT getAsPackedEnum(EGLAttrib key, PackedEnumT defaultValue) const
     {
-        auto iter = mAttributes.find(key);
-        return (mAttributes.find(key) != mAttributes.end())
+        auto iter = attribs().find(key);
+        return (attribs().find(key) != attribs().end())
                    ? FromEGLenum<PackedEnumT>(static_cast<EGLenum>(iter->second))
                    : defaultValue;
     }
@@ -56,11 +59,35 @@ class AttributeMap final
     const_iterator begin() const;
     const_iterator end() const;
 
+    bool validate(const ValidationContext *val,
+                  const egl::Display *display,
+                  std::function<bool(const ValidationContext *, const Display *, EGLAttrib)>
+                      validationFunc) const;
+
+    // TODO: remove this and validate at every call site. http://anglebug.com/6671
+    void initializeWithoutValidation() const;
+
     static AttributeMap CreateFromIntArray(const EGLint *attributes);
     static AttributeMap CreateFromAttribArray(const EGLAttrib *attributes);
 
   private:
-    std::map<EGLAttrib, EGLAttrib> mAttributes;
+    bool isValidated() const;
+
+    const std::map<EGLAttrib, EGLAttrib> &attribs() const
+    {
+        ASSERT(isValidated());
+        return mValidatedAttributes;
+    }
+
+    std::map<EGLAttrib, EGLAttrib> &attribs()
+    {
+        ASSERT(isValidated());
+        return mValidatedAttributes;
+    }
+
+    mutable const EGLint *mIntPointer       = nullptr;
+    mutable const EGLAttrib *mAttribPointer = nullptr;
+    mutable std::map<EGLAttrib, EGLAttrib> mValidatedAttributes;
 };
 }  // namespace egl
 

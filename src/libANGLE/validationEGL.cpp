@@ -400,11 +400,13 @@ bool ValidateConfigAttributes(const ValidationContext *val,
                               const Display *display,
                               const AttributeMap &attributes)
 {
+    ANGLE_VALIDATION_TRY(attributes.validate(val, display, ValidateConfigAttribute));
+
     for (const auto &attrib : attributes)
     {
-        ANGLE_VALIDATION_TRY(ValidateConfigAttribute(val, display, attrib.first));
-        ANGLE_VALIDATION_TRY(
-            ValidateConfigAttributeValue(val, display, attrib.first, attrib.second));
+        EGLAttrib pname = attrib.first;
+        EGLAttrib value = attrib.second;
+        ANGLE_VALIDATION_TRY(ValidateConfigAttributeValue(val, display, pname, value));
     }
 
     return true;
@@ -552,6 +554,8 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
             val->setError(EGL_BAD_CONFIG, "Bad platform type.");
             return false;
     }
+
+    attribMap.initializeWithoutValidation();
 
     if (platform == EGL_PLATFORM_ANGLE_ANGLE)
     {
@@ -1223,6 +1227,8 @@ bool ValidateCreateSyncBase(const ValidationContext *val,
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
+    attribs.initializeWithoutValidation();
+
     gl::Context *currentContext  = val->eglThread->getContext();
     egl::Display *currentDisplay = currentContext ? currentContext->getDisplay() : nullptr;
 
@@ -1648,6 +1654,8 @@ bool ValidateCreateContext(const ValidationContext *val,
             return false;
         }
     }
+
+    attributes.initializeWithoutValidation();
 
     // Get the requested client version (default is 1) and check it is 2 or 3.
     EGLAttrib clientMajorVersion = 1;
@@ -2146,6 +2154,8 @@ bool ValidateCreateWindowSurface(const ValidationContext *val,
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
 
+    attributes.initializeWithoutValidation();
+
     for (const auto &attributeIter : attributes)
     {
         EGLAttrib attribute = attributeIter.first;
@@ -2319,6 +2329,8 @@ bool ValidateCreatePbufferSurface(const ValidationContext *val,
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
 
+    attributes.initializeWithoutValidation();
+
     for (const auto &attributeIter : attributes)
     {
         EGLAttrib attribute = attributeIter.first;
@@ -2463,6 +2475,8 @@ bool ValidateCreatePbufferFromClientBuffer(const ValidationContext *val,
     ANGLE_VALIDATION_TRY(ValidateConfig(val, display, config));
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
+
+    attributes.initializeWithoutValidation();
 
     switch (buftype)
     {
@@ -2770,11 +2784,12 @@ bool ValidateCreatePixmapSurface(const ValidationContext *val,
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
 
-    for (AttributeMap::const_iterator attributeIter = attributes.begin();
-         attributeIter != attributes.end(); attributeIter++)
+    attributes.initializeWithoutValidation();
+
+    for (const auto &attributePair : attributes)
     {
-        EGLAttrib attribute = attributeIter->first;
-        EGLAttrib value     = attributeIter->second;
+        EGLAttrib attribute = attributePair.first;
+        EGLAttrib value     = attributePair.second;
 
         switch (attribute)
         {
@@ -2967,6 +2982,8 @@ bool ValidateCreateImage(const ValidationContext *val,
 {
 
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+
+    attributes.initializeWithoutValidation();
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
 
@@ -3842,6 +3859,8 @@ bool ValidateCreateStreamKHR(const ValidationContext *val,
         return false;
     }
 
+    attributes.initializeWithoutValidation();
+
     for (const auto &attributeIter : attributes)
     {
         EGLAttrib attribute = attributeIter.first;
@@ -4122,6 +4141,9 @@ bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *v
     {
         plane[i] = -1;
     }
+
+    attribs.initializeWithoutValidation();
+
     for (const auto &attributeIter : attribs)
     {
         EGLAttrib attribute = attributeIter.first;
@@ -4262,6 +4284,8 @@ bool ValidateCreateStreamProducerD3DTextureANGLE(const ValidationContext *val,
 
     ANGLE_VALIDATION_TRY(ValidateStream(val, display, stream));
 
+    attribs.initializeWithoutValidation();
+
     if (!attribs.isEmpty())
     {
         val->setError(EGL_BAD_ATTRIBUTE, "Invalid attribute");
@@ -4316,6 +4340,8 @@ bool ValidateStreamPostD3DTextureANGLE(const ValidationContext *val,
     }
 
     ANGLE_VALIDATION_TRY(ValidateStream(val, display, stream));
+
+    attribs.initializeWithoutValidation();
 
     for (auto &attributeIter : attribs)
     {
@@ -5307,6 +5333,8 @@ bool ValidateDebugMessageControlKHR(const ValidationContext *val,
         return false;
     }
 
+    attribs.initializeWithoutValidation();
+
     for (const auto &attrib : attribs)
     {
         switch (attrib.first)
@@ -5644,6 +5672,8 @@ bool ValidateGetNativeClientBufferANDROID(const ValidationContext *val,
 bool ValidateCreateNativeClientBufferANDROID(const ValidationContext *val,
                                              const egl::AttributeMap &attribMap)
 {
+    attribMap.initializeWithoutValidation();
+
     if (attribMap.isEmpty() || attribMap.begin()->second == EGL_NONE)
     {
         val->setError(EGL_BAD_PARAMETER, "invalid attribute list.");
