@@ -425,7 +425,10 @@ angle::Result ContextMtl::drawArraysImpl(const gl::Context *context,
     {
         return angle::Result::Continue;
     }
-
+    if (requiresIndexRewrite(context->getState(), mode))
+    {
+        return drawArraysProvokingVertexImpl(context, mode, first, count, instances);
+    }
     if (mode == gl::PrimitiveMode::TriangleFan)
     {
         return drawTriFanArrays(context, first, count, instanceCount);
@@ -579,6 +582,68 @@ angle::Result ContextMtl::drawLineLoopElements(const gl::Context *context,
                                  instances);
 }
 
+angle::Result ContextMtl::drawArraysProvokingVertexImpl(const gl::Context *context,
+                                                        gl::PrimitiveMode mode,
+                                                        GLsizei first,
+                                                        GLsizei count,
+                                                        GLsizei instances)
+{
+
+    size_t outIndexCount               = 0;
+    size_t outIndexOffset              = 0;
+    gl::DrawElementsType convertedType = gl::DrawElementsType::UnsignedInt;
+    gl::PrimitiveMode outIndexMode     = gl::PrimitiveMode::InvalidEnum;
+
+    mtl::BufferRef drawIdxBuffer = mProvokingVertexHelper.generateIndexBuffer(
+        mtl::GetImpl(context), first, count, mode, convertedType, outIndexCount, outIndexOffset,
+        outIndexMode);
+    GLsizei outIndexCounti32     = static_cast<GLsizei>(outIndexCount);
+    const uint8_t *mappedIndices = drawIdxBuffer->mapReadOnly(this);
+    if (!drawIdxBuffer || !mappedIndices)
+    {
+        return angle::Result::Stop;
+    }
+
+#define DRAW_PROVOKING_VERTEX_ARRAY(xfbPass)                                                      \
+    if (xfbPass)                                                                                  \
+    {                                                                                             \
+        ANGLE_TRY(setupDraw(context, mode, first, count, instances,                               \
+                            gl::DrawElementsType::InvalidEnum, nullptr, xfbPass));                \
+        MTLPrimitiveType mtlType = mtl::GetPrimitiveType(mode);                                   \
+        if (instances == 0)                                                                       \
+        {                                                                                         \
+            /* This method is called from normal drawArrays() */                                  \
+            mRenderEncoder.draw(mtlType, first, count);                                           \
+        }                                                                                         \
+        else                                                                                      \
+        {                                                                                         \
+            mRenderEncoder.drawInstanced(mtlType, first, count, instances);                       \
+        }                                                                                         \
+    }                                                                                             \
+    else                                                                                          \
+    {                                                                                             \
+        ANGLE_TRY(setupDraw(context, outIndexMode, 0, outIndexCounti32, instances, convertedType, \
+                            mappedIndices + outIndexOffset, xfbPass));                            \
+                                                                                                  \
+        MTLPrimitiveType mtlType = mtl::GetPrimitiveType(outIndexMode);                           \
+        MTLIndexType mtlIdxType  = mtl::GetIndexType(convertedType);                              \
+        if (instances == 0)                                                                       \
+        {                                                                                         \
+            mRenderEncoder.drawIndexed(mtlType, outIndexCounti32, mtlIdxType, drawIdxBuffer,      \
+                                       outIndexOffset);                                           \
+        }                                                                                         \
+        else                                                                                      \
+        {                                                                                         \
+            mRenderEncoder.drawIndexedInstanced(mtlType, outIndexCounti32, mtlIdxType,            \
+                                                drawIdxBuffer, outIndexOffset, instances);        \
+        }                                                                                         \
+    }
+
+    ANGLE_MTL_XFB_DRAW(DRAW_PROVOKING_VERTEX_ARRAY)
+    drawIdxBuffer->unmapNoFlush(this);
+    return angle::Result::Continue;
+}
+
 angle::Result ContextMtl::drawElementsImpl(const gl::Context *context,
                                            gl::PrimitiveMode mode,
                                            GLsizei count,
@@ -617,13 +682,16 @@ angle::Result ContextMtl::drawElementsImpl(const gl::Context *context,
 
     uint32_t convertedCounti32 = (uint32_t)count;
 
+    size_t provokingVertexAdditionalOffset = 0;
+
     if (requiresIndexRewrite(context->getState(), mode))
     {
         size_t outIndexCount      = 0;
         gl::PrimitiveMode newMode = gl::PrimitiveMode::InvalidEnum;
         drawIdxBuffer             = mProvokingVertexHelper.preconditionIndexBuffer(
             mtl::GetImpl(context), idxBuffer, count, convertedOffset,
-            mState.isPrimitiveRestartEnabled(), mode, convertedType, outIndexCount, newMode);
+            mState.isPrimitiveRestartEnabled(), mode, convertedType, outIndexCount,
+            provokingVertexAdditionalOffset, newMode);
         if (!drawIdxBuffer)
         {
             return angle::Result::Stop;
@@ -656,7 +724,7 @@ angle::Result ContextMtl::drawElementsImpl(const gl::Context *context,
         for (auto &command : drawCommands)
         {
             mRenderEncoder.drawIndexed(mtlType, command.count, mtlIdxType, drawIdxBuffer,
-                                       command.offset);
+                                       command.offset + provokingVertexAdditionalOffset);
         }
     }
     else
@@ -665,10 +733,10 @@ angle::Result ContextMtl::drawElementsImpl(const gl::Context *context,
         for (auto &command : drawCommands)
         {
             mRenderEncoder.drawIndexedInstanced(mtlType, command.count, mtlIdxType, drawIdxBuffer,
-                                                command.offset, instanceCount);
+                                                command.offset + provokingVertexAdditionalOffset,
+                                                instanceCount);
         }
     }
-
     return angle::Result::Continue;
 }
 

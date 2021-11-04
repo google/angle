@@ -558,8 +558,6 @@
 
 /////////// Metal ////////////////
 
-// last provoking vertex (for flat shading) is not supported
-5232 MAC METAL : dEQP-GLES3.*flatshading* = FAIL
 5232 MAC METAL AMD : dEQP-GLES3.functional.shaders.builtin_functions.pack_unpack.unpacksnorm2x16_fragment = FAIL
 5232 MAC METAL AMD : dEQP-GLES3.functional.shaders.builtin_functions.pack_unpack.unpackunorm2x16_fragment = FAIL
 

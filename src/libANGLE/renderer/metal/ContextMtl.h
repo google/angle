@@ -432,6 +432,12 @@ class ContextMtl : public ContextImpl, public mtl::Context
                                        const void *indices,
                                        GLsizei instances);
 
+    angle::Result drawArraysProvokingVertexImpl(const gl::Context *context,
+                                                gl::PrimitiveMode mode,
+                                                GLsizei first,
+                                                GLsizei count,
+                                                GLsizei instances);
+
     angle::Result drawArraysImpl(const gl::Context *context,
                                  gl::PrimitiveMode mode,
                                  GLint first,
