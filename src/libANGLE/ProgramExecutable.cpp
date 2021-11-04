@@ -808,6 +808,9 @@ void ProgramExecutable::updateActiveSamplers(const ProgramState &programState)
             mActiveSamplersMask.set(textureUnit);
         }
     }
+
+    // Invalidate the validation cache.
+    resetCachedValidateSamplersResult();
 }
 
 void ProgramExecutable::updateActiveImages(const ProgramExecutable &executable)
