@@ -1114,6 +1114,12 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
     if (traceNameIs("world_cricket_championship_2"))
     {
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
+
+        // http://anglebug.com/6657 - Native test timing out on Intel Linux
+        if (IsLinux() && IsIntel() && mParams.driver == GLESDriverType::SystemWGL)
+        {
+            mSkipTest = true;
+        }
     }
 
     if (traceNameIs("zillow"))
