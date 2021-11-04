@@ -2185,9 +2185,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // Temporarily disable on all of Android. http://crbug.com/1238327
     ANGLE_FEATURE_CONDITION(features, disableMultisampledRenderToTexture,
-                            IsAndroid() || isAdreno4xxOnAndroidLessThan51 ||
-                                isAdreno4xxOnAndroid70 || isAdreno5xxOnAndroidLessThan70 ||
-                                isAdreno5xxOnAndroid71 || isLinuxVivante);
+                            isAdreno4xxOnAndroidLessThan51 || isAdreno4xxOnAndroid70 ||
+                                isAdreno5xxOnAndroidLessThan70 || isAdreno5xxOnAndroid71 ||
+                                isLinuxVivante);
 
     // http://crbug.com/1181068
     ANGLE_FEATURE_CONDITION(features, uploadTextureDataInChunks, IsApple());

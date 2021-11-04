@@ -521,6 +521,41 @@ TEST_P(MultisampledRenderToTextureTest, FramebufferCompletenessSmallSampleCount)
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 }
 
+// Test mixing unsized and sized formats with multisampling. Regression test for
+// http://crbug.com/1238327
+TEST_P(MultisampledRenderToTextureTest, UnsizedTextureFormatSampleMissmatch)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_texture_rg"));
+
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsAMD());
+
+    GLsizei samples = 0;
+    glGetIntegerv(GL_MAX_SAMPLES, &samples);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 64, 64, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Texture attachment for color attachment 0.  Framebuffer should be complete.
+    GLFramebuffer FBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         texture, 0, samples);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Depth/stencil renderbuffer, potentially with a different sample count.
+    GLRenderbuffer dsRenderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, dsRenderbuffer);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, samples, GL_STENCIL_INDEX8, 64, 64);
+    ASSERT_GL_NO_ERROR();
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              dsRenderbuffer);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+}
+
 void MultisampledRenderToTextureTest::createAndAttachColorAttachment(
     bool useRenderbuffer,
     GLsizei size,
