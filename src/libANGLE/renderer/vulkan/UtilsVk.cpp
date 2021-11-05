@@ -2301,7 +2301,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     shaderParams.flipY    = params.flipY;
     shaderParams.rotateXY = 0;
 
-    // Potentially make adjustments for pre-rotatation.  Depending on the angle some of the
+    // Potentially make adjustments for pre-rotation.  Depending on the angle some of the
     // shaderParams need to be adjusted.
     switch (params.rotation)
     {

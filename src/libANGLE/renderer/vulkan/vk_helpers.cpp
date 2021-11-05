@@ -1068,7 +1068,7 @@ void CommandBufferHelper::imageRead(ContextVk *contextVk,
     if (mIsRenderPassCommandBuffer)
     {
         // As noted in the header we don't support multiple read layouts for Images.
-        // We allow duplicate uses in the RP to accomodate for normal GL sampler usage.
+        // We allow duplicate uses in the RP to accommodate for normal GL sampler usage.
         if (!usesImageInRenderPass(*image))
         {
             mRenderPassUsedImages.insert(image->getImageSerial().getValue());

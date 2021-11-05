@@ -796,8 +796,8 @@ class PipelineBarrier : angle::NonCopyable
 
     void mergeMemoryBarrier(VkPipelineStageFlags srcStageMask,
                             VkPipelineStageFlags dstStageMask,
-                            VkFlags srcAccess,
-                            VkFlags dstAccess)
+                            VkAccessFlags srcAccess,
+                            VkAccessFlags dstAccess)
     {
         mSrcStageMask |= srcStageMask;
         mDstStageMask |= dstStageMask;
@@ -829,8 +829,8 @@ class PipelineBarrier : angle::NonCopyable
   private:
     VkPipelineStageFlags mSrcStageMask;
     VkPipelineStageFlags mDstStageMask;
-    VkFlags mMemoryBarrierSrcAccess;
-    VkFlags mMemoryBarrierDstAccess;
+    VkAccessFlags mMemoryBarrierSrcAccess;
+    VkAccessFlags mMemoryBarrierDstAccess;
     std::vector<VkImageMemoryBarrier> mImageMemoryBarriers;
 };
 using PipelineBarrierArray = angle::PackedEnumMap<PipelineStage, PipelineBarrier>;
