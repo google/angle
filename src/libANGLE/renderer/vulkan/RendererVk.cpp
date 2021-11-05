@@ -370,6 +370,16 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "EXT|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_"
      "ATTACHMENT_WRITE, command: vkCmdEndRenderPass",
      "", false},
+    // From: TracePerfTest.Run/vulkan_swiftshader_slingshot_test1 http://anglebug.com/6566
+    {"SYNC-HAZARD-READ_AFTER_WRITE",
+     "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
+     "VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, binding #0, index 0. Access info (usage: "
+     "SYNC_VERTEX_SHADER_SHADER_STORAGE_READ, prior_usage: SYNC_IMAGE_LAYOUT_TRANSITION, "
+     "write_barriers: "
+     "SYNC_FRAGMENT_SHADER_SHADER_SAMPLED_READ|SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ|SYNC_"
+     "FRAGMENT_SHADER_UNIFORM_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_"
+     "ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, command: vkCmdPipelineBarrier, seq_no: 38",
+     "", false},
 };
 
 enum class DebugMessageReport
