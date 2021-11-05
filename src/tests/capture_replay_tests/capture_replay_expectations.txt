@@ -221,8 +221,6 @@
 6608 : FramebufferFetchES31.MultipleRenderTargetWithInoutArray_NonCoherent/* = SKIP_FOR_CAPTURE
 6608 : FramebufferFetchES31.MultipleRenderTarget_NonCoherent/* = SKIP_FOR_CAPTURE
 6608 : FramebufferFetchES31.ProgramPipeline_NonCoherent/* = SKIP_FOR_CAPTURE
-6609 : GLSLTest_ES31.IOBlockArray/* = SKIP_FOR_CAPTURE
-6610 : GLSLTest_ES31.StructBothInvariantAndNot/* = SKIP_FOR_CAPTURE
 6611 : TextureMultisampleArrayWebGLTest.FramebufferColorClearAndBlit/* = SKIP_FOR_CAPTURE
 6611 : TextureMultisampleArrayWebGLTest.FramebufferCompleteness/* = SKIP_FOR_CAPTURE
 6611 : TextureMultisampleArrayWebGLTest.IntegerTexelFetch/* = SKIP_FOR_CAPTURE
@@ -234,8 +232,6 @@
 6611 : TextureMultisampleTest.MultisampleTargetFramebufferTexture2D/* = SKIP_FOR_CAPTURE
 6611 : TextureMultisampleTest.ResolveToDefaultFramebuffer/* = SKIP_FOR_CAPTURE
 6611 : TextureMultisampleTest.ValidateTextureStorageMultisampleParameters/* = SKIP_FOR_CAPTURE
-6610 : TransformFeedbackTestIOBlocks.Interleaved/* = SKIP_FOR_CAPTURE
-6610 : TransformFeedbackTestIOBlocks.Separate/* = SKIP_FOR_CAPTURE
 6605 : TextureBufferTestES31.MapTextureBufferInvalidateThenWrite/* = SKIP_FOR_CAPTURE
 6605 : TextureBufferTestES31.UseAsUBOThenUpdateThenAsTextureBuffer/* = SKIP_FOR_CAPTURE
 
