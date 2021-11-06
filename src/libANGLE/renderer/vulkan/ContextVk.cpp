@@ -5292,8 +5292,21 @@ angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
         memoryBarrier.srcAccessMask   = VK_ACCESS_MEMORY_WRITE_BIT;
         memoryBarrier.dstAccessMask   = VK_ACCESS_HOST_READ_BIT | VK_ACCESS_HOST_WRITE_BIT;
 
+        const VkPipelineStageFlags supportedShaderStages =
+            (VK_PIPELINE_STAGE_VERTEX_SHADER_BIT |
+             VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT |
+             VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT |
+             VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT |
+             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT) &
+            mRenderer->getSupportedVulkanPipelineStageMask();
+        const VkPipelineStageFlags bufferWriteStages =
+            VK_PIPELINE_STAGE_TRANSFER_BIT | supportedShaderStages |
+            (getFeatures().supportsTransformFeedbackExtension.enabled
+                 ? VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT
+                 : 0);
+
         mOutsideRenderPassCommands->getCommandBuffer().memoryBarrier(
-            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_HOST_BIT, &memoryBarrier);
+            bufferWriteStages, VK_PIPELINE_STAGE_HOST_BIT, &memoryBarrier);
         mIsAnyHostVisibleBufferWritten = false;
     }
 
