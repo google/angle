@@ -589,7 +589,6 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         GLuint stride;
         // Init attribute offset to the front-end value
         mCurrentArrayBufferRelativeOffsets[attribIndex] = attrib.relativeOffset;
-        bool anyVertexBufferConvertedOnGpu              = false;
         gl::Buffer *bufferGL                            = binding.getBuffer().get();
         // Emulated and/or client-side attribs will be streamed
         bool isStreamingVertexAttrib =
@@ -643,7 +642,6 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                         ANGLE_TRY(convertVertexBufferGPU(contextVk, bufferVk, binding, attribIndex,
                                                          vertexFormat, conversion,
                                                          attrib.relativeOffset, compressed));
-                        anyVertexBufferConvertedOnGpu = true;
                     }
                     else
                     {
@@ -728,12 +726,6 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
             // Cache the stride of the attribute
             mCurrentArrayBufferStrides[attribIndex]    = stride;
             mCurrentArrayBufferCompressed[attribIndex] = compressed;
-        }
-
-        if (anyVertexBufferConvertedOnGpu &&
-            renderer->getFeatures().flushAfterVertexConversion.enabled)
-        {
-            ANGLE_TRY(contextVk->flushImpl(nullptr));
         }
     }
     else

@@ -577,8 +577,9 @@ angle::Result BufferVk::handleDeviceLocalBufferMap(ContextVk *contextVk,
 
     VkBufferCopy copyRegion = {mBufferOffset + offset, mHostVisibleBufferOffset, size};
     ANGLE_TRY(hostVisibleBuffer->copyFromBuffer(contextVk, mBuffer, 1, &copyRegion));
-    ANGLE_TRY(
-        hostVisibleBuffer->waitForIdle(contextVk, "GPU stall due to mapping device local buffer"));
+    ANGLE_TRY(hostVisibleBuffer->waitForIdle(contextVk,
+                                             "GPU stall due to mapping device local buffer",
+                                             RenderPassClosureReason::DeviceLocalBufferMap));
 
     return angle::Result::Continue;
 }
@@ -699,7 +700,8 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
                 // If there are pending commands for the resource, flush them.
                 if (mBuffer->usedInRecordedCommands())
                 {
-                    ANGLE_TRY(contextVk->flushImpl(nullptr));
+                    ANGLE_TRY(
+                        contextVk->flushImpl(nullptr, RenderPassClosureReason::BufferWriteThenMap));
                 }
                 ANGLE_TRY(mBuffer->finishGPUWriteCommands(contextVk));
             }
@@ -742,7 +744,8 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
             else if ((access & GL_MAP_UNSYNCHRONIZED_BIT) == 0)
             {
                 ANGLE_TRY(mBuffer->waitForIdle(
-                    contextVk, "GPU stall due to mapping buffer in use by the GPU"));
+                    contextVk, "GPU stall due to mapping buffer in use by the GPU",
+                    RenderPassClosureReason::BufferInUseWhenSynchronizedMap));
             }
         }
 

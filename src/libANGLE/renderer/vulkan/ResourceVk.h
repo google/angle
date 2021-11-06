@@ -184,7 +184,9 @@ class Resource : angle::NonCopyable
     angle::Result finishRunningCommands(ContextVk *contextVk);
 
     // Complete all recorded and in-flight commands involving this resource
-    angle::Result waitForIdle(ContextVk *contextVk, const char *debugMessage);
+    angle::Result waitForIdle(ContextVk *contextVk,
+                              const char *debugMessage,
+                              RenderPassClosureReason reason);
 
     // Adds the resource to a resource use list.
     void retain(ResourceUseList *resourceUseList) const;
@@ -236,7 +238,9 @@ class ReadWriteResource : public angle::NonCopyable
     angle::Result finishGPUWriteCommands(ContextVk *contextVk);
 
     // Complete all recorded and in-flight commands involving this resource
-    angle::Result waitForIdle(ContextVk *contextVk, const char *debugMessage);
+    angle::Result waitForIdle(ContextVk *contextVk,
+                              const char *debugMessage,
+                              RenderPassClosureReason reason);
 
     // Adds the resource to a resource use list.
     void retainReadOnly(ResourceUseList *resourceUseList) const;

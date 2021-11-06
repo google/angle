@@ -160,9 +160,7 @@ angle::Result ImageVk::orphan(const gl::Context *context, egl::ImageSibling *sib
     ContextVk *contextVk = vk::GetImpl(context);
 
     // Flush the context to make sure the fence has been submitted.
-    ANGLE_TRY(contextVk->flushImpl(nullptr));
-
-    return angle::Result::Continue;
+    return contextVk->flushImpl(nullptr, RenderPassClosureReason::ImageOrphan);
 }
 
 }  // namespace rx

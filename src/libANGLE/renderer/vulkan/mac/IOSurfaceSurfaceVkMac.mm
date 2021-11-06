@@ -139,7 +139,7 @@ egl::Error IOSurfaceSurfaceVkMac::unMakeCurrent(const gl::Context *context)
     ASSERT(context != nullptr);
     ContextVk *contextVk = vk::GetImpl(context);
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
-    angle::Result result = contextVk->flushImpl(nullptr);
+    angle::Result result = contextVk->flushImpl(nullptr, RenderPassClosureReason::ContextChange);
     return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
 }
 

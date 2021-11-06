@@ -521,7 +521,7 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
 
     if (isUsedInRecordedCommands())
     {
-        ANGLE_TRY(contextVk->flushImpl(nullptr));
+        ANGLE_TRY(contextVk->flushImpl(nullptr, RenderPassClosureReason::GetQueryResult));
 
         ASSERT(!mQueryHelperTimeElapsedBegin.usedInRecordedCommands());
         ASSERT(!mQueryHelper.get().usedInRecordedCommands());
