@@ -4144,8 +4144,14 @@ ANGLE_INLINE angle::Result Context::prepareForDispatch()
 
 angle::Result Context::prepareForInvalidate(GLenum target)
 {
-    // Only sync the FBO that's being invalidated
-    ANGLE_TRY(mState.syncDirtyObject(this, target));
+    // Only sync the FBO that's being invalidated.  Per the GLES3 spec, GL_FRAMEBUFFER is equivalent
+    // to GL_DRAW_FRAMEBUFFER for the purposes of invalidation.
+    GLenum effectiveTarget = target;
+    if (effectiveTarget == GL_FRAMEBUFFER)
+    {
+        effectiveTarget = GL_DRAW_FRAMEBUFFER;
+    }
+    ANGLE_TRY(mState.syncDirtyObject(this, effectiveTarget));
     return syncDirtyBits(mInvalidateDirtyBits, Command::Invalidate);
 }
 
@@ -4790,13 +4796,9 @@ void Context::readBuffer(GLenum mode)
 
 void Context::discardFramebuffer(GLenum target, GLsizei numAttachments, const GLenum *attachments)
 {
-    Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
-    ASSERT(framebuffer);
-
     // The specification isn't clear what should be done when the framebuffer isn't complete.
-    // We leave it up to the framebuffer implementation to decide what to do.
-    ANGLE_CONTEXT_TRY(prepareForInvalidate(target));
-    ANGLE_CONTEXT_TRY(framebuffer->discard(this, numAttachments, attachments));
+    // We threat it the same way as GLES3 glInvalidateFramebuffer.
+    invalidateFramebuffer(target, numAttachments, attachments);
 }
 
 void Context::invalidateFramebuffer(GLenum target,
