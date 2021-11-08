@@ -48,6 +48,10 @@ declare_args() {
 
   # Optional feature that forces dirty state whenever we use a new context regardless of thread.
   angle_force_context_check_every_call = false
+
+  # Allow shared library custom name extensions for setting soname such as libEGL.so.1
+  angle_egl_extension = ""
+  angle_glesv2_extension = ""
 }
 
 if (angle_build_all) {
@@ -1134,6 +1138,9 @@ template("angle_libGLESv2") {
     }
 
     output_name = "${invoker.output_name}${angle_libs_suffix}"
+    if (angle_glesv2_extension != "") {
+      output_extension = angle_glesv2_extension
+    }
 
     configs += [
       ":angle_gl_visibility_config",
@@ -1265,6 +1272,9 @@ angle_shared_library("libEGL") {
   }
 
   output_name = "libEGL${angle_libs_suffix}"
+  if (angle_egl_extension != "") {
+    output_extension = angle_egl_extension
+  }
 
   configs += [
     ":debug_annotations_config",
