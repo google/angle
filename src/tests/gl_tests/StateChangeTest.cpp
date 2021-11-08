@@ -7066,6 +7066,77 @@ TEST_P(SimpleStateChangeTestES3, DeleteFramebufferBeforeQuery)
     ASSERT_GL_NO_ERROR();
 }
 
+// Covers an edge case
+TEST_P(SimpleStateChangeTestES3, TextureTypeConflictAfterDraw)
+{
+    constexpr char kVS[] = R"(precision highp float;
+attribute vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+}
+)";
+
+    constexpr char kFS[] = R"(precision highp float;
+uniform sampler2D u_2d1;
+uniform samplerCube u_Cube1;
+void main()
+{
+    gl_FragColor = texture2D(u_2d1, vec2(0.0, 0.0)) + textureCube(u_Cube1, vec3(0.0, 0.0, 0.0));
+}
+)";
+
+    ANGLE_GL_PROGRAM(testProgram, kVS, kFS);
+    glUseProgram(testProgram);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 4, GL_SRGB8, 1268, 614);
+
+    GLint uniformloc = glGetUniformLocation(testProgram, "u_Cube1");
+    ASSERT_NE(-1, uniformloc);
+    glUniform1i(uniformloc, 1);
+
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Trigger the state update.
+    glLinkProgram(testProgram);
+    texture.reset();
+
+    // The texture types are now conflicting, and draws should fail.
+    glDrawArrays(GL_POINTS, 0, 1);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Regression test for a bug where the framebuffer binding was not synced during invalidate when a
+// clear operation was deferred.
+TEST_P(SimpleStateChangeTestES3, ChangeFramebufferThenInvalidateWithClear)
+{
+    // Clear the default framebuffer.
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Start rendering to another framebuffer
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Red());
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Switch back to the default framebuffer
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+    // Invalidate it.  Don't invalidate color, as that's the one being cleared.
+    constexpr GLenum kAttachment = GL_DEPTH;
+    glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 1, &kAttachment);
+    EXPECT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);

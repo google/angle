@@ -38,6 +38,7 @@ enum class Command
     Dispatch,
     Draw,
     GenerateMipmap,
+    Invalidate,
     ReadPixels,
     TexImage,
     Other

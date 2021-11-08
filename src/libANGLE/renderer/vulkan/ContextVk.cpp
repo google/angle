@@ -5568,6 +5568,8 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
                                          vk::CommandBuffer **commandBufferOut,
                                          bool *renderPassDescChangedOut)
 {
+    ASSERT(mDrawFramebuffer == vk::GetImpl(mState.getDrawFramebuffer()));
+
     ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, renderArea, &mRenderPassCommandBuffer,
                                                    renderPassDescChangedOut));
 
