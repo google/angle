@@ -257,3 +257,9 @@
 6180 : GLSLTest_ES31.VaryingTessellationSampleInAndOut/ES3_1_Vulkan_SwiftShader = SKIPPED_BY_GTEST
 6180 : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/ES3_1_Vulkan_SwiftShader = SKIPPED_BY_GTEST
 6180 : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/ES3_1_Vulkan_SwiftShader = SKIPPED_BY_GTEST
+
+6663 : Texture2DTest.UploadThenFSThenNewRPThenFSThenVS/ES2_Vulkan_SwiftShader = SKIPPED_BY_GTEST
+6663 : Texture2DTest.UploadThenFSThenNewRPThenVS/ES2_Vulkan_SwiftShader = SKIPPED_BY_GTEST
+6663 : Texture2DTest.UploadThenFSThenNewRPThenVSThenFS/ES2_Vulkan_SwiftShader = SKIPPED_BY_GTEST
+6663 : Texture2DTest.UploadThenFSThenVS/ES2_Vulkan_SwiftShader = SKIPPED_BY_GTEST
+6663 : Texture2DTest.UploadThenFSThenVSThenNewRPThenFS/ES2_Vulkan_SwiftShader  = SKIPPED_BY_GTEST
