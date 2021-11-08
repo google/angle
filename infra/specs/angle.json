@@ -3783,6 +3783,7 @@
       }
     ]
   },
+  "win10-x64-swiftshader-asan": {},
   "win10-x86-swiftshader": {
     "gtest_tests": [
       {
@@ -4195,7 +4196,6 @@
       }
     ]
   },
-  "win10-x86-swiftshader-asan": {},
   "win7-x64-nvidia": {
     "gtest_tests": [
       {

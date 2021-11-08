@@ -180,6 +180,15 @@
           'gtest_tests': 'swangle_gtests',
         },
       },
+      'win10-x64-swiftshader-asan': {
+        'os_type': 'win',
+        'mixins': [
+          'win10_gce_gpu_pool',
+          'timeout_15m',
+        ],
+        'test_suites': {
+        },
+      },
       'win10-x86-swiftshader': {
         'os_type': 'win',
         'mixins': [
@@ -188,15 +197,6 @@
         ],
         'test_suites': {
           'gtest_tests': 'swangle_gtests',
-        },
-      },
-      'win10-x86-swiftshader-asan': {
-        'os_type': 'win',
-        'mixins': [
-          'win10_gce_gpu_pool',
-          'timeout_15m',
-        ],
-        'test_suites': {
         },
       },
       'win7-x64-nvidia': {
