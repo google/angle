@@ -7208,6 +7208,27 @@ TEST_P(SimpleStateChangeTestES3, ClearColorInvalidateDepthClearColor)
     glClear(GL_COLOR_BUFFER_BIT);
     ASSERT_GL_NO_ERROR();
 }
+
+// Regression test for a bug where glInvalidateFramebuffer(GL_FRAMEBUFFER, ...) was invalidating
+// both the draw and read framebuffers.
+TEST_P(SimpleStateChangeTestES3, InvalidateFramebufferShouldntInvalidateReadFramebuffer)
+{
+    // Create an invalid read framebuffer.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_R8, 1, 1, 1);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, tex, 0, 5);
+
+    // Invalidate using GL_FRAMEBUFFER.  If GL_READ_FRAMEBUFFER was used, validation would fail due
+    // to the framebuffer not being complete.  A bug here was attempting to invalidate the read
+    // framebuffer given GL_FRAMEBUFFER anyway.
+    constexpr std::array<GLenum, 2> kAttachments = {GL_DEPTH, GL_STENCIL};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, kAttachments.data());
+    EXPECT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
