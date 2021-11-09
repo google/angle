@@ -734,9 +734,6 @@ struct ClientExtensions
 
     // EGL_EXT_device_query
     bool deviceQueryEXT = false;
-
-    // EGL_ANGLE_display_power_preference
-    bool displayPowerPreferenceANGLE = false;
 };
 
 }  // namespace egl

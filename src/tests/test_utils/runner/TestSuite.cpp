@@ -1038,8 +1038,7 @@ TestSuite::TestSuite(int *argc, char **argv)
       mBatchId(-1),
       mFlakyRetries(0),
       mMaxFailures(kDefaultMaxFailures),
-      mFailureCount(0),
-      mModifiedPreferredDevice(false)
+      mFailureCount(0)
 {
     ASSERT(mInstance == nullptr);
     mInstance = this;
@@ -1127,34 +1126,6 @@ TestSuite::TestSuite(int *argc, char **argv)
         {
             std::stringstream shardCountStream(envTotalShards);
             shardCountStream >> mShardCount;
-        }
-    }
-
-    // The test harness reads the active GPU from SystemInfo and uses that for test expectations.
-    // However, some ANGLE backends don't have a concept of an "active" GPU, and instead use power
-    // preference to select GPU. We can use the environment variable ANGLE_PREFERRED_DEVICE to
-    // ensure ANGLE's selected GPU matches the GPU expected for this test suite.
-    const GPUTestConfig testConfig      = GPUTestConfig();
-    const char kPreferredDeviceEnvVar[] = "ANGLE_PREFERRED_DEVICE";
-    if (GetEnvironmentVar(kPreferredDeviceEnvVar).empty())
-    {
-        mModifiedPreferredDevice                        = true;
-        const GPUTestConfig::ConditionArray &conditions = testConfig.getConditions();
-        if (conditions[GPUTestConfig::kConditionAMD])
-        {
-            SetEnvironmentVar(kPreferredDeviceEnvVar, "amd");
-        }
-        else if (conditions[GPUTestConfig::kConditionNVIDIA])
-        {
-            SetEnvironmentVar(kPreferredDeviceEnvVar, "nvidia");
-        }
-        else if (conditions[GPUTestConfig::kConditionIntel])
-        {
-            SetEnvironmentVar(kPreferredDeviceEnvVar, "intel");
-        }
-        else if (conditions[GPUTestConfig::kConditionApple])
-        {
-            SetEnvironmentVar(kPreferredDeviceEnvVar, "apple");
         }
     }
 
@@ -1312,12 +1283,6 @@ TestSuite::TestSuite(int *argc, char **argv)
 
 TestSuite::~TestSuite()
 {
-    const char kPreferredDeviceEnvVar[] = "ANGLE_PREFERRED_DEVICE";
-    if (mModifiedPreferredDevice && !angle::GetEnvironmentVar(kPreferredDeviceEnvVar).empty())
-    {
-        angle::UnsetEnvironmentVar(kPreferredDeviceEnvVar);
-    }
-
     if (mWatchdogThread.joinable())
     {
         mWatchdogThread.detach();

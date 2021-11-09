@@ -309,6 +309,8 @@ void DisplayEAGL::generateExtensions(egl::DisplayExtensions *outExtensions) cons
     outExtensions->displayTextureShareGroup   = true;
     outExtensions->displaySemaphoreShareGroup = true;
 
+    outExtensions->powerPreference = false;
+
     DisplayGL::generateExtensions(outExtensions);
 }
 

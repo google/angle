@@ -129,9 +129,6 @@ bool IsVMWare(VendorID vendorId);
 bool IsVivante(VendorID vendorId);
 bool IsApple(VendorID vendorId);
 
-// Returns a readable vendor name given the VendorID
-std::string VendorName(VendorID vendor);
-
 // Use a heuristic to attempt to find the GPU used for 3D graphics. Sets activeGPUIndex,
 // isOptimus, and isAMDSwitchable.
 // Always assumes the non-Intel GPU is active on dual-GPU machines.

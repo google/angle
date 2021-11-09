@@ -232,50 +232,8 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
     const egl::AttributeMap &attribs)
 {
 #if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
-    auto deviceList = mtl::adoptObjCObj(MTLCopyAllDevices());
-
-    NSMutableArray<id<MTLDevice>> *externalGPUs   = [[NSMutableArray alloc] init];
-    NSMutableArray<id<MTLDevice>> *integratedGPUs = [[NSMutableArray alloc] init];
-    NSMutableArray<id<MTLDevice>> *discreteGPUs   = [[NSMutableArray alloc] init];
-    for (id<MTLDevice> device in deviceList.get())
-    {
-        if (device.removable)
-        {
-            [externalGPUs addObject:device];
-        }
-        else if (device.lowPower)
-        {
-            [integratedGPUs addObject:device];
-        }
-        else
-        {
-            [discreteGPUs addObject:device];
-        }
-    }
-    // TODO(kpiddington: External GPU support. Do we prefer high power / low bandwidth for general
-    // WebGL applications?
-    //      Can we support hot-swapping in GPU's?
-    if (attribs.get(EGL_POWER_PREFERENCE_ANGLE, 0) == EGL_HIGH_POWER_ANGLE)
-    {
-        // Search for a discrete GPU first.
-        for (id<MTLDevice> device in discreteGPUs)
-        {
-            if (![device isHeadless])
-                return device;
-        }
-    }
-    else if (attribs.get(EGL_POWER_PREFERENCE_ANGLE, 0) == EGL_LOW_POWER_ANGLE)
-    {
-        // If we've selected a low power device, look through integrated devices.
-        for (id<MTLDevice> device in integratedGPUs)
-        {
-            if (![device isHeadless])
-                return device;
-        }
-    }
-
-    // Check the ANGLE_PREFERRED_DEVICE environment variable for device preference
     const std::string anglePreferredDevice = angle::GetEnvironmentVar(kANGLEPreferredDeviceEnv);
+    auto deviceList                        = mtl::adoptObjCObj(MTLCopyAllDevices());
     if (anglePreferredDevice != "")
     {
         for (id<MTLDevice> device in deviceList.get())
@@ -290,17 +248,11 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
         }
     }
 
-    // Default to use a low power device, look through integrated devices.
-    for (id<MTLDevice> device in integratedGPUs)
-    {
-        if (![device isHeadless])
-            return device;
-    }
-
-    // If we selected a low power device and there's no low-power devices avaialble, return the
-    // first (default) device.
-    if (deviceList.get().count > 0)
-        return deviceList[0];
+    // TODO(anglebug.com/6143): reintroduce Apple's GPU selection code
+    // under a run-time check; don't perform it on macOS versions
+    // earlier than 10.15. Respecify EGL_ANGLE_power_preference to
+    // allow it to be used at display creation time rather than
+    // context creation time.
 #endif
     // If we can't find anything, or are on a platform that doesn't support power options, create a
     // default device.
@@ -466,6 +418,7 @@ void DisplayMtl::generateExtensions(egl::DisplayExtensions *outExtensions) const
     // this extension so that ANGLE can be initialized in Chrome. WebGL will fail to use
     // this extension (anglebug.com/4929)
     outExtensions->robustResourceInitializationANGLE = true;
+    outExtensions->powerPreference                   = true;
 
     // EGL_KHR_image
     outExtensions->image     = true;
