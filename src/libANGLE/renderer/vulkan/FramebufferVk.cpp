@@ -401,11 +401,11 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
         return invalidate(context, count, attachments);
     }
 
-    // If there are deferred clears, flush them.  syncState may have accumulated deferred clears,
+    // If there are deferred clears, redefer them.  syncState may have accumulated deferred clears,
     // but if the framebuffer's attachments are used after this call not through the framebuffer,
     // those clears wouldn't get flushed otherwise (for example as the destination of
     // glCopyTex[Sub]Image, shader storage image, etc).
-    ANGLE_TRY(flushDeferredClears(contextVk));
+    redeferClears(contextVk);
 
     if (contextVk->hasStartedRenderPass() &&
         rotatedInvalidateArea.encloses(contextVk->getStartedRenderPassCommands().getRenderArea()))
@@ -1553,8 +1553,8 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
         }
     }
 
-    // If there are still deferred clears, flush them.  See relevant comment in invalidateSub.
-    ANGLE_TRY(flushDeferredClears(contextVk));
+    // If there are still deferred clears, redefer them.  See relevant comment in invalidateSub.
+    redeferClears(contextVk);
 
     const auto &colorRenderTargets           = mRenderTargetCache.getColors();
     RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
@@ -2286,7 +2286,7 @@ VkClearValue FramebufferVk::getCorrectedColorClearValue(size_t colorIndexGL,
 
 void FramebufferVk::redeferClears(ContextVk *contextVk)
 {
-    ASSERT(!contextVk->hasStartedRenderPass());
+    ASSERT(!contextVk->hasStartedRenderPass() || !mDeferredClears.any());
 
     // Set the appropriate loadOp and clear values for depth and stencil.
     VkImageAspectFlags dsAspectFlags  = 0;
