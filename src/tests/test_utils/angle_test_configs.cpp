@@ -298,6 +298,16 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_FallbackFormat";
     }
 
+    if (pp.eglParameters.displayPowerPreference == EGL_LOW_POWER_ANGLE)
+    {
+        stream << "_LowPowerGPU";
+    }
+
+    if (pp.eglParameters.displayPowerPreference == EGL_HIGH_POWER_ANGLE)
+    {
+        stream << "_HighPowerGPU";
+    }
+
     return stream;
 }
 

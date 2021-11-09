@@ -99,7 +99,30 @@ static WindowSurfaceMap *GetWindowSurfaces()
     return windowSurfaces.get();
 }
 
-typedef std::map<EGLNativeDisplayType, Display *> ANGLEPlatformDisplayMap;
+struct ANGLEPlatformDisplay
+{
+    ANGLEPlatformDisplay() = default;
+
+    ANGLEPlatformDisplay(EGLNativeDisplayType nativeDisplayType)
+        : nativeDisplayType(nativeDisplayType), powerPreference(EGL_LOW_POWER_ANGLE)
+    {}
+
+    ANGLEPlatformDisplay(EGLNativeDisplayType nativeDisplayType, EGLAttrib powerPreference)
+        : nativeDisplayType(nativeDisplayType), powerPreference(powerPreference)
+    {}
+
+    auto tie() const { return std::tie(nativeDisplayType, powerPreference); }
+
+    EGLNativeDisplayType nativeDisplayType;
+    EGLAttrib powerPreference;
+};
+
+inline bool operator<(const ANGLEPlatformDisplay &a, const ANGLEPlatformDisplay &b)
+{
+    return a.tie() < b.tie();
+}
+
+typedef std::map<ANGLEPlatformDisplay, Display *> ANGLEPlatformDisplayMap;
 static ANGLEPlatformDisplayMap *GetANGLEPlatformDisplayMap()
 {
     static angle::base::NoDestructor<ANGLEPlatformDisplayMap> displays;
@@ -618,8 +641,9 @@ Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay
 {
     Display *display = nullptr;
 
+    EGLAttrib powerPreference = attribMap.get(EGL_POWER_PREFERENCE_ANGLE, EGL_LOW_POWER_ANGLE);
     ANGLEPlatformDisplayMap *displays = GetANGLEPlatformDisplayMap();
-    const auto &iter                  = displays->find(nativeDisplay);
+    const auto &iter = displays->find(ANGLEPlatformDisplay(nativeDisplay, powerPreference));
     if (iter != displays->end())
     {
         display = iter->second;
@@ -634,9 +658,9 @@ Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay
         }
 
         display = new Display(EGL_PLATFORM_ANGLE_ANGLE, nativeDisplay, nullptr);
-        displays->insert(std::make_pair(nativeDisplay, display));
+        displays->insert(
+            std::make_pair(ANGLEPlatformDisplay(nativeDisplay, powerPreference), display));
     }
-
     // Apply new attributes if the display is not initialized yet.
     if (!display->isInitialized())
     {
@@ -761,7 +785,8 @@ Display::~Display()
     if (mPlatform == EGL_PLATFORM_ANGLE_ANGLE)
     {
         ANGLEPlatformDisplayMap *displays      = GetANGLEPlatformDisplayMap();
-        ANGLEPlatformDisplayMap::iterator iter = displays->find(mState.displayId);
+        ANGLEPlatformDisplayMap::iterator iter = displays->find(ANGLEPlatformDisplay(
+            mState.displayId, mAttributeMap.get(EGL_POWER_PREFERENCE_ANGLE, EGL_LOW_POWER_ANGLE)));
         if (iter != displays->end())
         {
             displays->erase(iter);
@@ -1772,6 +1797,10 @@ static ClientExtensions GenerateClientExtensions()
 
 #if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
     extensions.platformANGLEDeviceContextVolatileCgl = true;
+#endif
+
+#if defined(ANGLE_ENABLE_METAL)
+    extensions.displayPowerPreferenceANGLE = true;
 #endif
 
     extensions.clientGetAllProcAddresses = true;

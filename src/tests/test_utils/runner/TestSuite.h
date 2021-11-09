@@ -198,6 +198,7 @@ class TestSuite
     int mFlakyRetries;
     int mMaxFailures;
     int mFailureCount;
+    bool mModifiedPreferredDevice;
     std::vector<std::string> mChildProcessArgs;
     std::map<TestIdentifier, FileLine> mTestFileLines;
     std::vector<ProcessInfo> mCurrentProcesses;

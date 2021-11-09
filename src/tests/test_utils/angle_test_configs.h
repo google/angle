@@ -313,6 +313,20 @@ inline PlatformParameters WithForceVulkanFallbackFormat(const PlatformParameters
     paramsOut.eglParameters.forceVulkanFallbackFormat = EGL_TRUE;
     return paramsOut;
 }
+
+inline PlatformParameters WithLowPowerGPU(const PlatformParameters &paramsIn)
+{
+    PlatformParameters paramsOut                   = paramsIn;
+    paramsOut.eglParameters.displayPowerPreference = EGL_LOW_POWER_ANGLE;
+    return paramsOut;
+}
+
+inline PlatformParameters WithHighPowerGPU(const PlatformParameters &paramsIn)
+{
+    PlatformParameters paramsOut                   = paramsIn;
+    paramsOut.eglParameters.displayPowerPreference = EGL_HIGH_POWER_ANGLE;
+    return paramsOut;
+}
 }  // namespace angle
 
 #endif  // ANGLE_TEST_CONFIGS_H_

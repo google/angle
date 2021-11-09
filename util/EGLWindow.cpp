@@ -196,6 +196,12 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         displayAttributes.push_back(reinterpret_cast<EGLAttrib>(params.platformMethods));
     }
 
+    if (params.displayPowerPreference != EGL_DONT_CARE)
+    {
+        displayAttributes.push_back(EGL_POWER_PREFERENCE_ANGLE);
+        displayAttributes.push_back(params.displayPowerPreference);
+    }
+
     std::vector<const char *> disabledFeatureOverrides;
     std::vector<const char *> enabledFeatureOverrides;
 

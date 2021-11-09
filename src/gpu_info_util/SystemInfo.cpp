@@ -17,8 +17,6 @@
 
 namespace angle
 {
-namespace
-{
 std::string VendorName(VendorID vendor)
 {
     switch (vendor)
@@ -53,7 +51,7 @@ std::string VendorName(VendorID vendor)
             return "Unknown (" + std::to_string(vendor) + ")";
     }
 }
-}  // anonymous namespace
+
 GPUDeviceInfo::GPUDeviceInfo() = default;
 
 GPUDeviceInfo::~GPUDeviceInfo() = default;
