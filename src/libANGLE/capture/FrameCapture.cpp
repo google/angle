@@ -4984,6 +4984,18 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             break;
         }
 
+        case EntryPoint::GLGenFramebuffers:
+        {
+            GLsizei count = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+            const gl::FramebufferID *framebufferIDs =
+                call.params.getParam("framebuffersPacked", ParamType::TFramebufferIDPointer, 1)
+                    .value.FramebufferIDPointerVal;
+            for (GLsizei i = 0; i < count; i++)
+            {
+                handleGennedResource(framebufferIDs[i]);
+            }
+            break;
+        }
         case EntryPoint::GLGenTextures:
         {
             GLsizei count = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
