@@ -467,9 +467,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     angle::Result respecifyImageStorage(ContextVk *contextVk);
 
     // Update base and max levels, and re-create image if needed.
-    angle::Result updateBaseMaxLevels(ContextVk *contextVk,
-                                      bool baseLevelChanged,
-                                      bool maxLevelChanged);
+    angle::Result maybeUpdateBaseMaxLevels(ContextVk *contextVk, bool *didRespecifyOut);
 
     bool isFastUnpackPossible(const vk::Format &vkFormat, size_t offset) const;
 
@@ -578,6 +576,10 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     gl::TexLevelMask mRedefinedLevels;
 
     angle::ObserverBinding mImageObserverBinding;
+
+    // Saved between updates.
+    gl::LevelIndex mCurrentBaseLevel;
+    gl::LevelIndex mCurrentMaxLevel;
 };
 
 }  // namespace rx
