@@ -7109,6 +7109,59 @@ void main()
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Regression test for a bug where a mutable texture is used with non-zero base level then rebased
+// to zero but made incomplete and attached to the framebuffer.  The texture's image is not
+// recreated with level 0, leading to errors when drawing to the framebuffer.
+TEST_P(SimpleStateChangeTestES3, NonZeroBaseMutableTextureThenZeroBaseButIncompleteBug)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(program);
+
+    const std::array<GLColor, 4> kMip0Data = {GLColor::red, GLColor::red, GLColor::red,
+                                              GLColor::red};
+    const std::array<GLColor, 2> kMip1Data = {GLColor::green, GLColor::green};
+
+    // Create two textures.
+    GLTexture immutableTex;
+    glBindTexture(GL_TEXTURE_2D, immutableTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kMip0Data.data());
+
+    GLTexture mutableTex;
+    glBindTexture(GL_TEXTURE_2D, mutableTex);
+    for (uint32_t mip = 0; mip < 2; ++mip)
+    {
+        const uint32_t size = 4 >> mip;
+        glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA8, size, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     mip == 0 ? kMip0Data.data() : kMip1Data.data());
+    }
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // Sample from the mutable texture at non-zero base level.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, immutableTex, 0);
+    drawQuad(program, std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMip1Data[0]);
+
+    // Rebase the mutable texture to zero, but enable mipmapping which makes it incomplete.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+    // Remove feedback loop for good measure.
+    glBindTexture(GL_TEXTURE_2D, immutableTex);
+
+    // Draw into base zero of the texture.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mutableTex, 0);
+    drawQuad(program, std::string(essl1_shaders::PositionAttrib()), 0.0f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMip1Data[1]);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Regression test for a bug where the framebuffer binding was not synced during invalidate when a
 // clear operation was deferred.
 TEST_P(SimpleStateChangeTestES3, ChangeFramebufferThenInvalidateWithClear)
