@@ -102,8 +102,8 @@ bool GetTextureSRGBDecodeSupport(const RendererVk *rendererVk)
     return true;
 }
 
-bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
-                                   const gl::Extensions &supportedExtensions)
+ANGLE_MAYBE_UNUSED bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
+                                                      const gl::Extensions &supportedExtensions)
 {
     static constexpr bool kNonLinearColorspace = false;
 
@@ -484,8 +484,8 @@ void RendererVk::ensureCapsInitialized() const
 
     // Vulkan natively supports format reinterpretation, but we still require support for all
     // formats we may reinterpret to
-    mNativeExtensions.textureFormatSRGBOverrideEXT =
-        vk::GetTextureSRGBOverrideSupport(this, mNativeExtensions);
+    mNativeExtensions.textureFormatSRGBOverrideEXT = true;
+    //    vk::GetTextureSRGBOverrideSupport(this, mNativeExtensions);
     mNativeExtensions.textureSRGBDecodeEXT = vk::GetTextureSRGBDecodeSupport(this);
 
     // EXT_srgb_write_control requires image_format_list
