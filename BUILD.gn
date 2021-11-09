@@ -923,7 +923,7 @@ angle_source_set("libANGLE_base") {
   }
 
   # Enable extra Chromium style warnings for libANGLE.
-  if (is_clang && angle_has_build && !use_xcode_clang) {
+  if (is_clang && angle_has_build) {
     suppressed_configs -= [ "//build/config/clang:find_bad_constructs" ]
   }
 
