@@ -1130,8 +1130,7 @@ TEST_P(BufferStorageTestES3, StorageBufferMapBufferOES)
 TEST_P(BufferStorageTestES3, StorageCopyBufferSubDataMapped)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
-                       !IsGLExtensionEnabled("GL_EXT_buffer_storage") ||
-                       !IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage"));
 
     const std::array<GLColor, 4> kInitialData = {GLColor::red, GLColor::green, GLColor::blue,
                                                  GLColor::yellow};
@@ -1172,8 +1171,7 @@ TEST_P(BufferStorageTestES3, StorageCopyBufferSubDataMapped)
 TEST_P(BufferStorageTestES3, DrawElementsElementArrayBufferMapped)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
-                       !IsGLExtensionEnabled("GL_EXT_buffer_storage") ||
-                       !IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage"));
 
     GLfloat kVertexBuffer[] = {-1.0f, -1.0f, 1.0f,  // (x, y, R)
                                -1.0f, 1.0f,  1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
@@ -1264,8 +1262,7 @@ TEST_P(BufferStorageTestES3, TexImage2DPixelUnpackBufferMappedPersistently)
 TEST_P(BufferStorageTestES3, StorageBufferSubDataMapped)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
-                       !IsGLExtensionEnabled("GL_EXT_buffer_storage") ||
-                       !IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage"));
 
     const std::array<GLColor, 4> kUpdateData1 = {GLColor::red, GLColor::green, GLColor::blue,
                                                  GLColor::yellow};
