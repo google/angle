@@ -236,6 +236,7 @@ class TrackedResource final : angle::NonCopyable
     void setGennedResource(GLuint id);
     void setDeletedResource(GLuint id);
     void setModifiedResource(GLuint id);
+    bool resourceIsGenerated(GLuint id);
 
     ResourceCalls &getResourceRegenCalls() { return mResourceRegenCalls; }
     ResourceCalls &getResourceRestoreCalls() { return mResourceRestoreCalls; }
@@ -487,6 +488,14 @@ class FrameCaptureShared final : angle::NonCopyable
     }
 
     template <typename ResourceType>
+    bool resourceIsGenerated(ResourceType resourceID)
+    {
+        ResourceIDType idType    = GetResourceIDTypeFromType<ResourceType>::IDType;
+        TrackedResource &tracker = mResourceTracker.getTrackedResource(idType);
+        return tracker.resourceIsGenerated(resourceID.value);
+    }
+
+    template <typename ResourceType>
     void handleDeletedResource(ResourceType resourceID)
     {
         if (isCaptureActive())
@@ -518,6 +527,8 @@ class FrameCaptureShared final : angle::NonCopyable
                                     CallCapture &call,
                                     std::vector<CallCapture> *shareGroupSetupCalls,
                                     ResourceIDToSetupCallsMap *resourceIDToSetupCalls);
+    template <typename ParamValueType>
+    void maybeGenResourceOnBind(CallCapture &call, const char *paramName, ParamType paramType);
     void maybeCapturePostCallUpdates(const gl::Context *context);
     void maybeCaptureDrawArraysClientData(const gl::Context *context,
                                           CallCapture &call,

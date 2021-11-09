@@ -119,10 +119,6 @@
 6286 : ImageTestES3.Source2DTarget2DTargetTextureRespecifyLevel/ES3_Vulkan_SwiftShader = FAIL
 6286 : ImageTestES3.Source2DTargetExternalESSL3/ES3_Vulkan_SwiftShader = FAIL
 6286 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3/ES3_Vulkan_SwiftShader = FAIL
-6425 : ObjectAllocationTest.BindFramebufferAfterGen/ES3_Vulkan_SwiftShader = FAIL
-6425 : ObjectAllocationTest.BindFramebufferBeforeGen/ES3_Vulkan_SwiftShader = FAIL
-6425 : ObjectAllocationTestES3.BindFramebufferAfterGen/ES3_Vulkan_SwiftShader = FAIL
-6425 : ObjectAllocationTestES3.BindFramebufferBeforeGen/ES3_Vulkan_SwiftShader = FAIL
 6512 : RobustResourceInitTestES3.BindTexImage/ES3_Vulkan_SwiftShader = FAIL
 6180 WIN : TransformFeedbackTest.DrawWithoutTransformFeedbackThenWith/ES3_Vulkan_SwiftShader = FLAKY
 6513 : TransformFeedbackTest.MultiContext/ES3_Vulkan_SwiftShader = FLAKY

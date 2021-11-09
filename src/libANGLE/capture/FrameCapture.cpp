@@ -4985,6 +4985,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
         }
 
         case EntryPoint::GLGenFramebuffers:
+        case EntryPoint::GLGenFramebuffersOES:
         {
             GLsizei count = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
             const gl::FramebufferID *framebufferIDs =
@@ -4996,6 +4997,13 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             }
             break;
         }
+
+        case EntryPoint::GLBindFramebuffer:
+        case EntryPoint::GLBindFramebufferOES:
+            maybeGenResourceOnBind<gl::FramebufferID>(call, "framebufferPacked",
+                                                      ParamType::TFramebufferID);
+            break;
+
         case EntryPoint::GLGenTextures:
         {
             GLsizei count = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
@@ -5357,6 +5365,32 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
     }
 
     updateResourceCounts(call);
+}
+
+template <typename ParamValueType>
+void FrameCaptureShared::maybeGenResourceOnBind(CallCapture &call,
+                                                const char *paramName,
+                                                ParamType paramType)
+{
+    const ParamCapture &param = call.params.getParam(paramName, paramType, 1);
+    const ParamValueType id   = AccessParamValue<ParamValueType>(paramType, param.value);
+
+    // Don't inject the default resource or resources that are already generated
+    if (id.value != 0 && !resourceIsGenerated(id))
+    {
+        handleGennedResource(id);
+
+        ResourceIDType resourceIDType = GetResourceIDTypeFromParamType(param.type);
+        const char *resourceName      = GetResourceIDTypeName(resourceIDType);
+
+        std::stringstream updateFuncNameStr;
+        updateFuncNameStr << "Set" << resourceName << "ID";
+        std::string updateFuncName = updateFuncNameStr.str();
+
+        ParamBuffer params;
+        params.addValueParam("id", ParamType::TGLuint, id.value);
+        mFrameCalls.emplace_back(updateFuncName, std::move(params));
+    }
 }
 
 void FrameCaptureShared::updateResourceCounts(const CallCapture &call)
@@ -5925,6 +5959,11 @@ void TrackedResource::setGennedResource(GLuint id)
         mNewResources.insert(id);
         return;
     }
+}
+
+bool TrackedResource::resourceIsGenerated(GLuint id)
+{
+    return mNewResources.find(id) != mNewResources.end();
 }
 
 void TrackedResource::setDeletedResource(GLuint id)
