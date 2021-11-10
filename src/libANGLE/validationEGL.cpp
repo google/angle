@@ -1877,6 +1877,142 @@ bool ValidateCreateContextAttributeValue(const ValidationContext *val,
 
     return true;
 }
+
+bool ValidateCreatePbufferSurfaceAttribute(const ValidationContext *val,
+                                           const Display *display,
+                                           EGLAttrib attribute)
+{
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+
+    switch (attribute)
+    {
+        case EGL_WIDTH:
+        case EGL_HEIGHT:
+        case EGL_LARGEST_PBUFFER:
+        case EGL_TEXTURE_FORMAT:
+        case EGL_TEXTURE_TARGET:
+        case EGL_MIPMAP_TEXTURE:
+        case EGL_VG_COLORSPACE:
+        case EGL_GL_COLORSPACE:
+        case EGL_VG_ALPHA_FORMAT:
+            break;
+
+        case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+            if (!displayExtensions.robustResourceInitializationANGLE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                              "requires EGL_ANGLE_robust_resource_initialization.");
+                return false;
+            }
+            break;
+
+        case EGL_PROTECTED_CONTENT_EXT:
+            if (!displayExtensions.protectedContentEXT)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_PROTECTED_CONTEXT_EXT requires "
+                              "extension EGL_EXT_protected_content.");
+                return false;
+            }
+            break;
+
+        default:
+            val->setError(EGL_BAD_ATTRIBUTE);
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateCreatePbufferSurfaceAttributeValue(const ValidationContext *val,
+                                                const Display *display,
+                                                EGLAttrib attribute,
+                                                EGLAttrib value)
+{
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+
+    switch (attribute)
+    {
+        case EGL_WIDTH:
+        case EGL_HEIGHT:
+            if (value < 0)
+            {
+                val->setError(EGL_BAD_PARAMETER);
+                return false;
+            }
+            break;
+
+        case EGL_LARGEST_PBUFFER:
+            break;
+
+        case EGL_TEXTURE_FORMAT:
+            switch (value)
+            {
+                case EGL_NO_TEXTURE:
+                case EGL_TEXTURE_RGB:
+                case EGL_TEXTURE_RGBA:
+                    break;
+                default:
+                    val->setError(EGL_BAD_ATTRIBUTE);
+                    return false;
+            }
+            break;
+
+        case EGL_TEXTURE_TARGET:
+            switch (value)
+            {
+                case EGL_NO_TEXTURE:
+                case EGL_TEXTURE_2D:
+                    break;
+                default:
+                    val->setError(EGL_BAD_ATTRIBUTE);
+                    return false;
+            }
+            break;
+
+        case EGL_MIPMAP_TEXTURE:
+            break;
+
+        case EGL_VG_COLORSPACE:
+            break;
+
+        case EGL_GL_COLORSPACE:
+            ANGLE_VALIDATION_TRY(ValidateColorspaceAttribute(val, displayExtensions, value));
+            break;
+
+        case EGL_VG_ALPHA_FORMAT:
+            break;
+
+        case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+            ASSERT(displayExtensions.robustResourceInitializationANGLE);
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                              "either EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_PROTECTED_CONTENT_EXT:
+            ASSERT(displayExtensions.protectedContentEXT);
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_PROTECTED_CONTENT_EXT must "
+                              "be either EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        default:
+            UNREACHABLE();
+            return false;
+    }
+
+    return true;
+}
 }  // anonymous namespace
 
 void ValidationContext::setError(EGLint error) const
@@ -2401,106 +2537,15 @@ bool ValidateCreatePbufferSurface(const ValidationContext *val,
                                   const AttributeMap &attributes)
 {
     ANGLE_VALIDATION_TRY(ValidateConfig(val, display, config));
-
-    const DisplayExtensions &displayExtensions = display->getExtensions();
-
-    attributes.initializeWithoutValidation();
+    ANGLE_VALIDATION_TRY(attributes.validate(val, display, ValidateCreatePbufferSurfaceAttribute));
 
     for (const auto &attributeIter : attributes)
     {
         EGLAttrib attribute = attributeIter.first;
         EGLAttrib value     = attributeIter.second;
 
-        switch (attribute)
-        {
-            case EGL_WIDTH:
-            case EGL_HEIGHT:
-                if (value < 0)
-                {
-                    val->setError(EGL_BAD_PARAMETER);
-                    return false;
-                }
-                break;
-
-            case EGL_LARGEST_PBUFFER:
-                break;
-
-            case EGL_TEXTURE_FORMAT:
-                switch (value)
-                {
-                    case EGL_NO_TEXTURE:
-                    case EGL_TEXTURE_RGB:
-                    case EGL_TEXTURE_RGBA:
-                        break;
-                    default:
-                        val->setError(EGL_BAD_ATTRIBUTE);
-                        return false;
-                }
-                break;
-
-            case EGL_TEXTURE_TARGET:
-                switch (value)
-                {
-                    case EGL_NO_TEXTURE:
-                    case EGL_TEXTURE_2D:
-                        break;
-                    default:
-                        val->setError(EGL_BAD_ATTRIBUTE);
-                        return false;
-                }
-                break;
-
-            case EGL_MIPMAP_TEXTURE:
-                break;
-
-            case EGL_VG_COLORSPACE:
-                break;
-
-            case EGL_GL_COLORSPACE:
-                ANGLE_VALIDATION_TRY(ValidateColorspaceAttribute(val, displayExtensions, value));
-                break;
-
-            case EGL_VG_ALPHA_FORMAT:
-                break;
-
-            case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-                if (!displayExtensions.robustResourceInitializationANGLE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
-                                  "requires EGL_ANGLE_robust_resource_initialization.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
-                                  "either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_PROTECTED_CONTENT_EXT:
-                if (!displayExtensions.protectedContentEXT)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_PROTECTED_CONTEXT_EXT requires "
-                                  "extension EGL_EXT_protected_content.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_PROTECTED_CONTENT_EXT must "
-                                  "be either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            default:
-                val->setError(EGL_BAD_ATTRIBUTE);
-                return false;
-        }
+        ANGLE_VALIDATION_TRY(
+            ValidateCreatePbufferSurfaceAttributeValue(val, display, attribute, value));
     }
 
     if ((config->surfaceType & EGL_PBUFFER_BIT) == 0)

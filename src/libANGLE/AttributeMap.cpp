@@ -121,7 +121,7 @@ void AttributeMap::initializeWithoutValidation() const
     auto alwaysTrue = [](const ValidationContext *, const egl::Display *, EGLAttrib) {
         return true;
     };
-    validate(nullptr, nullptr, alwaysTrue);
+    (void)validate(nullptr, nullptr, alwaysTrue);
 }
 
 // static
