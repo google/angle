@@ -234,7 +234,7 @@ int SampleApplication::run()
 
     while (mRunning)
     {
-        double elapsedTime = mTimer.getElapsedTime();
+        double elapsedTime = mTimer.getElapsedWallClockTime();
         double deltaTime   = elapsedTime - prevTime;
 
         step(static_cast<float>(deltaTime), elapsedTime);
@@ -277,7 +277,7 @@ int SampleApplication::run()
         if (mFrameCount % 100 == 0)
         {
             printf("Rate: %0.2lf frames / second\n",
-                   static_cast<double>(mFrameCount) / mTimer.getElapsedTime());
+                   static_cast<double>(mFrameCount) / mTimer.getElapsedWallClockTime());
         }
     }
 

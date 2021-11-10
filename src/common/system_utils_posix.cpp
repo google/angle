@@ -12,6 +12,12 @@
 #include <iostream>
 
 #include <dlfcn.h>
+#ifdef ANGLE_PLATFORM_FUCHSIA
+#    include <zircon/process.h>
+#    include <zircon/syscalls.h>
+#else
+#    include <sys/resource.h>
+#endif
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -199,4 +205,26 @@ std::string GetRootDirectory()
 {
     return "/";
 }
+
+double GetCurrentProcessCpuTime()
+{
+#ifdef ANGLE_PLATFORM_FUCHSIA
+    static zx_handle_t me = zx_process_self();
+    zx_info_task_runtime_t task_runtime;
+    zx_object_get_info(me, ZX_INFO_TASK_RUNTIME, &task_runtime, sizeof(task_runtime), nullptr,
+                       nullptr);
+    return static_cast<double>(task_runtime.cpu_time) * 1e-9;
+#else
+    // We could also have used /proc/stat, but that requires us to read the
+    // filesystem and convert from jiffies. /proc/stat also relies on jiffies
+    // (lower resolution) while getrusage can potentially use a sched_clock()
+    // underneath that has higher resolution.
+    struct rusage usage;
+    getrusage(RUSAGE_SELF, &usage);
+    double userTime = usage.ru_utime.tv_sec + usage.ru_utime.tv_usec * 1e-6;
+    double systemTime = usage.ru_stime.tv_sec + usage.ru_stime.tv_usec * 1e-6;
+    return userTime + systemTime;
+#endif
+}
+
 }  // namespace angle

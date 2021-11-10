@@ -68,7 +68,7 @@ class Process : angle::NonCopyable
     virtual bool kill()       = 0;
     virtual int getExitCode() = 0;
 
-    double getElapsedTimeSeconds() const { return mTimer.getElapsedTime(); }
+    double getElapsedTimeSeconds() const { return mTimer.getElapsedWallClockTime(); }
     const std::string &getStdout() const { return mStdout; }
     const std::string &getStderr() const { return mStderr; }
 

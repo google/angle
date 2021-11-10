@@ -62,7 +62,7 @@ TEST(TestUtils, Sleep)
     timer.stop();
 
     // Use a slightly fuzzy range
-    EXPECT_GT(timer.getElapsedTime(), 0.48);
+    EXPECT_GT(timer.getElapsedWallClockTime(), 0.48);
 }
 
 constexpr uint32_t kMaxPath = 1000;
@@ -206,7 +206,7 @@ TEST(TestUtils, MAYBE_RunAppAsync)
 
         Timer timer;
         timer.start();
-        while (!process->finished() && timer.getElapsedTime() < kTimeout)
+        while (!process->finished() && timer.getElapsedWallClockTime() < kTimeout)
         {
             angle::Sleep(1);
         }
@@ -238,7 +238,7 @@ TEST(TestUtils, MAYBE_RunAppAsyncRedirectStderrToStdout)
 
         Timer timer;
         timer.start();
-        while (!process->finished() && timer.getElapsedTime() < kTimeout)
+        while (!process->finished() && timer.getElapsedWallClockTime() < kTimeout)
         {
             angle::Sleep(1);
         }

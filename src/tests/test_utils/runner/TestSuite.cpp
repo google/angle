@@ -429,7 +429,7 @@ void UpdateCurrentTestResult(const testing::TestResult &resultIn, TestResults *r
         resultOut.type = TestResultType::Pass;
     }
 
-    resultOut.elapsedTimeSeconds = resultsOut->currentTestTimer.getElapsedTime();
+    resultOut.elapsedTimeSeconds = resultsOut->currentTestTimer.getElapsedWallClockTime();
 }
 
 TestIdentifier GetTestIdentifier(const testing::TestInfo &testInfo)
@@ -1363,7 +1363,7 @@ void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
     {
         TestResult &result        = mTestResults.results[mTestResults.currentTest];
         result.type               = crashOrTimeout;
-        result.elapsedTimeSeconds = mTestResults.currentTestTimer.getElapsedTime();
+        result.elapsedTimeSeconds = mTestResults.currentTestTimer.getElapsedWallClockTime();
     }
 
     if (mResultsFile.empty())
@@ -1795,7 +1795,7 @@ int TestSuite::run()
         {
             messageTimer.start();
         }
-        else if (messageTimer.getElapsedTime() > kIdleMessageTimeout)
+        else if (messageTimer.getElapsedWallClockTime() > kIdleMessageTimeout)
         {
             const ProcessInfo &processInfo = mCurrentProcesses[0];
             double processTime             = processInfo.process->getElapsedTimeSeconds();
@@ -1831,7 +1831,7 @@ int TestSuite::run()
     }
 
     totalRunTime.stop();
-    printf("Tests completed in %lf seconds\n", totalRunTime.getElapsedTime());
+    printf("Tests completed in %lf seconds\n", totalRunTime.getElapsedWallClockTime());
 
     return printFailuresAndReturnCount() == 0 ? 0 : 1;
 }
@@ -1884,7 +1884,7 @@ void TestSuite::startWatchdog()
         {
             {
                 std::lock_guard<std::mutex> guard(mTestResults.currentTestMutex);
-                if (mTestResults.currentTestTimer.getElapsedTime() >
+                if (mTestResults.currentTestTimer.getElapsedWallClockTime() >
                     mTestResults.currentTestTimeout)
                 {
                     break;

@@ -83,6 +83,37 @@ double GetCurrentSystemTime()
     return static_cast<double>(curTime.QuadPart) / frequency.QuadPart;
 }
 
+double GetCurrentProcessCpuTime()
+{
+    FILETIME creationTime = {};
+    FILETIME exitTime     = {};
+    FILETIME kernelTime   = {};
+    FILETIME userTime     = {};
+
+    // Note this will not give accurate results if the current thread is
+    // scheduled for less than the tick rate, which is often 15 ms. In that
+    // case, GetProcessTimes will not return different values, making it
+    // possible to end up with 0 ms for a process that takes 93% of a core
+    // (14/15 ms)!  An alternative is QueryProcessCycleTime but there is no
+    // simple way to convert cycles back to seconds, and on top of that, it's
+    // not supported pre-Windows Vista.
+
+    // Returns 100-ns intervals, so we want to divide by 1e7 to get seconds
+    GetProcessTimes(GetCurrentProcess(), &creationTime, &exitTime, &kernelTime, &userTime);
+
+    ULARGE_INTEGER kernelInt64;
+    kernelInt64.LowPart      = kernelTime.dwLowDateTime;
+    kernelInt64.HighPart     = kernelTime.dwHighDateTime;
+    double systemTimeSeconds = static_cast<double>(kernelInt64.QuadPart) * 1e-7;
+
+    ULARGE_INTEGER userInt64;
+    userInt64.LowPart      = userTime.dwLowDateTime;
+    userInt64.HighPart     = userTime.dwHighDateTime;
+    double userTimeSeconds = static_cast<double>(userInt64.QuadPart) * 1e-7;
+
+    return systemTimeSeconds + userTimeSeconds;
+}
+
 bool IsDirectory(const char *filename)
 {
     WIN32_FILE_ATTRIBUTE_DATA fileInformation;
