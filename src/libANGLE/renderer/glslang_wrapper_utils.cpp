@@ -3393,6 +3393,9 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
             newDecorationValue = info->descriptorSet;
             break;
         case spv::DecorationFlat:
+        case spv::DecorationNoPerspective:
+        case spv::DecorationCentroid:
+        case spv::DecorationSample:
             if (info->useRelaxedPrecision)
             {
                 // Change the id to replacement variable

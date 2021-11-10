@@ -6171,6 +6171,46 @@ TEST_P(GLSLTest_ES31, VaryingTessellationSampleInAndOut)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that a shader with sample in / sample out can be used successfully when the varying
+// precision is different between VS and FS.
+TEST_P(GLSLTest_ES31, VaryingSampleInAndOutDifferentPrecision)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_shader_multisample_interpolation"));
+
+    constexpr char kVS[] =
+        R"(#version 310 es
+        #extension GL_OES_shader_multisample_interpolation : require
+
+        precision highp float;
+        in vec4 inputAttribute;
+
+        sample out highp float v;
+        void main()
+        {
+            v = inputAttribute[0];
+            gl_Position = inputAttribute;
+        })";
+
+    constexpr char kFS[] =
+        R"(#version 310 es
+        #extension GL_OES_shader_multisample_interpolation : require
+
+        precision highp float;
+        sample in mediump float v;
+        layout(location = 0) out mediump vec4 color;
+
+        void main()
+        {
+            color = vec4(round((v + 1.) / 2. * 5.) / 5., 0, 0, 1);
+        })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program.get(), "inputAttribute", 0.5f, 1.0f, GL_FALSE);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, 0, GLColor::red);
+}
+
 // Test that a varying struct that's not declared in the fragment shader links successfully.
 // GLSL ES 3.00.6 section 4.3.10.
 TEST_P(GLSLTest_ES3, VaryingStructNotDeclaredInFragmentShader)
