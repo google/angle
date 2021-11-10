@@ -112,13 +112,14 @@ constexpr APIInfo kEGLDisplayAPIs[] = {
     {"angle-vulkan", GPUTestConfig::kAPIVulkan},
 };
 
-constexpr char kdEQPEGLString[]    = "--deqp-egl-display-type=";
-constexpr char kANGLEEGLString[]   = "--use-angle=";
-constexpr char kANGLEPreRotation[] = "--emulated-pre-rotation=";
-constexpr char kdEQPCaseString[]   = "--deqp-case=";
-constexpr char kVerboseString[]    = "--verbose";
-constexpr char kRenderDocString[]  = "--renderdoc";
-constexpr char kdEQPFlagsPrefix[]  = "--deqp-";
+constexpr char kdEQPEGLString[]     = "--deqp-egl-display-type=";
+constexpr char kANGLEEGLString[]    = "--use-angle=";
+constexpr char kANGLEPreRotation[]  = "--emulated-pre-rotation=";
+constexpr char kdEQPCaseString[]    = "--deqp-case=";
+constexpr char kVerboseString[]     = "--verbose";
+constexpr char kRenderDocString[]   = "--renderdoc";
+constexpr char kNoRenderDocString[] = "--no-renderdoc";
+constexpr char kdEQPFlagsPrefix[]   = "--deqp-";
 
 std::array<char, 500> gCaseStringBuffer;
 
@@ -133,10 +134,16 @@ constexpr uint32_t kDefaultPreRotation = 270;
 constexpr uint32_t kDefaultPreRotation = 0;
 #endif
 
+#if defined(ANGLE_TEST_ENABLE_RENDERDOC_CAPTURE)
+constexpr bool kEnableRenderDocCapture = true;
+#else
+constexpr bool kEnableRenderDocCapture = false;
+#endif
+
 const APIInfo *gInitAPI = nullptr;
 dEQPOptions gOptions    = {
-    kDefaultPreRotation,  // preRotation
-    false,                // enableRenderDocCapture
+    kDefaultPreRotation,      // preRotation
+    kEnableRenderDocCapture,  // enableRenderDocCapture
 };
 
 constexpr const char gdEQPEGLConfigNameString[] = "--deqp-gl-config-name=";
@@ -775,6 +782,10 @@ void InitTestHarness(int *argc, char **argv)
         else if (strncmp(argv[argIndex], kRenderDocString, strlen(kRenderDocString)) == 0)
         {
             gOptions.enableRenderDocCapture = true;
+        }
+        else if (strncmp(argv[argIndex], kNoRenderDocString, strlen(kNoRenderDocString)) == 0)
+        {
+            gOptions.enableRenderDocCapture = false;
         }
         else if (strncmp(argv[argIndex], kdEQPFlagsPrefix, strlen(kdEQPFlagsPrefix)) == 0)
         {

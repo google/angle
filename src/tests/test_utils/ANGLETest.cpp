@@ -384,6 +384,7 @@ constexpr char kEnableANGLEPerTestCaptureLabel[] = "--angle-per-test-capture-lab
 constexpr char kBatchId[]                        = "--batch-id=";
 constexpr char kDelayTestStart[]                 = "--delay-test-start=";
 constexpr char kRenderDoc[]                      = "--renderdoc";
+constexpr char kNoRenderDoc[]                    = "--no-renderdoc";
 
 void SetupEnvironmentVarsForCaptureReplay()
 {
@@ -408,7 +409,11 @@ void SetTestStartDelay(const char *testStartDelay)
     gTestStartDelaySeconds = std::stoi(testStartDelay);
 }
 
+#if defined(ANGLE_TEST_ENABLE_RENDERDOC_CAPTURE)
+bool gEnableRenderDocCapture = true;
+#else
 bool gEnableRenderDocCapture = false;
+#endif
 
 // static
 std::array<Vector3, 6> ANGLETestBase::GetQuadVertices()
@@ -1598,6 +1603,10 @@ void ANGLEProcessTestArgs(int *argc, char *argv[])
         else if (strncmp(argv[argIndex], kRenderDoc, strlen(kRenderDoc)) == 0)
         {
             gEnableRenderDocCapture = true;
+        }
+        else if (strncmp(argv[argIndex], kNoRenderDoc, strlen(kNoRenderDoc)) == 0)
+        {
+            gEnableRenderDocCapture = false;
         }
     }
 }
