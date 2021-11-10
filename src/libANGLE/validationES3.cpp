@@ -803,8 +803,8 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             }
         }
 
-        // ...the buffer object's data store is currently mapped.
-        if (pixelUnpackBuffer->isMapped())
+        // ...the buffer object's data store is currently mapped but not persistently.
+        if (pixelUnpackBuffer->isMapped() && !pixelUnpackBuffer->isPersistentlyMapped())
         {
             context->validationError(entryPoint, GL_INVALID_OPERATION, kBufferMapped);
             return false;

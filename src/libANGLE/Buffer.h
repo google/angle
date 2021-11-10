@@ -140,6 +140,10 @@ class Buffer final : public RefCountObject<BufferID>,
     GLbitfield getAccessFlags() const { return mState.mAccessFlags; }
     GLenum getAccess() const { return mState.mAccess; }
     GLboolean isMapped() const { return mState.mMapped; }
+    bool isPersistentlyMapped() const
+    {
+        return (mState.mStorageExtUsageFlags & GL_MAP_PERSISTENT_BIT_EXT) != 0;
+    }
     void *getMapPointer() const { return mState.mMapPointer; }
     GLint64 getMapOffset() const { return mState.mMapOffset; }
     GLint64 getMapLength() const { return mState.mMapLength; }

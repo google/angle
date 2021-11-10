@@ -1225,6 +1225,41 @@ TEST_P(BufferStorageTestES3, DrawElementsElementArrayBufferMapped)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test that we are able to perform glTex*D calls while a pixel unpack buffer is bound
+// and persistently mapped.
+TEST_P(BufferStorageTestES3, TexImage2DPixelUnpackBufferMappedPersistently)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage"));
+
+    std::vector<uint8_t> data(64);
+    FillVectorWithRandomUBytes(&data);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer.get());
+    glBufferStorageEXT(GL_PIXEL_UNPACK_BUFFER, data.size(), data.data(),
+                       GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT);
+
+    // Map the buffer.
+    void *mapPtr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, data.size(),
+                                    GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT);
+    ASSERT_NE(nullptr, mapPtr);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a 2D texture and fill it using the persistenly mapped unpack buffer
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    constexpr GLsizei kTextureWidth  = 4;
+    constexpr GLsizei kTextureHeight = 4;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kTextureWidth, kTextureHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Verify persistently mapped buffers can use glBufferSubData
 TEST_P(BufferStorageTestES3, StorageBufferSubDataMapped)
 {
