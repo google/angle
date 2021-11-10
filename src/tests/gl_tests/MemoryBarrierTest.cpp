@@ -1730,9 +1730,12 @@ void MemoryBarrierTestBase::transformFeedbackBitBufferWriteThenCapture(
 
     GLBuffer xfbBuffer;
     GLTexture xfbTextureBuffer;
-    constexpr std::array<float, 4> kInitData = {12.34, 5.6, 78.91, 123.456};
-    createStorageBuffer(writeResource, xfbBuffer, xfbTextureBuffer, sizeof(kInitData) * 6,
-                        kInitData.data());
+    constexpr size_t kOneInstanceDataSize                                       = 4;
+    constexpr size_t kInstanceCount                                             = 6;
+    constexpr std::array<float, kOneInstanceDataSize *kInstanceCount> kInitData = {12.34, 5.6,
+                                                                                   78.91, 123.456};
+    createStorageBuffer(writeResource, xfbBuffer, xfbTextureBuffer,
+                        sizeof(kInitData[0]) * kInitData.size(), kInitData.data());
 
     constexpr std::array<float, 4> kWriteData = {1.5, 3.75, 5.0, 12.125};
     setUniformData(writeProgram, kWriteData);
