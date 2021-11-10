@@ -4156,7 +4156,7 @@ angle::Result Context::prepareForInvalidate(GLenum target)
         effectiveTarget = GL_DRAW_FRAMEBUFFER;
     }
     ANGLE_TRY(mState.syncDirtyObject(this, effectiveTarget));
-    return syncDirtyBits(mInvalidateDirtyBits, Command::Invalidate);
+    return syncDirtyBits(mInvalidateDirtyBits);
 }
 
 angle::Result Context::syncState(const State::DirtyBits &bitMask,
