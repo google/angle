@@ -1320,6 +1320,14 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
     mImageUsageFlags  = usageFlags;
     mImageCreateFlags = createFlags;
 
+    constexpr VkImageUsageFlags kRenderableUsageFlags =
+        VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT |
+        VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+    if ((usageFlags | kRenderableUsageFlags) != 0)
+    {
+        mRequiredImageAccess = vk::ImageAccess::Renderable;
+    }
+
     gl::Format glFormat(internalFormat);
     ANGLE_TRY(initImageViews(contextVk, format.getActualImageFormat(getRequiredImageAccess()),
                              glFormat.info->sized, static_cast<uint32_t>(levels),

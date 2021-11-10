@@ -51,11 +51,7 @@ const struct ImageFormatPair
     {VK_FORMAT_R8_UNORM, GL_ALPHA8_EXT},                         // ALPHA_8
     {VK_FORMAT_R8_UNORM, GL_LUMINANCE8_EXT},                     // LUMINANCE_8
     {VK_FORMAT_R8G8_UNORM, GL_RG8_EXT},                          // RG_88
-
-    // TODO(spang): Chrome could use GL_RGBA8_OES here if we can solve a couple
-    // of validation comformance issues (see crbug.com/1058521). Or, we can add
-    // a new internalformat that's unambiguously R8G8B8X8 in ANGLE and use that.
-    {VK_FORMAT_R8G8B8A8_UNORM, GL_RGB8_OES},  // RGBX_8888
+    {VK_FORMAT_R8G8B8A8_UNORM, GL_RGB8_OES},                     // RGBX_8888
 };
 
 struct OpaqueFdTraits
@@ -479,9 +475,7 @@ void RunTextureFormatCompatChromiumTest(bool useMemoryObjectFlags,
     for (const ImageFormatPair &format : kChromeFormats)
     {
         // https://crbug.com/angleproject/5046
-        if ((format.vkFormat == VK_FORMAT_R4G4B4A4_UNORM_PACK16 ||
-             format.internalFormat == GL_RGB8_OES) &&
-            IsIntel())
+        if ((format.vkFormat == VK_FORMAT_R4G4B4A4_UNORM_PACK16) && IsIntel())
         {
             continue;
         }
