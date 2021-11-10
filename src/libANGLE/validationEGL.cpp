@@ -1410,6 +1410,473 @@ bool ValidateQueryDisplayAttribBase(const ValidationContext *val,
 
     return true;
 }
+
+bool ValidateCreateContextAttribute(const ValidationContext *val,
+                                    const Display *display,
+                                    EGLAttrib attribute)
+{
+    switch (attribute)
+    {
+        case EGL_CONTEXT_CLIENT_VERSION:
+        case EGL_CONTEXT_MINOR_VERSION:
+        case EGL_CONTEXT_FLAGS_KHR:
+        case EGL_CONTEXT_OPENGL_DEBUG:
+            break;
+
+        case EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR:
+            // Only valid for OpenGL (non-ES) contexts
+            val->setError(EGL_BAD_ATTRIBUTE);
+            return false;
+
+        case EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT:
+            if (!display->getExtensions().createContextRobustness)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE);
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR:
+            val->setError(EGL_BAD_ATTRIBUTE,
+                          "EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR is not"
+                          " valid for GLES with EGL 1.4 and KHR_create_context. Use"
+                          " EXT_create_context_robustness.");
+            return false;
+
+        case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT:
+            if (!display->getExtensions().createContextRobustness)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE);
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_OPENGL_NO_ERROR_KHR:
+            if (!display->getExtensions().createContextNoError)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE, "Invalid Context attribute.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE:
+            if (!display->getExtensions().createContextWebGLCompatibility)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute "
+                              "EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE requires "
+                              "EGL_ANGLE_create_context_webgl_compatibility.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM:
+            if (!display->getExtensions().createContextBindGeneratesResource)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM requires "
+                              "EGL_CHROMIUM_create_context_bind_generates_resource.");
+                return false;
+            }
+            break;
+
+        case EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE:
+            if (!display->getExtensions().displayTextureShareGroup)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute "
+                              "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE requires "
+                              "EGL_ANGLE_display_texture_share_group.");
+                return false;
+            }
+            break;
+
+        case EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE:
+            if (!display->getExtensions().displayTextureShareGroup)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute "
+                              "EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE requires "
+                              "EGL_ANGLE_display_semaphore_share_group.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE:
+            if (!display->getExtensions().createContextClientArrays)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE requires "
+                              "EGL_ANGLE_create_context_client_arrays.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE:
+            if (!display->getExtensions().programCacheControlANGLE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE "
+                              "requires EGL_ANGLE_program_cache_control.");
+                return false;
+            }
+            break;
+
+        case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+            if (!display->getExtensions().robustResourceInitializationANGLE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                              "requires EGL_ANGLE_robust_resource_initialization.");
+                return false;
+            }
+            break;
+
+        case EGL_EXTENSIONS_ENABLED_ANGLE:
+            if (!display->getExtensions().createContextExtensionsEnabled)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_EXTENSIONS_ENABLED_ANGLE "
+                              "requires EGL_ANGLE_create_context_extensions_enabled.");
+                return false;
+            }
+            break;
+
+        case EGL_POWER_PREFERENCE_ANGLE:
+            if (!display->getExtensions().powerPreference)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_POWER_PREFERENCE_ANGLE "
+                              "requires EGL_ANGLE_power_preference.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE:
+            if (!display->getExtensions().createContextBackwardsCompatible)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE "
+                              "requires EGL_ANGLE_create_context_backwards_compatible.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_PRIORITY_LEVEL_IMG:
+            if (!display->getExtensions().contextPriority)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_CONTEXT_PRIORITY_LEVEL_IMG requires "
+                              "extension EGL_IMG_context_priority.");
+                return false;
+            }
+            break;
+
+        case EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV:
+            if (!display->getExtensions().robustnessVideoMemoryPurgeNV)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV requires "
+                              "extension EGL_NV_robustness_video_memory_purge.");
+                return false;
+            }
+            break;
+
+        case EGL_EXTERNAL_CONTEXT_ANGLE:
+            if (!display->getExtensions().externalContextAndSurface)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute "
+                              "EGL_EXTERNAL_CONTEXT_ANGLE requires "
+                              "EGL_ANGLE_external_context_and_surface.");
+                return false;
+            }
+            break;
+        case EGL_EXTERNAL_CONTEXT_SAVE_STATE_ANGLE:
+            if (!display->getExtensions().externalContextAndSurface)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute "
+                              "EGL_EXTERNAL_CONTEXT_SAVE_STATE_ANGLE requires "
+                              "EGL_ANGLE_external_context_and_surface.");
+                return false;
+            }
+            break;
+
+        case EGL_PROTECTED_CONTENT_EXT:
+            if (!display->getExtensions().protectedContentEXT)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_PROTECTED_CONTEXT_EXT requires "
+                              "extension EGL_EXT_protected_content.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE:
+            if (!display->getExtensions().contextVirtualizationANGLE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE requires "
+                              "extension EGL_ANGLE_context_virtualization.");
+                return false;
+            }
+            break;
+
+        default:
+            val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04" PRIxPTR "X", attribute);
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateCreateContextAttributeValue(const ValidationContext *val,
+                                         const Display *display,
+                                         const gl::Context *shareContext,
+                                         EGLAttrib attribute,
+                                         EGLAttrib value)
+{
+    switch (attribute)
+    {
+        case EGL_CONTEXT_CLIENT_VERSION:
+        case EGL_CONTEXT_MINOR_VERSION:
+        case EGL_CONTEXT_OPENGL_DEBUG:
+        case EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE:
+            break;
+
+        case EGL_CONTEXT_FLAGS_KHR:
+        {
+            // Note: EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR does not apply to ES
+            constexpr EGLint kValidContextFlags =
+                (EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR | EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR);
+            if ((value & ~kValidContextFlags) != 0)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE);
+                return false;
+            }
+            break;
+        }
+
+        case EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE);
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT:
+            if (value != EGL_LOSE_CONTEXT_ON_RESET_EXT && value != EGL_NO_RESET_NOTIFICATION_EXT)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE);
+                return false;
+            }
+
+            if (shareContext && shareContext->isResetNotificationEnabled() !=
+                                    (value == EGL_LOSE_CONTEXT_ON_RESET_EXT))
+            {
+                val->setError(EGL_BAD_MATCH);
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_OPENGL_NO_ERROR_KHR:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE, "Attribute must be EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE must be "
+                              "EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM "
+                              "must be EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE must be "
+                              "EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            if (shareContext &&
+                shareContext->usingDisplayTextureShareGroup() != (value == EGL_TRUE))
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "All contexts within a share group must be "
+                              "created with the same value of "
+                              "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE.");
+                return false;
+            }
+            break;
+
+        case EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE must be "
+                              "EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            if (shareContext &&
+                shareContext->usingDisplaySemaphoreShareGroup() != (value == EGL_TRUE))
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "All contexts within a share group must be "
+                              "created with the same value of "
+                              "EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE must "
+                              "be EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE must "
+                              "be EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                              "either EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_EXTENSIONS_ENABLED_ANGLE:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_EXTENSIONS_ENABLED_ANGLE must be "
+                              "either EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_POWER_PREFERENCE_ANGLE:
+            if (value != EGL_LOW_POWER_ANGLE && value != EGL_HIGH_POWER_ANGLE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_POWER_PREFERENCE_ANGLE must be "
+                              "either EGL_LOW_POWER_ANGLE or EGL_HIGH_POWER_ANGLE.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE must be "
+                              "either EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_PRIORITY_LEVEL_IMG:
+            switch (value)
+            {
+                case EGL_CONTEXT_PRIORITY_LOW_IMG:
+                case EGL_CONTEXT_PRIORITY_MEDIUM_IMG:
+                case EGL_CONTEXT_PRIORITY_HIGH_IMG:
+                    break;
+                default:
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "Attribute EGL_CONTEXT_PRIORITY_LEVEL_IMG "
+                                  "must be one of: EGL_CONTEXT_PRIORITY_LOW_IMG, "
+                                  "EGL_CONTEXT_PRIORITY_MEDIUM_IMG, or "
+                                  "EGL_CONTEXT_PRIORITY_HIGH_IMG.");
+                    return false;
+            }
+            break;
+
+        case EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV must "
+                              "be either EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_EXTERNAL_CONTEXT_ANGLE:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_EXTERNAL_CONTEXT_ANGLE must "
+                              "be either EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            if (shareContext && (value == EGL_TRUE))
+            {
+                val->setError(
+                    EGL_BAD_ATTRIBUTE,
+                    "EGL_EXTERNAL_CONTEXT_ANGLE doesn't allow creating with sharedContext.");
+                return false;
+            }
+            break;
+        case EGL_EXTERNAL_CONTEXT_SAVE_STATE_ANGLE:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_EXTERNAL_CONTEXT_SAVE_STATE_ANGLE must "
+                              "be either EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_PROTECTED_CONTENT_EXT:
+            if (value != EGL_TRUE && value != EGL_FALSE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_PROTECTED_CONTENT_EXT must "
+                              "be either EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        default:
+            UNREACHABLE();
+            return false;
+    }
+
+    return true;
+}
 }  // anonymous namespace
 
 void ValidationContext::setError(EGLint error) const
@@ -1655,396 +2122,19 @@ bool ValidateCreateContext(const ValidationContext *val,
         }
     }
 
-    attributes.initializeWithoutValidation();
+    ANGLE_VALIDATION_TRY(attributes.validate(val, display, ValidateCreateContextAttribute));
+
+    for (const auto &attributePair : attributes)
+    {
+        EGLAttrib attribute = attributePair.first;
+        EGLAttrib value     = attributePair.second;
+        ANGLE_VALIDATION_TRY(
+            ValidateCreateContextAttributeValue(val, display, shareContext, attribute, value));
+    }
 
     // Get the requested client version (default is 1) and check it is 2 or 3.
-    EGLAttrib clientMajorVersion = 1;
-    EGLAttrib clientMinorVersion = 0;
-    EGLAttrib contextFlags       = 0;
-    bool resetNotification       = false;
-    for (AttributeMap::const_iterator attributeIter = attributes.begin();
-         attributeIter != attributes.end(); attributeIter++)
-    {
-        EGLAttrib attribute = attributeIter->first;
-        EGLAttrib value     = attributeIter->second;
-
-        switch (attribute)
-        {
-            case EGL_CONTEXT_CLIENT_VERSION:
-                clientMajorVersion = value;
-                break;
-
-            case EGL_CONTEXT_MINOR_VERSION:
-                clientMinorVersion = value;
-                break;
-
-            case EGL_CONTEXT_FLAGS_KHR:
-                contextFlags = value;
-                break;
-
-            case EGL_CONTEXT_OPENGL_DEBUG:
-                break;
-
-            case EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR:
-                // Only valid for OpenGL (non-ES) contexts
-                val->setError(EGL_BAD_ATTRIBUTE);
-                return false;
-
-            case EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT:
-                if (!display->getExtensions().createContextRobustness)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE);
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE);
-                    return false;
-                }
-                break;
-
-            case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR:
-                val->setError(EGL_BAD_ATTRIBUTE,
-                              "EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR is not"
-                              " valid for GLES with EGL 1.4 and KHR_create_context. Use"
-                              " EXT_create_context_robustness.");
-                return false;
-            case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT:
-                if (!display->getExtensions().createContextRobustness)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE);
-                    return false;
-                }
-                if (value == EGL_LOSE_CONTEXT_ON_RESET_EXT)
-                {
-                    resetNotification = true;
-                }
-                else if (value != EGL_NO_RESET_NOTIFICATION_EXT)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE);
-                    return false;
-                }
-                break;
-
-            case EGL_CONTEXT_OPENGL_NO_ERROR_KHR:
-                if (!display->getExtensions().createContextNoError)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE, "Invalid Context attribute.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE, "Attribute must be EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE:
-                if (!display->getExtensions().createContextWebGLCompatibility)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute "
-                                  "EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE requires "
-                                  "EGL_ANGLE_create_context_webgl_compatibility.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE must be "
-                                  "EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM:
-                if (!display->getExtensions().createContextBindGeneratesResource)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM requires "
-                                  "EGL_CHROMIUM_create_context_bind_generates_resource.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM "
-                                  "must be EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE:
-                if (!display->getExtensions().displayTextureShareGroup)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute "
-                                  "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE requires "
-                                  "EGL_ANGLE_display_texture_share_group.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE must be "
-                                  "EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                if (shareContext &&
-                    (shareContext->usingDisplayTextureShareGroup() != (value == EGL_TRUE)))
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "All contexts within a share group must be "
-                                  "created with the same value of "
-                                  "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE.");
-                    return false;
-                }
-                break;
-
-            case EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE:
-                if (!display->getExtensions().displayTextureShareGroup)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute "
-                                  "EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE requires "
-                                  "EGL_ANGLE_display_semaphore_share_group.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE must be "
-                                  "EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                if (shareContext &&
-                    (shareContext->usingDisplaySemaphoreShareGroup() != (value == EGL_TRUE)))
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "All contexts within a share group must be "
-                                  "created with the same value of "
-                                  "EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE.");
-                    return false;
-                }
-                break;
-
-            case EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE:
-                if (!display->getExtensions().createContextClientArrays)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE requires "
-                                  "EGL_ANGLE_create_context_client_arrays.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE must "
-                                  "be EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE:
-                if (!display->getExtensions().programCacheControlANGLE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE "
-                                  "requires EGL_ANGLE_program_cache_control.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE must "
-                                  "be EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-                if (!display->getExtensions().robustResourceInitializationANGLE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
-                                  "requires EGL_ANGLE_robust_resource_initialization.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
-                                  "either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_EXTENSIONS_ENABLED_ANGLE:
-                if (!display->getExtensions().createContextExtensionsEnabled)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_EXTENSIONS_ENABLED_ANGLE "
-                                  "requires EGL_ANGLE_create_context_extensions_enabled.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_EXTENSIONS_ENABLED_ANGLE must be "
-                                  "either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_POWER_PREFERENCE_ANGLE:
-                if (!display->getExtensions().powerPreference)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_POWER_PREFERENCE_ANGLE "
-                                  "requires EGL_ANGLE_power_preference.");
-                    return false;
-                }
-                if (value != EGL_LOW_POWER_ANGLE && value != EGL_HIGH_POWER_ANGLE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_POWER_PREFERENCE_ANGLE must be "
-                                  "either EGL_LOW_POWER_ANGLE or EGL_HIGH_POWER_ANGLE.");
-                    return false;
-                }
-                break;
-
-            case EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE:
-                if (!display->getExtensions().createContextBackwardsCompatible)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE "
-                                  "requires EGL_ANGLE_create_context_backwards_compatible.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE must be "
-                                  "either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_CONTEXT_PRIORITY_LEVEL_IMG:
-                if (!display->getExtensions().contextPriority)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_CONTEXT_PRIORITY_LEVEL_IMG requires "
-                                  "extension EGL_IMG_context_priority.");
-                    return false;
-                }
-                switch (value)
-                {
-                    case EGL_CONTEXT_PRIORITY_LOW_IMG:
-                    case EGL_CONTEXT_PRIORITY_MEDIUM_IMG:
-                    case EGL_CONTEXT_PRIORITY_HIGH_IMG:
-                        break;
-                    default:
-                        val->setError(EGL_BAD_ATTRIBUTE,
-                                      "Attribute EGL_CONTEXT_PRIORITY_LEVEL_IMG "
-                                      "must be one of: EGL_CONTEXT_PRIORITY_LOW_IMG, "
-                                      "EGL_CONTEXT_PRIORITY_MEDIUM_IMG, or "
-                                      "EGL_CONTEXT_PRIORITY_HIGH_IMG.");
-                        return false;
-                }
-                break;
-
-            case EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV:
-                if (!display->getExtensions().robustnessVideoMemoryPurgeNV)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV requires "
-                                  "extension EGL_NV_robustness_video_memory_purge.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV must "
-                                  "be either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_EXTERNAL_CONTEXT_ANGLE:
-                if (!display->getExtensions().externalContextAndSurface)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute "
-                                  "EGL_EXTERNAL_CONTEXT_ANGLE requires "
-                                  "EGL_ANGLE_external_context_and_surface.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_EXTERNAL_CONTEXT_ANGLE must "
-                                  "be either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                if (value == EGL_TRUE && shareContext)
-                {
-                    val->setError(
-                        EGL_BAD_ATTRIBUTE,
-                        "EGL_EXTERNAL_CONTEXT_ANGLE doesn't allow creating with sharedContext.");
-                    return false;
-                }
-                break;
-            case EGL_EXTERNAL_CONTEXT_SAVE_STATE_ANGLE:
-                if (!display->getExtensions().externalContextAndSurface)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute "
-                                  "EGL_EXTERNAL_CONTEXT_SAVE_STATE_ANGLE requires "
-                                  "EGL_ANGLE_external_context_and_surface.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_EXTERNAL_CONTEXT_SAVE_STATE_ANGLE must "
-                                  "be either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_PROTECTED_CONTENT_EXT:
-                if (!display->getExtensions().protectedContentEXT)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_PROTECTED_CONTEXT_EXT requires "
-                                  "extension EGL_EXT_protected_content.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_PROTECTED_CONTENT_EXT must "
-                                  "be either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE:
-                if (!display->getExtensions().contextVirtualizationANGLE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE requires "
-                                  "extension EGL_ANGLE_context_virtualization.");
-                    return false;
-                }
-                break;
-
-            default:
-                val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04" PRIxPTR "X", attribute);
-                return false;
-        }
-    }
+    EGLAttrib clientMajorVersion = attributes.get(EGL_CONTEXT_CLIENT_VERSION, 1);
+    EGLAttrib clientMinorVersion = attributes.get(EGL_CONTEXT_MINOR_VERSION, 0);
 
     switch (clientMajorVersion)
     {
@@ -2110,25 +2200,10 @@ bool ValidateCreateContext(const ValidationContext *val,
             return false;
     }
 
-    // Note: EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR does not apply to ES
-    const EGLint validContextFlags =
-        (EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR | EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR);
-    if ((contextFlags & ~validContextFlags) != 0)
-    {
-        val->setError(EGL_BAD_ATTRIBUTE);
-        return false;
-    }
-
     if (shareContext)
     {
         // Shared context is invalid or is owned by another display
         if (!display->isValidContext(shareContext))
-        {
-            val->setError(EGL_BAD_MATCH);
-            return false;
-        }
-
-        if (shareContext->isResetNotificationEnabled() != resetNotification)
         {
             val->setError(EGL_BAD_MATCH);
             return false;
@@ -2863,7 +2938,7 @@ bool ValidateCreatePixmapSurface(const ValidationContext *val,
                 break;
 
             default:
-                val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04" PRIxPTR "X", attribute);
+                val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04" PRIxPTR, attribute);
                 return false;
         }
     }

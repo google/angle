@@ -20,6 +20,10 @@ namespace egl
 class Display;
 struct ValidationContext;
 
+// Validates {key, value} for each attribute. Generates an error and returns false on invalid usage.
+using AttributeValidationFunc =
+    std::function<bool(const ValidationContext *, const Display *, EGLAttrib)>;
+
 class AttributeMap final
 {
   public:
@@ -61,8 +65,7 @@ class AttributeMap final
 
     bool validate(const ValidationContext *val,
                   const egl::Display *display,
-                  std::function<bool(const ValidationContext *, const Display *, EGLAttrib)>
-                      validationFunc) const;
+                  AttributeValidationFunc validationFunc) const;
 
     // TODO: remove this and validate at every call site. http://anglebug.com/6671
     void initializeWithoutValidation() const;

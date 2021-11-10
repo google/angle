@@ -80,11 +80,9 @@ AttributeMap::const_iterator AttributeMap::end() const
     return attribs().end();
 }
 
-bool AttributeMap::validate(
-    const ValidationContext *val,
-    const egl::Display *display,
-    std::function<bool(const ValidationContext *, const egl::Display *, EGLAttrib)> validationFunc)
-    const
+bool AttributeMap::validate(const ValidationContext *val,
+                            const egl::Display *display,
+                            AttributeValidationFunc validationFunc) const
 {
     if (mIntPointer)
     {
