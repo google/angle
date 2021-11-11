@@ -118,6 +118,7 @@ constexpr char kANGLEPreRotation[] = "--emulated-pre-rotation=";
 constexpr char kdEQPCaseString[]   = "--deqp-case=";
 constexpr char kVerboseString[]    = "--verbose";
 constexpr char kRenderDocString[]  = "--renderdoc";
+constexpr char kdEQPFlagsPrefix[]  = "--deqp-";
 
 std::array<char, 500> gCaseStringBuffer;
 
@@ -143,6 +144,8 @@ constexpr const char gdEQPLogImagesString[]     = "--deqp-log-images=";
 
 // Default the config to RGBA8
 const char *gEGLConfigName = "rgba8888d24s8";
+
+std::vector<const char *> gdEQPForwardFlags;
 
 // Returns the default API for a platform.
 const char *GetDefaultAPIName()
@@ -561,6 +564,9 @@ void dEQPTest<TestModuleIndex>::SetUpTestCase()
         argv.push_back("--deqp-log-flush=disable");
     }
 
+    // Add any additional flags specified from command line to be forwarded to dEQP.
+    argv.insert(argv.end(), gdEQPForwardFlags.begin(), gdEQPForwardFlags.end());
+
     // Init the platform.
     if (!deqp_libtester_init_platform(static_cast<int>(argv.size()), argv.data(),
                                       reinterpret_cast<void *>(&HandlePlatformError), gOptions))
@@ -769,6 +775,10 @@ void InitTestHarness(int *argc, char **argv)
         else if (strncmp(argv[argIndex], kRenderDocString, strlen(kRenderDocString)) == 0)
         {
             gOptions.enableRenderDocCapture = true;
+        }
+        else if (strncmp(argv[argIndex], kdEQPFlagsPrefix, strlen(kdEQPFlagsPrefix)) == 0)
+        {
+            gdEQPForwardFlags.push_back(argv[argIndex]);
         }
         argIndex++;
     }
