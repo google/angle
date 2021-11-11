@@ -215,7 +215,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result pushGroupMarker(GLsizei length, const char *marker) override;
     angle::Result popGroupMarker() override;
 
-    void insertEventMarkerImpl(const char *marker);
+    void insertEventMarkerImpl(GLenum source, const char *marker);
 
     // KHR_debug
     angle::Result pushDebugGroup(const gl::Context *context,
@@ -1245,14 +1245,14 @@ ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex
 }  // namespace rx
 
 // Generate a perf warning, and insert an event marker in the command buffer.
-#define ANGLE_VK_PERF_WARNING(contextVk, severity, ...)                     \
-    do                                                                      \
-    {                                                                       \
-        char ANGLE_MESSAGE[100];                                            \
-        snprintf(ANGLE_MESSAGE, sizeof(ANGLE_MESSAGE), __VA_ARGS__);        \
-        ANGLE_PERF_WARNING(contextVk->getDebug(), severity, ANGLE_MESSAGE); \
-                                                                            \
-        contextVk->insertEventMarkerImpl(ANGLE_MESSAGE);                    \
+#define ANGLE_VK_PERF_WARNING(contextVk, severity, ...)                         \
+    do                                                                          \
+    {                                                                           \
+        char ANGLE_MESSAGE[100];                                                \
+        snprintf(ANGLE_MESSAGE, sizeof(ANGLE_MESSAGE), __VA_ARGS__);            \
+        ANGLE_PERF_WARNING(contextVk->getDebug(), severity, ANGLE_MESSAGE);     \
+                                                                                \
+        contextVk->insertEventMarkerImpl(GL_DEBUG_SOURCE_OTHER, ANGLE_MESSAGE); \
     } while (0)
 
 #endif  // LIBANGLE_RENDERER_VULKAN_CONTEXTVK_H_

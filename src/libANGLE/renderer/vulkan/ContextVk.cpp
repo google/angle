@@ -464,7 +464,7 @@ ANGLE_INLINE void ContextVk::onRenderPassFinished(RenderPassClosureReason reason
         const char *reasonText = kRenderPassClosureReason[reason];
         if (reasonText)
         {
-            insertEventMarkerImpl(reasonText);
+            insertEventMarkerImpl(GL_DEBUG_SOURCE_API, reasonText);
         }
     }
 
@@ -3077,11 +3077,11 @@ gl::GraphicsResetStatus ContextVk::getResetStatus()
 
 angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 {
-    insertEventMarkerImpl(marker);
+    insertEventMarkerImpl(GL_DEBUG_SOURCE_APPLICATION, marker);
     return angle::Result::Continue;
 }
 
-void ContextVk::insertEventMarkerImpl(const char *marker)
+void ContextVk::insertEventMarkerImpl(GLenum source, const char *marker)
 {
     if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
     {
@@ -3089,7 +3089,7 @@ void ContextVk::insertEventMarkerImpl(const char *marker)
     }
 
     VkDebugUtilsLabelEXT label;
-    vk::MakeDebugUtilsLabel(GL_DEBUG_SOURCE_APPLICATION, marker, &label);
+    vk::MakeDebugUtilsLabel(source, marker, &label);
 
     vk::CommandBuffer *commandBuffer = hasStartedRenderPass()
                                            ? mRenderPassCommandBuffer
