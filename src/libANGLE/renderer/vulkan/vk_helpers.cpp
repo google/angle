@@ -899,10 +899,10 @@ CommandBufferHelper::CommandBufferHelper()
       mHasGLMemoryBarrierIssued(false),
       mDepthAccess(ResourceAccess::Unused),
       mStencilAccess(ResourceAccess::Unused),
-      mDepthCmdSizeInvalidated(kInfiniteCmdSize),
-      mDepthCmdSizeDisabled(kInfiniteCmdSize),
-      mStencilCmdSizeInvalidated(kInfiniteCmdSize),
-      mStencilCmdSizeDisabled(kInfiniteCmdSize),
+      mDepthCmdCountInvalidated(kInfiniteCmdCount),
+      mDepthCmdCountDisabled(kInfiniteCmdCount),
+      mStencilCmdCountInvalidated(kInfiniteCmdCount),
+      mStencilCmdCountDisabled(kInfiniteCmdCount),
       mDepthStencilAttachmentIndex(kAttachmentIndexInvalid),
       mDepthStencilImage(nullptr),
       mDepthStencilResolveImage(nullptr),
@@ -962,10 +962,10 @@ angle::Result CommandBufferHelper::reset(Context *context)
         mHasGLMemoryBarrierIssued          = false;
         mDepthAccess                       = ResourceAccess::Unused;
         mStencilAccess                     = ResourceAccess::Unused;
-        mDepthCmdSizeInvalidated           = kInfiniteCmdSize;
-        mDepthCmdSizeDisabled              = kInfiniteCmdSize;
-        mStencilCmdSizeInvalidated         = kInfiniteCmdSize;
-        mStencilCmdSizeDisabled            = kInfiniteCmdSize;
+        mDepthCmdCountInvalidated          = kInfiniteCmdCount;
+        mDepthCmdCountDisabled             = kInfiniteCmdCount;
+        mStencilCmdCountInvalidated        = kInfiniteCmdCount;
+        mStencilCmdCountDisabled           = kInfiniteCmdCount;
         mColorImagesCount                  = PackedAttachmentCount(0);
         mDepthStencilAttachmentIndex       = kAttachmentIndexInvalid;
         mDepthInvalidateArea               = gl::Rectangle();
@@ -1176,7 +1176,7 @@ void CommandBufferHelper::onDepthAccess(ResourceAccess access)
     UpdateAccess(&mDepthAccess, access);
 
     // Update the invalidate state for optimizing this render pass's storeOp
-    if (onDepthStencilAccess(access, &mDepthCmdSizeInvalidated, &mDepthCmdSizeDisabled))
+    if (onDepthStencilAccess(access, &mDepthCmdCountInvalidated, &mDepthCmdCountDisabled))
     {
         // The attachment is no longer invalid, so restore its content.
         restoreDepthContent();
@@ -1189,7 +1189,7 @@ void CommandBufferHelper::onStencilAccess(ResourceAccess access)
     UpdateAccess(&mStencilAccess, access);
 
     // Update the invalidate state for optimizing this render pass's stencilStoreOp
-    if (onDepthStencilAccess(access, &mStencilCmdSizeInvalidated, &mStencilCmdSizeDisabled))
+    if (onDepthStencilAccess(access, &mStencilCmdCountInvalidated, &mStencilCmdCountDisabled))
     {
         // The attachment is no longer invalid, so restore its content.
         restoreStencilContent();
@@ -1200,7 +1200,7 @@ bool CommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
                                                uint32_t *cmdCountInvalidated,
                                                uint32_t *cmdCountDisabled)
 {
-    if (*cmdCountInvalidated == kInfiniteCmdSize)
+    if (*cmdCountInvalidated == kInfiniteCmdCount)
     {
         // If never invalidated or no longer invalidated, return early.
         return false;
@@ -1210,8 +1210,8 @@ bool CommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
         // Drawing to this attachment is being enabled.  Assume that drawing will immediately occur
         // after this attachment is enabled, and that means that the attachment will no longer be
         // invalidated.
-        *cmdCountInvalidated = kInfiniteCmdSize;
-        *cmdCountDisabled    = kInfiniteCmdSize;
+        *cmdCountInvalidated = kInfiniteCmdCount;
+        *cmdCountDisabled    = kInfiniteCmdCount;
         // Return true to indicate that the store op should remain STORE and that mContentDefined
         // should be set to true;
         return true;
@@ -1222,18 +1222,18 @@ bool CommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
         if (hasWriteAfterInvalidate(*cmdCountInvalidated, *cmdCountDisabled))
         {
             // The attachment was previously drawn while enabled, and so is no longer invalidated.
-            *cmdCountInvalidated = kInfiniteCmdSize;
-            *cmdCountDisabled    = kInfiniteCmdSize;
+            *cmdCountInvalidated = kInfiniteCmdCount;
+            *cmdCountDisabled    = kInfiniteCmdCount;
             // Return true to indicate that the store op should remain STORE and that
             // mContentDefined should be set to true;
             return true;
         }
         else
         {
-            // Get the latest CmdSize at the start of being disabled.  At the end of the render
+            // Get the latest CmdCount at the start of being disabled.  At the end of the render
             // pass, cmdCountDisabled is <= the actual command buffer size, and so it's compared
             // with cmdCountInvalidated.  If the same, the attachment is still invalidated.
-            *cmdCountDisabled = mCommandBuffer.getCommandSize();
+            *cmdCountDisabled = mCommandBuffer.getRenderPassWriteCommandCount();
             return false;
         }
     }
@@ -1526,13 +1526,13 @@ void CommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
     // attachment and the attachment has not been used, auto-invalidate it.
     const bool depthNotLoaded =
         depthLoadOp == RenderPassLoadOp::DontCare && !mRenderPassDesc.hasDepthUnresolveAttachment();
-    if (isInvalidated(mDepthCmdSizeInvalidated, mDepthCmdSizeDisabled) ||
+    if (isInvalidated(mDepthCmdCountInvalidated, mDepthCmdCountDisabled) ||
         (depthNotLoaded && mDepthAccess != ResourceAccess::Write))
     {
         depthStoreOp        = RenderPassStoreOp::DontCare;
         dsOps.isInvalidated = true;
     }
-    else if (hasWriteAfterInvalidate(mDepthCmdSizeInvalidated, mDepthCmdSizeDisabled))
+    else if (hasWriteAfterInvalidate(mDepthCmdCountInvalidated, mDepthCmdCountDisabled))
     {
         // The depth attachment was invalidated, but is now valid.  Let the image know the contents
         // are now defined so a future render pass would use loadOp=LOAD.
@@ -1540,13 +1540,13 @@ void CommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
     }
     const bool stencilNotLoaded = stencilLoadOp == RenderPassLoadOp::DontCare &&
                                   !mRenderPassDesc.hasStencilUnresolveAttachment();
-    if (isInvalidated(mStencilCmdSizeInvalidated, mStencilCmdSizeDisabled) ||
+    if (isInvalidated(mStencilCmdCountInvalidated, mStencilCmdCountDisabled) ||
         (stencilNotLoaded && mStencilAccess != ResourceAccess::Write))
     {
         stencilStoreOp             = RenderPassStoreOp::DontCare;
         dsOps.isStencilInvalidated = true;
     }
-    else if (hasWriteAfterInvalidate(mStencilCmdSizeInvalidated, mStencilCmdSizeDisabled))
+    else if (hasWriteAfterInvalidate(mStencilCmdCountInvalidated, mStencilCmdCountDisabled))
     {
         // The stencil attachment was invalidated, but is now valid.  Let the image know the
         // contents are now defined so a future render pass would use loadOp=LOAD.
@@ -1731,11 +1731,11 @@ void CommandBufferHelper::invalidateRenderPassDepthAttachment(const gl::DepthSte
     ASSERT(mIsRenderPassCommandBuffer);
     // Keep track of the size of commands in the command buffer.  If the size grows in the
     // future, that implies that drawing occured since invalidated.
-    mDepthCmdSizeInvalidated = mCommandBuffer.getCommandSize();
+    mDepthCmdCountInvalidated = mCommandBuffer.getRenderPassWriteCommandCount();
 
     // Also track the size if the attachment is currently disabled.
     const bool isDepthWriteEnabled = dsState.depthTest && dsState.depthMask;
-    mDepthCmdSizeDisabled = isDepthWriteEnabled ? kInfiniteCmdSize : mDepthCmdSizeInvalidated;
+    mDepthCmdCountDisabled = isDepthWriteEnabled ? kInfiniteCmdCount : mDepthCmdCountInvalidated;
 
     // Set/extend the invalidate area.
     ExtendRenderPassInvalidateArea(invalidateArea, &mDepthInvalidateArea);
@@ -1748,12 +1748,13 @@ void CommandBufferHelper::invalidateRenderPassStencilAttachment(
     ASSERT(mIsRenderPassCommandBuffer);
     // Keep track of the size of commands in the command buffer.  If the size grows in the
     // future, that implies that drawing occured since invalidated.
-    mStencilCmdSizeInvalidated = mCommandBuffer.getCommandSize();
+    mStencilCmdCountInvalidated = mCommandBuffer.getRenderPassWriteCommandCount();
 
     // Also track the size if the attachment is currently disabled.
     const bool isStencilWriteEnabled =
         dsState.stencilTest && (!dsState.isStencilNoOp() || !dsState.isStencilBackNoOp());
-    mStencilCmdSizeDisabled = isStencilWriteEnabled ? kInfiniteCmdSize : mStencilCmdSizeInvalidated;
+    mStencilCmdCountDisabled =
+        isStencilWriteEnabled ? kInfiniteCmdCount : mStencilCmdCountInvalidated;
 
     // Set/extend the invalidate area.
     ExtendRenderPassInvalidateArea(invalidateArea, &mStencilInvalidateArea);
@@ -1973,16 +1974,16 @@ void CommandBufferHelper::growRenderArea(ContextVk *contextVk, const gl::Rectang
         ANGLE_PERF_WARNING(
             contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
             "InvalidateSubFramebuffer for depth discarded due to increased scissor region");
-        mDepthInvalidateArea     = gl::Rectangle();
-        mDepthCmdSizeInvalidated = kInfiniteCmdSize;
+        mDepthInvalidateArea      = gl::Rectangle();
+        mDepthCmdCountInvalidated = kInfiniteCmdCount;
     }
     if (!mStencilInvalidateArea.empty() && !mStencilInvalidateArea.encloses(mRenderArea))
     {
         ANGLE_PERF_WARNING(
             contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
             "InvalidateSubFramebuffer for stencil discarded due to increased scissor region");
-        mStencilInvalidateArea     = gl::Rectangle();
-        mStencilCmdSizeInvalidated = kInfiniteCmdSize;
+        mStencilInvalidateArea      = gl::Rectangle();
+        mStencilCmdCountInvalidated = kInfiniteCmdCount;
     }
 }
 

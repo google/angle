@@ -998,8 +998,8 @@ class PackedImageAttachmentArray final
 
 // The following are used to help track the state of an invalidated attachment.
 
-// This value indicates an "infinite" CmdSize that is not valid for comparing
-constexpr uint32_t kInfiniteCmdSize = 0xFFFFFFFF;
+// This value indicates an "infinite" CmdCount that is not valid for comparing
+constexpr uint32_t kInfiniteCmdCount = 0xFFFFFFFF;
 
 // CommandBufferHelper (CBH) class wraps ANGLE's custom command buffer
 //  class, SecondaryCommandBuffer. This provides a way to temporarily
@@ -1125,15 +1125,17 @@ class CommandBufferHelper : angle::NonCopyable
     bool hasWriteAfterInvalidate(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)
     {
         ASSERT(mIsRenderPassCommandBuffer);
-        return (cmdCountInvalidated != kInfiniteCmdSize &&
-                std::min(cmdCountDisabled, mCommandBuffer.getCommandSize()) != cmdCountInvalidated);
+        return (cmdCountInvalidated != kInfiniteCmdCount &&
+                std::min(cmdCountDisabled, mCommandBuffer.getRenderPassWriteCommandCount()) !=
+                    cmdCountInvalidated);
     }
 
     bool isInvalidated(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)
     {
         ASSERT(mIsRenderPassCommandBuffer);
-        return cmdCountInvalidated != kInfiniteCmdSize &&
-               std::min(cmdCountDisabled, mCommandBuffer.getCommandSize()) == cmdCountInvalidated;
+        return cmdCountInvalidated != kInfiniteCmdCount &&
+               std::min(cmdCountDisabled, mCommandBuffer.getRenderPassWriteCommandCount()) ==
+                   cmdCountInvalidated;
     }
 
     void updateRenderPassColorClear(PackedAttachmentIndex colorIndex,
@@ -1291,10 +1293,10 @@ class CommandBufferHelper : angle::NonCopyable
     ResourceAccess mStencilAccess;
 
     // State tracking for whether to optimize the storeOp to DONT_CARE
-    uint32_t mDepthCmdSizeInvalidated;
-    uint32_t mDepthCmdSizeDisabled;
-    uint32_t mStencilCmdSizeInvalidated;
-    uint32_t mStencilCmdSizeDisabled;
+    uint32_t mDepthCmdCountInvalidated;
+    uint32_t mDepthCmdCountDisabled;
+    uint32_t mStencilCmdCountInvalidated;
+    uint32_t mStencilCmdCountDisabled;
     gl::Rectangle mDepthInvalidateArea;
     gl::Rectangle mStencilInvalidateArea;
 

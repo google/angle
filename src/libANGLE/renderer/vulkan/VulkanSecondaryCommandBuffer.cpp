@@ -58,7 +58,8 @@ angle::Result VulkanSecondaryCommandBuffer::initialize(Context *context,
 {
     VkDevice device = context->getDevice();
 
-    mSize = 0;
+    mCommandTracker.reset();
+    mAnyCommand = false;
 
     VkCommandBufferAllocateInfo allocInfo = {};
     allocInfo.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -84,7 +85,7 @@ angle::Result VulkanSecondaryCommandBuffer::begin(
     Context *context,
     const VkCommandBufferInheritanceInfo &inheritanceInfo)
 {
-    ASSERT(mSize == 0);
+    ASSERT(!mAnyCommand);
 
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -107,7 +108,8 @@ angle::Result VulkanSecondaryCommandBuffer::end(Context *context)
 
 VkResult VulkanSecondaryCommandBuffer::reset()
 {
-    mSize = 0;
+    mCommandTracker.reset();
+    mAnyCommand = false;
     return CommandBuffer::reset();
 }
 }  // namespace vk

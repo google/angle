@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_VULKAN_VULKANSECONDARYCOMMANDBUFFERVK_H_
 
 #include "common/vulkan/vk_headers.h"
+#include "libANGLE/renderer/vulkan/vk_command_buffer_utils.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
 
 namespace angle
@@ -220,14 +221,18 @@ class VulkanSecondaryCommandBuffer : public priv::CommandBuffer
 
     void open() const {}
     void close() const {}
-    bool empty() const { return mSize == 0; }
-    uint32_t getCommandSize() const { return mSize; }
+    bool empty() const { return !mAnyCommand; }
+    uint32_t getRenderPassWriteCommandCount() const
+    {
+        return mCommandTracker.getRenderPassWriteCommandCount();
+    }
     std::string dumpCommands(const char *separator) const { return ""; }
 
   private:
-    void onRecordCommand() { ++mSize; }
+    void onRecordCommand() { mAnyCommand = true; }
 
-    uint32_t mSize = 0;
+    CommandBufferCommandTracker mCommandTracker;
+    bool mAnyCommand = false;
 };
 
 ANGLE_INLINE void VulkanSecondaryCommandBuffer::blitImage(const Image &srcImage,
@@ -295,6 +300,7 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::clearAttachments(
     const VkClearRect *rects)
 {
     onRecordCommand();
+    mCommandTracker.onClearAttachments();
     CommandBuffer::clearAttachments(attachmentCount, attachments, rectCount, rects);
 }
 
@@ -345,12 +351,14 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::draw(uint32_t vertexCount,
                                                      uint32_t firstInstance)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::draw(vertexCount, instanceCount, firstVertex, firstInstance);
 }
 
 ANGLE_INLINE void VulkanSecondaryCommandBuffer::draw(uint32_t vertexCount, uint32_t firstVertex)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::draw(vertexCount, 1, firstVertex, 0);
 }
 
@@ -359,6 +367,7 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawInstanced(uint32_t vertexCou
                                                               uint32_t firstVertex)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::draw(vertexCount, instanceCount, firstVertex, 0);
 }
 
@@ -368,6 +377,7 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawInstancedBaseInstance(uint32
                                                                           uint32_t firstInstance)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::draw(vertexCount, instanceCount, firstVertex, firstInstance);
 }
 
@@ -378,12 +388,14 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexed(uint32_t indexCount,
                                                             uint32_t firstInstance)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::drawIndexed(indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 }
 
 ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexed(uint32_t indexCount)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::drawIndexed(indexCount, 1, 0, 0, 0);
 }
 
@@ -391,6 +403,7 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexedBaseVertex(uint32_t i
                                                                       uint32_t vertexOffset)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::drawIndexed(indexCount, 1, 0, vertexOffset, 0);
 }
 
@@ -398,6 +411,7 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexedInstanced(uint32_t in
                                                                      uint32_t instanceCount)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::drawIndexed(indexCount, instanceCount, 0, 0, 0);
 }
 
@@ -407,6 +421,7 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexedInstancedBaseVertex(
     uint32_t vertexOffset)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::drawIndexed(indexCount, instanceCount, 0, vertexOffset, 0);
 }
 
@@ -418,6 +433,7 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexedInstancedBaseVertexBa
     uint32_t firstInstance)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::drawIndexed(indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 }
 
@@ -427,6 +443,7 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndexedIndirect(const Buffer
                                                                     uint32_t stride)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::drawIndexedIndirect(buffer, offset, drawCount, stride);
 }
 
@@ -436,6 +453,7 @@ ANGLE_INLINE void VulkanSecondaryCommandBuffer::drawIndirect(const Buffer &buffe
                                                              uint32_t stride)
 {
     onRecordCommand();
+    mCommandTracker.onDraw();
     CommandBuffer::drawIndirect(buffer, offset, drawCount, stride);
 }
 

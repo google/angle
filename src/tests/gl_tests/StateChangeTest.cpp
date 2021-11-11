@@ -2681,9 +2681,7 @@ TEST_P(SimpleStateChangeTestES3, ReadFramebufferDrawFramebufferDifferentAttachme
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // A handful of non-draw calls can sync framebuffer state, such as discard, invalidate,
-    // invalidateSub and multisamplefv.  The trick here is to give GL_FRAMEBUFFER as target, which
-    // includes both the read and draw framebuffers.  The test is to make sure syncing the read
-    // framebuffer doesn't affect the draw call.
+    // invalidateSub and multisamplefv.
     GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
     glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &invalidateAttachment);
     EXPECT_GL_NO_ERROR();
@@ -3057,6 +3055,99 @@ TEST_P(SimpleStateChangeTestES3, SubInvalidateThenDraw)
     // Blend into the framebuffer, then verify that the framebuffer should have had cyan.
     glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
     blendAndVerifyColor(GLColor32F(0.0f, 0.0f, 1.0f, 0.5f), GLColor(127, 127, 127, 191));
+}
+
+// Tests that mid-render-pass invalidate then clear works for color buffers.  This test ensures that
+// the invalidate is undone on draw.
+TEST_P(SimpleStateChangeTestES3, ColorInvalidateThenClear)
+{
+    // Create the framebuffer that will be invalidated
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Initialize the framebuffer with a draw call.
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Invalidate it.
+    GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &invalidateAttachment);
+
+    // Clear the framebuffer.
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Expect the clear color, ensuring that invalidate wasn't applied after clear.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Tests that mid-render-pass invalidate then clear works for depth buffers.  This test ensures that
+// the invalidate is undone on draw.
+TEST_P(SimpleStateChangeTestES3, DepthInvalidateThenClear)
+{
+    // Create the framebuffer that will be invalidated
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+
+    GLRenderbuffer depth;
+    glBindRenderbuffer(GL_RENDERBUFFER, depth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 2, 2);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Initialize the framebuffer with a draw call.
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Invalidate depth.
+    GLenum invalidateAttachment = GL_DEPTH_ATTACHMENT;
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &invalidateAttachment);
+
+    // Clear the framebuffer.
+    glClearDepthf(0.8f);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    // Expect the draw color.  This breaks the render pass.  Later, the test ensures that invalidate
+    // of depth wasn't applied after clear.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Blend with depth test and make sure depth is as expected.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    glDepthFunc(GL_LESS);
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.59f);
+
+    glDepthFunc(GL_GREATER);
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.61f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
 }
 
 // Tests deleting a Framebuffer that is in use.
