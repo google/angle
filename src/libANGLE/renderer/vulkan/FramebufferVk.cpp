@@ -358,6 +358,7 @@ void FramebufferVk::destroy(const gl::Context *context)
     mReadPixelBuffer.release(rendererVk);
     mFramebufferCache.clear(contextVk);
     mFramebufferCache.destroy(rendererVk);
+    mFramebuffer = nullptr;
 }
 
 angle::Result FramebufferVk::discard(const gl::Context *context,
@@ -1841,6 +1842,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 // Invalidate the cache. If we have performance critical code hitting this path we
                 // can add related data (such as width/height) to the cache
                 mFramebufferCache.clear(contextVk);
+                mFramebuffer = nullptr;
                 break;
             case gl::Framebuffer::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE:
                 shouldUpdateSrgbWriteControlMode = true;
