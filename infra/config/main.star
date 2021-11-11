@@ -262,7 +262,7 @@ def angle_builder(name, cpu):
     luci.builder(
         name = name,
         bucket = "ci",
-        triggered_by = ["master-poller"],
+        triggered_by = ["main-poller"],
         executable = "recipe:angle",
         service_account = "angle-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         properties = properties,
@@ -307,7 +307,7 @@ def angle_builder(name, cpu):
         # Do not add ASAN tests to CQ (yet). http://anglebug.com/5795
         if not is_asan:
             luci.cq_tryjob_verifier(
-                cq_group = "master",
+                cq_group = "main",
                 builder = "angle:try/" + name,
                 location_regexp = location_regexp,
             )
@@ -358,11 +358,11 @@ luci.builder(
 )
 
 luci.gitiles_poller(
-    name = "master-poller",
+    name = "main-poller",
     bucket = "ci",
     repo = "https://chromium.googlesource.com/angle/angle",
     refs = [
-        "refs/heads/master",
+        "refs/heads/main",
     ],
     schedule = "with 10s interval",
 )
@@ -425,10 +425,10 @@ luci.cq(
 )
 
 luci.cq_group(
-    name = "master",
+    name = "main",
     watch = cq.refset(
         "https://chromium.googlesource.com/angle/angle",
-        refs = [r"refs/heads/master", r"refs/heads/main"],
+        refs = [r"refs/heads/main"],
     ),
     acls = [
         acl.entry(
