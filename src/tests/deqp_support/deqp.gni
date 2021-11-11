@@ -1193,13 +1193,8 @@ deqp_khr_gles31_sources = [
   "$deqp_path/external/openglcts/modules/gles31/es31cTextureStorageMultisampleTexStorage2DMultisampleTests.hpp",
   "$deqp_path/external/openglcts/modules/gles31/es31cTextureStorageMultisampleTexStorage3DMultisampleTests.cpp",
   "$deqp_path/external/openglcts/modules/gles31/es31cTextureStorageMultisampleTexStorage3DMultisampleTests.hpp",
-
-  #  "$deqp_path/external/openglcts/modules/gles31/es31cVertexAttribBindingTests.cpp",
+  "$deqp_path/external/openglcts/modules/gles31/es31cVertexAttribBindingTests.cpp",
   "$deqp_path/external/openglcts/modules/gles31/es31cVertexAttribBindingTests.hpp",
-
-  # Overrides
-  # 5500: Override to prevent right-shifts by too large a value
-  "deqp_support/es31cVertexAttribBindingTests_override.cpp",
 ]
 
 deqp_khr_gles32_sources = [
