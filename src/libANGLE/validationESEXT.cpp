@@ -1432,7 +1432,8 @@ bool ValidateTexStorageMemFlags2DANGLE(const Context *context,
                                        MemoryObjectID memoryPacked,
                                        GLuint64 offset,
                                        GLbitfield createFlags,
-                                       GLbitfield usageFlags)
+                                       GLbitfield usageFlags,
+                                       const void *imageCreateInfoPNext)
 {
     if (!context->getExtensions().memoryObjectFlagsANGLE)
     {
@@ -1490,7 +1491,8 @@ bool ValidateTexStorageMemFlags2DMultisampleANGLE(const Context *context,
                                                   MemoryObjectID memoryPacked,
                                                   GLuint64 offset,
                                                   GLbitfield createFlags,
-                                                  GLbitfield usageFlags)
+                                                  GLbitfield usageFlags,
+                                                  const void *imageCreateInfoPNext)
 {
     UNIMPLEMENTED();
     return false;
@@ -1507,7 +1509,8 @@ bool ValidateTexStorageMemFlags3DANGLE(const Context *context,
                                        MemoryObjectID memoryPacked,
                                        GLuint64 offset,
                                        GLbitfield createFlags,
-                                       GLbitfield usageFlags)
+                                       GLbitfield usageFlags,
+                                       const void *imageCreateInfoPNext)
 {
     UNIMPLEMENTED();
     return false;
@@ -1525,7 +1528,8 @@ bool ValidateTexStorageMemFlags3DMultisampleANGLE(const Context *context,
                                                   MemoryObjectID memoryPacked,
                                                   GLuint64 offset,
                                                   GLbitfield createFlags,
-                                                  GLbitfield usageFlags)
+                                                  GLbitfield usageFlags,
+                                                  const void *imageCreateInfoPNext)
 {
     UNIMPLEMENTED();
     return false;

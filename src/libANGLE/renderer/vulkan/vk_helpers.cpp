@@ -4015,8 +4015,7 @@ angle::Result ImageHelper::init(Context *context,
     return initExternal(context, textureType, extents, format.getIntendedFormatID(),
                         format.getActualRenderableImageFormatID(), samples, usage,
                         kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
-                        mipLevels, layerCount, isRobustResourceInitEnabled, nullptr,
-                        hasProtectedContent);
+                        mipLevels, layerCount, isRobustResourceInitEnabled, hasProtectedContent);
 }
 
 angle::Result ImageHelper::initMSAASwapchain(Context *context,
@@ -4035,7 +4034,7 @@ angle::Result ImageHelper::initMSAASwapchain(Context *context,
     ANGLE_TRY(initExternal(context, textureType, extents, format.getIntendedFormatID(),
                            format.getActualRenderableImageFormatID(), samples, usage,
                            kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
-                           mipLevels, layerCount, isRobustResourceInitEnabled, nullptr,
+                           mipLevels, layerCount, isRobustResourceInitEnabled,
                            hasProtectedContent));
     if (rotatedAspectRatio)
     {
@@ -4059,12 +4058,13 @@ angle::Result ImageHelper::initExternal(Context *context,
                                         uint32_t mipLevels,
                                         uint32_t layerCount,
                                         bool isRobustResourceInitEnabled,
-                                        bool *imageFormatListEnabledOut,
                                         bool hasProtectedContent)
 {
     ASSERT(!valid());
     ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
     ASSERT(!IsAnySubresourceContentDefined(mStencilContentDefined));
+
+    RendererVk *rendererVk = context->getRenderer();
 
     mImageType           = gl_vk::GetImageType(textureType);
     mExtents             = extents;
@@ -4086,44 +4086,25 @@ angle::Result ImageHelper::initExternal(Context *context,
     ASSERT(textureType != gl::TextureType::Rectangle || mLayerCount == 1);
     ASSERT(textureType != gl::TextureType::CubeMap || mLayerCount == gl::kCubeFaceCount);
 
-    // With the introduction of sRGB related GLES extensions any sample/render target could be
-    // respecified causing it to be interpreted in a different colorspace. Create the VkImage
-    // accordingly.
-    bool imageFormatListEnabled                        = false;
-    RendererVk *rendererVk                             = context->getRenderer();
-    VkImageFormatListCreateInfoKHR imageFormatListInfo = {};
-    const angle::Format &actualFormat                  = angle::Format::Get(mActualFormatID);
-    VkFormat actualVkFormat                            = GetVkFormatFromFormatID(mActualFormatID);
-    angle::FormatID additionalFormat =
-        actualFormat.isSRGB ? ConvertToLinear(mActualFormatID) : ConvertToSRGB(mActualFormatID);
-    constexpr uint32_t kImageListFormatCount = 2;
-    VkFormat imageListFormats[kImageListFormatCount];
-    imageListFormats[0] = vk::GetVkFormatFromFormatID(mActualFormatID);
-    imageListFormats[1] = vk::GetVkFormatFromFormatID(additionalFormat);
+    // If externalImageCreateInfo is provided, use that directly.  Otherwise derive the necessary
+    // pNext chain.
+    const void *imageCreateInfoPNext = externalImageCreateInfo;
+    VkImageFormatListCreateInfoKHR imageFormatListInfoStorage;
+    ImageListFormats imageListFormatsStorage;
 
-    if (rendererVk->getFeatures().supportsImageFormatList.enabled &&
-        rendererVk->haveSameFormatFeatureBits(mActualFormatID, additionalFormat))
+    if (externalImageCreateInfo == nullptr)
     {
-        imageFormatListEnabled = true;
-
-        // Add VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
-        mCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
-
-        // There is just 1 additional format we might use to create a VkImageView for this
-        // VkImage
-        imageFormatListInfo.sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
-        imageFormatListInfo.pNext           = externalImageCreateInfo;
-        imageFormatListInfo.viewFormatCount = kImageListFormatCount;
-        imageFormatListInfo.pViewFormats    = imageListFormats;
-    }
-
-    if (imageFormatListEnabledOut)
-    {
-        *imageFormatListEnabledOut = imageFormatListEnabled;
+        imageCreateInfoPNext =
+            DeriveCreateInfoPNext(context, actualFormatID, nullptr, &imageFormatListInfoStorage,
+                                  &imageListFormatsStorage, &mCreateFlags);
     }
 
     mYuvConversionSampler.reset();
     mExternalFormat = 0;
+
+    const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
+    VkFormat actualVkFormat           = GetVkFormatFromFormatID(actualFormatID);
+
     if (actualFormat.isYUV)
     {
         // The Vulkan spec states: If sampler is used and the VkFormat of the image is a
@@ -4165,14 +4146,14 @@ angle::Result ImageHelper::initExternal(Context *context,
         mCreateFlags |= VK_IMAGE_CREATE_PROTECTED_BIT;
     }
 
-    VkImageCreateInfo imageInfo = {};
-    imageInfo.sType             = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-    imageInfo.pNext     = (imageFormatListEnabled) ? &imageFormatListInfo : externalImageCreateInfo;
-    imageInfo.flags     = mCreateFlags;
-    imageInfo.imageType = mImageType;
-    imageInfo.format    = actualVkFormat;
-    imageInfo.extent    = mExtents;
-    imageInfo.mipLevels = mLevelCount;
+    VkImageCreateInfo imageInfo     = {};
+    imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.pNext                 = imageCreateInfoPNext;
+    imageInfo.flags                 = mCreateFlags;
+    imageInfo.imageType             = mImageType;
+    imageInfo.format                = actualVkFormat;
+    imageInfo.extent                = mExtents;
+    imageInfo.mipLevels             = mLevelCount;
     imageInfo.arrayLayers           = mLayerCount;
     imageInfo.samples               = gl_vk::GetSamples(mSamples);
     imageInfo.tiling                = mTilingMode;
@@ -4196,6 +4177,43 @@ angle::Result ImageHelper::initExternal(Context *context,
     }
 
     return angle::Result::Continue;
+}
+
+const void *ImageHelper::DeriveCreateInfoPNext(
+    Context *context,
+    angle::FormatID actualFormatID,
+    const void *pNext,
+    VkImageFormatListCreateInfoKHR *imageFormatListInfoStorage,
+    std::array<VkFormat, kImageListFormatCount> *imageListFormatsStorage,
+    VkImageCreateFlags *createFlagsOut)
+{
+    // With the introduction of sRGB related GLES extensions any sample/render target could be
+    // respecified causing it to be interpreted in a different colorspace.  Create the VkImage
+    // accordingly.
+    RendererVk *rendererVk            = context->getRenderer();
+    const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
+    angle::FormatID additionalFormat =
+        actualFormat.isSRGB ? ConvertToLinear(actualFormatID) : ConvertToSRGB(actualFormatID);
+    (*imageListFormatsStorage)[0] = vk::GetVkFormatFromFormatID(actualFormatID);
+    (*imageListFormatsStorage)[1] = vk::GetVkFormatFromFormatID(additionalFormat);
+
+    if (rendererVk->getFeatures().supportsImageFormatList.enabled &&
+        rendererVk->haveSameFormatFeatureBits(actualFormatID, additionalFormat))
+    {
+        // Add VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
+        *createFlagsOut |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+
+        // There is just 1 additional format we might use to create a VkImageView for this
+        // VkImage
+        imageFormatListInfoStorage->sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
+        imageFormatListInfoStorage->pNext = pNext;
+        imageFormatListInfoStorage->viewFormatCount = kImageListFormatCount;
+        imageFormatListInfoStorage->pViewFormats    = imageListFormatsStorage->data();
+
+        pNext = imageFormatListInfoStorage;
+    }
+
+    return pNext;
 }
 
 void ImageHelper::releaseImage(RendererVk *renderer)
@@ -4743,7 +4761,7 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
                            samples, kMultisampledUsageFlags, kMultisampledCreateFlags,
                            ImageLayout::Undefined, nullptr, resolveImage.getFirstAllocatedLevel(),
                            resolveImage.getLevelCount(), resolveImage.getLayerCount(),
-                           isRobustResourceInitEnabled, nullptr, hasProtectedContent));
+                           isRobustResourceInitEnabled, hasProtectedContent));
 
     // Remove the emulated format clear from the multisampled image if any.  There is one already
     // staged on the resolve image if needed.

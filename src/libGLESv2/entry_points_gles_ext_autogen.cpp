@@ -639,35 +639,40 @@ void GL_APIENTRY GL_TexStorageMemFlags2DANGLE(GLenum target,
                                               GLuint memory,
                                               GLuint64 offset,
                                               GLbitfield createFlags,
-                                              GLbitfield usageFlags)
+                                              GLbitfield usageFlags,
+                                              const void *imageCreateInfoPNext)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorageMemFlags2DANGLE,
           "context = %d, target = %s, levels = %d, internalFormat = %s, width = %d, height = %d, "
-          "memory = %u, offset = %llu, createFlags = %s, usageFlags = %s",
+          "memory = %u, offset = %llu, createFlags = %s, usageFlags = %s, imageCreateInfoPNext = "
+          "0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
           GLenumToString(GLenumGroup::DefaultGroup, internalFormat), width, height, memory,
           static_cast<unsigned long long>(offset),
           GLbitfieldToString(GLenumGroup::DefaultGroup, createFlags).c_str(),
-          GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str());
+          GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str(),
+          (uintptr_t)imageCreateInfoPNext);
 
     if (context)
     {
         TextureType targetPacked                              = PackParam<TextureType>(target);
         MemoryObjectID memoryPacked                           = PackParam<MemoryObjectID>(memory);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateTexStorageMemFlags2DANGLE(
-                 context, angle::EntryPoint::GLTexStorageMemFlags2DANGLE, targetPacked, levels,
-                 internalFormat, width, height, memoryPacked, offset, createFlags, usageFlags));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateTexStorageMemFlags2DANGLE(
+                                context, angle::EntryPoint::GLTexStorageMemFlags2DANGLE,
+                                targetPacked, levels, internalFormat, width, height, memoryPacked,
+                                offset, createFlags, usageFlags, imageCreateInfoPNext));
         if (isCallValid)
         {
             context->texStorageMemFlags2D(targetPacked, levels, internalFormat, width, height,
-                                          memoryPacked, offset, createFlags, usageFlags);
+                                          memoryPacked, offset, createFlags, usageFlags,
+                                          imageCreateInfoPNext);
         }
         ANGLE_CAPTURE(TexStorageMemFlags2DANGLE, isCallValid, context, targetPacked, levels,
-                      internalFormat, width, height, memoryPacked, offset, createFlags, usageFlags);
+                      internalFormat, width, height, memoryPacked, offset, createFlags, usageFlags,
+                      imageCreateInfoPNext);
     }
     else
     {
@@ -684,18 +689,20 @@ void GL_APIENTRY GL_TexStorageMemFlags2DMultisampleANGLE(GLenum target,
                                                          GLuint memory,
                                                          GLuint64 offset,
                                                          GLbitfield createFlags,
-                                                         GLbitfield usageFlags)
+                                                         GLbitfield usageFlags,
+                                                         const void *imageCreateInfoPNext)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(
-        context, GLTexStorageMemFlags2DMultisampleANGLE,
-        "context = %d, target = %s, samples = %d, internalFormat = %s, width = %d, height = %d, "
-        "fixedSampleLocations = %s, memory = %u, offset = %llu, createFlags = %s, usageFlags = %s",
-        CID(context), GLenumToString(GLenumGroup::TextureTarget, target), samples,
-        GLenumToString(GLenumGroup::DefaultGroup, internalFormat), width, height,
-        GLbooleanToString(fixedSampleLocations), memory, static_cast<unsigned long long>(offset),
-        GLbitfieldToString(GLenumGroup::DefaultGroup, createFlags).c_str(),
-        GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str());
+    EVENT(context, GLTexStorageMemFlags2DMultisampleANGLE,
+          "context = %d, target = %s, samples = %d, internalFormat = %s, width = %d, height = %d, "
+          "fixedSampleLocations = %s, memory = %u, offset = %llu, createFlags = %s, usageFlags = "
+          "%s, imageCreateInfoPNext = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), samples,
+          GLenumToString(GLenumGroup::DefaultGroup, internalFormat), width, height,
+          GLbooleanToString(fixedSampleLocations), memory, static_cast<unsigned long long>(offset),
+          GLbitfieldToString(GLenumGroup::DefaultGroup, createFlags).c_str(),
+          GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str(),
+          (uintptr_t)imageCreateInfoPNext);
 
     if (context)
     {
@@ -707,16 +714,16 @@ void GL_APIENTRY GL_TexStorageMemFlags2DMultisampleANGLE(GLenum target,
              ValidateTexStorageMemFlags2DMultisampleANGLE(
                  context, angle::EntryPoint::GLTexStorageMemFlags2DMultisampleANGLE, targetPacked,
                  samples, internalFormat, width, height, fixedSampleLocations, memoryPacked, offset,
-                 createFlags, usageFlags));
+                 createFlags, usageFlags, imageCreateInfoPNext));
         if (isCallValid)
         {
-            context->texStorageMemFlags2DMultisample(targetPacked, samples, internalFormat, width,
-                                                     height, fixedSampleLocations, memoryPacked,
-                                                     offset, createFlags, usageFlags);
+            context->texStorageMemFlags2DMultisample(
+                targetPacked, samples, internalFormat, width, height, fixedSampleLocations,
+                memoryPacked, offset, createFlags, usageFlags, imageCreateInfoPNext);
         }
         ANGLE_CAPTURE(TexStorageMemFlags2DMultisampleANGLE, isCallValid, context, targetPacked,
                       samples, internalFormat, width, height, fixedSampleLocations, memoryPacked,
-                      offset, createFlags, usageFlags);
+                      offset, createFlags, usageFlags, imageCreateInfoPNext);
     }
     else
     {
@@ -733,36 +740,41 @@ void GL_APIENTRY GL_TexStorageMemFlags3DANGLE(GLenum target,
                                               GLuint memory,
                                               GLuint64 offset,
                                               GLbitfield createFlags,
-                                              GLbitfield usageFlags)
+                                              GLbitfield usageFlags,
+                                              const void *imageCreateInfoPNext)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorageMemFlags3DANGLE,
           "context = %d, target = %s, levels = %d, internalFormat = %s, width = %d, height = %d, "
-          "depth = %d, memory = %u, offset = %llu, createFlags = %s, usageFlags = %s",
+          "depth = %d, memory = %u, offset = %llu, createFlags = %s, usageFlags = %s, "
+          "imageCreateInfoPNext = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
           GLenumToString(GLenumGroup::DefaultGroup, internalFormat), width, height, depth, memory,
           static_cast<unsigned long long>(offset),
           GLbitfieldToString(GLenumGroup::DefaultGroup, createFlags).c_str(),
-          GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str());
+          GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str(),
+          (uintptr_t)imageCreateInfoPNext);
 
     if (context)
     {
         TextureType targetPacked                              = PackParam<TextureType>(target);
         MemoryObjectID memoryPacked                           = PackParam<MemoryObjectID>(memory);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTexStorageMemFlags3DANGLE(
-                                context, angle::EntryPoint::GLTexStorageMemFlags3DANGLE,
-                                targetPacked, levels, internalFormat, width, height, depth,
-                                memoryPacked, offset, createFlags, usageFlags));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateTexStorageMemFlags3DANGLE(
+                 context, angle::EntryPoint::GLTexStorageMemFlags3DANGLE, targetPacked, levels,
+                 internalFormat, width, height, depth, memoryPacked, offset, createFlags,
+                 usageFlags, imageCreateInfoPNext));
         if (isCallValid)
         {
             context->texStorageMemFlags3D(targetPacked, levels, internalFormat, width, height,
-                                          depth, memoryPacked, offset, createFlags, usageFlags);
+                                          depth, memoryPacked, offset, createFlags, usageFlags,
+                                          imageCreateInfoPNext);
         }
         ANGLE_CAPTURE(TexStorageMemFlags3DANGLE, isCallValid, context, targetPacked, levels,
                       internalFormat, width, height, depth, memoryPacked, offset, createFlags,
-                      usageFlags);
+                      usageFlags, imageCreateInfoPNext);
     }
     else
     {
@@ -780,18 +792,20 @@ void GL_APIENTRY GL_TexStorageMemFlags3DMultisampleANGLE(GLenum target,
                                                          GLuint memory,
                                                          GLuint64 offset,
                                                          GLbitfield createFlags,
-                                                         GLbitfield usageFlags)
+                                                         GLbitfield usageFlags,
+                                                         const void *imageCreateInfoPNext)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorageMemFlags3DMultisampleANGLE,
           "context = %d, target = %s, samples = %d, internalFormat = %s, width = %d, height = %d, "
           "depth = %d, fixedSampleLocations = %s, memory = %u, offset = %llu, createFlags = %s, "
-          "usageFlags = %s",
+          "usageFlags = %s, imageCreateInfoPNext = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), samples,
           GLenumToString(GLenumGroup::DefaultGroup, internalFormat), width, height, depth,
           GLbooleanToString(fixedSampleLocations), memory, static_cast<unsigned long long>(offset),
           GLbitfieldToString(GLenumGroup::DefaultGroup, createFlags).c_str(),
-          GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str());
+          GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str(),
+          (uintptr_t)imageCreateInfoPNext);
 
     if (context)
     {
@@ -803,16 +817,16 @@ void GL_APIENTRY GL_TexStorageMemFlags3DMultisampleANGLE(GLenum target,
              ValidateTexStorageMemFlags3DMultisampleANGLE(
                  context, angle::EntryPoint::GLTexStorageMemFlags3DMultisampleANGLE, targetPacked,
                  samples, internalFormat, width, height, depth, fixedSampleLocations, memoryPacked,
-                 offset, createFlags, usageFlags));
+                 offset, createFlags, usageFlags, imageCreateInfoPNext));
         if (isCallValid)
         {
-            context->texStorageMemFlags3DMultisample(targetPacked, samples, internalFormat, width,
-                                                     height, depth, fixedSampleLocations,
-                                                     memoryPacked, offset, createFlags, usageFlags);
+            context->texStorageMemFlags3DMultisample(
+                targetPacked, samples, internalFormat, width, height, depth, fixedSampleLocations,
+                memoryPacked, offset, createFlags, usageFlags, imageCreateInfoPNext);
         }
         ANGLE_CAPTURE(TexStorageMemFlags3DMultisampleANGLE, isCallValid, context, targetPacked,
                       samples, internalFormat, width, height, depth, fixedSampleLocations,
-                      memoryPacked, offset, createFlags, usageFlags);
+                      memoryPacked, offset, createFlags, usageFlags, imageCreateInfoPNext);
     }
     else
     {

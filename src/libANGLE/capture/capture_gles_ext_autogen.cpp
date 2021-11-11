@@ -635,7 +635,8 @@ CallCapture CaptureTexStorageMemFlags2DANGLE(const State &glState,
                                              MemoryObjectID memoryPacked,
                                              GLuint64 offset,
                                              GLbitfield createFlags,
-                                             GLbitfield usageFlags)
+                                             GLbitfield usageFlags,
+                                             const void *imageCreateInfoPNext)
 {
     ParamBuffer paramBuffer;
 
@@ -652,6 +653,26 @@ CallCapture CaptureTexStorageMemFlags2DANGLE(const State &glState,
     paramBuffer.addEnumParam("usageFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
                              usageFlags);
 
+    if (isCallValid)
+    {
+        ParamCapture imageCreateInfoPNextParam("imageCreateInfoPNext",
+                                               ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, imageCreateInfoPNext,
+                       &imageCreateInfoPNextParam.value);
+        CaptureTexStorageMemFlags2DANGLE_imageCreateInfoPNext(
+            glState, isCallValid, targetPacked, levels, internalFormat, width, height, memoryPacked,
+            offset, createFlags, usageFlags, imageCreateInfoPNext, &imageCreateInfoPNextParam);
+        paramBuffer.addParam(std::move(imageCreateInfoPNextParam));
+    }
+    else
+    {
+        ParamCapture imageCreateInfoPNextParam("imageCreateInfoPNext",
+                                               ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, static_cast<const void *>(nullptr),
+                       &imageCreateInfoPNextParam.value);
+        paramBuffer.addParam(std::move(imageCreateInfoPNextParam));
+    }
+
     return CallCapture(angle::EntryPoint::GLTexStorageMemFlags2DANGLE, std::move(paramBuffer));
 }
 
@@ -666,7 +687,8 @@ CallCapture CaptureTexStorageMemFlags2DMultisampleANGLE(const State &glState,
                                                         MemoryObjectID memoryPacked,
                                                         GLuint64 offset,
                                                         GLbitfield createFlags,
-                                                        GLbitfield usageFlags)
+                                                        GLbitfield usageFlags,
+                                                        const void *imageCreateInfoPNext)
 {
     ParamBuffer paramBuffer;
 
@@ -683,6 +705,27 @@ CallCapture CaptureTexStorageMemFlags2DMultisampleANGLE(const State &glState,
                              createFlags);
     paramBuffer.addEnumParam("usageFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
                              usageFlags);
+
+    if (isCallValid)
+    {
+        ParamCapture imageCreateInfoPNextParam("imageCreateInfoPNext",
+                                               ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, imageCreateInfoPNext,
+                       &imageCreateInfoPNextParam.value);
+        CaptureTexStorageMemFlags2DMultisampleANGLE_imageCreateInfoPNext(
+            glState, isCallValid, targetPacked, samples, internalFormat, width, height,
+            fixedSampleLocations, memoryPacked, offset, createFlags, usageFlags,
+            imageCreateInfoPNext, &imageCreateInfoPNextParam);
+        paramBuffer.addParam(std::move(imageCreateInfoPNextParam));
+    }
+    else
+    {
+        ParamCapture imageCreateInfoPNextParam("imageCreateInfoPNext",
+                                               ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, static_cast<const void *>(nullptr),
+                       &imageCreateInfoPNextParam.value);
+        paramBuffer.addParam(std::move(imageCreateInfoPNextParam));
+    }
 
     return CallCapture(angle::EntryPoint::GLTexStorageMemFlags2DMultisampleANGLE,
                        std::move(paramBuffer));
@@ -699,7 +742,8 @@ CallCapture CaptureTexStorageMemFlags3DANGLE(const State &glState,
                                              MemoryObjectID memoryPacked,
                                              GLuint64 offset,
                                              GLbitfield createFlags,
-                                             GLbitfield usageFlags)
+                                             GLbitfield usageFlags,
+                                             const void *imageCreateInfoPNext)
 {
     ParamBuffer paramBuffer;
 
@@ -717,6 +761,27 @@ CallCapture CaptureTexStorageMemFlags3DANGLE(const State &glState,
     paramBuffer.addEnumParam("usageFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
                              usageFlags);
 
+    if (isCallValid)
+    {
+        ParamCapture imageCreateInfoPNextParam("imageCreateInfoPNext",
+                                               ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, imageCreateInfoPNext,
+                       &imageCreateInfoPNextParam.value);
+        CaptureTexStorageMemFlags3DANGLE_imageCreateInfoPNext(
+            glState, isCallValid, targetPacked, levels, internalFormat, width, height, depth,
+            memoryPacked, offset, createFlags, usageFlags, imageCreateInfoPNext,
+            &imageCreateInfoPNextParam);
+        paramBuffer.addParam(std::move(imageCreateInfoPNextParam));
+    }
+    else
+    {
+        ParamCapture imageCreateInfoPNextParam("imageCreateInfoPNext",
+                                               ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, static_cast<const void *>(nullptr),
+                       &imageCreateInfoPNextParam.value);
+        paramBuffer.addParam(std::move(imageCreateInfoPNextParam));
+    }
+
     return CallCapture(angle::EntryPoint::GLTexStorageMemFlags3DANGLE, std::move(paramBuffer));
 }
 
@@ -732,7 +797,8 @@ CallCapture CaptureTexStorageMemFlags3DMultisampleANGLE(const State &glState,
                                                         MemoryObjectID memoryPacked,
                                                         GLuint64 offset,
                                                         GLbitfield createFlags,
-                                                        GLbitfield usageFlags)
+                                                        GLbitfield usageFlags,
+                                                        const void *imageCreateInfoPNext)
 {
     ParamBuffer paramBuffer;
 
@@ -750,6 +816,27 @@ CallCapture CaptureTexStorageMemFlags3DMultisampleANGLE(const State &glState,
                              createFlags);
     paramBuffer.addEnumParam("usageFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
                              usageFlags);
+
+    if (isCallValid)
+    {
+        ParamCapture imageCreateInfoPNextParam("imageCreateInfoPNext",
+                                               ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, imageCreateInfoPNext,
+                       &imageCreateInfoPNextParam.value);
+        CaptureTexStorageMemFlags3DMultisampleANGLE_imageCreateInfoPNext(
+            glState, isCallValid, targetPacked, samples, internalFormat, width, height, depth,
+            fixedSampleLocations, memoryPacked, offset, createFlags, usageFlags,
+            imageCreateInfoPNext, &imageCreateInfoPNextParam);
+        paramBuffer.addParam(std::move(imageCreateInfoPNextParam));
+    }
+    else
+    {
+        ParamCapture imageCreateInfoPNextParam("imageCreateInfoPNext",
+                                               ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, static_cast<const void *>(nullptr),
+                       &imageCreateInfoPNextParam.value);
+        paramBuffer.addParam(std::move(imageCreateInfoPNextParam));
+    }
 
     return CallCapture(angle::EntryPoint::GLTexStorageMemFlags3DMultisampleANGLE,
                        std::move(paramBuffer));

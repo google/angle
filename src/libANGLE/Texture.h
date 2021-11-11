@@ -487,7 +487,8 @@ class Texture final : public RefCountObject<TextureID>,
                                            MemoryObject *memoryObject,
                                            GLuint64 offset,
                                            GLbitfield createFlags,
-                                           GLbitfield usageFlags);
+                                           GLbitfield usageFlags,
+                                           const void *imageCreateInfoPNext);
 
     angle::Result setImageExternal(Context *context,
                                    TextureTarget target,

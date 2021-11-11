@@ -371,7 +371,7 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
     VkImageUsageFlags usageFlags =
         GetUsageFlags(renderer, format, modifierProperties, &mTextureable, &mRenderable);
 
-    const VkImageCreateFlags createFlags =
+    VkImageCreateFlags createFlags =
         vk::kVkImageCreateFlagsNone | (hasProtectedContent() ? VK_IMAGE_CREATE_PROTECTED_BIT : 0);
 
     // The Vulkan and EGL plane counts are expected to match.
@@ -440,6 +440,12 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
     externalMemoryImageCreateInfo.pNext       = &imageDrmModifierCreateInfo;
     externalMemoryImageCreateInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT;
 
+    VkImageFormatListCreateInfoKHR imageFormatListInfoStorage;
+    vk::ImageHelper::ImageListFormats imageListFormatsStorage;
+    const void *imageCreateInfoPNext = vk::ImageHelper::DeriveCreateInfoPNext(
+        displayVk, actualImageFormatID, &externalMemoryImageCreateInfo, &imageFormatListInfoStorage,
+        &imageListFormatsStorage, &createFlags);
+
     // Create the image
     mImage = new vk::ImageHelper();
 
@@ -448,11 +454,10 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
 
     constexpr bool kIsRobustInitEnabled = false;
 
-    ANGLE_TRY(mImage->initExternal(displayVk, gl::TextureType::_2D, vkExtents, intendedFormatID,
-                                   actualImageFormatID, 1, usageFlags, createFlags,
-                                   vk::ImageLayout::ExternalPreInitialized,
-                                   &externalMemoryImageCreateInfo, gl::LevelIndex(0), 1, 1,
-                                   kIsRobustInitEnabled, nullptr, hasProtectedContent()));
+    ANGLE_TRY(mImage->initExternal(
+        displayVk, gl::TextureType::_2D, vkExtents, intendedFormatID, actualImageFormatID, 1,
+        usageFlags, createFlags, vk::ImageLayout::ExternalPreInitialized, imageCreateInfoPNext,
+        gl::LevelIndex(0), 1, 1, kIsRobustInitEnabled, hasProtectedContent()));
 
     VkMemoryRequirements externalMemoryRequirements;
     mImage->getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);

@@ -74,7 +74,8 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
                                            gl::MemoryObject *memoryObject,
                                            GLuint64 offset,
                                            GLbitfield createFlags,
-                                           GLbitfield usageFlags) override;
+                                           GLbitfield usageFlags,
+                                           const void *imageCreateInfoPNext) override;
 
     bool isImmutable() const { return mImmutable; }
 

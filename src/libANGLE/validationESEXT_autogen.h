@@ -176,7 +176,8 @@ bool ValidateTexStorageMemFlags2DANGLE(const Context *context,
                                        MemoryObjectID memoryPacked,
                                        GLuint64 offset,
                                        GLbitfield createFlags,
-                                       GLbitfield usageFlags);
+                                       GLbitfield usageFlags,
+                                       const void *imageCreateInfoPNext);
 bool ValidateTexStorageMemFlags2DMultisampleANGLE(const Context *context,
                                                   angle::EntryPoint entryPoint,
                                                   TextureType targetPacked,
@@ -188,7 +189,8 @@ bool ValidateTexStorageMemFlags2DMultisampleANGLE(const Context *context,
                                                   MemoryObjectID memoryPacked,
                                                   GLuint64 offset,
                                                   GLbitfield createFlags,
-                                                  GLbitfield usageFlags);
+                                                  GLbitfield usageFlags,
+                                                  const void *imageCreateInfoPNext);
 bool ValidateTexStorageMemFlags3DANGLE(const Context *context,
                                        angle::EntryPoint entryPoint,
                                        TextureType targetPacked,
@@ -200,7 +202,8 @@ bool ValidateTexStorageMemFlags3DANGLE(const Context *context,
                                        MemoryObjectID memoryPacked,
                                        GLuint64 offset,
                                        GLbitfield createFlags,
-                                       GLbitfield usageFlags);
+                                       GLbitfield usageFlags,
+                                       const void *imageCreateInfoPNext);
 bool ValidateTexStorageMemFlags3DMultisampleANGLE(const Context *context,
                                                   angle::EntryPoint entryPoint,
                                                   TextureType targetPacked,
@@ -213,7 +216,8 @@ bool ValidateTexStorageMemFlags3DMultisampleANGLE(const Context *context,
                                                   MemoryObjectID memoryPacked,
                                                   GLuint64 offset,
                                                   GLbitfield createFlags,
-                                                  GLbitfield usageFlags);
+                                                  GLbitfield usageFlags,
+                                                  const void *imageCreateInfoPNext);
 
 // GL_ANGLE_memory_object_fuchsia
 bool ValidateImportMemoryZirconHandleANGLE(const Context *context,

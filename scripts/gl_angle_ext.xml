@@ -864,6 +864,7 @@
             <param><ptype>GLuint64</ptype> <name>offset</name></param>
             <param><ptype>GLbitfield</ptype> <name>createFlags</name></param>
             <param><ptype>GLbitfield</ptype> <name>usageFlags</name></param>
+            <param><ptype>const void *</ptype> <name>imageCreateInfoPNext</name></param>
         </command>
         <command>
             <proto>void <name>glTexStorageMemFlags2DMultisampleANGLE</name></proto>
@@ -877,6 +878,7 @@
             <param><ptype>GLuint64</ptype> <name>offset</name></param>
             <param><ptype>GLbitfield</ptype> <name>createFlags</name></param>
             <param><ptype>GLbitfield</ptype> <name>usageFlags</name></param>
+            <param><ptype>const void *</ptype> <name>imageCreateInfoPNext</name></param>
         </command>
         <command>
             <proto>void <name>glTexStorageMemFlags3DANGLE</name></proto>
@@ -890,6 +892,7 @@
             <param><ptype>GLuint64</ptype> <name>offset</name></param>
             <param><ptype>GLbitfield</ptype> <name>createFlags</name></param>
             <param><ptype>GLbitfield</ptype> <name>usageFlags</name></param>
+            <param><ptype>const void *</ptype> <name>imageCreateInfoPNext</name></param>
         </command>
         <command>
             <proto>void <name>glTexStorageMemFlags3DMultisampleANGLE</name></proto>
@@ -904,6 +907,7 @@
             <param><ptype>GLuint64</ptype> <name>offset</name></param>
             <param><ptype>GLbitfield</ptype> <name>createFlags</name></param>
             <param><ptype>GLbitfield</ptype> <name>usageFlags</name></param>
+            <param><ptype>const void *</ptype> <name>imageCreateInfoPNext</name></param>
         </command>
         <command>
             <proto>void <name>glImportMemoryZirconHandleANGLE</name></proto>

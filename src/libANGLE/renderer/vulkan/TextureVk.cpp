@@ -1305,7 +1305,8 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
                                                   gl::MemoryObject *memoryObject,
                                                   GLuint64 offset,
                                                   GLbitfield createFlags,
-                                                  GLbitfield usageFlags)
+                                                  GLbitfield usageFlags,
+                                                  const void *imageCreateInfoPNext)
 {
     ContextVk *contextVk           = vk::GetImpl(context);
     RendererVk *renderer           = contextVk->getRenderer();
@@ -1318,7 +1319,7 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
     setImageHelper(contextVk, new vk::ImageHelper(), mState.getType(), format, 0, 0, true);
 
     ANGLE_TRY(memoryObjectVk->createImage(contextVk, type, levels, internalFormat, size, offset,
-                                          mImage, createFlags, usageFlags));
+                                          mImage, createFlags, usageFlags, imageCreateInfoPNext));
     mImageUsageFlags  = usageFlags;
     mImageCreateFlags = createFlags;
 
@@ -2949,13 +2950,11 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         mImageCreateFlags |= VK_IMAGE_CREATE_PROTECTED_BIT;
     }
 
-    bool imageFormatListEnabled = false;
-    ANGLE_TRY(mImage->initExternal(contextVk, mState.getType(), vkExtent, intendedImageFormatID,
-                                   actualImageFormatID, samples, mImageUsageFlags,
-                                   mImageCreateFlags, vk::ImageLayout::Undefined, nullptr,
-                                   gl::LevelIndex(firstLevel), levelCount, layerCount,
-                                   contextVk->isRobustResourceInitEnabled(),
-                                   &imageFormatListEnabled, mState.hasProtectedContent()));
+    ANGLE_TRY(mImage->initExternal(
+        contextVk, mState.getType(), vkExtent, intendedImageFormatID, actualImageFormatID, samples,
+        mImageUsageFlags, mImageCreateFlags, vk::ImageLayout::Undefined, nullptr,
+        gl::LevelIndex(firstLevel), levelCount, layerCount,
+        contextVk->isRobustResourceInitEnabled(), mState.hasProtectedContent()));
 
     mRequiresMutableStorage = (mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0;
 

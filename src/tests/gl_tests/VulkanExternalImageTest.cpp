@@ -98,13 +98,15 @@ struct OpaqueFdTraits
                                   VkFormat format,
                                   VkImageCreateFlags createFlags,
                                   VkImageUsageFlags usageFlags,
+                                  const void *imageCreateInfoPNext,
                                   VkExtent3D extent,
                                   VkImage *imageOut,
                                   VkDeviceMemory *deviceMemoryOut,
                                   VkDeviceSize *deviceMemorySizeOut)
     {
-        return helper->createImage2DOpaqueFd(format, createFlags, usageFlags, extent, imageOut,
-                                             deviceMemoryOut, deviceMemorySizeOut);
+        return helper->createImage2DOpaqueFd(format, createFlags, usageFlags, imageCreateInfoPNext,
+                                             extent, imageOut, deviceMemoryOut,
+                                             deviceMemorySizeOut);
     }
 
     static VkResult ExportMemory(VulkanExternalHelper *helper,
@@ -165,13 +167,15 @@ struct FuchsiaTraits
                                   VkFormat format,
                                   VkImageCreateFlags createFlags,
                                   VkImageUsageFlags usageFlags,
+                                  const void *imageCreateInfoPNext,
                                   VkExtent3D extent,
                                   VkImage *imageOut,
                                   VkDeviceMemory *deviceMemoryOut,
                                   VkDeviceSize *deviceMemorySizeOut)
     {
-        return helper->createImage2DZirconVmo(format, createFlags, usageFlags, extent, imageOut,
-                                              deviceMemoryOut, deviceMemorySizeOut);
+        return helper->createImage2DZirconVmo(format, createFlags, usageFlags, imageCreateInfoPNext,
+                                              extent, imageOut, deviceMemoryOut,
+                                              deviceMemorySizeOut);
     }
 
     static VkResult ExportMemory(VulkanExternalHelper *helper,
@@ -230,8 +234,8 @@ void RunShouldImportMemoryTest(VkImageCreateFlags createFlags,
     VkDeviceSize deviceMemorySize = 0;
 
     VkExtent3D extent = {1, 1, 1};
-    VkResult result   = Traits::CreateImage2D(&helper, format, createFlags, usageFlags, extent,
-                                            &image, &deviceMemory, &deviceMemorySize);
+    VkResult result   = Traits::CreateImage2D(&helper, format, createFlags, usageFlags, nullptr,
+                                            extent, &image, &deviceMemory, &deviceMemorySize);
     EXPECT_EQ(result, VK_SUCCESS);
 
     typename Traits::Handle memoryHandle = Traits::InvalidHandle();
@@ -340,8 +344,8 @@ void RunShouldClearTest(bool useMemoryObjectFlags,
     VkDeviceSize deviceMemorySize = 0;
 
     VkExtent3D extent = {1, 1, 1};
-    VkResult result   = Traits::CreateImage2D(&helper, format, createFlags, usageFlags, extent,
-                                            &image, &deviceMemory, &deviceMemorySize);
+    VkResult result   = Traits::CreateImage2D(&helper, format, createFlags, usageFlags, nullptr,
+                                            extent, &image, &deviceMemory, &deviceMemorySize);
     EXPECT_EQ(result, VK_SUCCESS);
 
     typename Traits::Handle memoryHandle = Traits::InvalidHandle();
@@ -361,7 +365,7 @@ void RunShouldClearTest(bool useMemoryObjectFlags,
         if (useMemoryObjectFlags)
         {
             glTexStorageMemFlags2DANGLE(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1, memoryObject, 0,
-                                        createFlags, usageFlags);
+                                        createFlags, usageFlags, nullptr);
         }
         else
         {
@@ -502,8 +506,9 @@ void RunTextureFormatCompatChromiumTest(bool useMemoryObjectFlags,
         VkDeviceSize deviceMemorySize = 0;
 
         VkExtent3D extent = {113, 211, 1};
-        VkResult result   = Traits::CreateImage2D(&helper, format.vkFormat, createFlags, usageFlags,
-                                                extent, &image, &deviceMemory, &deviceMemorySize);
+        VkResult result =
+            Traits::CreateImage2D(&helper, format.vkFormat, createFlags, usageFlags, nullptr,
+                                  extent, &image, &deviceMemory, &deviceMemorySize);
         EXPECT_EQ(result, VK_SUCCESS);
 
         typename Traits::Handle memoryHandle = Traits::InvalidHandle();
@@ -523,8 +528,8 @@ void RunTextureFormatCompatChromiumTest(bool useMemoryObjectFlags,
             if (useMemoryObjectFlags)
             {
                 glTexStorageMemFlags2DANGLE(GL_TEXTURE_2D, 1, format.internalFormat, extent.width,
-                                            extent.height, memoryObject, 0, createFlags,
-                                            usageFlags);
+                                            extent.height, memoryObject, 0, createFlags, usageFlags,
+                                            nullptr);
             }
             else
             {
@@ -670,8 +675,8 @@ void RunShouldClearWithSemaphoresTest(bool useMemoryObjectFlags,
     VkDeviceSize deviceMemorySize = 0;
 
     VkExtent3D extent = {1, 1, 1};
-    result = Traits::CreateImage2D(&helper, format, createFlags, usageFlags, extent, &image,
-                                   &deviceMemory, &deviceMemorySize);
+    result = Traits::CreateImage2D(&helper, format, createFlags, usageFlags, nullptr, extent,
+                                   &image, &deviceMemory, &deviceMemorySize);
     EXPECT_EQ(result, VK_SUCCESS);
 
     typename Traits::Handle memoryHandle = Traits::InvalidHandle();
@@ -691,7 +696,7 @@ void RunShouldClearWithSemaphoresTest(bool useMemoryObjectFlags,
         if (useMemoryObjectFlags)
         {
             glTexStorageMemFlags2DANGLE(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1, memoryObject, 0,
-                                        createFlags, usageFlags);
+                                        createFlags, usageFlags, nullptr);
         }
         else
         {
@@ -910,7 +915,7 @@ void VulkanExternalImageTest::runShouldDrawTest(bool isSwiftshader, bool enableD
     VkExtent3D extent = {1, 1, 1};
     result =
         Traits::CreateImage2D(&helper, format, kDefaultImageCreateFlags, kDefaultImageUsageFlags,
-                              extent, &image, &deviceMemory, &deviceMemorySize);
+                              nullptr, extent, &image, &deviceMemory, &deviceMemorySize);
     EXPECT_EQ(result, VK_SUCCESS);
 
     typename Traits::Handle memoryHandle = Traits::InvalidHandle();
@@ -1061,7 +1066,7 @@ void VulkanExternalImageTest::runWaitSemaphoresRetainsContentTest(bool isSwiftsh
     VkExtent3D extent = {1, 1, 1};
     result =
         Traits::CreateImage2D(&helper, format, kDefaultImageCreateFlags, kDefaultImageUsageFlags,
-                              extent, &image, &deviceMemory, &deviceMemorySize);
+                              nullptr, extent, &image, &deviceMemory, &deviceMemorySize);
     EXPECT_EQ(result, VK_SUCCESS);
 
     typename Traits::Handle memoryHandle = Traits::InvalidHandle();

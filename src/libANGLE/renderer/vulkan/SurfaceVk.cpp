@@ -146,7 +146,7 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
     ANGLE_TRY(imageHelper->initExternal(
         displayVk, gl::TextureType::_2D, extents, vkFormat.getIntendedFormatID(),
         renderableFormatId, samples, usage, imageCreateFlags, vk::ImageLayout::Undefined, nullptr,
-        gl::LevelIndex(0), 1, 1, isRobustResourceInitEnabled, nullptr, hasProtectedContent));
+        gl::LevelIndex(0), 1, 1, isRobustResourceInitEnabled, hasProtectedContent));
 
     return angle::Result::Continue;
 }

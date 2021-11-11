@@ -44,7 +44,8 @@ class MemoryObjectVk : public MemoryObjectImpl
                               GLuint64 offset,
                               vk::ImageHelper *image,
                               GLbitfield createFlags,
-                              GLbitfield usageFlags);
+                              GLbitfield usageFlags,
+                              const void *imageCreateInfoPNext);
 
   private:
     static constexpr int kInvalidFd = -1;

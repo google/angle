@@ -182,7 +182,8 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                                    gl::MemoryObject *memoryObject,
                                                    GLuint64 offset,
                                                    GLbitfield createFlags,
-                                                   GLbitfield usageFlags) = 0;
+                                                   GLbitfield usageFlags,
+                                                   const void *imageCreateInfoPNext) = 0;
 
     virtual angle::Result setImageExternal(const gl::Context *context,
                                            const gl::ImageIndex &index,

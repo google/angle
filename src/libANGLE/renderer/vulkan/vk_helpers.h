@@ -1505,7 +1505,6 @@ class ImageHelper final : public Resource, public angle::Subject
                                uint32_t mipLevels,
                                uint32_t layerCount,
                                bool isRobustResourceInitEnabled,
-                               bool *imageFormatListEnabledOut,
                                bool hasProtectedContent);
     angle::Result initMemory(Context *context,
                              bool hasProtectedContent,
@@ -1595,6 +1594,21 @@ class ImageHelper final : public Resource, public angle::Subject
                                                           GLint samples,
                                                           const ImageHelper &resolveImage,
                                                           bool isRobustResourceInitEnabled);
+
+    // Helper for initExternal and users to automatically derive the appropriate VkImageCreateInfo
+    // pNext chain based on the given parameters, and adjust create flags.  In some cases, these
+    // shouldn't be automatically derived, for example when importing images through
+    // EXT_external_objects and ANGLE_external_objects_flags.
+    static constexpr uint32_t kImageListFormatCount = 2;
+    using ImageListFormats                          = std::array<VkFormat, kImageListFormatCount>;
+    static const void *DeriveCreateInfoPNext(
+        Context *context,
+        angle::FormatID actualFormatID,
+        const void *pNext,
+        VkImageFormatListCreateInfoKHR *imageFormatListInfoStorage,
+        ImageListFormats *imageListFormatsStorage,
+        VkImageCreateFlags *createFlagsOut);
+
     // Release the underlining VkImage object for garbage collection.
     void releaseImage(RendererVk *renderer);
     // Similar to releaseImage, but also notify all contexts in the same share group to stop

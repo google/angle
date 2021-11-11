@@ -2897,10 +2897,11 @@ void GL_APIENTRY glTexStorageMemFlags2DANGLE(GLenum target,
                                              GLuint memory,
                                              GLuint64 offset,
                                              GLbitfield createFlags,
-                                             GLbitfield usageFlags)
+                                             GLbitfield usageFlags,
+                                             const void *imageCreateInfoPNext)
 {
     return GL_TexStorageMemFlags2DANGLE(target, levels, internalFormat, width, height, memory,
-                                        offset, createFlags, usageFlags);
+                                        offset, createFlags, usageFlags, imageCreateInfoPNext);
 }
 
 void GL_APIENTRY glTexStorageMemFlags2DMultisampleANGLE(GLenum target,
@@ -2912,11 +2913,12 @@ void GL_APIENTRY glTexStorageMemFlags2DMultisampleANGLE(GLenum target,
                                                         GLuint memory,
                                                         GLuint64 offset,
                                                         GLbitfield createFlags,
-                                                        GLbitfield usageFlags)
+                                                        GLbitfield usageFlags,
+                                                        const void *imageCreateInfoPNext)
 {
     return GL_TexStorageMemFlags2DMultisampleANGLE(target, samples, internalFormat, width, height,
                                                    fixedSampleLocations, memory, offset,
-                                                   createFlags, usageFlags);
+                                                   createFlags, usageFlags, imageCreateInfoPNext);
 }
 
 void GL_APIENTRY glTexStorageMemFlags3DANGLE(GLenum target,
@@ -2928,10 +2930,12 @@ void GL_APIENTRY glTexStorageMemFlags3DANGLE(GLenum target,
                                              GLuint memory,
                                              GLuint64 offset,
                                              GLbitfield createFlags,
-                                             GLbitfield usageFlags)
+                                             GLbitfield usageFlags,
+                                             const void *imageCreateInfoPNext)
 {
     return GL_TexStorageMemFlags3DANGLE(target, levels, internalFormat, width, height, depth,
-                                        memory, offset, createFlags, usageFlags);
+                                        memory, offset, createFlags, usageFlags,
+                                        imageCreateInfoPNext);
 }
 
 void GL_APIENTRY glTexStorageMemFlags3DMultisampleANGLE(GLenum target,
@@ -2944,11 +2948,12 @@ void GL_APIENTRY glTexStorageMemFlags3DMultisampleANGLE(GLenum target,
                                                         GLuint memory,
                                                         GLuint64 offset,
                                                         GLbitfield createFlags,
-                                                        GLbitfield usageFlags)
+                                                        GLbitfield usageFlags,
+                                                        const void *imageCreateInfoPNext)
 {
     return GL_TexStorageMemFlags3DMultisampleANGLE(target, samples, internalFormat, width, height,
                                                    depth, fixedSampleLocations, memory, offset,
-                                                   createFlags, usageFlags);
+                                                   createFlags, usageFlags, imageCreateInfoPNext);
 }
 
 // GL_ANGLE_memory_object_fuchsia
