@@ -404,7 +404,6 @@ luci.console_view(
     name = "ci",
     title = "ANGLE CI Builders",
     repo = "https://chromium.googlesource.com/angle/angle",
-    refs = ["refs/heads/master"],
 )
 
 luci.list_view(
