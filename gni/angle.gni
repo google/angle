@@ -216,6 +216,9 @@ declare_args() {
       "$angle_root/third_party/vulkan-deps/vulkan-tools/src"
   angle_vulkan_validation_layers_dir =
       "$angle_root/third_party/vulkan-deps/vulkan-validation-layers/src"
+
+  angle_build_vulkan_system_info =
+      !is_chromeos && angle_has_build && !angle_is_winuwp
 }
 
 declare_args() {
