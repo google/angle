@@ -36,7 +36,7 @@ angle::Result WaitForIdle(ContextVk *contextVk, const char *debugMessage, T *res
     {
         if (debugMessage)
         {
-            ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH, debugMessage);
+            ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_HIGH, "%s", debugMessage);
         }
         ANGLE_TRY(resource->finishRunningCommands(contextVk));
     }

@@ -418,8 +418,8 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
     }
     else
     {
-        ANGLE_PERF_WARNING(
-            contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+        ANGLE_VK_PERF_WARNING(
+            contextVk, GL_DEBUG_SEVERITY_LOW,
             "InvalidateSubFramebuffer ignored due to area not covering the render area");
     }
 
@@ -559,8 +559,8 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         // changed, inline the clear.
         if (isMidRenderPassClear)
         {
-            ANGLE_PERF_WARNING(
-                contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+            ANGLE_VK_PERF_WARNING(
+                contextVk, GL_DEBUG_SEVERITY_LOW,
                 "Clear effectively discarding previous draw call results. Suggest earlier Clear "
                 "followed by masked color or depth/stencil draw calls instead");
 
@@ -1305,9 +1305,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             // If shader stencil export is not present, blit stencil through a different path.
             if (blitStencilBuffer && !hasShaderStencilExport)
             {
-                ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
-                                   "Inefficient BlitFramebuffer operation on the stencil aspect "
-                                   "due to lack of shader stencil export support");
+                ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_LOW,
+                                      "Inefficient BlitFramebuffer operation on the stencil aspect "
+                                      "due to lack of shader stencil export support");
                 ANGLE_TRY(utilsVk.stencilBlitResolveNoShaderExport(
                     contextVk, this, depthStencilImage, &stencilView.get(), params));
             }

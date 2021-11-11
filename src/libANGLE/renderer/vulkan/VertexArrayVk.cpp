@@ -49,30 +49,21 @@ ANGLE_INLINE bool BindingIsAligned(const gl::VertexBinding &binding,
     }
 }
 
-angle::Result WarnOnVertexFormatConversion(ContextVk *contextVk,
-                                           const vk::Format &vertexFormat,
-                                           bool compressed,
-                                           bool insertEventMarker)
+void WarnOnVertexFormatConversion(ContextVk *contextVk,
+                                  const vk::Format &vertexFormat,
+                                  bool compressed,
+                                  bool insertEventMarker)
 {
     if (!vertexFormat.getVertexLoadRequiresConversion(compressed))
     {
-        return angle::Result::Continue;
+        return;
     }
 
-    char stringBuffer[100];
-    snprintf(
-        stringBuffer, sizeof(stringBuffer),
+    ANGLE_VK_PERF_WARNING(
+        contextVk, GL_DEBUG_SEVERITY_LOW,
         "The Vulkan driver does not support vertex attribute format 0x%04X, emulating with 0x%04X",
         vertexFormat.getIntendedFormat().glInternalFormat,
         vertexFormat.getActualBufferFormat(compressed).glInternalFormat);
-    ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW, stringBuffer);
-
-    if (insertEventMarker)
-    {
-        ANGLE_TRY(contextVk->insertEventMarker(0, stringBuffer));
-    }
-
-    return angle::Result::Continue;
 }
 
 angle::Result StreamVertexData(ContextVk *contextVk,
@@ -632,7 +623,7 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
             {
                 mContentsObservers->enableForBuffer(bufferGL, static_cast<uint32_t>(attribIndex));
 
-                ANGLE_TRY(WarnOnVertexFormatConversion(contextVk, vertexFormat, compressed, true));
+                WarnOnVertexFormatConversion(contextVk, vertexFormat, compressed, true);
 
                 ConversionBuffer *conversion = bufferVk->getVertexConversionBuffer(
                     renderer, intendedFormat.id, binding.getStride(),
@@ -656,8 +647,8 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                     }
                     else
                     {
-                        ANGLE_PERF_WARNING(
-                            contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
+                        ANGLE_VK_PERF_WARNING(
+                            contextVk, GL_DEBUG_SEVERITY_HIGH,
                             "GPU stall due to vertex format conversion of unaligned data");
 
                         ANGLE_TRY(convertVertexBufferCPU(contextVk, bufferVk, binding, attribIndex,
@@ -806,7 +797,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
         GLuint stride                  = vertexFormat.getActualBufferFormat(false).pixelBytes;
 
         bool compressed = false;
-        ANGLE_TRY(WarnOnVertexFormatConversion(contextVk, vertexFormat, compressed, false));
+        WarnOnVertexFormatConversion(contextVk, vertexFormat, compressed, false);
 
         ASSERT(vertexFormat.getVertexInputAlignment(false) <= vk::kVertexBufferAlignment);
 

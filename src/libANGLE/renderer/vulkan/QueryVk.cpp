@@ -544,8 +544,8 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
             {
                 return angle::Result::Continue;
             }
-            ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
-                               "GPU stall due to waiting on uncompleted query");
+            ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_HIGH,
+                                  "GPU stall due to waiting on uncompleted query");
 
             // Assert that the work has been sent to the GPU
             ASSERT(!isUsedInRecordedCommands());

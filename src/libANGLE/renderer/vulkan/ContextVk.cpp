@@ -926,9 +926,9 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
         }
         if (shouldConvertUint8VkIndexType(indexType) && mGraphicsDirtyBits[DIRTY_BIT_INDEX_BUFFER])
         {
-            ANGLE_PERF_WARNING(getDebug(), GL_DEBUG_SEVERITY_LOW,
-                               "Potential inefficiency emulating uint8 vertex attributes due to "
-                               "lack of hardware support");
+            ANGLE_VK_PERF_WARNING(this, GL_DEBUG_SEVERITY_LOW,
+                                  "Potential inefficiency emulating uint8 vertex attributes due to "
+                                  "lack of hardware support");
 
             BufferVk *bufferVk             = vk::GetImpl(elementArrayBuffer);
             VkDeviceSize bufferOffset      = 0;
@@ -2807,9 +2807,10 @@ angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
 
     if (shouldConvertUint8VkIndexType(type) && mGraphicsDirtyBits[DIRTY_BIT_INDEX_BUFFER])
     {
-        ANGLE_PERF_WARNING(getDebug(), GL_DEBUG_SEVERITY_LOW,
-                           "Potential inefficiency emulating uint8 vertex attributes due to lack "
-                           "of hardware support");
+        ANGLE_VK_PERF_WARNING(
+            this, GL_DEBUG_SEVERITY_LOW,
+            "Potential inefficiency emulating uint8 vertex attributes due to lack "
+            "of hardware support");
 
         vk::BufferHelper *dstIndirectBuf;
         VkDeviceSize dstIndirectBufOffset;
@@ -2969,9 +2970,15 @@ gl::GraphicsResetStatus ContextVk::getResetStatus()
 
 angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 {
+    insertEventMarkerImpl(marker);
+    return angle::Result::Continue;
+}
+
+void ContextVk::insertEventMarkerImpl(const char *marker)
+{
     if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
     {
-        return angle::Result::Continue;
+        return;
     }
 
     VkDebugUtilsLabelEXT label;
@@ -2981,8 +2988,6 @@ angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
                                            ? mRenderPassCommandBuffer
                                            : &mOutsideRenderPassCommands->getCommandBuffer();
     commandBuffer->insertDebugUtilsLabelEXT(label);
-
-    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
@@ -5104,13 +5109,11 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
 
         if (textureVk->getImage().hasEmulatedImageFormat())
         {
-            char stringBuffer[100];
-            snprintf(
-                stringBuffer, sizeof(stringBuffer),
+            ANGLE_VK_PERF_WARNING(
+                this, GL_DEBUG_SEVERITY_LOW,
                 "The Vulkan driver does not support texture format 0x%04X, emulating with 0x%04X",
                 textureVk->getImage().getIntendedFormat().glInternalFormat,
                 textureVk->getImage().getActualFormat().glInternalFormat);
-            ANGLE_PERF_WARNING(getDebug(), GL_DEBUG_SEVERITY_LOW, stringBuffer);
         }
 
         vk::ImageOrBufferViewSubresourceSerial imageViewSerial =
