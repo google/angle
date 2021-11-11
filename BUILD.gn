@@ -6,6 +6,7 @@
 import("gni/angle.gni")
 if (angle_has_build) {
   import("//build/config/linux/pkg_config.gni")
+  import("//build/config/sanitizers/sanitizers.gni")
   import("//build/config/ui.gni")
   import("//testing/libfuzzer/fuzzer_test.gni")
 
@@ -397,6 +398,10 @@ angle_static_library("angle_common") {
 
   if (angle_expose_non_conformant_extensions_and_versions) {
     defines = [ "ANGLE_EXPOSE_NON_CONFORMANT_EXTENSIONS_AND_VERSIONS" ]
+  }
+
+  if (using_sanitizer && !build_with_chromium && angle_has_build) {
+    data_deps = [ "//build/config/clang:llvm-symbolizer_data($host_toolchain)" ]
   }
 }
 
