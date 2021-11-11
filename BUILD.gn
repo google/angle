@@ -450,11 +450,12 @@ angle_static_library("angle_gpu_info_util") {
   libs = []
   defines = []
 
-  if (!is_chromeos && angle_has_build) {
+  if (!is_chromeos && angle_has_build && !angle_is_winuwp) {
     sources += libangle_gpu_info_util_vulkan_sources
     deps += [
-      "$angle_root/src/common/vulkan:angle_libvulkan_loader",
       "$angle_vulkan_headers_dir:vulkan_headers",
+      "src/common/vulkan:angle_libvulkan_loader",
+      "src/common/vulkan:angle_vulkan_icd",
     ]
     if (angle_enable_vulkan_system_info) {
       defines += [ "ANGLE_HAS_VULKAN_SYSTEM_INFO" ]

@@ -243,7 +243,8 @@ bool ScopedVkLoaderEnvironment::setCustomExtensionsEnvironment()
                                               strstr.str().c_str());
 }
 
-void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
+void ChoosePhysicalDevice(PFN_vkGetPhysicalDeviceProperties pGetPhysicalDeviceProperties,
+                          const std::vector<VkPhysicalDevice> &physicalDevices,
                           vk::ICD preferredICD,
                           VkPhysicalDevice *physicalDeviceOut,
                           VkPhysicalDeviceProperties *physicalDevicePropertiesOut)
@@ -254,7 +255,7 @@ void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
 
     for (const VkPhysicalDevice &physicalDevice : physicalDevices)
     {
-        vkGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
+        pGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
         if (filter(*physicalDevicePropertiesOut))
         {
             *physicalDeviceOut = physicalDevice;
@@ -266,7 +267,7 @@ void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
     VkPhysicalDeviceProperties integratedDeviceProperties;
     for (const VkPhysicalDevice &physicalDevice : physicalDevices)
     {
-        vkGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
+        pGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
         // If discrete GPU exists, uses it by default.
         if (physicalDevicePropertiesOut->deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
         {
@@ -293,7 +294,7 @@ void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
     WARN() << "Preferred device ICD not found. Using default physicalDevice instead.";
     // Fallback to the first device.
     *physicalDeviceOut = physicalDevices[0];
-    vkGetPhysicalDeviceProperties(*physicalDeviceOut, physicalDevicePropertiesOut);
+    pGetPhysicalDeviceProperties(*physicalDeviceOut, physicalDevicePropertiesOut);
 }
 
 }  // namespace vk
