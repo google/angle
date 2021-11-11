@@ -176,8 +176,7 @@
 6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/* = SKIP
 6447 MAC METAL : FramebufferTest_ES3.RenderSampleDepthTextureWithExcludedLevel/* = SKIP
 
-// Passes in MacOS 12 but still fails in MacOS 11.x
-5325 MAC METAL : GLSLTest_ES3.GLVertexIDIntegerTextureDrawArrays/* = SKIP
+6688 MAC METAL : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElements/* = SKIP
 
 5087 MAC METAL INTEL : MultisampleTest.AlphaToSampleCoverage/* = SKIP
 5087 MAC METAL AMD : MultisampleTest.AlphaToSampleCoverage/* = SKIP
