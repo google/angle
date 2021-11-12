@@ -191,7 +191,7 @@ class BufferVk : public BufferImpl
     angle::Result handleDeviceLocalBufferMap(ContextVk *contextVk,
                                              VkDeviceSize offset,
                                              VkDeviceSize size,
-                                             void **mapPtr);
+                                             uint8_t **mapPtr);
     angle::Result handleDeviceLocalBufferUnmap(ContextVk *contextVk,
                                                VkDeviceSize offset,
                                                VkDeviceSize size);
