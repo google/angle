@@ -243,8 +243,7 @@ bool ScopedVkLoaderEnvironment::setCustomExtensionsEnvironment()
                                               strstr.str().c_str());
 }
 
-void ChoosePhysicalDevice(PFN_vkGetPhysicalDeviceProperties pGetPhysicalDeviceProperties,
-                          const std::vector<VkPhysicalDevice> &physicalDevices,
+void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
                           vk::ICD preferredICD,
                           VkPhysicalDevice *physicalDeviceOut,
                           VkPhysicalDeviceProperties *physicalDevicePropertiesOut)
@@ -255,7 +254,7 @@ void ChoosePhysicalDevice(PFN_vkGetPhysicalDeviceProperties pGetPhysicalDevicePr
 
     for (const VkPhysicalDevice &physicalDevice : physicalDevices)
     {
-        pGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
+        vkGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
         if (filter(*physicalDevicePropertiesOut))
         {
             *physicalDeviceOut = physicalDevice;
@@ -267,7 +266,7 @@ void ChoosePhysicalDevice(PFN_vkGetPhysicalDeviceProperties pGetPhysicalDevicePr
     VkPhysicalDeviceProperties integratedDeviceProperties;
     for (const VkPhysicalDevice &physicalDevice : physicalDevices)
     {
-        pGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
+        vkGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
         // If discrete GPU exists, uses it by default.
         if (physicalDevicePropertiesOut->deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
         {
@@ -294,7 +293,7 @@ void ChoosePhysicalDevice(PFN_vkGetPhysicalDeviceProperties pGetPhysicalDevicePr
     WARN() << "Preferred device ICD not found. Using default physicalDevice instead.";
     // Fallback to the first device.
     *physicalDeviceOut = physicalDevices[0];
-    pGetPhysicalDeviceProperties(*physicalDeviceOut, physicalDevicePropertiesOut);
+    vkGetPhysicalDeviceProperties(*physicalDeviceOut, physicalDevicePropertiesOut);
 }
 
 }  // namespace vk

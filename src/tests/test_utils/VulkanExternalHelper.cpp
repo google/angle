@@ -256,8 +256,7 @@ void VulkanExternalHelper::initialize(bool useSwiftshader, bool enableValidation
     ASSERT(physicalDevices.size() > 0);
 
     VkPhysicalDeviceProperties physicalDeviceProperties;
-    ChoosePhysicalDevice(vkGetPhysicalDeviceProperties, physicalDevices, icd, &mPhysicalDevice,
-                         &physicalDeviceProperties);
+    ChoosePhysicalDevice(physicalDevices, icd, &mPhysicalDevice, &physicalDeviceProperties);
 
     vkGetPhysicalDeviceMemoryProperties(mPhysicalDevice, &mMemoryProperties);
 

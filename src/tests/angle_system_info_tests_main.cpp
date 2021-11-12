@@ -32,15 +32,13 @@
 
 #include "gpu_info_util/SystemInfo.h"
 
+#include <cstdlib>
+
 #include <gtest/gtest.h>
+
 #include <rapidjson/document.h>
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
-#include <cstdlib>
-
-#if defined(ANGLE_ENABLE_VULKAN)
-#    include "gpu_info_util/SystemInfo_vulkan.h"
-#endif  // defined(ANGLE_ENABLE_VULKAN)
 
 namespace js = rapidjson;
 
