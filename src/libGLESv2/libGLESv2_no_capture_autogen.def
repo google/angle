@@ -738,6 +738,10 @@ EXPORTS
     ; GL_EXT_memory_object_fd
     glImportMemoryFdEXT
 
+    ; GL_EXT_multi_draw_indirect
+    glMultiDrawArraysIndirectEXT
+    glMultiDrawElementsIndirectEXT
+
     ; GL_EXT_multisampled_render_to_texture
     glFramebufferTexture2DMultisampleEXT
     glRenderbufferStorageMultisampleEXT

@@ -141,6 +141,11 @@
     /* GL_EXT_memory_object_fd */                                                                  \
     void importMemoryFd(MemoryObjectID memoryPacked, GLuint64 size, HandleType handleTypePacked,   \
                         GLint fd);                                                                 \
+    /* GL_EXT_multi_draw_indirect */                                                               \
+    void multiDrawArraysIndirect(GLenum mode, const void *indirect, GLsizei drawcount,             \
+                                 GLsizei stride);                                                  \
+    void multiDrawElementsIndirect(GLenum mode, GLenum type, const void *indirect,                 \
+                                   GLsizei drawcount, GLsizei stride);                             \
     /* GL_EXT_multisample_compatibility */                                                         \
     /* GL_EXT_multisampled_render_to_texture */                                                    \
     void framebufferTexture2DMultisample(GLenum target, GLenum attachment,                         \

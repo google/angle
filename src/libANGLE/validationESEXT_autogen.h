@@ -1277,6 +1277,21 @@ bool ValidateImportMemoryFdEXT(const Context *context,
                                HandleType handleTypePacked,
                                GLint fd);
 
+// GL_EXT_multi_draw_indirect
+bool ValidateMultiDrawArraysIndirectEXT(const Context *context,
+                                        angle::EntryPoint entryPoint,
+                                        GLenum mode,
+                                        const void *indirect,
+                                        GLsizei drawcount,
+                                        GLsizei stride);
+bool ValidateMultiDrawElementsIndirectEXT(const Context *context,
+                                          angle::EntryPoint entryPoint,
+                                          GLenum mode,
+                                          GLenum type,
+                                          const void *indirect,
+                                          GLsizei drawcount,
+                                          GLsizei stride);
+
 // GL_EXT_multisampled_render_to_texture
 bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
                                                 angle::EntryPoint entryPoint,

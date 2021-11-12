@@ -88,6 +88,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_EXT_map_buffer_range](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_map_buffer_range.txt) | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; |
 | [GL_EXT_memory_object](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_memory_object.txt) | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; |
 | [GL_EXT_memory_object_fd](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_external_objects_fd.txt) | &#10060; | &#10060; | &#10004; | &#10004; | &#10060; | &#10004; |
+| [GL_EXT_multi_draw_indirect](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_multi_draw_indirect.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; |
 | [GL_EXT_multisample_compatibility](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_multisample_compatibility.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; |
 | [GL_EXT_multisampled_render_to_texture](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_multisampled_render_to_texture.txt) | &#10004; | &#10060; | &#10004; | &#10004; | &#10004; | &#10004; |
 | [GL_EXT_multisampled_render_to_texture2](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_multisampled_render_to_texture2.txt) | &#10004; | &#10060; | &#10004; | &#10004; | &#10004; | &#10004; |

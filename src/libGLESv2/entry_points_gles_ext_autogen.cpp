@@ -5683,6 +5683,72 @@ void GL_APIENTRY GL_ImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handl
     }
 }
 
+// GL_EXT_multi_draw_indirect
+void GL_APIENTRY GL_MultiDrawArraysIndirectEXT(GLenum mode,
+                                               const void *indirect,
+                                               GLsizei drawcount,
+                                               GLsizei stride)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLMultiDrawArraysIndirectEXT,
+          "context = %d, mode = %s, indirect = 0x%016" PRIxPTR ", drawcount = %d, stride = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)indirect,
+          drawcount, stride);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateMultiDrawArraysIndirectEXT(
+                                context, angle::EntryPoint::GLMultiDrawArraysIndirectEXT, mode,
+                                indirect, drawcount, stride));
+        if (isCallValid)
+        {
+            context->multiDrawArraysIndirect(mode, indirect, drawcount, stride);
+        }
+        ANGLE_CAPTURE(MultiDrawArraysIndirectEXT, isCallValid, context, mode, indirect, drawcount,
+                      stride);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+void GL_APIENTRY GL_MultiDrawElementsIndirectEXT(GLenum mode,
+                                                 GLenum type,
+                                                 const void *indirect,
+                                                 GLsizei drawcount,
+                                                 GLsizei stride)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLMultiDrawElementsIndirectEXT,
+          "context = %d, mode = %s, type = %s, indirect = 0x%016" PRIxPTR
+          ", drawcount = %d, stride = %d",
+          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode),
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indirect, drawcount,
+          stride);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateMultiDrawElementsIndirectEXT(
+                                context, angle::EntryPoint::GLMultiDrawElementsIndirectEXT, mode,
+                                type, indirect, drawcount, stride));
+        if (isCallValid)
+        {
+            context->multiDrawElementsIndirect(mode, type, indirect, drawcount, stride);
+        }
+        ANGLE_CAPTURE(MultiDrawElementsIndirectEXT, isCallValid, context, mode, type, indirect,
+                      drawcount, stride);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_EXT_multisampled_render_to_texture
 void GL_APIENTRY GL_FramebufferTexture2DMultisampleEXT(GLenum target,
                                                        GLenum attachment,

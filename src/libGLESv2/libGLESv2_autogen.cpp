@@ -4242,6 +4242,24 @@ void GL_APIENTRY glImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handle
     return GL_ImportMemoryFdEXT(memory, size, handleType, fd);
 }
 
+// GL_EXT_multi_draw_indirect
+void GL_APIENTRY glMultiDrawArraysIndirectEXT(GLenum mode,
+                                              const void *indirect,
+                                              GLsizei drawcount,
+                                              GLsizei stride)
+{
+    return GL_MultiDrawArraysIndirectEXT(mode, indirect, drawcount, stride);
+}
+
+void GL_APIENTRY glMultiDrawElementsIndirectEXT(GLenum mode,
+                                                GLenum type,
+                                                const void *indirect,
+                                                GLsizei drawcount,
+                                                GLsizei stride)
+{
+    return GL_MultiDrawElementsIndirectEXT(mode, type, indirect, drawcount, stride);
+}
+
 // GL_EXT_multisampled_render_to_texture
 void GL_APIENTRY glFramebufferTexture2DMultisampleEXT(GLenum target,
                                                       GLenum attachment,

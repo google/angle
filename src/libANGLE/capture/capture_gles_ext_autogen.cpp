@@ -6092,6 +6092,74 @@ CallCapture CaptureImportMemoryFdEXT(const State &glState,
     return CallCapture(angle::EntryPoint::GLImportMemoryFdEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureMultiDrawArraysIndirectEXT(const State &glState,
+                                              bool isCallValid,
+                                              GLenum mode,
+                                              const void *indirect,
+                                              GLsizei drawcount,
+                                              GLsizei stride)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("mode", GLenumGroup::PrimitiveType, ParamType::TGLenum, mode);
+
+    if (isCallValid)
+    {
+        ParamCapture indirectParam("indirect", ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, indirect, &indirectParam.value);
+        CaptureMultiDrawArraysIndirectEXT_indirect(glState, isCallValid, mode, indirect, drawcount,
+                                                   stride, &indirectParam);
+        paramBuffer.addParam(std::move(indirectParam));
+    }
+    else
+    {
+        ParamCapture indirectParam("indirect", ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, static_cast<const void *>(nullptr),
+                       &indirectParam.value);
+        paramBuffer.addParam(std::move(indirectParam));
+    }
+
+    paramBuffer.addValueParam("drawcount", ParamType::TGLsizei, drawcount);
+    paramBuffer.addValueParam("stride", ParamType::TGLsizei, stride);
+
+    return CallCapture(angle::EntryPoint::GLMultiDrawArraysIndirectEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureMultiDrawElementsIndirectEXT(const State &glState,
+                                                bool isCallValid,
+                                                GLenum mode,
+                                                GLenum type,
+                                                const void *indirect,
+                                                GLsizei drawcount,
+                                                GLsizei stride)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("mode", GLenumGroup::PrimitiveType, ParamType::TGLenum, mode);
+    paramBuffer.addEnumParam("type", GLenumGroup::DrawElementsType, ParamType::TGLenum, type);
+
+    if (isCallValid)
+    {
+        ParamCapture indirectParam("indirect", ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, indirect, &indirectParam.value);
+        CaptureMultiDrawElementsIndirectEXT_indirect(glState, isCallValid, mode, type, indirect,
+                                                     drawcount, stride, &indirectParam);
+        paramBuffer.addParam(std::move(indirectParam));
+    }
+    else
+    {
+        ParamCapture indirectParam("indirect", ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, static_cast<const void *>(nullptr),
+                       &indirectParam.value);
+        paramBuffer.addParam(std::move(indirectParam));
+    }
+
+    paramBuffer.addValueParam("drawcount", ParamType::TGLsizei, drawcount);
+    paramBuffer.addValueParam("stride", ParamType::TGLsizei, stride);
+
+    return CallCapture(angle::EntryPoint::GLMultiDrawElementsIndirectEXT, std::move(paramBuffer));
+}
+
 CallCapture CaptureFramebufferTexture2DMultisampleEXT(const State &glState,
                                                       bool isCallValid,
                                                       GLenum target,

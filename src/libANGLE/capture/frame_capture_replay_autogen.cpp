@@ -1955,6 +1955,14 @@ void FrameCaptureShared::ReplayCall(gl::Context *context,
                     params.getParam("count", ParamType::TGLsizeiConstPointer, 2)),
                 params.getParam("drawcount", ParamType::TGLsizei, 3).value.GLsizeiVal);
             break;
+        case angle::EntryPoint::GLMultiDrawArraysIndirect:
+            context->multiDrawArraysIndirect(
+                params.getParam("mode", ParamType::TGLenum, 0).value.GLenumVal,
+                replayContext->getAsConstPointer<const void *>(
+                    params.getParam("indirect", ParamType::TvoidConstPointer, 1)),
+                params.getParam("drawcount", ParamType::TGLsizei, 2).value.GLsizeiVal,
+                params.getParam("stride", ParamType::TGLsizei, 3).value.GLsizeiVal);
+            break;
         case angle::EntryPoint::GLMultiDrawElements:
             context->multiDrawElements(
                 params.getParam("modePacked", ParamType::TPrimitiveMode, 0).value.PrimitiveModeVal,
@@ -1978,6 +1986,15 @@ void FrameCaptureShared::ReplayCall(gl::Context *context,
                 params.getParam("drawcount", ParamType::TGLsizei, 4).value.GLsizeiVal,
                 replayContext->getAsConstPointer<const GLint *>(
                     params.getParam("basevertex", ParamType::TGLintConstPointer, 5)));
+            break;
+        case angle::EntryPoint::GLMultiDrawElementsIndirect:
+            context->multiDrawElementsIndirect(
+                params.getParam("mode", ParamType::TGLenum, 0).value.GLenumVal,
+                params.getParam("type", ParamType::TGLenum, 1).value.GLenumVal,
+                replayContext->getAsConstPointer<const void *>(
+                    params.getParam("indirect", ParamType::TvoidConstPointer, 2)),
+                params.getParam("drawcount", ParamType::TGLsizei, 3).value.GLsizeiVal,
+                params.getParam("stride", ParamType::TGLsizei, 4).value.GLsizeiVal);
             break;
         case angle::EntryPoint::GLMultiTexCoord4f:
             context->multiTexCoord4f(

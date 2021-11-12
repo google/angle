@@ -909,6 +909,17 @@ ANGLE_EXPORT void GL_APIENTRY GL_ImportMemoryFdEXT(GLuint memory,
                                                    GLenum handleType,
                                                    GLint fd);
 
+// GL_EXT_multi_draw_indirect
+ANGLE_EXPORT void GL_APIENTRY GL_MultiDrawArraysIndirectEXT(GLenum mode,
+                                                            const void *indirect,
+                                                            GLsizei drawcount,
+                                                            GLsizei stride);
+ANGLE_EXPORT void GL_APIENTRY GL_MultiDrawElementsIndirectEXT(GLenum mode,
+                                                              GLenum type,
+                                                              const void *indirect,
+                                                              GLsizei drawcount,
+                                                              GLsizei stride);
+
 // GL_EXT_multisampled_render_to_texture
 ANGLE_EXPORT void GL_APIENTRY GL_FramebufferTexture2DMultisampleEXT(GLenum target,
                                                                     GLenum attachment,

@@ -621,11 +621,13 @@ const ProcEntry g_procTable[] = {
     {"glMultMatrixf", P(GL_MultMatrixf)},
     {"glMultMatrixx", P(GL_MultMatrixx)},
     {"glMultiDrawArraysANGLE", P(GL_MultiDrawArraysANGLE)},
+    {"glMultiDrawArraysIndirectEXT", P(GL_MultiDrawArraysIndirectEXT)},
     {"glMultiDrawArraysInstancedANGLE", P(GL_MultiDrawArraysInstancedANGLE)},
     {"glMultiDrawArraysInstancedBaseInstanceANGLE",
      P(GL_MultiDrawArraysInstancedBaseInstanceANGLE)},
     {"glMultiDrawElementsANGLE", P(GL_MultiDrawElementsANGLE)},
     {"glMultiDrawElementsBaseVertexEXT", P(GL_MultiDrawElementsBaseVertexEXT)},
+    {"glMultiDrawElementsIndirectEXT", P(GL_MultiDrawElementsIndirectEXT)},
     {"glMultiDrawElementsInstancedANGLE", P(GL_MultiDrawElementsInstancedANGLE)},
     {"glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE",
      P(GL_MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE)},
@@ -922,5 +924,5 @@ const ProcEntry g_procTable[] = {
     {"glWaitSync", P(GL_WaitSync)},
     {"glWeightPointerOES", P(GL_WeightPointerOES)}};
 
-const size_t g_numProcs = 889;
+const size_t g_numProcs = 891;
 }  // namespace egl

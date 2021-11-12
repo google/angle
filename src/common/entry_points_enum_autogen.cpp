@@ -1970,6 +1970,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glMultiDrawArraysIndirect";
         case EntryPoint::GLMultiDrawArraysIndirectCount:
             return "glMultiDrawArraysIndirectCount";
+        case EntryPoint::GLMultiDrawArraysIndirectEXT:
+            return "glMultiDrawArraysIndirectEXT";
         case EntryPoint::GLMultiDrawArraysInstancedANGLE:
             return "glMultiDrawArraysInstancedANGLE";
         case EntryPoint::GLMultiDrawArraysInstancedBaseInstanceANGLE:
@@ -1986,6 +1988,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glMultiDrawElementsIndirect";
         case EntryPoint::GLMultiDrawElementsIndirectCount:
             return "glMultiDrawElementsIndirectCount";
+        case EntryPoint::GLMultiDrawElementsIndirectEXT:
+            return "glMultiDrawElementsIndirectEXT";
         case EntryPoint::GLMultiDrawElementsInstancedANGLE:
             return "glMultiDrawElementsInstancedANGLE";
         case EntryPoint::GLMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE:

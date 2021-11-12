@@ -1289,6 +1289,21 @@ angle::CallCapture CaptureImportMemoryFdEXT(const State &glState,
                                             HandleType handleTypePacked,
                                             GLint fd);
 
+// GL_EXT_multi_draw_indirect
+angle::CallCapture CaptureMultiDrawArraysIndirectEXT(const State &glState,
+                                                     bool isCallValid,
+                                                     GLenum mode,
+                                                     const void *indirect,
+                                                     GLsizei drawcount,
+                                                     GLsizei stride);
+angle::CallCapture CaptureMultiDrawElementsIndirectEXT(const State &glState,
+                                                       bool isCallValid,
+                                                       GLenum mode,
+                                                       GLenum type,
+                                                       const void *indirect,
+                                                       GLsizei drawcount,
+                                                       GLsizei stride);
+
 // GL_EXT_multisampled_render_to_texture
 angle::CallCapture CaptureFramebufferTexture2DMultisampleEXT(const State &glState,
                                                              bool isCallValid,
@@ -4062,6 +4077,21 @@ void CaptureMemoryObjectParameterivEXT_params(const State &glState,
                                               GLenum pname,
                                               const GLint *params,
                                               angle::ParamCapture *paramCapture);
+void CaptureMultiDrawArraysIndirectEXT_indirect(const State &glState,
+                                                bool isCallValid,
+                                                GLenum mode,
+                                                const void *indirect,
+                                                GLsizei drawcount,
+                                                GLsizei stride,
+                                                angle::ParamCapture *paramCapture);
+void CaptureMultiDrawElementsIndirectEXT_indirect(const State &glState,
+                                                  bool isCallValid,
+                                                  GLenum mode,
+                                                  GLenum type,
+                                                  const void *indirect,
+                                                  GLsizei drawcount,
+                                                  GLsizei stride,
+                                                  angle::ParamCapture *paramCapture);
 void CaptureGetnUniformfvEXT_params(const State &glState,
                                     bool isCallValid,
                                     ShaderProgramID programPacked,
