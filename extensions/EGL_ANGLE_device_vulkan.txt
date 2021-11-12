@@ -68,6 +68,7 @@ New Tokens
         EGL_VULKAN_FEATURES_ANGLE            0x34AE
         EGL_VULKAN_QUEUE_ANGLE               0x34AF
         EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE 0x34D0
+        EGL_VULKAN_GET_INSTANCE_PROC_ADDR    0x34D1
 
 Add a new section 2.1.3 (Vulkan Devices) after 2.1.2 (Devices)
 
@@ -146,6 +147,13 @@ Changes to section 3.2 (Devices)
     corresponding to the EGL device is returned in <value>. If the EGL device
     is not currently associated with a Vulkan device and <attribute> is
     EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE, EGL_BAD_ATTRIBUTE is returned, and
+    <value> is left unchanged.
+
+    <attribute> may be EGL_VULKAN_GET_INSTANCE_PROC_ADDR.
+    On success, EGL_TRUE is returned, and the vkGetInstanceProcAddr function
+    pointer corresponding to the EGL device is returned in <value>. If the EGL
+    device is not currently associated with a Vulkan device and <attribute> is
+    EGL_VULKAN_GET_INSTANCE_PROC_ADDR, EGL_BAD_ATTRIBUTE is returned, and
     <value> is left unchanged.
 
 Issues

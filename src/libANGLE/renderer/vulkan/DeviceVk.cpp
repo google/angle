@@ -86,6 +86,11 @@ egl::Error DeviceVk::getAttribute(const egl::Display *display, EGLint attribute,
             *outValue            = const_cast<void *>(reinterpret_cast<const void *>(features));
             return egl::NoError();
         }
+        case EGL_VULKAN_GET_INSTANCE_PROC_ADDR:
+        {
+            *outValue = reinterpret_cast<void *>(vkGetInstanceProcAddr);
+            return egl::NoError();
+        }
         default:
             return egl::EglBadAccess();
     }

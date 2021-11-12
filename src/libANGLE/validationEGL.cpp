@@ -6048,6 +6048,7 @@ bool ValidateQueryDeviceAttribEXT(const ValidationContext *val,
         case EGL_VULKAN_FEATURES_ANGLE:
         case EGL_VULKAN_QUEUE_ANGLE:
         case EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE:
+        case EGL_VULKAN_GET_INSTANCE_PROC_ADDR:
             if (!device->getExtensions().deviceVulkan)
             {
                 val->setError(EGL_BAD_ATTRIBUTE);
