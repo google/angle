@@ -1206,7 +1206,7 @@ TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElements)
 
     EXPECT_GL_NO_ERROR();
 
-    GLint clearData[] = {42};
+    GLint clearData[4] = {42};
     glClearBufferiv(GL_COLOR, 0, clearData);
     EXPECT_EQ(42, GetFirstIntPixelRedValue());
 
