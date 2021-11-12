@@ -60,6 +60,10 @@ luci.project(
     ],
     bindings = [
         luci.binding(
+            roles = "role/configs.validator",
+            users = "angle-try-builder@chops-service-accounts.iam.gserviceaccount.com",
+        ),
+        luci.binding(
             roles = "role/swarming.poolOwner",
             groups = ["project-angle-owners", "mdb/chrome-troopers"],
         ),
