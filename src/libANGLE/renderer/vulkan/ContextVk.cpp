@@ -2407,9 +2407,9 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         Serial submitSerial;
         // vkEvent's are externally synchronized, therefore need work to be submitted before calling
         // vkGetEventStatus
-        ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer),
-                                               hasProtectedContent(), mContextPriority, nullptr,
-                                               vk::SubmitPolicy::EnsureSubmitted, &submitSerial));
+        ANGLE_TRY(mRenderer->queueSubmitOneOff(
+            this, std::move(commandBuffer), hasProtectedContent(), mContextPriority, nullptr, 0,
+            nullptr, vk::SubmitPolicy::EnsureSubmitted, &submitSerial));
         scratchResourceUseList.releaseResourceUsesAndUpdateSerials(submitSerial);
 
         // Wait for GPU to be ready.  This is a short busy wait.
@@ -5600,7 +5600,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
 
     Serial throwAwaySerial;
     ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), hasProtectedContent(),
-                                           mContextPriority, &fence.get(),
+                                           mContextPriority, nullptr, 0, &fence.get(),
                                            vk::SubmitPolicy::EnsureSubmitted, &throwAwaySerial));
 
     // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute

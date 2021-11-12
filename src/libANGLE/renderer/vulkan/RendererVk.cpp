@@ -3075,6 +3075,8 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
                                             vk::PrimaryCommandBuffer &&primary,
                                             bool hasProtectedContent,
                                             egl::ContextPriority priority,
+                                            const vk::Semaphore *waitSemaphore,
+                                            VkPipelineStageFlags waitSemaphoreStageMasks,
                                             const vk::Fence *fence,
                                             vk::SubmitPolicy submitPolicy,
                                             Serial *serialOut)
@@ -3087,16 +3089,16 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
     if (mFeatures.asyncCommandQueue.enabled)
     {
         submitQueueSerial = mCommandProcessor.reserveSubmitSerial();
-        ANGLE_TRY(mCommandProcessor.queueSubmitOneOff(context, hasProtectedContent, priority,
-                                                      primary.getHandle(), fence, submitPolicy,
-                                                      submitQueueSerial));
+        ANGLE_TRY(mCommandProcessor.queueSubmitOneOff(
+            context, hasProtectedContent, priority, primary.getHandle(), waitSemaphore,
+            waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial));
     }
     else
     {
         submitQueueSerial = mCommandQueue.reserveSubmitSerial();
-        ANGLE_TRY(mCommandQueue.queueSubmitOneOff(context, hasProtectedContent, priority,
-                                                  primary.getHandle(), fence, submitPolicy,
-                                                  submitQueueSerial));
+        ANGLE_TRY(mCommandQueue.queueSubmitOneOff(
+            context, hasProtectedContent, priority, primary.getHandle(), waitSemaphore,
+            waitSemaphoreStageMasks, fence, submitPolicy, submitQueueSerial));
     }
 
     *serialOut = submitQueueSerial;

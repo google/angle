@@ -3664,7 +3664,7 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context, VkDeviceSi
 
     Serial serial;
     ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(commandBuffer), false,
-                                          egl::ContextPriority::Medium, nullptr,
+                                          egl::ContextPriority::Medium, nullptr, 0, nullptr,
                                           vk::SubmitPolicy::AllowDeferred, &serial));
 
     stagingBuffer.collectGarbage(renderer, serial);
@@ -4366,7 +4366,7 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
 
     Serial serial;
     ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(commandBuffer), hasProtectedContent,
-                                          egl::ContextPriority::Medium, nullptr,
+                                          egl::ContextPriority::Medium, nullptr, 0, nullptr,
                                           vk::SubmitPolicy::AllowDeferred, &serial));
 
     if (isCompressedFormat)

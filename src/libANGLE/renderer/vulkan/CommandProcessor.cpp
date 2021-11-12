@@ -98,21 +98,23 @@ void FenceRecycler::destroy(vk::Context *context)
 // CommandProcessorTask implementation
 void CommandProcessorTask::initTask()
 {
-    mTask                        = CustomTask::Invalid;
-    mRenderPass                  = nullptr;
-    mCommandBuffer               = nullptr;
-    mSemaphore                   = nullptr;
-    mCommandPool                 = nullptr;
-    mOneOffFence                 = nullptr;
-    mPresentInfo                 = {};
-    mPresentInfo.pResults        = nullptr;
-    mPresentInfo.pSwapchains     = nullptr;
-    mPresentInfo.pImageIndices   = nullptr;
-    mPresentInfo.pNext           = nullptr;
-    mPresentInfo.pWaitSemaphores = nullptr;
-    mOneOffCommandBufferVk       = VK_NULL_HANDLE;
-    mPriority                    = egl::ContextPriority::Medium;
-    mHasProtectedContent         = false;
+    mTask                         = CustomTask::Invalid;
+    mRenderPass                   = nullptr;
+    mCommandBuffer                = nullptr;
+    mSemaphore                    = nullptr;
+    mCommandPool                  = nullptr;
+    mOneOffWaitSemaphore          = nullptr;
+    mOneOffWaitSemaphoreStageMask = 0;
+    mOneOffFence                  = nullptr;
+    mPresentInfo                  = {};
+    mPresentInfo.pResults         = nullptr;
+    mPresentInfo.pSwapchains      = nullptr;
+    mPresentInfo.pImageIndices    = nullptr;
+    mPresentInfo.pNext            = nullptr;
+    mPresentInfo.pWaitSemaphores  = nullptr;
+    mOneOffCommandBufferVk        = VK_NULL_HANDLE;
+    mPriority                     = egl::ContextPriority::Medium;
+    mHasProtectedContent          = false;
 }
 
 void CommandProcessorTask::initProcessCommands(bool hasProtectedContent,
@@ -236,15 +238,19 @@ void CommandProcessorTask::initFlushAndQueueSubmit(
 void CommandProcessorTask::initOneOffQueueSubmit(VkCommandBuffer commandBufferHandle,
                                                  bool hasProtectedContent,
                                                  egl::ContextPriority priority,
+                                                 const Semaphore *waitSemaphore,
+                                                 VkPipelineStageFlags waitSemaphoreStageMask,
                                                  const Fence *fence,
                                                  Serial submitQueueSerial)
 {
-    mTask                  = CustomTask::OneOffQueueSubmit;
-    mOneOffCommandBufferVk = commandBufferHandle;
-    mOneOffFence           = fence;
-    mPriority              = priority;
-    mHasProtectedContent   = hasProtectedContent;
-    mSerial                = submitQueueSerial;
+    mTask                         = CustomTask::OneOffQueueSubmit;
+    mOneOffCommandBufferVk        = commandBufferHandle;
+    mOneOffWaitSemaphore          = waitSemaphore;
+    mOneOffWaitSemaphoreStageMask = waitSemaphoreStageMask;
+    mOneOffFence                  = fence;
+    mPriority                     = priority;
+    mHasProtectedContent          = hasProtectedContent;
+    mSerial                       = submitQueueSerial;
 }
 
 CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs)
@@ -260,6 +266,8 @@ CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs
     std::swap(mWaitSemaphores, rhs.mWaitSemaphores);
     std::swap(mWaitSemaphoreStageMasks, rhs.mWaitSemaphoreStageMasks);
     std::swap(mSemaphore, rhs.mSemaphore);
+    std::swap(mOneOffWaitSemaphore, rhs.mOneOffWaitSemaphore);
+    std::swap(mOneOffWaitSemaphoreStageMask, rhs.mOneOffWaitSemaphoreStageMask);
     std::swap(mOneOffFence, rhs.mOneOffFence);
     std::swap(mCommandPool, rhs.mCommandPool);
     std::swap(mGarbage, rhs.mGarbage);
@@ -469,7 +477,8 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
 
             ANGLE_TRY(mCommandQueue.queueSubmitOneOff(
                 this, task->hasProtectedContent(), task->getPriority(),
-                task->getOneOffCommandBufferVk(), task->getOneOffFence(),
+                task->getOneOffCommandBufferVk(), task->getOneOffWaitSemaphore(),
+                task->getOneOffWaitSemaphoreStageMask(), task->getOneOffFence(),
                 SubmitPolicy::EnsureSubmitted, task->getQueueSerial()));
             ANGLE_TRY(mCommandQueue.checkCompletedCommands(this));
             break;
@@ -701,6 +710,8 @@ angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
                                                   bool hasProtectedContent,
                                                   egl::ContextPriority contextPriority,
                                                   VkCommandBuffer commandBufferHandle,
+                                                  const Semaphore *waitSemaphore,
+                                                  VkPipelineStageFlags waitSemaphoreStageMask,
                                                   const Fence *fence,
                                                   SubmitPolicy submitPolicy,
                                                   Serial submitQueueSerial)
@@ -708,8 +719,8 @@ angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
     ANGLE_TRY(checkAndPopPendingError(context));
 
     CommandProcessorTask task;
-    task.initOneOffQueueSubmit(commandBufferHandle, hasProtectedContent, contextPriority, fence,
-                               submitQueueSerial);
+    task.initOneOffQueueSubmit(commandBufferHandle, hasProtectedContent, contextPriority,
+                               waitSemaphore, waitSemaphoreStageMask, fence, submitQueueSerial);
     queueCommand(std::move(task));
     if (submitPolicy == SubmitPolicy::EnsureSubmitted)
     {
@@ -1180,6 +1191,8 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
                                               bool hasProtectedContent,
                                               egl::ContextPriority contextPriority,
                                               VkCommandBuffer commandBufferHandle,
+                                              const Semaphore *waitSemaphore,
+                                              VkPipelineStageFlags waitSemaphoreStageMask,
                                               const Fence *fence,
                                               SubmitPolicy submitPolicy,
                                               Serial submitQueueSerial)
@@ -1200,6 +1213,13 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
     {
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers    = &commandBufferHandle;
+    }
+
+    if (waitSemaphore != nullptr)
+    {
+        submitInfo.waitSemaphoreCount = 1;
+        submitInfo.pWaitSemaphores    = waitSemaphore->ptr();
+        submitInfo.pWaitDstStageMask  = &waitSemaphoreStageMask;
     }
 
     return queueSubmit(context, contextPriority, submitInfo, fence, submitQueueSerial);

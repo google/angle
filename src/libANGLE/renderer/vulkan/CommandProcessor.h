@@ -108,6 +108,8 @@ class CommandProcessorTask
     void initOneOffQueueSubmit(VkCommandBuffer commandBufferHandle,
                                bool hasProtectedContent,
                                egl::ContextPriority priority,
+                               const Semaphore *waitSemaphore,
+                               VkPipelineStageFlags waitSemaphoreStageMask,
                                const Fence *fence,
                                Serial submitQueueSerial);
 
@@ -132,6 +134,8 @@ class CommandProcessorTask
     egl::ContextPriority getPriority() const { return mPriority; }
     bool hasProtectedContent() const { return mHasProtectedContent; }
     VkCommandBuffer getOneOffCommandBufferVk() const { return mOneOffCommandBufferVk; }
+    const Semaphore *getOneOffWaitSemaphore() { return mOneOffWaitSemaphore; }
+    VkPipelineStageFlags getOneOffWaitSemaphoreStageMask() { return mOneOffWaitSemaphoreStageMask; }
     const Fence *getOneOffFence() { return mOneOffFence; }
     const VkPresentInfoKHR &getPresentInfo() const { return mPresentInfo; }
     const RenderPass *getRenderPass() const { return mRenderPass; }
@@ -170,6 +174,8 @@ class CommandProcessorTask
 
     // Used by OneOffQueueSubmit
     VkCommandBuffer mOneOffCommandBufferVk;
+    const Semaphore *mOneOffWaitSemaphore;
+    VkPipelineStageFlags mOneOffWaitSemaphoreStageMask;
     const Fence *mOneOffFence;
 
     // Flush, Present & QueueWaitIdle data
@@ -291,6 +297,8 @@ class CommandQueueInterface : angle::NonCopyable
                                             bool hasProtectedContent,
                                             egl::ContextPriority contextPriority,
                                             VkCommandBuffer commandBufferHandle,
+                                            const Semaphore *waitSemaphore,
+                                            VkPipelineStageFlags waitSemaphoreStageMask,
                                             const Fence *fence,
                                             SubmitPolicy submitPolicy,
                                             Serial submitQueueSerial)  = 0;
@@ -355,6 +363,8 @@ class CommandQueue final : public CommandQueueInterface
                                     bool hasProtectedContent,
                                     egl::ContextPriority contextPriority,
                                     VkCommandBuffer commandBufferHandle,
+                                    const Semaphore *waitSemaphore,
+                                    VkPipelineStageFlags waitSemaphoreStageMask,
                                     const Fence *fence,
                                     SubmitPolicy submitPolicy,
                                     Serial submitQueueSerial) override;
@@ -502,6 +512,8 @@ class CommandProcessor : public Context, public CommandQueueInterface
                                     bool hasProtectedContent,
                                     egl::ContextPriority contextPriority,
                                     VkCommandBuffer commandBufferHandle,
+                                    const Semaphore *waitSemaphore,
+                                    VkPipelineStageFlags waitSemaphoreStageMask,
                                     const Fence *fence,
                                     SubmitPolicy submitPolicy,
                                     Serial submitQueueSerial) override;
