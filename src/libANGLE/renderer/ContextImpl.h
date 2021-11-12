@@ -121,6 +121,11 @@ class ContextImpl : public GLImplFactory
                                           const GLint *firsts,
                                           const GLsizei *counts,
                                           GLsizei drawcount)                      = 0;
+    virtual angle::Result multiDrawArraysIndirect(const gl::Context *context,
+                                                  gl::PrimitiveMode mode,
+                                                  const void *indirect,
+                                                  GLsizei drawcount,
+                                                  GLsizei stride)                 = 0;
     virtual angle::Result multiDrawArraysInstanced(const gl::Context *context,
                                                    gl::PrimitiveMode mode,
                                                    const GLint *firsts,
@@ -140,6 +145,12 @@ class ContextImpl : public GLImplFactory
                                                      const GLvoid *const *indices,
                                                      const GLsizei *instanceCounts,
                                                      GLsizei drawcount)           = 0;
+    virtual angle::Result multiDrawElementsIndirect(const gl::Context *context,
+                                                    gl::PrimitiveMode mode,
+                                                    gl::DrawElementsType type,
+                                                    const void *indirect,
+                                                    GLsizei drawcount,
+                                                    GLsizei stride)               = 0;
     virtual angle::Result multiDrawArraysInstancedBaseInstance(const gl::Context *context,
                                                                gl::PrimitiveMode mode,
                                                                const GLint *firsts,

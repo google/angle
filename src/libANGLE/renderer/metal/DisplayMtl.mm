@@ -877,6 +877,7 @@ void DisplayMtl::initializeExtensions() const
 
     mNativeExtensions.robustnessEXT               = true;
     mNativeExtensions.textureBorderClampOES       = false;  // not implemented yet
+    mNativeExtensions.multiDrawIndirectEXT        = true;
     mNativeExtensions.translatedShaderSourceANGLE = true;
     mNativeExtensions.discardFramebufferEXT       = true;
     // TODO(anglebug.com/6395): Apple's implementation exposed

@@ -574,6 +574,34 @@ bool ValidateDrawElementsIndirect(const Context *context,
     return true;
 }
 
+bool ValidateMultiDrawIndirectBase(const Context *context,
+                                   angle::EntryPoint entryPoint,
+                                   GLsizei drawcount,
+                                   GLsizei stride)
+{
+    if (!context->getExtensions().multiDrawIndirectEXT)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    // An INVALID_VALUE error is generated if stride is neither 0 nor a multiple of 4.
+    if ((stride & 3) != 0)
+    {
+        context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidDrawBufferValue);
+        return false;
+    }
+
+    // An INVALID_VALUE error is generated if drawcount is not positive.
+    if (drawcount <= 0)
+    {
+        context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidValueNonPositive);
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateProgramUniform1iBase(const Context *context,
                                   angle::EntryPoint entryPoint,
                                   ShaderProgramID program,

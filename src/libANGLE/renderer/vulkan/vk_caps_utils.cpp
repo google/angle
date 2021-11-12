@@ -378,6 +378,9 @@ void RendererVk::ensureCapsInitialized() const
     // Enable EXT_texture_type_2_10_10_10_REV
     mNativeExtensions.textureType2101010REVEXT = true;
 
+    // Enable EXT_multi_draw_indirect
+    mNativeExtensions.multiDrawIndirectEXT = true;
+
     // Enable ANGLE_base_vertex_base_instance
     mNativeExtensions.baseVertexBaseInstanceANGLE = true;
 

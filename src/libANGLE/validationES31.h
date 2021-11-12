@@ -28,6 +28,12 @@ bool ValidateTexBufferRangeBase(const Context *context,
                                 GLintptr offset,
                                 GLsizeiptr size);
 
+// GL_EXT_multi_draw_indirect
+bool ValidateMultiDrawIndirectBase(const Context *context,
+                                   angle::EntryPoint entryPoint,
+                                   GLsizei drawcount,
+                                   GLsizei stride);
+
 // GL_EXT_separate_shader_objects
 bool ValidateActiveShaderProgramBase(const Context *context,
                                      angle::EntryPoint entryPoint,

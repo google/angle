@@ -97,6 +97,7 @@ ContextNULL::ContextNULL(const gl::State &state,
     mExtensions.lossyEtcDecodeANGLE             = true;
     mExtensions.geometryShaderEXT               = true;
     mExtensions.geometryShaderOES               = true;
+    mExtensions.multiDrawIndirectEXT            = true;
 
     mExtensions.EGLImageOES                 = true;
     mExtensions.EGLImageExternalOES         = true;
@@ -263,6 +264,15 @@ angle::Result ContextNULL::multiDrawArraysInstanced(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result ContextNULL::multiDrawArraysIndirect(const gl::Context *context,
+                                                   gl::PrimitiveMode mode,
+                                                   const void *indirect,
+                                                   GLsizei drawcount,
+                                                   GLsizei stride)
+{
+    return angle::Result::Continue;
+}
+
 angle::Result ContextNULL::multiDrawElements(const gl::Context *context,
                                              gl::PrimitiveMode mode,
                                              const GLsizei *counts,
@@ -280,6 +290,16 @@ angle::Result ContextNULL::multiDrawElementsInstanced(const gl::Context *context
                                                       const GLvoid *const *indices,
                                                       const GLsizei *instanceCounts,
                                                       GLsizei drawcount)
+{
+    return angle::Result::Continue;
+}
+
+angle::Result ContextNULL::multiDrawElementsIndirect(const gl::Context *context,
+                                                     gl::PrimitiveMode mode,
+                                                     gl::DrawElementsType type,
+                                                     const void *indirect,
+                                                     GLsizei drawcount,
+                                                     GLsizei stride)
 {
     return angle::Result::Continue;
 }

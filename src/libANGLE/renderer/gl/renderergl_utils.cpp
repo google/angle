@@ -1438,6 +1438,7 @@ void GenerateCaps(const FunctionsGL *functions,
         functions->hasGLESExtension("GL_OES_texture_border_clamp") ||
         functions->hasGLESExtension("GL_EXT_texture_border_clamp") ||
         functions->hasGLESExtension("GL_NV_texture_border_clamp");
+    extensions->multiDrawIndirectEXT = true;
     extensions->instancedArraysANGLE = functions->isAtLeastGL(gl::Version(3, 1)) ||
                                        (functions->hasGLExtension("GL_ARB_instanced_arrays") &&
                                         (functions->hasGLExtension("GL_ARB_draw_instanced") ||
