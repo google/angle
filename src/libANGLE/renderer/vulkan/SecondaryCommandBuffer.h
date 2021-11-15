@@ -263,6 +263,8 @@ struct DrawIndexedIndirectParams
 {
     VkBuffer buffer;
     VkDeviceSize offset;
+    uint32_t drawCount;
+    uint32_t stride;
 };
 VERIFY_4_BYTE_ALIGNMENT(DrawIndexedIndirectParams)
 
@@ -295,6 +297,8 @@ struct DrawIndirectParams
 {
     VkBuffer buffer;
     VkDeviceSize offset;
+    uint32_t drawCount;
+    uint32_t stride;
 };
 VERIFY_4_BYTE_ALIGNMENT(DrawIndirectParams)
 
@@ -1187,9 +1191,10 @@ ANGLE_INLINE void SecondaryCommandBuffer::drawIndexedIndirect(const Buffer &buff
 {
     DrawIndexedIndirectParams *paramStruct =
         initCommand<DrawIndexedIndirectParams>(CommandID::DrawIndexedIndirect);
-    paramStruct->buffer = buffer.getHandle();
-    paramStruct->offset = offset;
-    ASSERT(drawCount == 1);
+    paramStruct->buffer    = buffer.getHandle();
+    paramStruct->offset    = offset;
+    paramStruct->drawCount = drawCount;
+    paramStruct->stride    = stride;
 
     mCommandTracker.onDraw();
 }
@@ -1246,10 +1251,8 @@ ANGLE_INLINE void SecondaryCommandBuffer::drawIndirect(const Buffer &buffer,
     DrawIndirectParams *paramStruct = initCommand<DrawIndirectParams>(CommandID::DrawIndirect);
     paramStruct->buffer             = buffer.getHandle();
     paramStruct->offset             = offset;
-
-    // OpenGL ES doesn't have a way to specify a drawCount or stride, throw assert if something
-    // changes.
-    ASSERT(drawCount == 1);
+    paramStruct->drawCount          = drawCount;
+    paramStruct->stride             = stride;
 
     mCommandTracker.onDraw();
 }

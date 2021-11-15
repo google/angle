@@ -207,6 +207,19 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                                    const GLuint *baseInstances,
                                                                    GLsizei drawcount) override;
 
+    // MultiDrawIndirect helper functions
+    angle::Result multiDrawElementsIndirectHelper(const gl::Context *context,
+                                                  gl::PrimitiveMode mode,
+                                                  gl::DrawElementsType type,
+                                                  const void *indirect,
+                                                  GLsizei drawcount,
+                                                  GLsizei stride);
+    angle::Result multiDrawArraysIndirectHelper(const gl::Context *context,
+                                                gl::PrimitiveMode mode,
+                                                const void *indirect,
+                                                GLsizei drawcount,
+                                                GLsizei stride);
+
     // ShareGroup
     ShareGroupVk *getShareGroupVk() { return mShareGroupVk; }
     PipelineLayoutCache &getPipelineLayoutCache()
