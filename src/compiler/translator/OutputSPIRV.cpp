@@ -1141,10 +1141,8 @@ void OutputSPIRVTraverser::declareConst(TIntermDeclaration *decl)
                        initializer->isConstantNullValue());
 
     // Remember the id of the variable for future look up.
-    ASSERT(mSymbolIdMap.count(&symbol->variable()) == 0);
-    mSymbolIdMap[&symbol->variable()] = constId;
-
-    mBuilder.declareNamedConst(constId, mBuilder.hashName(variable).data());
+    ASSERT(mSymbolIdMap.count(variable) == 0);
+    mSymbolIdMap[variable] = constId;
 
     if (!mInGlobalScope)
     {

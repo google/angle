@@ -403,8 +403,6 @@ class SPIRVBuilder : angle::NonCopyable
                                  const char *name);
     // Helper to declare specialization constants.
     spirv::IdRef declareSpecConst(TBasicType type, int id, const char *name);
-    // Helper to declare a named constant.
-    void declareNamedConst(spirv::IdRef id, const char *name);
 
     // Helpers for conditionals.
     void startConditional(size_t blockCount, bool isContinuable, bool isBreakable);
