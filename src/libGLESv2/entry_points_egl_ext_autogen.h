@@ -124,6 +124,12 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetMscRateANGLE(EGLDisplay dpy,
                                                         EGLint *numerator,
                                                         EGLint *denominator);
 
+// EGL_ANGLE_vulkan_image
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_ExportVkImageANGLE(EGLDisplay dpy,
+                                                           EGLImage image,
+                                                           void *vk_image,
+                                                           void *vk_image_create_info);
+
 // EGL_CHROMIUM_sync_control
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetSyncValuesCHROMIUM(EGLDisplay dpy,
                                                               EGLSurface surface,

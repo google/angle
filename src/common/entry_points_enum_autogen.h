@@ -162,6 +162,7 @@ enum class EntryPoint
     EGLDestroySync,
     EGLDestroySyncKHR,
     EGLDupNativeFenceFDANDROID,
+    EGLExportVkImageANGLE,
     EGLGetCompositorTimingANDROID,
     EGLGetCompositorTimingSupportedANDROID,
     EGLGetConfigAttrib,

@@ -831,4 +831,20 @@ EGLBoolean QuerySurface64KHR(Thread *thread,
     thread->setSuccess();
     return EGL_TRUE;
 }
+
+EGLBoolean ExportVkImageANGLE(Thread *thread,
+                              egl::Display *display,
+                              Image *image,
+                              void *vk_image,
+                              void *vk_image_create_info)
+{
+    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglExportVkImageANGLE",
+                         GetDisplayIfValid(display), EGL_FALSE);
+    ANGLE_EGL_TRY_RETURN(thread, image->exportVkImage(vk_image, vk_image_create_info),
+                         "eglExportVkImageANGLE", GetImageIfValid(display, image), EGL_FALSE);
+
+    thread->setSuccess();
+    return EGL_TRUE;
+}
+
 }  // namespace egl

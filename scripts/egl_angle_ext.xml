@@ -114,6 +114,13 @@
             <param><ptype>EGLint</ptype> <name>attribute</name></param>
             <param><ptype>EGLAttrib *</ptype> <name>value</name></param>
         </command>
+        <command>
+            <proto><ptype>EGLBoolean</ptype> <name>eglExportVkImageANGLE</name></proto>
+            <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
+            <param><ptype>EGLImage</ptype> <name>image</name></param>
+            <param><ptype>void *</ptype> <name>vk_image</name></param>
+            <param><ptype>void *</ptype> <name>vk_image_create_info</name></param>
+        </command>
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
@@ -173,6 +180,11 @@
         <extension name="EGL_ANGLE_display_texture_share_group" supported="egl">
             <require>
                 <enum name="EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE"/>
+            </require>
+        </extension>
+        <extension name="EGL_ANGLE_vulkan_image" supported="egl">
+            <require>
+                <command name="eglExportVkImageANGLE"/>
             </require>
         </extension>
     </extensions>

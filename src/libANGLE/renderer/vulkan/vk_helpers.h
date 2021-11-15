@@ -1638,6 +1638,7 @@ class ImageHelper final : public Resource, public angle::Subject
     const Image &getImage() const { return mImage; }
     const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
 
+    const VkImageCreateInfo &getVkImageCreateInfo() const { return mVkImageCreateInfo; }
     void setTilingMode(VkImageTiling tilingMode) { mTilingMode = tilingMode; }
     VkImageTiling getTilingMode() const { return mTilingMode; }
     VkImageCreateFlags getCreateFlags() const { return mCreateFlags; }
@@ -2231,6 +2232,7 @@ class ImageHelper final : public Resource, public angle::Subject
     DeviceMemory mDeviceMemory;
 
     // Image properties.
+    VkImageCreateInfo mVkImageCreateInfo;
     VkImageType mImageType;
     VkImageTiling mTilingMode;
     VkImageCreateFlags mCreateFlags;

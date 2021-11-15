@@ -232,5 +232,10 @@ EGLBoolean QueryDisplayAttribANGLE(Thread *thread,
                                    egl::Display *dpyPacked,
                                    EGLint attribute,
                                    EGLAttrib *value);
+EGLBoolean ExportVkImageANGLE(Thread *thread,
+                              egl::Display *dpyPacked,
+                              Image *imagePacked,
+                              void *vk_image,
+                              void *vk_image_create_info);
 }  // namespace egl
 #endif  // LIBGLESV2_EGL_EXT_STUBS_AUTOGEN_H_

@@ -495,6 +495,11 @@ void Image::setInitState(gl::InitState initState)
     return mState.source->setInitState(mState.imageIndex, initState);
 }
 
+Error Image::exportVkImage(void *vkImage, void *vkImageCreateInfo)
+{
+    return mImplementation->exportVkImage(vkImage, vkImageCreateInfo);
+}
+
 void Image::notifySiblings(const ImageSibling *notifier, angle::SubjectMessage message)
 {
     if (mState.source && mState.source != notifier)

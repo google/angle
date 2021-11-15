@@ -115,6 +115,9 @@ EXPORTS
     ; EGL_ANGLE_sync_control_rate
     eglGetMscRateANGLE
 
+    ; EGL_ANGLE_vulkan_image
+    eglExportVkImageANGLE
+
     ; EGL_CHROMIUM_sync_control
     eglGetSyncValuesCHROMIUM
 

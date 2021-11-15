@@ -61,6 +61,7 @@ const ProcEntry g_procTable[] = {
     {"eglDestroySync", P(EGL_DestroySync)},
     {"eglDestroySyncKHR", P(EGL_DestroySyncKHR)},
     {"eglDupNativeFenceFDANDROID", P(EGL_DupNativeFenceFDANDROID)},
+    {"eglExportVkImageANGLE", P(EGL_ExportVkImageANGLE)},
     {"eglGetCompositorTimingANDROID", P(EGL_GetCompositorTimingANDROID)},
     {"eglGetCompositorTimingSupportedANDROID", P(EGL_GetCompositorTimingSupportedANDROID)},
     {"eglGetConfigAttrib", P(EGL_GetConfigAttrib)},
@@ -924,5 +925,5 @@ const ProcEntry g_procTable[] = {
     {"glWaitSync", P(GL_WaitSync)},
     {"glWeightPointerOES", P(GL_WeightPointerOES)}};
 
-const size_t g_numProcs = 891;
+const size_t g_numProcs = 892;
 }  // namespace egl

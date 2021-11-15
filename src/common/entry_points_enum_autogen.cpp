@@ -312,6 +312,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglDestroySyncKHR";
         case EntryPoint::EGLDupNativeFenceFDANDROID:
             return "eglDupNativeFenceFDANDROID";
+        case EntryPoint::EGLExportVkImageANGLE:
+            return "eglExportVkImageANGLE";
         case EntryPoint::EGLGetCompositorTimingANDROID:
             return "eglGetCompositorTimingANDROID";
         case EntryPoint::EGLGetCompositorTimingSupportedANDROID:

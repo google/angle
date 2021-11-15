@@ -599,6 +599,16 @@ EGLBoolean EGLAPIENTRY eglGetMscRateANGLE(EGLDisplay dpy,
     return EGL_GetMscRateANGLE(dpy, surface, numerator, denominator);
 }
 
+// EGL_ANGLE_vulkan_image
+EGLBoolean EGLAPIENTRY eglExportVkImageANGLE(EGLDisplay dpy,
+                                             EGLImage image,
+                                             void *vk_image,
+                                             void *vk_image_create_info)
+{
+    EnsureEGLLoaded();
+    return EGL_ExportVkImageANGLE(dpy, image, vk_image, vk_image_create_info);
+}
+
 // EGL_CHROMIUM_sync_control
 EGLBoolean EGLAPIENTRY eglGetSyncValuesCHROMIUM(EGLDisplay dpy,
                                                 EGLSurface surface,
