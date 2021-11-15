@@ -557,7 +557,7 @@ template("angle_trace") {
     }
 
     # Disable optimization in the trace perf tests to avoid optimizing huge files.
-    if (!is_debug) {
+    if (!is_debug && !is_ubsan) {
       suppressed_configs += [
         "//build/config/compiler:afdo",
         "//build/config/compiler:afdo_optimize_size",
