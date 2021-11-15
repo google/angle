@@ -454,11 +454,13 @@ inline bool IsDeviceIdGPU(const std::string &gpuDeviceId)
 // Check whether the active GPU is a NVIDIA Quadro P400
 inline bool IsNVIDIAQuadroP400()
 {
-    if (!IsNVIDIA())
-    {
-        return false;
-    }
-    return IsDeviceIdGPU("0x1CB3");
+    return (IsNVIDIA() && IsDeviceIdGPU("0x1CB3"));
+}
+
+// Check whether the active GPU is a NVIDIA GTX 1660
+inline bool IsNVIDIAGTX1660()
+{
+    return (IsNVIDIA() && IsDeviceIdGPU("0x2184"));
 }
 
 // Check whether the backend API has been set to D3D9 in the constructor
@@ -553,6 +555,7 @@ GPUTestConfig::GPUTestConfig(bool isSwiftShader)
     mConditions[kConditionPixel2OrXL]       = !isSwiftShader && (IsPixel2() || IsPixel2XL());
     mConditions[kConditionPixel4OrXL]       = !isSwiftShader && (IsPixel4() || IsPixel4XL());
     mConditions[kConditionNVIDIAQuadroP400] = !isSwiftShader && IsNVIDIAQuadroP400();
+    mConditions[kConditionNVIDIAGTX1660]    = !isSwiftShader && IsNVIDIAGTX1660();
 
     mConditions[kConditionPreRotation]    = false;
     mConditions[kConditionPreRotation90]  = false;

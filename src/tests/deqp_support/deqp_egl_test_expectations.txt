@@ -271,3 +271,6 @@
 6528 PIXEL4ORXL GLES : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_blue_value = FAIL
 6528 PIXEL4ORXL GLES : dEQP-EGL.functional.thread_cleanup.multi_context_* = FAIL
 6528 PIXEL4ORXL GLES : dEQP-EGL.functional.thread_cleanup.single_context_* = FAIL
+
+6707 NVIDIA : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.reads.uniform_block.compute = SKIP
+6707 NVIDIA : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.writes.uniform_block.compute = SKIP

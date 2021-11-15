@@ -64,7 +64,7 @@
       'linux-nvidia': {
         'os_type': 'linux',
         'mixins': [
-          'linux_nvidia_quadro_p400_stable',
+          'angle_linux_nvidia_gtx_1660_stable',
         ],
         'test_suites': {
           'gtest_tests': 'linux_nvidia_gtests',
@@ -74,7 +74,7 @@
       'linux-nvidia-perf': {
         'os_type': 'linux',
         'mixins': [
-          'linux_nvidia_quadro_p400_stable',
+          'angle_linux_nvidia_gtx_1660_stable',
         ],
         'test_suites': {
           'isolated_scripts': 'angle_perf_isolated_scripts',
@@ -180,7 +180,7 @@
       'win10-x64-nvidia': {
         'os_type': 'win',
         'mixins': [
-          'win10_nvidia_quadro_p400_stable',
+          'angle_win10_nvidia_gtx_1660_stable',
         ],
         'test_suites': {
           'gtest_tests': 'win10_nvidia_gtests',
@@ -190,7 +190,7 @@
       'win10-x64-nvidia-perf': {
         'os_type': 'win',
         'mixins': [
-          'win10_nvidia_quadro_p400_stable',
+          'angle_win10_nvidia_gtx_1660_stable',
         ],
         'test_suites': {
           'isolated_scripts': 'angle_perf_isolated_scripts',

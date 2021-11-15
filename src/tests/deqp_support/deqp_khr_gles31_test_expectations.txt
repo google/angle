@@ -278,3 +278,7 @@
 6678 ASAN : KHR-GLES31.core.draw_indirect.negative-noVAO-arrays = SKIP
 6678 ASAN : KHR-GLES31.core.draw_indirect.negative-noVBO-arrays = SKIP
 6678 ASAN : KHR-GLES31.core.framebuffer_no_attachments.render = SKIP
+
+6709 NVIDIA GTX1660 VULKAN : KHR-GLES31.core.compute_shader.max = FAIL
+6709 NVIDIA GTX1660 VULKAN : KHR-GLES31.core.shader_multisample_interpolation.render.interpolate_at_offset* = FAIL
+6709 NVIDIA GTX1660 VULKAN LINUX : KHR-GLES31.core.shader_image_load_store.advanced-memory-order-vsfs = FAIL

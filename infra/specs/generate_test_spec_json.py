@@ -40,7 +40,28 @@ ADDITIONAL_MIXINS = {
             ],
         }
     },
+
+    # TODO(jmadill): De-duplicate when landed in Chrome. http://crbug.com/1236818
+    'angle_linux_nvidia_gtx_1660_stable': {
+        'swarming': {
+            'dimensions': {
+                'gpu': '10de:2184-440.100',
+                'os': 'Ubuntu-18.04.5|Ubuntu-18.04.6',
+                'pool': 'chromium.tests.gpu',
+            },
+        },
+    },
+    'angle_win10_nvidia_gtx_1660_stable': {
+        'swarming': {
+            'dimensions': {
+                'gpu': '10de:2184-27.21.14.5638',
+                'os': 'Windows-10-18363',
+                'pool': 'chromium.tests.gpu',
+            },
+        },
+    },
 }
+
 MIXIN_FILE_NAME = os.path.join(THIS_DIR, 'mixins.pyl')
 MIXINS_PYL_TEMPLATE = """\
 # GENERATED FILE - DO NOT EDIT.
