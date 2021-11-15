@@ -1952,6 +1952,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     mEnabledFeatures.features.imageCubeArray = getFeatures().supportsImageCubeArray.enabled;
     // Used to support framebuffers with multiple attachments:
     mEnabledFeatures.features.independentBlend = mPhysicalDeviceFeatures.independentBlend;
+    // Used to support multi_draw_indirect
+    mEnabledFeatures.features.multiDrawIndirect = mPhysicalDeviceFeatures.multiDrawIndirect;
     // Used to support robust buffer access:
     mEnabledFeatures.features.robustBufferAccess = mPhysicalDeviceFeatures.robustBufferAccess;
     // Used to support Anisotropic filtering:
@@ -2690,6 +2692,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         &mFeatures, supportsCustomBorderColorEXT,
         mCustomBorderColorFeatures.customBorderColors == VK_TRUE &&
             mCustomBorderColorFeatures.customBorderColorWithoutFormat == VK_TRUE && !isSwiftShader);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsMultiDrawIndirect,
+                            mPhysicalDeviceFeatures.multiDrawIndirect == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, disableFifoPresentMode, IsLinux() && isIntel);
 

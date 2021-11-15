@@ -491,12 +491,8 @@ class MultiDrawIndirectTest : public ANGLETestBase,
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
     }
-    void SetUp() override
-    {
-        ASSERT_GE(getClientMajorVersion(), 3);
-        ASSERT_GE(getClientMinorVersion(), 1);
-        ANGLETestBase::ANGLETestSetUp();
-    }
+
+    void SetUp() override { ANGLETestBase::ANGLETestSetUp(); }
 
     void SetupProgramIndirect()
     {
@@ -929,6 +925,7 @@ INSTANTIATE_TEST_SUITE_P(
     PrintToStringParamName());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiDrawIndirectTest);
-ANGLE_INSTANTIATE_TEST_ES31(MultiDrawIndirectTest);
 
+ANGLE_INSTANTIATE_TEST_ES31_AND(MultiDrawIndirectTest,
+                                WithNoVulkanMultiDrawIndirect(ES31_VULKAN()));
 }  // namespace

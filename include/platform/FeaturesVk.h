@@ -193,6 +193,12 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports the VK_EXT_custom_border_color extension", &members,
         "http://anglebug.com/3577"};
 
+    // Whether the VkDevice supports multiDrawIndirect (drawIndirect with drawCount > 1)
+    // http://anglebug.com/6439
+    Feature supportsMultiDrawIndirect = {
+        "supportsMultiDrawIndirect", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the multiDrawIndirect extension", &members, "http://anglebug.com/6439"};
+
     // Whether the VkDevice supports the VK_KHR_depth_stencil_resolve extension with the
     // independentResolveNone feature.
     // http://anglebug.com/4836
