@@ -938,6 +938,8 @@ angle::Result WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context *cont
     if (mNeedToAcquireNextSwapchainImage)
     {
         // Acquire the next image (previously deferred) before it is drawn to or read from.
+        ContextVk *contextVk = vk::GetImpl(context);
+        ANGLE_VK_TRACE_EVENT_AND_MARKER(contextVk, "First Swap Image Use");
         ANGLE_TRY(doDeferredAcquireNextImage(context, false));
     }
     return SurfaceVk::getAttachmentRenderTarget(context, binding, imageIndex, samples, rtOut);
@@ -1632,6 +1634,7 @@ angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context,
         // Acquire the next image (previously deferred).  The image may not have been already
         // acquired if there was no rendering done at all to the default framebuffer in this frame,
         // for example if all rendering was done to FBOs.
+        ANGLE_VK_TRACE_EVENT_AND_MARKER(contextVk, "Acquire Swap Image Before Swap");
         ANGLE_TRY(doDeferredAcquireNextImage(context, false));
     }
 
@@ -1647,6 +1650,7 @@ angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context,
     {
         // Immediately try to acquire the next image, which will recognize the out-of-date
         // swapchain (potentially because of a rotation change), and recreate it.
+        ANGLE_VK_TRACE_EVENT_AND_MARKER(contextVk, "Out-of-Date Swapbuffer");
         ANGLE_TRY(doDeferredAcquireNextImage(context, presentOutOfDate));
     }
 
@@ -2008,6 +2012,7 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
         // Acquire the next image (previously deferred).  Some tests (e.g.
         // GenerateMipmapWithRedefineBenchmark.Run/vulkan_webgl) cause this path to be taken,
         // because of dirty-object processing.
+        ANGLE_VK_TRACE_EVENT_AND_MARKER(contextVk, "Initialize Swap Image");
         ANGLE_TRY(doDeferredAcquireNextImage(context, false));
     }
 

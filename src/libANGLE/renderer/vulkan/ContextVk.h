@@ -1255,4 +1255,15 @@ ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex
         contextVk->insertEventMarkerImpl(GL_DEBUG_SOURCE_OTHER, ANGLE_MESSAGE); \
     } while (0)
 
+// Generate a trace event for graphics profiler, and insert an event marker in the command buffer.
+#define ANGLE_VK_TRACE_EVENT_AND_MARKER(contextVk, ...)                         \
+    do                                                                          \
+    {                                                                           \
+        char ANGLE_MESSAGE[100];                                                \
+        snprintf(ANGLE_MESSAGE, sizeof(ANGLE_MESSAGE), __VA_ARGS__);            \
+        ANGLE_TRACE_EVENT0("gpu.angle", ANGLE_MESSAGE);                         \
+                                                                                \
+        contextVk->insertEventMarkerImpl(GL_DEBUG_SOURCE_OTHER, ANGLE_MESSAGE); \
+    } while (0)
+
 #endif  // LIBANGLE_RENDERER_VULKAN_CONTEXTVK_H_
