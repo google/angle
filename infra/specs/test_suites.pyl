@@ -934,7 +934,7 @@
       },
     },
 
-    'swangle_isolated_scripts': {
+    'swangle_restricted_trace_gold_isolated_scripts': {
       'angle_restricted_trace_gold_tests': {
         'args': [
           '--test-machine-name',
@@ -951,7 +951,7 @@
           'chrome-gpu-gold-service-account',
         ],
         'swarming': {
-          'shards': 2,
+          'shards': 6,
         },
       },
     },

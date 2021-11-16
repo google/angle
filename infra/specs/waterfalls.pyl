@@ -91,7 +91,7 @@
         ],
         'test_suites': {
           'gtest_tests': 'swangle_gtests',
-          'isolated_scripts': 'swangle_isolated_scripts',
+          'isolated_scripts': 'swangle_restricted_trace_gold_isolated_scripts',
         },
       },
       'linux-swiftshader-asan': {
@@ -204,7 +204,7 @@
         ],
         'test_suites': {
           'gtest_tests': 'swangle_gtests',
-          'isolated_scripts': 'swangle_isolated_scripts',
+          'isolated_scripts': 'swangle_restricted_trace_gold_isolated_scripts',
         },
       },
       'win10-x64-swiftshader-asan': {
