@@ -705,6 +705,17 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
 
     bool hostVisible = mBuffer->isHostVisible();
 
+    // MAP_UNSYNCHRONIZED_BIT, so immediately map.
+    if ((access & GL_MAP_UNSYNCHRONIZED_BIT) != 0)
+    {
+        if (hostVisible)
+        {
+            return mBuffer->mapWithOffset(contextVk, mapPtrBytes,
+                                          static_cast<size_t>(mBufferOffset + offset));
+        }
+        return handleDeviceLocalBufferMap(contextVk, offset, length, mapPtrBytes);
+    }
+
     // Read case
     if ((access & GL_MAP_WRITE_BIT) == 0)
     {
@@ -779,12 +790,8 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     }
 
     // Write case (worst case, buffer in use for write)
-    if ((access & GL_MAP_UNSYNCHRONIZED_BIT) == 0)
-    {
-        ANGLE_TRY(mBuffer->waitForIdle(contextVk,
-                                       "GPU stall due to mapping buffer in use by the GPU",
-                                       RenderPassClosureReason::BufferInUseWhenSynchronizedMap));
-    }
+    ANGLE_TRY(mBuffer->waitForIdle(contextVk, "GPU stall due to mapping buffer in use by the GPU",
+                                   RenderPassClosureReason::BufferInUseWhenSynchronizedMap));
     return mBuffer->mapWithOffset(contextVk, mapPtrBytes,
                                   static_cast<size_t>(mBufferOffset + offset));
 }

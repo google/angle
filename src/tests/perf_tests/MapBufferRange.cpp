@@ -35,6 +35,7 @@ struct MapBufferRangeParams final : public RenderTestParams
         updateOffset      = 0;
         bufferSize        = 1048576;
         iterationsPerStep = kIterationsPerStep;
+        access            = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT;
     }
 
     std::string story() const override;
@@ -47,6 +48,7 @@ struct MapBufferRangeParams final : public RenderTestParams
     GLsizeiptr updateSize;
     GLsizeiptr updateOffset;
     GLsizeiptr bufferSize;
+    GLbitfield access;
 };
 
 std::ostream &operator<<(std::ostream &os, const MapBufferRangeParams &params)
@@ -254,6 +256,7 @@ std::string MapBufferRangeParams::story() const
     strstr << "_updateOffset" << updateOffset;
     strstr << "_updateSize" << updateSize;
     strstr << "_bufferSize" << bufferSize;
+    strstr << "_access0x" << std::hex << access;
 
     return strstr.str();
 }
@@ -338,7 +341,7 @@ void MapBufferRangeBenchmark::drawBenchmark()
         if (params.updateSize > 0)
         {
             void *mapPtr = glMapBufferRange(GL_ARRAY_BUFFER, params.updateOffset, params.updateSize,
-                                            GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
+                                            params.access);
             memcpy(mapPtr, mVertexData.data() + params.updateOffset, params.updateSize);
             glUnmapBuffer(GL_ARRAY_BUFFER);
         }
@@ -432,7 +435,29 @@ MapBufferRangeParams BufferUpdateVulkanParamsNonPowerOf2()
     params.vertexNormalized     = GL_FALSE;
     params.updateSize           = 32000;
     params.bufferSize           = 800000;
-    ;
+    return params;
+}
+
+MapBufferRangeParams BufferUpdateVulkanParamsUnsynchronized()
+{
+    MapBufferRangeParams params;
+    params.eglParameters        = egl_platform::VULKAN();
+    params.vertexType           = GL_FLOAT;
+    params.vertexComponentCount = 4;
+    params.vertexNormalized     = GL_FALSE;
+    params.access               = GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
+    return params;
+}
+
+MapBufferRangeParams BufferUpdateVulkanParamsLargeUpdateUnsynchronized()
+{
+    MapBufferRangeParams params;
+    params.eglParameters        = egl_platform::VULKAN();
+    params.vertexType           = GL_FLOAT;
+    params.vertexComponentCount = 4;
+    params.vertexNormalized     = GL_FALSE;
+    params.updateSize           = 524288;
+    params.access               = GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
     return params;
 }
 
@@ -449,6 +474,8 @@ ANGLE_INSTANTIATE_TEST(MapBufferRangeBenchmark,
                        BufferUpdateVulkanParamsLargeUpdate(),
                        BufferUpdateVulkanParamsFullBuffer(),
                        BufferUpdateVulkanParamsTinyUpdate(),
-                       BufferUpdateVulkanParamsNonPowerOf2());
+                       BufferUpdateVulkanParamsNonPowerOf2(),
+                       BufferUpdateVulkanParamsUnsynchronized(),
+                       BufferUpdateVulkanParamsLargeUpdateUnsynchronized());
 
 }  // namespace
