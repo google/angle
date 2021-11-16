@@ -1761,6 +1761,19 @@ int TestSuite::run()
                 {
                     return 1;
                 }
+
+                const std::string &batchStdout = processInfo.process->getStdout();
+                std::vector<std::string> lines =
+                    SplitString(batchStdout, "\r\n", WhitespaceHandling::TRIM_WHITESPACE,
+                                SplitResult::SPLIT_WANT_NONEMPTY);
+                constexpr size_t kKeepLines = 10;
+                printf("Last %d lines of batch stdout:\n", static_cast<int>(kKeepLines));
+                for (size_t lineNo = lines.size() - std::min(lines.size(), kKeepLines);
+                     lineNo < lines.size(); ++lineNo)
+                {
+                    printf("%s\n", lines[lineNo].c_str());
+                }
+
                 for (const TestIdentifier &testIdentifier : processInfo.testsInBatch)
                 {
                     // Because the whole batch failed we can't know how long each test took.
