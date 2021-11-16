@@ -495,6 +495,8 @@ ContextImpl *DisplayEGL::createContext(const gl::State &state,
     bool usingExternalContext = attribs.get(EGL_EXTERNAL_CONTEXT_ANGLE, EGL_FALSE) == EGL_TRUE;
     EGLAttrib virtualizationGroup =
         attribs.get(EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, EGL_DONT_CARE);
+    bool globalTextureShareGroup =
+        attribs.get(EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_FALSE) == EGL_TRUE;
 
     std::shared_ptr<RendererEGL> renderer = mRenderer;
     if (usingExternalContext)
@@ -512,16 +514,20 @@ ContextImpl *DisplayEGL::createContext(const gl::State &state,
         renderer = mVirtualizationGroups[virtualizationGroup].lock();
         if (!renderer)
         {
+            // If the user requested a dispaly-level texture share group, all contexts must be in
+            // the same share group. Otherwise honor the user's share group request.
             EGLContext nativeShareContext = EGL_NO_CONTEXT;
-            if (shareContext)
+            if (globalTextureShareGroup)
+            {
+                nativeShareContext = mRenderer->getContext();
+            }
+            else if (shareContext)
             {
                 ContextEGL *shareContextEGL = GetImplAs<ContextEGL>(shareContext);
                 nativeShareContext          = shareContextEGL->getContext();
             }
 
-            // Create a new renderer for this context.  It only needs to share with the user's
-            // requested share context because there are no internal resources in DisplayEGL that
-            // are shared at the GL level.
+            // Create a new renderer for this context.
             egl::Error error = createRenderer(nativeShareContext, false, false, &renderer);
             if (error.isError())
             {
