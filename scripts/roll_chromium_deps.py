@@ -8,7 +8,7 @@
 # be found in the AUTHORS file in the root of the source tree.
 
 # This is a modified copy of the script in
-# https://webrtc.googlesource.com/src/+/master/tools_webrtc/autoroller/roll_deps.py
+# https://webrtc.googlesource.com/src/+/main/tools_webrtc/autoroller/roll_deps.py
 # customized for ANGLE.
 """Script to automatically roll Chromium dependencies in the ANGLE DEPS file."""
 
@@ -562,14 +562,14 @@ def _IsTreeClean():
     return False
 
 
-def _EnsureUpdatedMasterBranch(dry_run):
+def _EnsureUpdatedMainBranch(dry_run):
     current_branch = _RunCommand(['git', 'rev-parse', '--abbrev-ref', 'HEAD'])[0].splitlines()[0]
-    if current_branch != 'master':
-        logging.error('Please checkout the master branch and re-run this script.')
+    if current_branch != 'main':
+        logging.error('Please checkout the main branch and re-run this script.')
         if not dry_run:
             sys.exit(-1)
 
-    logging.info('Updating master branch...')
+    logging.info('Updating main branch...')
     _RunCommand(['git', 'pull'])
 
 
@@ -582,7 +582,7 @@ def _CreateRollBranch(dry_run):
 def _RemovePreviousRollBranch(dry_run):
     active_branch, branches = _GetBranches()
     if active_branch == ROLL_BRANCH_NAME:
-        active_branch = 'master'
+        active_branch = 'main'
     if ROLL_BRANCH_NAME in branches:
         logging.info('Removing previous roll branch (%s)', ROLL_BRANCH_NAME)
         if not dry_run:
@@ -681,7 +681,7 @@ def main():
         '--ignore-unclean-workdir',
         action='store_true',
         default=False,
-        help=('Ignore if the current branch is not master or if there '
+        help=('Ignore if the current branch is not main or if there '
               'are uncommitted changes (default: %(default)s).'))
     grp = p.add_mutually_exclusive_group()
     grp.add_argument(
@@ -727,7 +727,7 @@ def main():
         _RemovePreviousRollBranch(opts.dry_run)
 
     if not opts.ignore_unclean_workdir:
-        _EnsureUpdatedMasterBranch(opts.dry_run)
+        _EnsureUpdatedMainBranch(opts.dry_run)
 
     deps_filename = os.path.join(CHECKOUT_SRC_DIR, 'DEPS')
     angle_deps = ParseLocalDepsFile(deps_filename)
