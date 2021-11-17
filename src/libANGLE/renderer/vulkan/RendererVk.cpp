@@ -1688,11 +1688,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
                  vkEnumerateDeviceLayerProperties(mPhysicalDevice, &deviceLayerCount, nullptr));
 
     std::vector<VkLayerProperties> deviceLayerProps(deviceLayerCount);
-    if (deviceLayerCount > 0)
-    {
-        ANGLE_VK_TRY(displayVk, vkEnumerateDeviceLayerProperties(mPhysicalDevice, &deviceLayerCount,
-                                                                 deviceLayerProps.data()));
-    }
+    ANGLE_VK_TRY(displayVk, vkEnumerateDeviceLayerProperties(mPhysicalDevice, &deviceLayerCount,
+                                                             deviceLayerProps.data()));
 
     VulkanLayerVector enabledDeviceLayerNames;
     if (mEnableValidationLayers)
@@ -1713,13 +1710,16 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     ANGLE_VK_TRY(displayVk, vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr,
                                                                  &deviceExtensionCount, nullptr));
 
+    // Work-around a race condition in the Android platform during Android start-up, that can cause
+    // the second call to vkEnumerateDeviceExtensionProperties to have an additional extension.  In
+    // that case, the second call will return VK_INCOMPLETE.  To work-around that, add 1 to
+    // deviceExtensionCount and ask for one more extension property than the first call said there
+    // were.  See: http://anglebug.com/6715 and internal-to-Google bug: b/206733351.
+    deviceExtensionCount++;
     std::vector<VkExtensionProperties> deviceExtensionProps(deviceExtensionCount);
-    if (deviceExtensionCount > 0)
-    {
-        ANGLE_VK_TRY(displayVk, vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr,
-                                                                     &deviceExtensionCount,
-                                                                     deviceExtensionProps.data()));
-    }
+    ANGLE_VK_TRY(displayVk,
+                 vkEnumerateDeviceExtensionProperties(
+                     mPhysicalDevice, nullptr, &deviceExtensionCount, deviceExtensionProps.data()));
 
     // Enumerate device extensions that are provided by explicit layers.
     for (const char *layerName : enabledDeviceLayerNames)
