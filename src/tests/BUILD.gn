@@ -771,6 +771,9 @@ if (build_angle_gles1_conform_tests) {
 
       sources += angle_gles1_conform_common_source
 
+      if (is_clang) {
+        cflags_c = [ "-Wno-shadow" ]
+      }
       defines = [ "ProbeEnum=ProbeEnumANGLE" ]
     }
 
@@ -843,6 +846,10 @@ if (build_angle_gles1_conform_tests) {
     ]
 
     sources += angle_gles1_conform_common_source
+
+    if (is_clang) {
+      cflags_c = [ "-Wno-shadow" ]
+    }
   }
 
   angle_test("angle_gles1_primtest_tests") {
@@ -896,6 +903,10 @@ if (build_angle_gles1_conform_tests) {
     ]
 
     sources += angle_gles1_conform_common_source
+
+    if (is_clang) {
+      cflags_c = [ "-Wno-shadow" ]
+    }
 
     if (!is_win && !is_linux && !is_chromeos) {
       defines = [ "NULLWS" ]
