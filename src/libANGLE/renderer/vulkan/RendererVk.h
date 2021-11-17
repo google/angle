@@ -405,7 +405,9 @@ class RendererVk : angle::NonCopyable
 
     SamplerCache &getSamplerCache() { return mSamplerCache; }
     SamplerYcbcrConversionCache &getYuvConversionCache() { return mYuvConversionCache; }
-    vk::ActiveHandleCounter &getActiveHandleCounts() { return mActiveHandleCounts; }
+
+    void onAllocateHandle(vk::HandleType handleType);
+    void onDeallocateHandle(vk::HandleType handleType);
 
     bool getEnableValidationLayers() const { return mEnableValidationLayers; }
 
@@ -639,6 +641,7 @@ class RendererVk : angle::NonCopyable
     SamplerYcbcrConversionCache mYuvConversionCache;
     angle::HashMap<VkFormat, uint32_t> mVkFormatDescriptorCountMap;
     vk::ActiveHandleCounter mActiveHandleCounts;
+    std::mutex mActiveHandleCountsMutex;
 
     // Tracks resource serials.
     vk::ResourceSerialFactory mResourceSerialFactory;

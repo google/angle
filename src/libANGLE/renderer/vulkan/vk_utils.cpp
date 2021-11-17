@@ -890,7 +890,7 @@ void GarbageObject::destroy(RendererVk *renderer)
             break;
     }
 
-    renderer->getActiveHandleCounts().onDeallocate(mHandleType);
+    renderer->onDeallocateHandle(mHandleType);
 }
 
 void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label)

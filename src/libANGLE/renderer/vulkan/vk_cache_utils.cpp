@@ -3829,7 +3829,7 @@ void SamplerYcbcrConversionCache::destroy(RendererVk *rendererVk)
         ASSERT(!yuvSampler.isReferenced());
         yuvSampler.get().destroy(device);
 
-        rendererVk->getActiveHandleCounts().onDeallocate(vk::HandleType::SamplerYcbcrConversion);
+        rendererVk->onDeallocateHandle(vk::HandleType::SamplerYcbcrConversion);
     }
 
     for (auto &iter : mVkFormatPayload)
@@ -3838,7 +3838,7 @@ void SamplerYcbcrConversionCache::destroy(RendererVk *rendererVk)
         ASSERT(!yuvSampler.isReferenced());
         yuvSampler.get().destroy(device);
 
-        rendererVk->getActiveHandleCounts().onDeallocate(vk::HandleType::SamplerYcbcrConversion);
+        rendererVk->onDeallocateHandle(vk::HandleType::SamplerYcbcrConversion);
     }
 
     mExternalFormatPayload.clear();
@@ -3871,8 +3871,7 @@ angle::Result SamplerYcbcrConversionCache::getYuvConversionImpl(
     vk::RefCountedSamplerYcbcrConversion &insertedYuvConversion = insertedItem.first->second;
     yuvConversionOut->set(&insertedYuvConversion);
 
-    context->getRenderer()->getActiveHandleCounts().onAllocate(
-        vk::HandleType::SamplerYcbcrConversion);
+    context->getRenderer()->onAllocateHandle(vk::HandleType::SamplerYcbcrConversion);
 
     return angle::Result::Continue;
 }
@@ -3948,7 +3947,7 @@ void SamplerCache::destroy(RendererVk *rendererVk)
         ASSERT(!sampler.isReferenced());
         sampler.get().get().destroy(device);
 
-        rendererVk->getActiveHandleCounts().onDeallocate(vk::HandleType::Sampler);
+        rendererVk->onDeallocateHandle(vk::HandleType::Sampler);
     }
 
     mPayload.clear();
@@ -3976,7 +3975,7 @@ angle::Result SamplerCache::getSampler(ContextVk *contextVk,
     vk::RefCountedSampler &insertedSampler = insertedItem.first->second;
     samplerOut->set(&insertedSampler);
 
-    contextVk->getRenderer()->getActiveHandleCounts().onAllocate(vk::HandleType::Sampler);
+    contextVk->getRenderer()->onAllocateHandle(vk::HandleType::Sampler);
 
     return angle::Result::Continue;
 }

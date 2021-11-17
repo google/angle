@@ -3617,6 +3617,18 @@ angle::Result RendererVk::getFormatDescriptorCountForExternalFormat(ContextVk *c
     return angle::Result::Stop;
 }
 
+void RendererVk::onAllocateHandle(vk::HandleType handleType)
+{
+    std::lock_guard<std::mutex> localLock(mActiveHandleCountsMutex);
+    mActiveHandleCounts.onAllocate(handleType);
+}
+
+void RendererVk::onDeallocateHandle(vk::HandleType handleType)
+{
+    std::lock_guard<std::mutex> localLock(mActiveHandleCountsMutex);
+    mActiveHandleCounts.onDeallocate(handleType);
+}
+
 namespace vk
 {
 MemoryReport::MemoryReport()
