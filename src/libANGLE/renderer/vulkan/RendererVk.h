@@ -468,6 +468,7 @@ class RendererVk : angle::NonCopyable
     // Accumulate cache stats for a specific cache
     void accumulateCacheStats(VulkanCacheType cache, const CacheStats &stats)
     {
+        std::lock_guard<std::mutex> localLock(mCacheStatsMutex);
         mVulkanCacheStats[cache].accumulate(stats);
     }
     // Log cache stats for all caches
@@ -648,6 +649,7 @@ class RendererVk : angle::NonCopyable
     // Stats about all Vulkan object caches
     using VulkanCacheStats = angle::PackedEnumMap<VulkanCacheType, CacheStats>;
     VulkanCacheStats mVulkanCacheStats;
+    mutable std::mutex mCacheStatsMutex;
 
     // A mask to filter out Vulkan pipeline stages that are not supported, applied in situations
     // where multiple stages are prespecified (for example with image layout transitions):

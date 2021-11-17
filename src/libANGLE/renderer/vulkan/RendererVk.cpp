@@ -3547,6 +3547,8 @@ void RendererVk::logCacheStats() const
         return;
     }
 
+    std::lock_guard<std::mutex> localLock(mCacheStatsMutex);
+
     int cacheType = 0;
     INFO() << "Vulkan object cache hit ratios: ";
     for (const CacheStats &stats : mVulkanCacheStats)
