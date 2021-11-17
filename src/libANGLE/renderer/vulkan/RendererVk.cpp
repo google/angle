@@ -3260,13 +3260,16 @@ void RendererVk::setGlobalDebugAnnotator()
     installDebugAnnotatorVk = true;
 #endif
 
-    if (installDebugAnnotatorVk)
     {
-        gl::InitializeDebugAnnotations(&mAnnotator);
-    }
-    else
-    {
-        mDisplay->setGlobalDebugAnnotator();
+        std::lock_guard<std::mutex> lock(gl::GetDebugMutex());
+        if (installDebugAnnotatorVk)
+        {
+            gl::InitializeDebugAnnotations(&mAnnotator);
+        }
+        else
+        {
+            mDisplay->setGlobalDebugAnnotator();
+        }
     }
 }
 
