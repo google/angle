@@ -9,11 +9,13 @@
 
 import argparse
 import fnmatch
+import io
 import json
 import logging
 import time
 import os
 import re
+import subprocess
 import sys
 
 # Add //src/testing into sys.path for importing xvfb and test_env, and
@@ -35,11 +37,11 @@ from tracing.value import merge_histograms
 
 DEFAULT_TEST_SUITE = 'angle_perftests'
 DEFAULT_LOG = 'info'
-DEFAULT_SAMPLES = 5
+DEFAULT_SAMPLES = 4
 DEFAULT_TRIALS = 3
 DEFAULT_MAX_ERRORS = 3
-DEFAULT_WARMUP_LOOPS = 3
-DEFAULT_CALIBRATION_TIME = 3
+DEFAULT_WARMUP_LOOPS = 2
+DEFAULT_CALIBRATION_TIME = 2
 
 # Filters out stuff like: " I   72.572s run_tests_on_device(96071FFAZ00096) "
 ANDROID_LOGGING_PREFIX = r'I +\d+.\d+s \w+\(\w+\)  '
@@ -48,6 +50,9 @@ ANDROID_LOGGING_PREFIX = r'I +\d+.\d+s \w+\(\w+\)  '
 FAIL = 'FAIL'
 PASS = 'PASS'
 SKIP = 'SKIP'
+
+EXIT_FAILURE = 1
+EXIT_SUCCESS = 0
 
 
 def is_windows():
@@ -61,20 +66,38 @@ def get_binary_name(binary):
         return './%s' % binary
 
 
+def _popen(*args, **kwargs):
+    assert 'creationflags' not in kwargs
+    if sys.platform == 'win32':
+        # Necessary for signal handling. See crbug.com/733612#c6.
+        kwargs['creationflags'] = subprocess.CREATE_NEW_PROCESS_GROUP
+    return subprocess.Popen(*args, **kwargs)
+
+
+def run_command_with_output(argv, stdoutfile, env=None, cwd=None, log=True):
+    assert stdoutfile
+    with io.open(stdoutfile, 'wb') as writer:
+        process = _popen(argv, env=env, cwd=cwd, stdout=writer, stderr=subprocess.STDOUT)
+        test_env.forward_signals([process])
+        while process.poll() is None:
+            # This sleep is needed for signal propagation. See the
+            # wait_with_signals() docstring.
+            time.sleep(0.1)
+        return process.returncode
+
+
 def _run_and_get_output(args, cmd, env):
     lines = []
+    logging.debug(' '.join(cmd))
     with common.temporary_file() as tempfile_path:
         if args.xvfb:
-            ret = xvfb.run_executable(cmd, env, stdoutfile=tempfile_path)
+            exit_code = xvfb.run_executable(cmd, env, stdoutfile=tempfile_path)
         else:
-            ret = test_env.run_command_with_output(cmd, env=env, stdoutfile=tempfile_path)
-        if ret:
-            logging.error('Error running test suite.')
-            return None
+            exit_code = run_command_with_output(cmd, env=env, stdoutfile=tempfile_path, log=False)
         with open(tempfile_path) as f:
             for line in f:
                 lines.append(line.strip())
-    return lines
+    return exit_code, lines
 
 
 def _filter_tests(tests, pattern):
@@ -97,7 +120,7 @@ def _get_results_from_output(output, result):
     logging.debug('Searching for %s in output' % pattern)
     m = re.findall(pattern, output)
     if not m:
-        logging.warning('Did not find the result "%s" in the test output.' % result)
+        logging.warning('Did not find the result "%s" in the test output:\n%s' % (result, output))
         return None
 
     return [float(value) for value in m]
@@ -155,7 +178,7 @@ def _coefficient_of_variation(data):
     return stddev / c
 
 
-def _save_extra_output_files(args, test_results, histograms):
+def _save_extra_output_files(args, results, histograms):
     isolated_out_dir = os.path.dirname(args.isolated_script_test_output)
     if not os.path.isdir(isolated_out_dir):
         return
@@ -163,13 +186,59 @@ def _save_extra_output_files(args, test_results, histograms):
     if not os.path.isdir(benchmark_path):
         os.makedirs(benchmark_path)
     test_output_path = os.path.join(benchmark_path, 'test_results.json')
-    logging.info('Saving test results to %s.' % test_output_path)
-    with open(test_output_path, 'w') as out_file:
-        out_file.write(json.dumps(test_results, indent=2))
+    results.save_to_json_file(test_output_path)
     perf_output_path = os.path.join(benchmark_path, 'perf_results.json')
     logging.info('Saving perf histograms to %s.' % perf_output_path)
     with open(perf_output_path, 'w') as out_file:
         out_file.write(json.dumps(histograms.AsDicts(), indent=2))
+
+
+class Results:
+
+    def __init__(self):
+        self._results = {
+            'tests': {},
+            'interrupted': False,
+            'seconds_since_epoch': time.time(),
+            'path_delimiter': '.',
+            'version': 3,
+            'num_failures_by_type': {
+                FAIL: 0,
+                PASS: 0,
+                SKIP: 0,
+            },
+        }
+        self._test_results = {}
+
+    def has_result(self, test):
+        return test in self._test_results
+
+    def result_skip(self, test):
+        self._test_results[test] = {'expected': SKIP, 'actual': SKIP}
+        self._results['num_failures_by_type'][SKIP] += 1
+
+    def result_pass(self, test):
+        self._test_results[test] = {'expected': PASS, 'actual': PASS}
+        self._results['num_failures_by_type'][PASS] += 1
+
+    def result_fail(self, test):
+        self._test_results[test] = {'expected': PASS, 'actual': FAIL, 'is_unexpected': True}
+        self._results['num_failures_by_type'][FAIL] += 1
+
+    def save_to_output_file(self, test_suite, fname):
+        self._update_results(test_suite)
+        with open(fname, 'w') as out_file:
+            out_file.write(json.dumps(self._results, indent=2))
+
+    def save_to_json_file(self, fname):
+        logging.info('Saving test results to %s.' % fname)
+        with open(fname, 'w') as out_file:
+            out_file.write(json.dumps(self._results, indent=2))
+
+    def _update_results(self, test_suite):
+        if self._test_results:
+            self._results['tests'][test_suite] = self._test_results
+            self._test_results = {}
 
 
 def main():
@@ -227,7 +296,9 @@ def main():
         default=DEFAULT_CALIBRATION_TIME)
 
     args, extra_flags = parser.parse_known_args()
-    logging.basicConfig(level=args.log.upper(), stream=sys.stdout)
+
+    reload(logging)
+    logging.basicConfig(level=args.log.upper())
 
     start_time = time.time()
 
@@ -249,9 +320,9 @@ def main():
 
     # Get test list
     cmd = [get_binary_name(args.test_suite), '--list-tests', '--verbose']
-    lines = _run_and_get_output(args, cmd, env)
-    if not lines:
-        raise Exception('Could not find test list from test output.')
+    exit_code, lines = _run_and_get_output(args, cmd, env)
+    if exit_code != EXIT_SUCCESS:
+        logging.fatal('Could not find test list from test output:\n%s' % '\n'.join(lines))
     tests = _get_tests_from_output(lines)
 
     if args.filter:
@@ -260,25 +331,21 @@ def main():
     # Get tests for this shard (if using sharding args)
     tests = _shard_tests(tests, args.shard_count, args.shard_index)
 
-    # Run tests
-    results = {
-        'tests': {},
-        'interrupted': False,
-        'seconds_since_epoch': time.time(),
-        'path_delimiter': '.',
-        'version': 3,
-        'num_failures_by_type': {
-            FAIL: 0,
-            PASS: 0,
-            SKIP: 0,
-        },
-    }
+    num_tests = len(tests)
+    if num_tests == 0:
+        logging.error('No tests to run.')
+        return EXIT_FAILURE
 
-    test_results = {}
+    logging.info('Running %d test%s' % (num_tests, 's' if num_tests > 1 else ' '))
+
+    # Run tests
+    results = Results()
+
     histograms = histogram_set.HistogramSet()
     total_errors = 0
 
-    for test in tests:
+    for test_index in range(num_tests):
+        test = tests[test_index]
         cmd = [
             get_binary_name(args.test_suite),
             '--gtest_filter=%s' % test,
@@ -298,12 +365,12 @@ def main():
                 '--warmup-loops',
                 str(args.warmup_loops),
             ]
-            calibrate_output = _run_and_get_output(args, cmd_calibrate, env)
-            if not calibrate_output:
-                logging.error('Failed to get calibration output')
-                test_results[test] = {'expected': PASS, 'actual': FAIL, 'is_unexpected': True}
-                results['num_failures_by_type'][FAIL] += 1
+            exit_code, calibrate_output = _run_and_get_output(args, cmd_calibrate, env)
+            if exit_code != EXIT_SUCCESS:
+                logging.fatal('%s failed. Output:\n%s' %
+                              (cmd_calibrate[0], '\n'.join(calibrate_output)))
                 total_errors += 1
+                results.result_fail(test)
                 continue
             steps_per_trial = _get_results_from_output(calibrate_output, 'steps_to_run')
             if not steps_per_trial:
@@ -311,14 +378,15 @@ def main():
                 continue
             assert (len(steps_per_trial) == 1)
             steps_per_trial = int(steps_per_trial[0])
-        logging.info('Running %s %d times with %d trials and %d steps per trial.' %
-                     (test, args.samples_per_test, args.trials_per_sample, steps_per_trial))
+        logging.info('Test %d/%d: %s (samples=%d trials_per_sample=%d steps_per_trial=%d)' %
+                     (test_index + 1, num_tests, test, args.samples_per_test,
+                      args.trials_per_sample, steps_per_trial))
         wall_times = []
         test_histogram_set = histogram_set.HistogramSet()
         for sample in range(args.samples_per_test):
             if total_errors >= args.max_errors:
                 logging.error('Error count exceeded max errors (%d). Aborting.' % args.max_errors)
-                return 1
+                return EXIT_FAILURE
 
             cmd_run = cmd + [
                 '--steps-per-trial',
@@ -332,65 +400,62 @@ def main():
                 cmd_run += ['--warmup-loops', str(args.warmup_loops)]
             with common.temporary_file() as histogram_file_path:
                 cmd_run += ['--isolated-script-test-perf-output=%s' % histogram_file_path]
-                output = _run_and_get_output(args, cmd_run, env)
-                if output:
-                    sample_wall_times = _get_results_from_output(output, 'wall_time')
-                    if not sample_wall_times:
-                        logging.warning('Test %s failed to produce a sample output' % test)
-                        break
-                    logging.info('Sample %d wall_time results: %s' %
-                                 (sample, str(sample_wall_times)))
-                    wall_times += sample_wall_times
-                    with open(histogram_file_path) as histogram_file:
-                        sample_json = json.load(histogram_file)
-                        sample_histogram = histogram_set.HistogramSet()
-                        sample_histogram.ImportDicts(sample_json)
-                        test_histogram_set.Merge(sample_histogram)
-                else:
-                    logging.error('Failed to get sample for test %s' % test)
+                exit_code, output = _run_and_get_output(args, cmd_run, env)
+                if exit_code != EXIT_SUCCESS:
+                    logging.error('%s failed. Output:\n%s' % (cmd_run[0], '\n'.join(output)))
+                    results.result_fail(test)
                     total_errors += 1
+                    break
 
-        if not wall_times:
-            logging.warning('Skipping test %s. Assuming this is intentional.' % test)
-            test_results[test] = {'expected': SKIP, 'actual': SKIP}
-            results['num_failures_by_type'][SKIP] += 1
-        elif len(wall_times) == (args.samples_per_test * args.trials_per_sample):
-            if len(wall_times) > 7:
-                truncation_n = len(wall_times) >> 3
-                logging.info(
-                    'Truncation: Removing the %d highest and lowest times from wall_times.' %
-                    truncation_n)
-                wall_times = _truncated_list(wall_times, truncation_n)
+                sample_wall_times = _get_results_from_output(output, 'wall_time')
+                if not sample_wall_times:
+                    # This can be intentional for skipped tests. They are handled below.
+                    logging.warning('Test %s failed to produce a sample output' % test)
+                    break
+                logging.info('Test %d/%d Sample %d/%d wall_times: %s' %
+                             (test_index + 1, num_tests, sample + 1, args.samples_per_test,
+                              str(sample_wall_times)))
+                wall_times += sample_wall_times
+                with open(histogram_file_path) as histogram_file:
+                    sample_json = json.load(histogram_file)
+                    sample_histogram = histogram_set.HistogramSet()
+                    sample_histogram.ImportDicts(sample_json)
+                    test_histogram_set.Merge(sample_histogram)
 
-            if len(wall_times) > 1:
-                logging.info(
-                    'Mean wall_time for %s is %.2f, with coefficient of variation %.2f%%' %
-                    (test, _mean(wall_times), (_coefficient_of_variation(wall_times) * 100.0)))
-            test_results[test] = {'expected': PASS, 'actual': PASS}
-            results['num_failures_by_type'][PASS] += 1
+        if not results.has_result(test):
+            if not wall_times:
+                logging.warning('Skipping test %s. Assuming this is intentional.' % test)
+                results.result_skip(test)
+            elif len(wall_times) == (args.samples_per_test * args.trials_per_sample):
+                if len(wall_times) > 7:
+                    truncation_n = len(wall_times) >> 3
+                    logging.debug(
+                        'Truncation: Removing the %d highest and lowest times from wall_times.' %
+                        truncation_n)
+                    wall_times = _truncated_list(wall_times, truncation_n)
 
-            # Merge the histogram set into one histogram
-            with common.temporary_file() as merge_histogram_path:
-                logging.info('Writing merged histograms to %s.' % merge_histogram_path)
-                with open(merge_histogram_path, 'w') as merge_histogram_file:
-                    json.dump(test_histogram_set.AsDicts(), merge_histogram_file)
-                    merge_histogram_file.close()
-                merged_dicts = merge_histograms.MergeHistograms(
-                    merge_histogram_path, groupby=['name'])
-                merged_histogram = histogram_set.HistogramSet()
-                merged_histogram.ImportDicts(merged_dicts)
-                histograms.Merge(merged_histogram)
-        else:
-            logging.error('Test %s failed to record some samples' % test)
-            test_results[test] = {'expected': PASS, 'actual': FAIL, 'is_unexpected': True}
-            results['num_failures_by_type'][FAIL] += 1
+                if len(wall_times) > 1:
+                    logging.info('Test %d/%d: %s: truncated mean wall_time = %.2f, cov = %.2f%%' %
+                                 (test_index + 1, num_tests, test, _mean(wall_times),
+                                  (_coefficient_of_variation(wall_times) * 100.0)))
+                results.result_pass(test)
 
-    if test_results:
-        results['tests'][args.test_suite] = test_results
+                # Merge the histogram set into one histogram
+                with common.temporary_file() as merge_histogram_path:
+                    logging.info('Writing merged histograms to %s.' % merge_histogram_path)
+                    with open(merge_histogram_path, 'w') as merge_histogram_file:
+                        json.dump(test_histogram_set.AsDicts(), merge_histogram_file)
+                        merge_histogram_file.close()
+                    merged_dicts = merge_histograms.MergeHistograms(
+                        merge_histogram_path, groupby=['name'])
+                    merged_histogram = histogram_set.HistogramSet()
+                    merged_histogram.ImportDicts(merged_dicts)
+                    histograms.Merge(merged_histogram)
+            else:
+                logging.error('Test %s failed to record some samples' % test)
 
     if args.isolated_script_test_output:
-        with open(args.isolated_script_test_output, 'w') as out_file:
-            out_file.write(json.dumps(results, indent=2))
+        results.save_to_output_file(args.test_suite, args.isolated_script_test_output)
 
         # Uses special output files to match the merge script.
         _save_extra_output_files(args, results, histograms)
@@ -402,7 +467,7 @@ def main():
     end_time = time.time()
     logging.info('Elapsed time: %.2lf seconds.' % (end_time - start_time))
 
-    return 0
+    return EXIT_SUCCESS
 
 
 # This is not really a "script test" so does not need to manually add

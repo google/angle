@@ -1055,12 +1055,21 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         }
     }
 
+    if (traceNameIs("mario_kart_tour"))
+    {
+        // Fails on native Mesa. http://anglebug.com/6711
+        if (IsLinux() && IsIntel() && !mParams.isVulkan())
+        {
+            mSkipTest = true;
+        }
+    }
+
     if (traceNameIs("pubg_mobile_skydive") || traceNameIs("pubg_mobile_battle_royale"))
     {
         addExtensionPrerequisite("GL_EXT_texture_buffer");
 
-        // TODO: http://anglebug.com/6240 Internal errors on Windows using Intel or NVIDIA
-        if (IsWindows() && (IsIntel() || IsNVIDIA()) && mParams.driver == GLESDriverType::SystemWGL)
+        // TODO: http://anglebug.com/6240 Internal errors on Windows/Intel and NVIDIA
+        if (((IsWindows() && IsIntel()) || IsNVIDIA()) && !mParams.isVulkan())
         {
             mSkipTest = true;
         }
@@ -1122,7 +1131,7 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
 
         // http://anglebug.com/6657 - Native test timing out on Intel Linux
-        if (IsLinux() && IsIntel() && mParams.driver == GLESDriverType::SystemWGL)
+        if (IsLinux() && IsIntel() && !mParams.isVulkan())
         {
             mSkipTest = true;
         }
@@ -1135,6 +1144,11 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         {
             mSkipTest = true;
         }
+    }
+
+    if (traceNameIs("township"))
+    {
+        addExtensionPrerequisite("GL_OES_EGL_image_external");
     }
 
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
