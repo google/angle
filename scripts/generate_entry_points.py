@@ -1048,6 +1048,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
     {{
 {access_param_value_cases}
     }}
+    UNREACHABLE();
+    return T();
 }}
 
 template <ParamType PType, typename T>
