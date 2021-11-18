@@ -2524,7 +2524,8 @@
         "args": [
           "angle_end2end_tests",
           "--gtest_filter=-*Vulkan_SwiftShader*",
-          "--bot-mode"
+          "--bot-mode",
+          "--flaky-retries=2"
         ],
         "merge": {
           "args": [],
@@ -2751,7 +2752,8 @@
         "args": [
           "angle_end2end_tests",
           "--gtest_filter=-*Vulkan_SwiftShader*",
-          "--bot-mode"
+          "--bot-mode",
+          "--flaky-retries=2"
         ],
         "merge": {
           "args": [],
@@ -2808,7 +2810,8 @@
         "args": [
           "angle_end2end_tests",
           "--gtest_filter=-*Vulkan_SwiftShader*",
-          "--bot-mode"
+          "--bot-mode",
+          "--flaky-retries=2"
         ],
         "merge": {
           "args": [],

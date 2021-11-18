@@ -1017,12 +1017,12 @@
       'angle_deqp_gles2_metal_gtests',
       'angle_deqp_gles3_gl_gtests',
       'angle_deqp_gles3_metal_gtests',
-      'angle_end2end_gtests',
+      'angle_end2end_with_retry_gtests',
       'angle_unit_gtests',
     ],
 
     'mac_nvidia_gtests': [
-      'angle_end2end_gtests',
+      'angle_end2end_with_retry_gtests',
       'angle_unit_gtests',
     ],
 
