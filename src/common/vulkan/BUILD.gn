@@ -50,10 +50,13 @@ if (angle_enable_vulkan || angle_build_vulkan_system_info) {
       "vulkan_icd.h",
     ]
 
-    defines = [
-      "ANGLE_VK_LAYERS_DIR=\"$angle_data_dir\"",
-      "ANGLE_VK_MOCK_ICD_JSON=\"$angle_data_dir/VkICD_mock_icd.json\"",
-    ]
+    defines =
+        [ "ANGLE_VK_MOCK_ICD_JSON=\"$angle_data_dir/VkICD_mock_icd.json\"" ]
+
+    # On Fuchsia use validation layer provided by the SDK.
+    if (!is_fuchsia) {
+      defines += [ "ANGLE_VK_LAYERS_DIR=\"$angle_data_dir\"" ]
+    }
 
     data_deps = []
 
@@ -62,6 +65,8 @@ if (angle_enable_vulkan || angle_build_vulkan_system_info) {
       _sws_icd = "./$swiftshader_icd_file_name"
       if (is_win) {
         _sws_icd = ".\\\\$swiftshader_icd_file_name"
+      } else if (is_fuchsia) {
+        _sws_icd = "/pkg/$swiftshader_icd_file_name"
       }
 
       defines += [ "ANGLE_VK_SWIFTSHADER_ICD_JSON=\"${_sws_icd}\"" ]
@@ -126,7 +131,7 @@ if (angle_enable_vulkan) {
     group("vulkan_validation_layers") {
       data_deps = []
       if (is_fuchsia) {
-        data_deps += [ "//third_party/fuchsia-sdk:vulkan_validation" ]
+        data_deps += [ "//third_party/fuchsia-sdk/sdk/pkg/vulkan_layers:VkLayer_khronos_validation" ]
       } else {
         data_deps +=
             [ "$angle_vulkan_validation_layers_dir:vulkan_validation_layers" ]

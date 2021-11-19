@@ -121,7 +121,7 @@ TEST(SystemUtils, ConcatenatePath2FullPath)
 {
     std::string path1    = "/this/is/path1";
     std::string path2    = "/this/is/path2";
-    std::string expected = "/this/is/path1";
+    std::string expected = "/this/is/path2";
     EXPECT_EQ(ConcatenatePath(path1, path2), expected);
 }
 
@@ -169,7 +169,7 @@ TEST(SystemUtils, ConcatenatePath2FullPath)
 {
     std::string path1    = "C:\\this\\is\\path1";
     std::string path2    = "C:\\this\\is\\path2";
-    std::string expected = "C:\\this\\is\\path1";
+    std::string expected = "C:\\this\\is\\path2";
     EXPECT_EQ(ConcatenatePath(path1, path2), expected);
 }
 

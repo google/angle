@@ -122,7 +122,7 @@ std::string ConcatenatePath(std::string first, std::string second)
     }
     if (IsFullPath(second))
     {
-        return first;
+        return second;
     }
     bool firstRedundantPathSeparator = first.find_last_of(GetPathSeparator()) == first.length() - 1;
     bool secondRedundantPathSeparator = second.find(GetPathSeparator()) == 0;
