@@ -250,6 +250,12 @@ class ContextImpl : public GLImplFactory
     virtual egl::Error releaseHighPowerGPU(gl::Context *context);
     virtual egl::Error reacquireHighPowerGPU(gl::Context *context);
 
+    // GL_ANGLE_vulkan_image
+    virtual angle::Result acquireTextures(const gl::Context *context,
+                                          const gl::TextureBarrierVector &textureBarriers);
+    virtual angle::Result releaseTextures(const gl::Context *context,
+                                          gl::TextureBarrierVector *textureBarriers);
+
   protected:
     const gl::State &mState;
     gl::MemoryProgramCache *mMemoryProgramCache;

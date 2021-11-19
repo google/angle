@@ -219,6 +219,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_CHROMIUM_texture_filtering_hint](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/CHROMIUM_texture_filtering_hint.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10004; | &#10060; |
 | [GL_ANGLE_texture_multisample](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_texture_multisample.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; |
 | [GL_ANGLE_texture_rectangle](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_texture_rectangle.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; |
+| [GL_ANGLE_vulkan_image](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_vulkan_image.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; |
 | [GL_ANGLE_webgl_compatibility](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_webgl_compatibility.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; |
 | [GL_ANGLE_yuv_internal_format](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_yuv_internal_format.txt) | &#10004; | &#10060; | &#10004; | &#10004; | &#10004; | &#10004; |
 

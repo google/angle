@@ -640,6 +640,9 @@ struct Extensions
     // GL_ANGLE_texture_rectangle
     bool textureRectangleANGLE = false;
 
+    // GL_ANGLE_vulkan_image
+    bool vulkanImageANGLE = false;
+
     // GL_ANGLE_webgl_compatibility
     bool webglCompatibilityANGLE = false;
 

@@ -4848,6 +4848,43 @@ void ContextVk::framebufferFetchBarrier()
     mGraphicsDirtyBits.set(DIRTY_BIT_FRAMEBUFFER_FETCH_BARRIER);
 }
 
+angle::Result ContextVk::acquireTextures(const gl::Context *context,
+                                         const gl::TextureBarrierVector &textureBarriers)
+{
+    for (const gl::TextureAndLayout &textureBarrier : textureBarriers)
+    {
+        TextureVk *textureVk   = vk::GetImpl(textureBarrier.texture);
+        vk::ImageHelper &image = textureVk->getImage();
+        vk::ImageLayout layout = vk::GetImageLayoutFromGLImageLayout(textureBarrier.layout);
+        // Image should not be accessed while unowned. Emulated formats may have staged updates
+        // to clear the image after initialization.
+        ASSERT(!image.hasStagedUpdatesInAllocatedLevels() || image.hasEmulatedImageChannels());
+        image.setCurrentImageLayout(layout);
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::releaseTextures(const gl::Context *context,
+                                         gl::TextureBarrierVector *textureBarriers)
+{
+    for (gl::TextureAndLayout &textureBarrier : *textureBarriers)
+    {
+
+        TextureVk *textureVk = vk::GetImpl(textureBarrier.texture);
+
+        ANGLE_TRY(textureVk->ensureImageInitialized(this, ImageMipLevels::EnabledLevels));
+
+        vk::ImageHelper &image = textureVk->getImage();
+        ANGLE_TRY(onImageReleaseToExternal(image));
+
+        textureBarrier.layout =
+            vk::ConvertImageLayoutToGLImageLayout(image.getCurrentImageLayout());
+    }
+
+    ANGLE_TRY(flushImpl(nullptr, RenderPassClosureReason::ImageUseThenReleaseToExternal));
+    return mRenderer->ensureNoPendingWork(this);
+}
+
 vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
 {
     ASSERT(queryType == gl::QueryType::AnySamples ||

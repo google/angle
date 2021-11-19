@@ -133,6 +133,7 @@ const ProcEntry g_procTable[] = {
     {"eglWaitNative", P(EGL_WaitNative)},
     {"eglWaitSync", P(EGL_WaitSync)},
     {"eglWaitSyncKHR", P(EGL_WaitSyncKHR)},
+    {"glAcquireTexturesANGLE", P(GL_AcquireTexturesANGLE)},
     {"glActiveShaderProgram", P(GL_ActiveShaderProgram)},
     {"glActiveShaderProgramEXT", P(GL_ActiveShaderProgramEXT)},
     {"glActiveTexture", P(GL_ActiveTexture)},
@@ -747,6 +748,7 @@ const ProcEntry g_procTable[] = {
     {"glReadnPixelsEXT", P(GL_ReadnPixelsEXT)},
     {"glReadnPixelsRobustANGLE", P(GL_ReadnPixelsRobustANGLE)},
     {"glReleaseShaderCompiler", P(GL_ReleaseShaderCompiler)},
+    {"glReleaseTexturesANGLE", P(GL_ReleaseTexturesANGLE)},
     {"glRenderbufferStorage", P(GL_RenderbufferStorage)},
     {"glRenderbufferStorageMultisample", P(GL_RenderbufferStorageMultisample)},
     {"glRenderbufferStorageMultisampleANGLE", P(GL_RenderbufferStorageMultisampleANGLE)},
@@ -925,5 +927,5 @@ const ProcEntry g_procTable[] = {
     {"glWaitSync", P(GL_WaitSync)},
     {"glWeightPointerOES", P(GL_WeightPointerOES)}};
 
-const size_t g_numProcs = 892;
+const size_t g_numProcs = 894;
 }  // namespace egl

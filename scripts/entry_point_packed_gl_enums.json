@@ -9,6 +9,9 @@
         "Note that all entry points have their suffixes stripped in this file.",
         "See gen_packed_gl_enums.py for the generator that uses this data."
     ],
+    "glAcquireTextures": {
+        "textures": "const TextureID *"
+    },
     "glActiveShaderProgram": {
         "pipeline": "ProgramPipelineID",
         "program": "ShaderProgramID"
@@ -1395,6 +1398,9 @@
     "glQueryCounter": {
         "id": "QueryID",
         "target": "QueryType"
+    },
+    "glReleaseTextures": {
+        "textures": "const TextureID *"
     },
     "glSamplerParameterf": {
         "sampler": "SamplerID"

@@ -1102,6 +1102,9 @@ void RendererVk::ensureCapsInitialized() const
 
     // GL_EXT_protected_textures
     mNativeExtensions.protectedTexturesEXT = mFeatures.supportsProtectedMemory.enabled;
+
+    // GL_ANGLE_vulkan_image
+    mNativeExtensions.vulkanImageANGLE = true;
 }
 
 namespace vk
