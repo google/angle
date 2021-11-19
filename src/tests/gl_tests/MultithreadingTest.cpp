@@ -633,6 +633,8 @@ void MultithreadingTestES3::mainThreadDraw(bool useDraw)
     constexpr int kNumIterations = 5;
     constexpr int kNumDraws      = 5;
 
+    mDrawGreen = false;
+
     std::thread textureThread(&MultithreadingTestES3::textureThreadFunction, this, true);
 
     ANGLE_GL_PROGRAM(texProgram, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
