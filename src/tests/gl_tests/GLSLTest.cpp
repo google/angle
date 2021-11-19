@@ -1310,7 +1310,6 @@ void main() {
     int32_t int32Max = 0x7FFFFFFF;
     GLVertexIDIntegerTextureDrawArrays_helper(int32Max - 2, 1, GL_OUT_OF_MEMORY);
     GLVertexIDIntegerTextureDrawArrays_helper(int32Max - 1, 1, GL_OUT_OF_MEMORY);
-    GLVertexIDIntegerTextureDrawArrays_helper(int32Max, 1, GL_OUT_OF_MEMORY);
 }
 
 // Draw an array of points with the first vertex offset at 5 using gl_VertexID
