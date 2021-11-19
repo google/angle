@@ -16,6 +16,8 @@ if (angle_has_build) {
     import("//build/config/android/rules.gni")
     import("android/angle_apk.gni")
   }
+} else {
+  using_sanitizer = false
 }
 
 declare_args() {
@@ -400,7 +402,7 @@ angle_static_library("angle_common") {
     defines = [ "ANGLE_EXPOSE_NON_CONFORMANT_EXTENSIONS_AND_VERSIONS" ]
   }
 
-  if (using_sanitizer && !build_with_chromium && angle_has_build) {
+  if (using_sanitizer && !build_with_chromium) {
     data_deps = [ "//build/config/clang:llvm-symbolizer_data($host_toolchain)" ]
   }
 }
