@@ -2114,6 +2114,8 @@ class ImageHelper final : public Resource, public angle::Subject
         RefCounted<ImageHelper> *image;
     };
 
+    void deriveExternalImageTiling(const void *createInfoChain);
+
     // Called from flushStagedUpdates, removes updates that are later superseded by another.  This
     // cannot be done at the time the updates were staged, as the image is not created (and thus the
     // extents are not known).
