@@ -894,9 +894,13 @@ def main(args):
 
         flaky_results = []
 
+        regression_error_log = []
+
         for test_batch in result_list:
             test_batch_result = test_batch.results
             logger.debug(str(test_batch_result))
+
+            batch_has_regression = False
 
             passed_count += len(test_batch_result[GroupedResult.Passed])
             failed_count += len(test_batch_result[GroupedResult.Failed])
@@ -914,15 +918,32 @@ def main(args):
                     # Passing tests are not in the list
                     if test not in test_expectation_for_list.keys():
                         if real_result != GroupedResult.Passed:
+                            batch_has_regression = True
                             unexpected_count[real_result] += 1
                             unexpected_test_results[real_result].append(
                                 '{} {} (expected Pass or is new test)'.format(test, real_result))
                     else:
                         expected_result = test_expectation_for_list[test]
                         if real_result != expected_result:
+                            if real_result != GroupedResult.Passed:
+                                batch_has_regression = True
                             unexpected_count[real_result] += 1
                             unexpected_test_results[real_result].append(
                                 '{} {} (expected {})'.format(test, real_result, expected_result))
+            if batch_has_regression:
+                regression_error_log.append(str(test_batch))
+
+        if len(regression_error_log) > 0:
+            logger.info('Logging output of test batches with regressions')
+            logger.info(
+                '==================================================================================================='
+            )
+            for log in regression_error_log:
+                logger.info(log)
+                logger.info(
+                    '---------------------------------------------------------------------------------------------------'
+                )
+                logger.info('')
 
         logger.info('')
         logger.info('Elapsed time: %.2lf seconds' % (end_time - start_time))
