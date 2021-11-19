@@ -385,7 +385,8 @@ class Renderer11 : public RendererD3D
                              GLint firstVertex,
                              GLsizei vertexCount,
                              GLsizei instanceCount,
-                             GLuint baseInstance);
+                             GLuint baseInstance,
+                             bool isInstancedDraw);
     angle::Result drawElements(const gl::Context *context,
                                gl::PrimitiveMode mode,
                                GLint startVertex,
@@ -394,7 +395,8 @@ class Renderer11 : public RendererD3D
                                const void *indices,
                                GLsizei instanceCount,
                                GLint baseVertex,
-                               GLuint baseInstance);
+                               GLuint baseInstance,
+                               bool isInstancedDraw);
     angle::Result drawArraysIndirect(const gl::Context *context, const void *indirect);
     angle::Result drawElementsIndirect(const gl::Context *context, const void *indirect);
 
