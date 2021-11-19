@@ -879,6 +879,7 @@ bool ValidateFrustumf(const Context *context,
     if (l == r || b == t || n == f || n <= 0.0f || f <= 0.0f)
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidProjectionMatrix);
+        return false;
     }
     return true;
 }
@@ -896,6 +897,7 @@ bool ValidateFrustumx(const Context *context,
     if (l == r || b == t || n == f || n <= 0 || f <= 0)
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidProjectionMatrix);
+        return false;
     }
     return true;
 }
@@ -1292,6 +1294,7 @@ bool ValidateOrthof(const Context *context,
     if (l == r || b == t || n == f)
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidProjectionMatrix);
+        return false;
     }
     return true;
 }
@@ -1309,6 +1312,7 @@ bool ValidateOrthox(const Context *context,
     if (l == r || b == t || n == f)
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidProjectionMatrix);
+        return false;
     }
     return true;
 }
