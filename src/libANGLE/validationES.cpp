@@ -7194,7 +7194,7 @@ bool ValidateReadPixelsBase(const Context *context,
             return false;
         }
 
-        *outExtent = std::max(clippedExtent.ValueOrDie(), 0);
+        *outExtent = std::max<int>(clippedExtent.ValueOrDie(), 0);
         return true;
     };
 

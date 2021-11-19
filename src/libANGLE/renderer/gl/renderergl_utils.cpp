@@ -2603,7 +2603,7 @@ angle::Result ShouldApplyLastRowPaddingWorkaround(ContextGL *contextGL,
     // At this point checkedEndByte is the actual last byte read.
     // The driver adds an extra row padding (if any), mimic it.
     ANGLE_CHECK_GL_MATH(contextGL, checkedPixelBytes.IsValid());
-    if (checkedPixelBytes.ValueOrDie() * size.width < rowPitch)
+    if (static_cast<size_t>(checkedPixelBytes.ValueOrDie()) * size.width < rowPitch)
     {
         checkedEndByte += rowPitch - checkedPixelBytes * size.width;
     }
