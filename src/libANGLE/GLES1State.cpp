@@ -522,7 +522,7 @@ AttributesMask GLES1State::getVertexArraysAttributeMask() const
                         isClientStateEnabled(attrib));
     }
 
-    for (unsigned int i = 0; i < GLES1Renderer::kTexUnitCount; i++)
+    for (unsigned int i = 0; i < kTexUnitCount; i++)
     {
         attribsMask.set(GLES1Renderer::TexCoordArrayIndex(i), isTexCoordArrayEnabled(i));
     }

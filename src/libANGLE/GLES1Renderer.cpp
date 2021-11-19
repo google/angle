@@ -13,6 +13,7 @@
 #include <sstream>
 #include <vector>
 
+#include "common/hash_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/Program.h"
@@ -28,6 +29,26 @@ namespace
 
 namespace gl
 {
+GLES1ShaderState::GLES1ShaderState()  = default;
+GLES1ShaderState::~GLES1ShaderState() = default;
+GLES1ShaderState::GLES1ShaderState(const GLES1ShaderState &other)
+{
+    memcpy(this, &other, sizeof(GLES1ShaderState));
+}
+
+bool operator==(const GLES1ShaderState &a, const GLES1ShaderState &b)
+{
+    return memcmp(&a, &b, sizeof(GLES1ShaderState)) == 0;
+}
+bool operator!=(const GLES1ShaderState &a, const GLES1ShaderState &b)
+{
+    return !(a == b);
+}
+
+size_t GLES1ShaderState::hash() const
+{
+    return angle::ComputeGenericHash(*this);
+}
 
 GLES1Renderer::GLES1Renderer() : mRendererProgramInitialized(false) {}
 
@@ -37,10 +58,10 @@ void GLES1Renderer::onDestroy(Context *context, State *state)
     {
         (void)state->setProgram(context, 0);
 
-        for (const auto &iter : mProgramStates)
+        for (const auto &iter : mUberShaderState)
         {
-            const GLES1ProgramState &programState = iter.second;
-            mShaderPrograms->deleteProgram(context, {programState.program});
+            const GLES1UberShaderState &UberShaderState = iter.second;
+            mShaderPrograms->deleteProgram(context, {UberShaderState.programState.program});
         }
         mShaderPrograms->release(context);
         mShaderPrograms             = nullptr;
@@ -54,13 +75,9 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
 {
     GLES1State &gles1State = glState->gles1();
 
-    std::array<bool, kTexUnitCount> tex2DEnables;
-    std::array<bool, kTexUnitCount> texCubeEnables;
-
-    std::vector<int> tex2DFormats = {GL_RGBA, GL_RGBA, GL_RGBA, GL_RGBA};
-
-    std::array<Vec4Uniform, kTexUnitCount> texCropRects;
-    Vec4Uniform *cropRectBuffer = texCropRects.data();
+    GLES1ShaderState::BoolTexArray &tex2DEnables   = mShaderState.tex2DEnables;
+    GLES1ShaderState::BoolTexArray &texCubeEnables = mShaderState.texCubeEnables;
+    GLES1ShaderState::IntTexArray &tex2DFormats    = mShaderState.tex2DFormats;
 
     for (int i = 0; i < kTexUnitCount; i++)
     {
@@ -91,7 +108,121 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
         {
             tex2DFormats[i] = gl::GetUnsizedFormat(
                 curr2DTexture->getFormat(TextureTarget::_2D, 0).info->internalFormat);
+        }
+    }
 
+    GLES1ShaderState::IntTexArray &texEnvModes          = mShaderState.texEnvModes;
+    GLES1ShaderState::IntTexArray &texCombineRgbs       = mShaderState.texCombineRgbs;
+    GLES1ShaderState::IntTexArray &texCombineAlphas     = mShaderState.texCombineAlphas;
+    GLES1ShaderState::IntTexArray &texCombineSrc0Rgbs   = mShaderState.texCombineSrc0Rgbs;
+    GLES1ShaderState::IntTexArray &texCombineSrc0Alphas = mShaderState.texCombineSrc0Alphas;
+    GLES1ShaderState::IntTexArray &texCombineSrc1Rgbs   = mShaderState.texCombineSrc1Rgbs;
+    GLES1ShaderState::IntTexArray &texCombineSrc1Alphas = mShaderState.texCombineSrc1Alphas;
+    GLES1ShaderState::IntTexArray &texCombineSrc2Rgbs   = mShaderState.texCombineSrc2Rgbs;
+    GLES1ShaderState::IntTexArray &texCombineSrc2Alphas = mShaderState.texCombineSrc2Alphas;
+    GLES1ShaderState::IntTexArray &texCombineOp0Rgbs    = mShaderState.texCombineOp0Rgbs;
+    GLES1ShaderState::IntTexArray &texCombineOp0Alphas  = mShaderState.texCombineOp0Alphas;
+    GLES1ShaderState::IntTexArray &texCombineOp1Rgbs    = mShaderState.texCombineOp1Rgbs;
+    GLES1ShaderState::IntTexArray &texCombineOp1Alphas  = mShaderState.texCombineOp1Alphas;
+    GLES1ShaderState::IntTexArray &texCombineOp2Rgbs    = mShaderState.texCombineOp2Rgbs;
+    GLES1ShaderState::IntTexArray &texCombineOp2Alphas  = mShaderState.texCombineOp2Alphas;
+
+    if (gles1State.isDirty(GLES1State::DIRTY_GLES1_TEXTURE_ENVIRONMENT))
+    {
+        for (int i = 0; i < kTexUnitCount; i++)
+        {
+            const auto &env         = gles1State.textureEnvironment(i);
+            texEnvModes[i]          = ToGLenum(env.mode);
+            texCombineRgbs[i]       = ToGLenum(env.combineRgb);
+            texCombineAlphas[i]     = ToGLenum(env.combineAlpha);
+            texCombineSrc0Rgbs[i]   = ToGLenum(env.src0Rgb);
+            texCombineSrc0Alphas[i] = ToGLenum(env.src0Alpha);
+            texCombineSrc1Rgbs[i]   = ToGLenum(env.src1Rgb);
+            texCombineSrc1Alphas[i] = ToGLenum(env.src1Alpha);
+            texCombineSrc2Rgbs[i]   = ToGLenum(env.src2Rgb);
+            texCombineSrc2Alphas[i] = ToGLenum(env.src2Alpha);
+            texCombineOp0Rgbs[i]    = ToGLenum(env.op0Rgb);
+            texCombineOp0Alphas[i]  = ToGLenum(env.op0Alpha);
+            texCombineOp1Rgbs[i]    = ToGLenum(env.op1Rgb);
+            texCombineOp1Alphas[i]  = ToGLenum(env.op1Alpha);
+            texCombineOp2Rgbs[i]    = ToGLenum(env.op2Rgb);
+            texCombineOp2Alphas[i]  = ToGLenum(env.op2Alpha);
+        }
+    }
+
+    bool enableClipPlanes                                  = false;
+    GLES1ShaderState::BoolClipPlaneArray &clipPlaneEnables = mShaderState.clipPlaneEnables;
+    for (int i = 0; i < kClipPlaneCount; i++)
+    {
+        clipPlaneEnables[i] = glState->getEnableFeature(GL_CLIP_PLANE0 + i);
+        enableClipPlanes    = enableClipPlanes || clipPlaneEnables[i];
+    }
+
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::ClipPlanes]  = enableClipPlanes;
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::DrawTexture] = mDrawTextureEnabled;
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::PointRasterization] =
+        mode == PrimitiveMode::Points;
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::ShadeModelFlat] =
+        gles1State.mShadeModel == ShadingModel::Flat;
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::AlphaTest] =
+        glState->getEnableFeature(GL_ALPHA_TEST);
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::Lighting] =
+        glState->getEnableFeature(GL_LIGHTING);
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::RescaleNormal] =
+        glState->getEnableFeature(GL_RESCALE_NORMAL);
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::Normalize] =
+        glState->getEnableFeature(GL_NORMALIZE);
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::Fog] = glState->getEnableFeature(GL_FOG);
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::PointSprite] =
+        glState->getEnableFeature(GL_POINT_SPRITE_OES);
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::ColorMaterial] =
+        glState->getEnableFeature(GL_COLOR_MATERIAL);
+
+    // TODO (lfy@google.com): Implement two-sided lighting model (lightModel.twoSided)
+    mShaderState.mGLES1StateEnabled[GLES1StateEnables::LightModelTwoSided] = false;
+
+    GLES1ShaderState::BoolTexArray &pointSpriteCoordReplaces =
+        mShaderState.pointSpriteCoordReplaces;
+    for (int i = 0; i < kTexUnitCount; i++)
+    {
+        const auto &env             = gles1State.textureEnvironment(i);
+        pointSpriteCoordReplaces[i] = env.pointSpriteCoordReplace;
+    }
+
+    GLES1ShaderState::BoolLightArray &lightEnables = mShaderState.lightEnables;
+    for (int i = 0; i < kLightCount; i++)
+    {
+        const auto &light = gles1State.mLights[i];
+        lightEnables[i]   = light.enabled;
+    }
+
+    mShaderState.alphaTestFunc = gles1State.mAlphaTestFunc;
+    mShaderState.fogMode       = gles1State.fogParameters().mode;
+
+    // All the states set before this spot affect ubershader creation
+
+    ANGLE_TRY(initializeRendererProgram(context, glState));
+
+    GLES1UberShaderState UberShaderState = getUberShaderState();
+
+    const GLES1ProgramState &programState = UberShaderState.programState;
+    GLES1UniformBuffers &uniformBuffers   = UberShaderState.uniformBuffers;
+
+    Program *programObject = getProgram(programState.program);
+
+    // If anything is dirty in gles1 or the common parts of gles1/2, just redo these parts
+    // completely for now.
+
+    // Feature enables
+
+    // Texture unit enables and format info
+    std::array<Vec4Uniform, kTexUnitCount> texCropRects;
+    Vec4Uniform *cropRectBuffer = texCropRects.data();
+    for (int i = 0; i < kTexUnitCount; i++)
+    {
+        Texture *curr2DTexture = glState->getSamplerTexture(i, TextureType::_2D);
+        if (curr2DTexture)
+        {
             const gl::Rectangle &cropRect = curr2DTexture->getCrop();
 
             GLfloat textureWidth =
@@ -108,97 +239,8 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
             }
         }
     }
-    mGLES1StateEnabled[GLES1StateEnables::Tex2d0] = tex2DEnables[0];
-    mGLES1StateEnabled[GLES1StateEnables::Tex2d1] = tex2DEnables[1];
-    mGLES1StateEnabled[GLES1StateEnables::Tex2d2] = tex2DEnables[2];
-    mGLES1StateEnabled[GLES1StateEnables::Tex2d3] = tex2DEnables[3];
-
-    mGLES1StateEnabled[GLES1StateEnables::TexCube0] = texCubeEnables[0];
-    mGLES1StateEnabled[GLES1StateEnables::TexCube1] = texCubeEnables[1];
-    mGLES1StateEnabled[GLES1StateEnables::TexCube2] = texCubeEnables[2];
-    mGLES1StateEnabled[GLES1StateEnables::TexCube3] = texCubeEnables[3];
-
-    bool enableClipPlanes = false;
-    bool clipPlaneEnables[kClipPlaneCount];
-    for (int i = 0; i < kClipPlaneCount; i++)
-    {
-        clipPlaneEnables[i] = glState->getEnableFeature(GL_CLIP_PLANE0 + i);
-        enableClipPlanes    = enableClipPlanes || clipPlaneEnables[i];
-    }
-    mGLES1StateEnabled[GLES1StateEnables::ClipPlanes]         = enableClipPlanes;
-    mGLES1StateEnabled[GLES1StateEnables::DrawTexture]        = mDrawTextureEnabled;
-    mGLES1StateEnabled[GLES1StateEnables::PointRasterization] = mode == PrimitiveMode::Points;
-    mGLES1StateEnabled[GLES1StateEnables::ShadeModelFlat] =
-        gles1State.mShadeModel == ShadingModel::Flat;
-    mGLES1StateEnabled[GLES1StateEnables::AlphaTest] = glState->getEnableFeature(GL_ALPHA_TEST);
-    mGLES1StateEnabled[GLES1StateEnables::Lighting]  = glState->getEnableFeature(GL_LIGHTING);
-    mGLES1StateEnabled[GLES1StateEnables::RescaleNormal] =
-        glState->getEnableFeature(GL_RESCALE_NORMAL);
-    mGLES1StateEnabled[GLES1StateEnables::Normalize] = glState->getEnableFeature(GL_NORMALIZE);
-    mGLES1StateEnabled[GLES1StateEnables::Fog]       = glState->getEnableFeature(GL_FOG);
-    mGLES1StateEnabled[GLES1StateEnables::PointSprite] =
-        glState->getEnableFeature(GL_POINT_SPRITE_OES);
-    mGLES1StateEnabled[GLES1StateEnables::ColorMaterial] =
-        glState->getEnableFeature(GL_COLOR_MATERIAL);
-
-    // TODO (lfy@google.com): Implement two-sided lighting model (lightModel.twoSided)
-    mGLES1StateEnabled[GLES1StateEnables::LightModelTwoSided] = false;
-
-    bool pointSpriteCoordReplaces[kTexUnitCount];
-    for (int i = 0; i < kTexUnitCount; i++)
-    {
-        const auto &env             = gles1State.textureEnvironment(i);
-        pointSpriteCoordReplaces[i] = env.pointSpriteCoordReplace;
-    }
-    mGLES1StateEnabled[GLES1StateEnables::PointSpriteCoordReplaces0] = pointSpriteCoordReplaces[0];
-    mGLES1StateEnabled[GLES1StateEnables::PointSpriteCoordReplaces1] = pointSpriteCoordReplaces[1];
-    mGLES1StateEnabled[GLES1StateEnables::PointSpriteCoordReplaces2] = pointSpriteCoordReplaces[2];
-    mGLES1StateEnabled[GLES1StateEnables::PointSpriteCoordReplaces3] = pointSpriteCoordReplaces[3];
-
-    bool lightEnables[kLightCount];
-    for (int i = 0; i < kLightCount; i++)
-    {
-        const auto &light = gles1State.mLights[i];
-        lightEnables[i]   = light.enabled;
-    }
-    mGLES1StateEnabled[GLES1StateEnables::Light0] = lightEnables[0];
-    mGLES1StateEnabled[GLES1StateEnables::Light1] = lightEnables[1];
-    mGLES1StateEnabled[GLES1StateEnables::Light2] = lightEnables[2];
-    mGLES1StateEnabled[GLES1StateEnables::Light3] = lightEnables[3];
-    mGLES1StateEnabled[GLES1StateEnables::Light4] = lightEnables[4];
-    mGLES1StateEnabled[GLES1StateEnables::Light5] = lightEnables[5];
-    mGLES1StateEnabled[GLES1StateEnables::Light6] = lightEnables[6];
-    mGLES1StateEnabled[GLES1StateEnables::Light7] = lightEnables[7];
-
-    mGLES1StateEnabled[GLES1StateEnables::ClipPlane0] = clipPlaneEnables[0];
-    mGLES1StateEnabled[GLES1StateEnables::ClipPlane1] = clipPlaneEnables[1];
-    mGLES1StateEnabled[GLES1StateEnables::ClipPlane2] = clipPlaneEnables[2];
-    mGLES1StateEnabled[GLES1StateEnables::ClipPlane3] = clipPlaneEnables[3];
-    mGLES1StateEnabled[GLES1StateEnables::ClipPlane4] = clipPlaneEnables[4];
-    mGLES1StateEnabled[GLES1StateEnables::ClipPlane5] = clipPlaneEnables[5];
-
-    ANGLE_TRY(initializeRendererProgram(context, glState));
-
-    uint64_t stateEnables                 = mGLES1StateEnabled.to_ulong();
-    const GLES1ProgramState &programState = mProgramStates[stateEnables];
-
-    Program *programObject = getProgram(programState.program);
-
-    GLES1UniformBuffers &uniformBuffers = mUniformBuffers[stateEnables];
-
-    // If anything is dirty in gles1 or the common parts of gles1/2, just redo these parts
-    // completely for now.
-
-    // Feature enables
-
-    // Texture unit enables and format info
-    {
-        setUniform1iv(context, programObject, programState.textureFormatLoc, kTexUnitCount,
-                      tex2DFormats.data());
-
-        setUniform4fv(programObject, programState.drawTextureNormalizedCropRectLoc, kTexUnitCount,
-                      reinterpret_cast<GLfloat *>(cropRectBuffer));
-    }
+    setUniform4fv(programObject, programState.drawTextureNormalizedCropRectLoc, kTexUnitCount,
+                  reinterpret_cast<GLfloat *>(cropRectBuffer));
 
     // Client state / current vector enables
     if (gles1State.isDirty(GLES1State::DIRTY_GLES1_CLIENT_STATE_ENABLE) ||
@@ -266,24 +308,6 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
         {
             const auto &env = gles1State.textureEnvironment(i);
 
-            uniformBuffers.texEnvModes[i]      = ToGLenum(env.mode);
-            uniformBuffers.texCombineRgbs[i]   = ToGLenum(env.combineRgb);
-            uniformBuffers.texCombineAlphas[i] = ToGLenum(env.combineAlpha);
-
-            uniformBuffers.texCombineSrc0Rgbs[i]   = ToGLenum(env.src0Rgb);
-            uniformBuffers.texCombineSrc0Alphas[i] = ToGLenum(env.src0Alpha);
-            uniformBuffers.texCombineSrc1Rgbs[i]   = ToGLenum(env.src1Rgb);
-            uniformBuffers.texCombineSrc1Alphas[i] = ToGLenum(env.src1Alpha);
-            uniformBuffers.texCombineSrc2Rgbs[i]   = ToGLenum(env.src2Rgb);
-            uniformBuffers.texCombineSrc2Alphas[i] = ToGLenum(env.src2Alpha);
-
-            uniformBuffers.texCombineOp0Rgbs[i]   = ToGLenum(env.op0Rgb);
-            uniformBuffers.texCombineOp0Alphas[i] = ToGLenum(env.op0Alpha);
-            uniformBuffers.texCombineOp1Rgbs[i]   = ToGLenum(env.op1Rgb);
-            uniformBuffers.texCombineOp1Alphas[i] = ToGLenum(env.op1Alpha);
-            uniformBuffers.texCombineOp2Rgbs[i]   = ToGLenum(env.op2Rgb);
-            uniformBuffers.texCombineOp2Alphas[i] = ToGLenum(env.op2Alpha);
-
             uniformBuffers.texEnvColors[i][0] = env.color.red;
             uniformBuffers.texEnvColors[i][1] = env.color.green;
             uniformBuffers.texEnvColors[i][2] = env.color.blue;
@@ -292,39 +316,6 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
             uniformBuffers.texEnvRgbScales[i]   = env.rgbScale;
             uniformBuffers.texEnvAlphaScales[i] = env.alphaScale;
         }
-
-        setUniform1iv(context, programObject, programState.textureEnvModeLoc, kTexUnitCount,
-                      uniformBuffers.texEnvModes.data());
-        setUniform1iv(context, programObject, programState.combineRgbLoc, kTexUnitCount,
-                      uniformBuffers.texCombineRgbs.data());
-        setUniform1iv(context, programObject, programState.combineAlphaLoc, kTexUnitCount,
-                      uniformBuffers.texCombineAlphas.data());
-
-        setUniform1iv(context, programObject, programState.src0rgbLoc, kTexUnitCount,
-                      uniformBuffers.texCombineSrc0Rgbs.data());
-        setUniform1iv(context, programObject, programState.src0alphaLoc, kTexUnitCount,
-                      uniformBuffers.texCombineSrc0Alphas.data());
-        setUniform1iv(context, programObject, programState.src1rgbLoc, kTexUnitCount,
-                      uniformBuffers.texCombineSrc1Rgbs.data());
-        setUniform1iv(context, programObject, programState.src1alphaLoc, kTexUnitCount,
-                      uniformBuffers.texCombineSrc1Alphas.data());
-        setUniform1iv(context, programObject, programState.src2rgbLoc, kTexUnitCount,
-                      uniformBuffers.texCombineSrc2Rgbs.data());
-        setUniform1iv(context, programObject, programState.src2alphaLoc, kTexUnitCount,
-                      uniformBuffers.texCombineSrc2Alphas.data());
-
-        setUniform1iv(context, programObject, programState.op0rgbLoc, kTexUnitCount,
-                      uniformBuffers.texCombineOp0Rgbs.data());
-        setUniform1iv(context, programObject, programState.op0alphaLoc, kTexUnitCount,
-                      uniformBuffers.texCombineOp0Alphas.data());
-        setUniform1iv(context, programObject, programState.op1rgbLoc, kTexUnitCount,
-                      uniformBuffers.texCombineOp1Rgbs.data());
-        setUniform1iv(context, programObject, programState.op1alphaLoc, kTexUnitCount,
-                      uniformBuffers.texCombineOp1Alphas.data());
-        setUniform1iv(context, programObject, programState.op2rgbLoc, kTexUnitCount,
-                      uniformBuffers.texCombineOp2Rgbs.data());
-        setUniform1iv(context, programObject, programState.op2alphaLoc, kTexUnitCount,
-                      uniformBuffers.texCombineOp2Alphas.data());
 
         setUniform4fv(programObject, programState.textureEnvColorLoc, kTexUnitCount,
                       reinterpret_cast<float *>(uniformBuffers.texEnvColors.data()));
@@ -337,8 +328,6 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
     // Alpha test
     if (gles1State.isDirty(GLES1State::DIRTY_GLES1_ALPHA_TEST))
     {
-        setUniform1i(context, programObject, programState.alphaFuncLoc,
-                     ToGLenum(gles1State.mAlphaTestFunc));
         setUniform1f(programObject, programState.alphaTestRefLoc, gles1State.mAlphaTestRef);
     }
 
@@ -407,7 +396,6 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context
     if (gles1State.isDirty(GLES1State::DIRTY_GLES1_FOG))
     {
         const FogParameters &fog = gles1State.fogParameters();
-        setUniform1i(context, programObject, programState.fogModeLoc, ToGLenum(fog.mode));
         setUniform1f(programObject, programState.fogDensityLoc, fog.density);
         setUniform1f(programObject, programState.fogStartLoc, fog.start);
         setUniform1f(programObject, programState.fogEndLoc, fog.end);
@@ -634,7 +622,7 @@ angle::Result GLES1Renderer::linkProgram(Context *context,
 
 const char *GLES1Renderer::getShaderBool(GLES1StateEnables state)
 {
-    if (mGLES1StateEnabled[state])
+    if (mShaderState.mGLES1StateEnabled[state])
     {
         return "true";
     }
@@ -650,6 +638,83 @@ void GLES1Renderer::addShaderDefine(std::stringstream &outStream,
 {
     outStream << "\n";
     outStream << "#define " << enableString << " " << getShaderBool(state);
+}
+
+void GLES1Renderer::addShaderInt(std::stringstream &outStream, const char *name, int value)
+{
+    outStream << "\n";
+    outStream << "const int " << name << " = " << value << ";";
+}
+
+void GLES1Renderer::addShaderIntTexArray(std::stringstream &outStream,
+                                         const char *texString,
+                                         GLES1ShaderState::IntTexArray &texState)
+{
+    outStream << "\n";
+    outStream << "const int " << texString << "[kMaxTexUnits] = int[kMaxTexUnits](";
+    for (int i = 0; i < kTexUnitCount; i++)
+    {
+        if (i != 0)
+        {
+            outStream << ", ";
+        }
+        outStream << texState[i];
+    }
+    outStream << ");";
+}
+
+void GLES1Renderer::addShaderBoolTexArray(std::stringstream &outStream,
+                                          const char *name,
+                                          GLES1ShaderState::BoolTexArray &value)
+{
+    outStream << std::boolalpha;
+    outStream << "\n";
+    outStream << "bool " << name << "[kMaxTexUnits] = bool[kMaxTexUnits](";
+    for (int i = 0; i < kTexUnitCount; i++)
+    {
+        if (i != 0)
+        {
+            outStream << ", ";
+        }
+        outStream << value[i];
+    }
+    outStream << ");";
+}
+
+void GLES1Renderer::addShaderBoolLightArray(std::stringstream &outStream,
+                                            const char *name,
+                                            GLES1ShaderState::BoolLightArray &value)
+{
+    outStream << std::boolalpha;
+    outStream << "\n";
+    outStream << "bool " << name << "[kMaxLights] = bool[kMaxLights](";
+    for (int i = 0; i < kLightCount; i++)
+    {
+        if (i != 0)
+        {
+            outStream << ", ";
+        }
+        outStream << value[i];
+    }
+    outStream << ");";
+}
+
+void GLES1Renderer::addShaderBoolClipPlaneArray(std::stringstream &outStream,
+                                                const char *name,
+                                                GLES1ShaderState::BoolClipPlaneArray &value)
+{
+    outStream << std::boolalpha;
+    outStream << "\n";
+    outStream << "bool " << name << "[kMaxClipPlanes] = bool[kMaxClipPlanes](";
+    for (int i = 0; i < kClipPlaneCount; i++)
+    {
+        if (i != 0)
+        {
+            outStream << ", ";
+        }
+        outStream << value[i];
+    }
+    outStream << ");";
 }
 
 void GLES1Renderer::addVertexShaderDefs(std::stringstream &outStream)
@@ -674,60 +739,82 @@ void GLES1Renderer::addFragmentShaderDefs(std::stringstream &outStream)
     addShaderDefine(outStream, GLES1StateEnables::LightModelTwoSided, "light_model_two_sided");
 
     // bool enable_texture_2d[kMaxTexUnits] = bool[kMaxTexUnits](...);
-    outStream << "\n";
-    outStream << "bool enable_texture_2d[kMaxTexUnits] = bool[kMaxTexUnits]("
-              << getShaderBool(GLES1StateEnables::Tex2d0) << ", "
-              << getShaderBool(GLES1StateEnables::Tex2d1) << ", "
-              << getShaderBool(GLES1StateEnables::Tex2d2) << ", "
-              << getShaderBool(GLES1StateEnables::Tex2d3) << ");";
+    addShaderBoolTexArray(outStream, "enable_texture_2d", mShaderState.tex2DEnables);
 
     // bool enable_texture_cube_map[kMaxTexUnits] = bool[kMaxTexUnits](...);
-    outStream << "\n";
-    outStream << "bool enable_texture_cube_map[kMaxTexUnits] = bool[kMaxTexUnits]("
-              << getShaderBool(GLES1StateEnables::TexCube0) << ", "
-              << getShaderBool(GLES1StateEnables::TexCube1) << ", "
-              << getShaderBool(GLES1StateEnables::TexCube2) << ", "
-              << getShaderBool(GLES1StateEnables::TexCube3) << ");";
+    addShaderBoolTexArray(outStream, "enable_texture_cube_map", mShaderState.texCubeEnables);
+
+    // int texture_format[kMaxTexUnits] = int[kMaxTexUnits](...);
+    addShaderIntTexArray(outStream, "texture_format", mShaderState.tex2DFormats);
 
     // bool point_sprite_coord_replace[kMaxTexUnits] = bool[kMaxTexUnits](...);
-    outStream << "\n";
-    outStream << "bool point_sprite_coord_replace[kMaxTexUnits] = bool[kMaxTexUnits]("
-              << getShaderBool(GLES1StateEnables::PointSpriteCoordReplaces0) << ", "
-              << getShaderBool(GLES1StateEnables::PointSpriteCoordReplaces1) << ", "
-              << getShaderBool(GLES1StateEnables::PointSpriteCoordReplaces2) << ", "
-              << getShaderBool(GLES1StateEnables::PointSpriteCoordReplaces3) << ");";
+    addShaderBoolTexArray(outStream, "point_sprite_coord_replace",
+                          mShaderState.pointSpriteCoordReplaces);
 
     // bool light_enables[kMaxLights] = bool[kMaxLights](...);
-    outStream << "\n";
-    outStream << "bool light_enables[kMaxLights] = bool[kMaxLights]("
-              << getShaderBool(GLES1StateEnables::Light0) << ", "
-              << getShaderBool(GLES1StateEnables::Light1) << ", "
-              << getShaderBool(GLES1StateEnables::Light2) << ", "
-              << getShaderBool(GLES1StateEnables::Light3) << ", "
-              << getShaderBool(GLES1StateEnables::Light4) << ", "
-              << getShaderBool(GLES1StateEnables::Light5) << ", "
-              << getShaderBool(GLES1StateEnables::Light6) << ", "
-              << getShaderBool(GLES1StateEnables::Light7) << ");";
+    addShaderBoolLightArray(outStream, "light_enables", mShaderState.lightEnables);
 
-    // bool clip_plane_enables[kMaxClipPlanes] = bool[kMaxClipPlanes](
-    outStream << "\n";
-    outStream << "bool clip_plane_enables[kMaxClipPlanes] = bool[kMaxClipPlanes]("
-              << getShaderBool(GLES1StateEnables::ClipPlane0) << ", "
-              << getShaderBool(GLES1StateEnables::ClipPlane1) << ", "
-              << getShaderBool(GLES1StateEnables::ClipPlane2) << ", "
-              << getShaderBool(GLES1StateEnables::ClipPlane3) << ", "
-              << getShaderBool(GLES1StateEnables::ClipPlane4) << ", "
-              << getShaderBool(GLES1StateEnables::ClipPlane5) << ");";
+    // bool clip_plane_enables[kMaxClipPlanes] = bool[kMaxClipPlanes](...);
+    addShaderBoolClipPlaneArray(outStream, "clip_plane_enables", mShaderState.clipPlaneEnables);
+
+    // int texture_format[kMaxTexUnits] = int[kMaxTexUnits](...);
+    addShaderIntTexArray(outStream, "texture_env_mode", mShaderState.texEnvModes);
+
+    // int combine_rgb[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "combine_rgb", mShaderState.texCombineRgbs);
+
+    // int combine_alpha[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "combine_alpha", mShaderState.texCombineAlphas);
+
+    // int src0_rgb[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "src0_rgb", mShaderState.texCombineSrc0Rgbs);
+
+    // int src0_alpha[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "src0_alpha", mShaderState.texCombineSrc0Alphas);
+
+    // int src1_rgb[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "src1_rgb", mShaderState.texCombineSrc1Rgbs);
+
+    // int src1_alpha[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "src1_alpha", mShaderState.texCombineSrc1Alphas);
+
+    // int src2_rgb[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "src2_rgb", mShaderState.texCombineSrc2Rgbs);
+
+    // int src2_alpha[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "src2_alpha", mShaderState.texCombineSrc2Alphas);
+
+    // int op0_rgb[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "op0_rgb", mShaderState.texCombineOp0Rgbs);
+
+    // int op0_alpha[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "op0_alpha", mShaderState.texCombineOp0Alphas);
+
+    // int op1_rgb[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "op1_rgb", mShaderState.texCombineOp1Rgbs);
+
+    // int op1_alpha[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "op1_alpha", mShaderState.texCombineOp1Alphas);
+
+    // int op2_rgb[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "op2_rgb", mShaderState.texCombineOp2Rgbs);
+
+    // int op2_alpha[kMaxTexUnits];
+    addShaderIntTexArray(outStream, "op2_alpha", mShaderState.texCombineOp2Alphas);
+
+    // int alpha_func;
+    addShaderInt(outStream, "alpha_func", ToGLenum(mShaderState.alphaTestFunc));
+
+    // int fog_mode;
+    addShaderInt(outStream, "fog_mode", ToGLenum(mShaderState.fogMode));
 }
 
 angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
 {
-    uint64_t currentGLES1State = mGLES1StateEnabled.to_ulong();
-
     // See if we have the shader for this combination of states
-    if (mProgramStates.find(currentGLES1State) != mProgramStates.end())
+    if (mUberShaderState.find(mShaderState) != mUberShaderState.end())
     {
-        Program *programObject = getProgram(mProgramStates[currentGLES1State].program);
+        Program *programObject = getProgram(getUberShaderState().programState.program);
 
         // If this is different than the current program, we need to sync everything
         // TODO: This could be optimized to only dirty state that differs between the two programs
@@ -746,7 +833,7 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
     }
 
     // If we get here, we don't have a shader for this state, need to create it
-    GLES1ProgramState &programState = mProgramStates[currentGLES1State];
+    GLES1ProgramState &programState = mUberShaderState[mShaderState].programState;
 
     ShaderProgramID vertexShader;
     ShaderProgramID fragmentShader;
@@ -816,27 +903,10 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
             programObject->getUniformLocation(sscube.str().c_str());
     }
 
-    programState.textureFormatLoc   = programObject->getUniformLocation("texture_format");
-    programState.textureEnvModeLoc  = programObject->getUniformLocation("texture_env_mode");
-    programState.combineRgbLoc      = programObject->getUniformLocation("combine_rgb");
-    programState.combineAlphaLoc    = programObject->getUniformLocation("combine_alpha");
-    programState.src0rgbLoc         = programObject->getUniformLocation("src0_rgb");
-    programState.src0alphaLoc       = programObject->getUniformLocation("src0_alpha");
-    programState.src1rgbLoc         = programObject->getUniformLocation("src1_rgb");
-    programState.src1alphaLoc       = programObject->getUniformLocation("src1_alpha");
-    programState.src2rgbLoc         = programObject->getUniformLocation("src2_rgb");
-    programState.src2alphaLoc       = programObject->getUniformLocation("src2_alpha");
-    programState.op0rgbLoc          = programObject->getUniformLocation("op0_rgb");
-    programState.op0alphaLoc        = programObject->getUniformLocation("op0_alpha");
-    programState.op1rgbLoc          = programObject->getUniformLocation("op1_rgb");
-    programState.op1alphaLoc        = programObject->getUniformLocation("op1_alpha");
-    programState.op2rgbLoc          = programObject->getUniformLocation("op2_rgb");
-    programState.op2alphaLoc        = programObject->getUniformLocation("op2_alpha");
     programState.textureEnvColorLoc = programObject->getUniformLocation("texture_env_color");
     programState.rgbScaleLoc        = programObject->getUniformLocation("texture_env_rgb_scale");
     programState.alphaScaleLoc      = programObject->getUniformLocation("texture_env_alpha_scale");
 
-    programState.alphaFuncLoc    = programObject->getUniformLocation("alpha_func");
     programState.alphaTestRefLoc = programObject->getUniformLocation("alpha_test_ref");
 
     programState.materialAmbientLoc  = programObject->getUniformLocation("material_ambient");
@@ -865,7 +935,6 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context, State *
     programState.lightAttenuationQuadraticsLoc =
         programObject->getUniformLocation("light_attenuation_quadratics");
 
-    programState.fogModeLoc    = programObject->getUniformLocation("fog_mode");
     programState.fogDensityLoc = programObject->getUniformLocation("fog_density");
     programState.fogStartLoc   = programObject->getUniformLocation("fog_start");
     programState.fogEndLoc     = programObject->getUniformLocation("fog_end");

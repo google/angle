@@ -7,23 +7,41 @@
 // GLES1Shaders.inc: Defines GLES1 emulation shader.
 
 // The following variables are added in GLES1Renderer::initializeRendererProgram
-// clip_plane_enables
-// enable_alpha_test
-// enable_clip_planes
-// enable_color_material
-// enable_draw_texture
-// enable_fog
-// enable_lighting
-// enable_normalize
-// enable_rescale_normal
-// enable_texture_2d
-// enable_texture_cube_map
-// light_enables
-// light_model_two_sided
-// point_rasterization
-// point_sprite_coord_replace
-// point_sprite_enabled
-// shade_model_flat
+// bool clip_plane_enables
+// bool enable_alpha_test
+// bool enable_clip_planes
+// bool enable_color_material
+// bool enable_draw_texture
+// bool enable_fog
+// bool enable_lighting
+// bool enable_normalize
+// bool enable_rescale_normal
+// bool enable_texture_2d[kMaxTexUnits]
+// bool enable_texture_cube_map[kMaxTexUnits]
+// bool light_enables[kMaxLights]
+// bool light_model_two_sided
+// bool point_rasterization
+// bool point_sprite_coord_replace
+// bool point_sprite_enabled
+// bool shade_model_flat
+// int texture_format[kMaxTexUnits];
+// int texture_env_mode[kMaxTexUnits];
+// int combine_rgb[kMaxTexUnits];
+// int combine_alpha[kMaxTexUnits];
+// int src0_rgb[kMaxTexUnits];
+// int src0_alpha[kMaxTexUnits];
+// int src1_rgb[kMaxTexUnits];
+// int src1_alpha[kMaxTexUnits];
+// int src2_rgb[kMaxTexUnits];
+// int src2_alpha[kMaxTexUnits];
+// int op0_rgb[kMaxTexUnits];
+// int op0_alpha[kMaxTexUnits];
+// int op1_rgb[kMaxTexUnits];
+// int op1_alpha[kMaxTexUnits];
+// int op2_rgb[kMaxTexUnits];
+// int op2_alpha[kMaxTexUnits];
+// int alpha_func;
+// int fog_mode;
 
 constexpr char kGLES1DrawVShaderHeader[] = R"(#version 300 es
 precision highp float;
@@ -290,23 +308,6 @@ uniform samplerCube tex_cube_sampler2;
 uniform sampler2D tex_sampler3;
 uniform samplerCube tex_cube_sampler3;
 
-uniform int texture_format[kMaxTexUnits];
-
-uniform int texture_env_mode[kMaxTexUnits];
-uniform int combine_rgb[kMaxTexUnits];
-uniform int combine_alpha[kMaxTexUnits];
-uniform int src0_rgb[kMaxTexUnits];
-uniform int src0_alpha[kMaxTexUnits];
-uniform int src1_rgb[kMaxTexUnits];
-uniform int src1_alpha[kMaxTexUnits];
-uniform int src2_rgb[kMaxTexUnits];
-uniform int src2_alpha[kMaxTexUnits];
-uniform int op0_rgb[kMaxTexUnits];
-uniform int op0_alpha[kMaxTexUnits];
-uniform int op1_rgb[kMaxTexUnits];
-uniform int op1_alpha[kMaxTexUnits];
-uniform int op2_rgb[kMaxTexUnits];
-uniform int op2_alpha[kMaxTexUnits];
 uniform vec4 texture_env_color[kMaxTexUnits];
 uniform float texture_env_rgb_scale[kMaxTexUnits];
 uniform float texture_env_alpha_scale[kMaxTexUnits];
@@ -324,7 +325,6 @@ in vec4 texcoord3_varying;
 
 // Alpha test///////////////////////////////////////////////////////////////////
 
-uniform int alpha_func;
 uniform float alpha_test_ref;
 
 // Shading: flat shading, lighting, and materials///////////////////////////////
@@ -350,7 +350,6 @@ uniform float light_attenuation_quadratics[kMaxLights];
 
 // Fog /////////////////////////////////////////////////////////////////////////
 
-uniform int fog_mode;
 uniform float fog_density;
 uniform float fog_start;
 uniform float fog_end;
