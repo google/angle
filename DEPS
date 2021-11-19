@@ -1305,6 +1305,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/my_talking_tom_friends': {
+      'packages': [
+        {
+            'package': 'angle/traces/my_talking_tom_friends',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/nba2k20_800': {
       'packages': [
         {
