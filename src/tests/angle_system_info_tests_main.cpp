@@ -83,6 +83,7 @@ int main(int argc, char **argv)
             useSwiftShader ? angle::vk::ICD::SwiftShader : angle::vk::ICD::Default;
         angle::GetSystemInfoVulkanWithICD(&info, preferredICD);
 #else
+        ANGLE_UNUSED_VARIABLE(useSwiftShader);
         printf("Vulkan not supported.\n");
         return EXIT_FAILURE;
 #endif  // defined(ANGLE_ENABLE_VULKAN)
