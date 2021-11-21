@@ -6180,15 +6180,21 @@ angle::Result ContextVk::endRenderPassQuery(QueryVk *queryVk)
     // Emit debug-util markers before calling the query command.
     ANGLE_TRY(handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InRenderPassCmdBufQueryCmd));
 
-    if (mRenderPassCommandBuffer)
+    // End the query inside the render pass.  In some situations, the query may not have actually
+    // been issued, so there is nothing to do there.  That is the case for transform feedback
+    // queries which are deferred until a draw call with transform feedback active is issued, which
+    // may have never happened.
+    ASSERT(mRenderPassCommandBuffer == nullptr ||
+           type == gl::QueryType::TransformFeedbackPrimitivesWritten || queryVk->hasQueryBegun());
+    if (mRenderPassCommandBuffer && queryVk->hasQueryBegun())
     {
         queryVk->getQueryHelper()->endRenderPassQuery(this);
+    }
 
-        // Update rasterizer discard emulation with primitives generated query if necessary.
-        if (type == gl::QueryType::PrimitivesGenerated)
-        {
-            updateRasterizerDiscardEnabled(false);
-        }
+    // Update rasterizer discard emulation with primitives generated query if necessary.
+    if (type == gl::QueryType::PrimitivesGenerated)
+    {
+        updateRasterizerDiscardEnabled(false);
     }
 
     ASSERT(mActiveRenderPassQueries[type] == queryVk);
