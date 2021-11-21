@@ -208,8 +208,9 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     options.shaderType = shaderType;
     options.removeEarlyFragmentTestsOptimization =
         shaderType == gl::ShaderType::Fragment && optionBits.removeEarlyFragmentTestsOptimization;
-    options.removeDebugInfo             = !contextVk->getRenderer()->getEnableValidationLayers();
-    options.isTransformFeedbackStage    = isLastPreFragmentStage && isTransformFeedbackProgram;
+    options.removeDebugInfo          = !contextVk->getRenderer()->getEnableValidationLayers();
+    options.isTransformFeedbackStage = isLastPreFragmentStage && isTransformFeedbackProgram &&
+                                       !optionBits.removeTransformFeedbackEmulation;
     options.isTransformFeedbackEmulated = contextVk->getFeatures().emulateTransformFeedback.enabled;
     options.negativeViewportSupported   = contextVk->getFeatures().supportsNegativeViewport.enabled;
 
@@ -850,6 +851,9 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
     mTransformOptions.enableLineRasterEmulation = contextVk->isBresenhamEmulationEnabled(mode);
     mTransformOptions.surfaceRotation           = ToUnderlying(desc.getSurfaceRotation());
     mTransformOptions.enableDepthCorrection     = !glState.isClipControlDepthZeroToOne();
+    mTransformOptions.removeTransformFeedbackEmulation =
+        contextVk->getFeatures().emulateTransformFeedback.enabled &&
+        !glState.isTransformFeedbackActiveUnpaused();
 
     // This must be called after mTransformOptions have been set.
     ProgramInfo &programInfo                  = getGraphicsProgramInfo(mTransformOptions);

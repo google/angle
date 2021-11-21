@@ -4465,6 +4465,12 @@ void ContextVk::onTransformFeedbackStateChanged()
     {
         invalidateGraphicsDriverUniforms();
         invalidateCurrentTransformFeedbackBuffers();
+
+        // Invalidate the graphics pipeline too.  On transform feedback state change, the current
+        // program may be used again, and it should switch between outputting transform feedback and
+        // not.
+        invalidateCurrentGraphicsPipeline();
+        resetCurrentGraphicsPipeline();
     }
 }
 

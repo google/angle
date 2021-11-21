@@ -86,6 +86,87 @@ class TransformFeedbackTest : public TransformFeedbackTestBase
     void midRecordOpDoesNotContributeTest(std::function<void()> op);
 };
 
+// Test that using a transform feedback program without transform feedback active works, and that
+// using it with transform feedback afterwards also works.
+TEST_P(TransformFeedbackTest, NoCaptureThenCapture)
+{
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec4 color;
+void main()
+{
+  color = vec4(0.6, 0.0, 0.0, 1.0);
+})";
+
+    // Set the program's transform feedback varyings (just gl_Position)
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(drawColor, essl3_shaders::vs::Simple(), kFS, tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+
+    glUseProgram(drawColor);
+    GLint positionLocation = glGetAttribLocation(drawColor, essl3_shaders::PositionAttrib());
+    ASSERT_NE(positionLocation, -1);
+
+    const GLfloat vertices[] = {
+        -1.0f, 1.0f, 0.5f, -1.0f, -1.0f, 0.5f, 1.0f, -1.0f, 0.5f,
+        -1.0f, 1.0f, 0.5f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f,  0.5f,
+    };
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    GLQuery primitivesWrittenQuery;
+    glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
+    ASSERT_GL_NO_ERROR();
+
+    // Don't bind a buffer for transform feedback output and don't active transform feedback.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Draw again, with xfb capture enabled.
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glEndTransformFeedback();
+
+    glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
+
+    // Ensure that both draw calls succeed.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+
+    GLuint primitivesWritten = 0;
+    glGetQueryObjectuiv(primitivesWrittenQuery, GL_QUERY_RESULT_EXT, &primitivesWritten);
+
+    // Ensure that only one draw call produced transform feedback data.
+    EXPECT_EQ(2u, primitivesWritten);
+    EXPECT_GL_NO_ERROR();
+
+    // Ensure that triangles were actually captured.
+    void *mappedBuffer =
+        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(float) * 24, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedBuffer);
+
+    const GLfloat expect[] = {
+        -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
+        -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
+    };
+
+    float *mappedFloats = static_cast<float *>(mappedBuffer);
+    for (uint32_t i = 0; i < 24; ++i)
+    {
+        EXPECT_EQ(mappedFloats[i], expect[i]);
+    }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 TEST_P(TransformFeedbackTest, ZeroSizedViewport)
 {
     // http://anglebug.com/5154
