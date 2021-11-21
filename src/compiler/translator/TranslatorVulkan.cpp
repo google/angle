@@ -487,18 +487,8 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
 
     // Create the following logic and add it at the end of main():
     //
-    //     if (ANGLEUniforms.xfbActiveUnpaused)
-    //     {
-    //         ANGLECaptureXfb();
-    //     }
+    //     ANGLECaptureXfb();
     //
-
-    // Create a reference ANGLEUniforms.xfbActiveUnpaused
-    TIntermBinary *xfbActiveUnpaused = driverUniforms->getXfbActiveUnpaused();
-
-    // ANGLEUniforms.xfbActiveUnpaused != 0
-    TIntermBinary *isXfbActiveUnpaused =
-        new TIntermBinary(EOpNotEqual, xfbActiveUnpaused, CreateUIntNode(0));
 
     // Create the function call
     TIntermAggregate *captureXfbCall =
@@ -515,11 +505,8 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
         TIntermAggregate::CreateFunctionCall(*getOffsetsFunction, &ivec4Zero);
     captureXfbBlock->appendStatement(getOffsetsCall);
 
-    // Create the if
-    TIntermIfElse *captureXfb = new TIntermIfElse(isXfbActiveUnpaused, captureXfbBlock, nullptr);
-
     // Run it at the end of the shader.
-    if (!RunAtTheEndOfShader(compiler, root, captureXfb, symbolTable))
+    if (!RunAtTheEndOfShader(compiler, root, captureXfbBlock, symbolTable))
     {
         return false;
     }
