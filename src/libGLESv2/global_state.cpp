@@ -63,6 +63,23 @@ Thread *AllocateCurrentThread()
 #else
     gl::gCurrentValidContext = nullptr;
 #endif
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+    static pthread_once_t keyOnce           = PTHREAD_ONCE_INIT;
+    static TLSIndex gProcessCleanupTLSIndex = TLS_INVALID_INDEX;
+
+    // Create process cleanup TLS slot
+    auto CreateProcessCleanupTLSIndex = []() {
+        gProcessCleanupTLSIndex = CreateTLSIndex(angle::ProcessCleanupCallback);
+    };
+    pthread_once(&keyOnce, CreateProcessCleanupTLSIndex);
+    ASSERT(gProcessCleanupTLSIndex != TLS_INVALID_INDEX);
+
+    // Initialize process cleanup TLS slot
+    angle::gProcessCleanupRefCount++;
+    SetTLSValue(gProcessCleanupTLSIndex, thread);
+#endif  // ANGLE_PLATFORM_ANDROID
+
     ASSERT(thread);
     return thread;
 }
@@ -94,7 +111,7 @@ static TLSIndex GetCurrentThreadTLSIndex()
     static dispatch_once_t once;
     dispatch_once(&once, ^{
       ASSERT(CurrentThreadIndex == TLS_INVALID_INDEX);
-      CurrentThreadIndex = CreateTLSIndex();
+      CurrentThreadIndex = CreateTLSIndex(nullptr);
     });
     return CurrentThreadIndex;
 }

@@ -329,7 +329,7 @@ static TLSIndex GetCurrentValidContextTLSIndex()
     static dispatch_once_t once;
     dispatch_once(&once, ^{
       ASSERT(CurrentValidContextIndex == TLS_INVALID_INDEX);
-      CurrentValidContextIndex = CreateTLSIndex();
+      CurrentValidContextIndex = CreateTLSIndex(nullptr);
     });
     return CurrentValidContextIndex;
 }

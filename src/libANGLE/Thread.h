@@ -13,9 +13,14 @@
 
 #include "libANGLE/Debug.h"
 
+#include <atomic>
+
 namespace angle
 {
 extern bool gUseAndroidOpenGLTlsSlot;
+extern std::atomic_int gProcessCleanupRefCount;
+
+void ProcessCleanupCallback(void *ptr);
 }  // namespace angle
 
 namespace gl

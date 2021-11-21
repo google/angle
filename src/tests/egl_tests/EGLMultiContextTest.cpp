@@ -53,6 +53,56 @@ class EGLMultiContextTest : public ANGLETest
         getEGLWindow()->makeCurrent();
     }
 
+    bool chooseConfig(EGLDisplay dpy, EGLConfig *config) const
+    {
+        bool result          = false;
+        EGLint count         = 0;
+        EGLint clientVersion = EGL_OPENGL_ES3_BIT;
+        EGLint attribs[]     = {EGL_RED_SIZE,
+                            8,
+                            EGL_GREEN_SIZE,
+                            8,
+                            EGL_BLUE_SIZE,
+                            8,
+                            EGL_ALPHA_SIZE,
+                            8,
+                            EGL_RENDERABLE_TYPE,
+                            clientVersion,
+                            EGL_SURFACE_TYPE,
+                            EGL_WINDOW_BIT,
+                            EGL_NONE};
+
+        result = eglChooseConfig(dpy, attribs, config, 1, &count);
+        EXPECT_EGL_TRUE(result && (count > 0));
+        return result;
+    }
+
+    bool createContext(EGLDisplay dpy, EGLConfig config, EGLContext *context)
+    {
+        bool result      = false;
+        EGLint attribs[] = {EGL_CONTEXT_MAJOR_VERSION, 3, EGL_NONE};
+
+        *context = eglCreateContext(dpy, config, nullptr, attribs);
+        result   = (*context != EGL_NO_CONTEXT);
+        EXPECT_TRUE(result);
+        return result;
+    }
+
+    bool createPbufferSurface(EGLDisplay dpy,
+                              EGLConfig config,
+                              EGLint width,
+                              EGLint height,
+                              EGLSurface *surface)
+    {
+        bool result      = false;
+        EGLint attribs[] = {EGL_WIDTH, width, EGL_HEIGHT, height, EGL_NONE};
+
+        *surface = eglCreatePbufferSurface(dpy, config, attribs);
+        result   = (*surface != EGL_NO_SURFACE);
+        EXPECT_TRUE(result);
+        return result;
+    }
+
     EGLContext mContexts[2];
     GLuint mTexture;
 };
@@ -236,6 +286,51 @@ void main()
     {
         eglDestroySurface(dpy, surface[t]);
         eglDestroyContext(dpy, ctx[t]);
+    }
+}
+
+// Test that repeated EGL init + terminate with improper cleanup doesn't cause an OOM crash.
+// To reproduce the memleak issue changes need to be made to "EGLWindow::destroyGL" as shown here ->
+// https://chromium-review.googlesource.com/c/angle/angle/+/3294581/5/util/EGLWindow.cpp
+TEST_P(EGLMultiContextTest, RepeatedEglInitAndTerminate)
+{
+    ANGLE_SKIP_TEST_IF(!IsAndroid() || !IsVulkan());
+
+    EGLDisplay dpy;
+    EGLSurface srf;
+    EGLContext ctx;
+    EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+
+    for (int i = 0; i < 100; i++)
+    {
+        std::thread thread = std::thread([&]() {
+            dpy = eglGetPlatformDisplayEXT(
+                EGL_PLATFORM_ANGLE_ANGLE, reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+            EXPECT_TRUE(dpy != EGL_NO_DISPLAY);
+            EXPECT_EGL_TRUE(eglInitialize(dpy, nullptr, nullptr));
+
+            EGLConfig config = EGL_NO_CONFIG_KHR;
+            EXPECT_TRUE(chooseConfig(dpy, &config));
+
+            EXPECT_TRUE(createPbufferSurface(dpy, config, 2560, 1080, &srf));
+            ASSERT_EGL_SUCCESS() << "eglCreatePbufferSurface failed.";
+
+            EXPECT_TRUE(createContext(dpy, config, &ctx));
+            EXPECT_EGL_TRUE(eglMakeCurrent(dpy, srf, srf, ctx));
+
+            // Clear and read back to make sure thread uses context.
+            glClearColor(1.0, 0.0, 0.0, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT);
+            EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+
+            eglTerminate(dpy);
+            EXPECT_EGL_SUCCESS();
+            dpy = EGL_NO_DISPLAY;
+            srf = EGL_NO_SURFACE;
+            ctx = EGL_NO_CONTEXT;
+        });
+
+        thread.join();
     }
 }
 }  // anonymous namespace

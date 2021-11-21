@@ -14,7 +14,7 @@
 #include "libANGLE/Thread.h"
 #include "libANGLE/features.h"
 
-#if defined(ANGLE_PLATFORM_APPLE)
+#if defined(ANGLE_PLATFORM_APPLE) || (ANGLE_PLATFORM_ANDROID)
 #    include "common/tls.h"
 #endif
 
