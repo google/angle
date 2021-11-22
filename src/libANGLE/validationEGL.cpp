@@ -6213,7 +6213,7 @@ bool ValidateCreatePlatformWindowSurface(const ValidationContext *val,
 bool ValidateLockSurfaceKHR(const ValidationContext *val,
                             const egl::Display *dpy,
                             const Surface *surface,
-                            const EGLint *attrib_list)
+                            const AttributeMap &attributes)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, dpy));
     ANGLE_VALIDATION_TRY(ValidateSurface(val, dpy, surface));
@@ -6249,10 +6249,13 @@ bool ValidateLockSurfaceKHR(const ValidationContext *val,
         return false;
     }
 
-    while (attrib_list != nullptr && attrib_list[0] != EGL_NONE)
+    attributes.initializeWithoutValidation();
+
+    for (const auto &attributeIter : attributes)
     {
-        EGLint attribute = *attrib_list++;
-        EGLint value     = *attrib_list++;
+        EGLAttrib attribute = attributeIter.first;
+        EGLAttrib value     = attributeIter.second;
+
         switch (attribute)
         {
             case EGL_MAP_PRESERVE_PIXELS_KHR:

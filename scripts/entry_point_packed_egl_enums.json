@@ -63,6 +63,9 @@
     "eglLabelObject": {
         "objectType": "ObjectType"
     },
+    "eglLockSurface": {
+        "attrib_list": "const AttributeMap &"
+    },
     "eglStreamConsumerGLTextureExternalAttribsNV": {
         "attrib_list": "const AttributeMap &"
     },

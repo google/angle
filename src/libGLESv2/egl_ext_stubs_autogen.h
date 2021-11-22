@@ -87,7 +87,7 @@ EGLint LabelObjectKHR(Thread *thread,
 EGLBoolean LockSurfaceKHR(Thread *thread,
                           egl::Display *dpyPacked,
                           Surface *surfacePacked,
-                          const EGLint *attrib_list);
+                          const AttributeMap &attrib_listPacked);
 EGLBoolean PostSubBufferNV(Thread *thread,
                            egl::Display *dpyPacked,
                            Surface *surfacePacked,

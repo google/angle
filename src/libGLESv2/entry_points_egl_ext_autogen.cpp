@@ -867,13 +867,14 @@ EGLBoolean EGLAPIENTRY EGL_LockSurfaceKHR(EGLDisplay dpy,
 
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-    Surface *surfacePacked  = PackParam<Surface *>(surface);
+    egl::Display *dpyPacked               = PackParam<egl::Display *>(dpy);
+    Surface *surfacePacked                = PackParam<Surface *>(surface);
+    const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
     ANGLE_EGL_VALIDATE(thread, LockSurfaceKHR, GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
-                       surfacePacked, attrib_list);
+                       surfacePacked, attrib_listPacked);
 
-    return LockSurfaceKHR(thread, dpyPacked, surfacePacked, attrib_list);
+    return LockSurfaceKHR(thread, dpyPacked, surfacePacked, attrib_listPacked);
 }
 
 EGLBoolean EGLAPIENTRY EGL_QuerySurface64KHR(EGLDisplay dpy,

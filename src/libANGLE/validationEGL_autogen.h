@@ -386,7 +386,7 @@ bool ValidateDestroyImageKHR(const ValidationContext *val,
 bool ValidateLockSurfaceKHR(const ValidationContext *val,
                             const egl::Display *dpyPacked,
                             const Surface *surfacePacked,
-                            const EGLint *attrib_list);
+                            const AttributeMap &attrib_listPacked);
 bool ValidateQuerySurface64KHR(const ValidationContext *val,
                                const egl::Display *dpyPacked,
                                const Surface *surfacePacked,
