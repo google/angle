@@ -607,6 +607,9 @@ struct Extensions
     // GL_ANGLE_request_extension
     bool requestExtensionANGLE = false;
 
+    // GL_ANGLE_rgbx_internal_format
+    bool rgbxInternalFormatANGLE = false;
+
     // GL_ANGLE_robust_client_memory
     bool robustClientMemoryANGLE = false;
 

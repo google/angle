@@ -1998,7 +1998,7 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8X8_UNORM:
-            mIntendedGLFormat              = GL_RGBX8_ANGLEX;
+            mIntendedGLFormat              = GL_RGBX8_ANGLE;
             mActualSampleOnlyImageFormatID = angle::FormatID::R8G8B8A8_UNORM;
             mImageInitializerFunction      = nullptr;
             mActualBufferFormatID          = angle::FormatID::NONE;

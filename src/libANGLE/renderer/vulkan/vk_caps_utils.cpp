@@ -563,6 +563,9 @@ void RendererVk::ensureCapsInitialized() const
     // https://gitlab.khronos.org/opengl/API/-/issues/149
     mNativeExtensions.shaderMultisampleInterpolationOES = mNativeExtensions.sampleVariablesOES;
 
+    // Always enable ANGLE_rgbx_internal_format to expose GL_RGBX8_ANGLE.
+    mNativeExtensions.rgbxInternalFormatANGLE = true;
+
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize = LimitToInt(limitsVk.maxImageDimension3D);

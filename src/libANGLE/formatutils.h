@@ -67,7 +67,7 @@ ANGLE_INLINE GLenum GetNonLinearFormat(const GLenum format)
             return GL_SRGB8_ALPHA8;
         case GL_RGB8:
         case GL_BGRX8_ANGLEX:
-        case GL_RGBX8_ANGLEX:
+        case GL_RGBX8_ANGLE:
             return GL_SRGB8;
         case GL_RGBA16F:
             return GL_RGBA16F;
@@ -485,7 +485,7 @@ ANGLE_INLINE bool IsBGRAFormat(const GLenum internalFormat)
         case GL_BGR5_A1_ANGLEX:
         case GL_BGRA8_SRGB_ANGLEX:
         case GL_BGRX8_ANGLEX:
-        case GL_RGBX8_ANGLEX:
+        case GL_RGBX8_ANGLE:
         case GL_BGR565_ANGLEX:
         case GL_BGR10_A2_ANGLEX:
             return true;

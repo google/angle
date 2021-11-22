@@ -694,7 +694,7 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
             return FormatID::R8G8B8A8_TYPELESS_SRGB;
         case GL_RGBA8_USCALED_ANGLEX:
             return FormatID::R8G8B8A8_USCALED;
-        case GL_RGBX8_ANGLEX:
+        case GL_RGBX8_ANGLE:
             return FormatID::R8G8B8X8_UNORM;
         case GL_SR8_EXT:
             return FormatID::R8_UNORM_SRGB;

@@ -184,5 +184,9 @@
     "From GL_OES_texture_stencil8":
     [
         [ "GL_STENCIL_INDEX8", "GL_STENCIL_INDEX", "GL_UNSIGNED_BYTE" ]
+    ],
+    "From GL_ANGLE_rgbx_internal_format":
+    [
+        [ "GL_RGBX8_ANGLE", "GL_RGB", "GL_UNSIGNED_BYTE" ]
     ]
 }

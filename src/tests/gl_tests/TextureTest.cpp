@@ -5647,6 +5647,24 @@ TEST_P(Texture2DTestES3, TextureRGBImplicitAlpha1)
 
 // When sampling a texture without an alpha channel, "1" is returned as the alpha value.
 // ES 3.0.4 table 3.24
+TEST_P(Texture2DTestES3, TextureRGBXImplicitAlpha1)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
+
+    GLuint texture2D;
+    glGenTextures(1, &texture2D);
+    glBindTexture(GL_TEXTURE_2D, texture2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBX8_ANGLE, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glActiveTexture(GL_TEXTURE0);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_ALPHA_EQ(0, 0, 255);
+}
+
+// When sampling a texture without an alpha channel, "1" is returned as the alpha value.
+// ES 3.0.4 table 3.24
 TEST_P(Texture2DTest, TextureLuminanceImplicitAlpha1)
 {
     setUpProgram();

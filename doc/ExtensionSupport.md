@@ -208,6 +208,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_ANGLE_provoking_vertex](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_provoking_vertex.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; |
 | [GL_ANGLE_relaxed_vertex_attribute_type](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_relaxed_vertex_attribute_type.txt) | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; |
 | [GL_ANGLE_request_extension](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_request_extension.txt) | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; |
+| [GL_ANGLE_rgbx_internal_format](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_rgbx_internal_format.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; |
 | [GL_ANGLE_robust_client_memory](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_robust_client_memory.txt) | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; |
 | [GL_ANGLE_robust_fragment_shader_output](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_robust_fragment_shader_output.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; |
 | [GL_ANGLE_robust_resource_initialization](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_robust_resource_initialization.txt) | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; | &#10060; |

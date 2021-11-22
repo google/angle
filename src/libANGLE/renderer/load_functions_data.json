@@ -415,7 +415,7 @@
       "GL_UNSIGNED_BYTE": "LoadToNative<GLubyte, 4>"
     }
   },
-  "GL_RGBX8_ANGLEX" : {
+  "GL_RGBX8_ANGLE" : {
     "R8G8B8X8_UNORM": {
       "GL_UNSIGNED_BYTE": "LoadToNative<GLubyte, 4>"
     },

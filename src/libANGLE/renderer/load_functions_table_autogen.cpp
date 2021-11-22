@@ -3140,7 +3140,7 @@ LoadImageFunctionInfo RGBA8_USCALED_ANGLEX_to_default(GLenum type)
     }
 }
 
-LoadImageFunctionInfo RGBX8_ANGLEX_to_R8G8B8A8_UNORM(GLenum type)
+LoadImageFunctionInfo RGBX8_ANGLE_to_R8G8B8A8_UNORM(GLenum type)
 {
     switch (type)
     {
@@ -3152,7 +3152,7 @@ LoadImageFunctionInfo RGBX8_ANGLEX_to_R8G8B8A8_UNORM(GLenum type)
     }
 }
 
-LoadImageFunctionInfo RGBX8_ANGLEX_to_R8G8B8X8_UNORM(GLenum type)
+LoadImageFunctionInfo RGBX8_ANGLE_to_R8G8B8X8_UNORM(GLenum type)
 {
     switch (type)
     {
@@ -4592,14 +4592,14 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
             return RGBA8_SSCALED_ANGLEX_to_default;
         case GL_RGBA8_USCALED_ANGLEX:
             return RGBA8_USCALED_ANGLEX_to_default;
-        case GL_RGBX8_ANGLEX:
+        case GL_RGBX8_ANGLE:
         {
             switch (angleFormat)
             {
                 case FormatID::R8G8B8A8_UNORM:
-                    return RGBX8_ANGLEX_to_R8G8B8A8_UNORM;
+                    return RGBX8_ANGLE_to_R8G8B8A8_UNORM;
                 case FormatID::R8G8B8X8_UNORM:
-                    return RGBX8_ANGLEX_to_R8G8B8X8_UNORM;
+                    return RGBX8_ANGLE_to_R8G8B8X8_UNORM;
                 default:
                     break;
             }
