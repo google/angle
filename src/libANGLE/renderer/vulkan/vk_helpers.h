@@ -545,6 +545,10 @@ class QueryHelper final : public Resource
                         CommandBuffer *resetCommandBuffer,
                         CommandBuffer *commandBuffer);
     void endQueryImpl(ContextVk *contextVk, CommandBuffer *commandBuffer);
+    template <typename CommandBufferT>
+    void resetQueryPoolImpl(ContextVk *contextVk,
+                            const QueryPool &queryPool,
+                            CommandBufferT *commandBuffer);
     VkResult getResultImpl(ContextVk *contextVk,
                            const VkQueryResultFlags flags,
                            QueryResult *resultOut);
