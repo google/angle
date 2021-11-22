@@ -5013,7 +5013,9 @@ void Context::compressedTexImage2D(TextureTarget target,
 
     Extents size(width, height, 1);
     Texture *texture = getTextureByTarget(target);
-    ANGLE_CONTEXT_TRY(texture->setCompressedImage(this, mState.getUnpackState(), target, level,
+    // From OpenGL ES 3 spec: All pixel storage modes are ignored when decoding a compressed texture
+    // image. So we use an empty PixelUnpackState.
+    ANGLE_CONTEXT_TRY(texture->setCompressedImage(this, PixelUnpackState(), target, level,
                                                   internalformat, size, imageSize,
                                                   static_cast<const uint8_t *>(data)));
 }
@@ -5045,7 +5047,9 @@ void Context::compressedTexImage3D(TextureTarget target,
 
     Extents size(width, height, depth);
     Texture *texture = getTextureByTarget(target);
-    ANGLE_CONTEXT_TRY(texture->setCompressedImage(this, mState.getUnpackState(), target, level,
+    // From OpenGL ES 3 spec: All pixel storage modes are ignored when decoding a compressed texture
+    // image. So we use an empty PixelUnpackState.
+    ANGLE_CONTEXT_TRY(texture->setCompressedImage(this, PixelUnpackState(), target, level,
                                                   internalformat, size, imageSize,
                                                   static_cast<const uint8_t *>(data)));
 }
@@ -5079,8 +5083,10 @@ void Context::compressedTexSubImage2D(TextureTarget target,
 
     Box area(xoffset, yoffset, 0, width, height, 1);
     Texture *texture = getTextureByTarget(target);
-    ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(this, mState.getUnpackState(), target, level,
-                                                     area, format, imageSize,
+    // From OpenGL ES 3 spec: All pixel storage modes are ignored when decoding a compressed texture
+    // image. So we use an empty PixelUnpackState.
+    ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(this, PixelUnpackState(), target, level, area,
+                                                     format, imageSize,
                                                      static_cast<const uint8_t *>(data)));
 }
 
@@ -5121,8 +5127,10 @@ void Context::compressedTexSubImage3D(TextureTarget target,
 
     Box area(xoffset, yoffset, zoffset, width, height, depth);
     Texture *texture = getTextureByTarget(target);
-    ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(this, mState.getUnpackState(), target, level,
-                                                     area, format, imageSize,
+    // From OpenGL ES 3 spec: All pixel storage modes are ignored when decoding a compressed texture
+    // image. So we use an empty PixelUnpackState.
+    ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(this, PixelUnpackState(), target, level, area,
+                                                     format, imageSize,
                                                      static_cast<const uint8_t *>(data)));
 }
 
