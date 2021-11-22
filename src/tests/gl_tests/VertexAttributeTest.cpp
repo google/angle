@@ -3720,7 +3720,6 @@ void main()
 // Test that aliasing attribute locations work with differing precisions.
 TEST_P(VertexAttributeTest, AliasingVectorAttribLocationsDifferingPrecisions)
 {
-    swapBuffers();
     // http://anglebug.com/5180
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
 
@@ -3822,6 +3821,37 @@ void main()
             EXPECT_PIXEL_COLOR_NEAR(0, 0, expected, 1);
         }
     }
+}
+
+// Test that unsupported vertex format specified on non-existing attribute doesn't crash.
+TEST_P(VertexAttributeTest, VertexFormatConversionOfNonExistingAttribute)
+{
+    constexpr char kVS[] = R"(precision highp float;
+attribute vec3 attr1;
+void main(void) {
+   gl_Position = vec4(attr1, 1.0);
+})";
+
+    constexpr char kFS[] = R"(precision highp float;
+void main(void) {
+   gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+})";
+
+    GLBuffer emptyBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, emptyBuffer);
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glBindAttribLocation(program, 0, "attr1");
+    glLinkProgram(program);
+    ASSERT_TRUE(CheckLinkStatusAndReturnProgram(program, true));
+    glUseProgram(program);
+
+    // Use the RGB8 format for non-existing attribute 1.
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, false, 1, 0);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_GL_NO_ERROR();
 }
 
 // VAO emulation fails on Mac but is not used on Mac in the wild. http://anglebug.com/5577

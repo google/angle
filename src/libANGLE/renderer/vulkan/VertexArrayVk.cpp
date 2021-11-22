@@ -601,7 +601,7 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
             mContentsObservers->disableForBuffer(bufferGL, static_cast<uint32_t>(attribIndex));
         }
 
-        if (!isStreamingVertexAttrib)
+        if (!isStreamingVertexAttrib && bufferGL->getSize() > 0)
         {
             BufferVk *bufferVk                  = vk::GetImpl(bufferGL);
             const angle::Format &intendedFormat = vertexFormat.getIntendedFormat();
