@@ -4121,6 +4121,19 @@ GLint GetAdjustedTextureCacheLevel(gl::TextureTarget target, GLint level)
 
     return adjustedLevel;
 }
+
+template <typename ParamValueType>
+struct ParamValueTrait
+{
+    static_assert(sizeof(ParamValueType) == 0, "invalid ParamValueType");
+};
+
+template <>
+struct ParamValueTrait<gl::FramebufferID>
+{
+    static constexpr const char *name = "framebufferPacked";
+    static const ParamType typeID     = ParamType::TFramebufferID;
+};
 }  // namespace
 
 ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
@@ -5026,8 +5039,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
 
         case EntryPoint::GLBindFramebuffer:
         case EntryPoint::GLBindFramebufferOES:
-            maybeGenResourceOnBind<gl::FramebufferID>(call, "framebufferPacked",
-                                                      ParamType::TFramebufferID);
+            maybeGenResourceOnBind<gl::FramebufferID>(call);
             break;
 
         case EntryPoint::GLGenTextures:
@@ -5394,10 +5406,11 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
 }
 
 template <typename ParamValueType>
-void FrameCaptureShared::maybeGenResourceOnBind(CallCapture &call,
-                                                const char *paramName,
-                                                ParamType paramType)
+void FrameCaptureShared::maybeGenResourceOnBind(CallCapture &call)
 {
+    const char *paramName     = ParamValueTrait<ParamValueType>::name;
+    const ParamType paramType = ParamValueTrait<ParamValueType>::typeID;
+
     const ParamCapture &param = call.params.getParam(paramName, paramType, 1);
     const ParamValueType id   = AccessParamValue<ParamValueType>(paramType, param.value);
 
