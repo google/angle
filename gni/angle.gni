@@ -52,6 +52,7 @@ if (angle_has_build) {
     angle_use_x11 = (is_linux || is_chromeos) && !is_ggp
     use_ozone = false
     ozone_platform_gbm = false
+    ozone_platform_wayland = false
     ozone_platform_headless = false
     use_fuzzing_engine = false
     is_apple = is_mac || is_ios
@@ -128,9 +129,9 @@ declare_args() {
 
   angle_enable_d3d9 = is_win && !angle_is_winuwp
   angle_enable_d3d11 = is_win
-  angle_enable_gl =
-      (ozone_platform_gbm || !is_linux || (angle_use_x11 && !is_chromeos)) &&
-      !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64
+  angle_enable_gl = (ozone_platform_gbm || ozone_platform_wayland ||
+                     !is_linux || (angle_use_x11 && !is_chromeos)) &&
+                    !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64
 
   angle_enable_vulkan =
       angle_has_build &&
