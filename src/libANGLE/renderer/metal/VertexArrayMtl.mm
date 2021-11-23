@@ -695,8 +695,7 @@ angle::Result VertexArrayMtl::getIndexBuffer(const gl::Context *context,
     }
     else
     {
-        bool needConversion = type == gl::DrawElementsType::UnsignedByte ||
-                              (convertedOffset % mtl::kIndexBufferOffsetAlignment) != 0;
+        bool needConversion = type == gl::DrawElementsType::UnsignedByte;
         if (needConversion)
         {
             ANGLE_TRY(convertIndexBuffer(context, type, convertedOffset, idxBufferOut,

@@ -33,6 +33,8 @@
 6663 VULKAN : Texture2DTest.UploadThenFSThenNewRPThenVSThenFS/* = SKIP
 6663 VULKAN : Texture2DTest.UploadThenFSThenVS/* = SKIP
 6663 VULKAN : Texture2DTest.UploadThenFSThenVSThenNewRPThenFS/* = SKIP
+6730 VULKAN : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8Line/* = SKIP
+6730 VULKAN : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8LineIds/* = SKIP
 
 // Windows
 3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
@@ -175,8 +177,6 @@
 6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/* = SKIP
 6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/* = SKIP
 6447 MAC METAL : FramebufferTest_ES3.RenderSampleDepthTextureWithExcludedLevel/* = SKIP
-
-6688 MAC METAL : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElements/* = SKIP
 
 5087 MAC METAL INTEL : MultisampleTest.AlphaToSampleCoverage/* = SKIP
 5087 MAC METAL AMD : MultisampleTest.AlphaToSampleCoverage/* = SKIP

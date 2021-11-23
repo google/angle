@@ -39,6 +39,7 @@ class ProvokingVertexHelper : public mtl::ProvokingVertexCacheSpecializeShaderFa
     void commitPreconditionCommandBuffer(ContextMtl *context);
     void ensureCommandBufferReady();
     void onDestroy(ContextMtl *context);
+    mtl::ComputeCommandEncoder *getComputeCommandEncoder();
 
   private:
     id<MTLLibrary> mProvokingVertexLibrary;
@@ -48,7 +49,6 @@ class ProvokingVertexHelper : public mtl::ProvokingVertexCacheSpecializeShaderFa
     mtl::ProvokingVertexComputePipelineDesc mCachedDesc;
     mtl::ComputeCommandEncoder mCurrentEncoder;
 
-    mtl::ComputeCommandEncoder *getComputeCommandEncoder();
     // Program cache
     virtual angle::Result getSpecializedShader(
         rx::mtl::Context *context,

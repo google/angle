@@ -1230,6 +1230,217 @@ TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElements)
     EXPECT_GL_NO_ERROR();
 }
 
+TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElementsU8)
+{
+    constexpr char kVS[] = R"(#version 300 es
+    flat out highp int vVertexID;
+
+    void main() {
+        vVertexID = gl_VertexID;
+        gl_PointSize = 1.0;
+        gl_Position = vec4(0,0,0,1);
+    })";
+
+    constexpr char kFS[] = R"(#version 300 es
+    flat in highp int vVertexID;
+    out highp int oVertexID;
+    void main() {
+        oVertexID = vVertexID;
+    })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glViewport(0, 0, 1, 1);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32I, 1, 1);
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+
+    EXPECT_GL_NO_ERROR();
+
+    GLint clearData[4] = {42};
+    glClearBufferiv(GL_COLOR, 0, clearData);
+    EXPECT_EQ(42, GetFirstIntPixelRedValue());
+
+    const int kIndexDataSize = 5;
+    GLubyte indexData[]      = {1, 2, 5, 3, 100};
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData, GL_STATIC_DRAW);
+
+    for (size_t first = 0; first < kIndexDataSize; ++first)
+    {
+        for (size_t count = 1; first + count <= kIndexDataSize; ++count)
+        {
+            glDrawElements(GL_POINTS, count, GL_UNSIGNED_BYTE,
+                           reinterpret_cast<const void *>(first));
+            GLint expected = indexData[first + count - 1];
+            GLint actual   = GetFirstIntPixelRedValue();
+            EXPECT_EQ(expected, actual);
+        }
+    }
+    EXPECT_GL_NO_ERROR();
+}
+
+void GLVertexIDIntegerTextureDrawElementsU8Line_Helper(size_t first, const GLubyte *indices)
+{
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, reinterpret_cast<const void *>(first));
+
+    GLint pixels[8];
+    glReadPixels(0, 0, 2, 1, GL_RGBA_INTEGER, GL_INT, pixels);
+
+    GLint expected = indices[first + 1];
+    EXPECT_EQ(expected, pixels[0]);
+    EXPECT_EQ(expected, pixels[4]);
+}
+
+TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElementsU8Line)
+{
+    constexpr char kVS[] = R"(#version 300 es
+    flat out highp int vVertexID;
+    layout(location = 0) in vec4 position;
+
+    void main() {
+        vVertexID = gl_VertexID;
+        gl_Position = position;
+    })";
+
+    constexpr char kFS[] = R"(#version 300 es
+    flat in highp int vVertexID;
+    out highp int oVertexID;
+    void main() {
+        oVertexID = vVertexID;
+    })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glViewport(0, 0, 2, 1);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32I, 2, 1);
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+
+    EXPECT_GL_NO_ERROR();
+
+    struct LR
+    {
+        LR() : X0(-1.0f), X1(1.0f) {}
+        float X0;
+        float X1;
+    };
+    constexpr int kNumVertices = 100;
+    LR vertData[kNumVertices];
+    GLBuffer buf;
+    glBindBuffer(GL_ARRAY_BUFFER, buf);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertData), vertData, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    GLint clearData[4] = {42};
+    glClearBufferiv(GL_COLOR, 0, clearData);
+    EXPECT_EQ(42, GetFirstIntPixelRedValue());
+
+    GLubyte indexData[] = {1, 4, 5, 2, 50, 61};
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData, GL_STATIC_DRAW);
+
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(0, indexData);
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(1, indexData);
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(2, indexData);
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(4, indexData);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test gl_VertexID works with lines
+TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElementsU8LineIds)
+{
+    // Draws lines via indices (glDrawElements). Each pair of indices
+    // draws the next consecutive pixel. For 2 points, because we're
+    // using int attributes, they must be "flat" and so the spec
+    // says for a given line the value should come from the second
+    // of the 2 points. (see: OpenGL ES 3.0.2 spec Table 2.12)
+    // Each line is only 1 pixel long so every other pixel should
+    // be the default value.
+    constexpr char kVS[] = R"(#version 300 es
+    flat out highp int vVertexID;
+    layout(location = 0) in float position;
+    uniform float width;
+
+    void main() {
+        vVertexID = gl_VertexID;
+        gl_Position = vec4(position / width * 2.0 - 1.0, 0, 0, 1);
+    })";
+
+    constexpr char kFS[] = R"(#version 300 es
+    flat in highp int vVertexID;
+    out highp int oVertexID;
+    void main() {
+        oVertexID = vVertexID;
+    })";
+
+    GLubyte indexData[]          = {1, 4, 5, 2, 50, 61, 32, 33};
+    constexpr size_t kNumIndices = sizeof(indexData) / sizeof(indexData[0]);
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData, GL_STATIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glUniform1f(glGetUniformLocation(program, "width"), kNumIndices);
+    glViewport(0, 0, kNumIndices, 1);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32I, kNumIndices, 1);
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+
+    constexpr int kNumVertices = 100;
+    std::vector<float> vertData(kNumVertices, -1.0f);
+    {
+        int i = 0;
+        for (GLubyte ndx : indexData)
+        {
+            vertData[ndx] = i++;
+        }
+    }
+    GLBuffer buf;
+    glBindBuffer(GL_ARRAY_BUFFER, buf);
+    glBufferData(GL_ARRAY_BUFFER, vertData.size() * sizeof(float), vertData.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    GLint kDefaultValue = 42;
+    GLint clearData[4]  = {kDefaultValue};
+    glClearBufferiv(GL_COLOR, 0, clearData);
+    EXPECT_EQ(kDefaultValue, GetFirstIntPixelRedValue());
+
+    EXPECT_GL_NO_ERROR();
+
+    glDrawElements(GL_LINES, kNumIndices, GL_UNSIGNED_BYTE, 0);
+
+    GLint pixels[kNumIndices * 4];
+    glReadPixels(0, 0, kNumIndices, 1, GL_RGBA_INTEGER, GL_INT, pixels);
+
+    for (size_t i = 0; i < kNumIndices; ++i)
+    {
+        const int expected = i % 2 ? kDefaultValue : indexData[i + 1];
+        const int actual   = pixels[i * 4];
+        EXPECT_EQ(expected, actual);
+    }
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Helper function for the GLVertexIDIntegerTextureDrawArrays test
 void GLVertexIDIntegerTextureDrawArrays_helper(int first, int count, GLenum err)
 {
