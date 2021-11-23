@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '53373ae01d328811f0ebbc74bd7a7bf17ad78c43',
+  'chromium_revision': '592e5132674712122164c30903b538c67eb5f8ea',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -79,7 +79,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '8a112e2bdf2b5839f07c820e255d78c835b0fd62',
+  'catapult_revision': '7ae3bc476654dd8161245fd5c42ae7aae3d010dc',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@b8e6a02717931f42cec85dfa15ea01930e1e571e',
+    'url': '{chromium_git}/chromium/src/build.git@831603f4abb9fdaaeba28b33f7c40130489a1cbb',
     'condition': 'not build_with_chromium',
   },
 
@@ -182,7 +182,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@e21de6f7d142b7f20841b9aebb4dc9e03dda4317',
+    'url': '{chromium_git}/chromium/src/testing@83d4511de476bdecb08b70db4ddc293998288a3d',
     'condition': 'not build_with_chromium',
   },
 
@@ -230,7 +230,7 @@ deps = {
   },
 
   'third_party/android_deps': {
-    'url': '{chromium_git}/chromium/src/third_party/android_deps@ebda32698579c0e59f4302bf0f259e1f925c1e9d',
+    'url': '{chromium_git}/chromium/src/third_party/android_deps@05738da13b14dd58c99019060a6981ee21794d39',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -332,7 +332,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@b6c1ed40d5d89f22a1ecee39acb33de3cf8158a8',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@a29f589a15b7f80edd3d0bbe4f3a2dbb1120316c',
     'condition': 'not build_with_chromium',
   },
 
@@ -439,7 +439,7 @@ deps = {
   },
 
   'third_party/protobuf': {
-    'url': '{chromium_git}/chromium/src/third_party/protobuf@fd8a7c7c2b96e13f526c7078a1ee099357b51c43',
+    'url': '{chromium_git}/chromium/src/third_party/protobuf@5227e7d8309e231f8b7a61edd9d63d5446ca0b0b',
     'condition': 'not build_with_chromium',
   },
 
@@ -536,7 +536,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@6a6ee955de36e3c97f5676ad55b7e21106b59832',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@649f6b9fa454fe4d6b7f4e4728ba14aad821e304',
     'condition': 'not build_with_chromium',
   },
 
@@ -567,7 +567,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@3eb0936d989a93e27eb1b23d0bbf970eff114cc6',
+    'url': '{chromium_git}/chromium/src/tools/mb@48aec494aacd62d3ece00d619480b50cf1166fbd',
     'condition': 'not build_with_chromium',
   },
 
@@ -582,7 +582,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@d0f3e129d77b4ecd3581ccef6c2b8afffc843c78',
+    'url': '{chromium_git}/chromium/src/tools/perf@abf7a4bd0b1a778c36fd46a92e7cc4c33f983124',
     'condition': 'not build_with_chromium',
   },
 
@@ -3339,7 +3339,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_jetbrains_kotlin_kotlin_stdlib',
-              'version': 'version:2@1.5.31.cr0',
+              'version': 'version:2@1.6.0.cr0',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -3350,7 +3350,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_jetbrains_kotlin_kotlin_stdlib_common',
-              'version': 'version:2@1.5.31.cr0',
+              'version': 'version:2@1.6.0.cr0',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
