@@ -434,8 +434,10 @@ static_assert(kPackedStencilOpSize == 4, "Size check failed");
 
 struct DepthStencilEnableFlags final
 {
-    uint8_t depthTest : 2;  // these only need one bit each. the extra is used as padding.
-    uint8_t depthWrite : 2;
+    uint8_t viewportNegativeOneToOne : 1;
+
+    uint8_t depthTest : 1;
+    uint8_t depthWrite : 2;  // these only need one bit each. the extra is used as padding.
     uint8_t depthBoundsTest : 2;
     uint8_t stencilTest : 2;
 };
@@ -598,6 +600,9 @@ class GraphicsPipelineDesc final
     void updateTopology(GraphicsPipelineTransitionBits *transition, gl::PrimitiveMode drawMode);
     void updatePrimitiveRestartEnabled(GraphicsPipelineTransitionBits *transition,
                                        bool primitiveRestartEnabled);
+
+    // Viewport states
+    void updateDepthClipControl(GraphicsPipelineTransitionBits *transition, bool negativeOneToOne);
 
     // Raster states
     void setCullMode(VkCullModeFlagBits cullMode);

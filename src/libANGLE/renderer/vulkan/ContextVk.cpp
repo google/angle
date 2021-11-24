@@ -4189,9 +4189,16 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                                                    isYFlipEnabledForDrawFBO());
                             updateScissor(glState);
 
-                            // Nothing is needed for depth correction for EXT_clip_control.
+                            // If VK_EXT_depth_clip_control is not enabled, there's nothing needed
+                            // for depth correction for EXT_clip_control.
                             // glState will be used to toggle control path of depth correction code
                             // in SPIR-V tranform options.
+                            if (getFeatures().supportsDepthClipControl.enabled)
+                            {
+                                mGraphicsPipelineDesc->updateDepthClipControl(
+                                    &mGraphicsPipelineTransition,
+                                    !glState.isClipControlDepthZeroToOne());
+                            }
                             break;
                         case gl::State::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
                             invalidateGraphicsDriverUniforms();

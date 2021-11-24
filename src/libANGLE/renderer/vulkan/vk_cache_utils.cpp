@@ -1638,6 +1638,8 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     mRasterizationAndMultisampleStateInfo.bits.alphaToCoverageEnable = 0;
     mRasterizationAndMultisampleStateInfo.bits.alphaToOneEnable      = 0;
 
+    mDepthStencilStateInfo.enable.viewportNegativeOneToOne =
+        contextVk->getFeatures().supportsDepthClipControl.enabled;
     mDepthStencilStateInfo.enable.depthTest  = 0;
     mDepthStencilStateInfo.enable.depthWrite = 0;
     SetBitField(mDepthStencilStateInfo.depthCompareOpAndSurfaceRotation.depthCompareOp,
@@ -1922,6 +1924,17 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     viewportState.scissorCount  = 1;
     viewportState.pScissors     = nullptr;
 
+    VkPipelineViewportDepthClipControlCreateInfoEXT depthClipControl = {};
+    if (contextVk->getFeatures().supportsDepthClipControl.enabled)
+    {
+        depthClipControl.sType =
+            VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT;
+        depthClipControl.negativeOneToOne =
+            static_cast<VkBool32>(mDepthStencilStateInfo.enable.viewportNegativeOneToOne);
+
+        viewportState.pNext = &depthClipControl;
+    }
+
     const PackedRasterizationAndMultisampleStateInfo &rasterAndMS =
         mRasterizationAndMultisampleStateInfo;
 
@@ -2182,6 +2195,13 @@ void GraphicsPipelineDesc::updateTopology(GraphicsPipelineTransitionBits *transi
 {
     setTopology(drawMode);
     transition->set(ANGLE_GET_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo, primitive));
+}
+
+void GraphicsPipelineDesc::updateDepthClipControl(GraphicsPipelineTransitionBits *transition,
+                                                  bool negativeOneToOne)
+{
+    SetBitField(mDepthStencilStateInfo.enable.viewportNegativeOneToOne, negativeOneToOne);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDepthStencilStateInfo, enable));
 }
 
 void GraphicsPipelineDesc::updatePrimitiveRestartEnabled(GraphicsPipelineTransitionBits *transition,

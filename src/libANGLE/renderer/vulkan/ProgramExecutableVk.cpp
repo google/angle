@@ -226,7 +226,9 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     if (isLastPreFragmentStage)
     {
         options.preRotation = static_cast<SurfaceRotation>(optionBits.surfaceRotation);
-        options.transformPositionToVulkanClipSpace = optionBits.enableDepthCorrection;
+        options.transformPositionToVulkanClipSpace =
+            optionBits.enableDepthCorrection &&
+            !contextVk->getFeatures().supportsDepthClipControl.enabled;
     }
 
     ANGLE_TRY(GlslangWrapperVk::TransformSpirV(options, variableInfoMap, originalSpirvBlob,
