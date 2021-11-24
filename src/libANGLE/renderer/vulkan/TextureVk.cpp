@@ -2270,8 +2270,8 @@ angle::Result TextureVk::bindTexImage(const gl::Context *context, egl::Surface *
 
     releaseAndDeleteImageAndViews(contextVk);
 
-    GLenum internalFormat    = surface->getConfig()->renderTargetFormat;
-    const vk::Format &format = renderer->getFormat(internalFormat);
+    const gl::InternalFormat &glInternalFormat = *surface->getBindTexImageFormat().info;
+    const vk::Format &format = renderer->getFormat(glInternalFormat.sizedInternalFormat);
 
     // eglBindTexImage can only be called with pbuffer (offscreen) surfaces
     OffscreenSurfaceVk *offscreenSurface = GetImplAs<OffscreenSurfaceVk>(surface);
@@ -2279,9 +2279,8 @@ angle::Result TextureVk::bindTexImage(const gl::Context *context, egl::Surface *
                    surface->getMipmapLevel(), 0, false);
 
     ASSERT(mImage->getLayerCount() == 1);
-    gl::Format glFormat(internalFormat);
     return initImageViews(contextVk, format.getActualImageFormat(getRequiredImageAccess()),
-                          glFormat.info->sized, 1, 1);
+                          glInternalFormat.sized, 1, 1);
 }
 
 angle::Result TextureVk::releaseTexImage(const gl::Context *context)
