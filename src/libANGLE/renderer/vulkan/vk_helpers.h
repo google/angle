@@ -2002,8 +2002,13 @@ class ImageHelper final : public Resource, public angle::Subject
                  uint32_t layerStart,
                  uint32_t layerCount,
                  VkImageAspectFlags aspectFlags);
-    bool hasImmutableSampler() const;
-    uint64_t getExternalFormat() const { return mExternalFormat; }
+    bool hasImmutableSampler() const { return mYcbcrConversionDesc.valid(); }
+    uint64_t getExternalFormat() const
+    {
+        return mYcbcrConversionDesc.mIsExternalFormat ? mYcbcrConversionDesc.mExternalOrVkFormat
+                                                      : 0;
+    }
+    const YcbcrConversionDesc *getYcbcrConversionDesc() const { return &mYcbcrConversionDesc; }
 
     // Used by framebuffer and render pass functions to decide loadOps and invalidate/un-invalidate
     // render target contents.
@@ -2263,8 +2268,8 @@ class ImageHelper final : public Resource, public angle::Subject
     RenderPassUsageFlags mRenderPassUsageFlags;
 
     // For imported images
+    YcbcrConversionDesc mYcbcrConversionDesc;
     BindingPointer<SamplerYcbcrConversion> mYuvConversionSampler;
-    uint64_t mExternalFormat;
 
     // The first level that has been allocated. For mutable textures, this should be same as
     // mBaseLevel since we always reallocate VkImage based on mBaseLevel change. But for immutable

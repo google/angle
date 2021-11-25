@@ -269,8 +269,7 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
         descriptorSetLayout.reset();
     }
     mImmutableSamplersMaxDescriptorCount = 1;
-    mExternalFormatIndexMap.clear();
-    mVkFormatIndexMap.clear();
+    mImmutableSamplerIndexMap.clear();
     mPipelineLayout.reset();
 
     mDescriptorSets.fill(VK_NULL_HANDLE);
@@ -734,6 +733,8 @@ void ProgramExecutableVk::addTextureDescriptorSetDesc(
                 const vk::Sampler &immutableSampler = textureVk->getSampler().get();
                 descOut->update(info.binding, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
                                 activeStages, &immutableSampler);
+                mImmutableSamplerIndexMap[*textureVk->getImage().getYcbcrConversionDesc()] =
+                    textureIndex;
                 // The Vulkan spec has the following note -
                 // All descriptors in a binding use the same maximum
                 // combinedImageSamplerDescriptorCount descriptors to allow implementations to use a
@@ -745,14 +746,12 @@ void ProgramExecutableVk::addTextureDescriptorSetDesc(
 
                 if (externalFormat != 0)
                 {
-                    mExternalFormatIndexMap[externalFormat] = textureIndex;
                     result = contextVk->getRenderer()->getFormatDescriptorCountForExternalFormat(
                         contextVk, externalFormat, &formatDescriptorCount);
                 }
                 else
                 {
                     ASSERT(vkFormat != 0);
-                    mVkFormatIndexMap[vkFormat] = textureIndex;
                     result = contextVk->getRenderer()->getFormatDescriptorCountForVkFormat(
                         contextVk, vkFormat, &formatDescriptorCount);
                 }
