@@ -5069,6 +5069,13 @@ void ImageHelper::barrierImpl(Context *context,
     mCurrentQueueFamilyIndex = newQueueFamilyIndex;
 }
 
+template void ImageHelper::barrierImpl<rx::vk::priv::CommandBuffer>(
+    Context *context,
+    VkImageAspectFlags aspectMask,
+    ImageLayout newLayout,
+    uint32_t newQueueFamilyIndex,
+    rx::vk::priv::CommandBuffer *commandBuffer);
+
 bool ImageHelper::updateLayoutAndBarrier(Context *context,
                                          VkImageAspectFlags aspectMask,
                                          ImageLayout newLayout,
