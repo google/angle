@@ -305,8 +305,9 @@ class ScopedEXTTextureNorm16ReadbackWorkaround
                 checkedAllocatedBytes += area.width * pixelBytes - rowBytes;
             }
             ANGLE_CHECK_GL_MATH(contextGL, checkedAllocatedBytes.IsValid());
-            tmpPixels = new GLubyte[checkedAllocatedBytes.ValueOrDie()];
-            memset(tmpPixels, 0, checkedAllocatedBytes.ValueOrDie());
+            const GLuint allocatedBytes = checkedAllocatedBytes.ValueOrDie();
+            tmpPixels                   = new GLubyte[allocatedBytes];
+            memset(tmpPixels, 0, allocatedBytes);
         }
 
         return angle::Result::Continue;
