@@ -231,6 +231,8 @@ def angle_builder(name, cpu):
         location_regexp = [
             ".+/[+]/src/libANGLE/capture/.+",
             ".+/[+]/src/tests/capture.+",
+            ".+/[+]/src/tests/egl_tests/.+",
+            ".+/[+]/src/tests/gl_tests/.+",
         ]
     elif is_perf:
         test_mode = "compile_and_test"
