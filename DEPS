@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '1f986773b3b22c1d22daf0ce72dad26875b43138',
+  'chromium_revision': 'b510b08641137b5c0a3893a814a870d99bbdff38',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@209a6891b422743dd03fd43d46620cd00f459a0e',
+    'url': '{chromium_git}/chromium/src/build.git@26881c1164bdd356cfdaae003b56567bbf6bf937',
     'condition': 'not build_with_chromium',
   },
 
@@ -166,7 +166,7 @@ deps = {
   },
 
   'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@038090f742d8373821987c56e7a94c5d8183f91b',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@f51a154281bdfe746c46c07cd4fb05be97f9441d',
     'condition': 'not build_with_chromium',
   },
 
@@ -182,12 +182,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@af043a3d6540dcd336565a24f92cf36cdf6aaf86',
+    'url': '{chromium_git}/chromium/src/testing@103f40247e3b554b9155219294a7d05328b35062',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@8b7dd344d7c783e1140effb3315a8ed0039c6a5a',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@457dbf33629c8578aaceed5393617313c4063229',
     'condition': 'not build_with_chromium',
   },
 
@@ -582,7 +582,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@d04fad92212d5d32bedb1d004d7da32ec0e88af1',
+    'url': '{chromium_git}/chromium/src/tools/perf@be66670475f4bc256f17aba51be3822bc6e3e0f4',
     'condition': 'not build_with_chromium',
   },
 
