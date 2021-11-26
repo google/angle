@@ -3,10 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// VulkanExternalHelper.h : Helper for allocating & managing vulkan external objects.
+// VulkanHelper.h : Helper for vulkan.
 
-#ifndef ANGLE_TESTS_TESTUTILS_VULKANEXTERNALHELPER_H_
-#define ANGLE_TESTS_TESTUTILS_VULKANEXTERNALHELPER_H_
+#ifndef ANGLE_TESTS_TESTUTILS_VULKANHELPER_H_
+#define ANGLE_TESTS_TESTUTILS_VULKANHELPER_H_
 
 #include "common/vulkan/vk_headers.h"
 #include "vulkan/vulkan_fuchsia_ext.h"
@@ -14,13 +14,14 @@
 namespace angle
 {
 
-class VulkanExternalHelper
+class VulkanHelper
 {
   public:
-    VulkanExternalHelper();
-    ~VulkanExternalHelper();
+    VulkanHelper();
+    ~VulkanHelper();
 
     void initialize(bool useSwiftshader, bool enableValidationLayers);
+    void initializeFromANGLE();
 
     VkInstance getInstance() const { return mInstance; }
     VkPhysicalDevice getPhysicalDevice() const { return mPhysicalDevice; }
@@ -114,6 +115,7 @@ class VulkanExternalHelper
                     size_t pixelsSize);
 
   private:
+    bool mInitializedFromANGLE       = false;
     VkInstance mInstance             = VK_NULL_HANDLE;
     VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
     VkDevice mDevice                 = VK_NULL_HANDLE;
@@ -140,4 +142,4 @@ class VulkanExternalHelper
 
 }  // namespace angle
 
-#endif  // ANGLE_TESTS_TESTUTILS_VULKANEXTERNALHELPER_H_
+#endif  // ANGLE_TESTS_TESTUTILS_VULKANHELPER_H_

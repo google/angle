@@ -9,7 +9,7 @@
 #include "test_utils/ANGLETest.h"
 
 #include "common/debug.h"
-#include "test_utils/VulkanExternalHelper.h"
+#include "test_utils/VulkanHelper.h"
 #include "test_utils/gl_raii.h"
 
 namespace angle
@@ -62,19 +62,17 @@ struct OpaqueFdTraits
     static const char *MemoryObjectExtension() { return "GL_EXT_memory_object_fd"; }
     static const char *SemaphoreExtension() { return "GL_EXT_semaphore_fd"; }
 
-    static bool CanCreateSemaphore(const VulkanExternalHelper &helper)
+    static bool CanCreateSemaphore(const VulkanHelper &helper)
     {
         return helper.canCreateSemaphoreOpaqueFd();
     }
 
-    static VkResult CreateSemaphore(VulkanExternalHelper *helper, VkSemaphore *semaphore)
+    static VkResult CreateSemaphore(VulkanHelper *helper, VkSemaphore *semaphore)
     {
         return helper->createSemaphoreOpaqueFd(semaphore);
     }
 
-    static VkResult ExportSemaphore(VulkanExternalHelper *helper,
-                                    VkSemaphore semaphore,
-                                    Handle *handle)
+    static VkResult ExportSemaphore(VulkanHelper *helper, VkSemaphore semaphore, Handle *handle)
     {
         return helper->exportSemaphoreOpaqueFd(semaphore, handle);
     }
@@ -84,7 +82,7 @@ struct OpaqueFdTraits
         glImportSemaphoreFdEXT(semaphore, GL_HANDLE_TYPE_OPAQUE_FD_EXT, handle);
     }
 
-    static bool CanCreateImage(const VulkanExternalHelper &helper,
+    static bool CanCreateImage(const VulkanHelper &helper,
                                VkFormat format,
                                VkImageType type,
                                VkImageTiling tiling,
@@ -94,7 +92,7 @@ struct OpaqueFdTraits
         return helper.canCreateImageOpaqueFd(format, type, tiling, createFlags, usageFlags);
     }
 
-    static VkResult CreateImage2D(VulkanExternalHelper *helper,
+    static VkResult CreateImage2D(VulkanHelper *helper,
                                   VkFormat format,
                                   VkImageCreateFlags createFlags,
                                   VkImageUsageFlags usageFlags,
@@ -109,9 +107,7 @@ struct OpaqueFdTraits
                                              deviceMemorySizeOut);
     }
 
-    static VkResult ExportMemory(VulkanExternalHelper *helper,
-                                 VkDeviceMemory deviceMemory,
-                                 Handle *handle)
+    static VkResult ExportMemory(VulkanHelper *helper, VkDeviceMemory deviceMemory, Handle *handle)
     {
         return helper->exportMemoryOpaqueFd(deviceMemory, handle);
     }
@@ -131,19 +127,17 @@ struct FuchsiaTraits
     static const char *MemoryObjectExtension() { return "GL_ANGLE_memory_object_fuchsia"; }
     static const char *SemaphoreExtension() { return "GL_ANGLE_semaphore_fuchsia"; }
 
-    static bool CanCreateSemaphore(const VulkanExternalHelper &helper)
+    static bool CanCreateSemaphore(const VulkanHelper &helper)
     {
         return helper.canCreateSemaphoreZirconEvent();
     }
 
-    static VkResult CreateSemaphore(VulkanExternalHelper *helper, VkSemaphore *semaphore)
+    static VkResult CreateSemaphore(VulkanHelper *helper, VkSemaphore *semaphore)
     {
         return helper->createSemaphoreZirconEvent(semaphore);
     }
 
-    static VkResult ExportSemaphore(VulkanExternalHelper *helper,
-                                    VkSemaphore semaphore,
-                                    Handle *handle)
+    static VkResult ExportSemaphore(VulkanHelper *helper, VkSemaphore semaphore, Handle *handle)
     {
         return helper->exportSemaphoreZirconEvent(semaphore, handle);
     }
@@ -153,7 +147,7 @@ struct FuchsiaTraits
         glImportSemaphoreZirconHandleANGLE(semaphore, GL_HANDLE_TYPE_ZIRCON_EVENT_ANGLE, handle);
     }
 
-    static bool CanCreateImage(const VulkanExternalHelper &helper,
+    static bool CanCreateImage(const VulkanHelper &helper,
                                VkFormat format,
                                VkImageType type,
                                VkImageTiling tiling,
@@ -163,7 +157,7 @@ struct FuchsiaTraits
         return helper.canCreateImageZirconVmo(format, type, tiling, createFlags, usageFlags);
     }
 
-    static VkResult CreateImage2D(VulkanExternalHelper *helper,
+    static VkResult CreateImage2D(VulkanHelper *helper,
                                   VkFormat format,
                                   VkImageCreateFlags createFlags,
                                   VkImageUsageFlags usageFlags,
@@ -178,9 +172,7 @@ struct FuchsiaTraits
                                               deviceMemorySizeOut);
     }
 
-    static VkResult ExportMemory(VulkanExternalHelper *helper,
-                                 VkDeviceMemory deviceMemory,
-                                 Handle *handle)
+    static VkResult ExportMemory(VulkanHelper *helper, VkDeviceMemory deviceMemory, Handle *handle)
     {
         return helper->exportMemoryZirconVmo(deviceMemory, handle);
     }
@@ -222,7 +214,7 @@ void RunShouldImportMemoryTest(VkImageCreateFlags createFlags,
 {
     ASSERT(EnsureGLExtensionEnabled(Traits::MemoryObjectExtension()));
 
-    VulkanExternalHelper helper;
+    VulkanHelper helper;
     helper.initialize(isSwiftshader, enableDebugLayers);
 
     VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
@@ -285,7 +277,7 @@ void RunShouldImportSemaphoreTest(bool isSwiftshader, bool enableDebugLayers)
 {
     ASSERT(EnsureGLExtensionEnabled(Traits::SemaphoreExtension()));
 
-    VulkanExternalHelper helper;
+    VulkanHelper helper;
     helper.initialize(isSwiftshader, enableDebugLayers);
 
     ANGLE_SKIP_TEST_IF(!Traits::CanCreateSemaphore(helper));
@@ -332,7 +324,7 @@ void RunShouldClearTest(bool useMemoryObjectFlags,
 {
     ASSERT(EnsureGLExtensionEnabled(Traits::MemoryObjectExtension()));
 
-    VulkanExternalHelper helper;
+    VulkanHelper helper;
     helper.initialize(isSwiftshader, enableDebugLayers);
 
     VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
@@ -474,7 +466,7 @@ void RunTextureFormatCompatChromiumTest(bool useMemoryObjectFlags,
 {
     ASSERT(EnsureGLExtensionEnabled(Traits::MemoryObjectExtension()));
 
-    VulkanExternalHelper helper;
+    VulkanHelper helper;
     helper.initialize(isSwiftshader, enableDebugLayers);
     for (const ImageFormatPair &format : kChromeFormats)
     {
@@ -642,7 +634,7 @@ void RunShouldClearWithSemaphoresTest(bool useMemoryObjectFlags,
     ASSERT(EnsureGLExtensionEnabled(Traits::MemoryObjectExtension()));
     ASSERT(EnsureGLExtensionEnabled(Traits::SemaphoreExtension()));
 
-    VulkanExternalHelper helper;
+    VulkanHelper helper;
     helper.initialize(isSwiftshader, enableDebugLayers);
 
     VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
@@ -879,7 +871,7 @@ void VulkanExternalImageTest::runShouldDrawTest(bool isSwiftshader, bool enableD
     ASSERT(EnsureGLExtensionEnabled(Traits::MemoryObjectExtension()));
     ASSERT(EnsureGLExtensionEnabled(Traits::SemaphoreExtension()));
 
-    VulkanExternalHelper helper;
+    VulkanHelper helper;
     helper.initialize(isSwiftshader, enableDebugLayers);
 
     VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
@@ -1030,7 +1022,7 @@ void VulkanExternalImageTest::runWaitSemaphoresRetainsContentTest(bool isSwiftsh
     ASSERT(EnsureGLExtensionEnabled(Traits::MemoryObjectExtension()));
     ASSERT(EnsureGLExtensionEnabled(Traits::SemaphoreExtension()));
 
-    VulkanExternalHelper helper;
+    VulkanHelper helper;
     helper.initialize(isSwiftshader, enableDebugLayers);
 
     VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
@@ -1199,7 +1191,7 @@ TEST_P(VulkanExternalImageTest, ShouldSupportExternalHandlesFuchsia)
     ANGLE_SKIP_TEST_IF(!IsFuchsia());
     EXPECT_TRUE(EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
     EXPECT_TRUE(EnsureGLExtensionEnabled("GL_ANGLE_semaphore_fuchsia"));
-    VulkanExternalHelper helper;
+    VulkanHelper helper;
     helper.initialize(isSwiftshader(), enableDebugLayers());
     EXPECT_TRUE(helper.canCreateSemaphoreZirconEvent());
     EXPECT_TRUE(helper.canCreateImageZirconVmo(VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TYPE_2D,

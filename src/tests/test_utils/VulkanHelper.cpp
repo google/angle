@@ -4,9 +4,9 @@
 // found in the LICENSE file.
 //
 
-// VulkanExternalHelper.cpp : Helper for allocating & managing vulkan external objects.
+// VulkanHelper.cpp : Helper for allocating & managing vulkan external objects.
 
-#include "test_utils/VulkanExternalHelper.h"
+#include "test_utils/VulkanHelper.h"
 
 #include <vector>
 
@@ -14,6 +14,7 @@
 #include "common/debug.h"
 #include "common/system_utils.h"
 #include "common/vulkan/vulkan_icd.h"
+#include "test_utils/ANGLETest.h"
 
 namespace angle
 {
@@ -149,9 +150,9 @@ void ImageMemoryBarrier(VkCommandBuffer commandBuffer,
 
 }  // namespace
 
-VulkanExternalHelper::VulkanExternalHelper() {}
+VulkanHelper::VulkanHelper() {}
 
-VulkanExternalHelper::~VulkanExternalHelper()
+VulkanHelper::~VulkanHelper()
 {
     if (mDevice != VK_NULL_HANDLE)
     {
@@ -163,23 +164,26 @@ VulkanExternalHelper::~VulkanExternalHelper()
         vkDestroyCommandPool(mDevice, mCommandPool, nullptr);
     }
 
-    if (mDevice != VK_NULL_HANDLE)
+    if (!mInitializedFromANGLE)
     {
-        vkDestroyDevice(mDevice, nullptr);
+        if (mDevice != VK_NULL_HANDLE)
+        {
+            vkDestroyDevice(mDevice, nullptr);
 
-        mDevice        = VK_NULL_HANDLE;
-        mGraphicsQueue = VK_NULL_HANDLE;
-    }
+            mDevice        = VK_NULL_HANDLE;
+            mGraphicsQueue = VK_NULL_HANDLE;
+        }
 
-    if (mInstance != VK_NULL_HANDLE)
-    {
-        vkDestroyInstance(mInstance, nullptr);
+        if (mInstance != VK_NULL_HANDLE)
+        {
+            vkDestroyInstance(mInstance, nullptr);
 
-        mInstance = VK_NULL_HANDLE;
+            mInstance = VK_NULL_HANDLE;
+        }
     }
 }
 
-void VulkanExternalHelper::initialize(bool useSwiftshader, bool enableValidationLayers)
+void VulkanHelper::initialize(bool useSwiftshader, bool enableValidationLayers)
 {
     bool enableValidationLayersOverride = enableValidationLayers;
 #if !defined(ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS)
@@ -374,13 +378,95 @@ void VulkanExternalHelper::initialize(bool useSwiftshader, bool enableValidation
     ASSERT(!mHasExternalSemaphoreFuchsia || vkGetSemaphoreZirconHandleFUCHSIA);
 }
 
-bool VulkanExternalHelper::canCreateImageExternal(
-    VkFormat format,
-    VkImageType type,
-    VkImageTiling tiling,
-    VkImageCreateFlags createFlags,
-    VkImageUsageFlags usageFlags,
-    VkExternalMemoryHandleTypeFlagBits handleType) const
+void VulkanHelper::initializeFromANGLE()
+{
+    mInitializedFromANGLE = true;
+    VkResult vkResult     = VK_SUCCESS;
+
+    EXPECT_TRUE(IsEGLClientExtensionEnabled("EGL_EXT_device_query"));
+    EGLDisplay display = eglGetCurrentDisplay();
+
+    EGLAttrib result = 0;
+    EXPECT_EGL_TRUE(eglQueryDisplayAttribEXT(display, EGL_DEVICE_EXT, &result));
+
+    EGLDeviceEXT device = reinterpret_cast<EGLDeviceEXT>(result);
+    EXPECT_NE(EGL_NO_DEVICE_EXT, device);
+    EXPECT_TRUE(IsEGLDeviceExtensionEnabled(device, "EGL_ANGLE_device_vulkan"));
+
+    EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(device, EGL_VULKAN_GET_INSTANCE_PROC_ADDR, &result));
+    PFN_vkGetInstanceProcAddr getInstanceProcAddr =
+        reinterpret_cast<PFN_vkGetInstanceProcAddr>(result);
+    EXPECT_NE(getInstanceProcAddr, nullptr);
+#if ANGLE_SHARED_LIBVULKAN
+    volkInitializeCustom(getInstanceProcAddr);
+#endif  // ANGLE_SHARED_LIBVULKAN
+
+    EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(device, EGL_VULKAN_INSTANCE_ANGLE, &result));
+    mInstance = reinterpret_cast<VkInstance>(result);
+    EXPECT_NE(mInstance, static_cast<VkInstance>(VK_NULL_HANDLE));
+
+#if ANGLE_SHARED_LIBVULKAN
+    volkLoadInstance(mInstance);
+#endif  // ANGLE_SHARED_LIBVULKAN
+
+    EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(device, EGL_VULKAN_PHYSICAL_DEVICE_ANGLE, &result));
+    mPhysicalDevice = reinterpret_cast<VkPhysicalDevice>(result);
+    EXPECT_NE(mPhysicalDevice, static_cast<VkPhysicalDevice>(VK_NULL_HANDLE));
+
+    vkGetPhysicalDeviceMemoryProperties(mPhysicalDevice, &mMemoryProperties);
+
+    EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(device, EGL_VULKAN_DEVICE_ANGLE, &result));
+    mDevice = reinterpret_cast<VkDevice>(result);
+    EXPECT_NE(mDevice, static_cast<VkDevice>(VK_NULL_HANDLE));
+
+    EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(device, EGL_VULKAN_QUEUE_ANGLE, &result));
+    mGraphicsQueue = reinterpret_cast<VkQueue>(result);
+    EXPECT_NE(mGraphicsQueue, static_cast<VkQueue>(VK_NULL_HANDLE));
+
+    EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(device, EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE, &result));
+    mGraphicsQueueFamilyIndex = static_cast<uint32_t>(result);
+
+#if ANGLE_SHARED_LIBVULKAN
+    volkLoadDevice(mDevice);
+#endif  // ANGLE_SHARED_LIBVULKAN
+
+    VkCommandPoolCreateInfo commandPoolCreateInfo = {
+        /* .sType = */ VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+        /* .pNext = */ nullptr,
+        /* .flags = */ 0,
+        /* .queueFamilyIndex = */ mGraphicsQueueFamilyIndex,
+    };
+    vkResult = vkCreateCommandPool(mDevice, &commandPoolCreateInfo, nullptr, &mCommandPool);
+    ASSERT(vkResult == VK_SUCCESS);
+
+    vkGetPhysicalDeviceImageFormatProperties2 =
+        reinterpret_cast<PFN_vkGetPhysicalDeviceImageFormatProperties2>(
+            vkGetInstanceProcAddr(mInstance, "vkGetPhysicalDeviceImageFormatProperties2"));
+    ASSERT(vkGetPhysicalDeviceImageFormatProperties2);
+
+    vkGetMemoryFdKHR = reinterpret_cast<PFN_vkGetMemoryFdKHR>(
+        vkGetInstanceProcAddr(mInstance, "vkGetMemoryFdKHR"));
+    ASSERT(!mHasExternalMemoryFd || vkGetMemoryFdKHR);
+    vkGetSemaphoreFdKHR = reinterpret_cast<PFN_vkGetSemaphoreFdKHR>(
+        vkGetInstanceProcAddr(mInstance, "vkGetSemaphoreFdKHR"));
+    ASSERT(!mHasExternalSemaphoreFd || vkGetSemaphoreFdKHR);
+    vkGetPhysicalDeviceExternalSemaphorePropertiesKHR =
+        reinterpret_cast<PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR>(
+            vkGetInstanceProcAddr(mInstance, "vkGetPhysicalDeviceExternalSemaphorePropertiesKHR"));
+    vkGetMemoryZirconHandleFUCHSIA = reinterpret_cast<PFN_vkGetMemoryZirconHandleFUCHSIA>(
+        vkGetInstanceProcAddr(mInstance, "vkGetMemoryZirconHandleFUCHSIA"));
+    ASSERT(!mHasExternalMemoryFuchsia || vkGetMemoryZirconHandleFUCHSIA);
+    vkGetSemaphoreZirconHandleFUCHSIA = reinterpret_cast<PFN_vkGetSemaphoreZirconHandleFUCHSIA>(
+        vkGetInstanceProcAddr(mInstance, "vkGetSemaphoreZirconHandleFUCHSIA"));
+    ASSERT(!mHasExternalSemaphoreFuchsia || vkGetSemaphoreZirconHandleFUCHSIA);
+}
+
+bool VulkanHelper::canCreateImageExternal(VkFormat format,
+                                          VkImageType type,
+                                          VkImageTiling tiling,
+                                          VkImageCreateFlags createFlags,
+                                          VkImageUsageFlags usageFlags,
+                                          VkExternalMemoryHandleTypeFlagBits handleType) const
 {
     VkPhysicalDeviceExternalImageFormatInfo externalImageFormatInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO,
@@ -427,15 +513,15 @@ bool VulkanExternalHelper::canCreateImageExternal(
     return true;
 }
 
-VkResult VulkanExternalHelper::createImage2DExternal(VkFormat format,
-                                                     VkImageCreateFlags createFlags,
-                                                     VkImageUsageFlags usageFlags,
-                                                     const void *imageCreateInfoPNext,
-                                                     VkExtent3D extent,
-                                                     VkExternalMemoryHandleTypeFlags handleTypes,
-                                                     VkImage *imageOut,
-                                                     VkDeviceMemory *deviceMemoryOut,
-                                                     VkDeviceSize *deviceMemorySizeOut)
+VkResult VulkanHelper::createImage2DExternal(VkFormat format,
+                                             VkImageCreateFlags createFlags,
+                                             VkImageUsageFlags usageFlags,
+                                             const void *imageCreateInfoPNext,
+                                             VkExtent3D extent,
+                                             VkExternalMemoryHandleTypeFlags handleTypes,
+                                             VkImage *imageOut,
+                                             VkDeviceMemory *deviceMemoryOut,
+                                             VkDeviceSize *deviceMemorySizeOut)
 {
     VkExternalMemoryImageCreateInfoKHR externalMemoryImageCreateInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
@@ -517,11 +603,11 @@ VkResult VulkanExternalHelper::createImage2DExternal(VkFormat format,
     return VK_SUCCESS;
 }
 
-bool VulkanExternalHelper::canCreateImageOpaqueFd(VkFormat format,
-                                                  VkImageType type,
-                                                  VkImageTiling tiling,
-                                                  VkImageCreateFlags createFlags,
-                                                  VkImageUsageFlags usageFlags) const
+bool VulkanHelper::canCreateImageOpaqueFd(VkFormat format,
+                                          VkImageType type,
+                                          VkImageTiling tiling,
+                                          VkImageCreateFlags createFlags,
+                                          VkImageUsageFlags usageFlags) const
 {
     if (!mHasExternalMemoryFd)
     {
@@ -532,21 +618,21 @@ bool VulkanExternalHelper::canCreateImageOpaqueFd(VkFormat format,
                                   VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT);
 }
 
-VkResult VulkanExternalHelper::createImage2DOpaqueFd(VkFormat format,
-                                                     VkImageCreateFlags createFlags,
-                                                     VkImageUsageFlags usageFlags,
-                                                     const void *imageCreateInfoPNext,
-                                                     VkExtent3D extent,
-                                                     VkImage *imageOut,
-                                                     VkDeviceMemory *deviceMemoryOut,
-                                                     VkDeviceSize *deviceMemorySizeOut)
+VkResult VulkanHelper::createImage2DOpaqueFd(VkFormat format,
+                                             VkImageCreateFlags createFlags,
+                                             VkImageUsageFlags usageFlags,
+                                             const void *imageCreateInfoPNext,
+                                             VkExtent3D extent,
+                                             VkImage *imageOut,
+                                             VkDeviceMemory *deviceMemoryOut,
+                                             VkDeviceSize *deviceMemorySizeOut)
 {
     return createImage2DExternal(format, createFlags, usageFlags, imageCreateInfoPNext, extent,
                                  VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT, imageOut,
                                  deviceMemoryOut, deviceMemorySizeOut);
 }
 
-VkResult VulkanExternalHelper::exportMemoryOpaqueFd(VkDeviceMemory deviceMemory, int *fd)
+VkResult VulkanHelper::exportMemoryOpaqueFd(VkDeviceMemory deviceMemory, int *fd)
 {
     VkMemoryGetFdInfoKHR memoryGetFdInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR,
@@ -558,11 +644,11 @@ VkResult VulkanExternalHelper::exportMemoryOpaqueFd(VkDeviceMemory deviceMemory,
     return vkGetMemoryFdKHR(mDevice, &memoryGetFdInfo, fd);
 }
 
-bool VulkanExternalHelper::canCreateImageZirconVmo(VkFormat format,
-                                                   VkImageType type,
-                                                   VkImageTiling tiling,
-                                                   VkImageCreateFlags createFlags,
-                                                   VkImageUsageFlags usageFlags) const
+bool VulkanHelper::canCreateImageZirconVmo(VkFormat format,
+                                           VkImageType type,
+                                           VkImageTiling tiling,
+                                           VkImageCreateFlags createFlags,
+                                           VkImageUsageFlags usageFlags) const
 {
     if (!mHasExternalMemoryFuchsia)
     {
@@ -573,21 +659,21 @@ bool VulkanExternalHelper::canCreateImageZirconVmo(VkFormat format,
                                   VK_EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA);
 }
 
-VkResult VulkanExternalHelper::createImage2DZirconVmo(VkFormat format,
-                                                      VkImageCreateFlags createFlags,
-                                                      VkImageUsageFlags usageFlags,
-                                                      const void *imageCreateInfoPNext,
-                                                      VkExtent3D extent,
-                                                      VkImage *imageOut,
-                                                      VkDeviceMemory *deviceMemoryOut,
-                                                      VkDeviceSize *deviceMemorySizeOut)
+VkResult VulkanHelper::createImage2DZirconVmo(VkFormat format,
+                                              VkImageCreateFlags createFlags,
+                                              VkImageUsageFlags usageFlags,
+                                              const void *imageCreateInfoPNext,
+                                              VkExtent3D extent,
+                                              VkImage *imageOut,
+                                              VkDeviceMemory *deviceMemoryOut,
+                                              VkDeviceSize *deviceMemorySizeOut)
 {
     return createImage2DExternal(format, createFlags, usageFlags, imageCreateInfoPNext, extent,
                                  VK_EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA, imageOut,
                                  deviceMemoryOut, deviceMemorySizeOut);
 }
 
-VkResult VulkanExternalHelper::exportMemoryZirconVmo(VkDeviceMemory deviceMemory, zx_handle_t *vmo)
+VkResult VulkanHelper::exportMemoryZirconVmo(VkDeviceMemory deviceMemory, zx_handle_t *vmo)
 {
     VkMemoryGetZirconHandleInfoFUCHSIA memoryGetZirconHandleInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_MEMORY_GET_ZIRCON_HANDLE_INFO_FUCHSIA,
@@ -599,7 +685,7 @@ VkResult VulkanExternalHelper::exportMemoryZirconVmo(VkDeviceMemory deviceMemory
     return vkGetMemoryZirconHandleFUCHSIA(mDevice, &memoryGetZirconHandleInfo, vmo);
 }
 
-bool VulkanExternalHelper::canCreateSemaphoreOpaqueFd() const
+bool VulkanHelper::canCreateSemaphoreOpaqueFd() const
 {
     if (!mHasExternalSemaphoreFd || !vkGetPhysicalDeviceExternalSemaphorePropertiesKHR)
     {
@@ -630,7 +716,7 @@ bool VulkanExternalHelper::canCreateSemaphoreOpaqueFd() const
     return true;
 }
 
-VkResult VulkanExternalHelper::createSemaphoreOpaqueFd(VkSemaphore *semaphore)
+VkResult VulkanHelper::createSemaphoreOpaqueFd(VkSemaphore *semaphore)
 {
     VkExportSemaphoreCreateInfo exportSemaphoreCreateInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
@@ -647,7 +733,7 @@ VkResult VulkanExternalHelper::createSemaphoreOpaqueFd(VkSemaphore *semaphore)
     return vkCreateSemaphore(mDevice, &semaphoreCreateInfo, nullptr, semaphore);
 }
 
-VkResult VulkanExternalHelper::exportSemaphoreOpaqueFd(VkSemaphore semaphore, int *fd)
+VkResult VulkanHelper::exportSemaphoreOpaqueFd(VkSemaphore semaphore, int *fd)
 {
     VkSemaphoreGetFdInfoKHR semaphoreGetFdInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR,
@@ -659,7 +745,7 @@ VkResult VulkanExternalHelper::exportSemaphoreOpaqueFd(VkSemaphore semaphore, in
     return vkGetSemaphoreFdKHR(mDevice, &semaphoreGetFdInfo, fd);
 }
 
-bool VulkanExternalHelper::canCreateSemaphoreZirconEvent() const
+bool VulkanHelper::canCreateSemaphoreZirconEvent() const
 {
     if (!mHasExternalSemaphoreFuchsia || !vkGetPhysicalDeviceExternalSemaphorePropertiesKHR)
     {
@@ -690,7 +776,7 @@ bool VulkanExternalHelper::canCreateSemaphoreZirconEvent() const
     return true;
 }
 
-VkResult VulkanExternalHelper::createSemaphoreZirconEvent(VkSemaphore *semaphore)
+VkResult VulkanHelper::createSemaphoreZirconEvent(VkSemaphore *semaphore)
 {
     VkExportSemaphoreCreateInfo exportSemaphoreCreateInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
@@ -707,7 +793,7 @@ VkResult VulkanExternalHelper::createSemaphoreZirconEvent(VkSemaphore *semaphore
     return vkCreateSemaphore(mDevice, &semaphoreCreateInfo, nullptr, semaphore);
 }
 
-VkResult VulkanExternalHelper::exportSemaphoreZirconEvent(VkSemaphore semaphore, zx_handle_t *event)
+VkResult VulkanHelper::exportSemaphoreZirconEvent(VkSemaphore semaphore, zx_handle_t *event)
 {
     VkSemaphoreGetZirconHandleInfoFUCHSIA semaphoreGetZirconHandleInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_SEMAPHORE_GET_ZIRCON_HANDLE_INFO_FUCHSIA,
@@ -719,10 +805,10 @@ VkResult VulkanExternalHelper::exportSemaphoreZirconEvent(VkSemaphore semaphore,
     return vkGetSemaphoreZirconHandleFUCHSIA(mDevice, &semaphoreGetZirconHandleInfo, event);
 }
 
-void VulkanExternalHelper::releaseImageAndSignalSemaphore(VkImage image,
-                                                          VkImageLayout oldLayout,
-                                                          VkImageLayout newLayout,
-                                                          VkSemaphore semaphore)
+void VulkanHelper::releaseImageAndSignalSemaphore(VkImage image,
+                                                  VkImageLayout oldLayout,
+                                                  VkImageLayout newLayout,
+                                                  VkSemaphore semaphore)
 {
     VkResult result;
 
@@ -779,10 +865,10 @@ void VulkanExternalHelper::releaseImageAndSignalSemaphore(VkImage image,
     ASSERT(result == VK_SUCCESS);
 }
 
-void VulkanExternalHelper::waitSemaphoreAndAcquireImage(VkImage image,
-                                                        VkImageLayout oldLayout,
-                                                        VkImageLayout newLayout,
-                                                        VkSemaphore semaphore)
+void VulkanHelper::waitSemaphoreAndAcquireImage(VkImage image,
+                                                VkImageLayout oldLayout,
+                                                VkImageLayout newLayout,
+                                                VkSemaphore semaphore)
 {
     VkResult result;
 
@@ -845,13 +931,13 @@ void VulkanExternalHelper::waitSemaphoreAndAcquireImage(VkImage image,
     ASSERT(result == VK_SUCCESS);
 }
 
-void VulkanExternalHelper::readPixels(VkImage srcImage,
-                                      VkImageLayout srcImageLayout,
-                                      VkFormat srcImageFormat,
-                                      VkOffset3D imageOffset,
-                                      VkExtent3D imageExtent,
-                                      void *pixels,
-                                      size_t pixelsSize)
+void VulkanHelper::readPixels(VkImage srcImage,
+                              VkImageLayout srcImageLayout,
+                              VkFormat srcImageFormat,
+                              VkOffset3D imageOffset,
+                              VkExtent3D imageExtent,
+                              void *pixels,
+                              size_t pixelsSize)
 {
     ASSERT(srcImageFormat == VK_FORMAT_B8G8R8A8_UNORM ||
            srcImageFormat == VK_FORMAT_R8G8B8A8_UNORM);
@@ -940,6 +1026,34 @@ void VulkanExternalHelper::readPixels(VkImage srcImage,
     };
     constexpr uint32_t bufferImageCopyCount = std::extent<decltype(bufferImageCopies)>();
 
+    if (srcImageLayout != VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL)
+    {
+        VkImageMemoryBarrier imageMemoryBarriers = {
+            /* .sType = */ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+            /* .pNext = */ nullptr,
+            /* .srcAccessMask = */ VK_ACCESS_TRANSFER_WRITE_BIT,
+            /* .dstAccessMask = */ VK_ACCESS_TRANSFER_READ_BIT,
+            /* .oldLayout = */ srcImageLayout,
+            /* .newLayout = */ VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+            /* .srcQueueFamilyIndex = */ mGraphicsQueueFamilyIndex,
+            /* .dstQueueFamilyIndex = */ mGraphicsQueueFamilyIndex,
+            /* .image = */ srcImage,
+            /* .subresourceRange = */
+            {
+                /* .aspectMask = */ VK_IMAGE_ASPECT_COLOR_BIT,
+                /* .baseMipLevel = */ 0,
+                /* .levelCount = */ 1,
+                /* .baseArrayLayer = */ 0,
+                /* .layerCount = */ 1,
+            },
+
+        };
+        vkCmdPipelineBarrier(commandBuffers[0], VK_PIPELINE_STAGE_TRANSFER_BIT,
+                             VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1,
+                             &imageMemoryBarriers);
+        srcImageLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    }
+
     vkCmdCopyImageToBuffer(commandBuffers[0], srcImage, srcImageLayout, stagingBuffer,
                            bufferImageCopyCount, bufferImageCopies);
 
@@ -1002,9 +1116,10 @@ void VulkanExternalHelper::readPixels(VkImage srcImage,
 
     memcpy(pixels, stagingMemory, pixelsSize);
 
+    vkDestroyBuffer(mDevice, stagingBuffer, nullptr);
+
     vkUnmapMemory(mDevice, deviceMemory);
     vkFreeMemory(mDevice, deviceMemory, nullptr);
-    vkDestroyBuffer(mDevice, stagingBuffer, nullptr);
 }
 
 }  // namespace angle
