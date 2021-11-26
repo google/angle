@@ -576,6 +576,26 @@ TYPED_TEST(BitSetArrayTest, BasicTest)
     }
 }
 
+TYPED_TEST(BitSetArrayTest, IterationWithGaps)
+{
+    TypeParam &mBits = this->mBitSet;
+
+    // Test iterator works with gap in bitset.
+    std::set<size_t> bitsToBeSet = {0, mBits.size() / 2, mBits.size() - 1};
+    for (size_t bit : bitsToBeSet)
+    {
+        mBits.set(bit);
+    }
+    std::set<size_t> bitsActuallySet = {};
+    for (size_t bit : mBits)
+    {
+        bitsActuallySet.insert(bit);
+    }
+    EXPECT_EQ(bitsToBeSet, bitsActuallySet);
+    EXPECT_EQ(mBits.count(), bitsToBeSet.size());
+    mBits.reset();
+}
+
 // Unit test for angle::Bit
 TEST(Bit, Test)
 {

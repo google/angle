@@ -737,13 +737,14 @@ template <std::size_t N>
 typename BitSetArray<N>::Iterator &BitSetArray<N>::Iterator::operator++()
 {
     ++mCurrentIterator;
-    if (mCurrentIterator == mCurrentParent->mBaseBitSetArray[mIndex].end())
+    while (mCurrentIterator == mCurrentParent->mBaseBitSetArray[mIndex].end())
     {
         mIndex++;
-        if (mIndex < mCurrentParent->kArraySize)
+        if (mIndex >= mCurrentParent->kArraySize)
         {
-            mCurrentIterator = mCurrentParent->mBaseBitSetArray[mIndex].begin();
+            break;
         }
+        mCurrentIterator = mCurrentParent->mBaseBitSetArray[mIndex].begin();
     }
     return *this;
 }
