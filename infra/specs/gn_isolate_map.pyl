@@ -107,13 +107,11 @@
     "type": "script",
   },
   "angle_perftests": {
-    "python3": False,
     "label": "//src/tests:angle_perftests",
     "script": "//src/tests/run_perf_tests.py",
     "type": "script",
   },
   "angle_restricted_trace_gold_tests": {
-    "python3": False,
     "label": "//src/tests/restricted_traces:angle_restricted_trace_gold_tests",
     "script": "//src/tests/restricted_traces/restricted_trace_gold_tests.py",
     "type": "script",
@@ -124,7 +122,6 @@
     "type": "script",
   },
   "angle_white_box_perftests": {
-    "python3": False,
     "label": "//src/tests:angle_white_box_tests",
     "script": "//src/tests/run_perf_tests.py",
     "type": "script",

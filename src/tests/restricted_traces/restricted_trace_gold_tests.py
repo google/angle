@@ -1,15 +1,4 @@
-#! /usr/bin/env vpython
-#
-# [VPYTHON:BEGIN]
-# wheel: <
-#  name: "infra/python/wheels/psutil/${vpython_platform}"
-#  version: "version:5.2.2"
-# >
-# wheel: <
-#  name: "infra/python/wheels/six-py2_py3"
-#  version: "version:1.10.0"
-# >
-# [VPYTHON:END]
+#! /usr/bin/env vpython3
 #
 # Copyright 2020 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be

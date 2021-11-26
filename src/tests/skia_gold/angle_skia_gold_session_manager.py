@@ -14,7 +14,7 @@ CHROMIUM_SRC_DIR = d(d(ANGLE_SRC_DIR))
 sys.path.insert(0, os.path.join(CHROMIUM_SRC_DIR, 'build'))
 
 from skia_gold_common import skia_gold_session_manager as sgsm
-import angle_skia_gold_session
+from .angle_skia_gold_session import ANGLESkiaGoldSession
 
 
 class ANGLESkiaGoldSessionManager(sgsm.SkiaGoldSessionManager):
@@ -25,4 +25,4 @@ class ANGLESkiaGoldSessionManager(sgsm.SkiaGoldSessionManager):
 
     @staticmethod
     def GetSessionClass():
-        return angle_skia_gold_session.ANGLESkiaGoldSession
+        return ANGLESkiaGoldSession

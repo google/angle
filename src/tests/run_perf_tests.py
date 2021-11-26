@@ -1,4 +1,4 @@
-#! /usr/bin/env vpython
+#! /usr/bin/env vpython3
 #
 # Copyright 2021 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -9,6 +9,7 @@
 
 import argparse
 import fnmatch
+import importlib
 import io
 import json
 import logging
@@ -297,7 +298,7 @@ def main():
 
     args, extra_flags = parser.parse_known_args()
 
-    reload(logging)
+    importlib.reload(logging)
     logging.basicConfig(level=args.log.upper())
 
     start_time = time.time()
