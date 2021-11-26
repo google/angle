@@ -345,6 +345,26 @@ void dEQPCaseList::initialize()
     }
 }
 
+bool IsPassingResult(dEQPTestResult result)
+{
+    // Check the global error flag for unexpected platform errors.
+    if (gGlobalError)
+    {
+        gGlobalError = false;
+        return false;
+    }
+
+    switch (result)
+    {
+        case dEQPTestResult::Fail:
+        case dEQPTestResult::Exception:
+            return false;
+
+        default:
+            return true;
+    }
+}
+
 template <size_t TestModuleIndex>
 class dEQPTest : public testing::TestWithParam<size_t>
 {
@@ -399,16 +419,18 @@ class dEQPTest : public testing::TestWithParam<size_t>
         gExpectError          = (caseInfo.mExpectation != GPUTestExpectationsParser::kGpuTestPass);
         dEQPTestResult result = deqp_libtester_run(caseInfo.mDEQPName.c_str());
 
-        bool testSucceeded = countTestResultAndReturnSuccess(result);
+        bool testSucceeded = IsPassingResult(result);
 
-        // Check the global error flag for unexpected platform errors.
-        if (gGlobalError)
+        if (!testSucceeded && caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestFlaky)
         {
-            testSucceeded = false;
-            gGlobalError  = false;
+            result        = deqp_libtester_run(caseInfo.mDEQPName.c_str());
+            testSucceeded = IsPassingResult(result);
         }
 
-        if (caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestPass)
+        countTestResult(result);
+
+        if (caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestPass ||
+            caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestFlaky)
         {
             EXPECT_TRUE(testSucceeded);
 
@@ -424,25 +446,25 @@ class dEQPTest : public testing::TestWithParam<size_t>
         }
     }
 
-    bool countTestResultAndReturnSuccess(dEQPTestResult result) const
+    void countTestResult(dEQPTestResult result) const
     {
         switch (result)
         {
             case dEQPTestResult::Pass:
                 sPassedTestCount++;
-                return true;
+                break;
             case dEQPTestResult::Fail:
                 sFailedTestCount++;
-                return false;
+                break;
             case dEQPTestResult::NotSupported:
                 sNotSupportedTestCount++;
-                return true;
+                break;
             case dEQPTestResult::Exception:
                 sTestExceptionCount++;
-                return false;
+                break;
             default:
                 std::cerr << "Unexpected test result code: " << static_cast<int>(result) << "\n";
-                return false;
+                break;
         }
     }
 
