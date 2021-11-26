@@ -37,16 +37,7 @@
 
 # ES2
 
-6538 : AddMockTextureNoRenderTargetTest.NoProgramOutputWorkaround/ES2_Vulkan_SwiftShader = FLAKY
-
-6266 : ContextLostSkipValidationTest.LostNoErrorGetProgram/ES2_Vulkan = FAIL
-6266 : ContextLostTest.ParallelCompileReadyQuery/ES2_Vulkan = FAIL
-
-6180 : EGLContextASANTest.DestroyContextInUse/ES2_Vulkan = FAIL
-6267 : EGLContextSharingTest.TextureLifetime/ES2_Vulkan = SKIP_FOR_CAPTURE
-6269 : EGLContextSharingTest.BindTextureAfterShareContextFree/ES2_Vulkan = SKIPPED_BY_GTEST
-6269 : EGLContextSharingTest.DisplayShareGroupObjectSharing/ES2_Vulkan = SKIPPED_BY_GTEST
-6269 : EGLContextSharingTest.DisplayShareGroupReleasedWithLastContext/ES2_Vulkan = SKIPPED_BY_GTEST
+6538 : AddMockTextureNoRenderTargetTest.NoProgramOutputWorkaround/* = FLAKY
 
 5822 : ExternalWrapTest.ClampToEdge/* = SKIP_FOR_CAPTURE
 5822 : ExternalWrapTest.MirroredRepeat/* = SKIP_FOR_CAPTURE
@@ -67,15 +58,6 @@
 6286 : ImageTest.SourceRenderbufferTargetTextureExternal/* = FAIL
 6286 : ImageTest.UpdatedData/* = FAIL
 
-6180 : MipmapTest.DefineValidExtraLevelAndUseItLater/ES2_Vulkan = FAIL
-6180 : MipmapTest.GenerateMipmapAfterModifyingBaseLevel/ES2_Vulkan = FAIL
-6180 : MipmapTest.GenerateMipmapAfterSingleLevelDraw/ES2_Vulkan = FAIL
-6180 : MipmapTest.GenerateMipmapFromInitDataThenRender/ES2_Vulkan = FAIL
-6180 : MipmapTest.GenerateMipmapFromRenderedImage/ES2_Vulkan = FAIL
-6180 : MipmapTest.MipMapGenerationD3D9Bug/ES2_Vulkan = FAIL
-6180 : MipmapTest.MipmapsForTexture3DOES/ES2_Vulkan = FAIL
-6180 : MipmapTest.RenderOntoLevelZeroAfterGenerateMipmap/ES2_Vulkan = FAIL
-
 6180 : PbufferTest.BindTexImage/* = FAIL
 6180 : PbufferTest.ClearAndBindTexImageSrgb/* = FAIL
 6180 : PbufferTest.ClearAndBindTexImageSrgbSkipDecode/* = FAIL
@@ -84,124 +66,125 @@
 
 6220 : Texture2DTest.DefineMultipleLevelsWithoutMipmapping/* = SKIP_FOR_CAPTURE
 
-6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphores/ES*_Vulkan* = SKIP_FOR_CAPTURE
-6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphoresMutableNoStorage/ES*_Vulkan* = SKIP_FOR_CAPTURE
-6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphoresNoStorage/ES*_Vulkan* = SKIP_FOR_CAPTURE
-6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphoresWithFlags/ES*_Vulkan* = SKIP_FOR_CAPTURE
-6221 : VulkanExternalImageTest.ShouldDrawOpaqueFdWithSemaphores/ES*_Vulkan* = SKIP_FOR_CAPTURE
-6221 : VulkanExternalImageTest.WaitSemaphoresRetainsContentOpaqueFd/ES*_Vulkan* = SKIP_FOR_CAPTURE
+6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphores/* = SKIP_FOR_CAPTURE
+6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphoresMutableNoStorage/* = SKIP_FOR_CAPTURE
+6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphoresNoStorage/* = SKIP_FOR_CAPTURE
+6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphoresWithFlags/* = SKIP_FOR_CAPTURE
+6221 : VulkanExternalImageTest.ShouldDrawOpaqueFdWithSemaphores/* = SKIP_FOR_CAPTURE
+6221 : VulkanExternalImageTest.WaitSemaphoresRetainsContentOpaqueFd/* = SKIP_FOR_CAPTURE
 
 6267 : WebGLCompatibilityTest.MultiContextNoRenderingFeedbackLoops/* = SKIP_FOR_CAPTURE
-
-6180 WIN : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/ES2_Vulkan_SwiftShader = FAIL
 
 6654 : UniformTest.UnusedStructInlineUniform/* = SKIP_FOR_CAPTURE
 6654 : UniformTest.UnusedStructInlineUniformWithSampler/* = SKIP_FOR_CAPTURE
 
 # Fails because of unsupported combined depth/stencil GetImage.
-4688 ASAN : DepthStencilTest.DepthOnlyEmulatedWithPacked/ES2_Vulkan_SwiftShader = FAIL
+4688 ASAN : DepthStencilTest.DepthOnlyEmulatedWithPacked/* = FAIL
 
 # flaky test
-6511 : DrawBuffersTest.UnwrittenOutputVariablesShouldNotCrash/ES*_Vulkan_SwiftShader = FLAKY
-6180 : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInIndexBuffer/ES2_Vulkan_SwiftShader = FLAKY
+6511 : DrawBuffersTest.UnwrittenOutputVariablesShouldNotCrash/* = FLAKY
+6180 : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInIndexBuffer/* = FLAKY
 6180 : ImageTest.MipLevels/* = FLAKY
 6373 : WebGLCompatibilityTest.DrawArraysBufferOutOfBoundsNonInstanced/* = FLAKY
+6180 : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/* = FLAKY
+
 
 # ES3
-6180 : BlitFramebufferTest.BlitDepthStencilPixelByPixel/ES3_Vulkan_SwiftShader = SKIPPED_BY_GTEST
-6180 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/ES3_Vulkan_SwiftShader = SKIPPED_BY_GTEST
+6180 : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIPPED_BY_GTEST
+6180 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIPPED_BY_GTEST
 
 # This test only exists on Win64
-6180 WIN : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_Vulkan_SwiftShader = SKIPPED_BY_GTEST
+6180 WIN : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIPPED_BY_GTEST
 
-6286 : ImageRespecificationTest.ImageTarget2DOESSwitch/ES3_Vulkan_SwiftShader = FAIL
-6286 : ImageTest.Source2DTarget2DArray/ES3_Vulkan_SwiftShader = FAIL
-6286 : ImageTestES3.Source2DTarget2DTargetTextureRespecifyLevel/ES3_Vulkan_SwiftShader = FAIL
-6286 : ImageTestES3.Source2DTargetExternalESSL3/ES3_Vulkan_SwiftShader = FAIL
-6286 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3/ES3_Vulkan_SwiftShader = FAIL
-6512 : RobustResourceInitTestES3.BindTexImage/ES3_Vulkan_SwiftShader = FAIL
-6180 WIN : TransformFeedbackTest.DrawWithoutTransformFeedbackThenWith/ES3_Vulkan_SwiftShader = FLAKY
-6513 : TransformFeedbackTest.MultiContext/ES3_Vulkan_SwiftShader = FLAKY
+6286 : ImageRespecificationTest.ImageTarget2DOESSwitch/* = FAIL
+6286 : ImageTest.Source2DTarget2DArray/ES3* = FAIL
+6286 : ImageTestES3.Source2DTarget2DTargetTextureRespecifyLevel/* = FAIL
+6286 : ImageTestES3.Source2DTargetExternalESSL3/* = FAIL
+6286 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3/* = FAIL
+6512 : RobustResourceInitTestES3.BindTexImage/* = FAIL
+6180 WIN : TransformFeedbackTest.DrawWithoutTransformFeedbackThenWith/* = FLAKY
+6513 : TransformFeedbackTest.MultiContext/* = FLAKY
 
-6180 : UniformBufferTest.BlockArrayContainingArrayOfStructs/ES3_Vulkan_SwiftShader = FAIL
-6180 : UniformBufferTest.ManyBlocks/ES3_Vulkan_SwiftShader = FAIL
+6180 : UniformBufferTest.BlockArrayContainingArrayOfStructs/* = FAIL
+6180 : UniformBufferTest.ManyBlocks/* = FAIL
 
 # Skip because crashes
-6313 : CopyTextureTestES3.InvalidateBlitThenBlend1000Layers/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6313 : CopyTextureTestES3.InvalidateBlitThenBlend3Layers/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6314 : FramebufferTest_ES3.AttachmentsWithUnequalDimensions/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6314 : FramebufferTest_ES3.ChangeAttachmentThenInvalidateAndDraw/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6314 : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6314 : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6315 : GLSLTest_ES3.InactiveFragmentShaderOutput/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6180 : ImageTestES3.SourceCubeTargetExternalESSL3/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6334 : MipmapTestES3.GenerateMipmapBaseLevelOutOfRangeImmutableTexture/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6180 WIN : RenderbufferMultisampleTest.IntegerInternalformat/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6324 : OcclusionQueriesTestES3.UnresolveNotCounted/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6329 : RenderbufferMultisampleTest.OddSampleCount/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6333 : Texture2DFloatTestES3.TextureHalfFloatLinearLegacyTest/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6333 : Texture2DFloatTestES3.TextureHalfFloatSampleLegacyTest/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6334 : Texture2DTestES3.ImmutableTextureBaseLevelOutOfRange/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6399 : Texture2DTestES3.TexStorage2DCycleThroughYuvSourcesNoData/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6334 : Texture2DTestES3.TextureBaseLevelGreaterThanMaxLevel/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6399 : Texture2DTestES3.TexStorage2DSimultaneousUseOfMultipleYuvSourcesNoData/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6400 : Texture2DTestES3.TextureCompletenessChangesWithBaseLevel/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6399 : Texture2DTestES3.TexStorage2DLargeYuvTextureCount/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6314 : Texture2DTestES3.UpdateRenderTargetCacheOnDestroyTexStorage/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6335 DEBUG : VulkanExternalImageTest.ShouldImportSemaphoreOpaqueFd/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+6313 : CopyTextureTestES3.InvalidateBlitThenBlend1000Layers/* = SKIP_FOR_CAPTURE
+6313 : CopyTextureTestES3.InvalidateBlitThenBlend3Layers/* = SKIP_FOR_CAPTURE
+6314 : FramebufferTest_ES3.AttachmentsWithUnequalDimensions/* = SKIP_FOR_CAPTURE
+6314 : FramebufferTest_ES3.ChangeAttachmentThenInvalidateAndDraw/* = SKIP_FOR_CAPTURE
+6314 : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/* = SKIP_FOR_CAPTURE
+6314 : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/* = SKIP_FOR_CAPTURE
+6315 : GLSLTest_ES3.InactiveFragmentShaderOutput/* = SKIP_FOR_CAPTURE
+6180 : ImageTestES3.SourceCubeTargetExternalESSL3/* = SKIP_FOR_CAPTURE
+6334 : MipmapTestES3.GenerateMipmapBaseLevelOutOfRangeImmutableTexture/* = SKIP_FOR_CAPTURE
+6180 WIN : RenderbufferMultisampleTest.IntegerInternalformat/* = SKIP_FOR_CAPTURE
+6324 : OcclusionQueriesTestES3.UnresolveNotCounted/* = SKIP_FOR_CAPTURE
+6329 : RenderbufferMultisampleTest.OddSampleCount/* = SKIP_FOR_CAPTURE
+6333 : Texture2DFloatTestES3.TextureHalfFloatLinearLegacyTest/* = SKIP_FOR_CAPTURE
+6333 : Texture2DFloatTestES3.TextureHalfFloatSampleLegacyTest/* = SKIP_FOR_CAPTURE
+6334 : Texture2DTestES3.ImmutableTextureBaseLevelOutOfRange/* = SKIP_FOR_CAPTURE
+6399 : Texture2DTestES3.TexStorage2DCycleThroughYuvSourcesNoData/* = SKIP_FOR_CAPTURE
+6334 : Texture2DTestES3.TextureBaseLevelGreaterThanMaxLevel/* = SKIP_FOR_CAPTURE
+6399 : Texture2DTestES3.TexStorage2DSimultaneousUseOfMultipleYuvSourcesNoData/* = SKIP_FOR_CAPTURE
+6400 : Texture2DTestES3.TextureCompletenessChangesWithBaseLevel/* = SKIP_FOR_CAPTURE
+6399 : Texture2DTestES3.TexStorage2DLargeYuvTextureCount/* = SKIP_FOR_CAPTURE
+6314 : Texture2DTestES3.UpdateRenderTargetCacheOnDestroyTexStorage/* = SKIP_FOR_CAPTURE
+6335 DEBUG : VulkanExternalImageTest.ShouldImportSemaphoreOpaqueFd/* = SKIP_FOR_CAPTURE
 
 # Skip because Timeout
 
 # ES3 Flaky
-6510 : FenceSyncTest.BasicOperations/ES3_Vulkan_SwiftShader = FLAKY
-6510 : FenceSyncTest.BasicQueries/ES3_Vulkan_SwiftShader = FLAKY
-6510 : FenceSyncTest.IsSync/ES3_Vulkan_SwiftShader = FLAKY
-6510 : FenceSyncTest.Errors/ES3_Vulkan_SwiftShader = FLAKY
-6510 : FenceSyncTest.MultipleFenceDraw/ES3_Vulkan_SwiftShader = FLAKY
-6543 : GLSLTest_ES3.ComplexCrossExpression/ES3_Vulkan_SwiftShader = FLAKY
+6510 : FenceSyncTest.BasicOperations/* = FLAKY
+6510 : FenceSyncTest.BasicQueries/* = FLAKY
+6510 : FenceSyncTest.IsSync/* = FLAKY
+6510 : FenceSyncTest.Errors/* = FLAKY
+6510 : FenceSyncTest.MultipleFenceDraw/* = FLAKY
+6543 : GLSLTest_ES3.ComplexCrossExpression/* = FLAKY
 
 # Fails after recent colorspace CL.
-6578 : ImageTest.Source2DTarget2D_Colorspace/ES2_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.Source2DTargetExternal_Colorspace/ES2_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.SourceCubeTargetExternal_Colorspace/ES2_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.SourceCubeTarget2D_Colorspace/ES2_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.SourceRenderbufferTargetTextureExternal_Colorspace/ES2_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.SourceRenderbufferTargetTexture_Colorspace/ES2_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.Source2DTarget2DArray_Colorspace/ES3_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.Source2DTarget2D_Colorspace/ES3_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.Source2DTargetExternal_Colorspace/ES3_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.SourceCubeTarget2D_Colorspace/ES3_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.SourceCubeTargetExternal_Colorspace/ES3_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.SourceRenderbufferTargetTextureExternal_Colorspace/ES3_Vulkan_SwiftShader = FAIL
-6578 : ImageTest.SourceRenderbufferTargetTexture_Colorspace/ES3_Vulkan_SwiftShader = FAIL
-6578 : ImageTestES3.Source2DTargetExternalESSL3_Colorspace/ES3_Vulkan_SwiftShader = FAIL
-6578 : ImageTestES3.SourceCubeTargetExternalESSL3_Colorspace/ES3_Vulkan_SwiftShader = FAIL
-6578 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3_Colorspace/ES3_Vulkan_SwiftShader = FAIL
+6578 : ImageTest.Source2DTarget2D_Colorspace/* = FAIL
+6578 : ImageTest.Source2DTargetExternal_Colorspace/* = FAIL
+6578 : ImageTest.SourceCubeTargetExternal_Colorspace/* = FAIL
+6578 : ImageTest.SourceCubeTarget2D_Colorspace/* = FAIL
+6578 : ImageTest.SourceRenderbufferTargetTextureExternal_Colorspace/* = FAIL
+6578 : ImageTest.SourceRenderbufferTargetTexture_Colorspace/* = FAIL
+6578 : ImageTest.Source2DTarget2DArray_Colorspace/ES3* = FAIL
+6578 : ImageTest.Source2DTarget2D_Colorspace/* = FAIL
+6578 : ImageTest.Source2DTargetExternal_Colorspace/* = FAIL
+6578 : ImageTest.SourceCubeTarget2D_Colorspace/* = FAIL
+6578 : ImageTest.SourceCubeTargetExternal_Colorspace/* = FAIL
+6578 : ImageTest.SourceRenderbufferTargetTextureExternal_Colorspace/* = FAIL
+6578 : ImageTest.SourceRenderbufferTargetTexture_Colorspace/* = FAIL
+6578 : ImageTestES3.Source2DTargetExternalESSL3_Colorspace/* = FAIL
+6578 : ImageTestES3.SourceCubeTargetExternalESSL3_Colorspace/* = FAIL
+6578 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3_Colorspace/* = FAIL
 
-6631 : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6631 : MultithreadingTest.MultiContextCreateAndDeleteResources/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6631 : MultithreadingTestES3.MultithreadFenceDraw/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6631 : MultithreadingTestES3.MultithreadFenceTexImage/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
-6631 : MultithreadingTest.MultiContextDrawWithSwapBuffers/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+6631 : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP_FOR_CAPTURE
+6631 : MultithreadingTest.MultiContextCreateAndDeleteResources/* = SKIP_FOR_CAPTURE
+6631 : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP_FOR_CAPTURE
+6631 : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP_FOR_CAPTURE
+6631 : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP_FOR_CAPTURE
+6631 : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8Line/* = SKIP_FOR_CAPTURE
+6631 : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8LineIds/* = SKIP_FOR_CAPTURE
 
 # ES3_1
-6180 : ProgramPipelineTest31.DifferentTextureTypes/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.DrawWith2DTexture/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.FragmentStageUniformTest/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.ImageUniforms/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.MaxFragmentShaderStorageBufferObjects/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.MaxFragmentUniformBufferObjects/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.PipelineWithoutVertexShader/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.ProgramPipelineVaryings/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.SampleTextureAThenTextureB/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.UseCreateShaderProgramv/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.VaryingIOBlockSeparableProgram/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.VaryingLocationMismatch/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : ProgramPipelineTest31.VerifyPpoLinkErrorSignalledCorrectly/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : SimpleStateChangeTestComputeES31PPO.DeleteImageTextureInUse/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : Texture2DTestES31PPO.TexStorage/ES3_1_Vulkan_SwiftShader = FAIL
-6180 : Texture2DTestES31PPO.SingleTextureMultipleSamplers/ES3_1_Vulkan_SwiftShader = FAIL
-
+6180 : ProgramPipelineTest31.DifferentTextureTypes/* = FAIL
+6180 : ProgramPipelineTest31.DrawWith2DTexture/* = FAIL
+6180 : ProgramPipelineTest31.FragmentStageUniformTest/* = FAIL
+6180 : ProgramPipelineTest31.ImageUniforms/* = FAIL
+6180 : ProgramPipelineTest31.MaxFragmentShaderStorageBufferObjects/* = FAIL
+6180 : ProgramPipelineTest31.MaxFragmentUniformBufferObjects/* = FAIL
+6180 : ProgramPipelineTest31.PipelineWithoutVertexShader/* = FAIL
+6180 : ProgramPipelineTest31.ProgramPipelineVaryings/* = FAIL
+6180 : ProgramPipelineTest31.SampleTextureAThenTextureB/* = FAIL
+6180 : ProgramPipelineTest31.UseCreateShaderProgramv/* = FAIL
+6180 : ProgramPipelineTest31.VaryingIOBlockSeparableProgram/* = FAIL
+6180 : ProgramPipelineTest31.VaryingLocationMismatch/* = FAIL
+6180 : ProgramPipelineTest31.VerifyPpoLinkErrorSignalledCorrectly/* = FAIL
+6180 : SimpleStateChangeTestComputeES31PPO.DeleteImageTextureInUse/* = FAIL
+6180 : Texture2DTestES31PPO.TexStorage/* = FAIL
+6180 : Texture2DTestES31PPO.SingleTextureMultipleSamplers/* = FAIL
 
 # ES3_1 Crashed
 6605 : ComputeShaderTest.ImageBufferMapWrite/* = SKIP_FOR_CAPTURE
@@ -222,13 +205,13 @@
 6605 : TextureBufferTestES31.UseAsUBOThenUpdateThenAsTextureBuffer/* = SKIP_FOR_CAPTURE
 
 # ES3_1 gtest skips
-6180 : GLSLTest_ES31.InterpolateAtWithSwizzle/ES3_1_Vulkan_SwiftShader = SKIPPED_BY_GTEST
-6180 : GLSLTest_ES31.VaryingTessellationSampleInAndOut/ES3_1_Vulkan_SwiftShader = SKIPPED_BY_GTEST
-6180 : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/ES3_1_Vulkan_SwiftShader = SKIPPED_BY_GTEST
-6180 : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/ES3_1_Vulkan_SwiftShader = SKIPPED_BY_GTEST
+6180 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIPPED_BY_GTEST
+6180 : GLSLTest_ES31.VaryingTessellationSampleInAndOut/* = SKIPPED_BY_GTEST
+6180 : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/* = SKIPPED_BY_GTEST
+6180 : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/* = SKIPPED_BY_GTEST
 
-6663 : Texture2DTest.UploadThenFSThenNewRPThenFSThenVS/ES2_Vulkan_SwiftShader = SKIPPED_BY_GTEST
-6663 : Texture2DTest.UploadThenFSThenNewRPThenVS/ES2_Vulkan_SwiftShader = SKIPPED_BY_GTEST
-6663 : Texture2DTest.UploadThenFSThenNewRPThenVSThenFS/ES2_Vulkan_SwiftShader = SKIPPED_BY_GTEST
-6663 : Texture2DTest.UploadThenFSThenVS/ES2_Vulkan_SwiftShader = SKIPPED_BY_GTEST
-6663 : Texture2DTest.UploadThenFSThenVSThenNewRPThenFS/ES2_Vulkan_SwiftShader  = SKIPPED_BY_GTEST
+6663 : Texture2DTest.UploadThenFSThenNewRPThenFSThenVS/* = SKIPPED_BY_GTEST
+6663 : Texture2DTest.UploadThenFSThenNewRPThenVS/* = SKIPPED_BY_GTEST
+6663 : Texture2DTest.UploadThenFSThenNewRPThenVSThenFS/* = SKIPPED_BY_GTEST
+6663 : Texture2DTest.UploadThenFSThenVS/* = SKIPPED_BY_GTEST
+6663 : Texture2DTest.UploadThenFSThenVSThenNewRPThenFS/*  = SKIPPED_BY_GTEST
