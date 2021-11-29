@@ -22,6 +22,14 @@ ResourceTracker::ResourceTracker() {}
 ResourceTracker::~ResourceTracker() {}
 TrackedResource::TrackedResource() {}
 TrackedResource::~TrackedResource() {}
+DataTracker::DataTracker() {}
+DataTracker::~DataTracker() {}
+DataCounters::DataCounters() {}
+DataCounters::~DataCounters() {}
+StringCounters::StringCounters() {}
+StringCounters::~StringCounters() {}
+ReplayWriter::ReplayWriter() {}
+ReplayWriter::~ReplayWriter() {}
 
 FrameCapture::FrameCapture() {}
 FrameCapture::~FrameCapture() {}

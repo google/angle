@@ -1,10 +1,10 @@
-
+//
 // Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 // FrameCapture.h:
-//   ANGLE Frame capture inteface.
+//   ANGLE Frame capture interface.
 //
 
 #ifndef LIBANGLE_FRAME_CAPTURE_H_
@@ -190,8 +190,8 @@ class StringCounters final : angle::NonCopyable
     StringCounters();
     ~StringCounters();
 
-    int getStringCounter(std::vector<std::string> &str);
-    void setStringCounter(std::vector<std::string> &str, int &counter);
+    int getStringCounter(const std::vector<std::string> &str);
+    void setStringCounter(const std::vector<std::string> &str, int &counter);
 
   private:
     std::map<std::vector<std::string>, int> mStringCounterMap;
@@ -209,6 +209,56 @@ class DataTracker final : angle::NonCopyable
   private:
     DataCounters mCounters;
     StringCounters mStringCounters;
+};
+
+class ReplayWriter final : angle::NonCopyable
+{
+  public:
+    ReplayWriter();
+    ~ReplayWriter();
+
+    void setFilenamePattern(const std::string &pattern);
+    void setCaptureLabel(const std::string &label);
+    void setSourcePrologue(const std::string &prologue);
+    void setHeaderPrologue(const std::string &prologue);
+
+    void addPublicFunction(const std::string &functionProto,
+                           const std::stringstream &headerStream,
+                           const std::stringstream &bodyStream);
+    void addPrivateFunction(const std::string &functionProto,
+                            const std::stringstream &headerStream,
+                            const std::stringstream &bodyStream);
+    std::string getInlineVariableName(EntryPoint entryPoint, const std::string &paramName);
+
+    std::string getInlineStringSetVariableName(EntryPoint entryPoint,
+                                               const std::string &paramName,
+                                               const std::vector<std::string> &strings,
+                                               bool *isNewEntryOut);
+
+    void saveFrame(uint32_t frameIndex);
+    void saveIndexFilesAndHeader();
+    void saveSetupFile();
+
+  private:
+    static std::string GetVarName(EntryPoint entryPoint, const std::string &paramName, int counter);
+
+    void saveHeader();
+    void writeReplaySource(const std::string &filename);
+
+    DataTracker mDataTracker;
+    std::string mFilenamePattern;
+    std::string mCaptureLabel;
+    std::string mSourcePrologue;
+    std::string mHeaderPrologue;
+
+    std::vector<std::string> mReplayHeaders;
+    std::vector<std::string> mGlobalVariableDeclarations;
+
+    std::vector<std::string> mPublicFunctionPrototypes;
+    std::vector<std::string> mPublicFunctions;
+
+    std::vector<std::string> mPrivateFunctionPrototypes;
+    std::vector<std::string> mPrivateFunctions;
 };
 
 using BufferCalls = std::map<GLuint, std::vector<CallCapture>>;
@@ -580,6 +630,7 @@ class FrameCaptureShared final : angle::NonCopyable
     PackedEnumMap<ResourceIDType, uint32_t> mMaxAccessedResourceIDs;
 
     ResourceTracker mResourceTracker;
+    ReplayWriter mReplayWriter;
 
     // If you don't know which frame you want to start capturing at, use the capture trigger.
     // Initialize it to the number of frames you want to capture, and then clear the value to 0 when

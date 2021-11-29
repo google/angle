@@ -372,23 +372,6 @@ std::string GetCaptureFileName(gl::ContextID contextId,
     return fnameStream.str();
 }
 
-std::string GetCaptureFilePath(const std::string &outDir,
-                               gl::ContextID contextId,
-                               const std::string &captureLabel,
-                               uint32_t frameIndex,
-                               const char *suffix)
-{
-    return outDir + GetCaptureFileName(contextId, captureLabel, frameIndex, suffix);
-}
-
-void WriteParamStaticVarName(const CallCapture &call,
-                             const ParamCapture &param,
-                             int counter,
-                             std::ostream &out)
-{
-    out << call.name() << "_" << param.name << "_" << counter;
-}
-
 void WriteGLFloatValue(std::ostream &out, GLfloat value)
 {
     // Check for non-representable values
@@ -458,7 +441,7 @@ void WriteInlineData<GLchar>(const std::vector<uint8_t> &vec, std::ostream &out)
     out << "\"";
 }
 
-void WriteStringParamReplay(DataTracker *dataTracker,
+void WriteStringParamReplay(ReplayWriter &replayWriter,
                             std::ostream &out,
                             std::ostream &header,
                             const CallCapture &call,
@@ -482,14 +465,9 @@ void WriteStringParamReplay(DataTracker *dataTracker,
     }
     else if (str.find('\n') != std::string::npos)
     {
-        // Move multi-line strings into the header.
-        int counter = dataTracker->getCounters().getAndIncrement(call.entryPoint, param.name);
-
-        header << "const char ";
-        WriteParamStaticVarName(call, param, counter, header);
-        header << "[] = R\"(" << str << ")\";\n";
-
-        WriteParamStaticVarName(call, param, counter, out);
+        std::string varName = replayWriter.getInlineVariableName(call.entryPoint, param.name);
+        header << "const char " << varName << "[] = R\"(" << str << ")\";\n";
+        out << varName;
     }
     else
     {
@@ -497,7 +475,7 @@ void WriteStringParamReplay(DataTracker *dataTracker,
     }
 }
 
-void WriteStringPointerParamReplay(DataTracker *dataTracker,
+void WriteStringPointerParamReplay(ReplayWriter &replayWriter,
                                    std::ostream &out,
                                    std::ostream &header,
                                    const CallCapture &call,
@@ -512,16 +490,13 @@ void WriteStringPointerParamReplay(DataTracker *dataTracker,
         strings.emplace_back(data.begin(), data.end() - 1);
     }
 
-    int counter = dataTracker->getStringCounters().getStringCounter(strings);
-    if (counter == kStringsNotFound)
-    {
-        // This is a unique set of strings, so set up their declaration and update the counter
-        counter = dataTracker->getCounters().getAndIncrement(call.entryPoint, param.name);
-        dataTracker->getStringCounters().setStringCounter(strings, counter);
+    bool isNewEntry     = false;
+    std::string varName = replayWriter.getInlineStringSetVariableName(call.entryPoint, param.name,
+                                                                      strings, &isNewEntry);
 
-        header << "const char* const ";
-        WriteParamStaticVarName(call, param, counter, header);
-        header << "[] = { \n";
+    if (isNewEntry)
+    {
+        header << "const char *const " << varName << "[] = { \n";
 
         for (const std::string &str : strings)
         {
@@ -545,25 +520,22 @@ void WriteStringPointerParamReplay(DataTracker *dataTracker,
             }
         }
 
-        header << " };\n";
+        header << "};\n";
     }
 
-    ASSERT(counter >= 0);
-    WriteParamStaticVarName(call, param, counter, out);
+    out << varName;
 }
 
 template <typename ParamT>
-void WriteResourceIDPointerParamReplay(DataTracker *dataTracker,
+void WriteResourceIDPointerParamReplay(ReplayWriter &replayWriter,
                                        std::ostream &out,
                                        std::ostream &header,
                                        const CallCapture &call,
                                        const ParamCapture &param)
 {
-    int counter = dataTracker->getCounters().getAndIncrement(call.entryPoint, param.name);
+    std::string varName = replayWriter.getInlineVariableName(call.entryPoint, param.name);
 
-    header << "const GLuint ";
-    WriteParamStaticVarName(call, param, counter, header);
-    header << "[] = { ";
+    header << "const GLuint " << varName << "[] = { ";
 
     const ResourceIDType resourceIDType = GetResourceIDTypeFromParamType(param.type);
     ASSERT(resourceIDType != ResourceIDType::InvalidEnum);
@@ -590,17 +562,17 @@ void WriteResourceIDPointerParamReplay(DataTracker *dataTracker,
     }
     header << " };\n    ";
 
-    WriteParamStaticVarName(call, param, counter, out);
+    out << varName;
 }
 
-void WriteBinaryParamReplay(DataTracker *dataTracker,
+void WriteBinaryParamReplay(ReplayWriter &replayWriter,
                             std::ostream &out,
                             std::ostream &header,
                             const CallCapture &call,
                             const ParamCapture &param,
                             std::vector<uint8_t> *binaryData)
 {
-    int counter = dataTracker->getCounters().getAndIncrement(call.entryPoint, param.name);
+    std::string varName = replayWriter.getInlineVariableName(call.entryPoint, param.name);
 
     ASSERT(param.data.size() == 1);
     const std::vector<uint8_t> &data = param.data[0];
@@ -614,9 +586,7 @@ void WriteBinaryParamReplay(DataTracker *dataTracker,
     {
         // Inline if data are of type string or enum
         std::string paramTypeString = ParamTypeToString(param.type);
-        header << paramTypeString.substr(0, paramTypeString.length() - 1);
-        WriteParamStaticVarName(call, param, counter, header);
-        header << "[] = { ";
+        header << paramTypeString.substr(0, paramTypeString.length() - 1) << varName << "[] = { ";
         if (overrideType == ParamType::TGLenumConstPointer)
         {
             WriteInlineData<GLuint>(data, header);
@@ -627,7 +597,7 @@ void WriteBinaryParamReplay(DataTracker *dataTracker,
             WriteInlineData<GLchar>(data, header);
         }
         header << " };\n";
-        WriteParamStaticVarName(call, param, counter, out);
+        out << varName;
     }
     else
     {
@@ -647,7 +617,7 @@ uintptr_t SyncIndexValue(GLsync sync)
 }
 
 void WriteCppReplayForCall(const CallCapture &call,
-                           DataTracker *dataTracker,
+                           ReplayWriter &replayWriter,
                            std::ostream &out,
                            std::ostream &header,
                            std::vector<uint8_t> *binaryData)
@@ -754,61 +724,61 @@ void WriteCppReplayForCall(const CallCapture &call,
             switch (param.type)
             {
                 case ParamType::TGLcharConstPointer:
-                    WriteStringParamReplay(dataTracker, callOut, header, call, param, binaryData);
+                    WriteStringParamReplay(replayWriter, callOut, header, call, param, binaryData);
                     break;
                 case ParamType::TGLcharConstPointerPointer:
-                    WriteStringPointerParamReplay(dataTracker, callOut, header, call, param);
+                    WriteStringPointerParamReplay(replayWriter, callOut, header, call, param);
                     break;
                 case ParamType::TBufferIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::BufferID>(dataTracker, callOut, out, call,
-                                                                    param);
+                    WriteResourceIDPointerParamReplay<gl::BufferID>(replayWriter, callOut, out,
+                                                                    call, param);
                     break;
                 case ParamType::TFenceNVIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::FenceNVID>(dataTracker, callOut, out,
+                    WriteResourceIDPointerParamReplay<gl::FenceNVID>(replayWriter, callOut, out,
                                                                      call, param);
                     break;
                 case ParamType::TFramebufferIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::FramebufferID>(dataTracker, callOut, out,
+                    WriteResourceIDPointerParamReplay<gl::FramebufferID>(replayWriter, callOut, out,
                                                                          call, param);
                     break;
                 case ParamType::TMemoryObjectIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::MemoryObjectID>(dataTracker, callOut, out,
-                                                                          call, param);
+                    WriteResourceIDPointerParamReplay<gl::MemoryObjectID>(replayWriter, callOut,
+                                                                          out, call, param);
                     break;
                 case ParamType::TProgramPipelineIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::ProgramPipelineID>(dataTracker, callOut,
+                    WriteResourceIDPointerParamReplay<gl::ProgramPipelineID>(replayWriter, callOut,
                                                                              out, call, param);
                     break;
                 case ParamType::TQueryIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::QueryID>(dataTracker, callOut, out, call,
+                    WriteResourceIDPointerParamReplay<gl::QueryID>(replayWriter, callOut, out, call,
                                                                    param);
                     break;
                 case ParamType::TRenderbufferIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::RenderbufferID>(dataTracker, callOut, out,
-                                                                          call, param);
+                    WriteResourceIDPointerParamReplay<gl::RenderbufferID>(replayWriter, callOut,
+                                                                          out, call, param);
                     break;
                 case ParamType::TSamplerIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::SamplerID>(dataTracker, callOut, out,
+                    WriteResourceIDPointerParamReplay<gl::SamplerID>(replayWriter, callOut, out,
                                                                      call, param);
                     break;
                 case ParamType::TSemaphoreIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::SemaphoreID>(dataTracker, callOut, out,
+                    WriteResourceIDPointerParamReplay<gl::SemaphoreID>(replayWriter, callOut, out,
                                                                        call, param);
                     break;
                 case ParamType::TTextureIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::TextureID>(dataTracker, callOut, out,
+                    WriteResourceIDPointerParamReplay<gl::TextureID>(replayWriter, callOut, out,
                                                                      call, param);
                     break;
                 case ParamType::TTransformFeedbackIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::TransformFeedbackID>(dataTracker, callOut,
-                                                                               out, call, param);
+                    WriteResourceIDPointerParamReplay<gl::TransformFeedbackID>(
+                        replayWriter, callOut, out, call, param);
                     break;
                 case ParamType::TVertexArrayIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::VertexArrayID>(dataTracker, callOut, out,
+                    WriteResourceIDPointerParamReplay<gl::VertexArrayID>(replayWriter, callOut, out,
                                                                          call, param);
                     break;
                 default:
-                    WriteBinaryParamReplay(dataTracker, callOut, header, call, param, binaryData);
+                    WriteBinaryParamReplay(replayWriter, callOut, header, call, param, binaryData);
                     break;
             }
         }
@@ -924,9 +894,9 @@ void WriteInitReplayCall(bool compression,
 }
 
 // TODO (http://anglebug.com/4599): Reset more state on frame loop
-void MaybeResetResources(std::stringstream &out,
-                         ResourceIDType resourceIDType,
-                         DataTracker *dataTracker,
+void MaybeResetResources(ResourceIDType resourceIDType,
+                         ReplayWriter &replayWriter,
+                         std::stringstream &out,
                          std::stringstream &header,
                          ResourceTracker *resourceTracker,
                          std::vector<uint8_t> *binaryData)
@@ -973,7 +943,7 @@ void MaybeResetResources(std::stringstream &out,
                 for (CallCapture &call : bufferRegenCalls[id])
                 {
                     out << "    ";
-                    WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
                     out << ";\n";
                 }
             }
@@ -989,7 +959,7 @@ void MaybeResetResources(std::stringstream &out,
                     for (CallCapture &call : bufferUnmapCalls[id])
                     {
                         out << "    ";
-                        WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+                        WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
                         out << ";\n";
                     }
                 }
@@ -998,7 +968,7 @@ void MaybeResetResources(std::stringstream &out,
                 for (CallCapture &call : bufferRestoreCalls[id])
                 {
                     out << "    ";
-                    WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
                     out << ";\n";
 
                     // Also note that this buffer has been implicitly unmapped by this call
@@ -1018,7 +988,7 @@ void MaybeResetResources(std::stringstream &out,
                     for (CallCapture &call : bufferMapCalls[id])
                     {
                         out << "    ";
-                        WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+                        WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
                         out << ";\n";
                     }
                 }
@@ -1030,7 +1000,7 @@ void MaybeResetResources(std::stringstream &out,
                     for (CallCapture &call : bufferUnmapCalls[id])
                     {
                         out << "    ";
-                        WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+                        WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
                         out << ";\n";
                     }
                 }
@@ -1041,7 +1011,7 @@ void MaybeResetResources(std::stringstream &out,
             for (CallCapture &call : bufferBindingCalls)
             {
                 out << "    ";
-                WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+                WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
                 out << ";\n";
             }
 
@@ -1103,7 +1073,7 @@ void MaybeResetResources(std::stringstream &out,
                 for (CallCapture &call : textureRegenCalls[id])
                 {
                     out << "    ";
-                    WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
                     out << ";\n";
                 }
             }
@@ -1116,7 +1086,7 @@ void MaybeResetResources(std::stringstream &out,
                 for (CallCapture &call : textureRestoreCalls[id])
                 {
                     out << "    ";
-                    WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
                     out << ";\n";
                 }
             }
@@ -1129,7 +1099,7 @@ void MaybeResetResources(std::stringstream &out,
 }
 
 void MaybeResetFenceSyncObjects(std::stringstream &out,
-                                DataTracker *dataTracker,
+                                ReplayWriter &replayWriter,
                                 std::stringstream &header,
                                 ResourceTracker *resourceTracker,
                                 std::vector<uint8_t> *binaryData)
@@ -1144,19 +1114,19 @@ void MaybeResetFenceSyncObjects(std::stringstream &out,
         for (CallCapture &call : fenceSyncRegenCalls[sync])
         {
             out << "    ";
-            WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+            WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
             out << ";\n";
         }
     }
 }
 
-void MaybeResetOpaqueTypeObjects(std::stringstream &out,
-                                 DataTracker *dataTracker,
+void MaybeResetOpaqueTypeObjects(ReplayWriter &replayWriter,
+                                 std::stringstream &out,
                                  std::stringstream &header,
                                  ResourceTracker *resourceTracker,
                                  std::vector<uint8_t> *binaryData)
 {
-    MaybeResetFenceSyncObjects(out, dataTracker, header, resourceTracker, binaryData);
+    MaybeResetFenceSyncObjects(out, replayWriter, header, resourceTracker, binaryData);
 }
 
 bool FindShaderProgramIDsInCall(const CallCapture &call, std::vector<gl::ShaderProgramID> &idsOut)
@@ -1198,7 +1168,7 @@ void MarkResourceIDActive(ResourceIDType resourceType,
 // function into parts to avoid overflowing the stack and causing slow compilation.
 void WriteCppReplayFunctionWithParts(const gl::ContextID contextID,
                                      ReplayFunc replayFunc,
-                                     DataTracker *dataTracker,
+                                     ReplayWriter &replayWriter,
                                      uint32_t frameIndex,
                                      std::vector<uint8_t> *binaryData,
                                      const std::vector<CallCapture> &calls,
@@ -1228,7 +1198,7 @@ void WriteCppReplayFunctionWithParts(const gl::ContextID contextID,
         }
 
         out << "    ";
-        WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+        WriteCppReplayForCall(call, replayWriter, out, header, binaryData);
         out << ";\n";
 
         if (partCount > 0 && ++callCount % kFunctionSizeLimit == 0)
@@ -1259,7 +1229,8 @@ void WriteCppReplayFunctionWithParts(const gl::ContextID contextID,
 
 // Auxiliary contexts are other contexts in the share group that aren't the context calling
 // eglSwapBuffers().
-void WriteAuxiliaryContextCppSetupReplay(bool compression,
+void WriteAuxiliaryContextCppSetupReplay(ReplayWriter &replayWriter,
+                                         bool compression,
                                          const std::string &outDir,
                                          const gl::Context *context,
                                          const std::string &captureLabel,
@@ -1271,70 +1242,44 @@ void WriteAuxiliaryContextCppSetupReplay(bool compression,
 {
     ASSERT(frameCaptureShared.getWindowSurfaceContextID() != context->id());
 
-    DataTracker dataTracker;
-
-    std::stringstream out;
-    std::stringstream include;
-    std::stringstream header;
-
-    include << "#include \""
-            << FmtCapturePrefix(frameCaptureShared.getWindowSurfaceContextID(), captureLabel)
-            << ".h\"\n";
-    include << "#include \"angle_trace_gl.h\"\n";
-    include << "";
-    include << "\n";
-    include << "namespace\n";
-    include << "{\n";
-
-    if (!captureLabel.empty())
     {
-        header << "namespace " << captureLabel << "\n";
-        header << "{\n";
-        out << "namespace " << captureLabel << "\n";
-        out << "{\n";
+        std::stringstream filenameStream;
+        filenameStream << outDir << FmtCapturePrefix(context->id(), captureLabel);
+        std::string filenamePattern = filenameStream.str();
+        replayWriter.setFilenamePattern(filenamePattern);
     }
 
-    header << "void " << FmtSetupFunction(kNoPartId, context->id()) << ";\n";
-
-    WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Setup, &dataTracker, frameIndex,
-                                    binaryData, setupCalls, header, out);
-
-    out << "\n";
-
-    if (!captureLabel.empty())
     {
-        header << "} // namespace " << captureLabel << "\n";
-        out << "} // namespace " << captureLabel << "\n";
+        std::stringstream include;
+        include << "#include \""
+                << FmtCapturePrefix(frameCaptureShared.getWindowSurfaceContextID(), captureLabel)
+                << ".h\"\n";
+        include << "#include \"angle_trace_gl.h\"\n";
+
+        std::string frameIncludes = include.str();
+        replayWriter.setSourcePrologue(frameIncludes);
+        replayWriter.setHeaderPrologue(frameIncludes);
     }
 
-    include << "}  // namespace\n";
-
-    // Write out the source file.
     {
-        std::string outString    = out.str();
-        std::string headerString = include.str();
+        std::stringstream protoStream;
+        std::stringstream headerStream;
+        std::stringstream bodyStream;
 
-        std::string cppFilePath =
-            GetCaptureFilePath(outDir, context->id(), captureLabel, frameIndex, ".cpp");
+        protoStream << "void " << FmtSetupFunction(kNoPartId, context->id());
+        std::string proto = protoStream.str();
 
-        SaveFileHelper saveCpp(cppFilePath);
-        saveCpp << headerString << "\n" << outString;
+        WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Setup, replayWriter, frameIndex,
+                                        binaryData, setupCalls, headerStream, bodyStream);
+
+        replayWriter.addPrivateFunction(proto, headerStream, bodyStream);
     }
 
-    // Write out the header file.
-    {
-        std::string headerContents = header.str();
-
-        std::stringstream headerPathStream;
-        headerPathStream << outDir << FmtCapturePrefix(context->id(), captureLabel) << ".h";
-        std::string headerPath = headerPathStream.str();
-
-        SaveFileHelper saveHeader(headerPath);
-        saveHeader << headerContents;
-    }
+    replayWriter.saveFrame(frameIndex);
 }
 
-void WriteShareGroupCppSetupReplay(bool compression,
+void WriteShareGroupCppSetupReplay(ReplayWriter &replayWriter,
+                                   bool compression,
                                    const std::string &outDir,
                                    const std::string &captureLabel,
                                    uint32_t frameIndex,
@@ -1345,45 +1290,41 @@ void WriteShareGroupCppSetupReplay(bool compression,
                                    bool serializeStateEnabled,
                                    const FrameCaptureShared &frameCaptureShared)
 {
-    DataTracker dataTracker;
-
-    std::stringstream out;
-    std::stringstream include;
-
-    include << "#include \"angle_trace_gl.h\"\n";
-    include << "\n";
-    include << "namespace\n";
-    include << "{\n";
-
-    if (!captureLabel.empty())
     {
-        out << "namespace " << captureLabel << "\n";
-        out << "{\n";
+        std::stringstream include;
+
+        include << "#include \"angle_trace_gl.h\"\n";
+
+        std::string includeString = include.str();
+
+        replayWriter.setSourcePrologue(includeString);
     }
 
-    WriteCppReplayFunctionWithParts(kSharedContextId, ReplayFunc::Setup, &dataTracker, frameIndex,
-                                    binaryData, setupCalls, include, out);
-
-    out << "\n";
-
-    if (!captureLabel.empty())
     {
-        out << "} // namespace " << captureLabel << "\n";
+        std::stringstream protoStream;
+        std::stringstream headerStream;
+        std::stringstream bodyStream;
+
+        protoStream << "void " << FmtSetupFunction(kNoPartId, kSharedContextId);
+        std::string proto = protoStream.str();
+
+        WriteCppReplayFunctionWithParts(kSharedContextId, ReplayFunc::Setup, replayWriter,
+                                        frameIndex, binaryData, setupCalls, headerStream,
+                                        bodyStream);
+
+        replayWriter.addPrivateFunction(proto, headerStream, bodyStream);
     }
 
-    include << "}  // namespace\n";
-
-    // Write out the source file.
     {
-        std::string outString    = out.str();
-        std::string headerString = include.str();
+        std::stringstream filenameStream;
+        filenameStream << outDir << FmtCapturePrefix(kSharedContextId, captureLabel);
 
-        std::string cppFilePath =
-            GetCaptureFilePath(outDir, kSharedContextId, captureLabel, frameIndex, ".cpp");
+        std::string filenamePattern = filenameStream.str();
 
-        SaveFileHelper saveCpp(cppFilePath);
-        saveCpp << headerString << "\n" << outString;
+        replayWriter.setFilenamePattern(filenamePattern);
     }
+
+    replayWriter.saveSetupFile();
 }
 
 ProgramSources GetAttachedProgramSources(const gl::Program *program)
@@ -4409,6 +4350,8 @@ FrameCaptureShared::FrameCaptureShared()
     {
         mEnabled = false;
     }
+
+    mReplayWriter.setCaptureLabel(mCaptureLabel);
 }
 
 FrameCaptureShared::~FrameCaptureShared() = default;
@@ -5790,9 +5733,9 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
 
             scanSetupCalls(mainContext, frameCapture->getSetupCalls());
 
-            WriteAuxiliaryContextCppSetupReplay(mCompression, mOutDirectory, shareContext,
-                                                mCaptureLabel, 1, frameCapture->getSetupCalls(),
-                                                &mBinaryData, mSerializeStateEnabled, *this);
+            WriteAuxiliaryContextCppSetupReplay(
+                mReplayWriter, mCompression, mOutDirectory, shareContext, mCaptureLabel, 1,
+                frameCapture->getSetupCalls(), &mBinaryData, mSerializeStateEnabled, *this);
         }
     }
 }
@@ -5867,8 +5810,8 @@ void FrameCaptureShared::onEndFrame(const gl::Context *context)
     if (mFrameIndex == mCaptureEndFrame)
     {
         // Write shared MEC after frame sequence so we can eliminate unused assets like programs
-        WriteShareGroupCppSetupReplay(mCompression, mOutDirectory, mCaptureLabel, 1, 1,
-                                      mShareGroupSetupCalls, &mResourceTracker, &mBinaryData,
+        WriteShareGroupCppSetupReplay(mReplayWriter, mCompression, mOutDirectory, mCaptureLabel, 1,
+                                      1, mShareGroupSetupCalls, &mResourceTracker, &mBinaryData,
                                       mSerializeStateEnabled, *this);
 
         // Save the index files after the last frame.
@@ -5933,7 +5876,7 @@ StringCounters::StringCounters() = default;
 
 StringCounters::~StringCounters() = default;
 
-int StringCounters::getStringCounter(std::vector<std::string> &strings)
+int StringCounters::getStringCounter(const std::vector<std::string> &strings)
 {
     const auto &id = mStringCounterMap.find(strings);
     if (id == mStringCounterMap.end())
@@ -5946,7 +5889,7 @@ int StringCounters::getStringCounter(std::vector<std::string> &strings)
     }
 }
 
-void StringCounters::setStringCounter(std::vector<std::string> &strings, int &counter)
+void StringCounters::setStringCounter(const std::vector<std::string> &strings, int &counter)
 {
     ASSERT(counter >= 0);
     mStringCounterMap[strings] = counter;
@@ -6222,94 +6165,88 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
         saveData.write(reinterpret_cast<const uint8_t *>(json.data()), json.length());
     }
 
-    std::stringstream header;
-    std::stringstream source;
+    {
+        std::stringstream header;
 
-    header << "#pragma once\n";
-    header << "\n";
-    header << "#include <EGL/egl.h>\n";
-    header << "#include <cstdint>\n";
-    header << "\n";
-
-    if (!mCaptureLabel.empty())
-    {
-        header << "namespace " << mCaptureLabel << "\n";
-        header << "{\n";
-    }
-    for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
-    {
-        header << "void " << FmtReplayFunction(contextId, frameIndex) << ";\n";
-    }
-    header << "\n";
-    if (mSerializeStateEnabled)
-    {
-        for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
-        {
-            header << "const char *" << FmtGetSerializedContextStateFunction(contextId, frameIndex)
-                   << ";\n";
-        }
+        header << "#pragma once\n";
         header << "\n";
+        header << "#include <EGL/egl.h>\n";
+        header << "#include <cstdint>\n";
+
+        std::string includes = header.str();
+        mReplayWriter.setHeaderPrologue(includes);
     }
 
-    header << "void InitReplay();\n";
-    if (mCaptureStartFrame != 1)
     {
-        header << "void SetupReplayContextShared();\n";
+        std::stringstream source;
+
+        source << "#include \"" << FmtCapturePrefix(contextId, mCaptureLabel) << ".h\"\n";
+        source << "#include \"trace_fixture.h\"\n";
+        source << "#include \"angle_trace_gl.h\"\n";
+
+        std::string sourcePrologue = source.str();
+        mReplayWriter.setSourcePrologue(sourcePrologue);
     }
 
-    for (const gl::Context *shareContext : shareGroup->getContexts())
     {
-        header << "void " << FmtSetupFunction(kNoPartId, shareContext->id()) << ";\n";
+        std::string proto = "void InitReplay()";
+
+        std::stringstream source;
+        source << proto << "\n";
+        source << "{\n";
+        WriteInitReplayCall(mCompression, source, kSharedContextId, mCaptureLabel,
+                            MaxClientArraySize(mClientArraySizes), mReadBufferSize,
+                            mMaxAccessedResourceIDs);
+        source << "}\n";
+
+        mReplayWriter.addPrivateFunction(proto, std::stringstream(), source);
     }
 
-    source << "#include \"" << FmtCapturePrefix(contextId, mCaptureLabel) << ".h\"\n";
-    source << "#include \"trace_fixture.h\"\n";
-    source << "#include \"angle_trace_gl.h\"\n";
-    source << "\n";
-
-    if (!mCaptureLabel.empty())
     {
-        source << "using namespace " << mCaptureLabel << ";\n";
-        source << "\n";
-    }
+        std::string proto = "void ReplayFrame(uint32_t frameIndex)";
 
-    source << "void " << mCaptureLabel << "::InitReplay()\n";
-    source << "{\n";
-    WriteInitReplayCall(mCompression, source, kSharedContextId, mCaptureLabel,
-                        MaxClientArraySize(mClientArraySizes), mReadBufferSize,
-                        mMaxAccessedResourceIDs);
-    source << "}\n";
+        std::stringstream source;
 
-    source << "extern \"C\" {\n";
-    source << "void ReplayFrame(uint32_t frameIndex)\n";
-    source << "{\n";
-    source << "    switch (frameIndex)\n";
-    source << "    {\n";
-    for (uint32_t frameIndex : mActiveFrameIndices)
-    {
-        source << "        case " << frameIndex << ":\n";
-        source << "            " << FmtReplayFunction(contextId, frameIndex) << ";\n";
+        source << proto << "\n";
+        source << "{\n";
+        source << "    switch (frameIndex)\n";
+        source << "    {\n";
+        for (uint32_t frameIndex : mActiveFrameIndices)
+        {
+            source << "        case " << frameIndex << ":\n";
+            source << "            " << FmtReplayFunction(contextId, frameIndex) << ";\n";
+            source << "            break;\n";
+        }
+        source << "        default:\n";
         source << "            break;\n";
+        source << "    }\n";
+        source << "}\n";
+
+        mReplayWriter.addPublicFunction(proto, std::stringstream(), source);
     }
-    source << "        default:\n";
-    source << "            break;\n";
-    source << "    }\n";
-    source << "}\n";
-    source << "\n";
 
     if (writeResetContextCall)
     {
-        source << "void ResetReplay()\n";
+        std::string proto = "void ResetReplay()";
+
+        std::stringstream source;
+
+        source << proto << "\n";
         source << "{\n";
         source << "    // Reset context is empty because context is destroyed before end "
                   "frame is reached\n";
         source << "}\n";
-        source << "\n";
+
+        mReplayWriter.addPublicFunction(proto, std::stringstream(), source);
     }
 
     if (mSerializeStateEnabled)
     {
-        source << "const char *GetSerializedContextState(uint32_t frameIndex)\n";
+        std::string proto = "const char *GetSerializedContextState(uint32_t frameIndex)";
+
+        std::stringstream source;
+
+        source << proto << "\n";
         source << "{\n";
         source << "    switch (frameIndex)\n";
         source << "    {\n";
@@ -6323,37 +6260,19 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
         source << "            return nullptr;\n";
         source << "    }\n";
         source << "}\n";
-        source << "\n";
-    }
 
-    source << "}  // extern \"C\"\n";
-
-    if (!mCaptureLabel.empty())
-    {
-        header << "} // namespace " << mCaptureLabel << "\n";
+        mReplayWriter.addPublicFunction(proto, std::stringstream(), source);
     }
 
     {
-        std::string headerContents = header.str();
+        std::stringstream fnameStream;
+        fnameStream << mOutDirectory << FmtCapturePrefix(contextId, mCaptureLabel);
+        std::string fnamePattern = fnameStream.str();
 
-        std::stringstream headerPathStream;
-        headerPathStream << mOutDirectory << FmtCapturePrefix(contextId, mCaptureLabel) << ".h";
-        std::string headerPath = headerPathStream.str();
-
-        SaveFileHelper saveHeader(headerPath);
-        saveHeader << headerContents;
+        mReplayWriter.setFilenamePattern(fnamePattern);
     }
 
-    {
-        std::string sourceContents = source.str();
-
-        std::stringstream sourcePathStream;
-        sourcePathStream << mOutDirectory << FmtCapturePrefix(contextId, mCaptureLabel) << ".cpp";
-        std::string sourcePath = sourcePathStream.str();
-
-        SaveFileHelper saveSource(sourcePath);
-        saveSource << sourceContents;
-    }
+    mReplayWriter.saveIndexFilesAndHeader();
 }
 
 void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
@@ -6361,128 +6280,145 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
 {
     ASSERT(mWindowSurfaceContextID == context->id());
 
-    DataTracker dataTracker;
+    {
+        std::stringstream header;
 
-    std::stringstream out;
-    std::stringstream header;
+        header << "#include \"" << FmtCapturePrefix(context->id(), mCaptureLabel) << ".h\"\n";
+        header << "#include \"angle_trace_gl.h\"\n";
 
-    header << "#include \"" << FmtCapturePrefix(context->id(), mCaptureLabel) << ".h\"\n";
-    header << "#include \"angle_trace_gl.h\"\n";
-    header << "";
-    header << "\n";
-    header << "namespace\n";
-    header << "{\n";
+        std::string headerString = header.str();
+        mReplayWriter.setSourcePrologue(headerString);
+    }
 
     uint32_t frameCount = getFrameCount();
     uint32_t frameIndex = getReplayFrameIndex();
 
-    if (frameIndex == 1 || frameIndex == frameCount)
-    {
-        out << "extern \"C\" {\n";
-    }
-
     if (frameIndex == 1)
     {
-        WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Setup, &dataTracker, frameIndex,
-                                        &mBinaryData, setupCalls, header, out);
-
-        out << "\n";
-        out << "void SetupReplay()\n";
-        out << "{\n";
-        out << "    EGLContext context = eglGetCurrentContext();\n";
-        out << "    gContextMap[" << context->id().value << "] = context;\n";
-        out << "\n";
-
-        // Setup all of the shared objects.
-        out << "    " << mCaptureLabel << "::InitReplay();\n";
-        if (usesMidExecutionCapture())
         {
-            out << "    " << mCaptureLabel << "::" << FmtSetupFunction(kNoPartId, kSharedContextId)
-                << ";\n";
+            std::stringstream protoStream;
+            std::stringstream headerStream;
+            std::stringstream bodyStream;
+
+            protoStream << "void " << FmtSetupFunction(kNoPartId, context->id());
+            std::string proto = protoStream.str();
+
+            WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Setup, mReplayWriter,
+                                            frameIndex, &mBinaryData, setupCalls, headerStream,
+                                            bodyStream);
+
+            mReplayWriter.addPrivateFunction(proto, headerStream, bodyStream);
         }
 
-        // Setup the presentation (this) context first.
-        out << "    " << FmtSetupFunction(kNoPartId, context->id()) << ";\n";
-        out << "\n";
-
-        // Setup each of the auxiliary contexts.
-        egl::ShareGroup *shareGroup            = context->getShareGroup();
-        const egl::ContextSet &shareContextSet = shareGroup->getContexts();
-        for (gl::Context *shareContext : shareContextSet)
         {
-            // Skip the presentation context, since that context was created by the test framework.
-            if (shareContext->id() == context->id())
-            {
-                continue;
-            }
+            std::string proto = "void SetupReplay()";
 
-            // TODO(http://www.anglebug.com/5878): Support capture/replay of eglCreateContext() so
-            // this block can be moved into SetupReplayContextXX() by injecting them into the
-            // beginning of the setup call stream.
-            out << "    EGLContext context" << shareContext->id()
-                << " = eglCreateContext(nullptr, nullptr, context, nullptr);\n";
-            out << "    gContextMap[" << shareContext->id().value << "] = context"
-                << shareContext->id() << ";\n";
-            // The SetupReplayContextXX() calls only exist if this is a mid-execution capture and
-            // we can only call them if they exist, so only output the calls if this is a MEC.
+            std::stringstream out;
+
+            out << proto << "\n";
+            out << "{\n";
+            out << "    EGLContext context = eglGetCurrentContext();\n";
+            out << "    gContextMap[" << context->id().value << "] = context;\n";
+            out << "\n";
+
+            // Setup all of the shared objects.
+            out << "    InitReplay();\n";
             if (usesMidExecutionCapture())
             {
-                out << "    " << mCaptureLabel
-                    << "::" << FmtSetupFunction(kNoPartId, shareContext->id()) << ";\n";
+                out << "    " << FmtSetupFunction(kNoPartId, kSharedContextId) << ";\n";
             }
-        }
 
-        // If there are other contexts that were initialized, we need to make the main context
-        // current again.
-        if (shareContextSet.size() > 1)
-        {
+            // Setup the presentation (this) context first.
+            out << "    " << FmtSetupFunction(kNoPartId, context->id()) << ";\n";
             out << "\n";
-            out << "    eglMakeCurrent(EGL_NO_DISPLAY, EGL_NO_SURFACE, EGL_NO_SURFACE, context);\n";
-        }
 
-        out << "}\n";
-        out << "\n";
+            // Setup each of the auxiliary contexts.
+            egl::ShareGroup *shareGroup            = context->getShareGroup();
+            const egl::ContextSet &shareContextSet = shareGroup->getContexts();
+            for (gl::Context *shareContext : shareContextSet)
+            {
+                // Skip the presentation context, since that context was created by the test
+                // framework.
+                if (shareContext->id() == context->id())
+                {
+                    continue;
+                }
+
+                // TODO(http://www.anglebug.com/5878): Support capture/replay of eglCreateContext()
+                // so this block can be moved into SetupReplayContextXX() by injecting them into the
+                // beginning of the setup call stream.
+                out << "    EGLContext context" << shareContext->id()
+                    << " = eglCreateContext(nullptr, nullptr, context, nullptr);\n";
+                out << "    gContextMap[" << shareContext->id().value << "] = context"
+                    << shareContext->id() << ";\n";
+                // The SetupReplayContextXX() calls only exist if this is a mid-execution capture
+                // and we can only call them if they exist, so only output the calls if this is a
+                // MEC.
+                if (usesMidExecutionCapture())
+                {
+                    out << "    " << FmtSetupFunction(kNoPartId, shareContext->id()) << ";\n";
+                }
+            }
+
+            // If there are other contexts that were initialized, we need to make the main context
+            // current again.
+            if (shareContextSet.size() > 1)
+            {
+                out << "\n";
+                out << "    eglMakeCurrent(EGL_NO_DISPLAY, EGL_NO_SURFACE, EGL_NO_SURFACE, "
+                       "context);\n";
+            }
+
+            out << "}\n";
+
+            mReplayWriter.addPublicFunction(proto, std::stringstream(), out);
+        }
     }
 
+    // Emit code to reset back to starting state
     if (frameIndex == frameCount)
     {
-        // Emit code to reset back to starting state
-        out << "void " << FmtResetFunction() << "\n";
-        out << "{\n";
+        std::stringstream protoStream;
+        std::stringstream headerStream;
+        std::stringstream bodyStream;
+
+        protoStream << "void " << FmtResetFunction();
+        std::string proto = protoStream.str();
+
+        bodyStream << proto << "\n";
+        bodyStream << "{\n";
 
         // TODO(http://anglebug.com/5878): Look at moving this into the shared context file since
         // it's resetting shared objects.
-        std::stringstream restoreCallStream;
         for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
         {
-            MaybeResetResources(restoreCallStream, resourceType, &dataTracker, header,
+            MaybeResetResources(resourceType, mReplayWriter, bodyStream, headerStream,
                                 &mResourceTracker, &mBinaryData);
         }
 
         // Reset opaque type objects that don't have IDs, so are not ResourceIDTypes.
-        MaybeResetOpaqueTypeObjects(restoreCallStream, &dataTracker, header, &mResourceTracker,
+        MaybeResetOpaqueTypeObjects(mReplayWriter, bodyStream, headerStream, &mResourceTracker,
                                     &mBinaryData);
 
-        out << restoreCallStream.str();
-        out << "}\n";
-    }
+        bodyStream << "}\n";
 
-    if (frameIndex == 1 || frameIndex == frameCount)
-    {
-        out << "}  // extern \"C\"\n";
-        out << "\n";
-    }
-
-    if (!mCaptureLabel.empty())
-    {
-        out << "namespace " << mCaptureLabel << "\n";
-        out << "{\n";
+        mReplayWriter.addPublicFunction(proto, headerStream, bodyStream);
     }
 
     if (!mFrameCalls.empty())
     {
-        WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Replay, &dataTracker, frameIndex,
-                                        &mBinaryData, mFrameCalls, header, out);
+        std::stringstream protoStream;
+        protoStream << "void " << FmtReplayFunction(context->id(), frameIndex);
+        std::string proto = protoStream.str();
+
+        std::stringstream headerStream;
+        std::stringstream bodyStream;
+
+        WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Replay, mReplayWriter,
+                                        frameIndex, &mBinaryData, mFrameCalls, headerStream,
+                                        bodyStream);
+
+        mReplayWriter.addPrivateFunction(proto, headerStream, bodyStream);
     }
 
     if (mSerializeStateEnabled)
@@ -6491,32 +6427,30 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
         if (SerializeContextToString(const_cast<gl::Context *>(context),
                                      &serializedContextString) == Result::Continue)
         {
-            out << "const char *" << FmtGetSerializedContextStateFunction(context->id(), frameIndex)
-                << "\n";
-            out << "{\n";
-            out << "    return R\"(" << serializedContextString << ")\";\n";
-            out << "}\n";
-            out << "\n";
+            std::stringstream protoStream;
+            protoStream << "const char *"
+                        << FmtGetSerializedContextStateFunction(context->id(), frameIndex);
+            std::string proto = protoStream.str();
+
+            std::stringstream bodyStream;
+            bodyStream << proto << "\n";
+            bodyStream << "{\n";
+            bodyStream << "    return R\"(" << serializedContextString << ")\";\n";
+            bodyStream << "}\n";
+
+            mReplayWriter.addPrivateFunction(proto, std::stringstream(), bodyStream);
         }
     }
 
-    if (!mCaptureLabel.empty())
     {
-        out << "} // namespace " << mCaptureLabel << "\n";
+        std::stringstream fnamePatternStream;
+        fnamePatternStream << mOutDirectory << FmtCapturePrefix(context->id(), mCaptureLabel);
+        std::string fnamePattern = fnamePatternStream.str();
+
+        mReplayWriter.setFilenamePattern(fnamePattern);
     }
 
-    header << "}  // namespace\n";
-
-    {
-        std::string outString    = out.str();
-        std::string headerString = header.str();
-
-        std::string cppFilePath =
-            GetCaptureFilePath(mOutDirectory, context->id(), mCaptureLabel, frameIndex, ".cpp");
-
-        SaveFileHelper saveCpp(cppFilePath);
-        saveCpp << headerString << "\n" << outString;
-    }
+    mReplayWriter.saveFrame(frameIndex);
 }
 
 void FrameCaptureShared::reset()
@@ -7198,4 +7132,222 @@ void WriteParamValueReplay<ParamType::TEGLSetBlobFuncANDROID>(std::ostream &os,
     os << reinterpret_cast<void *>(value);
 }
 
+// ReplayWriter implementation.
+ReplayWriter::ReplayWriter() {}
+
+ReplayWriter::~ReplayWriter()
+{
+    ASSERT(mPrivateFunctionPrototypes.empty());
+    ASSERT(mPublicFunctionPrototypes.empty());
+    ASSERT(mPrivateFunctions.empty());
+    ASSERT(mPublicFunctions.empty());
+    ASSERT(mGlobalVariableDeclarations.empty());
+    ASSERT(mReplayHeaders.empty());
+}
+
+void ReplayWriter::setFilenamePattern(const std::string &pattern)
+{
+    mFilenamePattern = pattern;
+}
+
+void ReplayWriter::setCaptureLabel(const std::string &label)
+{
+    mCaptureLabel = label;
+}
+
+void ReplayWriter::setSourcePrologue(const std::string &prologue)
+{
+    mSourcePrologue = prologue;
+}
+
+void ReplayWriter::setHeaderPrologue(const std::string &prologue)
+{
+    mHeaderPrologue = prologue;
+}
+
+void ReplayWriter::addPublicFunction(const std::string &functionProto,
+                                     const std::stringstream &headerStream,
+                                     const std::stringstream &bodyStream)
+{
+    mPublicFunctionPrototypes.push_back(functionProto);
+
+    std::string header = headerStream.str();
+    std::string body   = bodyStream.str();
+
+    if (!header.empty())
+    {
+        mReplayHeaders.emplace_back(header);
+    }
+
+    if (!body.empty())
+    {
+        mPublicFunctions.emplace_back(body);
+    }
+}
+
+void ReplayWriter::addPrivateFunction(const std::string &functionProto,
+                                      const std::stringstream &headerStream,
+                                      const std::stringstream &bodyStream)
+{
+    mPrivateFunctionPrototypes.push_back(functionProto);
+
+    std::string header = headerStream.str();
+    std::string body   = bodyStream.str();
+
+    if (!header.empty())
+    {
+        mReplayHeaders.emplace_back(header);
+    }
+
+    if (!body.empty())
+    {
+        mPrivateFunctions.emplace_back(body);
+    }
+}
+
+std::string ReplayWriter::getInlineVariableName(EntryPoint entryPoint, const std::string &paramName)
+{
+    int counter = mDataTracker.getCounters().getAndIncrement(entryPoint, paramName);
+    return GetVarName(entryPoint, paramName, counter);
+}
+
+std::string ReplayWriter::getInlineStringSetVariableName(EntryPoint entryPoint,
+                                                         const std::string &paramName,
+                                                         const std::vector<std::string> &strings,
+                                                         bool *isNewEntryOut)
+{
+    int counter    = mDataTracker.getStringCounters().getStringCounter(strings);
+    *isNewEntryOut = (counter == kStringsNotFound);
+    if (*isNewEntryOut)
+    {
+        // This is a unique set of strings, so set up their declaration and update the counter
+        counter = mDataTracker.getCounters().getAndIncrement(entryPoint, paramName);
+        mDataTracker.getStringCounters().setStringCounter(strings, counter);
+
+        std::string varName = GetVarName(entryPoint, paramName, counter);
+
+        std::stringstream declStream;
+        declStream << "const char *const " << varName << "[]";
+        std::string decl = declStream.str();
+
+        mGlobalVariableDeclarations.push_back(decl);
+
+        return varName;
+    }
+    else
+    {
+        return GetVarName(entryPoint, paramName, counter);
+    }
+}
+
+// static
+std::string ReplayWriter::GetVarName(EntryPoint entryPoint,
+                                     const std::string &paramName,
+                                     int counter)
+{
+    std::stringstream strstr;
+    strstr << GetEntryPointName(entryPoint) << "_" << paramName << "_" << counter;
+    return strstr.str();
+}
+
+void ReplayWriter::saveFrame(uint32_t frameIndex)
+{
+    std::stringstream strstr;
+    strstr << mFilenamePattern << "_frame" << std::setfill('0') << std::setw(3) << frameIndex
+           << ".cpp";
+
+    std::string frameFilePath = strstr.str();
+
+    writeReplaySource(frameFilePath);
+}
+
+void ReplayWriter::saveHeader()
+{
+    std::stringstream headerPathStream;
+    headerPathStream << mFilenamePattern << ".h";
+    std::string headerPath = headerPathStream.str();
+
+    SaveFileHelper saveH(headerPath);
+
+    saveH << mHeaderPrologue << "\n";
+
+    saveH << "// Public functions are declared in trace_fixture.h.\n";
+    saveH << "\n";
+    saveH << "// Private Functions\n";
+    saveH << "\n";
+
+    for (const std::string &proto : mPrivateFunctionPrototypes)
+    {
+        saveH << proto << ";\n";
+    }
+
+    saveH << "\n";
+    saveH << "// Global variables\n";
+    saveH << "\n";
+
+    for (const std::string &globalVar : mGlobalVariableDeclarations)
+    {
+        saveH << "extern " << globalVar << ";\n";
+    }
+
+    mPublicFunctionPrototypes.clear();
+    mPrivateFunctionPrototypes.clear();
+    mGlobalVariableDeclarations.clear();
+}
+
+void ReplayWriter::saveIndexFilesAndHeader()
+{
+    std::stringstream sourcePathStream;
+    sourcePathStream << mFilenamePattern << ".cpp";
+    std::string sourcePath = sourcePathStream.str();
+
+    writeReplaySource(sourcePath);
+    saveHeader();
+}
+
+void ReplayWriter::saveSetupFile()
+{
+    std::stringstream strstr;
+    strstr << mFilenamePattern << ".cpp";
+
+    std::string frameFilePath = strstr.str();
+
+    writeReplaySource(frameFilePath);
+}
+
+void ReplayWriter::writeReplaySource(const std::string &filename)
+{
+    SaveFileHelper saveCpp(filename);
+
+    saveCpp << mSourcePrologue << "\n";
+
+    for (const std::string &header : mReplayHeaders)
+    {
+        saveCpp << header << "\n";
+    }
+
+    saveCpp << "// Private Functions\n";
+    saveCpp << "\n";
+
+    for (const std::string &func : mPrivateFunctions)
+    {
+        saveCpp << func << "\n";
+    }
+
+    saveCpp << "// Public Functions\n";
+    saveCpp << "\n";
+    saveCpp << "extern \"C\"\n";
+    saveCpp << "{\n";
+
+    for (const std::string &func : mPublicFunctions)
+    {
+        saveCpp << func << "\n";
+    }
+
+    saveCpp << "}  // extern \"C\"\n";
+
+    mReplayHeaders.clear();
+    mPrivateFunctions.clear();
+    mPublicFunctions.clear();
+}
 }  // namespace angle
