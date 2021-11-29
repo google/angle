@@ -1681,6 +1681,16 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
         ANGLE_VK_TRY(contextVk, result);
     }
 
+    // Invalidate the color image if the swap behavior is EGL_BUFFER_DESTROYED.
+    // Also invalidate the multi-sample color image.
+    // In swapImpl(), optimizeRenderPassForPresent() does this for depth/stencil content.
+    if (mState.swapBehavior == EGL_BUFFER_DESTROYED)
+    {
+        mSwapchainImages[mCurrentSwapchainImageIndex].image.invalidateSubresourceContent(
+            contextVk, gl::LevelIndex(0), 0, 1);
+    }
+    mColorImageMS.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1);
+
     RendererVk *renderer = contextVk->getRenderer();
     ANGLE_TRY(renderer->syncPipelineCacheVk(displayVk, context));
 
@@ -2100,6 +2110,13 @@ angle::Result WindowSurfaceVk::drawOverlay(ContextVk *contextVk, SwapchainImage 
 
 egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age)
 {
+    // Set age to 0 if swap behavior is EGL_BUFFER_DESTROYED.
+    if (age != nullptr && mState.swapBehavior == EGL_BUFFER_DESTROYED)
+    {
+        *age = 0;
+        return egl::NoError();
+    }
+
     if (mNeedToAcquireNextSwapchainImage)
     {
         // Acquire the current image if needed.
