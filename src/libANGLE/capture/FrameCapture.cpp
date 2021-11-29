@@ -3423,6 +3423,10 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_FRAMEBUFFER, id));
         currentDrawFramebuffer = currentReadFramebuffer = id;
 
+        resourceTracker->getTrackedResource(ResourceIDType::Framebuffer)
+            .getStartingResources()
+            .insert(id.value);
+
         // Color Attachments.
         for (const gl::FramebufferAttachment &colorAttachment : framebuffer->getColorAttachments())
         {
@@ -5985,7 +5989,8 @@ void TrackedResource::setGennedResource(GLuint id)
 
 bool TrackedResource::resourceIsGenerated(GLuint id)
 {
-    return mNewResources.find(id) != mNewResources.end();
+    return mStartingResources.find(id) != mStartingResources.end() ||
+           mNewResources.find(id) != mNewResources.end();
 }
 
 void TrackedResource::setDeletedResource(GLuint id)
