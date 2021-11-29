@@ -68,6 +68,18 @@ TEST_P(ObjectAllocationTest, BindRenderbuffer)
     EXPECT_GL_NO_ERROR();
 }
 
+// Buffers can be created on the fly by calling glBindBuffer, so
+// check that the call doesn't fail that the buffer is also deleted
+TEST_P(ObjectAllocationTest, BindBufferBeforeGenAndDelete)
+{
+    GLuint id = 1;
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    EXPECT_GL_NO_ERROR();
+    // trigger serialization to capture the created buffer ID
+    swapBuffers();
+    glDeleteBuffers(1, &id);
+    EXPECT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ObjectAllocationTest);

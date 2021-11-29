@@ -315,6 +315,10 @@ void SetFramebufferID(GLuint id)
     SetResourceID(gFramebufferMap, id);
 }
 
+void SetBufferID(GLuint id)
+{
+    SetResourceID(gBufferMap, id);
+}
 void ValidateSerializedState(const char *serializedState, const char *fileName, uint32_t line)
 {
     if (gValidateSerializedStateCallback)
