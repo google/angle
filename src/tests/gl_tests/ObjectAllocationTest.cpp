@@ -96,6 +96,20 @@ TEST_P(ObjectAllocationTest, BindBufferBeforeGenAndDelete)
     glDeleteBuffers(1, &id);
     EXPECT_GL_NO_ERROR();
 }
+
+// Textures can be created on the fly by calling glBindTexture, so
+// check that the call doesn't fail that the texture is also deleted
+TEST_P(ObjectAllocationTest, BindTextureBeforeGenAndDelete)
+{
+    GLuint id = 1;
+    glBindTexture(GL_TEXTURE_2D, id);
+    EXPECT_GL_NO_ERROR();
+    // trigger serialization to capture the created texture ID
+    swapBuffers();
+    glDeleteTextures(1, &id);
+    EXPECT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ObjectAllocationTest);

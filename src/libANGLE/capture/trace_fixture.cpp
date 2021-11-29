@@ -324,6 +324,12 @@ void SetRenderbufferID(GLuint id)
 {
     SetResourceID(gRenderbufferMap, id);
 }
+
+void SetTextureID(GLuint id)
+{
+    SetResourceID(gTextureMap, id);
+}
+
 void ValidateSerializedState(const char *serializedState, const char *fileName, uint32_t line)
 {
     if (gValidateSerializedStateCallback)
