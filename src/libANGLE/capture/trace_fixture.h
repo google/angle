@@ -131,6 +131,7 @@ void UpdateBufferID2(GLuint id, GLsizei readBufferOffset);
 
 void SetFramebufferID(GLuint id);
 void SetBufferID(GLuint id);
+void SetRenderbufferID(GLuint id);
 
 void ValidateSerializedState(const char *serializedState, const char *fileName, uint32_t line);
 #define VALIDATE_CHECKPOINT(STATE) ValidateSerializedState(STATE, __FILE__, __LINE__)

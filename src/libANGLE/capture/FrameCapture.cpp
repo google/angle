@@ -4319,6 +4319,13 @@ struct ParamValueTrait<gl::BufferID>
     static const ParamType typeID     = ParamType::TBufferID;
 };
 
+template <>
+struct ParamValueTrait<gl::RenderbufferID>
+{
+    static constexpr const char *name = "renderbufferPacked";
+    static const ParamType typeID     = ParamType::TRenderbufferID;
+};
+
 }  // namespace
 
 ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
@@ -5667,6 +5674,25 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
         case EntryPoint::GLBindFramebuffer:
         case EntryPoint::GLBindFramebufferOES:
             maybeGenResourceOnBind<gl::FramebufferID>(call);
+            break;
+
+        case EntryPoint::GLGenRenderbuffers:
+        case EntryPoint::GLGenRenderbuffersOES:
+        {
+            GLsizei count = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
+            const gl::RenderbufferID *renderbufferIDs =
+                call.params.getParam("renderbuffersPacked", ParamType::TRenderbufferIDPointer, 1)
+                    .value.RenderbufferIDPointerVal;
+            for (GLsizei i = 0; i < count; i++)
+            {
+                handleGennedResource(renderbufferIDs[i]);
+            }
+            break;
+        }
+
+        case EntryPoint::GLBindRenderbuffer:
+        case EntryPoint::GLBindRenderbufferOES:
+            maybeGenResourceOnBind<gl::RenderbufferID>(call);
             break;
 
         case EntryPoint::GLGenTextures:
