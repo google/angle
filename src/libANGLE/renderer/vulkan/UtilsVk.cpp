@@ -998,8 +998,6 @@ angle::Result GetUnresolveFrag(
 }
 }  // namespace
 
-const uint32_t UtilsVk::kGenerateMipmapMaxLevels;
-
 UtilsVk::ConvertVertexShaderParams::ConvertVertexShaderParams() = default;
 
 UtilsVk::ImageCopyShaderParams::ImageCopyShaderParams() = default;

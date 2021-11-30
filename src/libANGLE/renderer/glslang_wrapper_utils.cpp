@@ -4684,8 +4684,6 @@ UniformBindingInfo::UniformBindingInfo(uint32_t bindingIndex,
 UniformBindingInfo::UniformBindingInfo() {}
 
 // ShaderInterfaceVariableInfo implementation.
-const uint32_t ShaderInterfaceVariableInfo::kInvalid;
-
 ShaderInterfaceVariableInfo::ShaderInterfaceVariableInfo() {}
 
 // ShaderInterfaceVariableInfoMap implementation.
