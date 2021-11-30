@@ -7176,6 +7176,22 @@ TEST_P(SimpleStateChangeTestES3, InvalidateFramebufferShouldntInvalidateReadFram
     glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, kAttachments.data());
     EXPECT_GL_NO_ERROR();
 }
+
+// Covers situations where vertex conversion could read out of bounds.
+TEST_P(SimpleStateChangeTestES3, OutOfBoundsByteAttribute)
+{
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glUseProgram(testProgram);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, 2, nullptr, GL_STREAM_COPY);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_BYTE, false, 0xff, reinterpret_cast<const void *>(0xfe));
+
+    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 1, 10, 1000);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
