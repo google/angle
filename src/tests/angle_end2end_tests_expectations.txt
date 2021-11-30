@@ -20,6 +20,12 @@
 6347 GLES : FramebufferTestWithFormatFallback.R5G5B5A1_BlitCopyTexImage/* = SKIP
 6347 GLES : FramebufferTestWithFormatFallback.RGBA4444_BlitCopyTexImage/* = SKIP
 
+6743 OPENGL : SimpleStateChangeTestES3.RespecifyBufferAfterBeginTransformFeedback/* = SKIP
+6743 GLES : SimpleStateChangeTestES3.RespecifyBufferAfterBeginTransformFeedback/* = SKIP
+
+1274316 VULKAN : SimpleStateChangeTestES3.RespecifyBufferAfterBeginTransformFeedback/* = SKIP
+
+
 // Direct SPIR-V generation.  The following tests pass on some platforms but not others.  Need to investigate.
 4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/* = SKIP
 4889 VULKAN : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/* = SKIP
