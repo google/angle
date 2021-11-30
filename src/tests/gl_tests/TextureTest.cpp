@@ -5949,11 +5949,11 @@ TEST_P(Texture2DTestES3, PixelUnpackStateTexImage)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_s3tc") &&
                        !IsGLExtensionEnabled("GL_ANGLE_texture_compression_dxt3"));
 
-    glPixelStorei(GL_UNPACK_ROW_LENGTH, 5);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 9);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
 
-    uint8_t data[16] = {0};
-    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, 4, 4, 0, 16, data);
+    uint8_t data[64] = {0};
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, 8, 8, 0, 64, data);
     EXPECT_GL_NO_ERROR();
 }
 
@@ -5966,13 +5966,13 @@ TEST_P(Texture2DTestES3, PixelUnpackStateTexSubImage)
 
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
 
-    uint8_t data[16] = {0};
-    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, 4, 4, 0, 16, data);
+    uint8_t data[64] = {0};
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, 8, 8, 0, 64, data);
     EXPECT_GL_NO_ERROR();
 
-    glPixelStorei(GL_UNPACK_ROW_LENGTH, 5);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 9);
 
-    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, 16,
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 8, 8, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, 64,
                               data);
     EXPECT_GL_NO_ERROR();
 }
