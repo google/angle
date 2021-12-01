@@ -560,7 +560,8 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
             ANGLE_VK_PERF_WARNING(
                 contextVk, GL_DEBUG_SEVERITY_LOW,
                 "Clear effectively discarding previous draw call results. Suggest earlier Clear "
-                "followed by masked color or depth/stencil draw calls instead");
+                "followed by masked color or depth/stencil draw calls instead, or "
+                "glInvalidateFramebuffer to discard data instead");
 
             ASSERT(!preferDrawOverClearAttachments);
 
