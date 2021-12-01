@@ -799,8 +799,7 @@ angle::Result TextureMtl::ensureSamplerStateCreated(const gl::Context *context)
 
     mtl::SamplerDesc samplerDesc(mState.getSamplerState());
 
-    if (mFormat.actualAngleFormat().depthBits &&
-        !displayMtl->getFeatures().hasDepthTextureFiltering.enabled)
+    if (mFormat.actualAngleFormat().depthBits && !mFormat.getCaps().filterable)
     {
         // On devices not supporting filtering for depth textures, we need to convert to nearest
         // here.
@@ -1287,11 +1286,11 @@ angle::Result TextureMtl::generateMipmap(const gl::Context *context)
     //
     bool sRGB = mFormat.actualInternalFormat().colorEncoding == GL_SRGB;
 
-    bool avoidCSPath =
+    bool avoidGPUPath =
         contextMtl->getDisplay()->getFeatures().forceNonCSBaseMipmapGeneration.enabled &&
         mNativeTexture->widthAt0() < 5;
 
-    if (!avoidCSPath && caps.writable && mState.getType() == gl::TextureType::_3D)
+    if (!avoidGPUPath && caps.writable && mState.getType() == gl::TextureType::_3D)
     {
         // http://anglebug.com/4921.
         // Use compute for 3D mipmap generation.
@@ -1299,7 +1298,7 @@ angle::Result TextureMtl::generateMipmap(const gl::Context *context)
         ANGLE_TRY(contextMtl->getDisplay()->getUtils().generateMipmapCS(contextMtl, mNativeTexture,
                                                                         sRGB, &mNativeLevelViews));
     }
-    else if (caps.filterable && caps.colorRenderable)
+    else if (!avoidGPUPath && caps.filterable && caps.colorRenderable)
     {
         mtl::BlitCommandEncoder *blitEncoder = contextMtl->getBlitCommandEncoder();
         blitEncoder->generateMipmapsForTexture(mNativeTexture);
