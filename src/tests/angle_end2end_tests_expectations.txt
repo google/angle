@@ -410,4 +410,5 @@
 6652 WIN AMD VULKAN : PointSpriteTest.TrianglesNotTreatedAsPointSprites/* = SKIP
 
 6718 TSAN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP
+6718 TSAN : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
 6746 TSAN : *Vulkan_AsyncQueue = SKIP
