@@ -6347,6 +6347,9 @@ void ImageHelper::stageSelfAsSubresourceUpdates(ContextVk *contextVk,
     // Move the necessary information for staged update to work, and keep the rest as part of this
     // object.
 
+    // Usage info
+    prevImage->get().Resource::operator=(std::move(*this));
+
     // Vulkan objects
     prevImage->get().mImage        = std::move(mImage);
     prevImage->get().mDeviceMemory = std::move(mDeviceMemory);
