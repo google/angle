@@ -1194,6 +1194,8 @@ void MarkResourceIDActive(ResourceIDType resourceType,
     }
 }
 
+// Some replay functions can get quite large. If over a certain size, this method breaks up the
+// function into parts to avoid overflowing the stack and causing slow compilation.
 void WriteCppReplayFunctionWithParts(const gl::ContextID contextID,
                                      ReplayFunc replayFunc,
                                      DataTracker *dataTracker,
@@ -1201,22 +1203,21 @@ void WriteCppReplayFunctionWithParts(const gl::ContextID contextID,
                                      std::vector<uint8_t> *binaryData,
                                      const std::vector<CallCapture> &calls,
                                      std::stringstream &header,
-                                     std::stringstream &callStream,
                                      std::stringstream &out)
 {
-    std::stringstream callStreamParts;
-
     int callCount = 0;
     int partCount = 0;
 
-    // Setup can get quite large. If over a certain size, break up the function to avoid
-    // overflowing the stack
     if (calls.size() > kFunctionSizeLimit)
     {
-        callStreamParts << "void " << FmtFunction(replayFunc, contextID, frameIndex, ++partCount)
-                        << "\n";
-        callStreamParts << "{\n";
+        out << "void " << FmtFunction(replayFunc, contextID, frameIndex, ++partCount) << "\n";
     }
+    else
+    {
+        out << "void " << FmtFunction(replayFunc, contextID, frameIndex, kNoPartId) << "\n";
+    }
+
+    out << "{\n";
 
     for (const CallCapture &call : calls)
     {
@@ -1226,38 +1227,33 @@ void WriteCppReplayFunctionWithParts(const gl::ContextID contextID,
             continue;
         }
 
-        callStreamParts << "    ";
-        WriteCppReplayForCall(call, dataTracker, callStreamParts, header, binaryData);
-        callStreamParts << ";\n";
+        out << "    ";
+        WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+        out << ";\n";
 
         if (partCount > 0 && ++callCount % kFunctionSizeLimit == 0)
         {
-            callStreamParts << "}\n";
-            callStreamParts << "\n";
-            callStreamParts << "void "
-                            << FmtFunction(replayFunc, contextID, frameIndex, ++partCount) << "\n";
-            callStreamParts << "{\n";
+            out << "}\n";
+            out << "\n";
+            out << "void " << FmtFunction(replayFunc, contextID, frameIndex, ++partCount) << "\n";
+            out << "{\n";
         }
     }
+    out << "}\n";
 
     if (partCount > 0)
     {
-        callStreamParts << "}\n";
-        callStreamParts << "\n";
+        out << "\n";
+        out << "void " << FmtFunction(replayFunc, contextID, frameIndex, kNoPartId) << "\n";
+        out << "{\n";
 
-        // Write out the parts
-        out << callStreamParts.str();
-
-        // Write out the calls to the parts
+        // Write out the main call which calls all the parts.
         for (int i = 1; i <= partCount; i++)
         {
-            callStream << "    " << FmtFunction(replayFunc, contextID, frameIndex, i) << ";\n";
+            out << "    " << FmtFunction(replayFunc, contextID, frameIndex, i) << ";\n";
         }
-    }
-    else
-    {
-        // If we didn't chunk it up, write all the calls directly to SetupContext
-        callStream << callStreamParts.str();
+
+        out << "}\n";
     }
 }
 
@@ -1298,17 +1294,11 @@ void WriteAuxiliaryContextCppSetupReplay(bool compression,
         out << "{\n";
     }
 
-    std::stringstream setupCallStream;
-
     header << "void " << FmtSetupFunction(kNoPartId, context->id()) << ";\n";
-    setupCallStream << "void " << FmtSetupFunction(kNoPartId, context->id()) << "\n";
-    setupCallStream << "{\n";
 
     WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Setup, &dataTracker, frameIndex,
-                                    binaryData, setupCalls, include, setupCallStream, out);
+                                    binaryData, setupCalls, header, out);
 
-    out << setupCallStream.str();
-    out << "}\n";
     out << "\n";
 
     if (!captureLabel.empty())
@@ -1371,16 +1361,9 @@ void WriteShareGroupCppSetupReplay(bool compression,
         out << "{\n";
     }
 
-    std::stringstream setupCallStream;
-
-    setupCallStream << "void " << FmtSetupFunction(kNoPartId, kSharedContextId) << "\n";
-    setupCallStream << "{\n";
-
     WriteCppReplayFunctionWithParts(kSharedContextId, ReplayFunc::Setup, &dataTracker, frameIndex,
-                                    binaryData, setupCalls, include, setupCallStream, out);
+                                    binaryData, setupCalls, include, out);
 
-    out << setupCallStream.str();
-    out << "}\n";
     out << "\n";
 
     if (!captureLabel.empty())
@@ -6400,16 +6383,9 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
 
     if (frameIndex == 1)
     {
-        std::stringstream setupCallStream;
-
-        setupCallStream << "void " << FmtSetupFunction(kNoPartId, context->id()) << "\n";
-        setupCallStream << "{\n";
-
         WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Setup, &dataTracker, frameIndex,
-                                        &mBinaryData, setupCalls, header, setupCallStream, out);
+                                        &mBinaryData, setupCalls, header, out);
 
-        out << setupCallStream.str();
-        out << "}\n";
         out << "\n";
         out << "void SetupReplay()\n";
         out << "{\n";
@@ -6505,16 +6481,8 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
 
     if (!mFrameCalls.empty())
     {
-        std::stringstream callStream;
-
-        callStream << "void " << FmtReplayFunction(context->id(), frameIndex) << "\n";
-        callStream << "{\n";
-
         WriteCppReplayFunctionWithParts(context->id(), ReplayFunc::Replay, &dataTracker, frameIndex,
-                                        &mBinaryData, mFrameCalls, header, callStream, out);
-
-        out << callStream.str();
-        out << "}\n";
+                                        &mBinaryData, mFrameCalls, header, out);
     }
 
     if (mSerializeStateEnabled)
