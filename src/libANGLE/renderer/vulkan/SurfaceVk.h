@@ -92,15 +92,6 @@ class OffscreenSurfaceVk : public SurfaceVk
                                  bool isRobustResourceInitEnabled,
                                  bool hasProtectedContent);
 
-        angle::Result initializeWithExternalMemory(DisplayVk *displayVk,
-                                                   EGLint width,
-                                                   EGLint height,
-                                                   const vk::Format &vkFormat,
-                                                   GLint samples,
-                                                   void *buffer,
-                                                   bool isRobustResourceInitEnabled,
-                                                   bool hasProtectedContent);
-
         void destroy(const egl::Display *display);
 
         vk::ImageHelper image;
