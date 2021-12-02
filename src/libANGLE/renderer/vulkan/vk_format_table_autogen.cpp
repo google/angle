@@ -10,6 +10,8 @@
 
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 
+#include "image_util/copyimage.h"
+#include "image_util/generatemip.h"
 #include "image_util/loadimage.h"
 
 using namespace angle;
@@ -2097,23 +2099,14 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8G8B8_UNORM:
-            mIntendedGLFormat = GL_RGB8;
-            {
-                static constexpr ImageFormatInitInfo kInfo[] = {
-                    {angle::FormatID::R8G8B8_UNORM, nullptr},
-                    {angle::FormatID::R8G8B8A8_UNORM,
-                     Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>}};
-                initImageFallback(renderer, kInfo, ArraySize(kInfo));
-            }
-            {
-                static constexpr BufferFormatInitInfo kInfo[] = {
-                    {angle::FormatID::R8G8B8_UNORM, false, CopyNativeVertexData<GLubyte, 3, 3, 0>,
-                     false},
-                    {angle::FormatID::R8G8B8A8_UNORM, false,
-                     CopyNativeVertexData<GLubyte, 3, 4, std::numeric_limits<GLubyte>::max()>,
-                     true}};
-                initBufferFallback(renderer, kInfo, ArraySize(kInfo), 2);
-            }
+            mIntendedGLFormat              = GL_RGB8;
+            mActualSampleOnlyImageFormatID = angle::FormatID::R8G8B8A8_UNORM;
+            mImageInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            mActualBufferFormatID     = angle::FormatID::R8G8B8A8_UNORM;
+            mVkBufferFormatIsPacked   = false;
+            mVertexLoadFunction =
+                CopyNativeVertexData<GLubyte, 3, 4, std::numeric_limits<GLubyte>::max()>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R8G8B8_UNORM_SRGB:
@@ -2534,7 +2527,6 @@ VkFormat GetVkFormatFromFormatID(angle::FormatID formatID)
         {angle::FormatID::R8G8B8_SNORM, VK_FORMAT_R8G8B8_SNORM},
         {angle::FormatID::R8G8B8_SSCALED, VK_FORMAT_R8G8B8_SSCALED},
         {angle::FormatID::R8G8B8_UINT, VK_FORMAT_R8G8B8_UINT},
-        {angle::FormatID::R8G8B8_UNORM, VK_FORMAT_R8G8B8_UNORM},
         {angle::FormatID::R8G8B8_UNORM_SRGB, VK_FORMAT_R8G8B8_SRGB},
         {angle::FormatID::R8G8B8_USCALED, VK_FORMAT_R8G8B8_USCALED},
         {angle::FormatID::R8G8_SINT, VK_FORMAT_R8G8_SINT},
@@ -2821,8 +2813,6 @@ angle::FormatID GetFormatIDFromVkFormat(VkFormat vkFormat)
             return angle::FormatID::R8G8B8_SSCALED;
         case VK_FORMAT_R8G8B8_UINT:
             return angle::FormatID::R8G8B8_UINT;
-        case VK_FORMAT_R8G8B8_UNORM:
-            return angle::FormatID::R8G8B8_UNORM;
         case VK_FORMAT_R8G8B8_SRGB:
             return angle::FormatID::R8G8B8_UNORM_SRGB;
         case VK_FORMAT_R8G8B8_USCALED:
@@ -2861,7 +2851,6 @@ angle::FormatID GetFormatIDFromVkFormat(VkFormat vkFormat)
             return angle::FormatID::S8_UINT;
 
         default:
-            UNREACHABLE();
             return angle::FormatID::NONE;
     }
 }

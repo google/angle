@@ -6360,9 +6360,9 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result ImageHelper::reformatStagedBufferUpdates(ContextVk *contextVk,
-                                                       angle::FormatID srcFormatID,
-                                                       angle::FormatID dstFormatID)
+angle::Result ImageHelper::reformatStagedUpdate(ContextVk *contextVk,
+                                                angle::FormatID srcFormatID,
+                                                angle::FormatID dstFormatID)
 {
     RendererVk *renderer           = contextVk->getRenderer();
     const angle::Format &srcFormat = angle::Format::Get(srcFormatID);
@@ -7428,30 +7428,6 @@ bool ImageHelper::hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelI
         if (!levelUpdates->empty())
         {
             return true;
-        }
-    }
-    return false;
-}
-
-bool ImageHelper::hasStagedImageUpdatesWithMismatchedFormat(gl::LevelIndex levelStart,
-                                                            gl::LevelIndex levelEnd,
-                                                            angle::FormatID formatID) const
-{
-    for (gl::LevelIndex level = levelStart; level < levelEnd; ++level)
-    {
-        const std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(level);
-        if (levelUpdates == nullptr)
-        {
-            continue;
-        }
-
-        for (const SubresourceUpdate &update : *levelUpdates)
-        {
-            if (update.updateSource == UpdateSource::Image &&
-                update.data.image.formatID != formatID)
-            {
-                return true;
-            }
         }
     }
     return false;
