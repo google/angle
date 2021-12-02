@@ -9023,12 +9023,6 @@ TEST_P(Texture2DTestES3, NonZeroBaseEmulatedClear)
     // Tests behavior of the Vulkan backend with emulated formats.
     ANGLE_SKIP_TEST_IF(!IsVulkan());
 
-    // This test assumes GL_RGB is always emulated, which overrides the WithAllocateNonZeroMemory
-    // memory feature, clearing the memory to zero. However, if the format is *not* emulated and the
-    // feature WithAllocateNonZeroMemory is enabled, the texture memory will contain non-zero
-    // memory, which means the color is not black (causing the test to fail).
-    ANGLE_SKIP_TEST_IF(isAllocateNonZeroMemoryEnabled());
-
     setUpProgram();
 
     glActiveTexture(GL_TEXTURE0);

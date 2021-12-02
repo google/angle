@@ -162,9 +162,8 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
         angle::FormatID formatID = vk::GetFormatIDFromVkFormat(bufferFormatProperties.format);
         if (!HasFullTextureFormatSupport(renderer, formatID))
         {
-            return egl::EglBadParameter()
-                   << "AHardwareBuffer format " << bufferFormatProperties.format
-                   << " does not support enough features to use as a texture.";
+            return egl::EglBadParameter() << "AHardwareBuffer format does not support enough "
+                                             "features to use as a texture.";
         }
     }
 

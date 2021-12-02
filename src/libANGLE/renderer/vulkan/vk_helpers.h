@@ -1422,8 +1422,6 @@ enum class ImageLayout
     EnumCount = InvalidEnum,
 };
 
-VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType);
-
 VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout);
 
 // How the ImageHelper object is being used by the renderpass
@@ -1987,12 +1985,9 @@ class ImageHelper final : public Resource, public angle::Subject
     void restoreSubresourceStencilContent(gl::LevelIndex level,
                                           uint32_t layerIndex,
                                           uint32_t layerCount);
-    angle::Result reformatStagedBufferUpdates(ContextVk *contextVk,
-                                              angle::FormatID srcFormatID,
-                                              angle::FormatID dstFormatID);
-    bool hasStagedImageUpdatesWithMismatchedFormat(gl::LevelIndex levelStart,
-                                                   gl::LevelIndex levelEnd,
-                                                   angle::FormatID formatID) const;
+    angle::Result reformatStagedUpdate(ContextVk *contextVk,
+                                       angle::FormatID srcFormatID,
+                                       angle::FormatID dstFormatID);
 
   private:
     enum class UpdateSource
