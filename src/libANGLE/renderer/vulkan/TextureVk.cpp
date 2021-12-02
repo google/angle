@@ -1273,6 +1273,10 @@ angle::Result TextureVk::setStorageMultisample(const gl::Context *context,
     {
         releaseAndDeleteImageAndViews(contextVk);
     }
+    else if (mImage)
+    {
+        mImage->releaseStagingBuffer(contextVk->getRenderer());
+    }
 
     // Assume all multisample texture types must be renderable.
     if (type == gl::TextureType::_2DMultisample || type == gl::TextureType::_2DMultisampleArray)
