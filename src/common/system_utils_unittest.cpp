@@ -72,13 +72,10 @@ TEST(SystemUtils, CpuTimeSmallOp)
 // Test CPU time measurement with a sleepy operation
 TEST(SystemUtils, CpuTimeSleepy)
 {
-    double wallTimeStart = GetCurrentSystemTime();
-    double cpuTimeStart  = GetCurrentProcessCpuTime();
+    double cpuTimeStart = GetCurrentProcessCpuTime();
     angle::Sleep(1);
-    double cpuTimeEnd  = GetCurrentProcessCpuTime();
-    double wallTimeEnd = GetCurrentSystemTime();
+    double cpuTimeEnd = GetCurrentProcessCpuTime();
     EXPECT_GE(cpuTimeEnd, cpuTimeStart);
-    EXPECT_GE(wallTimeEnd - wallTimeStart, cpuTimeEnd - cpuTimeStart);
 }
 
 // Test CPU time measurement with a heavy operation
