@@ -139,7 +139,9 @@ SharedGarbage &SharedGarbage::operator=(SharedGarbage &&rhs)
 bool SharedGarbage::destroyIfComplete(RendererVk *renderer, Serial completedSerial)
 {
     if (mLifetime.isCurrentlyInUse(completedSerial))
+    {
         return false;
+    }
 
     for (GarbageObject &object : mGarbage)
     {
