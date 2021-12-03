@@ -7354,6 +7354,62 @@ TEST_P(SimpleStateChangeTestES3, RespecifyBufferAfterBeginTransformFeedback)
     glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(float) * 3 * 4 * 6, nullptr, GL_STREAM_DRAW);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
+
+// Regression test for a bug in the Vulkan backend where a draw-based copy after a deferred flush
+// would lead to an image view being destroyed too early.
+TEST_P(SimpleStateChangeTestES3, DrawFlushThenCopyTexImage)
+{
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), essl3_shaders::fs::Green());
+
+    // Issue a cheap draw call and a flush
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, 1, 1);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    glDisable(GL_SCISSOR_TEST);
+    glFlush();
+
+    constexpr GLsizei kSize = 32;
+
+    // Then an expensive copy tex image
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGB8, kSize, kSize, kSize);
+    glCopyTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 0, 0, kSize, kSize);
+    glFlush();
+    ASSERT_GL_NO_ERROR();
+}
+
+TEST_P(SimpleStateChangeTestES3, DrawFlushThenBlit)
+{
+    constexpr GLsizei kSize = 256;
+    const std::vector<GLColor> data(kSize * kSize, GLColor::red);
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), essl3_shaders::fs::Green());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLTexture readColor;
+    glBindTexture(GL_TEXTURE_2D, readColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 data.data());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, readColor, 0);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Issue a cheap draw call and a flush
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, 1, 1);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    glDisable(GL_SCISSOR_TEST);
+    glFlush();
+
+    // Then an expensive blit
+    glBlitFramebuffer(0, 0, kSize, kSize, kSize + 2, kSize, 0, 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glFlush();
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);

@@ -1155,6 +1155,8 @@ enum class RenderPassClosureReason
     DeviceLocalBufferMap,
 
     // UtilsVk
+    PrepareForBlit,
+    PrepareForImageCopy,
     TemporaryForImageClear,
     TemporaryForImageCopy,
 
