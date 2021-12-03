@@ -1572,9 +1572,6 @@ class RobustVertexAttributeTest : public VertexAttributeTest
 // Requires WebGL compatibility with robust access behaviour disabled.
 TEST_P(VertexAttributeOORTest, ANGLEDrawArraysBufferTooSmall)
 {
-    // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
-    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"));
-
     std::array<GLfloat, kVertexCount> inputData;
     std::array<GLfloat, kVertexCount> expectedData;
     InitTestData(inputData, expectedData);
@@ -1591,9 +1588,6 @@ TEST_P(VertexAttributeOORTest, ANGLEDrawArraysBufferTooSmall)
 // Requires WebGL compatibility with robust access behaviour disabled.
 TEST_P(VertexAttributeOORTest, ANGLEDrawElementsBufferTooSmall)
 {
-    // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
-    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"));
-
     std::array<GLfloat, kVertexCount> inputData;
     std::array<GLfloat, kVertexCount> expectedData;
     InitTestData(inputData, expectedData);
@@ -1610,9 +1604,6 @@ TEST_P(VertexAttributeOORTest, ANGLEDrawElementsBufferTooSmall)
 // Requires WebGL compatibility with robust access behaviour disabled.
 TEST_P(VertexAttributeOORTest, ANGLEDrawArraysOutOfBoundsCases)
 {
-    // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
-    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"));
-
     initBasicProgram();
 
     GLfloat singleFloat = 1.0f;
@@ -1685,17 +1676,7 @@ void main()
     // Two vertices is out-of-bounds for the new (4xFLOAT) format.
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawArrays(GL_POINTS, 0, 2);
-    if (IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"))
-    {
-        // The front-end element limit check is bypassed when the backend exposes robust buffer
-        // access, so the draw succeeds. Vertex 0 is in bounds and still draws the point.
-        EXPECT_GL_NO_ERROR();
-        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
-    }
-    else
-    {
-        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-    }
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     glClear(GL_COLOR_BUFFER_BIT);
     glVertexAttribPointer(attribLoc, 1, GL_BYTE, GL_FALSE, 28, nullptr);

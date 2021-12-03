@@ -3970,6 +3970,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.clipDistanceAPPLE        = false;
         supportedExtensions.disjointTimerQueryEXT    = false;
         supportedExtensions.robustnessKHR            = false;
+        supportedExtensions.robustBufferAccessBehaviorKHR = false;
 
         supportedExtensions.blendEquationAdvancedKHR         = false;
         supportedExtensions.blendEquationAdvancedCoherentKHR = false;
@@ -4183,11 +4184,6 @@ Extensions Context::generateSupportedExtensions() const
 
     // Determine robust resource init availability from EGL.
     supportedExtensions.robustResourceInitializationANGLE = mState.isRobustResourceInitEnabled();
-
-    // mState.getExtensions().robustBufferAccessBehaviorKHR is true only if robust access is true
-    // and the backend supports it.
-    supportedExtensions.robustBufferAccessBehaviorKHR =
-        mState.hasRobustAccess() && supportedExtensions.robustBufferAccessBehaviorKHR;
 
     // Enable the cache control query unconditionally.
     supportedExtensions.programCacheControlANGLE = true;
@@ -4894,11 +4890,15 @@ void Context::updateCaps()
         mTilingDirtyObjects.set(state::DIRTY_OBJECT_DRAW_ATTACHMENTS);
     }
 
-    // If we are in a WebGL or robust access context and the back-end does not support robust buffer
-    // access behaviour, we need to validate the buffer bounds manually.
+    // If we are in a WebGL or robust access context, buffer bounds must be validated manually
+    // unless the back-end provides robust buffer access behaviour.
+    // GL_KHR_robust_buffer_access_behavior is exposed regardless of context robustness, but
+    // back-ends only guarantee the behaviour in robust access contexts, so non-robust
+    // WebGL contexts still need validation.
     mRequiresRobustBehavior = mState.isWebGL() || mState.hasRobustAccess();
-    mBufferAccessValidationEnabled =
-        !mSupportedExtensions.robustBufferAccessBehaviorKHR && mRequiresRobustBehavior;
+    const bool contextSupportsRobustAccess =
+        mSupportedExtensions.robustBufferAccessBehaviorKHR && mState.hasRobustAccess();
+    mBufferAccessValidationEnabled = mRequiresRobustBehavior && !contextSupportsRobustAccess;
 
     // Cache this in the VertexArrays. They need to check it in state change notifications.
     // Note: vertex array objects are private to context and so the map doesn't need locking
