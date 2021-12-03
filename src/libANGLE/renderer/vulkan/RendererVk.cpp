@@ -1737,6 +1737,9 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     ANGLE_VK_TRY(displayVk,
                  vkEnumerateDeviceExtensionProperties(
                      mPhysicalDevice, nullptr, &deviceExtensionCount, deviceExtensionProps.data()));
+    // In case fewer items were returned than requested, resize deviceExtensionProps to the number
+    // of extensions returned (i.e. deviceExtensionCount).  See: b/208937840
+    deviceExtensionProps.resize(deviceExtensionCount);
 
     // Enumerate device extensions that are provided by explicit layers.
     for (const char *layerName : enabledDeviceLayerNames)
