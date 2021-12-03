@@ -216,4 +216,4 @@
 6663 : Texture2DTest.UploadThenFSThenVS/* = NOT_RUN
 6663 : Texture2DTest.UploadThenFSThenVSThenNewRPThenFS/*  = NOT_RUN
 
-6741 : VulkanImageTest.PixelTest* = SKIP_FOR_CAPTURE
+6741 : VulkanImageTest.* = SKIP_FOR_CAPTURE

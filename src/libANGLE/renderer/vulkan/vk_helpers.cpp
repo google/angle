@@ -4793,9 +4793,10 @@ void ImageHelper::init2DWeakReference(Context *context,
     mActualFormatID     = actualFormatID;
     mSamples            = std::max(samples, 1);
     mImageSerial        = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
-    mCurrentLayout      = ImageLayout::Undefined;
-    mLayerCount         = 1;
-    mLevelCount         = 1;
+    mCurrentQueueFamilyIndex = context->getRenderer()->getQueueFamilyIndex();
+    mCurrentLayout           = ImageLayout::Undefined;
+    mLayerCount              = 1;
+    mLevelCount              = 1;
 
     mImage.setHandle(handle);
 
