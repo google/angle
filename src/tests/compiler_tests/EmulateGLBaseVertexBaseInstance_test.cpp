@@ -21,19 +21,17 @@ class EmulateGLBaseVertexBaseInstanceTest : public MatchOutputCodeTest
     EmulateGLBaseVertexBaseInstanceTest()
         : MatchOutputCodeTest(GL_VERTEX_SHADER, SH_VARIABLES, SH_GLSL_COMPATIBILITY_OUTPUT)
     {
-        getResources()->ANGLE_base_vertex_base_instance_shader_builtin = 1;
+        getResources()->ANGLE_base_vertex_base_instance = 1;
     }
 
   protected:
-    void CheckCompileFailure(const std::string &shaderString,
-                             const char *expectedError       = nullptr,
-                             ShCompileOptions compileOptions = SH_VARIABLES)
+    void CheckCompileFailure(const std::string &shaderString, const char *expectedError = nullptr)
     {
         std::string translatedCode;
         std::string infoLog;
         bool success = compileTestShader(GL_VERTEX_SHADER, SH_GLES3_SPEC,
                                          SH_GLSL_COMPATIBILITY_OUTPUT, shaderString, getResources(),
-                                         compileOptions, &translatedCode, &infoLog);
+                                         SH_VARIABLES, &translatedCode, &infoLog);
         EXPECT_FALSE(success);
         if (expectedError)
         {
@@ -47,39 +45,25 @@ class EmulateGLBaseVertexBaseInstanceTest : public MatchOutputCodeTest
 TEST_F(EmulateGLBaseVertexBaseInstanceTest, RequiresEmulation)
 {
     CheckCompileFailure(
-        "#version 300 es\n"
-        "#extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require\n"
+        "#extension GL_ANGLE_base_vertex_base_instance : require\n"
         "void main() {\n"
         "   gl_Position = vec4(float(gl_BaseVertex), float(gl_BaseInstance), 0.0, 1.0);\n"
         "}\n",
         "extension is not supported");
 }
 
-// Check that compiling with emulation with gl_BaseVertex and gl_BaseInstance works
+// Check that compiling with emulation with gl_BaseVertex and gl_BaseInstance works with different
+// shader versions
 TEST_F(EmulateGLBaseVertexBaseInstanceTest, CheckCompile)
 {
     const std::string shaderString =
-        "#version 300 es\n"
-        "#extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require\n"
-        "void main() {\n"
-        "   gl_Position = vec4(float(gl_BaseVertex), float(gl_BaseInstance), 0.0, 1.0);\n"
-        "}\n";
-
-    compile(shaderString, SH_OBJECT_CODE | SH_VARIABLES | SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE);
-}
-
-// Check that compiling with the old extension doesn't work
-TEST_F(EmulateGLBaseVertexBaseInstanceTest, CheckCompileOldExtension)
-{
-    const std::string shaderString =
-        "#version 300 es\n"
         "#extension GL_ANGLE_base_vertex_base_instance : require\n"
         "void main() {\n"
         "   gl_Position = vec4(float(gl_BaseVertex), float(gl_BaseInstance), 0.0, 1.0);\n"
         "}\n";
 
-    CheckCompileFailure(shaderString, "extension is not supported",
-                        SH_OBJECT_CODE | SH_VARIABLES | SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE);
+    compile("#version 300 es\n" + shaderString,
+            SH_OBJECT_CODE | SH_VARIABLES | SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE);
 }
 
 // Check that gl_BaseVertex and gl_BaseInstance is properly emulated
@@ -97,7 +81,7 @@ TEST_F(EmulateGLBaseVertexBaseInstanceTest, EmulatesUniform)
 
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require\n"
+        "#extension GL_ANGLE_base_vertex_base_instance : require\n"
         "void main() {\n"
         "   gl_Position = vec4(float(gl_BaseVertex), float(gl_BaseInstance), 0.0, 1.0);\n"
         "}\n";
@@ -108,7 +92,7 @@ TEST_F(EmulateGLBaseVertexBaseInstanceTest, EmulatesUniform)
     EXPECT_TRUE(foundInCode("angle_BaseVertex"));
     EXPECT_TRUE(notFoundInCode("gl_BaseInstance"));
     EXPECT_TRUE(foundInCode("angle_BaseInstance"));
-    EXPECT_TRUE(notFoundInCode("GL_ANGLE_base_vertex_base_instance_shader_builtin"));
+    EXPECT_TRUE(notFoundInCode("GL_ANGLE_base_vertex_base_instance"));
 
     EXPECT_TRUE(foundInCode(SH_GLSL_COMPATIBILITY_OUTPUT, "uniform int angle_BaseVertex"));
     EXPECT_TRUE(foundInCode(SH_GLSL_COMPATIBILITY_OUTPUT, "uniform int angle_BaseInstance"));
@@ -160,7 +144,7 @@ TEST_F(EmulateGLBaseVertexBaseInstanceTest, DisallowsUserDefinedGLDrawID)
     // Check that it is not permitted with the extension
     CheckCompileFailure(
         "#version 300 es\n"
-        "#extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require\n"
+        "#extension GL_ANGLE_base_vertex_base_instance : require\n"
         "uniform int gl_BaseVertex;\n"
         "void main() {\n"
         "   gl_Position = vec4(float(gl_BaseVertex), 0.0, 0.0, 1.0);\n"
@@ -169,7 +153,7 @@ TEST_F(EmulateGLBaseVertexBaseInstanceTest, DisallowsUserDefinedGLDrawID)
 
     CheckCompileFailure(
         "#version 300 es\n"
-        "#extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require\n"
+        "#extension GL_ANGLE_base_vertex_base_instance : require\n"
         "uniform int gl_BaseInstance;\n"
         "void main() {\n"
         "   gl_Position = vec4(float(gl_BaseInstance), 0.0, 0.0, 1.0);\n"
@@ -178,7 +162,7 @@ TEST_F(EmulateGLBaseVertexBaseInstanceTest, DisallowsUserDefinedGLDrawID)
 
     CheckCompileFailure(
         "#version 300 es\n"
-        "#extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require\n"
+        "#extension GL_ANGLE_base_vertex_base_instance : require\n"
         "void main() {\n"
         "   int gl_BaseVertex = 0;\n"
         "   gl_Position = vec4(float(gl_BaseVertex), 0.0, 0.0, 1.0);\n"
@@ -187,7 +171,7 @@ TEST_F(EmulateGLBaseVertexBaseInstanceTest, DisallowsUserDefinedGLDrawID)
 
     CheckCompileFailure(
         "#version 300 es\n"
-        "#extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require\n"
+        "#extension GL_ANGLE_base_vertex_base_instance : require\n"
         "void main() {\n"
         "   int gl_BaseInstance = 0;\n"
         "   gl_Position = vec4(float(gl_BaseInstance), 0.0, 0.0, 1.0);\n"
@@ -211,7 +195,7 @@ TEST_F(EmulateGLBaseVertexBaseInstanceTest, AllowsUserDefinedANGLEDrawID)
 
     const std::string &shaderString =
         "#version 300 es\n"
-        "#extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require\n"
+        "#extension GL_ANGLE_base_vertex_base_instance : require\n"
         "uniform int angle_BaseVertex;\n"
         "uniform int angle_BaseInstance;\n"
         "void main() {\n"

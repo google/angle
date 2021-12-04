@@ -426,8 +426,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         (compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0;
     if (!glBaseVertexBaseInstanceSupported)
     {
-        auto it =
-            mExtensionBehavior.find(TExtension::ANGLE_base_vertex_base_instance_shader_builtin);
+        auto it = mExtensionBehavior.find(TExtension::ANGLE_base_vertex_base_instance);
         if (it != mExtensionBehavior.end())
         {
             mExtensionBehavior.erase(it);
@@ -861,8 +860,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
 
     if (mShaderType == GL_VERTEX_SHADER &&
-        IsExtensionEnabled(mExtensionBehavior,
-                           TExtension::ANGLE_base_vertex_base_instance_shader_builtin))
+        IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_base_vertex_base_instance))
     {
         if ((compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0)
         {
@@ -1160,7 +1158,7 @@ bool TCompiler::compile(const char *const shaderStrings[],
                 (compileOptions & SH_EMULATE_GL_DRAW_ID) != 0;
             bool lookForBaseVertexBaseInstance =
                 IsExtensionEnabled(mExtensionBehavior,
-                                   TExtension::ANGLE_base_vertex_base_instance_shader_builtin) &&
+                                   TExtension::ANGLE_base_vertex_base_instance) &&
                 (compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0;
 
             if (lookForDrawID || lookForBaseVertexBaseInstance)
@@ -1258,7 +1256,7 @@ void TCompiler::setResourceString()
         << ":MaxViewsOVR:" << mResources.MaxViewsOVR
         << ":NV_draw_buffers:" << mResources.NV_draw_buffers
         << ":ANGLE_multi_draw:" << mResources.ANGLE_multi_draw
-        << ":ANGLE_base_vertex_base_instance_shader_builtin:" << mResources.ANGLE_base_vertex_base_instance_shader_builtin
+        << ":ANGLE_base_vertex_base_instance:" << mResources.ANGLE_base_vertex_base_instance
         << ":APPLE_clip_distance:" << mResources.APPLE_clip_distance
         << ":OES_texture_cube_map_array:" << mResources.OES_texture_cube_map_array
         << ":EXT_texture_cube_map_array:" << mResources.EXT_texture_cube_map_array

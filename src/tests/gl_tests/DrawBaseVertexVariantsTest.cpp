@@ -339,12 +339,7 @@ void main()
                 return false;
             }
         }
-        if (!EnsureGLExtensionEnabled("GL_ANGLE_base_vertex_base_instance"))
-        {
-            return false;
-        }
-
-        return EnsureGLExtensionEnabled("GL_ANGLE_base_vertex_base_instance_shader_builtin");
+        return EnsureGLExtensionEnabled("GL_ANGLE_base_vertex_base_instance");
     }
 
     bool requestNativeBaseVertexExtensions()
