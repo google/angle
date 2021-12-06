@@ -239,11 +239,14 @@ class ReplayWriter final : angle::NonCopyable
     void saveIndexFilesAndHeader();
     void saveSetupFile();
 
+    std::vector<std::string> getAndResetWrittenFiles();
+
   private:
     static std::string GetVarName(EntryPoint entryPoint, const std::string &paramName, int counter);
 
     void saveHeader();
     void writeReplaySource(const std::string &filename);
+    void addWrittenFile(const std::string &filename);
 
     DataTracker mDataTracker;
     std::string mFilenamePattern;
@@ -259,6 +262,8 @@ class ReplayWriter final : angle::NonCopyable
 
     std::vector<std::string> mPrivateFunctionPrototypes;
     std::vector<std::string> mPrivateFunctions;
+
+    std::vector<std::string> mWrittenFiles;
 };
 
 using BufferCalls = std::map<GLuint, std::vector<CallCapture>>;
@@ -557,7 +562,8 @@ class FrameCaptureShared final : angle::NonCopyable
     }
 
   private:
-    void writeCppReplayIndexFiles(const gl::Context *, bool writeResetContextCall);
+    void writeJSON(const gl::Context *context);
+    void writeCppReplayIndexFiles(const gl::Context *context, bool writeResetContextCall);
     void writeMainContextCppReplay(const gl::Context *context,
                                    const std::vector<CallCapture> &setupCalls);
 

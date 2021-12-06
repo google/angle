@@ -352,26 +352,6 @@ std::ostream &operator<<(std::ostream &os, const FmtGetSerializedContextStateFun
     return os;
 }
 
-std::string GetCaptureFileName(gl::ContextID contextId,
-                               const std::string &captureLabel,
-                               uint32_t frameIndex,
-                               const char *suffix)
-{
-    std::stringstream fnameStream;
-
-    if (contextId == kSharedContextId)
-    {
-        fnameStream << FmtCapturePrefix(contextId, captureLabel) << suffix;
-    }
-    else
-    {
-        fnameStream << FmtCapturePrefix(contextId, captureLabel) << "_frame" << std::setfill('0')
-                    << std::setw(3) << frameIndex << suffix;
-    }
-
-    return fnameStream.str();
-}
-
 void WriteGLFloatValue(std::ostream &out, GLfloat value)
 {
     // Check for non-representable values
@@ -4060,6 +4040,14 @@ struct ParamValueTrait<gl::FramebufferID>
     static constexpr const char *name = "framebufferPacked";
     static const ParamType typeID     = ParamType::TFramebufferID;
 };
+
+std::string GetBaseName(const std::string &nameWithPath)
+{
+    std::vector<std::string> result = angle::SplitString(
+        nameWithPath, "/\\", WhitespaceHandling::TRIM_WHITESPACE, SplitResult::SPLIT_WANT_NONEMPTY);
+    ASSERT(!result.empty());
+    return result.back();
+}
 }  // namespace
 
 ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
@@ -6088,28 +6076,24 @@ void FrameCaptureShared::replay(gl::Context *context)
     }
 }
 
-void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
-                                                  bool writeResetContextCall)
+// Serialize trace metadata into a JSON file. The JSON file will be named "trace_prefix.json".
+//
+// As of writing, it will have the format like so:
+// {
+//     "TraceMetadata":
+//     {
+//         "AreClientArraysEnabled" : 1, "CaptureRevision" : 16631, "ConfigAlphaBits" : 8,
+//             "ConfigBlueBits" : 8, "ConfigDepthBits" : 24, "ConfigGreenBits" : 8,
+// ... etc ...
+void FrameCaptureShared::writeJSON(const gl::Context *context)
 {
     const gl::ContextID contextId           = context->id();
+    const SurfaceParams &surfaceParams      = mDrawSurfaceParams.at(contextId);
+    const gl::State &glState                = context->getState();
     const egl::Config *config               = context->getConfig();
     const egl::AttributeMap &displayAttribs = context->getDisplay()->getAttributeMap();
-    const egl::ShareGroup *shareGroup       = context->getShareGroup();
 
-    unsigned frameCount = getFrameCount();
-
-    const SurfaceParams &surfaceParams = mDrawSurfaceParams.at(contextId);
-    const gl::State &glState           = context->getState();
-
-    // Serialize trace metadata into a JSON file. The JSON file will be named "trace_prefix.json".
-    //
-    // As of writing, it will have the format like so:
-    // {
-    //     "TraceMetadata":
-    //     {
-    //         "AreClientArraysEnabled" : 1, "CaptureRevision" : 16631, "ConfigAlphaBits" : 8,
-    //             "ConfigBlueBits" : 8, "ConfigDepthBits" : 24, "ConfigGreenBits" : 8,
-    // ... etc ...
+    unsigned int frameCount = getFrameCount();
 
     JsonSerializer json;
     json.startGroup("TraceMetadata");
@@ -6151,28 +6135,7 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
     json.endGroup();
 
     {
-        std::vector<std::string> traceFiles;
-        for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
-        {
-            traceFiles.push_back(GetCaptureFileName(contextId, mCaptureLabel, frameIndex, ".cpp"));
-        }
-
-        for (gl::Context *shareContext : shareGroup->getContexts())
-        {
-            if (shareContext->id() == contextId)
-            {
-                // We already listed all of the "main" context's files, so skip it here.
-                continue;
-            }
-            traceFiles.push_back(GetCaptureFileName(shareContext->id(), mCaptureLabel, 1, ".cpp"));
-        }
-
-        // Only save the MEC setup if we are using MEC.
-        if (mCaptureStartFrame != 1)
-        {
-            traceFiles.push_back(GetCaptureFileName(kSharedContextId, mCaptureLabel, 1, ".cpp"));
-        }
-
+        const std::vector<std::string> &traceFiles = mReplayWriter.getAndResetWrittenFiles();
         json.addVectorOfStrings("TraceFiles", traceFiles);
     }
 
@@ -6187,6 +6150,12 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
         SaveFileHelper saveData(jsonFileName);
         saveData.write(reinterpret_cast<const uint8_t *>(json.data()), json.length());
     }
+}
+
+void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
+                                                  bool writeResetContextCall)
+{
+    const gl::ContextID contextId = context->id();
 
     {
         std::stringstream header;
@@ -6273,7 +6242,7 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
         source << "{\n";
         source << "    switch (frameIndex)\n";
         source << "    {\n";
-        for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
+        for (uint32_t frameIndex = 1; frameIndex <= getFrameCount(); ++frameIndex)
         {
             source << "        case " << frameIndex << ":\n";
             source << "            return "
@@ -6294,6 +6263,10 @@ void FrameCaptureShared::writeCppReplayIndexFiles(const gl::Context *context,
 
         mReplayWriter.setFilenamePattern(fnamePattern);
     }
+
+    // We write the json before the index files and header, to avoid duplicating sources with
+    // automatically defined sources in angle.gni.
+    writeJSON(context);
 
     mReplayWriter.saveIndexFilesAndHeader();
 }
@@ -7316,6 +7289,8 @@ void ReplayWriter::saveHeader()
     mPublicFunctionPrototypes.clear();
     mPrivateFunctionPrototypes.clear();
     mGlobalVariableDeclarations.clear();
+
+    addWrittenFile(headerPath);
 }
 
 void ReplayWriter::saveIndexFilesAndHeader()
@@ -7372,5 +7347,22 @@ void ReplayWriter::writeReplaySource(const std::string &filename)
     mReplayHeaders.clear();
     mPrivateFunctions.clear();
     mPublicFunctions.clear();
+
+    addWrittenFile(filename);
+}
+
+void ReplayWriter::addWrittenFile(const std::string &filename)
+{
+    std::string writtenFile = GetBaseName(filename);
+    ASSERT(std::find(mWrittenFiles.begin(), mWrittenFiles.end(), writtenFile) ==
+           mWrittenFiles.end());
+    mWrittenFiles.push_back(writtenFile);
+}
+
+std::vector<std::string> ReplayWriter::getAndResetWrittenFiles()
+{
+    std::vector<std::string> results = std::move(mWrittenFiles);
+    ASSERT(mWrittenFiles.empty());
+    return results;
 }
 }  // namespace angle

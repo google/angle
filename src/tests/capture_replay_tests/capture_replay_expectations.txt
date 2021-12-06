@@ -74,7 +74,7 @@
 6221 : VulkanExternalImageTest.ShouldDrawOpaqueFdWithSemaphores/* = TIMEOUT
 6221 : VulkanExternalImageTest.WaitSemaphoresRetainsContentOpaqueFd/* = TIMEOUT
 
-6267 : WebGLCompatibilityTest.MultiContextNoRenderingFeedbackLoops/* = COMPILE_FAIL
+6267 : WebGLCompatibilityTest.MultiContextNoRenderingFeedbackLoops/* = SKIP_FOR_CAPTURE
 
 6180 WIN : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/* = FLAKY
 
