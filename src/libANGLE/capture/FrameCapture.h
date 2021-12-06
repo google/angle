@@ -217,6 +217,7 @@ class ReplayWriter final : angle::NonCopyable
     ReplayWriter();
     ~ReplayWriter();
 
+    void setSourceFileSizeThreshold(size_t sourceFileSizeThreshold);
     void setFilenamePattern(const std::string &pattern);
     void setCaptureLabel(const std::string &label);
     void setSourcePrologue(const std::string &prologue);
@@ -235,7 +236,8 @@ class ReplayWriter final : angle::NonCopyable
                                                const std::vector<std::string> &strings,
                                                bool *isNewEntryOut);
 
-    void saveFrame(uint32_t frameIndex);
+    void saveFrame();
+    void saveFrameIfFull();
     void saveIndexFilesAndHeader();
     void saveSetupFile();
 
@@ -247,6 +249,10 @@ class ReplayWriter final : angle::NonCopyable
     void saveHeader();
     void writeReplaySource(const std::string &filename);
     void addWrittenFile(const std::string &filename);
+    size_t getStoredReplaySourceSize() const;
+
+    size_t mSourceFileSizeThreshold;
+    size_t mFrameIndex;
 
     DataTracker mDataTracker;
     std::string mFilenamePattern;
