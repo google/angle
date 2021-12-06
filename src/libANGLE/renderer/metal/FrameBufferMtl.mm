@@ -1452,6 +1452,10 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
         }
         ANGLE_MTL_CHECK(contextMtl, texture->samples() == 1, GL_INVALID_OPERATION);
     }
+    if (texture->isBeingUsedByGPU(contextMtl))
+    {
+        contextMtl->flushCommandBuffer(mtl::WaitUntilFinished);
+    }
 
     const mtl::Format &readFormat        = *renderTarget->getFormat();
     const angle::Format &readAngleFormat = readFormat.actualAngleFormat();
