@@ -1203,6 +1203,11 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk,
         // to use the new buffer.
         onStateChange(angle::SubjectMessage::InternalMemoryAllocationChanged);
     }
+    else if (updateType == BufferUpdateType::StorageRedefined)
+    {
+        // Tell the observers (front end) that a buffer's storage has changed.
+        onStateChange(angle::SubjectMessage::BufferVkStorageChanged);
+    }
 
     return angle::Result::Continue;
 }
