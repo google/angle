@@ -5330,7 +5330,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
         }
     }
 
-    updateResourceCounts(call);
+    updateResourceCountsFromCallCapture(call);
 }
 
 template <typename ParamValueType>
@@ -5360,36 +5360,57 @@ void FrameCaptureShared::maybeGenResourceOnBind(CallCapture &call)
     }
 }
 
-void FrameCaptureShared::updateResourceCounts(const CallCapture &call)
+void FrameCaptureShared::updateResourceCountsFromParamCapture(const ParamCapture &param,
+                                                              ResourceIDType idType)
+{
+    if (idType != ResourceIDType::InvalidEnum)
+    {
+        mHasResourceType.set(idType);
+
+        // Capture resource IDs for non-pointer types.
+        if (strcmp(ParamTypeToString(param.type), "GLuint") == 0)
+        {
+            mMaxAccessedResourceIDs[idType] =
+                std::max(mMaxAccessedResourceIDs[idType], param.value.GLuintVal);
+        }
+        // Capture resource IDs for pointer types.
+        if (strstr(ParamTypeToString(param.type), "GLuint *") != nullptr)
+        {
+            if (param.data.size() == 1u)
+            {
+                const GLuint *dataPtr = reinterpret_cast<const GLuint *>(param.data[0].data());
+                size_t numHandles     = param.data[0].size() / sizeof(GLuint);
+                for (size_t handleIndex = 0; handleIndex < numHandles; ++handleIndex)
+                {
+                    mMaxAccessedResourceIDs[idType] =
+                        std::max(mMaxAccessedResourceIDs[idType], dataPtr[handleIndex]);
+                }
+            }
+        }
+    }
+}
+
+void FrameCaptureShared::updateResourceCountsFromCallCapture(const CallCapture &call)
 {
     for (const ParamCapture &param : call.params.getParamCaptures())
     {
         ResourceIDType idType = GetResourceIDTypeFromParamType(param.type);
-        if (idType != ResourceIDType::InvalidEnum)
-        {
-            mHasResourceType.set(idType);
+        updateResourceCountsFromParamCapture(param, idType);
+    }
 
-            // Capture resource IDs for non-pointer types.
-            if (strcmp(ParamTypeToString(param.type), "GLuint") == 0)
-            {
-                mMaxAccessedResourceIDs[idType] =
-                    std::max(mMaxAccessedResourceIDs[idType], param.value.GLuintVal);
-            }
-            // Capture resource IDs for pointer types.
-            if (strstr(ParamTypeToString(param.type), "GLuint *") != nullptr)
-            {
-                if (param.data.size() == 1u)
-                {
-                    const GLuint *dataPtr = reinterpret_cast<const GLuint *>(param.data[0].data());
-                    size_t numHandles     = param.data[0].size() / sizeof(GLuint);
-                    for (size_t handleIndex = 0; handleIndex < numHandles; ++handleIndex)
-                    {
-                        mMaxAccessedResourceIDs[idType] =
-                            std::max(mMaxAccessedResourceIDs[idType], dataPtr[handleIndex]);
-                    }
-                }
-            }
-        }
+    // Update resource IDs in the return value. Return values types are not stored as resource IDs,
+    // but instead are stored as GLuints. Therefore we need to explicitly label the resource ID type
+    // when we call update. Currently only shader and program creation are explicitly tracked.
+    switch (call.entryPoint)
+    {
+        case EntryPoint::GLCreateShader:
+        case EntryPoint::GLCreateProgram:
+            updateResourceCountsFromParamCapture(call.params.getReturnValue(),
+                                                 ResourceIDType::ShaderProgram);
+            break;
+
+        default:
+            break;
     }
 }
 
@@ -5684,7 +5705,7 @@ void FrameCaptureShared::scanSetupCalls(const gl::Context *context,
     for (CallCapture &call : setupCalls)
     {
         updateReadBufferSize(call.params.getReadBufferSize());
-        updateResourceCounts(call);
+        updateResourceCountsFromCallCapture(call);
     }
 }
 
