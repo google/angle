@@ -1288,12 +1288,14 @@ void WriteShareGroupCppSetupReplay(ReplayWriter &replayWriter,
                                    ResourceTracker *resourceTracker,
                                    std::vector<uint8_t> *binaryData,
                                    bool serializeStateEnabled,
-                                   const FrameCaptureShared &frameCaptureShared)
+                                   gl::ContextID windowSurfaceContextID)
 {
     {
         std::stringstream include;
 
         include << "#include \"angle_trace_gl.h\"\n";
+        include << "#include \"" << FmtCapturePrefix(windowSurfaceContextID, captureLabel)
+                << ".h\"\n";
 
         std::string includeString = include.str();
 
@@ -5812,7 +5814,7 @@ void FrameCaptureShared::onEndFrame(const gl::Context *context)
         // Write shared MEC after frame sequence so we can eliminate unused assets like programs
         WriteShareGroupCppSetupReplay(mReplayWriter, mCompression, mOutDirectory, mCaptureLabel, 1,
                                       1, mShareGroupSetupCalls, &mResourceTracker, &mBinaryData,
-                                      mSerializeStateEnabled, *this);
+                                      mSerializeStateEnabled, mWindowSurfaceContextID);
 
         // Save the index files after the last frame.
         writeCppReplayIndexFiles(context, false);
