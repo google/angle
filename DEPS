@@ -895,6 +895,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/dota_underlords': {
+      'packages': [
+        {
+            'package': 'angle/traces/dota_underlords',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/dr_driving': {
       'packages': [
         {
