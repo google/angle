@@ -382,7 +382,8 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.multiDrawIndirectEXT = true;
 
     // Enable ANGLE_base_vertex_base_instance
-    mNativeExtensions.baseVertexBaseInstanceANGLE = true;
+    mNativeExtensions.baseVertexBaseInstanceANGLE              = true;
+    mNativeExtensions.baseVertexBaseInstanceShaderBuiltinANGLE = true;
 
     // Enable OES/EXT_draw_elements_base_vertex
     mNativeExtensions.drawElementsBaseVertexOES = true;
