@@ -394,10 +394,7 @@ class BufferMemory : angle::NonCopyable
         return angle::Result::Continue;
     }
     void unmap(RendererVk *renderer);
-    void flush(RendererVk *renderer,
-               VkMemoryMapFlags memoryPropertyFlags,
-               VkDeviceSize offset,
-               VkDeviceSize size);
+    void flush(RendererVk *renderer, VkDeviceSize offset, VkDeviceSize size);
     void invalidate(RendererVk *renderer,
                     VkMemoryMapFlags memoryPropertyFlags,
                     VkDeviceSize offset,
@@ -931,10 +928,15 @@ class BufferBlock final : angle::NonCopyable
                        Allocation &allocation,
                        VkMemoryPropertyFlags memoryPropertyFlags,
                        VkDeviceSize size);
+    void initWithoutVirtualBlock(ContextVk *contextVk,
+                                 Buffer &buffer,
+                                 Allocation &allocation,
+                                 VkMemoryPropertyFlags memoryPropertyFlags,
+                                 VkDeviceSize size);
 
     BufferBlock &operator=(BufferBlock &&other);
 
-    const Buffer &getBuffer() const;
+    Buffer *getBuffer();
     const Allocation &getAllocation() const;
     BufferSerial getBufferSerial() const { return mSerial; }
 
@@ -945,6 +947,9 @@ class BufferBlock final : angle::NonCopyable
     void free(VkDeviceSize offset);
     VkBool32 isEmpty();
 
+    bool hasVirtualBlock() const { return mVirtualBlock.valid(); }
+    bool isHostVisible() const;
+    bool isCoherent() const;
     bool isMapped() const;
     angle::Result map(ContextVk *contextVk);
     void unmap(const Allocator &allocator);
@@ -990,9 +995,23 @@ CreateVmaBufferSubAllocation(BufferBlock *block,
     *vmaBufferSubAllocationOut = new VmaBufferSubAllocation_T{block, offset, size};
     return *vmaBufferSubAllocationOut != VK_NULL_HANDLE ? VK_SUCCESS : VK_ERROR_OUT_OF_HOST_MEMORY;
 }
-ANGLE_INLINE void DestroyVmaBufferSubAllocation(VmaBufferSubAllocation vmaBufferSubAllocation)
+ANGLE_INLINE void DestroyVmaBufferSubAllocation(RendererVk *renderer,
+                                                VmaBufferSubAllocation vmaBufferSubAllocation)
 {
-    vmaBufferSubAllocation->mBufferBlock->free(vmaBufferSubAllocation->mOffset);
+    ASSERT(vmaBufferSubAllocation->mBufferBlock);
+    if (vmaBufferSubAllocation->mBufferBlock->hasVirtualBlock())
+    {
+        vmaBufferSubAllocation->mBufferBlock->free(vmaBufferSubAllocation->mOffset);
+    }
+    else
+    {
+        // When virtual block is invalid, this is the standalone buffer that are created by
+        // BufferSubAllocation::initWithEntireBuffer call. In this case, vmaBufferSubAllocation owns
+        // block, we must properly delete the block object.
+        vmaBufferSubAllocation->mBufferBlock->destroy(renderer);
+        delete vmaBufferSubAllocation->mBufferBlock;
+    }
+
     delete vmaBufferSubAllocation;
 }
 
@@ -1000,12 +1019,22 @@ class BufferSubAllocation final : public WrappedObject<BufferSubAllocation, VmaB
 {
   public:
     BufferSubAllocation() = default;
-    void destroy(VkDevice device);
-    VkResult init(VkDevice device, BufferBlock *block, VkDeviceSize offset, VkDeviceSize size);
+    void destroy(RendererVk *renderer);
 
-    const BufferBlock *getBlock() const;
+    VkResult init(VkDevice device, BufferBlock *block, VkDeviceSize offset, VkDeviceSize size);
+    VkResult initWithEntireBuffer(ContextVk *contextVk,
+                                  Buffer &buffer,
+                                  Allocation &allocation,
+                                  VkMemoryPropertyFlags memoryPropertyFlags,
+                                  VkDeviceSize size);
+
+    BufferBlock *getBlock() const;
     const Buffer &getBuffer() const;
+    VkDeviceSize getSize() const;
     const Allocation &getAllocation() const;
+    VkMemoryMapFlags getMemoryPropertyFlags() const;
+    bool isHostVisible() const;
+    bool isCoherent() const;
     bool isMapped() const;
     uint8_t *getMappedMemory() const;
     void flush(const Allocator &allocator) const;
