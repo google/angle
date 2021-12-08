@@ -2018,12 +2018,17 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
         {
             // Each attribute can pull from a separate buffer, so check the binding
             gl::Buffer *buffer = binding.getBuffer().get();
-            if (buffer && buffer != replayState->getArrayBuffer())
+            if (buffer != replayState->getArrayBuffer())
             {
                 replayState->setBufferBinding(context, gl::BufferBinding::Array, buffer);
 
-                Capture(setupCalls, CaptureBindBuffer(*replayState, true, gl::BufferBinding::Array,
-                                                      buffer->id()));
+                gl::BufferID bufferID = {0};
+                if (buffer)
+                {
+                    bufferID = buffer->id();
+                }
+                Capture(setupCalls,
+                        CaptureBindBuffer(*replayState, true, gl::BufferBinding::Array, bufferID));
             }
 
             // Establish the relationship between currently bound buffer and the VAO
