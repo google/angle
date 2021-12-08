@@ -5388,6 +5388,14 @@ bool ValidateQuerySurface(const ValidationContext *val,
             }
             break;
 
+        case EGL_PROTECTED_CONTENT_EXT:
+            if (!display->getExtensions().protectedContentEXT)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE, "EGL_EXT_protected_content not supported");
+                return false;
+            }
+            break;
+
         default:
             val->setError(EGL_BAD_ATTRIBUTE, "Invalid surface attribute: 0x%04X", attribute);
             return false;
@@ -5429,6 +5437,14 @@ bool ValidateQueryContext(const ValidationContext *val,
                 val->setError(EGL_BAD_ATTRIBUTE,
                               "Attribute EGL_CONTEXT_PRIORITY_LEVEL_IMG requires "
                               "extension EGL_IMG_context_priority.");
+                return false;
+            }
+            break;
+
+        case EGL_PROTECTED_CONTENT_EXT:
+            if (!display->getExtensions().protectedContentEXT)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE, "EGL_EXT_protected_content not supported");
                 return false;
             }
             break;
