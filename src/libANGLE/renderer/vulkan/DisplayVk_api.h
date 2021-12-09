@@ -24,6 +24,9 @@ DisplayImpl *CreateVulkanWin32Display(const egl::DisplayState &state);
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
 #if defined(ANGLE_PLATFORM_LINUX)
+bool IsVulkanWaylandDisplayAvailable();
+DisplayImpl *CreateVulkanWaylandDisplay(const egl::DisplayState &state);
+
 bool IsVulkanXcbDisplayAvailable();
 DisplayImpl *CreateVulkanXcbDisplay(const egl::DisplayState &state);
 
