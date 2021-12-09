@@ -1140,7 +1140,8 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
     if (traceNameIs("zillow"))
     {
         // http://anglebug.com/6658 - Crashing in Vulkan backend
-        if ((IsLinux() || IsWindows()) && IsNVIDIA() && mParams.driver == GLESDriverType::AngleEGL)
+        if ((IsLinux() || IsWindows()) && IsNVIDIA() &&
+            mParams.driver == GLESDriverType::AngleEGL && !mParams.isSwiftshader())
         {
             mSkipTest = true;
         }
