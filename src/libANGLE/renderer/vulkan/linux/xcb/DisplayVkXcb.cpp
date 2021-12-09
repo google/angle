@@ -147,6 +147,12 @@ const char *DisplayVkXcb::getWSIExtension() const
 
 bool IsVulkanXcbDisplayAvailable()
 {
+    Display *display = XOpenDisplay(nullptr);
+    if (!display)
+    {
+        return false;
+    }
+    XCloseDisplay(display);
     return true;
 }
 
