@@ -1046,8 +1046,8 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
             ANGLE_TRY(
                 src->mapWithOffset(contextVk, &mapPointer, static_cast<size_t>(mBufferOffset)));
             ASSERT(mapPointer);
-            srcMapPtrBeforeSubData = mapPointer + mBufferOffset;
-            srcMapPtrAfterSubData  = mapPointer + mBufferOffset + offsetAfterSubdata;
+            srcMapPtrBeforeSubData = mapPointer;
+            srcMapPtrAfterSubData  = mapPointer + offsetAfterSubdata;
         }
     }
 
