@@ -3036,6 +3036,10 @@ angle::Result ContextVk::multiDrawElementsIndirectHelper(const gl::Context *cont
     VkDeviceSize currentIndirectBufOffset =
         indirectBufferOffset + reinterpret_cast<VkDeviceSize>(indirect);
 
+    // Reset the index buffer offset
+    mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+    mCurrentIndexBufferOffset = 0;
+
     if (mVertexArray->getStreamingVertexAttribsMask().any())
     {
         // Handling instanced vertex attributes is not covered for drawcount > 1.
