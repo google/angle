@@ -283,9 +283,13 @@ class TrackedResource final : angle::NonCopyable
     TrackedResource();
     ~TrackedResource();
 
+    const ResourceSet &getStartingResources() const { return mStartingResources; }
     ResourceSet &getStartingResources() { return mStartingResources; }
+    const ResourceSet &getNewResources() const { return mNewResources; }
     ResourceSet &getNewResources() { return mNewResources; }
+    const ResourceSet &getResourcesToRegen() const { return mResourcesToRegen; }
     ResourceSet &getResourcesToRegen() { return mResourcesToRegen; }
+    const ResourceSet &getResourcesToRestore() const { return mResourcesToRestore; }
     ResourceSet &getResourcesToRestore() { return mResourcesToRestore; }
 
     void setGennedResource(GLuint id);

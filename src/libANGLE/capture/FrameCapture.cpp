@@ -5992,10 +5992,13 @@ void TrackedResource::setModifiedResource(GLuint id)
 
 void ResourceTracker::setBufferMapped(GLuint id)
 {
-    // If this was a starting buffer, we may need to restore it to original state during Reset
-    TrackedResource &trackedBuffers = getTrackedResource(ResourceIDType::Buffer);
-    if (trackedBuffers.getStartingResources().find(id) !=
-        trackedBuffers.getStartingResources().end())
+    // If this was a starting buffer, we may need to restore it to original state during Reset.
+    // Skip buffers that were deleted after the starting point.
+    const TrackedResource &trackedBuffers = getTrackedResource(ResourceIDType::Buffer);
+    const ResourceSet &startingBuffers    = trackedBuffers.getStartingResources();
+    const ResourceSet &buffersToRegen     = trackedBuffers.getResourcesToRegen();
+    if (startingBuffers.find(id) != startingBuffers.end() &&
+        buffersToRegen.find(id) == buffersToRegen.end())
     {
         // Track that its current state is mapped (true)
         mStartingBuffersMappedCurrent[id] = true;
@@ -6004,10 +6007,13 @@ void ResourceTracker::setBufferMapped(GLuint id)
 
 void ResourceTracker::setBufferUnmapped(GLuint id)
 {
-    // If this was a starting buffer, we may need to restore it to original state during Reset
-    TrackedResource &trackedBuffers = getTrackedResource(ResourceIDType::Buffer);
-    if (trackedBuffers.getStartingResources().find(id) !=
-        trackedBuffers.getStartingResources().end())
+    // If this was a starting buffer, we may need to restore it to original state during Reset.
+    // Skip buffers that were deleted after the starting point.
+    const TrackedResource &trackedBuffers = getTrackedResource(ResourceIDType::Buffer);
+    const ResourceSet &startingBuffers    = trackedBuffers.getStartingResources();
+    const ResourceSet &buffersToRegen     = trackedBuffers.getResourcesToRegen();
+    if (startingBuffers.find(id) != startingBuffers.end() &&
+        buffersToRegen.find(id) == buffersToRegen.end())
     {
         // Track that its current state is unmapped (false)
         mStartingBuffersMappedCurrent[id] = false;
