@@ -1800,6 +1800,15 @@ void GenerateCaps(const FunctionsGL *functions,
 
     extensions->YUVTargetEXT = functions->hasGLESExtension("GL_EXT_YUV_target");
 
+    // GL_MESA_framebuffer_flip_y
+    if (functions->isAtLeastGL(gl::Version(4, 3)) ||
+        functions->hasGLExtension("GL_MESA_framebuffer_flip_y") ||
+        functions->isAtLeastGLES(gl::Version(3, 1)) ||
+        functions->hasGLESExtension("GL_MESA_framebuffer_flip_y"))
+    {
+        extensions->framebufferFlipYMESA = true;
+    }
+
     // PVRTC1 textures must be squares on Apple platforms.
     if (IsApple())
     {

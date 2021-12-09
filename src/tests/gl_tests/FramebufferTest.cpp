@@ -2745,6 +2745,49 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Validates both MESA and standard functions can be used on OpenGL ES >=3.1
+TEST_P(FramebufferTest_ES31, ValidateFramebufferFlipYMesaExtension)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y"));
+
+    GLFramebuffer mFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
+
+    glFramebufferParameteriMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, 1);
+    ASSERT_GL_NO_ERROR();
+
+    GLint flip_y = -1;
+
+    glGetFramebufferParameterivMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, &flip_y);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(flip_y, 1);
+
+    glFramebufferParameteriMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, 0);
+    ASSERT_GL_NO_ERROR();
+
+    flip_y = -1;
+    glGetFramebufferParameterivMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, &flip_y);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(flip_y, 0);
+
+    // Also using non-MESA functions should work.
+    glFramebufferParameteri(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, 1);
+    ASSERT_GL_NO_ERROR();
+
+    flip_y = -1;
+    glGetFramebufferParameteriv(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, &flip_y);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(flip_y, 1);
+
+    glFramebufferParameteri(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, 0);
+    ASSERT_GL_NO_ERROR();
+
+    flip_y = -1;
+    glGetFramebufferParameteriv(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, &flip_y);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(flip_y, 0);
+}
+
 class AddMockTextureNoRenderTargetTest : public ANGLETest
 {
   public:
@@ -3686,6 +3729,50 @@ TEST_P(FramebufferTest_ES3, AttachmentsWithUnequalDimensions)
         // Validate the result. The intersected common area should be red now
         EXPECT_PIXEL_RECT_EQ(0, 0, kSizeSmall, kSizeSmall, GLColor::red);
     }
+}
+
+// Validates only MESA functions can be used on OpenGL ES <3.1
+TEST_P(FramebufferTest_ES3, ValidateFramebufferFlipYMesaExtension)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y"));
+
+    GLFramebuffer mFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
+
+    glFramebufferParameteriMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, 1);
+    ASSERT_GL_NO_ERROR();
+
+    GLint flip_y = -1;
+
+    glGetFramebufferParameterivMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, &flip_y);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(flip_y, 1);
+
+    glFramebufferParameteriMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, 0);
+    ASSERT_GL_NO_ERROR();
+
+    flip_y = -1;
+    glGetFramebufferParameterivMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, &flip_y);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(flip_y, 0);
+
+    // Using non-MESA function should fail.
+    glFramebufferParameteri(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, 0);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glGetFramebufferParameteriv(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, &flip_y);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+TEST_P(FramebufferTest_ES3, FramebufferFlipYMesaExtensionIncorrectPname)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y"));
+
+    GLFramebuffer mFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
+
+    glFramebufferParameteriMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 1);
+    ASSERT_GL_ERROR(GL_INVALID_ENUM);
 }
 
 class FramebufferTest : public ANGLETest

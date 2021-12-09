@@ -128,6 +128,11 @@ bool ValidateBindRenderbufferBase(const Context *context,
                                   angle::EntryPoint entryPoint,
                                   GLenum target,
                                   RenderbufferID renderbuffer);
+bool ValidateFramebufferParameteriBase(const Context *context,
+                                       angle::EntryPoint entryPoint,
+                                       GLenum target,
+                                       GLenum pname,
+                                       GLint param);
 bool ValidateFramebufferRenderbufferBase(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          GLenum target,
@@ -633,6 +638,12 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
                                                      GLenum attachment,
                                                      GLenum pname,
                                                      GLsizei *numParams);
+
+bool ValidateGetFramebufferParameterivBase(const Context *context,
+                                           angle::EntryPoint entryPoint,
+                                           GLenum target,
+                                           GLenum pname,
+                                           const GLint *params);
 
 bool ValidateGetBufferParameterBase(const Context *context,
                                     angle::EntryPoint entryPoint,

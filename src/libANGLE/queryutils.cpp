@@ -1690,6 +1690,9 @@ void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, G
         case GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT:
             *params = framebuffer->getDefaultLayers();
             break;
+        case GL_FRAMEBUFFER_FLIP_Y_MESA:
+            *params = ConvertToGLBoolean(framebuffer->getFlipY());
+            break;
         default:
             UNREACHABLE();
             break;
@@ -1843,6 +1846,9 @@ void SetFramebufferParameteri(const Context *context,
             break;
         case GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT:
             framebuffer->setDefaultLayers(param);
+            break;
+        case GL_FRAMEBUFFER_FLIP_Y_MESA:
+            framebuffer->setFlipY(ConvertToBool(param));
             break;
         default:
             UNREACHABLE();

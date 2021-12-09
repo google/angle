@@ -344,6 +344,7 @@ Result SerializeFramebufferState(const gl::Context *context,
     json->addScalar("DefaultFixedSampleLocation",
                     framebufferState.getDefaultFixedSampleLocations());
     json->addScalar("DefaultLayers", framebufferState.getDefaultLayers());
+    json->addScalar("FlipY", framebufferState.getFlipY());
 
     {
         GroupScope attachmentsGroup(json, "Attachments");

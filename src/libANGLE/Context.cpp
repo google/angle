@@ -8940,12 +8940,12 @@ void Context::maxShaderCompilerThreads(GLuint count)
 
 void Context::framebufferParameteriMESA(GLenum target, GLenum pname, GLint param)
 {
-    UNIMPLEMENTED();
+    framebufferParameteri(target, pname, param);
 }
 
 void Context::getFramebufferParameterivMESA(GLenum target, GLenum pname, GLint *params)
 {
-    UNIMPLEMENTED();
+    getFramebufferParameteriv(target, pname, params);
 }
 
 bool Context::isGLES1() const
