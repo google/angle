@@ -60,6 +60,7 @@ class DriverUniform
     virtual TIntermTyped *getFragRotationMatrixRef() const { return nullptr; }
     virtual TIntermTyped *getHalfRenderAreaRef() const { return nullptr; }
     virtual TIntermTyped *getNegFlipYRef() const { return nullptr; }
+    virtual TIntermTyped *getDitherRef() const { return nullptr; }
 
     const TVariable *getDriverUniformsVariable() const { return mDriverUniforms; }
 
@@ -85,6 +86,7 @@ class DriverUniformExtended : public DriverUniform
     TIntermTyped *getFragRotationMatrixRef() const override;
     TIntermTyped *getHalfRenderAreaRef() const override;
     TIntermTyped *getNegFlipYRef() const override;
+    TIntermTyped *getDitherRef() const override;
 
   protected:
     virtual TFieldList *createUniformFields(TSymbolTable *symbolTable) override;

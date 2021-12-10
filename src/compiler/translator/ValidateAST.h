@@ -73,6 +73,8 @@ struct ValidateASTOptions
     // Implemented:
     //
     //  - Binary node that indexes T[] should have type T
+    //  - Binary nodes with EOpIndexDirect* should have a constant as the right node
+    //  - Switch nodes should have an integer type in the selector
     //
     // TODO:
     //
@@ -80,6 +82,7 @@ struct ValidateASTOptions
     //  - Unary and binary operators have the correct type based on operands
     //  - Swizzle result has same type as the operand except for vector size
     //  - Ternary operator has the same type as the operands
+    //  - Case expressions have the same type as the switch selector
     bool validateExpressionTypes = true;
     // If SeparateDeclarations has been run, check for the absence of multi declarations as well.
     bool validateMultiDeclarations = false;

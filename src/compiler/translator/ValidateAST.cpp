@@ -61,6 +61,8 @@ class ValidateAST : public TIntermTraverser
     void visitFunctionCall(TIntermAggregate *node);
     // Visit a binary node and validate its type against its operands.
     void validateExpressionTypeBinary(TIntermBinary *node);
+    // Visit a switch node and validate its selector type is integer.
+    void validateExpressionTypeSwitch(TIntermSwitch *node);
     // Visit a symbol node and validate it's declared previously.
     void visitVariableNeedingDeclaration(TIntermSymbol *node);
     // Visit a built-in symbol node and validate it's consistently used across the tree.
@@ -401,6 +403,41 @@ void ValidateAST::validateExpressionTypeBinary(TIntermBinary *node)
             // TODO: Validate other expressions. http://anglebug.com/2733
             break;
     }
+
+    switch (node->getOp())
+    {
+        case EOpIndexDirect:
+        case EOpIndexDirectStruct:
+        case EOpIndexDirectInterfaceBlock:
+            if (node->getRight()->getAsConstantUnion() == nullptr)
+            {
+                mDiagnostics->error(node->getLine(),
+                                    "Found direct index node with a non-constant index",
+                                    "<validateExpressionTypes>");
+                mExpressionTypesFailed = true;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+void ValidateAST::validateExpressionTypeSwitch(TIntermSwitch *node)
+{
+    const TType &selectorType = node->getInit()->getType();
+
+    if (selectorType.getBasicType() != EbtInt && selectorType.getBasicType() != EbtUInt)
+    {
+        mDiagnostics->error(node->getLine(), "Found switch selector expression that is not integer",
+                            "<validateExpressionTypes>");
+        mExpressionTypesFailed = true;
+    }
+    else if (!selectorType.isScalar())
+    {
+        mDiagnostics->error(node->getLine(), "Found switch selector expression that is not scalar",
+                            "<validateExpressionTypes>");
+        mExpressionTypesFailed = true;
+    }
 }
 
 void ValidateAST::visitVariableNeedingDeclaration(TIntermSymbol *node)
@@ -678,6 +715,12 @@ bool ValidateAST::visitIfElse(Visit visit, TIntermIfElse *node)
 bool ValidateAST::visitSwitch(Visit visit, TIntermSwitch *node)
 {
     visitNode(visit, node);
+
+    if (mOptions.validateExpressionTypes && visit == PreVisit)
+    {
+        validateExpressionTypeSwitch(node);
+    }
+
     return true;
 }
 

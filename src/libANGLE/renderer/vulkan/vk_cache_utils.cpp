@@ -1329,6 +1329,11 @@ void InitializeSpecializationInfo(
                     offsetof(vk::SpecializationConstants, drawableHeight);
                 (*specializationEntriesOut)[id].size = sizeof(specConsts.drawableHeight);
                 break;
+            case sh::vk::SpecializationConstantId::Dither:
+                (*specializationEntriesOut)[id].offset =
+                    offsetof(vk::SpecializationConstants, dither);
+                (*specializationEntriesOut)[id].size = sizeof(specConsts.dither);
+                break;
             default:
                 UNREACHABLE();
                 break;
@@ -1695,6 +1700,9 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
 
     mDrawableSize.width  = 1;
     mDrawableSize.height = 1;
+
+    mDither.emulatedDitherControl = 0;
+    mDither.unused                = 0;
 }
 
 angle::Result GraphicsPipelineDesc::initializePipeline(
@@ -2675,6 +2683,16 @@ void GraphicsPipelineDesc::setSubpass(uint32_t subpass)
 uint32_t GraphicsPipelineDesc::getSubpass() const
 {
     return mRasterizationAndMultisampleStateInfo.bits.subpass;
+}
+
+void GraphicsPipelineDesc::updateEmulatedDitherControl(GraphicsPipelineTransitionBits *transition,
+                                                       uint16_t value)
+{
+    // Make sure we don't waste time resetting this to zero in the common no-dither case.
+    ASSERT(value != 0 || mDither.emulatedDitherControl != 0);
+
+    mDither.emulatedDitherControl = value;
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDither, emulatedDitherControl));
 }
 
 void GraphicsPipelineDesc::updateRenderPassDesc(GraphicsPipelineTransitionBits *transition,

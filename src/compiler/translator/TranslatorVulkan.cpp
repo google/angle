@@ -32,6 +32,7 @@
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 #include "compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.h"
 #include "compiler/translator/tree_ops/vulkan/DeclarePerVertexBlocks.h"
+#include "compiler/translator/tree_ops/vulkan/EmulateDithering.h"
 #include "compiler/translator/tree_ops/vulkan/EmulateFragColorData.h"
 #include "compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.h"
 #include "compiler/translator/tree_ops/vulkan/ReplaceForShaderFramebufferFetch.h"
@@ -1192,6 +1193,11 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                 {
                     return false;
                 }
+            }
+
+            if (!EmulateDithering(this, root, &getSymbolTable(), specConst, driverUniforms))
+            {
+                return false;
             }
 
             EmitEarlyFragmentTestsGLSL(*this, sink);

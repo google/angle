@@ -833,6 +833,7 @@ struct SpecializationConstants final
     uint32_t surfaceRotation;
     float drawableWidth;
     float drawableHeight;
+    uint32_t dither;
 };
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 

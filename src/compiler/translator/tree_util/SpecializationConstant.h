@@ -45,6 +45,9 @@ class SpecConst
     // Half render area
     TIntermTyped *getHalfRenderArea();
 
+    // Dither emulation
+    TIntermTyped *getDither();
+
     void declareSpecConsts(TIntermBlock *root);
     SpecConstUsageBits getSpecConstUsageBits() const { return mUsageBits; }
 
@@ -63,6 +66,7 @@ class SpecConst
     TVariable *mSurfaceRotationVar;
     TVariable *mDrawableWidthVar;
     TVariable *mDrawableHeightVar;
+    TVariable *mDitherVar;
 
     // Bit is set if YFlip or Rotation has been used
     SpecConstUsageBits mUsageBits;

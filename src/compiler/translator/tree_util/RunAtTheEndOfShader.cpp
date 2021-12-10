@@ -16,7 +16,9 @@
 //     codeToRun
 // }
 //
-// This way the code will get run even if the return statement inside main is executed.
+// This way the code will get run even if the return statement inside main is executed.  This is
+// done if main ends in an unconditional |discard| as well, to help with SPIR-V generation that
+// expects no dead-code to be present after branches in a block.
 //
 
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
@@ -64,6 +66,16 @@ bool ContainsReturn(TIntermNode *node)
     return traverser.containsReturn();
 }
 
+bool EndsInDiscard(TIntermBlock *block)
+{
+    TIntermSequence *statements = block->getSequence();
+    TIntermBranch *lastStatementAsBranch =
+        statements->empty() ? nullptr : statements->back()->getAsBranchNode();
+    // The body can end in discard or return.  There is no need to specifically check for discard as
+    // return is already detected in |ContainsReturn|.
+    return lastStatementAsBranch != nullptr;
+}
+
 void WrapMainAndAppend(TIntermBlock *root,
                        TIntermFunctionDefinition *main,
                        TIntermNode *codeToRun,
@@ -108,13 +120,13 @@ bool RunAtTheEndOfShader(TCompiler *compiler,
                          TSymbolTable *symbolTable)
 {
     TIntermFunctionDefinition *main = FindMain(root);
-    if (!ContainsReturn(main))
+    if (ContainsReturn(main) || EndsInDiscard(main->getBody()))
     {
-        main->getBody()->appendStatement(codeToRun);
+        WrapMainAndAppend(root, main, codeToRun, symbolTable);
     }
     else
     {
-        WrapMainAndAppend(root, main, codeToRun, symbolTable);
+        main->getBody()->appendStatement(codeToRun);
     }
 
     return compiler->validateAST(root);

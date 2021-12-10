@@ -915,6 +915,9 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
                                              dimensions.width);
     shaderProgram->setSpecializationConstant(sh::vk::SpecializationConstantId::DrawableHeight,
                                              dimensions.height);
+    // Similarly with the required dither based on the bound framebuffer attachment formats.
+    shaderProgram->setSpecializationConstant(sh::vk::SpecializationConstantId::Dither,
+                                             desc.getEmulatedDitherControl());
 
     // Compare the fragment output interface with the framebuffer interface.
     const gl::ProgramExecutable &executable = *glState.getProgramExecutable();
