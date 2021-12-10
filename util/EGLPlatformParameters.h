@@ -65,10 +65,10 @@ struct EGLPlatformParameters
                         emulatedPrerotation, asyncCommandQueueFeatureVulkan,
                         hasExplicitMemBarrierFeatureMtl, hasCheapRenderPassFeatureMtl,
                         forceBufferGPUStorageFeatureMtl, supportsVulkanViewportFlip,
-                        supportsVulkanMultiDrawIndirect, emulatedVAOs, generateSPIRVThroughGlslang,
-                        captureLimits, forceRobustResourceInit, directMetalGeneration,
-                        forceInitShaderVariables, forceVulkanFallbackFormat,
-                        displayPowerPreference);
+                        supportsVulkanMultiDrawIndirect, WithVulkanPreferCPUForBufferSubData,
+                        emulatedVAOs, generateSPIRVThroughGlslang, captureLimits,
+                        forceRobustResourceInit, directMetalGeneration, forceInitShaderVariables,
+                        forceVulkanFallbackFormat, displayPowerPreference);
     }
 
     EGLint renderer                               = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
@@ -90,6 +90,7 @@ struct EGLPlatformParameters
     EGLint forceBufferGPUStorageFeatureMtl        = EGL_DONT_CARE;
     EGLint supportsVulkanViewportFlip             = EGL_DONT_CARE;
     EGLint supportsVulkanMultiDrawIndirect        = EGL_DONT_CARE;
+    EGLint WithVulkanPreferCPUForBufferSubData    = EGL_DONT_CARE;
     EGLint emulatedVAOs                           = EGL_DONT_CARE;
     EGLint generateSPIRVThroughGlslang            = EGL_DONT_CARE;
     EGLint captureLimits                          = EGL_DONT_CARE;

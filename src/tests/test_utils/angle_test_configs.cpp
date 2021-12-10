@@ -282,6 +282,15 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_VulkanNoMultiDrawIndirect";
     }
 
+    if (pp.eglParameters.WithVulkanPreferCPUForBufferSubData == EGL_TRUE)
+    {
+        stream << "_VulkanPreferCPUForBufferSubData";
+    }
+    else if (pp.eglParameters.WithVulkanPreferCPUForBufferSubData == EGL_FALSE)
+    {
+        stream << "_VulkanNoPreferCPUForBufferSubData";
+    }
+
     if (pp.eglParameters.emulatedVAOs == EGL_TRUE)
     {
         stream << "_EmulatedVAOs";

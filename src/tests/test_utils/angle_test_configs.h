@@ -334,6 +334,13 @@ inline PlatformParameters WithHighPowerGPU(const PlatformParameters &paramsIn)
     paramsOut.eglParameters.displayPowerPreference = EGL_HIGH_POWER_ANGLE;
     return paramsOut;
 }
+
+inline PlatformParameters WithVulkanPreferCPUForBufferSubData(const PlatformParameters &paramsIn)
+{
+    PlatformParameters paramsOut                                = paramsIn;
+    paramsOut.eglParameters.WithVulkanPreferCPUForBufferSubData = EGL_TRUE;
+    return paramsOut;
+}
 }  // namespace angle
 
 #endif  // ANGLE_TEST_CONFIGS_H_
