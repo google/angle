@@ -27,6 +27,10 @@
 #include "libANGLE/trace.h"
 #include "platform/Platform.h"
 
+#ifdef ANGLE_METAL_XCODE_BUILDS_SHADERS
+#    include "libANGLE/renderer/metal/mtl_default_shaders_compiled.inc"
+#endif
+
 #include "EGL/eglext.h"
 
 #if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
