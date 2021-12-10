@@ -114,7 +114,7 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(
     NSDictionary<NSString *, NSObject *> *substitutionDictionary,
     AutoObjCPtr<NSError *> *error);
 
-bool supportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily);
+bool SupportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily);
 
 bool SupportsMacGPUFamily(id<MTLDevice> device, uint8_t macFamily);
 

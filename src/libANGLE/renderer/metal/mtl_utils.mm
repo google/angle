@@ -1195,11 +1195,11 @@ MTLClearColor EmulatedAlphaClearColor(MTLClearColor color, MTLColorWriteMask col
 
 NSUInteger GetMaxRenderTargetSizeForDeviceInBytes(id<MTLDevice> device)
 {
-    if (supportsAppleGPUFamily(device, 4))
+    if (SupportsAppleGPUFamily(device, 4))
     {
         return 64;
     }
-    else if (supportsAppleGPUFamily(device, 2))
+    else if (SupportsAppleGPUFamily(device, 2))
     {
         return 32;
     }
@@ -1211,7 +1211,7 @@ NSUInteger GetMaxRenderTargetSizeForDeviceInBytes(id<MTLDevice> device)
 
 NSUInteger GetMaxNumberOfRenderTargetsForDevice(id<MTLDevice> device)
 {
-    if (supportsAppleGPUFamily(device, 2) || SupportsMacGPUFamily(device, 1))
+    if (SupportsAppleGPUFamily(device, 2) || SupportsMacGPUFamily(device, 1))
     {
         return 8;
     }
@@ -1223,10 +1223,10 @@ NSUInteger GetMaxNumberOfRenderTargetsForDevice(id<MTLDevice> device)
 
 bool DeviceHasMaximumRenderTargetSize(id<MTLDevice> device)
 {
-    return supportsAppleGPUFamily(device, 1);
+    return SupportsAppleGPUFamily(device, 1);
 }
 
-bool supportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily)
+bool SupportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily)
 {
 #if (!TARGET_OS_IOS && !TARGET_OS_TV) || TARGET_OS_MACCATALYST
     return false;

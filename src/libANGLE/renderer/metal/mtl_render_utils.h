@@ -573,17 +573,6 @@ class VertexFormatConversionUtils final : angle::NonCopyable
     RenderPipelineCache mComponentsExpandRenderPipelineCache;
 };
 
-// Util class for handling transform feedback
-class TransformFeedbackUtils
-{
-  public:
-    void onDestroy();
-    AutoObjCPtr<id<MTLRenderPipelineState>> getTransformFeedbackRenderPipeline(
-        ContextMtl *contextMtl,
-        RenderCommandEncoder *cmdEncoder,
-        mtl::RenderPipelineDesc &pipelineDesc);
-};
-
 // RenderUtils: container class of various util classes above
 class RenderUtils : public Context, angle::NonCopyable
 {
