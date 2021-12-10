@@ -1007,6 +1007,17 @@ ANGLE_INLINE bool ValidateDrawArraysCommon(const Context *context,
         return ValidateDrawBase(context, entryPoint, mode);
     }
 
+    if (primcount <= 0)
+    {
+        if (primcount < 0)
+        {
+            context->validationError(entryPoint, GL_INVALID_VALUE, err::kNegativeCount);
+            return false;
+        }
+        // Early exit.
+        return ValidateDrawBase(context, entryPoint, mode);
+    }
+
     if (!ValidateDrawBase(context, entryPoint, mode))
     {
         return false;
