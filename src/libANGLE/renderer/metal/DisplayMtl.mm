@@ -146,7 +146,7 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
 
         mMetalDeviceVendorId = mtl::GetDeviceVendorId(mMetalDevice);
 
-        mCmdQueue.set([[mMetalDevice.get() newCommandQueue] ANGLE_MTL_AUTORELEASE]);
+        mCmdQueue.set([[mMetalDevice newCommandQueue] ANGLE_MTL_AUTORELEASE]);
 
         mCapsInitialized = false;
 #if ANGLE_ENABLE_METAL_SPIRV
@@ -375,7 +375,7 @@ rx::ContextImpl *DisplayMtl::createContext(const gl::State &state,
                                            const gl::Context *shareContext,
                                            const egl::AttributeMap &attribs)
 {
-    return new ContextMtl(state, errorSet, this);
+    return new ContextMtl(state, errorSet, attribs, this);
 }
 
 StreamProducerImpl *DisplayMtl::createStreamProducerD3DTexture(
@@ -470,6 +470,9 @@ void DisplayMtl::generateExtensions(egl::DisplayExtensions *outExtensions) const
     // EGL_KHR_image
     outExtensions->image     = true;
     outExtensions->imageBase = true;
+
+    // EGL_ANGLE_metal_create_context_ownership_identity
+    outExtensions->metalCreateContextOwnershipIdentityANGLE = true;
 }
 
 void DisplayMtl::generateCaps(egl::Caps *outCaps) const {}

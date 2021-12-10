@@ -1623,6 +1623,15 @@ bool ValidateCreateContextAttribute(const ValidationContext *val,
             }
             break;
 
+        case EGL_CONTEXT_METAL_OWNERSHIP_IDENTITY_ANGLE:
+            if (!display->getExtensions().metalCreateContextOwnershipIdentityANGLE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_CONTEXT_METAL_OWNERSHIP_IDENTITY_ANGLE requires "
+                              "EGL_ANGLE_metal_create_context_ownership_identity.");
+            }
+            break;
+
         default:
             val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04" PRIxPTR "X", attribute);
             return false;
@@ -1866,6 +1875,16 @@ bool ValidateCreateContextAttributeValue(const ValidationContext *val,
                 val->setError(EGL_BAD_ATTRIBUTE,
                               "EGL_PROTECTED_CONTENT_EXT must "
                               "be either EGL_TRUE or EGL_FALSE.");
+                return false;
+            }
+            break;
+
+        case EGL_CONTEXT_METAL_OWNERSHIP_IDENTITY_ANGLE:
+            if (value == 0)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_CONTEXT_METAL_OWNERSHIP_IDENTITY_ANGLE must"
+                              "be non-zero.");
                 return false;
             }
             break;

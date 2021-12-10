@@ -778,7 +778,7 @@ static MTLLanguageVersion GetUserSetOrHighestMSLVersion(const MTLLanguageVersion
 }
 
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
-    id<MTLDevice> metalDevice,
+    const mtl::ContextDevice &metalDevice,
     const std::string &source,
     NSDictionary<NSString *, NSObject *> *substitutionMacros,
     bool enableFastMath,
@@ -788,7 +788,7 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
                                enableFastMath, error);
 }
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(const mtl::ContextDevice &metalDevice,
                                                 const std::string &source,
                                                 AutoObjCPtr<NSError *> *error)
 {
@@ -796,7 +796,7 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
 }
 
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
-    id<MTLDevice> metalDevice,
+    const mtl::ContextDevice &metalDevice,
     const char *source,
     size_t sourceLen,
     NSDictionary<NSString *, NSObject *> *substitutionMacros,
@@ -823,7 +823,7 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
         options.fastMathEnabled &= enableFastMath;
         options.languageVersion    = GetUserSetOrHighestMSLVersion(options.languageVersion);
         options.preprocessorMacros = substitutionMacros;
-        auto library = [metalDevice newLibraryWithSource:nsSource options:options error:&nsError];
+        auto library               = metalDevice.newLibraryWithSource(nsSource, options, &nsError);
         if (angle::GetEnvironmentVar(kANGLEPrintMSLEnv)[0] == '1')
         {
             NSLog(@"%@\n", nsSource);
@@ -1193,7 +1193,7 @@ MTLClearColor EmulatedAlphaClearColor(MTLClearColor color, MTLColorWriteMask col
     return re;
 }
 
-NSUInteger GetMaxRenderTargetSizeForDeviceInBytes(id<MTLDevice> device)
+NSUInteger GetMaxRenderTargetSizeForDeviceInBytes(const mtl::ContextDevice &device)
 {
     if (SupportsAppleGPUFamily(device, 4))
     {
@@ -1209,7 +1209,7 @@ NSUInteger GetMaxRenderTargetSizeForDeviceInBytes(id<MTLDevice> device)
     }
 }
 
-NSUInteger GetMaxNumberOfRenderTargetsForDevice(id<MTLDevice> device)
+NSUInteger GetMaxNumberOfRenderTargetsForDevice(const mtl::ContextDevice &device)
 {
     if (SupportsAppleGPUFamily(device, 2) || SupportsMacGPUFamily(device, 1))
     {
@@ -1382,7 +1382,7 @@ static NSUInteger getNextLocationForFormat(const FormatCaps &caps,
 
 NSUInteger ComputeTotalSizeUsedForMTLRenderPassDescriptor(const MTLRenderPassDescriptor *descriptor,
                                                           const Context *context,
-                                                          id<MTLDevice> device)
+                                                          const mtl::ContextDevice &device)
 {
     NSUInteger currentRenderTargetSize = 0;
 
@@ -1433,7 +1433,7 @@ NSUInteger ComputeTotalSizeUsedForMTLRenderPassDescriptor(const MTLRenderPassDes
 NSUInteger ComputeTotalSizeUsedForMTLRenderPipelineDescriptor(
     const MTLRenderPipelineDescriptor *descriptor,
     const Context *context,
-    id<MTLDevice> device)
+    const mtl::ContextDevice &device)
 {
     NSUInteger currentRenderTargetSize = 0;
     bool isMsaa                        = descriptor.sampleCount > 1;

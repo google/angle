@@ -6,7 +6,7 @@
   "scripts/egl.xml":
     "013c552e6c523abdcf268268ea47e9fe",
   "scripts/egl_angle_ext.xml":
-    "bea2e9846b429ecf051a0a46e4f02374",
+    "bd57943b71217a962e6049a74bb64e0e",
   "scripts/extension_data/intel_630_linux.json":
     "dbcae14638684f9c094c216110fd4fa3",
   "scripts/extension_data/intel_630_win10.json":
@@ -26,7 +26,7 @@
   "scripts/gl_angle_ext.xml":
     "474989440f980a079935dff3ab4d7b24",
   "scripts/registry_xml.py":
-    "1962da4e017cd117dea42bc4d6d112a1",
+    "d3b720c24c32f53d46191cffa1618d28",
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/libANGLE/gen_extensions.py":

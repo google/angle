@@ -289,6 +289,7 @@ supported_egl_extensions = [
     "EGL_ANGLE_display_texture_share_group",
     "EGL_ANGLE_feature_control",
     "EGL_ANGLE_ggp_stream_descriptor",
+    "EGL_ANGLE_metal_create_context_ownership_identity",
     "EGL_ANGLE_power_preference",
     "EGL_ANGLE_program_cache_control",
     "EGL_ANGLE_query_surface_pointer",

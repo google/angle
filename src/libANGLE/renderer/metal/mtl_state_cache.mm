@@ -865,7 +865,7 @@ RenderPipelineCache::RenderPipelineCache(
 
 RenderPipelineCache::~RenderPipelineCache() {}
 
-void RenderPipelineCache::setVertexShader(Context *context, id<MTLFunction> shader)
+void RenderPipelineCache::setVertexShader(ContextMtl *context, id<MTLFunction> shader)
 {
     mVertexShader.retainAssign(shader);
 
@@ -878,7 +878,7 @@ void RenderPipelineCache::setVertexShader(Context *context, id<MTLFunction> shad
     recreatePipelineStates(context);
 }
 
-void RenderPipelineCache::setFragmentShader(Context *context, id<MTLFunction> shader)
+void RenderPipelineCache::setFragmentShader(ContextMtl *context, id<MTLFunction> shader)
 {
     mFragmentShader.retainAssign(shader);
 
@@ -922,7 +922,7 @@ AutoObjCPtr<id<MTLRenderPipelineState>> RenderPipelineCache::getRenderPipelineSt
 }
 
 AutoObjCPtr<id<MTLRenderPipelineState>> RenderPipelineCache::insertRenderPipelineState(
-    Context *context,
+    ContextMtl *context,
     const RenderPipelineDesc &desc,
     bool insertDefaultAttribLayout)
 {
@@ -944,7 +944,7 @@ AutoObjCPtr<id<MTLRenderPipelineState>> RenderPipelineCache::insertRenderPipelin
 }
 
 AutoObjCPtr<id<MTLRenderPipelineState>> RenderPipelineCache::createRenderPipelineState(
-    Context *context,
+    ContextMtl *context,
     const RenderPipelineDesc &originalDesc,
     bool insertDefaultAttribLayout)
 {
@@ -999,7 +999,7 @@ AutoObjCPtr<id<MTLRenderPipelineState>> RenderPipelineCache::createRenderPipelin
             return nil;
         }
 
-        id<MTLDevice> metalDevice = context->getMetalDevice();
+        const mtl::ContextDevice &metalDevice = context->getMetalDevice();
 
         // Convert to Objective-C desc:
         AutoObjCObj<MTLRenderPipelineDescriptor> objCDesc = ToObjC(vertShader, fragShader, desc);
@@ -1039,20 +1039,19 @@ AutoObjCPtr<id<MTLRenderPipelineState>> RenderPipelineCache::createRenderPipelin
                 atIndexedSubscript:kDefaultAttribsBindingIndex];
         }
         // Create pipeline state
-        NSError *err = nil;
-        id<MTLRenderPipelineState> newState =
-            [metalDevice newRenderPipelineStateWithDescriptor:objCDesc error:&err];
+        NSError *err  = nil;
+        auto newState = metalDevice.newRenderPipelineStateWithDescriptor(objCDesc, &err);
         if (err)
         {
             context->handleError(err, __FILE__, ANGLE_FUNCTION, __LINE__);
             return nil;
         }
 
-        return [newState ANGLE_MTL_AUTORELEASE];
+        return newState;
     }
 }
 
-void RenderPipelineCache::recreatePipelineStates(Context *context)
+void RenderPipelineCache::recreatePipelineStates(ContextMtl *context)
 {
     for (int hasDefaultAttrib = 0; hasDefaultAttrib <= 1; ++hasDefaultAttrib)
     {
@@ -1125,7 +1124,8 @@ ProvokingVertexComputePipelineCache::ProvokingVertexComputePipelineCache(
     : mComputeShader(nullptr), mSpecializedShaderFactory(specializedShaderFactory)
 {}
 
-void ProvokingVertexComputePipelineCache::setComputeShader(Context *context, id<MTLFunction> shader)
+void ProvokingVertexComputePipelineCache::setComputeShader(ContextMtl *context,
+                                                           id<MTLFunction> shader)
 {
     mComputeShader.retainAssign(shader);
     if (!shader)
@@ -1164,7 +1164,7 @@ ProvokingVertexComputePipelineCache::getComputePipelineState(
 
 AutoObjCPtr<id<MTLComputePipelineState>>
 ProvokingVertexComputePipelineCache::insertComputePipelineState(
-    Context *context,
+    ContextMtl *context,
     const ProvokingVertexComputePipelineDesc &desc)
 {
     AutoObjCPtr<id<MTLComputePipelineState>> newState = createComputePipelineState(context, desc);
@@ -1178,7 +1178,7 @@ ProvokingVertexComputePipelineCache::insertComputePipelineState(
     return re.first->second;
 }
 
-void ProvokingVertexComputePipelineCache::recreatePipelineStates(Context *context)
+void ProvokingVertexComputePipelineCache::recreatePipelineStates(ContextMtl *context)
 {
 
     for (auto &ite : mComputePipelineStates)
@@ -1194,7 +1194,7 @@ void ProvokingVertexComputePipelineCache::recreatePipelineStates(Context *contex
 
 AutoObjCPtr<id<MTLComputePipelineState>>
 ProvokingVertexComputePipelineCache::createComputePipelineState(
-    Context *context,
+    ContextMtl *context,
     const ProvokingVertexComputePipelineDesc &originalDesc)
 {
     ANGLE_MTL_OBJC_SCOPE
@@ -1227,19 +1227,18 @@ ProvokingVertexComputePipelineCache::createComputePipelineState(
             return nil;
         }
 
-        id<MTLDevice> metalDevice = context->getMetalDevice();
+        const mtl::ContextDevice &metalDevice = context->getMetalDevice();
 
         // Convert to Objective-C desc:
-        NSError *err = nil;
-        id<MTLComputePipelineState> newState =
-            [metalDevice newComputePipelineStateWithFunction:computeFunction error:&err];
+        NSError *err  = nil;
+        auto newState = metalDevice.newComputePipelineStateWithFunction(computeFunction, &err);
         if (err)
         {
             context->handleError(err, __FILE__, ANGLE_FUNCTION, __LINE__);
             return nil;
         }
 
-        return [newState ANGLE_MTL_AUTORELEASE];
+        return newState;
     }
 }
 
@@ -1250,7 +1249,8 @@ StateCache::StateCache(const angle::FeaturesMtl &features) : mFeatures(features)
 
 StateCache::~StateCache() {}
 
-AutoObjCPtr<id<MTLDepthStencilState>> StateCache::getNullDepthStencilState(id<MTLDevice> device)
+AutoObjCPtr<id<MTLDepthStencilState>> StateCache::getNullDepthStencilState(
+    const mtl::ContextDevice &device)
 {
     if (!mNullDepthStencilState)
     {
@@ -1263,8 +1263,9 @@ AutoObjCPtr<id<MTLDepthStencilState>> StateCache::getNullDepthStencilState(id<MT
     return mNullDepthStencilState;
 }
 
-AutoObjCPtr<id<MTLDepthStencilState>> StateCache::getDepthStencilState(id<MTLDevice> metalDevice,
-                                                                       const DepthStencilDesc &desc)
+AutoObjCPtr<id<MTLDepthStencilState>> StateCache::getDepthStencilState(
+    const mtl::ContextDevice &device,
+    const DepthStencilDesc &desc)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
@@ -1273,7 +1274,7 @@ AutoObjCPtr<id<MTLDepthStencilState>> StateCache::getDepthStencilState(id<MTLDev
         {
             AutoObjCObj<MTLDepthStencilDescriptor> objCDesc = ToObjC(desc);
             AutoObjCPtr<id<MTLDepthStencilState>> newState =
-                [[metalDevice newDepthStencilStateWithDescriptor:objCDesc] ANGLE_MTL_AUTORELEASE];
+                [device.newDepthStencilStateWithDescriptor(objCDesc) ANGLE_MTL_AUTORELEASE];
 
             auto re = mDepthStencilStates.insert(std::make_pair(desc, newState));
             if (!re.second)
@@ -1288,7 +1289,7 @@ AutoObjCPtr<id<MTLDepthStencilState>> StateCache::getDepthStencilState(id<MTLDev
     }
 }
 
-AutoObjCPtr<id<MTLSamplerState>> StateCache::getSamplerState(id<MTLDevice> metalDevice,
+AutoObjCPtr<id<MTLSamplerState>> StateCache::getSamplerState(const mtl::ContextDevice &device,
                                                              const SamplerDesc &desc)
 {
     ANGLE_MTL_OBJC_SCOPE
@@ -1303,7 +1304,7 @@ AutoObjCPtr<id<MTLSamplerState>> StateCache::getSamplerState(id<MTLDevice> metal
                 objCDesc.get().compareFunction = MTLCompareFunctionNever;
             }
             AutoObjCPtr<id<MTLSamplerState>> newState =
-                [[metalDevice newSamplerStateWithDescriptor:objCDesc] ANGLE_MTL_AUTORELEASE];
+                [device.newSamplerStateWithDescriptor(objCDesc) ANGLE_MTL_AUTORELEASE];
 
             auto re = mSamplerStates.insert(std::make_pair(desc, newState));
             if (!re.second)
@@ -1316,12 +1317,12 @@ AutoObjCPtr<id<MTLSamplerState>> StateCache::getSamplerState(id<MTLDevice> metal
     }
 }
 
-AutoObjCPtr<id<MTLSamplerState>> StateCache::getNullSamplerState(Context *context)
+AutoObjCPtr<id<MTLSamplerState>> StateCache::getNullSamplerState(ContextMtl *context)
 {
     return getNullSamplerState(context->getMetalDevice());
 }
 
-AutoObjCPtr<id<MTLSamplerState>> StateCache::getNullSamplerState(id<MTLDevice> device)
+AutoObjCPtr<id<MTLSamplerState>> StateCache::getNullSamplerState(const mtl::ContextDevice &device)
 {
     SamplerDesc desc;
     desc.reset();
