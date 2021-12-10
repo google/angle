@@ -1109,6 +1109,9 @@ void RendererVk::ensureCapsInitialized() const
 
     // GL_ANGLE_vulkan_image
     mNativeExtensions.vulkanImageANGLE = true;
+
+    // GL_ANGLE_texture_usage
+    mNativeExtensions.textureUsageANGLE = true;
 }
 
 namespace vk
