@@ -137,6 +137,30 @@ class PosixLibrary : public Library
     void *mModule = nullptr;
 };
 
+std::string GetSharedLibraryName(const char *libraryName, SearchType searchType)
+{
+    std::string libraryWithExtension = std::string(libraryName) + "." + GetSharedLibraryExtension();
+
+    std::string directory;
+    if (searchType == SearchType::ModuleDir)
+    {
+#if ANGLE_PLATFORM_IOS
+        // On iOS, shared libraries must be loaded from within the app bundle.
+        directory = GetExecutableDirectory() + "/Frameworks/";
+#else
+        directory = GetModuleDirectory();
+#endif
+    }
+
+    std::string fullPath = directory + libraryWithExtension;
+#if ANGLE_PLATFORM_IOS
+    // On iOS, dlopen needs a suffix on the framework name to work.
+    fullPath = fullPath + "/" + libraryName;
+#endif
+
+    return fullPath;
+}
+
 Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
 {
     std::string libraryWithExtension = std::string(libraryName) + "." + GetSharedLibraryExtension();

@@ -90,6 +90,21 @@ class UwpLibrary : public Library
     HMODULE mModule = nullptr;
 };
 
+std::string GetSharedLibraryName(const char *libraryName, SearchType searchType)
+{
+    char buffer[MAX_PATH];
+    int ret = snprintf(buffer, MAX_PATH, "%s.%s", libraryName, GetSharedLibraryExtension());
+
+    if (ret > 0 && ret < MAX_PATH)
+    {
+        return std::string(buffer);
+    }
+    else
+    {
+        return std::string("");
+    }
+}
+
 Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
 {
     char buffer[MAX_PATH];
