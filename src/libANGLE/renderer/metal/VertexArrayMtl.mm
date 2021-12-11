@@ -375,7 +375,6 @@ angle::Result VertexArrayMtl::setupDraw(const gl::Context *glContext,
 
     if (dirty)
     {
-        ContextMtl *contextMtl = mtl::GetImpl(glContext);
 
         mVertexArrayDirty = false;
         mEmulatedInstanceAttribs.clear();
@@ -469,7 +468,7 @@ angle::Result VertexArrayMtl::setupDraw(const gl::Context *glContext,
                     desc.layouts[bufferIdx].stepFunction = MTLVertexStepFunctionPerVertex;
                     desc.layouts[bufferIdx].stepRate     = 1;
                 }
-                else if (contextMtl->getDisplay()->getFeatures().hasBaseVertexInstancedDraw.enabled)
+                else
                 {
                     desc.layouts[bufferIdx].stepFunction = MTLVertexStepFunctionPerInstance;
                     desc.layouts[bufferIdx].stepRate     = binding.getDivisor();

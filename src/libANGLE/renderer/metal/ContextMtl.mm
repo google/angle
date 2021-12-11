@@ -328,8 +328,9 @@ angle::Result ContextMtl::drawTriFanArraysLegacy(const gl::Context *context,
                         gl::DrawElementsType::InvalidEnum, reinterpret_cast<const void *>(0),
                         false));
 
-    mRenderEncoder.drawIndexed(MTLPrimitiveTypeTriangle, genIndicesCount, MTLIndexTypeUInt32,
-                               genIdxBuffer, genIdxBufferOffset);
+    mRenderEncoder.drawIndexedInstanced(MTLPrimitiveTypeTriangle, genIndicesCount,
+                                        MTLIndexTypeUInt32, genIdxBuffer, genIdxBufferOffset,
+                                        instances);
 
     return angle::Result::Continue;
 }

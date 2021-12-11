@@ -103,25 +103,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
                                                          gl::ShCompilerInstance *compilerInstance,
                                                          ShCompileOptions options)
 {
-    ContextMtl *contextMtl = mtl::GetImpl(context);
-    if (getState().getShaderType() == gl::ShaderType::Vertex &&
-        !contextMtl->getDisplay()->getFeatures().hasBaseVertexInstancedDraw.enabled)
-    {
-        // Emulate gl_InstanceID
-        sh::TShHandleBase *base = static_cast<sh::TShHandleBase *>(compilerInstance->getHandle());
-        auto translatorMetalDirect = base->getAsTranslatorMetalDirect();
-        if (translatorMetalDirect == nullptr)
-        {
-            // TODO(jonahr): This isn't implemented in TranslatorMetal. Do we care? That should be
-            // deprecated. auto translatorMetal = static_cast<sh::TranslatorMetal
-            // *>(base->getAsCompiler()); translatorMetal->enableEmulatedInstanceID(true);
-        }
-        else
-        {
-            translatorMetalDirect->enableEmulatedInstanceID(true);
-        }
-    }
-
+    ContextMtl *contextMtl          = mtl::GetImpl(context);
     ShCompileOptions compileOptions = SH_INITIALIZE_UNINITIALIZED_LOCALS;
 
     if (context->isWebGL() && mState.getShaderType() != gl::ShaderType::Compute)
