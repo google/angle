@@ -1004,6 +1004,27 @@ AutoObjCPtr<id<MTLRenderPipelineState>> RenderPipelineCache::createRenderPipelin
         // Convert to Objective-C desc:
         AutoObjCObj<MTLRenderPipelineDescriptor> objCDesc = ToObjC(vertShader, fragShader, desc);
 
+        // Validate Render Pipeline State:
+        if (DeviceHasMaximumRenderTargetSize(metalDevice))
+        {
+            // TODO: Is the use of NSUInteger in 32 bit systems ok without any overflow checking?
+            NSUInteger maxSize = GetMaxRenderTargetSizeForDeviceInBytes(metalDevice);
+            NSUInteger renderTargetSize =
+                ComputeTotalSizeUsedForMTLRenderPipelineDescriptor(objCDesc, context, metalDevice);
+            if (renderTargetSize > maxSize)
+            {
+                NSString *errorString = [NSString
+                    stringWithFormat:@"This set of render targets requires %lu bytes of "
+                                     @"pixel storage. This device supports %lu bytes.",
+                                     (unsigned long)renderTargetSize, (unsigned long)maxSize];
+                NSError *err          = [NSError errorWithDomain:@"MTLValidationError"
+                                                   code:-1
+                                               userInfo:@{NSLocalizedDescriptionKey : errorString}];
+                context->handleError(err, __FILE__, ANGLE_FUNCTION, __LINE__);
+                return nil;
+            }
+        }
+
         // Special attribute slot for default attribute
         if (insertDefaultAttribLayout)
         {
