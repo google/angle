@@ -7,6 +7,7 @@
 # run_code_generation.py:
 #   Runs ANGLE format table and other script code generation scripts.
 
+import argparse
 import hashlib
 import json
 import os
@@ -214,11 +215,29 @@ def main():
     all_new_hashes = {}
     any_dirty = False
 
-    verify_only = False
-    if len(sys.argv) > 1 and sys.argv[1] == '--verify-no-dirty':
-        verify_only = True
+    parser = argparse.ArgumentParser(description='Generate ANGLE internal code.')
+    parser.add_argument(
+        '-v',
+        '--verify-no-dirty',
+        dest='verify_only',
+        action='store_true',
+        help='verify hashes are not dirty')
+    parser.add_argument(
+        '-g', '--generator', action='append', nargs='*', type=str, dest='specified_generators'),
 
-    for name, script in sorted(generators.items()):
+    args = parser.parse_args()
+
+    ranGenerators = generators
+    runningSingleGenerator = False
+    if (args.specified_generators):
+        ranGenerators = {k: v for k, v in generators.items() if k in args.specified_generators[0]}
+        runningSingleGenerator = True
+
+    if len(ranGenerators) == 0:
+        print("No valid generators specified.")
+        return 1
+
+    for name, script in sorted(ranGenerators.items()):
         info = auto_script(script)
         fname = get_hash_file_name(name)
         filenames = info['inputs'] + info['outputs'] + [script]
@@ -228,7 +247,7 @@ def main():
         if any_hash_dirty(name, filenames, new_hashes, all_old_hashes[fname]):
             any_dirty = True
 
-            if not verify_only:
+            if not args.verify_only:
                 print('Running ' + name + ' code generator')
 
                 # Set the CWD to the script directory.
@@ -243,10 +262,10 @@ def main():
         # Update the hash dictionary.
         all_new_hashes[fname] = new_hashes
 
-    if any_old_hash_missing(all_new_hashes, all_old_hashes):
+    if not runningSingleGenerator and any_old_hash_missing(all_new_hashes, all_old_hashes):
         any_dirty = True
 
-    if verify_only:
+    if args.verify_only:
         sys.exit(any_dirty)
 
     if any_dirty:
@@ -257,7 +276,7 @@ def main():
             sys.exit(1)
 
         # Update the output hashes again since they can be formatted.
-        for name, script in sorted(generators.items()):
+        for name, script in sorted(ranGenerators.items()):
             info = auto_script(script)
             fname = get_hash_file_name(name)
             update_output_hashes(name, info['outputs'], all_new_hashes[fname])
