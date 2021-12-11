@@ -4411,13 +4411,13 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** depthRenderable*/ false);
 
     setFormatCaps(MTLPixelFormatDepth32Float,
-                  /** filterable*/ display->supportsEitherGPUFamily(1, 1), /** writable*/ false,
+                  /** filterable*/ display->supports32BitFloatFiltering(), /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ true,
                   /** resolve*/ supportDepthAutoResolve, /** colorRenderable*/ false,
                   /** depthRenderable*/ true);
 
     setFormatCaps(MTLPixelFormatDepth32Float_Stencil8,
-                  /** filterable*/ display->supportsEitherGPUFamily(1, 1), /** writable*/ false,
+                  /** filterable*/ display->supports32BitFloatFiltering(), /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ true,
                   /** resolve*/ supportDepthStencilAutoResolve, /** colorRenderable*/ false,
                   /** depthRenderable*/ true);
@@ -4676,10 +4676,12 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** depthRenderable*/ true);
 
     setFormatCaps(MTLPixelFormatDepth24Unorm_Stencil8,
-                  /** filterable*/ display->supportsMacGPUFamily(1), /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ true,
+                  /** filterable*/ display->supportsMacGPUFamily(1) &&
+                      display->supportsDepth24Stencil8PixelFormat(),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ true,
                   /** resolve*/ supportDepthStencilAutoResolve, /** colorRenderable*/ false,
-                  /** depthRenderable*/ display->supportsMacGPUFamily(1));
+                  /** depthRenderable*/ display->supportsMacGPUFamily(1) &&
+                      display->supportsDepth24Stencil8PixelFormat());
 
 #endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
 #if (TARGET_OS_IOS && !TARGET_OS_MACCATALYST) || TARGET_OS_TV || \

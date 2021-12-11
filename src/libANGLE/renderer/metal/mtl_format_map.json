@@ -623,7 +623,7 @@
                 "colorRenderable": "true"
             },
             "MTLPixelFormatDepth32Float":{
-                "filterable": "display->supportsEitherGPUFamily(1, 1)",
+                "filterable": "display->supports32BitFloatFiltering()",
                 "writable": "false",
                 "blendable": "false",
                 "multisample": "true",
@@ -641,7 +641,7 @@
                 "depthRenderable": "true"
             },
             "MTLPixelFormatDepth32Float_Stencil8":{
-                "filterable": "display->supportsEitherGPUFamily(1, 1)",
+                "filterable": "display->supports32BitFloatFiltering()",
                 "writable": "false",
                 "blendable": "false",
                 "multisample": "true",
@@ -661,13 +661,13 @@
                 "depthRenderable": "true"
             },
             "MTLPixelFormatDepth24Unorm_Stencil8":{
-                "filterable": "display->supportsMacGPUFamily(1)",
+                "filterable": "display->supportsMacGPUFamily(1) && display->supportsDepth24Stencil8PixelFormat()",
                 "writable": "false",
                 "blendable": "false",
                 "multisample": "true",
                 "resolve": "supportDepthStencilAutoResolve",
                 "colorRenderable": "false",
-                "depthRenderable": "display->supportsMacGPUFamily(1)"
+                "depthRenderable": "display->supportsMacGPUFamily(1) && display->supportsDepth24Stencil8PixelFormat()"
             },
             "MTLPixelFormatBC1_RGBA":{
                 "filterable": "true"
