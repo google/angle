@@ -189,8 +189,8 @@ class BufferMtl : public BufferImpl, public BufferHolderMtl
     angle::Result commitShadowCopy(const gl::Context *context, size_t size);
 
     void markConversionBuffersDirty();
-
     void clearConversionBuffers();
+
     bool clientShadowCopyDataNeedSync(ContextMtl *contextMtl);
     void ensureShadowCopySyncedFromGPU(ContextMtl *contextMtl);
     uint8_t *syncAndObtainShadowCopy(ContextMtl *contextMtl);
@@ -213,7 +213,19 @@ class BufferMtl : public BufferImpl, public BufferHolderMtl
 
     std::vector<UniformConversionBufferMtl> mUniformConversionBuffers;
 
-    bool mRestartIndicesDirty;
+    struct RestartRangeCache
+    {
+        RestartRangeCache() : indexType(gl::DrawElementsType::InvalidEnum) { isDirty = true; }
+        RestartRangeCache(std::vector<IndexRange> &&ranges_, gl::DrawElementsType indexType_)
+            : ranges(ranges_), indexType(indexType_), isDirty(false)
+        {}
+        void markDirty() { isDirty = true; }
+        operator bool() const { return isDirty; }
+        std::vector<IndexRange> ranges;
+        gl::DrawElementsType indexType;
+        bool isDirty;
+    };
+    RestartRangeCache mRestartRangeCache;
     std::vector<IndexRange> mRestartIndices;
 };
 

@@ -395,7 +395,7 @@ void BufferMtl::markConversionBuffersDirty()
         buffer.convertedBuffer = nullptr;
         buffer.convertedOffset = 0;
     }
-    mRestartIndicesDirty = true;
+    mRestartRangeCache.markDirty();
 }
 
 void BufferMtl::clearConversionBuffers()
@@ -403,6 +403,7 @@ void BufferMtl::clearConversionBuffers()
     mVertexConversionBuffers.clear();
     mIndexConversionBuffers.clear();
     mUniformConversionBuffers.clear();
+    mRestartRangeCache.markDirty();
 }
 
 template <typename T>
@@ -432,26 +433,27 @@ static std::vector<IndexRange> calculateRestartRanges(ContextMtl *ctx, mtl::Buff
 const std::vector<IndexRange> &BufferMtl::getRestartIndices(ContextMtl *ctx,
                                                             gl::DrawElementsType indexType)
 {
-    if (mRestartIndicesDirty)
+    if (!mRestartRangeCache || mRestartRangeCache.indexType != indexType)
     {
-        std::vector<IndexRange>().swap(mRestartIndices);
+        mRestartRangeCache.markDirty();
+        std::vector<IndexRange> ranges;
         switch (indexType)
         {
             case gl::DrawElementsType::UnsignedByte:
-                mRestartIndices = calculateRestartRanges<uint8_t>(ctx, getCurrentBuffer());
+                ranges = calculateRestartRanges<uint8_t>(ctx, getCurrentBuffer());
                 break;
             case gl::DrawElementsType::UnsignedShort:
-                mRestartIndices = calculateRestartRanges<uint16_t>(ctx, getCurrentBuffer());
+                ranges = calculateRestartRanges<uint16_t>(ctx, getCurrentBuffer());
                 break;
             case gl::DrawElementsType::UnsignedInt:
-                mRestartIndices = calculateRestartRanges<uint32_t>(ctx, getCurrentBuffer());
+                ranges = calculateRestartRanges<uint32_t>(ctx, getCurrentBuffer());
                 break;
             default:
                 ASSERT(false);
         }
-        mRestartIndicesDirty = false;
+        mRestartRangeCache = RestartRangeCache(std::move(ranges), indexType);
     }
-    return mRestartIndices;
+    return mRestartRangeCache.ranges;
 }
 
 const std::vector<IndexRange> BufferMtl::getRestartIndicesFromClientData(
