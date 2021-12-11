@@ -916,13 +916,15 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
 
     // Metal's blend state is set at once, while ANGLE tracks separate dirty
     // bits: ENABLED, FUNCS, and EQUATIONS. Merge all three of them to the first one.
-    constexpr gl::State::DirtyBits checkBlendBitsMask(
-        angle::Bit<gl::State::DirtyBits::value_type>(gl::State::DIRTY_BIT_BLEND_ENABLED) |
-        angle::Bit<gl::State::DirtyBits::value_type>(gl::State::DIRTY_BIT_BLEND_FUNCS) |
-        angle::Bit<gl::State::DirtyBits::value_type>(gl::State::DIRTY_BIT_BLEND_EQUATIONS));
-    constexpr gl::State::DirtyBits resetBlendBitsMask(
-        angle::Bit<gl::State::DirtyBits::value_type>(gl::State::DIRTY_BIT_BLEND_FUNCS) |
-        angle::Bit<gl::State::DirtyBits::value_type>(gl::State::DIRTY_BIT_BLEND_EQUATIONS));
+    // PS: these can not be statically initialized on some architectures as there is
+    // no constuctor for DirtyBits that takes an int (which becomes BitSetArray<64>).
+    gl::State::DirtyBits checkBlendBitsMask;
+    checkBlendBitsMask.set(gl::State::DIRTY_BIT_BLEND_ENABLED);
+    checkBlendBitsMask.set(gl::State::DIRTY_BIT_BLEND_FUNCS);
+    checkBlendBitsMask.set(gl::State::DIRTY_BIT_BLEND_EQUATIONS);
+    gl::State::DirtyBits resetBlendBitsMask;
+    resetBlendBitsMask.set(gl::State::DIRTY_BIT_BLEND_FUNCS);
+    resetBlendBitsMask.set(gl::State::DIRTY_BIT_BLEND_EQUATIONS);
 
     gl::State::DirtyBits mergedDirtyBits = gl::State::DirtyBits(dirtyBits) & ~resetBlendBitsMask;
     mergedDirtyBits.set(gl::State::DIRTY_BIT_BLEND_ENABLED, (dirtyBits & checkBlendBitsMask).any());
