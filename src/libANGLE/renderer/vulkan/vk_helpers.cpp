@@ -3986,7 +3986,6 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mLastNonShaderReadOnlyLayout(other.mLastNonShaderReadOnlyLayout),
       mCurrentShaderReadStageMask(other.mCurrentShaderReadStageMask),
       mYcbcrConversionDesc(other.mYcbcrConversionDesc),
-      mYuvConversionSampler(std::move(other.mYuvConversionSampler)),
       mFirstAllocatedLevel(other.mFirstAllocatedLevel),
       mLayerCount(other.mLayerCount),
       mLevelCount(other.mLevelCount),
@@ -4222,7 +4221,6 @@ angle::Result ImageHelper::initExternal(Context *context,
     }
 
     mYcbcrConversionDesc.reset();
-    mYuvConversionSampler.reset();
 
     const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
     VkFormat actualVkFormat           = GetVkFormatFromFormatID(actualFormatID);
@@ -4251,23 +4249,17 @@ angle::Result ImageHelper::initExternal(Context *context,
         VkSamplerYcbcrModelConversion conversionModel = VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601;
         VkSamplerYcbcrRange colorRange                = VK_SAMPLER_YCBCR_RANGE_ITU_NARROW;
         VkFilter chromaFilter                         = VK_FILTER_NEAREST;
+        VkComponentMapping components                 = {
+            VK_COMPONENT_SWIZZLE_IDENTITY,
+            VK_COMPONENT_SWIZZLE_IDENTITY,
+            VK_COMPONENT_SWIZZLE_IDENTITY,
+            VK_COMPONENT_SWIZZLE_IDENTITY,
+        };
 
         // Create the VkSamplerYcbcrConversion to associate with image views and samplers
-        VkSamplerYcbcrConversionCreateInfo yuvConversionInfo = {};
-        yuvConversionInfo.sType         = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO;
-        yuvConversionInfo.format        = actualVkFormat;
-        yuvConversionInfo.xChromaOffset = supportedLocation;
-        yuvConversionInfo.yChromaOffset = supportedLocation;
-        yuvConversionInfo.ycbcrModel    = conversionModel;
-        yuvConversionInfo.ycbcrRange    = colorRange;
-        yuvConversionInfo.chromaFilter  = chromaFilter;
-
-        // Update the YuvConversionCache key
+        // Update the SamplerYcbcrConversionCache key
         mYcbcrConversionDesc.update(rendererVk, 0, conversionModel, colorRange, supportedLocation,
-                                    supportedLocation, chromaFilter, intendedFormatID);
-
-        ANGLE_TRY(rendererVk->getYuvConversionCache().getYuvConversion(
-            context, mYcbcrConversionDesc, yuvConversionInfo, &mYuvConversionSampler));
+                                    supportedLocation, chromaFilter, components, intendedFormatID);
     }
 
     if (hasProtectedContent)
@@ -4554,15 +4546,13 @@ angle::Result ImageHelper::initMemory(Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result ImageHelper::initExternalMemory(
-    Context *context,
-    const MemoryProperties &memoryProperties,
-    const VkMemoryRequirements &memoryRequirements,
-    const VkSamplerYcbcrConversionCreateInfo *samplerYcbcrConversionCreateInfo,
-    uint32_t extraAllocationInfoCount,
-    const void **extraAllocationInfo,
-    uint32_t currentQueueFamilyIndex,
-    VkMemoryPropertyFlags flags)
+angle::Result ImageHelper::initExternalMemory(Context *context,
+                                              const MemoryProperties &memoryProperties,
+                                              const VkMemoryRequirements &memoryRequirements,
+                                              uint32_t extraAllocationInfoCount,
+                                              const void **extraAllocationInfo,
+                                              uint32_t currentQueueFamilyIndex,
+                                              VkMemoryPropertyFlags flags)
 {
     // Vulkan allows up to 4 memory planes.
     constexpr size_t kMaxMemoryPlanes                                     = 4;
@@ -4590,28 +4580,6 @@ angle::Result ImageHelper::initExternalMemory(
     }
     mCurrentQueueFamilyIndex = currentQueueFamilyIndex;
 
-#ifdef VK_USE_PLATFORM_ANDROID_KHR
-    if (samplerYcbcrConversionCreateInfo)
-    {
-        const VkExternalFormatANDROID *vkExternalFormat =
-            reinterpret_cast<const VkExternalFormatANDROID *>(
-                samplerYcbcrConversionCreateInfo->pNext);
-        ASSERT(vkExternalFormat->sType == VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID);
-
-        // Update the YuvConversionCache key
-        mYcbcrConversionDesc.update(context->getRenderer(), vkExternalFormat->externalFormat,
-                                    samplerYcbcrConversionCreateInfo->ycbcrModel,
-                                    samplerYcbcrConversionCreateInfo->ycbcrRange,
-                                    samplerYcbcrConversionCreateInfo->xChromaOffset,
-                                    samplerYcbcrConversionCreateInfo->yChromaOffset,
-                                    samplerYcbcrConversionCreateInfo->chromaFilter,
-                                    angle::FormatID::NONE);
-
-        ANGLE_TRY(context->getRenderer()->getYuvConversionCache().getYuvConversion(
-            context, mYcbcrConversionDesc, *samplerYcbcrConversionCreateInfo,
-            &mYuvConversionSampler));
-    }
-#endif
     return angle::Result::Continue;
 }
 
@@ -4694,7 +4662,7 @@ angle::Result ImageHelper::initLayerImageViewImpl(
     viewInfo.viewType              = gl_vk::GetImageViewType(textureType);
     viewInfo.format                = imageFormat;
 
-    if (swizzleMap.swizzleRequired() && !mYuvConversionSampler.valid())
+    if (swizzleMap.swizzleRequired() && !mYcbcrConversionDesc.valid())
     {
         viewInfo.components.r = gl_vk::GetSwizzle(swizzleMap.swizzleRed);
         viewInfo.components.g = gl_vk::GetSwizzle(swizzleMap.swizzleGreen);
@@ -4717,12 +4685,13 @@ angle::Result ImageHelper::initLayerImageViewImpl(
     viewInfo.pNext = imageViewUsageCreateInfo;
 
     VkSamplerYcbcrConversionInfo yuvConversionInfo = {};
-    if (mYuvConversionSampler.valid())
+    if (mYcbcrConversionDesc.valid())
     {
         ASSERT((context->getRenderer()->getFeatures().supportsYUVSamplerConversion.enabled));
-        yuvConversionInfo.sType      = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
-        yuvConversionInfo.pNext      = nullptr;
-        yuvConversionInfo.conversion = mYuvConversionSampler.get().getHandle();
+        yuvConversionInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
+        yuvConversionInfo.pNext = nullptr;
+        ANGLE_TRY(context->getRenderer()->getYuvConversionCache().getSamplerYcbcrConversion(
+            context, mYcbcrConversionDesc, &yuvConversionInfo.conversion));
         AddToPNextChain(&viewInfo, &yuvConversionInfo);
 
         // VUID-VkImageViewCreateInfo-image-02399
