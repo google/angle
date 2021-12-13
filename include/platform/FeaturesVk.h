@@ -284,13 +284,6 @@ struct FeaturesVk : FeatureSetBase
         "pads up every buffer allocation size to be a multiple of the maximum stride.",
         &members, "http://anglebug.com/4428"};
 
-    // Whether the VkDevice supports the VK_EXT_swapchain_colorspace extension
-    // http://anglebug.com/2514
-    Feature supportsSwapchainColorspace = {
-        "supportsSwapchainColorspace", FeatureCategory::VulkanFeatures,
-        "VkDevice supports the VK_EXT_swapchain_colorspace extension", &members,
-        "http://anglebug.com/2514"};
-
     // Whether the VkDevice supports the VK_EXT_external_memory_dma_buf and
     // VK_EXT_image_drm_format_modifier extensions.  These extensions are always used together to
     // implement EGL_EXT_image_dma_buf_import and EGL_EXT_image_dma_buf_import_modifiers.

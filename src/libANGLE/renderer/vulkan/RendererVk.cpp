@@ -1216,12 +1216,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         mEnabledInstanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
     }
 
-    if (ExtensionFound(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME, instanceExtensionNames))
-    {
-        mEnabledInstanceExtensions.push_back(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
-        ANGLE_FEATURE_CONDITION(&mFeatures, supportsSwapchainColorspace, true);
-    }
-
     if (ExtensionFound(VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME, instanceExtensionNames))
     {
         mEnabledInstanceExtensions.push_back(VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME);
