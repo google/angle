@@ -24,14 +24,8 @@ lucicfg.enable_experiment("crbug.com/1085650")
 # Enable LUCI Realms support.
 lucicfg.enable_experiment("crbug.com/1085650")
 
-luci.builder.defaults.experiments.set({
-    # Launch all builds and tasks in Angle in realms mode.
-    "luci.use_realms": 100,
-    # Make the recipe use results from RDB rather than inspecting the JSON.
-    # TODO(crbug.com/1135718): This experiment can be removed after it's enabled
-    # by default in the recipe.
-    "chromium.chromium_tests.use_rdb_results": 100,
-})
+# Launch all builds and tasks in Angle in realms mode.
+luci.builder.defaults.experiments.set({"luci.use_realms": 100})
 
 luci.project(
     name = "angle",
