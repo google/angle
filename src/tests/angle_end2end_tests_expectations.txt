@@ -257,6 +257,7 @@
 5981 PIXEL4ORXL GLES : BlitFramebufferTest.BlitSRGBToRGBOversizedDestArea/* = SKIP
 5981 PIXEL4ORXL GLES : CopyTexImageTest.CopyTexSubImageFrom3DTexureOES/* = SKIP
 5981 PIXEL4ORXL GLES : CubeMapTextureTest.SampleCoordinateTransform/* = SKIP
+6805 PIXEL4ORXL GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 5981 PIXEL4ORXL GLES : ImageTest.Source2DTarget2D_Colorspace/* = SKIP
 5981 PIXEL4ORXL GLES : ImageTest.Source2DTargetExternal_Colorspace/* = SKIP
 5981 PIXEL4ORXL GLES : ImageTest.Source2DTargetRenderbuffer_Colorspace/* = SKIP
