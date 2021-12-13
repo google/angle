@@ -3823,7 +3823,7 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    mSerial = renderer->getResourceSerialFactory().generateBufferSerial();
+    initializeBarrierTracker(contextVk);
 
     VkBufferCreateInfo modifiedCreateInfo;
     const VkBufferCreateInfo *createInfo = &requestedCreateInfo;
@@ -3877,8 +3877,6 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
         ANGLE_TRY(map(contextVk, &ptrOut));
     }
 
-    mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
-
     if (renderer->getFeatures().allocateNonZeroMemory.enabled)
     {
         ANGLE_TRY(initializeNonZeroMemory(contextVk, createInfo->usage, createInfo->size));
@@ -3896,7 +3894,7 @@ angle::Result BufferHelper::initExternal(ContextVk *contextVk,
 
     RendererVk *renderer = contextVk->getRenderer();
 
-    mSerial = renderer->getResourceSerialFactory().generateBufferSerial();
+    initializeBarrierTracker(contextVk);
 
     VkBufferCreateInfo modifiedCreateInfo             = requestedCreateInfo;
     VkExternalMemoryBufferCreateInfo externCreateInfo = {};
@@ -3926,8 +3924,6 @@ angle::Result BufferHelper::initExternal(ContextVk *contextVk,
         ANGLE_TRY(map(contextVk, &ptrOut));
     }
 
-    mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
-
     return angle::Result::Continue;
 }
 
@@ -3938,7 +3934,9 @@ angle::Result BufferHelper::initSubAllocation(ContextVk *contextVk,
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    mSerial = renderer->getResourceSerialFactory().generateBufferSerial();
+    // We should reset these in case the BufferHelper object has been released and called
+    // initSubAllocation again.
+    initializeBarrierTracker(contextVk);
 
     if (renderer->getFeatures().padBuffersToMaxVertexAttribStride.enabled)
     {
@@ -3950,14 +3948,33 @@ angle::Result BufferHelper::initSubAllocation(ContextVk *contextVk,
     vk::BufferPool *pool = contextVk->getDefaultBufferPool(memoryTypeIndex);
     ANGLE_TRY(pool->allocateBuffer(contextVk, size, alignment, &mSubAllocation));
 
-    mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
-
     if (renderer->getFeatures().allocateNonZeroMemory.enabled)
     {
         ANGLE_TRY(initializeNonZeroMemory(contextVk, GetDefaultBufferUsageFlags(renderer), size));
     }
 
     return angle::Result::Continue;
+}
+
+angle::Result BufferHelper::initForCopyBuffer(ContextVk *contextVk,
+                                              size_t size,
+                                              MemoryCoherency coherency)
+{
+    RendererVk *renderer     = contextVk->getRenderer();
+    uint32_t memoryTypeIndex = renderer->getStagingBufferMemoryTypeIndex(coherency);
+    size_t alignment         = renderer->getStagingBufferAlignment();
+    return initSubAllocation(contextVk, memoryTypeIndex, size, alignment);
+}
+
+ANGLE_INLINE void BufferHelper::initializeBarrierTracker(Context *context)
+{
+    RendererVk *renderer     = context->getRenderer();
+    mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
+    mSerial                  = renderer->getResourceSerialFactory().generateBufferSerial();
+    mCurrentWriteAccess      = 0;
+    mCurrentReadAccess       = 0;
+    mCurrentWriteStages      = 0;
+    mCurrentReadStages       = 0;
 }
 
 angle::Result BufferHelper::initializeNonZeroMemory(Context *context,

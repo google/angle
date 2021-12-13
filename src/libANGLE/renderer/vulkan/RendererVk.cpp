@@ -998,6 +998,9 @@ RendererVk::RendererVk()
       mDefaultUniformBufferSize(kPreferredDefaultUniformBufferSize),
       mDevice(VK_NULL_HANDLE),
       mDeviceLost(false),
+      mCoherentStagingBufferMemoryTypeIndex(kInvalidMemoryTypeIndex),
+      mNonCoherentStagingBufferMemoryTypeIndex(kInvalidMemoryTypeIndex),
+      mStagingBufferAlignment(1),
       mPipelineCacheVkUpdateTimeout(kPipelineCacheVkUpdatePeriod),
       mPipelineCacheDirty(false),
       mPipelineCacheInitialized(false),
@@ -1469,6 +1472,51 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     // Create buffer memory allocator
     ANGLE_VK_TRY(displayVk, mBufferMemoryAllocator.initialize(this, preferredLargeHeapBlockSize));
+
+    ANGLE_VK_CHECK(displayVk, mMemoryProperties.getMemoryTypeCount() > 0,
+                   VK_ERROR_INITIALIZATION_FAILED);
+    // Initialize staging buffer memory type index and alignment.
+    // These buffers will only be used as transfer sources or transfer targets.
+    constexpr VkImageUsageFlags kUsageFlags =
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+
+    VkBufferCreateInfo createInfo    = {};
+    createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    createInfo.flags                 = 0;
+    createInfo.size                  = 4096;
+    createInfo.usage                 = kUsageFlags;
+    createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+    createInfo.queueFamilyIndexCount = 0;
+    createInfo.pQueueFamilyIndices   = nullptr;
+
+    VkMemoryPropertyFlags requiredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+    bool persistentlyMapped             = mFeatures.persistentlyMappedBuffers.enabled;
+
+    // Coherent staging buffer
+    VkMemoryPropertyFlags preferredFlags = VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    ANGLE_VK_TRY(displayVk, mBufferMemoryAllocator.findMemoryTypeIndexForBufferInfo(
+                                this, createInfo, requiredFlags, preferredFlags, persistentlyMapped,
+                                &mCoherentStagingBufferMemoryTypeIndex));
+    ASSERT(mCoherentStagingBufferMemoryTypeIndex != kInvalidMemoryTypeIndex);
+
+    // Non-coherent staging buffer
+    ANGLE_VK_TRY(displayVk, mBufferMemoryAllocator.findMemoryTypeIndexForBufferInfo(
+                                this, createInfo, requiredFlags, 0, persistentlyMapped,
+                                &mNonCoherentStagingBufferMemoryTypeIndex));
+    ASSERT(mNonCoherentStagingBufferMemoryTypeIndex != kInvalidMemoryTypeIndex);
+
+    // Alignment
+    mStagingBufferAlignment =
+        static_cast<size_t>(mPhysicalDeviceProperties.limits.minMemoryMapAlignment);
+    ASSERT(gl::isPow2(mPhysicalDeviceProperties.limits.nonCoherentAtomSize));
+    ASSERT(gl::isPow2(mPhysicalDeviceProperties.limits.optimalBufferCopyOffsetAlignment));
+    mStagingBufferAlignment = std::max(
+        mStagingBufferAlignment,
+        static_cast<size_t>(mPhysicalDeviceProperties.limits.optimalBufferCopyOffsetAlignment));
+    mStagingBufferAlignment =
+        std::max(mStagingBufferAlignment,
+                 static_cast<size_t>(mPhysicalDeviceProperties.limits.nonCoherentAtomSize));
+    ASSERT(gl::isPow2(mStagingBufferAlignment));
 
     {
         ANGLE_TRACE_EVENT0("gpu.angle,startup", "GlslangWarmup");
