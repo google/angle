@@ -140,22 +140,8 @@ class BufferVk : public BufferImpl
                                                 bool hostVisible);
 
   private:
-    angle::Result initializeShadowBuffer(ContextVk *contextVk,
-                                         gl::BufferBinding target,
-                                         size_t size);
     void initializeHostVisibleBufferPool(ContextVk *contextVk);
 
-    ANGLE_INLINE uint8_t *getShadowBuffer(size_t offset)
-    {
-        return (mShadowBuffer.getCurrentBuffer() + offset);
-    }
-
-    ANGLE_INLINE const uint8_t *getShadowBuffer(size_t offset) const
-    {
-        return (mShadowBuffer.getCurrentBuffer() + offset);
-    }
-
-    void updateShadowBuffer(const uint8_t *data, size_t size, size_t offset);
     angle::Result updateBuffer(ContextVk *contextVk,
                                const uint8_t *data,
                                size_t size,
@@ -235,13 +221,6 @@ class BufferVk : public BufferImpl
     // DynamicBuffer to aid map operations of buffers when they are not host visible.
     vk::DynamicBuffer mHostVisibleBufferPool;
     VkDeviceSize mHostVisibleBufferOffset;
-
-    // For GPU-read only buffers glMap* latency is reduced by maintaining a copy
-    // of the buffer which is writeable only by the CPU. The contents are updated on all
-    // glData/glSubData/glCopy calls. With this, a glMap* call becomes a non-blocking
-    // operation by elimnating the need to wait on any recorded or in-flight GPU commands.
-    // We use DynamicShadowBuffer class to encapsulate all the bookeeping logic.
-    vk::DynamicShadowBuffer mShadowBuffer;
 
     // A buffer pool to service GL_MAP_INVALIDATE_RANGE_BIT -style uploads.
     vk::DynamicBuffer *mMapInvalidateRangeStagingBuffer;
