@@ -433,7 +433,7 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
     switch_data += "#endif\n"
 
     # Override missing ES 3.0 formats for older macOS SDK or Catalyst
-    switch_data += "#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED < 101600)) || \\\n"
+    switch_data += "#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED < 110000)) || \\\n"
     switch_data += "TARGET_OS_MACCATALYST\n"
     for angle_format in sorted(mac_override_es3.keys()):
         switch_data += gen_image_map_switch_simple_case(angle_format,
@@ -463,7 +463,7 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
     switch_data += "#endif\n"
 
     # Try to support all iOS formats on newer macOS with Apple GPU.
-    switch_data += "#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))\n"
+    switch_data += "#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000))\n"
     for angle_format in sorted(ios_specific_map.keys()):
         if (angle_format in mac_override_es3.keys()):
             # ETC/EAC or packed 16-bit
@@ -505,7 +505,7 @@ def gen_image_mtl_to_angle_switch_string(image_table):
     switch_data += "#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
 
     # iOS + macOS 11.0+ specific
-    switch_data += "#if TARGET_OS_IOS || TARGET_OS_TV || (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))\n"
+    switch_data += "#if TARGET_OS_IOS || TARGET_OS_TV || (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000))\n"
     for angle_format in sorted(ios_specific_map.keys()):
         # ETC1_R8G8B8_UNORM_BLOCK is a duplicated of ETC2_R8G8B8_UNORM_BLOCK
         if angle_format == 'ETC1_R8G8B8_UNORM_BLOCK':
@@ -617,7 +617,7 @@ def gen_mtl_format_caps_init_string(map_image):
     caps_init_str += "#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
 
     caps_init_str += "#if (TARGET_OS_IOS && !TARGET_OS_MACCATALYST) || TARGET_OS_TV || \\\n"
-    caps_init_str += "    (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))\n"
+    caps_init_str += "    (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000))\n"
 
     caps_init_str += caps_to_cpp(ios_caps)
 

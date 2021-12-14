@@ -161,7 +161,7 @@ angle::FormatID Format::MetalToAngleFormatID(MTLPixelFormat formatMtl)
         case MTLPixelFormatDepth24Unorm_Stencil8:
             return angle::FormatID::D24_UNORM_S8_UINT;
 #endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
-#if TARGET_OS_IOS || TARGET_OS_TV || (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))
+#if TARGET_OS_IOS || TARGET_OS_TV || (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000))
         case MTLPixelFormatASTC_10x10_sRGB:
             return angle::FormatID::ASTC_10x10_SRGB_BLOCK;
         case MTLPixelFormatASTC_10x5_sRGB:
@@ -1166,7 +1166,7 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             break;
 
 #endif
-#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED < 101600)) || TARGET_OS_MACCATALYST
+#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED < 110000)) || TARGET_OS_MACCATALYST
         case angle::FormatID::EAC_R11G11_SNORM_BLOCK:
 
             this->metalFormat    = MTLPixelFormatRG16Snorm;
@@ -2548,7 +2548,7 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             break;
 
 #endif
-#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))
+#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000))
         case angle::FormatID::ASTC_10x10_SRGB_BLOCK:
 
             this->metalFormat    = MTLPixelFormatASTC_10x10_sRGB;
@@ -4683,7 +4683,7 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
 
 #endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
 #if (TARGET_OS_IOS && !TARGET_OS_MACCATALYST) || TARGET_OS_TV || \
-    (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))
+    (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000))
     setFormatCaps(MTLPixelFormatA1BGR5Unorm, /** filterable*/ display->supportsAppleGPUFamily(1),
                   /** writable*/ false, /** blendable*/ display->supportsAppleGPUFamily(1),
                   /** multisample*/ display->supportsAppleGPUFamily(1),
