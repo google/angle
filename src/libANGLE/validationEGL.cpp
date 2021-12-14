@@ -564,6 +564,7 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
         bool enableD3D11on12         = false;
         bool presentPathSpecified    = false;
         bool luidSpecified           = false;
+        bool deviceIdSpecified       = false;
 
         Optional<EGLAttrib> majorVersion;
         Optional<EGLAttrib> minorVersion;
@@ -759,6 +760,16 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
                             return false;
                     }
                     break;
+                case EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE:
+                case EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE:
+                    if (!clientExtensions.platformANGLEDeviceId)
+                    {
+                        val->setError(EGL_BAD_ATTRIBUTE,
+                                      "EGL_ANGLE_platform_angle_device_id is not supported");
+                        return false;
+                    }
+                    deviceIdSpecified = true;
+                    break;
                 default:
                     break;
             }
@@ -837,6 +848,19 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
                 val->setError(EGL_BAD_ATTRIBUTE,
                               "If either EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE "
                               "and/or EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE are "
+                              "specified, at least one must non-zero.");
+                return false;
+            }
+        }
+
+        if (deviceIdSpecified)
+        {
+            if (attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0) == 0 &&
+                attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0) == 0)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "If either EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE "
+                              "and/or EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE are "
                               "specified, at least one must non-zero.");
                 return false;
             }

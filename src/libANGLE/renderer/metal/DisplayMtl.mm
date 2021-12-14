@@ -238,6 +238,22 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
 #if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
     auto deviceList = mtl::adoptObjCObj(MTLCopyAllDevices());
 
+    EGLAttrib high = attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0);
+    EGLAttrib low  = attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0);
+    uint64_t deviceId =
+        angle::GetSystemDeviceIdFromParts(static_cast<uint32_t>(high), static_cast<uint32_t>(low));
+    // Check EGL_ANGLE_platform_angle_device_id to see if a device was specified.
+    if (deviceId != 0)
+    {
+        for (id<MTLDevice> device in deviceList.get())
+        {
+            if ([device registryID] == deviceId)
+            {
+                return device;
+            }
+        }
+    }
+
     NSMutableArray<id<MTLDevice>> *externalGPUs   = [[NSMutableArray alloc] init];
     NSMutableArray<id<MTLDevice>> *integratedGPUs = [[NSMutableArray alloc] init];
     NSMutableArray<id<MTLDevice>> *discreteGPUs   = [[NSMutableArray alloc] init];
@@ -294,17 +310,6 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
         }
     }
 
-    // Default to use a low power device, look through integrated devices.
-    for (id<MTLDevice> device in integratedGPUs)
-    {
-        if (![device isHeadless])
-            return device;
-    }
-
-    // If we selected a low power device and there's no low-power devices avaialble, return the
-    // first (default) device.
-    if (deviceList.get().count > 0)
-        return deviceList[0];
 #endif
     // If we can't find anything, or are on a platform that doesn't support power options, create a
     // default device.

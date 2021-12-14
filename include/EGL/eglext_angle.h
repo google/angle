@@ -130,6 +130,12 @@
 #define EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_CGL_ANGLE 0x34A3
 #endif /* EGL_ANGLE_platform_angle_device_context_volatile_cgl */
 
+#ifndef EGL_ANGLE_platform_angle_device_id
+#define EGL_ANGLE_platform_angle_device_id
+#define EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE 0x34D6
+#define EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE 0x34D7
+#endif /* EGL_ANGLE_platform_angle_device_id */
+
 #ifndef EGL_ANGLE_x11_visual
 #define EGL_ANGLE_x11_visual
 #define EGL_X11_VISUAL_ID_ANGLE 0x33A3
