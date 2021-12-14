@@ -330,7 +330,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
         ASSERT(externalFormat.pNext == nullptr);
 
         // Update the SamplerYcbcrConversionCache key
-        mImage->updateYcbcbConversionDesc(
+        mImage->updateYcbcrConversionDesc(
             renderer, bufferFormatProperties.externalFormat,
             bufferFormatProperties.suggestedYcbcrModel, bufferFormatProperties.suggestedYcbcrRange,
             bufferFormatProperties.suggestedXChromaOffset,

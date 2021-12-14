@@ -484,7 +484,7 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
         ANGLE_VK_CHECK(displayVk, renderer->getFeatures().supportsYUVSamplerConversion.enabled,
                        VK_ERROR_FEATURE_NOT_PRESENT);
 
-        mImage->updateYcbcbConversionDesc(renderer, 0, model, range, xChromaOffset, yChromaOffset,
+        mImage->updateYcbcrConversionDesc(renderer, 0, model, range, xChromaOffset, yChromaOffset,
                                           VK_FILTER_NEAREST, components, intendedFormatID);
     }
 

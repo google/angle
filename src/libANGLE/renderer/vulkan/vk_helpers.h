@@ -2011,7 +2011,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                                       : 0;
     }
     const YcbcrConversionDesc *getYcbcrConversionDesc() const { return &mYcbcrConversionDesc; }
-    void updateYcbcbConversionDesc(RendererVk *rendererVk,
+    void updateYcbcrConversionDesc(RendererVk *rendererVk,
                                    uint64_t externalFormat,
                                    VkSamplerYcbcrModelConversion conversionModel,
                                    VkSamplerYcbcrRange colorRange,
