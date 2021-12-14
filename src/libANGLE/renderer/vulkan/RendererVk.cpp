@@ -346,6 +346,13 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
      "command: vkCmdBeginRenderPass, seq_no: 8,",
      "", false},
+    // With Vulkan secondary command buffers:
+    {"SYNC-HAZARD-READ_AFTER_WRITE",
+     "Recorded access info (recorded_usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, command: "
+     "vkCmdDraw, seq_no: 1, reset_no: 1). Access info (prior_usage: "
+     "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, command: "
+     "vkCmdBeginRenderPass, seq_no:",
+     "", false},
     // From: TracePerfTest.Run/vulkan_aztec_ruins
     {"SYNC-HAZARD-READ_AFTER_WRITE",
      "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "

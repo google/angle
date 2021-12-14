@@ -2163,6 +2163,13 @@ angle::Result ContextVk::handleDirtyComputeDescriptorSets()
 angle::Result ContextVk::handleDirtyDescriptorSetsImpl(vk::CommandBuffer *commandBuffer,
                                                        PipelineType pipelineType)
 {
+    // When using Vulkan secondary command buffers, the descriptor sets need to be updated before
+    // they are bound.
+    if (!vk::CommandBuffer::ExecutesInline())
+    {
+        flushDescriptorSetUpdates();
+    }
+
     return mExecutable->updateDescriptorSets(this, commandBuffer, pipelineType);
 }
 
