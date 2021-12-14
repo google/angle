@@ -45,6 +45,7 @@ bool IsNVIDIAShield();
 // GPU vendors.
 bool IsIntel();
 bool IsAMD();
+bool IsApple();
 bool IsARM();
 bool IsNVIDIA();
 bool IsQualcomm();
