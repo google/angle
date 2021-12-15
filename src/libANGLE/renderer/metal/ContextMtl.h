@@ -513,7 +513,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
         // 32 bits for 32 clip distances
         uint32_t enabledClipDistances;
 
-        uint32_t xfbActiveUnpaused;
+        uint32_t unused;
         int32_t xfbVerticesPerInstance;
 
         int32_t numSamples;
