@@ -5785,6 +5785,7 @@ void ContextVk::invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask)
     {
         mDirtyDefaultAttribsMask |= dirtyMask;
         mGraphicsDirtyBits.set(DIRTY_BIT_DEFAULT_ATTRIBS);
+        mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     }
 }
 
