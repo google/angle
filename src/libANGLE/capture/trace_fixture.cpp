@@ -112,6 +112,22 @@ void UpdateUniformLocation2(GLuint program, const char *name, GLint location, GL
     gUniformLocations2[program] = programLocations.data();
 }
 
+void UpdateUniformLocation3(GLuint program, const char *name, GLint location, GLint count)
+{
+    std::vector<GLint> &programLocations = gInternalUniformLocationsMap[program];
+    if (static_cast<GLint>(programLocations.size()) < location + count)
+    {
+        programLocations.resize(location + count, 0);
+    }
+    for (GLint arrayIndex = 0; arrayIndex < count; ++arrayIndex)
+    {
+        GLuint mappedProgramID = gShaderProgramMap2[program];
+        programLocations[location + arrayIndex] =
+            glGetUniformLocation(mappedProgramID, name) + arrayIndex;
+    }
+    gUniformLocations2[program] = programLocations.data();
+}
+
 void DeleteUniformLocations(GLuint program)
 {
     gUniformLocations.erase(program);

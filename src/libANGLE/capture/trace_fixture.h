@@ -61,6 +61,7 @@ extern GLuint gCurrentProgram;
 void UpdateUniformLocation(GLuint program, const char *name, GLint location);
 void UpdateUniformLocation(GLuint program, const char *name, GLint location, GLint count);
 void UpdateUniformLocation2(GLuint program, const char *name, GLint location, GLint count);
+void UpdateUniformLocation3(GLuint program, const char *name, GLint location, GLint count);
 void DeleteUniformLocations(GLuint program);
 void DeleteUniformLocations2(GLuint program);
 void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index);

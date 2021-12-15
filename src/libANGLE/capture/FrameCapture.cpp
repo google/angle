@@ -1373,7 +1373,7 @@ void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallC
         std::string name;
         int count = 1;
         ParamBuffer params;
-        params.addValueParam("program", ParamType::TShaderProgramID, program->id());
+        params.addValueParam("program", ParamType::TGLuint, program->id().value);
 
         if (locationVar.index >= uniforms.size())
         {
@@ -1411,7 +1411,7 @@ void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallC
         params.addParam(std::move(nameParam));
         params.addValueParam("location", ParamType::TGLint, location);
         params.addValueParam("count", ParamType::TGLint, static_cast<GLint>(count));
-        callsOut->emplace_back("UpdateUniformLocation2", std::move(params));
+        callsOut->emplace_back("UpdateUniformLocation3", std::move(params));
     }
 }
 
@@ -1585,7 +1585,7 @@ void CaptureUpdateCurrentProgram(const CallCapture &call,
     gl::ShaderProgramID programID = param.value.ShaderProgramIDVal;
 
     ParamBuffer paramBuffer;
-    paramBuffer.addValueParam("program", ParamType::TShaderProgramID, programID);
+    paramBuffer.addValueParam("program", ParamType::TGLuint, programID.value);
 
     callsOut->emplace_back("UpdateCurrentProgram", std::move(paramBuffer));
 }
