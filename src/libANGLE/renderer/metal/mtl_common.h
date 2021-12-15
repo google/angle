@@ -247,7 +247,7 @@ template <typename T>
 using GetImplType = typename ImplTypeHelper<T>::ImplType;
 
 template <typename T>
-GetImplType<T> *GetImpl(const T *_Nonnull glObject)
+GetImplType<T> *GetImpl(const T *glObject)
 {
     return GetImplAs<GetImplType<T>>(glObject);
 }
@@ -546,7 +546,7 @@ class ErrorHandler
                              const char *function,
                              unsigned int line) = 0;
 
-    virtual void handleError(NSError *_Nullable error,
+    virtual void handleError(NSError *error,
                              const char *file,
                              const char *function,
                              unsigned int line) = 0;
