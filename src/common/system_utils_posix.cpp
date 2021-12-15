@@ -329,7 +329,8 @@ void SegfaultHandlerFunction(int sig, siginfo_t *info, void *unused)
 void PosixPageFaultHandler::handle(int sig, siginfo_t *info, void *unused)
 {
     bool found = false;
-    if ((sig == SIGSEGV || sig == SIGBUS) && info->si_code == SEGV_ACCERR)
+    if ((sig == SIGSEGV || sig == SIGBUS) &&
+        (info->si_code == SEGV_ACCERR || info->si_code == SEGV_MAPERR))
     {
         found = mCallback(reinterpret_cast<uintptr_t>(info->si_addr)) ==
                 PageFaultHandlerRangeType::InRange;
