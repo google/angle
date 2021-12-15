@@ -800,8 +800,18 @@ Result SerializeRenderbuffer(const gl::Context *context,
 
     if (renderbuffer->initState(gl::ImageIndex()) == gl::InitState::Initialized)
     {
-
-        if (renderbuffer->getWidth() * renderbuffer->getHeight() > 0)
+        if (renderbuffer->getSamples() > 1 && renderbuffer->getFormat().info->depthBits > 0)
+        {
+            // Vulkan can't do resolve blits for multisampled depth attachemnts and
+            // we don't implement an emulation, therefore we can't read back any useful
+            // data here.
+            json->addCString("Pixels", "multisampled depth buffer");
+        }
+        else if (renderbuffer->getWidth() * renderbuffer->getHeight() <= 0)
+        {
+            json->addCString("Pixels", "no pixels");
+        }
+        else
         {
             const gl::InternalFormat &format = *renderbuffer->getFormat().info;
 
@@ -824,10 +834,6 @@ Result SerializeRenderbuffer(const gl::Context *context,
             ANGLE_TRY(renderbuffer->getImplementation()->getRenderbufferImage(
                 context, packState, nullptr, readFormat, readType, pixelsPtr->data()));
             json->addBlob("Pixels", pixelsPtr->data(), pixelsPtr->size());
-        }
-        else
-        {
-            json->addCString("Pixels", "no pixels");
         }
     }
     else
