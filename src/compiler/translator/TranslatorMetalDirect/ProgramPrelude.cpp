@@ -202,16 +202,22 @@ class ProgramPrelude : public TIntermTraverser
     void texture1DProj();
     void texture1DProjLod();
     void texture2D();
+    void texture2DGradEXT();
     void texture2DLod();
+    void texture2DLodEXT();
     void texture2DProj();
+    void texture2DProjGradEXT();
     void texture2DProjLod();
+    void texture2DProjLodEXT();
     void texture2DRect();
     void texture2DRectProj();
     void texture3DLod();
     void texture3DProj();
     void texture3DProjLod();
     void textureCube();
+    void textureCubeGradEXT();
     void textureCubeLod();
+    void textureCubeLodEXT();
     void textureCubeProj();
     void textureCubeProjLod();
     void textureGrad();
@@ -1884,6 +1890,23 @@ ANGLE_ALWAYS_INLINE auto ANGLE_texture2D_impl(
 )",
                         textureEnv())
 
+PROGRAM_PRELUDE_DECLARE(texture2DGradEXT,
+                        R"(
+#define ANGLE_texture2DGradEXT(env, ...) ANGLE_texture2DGradEXT_impl(*env.texture, *env.sampler, __VA_ARGS__)
+
+template <typename Texture>
+ANGLE_ALWAYS_INLINE auto ANGLE_texture2DGradEXT_impl(
+    thread Texture &texture,
+    thread metal::sampler const &sampler,
+    metal::float2 const coord,
+    metal::float2 const dPdx,
+    metal::float2 const dPdy)
+{
+    return texture.sample(sampler, coord, metal::gradient2d(dPdx, dPdy));
+}
+)",
+                        textureEnv())
+
 PROGRAM_PRELUDE_DECLARE(texture2DRect,
                         R"(
 #define ANGLE_texture2DRect(env, ...) ANGLE_texture2DRect_impl(*env.texture, *env.sampler, __VA_ARGS__)
@@ -1914,6 +1937,12 @@ ANGLE_ALWAYS_INLINE auto ANGLE_texture2DLod_impl(
 )",
                         textureEnv())
 
+PROGRAM_PRELUDE_DECLARE(texture2DLodEXT,
+                        R"(
+#define ANGLE_texture2DLodEXT ANGLE_texture2DLod
+)",
+                        texture2DLod())
+
 PROGRAM_PRELUDE_DECLARE(texture2DProj,
                         R"(
 #define ANGLE_texture2DProj(env, ...) ANGLE_texture2DProj_impl(*env.texture, *env.sampler, __VA_ARGS__)
@@ -1936,6 +1965,34 @@ ANGLE_ALWAYS_INLINE auto ANGLE_texture2DProj_impl(
     float bias = 0)
 {
     return texture.sample(sampler, coord.xy/coord.w, metal::bias(bias));
+}
+)",
+                        textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(texture2DProjGradEXT,
+                        R"(
+#define ANGLE_texture2DProjGradEXT(env, ...) ANGLE_texture2DProjGradEXT_impl(*env.texture, *env.sampler, __VA_ARGS__)
+
+template <typename Texture>
+ANGLE_ALWAYS_INLINE auto ANGLE_texture2DProjGradEXT_impl(
+    thread Texture &texture,
+    thread metal::sampler const &sampler,
+    metal::float3 const coord,
+    metal::float2 const dPdx,
+    metal::float2 const dPdy)
+{
+    return texture.sample(sampler, coord.xy/coord.z, metal::gradient2d(dPdx, dPdy));
+}
+
+template <typename Texture>
+ANGLE_ALWAYS_INLINE auto ANGLE_texture2DProjGradEXT_impl(
+    thread Texture &texture,
+    thread metal::sampler const &sampler,
+    metal::float4 const coord,
+    metal::float2 const dPdx,
+    metal::float2 const dPdy)
+{
+    return texture.sample(sampler, coord.xy/coord.w, metal::gradient2d(dPdx, dPdy));
 }
 )",
                         textureEnv())
@@ -1988,6 +2045,12 @@ ANGLE_ALWAYS_INLINE auto ANGLE_texture2DProjLod_impl(
 }
 )",
                         textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(texture2DProjLodEXT,
+                        R"(
+#define ANGLE_texture2DProjLodEXT ANGLE_texture2DProjLod
+)",
+                        texture2DProjLod())
 
 PROGRAM_PRELUDE_DECLARE(texture3DLod,
                         R"(
@@ -2062,6 +2125,23 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureCube_impl(
 )",
                         textureEnv())
 
+PROGRAM_PRELUDE_DECLARE(textureCubeGradEXT,
+                        R"(
+#define ANGLE_textureCubeGradEXT(env, ...) ANGLE_textureCubeGradEXT_impl(*env.texture, *env.sampler, __VA_ARGS__)
+
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureCubeGradEXT_impl(
+    thread metal::texturecube<T> &texture,
+    thread metal::sampler const &sampler,
+    metal::float3 const coord,
+    metal::float3 const dPdx,
+    metal::float3 const dPdy)
+{
+    return texture.sample(sampler, coord, metal::gradientcube(dPdx, dPdy));
+}
+)",
+                        textureEnv())
+
 PROGRAM_PRELUDE_DECLARE(textureCubeLod,
                         R"(
 #define ANGLE_textureCubeLod(env, ...) ANGLE_textureCubeLod_impl(*env.texture, *env.sampler, __VA_ARGS__)
@@ -2077,6 +2157,12 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureCubeLod_impl(
 }
 )",
                         textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(textureCubeLodEXT,
+                        R"(
+#define ANGLE_textureCubeLodEXT ANGLE_textureCubeLod
+)",
+                        textureCubeLod())
 
 PROGRAM_PRELUDE_DECLARE(textureCubeProj,
                         R"(
@@ -3161,18 +3247,24 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
     putBuiltIn("texture1DProj", EMIT_METHOD(texture1DProj));
     putBuiltIn("texture1DProjLod", EMIT_METHOD(texture1DProjLod));
     putBuiltIn("texture2D", EMIT_METHOD(texture2D));
+    putBuiltIn("texture2DGradEXT", EMIT_METHOD(texture2DGradEXT));
     putBuiltIn("texture2DLod", EMIT_METHOD(texture2DLod));
+    putBuiltIn("texture2DLodEXT", EMIT_METHOD(texture2DLodEXT));
     putBuiltIn("texture2DProj", EMIT_METHOD(texture2DProj));
+    putBuiltIn("texture2DProjGradEXT", EMIT_METHOD(texture2DProjGradEXT));
+    putBuiltIn("texture2DProjLod", EMIT_METHOD(texture2DProjLod));
+    putBuiltIn("texture2DProjLodEXT", EMIT_METHOD(texture2DProjLodEXT));
     putBuiltIn("texture2DRect", EMIT_METHOD(texture2DRect));
     putBuiltIn("texture2DRectProj", EMIT_METHOD(texture2DRectProj));
     putBuiltIn("texture3DLod", EMIT_METHOD(texture3DLod));
     putBuiltIn("texture3DProj", EMIT_METHOD(texture3DProj));
     putBuiltIn("texture3DProjLod", EMIT_METHOD(texture3DProjLod));
     putBuiltIn("textureCube", EMIT_METHOD(textureCube));
+    putBuiltIn("textureCubeGradEXT", EMIT_METHOD(textureCubeGradEXT));
     putBuiltIn("textureCubeLod", EMIT_METHOD(textureCubeLod));
+    putBuiltIn("textureCubeLodEXT", EMIT_METHOD(textureCubeLodEXT));
     putBuiltIn("textureCubeProj", EMIT_METHOD(textureCubeProj));
     putBuiltIn("textureCubeProjLod", EMIT_METHOD(textureCubeProjLod));
-    putBuiltIn("texture2DProjLod", EMIT_METHOD(texture2DProjLod));
     putBuiltIn("textureGrad", [](ProgramPrelude &pp, const TFunction &func) {
         const ImmutableString textureName =
             GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();

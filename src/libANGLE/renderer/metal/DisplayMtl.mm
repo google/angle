@@ -946,6 +946,8 @@ void DisplayMtl::initializeExtensions() const
 
     mNativeExtensions.texture3DOES = true;
 
+    mNativeExtensions.shaderTextureLodEXT = true;
+
     mNativeExtensions.standardDerivativesOES = true;
 
     mNativeExtensions.elementIndexUintOES = true;

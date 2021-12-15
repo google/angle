@@ -440,3 +440,13 @@
 
 // Regression after a buffer change.
 6881 INTEL VULKAN LINUX : Texture2DTest.TexStorageWithPBOMiddlePixelDifferent/* = SKIP
+
+// Cubemap sampling with explicit derivatives
+3814 PIXEL4ORXL VULKAN : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
+3814 PIXEL4ORXL VULKAN : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/* = SKIP
+3814 PIXEL4ORXL GLES : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/* = SKIP
+3856 WIN D3D11 : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
+3856 WIN D3D11 : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/* = SKIP
+6891 WIN D3D9 : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
+6824 METAL INTEL : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
+6824 METAL INTEL : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/* = SKIP
