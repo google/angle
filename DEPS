@@ -685,6 +685,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/asphalt_9': {
+      'packages': [
+        {
+            'package': 'angle/traces/asphalt_9',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/avakin_life': {
       'packages': [
         {
