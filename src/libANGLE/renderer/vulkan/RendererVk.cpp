@@ -1009,7 +1009,7 @@ void RendererVk::onDestroy(vk::Context *context)
 {
     {
         std::lock_guard<std::mutex> lock(mCommandQueueMutex);
-        if (mFeatures.asyncCommandQueue.enabled)
+        if (isAsyncCommandQueueEnabled())
         {
             mCommandProcessor.destroy(context);
         }
@@ -2187,7 +2187,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     vk::DeviceQueueMap graphicsQueueMap =
         queueFamily.initializeQueueMap(mDevice, queueFamily.supportsProtected(), 0, queueCount);
 
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.init(displayVk, graphicsQueueMap));
     }
@@ -2884,6 +2884,16 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     platform->overrideFeaturesVk(platform, &mFeatures);
 
     ApplyFeatureOverrides(&mFeatures, displayVk->getState());
+
+    // Disable async command queue when using Vulkan secondary command buffers temporarily to avoid
+    // threading hazards with ContextVk::mCommandPool.  Note that this is done even if the feature
+    // is enabled through an override.
+    // TODO: Investigate whether async command queue is useful with Vulkan secondary command buffers
+    // and enable the feature.  http://anglebug.com/6811
+    if (!vk::CommandBuffer::ExecutesInline())
+    {
+        mFeatures.asyncCommandQueue.enabled = false;
+    }
 }
 
 angle::Result RendererVk::initPipelineCache(DisplayVk *display,
@@ -3141,7 +3151,7 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
     std::lock_guard<std::mutex> commandQueueLock(mCommandQueueMutex);
 
     Serial submitQueueSerial;
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         submitQueueSerial = mCommandProcessor.reserveSubmitSerial();
         ANGLE_TRY(mCommandProcessor.queueSubmitOneOff(
@@ -3389,7 +3399,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 {
     std::lock_guard<std::mutex> commandQueueLock(mCommandQueueMutex);
 
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         *submitSerialOut = mCommandProcessor.reserveSubmitSerial();
 
@@ -3425,7 +3435,7 @@ void RendererVk::handleDeviceLost()
 {
     std::lock_guard<std::mutex> lock(mCommandQueueMutex);
 
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         mCommandProcessor.handleDeviceLost(this);
     }
@@ -3439,7 +3449,7 @@ angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
 {
     std::lock_guard<std::mutex> lock(mCommandQueueMutex);
 
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.finishToSerial(context, serial, getMaxFenceWaitTimeNs()));
     }
@@ -3459,7 +3469,7 @@ angle::Result RendererVk::waitForSerialWithUserTimeout(vk::Context *context,
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::waitForSerialWithUserTimeout");
 
     std::lock_guard<std::mutex> lock(mCommandQueueMutex);
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.waitForSerialWithUserTimeout(context, serial, timeout, result));
     }
@@ -3475,7 +3485,7 @@ angle::Result RendererVk::finish(vk::Context *context, bool hasProtectedContent)
 {
     std::lock_guard<std::mutex> lock(mCommandQueueMutex);
 
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.waitIdle(context, getMaxFenceWaitTimeNs()));
     }
@@ -3493,7 +3503,7 @@ angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
     // TODO: https://issuetracker.google.com/169788986 - would be better if we could just wait
     // for the work we need but that requires QueryHelper to use the actual serial for the
     // query.
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.checkCompletedCommands(context));
     }
@@ -3513,7 +3523,7 @@ angle::Result RendererVk::flushRenderPassCommands(vk::Context *context,
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushRenderPassCommands");
 
     std::lock_guard<std::mutex> lock(mCommandQueueMutex);
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.flushRenderPassCommands(context, hasProtectedContent,
                                                             renderPass, renderPassCommands));
@@ -3534,7 +3544,7 @@ angle::Result RendererVk::flushOutsideRPCommands(vk::Context *context,
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushOutsideRPCommands");
 
     std::lock_guard<std::mutex> lock(mCommandQueueMutex);
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         ANGLE_TRY(mCommandProcessor.flushOutsideRPCommands(context, hasProtectedContent,
                                                            outsideRPCommands));
@@ -3555,7 +3565,7 @@ VkResult RendererVk::queuePresent(vk::Context *context,
     std::lock_guard<std::mutex> lock(mCommandQueueMutex);
 
     VkResult result = VK_SUCCESS;
-    if (mFeatures.asyncCommandQueue.enabled)
+    if (isAsyncCommandQueueEnabled())
     {
         result = mCommandProcessor.queuePresent(priority, presentInfo);
     }
