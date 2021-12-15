@@ -223,7 +223,18 @@ void CaptureMultiDrawElementsIndirectEXT_indirect(const State &glState,
                                                   GLsizei stride,
                                                   angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    if (glState.getTargetBuffer(gl::BufferBinding::DrawIndirect) != nullptr)
+    {
+        paramCapture->value.voidConstPointerVal = indirect;
+    }
+    else
+    {
+        if (stride == 0)
+        {
+            stride = sizeof(DrawElementsIndirectCommand);
+        }
+        CaptureMemory(indirect, stride * drawcount, paramCapture);
+    }
 }
 
 void CaptureDrawRangeElementsBaseVertexEXT_indices(const State &glState,
@@ -386,7 +397,7 @@ void CaptureMultiDrawElementsANGLE_counts(const State &glState,
                                           GLsizei drawcount,
                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(counts, drawcount, paramCapture);
 }
 
 void CaptureMultiDrawElementsANGLE_indices(const State &glState,
@@ -398,7 +409,7 @@ void CaptureMultiDrawElementsANGLE_indices(const State &glState,
                                            GLsizei drawcount,
                                            ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(indices, drawcount, paramCapture);
 }
 
 void CaptureMultiDrawElementsInstancedANGLE_counts(const State &glState,
