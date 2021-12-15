@@ -165,7 +165,6 @@ class TranslatorMetalDirect : public TCompiler
     TranslatorMetalDirect *getAsTranslatorMetalDirect() override { return this; }
 #endif
 
-    void enableEmulatedInstanceID(bool e) { mEmulatedInstanceID = e; }
     TranslatorMetalReflection *getTranslatorMetalReflection() { return &translatorMetalReflection; }
 
   protected:
@@ -196,8 +195,6 @@ class TranslatorMetalDirect : public TCompiler
 
     ANGLE_NO_DISCARD TIntermSwizzle *getDriverUniformNegFlipYRef(
         DriverUniform &driverUniforms) const;
-
-    bool mEmulatedInstanceID = false;
 
     TranslatorMetalReflection translatorMetalReflection = {};
 };

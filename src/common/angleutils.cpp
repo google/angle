@@ -75,6 +75,9 @@ std::string ArrayIndexString(const std::vector<unsigned int> &indices)
     return strstr.str();
 }
 
+#if defined(__clang__)
+#    pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif
 size_t FormatStringIntoVector(const char *fmt, va_list vararg, std::vector<char> &outBuffer)
 {
     va_list varargCopy;
