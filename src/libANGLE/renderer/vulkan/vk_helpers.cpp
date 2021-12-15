@@ -877,47 +877,29 @@ ImageLayout GetImageLayoutFromGLImageLayout(GLenum layout)
 
 GLenum ConvertImageLayoutToGLImageLayout(ImageLayout layout)
 {
-    switch (layout)
+    switch (kImageMemoryBarrierData[layout].layout)
     {
-        case ImageLayout::Undefined:
+        case VK_IMAGE_LAYOUT_UNDEFINED:
             return GL_NONE;
-        case ImageLayout::ColorAttachment:
-            return GL_LAYOUT_COLOR_ATTACHMENT_EXT;
-        case ImageLayout::ColorAttachmentAndFragmentShaderRead:
-        case ImageLayout::ColorAttachmentAndAllShadersRead:
-        case ImageLayout::DSAttachmentWriteAndFragmentShaderRead:
-        case ImageLayout::DSAttachmentWriteAndAllShadersRead:
-        case ImageLayout::DSAttachmentReadAndFragmentShaderRead:
-        case ImageLayout::DSAttachmentReadAndAllShadersRead:
-            break;
-        case ImageLayout::DepthStencilAttachmentReadOnly:
-            return GL_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_EXT;
-        case ImageLayout::DepthStencilAttachment:
-            return GL_LAYOUT_DEPTH_STENCIL_ATTACHMENT_EXT;
-        case ImageLayout::DepthStencilResolveAttachment:
-        case ImageLayout::Present:
-        case ImageLayout::SharedPresent:
-        case ImageLayout::ExternalPreInitialized:
-            break;
-        case ImageLayout::ExternalShadersReadOnly:
-            return GL_LAYOUT_SHADER_READ_ONLY_EXT;
-        case ImageLayout::ExternalShadersWrite:
+        case VK_IMAGE_LAYOUT_GENERAL:
             return GL_LAYOUT_GENERAL_EXT;
-        case ImageLayout::TransferSrc:
+        case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+            return GL_LAYOUT_COLOR_ATTACHMENT_EXT;
+        case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+            return GL_LAYOUT_DEPTH_STENCIL_ATTACHMENT_EXT;
+        case VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL:
+            return GL_LAYOUT_DEPTH_STENCIL_READ_ONLY_EXT;
+        case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+            return GL_LAYOUT_SHADER_READ_ONLY_EXT;
+        case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
             return GL_LAYOUT_TRANSFER_SRC_EXT;
-        case ImageLayout::TransferDst:
+        case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
             return GL_LAYOUT_TRANSFER_DST_EXT;
-        case ImageLayout::VertexShaderReadOnly:
-        case ImageLayout::VertexShaderWrite:
-        case ImageLayout::PreFragmentShadersReadOnly:
-        case ImageLayout::PreFragmentShadersWrite:
-        case ImageLayout::FragmentShaderReadOnly:
-        case ImageLayout::FragmentShaderWrite:
-        case ImageLayout::ComputeShaderReadOnly:
-        case ImageLayout::ComputeShaderWrite:
-        case ImageLayout::AllGraphicsShadersReadOnly:
-        case ImageLayout::AllGraphicsShadersWrite:
-        case ImageLayout::InvalidEnum:
+        case VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL:
+            return GL_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_EXT;
+        case VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL:
+            return GL_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_EXT;
+        default:
             break;
     }
     UNREACHABLE();
