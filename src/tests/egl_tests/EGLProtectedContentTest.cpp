@@ -828,6 +828,27 @@ TEST_P(EGLProtectedContentTest, ProtectedContextWithProtectedTextureFromAndroidN
     textureFromAndroidNativeBufferTest(true, true);
 }
 
+// Retrieve the EGL_PROTECTED_CONTENT_EXT attribute via eglQueryContext
+TEST_P(EGLProtectedContentTest, QueryContext)
+{
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_EXT_protected_content"));
+
+    EGLConfig config = EGL_NO_CONFIG_KHR;
+    EXPECT_TRUE(chooseConfig(&config));
+    ANGLE_SKIP_TEST_IF(config == EGL_NO_CONFIG_KHR);
+
+    bool isProtectedContext = true;
+    EGLContext context      = EGL_NO_CONTEXT;
+    EXPECT_TRUE(createContext(isProtectedContext, config, &context));
+    ASSERT_EGL_SUCCESS() << "eglCreateContext failed.";
+
+    EGLint value = 0;
+    EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_PROTECTED_CONTENT_EXT, &value));
+    ASSERT_EGL_SUCCESS() << "eglQueryContext failed.";
+
+    EXPECT_EQ(value, 1);
+}
+
 ANGLE_INSTANTIATE_TEST(EGLProtectedContentTest,
                        WithNoFixture(ES2_OPENGLES()),
                        WithNoFixture(ES3_OPENGLES()),
