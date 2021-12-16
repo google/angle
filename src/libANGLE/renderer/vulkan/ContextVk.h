@@ -605,7 +605,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result startRenderPass(gl::Rectangle renderArea,
                                   vk::RenderPassCommandBuffer **commandBufferOut,
                                   bool *renderPassDescChangedOut);
-    void startNextSubpass();
+    angle::Result startNextSubpass();
     angle::Result flushCommandsAndEndRenderPass(RenderPassClosureReason reason);
     angle::Result flushCommandsAndEndRenderPassWithoutQueueSubmit(RenderPassClosureReason reason);
 

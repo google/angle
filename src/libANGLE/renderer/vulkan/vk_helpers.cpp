@@ -1275,7 +1275,8 @@ void OutsideRenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *cont
 
 // RenderPassCommandBufferHelper implementation.
 RenderPassCommandBufferHelper::RenderPassCommandBufferHelper()
-    : mCounter(0),
+    : mCurrentSubpass(0),
+      mCounter(0),
       mClearValues{},
       mRenderPassStarted(false),
       mTransformFeedbackCounterBuffers{},
@@ -1284,6 +1285,7 @@ RenderPassCommandBufferHelper::RenderPassCommandBufferHelper()
       mIsTransformFeedbackActiveUnpaused(false),
       mDepthAccess(ResourceAccess::Unused),
       mStencilAccess(ResourceAccess::Unused),
+      mPreviousSubpassesCmdCount(0),
       mDepthCmdCountInvalidated(kInfiniteCmdCount),
       mDepthCmdCountDisabled(kInfiniteCmdCount),
       mStencilCmdCountInvalidated(kInfiniteCmdCount),
@@ -1311,7 +1313,7 @@ angle::Result RenderPassCommandBufferHelper::initialize(Context *context, Comman
 
 angle::Result RenderPassCommandBufferHelper::initializeCommandBuffer(Context *context)
 {
-    return mCommandBuffer.initialize(context, mCommandPool, true, &mAllocator);
+    return getCommandBuffer().initialize(context, mCommandPool, true, &mAllocator);
 }
 
 angle::Result RenderPassCommandBufferHelper::reset(Context *context)
@@ -1325,6 +1327,7 @@ angle::Result RenderPassCommandBufferHelper::reset(Context *context)
     mHasGLMemoryBarrierIssued          = false;
     mDepthAccess                       = ResourceAccess::Unused;
     mStencilAccess                     = ResourceAccess::Unused;
+    mPreviousSubpassesCmdCount         = 0;
     mDepthCmdCountInvalidated          = kInfiniteCmdCount;
     mDepthCmdCountDisabled             = kInfiniteCmdCount;
     mStencilCmdCountInvalidated        = kInfiniteCmdCount;
@@ -1340,8 +1343,13 @@ angle::Result RenderPassCommandBufferHelper::reset(Context *context)
     mColorResolveImages.reset();
     mImageOptimizeForPresent = nullptr;
 
-    // Reset and re-initialize the command buffer
-    context->getRenderer()->resetRenderPassCommandBuffer(std::move(mCommandBuffer));
+    // Reset and re-initialize the command buffers
+    for (uint32_t subpass = 0; subpass <= mCurrentSubpass; ++subpass)
+    {
+        context->getRenderer()->resetRenderPassCommandBuffer(std::move(mCommandBuffers[subpass]));
+    }
+
+    mCurrentSubpass = 0;
     return initializeCommandBuffer(context);
 }
 
@@ -1511,7 +1519,7 @@ bool RenderPassCommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
             // Get the latest CmdCount at the start of being disabled.  At the end of the render
             // pass, cmdCountDisabled is <= the actual command buffer size, and so it's compared
             // with cmdCountInvalidated.  If the same, the attachment is still invalidated.
-            *cmdCountDisabled = mCommandBuffer.getRenderPassWriteCommandCount();
+            *cmdCountDisabled = getRenderPassWriteCommandCount();
             return false;
         }
     }
@@ -1871,11 +1879,6 @@ angle::Result RenderPassCommandBufferHelper::beginRenderPass(
 {
     ASSERT(!mRenderPassStarted);
 
-    VkCommandBufferInheritanceInfo inheritanceInfo = {};
-    ANGLE_TRY(RenderPassCommandBuffer::InitializeRenderPassInheritanceInfo(
-        contextVk, framebuffer, renderPassDesc, &inheritanceInfo));
-    ANGLE_TRY(mCommandBuffer.begin(contextVk, inheritanceInfo));
-
     mRenderPassDesc              = renderPassDesc;
     mAttachmentOps               = renderPassAttachmentOps;
     mDepthStencilAttachmentIndex = depthStencilAttachmentIndex;
@@ -1883,17 +1886,27 @@ angle::Result RenderPassCommandBufferHelper::beginRenderPass(
     mFramebuffer.setHandle(framebuffer.getHandle());
     mRenderArea       = renderArea;
     mClearValues      = clearValues;
-    *commandBufferOut = &mCommandBuffer;
+    *commandBufferOut = &getCommandBuffer();
 
     mRenderPassStarted = true;
     mCounter++;
 
-    return angle::Result::Continue;
+    return beginRenderPassCommandBuffer(contextVk);
+}
+
+angle::Result RenderPassCommandBufferHelper::beginRenderPassCommandBuffer(ContextVk *contextVk)
+{
+    VkCommandBufferInheritanceInfo inheritanceInfo = {};
+    ANGLE_TRY(RenderPassCommandBuffer::InitializeRenderPassInheritanceInfo(
+        contextVk, mFramebuffer, mRenderPassDesc, &inheritanceInfo));
+    inheritanceInfo.subpass = mCurrentSubpass;
+
+    return getCommandBuffer().begin(contextVk, inheritanceInfo);
 }
 
 angle::Result RenderPassCommandBufferHelper::endRenderPass(ContextVk *contextVk)
 {
-    ANGLE_TRY(mCommandBuffer.end(contextVk));
+    ANGLE_TRY(endRenderPassCommandBuffer(contextVk));
 
     for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorImagesCount; ++index)
     {
@@ -1922,6 +1935,51 @@ angle::Result RenderPassCommandBufferHelper::endRenderPass(ContextVk *contextVk)
         finalizeDepthStencilResolveImageLayout(contextVk);
     }
 
+    return angle::Result::Continue;
+}
+
+angle::Result RenderPassCommandBufferHelper::endRenderPassCommandBuffer(ContextVk *contextVk)
+{
+    return getCommandBuffer().end(contextVk);
+}
+
+angle::Result RenderPassCommandBufferHelper::nextSubpass(ContextVk *contextVk,
+                                                         RenderPassCommandBuffer **commandBufferOut)
+{
+    if (RenderPassCommandBuffer::ExecutesInline())
+    {
+        // When using ANGLE secondary command buffers, the commands are inline and are executed on
+        // the primary command buffer.  This means that vkCmdNextSubpass can be intermixed with the
+        // rest of the commands, and there is no need to split command buffers.
+        //
+        // Note also that the command buffer handle doesn't change in this case.
+        getCommandBuffer().nextSubpass(VK_SUBPASS_CONTENTS_INLINE);
+        return angle::Result::Continue;
+    }
+
+    // When using Vulkan secondary command buffers, each subpass's contents must be recorded in a
+    // separate command buffer that is vkCmdExecuteCommands'ed in the primary command buffer.
+    // vkCmdNextSubpass calls must also be issued in the primary command buffer.
+    //
+    // To support this, a list of command buffers are kept, one for each subpass.  When moving to
+    // the next subpass, the previous command buffer is ended and a new one is initialized and
+    // begun.
+
+    // Accumulate command count for tracking purposes.
+    mPreviousSubpassesCmdCount = getRenderPassWriteCommandCount();
+
+    ANGLE_TRY(endRenderPassCommandBuffer(contextVk));
+    markClosed();
+
+    ++mCurrentSubpass;
+    ASSERT(mCurrentSubpass < kMaxSubpassCount);
+
+    ANGLE_TRY(initializeCommandBuffer(contextVk));
+    ANGLE_TRY(beginRenderPassCommandBuffer(contextVk));
+    markOpen();
+
+    // Return the new command buffer handle
+    *commandBufferOut = &getCommandBuffer();
     return angle::Result::Continue;
 }
 
@@ -1957,7 +2015,7 @@ void RenderPassCommandBufferHelper::invalidateRenderPassDepthAttachment(
 {
     // Keep track of the size of commands in the command buffer.  If the size grows in the
     // future, that implies that drawing occured since invalidated.
-    mDepthCmdCountInvalidated = mCommandBuffer.getRenderPassWriteCommandCount();
+    mDepthCmdCountInvalidated = getRenderPassWriteCommandCount();
 
     // Also track the size if the attachment is currently disabled.
     const bool isDepthWriteEnabled = dsState.depthTest && dsState.depthMask;
@@ -1973,7 +2031,7 @@ void RenderPassCommandBufferHelper::invalidateRenderPassStencilAttachment(
 {
     // Keep track of the size of commands in the command buffer.  If the size grows in the
     // future, that implies that drawing occured since invalidated.
-    mStencilCmdCountInvalidated = mCommandBuffer.getRenderPassWriteCommandCount();
+    mStencilCmdCountInvalidated = getRenderPassWriteCommandCount();
 
     // Also track the size if the attachment is currently disabled.
     const bool isStencilWriteEnabled =
@@ -2014,7 +2072,14 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
                                                   : VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
 
     primary->beginRenderPass(beginInfo, kSubpassContents);
-    mCommandBuffer.executeCommands(primary);
+    for (uint32_t subpass = 0; subpass <= mCurrentSubpass; ++subpass)
+    {
+        if (subpass > 0)
+        {
+            primary->nextSubpass(kSubpassContents);
+        }
+        mCommandBuffers[subpass].executeCommands(primary);
+    }
     primary->endRenderPass();
 
     // Restart the command buffer.
@@ -2040,16 +2105,16 @@ void RenderPassCommandBufferHelper::resumeTransformFeedback()
     mRebindTransformFeedbackBuffers    = false;
     mIsTransformFeedbackActiveUnpaused = true;
 
-    mCommandBuffer.beginTransformFeedback(0, numCounterBuffers,
-                                          mTransformFeedbackCounterBuffers.data(), nullptr);
+    getCommandBuffer().beginTransformFeedback(0, numCounterBuffers,
+                                              mTransformFeedbackCounterBuffers.data(), nullptr);
 }
 
 void RenderPassCommandBufferHelper::pauseTransformFeedback()
 {
     ASSERT(isTransformFeedbackStarted() && isTransformFeedbackActiveUnpaused());
     mIsTransformFeedbackActiveUnpaused = false;
-    mCommandBuffer.endTransformFeedback(0, mValidTransformFeedbackBufferCount,
-                                        mTransformFeedbackCounterBuffers.data(), nullptr);
+    getCommandBuffer().endTransformFeedback(0, mValidTransformFeedbackBufferCount,
+                                            mTransformFeedbackCounterBuffers.data(), nullptr);
 }
 
 void RenderPassCommandBufferHelper::updateRenderPassColorClear(PackedAttachmentIndex colorIndexVk,
@@ -2158,7 +2223,15 @@ void RenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
         out << "StoreOp: " << storeOps << "\\l";
     }
 
-    out << mCommandBuffer.dumpCommands("\\l");
+    for (uint32_t subpass = 0; subpass <= mCurrentSubpass; ++subpass)
+    {
+        if (subpass > 0)
+        {
+            out << "Next Subpass"
+                << "\\l";
+        }
+        out << mCommandBuffers[subpass].dumpCommands("\\l");
+    }
     contextVk->addCommandBufferDiagnostics(out.str());
 }
 

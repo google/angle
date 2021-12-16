@@ -5908,14 +5908,14 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
     return angle::Result::Continue;
 }
 
-void ContextVk::startNextSubpass()
+angle::Result ContextVk::startNextSubpass()
 {
     ASSERT(hasStartedRenderPass());
 
-    mRenderPassCommands->getCommandBuffer().nextSubpass(VK_SUBPASS_CONTENTS_INLINE);
-
     // The graphics pipelines are bound to a subpass, so update the subpass as well.
     mGraphicsPipelineDesc->nextSubpass(&mGraphicsPipelineTransition);
+
+    return mRenderPassCommands->nextSubpass(this, &mRenderPassCommandBuffer);
 }
 
 void ContextVk::restoreFinishedRenderPass(vk::Framebuffer *framebuffer)

@@ -176,6 +176,15 @@ constexpr const char *kSkippedMessages[] = {
     "UNASSIGNED-CoreValidation-Shader-InterfaceTypeMismatch",
     // http://anglebug.com/6514
     "vkEnumeratePhysicalDevices: One or more layers modified physical devices",
+    // When using Vulkan secondary command buffers, the command buffer is begun with the current
+    // framebuffer specified in pInheritanceInfo::framebuffer.  If the framebuffer is multisampled
+    // and is resolved, an optimization would change the framebuffer to add the resolve target and
+    // use a subpass resolve operation instead.  The following error complains that the framebuffer
+    // used to start the render pass and the one specified in pInheritanceInfo::framebuffer must be
+    // equal, which is not true in that case.  In practice, this is benign, as the part of the
+    // framebuffer that's accessed by the command buffer is identically laid out.
+    // http://anglebug.com/6811
+    "VUID-vkCmdExecuteCommands-pCommandBuffers-00099",
 };
 
 struct SkippedSyncvalMessage

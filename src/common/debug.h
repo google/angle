@@ -37,7 +37,7 @@ namespace gl
 {
 class Context;
 
-// Pairs a D3D begin event with an end event.
+// Pairs a begin event with an end event.
 class ScopedPerfEventHelper : angle::NonCopyable
 {
   public:

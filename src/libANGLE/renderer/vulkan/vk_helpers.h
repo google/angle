@@ -1095,13 +1095,13 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     angle::Result reset(Context *context);
 
-    RenderPassCommandBuffer &getCommandBuffer() { return mCommandBuffer; }
+    RenderPassCommandBuffer &getCommandBuffer() { return mCommandBuffers[mCurrentSubpass]; }
 
     bool empty() const { return !started(); }
 
 #if defined(ANGLE_ENABLE_ASSERTS)
-    void markOpen() { mCommandBuffer.open(); }
-    void markClosed() { mCommandBuffer.close(); }
+    void markOpen() { getCommandBuffer().open(); }
+    void markClosed() { getCommandBuffer().close(); }
 #endif
 
     void imageRead(ContextVk *contextVk,
@@ -1151,6 +1151,8 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     angle::Result endRenderPass(ContextVk *contextVk);
 
+    angle::Result nextSubpass(ContextVk *contextVk, RenderPassCommandBuffer **commandBufferOut);
+
     void updateStartedRenderPassWithDepthMode(bool readOnlyDepthStencilMode);
 
     void beginTransformFeedback(size_t validBufferCount,
@@ -1168,15 +1170,14 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     bool hasWriteAfterInvalidate(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)
     {
         return (cmdCountInvalidated != kInfiniteCmdCount &&
-                std::min(cmdCountDisabled, mCommandBuffer.getRenderPassWriteCommandCount()) !=
+                std::min(cmdCountDisabled, getRenderPassWriteCommandCount()) !=
                     cmdCountInvalidated);
     }
 
     bool isInvalidated(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)
     {
         return cmdCountInvalidated != kInfiniteCmdCount &&
-               std::min(cmdCountDisabled, mCommandBuffer.getRenderPassWriteCommandCount()) ==
-                   cmdCountInvalidated;
+               std::min(cmdCountDisabled, getRenderPassWriteCommandCount()) == cmdCountInvalidated;
     }
 
     void updateRenderPassColorClear(PackedAttachmentIndex colorIndex,
@@ -1235,7 +1236,15 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
   private:
     angle::Result initializeCommandBuffer(Context *context);
+    angle::Result beginRenderPassCommandBuffer(ContextVk *contextVk);
+    angle::Result endRenderPassCommandBuffer(ContextVk *contextVk);
 
+    uint32_t getRenderPassWriteCommandCount()
+    {
+        // All subpasses are chained (no subpasses running in parallel), so the cmd count can be
+        // considered continuous among subpasses.
+        return mPreviousSubpassesCmdCount + getCommandBuffer().getRenderPassWriteCommandCount();
+    }
     bool onDepthStencilAccess(ResourceAccess access,
                               uint32_t *cmdCountInvalidated,
                               uint32_t *cmdCountDisabled);
@@ -1258,7 +1267,13 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                                           RenderPassStoreOp *storeOp);
     void finalizeDepthStencilImageLayoutAndLoadStore(Context *context);
 
-    RenderPassCommandBuffer mCommandBuffer;
+    // When using Vulkan secondary command buffers, each subpass must be recorded in a separate
+    // command buffer.  Currently ANGLE produces render passes with at most 2 subpasses.  Once
+    // framebuffer-fetch is appropriately implemented to use subpasses, this array must be made
+    // dynamic.
+    static constexpr size_t kMaxSubpassCount = 2;
+    std::array<RenderPassCommandBuffer, kMaxSubpassCount> mCommandBuffers;
+    uint32_t mCurrentSubpass;
 
     // RenderPass state
     uint32_t mCounter;
@@ -1285,6 +1300,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     ResourceAccess mStencilAccess;
 
     // State tracking for whether to optimize the storeOp to DONT_CARE
+    uint32_t mPreviousSubpassesCmdCount;
     uint32_t mDepthCmdCountInvalidated;
     uint32_t mDepthCmdCountDisabled;
     uint32_t mStencilCmdCountInvalidated;
