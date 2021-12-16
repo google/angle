@@ -51,6 +51,8 @@
 1229184 WIN NVIDIA VULKAN : SimpleStateChangeTest.RedefineFramebufferTexture/* = SKIP
 6173 WIN INTEL OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 6217 WIN INTEL OPENGL : GLSLTest_ES31.StorageBufferBoolVectorPassedToFunctions/* = SKIP
+6826 WIN NVIDIA OPENGL : GLSLTest.VectorAndMatrixScalarizationDoesNotAffectRendering/* = SKIP
+6826 WIN NVIDIA GLES : GLSLTest.VectorAndMatrixScalarizationDoesNotAffectRendering/* = SKIP
 
 // Linux
 6065 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
