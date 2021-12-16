@@ -297,6 +297,7 @@
 6480 PIXEL4ORXL GLES : RobustResourceInitTestES3.CheckMultisampleDepthStencilRenderbufferIsCleared/ES3_OpenGLES = SKIP
 5981 PIXEL4ORXL GLES : SimpleStateChangeTestES31.ClearThenSampleWithCompute/* = SKIP
 5981 PIXEL4ORXL GLES : SimpleStateChangeTestES31.InvalidateThenStorageWriteThenBlend/* = SKIP
+6744 PIXEL4ORXL GLES : SimpleStateChangeTestES3.OutOfBoundsByteAttribute/* = SKIP
 5981 PIXEL4ORXL GLES : SimpleStateChangeTestES31.TransformFeedbackThenReadWithCompute/* = SKIP
 5981 PIXEL4ORXL GLES : Texture3DTestES2.CopySubImageAlpha/* = SKIP
 5981 PIXEL4ORXL GLES : Texture3DTestES2.CopySubImageLuminance/* = SKIP
