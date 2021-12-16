@@ -2144,14 +2144,19 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     ANGLE_VK_CHECK(displayVk, queueFamily.getDeviceQueueCount() > 0,
                    VK_ERROR_INITIALIZATION_FAILED);
 
+    // We enable protected context only if both supportsProtectedMemory and device also supports
+    // protected. There are cases we have to disable supportsProtectedMemory feature due to driver
+    // bugs.
+    bool enableProtectedContent =
+        queueFamily.supportsProtected() && getFeatures().supportsProtectedMemory.enabled;
+
     uint32_t queueCount = std::min(queueFamily.getDeviceQueueCount(),
                                    static_cast<uint32_t>(egl::ContextPriority::EnumCount));
 
     uint32_t queueCreateInfoCount              = 1;
     VkDeviceQueueCreateInfo queueCreateInfo[1] = {};
     queueCreateInfo[0].sType                   = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    queueCreateInfo[0].flags =
-        queueFamily.supportsProtected() ? VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT : 0;
+    queueCreateInfo[0].flags = enableProtectedContent ? VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT : 0;
     queueCreateInfo[0].queueFamilyIndex = queueFamilyIndex;
     queueCreateInfo[0].queueCount       = queueCount;
     queueCreateInfo[0].pQueuePriorities = vk::QueueFamily::kQueuePriorities;
@@ -2185,7 +2190,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 
     vk::DeviceQueueMap graphicsQueueMap =
-        queueFamily.initializeQueueMap(mDevice, queueFamily.supportsProtected(), 0, queueCount);
+        queueFamily.initializeQueueMap(mDevice, enableProtectedContent, 0, queueCount);
 
     if (isAsyncCommandQueueEnabled())
     {
@@ -2539,9 +2544,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         ANGLE_FEATURE_CONDITION(&mFeatures, provokingVertex, true);
     }
 
+    // http://b/208458772. ARM driver supports this protected memory extension but we are seeing
+    // excessive load/store unit activity when this extension is enabled, even if not been used.
+    // Disable this extension on ARM platform until we resolve this performance issue.
     // http://anglebug.com/3965
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsProtectedMemory,
-                            (mProtectedMemoryFeatures.protectedMemory == VK_TRUE));
+                            (mProtectedMemoryFeatures.protectedMemory == VK_TRUE) && !isARM);
 
     // http://anglebug.com/6692
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostQueryReset,
