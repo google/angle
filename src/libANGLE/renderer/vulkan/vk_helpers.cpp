@@ -85,7 +85,7 @@ struct ImageMemoryBarrierData
     VkAccessFlags srcAccessMask;
     // Read or write.
     ResourceAccess type;
-    // CommandBufferHelper tracks an array of PipelineBarriers. This indicates which array element
+    // *CommandBufferHelper track an array of PipelineBarriers. This indicates which array element
     // this should be merged into. Right now we track individual barrier for every PipelineStage. If
     // layout has a single stage mask bit, we use that stage as index. If layout has multiple stage
     // mask bits, we pick the lowest stage as the index since it is the first stage that needs
@@ -811,6 +811,71 @@ bool ShouldReleaseFreeBuffer(const vk::BufferHelper &buffer,
 
     return sizeMismatch || releaseByPolicy;
 }
+
+// Helper functions used below
+char GetLoadOpShorthand(RenderPassLoadOp loadOp)
+{
+    switch (loadOp)
+    {
+        case RenderPassLoadOp::Clear:
+            return 'C';
+        case RenderPassLoadOp::Load:
+            return 'L';
+        case RenderPassLoadOp::None:
+            return 'N';
+        default:
+            return 'D';
+    }
+}
+
+char GetStoreOpShorthand(RenderPassStoreOp storeOp)
+{
+    switch (storeOp)
+    {
+        case RenderPassStoreOp::Store:
+            return 'S';
+        case RenderPassStoreOp::None:
+            return 'N';
+        default:
+            return 'D';
+    }
+}
+
+template <typename CommandBufferHelperT>
+void RecycleCommandBufferHelper(VkDevice device,
+                                std::vector<CommandBufferHelperT *> *freeList,
+                                CommandBufferHelperT **commandBufferHelper,
+                                priv::SecondaryCommandBuffer *commandBuffer)
+{
+    freeList->push_back(*commandBufferHelper);
+}
+
+template <typename CommandBufferHelperT>
+void RecycleCommandBufferHelper(VkDevice device,
+                                std::vector<CommandBufferHelperT *> *freeList,
+                                CommandBufferHelperT **commandBufferHelper,
+                                VulkanSecondaryCommandBuffer *commandBuffer)
+{
+    CommandPool *pool = (*commandBufferHelper)->getCommandPool();
+
+    pool->freeCommandBuffers(device, 1, commandBuffer->ptr());
+    commandBuffer->releaseHandle();
+    SafeDelete(*commandBufferHelper);
+}
+
+ANGLE_MAYBE_UNUSED void ResetSecondaryCommandBuffer(
+    std::vector<priv::SecondaryCommandBuffer> *resetList,
+    priv::SecondaryCommandBuffer &&commandBuffer)
+{
+    commandBuffer.reset();
+}
+
+ANGLE_MAYBE_UNUSED void ResetSecondaryCommandBuffer(
+    std::vector<VulkanSecondaryCommandBuffer> *resetList,
+    VulkanSecondaryCommandBuffer &&commandBuffer)
+{
+    resetList->push_back(std::move(commandBuffer));
+}
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -953,45 +1018,18 @@ void PackedClearValuesArray::storeNoDepthStencil(PackedAttachmentIndex index,
     mValues[index.get()] = clearValue;
 }
 
-// CommandBufferHelper implementation.
-CommandBufferHelper::CommandBufferHelper()
+// CommandBufferHelperCommon implementation.
+CommandBufferHelperCommon::CommandBufferHelperCommon()
     : mPipelineBarriers(),
       mPipelineBarrierMask(),
       mCommandPool(nullptr),
-      mCounter(0),
-      mClearValues{},
-      mRenderPassStarted(false),
-      mTransformFeedbackCounterBuffers{},
-      mValidTransformFeedbackBufferCount(0),
-      mRebindTransformFeedbackBuffers(false),
-      mIsTransformFeedbackActiveUnpaused(false),
-      mIsRenderPassCommandBuffer(false),
       mHasShaderStorageOutput(false),
-      mHasGLMemoryBarrierIssued(false),
-      mDepthAccess(ResourceAccess::Unused),
-      mStencilAccess(ResourceAccess::Unused),
-      mDepthCmdCountInvalidated(kInfiniteCmdCount),
-      mDepthCmdCountDisabled(kInfiniteCmdCount),
-      mStencilCmdCountInvalidated(kInfiniteCmdCount),
-      mStencilCmdCountDisabled(kInfiniteCmdCount),
-      mDepthStencilAttachmentIndex(kAttachmentIndexInvalid),
-      mDepthStencilImage(nullptr),
-      mDepthStencilResolveImage(nullptr),
-      mDepthStencilLevelIndex(0),
-      mDepthStencilLayerIndex(0),
-      mDepthStencilLayerCount(0),
-      mColorImagesCount(0),
-      mImageOptimizeForPresent(nullptr)
+      mHasGLMemoryBarrierIssued(false)
 {}
 
-CommandBufferHelper::~CommandBufferHelper()
-{
-    mFramebuffer.setHandle(VK_NULL_HANDLE);
-}
+CommandBufferHelperCommon::~CommandBufferHelperCommon() {}
 
-angle::Result CommandBufferHelper::initialize(Context *context,
-                                              bool isRenderPassCommandBuffer,
-                                              CommandPool *commandPool)
+void CommandBufferHelperCommon::initializeImpl(Context *context, CommandPool *commandPool)
 {
     ASSERT(mUsedBuffers.empty());
     constexpr size_t kInitialBufferCount = 128;
@@ -1001,82 +1039,21 @@ angle::Result CommandBufferHelper::initialize(Context *context,
     // Push a scope into the pool allocator so we can easily free and re-init on reset()
     mAllocator.push();
 
-    mIsRenderPassCommandBuffer = isRenderPassCommandBuffer;
-    mCommandPool               = commandPool;
-
-    return initializeCommandBuffer(context);
+    mCommandPool = commandPool;
 }
 
-angle::Result CommandBufferHelper::initializeCommandBuffer(Context *context)
-{
-    return mCommandBuffer.initialize(context, mCommandPool, mIsRenderPassCommandBuffer,
-                                     &mAllocator);
-}
-
-angle::Result CommandBufferHelper::reset(Context *context)
+void CommandBufferHelperCommon::resetImpl()
 {
     mAllocator.pop();
     mAllocator.push();
 
-    // Reset and re-initialize the command buffer
-    context->getRenderer()->resetSecondaryCommandBuffer(std::move(mCommandBuffer));
-    ANGLE_TRY(initializeCommandBuffer(context));
-
     mUsedBuffers.clear();
-
-    if (mIsRenderPassCommandBuffer)
-    {
-        mRenderPassStarted                 = false;
-        mValidTransformFeedbackBufferCount = 0;
-        mRebindTransformFeedbackBuffers    = false;
-        mHasShaderStorageOutput            = false;
-        mHasGLMemoryBarrierIssued          = false;
-        mDepthAccess                       = ResourceAccess::Unused;
-        mStencilAccess                     = ResourceAccess::Unused;
-        mDepthCmdCountInvalidated          = kInfiniteCmdCount;
-        mDepthCmdCountDisabled             = kInfiniteCmdCount;
-        mStencilCmdCountInvalidated        = kInfiniteCmdCount;
-        mStencilCmdCountDisabled           = kInfiniteCmdCount;
-        mColorImagesCount                  = PackedAttachmentCount(0);
-        mDepthStencilAttachmentIndex       = kAttachmentIndexInvalid;
-        mDepthInvalidateArea               = gl::Rectangle();
-        mStencilInvalidateArea             = gl::Rectangle();
-        mRenderPassUsedImages.clear();
-        mDepthStencilImage        = nullptr;
-        mDepthStencilResolveImage = nullptr;
-        mColorImages.reset();
-        mColorResolveImages.reset();
-        mImageOptimizeForPresent = nullptr;
-    }
-    // This state should never change for non-renderPass command buffer
-    ASSERT(mRenderPassStarted == false);
-    ASSERT(mValidTransformFeedbackBufferCount == 0);
-    ASSERT(!mRebindTransformFeedbackBuffers);
-    ASSERT(!mIsTransformFeedbackActiveUnpaused);
-    ASSERT(mRenderPassUsedImages.empty());
-
-    return angle::Result::Continue;
 }
 
-bool CommandBufferHelper::usesBuffer(const BufferHelper &buffer) const
-{
-    return mUsedBuffers.contains(buffer.getBufferSerial().getValue());
-}
-
-bool CommandBufferHelper::usesBufferForWrite(const BufferHelper &buffer) const
-{
-    BufferAccess access;
-    if (!mUsedBuffers.get(buffer.getBufferSerial().getValue(), &access))
-    {
-        return false;
-    }
-    return access == BufferAccess::Write;
-}
-
-void CommandBufferHelper::bufferRead(ContextVk *contextVk,
-                                     VkAccessFlags readAccessType,
-                                     PipelineStage readStage,
-                                     BufferHelper *buffer)
+void CommandBufferHelperCommon::bufferRead(ContextVk *contextVk,
+                                           VkAccessFlags readAccessType,
+                                           PipelineStage readStage,
+                                           BufferHelper *buffer)
 {
     VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[readStage];
     if (buffer->recordReadBarrier(readAccessType, stageBits, &mPipelineBarriers[readStage]))
@@ -1092,11 +1069,11 @@ void CommandBufferHelper::bufferRead(ContextVk *contextVk,
     }
 }
 
-void CommandBufferHelper::bufferWrite(ContextVk *contextVk,
-                                      VkAccessFlags writeAccessType,
-                                      PipelineStage writeStage,
-                                      AliasingMode aliasingMode,
-                                      BufferHelper *buffer)
+void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
+                                            VkAccessFlags writeAccessType,
+                                            PipelineStage writeStage,
+                                            AliasingMode aliasingMode,
+                                            BufferHelper *buffer)
 {
     buffer->retainReadWrite(&contextVk->getResourceUseList());
     VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[writeStage];
@@ -1124,70 +1101,298 @@ void CommandBufferHelper::bufferWrite(ContextVk *contextVk,
     }
 }
 
-void CommandBufferHelper::imageRead(ContextVk *contextVk,
-                                    VkImageAspectFlags aspectFlags,
-                                    ImageLayout imageLayout,
-                                    ImageHelper *image)
+bool CommandBufferHelperCommon::usesBuffer(const BufferHelper &buffer) const
+{
+    return mUsedBuffers.contains(buffer.getBufferSerial().getValue());
+}
+
+bool CommandBufferHelperCommon::usesBufferForWrite(const BufferHelper &buffer) const
+{
+    BufferAccess access;
+    if (!mUsedBuffers.get(buffer.getBufferSerial().getValue(), &access))
+    {
+        return false;
+    }
+    return access == BufferAccess::Write;
+}
+
+void CommandBufferHelperCommon::executeBarriers(const angle::FeaturesVk &features,
+                                                PrimaryCommandBuffer *primary)
+{
+    // make a local copy for faster access
+    PipelineStagesMask mask = mPipelineBarrierMask;
+    if (mask.none())
+    {
+        return;
+    }
+
+    if (features.preferAggregateBarrierCalls.enabled)
+    {
+        PipelineStagesMask::Iterator iter = mask.begin();
+        PipelineBarrier &barrier          = mPipelineBarriers[*iter];
+        for (++iter; iter != mask.end(); ++iter)
+        {
+            barrier.merge(&mPipelineBarriers[*iter]);
+        }
+        barrier.execute(primary);
+    }
+    else
+    {
+        for (PipelineStage pipelineStage : mask)
+        {
+            PipelineBarrier &barrier = mPipelineBarriers[pipelineStage];
+            barrier.execute(primary);
+        }
+    }
+    mPipelineBarrierMask.reset();
+}
+
+void CommandBufferHelperCommon::imageReadImpl(ContextVk *contextVk,
+                                              VkImageAspectFlags aspectFlags,
+                                              ImageLayout imageLayout,
+                                              ImageHelper *image)
 {
     if (image->isReadBarrierNecessary(imageLayout))
     {
         updateImageLayoutAndBarrier(contextVk, image, aspectFlags, imageLayout);
     }
-
-    if (mIsRenderPassCommandBuffer)
-    {
-        // As noted in the header we don't support multiple read layouts for Images.
-        // We allow duplicate uses in the RP to accommodate for normal GL sampler usage.
-        if (!usesImageInRenderPass(*image))
-        {
-            mRenderPassUsedImages.insert(image->getImageSerial().getValue());
-            image->retain(&contextVk->getResourceUseList());
-        }
-    }
-    else
-    {
-        image->retain(&contextVk->getResourceUseList());
-    }
 }
 
-void CommandBufferHelper::imageWrite(ContextVk *contextVk,
-                                     gl::LevelIndex level,
-                                     uint32_t layerStart,
-                                     uint32_t layerCount,
-                                     VkImageAspectFlags aspectFlags,
-                                     ImageLayout imageLayout,
-                                     AliasingMode aliasingMode,
-                                     ImageHelper *image)
+void CommandBufferHelperCommon::imageWriteImpl(ContextVk *contextVk,
+                                               gl::LevelIndex level,
+                                               uint32_t layerStart,
+                                               uint32_t layerCount,
+                                               VkImageAspectFlags aspectFlags,
+                                               ImageLayout imageLayout,
+                                               AliasingMode aliasingMode,
+                                               ImageHelper *image)
 {
     image->retain(&contextVk->getResourceUseList());
     image->onWrite(level, 1, layerStart, layerCount, aspectFlags);
     // Write always requires a barrier
     updateImageLayoutAndBarrier(contextVk, image, aspectFlags, imageLayout);
+}
 
-    if (mIsRenderPassCommandBuffer)
+void CommandBufferHelperCommon::updateImageLayoutAndBarrier(Context *context,
+                                                            ImageHelper *image,
+                                                            VkImageAspectFlags aspectFlags,
+                                                            ImageLayout imageLayout)
+{
+    PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
+    ASSERT(barrierIndex != PipelineStage::InvalidEnum);
+    PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
+    if (image->updateLayoutAndBarrier(context, aspectFlags, imageLayout, barrier))
     {
-        // When used as a storage image we allow for aliased writes.
-        if (aliasingMode == AliasingMode::Disallowed)
-        {
-            ASSERT(!usesImageInRenderPass(*image));
-        }
-        if (!usesImageInRenderPass(*image))
-        {
-            mRenderPassUsedImages.insert(image->getImageSerial().getValue());
-        }
+        mPipelineBarrierMask.set(barrierIndex);
     }
 }
 
-void CommandBufferHelper::colorImagesDraw(ResourceUseList *resourceUseList,
-                                          ImageHelper *image,
-                                          ImageHelper *resolveImage,
-                                          PackedAttachmentIndex packedAttachmentIndex)
+void CommandBufferHelperCommon::addCommandDiagnosticsCommon(std::ostringstream *out)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
+    *out << "Memory Barrier: ";
+    for (PipelineBarrier &barrier : mPipelineBarriers)
+    {
+        if (!barrier.isEmpty())
+        {
+            barrier.addDiagnosticsString(*out);
+        }
+    }
+    *out << "\\l";
+}
+
+// OutsideRenderPassCommandBufferHelper implementation.
+OutsideRenderPassCommandBufferHelper::OutsideRenderPassCommandBufferHelper() {}
+
+OutsideRenderPassCommandBufferHelper::~OutsideRenderPassCommandBufferHelper() {}
+
+angle::Result OutsideRenderPassCommandBufferHelper::initialize(Context *context,
+                                                               CommandPool *commandPool)
+{
+    initializeImpl(context, commandPool);
+    return initializeCommandBuffer(context);
+}
+
+angle::Result OutsideRenderPassCommandBufferHelper::initializeCommandBuffer(Context *context)
+{
+    return mCommandBuffer.initialize(context, mCommandPool, false, &mAllocator);
+}
+
+angle::Result OutsideRenderPassCommandBufferHelper::reset(Context *context)
+{
+    resetImpl();
+
+    // Reset and re-initialize the command buffer
+    context->getRenderer()->resetOutsideRenderPassCommandBuffer(std::move(mCommandBuffer));
+    return initializeCommandBuffer(context);
+}
+
+void OutsideRenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
+                                                     VkImageAspectFlags aspectFlags,
+                                                     ImageLayout imageLayout,
+                                                     ImageHelper *image)
+{
+    imageReadImpl(contextVk, aspectFlags, imageLayout, image);
+    image->retain(&contextVk->getResourceUseList());
+}
+
+void OutsideRenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
+                                                      gl::LevelIndex level,
+                                                      uint32_t layerStart,
+                                                      uint32_t layerCount,
+                                                      VkImageAspectFlags aspectFlags,
+                                                      ImageLayout imageLayout,
+                                                      AliasingMode aliasingMode,
+                                                      ImageHelper *image)
+{
+    imageWriteImpl(contextVk, level, layerStart, layerCount, aspectFlags, imageLayout, aliasingMode,
+                   image);
+}
+
+angle::Result OutsideRenderPassCommandBufferHelper::flushToPrimary(Context *context,
+                                                                   PrimaryCommandBuffer *primary)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "OutsideRenderPassCommandBufferHelper::flushToPrimary");
+    ASSERT(!empty());
+
+    // Commands that are added to primary before beginRenderPass command
+    executeBarriers(context->getRenderer()->getFeatures(), primary);
+
+    ANGLE_TRY(mCommandBuffer.end(context));
+    mCommandBuffer.executeCommands(primary);
+
+    // Restart the command buffer.
+    return reset(context);
+}
+
+void OutsideRenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
+{
+    std::ostringstream out;
+    addCommandDiagnosticsCommon(&out);
+
+    out << mCommandBuffer.dumpCommands("\\l");
+    contextVk->addCommandBufferDiagnostics(out.str());
+}
+
+// RenderPassCommandBufferHelper implementation.
+RenderPassCommandBufferHelper::RenderPassCommandBufferHelper()
+    : mCounter(0),
+      mClearValues{},
+      mRenderPassStarted(false),
+      mTransformFeedbackCounterBuffers{},
+      mValidTransformFeedbackBufferCount(0),
+      mRebindTransformFeedbackBuffers(false),
+      mIsTransformFeedbackActiveUnpaused(false),
+      mDepthAccess(ResourceAccess::Unused),
+      mStencilAccess(ResourceAccess::Unused),
+      mDepthCmdCountInvalidated(kInfiniteCmdCount),
+      mDepthCmdCountDisabled(kInfiniteCmdCount),
+      mStencilCmdCountInvalidated(kInfiniteCmdCount),
+      mStencilCmdCountDisabled(kInfiniteCmdCount),
+      mDepthStencilAttachmentIndex(kAttachmentIndexInvalid),
+      mDepthStencilImage(nullptr),
+      mDepthStencilResolveImage(nullptr),
+      mDepthStencilLevelIndex(0),
+      mDepthStencilLayerIndex(0),
+      mDepthStencilLayerCount(0),
+      mColorImagesCount(0),
+      mImageOptimizeForPresent(nullptr)
+{}
+
+RenderPassCommandBufferHelper::~RenderPassCommandBufferHelper()
+{
+    mFramebuffer.setHandle(VK_NULL_HANDLE);
+}
+
+angle::Result RenderPassCommandBufferHelper::initialize(Context *context, CommandPool *commandPool)
+{
+    initializeImpl(context, commandPool);
+    return initializeCommandBuffer(context);
+}
+
+angle::Result RenderPassCommandBufferHelper::initializeCommandBuffer(Context *context)
+{
+    return mCommandBuffer.initialize(context, mCommandPool, true, &mAllocator);
+}
+
+angle::Result RenderPassCommandBufferHelper::reset(Context *context)
+{
+    resetImpl();
+
+    mRenderPassStarted                 = false;
+    mValidTransformFeedbackBufferCount = 0;
+    mRebindTransformFeedbackBuffers    = false;
+    mHasShaderStorageOutput            = false;
+    mHasGLMemoryBarrierIssued          = false;
+    mDepthAccess                       = ResourceAccess::Unused;
+    mStencilAccess                     = ResourceAccess::Unused;
+    mDepthCmdCountInvalidated          = kInfiniteCmdCount;
+    mDepthCmdCountDisabled             = kInfiniteCmdCount;
+    mStencilCmdCountInvalidated        = kInfiniteCmdCount;
+    mStencilCmdCountDisabled           = kInfiniteCmdCount;
+    mColorImagesCount                  = PackedAttachmentCount(0);
+    mDepthStencilAttachmentIndex       = kAttachmentIndexInvalid;
+    mDepthInvalidateArea               = gl::Rectangle();
+    mStencilInvalidateArea             = gl::Rectangle();
+    mRenderPassUsedImages.clear();
+    mDepthStencilImage        = nullptr;
+    mDepthStencilResolveImage = nullptr;
+    mColorImages.reset();
+    mColorResolveImages.reset();
+    mImageOptimizeForPresent = nullptr;
+
+    // Reset and re-initialize the command buffer
+    context->getRenderer()->resetRenderPassCommandBuffer(std::move(mCommandBuffer));
+    return initializeCommandBuffer(context);
+}
+
+void RenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
+                                              VkImageAspectFlags aspectFlags,
+                                              ImageLayout imageLayout,
+                                              ImageHelper *image)
+{
+    imageReadImpl(contextVk, aspectFlags, imageLayout, image);
+
+    // As noted in the header we don't support multiple read layouts for Images.
+    // We allow duplicate uses in the RP to accommodate for normal GL sampler usage.
+    if (!usesImage(*image))
+    {
+        mRenderPassUsedImages.insert(image->getImageSerial().getValue());
+        image->retain(&contextVk->getResourceUseList());
+    }
+}
+
+void RenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
+                                               gl::LevelIndex level,
+                                               uint32_t layerStart,
+                                               uint32_t layerCount,
+                                               VkImageAspectFlags aspectFlags,
+                                               ImageLayout imageLayout,
+                                               AliasingMode aliasingMode,
+                                               ImageHelper *image)
+{
+    imageWriteImpl(contextVk, level, layerStart, layerCount, aspectFlags, imageLayout, aliasingMode,
+                   image);
+
+    // When used as a storage image we allow for aliased writes.
+    if (aliasingMode == AliasingMode::Disallowed)
+    {
+        ASSERT(!usesImage(*image));
+    }
+    if (!usesImage(*image))
+    {
+        mRenderPassUsedImages.insert(image->getImageSerial().getValue());
+    }
+}
+
+void RenderPassCommandBufferHelper::colorImagesDraw(ResourceUseList *resourceUseList,
+                                                    ImageHelper *image,
+                                                    ImageHelper *resolveImage,
+                                                    PackedAttachmentIndex packedAttachmentIndex)
+{
     ASSERT(packedAttachmentIndex < mColorImagesCount);
 
     image->retain(resourceUseList);
-    if (!usesImageInRenderPass(*image))
+    if (!usesImage(*image))
     {
         // This is possible due to different layers of the same texture being attached to different
         // attachments
@@ -1200,7 +1405,7 @@ void CommandBufferHelper::colorImagesDraw(ResourceUseList *resourceUseList,
     if (resolveImage)
     {
         resolveImage->retain(resourceUseList);
-        if (!usesImageInRenderPass(*resolveImage))
+        if (!usesImage(*resolveImage))
         {
             mRenderPassUsedImages.insert(resolveImage->getImageSerial().getValue());
         }
@@ -1210,16 +1415,15 @@ void CommandBufferHelper::colorImagesDraw(ResourceUseList *resourceUseList,
     }
 }
 
-void CommandBufferHelper::depthStencilImagesDraw(ResourceUseList *resourceUseList,
-                                                 gl::LevelIndex level,
-                                                 uint32_t layerStart,
-                                                 uint32_t layerCount,
-                                                 ImageHelper *image,
-                                                 ImageHelper *resolveImage)
+void RenderPassCommandBufferHelper::depthStencilImagesDraw(ResourceUseList *resourceUseList,
+                                                           gl::LevelIndex level,
+                                                           uint32_t layerStart,
+                                                           uint32_t layerCount,
+                                                           ImageHelper *image,
+                                                           ImageHelper *resolveImage)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
-    ASSERT(!usesImageInRenderPass(*image));
-    ASSERT(!resolveImage || !usesImageInRenderPass(*resolveImage));
+    ASSERT(!usesImage(*image));
+    ASSERT(!resolveImage || !usesImage(*resolveImage));
 
     // Because depthStencil buffer's read/write property can change while we build renderpass, we
     // defer the image layout changes until endRenderPass time or when images going away so that we
@@ -1244,7 +1448,7 @@ void CommandBufferHelper::depthStencilImagesDraw(ResourceUseList *resourceUseLis
     }
 }
 
-void CommandBufferHelper::onDepthAccess(ResourceAccess access)
+void RenderPassCommandBufferHelper::onDepthAccess(ResourceAccess access)
 {
     // Update the access for optimizing this render pass's loadOp
     UpdateAccess(&mDepthAccess, access);
@@ -1257,7 +1461,7 @@ void CommandBufferHelper::onDepthAccess(ResourceAccess access)
     }
 }
 
-void CommandBufferHelper::onStencilAccess(ResourceAccess access)
+void RenderPassCommandBufferHelper::onStencilAccess(ResourceAccess access)
 {
     // Update the access for optimizing this render pass's loadOp
     UpdateAccess(&mStencilAccess, access);
@@ -1270,9 +1474,9 @@ void CommandBufferHelper::onStencilAccess(ResourceAccess access)
     }
 }
 
-bool CommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
-                                               uint32_t *cmdCountInvalidated,
-                                               uint32_t *cmdCountDisabled)
+bool RenderPassCommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
+                                                         uint32_t *cmdCountInvalidated,
+                                                         uint32_t *cmdCountDisabled)
 {
     if (*cmdCountInvalidated == kInfiniteCmdCount)
     {
@@ -1313,9 +1517,9 @@ bool CommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
     }
 }
 
-void CommandBufferHelper::updateStartedRenderPassWithDepthMode(bool readOnlyDepthStencilMode)
+void RenderPassCommandBufferHelper::updateStartedRenderPassWithDepthMode(
+    bool readOnlyDepthStencilMode)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(mRenderPassStarted);
 
     if (mDepthStencilImage)
@@ -1344,7 +1548,7 @@ void CommandBufferHelper::updateStartedRenderPassWithDepthMode(bool readOnlyDept
     }
 }
 
-void CommandBufferHelper::restoreDepthContent()
+void RenderPassCommandBufferHelper::restoreDepthContent()
 {
     // Note that the image may have been deleted since the render pass has started.
     if (mDepthStencilImage)
@@ -1356,7 +1560,7 @@ void CommandBufferHelper::restoreDepthContent()
     }
 }
 
-void CommandBufferHelper::restoreStencilContent()
+void RenderPassCommandBufferHelper::restoreStencilContent()
 {
     // Note that the image may have been deleted since the render pass has started.
     if (mDepthStencilImage)
@@ -1368,57 +1572,12 @@ void CommandBufferHelper::restoreStencilContent()
     }
 }
 
-void CommandBufferHelper::executeBarriers(const angle::FeaturesVk &features,
-                                          PrimaryCommandBuffer *primary)
+void RenderPassCommandBufferHelper::finalizeColorImageLayout(
+    Context *context,
+    ImageHelper *image,
+    PackedAttachmentIndex packedAttachmentIndex,
+    bool isResolveImage)
 {
-    // make a local copy for faster access
-    PipelineStagesMask mask = mPipelineBarrierMask;
-    if (mask.none())
-    {
-        return;
-    }
-
-    if (features.preferAggregateBarrierCalls.enabled)
-    {
-        PipelineStagesMask::Iterator iter = mask.begin();
-        PipelineBarrier &barrier          = mPipelineBarriers[*iter];
-        for (++iter; iter != mask.end(); ++iter)
-        {
-            barrier.merge(&mPipelineBarriers[*iter]);
-        }
-        barrier.execute(primary);
-    }
-    else
-    {
-        for (PipelineStage pipelineStage : mask)
-        {
-            PipelineBarrier &barrier = mPipelineBarriers[pipelineStage];
-            barrier.execute(primary);
-        }
-    }
-    mPipelineBarrierMask.reset();
-}
-
-void CommandBufferHelper::updateImageLayoutAndBarrier(Context *context,
-                                                      ImageHelper *image,
-                                                      VkImageAspectFlags aspectFlags,
-                                                      ImageLayout imageLayout)
-{
-    PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
-    ASSERT(barrierIndex != PipelineStage::InvalidEnum);
-    PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
-    if (image->updateLayoutAndBarrier(context, aspectFlags, imageLayout, barrier))
-    {
-        mPipelineBarrierMask.set(barrierIndex);
-    }
-}
-
-void CommandBufferHelper::finalizeColorImageLayout(Context *context,
-                                                   ImageHelper *image,
-                                                   PackedAttachmentIndex packedAttachmentIndex,
-                                                   bool isResolveImage)
-{
-    ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(packedAttachmentIndex < mColorImagesCount);
     ASSERT(image != nullptr);
 
@@ -1446,7 +1605,7 @@ void CommandBufferHelper::finalizeColorImageLayout(Context *context,
     {
         ASSERT(packedAttachmentIndex == kAttachmentIndexZero);
         // Use finalLayout instead of extra barrier for layout change to present
-        mImageOptimizeForPresent->setCurrentImageLayout(vk::ImageLayout::Present);
+        mImageOptimizeForPresent->setCurrentImageLayout(ImageLayout::Present);
         // TODO(syoussefi):  We currently don't store the layout of the resolve attachments, so once
         // multisampled backbuffers are optimized to use resolve attachments, this information needs
         // to be stored somewhere.  http://anglebug.com/4836
@@ -1458,9 +1617,8 @@ void CommandBufferHelper::finalizeColorImageLayout(Context *context,
     image->resetRenderPassUsageFlags();
 }
 
-void CommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
+void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(mDepthStencilImage);
 
     // Do depth stencil layout change.
@@ -1507,9 +1665,8 @@ void CommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
     }
 }
 
-void CommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *context)
+void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *context)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(mDepthStencilImage);
     ASSERT(!mDepthStencilResolveImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment));
 
@@ -1545,10 +1702,8 @@ void CommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *contex
     mDepthStencilResolveImage->resetRenderPassUsageFlags();
 }
 
-void CommandBufferHelper::finalizeImageLayout(Context *context, const ImageHelper *image)
+void RenderPassCommandBufferHelper::finalizeImageLayout(Context *context, const ImageHelper *image)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
-
     if (image->hasRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment))
     {
         for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorImagesCount; ++index)
@@ -1579,7 +1734,7 @@ void CommandBufferHelper::finalizeImageLayout(Context *context, const ImageHelpe
     }
 }
 
-void CommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
+void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
 {
     ASSERT(mDepthStencilAttachmentIndex != kAttachmentIndexInvalid);
 
@@ -1656,10 +1811,10 @@ void CommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
     SetBitField(dsOps.stencilStoreOp, stencilStoreOp);
 }
 
-void CommandBufferHelper::finalizeDepthStencilLoadStoreOps(Context *context,
-                                                           ResourceAccess access,
-                                                           RenderPassLoadOp *loadOp,
-                                                           RenderPassStoreOp *storeOp)
+void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStoreOps(Context *context,
+                                                                     ResourceAccess access,
+                                                                     RenderPassLoadOp *loadOp,
+                                                                     RenderPassStoreOp *storeOp)
 {
     // For read only depth stencil, we can use StoreOpNone if available.  DontCare is still
     // preferred, so do this after handling DontCare.
@@ -1696,29 +1851,28 @@ void CommandBufferHelper::finalizeDepthStencilLoadStoreOps(Context *context,
     }
 }
 
-void CommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(Context *context)
+void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(Context *context)
 {
     finalizeDepthStencilImageLayout(context);
     finalizeDepthStencilLoadStore(context);
     mDepthStencilImage->resetRenderPassUsageFlags();
 }
 
-angle::Result CommandBufferHelper::beginRenderPass(
+angle::Result RenderPassCommandBufferHelper::beginRenderPass(
     ContextVk *contextVk,
     const Framebuffer &framebuffer,
     const gl::Rectangle &renderArea,
     const RenderPassDesc &renderPassDesc,
     const AttachmentOpsArray &renderPassAttachmentOps,
-    const vk::PackedAttachmentCount colorAttachmentCount,
+    const PackedAttachmentCount colorAttachmentCount,
     const PackedAttachmentIndex depthStencilAttachmentIndex,
     const PackedClearValuesArray &clearValues,
-    CommandBuffer **commandBufferOut)
+    RenderPassCommandBuffer **commandBufferOut)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
-    ASSERT(empty());
+    ASSERT(!mRenderPassStarted);
 
     VkCommandBufferInheritanceInfo inheritanceInfo = {};
-    ANGLE_TRY(vk::CommandBuffer::InitializeRenderPassInheritanceInfo(
+    ANGLE_TRY(RenderPassCommandBuffer::InitializeRenderPassInheritanceInfo(
         contextVk, framebuffer, renderPassDesc, &inheritanceInfo));
     ANGLE_TRY(mCommandBuffer.begin(contextVk, inheritanceInfo));
 
@@ -1737,7 +1891,7 @@ angle::Result CommandBufferHelper::beginRenderPass(
     return angle::Result::Continue;
 }
 
-angle::Result CommandBufferHelper::endRenderPass(ContextVk *contextVk)
+angle::Result RenderPassCommandBufferHelper::endRenderPass(ContextVk *contextVk)
 {
     ANGLE_TRY(mCommandBuffer.end(contextVk));
 
@@ -1771,11 +1925,10 @@ angle::Result CommandBufferHelper::endRenderPass(ContextVk *contextVk)
     return angle::Result::Continue;
 }
 
-void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
-                                                 const VkBuffer *counterBuffers,
-                                                 bool rebindBuffers)
+void RenderPassCommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
+                                                           const VkBuffer *counterBuffers,
+                                                           bool rebindBuffers)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
     mValidTransformFeedbackBufferCount = static_cast<uint32_t>(validBufferCount);
     mRebindTransformFeedbackBuffers    = rebindBuffers;
 
@@ -1785,24 +1938,23 @@ void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
     }
 }
 
-void CommandBufferHelper::endTransformFeedback()
+void RenderPassCommandBufferHelper::endTransformFeedback()
 {
-    ASSERT(mIsRenderPassCommandBuffer);
     pauseTransformFeedback();
     mValidTransformFeedbackBufferCount = 0;
 }
 
-void CommandBufferHelper::invalidateRenderPassColorAttachment(PackedAttachmentIndex attachmentIndex)
+void RenderPassCommandBufferHelper::invalidateRenderPassColorAttachment(
+    PackedAttachmentIndex attachmentIndex)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
     SetBitField(mAttachmentOps[attachmentIndex].storeOp, RenderPassStoreOp::DontCare);
     mAttachmentOps[attachmentIndex].isInvalidated = true;
 }
 
-void CommandBufferHelper::invalidateRenderPassDepthAttachment(const gl::DepthStencilState &dsState,
-                                                              const gl::Rectangle &invalidateArea)
+void RenderPassCommandBufferHelper::invalidateRenderPassDepthAttachment(
+    const gl::DepthStencilState &dsState,
+    const gl::Rectangle &invalidateArea)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
     // Keep track of the size of commands in the command buffer.  If the size grows in the
     // future, that implies that drawing occured since invalidated.
     mDepthCmdCountInvalidated = mCommandBuffer.getRenderPassWriteCommandCount();
@@ -1815,11 +1967,10 @@ void CommandBufferHelper::invalidateRenderPassDepthAttachment(const gl::DepthSte
     ExtendRenderPassInvalidateArea(invalidateArea, &mDepthInvalidateArea);
 }
 
-void CommandBufferHelper::invalidateRenderPassStencilAttachment(
+void RenderPassCommandBufferHelper::invalidateRenderPassStencilAttachment(
     const gl::DepthStencilState &dsState,
     const gl::Rectangle &invalidateArea)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
     // Keep track of the size of commands in the command buffer.  If the size grows in the
     // future, that implies that drawing occured since invalidated.
     mStencilCmdCountInvalidated = mCommandBuffer.getRenderPassWriteCommandCount();
@@ -1834,157 +1985,53 @@ void CommandBufferHelper::invalidateRenderPassStencilAttachment(
     ExtendRenderPassInvalidateArea(invalidateArea, &mStencilInvalidateArea);
 }
 
-angle::Result CommandBufferHelper::flushToPrimary(Context *context,
-                                                  PrimaryCommandBuffer *primary,
-                                                  const RenderPass *renderPass)
+angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
+                                                            PrimaryCommandBuffer *primary,
+                                                            const RenderPass *renderPass)
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandBufferHelper::flushToPrimary");
-    ASSERT(!empty());
+    ANGLE_TRACE_EVENT0("gpu.angle", "RenderPassCommandBufferHelper::flushToPrimary");
+    ASSERT(mRenderPassStarted);
 
     // Commands that are added to primary before beginRenderPass command
     executeBarriers(context->getRenderer()->getFeatures(), primary);
 
-    if (mIsRenderPassCommandBuffer)
-    {
-        ASSERT(renderPass != nullptr);
+    ASSERT(renderPass != nullptr);
 
-        VkRenderPassBeginInfo beginInfo    = {};
-        beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        beginInfo.renderPass               = renderPass->getHandle();
-        beginInfo.framebuffer              = mFramebuffer.getHandle();
-        beginInfo.renderArea.offset.x      = static_cast<uint32_t>(mRenderArea.x);
-        beginInfo.renderArea.offset.y      = static_cast<uint32_t>(mRenderArea.y);
-        beginInfo.renderArea.extent.width  = static_cast<uint32_t>(mRenderArea.width);
-        beginInfo.renderArea.extent.height = static_cast<uint32_t>(mRenderArea.height);
-        beginInfo.clearValueCount = static_cast<uint32_t>(mRenderPassDesc.attachmentCount());
-        beginInfo.pClearValues    = mClearValues.data();
+    VkRenderPassBeginInfo beginInfo    = {};
+    beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    beginInfo.renderPass               = renderPass->getHandle();
+    beginInfo.framebuffer              = mFramebuffer.getHandle();
+    beginInfo.renderArea.offset.x      = static_cast<uint32_t>(mRenderArea.x);
+    beginInfo.renderArea.offset.y      = static_cast<uint32_t>(mRenderArea.y);
+    beginInfo.renderArea.extent.width  = static_cast<uint32_t>(mRenderArea.width);
+    beginInfo.renderArea.extent.height = static_cast<uint32_t>(mRenderArea.height);
+    beginInfo.clearValueCount          = static_cast<uint32_t>(mRenderPassDesc.attachmentCount());
+    beginInfo.pClearValues             = mClearValues.data();
 
-        // Run commands inside the RenderPass.
-        constexpr VkSubpassContents kSubpassContents =
-            vk::CommandBuffer::ExecutesInline() ? VK_SUBPASS_CONTENTS_INLINE
-                                                : VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
+    // Run commands inside the RenderPass.
+    constexpr VkSubpassContents kSubpassContents =
+        RenderPassCommandBuffer::ExecutesInline() ? VK_SUBPASS_CONTENTS_INLINE
+                                                  : VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
 
-        primary->beginRenderPass(beginInfo, kSubpassContents);
-        mCommandBuffer.executeCommands(primary);
-        primary->endRenderPass();
-    }
-    else
-    {
-        ANGLE_TRY(mCommandBuffer.end(context));
-        mCommandBuffer.executeCommands(primary);
-    }
+    primary->beginRenderPass(beginInfo, kSubpassContents);
+    mCommandBuffer.executeCommands(primary);
+    primary->endRenderPass();
 
     // Restart the command buffer.
     return reset(context);
 }
 
-void CommandBufferHelper::updateRenderPassForResolve(ContextVk *contextVk,
-                                                     Framebuffer *newFramebuffer,
-                                                     const RenderPassDesc &renderPassDesc)
+void RenderPassCommandBufferHelper::updateRenderPassForResolve(ContextVk *contextVk,
+                                                               Framebuffer *newFramebuffer,
+                                                               const RenderPassDesc &renderPassDesc)
 {
     ASSERT(newFramebuffer);
     mFramebuffer.setHandle(newFramebuffer->getHandle());
     mRenderPassDesc = renderPassDesc;
 }
 
-// Helper functions used below
-char GetLoadOpShorthand(RenderPassLoadOp loadOp)
+void RenderPassCommandBufferHelper::resumeTransformFeedback()
 {
-    switch (loadOp)
-    {
-        case RenderPassLoadOp::Clear:
-            return 'C';
-        case RenderPassLoadOp::Load:
-            return 'L';
-        case RenderPassLoadOp::None:
-            return 'N';
-        default:
-            return 'D';
-    }
-}
-
-char GetStoreOpShorthand(RenderPassStoreOp storeOp)
-{
-    switch (storeOp)
-    {
-        case RenderPassStoreOp::Store:
-            return 'S';
-        case RenderPassStoreOp::None:
-            return 'N';
-        default:
-            return 'D';
-    }
-}
-
-void CommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
-{
-    std::ostringstream out;
-
-    out << "Memory Barrier: ";
-    for (PipelineBarrier &barrier : mPipelineBarriers)
-    {
-        if (!barrier.isEmpty())
-        {
-            barrier.addDiagnosticsString(out);
-        }
-    }
-    out << "\\l";
-
-    if (mIsRenderPassCommandBuffer)
-    {
-        size_t attachmentCount             = mRenderPassDesc.attachmentCount();
-        size_t depthStencilAttachmentCount = mRenderPassDesc.hasDepthStencilAttachment() ? 1 : 0;
-        size_t colorAttachmentCount        = attachmentCount - depthStencilAttachmentCount;
-
-        PackedAttachmentIndex attachmentIndexVk(0);
-        std::string loadOps, storeOps;
-
-        if (colorAttachmentCount > 0)
-        {
-            loadOps += " Color: ";
-            storeOps += " Color: ";
-
-            for (size_t i = 0; i < colorAttachmentCount; ++i)
-            {
-                loadOps += GetLoadOpShorthand(
-                    static_cast<RenderPassLoadOp>(mAttachmentOps[attachmentIndexVk].loadOp));
-                storeOps += GetStoreOpShorthand(
-                    static_cast<RenderPassStoreOp>(mAttachmentOps[attachmentIndexVk].storeOp));
-                ++attachmentIndexVk;
-            }
-        }
-
-        if (depthStencilAttachmentCount > 0)
-        {
-            ASSERT(depthStencilAttachmentCount == 1);
-
-            loadOps += " Depth/Stencil: ";
-            storeOps += " Depth/Stencil: ";
-
-            loadOps += GetLoadOpShorthand(
-                static_cast<RenderPassLoadOp>(mAttachmentOps[attachmentIndexVk].loadOp));
-            loadOps += GetLoadOpShorthand(
-                static_cast<RenderPassLoadOp>(mAttachmentOps[attachmentIndexVk].stencilLoadOp));
-
-            storeOps += GetStoreOpShorthand(
-                static_cast<RenderPassStoreOp>(mAttachmentOps[attachmentIndexVk].storeOp));
-            storeOps += GetStoreOpShorthand(
-                static_cast<RenderPassStoreOp>(mAttachmentOps[attachmentIndexVk].stencilStoreOp));
-        }
-
-        if (attachmentCount > 0)
-        {
-            out << "LoadOp:  " << loadOps << "\\l";
-            out << "StoreOp: " << storeOps << "\\l";
-        }
-    }
-    out << mCommandBuffer.dumpCommands("\\l");
-    contextVk->addCommandBufferDiagnostics(out.str());
-}
-
-void CommandBufferHelper::resumeTransformFeedback()
-{
-    ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(isTransformFeedbackStarted());
 
     uint32_t numCounterBuffers =
@@ -1997,24 +2044,24 @@ void CommandBufferHelper::resumeTransformFeedback()
                                           mTransformFeedbackCounterBuffers.data(), nullptr);
 }
 
-void CommandBufferHelper::pauseTransformFeedback()
+void RenderPassCommandBufferHelper::pauseTransformFeedback()
 {
-    ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(isTransformFeedbackStarted() && isTransformFeedbackActiveUnpaused());
     mIsTransformFeedbackActiveUnpaused = false;
     mCommandBuffer.endTransformFeedback(0, mValidTransformFeedbackBufferCount,
                                         mTransformFeedbackCounterBuffers.data(), nullptr);
 }
 
-void CommandBufferHelper::updateRenderPassColorClear(PackedAttachmentIndex colorIndexVk,
-                                                     const VkClearValue &clearValue)
+void RenderPassCommandBufferHelper::updateRenderPassColorClear(PackedAttachmentIndex colorIndexVk,
+                                                               const VkClearValue &clearValue)
 {
     mAttachmentOps.setClearOp(colorIndexVk);
     mClearValues.store(colorIndexVk, VK_IMAGE_ASPECT_COLOR_BIT, clearValue);
 }
 
-void CommandBufferHelper::updateRenderPassDepthStencilClear(VkImageAspectFlags aspectFlags,
-                                                            const VkClearValue &clearValue)
+void RenderPassCommandBufferHelper::updateRenderPassDepthStencilClear(
+    VkImageAspectFlags aspectFlags,
+    const VkClearValue &clearValue)
 {
     // Don't overwrite prior clear values for individual aspects.
     VkClearValue combinedClearValue = mClearValues[mDepthStencilAttachmentIndex];
@@ -2035,10 +2082,9 @@ void CommandBufferHelper::updateRenderPassDepthStencilClear(VkImageAspectFlags a
     mClearValues.storeNoDepthStencil(mDepthStencilAttachmentIndex, combinedClearValue);
 }
 
-void CommandBufferHelper::growRenderArea(ContextVk *contextVk, const gl::Rectangle &newRenderArea)
+void RenderPassCommandBufferHelper::growRenderArea(ContextVk *contextVk,
+                                                   const gl::Rectangle &newRenderArea)
 {
-    ASSERT(mIsRenderPassCommandBuffer);
-
     // The render area is grown such that it covers both the previous and the new render areas.
     gl::GetEnclosingRectangle(mRenderArea, newRenderArea, &mRenderArea);
 
@@ -2061,13 +2107,66 @@ void CommandBufferHelper::growRenderArea(ContextVk *contextVk, const gl::Rectang
     }
 }
 
-// CommandBufferRecycler implementation.
-CommandBufferRecycler::CommandBufferRecycler()  = default;
-CommandBufferRecycler::~CommandBufferRecycler() = default;
-
-void CommandBufferRecycler::onDestroy()
+void RenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
 {
-    for (vk::CommandBufferHelper *commandBufferHelper : mCommandBufferHelperFreeList)
+    std::ostringstream out;
+    addCommandDiagnosticsCommon(&out);
+
+    size_t attachmentCount             = mRenderPassDesc.attachmentCount();
+    size_t depthStencilAttachmentCount = mRenderPassDesc.hasDepthStencilAttachment() ? 1 : 0;
+    size_t colorAttachmentCount        = attachmentCount - depthStencilAttachmentCount;
+
+    PackedAttachmentIndex attachmentIndexVk(0);
+    std::string loadOps, storeOps;
+
+    if (colorAttachmentCount > 0)
+    {
+        loadOps += " Color: ";
+        storeOps += " Color: ";
+
+        for (size_t i = 0; i < colorAttachmentCount; ++i)
+        {
+            loadOps += GetLoadOpShorthand(
+                static_cast<RenderPassLoadOp>(mAttachmentOps[attachmentIndexVk].loadOp));
+            storeOps += GetStoreOpShorthand(
+                static_cast<RenderPassStoreOp>(mAttachmentOps[attachmentIndexVk].storeOp));
+            ++attachmentIndexVk;
+        }
+    }
+
+    if (depthStencilAttachmentCount > 0)
+    {
+        ASSERT(depthStencilAttachmentCount == 1);
+
+        loadOps += " Depth/Stencil: ";
+        storeOps += " Depth/Stencil: ";
+
+        loadOps += GetLoadOpShorthand(
+            static_cast<RenderPassLoadOp>(mAttachmentOps[attachmentIndexVk].loadOp));
+        loadOps += GetLoadOpShorthand(
+            static_cast<RenderPassLoadOp>(mAttachmentOps[attachmentIndexVk].stencilLoadOp));
+
+        storeOps += GetStoreOpShorthand(
+            static_cast<RenderPassStoreOp>(mAttachmentOps[attachmentIndexVk].storeOp));
+        storeOps += GetStoreOpShorthand(
+            static_cast<RenderPassStoreOp>(mAttachmentOps[attachmentIndexVk].stencilStoreOp));
+    }
+
+    if (attachmentCount > 0)
+    {
+        out << "LoadOp:  " << loadOps << "\\l";
+        out << "StoreOp: " << storeOps << "\\l";
+    }
+
+    out << mCommandBuffer.dumpCommands("\\l");
+    contextVk->addCommandBufferDiagnostics(out.str());
+}
+
+// CommandBufferRecycler implementation.
+template <typename CommandBufferT, typename CommandBufferHelperT>
+void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::onDestroy()
+{
+    for (CommandBufferHelperT *commandBufferHelper : mCommandBufferHelperFreeList)
     {
         SafeDelete(commandBufferHelper);
     }
@@ -2076,60 +2175,68 @@ void CommandBufferRecycler::onDestroy()
     ASSERT(mSecondaryCommandBuffersToReset.empty());
 }
 
-angle::Result CommandBufferRecycler::getCommandBufferHelper(
+template void CommandBufferRecycler<OutsideRenderPassCommandBuffer,
+                                    OutsideRenderPassCommandBufferHelper>::onDestroy();
+template void
+CommandBufferRecycler<RenderPassCommandBuffer, RenderPassCommandBufferHelper>::onDestroy();
+
+template <typename CommandBufferT, typename CommandBufferHelperT>
+angle::Result CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::getCommandBufferHelper(
     Context *context,
-    bool hasRenderPass,
     CommandPool *commandPool,
-    CommandBufferHelper **commandBufferHelperOut)
+    CommandBufferHelperT **commandBufferHelperOut)
 {
     if (mCommandBufferHelperFreeList.empty())
     {
-        vk::CommandBufferHelper *commandBuffer = new vk::CommandBufferHelper();
-        *commandBufferHelperOut                = commandBuffer;
+        CommandBufferHelperT *commandBuffer = new CommandBufferHelperT();
+        *commandBufferHelperOut             = commandBuffer;
 
-        return commandBuffer->initialize(context, hasRenderPass, commandPool);
+        return commandBuffer->initialize(context, commandPool);
     }
     else
     {
-        vk::CommandBufferHelper *commandBuffer = mCommandBufferHelperFreeList.back();
+        CommandBufferHelperT *commandBuffer = mCommandBufferHelperFreeList.back();
         mCommandBufferHelperFreeList.pop_back();
-        commandBuffer->setHasRenderPass(hasRenderPass);
         *commandBufferHelperOut = commandBuffer;
         return angle::Result::Continue;
     }
 }
 
-void CommandBufferRecycler::recycleCommandBufferHelper(VkDevice device,
-                                                       vk::CommandBufferHelper **commandBuffer)
+template angle::Result
+CommandBufferRecycler<OutsideRenderPassCommandBuffer, OutsideRenderPassCommandBufferHelper>::
+    getCommandBufferHelper(Context *context,
+                           CommandPool *commandPool,
+                           OutsideRenderPassCommandBufferHelper **commandBufferHelperOut);
+template angle::Result
+CommandBufferRecycler<RenderPassCommandBuffer, RenderPassCommandBufferHelper>::
+    getCommandBufferHelper(Context *context,
+                           CommandPool *commandPool,
+                           RenderPassCommandBufferHelper **commandBufferHelperOut);
+
+template <typename CommandBufferT, typename CommandBufferHelperT>
+void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::recycleCommandBufferHelper(
+    VkDevice device,
+    CommandBufferHelperT **commandBuffer)
 {
     ASSERT((*commandBuffer)->empty());
     (*commandBuffer)->markOpen();
-    recycleImpl(device, commandBuffer);
+    RecycleCommandBufferHelper(device, &mCommandBufferHelperFreeList, commandBuffer,
+                               &(*commandBuffer)->getCommandBuffer());
 }
 
-#if ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
-void CommandBufferRecycler::recycleImpl(VkDevice device, CommandBufferHelper **commandBuffer)
-{
-    mCommandBufferHelperFreeList.push_back(*commandBuffer);
-}
-void CommandBufferRecycler::resetCommandBufferHelper(CommandBuffer &&commandBuffer)
-{
-    commandBuffer.reset();
-}
-#else   // ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
-void CommandBufferRecycler::recycleImpl(VkDevice device, CommandBufferHelper **commandBuffer)
-{
-    CommandPool *pool = (*commandBuffer)->getCommandPool();
+template void
+CommandBufferRecycler<OutsideRenderPassCommandBuffer, OutsideRenderPassCommandBufferHelper>::
+    recycleCommandBufferHelper(VkDevice device,
+                               OutsideRenderPassCommandBufferHelper **commandBuffer);
+template void CommandBufferRecycler<RenderPassCommandBuffer, RenderPassCommandBufferHelper>::
+    recycleCommandBufferHelper(VkDevice device, RenderPassCommandBufferHelper **commandBuffer);
 
-    pool->freeCommandBuffers(device, 1, (*commandBuffer)->getCommandBuffer().ptr());
-    (*commandBuffer)->getCommandBuffer().releaseHandle();
-    SafeDelete(*commandBuffer);
-}
-void CommandBufferRecycler::resetCommandBufferHelper(CommandBuffer &&commandBuffer)
+template <typename CommandBufferT, typename CommandBufferHelperT>
+void CommandBufferRecycler<CommandBufferT, CommandBufferHelperT>::resetCommandBuffer(
+    CommandBufferT &&commandBuffer)
 {
-    mSecondaryCommandBuffersToReset.push_back(std::move(commandBuffer));
+    ResetSecondaryCommandBuffer(&mSecondaryCommandBuffersToReset, std::move(commandBuffer));
 }
-#endif  // ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
 
 // DynamicBuffer implementation.
 DynamicBuffer::DynamicBuffer()
@@ -3152,9 +3259,10 @@ void QueryHelper::deinit()
     mStatus = QueryStatus::Inactive;
 }
 
+template <typename CommandBufferT>
 void QueryHelper::beginQueryImpl(ContextVk *contextVk,
-                                 CommandBuffer *resetCommandBuffer,
-                                 CommandBuffer *commandBuffer)
+                                 OutsideRenderPassCommandBuffer *resetCommandBuffer,
+                                 CommandBufferT *commandBuffer)
 {
     ASSERT(mStatus != QueryStatus::Active);
     const QueryPool &queryPool = getQueryPool();
@@ -3163,7 +3271,8 @@ void QueryHelper::beginQueryImpl(ContextVk *contextVk,
     mStatus = QueryStatus::Active;
 }
 
-void QueryHelper::endQueryImpl(ContextVk *contextVk, CommandBuffer *commandBuffer)
+template <typename CommandBufferT>
+void QueryHelper::endQueryImpl(ContextVk *contextVk, CommandBufferT *commandBuffer)
 {
     ASSERT(mStatus != QueryStatus::Ended);
     commandBuffer->endQuery(getQueryPool(), mQuery);
@@ -3181,7 +3290,7 @@ angle::Result QueryHelper::beginQuery(ContextVk *contextVk)
             RenderPassClosureReason::BeginNonRenderPassQuery));
     }
 
-    CommandBuffer *commandBuffer;
+    OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
 
     ANGLE_TRY(contextVk->handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd));
@@ -3199,7 +3308,7 @@ angle::Result QueryHelper::endQuery(ContextVk *contextVk)
             RenderPassClosureReason::EndNonRenderPassQuery));
     }
 
-    CommandBuffer *commandBuffer;
+    OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
 
     ANGLE_TRY(contextVk->handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd));
@@ -3227,10 +3336,10 @@ void QueryHelper::resetQueryPoolImpl(ContextVk *contextVk,
 
 angle::Result QueryHelper::beginRenderPassQuery(ContextVk *contextVk)
 {
-    CommandBuffer *outsideRenderPassCommandBuffer;
+    OutsideRenderPassCommandBuffer *outsideRenderPassCommandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &outsideRenderPassCommandBuffer));
 
-    CommandBuffer *renderPassCommandBuffer =
+    RenderPassCommandBuffer *renderPassCommandBuffer =
         &contextVk->getStartedRenderPassCommands().getCommandBuffer();
 
     beginQueryImpl(contextVk, outsideRenderPassCommandBuffer, renderPassCommandBuffer);
@@ -3254,7 +3363,7 @@ angle::Result QueryHelper::flushAndWriteTimestamp(ContextVk *contextVk)
             contextVk->flushCommandsAndEndRenderPass(RenderPassClosureReason::TimestampQuery));
     }
 
-    CommandBuffer *commandBuffer;
+    OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
     writeTimestamp(contextVk, commandBuffer);
     return angle::Result::Continue;
@@ -3269,7 +3378,8 @@ void QueryHelper::writeTimestampToPrimary(ContextVk *contextVk, PrimaryCommandBu
     primary->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool, mQuery);
 }
 
-void QueryHelper::writeTimestamp(ContextVk *contextVk, CommandBuffer *commandBuffer)
+void QueryHelper::writeTimestamp(ContextVk *contextVk,
+                                 OutsideRenderPassCommandBuffer *commandBuffer)
 {
     const QueryPool &queryPool = getQueryPool();
     resetQueryPoolImpl(contextVk, queryPool, commandBuffer);
@@ -3515,7 +3625,7 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
     access.onBufferTransferWrite(&mDynamicIndexBuffer);
     access.onBufferTransferRead(sourceBuffer);
 
-    vk::CommandBuffer *commandBuffer;
+    vk::OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     commandBuffer->copyBuffer(sourceBuffer->getBuffer(), mDynamicIndexBuffer.getBuffer(),
@@ -3675,7 +3785,9 @@ void LineLoopHelper::destroy(RendererVk *renderer)
 }
 
 // static
-void LineLoopHelper::Draw(uint32_t count, uint32_t baseVertex, CommandBuffer *commandBuffer)
+void LineLoopHelper::Draw(uint32_t count,
+                          uint32_t baseVertex,
+                          RenderPassCommandBuffer *commandBuffer)
 {
     // Our first index is always 0 because that's how we set it up in createIndexBuffer*.
     commandBuffer->drawIndexedBaseVertex(count, baseVertex);
@@ -4048,7 +4160,7 @@ angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
         access.onBufferTransferWrite(this);
     }
 
-    CommandBuffer *commandBuffer;
+    OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     commandBuffer->copyBuffer(srcBuffer->getBuffer(), getBuffer(), regionCount, copyRegions);
@@ -4129,7 +4241,8 @@ angle::Result BufferHelper::invalidate(RendererVk *renderer)
     return invalidate(renderer, 0, getSize());
 }
 
-void BufferHelper::changeQueue(uint32_t newQueueFamilyIndex, CommandBuffer *commandBuffer)
+void BufferHelper::changeQueue(uint32_t newQueueFamilyIndex,
+                               OutsideRenderPassCommandBuffer *commandBuffer)
 {
     VkBufferMemoryBarrier bufferMemoryBarrier = {};
     bufferMemoryBarrier.sType                 = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
@@ -4150,7 +4263,7 @@ void BufferHelper::changeQueue(uint32_t newQueueFamilyIndex, CommandBuffer *comm
 void BufferHelper::acquireFromExternal(ContextVk *contextVk,
                                        uint32_t externalQueueFamilyIndex,
                                        uint32_t rendererQueueFamilyIndex,
-                                       CommandBuffer *commandBuffer)
+                                       OutsideRenderPassCommandBuffer *commandBuffer)
 {
     mCurrentQueueFamilyIndex = externalQueueFamilyIndex;
 
@@ -4161,7 +4274,7 @@ void BufferHelper::acquireFromExternal(ContextVk *contextVk,
 void BufferHelper::releaseToExternal(ContextVk *contextVk,
                                      uint32_t rendererQueueFamilyIndex,
                                      uint32_t externalQueueFamilyIndex,
-                                     CommandBuffer *commandBuffer)
+                                     OutsideRenderPassCommandBuffer *commandBuffer)
 {
     ASSERT(mCurrentQueueFamilyIndex == rendererQueueFamilyIndex);
 
@@ -5280,7 +5393,7 @@ void ImageHelper::changeLayoutAndQueue(Context *context,
                                        VkImageAspectFlags aspectMask,
                                        ImageLayout newLayout,
                                        uint32_t newQueueFamilyIndex,
-                                       CommandBuffer *commandBuffer)
+                                       OutsideRenderPassCommandBuffer *commandBuffer)
 {
     ASSERT(isQueueChangeNeccesary(newQueueFamilyIndex));
     barrierImpl(context, aspectMask, newLayout, newQueueFamilyIndex, commandBuffer);
@@ -5290,7 +5403,7 @@ void ImageHelper::acquireFromExternal(ContextVk *contextVk,
                                       uint32_t externalQueueFamilyIndex,
                                       uint32_t rendererQueueFamilyIndex,
                                       ImageLayout currentLayout,
-                                      CommandBuffer *commandBuffer)
+                                      OutsideRenderPassCommandBuffer *commandBuffer)
 {
     // The image must be newly allocated or have been released to the external
     // queue. If this is not the case, it's an application bug, so ASSERT might
@@ -5321,7 +5434,7 @@ void ImageHelper::releaseToExternal(ContextVk *contextVk,
                                     uint32_t rendererQueueFamilyIndex,
                                     uint32_t externalQueueFamilyIndex,
                                     ImageLayout desiredLayout,
-                                    CommandBuffer *commandBuffer)
+                                    OutsideRenderPassCommandBuffer *commandBuffer)
 {
     ASSERT(mCurrentQueueFamilyIndex == rendererQueueFamilyIndex);
 
@@ -5422,12 +5535,11 @@ void ImageHelper::barrierImpl(Context *context,
     mCurrentQueueFamilyIndex = newQueueFamilyIndex;
 }
 
-template void ImageHelper::barrierImpl<rx::vk::priv::CommandBuffer>(
-    Context *context,
-    VkImageAspectFlags aspectMask,
-    ImageLayout newLayout,
-    uint32_t newQueueFamilyIndex,
-    rx::vk::priv::CommandBuffer *commandBuffer);
+template void ImageHelper::barrierImpl<priv::CommandBuffer>(Context *context,
+                                                            VkImageAspectFlags aspectMask,
+                                                            ImageLayout newLayout,
+                                                            uint32_t newQueueFamilyIndex,
+                                                            priv::CommandBuffer *commandBuffer);
 
 bool ImageHelper::updateLayoutAndBarrier(Context *context,
                                          VkImageAspectFlags aspectMask,
@@ -5514,7 +5626,7 @@ void ImageHelper::clearColor(const VkClearColorValue &color,
                              uint32_t levelCount,
                              uint32_t baseArrayLayer,
                              uint32_t layerCount,
-                             CommandBuffer *commandBuffer)
+                             OutsideRenderPassCommandBuffer *commandBuffer)
 {
     ASSERT(valid());
 
@@ -5545,7 +5657,7 @@ void ImageHelper::clearDepthStencil(VkImageAspectFlags clearAspectFlags,
                                     uint32_t levelCount,
                                     uint32_t baseArrayLayer,
                                     uint32_t layerCount,
-                                    CommandBuffer *commandBuffer)
+                                    OutsideRenderPassCommandBuffer *commandBuffer)
 {
     ASSERT(valid());
 
@@ -5574,7 +5686,7 @@ void ImageHelper::clear(VkImageAspectFlags aspectFlags,
                         LevelIndex mipLevel,
                         uint32_t baseArrayLayer,
                         uint32_t layerCount,
-                        CommandBuffer *commandBuffer)
+                        OutsideRenderPassCommandBuffer *commandBuffer)
 {
     const angle::Format &angleFormat = getActualFormat();
     bool isDepthStencil              = angleFormat.depthBits > 0 || angleFormat.stencilBits > 0;
@@ -5632,7 +5744,7 @@ void ImageHelper::Copy(ImageHelper *srcImage,
                        const gl::Extents &copySize,
                        const VkImageSubresourceLayers &srcSubresource,
                        const VkImageSubresourceLayers &dstSubresource,
-                       CommandBuffer *commandBuffer)
+                       OutsideRenderPassCommandBuffer *commandBuffer)
 {
     ASSERT(commandBuffer->valid() && srcImage->valid() && dstImage->valid());
 
@@ -5717,7 +5829,7 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
                                     region.dstSubresource.layerCount, VK_IMAGE_ASPECT_COLOR_BIT,
                                     dstImage);
 
-        CommandBuffer *commandBuffer;
+        OutsideRenderPassCommandBuffer *commandBuffer;
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
         ASSERT(srcImage->valid() && dstImage->valid());
@@ -5767,7 +5879,7 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
     access.onImageTransferWrite(baseLevelGL + 1, maxLevel.get(), 0, mLayerCount,
                                 VK_IMAGE_ASPECT_COLOR_BIT, this);
 
-    CommandBuffer *commandBuffer;
+    OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     // We are able to use blitImage since the image format we are using supports it.
@@ -5870,7 +5982,7 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
 
 void ImageHelper::resolve(ImageHelper *dst,
                           const VkImageResolve &region,
-                          CommandBuffer *commandBuffer)
+                          OutsideRenderPassCommandBuffer *commandBuffer)
 {
     ASSERT(mCurrentLayout == ImageLayout::TransferSrc ||
            mCurrentLayout == ImageLayout::SharedPresent);
@@ -6991,7 +7103,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     access.onImageTransferWrite(levelGLStart, 1, kMaxContentDefinedLayerCount, 0, aspectFlags,
                                 this);
 
-    CommandBuffer *commandBuffer;
+    OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     for (gl::LevelIndex updateMipLevelGL = levelGLStart; updateMipLevelGL < levelGLEnd;
@@ -7556,7 +7668,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     access.onBufferTransferWrite(dstBuffer);
     access.onImageTransferRead(aspectFlags, this);
 
-    CommandBuffer *commandBuffer;
+    OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     commandBuffer->copyImageToBuffer(mImage, getCurrentLayout(), bufferHandle, regionCount,
@@ -7729,7 +7841,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
                                     &resolvedImage.get());
     }
 
-    CommandBuffer *commandBuffer;
+    OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     const angle::Format *readFormat = &getActualFormat();
@@ -7797,7 +7909,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
         copyAccess.onBufferTransferWrite(&packBuffer);
         copyAccess.onImageTransferRead(copyAspectFlags, src);
 
-        CommandBuffer *copyCommandBuffer;
+        OutsideRenderPassCommandBuffer *copyCommandBuffer;
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(copyAccess, &copyCommandBuffer));
 
         ASSERT(packPixelsParams.outputPitch % readFormat->pixelBytes == 0);
@@ -7838,7 +7950,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     CommandBufferAccess readbackAccess;
     readbackAccess.onBufferTransferWrite(stagingBuffer);
 
-    CommandBuffer *readbackCommandBuffer;
+    OutsideRenderPassCommandBuffer *readbackCommandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(readbackAccess, &readbackCommandBuffer));
 
     readbackCommandBuffer->copyImageToBuffer(src->getImage(), src->getCurrentLayout(), bufferHandle,

@@ -441,7 +441,8 @@ void RendererVk::ensureCapsInitialized() const
     // We use secondary command buffers almost everywhere and they require a feature to be
     // able to execute in the presence of queries.  As a result, we won't support timestamp queries
     // unless that feature is available.
-    if (vk::CommandBuffer::SupportsQueries(mPhysicalDeviceFeatures))
+    if (vk::OutsideRenderPassCommandBuffer::SupportsQueries(mPhysicalDeviceFeatures) &&
+        vk::RenderPassCommandBuffer::SupportsQueries(mPhysicalDeviceFeatures))
     {
         mNativeExtensions.disjointTimerQueryEXT = queueFamilyProperties.timestampValidBits > 0;
         mNativeCaps.queryCounterBitsTimeElapsed = queueFamilyProperties.timestampValidBits;

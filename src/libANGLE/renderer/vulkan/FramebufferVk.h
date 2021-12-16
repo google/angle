@@ -138,7 +138,7 @@ class FramebufferVk : public FramebufferImpl
 
     angle::Result startNewRenderPass(ContextVk *contextVk,
                                      const gl::Rectangle &scissoredRenderArea,
-                                     vk::CommandBuffer **commandBufferOut,
+                                     vk::RenderPassCommandBuffer **commandBufferOut,
                                      bool *renderPassDescChangedOut);
 
     GLint getSamples() const;
@@ -157,7 +157,7 @@ class FramebufferVk : public FramebufferImpl
     }
     bool isReadOnlyDepthFeedbackLoopMode() const { return mReadOnlyDepthFeedbackLoopMode; }
     void updateRenderPassReadOnlyDepthMode(ContextVk *contextVk,
-                                           vk::CommandBufferHelper *renderPass);
+                                           vk::RenderPassCommandBufferHelper *renderPass);
 
     void onSwitchProgramFramebufferFetch(ContextVk *contextVk, bool programUsesFramebufferFetch);
 
@@ -211,7 +211,7 @@ class FramebufferVk : public FramebufferImpl
                                 const VkClearDepthStencilValue &clearDepthStencilValue);
     void redeferClears(ContextVk *contextVk);
     angle::Result clearWithCommand(ContextVk *contextVk,
-                                   vk::CommandBufferHelper *renderpassCommands,
+                                   vk::RenderPassCommandBufferHelper *renderpassCommands,
                                    const gl::Rectangle &scissoredRenderArea);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc(ContextVk *contextVk);

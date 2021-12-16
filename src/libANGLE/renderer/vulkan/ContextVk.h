@@ -446,8 +446,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void addWaitSemaphore(VkSemaphore semaphore, VkPipelineStageFlags stageMask);
 
-    const vk::CommandPool &getCommandPool() const;
-
     Serial getLastCompletedQueueSerial() const { return mRenderer->getLastCompletedQueueSerial(); }
 
     bool isSerialInUse(Serial serial) const;
@@ -481,7 +479,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Create Begin/End/Instant GPU trace events, which take their timestamps from GPU queries.
     // The events are queued until the query results are available.  Possible values for `phase`
     // are TRACE_EVENT_PHASE_*
-    ANGLE_INLINE angle::Result traceGpuEvent(vk::CommandBuffer *commandBuffer,
+    ANGLE_INLINE angle::Result traceGpuEvent(vk::OutsideRenderPassCommandBuffer *commandBuffer,
                                              char phase,
                                              const EventName &name)
     {
@@ -555,10 +553,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         }
     }
 
-    angle::Result getOutsideRenderPassCommandBuffer(const vk::CommandBufferAccess &access,
-                                                    vk::CommandBuffer **commandBufferOut)
+    angle::Result getOutsideRenderPassCommandBuffer(
+        const vk::CommandBufferAccess &access,
+        vk::OutsideRenderPassCommandBuffer **commandBufferOut)
     {
-        ASSERT(!mOutsideRenderPassCommands->hasRenderPass());
         ANGLE_TRY(onResourceAccess(access));
         *commandBufferOut = &mOutsideRenderPassCommands->getCommandBuffer();
         return angle::Result::Continue;
@@ -571,7 +569,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                      const vk::PackedAttachmentCount colorAttachmentCount,
                                      const vk::PackedAttachmentIndex depthStencilAttachmentIndex,
                                      const vk::PackedClearValuesArray &clearValues,
-                                     vk::CommandBuffer **commandBufferOut);
+                                     vk::RenderPassCommandBuffer **commandBufferOut);
 
     // Only returns true if we have a started RP and we've run setupDraw.
     bool hasStartedRenderPass() const
@@ -591,7 +589,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return hasStartedRenderPass() && !mRenderPassCommands->getCommandBuffer().empty();
     }
 
-    vk::CommandBufferHelper &getStartedRenderPassCommands()
+    vk::RenderPassCommandBufferHelper &getStartedRenderPassCommands()
     {
         ASSERT(mRenderPassCommands->started());
         return *mRenderPassCommands;
@@ -605,7 +603,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     egl::ContextPriority getContextPriority() const override { return mContextPriority; }
     angle::Result startRenderPass(gl::Rectangle renderArea,
-                                  vk::CommandBuffer **commandBufferOut,
+                                  vk::RenderPassCommandBuffer **commandBufferOut,
                                   bool *renderPassDescChangedOut);
     void startNextSubpass();
     angle::Result flushCommandsAndEndRenderPass(RenderPassClosureReason reason);
@@ -644,7 +642,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void syncObjectPerfCounters();
     void updateOverlayOnPresent();
-    void addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer);
+    void addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *commandBuffer);
 
     // DescriptorSet writes
     VkDescriptorBufferInfo *allocDescriptorBufferInfos(size_t count);
@@ -836,7 +834,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void updateSurfaceRotationReadFramebuffer(const gl::State &glState);
 
     angle::Result updateActiveTextures(const gl::Context *context, gl::Command command);
-    angle::Result updateActiveImages(vk::CommandBufferHelper *commandBufferHelper);
+    template <typename CommandBufferHelperT>
+    angle::Result updateActiveImages(CommandBufferHelperT *commandBufferHelper);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
     ANGLE_INLINE void invalidateCurrentGraphicsPipeline()
@@ -917,14 +916,20 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Common parts of the common dirty bit handlers.
     angle::Result handleDirtyMemoryBarrierImpl(DirtyBits::Iterator *dirtyBitsIterator,
                                                DirtyBits dirtyBitMask);
-    angle::Result handleDirtyEventLogImpl(vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyTexturesImpl(vk::CommandBufferHelper *commandBufferHelper,
+    template <typename CommandBufferT>
+    angle::Result handleDirtyEventLogImpl(CommandBufferT *commandBuffer);
+    template <typename CommandBufferHelperT>
+    angle::Result handleDirtyTexturesImpl(CommandBufferHelperT *commandBufferHelper,
                                           PipelineType pipelineType);
-    angle::Result handleDirtyShaderResourcesImpl(vk::CommandBufferHelper *commandBufferHelper);
-    void handleDirtyDriverUniformsBindingImpl(vk::CommandBuffer *commandBuffer,
+    template <typename CommandBufferHelperT>
+    angle::Result handleDirtyShaderResourcesImpl(CommandBufferHelperT *commandBufferHelper);
+    void handleDirtyShaderBufferResourcesImpl(vk::CommandBufferHelperCommon *commandBufferHelper);
+    template <typename CommandBufferT>
+    void handleDirtyDriverUniformsBindingImpl(CommandBufferT *commandBuffer,
                                               VkPipelineBindPoint bindPoint,
                                               DriverUniformsDescriptorSet *driverUniforms);
-    angle::Result handleDirtyDescriptorSetsImpl(vk::CommandBuffer *commandBuffer,
+    template <typename CommandBufferT>
+    angle::Result handleDirtyDescriptorSetsImpl(CommandBufferT *commandBuffer,
                                                 PipelineType pipelineType);
     void handleDirtyGraphicsScissorImpl(bool isPrimitivesGeneratedQueryActive);
 
@@ -941,7 +946,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result submitFrame(const vk::Semaphore *signalSemaphore, Serial *submitSerialOut);
 
     angle::Result synchronizeCpuGpuTime();
-    angle::Result traceGpuEventImpl(vk::CommandBuffer *commandBuffer,
+    angle::Result traceGpuEventImpl(vk::OutsideRenderPassCommandBuffer *commandBuffer,
                                     char phase,
                                     const EventName &name);
     angle::Result checkCompletedGpuEvents();
@@ -949,7 +954,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void handleDeviceLost();
     bool shouldEmulateSeamfulCubeMapSampling() const;
     void clearAllGarbage();
-    bool hasRecordedCommands();
     void dumpCommandStreamDiagnostics();
     angle::Result flushOutsideRenderPassCommands();
     // Flush commands and end render pass without setting any dirty bits.
@@ -1018,7 +1022,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     std::array<GraphicsDirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<ComputeDirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
 
-    vk::CommandBuffer *mRenderPassCommandBuffer;
+    vk::RenderPassCommandBuffer *mRenderPassCommandBuffer;
 
     vk::PipelineHelper *mCurrentGraphicsPipeline;
     vk::PipelineHelper *mCurrentComputePipeline;
@@ -1130,14 +1134,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     gl::AttribArray<vk::DynamicBuffer> mDefaultAttribBuffers;
 
     // We use a single pool for recording commands. We also keep a free list for pool recycling.
-    vk::CommandPool mCommandPool;
+    vk::SecondaryCommandPools mCommandPools;
 
     vk::GarbageList mCurrentGarbage;
 
     RenderPassCache mRenderPassCache;
 
-    vk::CommandBufferHelper *mOutsideRenderPassCommands;
-    vk::CommandBufferHelper *mRenderPassCommands;
+    vk::OutsideRenderPassCommandBufferHelper *mOutsideRenderPassCommands;
+    vk::RenderPassCommandBufferHelper *mRenderPassCommands;
 
     // The following is used when creating debug-util markers for graphics debuggers (e.g. AGI).  A
     // given gl{Begin|End}Query command may result in commands being submitted to the outside or

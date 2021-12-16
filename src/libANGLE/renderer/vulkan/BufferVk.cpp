@@ -449,7 +449,7 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
         access.onBufferTransferWrite(&mBuffer);
     }
 
-    vk::CommandBuffer *commandBuffer;
+    vk::OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     // Enqueue a copy command on the GPU.

@@ -209,10 +209,10 @@ void ApplySampleCoverage(const gl::State &glState,
     *maskOut &= coverageMask;
 }
 
-bool IsRenderPassStartedAndUsesImage(const vk::CommandBufferHelper &renderPassCommands,
+bool IsRenderPassStartedAndUsesImage(const vk::RenderPassCommandBufferHelper &renderPassCommands,
                                      const vk::ImageHelper &image)
 {
-    return renderPassCommands.started() && renderPassCommands.usesImageInRenderPass(image);
+    return renderPassCommands.started() && renderPassCommands.usesImage(image);
 }
 
 // When an Android surface is rotated differently than the device's native orientation, ANGLE must
@@ -363,6 +363,153 @@ void AppendBufferVectorToDesc(vk::ShaderBuffersDescriptorDesc *desc,
     }
 
     desc->append32BitValue(std::numeric_limits<uint32_t>::max());
+}
+
+vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
+                                   const gl::ProgramExecutable *executable,
+                                   size_t textureUnit,
+                                   PipelineType pipelineType)
+{
+    vk::ImageHelper &image = textureVk->getImage();
+
+    if (textureVk->hasBeenBoundAsImage())
+    {
+        return pipelineType == PipelineType::Compute ? vk::ImageLayout::ComputeShaderWrite
+                                                     : vk::ImageLayout::AllGraphicsShadersWrite;
+    }
+
+    gl::ShaderBitSet remainingShaderBits =
+        executable->getSamplerShaderBitsForTextureUnitIndex(textureUnit);
+    ASSERT(remainingShaderBits.any());
+    gl::ShaderType firstShader = remainingShaderBits.first();
+    gl::ShaderType lastShader  = remainingShaderBits.last();
+    remainingShaderBits.reset(firstShader);
+    remainingShaderBits.reset(lastShader);
+
+    if (image.hasRenderPassUsageFlag(vk::RenderPassUsage::RenderTargetAttachment))
+    {
+        // Right now we set this flag only when RenderTargetAttachment is set since we do
+        // not track all textures in the renderpass.
+        image.setRenderPassUsageFlag(vk::RenderPassUsage::TextureSampler);
+
+        if (image.isDepthOrStencil())
+        {
+            if (image.hasRenderPassUsageFlag(vk::RenderPassUsage::ReadOnlyAttachment))
+            {
+                if (firstShader == gl::ShaderType::Fragment)
+                {
+                    ASSERT(remainingShaderBits.none() && lastShader == firstShader);
+                    return vk::ImageLayout::DSAttachmentReadAndFragmentShaderRead;
+                }
+                return vk::ImageLayout::DSAttachmentReadAndAllShadersRead;
+            }
+
+            return firstShader == gl::ShaderType::Fragment
+                       ? vk::ImageLayout::DSAttachmentWriteAndFragmentShaderRead
+                       : vk::ImageLayout::DSAttachmentWriteAndAllShadersRead;
+        }
+
+        return firstShader == gl::ShaderType::Fragment
+                   ? vk::ImageLayout::ColorAttachmentAndFragmentShaderRead
+                   : vk::ImageLayout::ColorAttachmentAndAllShadersRead;
+    }
+
+    if (image.isDepthOrStencil())
+    {
+        // We always use a depth-stencil read-only layout for any depth Textures to simplify
+        // our implementation's handling of depth-stencil read-only mode. We don't have to
+        // split a RenderPass to transition a depth texture from shader-read to read-only.
+        // This improves performance in Manhattan. Future optimizations are likely possible
+        // here including using specialized barriers without breaking the RenderPass.
+        if (firstShader == gl::ShaderType::Fragment)
+        {
+            ASSERT(remainingShaderBits.none() && lastShader == firstShader);
+            return vk::ImageLayout::DSAttachmentReadAndFragmentShaderRead;
+        }
+        return vk::ImageLayout::DSAttachmentReadAndAllShadersRead;
+    }
+
+    // We barrier against either:
+    // - Vertex only
+    // - Fragment only
+    // - Pre-fragment only (vertex, geometry and tessellation together)
+    if (remainingShaderBits.any() || firstShader != lastShader)
+    {
+        return lastShader == gl::ShaderType::Fragment ? vk::ImageLayout::AllGraphicsShadersReadOnly
+                                                      : vk::ImageLayout::PreFragmentShadersReadOnly;
+    }
+
+    return kShaderReadOnlyImageLayouts[firstShader];
+}
+
+vk::ImageLayout GetImageWriteLayoutAndSubresource(const gl::ImageUnit &imageUnit,
+                                                  vk::ImageHelper &image,
+                                                  gl::ShaderBitSet shaderStages,
+                                                  gl::LevelIndex *levelOut,
+                                                  uint32_t *layerStartOut,
+                                                  uint32_t *layerCountOut)
+{
+    *levelOut = gl::LevelIndex(static_cast<uint32_t>(imageUnit.level));
+
+    *layerStartOut = 0;
+    *layerCountOut = image.getLayerCount();
+    if (imageUnit.layered)
+    {
+        *layerStartOut = imageUnit.layered;
+        *layerCountOut = 1;
+    }
+
+    gl::ShaderType firstShader = shaderStages.first();
+    gl::ShaderType lastShader  = shaderStages.last();
+    shaderStages.reset(firstShader);
+    shaderStages.reset(lastShader);
+    // We barrier against either:
+    // - Vertex only
+    // - Fragment only
+    // - Pre-fragment only (vertex, geometry and tessellation together)
+    if (shaderStages.any() || firstShader != lastShader)
+    {
+        return lastShader == gl::ShaderType::Fragment ? vk::ImageLayout::AllGraphicsShadersWrite
+                                                      : vk::ImageLayout::PreFragmentShadersWrite;
+    }
+
+    return kShaderWriteImageLayouts[firstShader];
+}
+
+void OnTextureBufferRead(ContextVk *contextVk,
+                         BufferVk *bufferVk,
+                         gl::ShaderBitSet stages,
+                         vk::CommandBufferHelperCommon *commandBufferHelper)
+{
+    vk::BufferHelper &buffer = bufferVk->getBuffer();
+
+    ASSERT(stages.any());
+
+    // TODO: accept multiple stages in bufferRead.  http://anglebug.com/3573
+    for (gl::ShaderType stage : stages)
+    {
+        // Note: if another range of the same buffer is simultaneously used for storage,
+        // such as for transform feedback output, or SSBO, unnecessary barriers can be
+        // generated.
+        commandBufferHelper->bufferRead(contextVk, VK_ACCESS_SHADER_READ_BIT,
+                                        vk::GetPipelineStage(stage), &buffer);
+    }
+}
+
+void OnImageBufferWrite(ContextVk *contextVk,
+                        BufferVk *bufferVk,
+                        gl::ShaderBitSet stages,
+                        vk::CommandBufferHelperCommon *commandBufferHelper)
+{
+    vk::BufferHelper &buffer = bufferVk->getBuffer();
+
+    // TODO: accept multiple stages in bufferWrite.  http://anglebug.com/3573
+    for (gl::ShaderType stage : stages)
+    {
+        commandBufferHelper->bufferWrite(
+            contextVk, VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
+            vk::GetPipelineStage(stage), vk::AliasingMode::Disallowed, &buffer);
+    }
 }
 
 constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPassClosureReason = {{
@@ -751,8 +898,8 @@ void ContextVk::onDestroy(const gl::Context *context)
     }
 
     // Recycle current commands buffers.
-    mRenderer->recycleCommandBufferHelper(device, &mOutsideRenderPassCommands);
-    mRenderer->recycleCommandBufferHelper(device, &mRenderPassCommands);
+    mRenderer->recycleOutsideRenderPassCommandBufferHelper(device, &mOutsideRenderPassCommands);
+    mRenderer->recycleRenderPassCommandBufferHelper(device, &mRenderPassCommands);
 
     mRenderer->releaseSharedResources(&mResourceUseList);
 
@@ -761,7 +908,8 @@ void ContextVk::onDestroy(const gl::Context *context)
     mRenderPassCache.destroy(mRenderer);
     mShaderLibrary.destroy(device);
     mGpuEventQueryPool.destroy(device);
-    mCommandPool.destroy(device);
+    mCommandPools.outsideRenderPassPool.destroy(device);
+    mCommandPools.renderPassPool.destroy(device);
 
     ASSERT(mCurrentGarbage.empty());
     ASSERT(mResourceUseList.empty());
@@ -869,11 +1017,16 @@ angle::Result ContextVk::initialize()
     mEmulateSeamfulCubeMapSampling = shouldEmulateSeamfulCubeMapSampling();
 
     // Assign initial command buffers from queue
-    ANGLE_TRY(vk::CommandBuffer::InitializeCommandPool(
-        this, &mCommandPool, mRenderer->getDeviceQueueIndex(), hasProtectedContent()));
-    ANGLE_TRY(
-        mRenderer->getCommandBufferHelper(this, false, &mCommandPool, &mOutsideRenderPassCommands));
-    ANGLE_TRY(mRenderer->getCommandBufferHelper(this, true, &mCommandPool, &mRenderPassCommands));
+    ANGLE_TRY(vk::OutsideRenderPassCommandBuffer::InitializeCommandPool(
+        this, &mCommandPools.outsideRenderPassPool, mRenderer->getDeviceQueueIndex(),
+        hasProtectedContent()));
+    ANGLE_TRY(vk::RenderPassCommandBuffer::InitializeCommandPool(
+        this, &mCommandPools.renderPassPool, mRenderer->getDeviceQueueIndex(),
+        hasProtectedContent()));
+    ANGLE_TRY(mRenderer->getOutsideRenderPassCommandBufferHelper(
+        this, &mCommandPools.outsideRenderPassPool, &mOutsideRenderPassCommands));
+    ANGLE_TRY(mRenderer->getRenderPassCommandBufferHelper(this, &mCommandPools.renderPassPool,
+                                                          &mRenderPassCommands));
 
     if (mGpuEventsEnabled)
     {
@@ -1383,7 +1536,8 @@ angle::Result ContextVk::handleDirtyComputeEventLog()
     return handleDirtyEventLogImpl(&mOutsideRenderPassCommands->getCommandBuffer());
 }
 
-angle::Result ContextVk::handleDirtyEventLogImpl(vk::CommandBuffer *commandBuffer)
+template <typename CommandBufferT>
+angle::Result ContextVk::handleDirtyEventLogImpl(CommandBufferT *commandBuffer)
 {
     // This method is called when a draw or dispatch command is being processed.  It's purpose is
     // to call the vkCmd*DebugUtilsLabelEXT functions in order to communicate to debuggers
@@ -1597,8 +1751,9 @@ angle::Result ContextVk::handleDirtyComputePipelineBinding()
     return angle::Result::Continue;
 }
 
+template <typename CommandBufferHelperT>
 ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
-    vk::CommandBufferHelper *commandBufferHelper,
+    CommandBufferHelperT *commandBufferHelper,
     PipelineType pipelineType)
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
@@ -1613,134 +1768,28 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
         // If it's a texture buffer, get the attached buffer.
         if (textureVk->getBuffer().get() != nullptr)
         {
-            BufferVk *bufferVk       = vk::GetImpl(textureVk->getBuffer().get());
-            vk::BufferHelper &buffer = bufferVk->getBuffer();
-
-            gl::ShaderBitSet stages =
+            BufferVk *bufferVk = vk::GetImpl(textureVk->getBuffer().get());
+            const gl::ShaderBitSet stages =
                 executable->getSamplerShaderBitsForTextureUnitIndex(textureUnit);
-            ASSERT(stages.any());
 
-            // TODO: accept multiple stages in bufferRead.  http://anglebug.com/3573
-            for (gl::ShaderType stage : stages)
-            {
-                // Note: if another range of the same buffer is simultaneously used for storage,
-                // such as for transform feedback output, or SSBO, unnecessary barriers can be
-                // generated.
-                commandBufferHelper->bufferRead(this, VK_ACCESS_SHADER_READ_BIT,
-                                                vk::GetPipelineStage(stage), &buffer);
-            }
+            OnTextureBufferRead(this, bufferVk, stages, commandBufferHelper);
 
             textureVk->retainBufferViews(&mResourceUseList);
-
             continue;
         }
-
-        vk::ImageHelper &image = textureVk->getImage();
 
         // The image should be flushed and ready to use at this point. There may still be
         // lingering staged updates in its staging buffer for unused texture mip levels or
         // layers. Therefore we can't verify it has no staged updates right here.
+        vk::ImageHelper &image = textureVk->getImage();
 
         // Select the appropriate vk::ImageLayout depending on whether the texture is also bound as
         // a GL image, and whether the program is a compute or graphics shader.
-        vk::ImageLayout textureLayout;
-        if (textureVk->hasBeenBoundAsImage())
-        {
-            textureLayout = pipelineType == PipelineType::Compute
-                                ? vk::ImageLayout::ComputeShaderWrite
-                                : vk::ImageLayout::AllGraphicsShadersWrite;
-        }
-        else
-        {
-            gl::ShaderBitSet remainingShaderBits =
-                executable->getSamplerShaderBitsForTextureUnitIndex(textureUnit);
-            ASSERT(remainingShaderBits.any());
-            gl::ShaderType firstShader = remainingShaderBits.first();
-            gl::ShaderType lastShader  = remainingShaderBits.last();
-            remainingShaderBits.reset(firstShader);
-            remainingShaderBits.reset(lastShader);
+        const vk::ImageLayout imageLayout =
+            GetImageReadLayout(textureVk, executable, textureUnit, pipelineType);
 
-            if (image.hasRenderPassUsageFlag(vk::RenderPassUsage::RenderTargetAttachment))
-            {
-                // Right now we set this flag only when RenderTargetAttachment is set since we do
-                // not track all textures in the renderpass.
-                image.setRenderPassUsageFlag(vk::RenderPassUsage::TextureSampler);
-
-                if (image.isDepthOrStencil())
-                {
-                    if (image.hasRenderPassUsageFlag(vk::RenderPassUsage::ReadOnlyAttachment))
-                    {
-                        if (firstShader == gl::ShaderType::Fragment)
-                        {
-                            ASSERT(remainingShaderBits.none() && lastShader == firstShader);
-                            textureLayout = vk::ImageLayout::DSAttachmentReadAndFragmentShaderRead;
-                        }
-                        else
-                        {
-                            textureLayout = vk::ImageLayout::DSAttachmentReadAndAllShadersRead;
-                        }
-                    }
-                    else
-                    {
-                        if (firstShader == gl::ShaderType::Fragment)
-                        {
-                            textureLayout = vk::ImageLayout::DSAttachmentWriteAndFragmentShaderRead;
-                        }
-                        else
-                        {
-                            textureLayout = vk::ImageLayout::DSAttachmentWriteAndAllShadersRead;
-                        }
-                    }
-                }
-                else
-                {
-                    if (firstShader == gl::ShaderType::Fragment)
-                    {
-                        textureLayout = vk::ImageLayout::ColorAttachmentAndFragmentShaderRead;
-                    }
-                    else
-                    {
-                        textureLayout = vk::ImageLayout::ColorAttachmentAndAllShadersRead;
-                    }
-                }
-            }
-            else if (image.isDepthOrStencil())
-            {
-                // We always use a depth-stencil read-only layout for any depth Textures to simplify
-                // our implementation's handling of depth-stencil read-only mode. We don't have to
-                // split a RenderPass to transition a depth texture from shader-read to read-only.
-                // This improves performance in Manhattan. Future optimizations are likely possible
-                // here including using specialized barriers without breaking the RenderPass.
-                if (firstShader == gl::ShaderType::Fragment)
-                {
-                    ASSERT(remainingShaderBits.none() && lastShader == firstShader);
-                    textureLayout = vk::ImageLayout::DSAttachmentReadAndFragmentShaderRead;
-                }
-                else
-                {
-                    textureLayout = vk::ImageLayout::DSAttachmentReadAndAllShadersRead;
-                }
-            }
-            else
-            {
-                // We barrier against either:
-                // - Vertex only
-                // - Fragment only
-                // - Pre-fragment only (vertex, geometry and tessellation together)
-                if (remainingShaderBits.any() || firstShader != lastShader)
-                {
-                    textureLayout = lastShader == gl::ShaderType::Fragment
-                                        ? vk::ImageLayout::AllGraphicsShadersReadOnly
-                                        : vk::ImageLayout::PreFragmentShadersReadOnly;
-                }
-                else
-                {
-                    textureLayout = kShaderReadOnlyImageLayouts[firstShader];
-                }
-            }
-        }
         // Ensure the image is in the desired layout
-        commandBufferHelper->imageRead(this, image.getAspectFlags(), textureLayout, &image);
+        commandBufferHelper->imageRead(this, image.getAspectFlags(), imageLayout, &image);
 
         textureVk->retainImageViews(&mResourceUseList);
     }
@@ -1827,8 +1876,8 @@ angle::Result ContextVk::handleDirtyGraphicsFramebufferFetchBarrier(
     return angle::Result::Continue;
 }
 
-ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
-    vk::CommandBufferHelper *commandBufferHelper)
+template <typename CommandBufferHelperT>
+angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *commandBufferHelper)
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
@@ -1848,6 +1897,27 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
     {
         ANGLE_TRY(updateActiveImages(commandBufferHelper));
     }
+
+    handleDirtyShaderBufferResourcesImpl(commandBufferHelper);
+
+    ANGLE_TRY(mExecutable->updateShaderResourcesDescriptorSet(this, mDrawFramebuffer,
+                                                              mShaderBuffersDescriptorDesc));
+
+    // Record usage of storage buffers and images in the command buffer to aid handling of
+    // glMemoryBarrier.
+    if (hasImages || hasStorageBuffers)
+    {
+        commandBufferHelper->setHasShaderStorageOutput();
+    }
+
+    return angle::Result::Continue;
+}
+
+void ContextVk::handleDirtyShaderBufferResourcesImpl(
+    vk::CommandBufferHelperCommon *commandBufferHelper)
+{
+    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
+    ASSERT(executable);
 
     // Process buffer barriers.
     gl::ShaderMap<const gl::ProgramState *> programStates;
@@ -1925,18 +1995,6 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
                 vk::GetPipelineStage(shaderType), vk::AliasingMode::Allowed, &bufferHelper);
         }
     }
-
-    ANGLE_TRY(mExecutable->updateShaderResourcesDescriptorSet(
-        this, mDrawFramebuffer, mShaderBuffersDescriptorDesc, commandBufferHelper));
-
-    // Record usage of storage buffers and images in the command buffer to aid handling of
-    // glMemoryBarrier.
-    if (hasImages || hasStorageBuffers)
-    {
-        commandBufferHelper->setHasShaderStorageOutput();
-    }
-
-    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::handleDirtyGraphicsShaderResources(DirtyBits::Iterator *dirtyBitsIterator,
@@ -2122,12 +2180,13 @@ angle::Result ContextVk::handleDirtyComputeDescriptorSets()
                                          PipelineType::Compute);
 }
 
-angle::Result ContextVk::handleDirtyDescriptorSetsImpl(vk::CommandBuffer *commandBuffer,
+template <typename CommandBufferT>
+angle::Result ContextVk::handleDirtyDescriptorSetsImpl(CommandBufferT *commandBuffer,
                                                        PipelineType pipelineType)
 {
     // When using Vulkan secondary command buffers, the descriptor sets need to be updated before
     // they are bound.
-    if (!vk::CommandBuffer::ExecutesInline())
+    if (!CommandBufferT::ExecutesInline())
     {
         flushDescriptorSetUpdates();
     }
@@ -2232,7 +2291,7 @@ void ContextVk::updateOverlayOnPresent()
     }
 }
 
-void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer)
+void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *commandBuffer)
 {
     const gl::OverlayType *overlay = mState.getOverlay();
     if (!overlay->isEnabled())
@@ -2263,7 +2322,7 @@ angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore, Seria
         }
     }
 
-    if (vk::CommandBufferHelper::kEnableCommandStreamDiagnostics)
+    if (vk::CommandBufferHelperCommon::kEnableCommandStreamDiagnostics)
     {
         dumpCommandStreamDiagnostics();
     }
@@ -2273,7 +2332,7 @@ angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore, Seria
                                      std::move(mWaitSemaphores),
                                      std::move(mWaitSemaphoreStageMasks), signalSemaphore,
                                      getShareGroupVk()->releaseResourceUseLists(),
-                                     std::move(mCurrentGarbage), &mCommandPool, submitSerialOut));
+                                     std::move(mCurrentGarbage), &mCommandPools, submitSerialOut));
 
     onRenderPassFinished(RenderPassClosureReason::AlreadySpecifiedElsewhere);
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
@@ -2357,9 +2416,6 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
     // calibration.
     //
     // Note: Once VK_EXT_calibrated_timestamps is ubiquitous, this should be redone.
-
-    // Make sure nothing is running
-    ASSERT(!hasRecordedCommands());
 
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::synchronizeCpuGpuTime");
 
@@ -2486,7 +2542,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::traceGpuEventImpl(vk::CommandBuffer *commandBuffer,
+angle::Result ContextVk::traceGpuEventImpl(vk::OutsideRenderPassCommandBuffer *commandBuffer,
                                            char phase,
                                            const EventName &name)
 {
@@ -3167,10 +3223,14 @@ void ContextVk::insertEventMarkerImpl(GLenum source, const char *marker)
     VkDebugUtilsLabelEXT label;
     vk::MakeDebugUtilsLabel(source, marker, &label);
 
-    vk::CommandBuffer *commandBuffer = hasStartedRenderPass()
-                                           ? mRenderPassCommandBuffer
-                                           : &mOutsideRenderPassCommands->getCommandBuffer();
-    commandBuffer->insertDebugUtilsLabelEXT(label);
+    if (hasStartedRenderPass())
+    {
+        mRenderPassCommandBuffer->insertDebugUtilsLabelEXT(label);
+    }
+    else
+    {
+        mOutsideRenderPassCommands->getCommandBuffer().insertDebugUtilsLabelEXT(label);
+    }
 }
 
 angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
@@ -3206,10 +3266,14 @@ angle::Result ContextVk::pushDebugGroupImpl(GLenum source, GLuint id, const char
     VkDebugUtilsLabelEXT label;
     vk::MakeDebugUtilsLabel(source, message, &label);
 
-    vk::CommandBuffer *commandBuffer = hasStartedRenderPass()
-                                           ? mRenderPassCommandBuffer
-                                           : &mOutsideRenderPassCommands->getCommandBuffer();
-    commandBuffer->beginDebugUtilsLabelEXT(label);
+    if (hasStartedRenderPass())
+    {
+        mRenderPassCommandBuffer->beginDebugUtilsLabelEXT(label);
+    }
+    else
+    {
+        mOutsideRenderPassCommands->getCommandBuffer().beginDebugUtilsLabelEXT(label);
+    }
 
     return angle::Result::Continue;
 }
@@ -3221,10 +3285,14 @@ angle::Result ContextVk::popDebugGroupImpl()
         return angle::Result::Continue;
     }
 
-    vk::CommandBuffer *commandBuffer = hasStartedRenderPass()
-                                           ? mRenderPassCommandBuffer
-                                           : &mOutsideRenderPassCommands->getCommandBuffer();
-    commandBuffer->endDebugUtilsLabelEXT();
+    if (hasStartedRenderPass())
+    {
+        mRenderPassCommandBuffer->endDebugUtilsLabelEXT();
+    }
+    else
+    {
+        mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
+    }
 
     return angle::Result::Continue;
 }
@@ -3270,16 +3338,15 @@ void ContextVk::endEventLogForClearOrQuery()
         return;
     }
 
-    vk::CommandBuffer *commandBuffer = nullptr;
     switch (mQueryEventType)
     {
         case GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd:
             ASSERT(mOutsideRenderPassCommands);
-            commandBuffer = &mOutsideRenderPassCommands->getCommandBuffer();
+            mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
             break;
         case GraphicsEventCmdBuf::InRenderPassCmdBufQueryCmd:
             ASSERT(mRenderPassCommands);
-            commandBuffer = &mRenderPassCommands->getCommandBuffer();
+            mRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
             break;
         case GraphicsEventCmdBuf::NotInQueryCmd:
             // The glClear* or gl*Query* command was noop'd or otherwise ended early.  We could
@@ -3290,7 +3357,6 @@ void ContextVk::endEventLogForClearOrQuery()
         default:
             UNREACHABLE();
     }
-    commandBuffer->endDebugUtilsLabelEXT();
 
     mQueryEventType = GraphicsEventCmdBuf::NotInQueryCmd;
 }
@@ -3311,21 +3377,18 @@ angle::Result ContextVk::handleGraphicsEventLog(GraphicsEventCmdBuf queryEventTy
 
     mQueryEventType = queryEventType;
 
-    vk::CommandBuffer *commandBuffer = nullptr;
     switch (mQueryEventType)
     {
         case GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd:
             ASSERT(mOutsideRenderPassCommands);
-            commandBuffer = &mOutsideRenderPassCommands->getCommandBuffer();
-            break;
+            return handleDirtyEventLogImpl(&mOutsideRenderPassCommands->getCommandBuffer());
         case GraphicsEventCmdBuf::InRenderPassCmdBufQueryCmd:
             ASSERT(mRenderPassCommands);
-            commandBuffer = &mRenderPassCommands->getCommandBuffer();
-            break;
+            return handleDirtyEventLogImpl(&mRenderPassCommands->getCommandBuffer());
         default:
             UNREACHABLE();
+            return angle::Result::Stop;
     }
-    return handleDirtyEventLogImpl(commandBuffer);
 }
 
 bool ContextVk::isViewportFlipEnabledForDrawFBO() const
@@ -5113,7 +5176,8 @@ angle::Result ContextVk::handleDirtyComputeDriverUniforms()
                                              PipelineType::Compute);
 }
 
-void ContextVk::handleDirtyDriverUniformsBindingImpl(vk::CommandBuffer *commandBuffer,
+template <typename CommandBufferT>
+void ContextVk::handleDirtyDriverUniformsBindingImpl(CommandBufferT *commandBuffer,
                                                      VkPipelineBindPoint bindPoint,
                                                      DriverUniformsDescriptorSet *driverUniforms)
 {
@@ -5399,7 +5463,8 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::updateActiveImages(vk::CommandBufferHelper *commandBufferHelper)
+template <typename CommandBufferHelperT>
+angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferHelper)
 {
     const gl::State &glState                = mState;
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
@@ -5440,19 +5505,11 @@ angle::Result ContextVk::updateActiveImages(vk::CommandBufferHelper *commandBuff
         // Special handling of texture buffers.  They have a buffer attached instead of an image.
         if (texture->getType() == gl::TextureType::Buffer)
         {
-            BufferVk *bufferVk       = vk::GetImpl(textureVk->getBuffer().get());
-            vk::BufferHelper &buffer = bufferVk->getBuffer();
+            BufferVk *bufferVk = vk::GetImpl(textureVk->getBuffer().get());
 
-            // TODO: accept multiple stages in bufferWrite.  http://anglebug.com/3573
-            for (gl::ShaderType stage : shaderStages)
-            {
-                commandBufferHelper->bufferWrite(
-                    this, VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
-                    vk::GetPipelineStage(stage), vk::AliasingMode::Disallowed, &buffer);
-            }
+            OnImageBufferWrite(this, bufferVk, shaderStages, commandBufferHelper);
 
             textureVk->retainBufferViews(&mResourceUseList);
-
             continue;
         }
 
@@ -5464,48 +5521,18 @@ angle::Result ContextVk::updateActiveImages(vk::CommandBufferHelper *commandBuff
         }
         alreadyProcessed.insert(image);
 
-        vk::ImageLayout imageLayout;
-        gl::ShaderType firstShader = shaderStages.first();
-        gl::ShaderType lastShader  = shaderStages.last();
-        shaderStages.reset(firstShader);
-        shaderStages.reset(lastShader);
-        // We barrier against either:
-        // - Vertex only
-        // - Fragment only
-        // - Pre-fragment only (vertex, geometry and tessellation together)
-        if (shaderStages.any() || firstShader != lastShader)
-        {
-            imageLayout = lastShader == gl::ShaderType::Fragment
-                              ? vk::ImageLayout::AllGraphicsShadersWrite
-                              : vk::ImageLayout::PreFragmentShadersWrite;
-        }
-        else
-        {
-            imageLayout = kShaderWriteImageLayouts[firstShader];
-        }
+        gl::LevelIndex level;
+        uint32_t layerStart               = 0;
+        uint32_t layerCount               = 0;
+        const vk::ImageLayout imageLayout = GetImageWriteLayoutAndSubresource(
+            imageUnit, *image, shaderStages, &level, &layerStart, &layerCount);
 
-        VkImageAspectFlags aspectFlags = image->getAspectFlags();
-
-        uint32_t layerStart = 0;
-        uint32_t layerCount = image->getLayerCount();
-        if (imageUnit.layered)
-        {
-            layerStart = imageUnit.layered;
-            layerCount = 1;
-        }
-
-        commandBufferHelper->imageWrite(
-            this, gl::LevelIndex(static_cast<uint32_t>(imageUnit.level)), layerStart, layerCount,
-            aspectFlags, imageLayout, vk::AliasingMode::Allowed, image);
+        commandBufferHelper->imageWrite(this, level, layerStart, layerCount,
+                                        image->getAspectFlags(), imageLayout,
+                                        vk::AliasingMode::Allowed, image);
     }
 
     return angle::Result::Continue;
-}
-
-bool ContextVk::hasRecordedCommands()
-{
-    ASSERT(mOutsideRenderPassCommands && mRenderPassCommands);
-    return !mOutsideRenderPassCommands->empty() || mRenderPassCommands->started();
 }
 
 angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
@@ -5638,11 +5665,6 @@ void ContextVk::addWaitSemaphore(VkSemaphore semaphore, VkPipelineStageFlags sta
 {
     mWaitSemaphores.push_back(semaphore);
     mWaitSemaphoreStageMasks.push_back(stageMask);
-}
-
-const vk::CommandPool &ContextVk::getCommandPool() const
-{
-    return mCommandPool;
 }
 
 bool ContextVk::isSerialInUse(Serial serial) const
@@ -5843,7 +5865,7 @@ angle::Result ContextVk::beginNewRenderPass(
     const vk::PackedAttachmentCount colorAttachmentCount,
     const vk::PackedAttachmentIndex depthStencilAttachmentIndex,
     const vk::PackedClearValuesArray &clearValues,
-    vk::CommandBuffer **commandBufferOut)
+    vk::RenderPassCommandBuffer **commandBufferOut)
 {
     // Next end any currently outstanding render pass.  The render pass is normally closed before
     // reaching here for various reasons, except typically when UtilsVk needs to start one.
@@ -5856,7 +5878,7 @@ angle::Result ContextVk::beginNewRenderPass(
 }
 
 angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
-                                         vk::CommandBuffer **commandBufferOut,
+                                         vk::RenderPassCommandBuffer **commandBufferOut,
                                          bool *renderPassDescChangedOut)
 {
     ASSERT(mDrawFramebuffer == vk::GetImpl(mState.getDrawFramebuffer()));
@@ -5977,7 +5999,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassImpl(QueueSubmitType queue
 
     ANGLE_TRY(mRenderPassCommands->endRenderPass(this));
 
-    if (vk::CommandBufferHelper::kEnableCommandStreamDiagnostics)
+    if (vk::CommandBufferHelperCommon::kEnableCommandStreamDiagnostics)
     {
         mRenderPassCommands->addCommandDiagnostics(this);
     }
@@ -6125,7 +6147,7 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
 
     addOverlayUsedBuffersCount(mOutsideRenderPassCommands);
 
-    if (vk::CommandBufferHelper::kEnableCommandStreamDiagnostics)
+    if (vk::CommandBufferHelperCommon::kEnableCommandStreamDiagnostics)
     {
         mOutsideRenderPassCommands->addCommandDiagnostics(this);
     }
@@ -6452,7 +6474,8 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
 {
     ANGLE_TRY(flushCommandBuffersIfNecessary(access));
 
-    vk::CommandBuffer *commandBuffer = &mOutsideRenderPassCommands->getCommandBuffer();
+    vk::OutsideRenderPassCommandBuffer *commandBuffer =
+        &mOutsideRenderPassCommands->getCommandBuffer();
 
     for (const vk::CommandBufferImageAccess &imageAccess : access.getReadImages())
     {

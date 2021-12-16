@@ -1551,8 +1551,7 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
 angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
     ContextVk *contextVk,
     FramebufferVk *framebufferVk,
-    const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc,
-    vk::CommandBufferHelper *commandBufferHelper)
+    const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc)
 {
     const gl::ProgramExecutable *executable = contextVk->getState().getProgramExecutable();
     ASSERT(executable);
@@ -1884,8 +1883,9 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
     return angle::Result::Continue;
 }
 
+template <typename CommandBufferT>
 angle::Result ProgramExecutableVk::updateDescriptorSets(ContextVk *contextVk,
-                                                        vk::CommandBuffer *commandBuffer,
+                                                        CommandBufferT *commandBuffer,
                                                         PipelineType pipelineType)
 {
     // Can probably use better dirty bits here.
@@ -1969,6 +1969,15 @@ angle::Result ProgramExecutableVk::updateDescriptorSets(ContextVk *contextVk,
 
     return angle::Result::Continue;
 }
+
+template angle::Result ProgramExecutableVk::updateDescriptorSets<vk::priv::SecondaryCommandBuffer>(
+    ContextVk *contextVk,
+    vk::priv::SecondaryCommandBuffer *commandBuffer,
+    PipelineType pipelineType);
+template angle::Result ProgramExecutableVk::updateDescriptorSets<vk::VulkanSecondaryCommandBuffer>(
+    ContextVk *contextVk,
+    vk::VulkanSecondaryCommandBuffer *commandBuffer,
+    PipelineType pipelineType);
 
 // Requires that trace is enabled to see the output, which is supported with is_debug=true
 void ProgramExecutableVk::outputCumulativePerfCounters()

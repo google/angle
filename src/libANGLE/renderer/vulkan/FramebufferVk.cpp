@@ -859,7 +859,7 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     access.onImageTransferRead(imageAspectMask, srcImage);
     access.onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
                                 drawRenderTarget->getLayerIndex(), 1, imageAspectMask, dstImage);
-    vk::CommandBuffer *commandBuffer;
+    vk::OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     VkImageBlit blit               = {};
@@ -1405,8 +1405,9 @@ angle::Result FramebufferVk::resolveColorWithSubpass(ContextVk *contextVk,
     ANGLE_TRY(drawRenderTarget->getImageView(contextVk, &resolveImageView));
     vk::Framebuffer *newSrcFramebuffer = nullptr;
     ANGLE_TRY(srcFramebufferVk->getFramebuffer(contextVk, &newSrcFramebuffer, resolveImageView));
-    // 2. Update the CommandBufferHelper with the new framebuffer and render pass
-    vk::CommandBufferHelper &commandBufferHelper = contextVk->getStartedRenderPassCommands();
+    // 2. Update the RenderPassCommandBufferHelper with the new framebuffer and render pass
+    vk::RenderPassCommandBufferHelper &commandBufferHelper =
+        contextVk->getStartedRenderPassCommands();
     commandBufferHelper.updateRenderPassForResolve(contextVk, newSrcFramebuffer,
                                                    srcFramebufferVk->getRenderPassDesc());
 
@@ -1438,7 +1439,7 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
                                     &dstImage);
     }
 
-    vk::CommandBuffer *commandBuffer;
+    vk::OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     VkImageResolve resolveRegion                = {};
@@ -2329,7 +2330,7 @@ void FramebufferVk::redeferClears(ContextVk *contextVk)
 }
 
 angle::Result FramebufferVk::clearWithCommand(ContextVk *contextVk,
-                                              vk::CommandBufferHelper *renderpassCommands,
+                                              vk::RenderPassCommandBufferHelper *renderpassCommands,
                                               const gl::Rectangle &scissoredRenderArea)
 {
     // Clear is not affected by viewport, so ContextVk::updateScissor may have decided on a smaller
@@ -2380,11 +2381,11 @@ angle::Result FramebufferVk::clearWithCommand(ContextVk *contextVk,
         updateRenderPassReadOnlyDepthMode(contextVk, renderpassCommands);
     }
 
-    VkClearRect rect                           = {};
-    rect.rect.extent.width                     = scissoredRenderArea.width;
-    rect.rect.extent.height                    = scissoredRenderArea.height;
-    rect.layerCount                            = mCurrentFramebufferDesc.getLayerCount();
-    vk::CommandBuffer *renderPassCommandBuffer = &renderpassCommands->getCommandBuffer();
+    VkClearRect rect                                     = {};
+    rect.rect.extent.width                               = scissoredRenderArea.width;
+    rect.rect.extent.height                              = scissoredRenderArea.height;
+    rect.layerCount                                      = mCurrentFramebufferDesc.getLayerCount();
+    vk::RenderPassCommandBuffer *renderPassCommandBuffer = &renderpassCommands->getCommandBuffer();
 
     renderPassCommandBuffer->clearAttachments(static_cast<uint32_t>(attachments.size()),
                                               attachments.data(), 1, &rect);
@@ -2402,7 +2403,7 @@ angle::Result FramebufferVk::getSamplePosition(const gl::Context *context,
 
 angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                                 const gl::Rectangle &scissoredRenderArea,
-                                                vk::CommandBuffer **commandBufferOut,
+                                                vk::RenderPassCommandBuffer **commandBufferOut,
                                                 bool *renderPassDescChangedOut)
 {
     ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass(RenderPassClosureReason::NewRenderPass));
@@ -2817,7 +2818,7 @@ angle::Result FramebufferVk::flushDeferredClears(ContextVk *contextVk)
 }
 
 void FramebufferVk::updateRenderPassReadOnlyDepthMode(ContextVk *contextVk,
-                                                      vk::CommandBufferHelper *renderPass)
+                                                      vk::RenderPassCommandBufferHelper *renderPass)
 {
     bool readOnlyDepthStencilMode =
         getDepthStencilRenderTarget() && !getDepthStencilRenderTarget()->hasResolveAttachment() &&

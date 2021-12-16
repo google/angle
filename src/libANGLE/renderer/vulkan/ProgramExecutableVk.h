@@ -161,8 +161,7 @@ class ProgramExecutableVk
     angle::Result updateShaderResourcesDescriptorSet(
         ContextVk *contextVk,
         FramebufferVk *framebufferVk,
-        const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc,
-        vk::CommandBufferHelper *commandBufferHelper);
+        const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc);
     angle::Result updateTransformFeedbackDescriptorSet(
         const gl::ProgramState &programState,
         gl::ShaderMap<DefaultUniformBlock> &defaultUniformBlocks,
@@ -174,8 +173,9 @@ class ProgramExecutableVk
                                                      ContextVk *contextVk,
                                                      FramebufferVk *framebufferVk);
 
+    template <typename CommandBufferT>
     angle::Result updateDescriptorSets(ContextVk *contextVk,
-                                       vk::CommandBuffer *commandBuffer,
+                                       CommandBufferT *commandBuffer,
                                        PipelineType pipelineType);
 
     void updateEarlyFragmentTestsOptimization(ContextVk *contextVk);

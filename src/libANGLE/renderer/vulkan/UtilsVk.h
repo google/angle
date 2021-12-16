@@ -481,21 +481,26 @@ class UtilsVk : angle::NonCopyable
         EnumCount   = 22,
     };
 
-    // Common function that creates the pipeline for the specified function, binds it and prepares
-    // the draw/dispatch call.  If function >= ComputeStartIndex, fsCsShader is expected to be a
-    // compute shader, vsShader and pipelineDesc should be nullptr, and this will set up a dispatch
-    // call. Otherwise fsCsShader is expected to be a fragment shader and this will set up a draw
-    // call.
-    angle::Result setupProgram(ContextVk *contextVk,
-                               Function function,
-                               vk::RefCounted<vk::ShaderAndSerial> *fsCsShader,
-                               vk::RefCounted<vk::ShaderAndSerial> *vsShader,
-                               vk::ShaderProgramHelper *program,
-                               const vk::GraphicsPipelineDesc *pipelineDesc,
-                               const VkDescriptorSet descriptorSet,
-                               const void *pushConstants,
-                               size_t pushConstantsSize,
-                               vk::CommandBuffer *commandBuffer);
+    // Common functions that create the pipeline for the specified function, binds it and prepares
+    // the draw/dispatch call.
+    angle::Result setupComputeProgram(ContextVk *contextVk,
+                                      Function function,
+                                      vk::RefCounted<vk::ShaderAndSerial> *csShader,
+                                      vk::ShaderProgramHelper *program,
+                                      const VkDescriptorSet descriptorSet,
+                                      const void *pushConstants,
+                                      size_t pushConstantsSize,
+                                      vk::OutsideRenderPassCommandBuffer *commandBuffer);
+    angle::Result setupGraphicsProgram(ContextVk *contextVk,
+                                       Function function,
+                                       vk::RefCounted<vk::ShaderAndSerial> *vsShader,
+                                       vk::RefCounted<vk::ShaderAndSerial> *fsShader,
+                                       vk::ShaderProgramHelper *program,
+                                       const vk::GraphicsPipelineDesc *pipelineDesc,
+                                       const VkDescriptorSet descriptorSet,
+                                       const void *pushConstants,
+                                       size_t pushConstantsSize,
+                                       vk::RenderPassCommandBuffer *commandBuffer);
 
     // Initializes descriptor set layout, pipeline layout and descriptor pool corresponding to given
     // function, if not already initialized.  Uses setSizes to create the layout.  For example, if
@@ -533,14 +538,14 @@ class UtilsVk : angle::NonCopyable
                                   const vk::ImageView *imageView,
                                   const vk::RenderPassDesc &renderPassDesc,
                                   const gl::Rectangle &renderArea,
-                                  vk::CommandBuffer **commandBufferOut);
+                                  vk::RenderPassCommandBuffer **commandBufferOut);
 
     // Set up descriptor set and call dispatch.
     angle::Result convertVertexBufferImpl(ContextVk *contextVk,
                                           vk::BufferHelper *dst,
                                           vk::BufferHelper *src,
                                           uint32_t flags,
-                                          vk::CommandBuffer *commandBuffer,
+                                          vk::OutsideRenderPassCommandBuffer *commandBuffer,
                                           const ConvertVertexShaderParams &shaderParams);
 
     // Blits or resolves either color or depth/stencil, based on which view is given.

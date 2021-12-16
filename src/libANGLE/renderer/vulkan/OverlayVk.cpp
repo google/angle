@@ -132,7 +132,7 @@ angle::Result OverlayVk::createFont(ContextVk *contextVk)
     access.onBufferTransferRead(&fontDataBuffer.get());
     access.onImageTransferWrite(gl::LevelIndex(0), 1, 0, gl::overlay::kFontCount,
                                 VK_IMAGE_ASPECT_COLOR_BIT, &mFontImage);
-    vk::CommandBuffer *fontDataUpload;
+    vk::OutsideRenderPassCommandBuffer *fontDataUpload;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &fontDataUpload));
 
     VkBufferImageCopy copy           = {};

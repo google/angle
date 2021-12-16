@@ -297,9 +297,14 @@ class RendererVk : angle::NonCopyable
                                          bool hasProtectedContent,
                                          vk::PrimaryCommandBuffer *commandBufferOut);
 
-    void resetSecondaryCommandBuffer(vk::CommandBuffer &&commandBuffer)
+    void resetOutsideRenderPassCommandBuffer(vk::OutsideRenderPassCommandBuffer &&commandBuffer)
     {
-        mCommandBufferRecycler.resetCommandBufferHelper(std::move(commandBuffer));
+        mOutsideRenderPassCommandBufferRecycler.resetCommandBuffer(std::move(commandBuffer));
+    }
+
+    void resetRenderPassCommandBuffer(vk::RenderPassCommandBuffer &&commandBuffer)
+    {
+        mRenderPassCommandBufferRecycler.resetCommandBuffer(std::move(commandBuffer));
     }
 
     // Fire off a single command buffer immediately with default priority.
@@ -432,7 +437,7 @@ class RendererVk : angle::NonCopyable
                               const vk::Semaphore *signalSemaphore,
                               std::vector<vk::ResourceUseList> &&resourceUseLists,
                               vk::GarbageList &&currentGarbage,
-                              vk::CommandPool *commandPool,
+                              vk::SecondaryCommandPools *commandPools,
                               Serial *submitSerialOut);
 
     void handleDeviceLost();
@@ -447,20 +452,30 @@ class RendererVk : angle::NonCopyable
     angle::Result flushRenderPassCommands(vk::Context *context,
                                           bool hasProtectedContent,
                                           const vk::RenderPass &renderPass,
-                                          vk::CommandBufferHelper **renderPassCommands);
-    angle::Result flushOutsideRPCommands(vk::Context *context,
-                                         bool hasProtectedContent,
-                                         vk::CommandBufferHelper **outsideRPCommands);
+                                          vk::RenderPassCommandBufferHelper **renderPassCommands);
+    angle::Result flushOutsideRPCommands(
+        vk::Context *context,
+        bool hasProtectedContent,
+        vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands);
 
     VkResult queuePresent(vk::Context *context,
                           egl::ContextPriority priority,
                           const VkPresentInfoKHR &presentInfo);
 
-    angle::Result getCommandBufferHelper(vk::Context *context,
-                                         bool hasRenderPass,
-                                         vk::CommandPool *commandPool,
-                                         vk::CommandBufferHelper **commandBufferHelperOut);
-    void recycleCommandBufferHelper(VkDevice device, vk::CommandBufferHelper **commandBuffer);
+    angle::Result getOutsideRenderPassCommandBufferHelper(
+        vk::Context *context,
+        vk::CommandPool *commandPool,
+        vk::OutsideRenderPassCommandBufferHelper **commandBufferHelperOut);
+    angle::Result getRenderPassCommandBufferHelper(
+        vk::Context *context,
+        vk::CommandPool *commandPool,
+        vk::RenderPassCommandBufferHelper **commandBufferHelperOut);
+
+    void recycleOutsideRenderPassCommandBufferHelper(
+        VkDevice device,
+        vk::OutsideRenderPassCommandBufferHelper **commandBuffer);
+    void recycleRenderPassCommandBufferHelper(VkDevice device,
+                                              vk::RenderPassCommandBufferHelper **commandBuffer);
 
     // Process GPU memory reports
     void processMemoryReportCallback(const VkDeviceMemoryReportCallbackDataEXT &callbackData)
@@ -663,7 +678,11 @@ class RendererVk : angle::NonCopyable
 
     // Command buffer pool management.
     std::mutex mCommandBufferRecyclerMutex;
-    vk::CommandBufferRecycler mCommandBufferRecycler;
+    vk::CommandBufferRecycler<vk::OutsideRenderPassCommandBuffer,
+                              vk::OutsideRenderPassCommandBufferHelper>
+        mOutsideRenderPassCommandBufferRecycler;
+    vk::CommandBufferRecycler<vk::RenderPassCommandBuffer, vk::RenderPassCommandBufferHelper>
+        mRenderPassCommandBufferRecycler;
 
     vk::BufferMemoryAllocator mBufferMemoryAllocator;
     vk::Allocator mAllocator;

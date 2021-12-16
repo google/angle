@@ -202,12 +202,24 @@ class Context : angle::NonCopyable
 class RenderPassDesc;
 
 #if ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
-using CommandBuffer = priv::SecondaryCommandBuffer;
+using OutsideRenderPassCommandBuffer = priv::SecondaryCommandBuffer;
+using RenderPassCommandBuffer        = priv::SecondaryCommandBuffer;
 #else
-using CommandBuffer                          = VulkanSecondaryCommandBuffer;
+using OutsideRenderPassCommandBuffer         = VulkanSecondaryCommandBuffer;
+using RenderPassCommandBuffer                = VulkanSecondaryCommandBuffer;
 #endif
 
-using SecondaryCommandBufferList = std::vector<CommandBuffer>;
+struct SecondaryCommandBufferList
+{
+    std::vector<OutsideRenderPassCommandBuffer> outsideRenderPassCommandBuffers;
+    std::vector<RenderPassCommandBuffer> renderPassCommandBuffers;
+};
+
+struct SecondaryCommandPools
+{
+    CommandPool outsideRenderPassPool;
+    CommandPool renderPassPool;
+};
 
 VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format);
 VkImageAspectFlags GetFormatAspectFlags(const angle::Format &format);

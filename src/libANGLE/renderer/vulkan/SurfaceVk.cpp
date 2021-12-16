@@ -1477,7 +1477,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     // ImageLayout::Present bellow.
     contextVk->finalizeImageLayout(&image.image);
 
-    vk::CommandBuffer *commandBuffer;
+    vk::OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
 
     if (mColorImageMS.valid())

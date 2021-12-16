@@ -143,7 +143,7 @@ angle::Result SyncHelper::serverWait(ContextVk *contextVk)
     // Every resource already tracks its usage and issues the appropriate barriers, so there's
     // really nothing to do here.  An execution barrier is issued to strictly satisfy what the
     // application asked for.
-    vk::CommandBuffer *commandBuffer;
+    vk::OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
     commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
                                    VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 0,
