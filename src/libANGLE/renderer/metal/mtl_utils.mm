@@ -831,7 +831,7 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
         [nsSource ANGLE_MTL_AUTORELEASE];
         *errorOut = std::move(nsError);
 
-        return [library ANGLE_MTL_AUTORELEASE];
+        return library;
     }
 }
 

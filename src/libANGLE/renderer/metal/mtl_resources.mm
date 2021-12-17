@@ -402,7 +402,7 @@ Texture::Texture(ContextMtl *context,
             desc.usage = desc.usage | MTLTextureUsagePixelFormatView;
         }
 
-        set([metalDevice.newTextureWithDescriptor(desc) ANGLE_MTL_AUTORELEASE]);
+        set(metalDevice.newTextureWithDescriptor(desc));
 
         mCreationDesc.retainAssign(desc);
     }
@@ -441,8 +441,7 @@ Texture::Texture(ContextMtl *context,
                 desc.usage = desc.usage | MTLTextureUsageShaderWrite;
             }
         }
-        id<MTLTexture> iosurfTexture = metalDevice.newTextureWithDescriptor(desc, iosurface, plane);
-        set([iosurfTexture ANGLE_MTL_AUTORELEASE]);
+        set(metalDevice.newTextureWithDescriptor(desc, iosurface, plane));
     }
 }
 
@@ -816,9 +815,7 @@ TextureRef Texture::getReadableCopy(ContextMtl *context,
             desc.resourceOptions = MTLResourceStorageModePrivate;
             desc.sampleCount     = get().sampleCount;
             desc.usage           = MTLTextureUsageShaderRead | MTLTextureUsagePixelFormatView;
-
-            id<MTLTexture> mtlTexture = context->getMetalDevice().newTextureWithDescriptor(desc);
-            mReadCopy.reset(new Texture(mtlTexture));
+            mReadCopy.reset(new Texture(context->getMetalDevice().newTextureWithDescriptor(desc)));
         }  // ANGLE_MTL_OBJC_SCOPE
     }
 
@@ -957,27 +954,18 @@ angle::Result Buffer::resetWithResOpt(ContextMtl *context,
                                       size_t size,
                                       const uint8_t *data)
 {
-    ANGLE_MTL_OBJC_SCOPE
-    {
-        id<MTLBuffer> newBuffer;
+    set([&] {
         const mtl::ContextDevice &metalDevice = context->getMetalDevice();
-
         if (data)
         {
-            newBuffer = metalDevice.newBufferWithBytes(data, size, options);
+            return metalDevice.newBufferWithBytes(data, size, options);
         }
-        else
-        {
-            newBuffer = metalDevice.newBufferWithLength(size, options);
-        }
+        return metalDevice.newBufferWithLength(size, options);
+    }());
+    // Reset command buffer's reference serial
+    Resource::reset();
 
-        set([newBuffer ANGLE_MTL_AUTORELEASE]);
-
-        // Reset command buffer's reference serial
-        Resource::reset();
-
-        return angle::Result::Continue;
-    }
+    return angle::Result::Continue;
 }
 
 void Buffer::syncContent(ContextMtl *context, mtl::BlitCommandEncoder *blitEncoder)

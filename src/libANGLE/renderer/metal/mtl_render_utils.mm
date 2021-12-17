@@ -521,8 +521,7 @@ void EnsureComputePipelineInitialized(ContextMtl *context,
 
         [shader ANGLE_MTL_AUTORELEASE];
 
-        pipeline =
-            [metalDevice.newComputePipelineStateWithFunction(shader, &err) ANGLE_MTL_AUTORELEASE];
+        pipeline = metalDevice.newComputePipelineStateWithFunction(shader, &err);
         if (err && !pipeline)
         {
             ERR() << "Internal error: " << err.localizedDescription.UTF8String << "\n";
@@ -566,8 +565,7 @@ void EnsureSpecializedComputePipelineInitialized(
             ERR() << "Internal error: " << err.localizedDescription.UTF8String << "\n";
         }
 
-        pipeline =
-            [metalDevice.newComputePipelineStateWithFunction(shader, &err) ANGLE_MTL_AUTORELEASE];
+        pipeline = metalDevice.newComputePipelineStateWithFunction(shader, &err);
         if (err && !pipeline)
         {
             ERR() << "Internal error: " << err.localizedDescription.UTF8String << "\n";
