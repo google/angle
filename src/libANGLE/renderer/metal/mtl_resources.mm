@@ -753,15 +753,10 @@ angle::Result Texture::resize(ContextMtl *context, uint32_t width, uint32_t heig
         MTLTextureDescriptor *newDesc = [[mCreationDesc.get() copy] ANGLE_MTL_AUTORELEASE];
         newDesc.width                 = width;
         newDesc.height                = height;
-        id<MTLTexture> newTexture =
-            [[get().device newTextureWithDescriptor:newDesc] ANGLE_MTL_AUTORELEASE];
-
+        auto newTexture               = context->getMetalDevice().newTextureWithDescriptor(newDesc);
         ANGLE_CHECK_GL_ALLOC(context, newTexture);
-
         mCreationDesc.retainAssign(newDesc);
-
         set(newTexture);
-
         // Reset reference counter
         Resource::reset();
     }
