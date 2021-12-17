@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '3f6c88f5581a1da8d44ac6d32c198f255a7ae06c',
+  'chromium_revision': '14ca75d254a5f70794df6397271be54f0e89c697',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -79,7 +79,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '58f3a92099a02ccc517ce7bce93b75da0766b451',
+  'catapult_revision': 'a25500bfae56d9a4774abe8c1b4efa3c08d20965',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@f64cedd2323a83c2e564d54f6ef7dcad609852ee',
+    'url': '{chromium_git}/chromium/src/build.git@1a7d92e5e8eba18adb7e67c9e991e58a9d30e5b0',
     'condition': 'not build_with_chromium',
   },
 
@@ -137,7 +137,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/linux-amd64',
-        'version': 'git_revision:2e56c317bd8e2bf152cfa2ead6ac5fa476fe28b4',
+        'version': 'git_revision:18df6af86191edab1e47c84d56e608da414d446b',
       }
     ],
     'dep_type': 'cipd',
@@ -148,7 +148,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/mac-${{arch}}',
-        'version': 'git_revision:2e56c317bd8e2bf152cfa2ead6ac5fa476fe28b4',
+        'version': 'git_revision:18df6af86191edab1e47c84d56e608da414d446b',
       }
     ],
     'dep_type': 'cipd',
@@ -166,7 +166,7 @@ deps = {
   },
 
   'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@d81cd6236cd771e78d7e1a1807404ef3f1d21820',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@4ead61094cab5ac7a90198fbe182596c4775183e',
     'condition': 'not build_with_chromium',
   },
 
@@ -174,7 +174,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/windows-amd64',
-        'version': 'git_revision:2e56c317bd8e2bf152cfa2ead6ac5fa476fe28b4',
+        'version': 'git_revision:18df6af86191edab1e47c84d56e608da414d446b',
       }
     ],
     'dep_type': 'cipd',
@@ -182,7 +182,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@66c450f46917b79b02603c01e8e34a830eac32bc',
+    'url': '{chromium_git}/chromium/src/testing@43b83d3c09af61dc50d1dc3932797712ec158f54',
     'condition': 'not build_with_chromium',
   },
 
@@ -200,7 +200,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_build_tools/aapt2',
-              'version': 'GlCdqxHxlg-8YkDGgj5cie-6COsEAZga9jyq-LAYxY4C',
+              'version': 'ZHiDoiurxMLwajQq_CwBH9zaDW5xwYWYGbedxIslTm8C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -230,7 +230,7 @@ deps = {
   },
 
   'third_party/android_deps': {
-    'url': '{chromium_git}/chromium/src/third_party/android_deps@a74e6cedaec825bf1c8f88e4d39b6c960f6c06c2',
+    'url': '{chromium_git}/chromium/src/third_party/android_deps@e2503e42c548dfcaa52e923733c8e827b22249d3',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -536,7 +536,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@dc7eff95e13cd297af9c0a28a2f43bd0c975c54b',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@4424dce4fe0daa6654a9052dc95ce3bd263018f0',
     'condition': 'not build_with_chromium',
   },
 
@@ -582,7 +582,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@fc6e94e14de77a8b5346a2499411057342486090',
+    'url': '{chromium_git}/chromium/src/tools/perf@ddecb08a270504d22d5a61092faa5ddd77a7c0fe',
     'condition': 'not build_with_chromium',
   },
 
@@ -3379,7 +3379,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_jetbrains_kotlin_kotlin_stdlib',
-              'version': 'version:2@1.6.0.cr0',
+              'version': 'version:2@1.6.10.cr0',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -3390,7 +3390,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/org_jetbrains_kotlin_kotlin_stdlib_common',
-              'version': 'version:2@1.6.0.cr0',
+              'version': 'version:2@1.6.10.cr0',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
