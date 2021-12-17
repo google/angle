@@ -18,6 +18,16 @@ declare_args() {
   angle_enable_vulkan_gpu_trace_events = false
 }
 
+declare_args() {
+  # Enable custom secondary command buffers for outside render pass commands only
+  angle_enable_custom_vulkan_outside_render_pass_cmd_buffers =
+      angle_enable_custom_vulkan_cmd_buffers
+
+  # Enable custom secondary command buffers for render pass commands only
+  angle_enable_custom_vulkan_render_pass_cmd_buffers =
+      angle_enable_custom_vulkan_cmd_buffers
+}
+
 _vulkan_backend_sources = [
   "BufferVk.cpp",
   "BufferVk.h",
@@ -223,8 +233,11 @@ config("angle_vulkan_backend_config") {
   if (angle_enable_swiftshader) {
     defines += [ "ANGLE_ENABLE_SWIFTSHADER" ]
   }
-  if (angle_enable_custom_vulkan_cmd_buffers) {
-    defines += [ "ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS=1" ]
+  if (angle_enable_custom_vulkan_outside_render_pass_cmd_buffers) {
+    defines += [ "ANGLE_USE_CUSTOM_VULKAN_OUTSIDE_RENDER_PASS_CMD_BUFFERS=1" ]
+  }
+  if (angle_enable_custom_vulkan_render_pass_cmd_buffers) {
+    defines += [ "ANGLE_USE_CUSTOM_VULKAN_RENDER_PASS_CMD_BUFFERS=1" ]
   }
   if (angle_enable_vulkan_gpu_trace_events) {
     defines += [ "ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS=1" ]
