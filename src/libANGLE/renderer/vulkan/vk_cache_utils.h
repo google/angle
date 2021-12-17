@@ -632,6 +632,7 @@ class GraphicsPipelineDesc final
                               const gl::BlendStateExt &blendStateExt,
                               gl::DrawBufferMask attachmentMask);
     void resetBlendFuncsAndEquations(GraphicsPipelineTransitionBits *transition,
+                                     const gl::BlendStateExt &blendStateExt,
                                      gl::DrawBufferMask previousAttachmentsMask,
                                      gl::DrawBufferMask newAttachmentsMask);
     void setColorWriteMasks(gl::BlendStateExt::ColorMaskStorage::Type colorMasks,

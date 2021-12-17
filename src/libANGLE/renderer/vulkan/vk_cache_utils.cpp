@@ -2341,6 +2341,7 @@ void GraphicsPipelineDesc::updateBlendFuncs(GraphicsPipelineTransitionBits *tran
 }
 
 void GraphicsPipelineDesc::resetBlendFuncsAndEquations(GraphicsPipelineTransitionBits *transition,
+                                                       const gl::BlendStateExt &blendStateExt,
                                                        gl::DrawBufferMask previousAttachmentsMask,
                                                        gl::DrawBufferMask newAttachmentsMask)
 {
@@ -2348,7 +2349,9 @@ void GraphicsPipelineDesc::resetBlendFuncsAndEquations(GraphicsPipelineTransitio
     // We need to clear blend funcs and equations for attachments in P that are not in N.  That is
     // attachments in P&~N.
     const gl::DrawBufferMask attachmentsToClear = previousAttachmentsMask & ~newAttachmentsMask;
-    constexpr size_t kSizeBits                  = sizeof(PackedColorBlendAttachmentState) * 8;
+    // We also need to restore blend funcs and equations for attachments in N that are not in P.
+    const gl::DrawBufferMask attachmentsToAdd = newAttachmentsMask & ~previousAttachmentsMask;
+    constexpr size_t kSizeBits                = sizeof(PackedColorBlendAttachmentState) * 8;
 
     for (size_t attachmentIndex : attachmentsToClear)
     {
@@ -2364,6 +2367,12 @@ void GraphicsPipelineDesc::resetBlendFuncsAndEquations(GraphicsPipelineTransitio
 
         transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo,
                                                          attachments, attachmentIndex, kSizeBits));
+    }
+
+    if (attachmentsToAdd.any())
+    {
+        updateBlendFuncs(transition, blendStateExt, attachmentsToAdd);
+        updateBlendEquations(transition, blendStateExt, attachmentsToAdd);
     }
 }
 
