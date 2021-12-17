@@ -445,6 +445,15 @@ inline bool IsASan()
 #endif  // defined(ANGLE_WITH_ASAN)
 }
 
+inline bool IsMSan()
+{
+#if defined(ANGLE_WITH_MSAN)
+    return true;
+#else
+    return false;
+#endif  // defined(ANGLE_WITH_MSAN)
+}
+
 inline bool IsTSan()
 {
 #if defined(ANGLE_WITH_TSAN)

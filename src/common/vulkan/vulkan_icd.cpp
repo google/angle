@@ -60,6 +60,7 @@ ANGLE_MAYBE_UNUSED constexpr char kLayerEnablesEnv[]     = "VK_LAYER_ENABLES";
 constexpr char kLoaderICDFilenamesEnv[]              = "VK_ICD_FILENAMES";
 constexpr char kANGLEPreferredDeviceEnv[]            = "ANGLE_PREFERRED_DEVICE";
 constexpr char kValidationLayersCustomSTypeListEnv[] = "VK_LAYER_CUSTOM_STYPE_LIST";
+constexpr char kNoDeviceSelect[]                     = "NODEVICE_SELECT";
 
 constexpr uint32_t kMockVendorID = 0xba5eba11;
 constexpr uint32_t kMockDeviceID = 0xf005ba11;
@@ -106,7 +107,8 @@ ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment(bool enableValidationLayers
     : mEnableValidationLayers(enableValidationLayers),
       mICD(icd),
       mChangedCWD(false),
-      mChangedICDEnv(false)
+      mChangedICDEnv(false),
+      mChangedNoDeviceSelect(IsMSan())
 {
 // Changing CWD and setting environment variables makes no sense on Android,
 // since this code is a part of Java application there.
@@ -177,6 +179,14 @@ ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment(bool enableValidationLayers
         }
     }
 #endif  // !defined(ANGLE_PLATFORM_ANDROID)
+
+    if (mChangedNoDeviceSelect)
+    {
+        // device select layer cause memory sanitizer false positive, so disable
+        // it for msan build.
+        mPreviousNoDeviceSelectEnv = angle::GetEnvironmentVar(kNoDeviceSelect);
+        angle::SetEnvironmentVar(kNoDeviceSelect, "1");
+    }
 }
 
 ScopedVkLoaderEnvironment::~ScopedVkLoaderEnvironment()
@@ -194,6 +204,11 @@ ScopedVkLoaderEnvironment::~ScopedVkLoaderEnvironment()
     }
 
     ResetEnvironmentVar(kValidationLayersCustomSTypeListEnv, mPreviousCustomExtensionsEnv);
+
+    if (mChangedNoDeviceSelect)
+    {
+        ResetEnvironmentVar(kNoDeviceSelect, mPreviousNoDeviceSelectEnv);
+    }
 }
 
 bool ScopedVkLoaderEnvironment::setICDEnvironment(const char *icd)
