@@ -558,14 +558,13 @@ void EnsureSpecializedComputePipelineInitialized(
         auto shaderLib                        = context->getDisplay()->getDefaultShadersLib();
         NSError *err                          = nil;
 
-        id<MTLFunction> shader = [shaderLib newFunctionWithName:functionName
-                                                 constantValues:funcConstants
-                                                          error:&err];
+        auto shader = adoptObjCObj([shaderLib newFunctionWithName:functionName
+                                                   constantValues:funcConstants
+                                                            error:&err]);
         if (err && !shader)
         {
             ERR() << "Internal error: " << err.localizedDescription.UTF8String << "\n";
         }
-        ASSERT([shader ANGLE_MTL_AUTORELEASE]);
 
         pipeline =
             [metalDevice.newComputePipelineStateWithFunction(shader, &err) ANGLE_MTL_AUTORELEASE];
@@ -590,15 +589,8 @@ void EnsureVertexShaderOnlyPipelineCacheInitialized(ContextMtl *context,
         // Already initialized
         return;
     }
-
-    ANGLE_MTL_OBJC_SCOPE
-    {
-        id<MTLFunction> shader = [shaderLib newFunctionWithName:vertexFunctionName];
-
-        ASSERT([shader ANGLE_MTL_AUTORELEASE]);
-
-        pipelineCache.setVertexShader(context, shader);
-    }
+    auto shader = adoptObjCObj([shaderLib newFunctionWithName:vertexFunctionName]);
+    pipelineCache.setVertexShader(context, shader);
 }
 
 // Function to initialize specialized render pipeline cache with only vertex shader.
@@ -631,16 +623,13 @@ void EnsureSpecializedVertexShaderOnlyPipelineCacheInitialized(
         DisplayMtl *display = context->getDisplay();
         auto shaderLib      = display->getDefaultShadersLib();
         NSError *err        = nil;
-
-        id<MTLFunction> shader = [shaderLib newFunctionWithName:vertexFunctionName
-                                                 constantValues:funcConstants
-                                                          error:&err];
+        auto shader         = adoptObjCObj([shaderLib newFunctionWithName:vertexFunctionName
+                                                   constantValues:funcConstants
+                                                            error:&err]);
         if (err && !shader)
         {
             ERR() << "Internal error: " << err.localizedDescription.UTF8String << "\n";
         }
-        ASSERT([shader ANGLE_MTL_AUTORELEASE]);
-
         pipelineCache.setVertexShader(context, shader);
     }
 }
