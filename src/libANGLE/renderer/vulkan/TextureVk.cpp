@@ -2717,6 +2717,16 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     localBits.reset(gl::Texture::DIRTY_BIT_BASE_LEVEL);
     localBits.reset(gl::Texture::DIRTY_BIT_MAX_LEVEL);
 
+    // For AHBs, the ImageViews are created with VkSamplerYcbcrConversionInfo's chromaFilter
+    // matching min/magFilters as part of the eglEGLImageTargetTexture2DOES() call. However, the
+    // min/mag filters can change later, requiring the ImageViews to be created.
+    if (mImage->valid() && mImage->hasImmutableSampler() &&
+        (dirtyBits.test(gl::Texture::DIRTY_BIT_MIN_FILTER) ||
+         dirtyBits.test(gl::Texture::DIRTY_BIT_MAG_FILTER)))
+    {
+        ANGLE_TRY(refreshImageViews(contextVk));
+    }
+
     if (localBits.none() && mSampler.valid())
     {
         return angle::Result::Continue;
@@ -3025,10 +3035,10 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
     // Use this as a proxy for the SRGB override & skip decode settings.
     bool createExtraSRGBViews = mRequiresMutableStorage;
 
-    ANGLE_TRY(getImageViews().initReadViews(contextVk, mState.getType(), *mImage, format,
-                                            formatSwizzle, readSwizzle, baseLevelVk, levelCount,
-                                            baseLayer, layerCount, createExtraSRGBViews,
-                                            mImageUsageFlags & ~VK_IMAGE_USAGE_STORAGE_BIT));
+    ANGLE_TRY(getImageViews().initReadViews(
+        contextVk, mState.getType(), *mImage, format, formatSwizzle, readSwizzle, baseLevelVk,
+        levelCount, baseLayer, layerCount, createExtraSRGBViews,
+        mImageUsageFlags & ~VK_IMAGE_USAGE_STORAGE_BIT, mState.getSamplerState()));
 
     return angle::Result::Continue;
 }
