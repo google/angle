@@ -3395,32 +3395,36 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     }
 
     // Capture framebuffer bindings.
-    gl::FramebufferID stateReadFramebuffer = apiState.getReadFramebuffer()->id();
-    gl::FramebufferID stateDrawFramebuffer = apiState.getDrawFramebuffer()->id();
-    if (stateDrawFramebuffer == stateReadFramebuffer)
+    if (apiState.getDrawFramebuffer())
     {
-        if (currentDrawFramebuffer != stateDrawFramebuffer ||
-            currentReadFramebuffer != stateReadFramebuffer)
+        ASSERT(apiState.getReadFramebuffer());
+        gl::FramebufferID stateReadFramebuffer = apiState.getReadFramebuffer()->id();
+        gl::FramebufferID stateDrawFramebuffer = apiState.getDrawFramebuffer()->id();
+        if (stateDrawFramebuffer == stateReadFramebuffer)
         {
-            cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_FRAMEBUFFER,
-                                                 stateDrawFramebuffer));
-            currentDrawFramebuffer = currentReadFramebuffer = stateDrawFramebuffer;
+            if (currentDrawFramebuffer != stateDrawFramebuffer ||
+                currentReadFramebuffer != stateReadFramebuffer)
+            {
+                cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_FRAMEBUFFER,
+                                                     stateDrawFramebuffer));
+                currentDrawFramebuffer = currentReadFramebuffer = stateDrawFramebuffer;
+            }
         }
-    }
-    else
-    {
-        if (currentDrawFramebuffer != stateDrawFramebuffer)
+        else
         {
-            cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_DRAW_FRAMEBUFFER,
-                                                 currentDrawFramebuffer));
-            currentDrawFramebuffer = stateDrawFramebuffer;
-        }
+            if (currentDrawFramebuffer != stateDrawFramebuffer)
+            {
+                cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_DRAW_FRAMEBUFFER,
+                                                     currentDrawFramebuffer));
+                currentDrawFramebuffer = stateDrawFramebuffer;
+            }
 
-        if (currentReadFramebuffer != stateReadFramebuffer)
-        {
-            cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_READ_FRAMEBUFFER,
-                                                 replayState.getReadFramebuffer()->id()));
-            currentReadFramebuffer = stateReadFramebuffer;
+            if (currentReadFramebuffer != stateReadFramebuffer)
+            {
+                cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_READ_FRAMEBUFFER,
+                                                     replayState.getReadFramebuffer()->id()));
+                currentReadFramebuffer = stateReadFramebuffer;
+            }
         }
     }
 
