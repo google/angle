@@ -108,7 +108,7 @@ ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment(bool enableValidationLayers
       mICD(icd),
       mChangedCWD(false),
       mChangedICDEnv(false),
-      mChangedNoDeviceSelect(IsMSan())
+      mChangedNoDeviceSelect(false)
 {
 // Changing CWD and setting environment variables makes no sense on Android,
 // since this code is a part of Java application there.
@@ -180,12 +180,13 @@ ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment(bool enableValidationLayers
     }
 #endif  // !defined(ANGLE_PLATFORM_ANDROID)
 
-    if (mChangedNoDeviceSelect)
+    if (IsMSan())
     {
         // device select layer cause memory sanitizer false positive, so disable
         // it for msan build.
         mPreviousNoDeviceSelectEnv = angle::GetEnvironmentVar(kNoDeviceSelect);
         angle::SetEnvironmentVar(kNoDeviceSelect, "1");
+        mChangedNoDeviceSelect = true;
     }
 }
 

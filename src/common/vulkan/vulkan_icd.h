@@ -53,7 +53,7 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
     bool mChangedICDEnv;
     Optional<std::string> mPreviousICDEnv;
     Optional<std::string> mPreviousCustomExtensionsEnv;
-    const bool mChangedNoDeviceSelect;
+    bool mChangedNoDeviceSelect;
     Optional<std::string> mPreviousNoDeviceSelectEnv;
 };
 
