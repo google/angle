@@ -1736,6 +1736,7 @@ angle::Result BufferBlock::init(ContextVk *contextVk,
     ASSERT(!mBuffer.valid());
     ASSERT(!mAllocation.valid());
 
+    mVirtualBlockMutex.init(renderer->isAsyncCommandQueueEnabled());
     ANGLE_VK_TRY(contextVk, mVirtualBlock.init(renderer->getDevice(), flags, size));
 
     mBuffer              = std::move(buffer);
@@ -1746,11 +1747,6 @@ angle::Result BufferBlock::init(ContextVk *contextVk,
     mSerial              = renderer->getResourceSerialFactory().generateBufferSerial();
 
     return angle::Result::Continue;
-}
-
-VirtualBlock &BufferBlock::getVirtualBlock()
-{
-    return mVirtualBlock;
 }
 
 const Buffer &BufferBlock::getBuffer() const
@@ -1773,8 +1769,9 @@ VkDeviceSize BufferBlock::getMemorySize() const
     return mSize;
 }
 
-VkBool32 BufferBlock::isEmpty() const
+VkBool32 BufferBlock::isEmpty()
 {
+    std::lock_guard<ConditionalMutex> lock(mVirtualBlockMutex);
     return vma::IsVirtualBlockEmpty(mVirtualBlock.getHandle());
 }
 
@@ -1805,12 +1802,14 @@ uint8_t *BufferBlock::getMappedMemory() const
 
 VkResult BufferBlock::allocate(VkDeviceSize size, VkDeviceSize alignment, VkDeviceSize *offsetOut)
 {
+    std::lock_guard<ConditionalMutex> lock(mVirtualBlockMutex);
     mCountRemainsEmpty = 0;
     return mVirtualBlock.allocate(size, alignment, offsetOut);
 }
 
 void BufferBlock::free(VkDeviceSize offset)
 {
+    std::lock_guard<ConditionalMutex> lock(mVirtualBlockMutex);
     mVirtualBlock.free(offset);
 }
 

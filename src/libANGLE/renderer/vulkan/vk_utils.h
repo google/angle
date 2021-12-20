@@ -934,7 +934,6 @@ class BufferBlock final : angle::NonCopyable
 
     BufferBlock &operator=(BufferBlock &&other);
 
-    VirtualBlock &getVirtualBlock();
     const Buffer &getBuffer() const;
     const Allocation &getAllocation() const;
     BufferSerial getBufferSerial() const { return mSerial; }
@@ -944,7 +943,7 @@ class BufferBlock final : angle::NonCopyable
 
     VkResult allocate(VkDeviceSize size, VkDeviceSize alignment, VkDeviceSize *offsetOut);
     void free(VkDeviceSize offset);
-    VkBool32 isEmpty() const;
+    VkBool32 isEmpty();
 
     bool isMapped() const;
     angle::Result map(ContextVk *contextVk);
@@ -956,7 +955,11 @@ class BufferBlock final : angle::NonCopyable
     int32_t getAndIncrementEmptyCounter();
 
   private:
+    // Protect multi-thread access to mVirtualBlock, which could be possible when asyncCommandQueue
+    // is enabled.
+    ConditionalMutex mVirtualBlockMutex;
     VirtualBlock mVirtualBlock;
+
     Buffer mBuffer;
     Allocation mAllocation;
     VkMemoryPropertyFlags mMemoryPropertyFlags;
@@ -989,7 +992,7 @@ CreateVmaBufferSubAllocation(BufferBlock *block,
 }
 ANGLE_INLINE void DestroyVmaBufferSubAllocation(VmaBufferSubAllocation vmaBufferSubAllocation)
 {
-    vmaBufferSubAllocation->mBufferBlock->getVirtualBlock().free(vmaBufferSubAllocation->mOffset);
+    vmaBufferSubAllocation->mBufferBlock->free(vmaBufferSubAllocation->mOffset);
     delete vmaBufferSubAllocation;
 }
 
