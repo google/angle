@@ -122,7 +122,6 @@
 6314 : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/* = CRASH
 6180 : ImageTestES3.SourceCubeTargetExternalESSL3/* = FAIL
 6334 : MipmapTestES3.GenerateMipmapBaseLevelOutOfRangeImmutableTexture/* = CRASH
-6324 : OcclusionQueriesTestES3.UnresolveNotCounted/* = CRASH
 6333 : Texture2DFloatTestES3.TextureHalfFloatLinearLegacyTest/* = CRASH
 6333 : Texture2DFloatTestES3.TextureHalfFloatSampleLegacyTest/* = CRASH
 6334 : Texture2DTestES3.ImmutableTextureBaseLevelOutOfRange/* = CRASH

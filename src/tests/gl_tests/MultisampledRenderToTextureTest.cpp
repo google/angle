@@ -584,6 +584,8 @@ void MultisampledRenderToTextureTest::createAndAttachColorAttachment(
     {
         glBindTexture(GL_TEXTURE_2D, *textureOut);
         glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size, size, 0, format, type, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, renderbufferTarget, GL_TEXTURE_2D,
                                              *textureOut, 0, samples);
     }
@@ -609,6 +611,8 @@ void MultisampledRenderToTextureTest::createAndAttachDepthStencilAttachment(
         glBindTexture(GL_TEXTURE_2D, *textureOut);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, size, size, 0, GL_DEPTH_STENCIL,
                      GL_UNSIGNED_INT_24_8_OES, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                                              GL_TEXTURE_2D, *textureOut, 0, mTestSampleCount);
     }
@@ -1688,6 +1692,82 @@ TEST_P(MultisampledRenderToTextureES3Test, DrawCopyDrawAttachInvalidatedThenDraw
 TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawCopyDrawAttachInvalidatedThenDraw)
 {
     drawCopyDrawAttachInvalidatedThenDrawCommon(true);
+}
+
+// Draw with a stencil-only attachment once without needing to unresolve it, and once needing to.
+// Regression test for a bug in the Vulkan backend where the state of stencil unresolve attachment's
+// existence was masked out by mistake in the framebuffer cache key, so the same framebuffer object
+// was used for both render passes, even though they could have different subpass counts due to
+// stencil unresolve.
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawStencilThenUnresolveStencil)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+
+    // Create multisampled framebuffer to draw into
+    GLTexture textureMS;
+    createAndAttachColorAttachment(false, kSize, GL_COLOR_ATTACHMENT0, nullptr, mTestSampleCount,
+                                   &textureMS, nullptr);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLRenderbuffer dsRenderbufferMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, dsRenderbufferMS);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, mTestSampleCount, GL_STENCIL_INDEX8, kSize,
+                                        kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              dsRenderbufferMS);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw red once with stencil cleared, not needing unresolve
+    glClearColor(0.1, 0.2, 0.3, 0.4);
+    glClearStencil(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x55, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilMask(0xFF);
+
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 1.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy color into it, this breaks the render pass
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+
+    // Clear the color, so that only stencil needs unresolving.
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw green, expecting correct stencil.  This unresolves stencil.
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 1.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now green
+    verifyResults(textureMS, GLColor::green, kSize, 0, 0, kSize, kSize);
+
+    // For completeness, also verify that the copy texture is red
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
+
+    ASSERT_GL_NO_ERROR();
 }
 
 void MultisampledRenderToTextureES3Test::drawCopyDrawAttachDepthStencilClearThenDrawCommon(

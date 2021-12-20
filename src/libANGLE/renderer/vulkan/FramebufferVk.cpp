@@ -283,13 +283,11 @@ vk::FramebufferNonResolveAttachmentMask MakeUnresolveAttachmentMask(const vk::Re
 {
     vk::FramebufferNonResolveAttachmentMask unresolveMask(
         desc.getColorUnresolveAttachmentMask().bits());
-    if (desc.hasDepthUnresolveAttachment())
+    if (desc.hasDepthUnresolveAttachment() || desc.hasStencilUnresolveAttachment())
     {
+        // This mask only needs to know if the depth/stencil attachment needs to be unresolved, and
+        // is agnostic of the aspect.
         unresolveMask.set(vk::kUnpackedDepthIndex);
-    }
-    if (desc.hasStencilUnresolveAttachment())
-    {
-        unresolveMask.set(vk::kUnpackedStencilIndex);
     }
     return unresolveMask;
 }
