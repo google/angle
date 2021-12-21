@@ -268,7 +268,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
                      const char *file,
                      const char *function,
                      unsigned int line) override;
-    void handleError(NSError *error,
+    void handleError(NSError *_Nullable error,
                      const char *file,
                      const char *function,
                      unsigned int line) override;

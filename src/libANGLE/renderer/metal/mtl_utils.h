@@ -33,6 +33,8 @@ void StopFrameCapture();
 namespace mtl
 {
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Initialize texture content to black.
 angle::Result InitializeTextureContents(const gl::Context *context,
                                         const TextureRef &texture,
@@ -193,12 +195,13 @@ angle::Result CreateMslShader(Context *context,
                               MTLFunctionConstantValues *funcConstants,
                               AutoObjCPtr<id<MTLFunction>> *shaderOut);
 
-angle::Result CreateMslShader(Context *context,
+angle::Result CreateMslShader(Context *_Nonnull context,
                               id<MTLLibrary> shaderLib,
-                              NSString *shaderName,
-                              MTLFunctionConstantValues *funcConstants,
-                              id<MTLFunction> *shaderOut);
+                              NSString *_Nonnull shaderName,
+                              MTLFunctionConstantValues *_Nullable funcConstants,
+                              id<MTLFunction> _Nullable *_Nonnull shaderOut);
 
+NS_ASSUME_NONNULL_END
 }  // namespace mtl
 }  // namespace rx
 
