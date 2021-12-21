@@ -423,3 +423,7 @@
 6751 D3D11 : MultiDrawIndirectTest.MultiDrawElementsIndirect* = SKIP
 6751 METAL : DrawBaseVertexBaseInstanceTest.MultiDrawElementsInstancedBaseVertexBaseInstance/* = SKIP
 6751 D3D11 : DrawBaseVertexBaseInstanceTest.MultiDrawElementsInstancedBaseVertexBaseInstance/* = SKIP
+
+// Temporary until VVL rolls into chromium
+6841 VULKAN : BlendIntegerTest.MRTSigned/* = SKIP
+6841 VULKAN : BlendIntegerTest.MRTUnsigned/* = SKIP
