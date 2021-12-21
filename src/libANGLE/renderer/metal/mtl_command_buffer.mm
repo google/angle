@@ -425,24 +425,15 @@ void CommandQueue::set(id<MTLCommandQueue> metalQueue)
 
 void CommandQueue::finishAllCommands()
 {
+    std::deque<CmdBufferQueueEntry> commandBuffers;
     {
-        // Copy to temp list
         std::lock_guard<std::mutex> lg(mLock);
-
-        for (CmdBufferQueueEntry &metalBufferEntry : mMetalCmdBuffers)
-        {
-            mMetalCmdBuffersTmp.push_back(metalBufferEntry);
-        }
-
-        mMetalCmdBuffers.clear();
+        mMetalCmdBuffers.swap(commandBuffers);
     }
-
-    // Wait for command buffers to finish
-    for (CmdBufferQueueEntry &metalBufferEntry : mMetalCmdBuffersTmp)
+    for (CmdBufferQueueEntry &entry : commandBuffers)
     {
-        [metalBufferEntry.buffer waitUntilCompleted];
+        [entry.buffer waitUntilCompleted];
     }
-    mMetalCmdBuffersTmp.clear();
 }
 
 void CommandQueue::ensureResourceReadyForCPU(const ResourceRef &resource)

@@ -89,7 +89,6 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
         uint64_t serial;
     };
     std::deque<CmdBufferQueueEntry> mMetalCmdBuffers;
-    std::deque<CmdBufferQueueEntry> mMetalCmdBuffersTmp;
 
     uint64_t mQueueSerialCounter = 1;
     std::atomic<uint64_t> mCommittedBufferSerial{0};
