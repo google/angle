@@ -55,6 +55,9 @@
 6180 : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8Line/* = NOT_RUN
 6180 : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8LineIds/* = NOT_RUN
 
+6840 : BlendIntegerTest.MRTSigned/* = NOT_RUN
+6840 : BlendIntegerTest.MRTUnsigned/* = NOT_RUN
+
 6286 : ImageTest.SourceRenderbufferTargetTexture/* = FAIL
 6286 : ImageTest.SourceRenderbufferTargetTextureExternal/* = FAIL
 6286 : ImageTest.UpdatedData/* = FAIL
