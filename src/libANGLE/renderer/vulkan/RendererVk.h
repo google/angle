@@ -516,6 +516,14 @@ class RendererVk : angle::NonCopyable
     }
     size_t getStagingBufferAlignment() const { return mStagingBufferAlignment; }
 
+    uint32_t getVertexConversionBufferMemoryTypeIndex(vk::MemoryHostVisibility hostVisibility) const
+    {
+        return hostVisibility == vk::MemoryHostVisibility::Visible
+                   ? mHostVisibleVertexConversionBufferMemoryTypeIndex
+                   : mDeviceLocalVertexConversionBufferMemoryTypeIndex;
+    }
+    size_t getVertexConversionBufferAlignment() const { return mVertexConversionBufferAlignment; }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -609,6 +617,10 @@ class RendererVk : angle::NonCopyable
     uint32_t mCoherentStagingBufferMemoryTypeIndex;
     uint32_t mNonCoherentStagingBufferMemoryTypeIndex;
     size_t mStagingBufferAlignment;
+
+    uint32_t mHostVisibleVertexConversionBufferMemoryTypeIndex;
+    uint32_t mDeviceLocalVertexConversionBufferMemoryTypeIndex;
+    size_t mVertexConversionBufferAlignment;
 
     // All access to the pipeline cache is done through EGL objects so it is thread safe to not use
     // a lock.
