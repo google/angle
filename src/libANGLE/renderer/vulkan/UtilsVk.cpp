@@ -3401,21 +3401,16 @@ angle::Result UtilsVk::cullOverlayWidgets(ContextVk *contextVk,
 {
     ANGLE_TRY(ensureOverlayCullResourcesInitialized(contextVk));
 
-    ASSERT(params.subgroupSize[0] == 8 &&
-           (params.subgroupSize[1] == 8 || params.subgroupSize[1] == 4));
+    // Currently, only subgroupSize of 16, 32 and 64 are supported
+    ASSERT((params.subgroupSize[0] == 8 &&
+            (params.subgroupSize[1] == 8 || params.subgroupSize[1] == 4)) ||
+           (params.subgroupSize[0] == 4 && params.subgroupSize[1] == 4));
+
     uint32_t flags =
         params.subgroupSize[1] == 8 ? OverlayCull_comp::kIs8x8 : OverlayCull_comp::kIs8x4;
-    if (params.supportsSubgroupBallot)
+    if (params.subgroupSize[0] == 4)
     {
-        flags |= OverlayCull_comp::kSupportsBallot;
-    }
-    else if (params.supportsSubgroupBallot)
-    {
-        flags |= OverlayCull_comp::kSupportsArithmetic;
-    }
-    else
-    {
-        flags |= OverlayCull_comp::kSupportsNone;
+        flags = OverlayCull_comp::kIs4x4;
     }
 
     VkDescriptorSet descriptorSet;
@@ -3490,10 +3485,18 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     shaderParams.outputSize[1] = dst->getExtents().height;
     shaderParams.rotateXY      = params.rotateXY;
 
-    ASSERT(params.subgroupSize[0] == 8 &&
-           (params.subgroupSize[1] == 8 || params.subgroupSize[1] == 4));
+    // subgroupSize 8x8 or 8x4 supports desktop, and subgroupSize 4x4 supports Android devices
+    ASSERT((params.subgroupSize[0] == 8 &&
+            (params.subgroupSize[1] == 8 || params.subgroupSize[1] == 4)) ||
+           (params.subgroupSize[0] == 4 && params.subgroupSize[1] == 4));
+
     uint32_t flags =
         params.subgroupSize[1] == 8 ? OverlayDraw_comp::kIs8x8 : OverlayDraw_comp::kIs8x4;
+
+    if (params.subgroupSize[0] == 4)
+    {
+        flags = OverlayDraw_comp::kIs4x4;
+    }
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;

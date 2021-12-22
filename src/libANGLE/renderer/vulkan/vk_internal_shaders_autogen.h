@@ -168,14 +168,9 @@ enum SubgroupSize
 {
     kIs8x4 = 0x00000000,
     kIs8x8 = 0x00000001,
+    kIs4x4 = 0x00000002,
 };
-enum SubgroupOp
-{
-    kSupportsBallot     = 0x00000000,
-    kSupportsArithmetic = 0x00000002,
-    kSupportsNone       = 0x00000004,
-};
-constexpr size_t kArrayLen = 0x00000006;
+constexpr size_t kArrayLen = 0x00000003;
 }  // namespace OverlayCull_comp
 
 namespace OverlayDraw_comp
@@ -184,8 +179,9 @@ enum SubgroupSize
 {
     kIs8x4 = 0x00000000,
     kIs8x8 = 0x00000001,
+    kIs4x4 = 0x00000002,
 };
-constexpr size_t kArrayLen = 0x00000002;
+constexpr size_t kArrayLen = 0x00000003;
 }  // namespace OverlayDraw_comp
 
 }  // namespace InternalShader

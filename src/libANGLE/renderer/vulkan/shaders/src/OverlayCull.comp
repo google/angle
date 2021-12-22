@@ -9,12 +9,8 @@
 #version 450 core
 
 #extension GL_EXT_samplerless_texture_functions : require
-#if SupportsBallot
-#extension GL_KHR_shader_subgroup_ballot: require
-#elif SupportsArithmetic
-#extension GL_KHR_shader_subgroup_arithmetic: require
-#endif
 
+// Currently, only subgroupSize of 16, 32 and 64 are supported
 #if Is8x4
 #define WORKGROUP_WIDTH 32
 #define BLOCK_WIDTH 8
@@ -23,13 +19,22 @@
 #define WORKGROUP_WIDTH 64
 #define BLOCK_WIDTH 8
 #define BLOCK_HEIGHT 8
+#elif Is4x4
+#define WORKGROUP_WIDTH 16
+#define BLOCK_WIDTH 4
+#define BLOCK_HEIGHT 4
 #else
 #error "Not all subgroup sizes are accounted for"
 #endif
 
 // Limits:
+#if Is4x4
+#define MAX_TEXT_WIDGETS 16
+#define MAX_GRAPH_WIDGETS 16
+#else
 #define MAX_TEXT_WIDGETS 32
 #define MAX_GRAPH_WIDGETS 32
+#endif
 
 layout (local_size_x = WORKGROUP_WIDTH, local_size_y = 1, local_size_z = 1) in;
 
@@ -40,7 +45,30 @@ layout (set = 0, binding = 1) uniform WidgetCoordinates
     uvec4 coordinates[MAX_TEXT_WIDGETS + MAX_GRAPH_WIDGETS];
 };
 
-#if SupportsNone
+#if Is4x4
+shared uint intersectingWidgets[16];
+
+void accumulateWidgets(const uint localId)
+{
+    if(localId < 8)
+    {
+        intersectingWidgets[localId] |= intersectingWidgets[localId + 8];
+        if(localId < 4)
+        {
+            intersectingWidgets[localId] |= intersectingWidgets[localId + 4];
+            if(localId < 2)
+            {
+                intersectingWidgets[localId] |= intersectingWidgets[localId + 2];
+                if(localId < 1)
+                {
+                    intersectingWidgets[localId] |= intersectingWidgets[localId+1];
+                }
+            }
+        }
+    }
+}
+
+#else
 shared uint intersectingWidgets[32];
 
 void accumulateWidgets(const uint localId)
@@ -67,7 +95,7 @@ void accumulateWidgets(const uint localId)
         }
     }
 }
-#endif
+#endif // #if Is4x4
 
 uvec2 cullWidgets(const uint offset, const uvec2 blockCoordLow, const uvec2 blockCoordHigh)
 {
@@ -77,26 +105,6 @@ uvec2 cullWidgets(const uint offset, const uvec2 blockCoordLow, const uvec2 bloc
     const bool intersects = widgetCoords.x < widgetCoords.z &&
                             all(lessThan(widgetCoords.xy, blockCoordHigh)) &&
                             all(greaterThanEqual(widgetCoords.zw, blockCoordLow));
-
-#if SupportsBallot
-
-    return subgroupBallot(intersects).xy;
-
-#elif SupportsArithmetic
-
-#if Is8x8
-    const uint textWidgetBit =
-        localId < MAX_TEXT_WIDGETS ? uint(intersects) << localId : 0;
-    const uint graphWidgetBit =
-        localId >= MAX_TEXT_WIDGETS ? uint(intersects) << (localId - MAX_TEXT_WIDGETS) : 0;
-    return uvec2(subgroupOr(textWidgetBit), subgroupOr(graphWidgetBit));
-#elif Is8x4
-    return uvec2(subgroupOr(uint(intersects) << localId), 0);
-#else
-#error "Not all subgroup sizes are accounted for"
-#endif
-
-#elif SupportsNone
 
     uvec2 ballot = uvec2(0, 0);
 #if Is8x8
@@ -119,7 +127,7 @@ uvec2 cullWidgets(const uint offset, const uvec2 blockCoordLow, const uvec2 bloc
     {
         ballot.y = intersectingWidgets[0];
     }
-#elif Is8x4
+#elif Is8x4 || Is4x4
     intersectingWidgets[localId] = uint(intersects) << localId;
     accumulateWidgets(localId);
     if (localId == 0)
@@ -131,10 +139,6 @@ uvec2 cullWidgets(const uint offset, const uvec2 blockCoordLow, const uvec2 bloc
 #endif
 
     return ballot;
-
-#else
-#error "Not all subgroup operations are accounted for"
-#endif
 }
 
 void main()
@@ -150,7 +154,7 @@ void main()
 
 #if Is8x8
     culledWidgets = cullWidgets(0, blockCoordLow, blockCoordHigh);
-#elif Is8x4
+#elif Is8x4 || Is4x4
     culledWidgets.x = cullWidgets(0, blockCoordLow, blockCoordHigh).x;
     culledWidgets.y = cullWidgets(MAX_TEXT_WIDGETS, blockCoordLow, blockCoordHigh).x;
 #else

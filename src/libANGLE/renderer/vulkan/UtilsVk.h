@@ -176,8 +176,6 @@ class UtilsVk : angle::NonCopyable
     struct OverlayCullParameters
     {
         uint32_t subgroupSize[2];
-        bool supportsSubgroupBallot;
-        bool supportsSubgroupArithmetic;
     };
 
     struct OverlayDrawParameters

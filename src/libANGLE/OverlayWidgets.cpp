@@ -40,10 +40,15 @@ constexpr angle::PackedEnumMap<WidgetType, WidgetInternalType> kWidgetTypeToInte
 // Structures and limits matching uniform buffers in vulkan/shaders/src/OverlayDraw.comp.  The size
 // of text and graph widgets is chosen such that they could fit in uniform buffers with minimum
 // required Vulkan size.
+#if ANDROID
+constexpr size_t kMaxRenderableTextWidgets  = 16;
+constexpr size_t kMaxRenderableGraphWidgets = 16;
+#else
 constexpr size_t kMaxRenderableTextWidgets  = 32;
 constexpr size_t kMaxRenderableGraphWidgets = 32;
-constexpr size_t kMaxTextLength             = 256;
-constexpr size_t kMaxGraphDataSize          = 256;
+#endif
+constexpr size_t kMaxTextLength    = 256;
+constexpr size_t kMaxGraphDataSize = 256;
 
 constexpr angle::PackedEnumMap<WidgetInternalType, size_t> kWidgetInternalTypeMaxWidgets = {
     {WidgetInternalType::Text, kMaxRenderableTextWidgets},

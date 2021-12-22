@@ -39,14 +39,27 @@ angle::Result OverlayVk::init(const gl::Context *context, bool *successOut)
         rendererVk->getPhysicalDeviceSubgroupProperties();
     uint32_t subgroupSize = subgroupProperties.subgroupSize;
 
-    // Currently, only subgroup sizes 32 and 64 are supported.
-    if (subgroupSize != 32 && subgroupSize != 64)
+    // Currently, only subgroup sizes 16, 32 and 64 are supported
+    if (subgroupSize != 32 && subgroupSize != 64 && subgroupSize != 16)
     {
         return angle::Result::Continue;
     }
 
-    mSubgroupSize[0] = 8;
-    mSubgroupSize[1] = subgroupSize / 8;
+    if (subgroupSize == 32 || subgroupSize == 64)
+    {
+        mSubgroupSize[0] = 8;
+        mSubgroupSize[1] = subgroupSize / 8;
+    }
+    else if (subgroupSize == 16)
+    {
+        mSubgroupSize[0] = 4;
+        mSubgroupSize[1] = 4;
+    }
+    else
+    {
+        // unsupported subgroupSize
+        return angle::Result::Continue;
+    }
 
     constexpr VkSubgroupFeatureFlags kSubgroupBallotOperations =
         VK_SUBGROUP_FEATURE_BASIC_BIT | VK_SUBGROUP_FEATURE_BALLOT_BIT;
@@ -201,10 +214,8 @@ angle::Result OverlayVk::cullWidgets(ContextVk *contextVk)
                                            &mCulledWidgetsView, vk::LevelIndex(0), 1));
 
     UtilsVk::OverlayCullParameters params;
-    params.subgroupSize[0]            = mSubgroupSize[0];
-    params.subgroupSize[1]            = mSubgroupSize[1];
-    params.supportsSubgroupBallot     = mSupportsSubgroupBallot;
-    params.supportsSubgroupArithmetic = mSupportsSubgroupArithmetic;
+    params.subgroupSize[0] = mSubgroupSize[0];
+    params.subgroupSize[1] = mSubgroupSize[1];
 
     return contextVk->getUtils().cullOverlayWidgets(contextVk, &enabledWidgetsBuffer.get(),
                                                     &mCulledWidgets, &mCulledWidgetsView, params);

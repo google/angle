@@ -142,9 +142,7 @@ angle_vulkan_internal_shaders = [
   "shaders/gen/OverlayCull.comp.00000000.inc",
   "shaders/gen/OverlayCull.comp.00000001.inc",
   "shaders/gen/OverlayCull.comp.00000002.inc",
-  "shaders/gen/OverlayCull.comp.00000003.inc",
-  "shaders/gen/OverlayCull.comp.00000004.inc",
-  "shaders/gen/OverlayCull.comp.00000005.inc",
   "shaders/gen/OverlayDraw.comp.00000000.inc",
   "shaders/gen/OverlayDraw.comp.00000001.inc",
+  "shaders/gen/OverlayDraw.comp.00000002.inc",
 ]
