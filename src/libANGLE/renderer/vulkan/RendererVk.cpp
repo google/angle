@@ -3347,7 +3347,8 @@ void RendererVk::setGlobalDebugAnnotator()
     // functions exist, and if the kEnableDebugMarkersVarName environment variable is set.
     if (vkCmdBeginDebugUtilsLabelEXT)
     {
-        std::string enabled = angle::GetEnvironmentVarOrAndroidProperty(
+        // Use the GetAndSet variant to improve future lookup times
+        std::string enabled = angle::GetAndSetEnvironmentVarOrUnCachedAndroidProperty(
             kEnableDebugMarkersVarName, kEnableDebugMarkersPropertyName);
         if (!enabled.empty() && enabled.compare("0") != 0)
         {

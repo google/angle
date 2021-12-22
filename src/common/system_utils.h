@@ -32,6 +32,8 @@ bool GetBoolEnvironmentVar(const char *variableName);
 std::string GetEnvironmentVar(const char *variableName);
 std::string GetEnvironmentVarOrUnCachedAndroidProperty(const char *variableName,
                                                        const char *propertyName);
+std::string GetAndSetEnvironmentVarOrUnCachedAndroidProperty(const char *variableName,
+                                                             const char *propertyName);
 std::string GetEnvironmentVarOrAndroidProperty(const char *variableName, const char *propertyName);
 const char *GetPathSeparatorForEnvironmentVar();
 bool PrependPathToEnvironmentVar(const char *variableName, const char *path);
