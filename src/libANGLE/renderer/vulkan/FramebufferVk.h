@@ -251,7 +251,6 @@ class FramebufferVk : public FramebufferImpl
     // channel is masked out, we check against the Framebuffer Attachments (RenderTargets) to see
     // if the masked out channel is present in any of the attachments.
     gl::BlendStateExt::ColorMaskStorage::Type mActiveColorComponentMasksForClear;
-    vk::DynamicBuffer mReadPixelBuffer;
 
     // When we draw to the framebuffer, and the real format has an alpha channel but the format of
     // the framebuffer does not, we need to mask out the alpha channel. This DrawBufferMask will

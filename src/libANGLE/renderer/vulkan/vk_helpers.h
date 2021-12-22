@@ -808,12 +808,20 @@ class BufferHelper : public ReadWriteResource
                                     size_t size,
                                     size_t alignment);
 
+    // Helper functions to initialize a buffer for a specific usage
     // Initialize a buffer with alignment good for shader storage or copyBuffer .
     angle::Result initForVertexConversion(ContextVk *contextVk,
                                           size_t size,
                                           MemoryHostVisibility hostVisibility);
     // Initialize a host visible buffer with alignment good for copyBuffer .
     angle::Result initForCopyBuffer(ContextVk *contextVk, size_t size, MemoryCoherency coherency);
+    // Initialize a host visible buffer with alignment good for copyImage .
+    angle::Result initForCopyImage(ContextVk *contextVk,
+                                   size_t size,
+                                   MemoryCoherency coherency,
+                                   angle::FormatID formatId,
+                                   VkDeviceSize *offset,
+                                   uint8_t **dataPtr);
 
     void destroy(RendererVk *renderer);
     void release(RendererVk *renderer);
@@ -1948,9 +1956,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                         uint32_t layerCount,
                                         uint32_t baseLayer,
                                         const gl::Box &sourceArea,
-                                        BufferHelper **bufferOut,
-                                        size_t *bufferSize,
-                                        StagingBufferOffsetArray *bufferOffsetsOut,
+                                        BufferHelper *dstBuffer,
                                         uint8_t **outDataPtr);
 
     static angle::Result GetReadPixelsParams(ContextVk *contextVk,
@@ -1979,8 +1985,7 @@ class ImageHelper final : public Resource, public angle::Subject
                              VkImageAspectFlagBits copyAspectFlags,
                              gl::LevelIndex levelGL,
                              uint32_t layer,
-                             void *pixels,
-                             DynamicBuffer *stagingBuffer);
+                             void *pixels);
 
     angle::Result CalculateBufferInfo(ContextVk *contextVk,
                                       const gl::Extents &glExtents,

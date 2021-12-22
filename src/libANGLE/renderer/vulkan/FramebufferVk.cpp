@@ -32,13 +32,6 @@ namespace rx
 
 namespace
 {
-constexpr size_t kMinReadPixelsBufferSize = 128000;
-
-// Alignment value to accommodate the largest known, for now, uncompressed Vulkan format
-// VK_FORMAT_R64G64B64A64_SFLOAT, while supporting 3-component types such as
-// VK_FORMAT_R16G16B16_SFLOAT.
-constexpr size_t kReadPixelsBufferAlignment = 32 * 3;
-
 // Clear values are only used when loadOp=Clear is set in clearWithRenderPassOp.  When starting a
 // new render pass, the clear value is set to an unlikely value (bright pink) to stand out better
 // in case of a bug.
@@ -341,10 +334,7 @@ FramebufferVk::FramebufferVk(RendererVk *renderer,
       mFramebuffer(nullptr),
       mActiveColorComponentMasksForClear(0),
       mReadOnlyDepthFeedbackLoopMode(false)
-{
-    mReadPixelBuffer.init(renderer, VK_BUFFER_USAGE_TRANSFER_DST_BIT, kReadPixelsBufferAlignment,
-                          kMinReadPixelsBufferSize, true, vk::DynamicBufferPolicy::OneShotUse);
-}
+{}
 
 FramebufferVk::~FramebufferVk() = default;
 
@@ -353,7 +343,6 @@ void FramebufferVk::destroy(const gl::Context *context)
     ContextVk *contextVk   = vk::GetImpl(context);
     RendererVk *rendererVk = contextVk->getRenderer();
 
-    mReadPixelBuffer.release(rendererVk);
     mFramebufferCache.clear(contextVk);
     mFramebufferCache.destroy(rendererVk);
     mFramebuffer = nullptr;
@@ -786,7 +775,6 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
     ANGLE_TRY(readPixelsImpl(contextVk, params.area, params, getReadPixelsAspectFlags(format),
                              getReadPixelsRenderTarget(format),
                              static_cast<uint8_t *>(pixels) + outputSkipBytes));
-    mReadPixelBuffer.releaseInFlightBuffers(contextVk);
     return angle::Result::Continue;
 }
 
@@ -2737,8 +2725,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     gl::LevelIndex levelGL = renderTarget->getLevelIndex();
     uint32_t layer         = renderTarget->getLayerIndex();
     return renderTarget->getImageForCopy().readPixels(contextVk, area, packPixelsParams,
-                                                      copyAspectFlags, levelGL, layer, pixels,
-                                                      &mReadPixelBuffer);
+                                                      copyAspectFlags, levelGL, layer, pixels);
 }
 
 gl::Extents FramebufferVk::getReadImageExtents() const

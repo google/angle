@@ -221,9 +221,9 @@ egl::Error IOSurfaceSurfaceVkMac::releaseTexImage(const gl::Context *context, EG
     PackPixelsParams params(bounds, dstFormat, static_cast<GLuint>(outputRowPitchInBytes),
                             contextVk->isViewportFlipEnabledForDrawFBO(), nullptr, 0);
 
-    result = mColorAttachment.image.readPixels(
-        contextVk, bounds, params, VK_IMAGE_ASPECT_COLOR_BIT, gl::LevelIndex(0), 0,
-        IOSurfaceGetBaseAddressOfPlane(mIOSurface, mPlane), contextVk->getStagingBuffer());
+    result = mColorAttachment.image.readPixels(contextVk, bounds, params, VK_IMAGE_ASPECT_COLOR_BIT,
+                                               gl::LevelIndex(0), 0,
+                                               IOSurfaceGetBaseAddressOfPlane(mIOSurface, mPlane));
 
     IOSurfaceUnlock(mIOSurface, 0, nullptr);
 
