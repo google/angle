@@ -2854,9 +2854,13 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     //
     // Note that emulation of GL_EXT_multisampled_render_to_texture is only really useful on tiling
     // hardware, but is exposed on desktop platforms purely to increase testing coverage.
+    const bool supportsIndependentDepthStencilResolve =
+        mFeatures.supportsDepthStencilResolve.enabled &&
+        mDepthStencilResolveProperties.independentResolveNone == VK_TRUE;
     ANGLE_FEATURE_CONDITION(&mFeatures, enableMultisampledRenderToTexture,
                             mFeatures.supportsMultisampledRenderToSingleSampled.enabled ||
-                                (!isSwiftShader && !(IsWindows() && (isIntel || isAMD))));
+                                (supportsIndependentDepthStencilResolve && !isSwiftShader &&
+                                 !(IsWindows() && (isIntel || isAMD))));
 
     // Currently we enable cube map arrays based on the imageCubeArray Vk feature.
     // TODO: Check device caps for full cube map array support. http://anglebug.com/5143

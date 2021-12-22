@@ -837,9 +837,6 @@ TEST_P(MultisampledRenderToTextureTest, 2DColorDepthMultisampleDrawTest)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
-    // http://anglebug.com/5380
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
-
     constexpr GLsizei kSize = 6;
     // create complete framebuffer with depth buffer
     GLTexture texture;
@@ -1396,9 +1393,6 @@ TEST_P(MultisampledRenderToTextureES3Test,
        RenderbufferClearDrawCopyThenBlendWithDepthStencilSameProgram)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
-
-    // http://anglebug.com/5380
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     constexpr GLsizei kSize = 64;
 
@@ -2102,9 +2096,6 @@ void MultisampledRenderToTextureES3Test::depthStencilClearThenDrawCommon(bool us
         ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
     }
 
-    // http://anglebug.com/5083
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
-
     constexpr GLsizei kSize = 64;
 
     setupCopyTexProgram();
@@ -2178,14 +2169,8 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearDrawCopy
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
-    // http://anglebug.com/5083
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
-
     // http://anglebug.com/5096
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
-
-    // http://anglebug.com/5380
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     constexpr GLsizei kSize = 64;
 
@@ -2273,14 +2258,8 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilDrawCopyClear
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
-    // http://anglebug.com/5083
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
-
     // http://anglebug.com/5096
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
-
-    // http://anglebug.com/5380
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     constexpr GLsizei kSize = 64;
 
@@ -2384,17 +2363,6 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferClearThenBlitDepthStencil
     // D3D backend doesn't implement multisampled render to texture renderbuffers correctly.
     // http://anglebug.com/3107
     ANGLE_SKIP_TEST_IF(IsD3D());
-
-    // The following trybot configurations don't support VK_KHR_depth_stencil_resolve.  ANGLE is not
-    // conformant without this extension, but it's allowed as users commonly invalidate
-    // depth/stencil.
-    //
-    //  - SwifthShader
-    //  - Android
-    //  - AMD
-    //  - Nvidia on Windows7
-    ANGLE_SKIP_TEST_IF(IsVulkan() &&
-                       (isSwiftshader() || IsAndroid() || IsAMD() || (IsWindows7() && IsNVIDIA())));
 
     constexpr GLsizei kSize = 64;
 
@@ -2504,11 +2472,6 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencil)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
-    // Skip on configurations that don't support VK_KHR_depth_stencil_resolve.  See comment
-    // in RenderbufferClearThenBlitDepthStencil.
-    ANGLE_SKIP_TEST_IF(IsVulkan() &&
-                       (isSwiftshader() || IsAndroid() || IsAMD() || (IsWindows7() && IsNVIDIA())));
-
     // http://anglebug.com/5096
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
@@ -2617,11 +2580,6 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencil)
 TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencilOnly)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
-
-    // Skip on configurations that don't support VK_KHR_depth_stencil_resolve.  See comment
-    // in RenderbufferClearThenBlitDepthStencil.
-    ANGLE_SKIP_TEST_IF(IsVulkan() &&
-                       (isSwiftshader() || IsAndroid() || IsAMD() || (IsWindows7() && IsNVIDIA())));
 
     // http://anglebug.com/5096
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
@@ -2777,9 +2735,6 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencilO
 TEST_P(MultisampledRenderToTextureTest, DepthReadWriteToggleWithStartedRenderPass)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
-
-    // http://anglebug.com/5380
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     constexpr GLsizei kSize = 64;
 
@@ -3753,14 +3708,8 @@ void MultisampledRenderToTextureES3Test::renderbufferUnresolveColorAndDepthStenc
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_draw_buffers"));
 
-    // http://anglebug.com/5083
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
-
     // http://anglebug.com/5096
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
-
-    // http://anglebug.com/5380
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     constexpr GLsizei kSize = 64;
 
@@ -3950,9 +3899,6 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferUnresolveColorAndDepthSte
 TEST_P(MultisampledRenderToTextureES3Test, ClearThenMaskedClearFramebufferTest)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
-
-    // TODO(anglebug:5655): This test is failing on Linux AMD Vulkan since it was added.
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     // TODO(geofflang) http://anglebug.com/2894
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL() && IsPixel2());
