@@ -1765,6 +1765,11 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
         region.imageOffset.z     = 0;
         region.imageExtent.depth = 1;
     }
+    else if (index.getType() == gl::TextureType::CubeMap)
+    {
+        // Copy to the correct cube map face.
+        layerIndex = index.getLayerIndex();
+    }
     region.imageSubresource.baseArrayLayer = layerIndex;
 
     // Make sure the source is initialized and its images are flushed.

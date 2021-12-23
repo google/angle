@@ -8754,6 +8754,80 @@ TEST_P(TextureCubeTestES3, SpecifyAndSampleFromBaseLevel1)
     EXPECT_PIXEL_COLOR_EQ(0, 0, angle::GLColor::white);
 }
 
+// Test GL_PIXEL_UNPACK_BUFFER with GL_TEXTURE_CUBE_MAP.
+TEST_P(TextureCubeTestES3, CubeMapPixelUnpackBuffer)
+{
+    // Check http://anglebug.com/2155.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
+
+    constexpr char kVS[] =
+        R"(#version 300 es
+        precision mediump float;
+        in vec3 pos;
+        void main() {
+            gl_Position = vec4(pos, 1.0);
+        })";
+
+    constexpr char kFS[] =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 color;
+        uniform float uLod;
+        uniform samplerCube uTex;
+        void main(){
+            color = texture(uTex, vec3(1.0));
+        })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    glUniform1i(glGetUniformLocation(program, "uTex"), 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    GLTexture cubeTex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
+
+    const int kFaceWidth  = 4;
+    const int kFaceHeight = 4;
+
+    uint16_t kHalfFloatOne  = 0x3C00;
+    uint16_t kHalfFloatZero = 0;
+
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA16F, kFaceWidth, kFaceHeight);
+    struct RGBA16F
+    {
+        uint16_t R, G, B, A;
+    };
+    RGBA16F redColor = {kHalfFloatOne, kHalfFloatZero, kHalfFloatZero, kHalfFloatOne};
+
+    std::vector<RGBA16F> pixels(kFaceWidth * kFaceHeight, redColor);
+    GLBuffer buffer;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer.get());
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, pixels.size() * sizeof(RGBA16F), pixels.data(),
+                 GL_DYNAMIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    for (GLenum faceIndex = 0; faceIndex < 6; faceIndex++)
+    {
+        glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, 0, 0, 0, kFaceWidth,
+                        kFaceHeight, GL_RGBA, GL_HALF_FLOAT, 0);
+        EXPECT_GL_NO_ERROR();
+    }
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_REPEAT);
+
+    drawQuad(program, "pos", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, angle::GLColor::red);
+}
+
 // Verify that using negative texture base level and max level generates GL_INVALID_VALUE.
 TEST_P(Texture2DTestES3, NegativeTextureBaseLevelAndMaxLevel)
 {
