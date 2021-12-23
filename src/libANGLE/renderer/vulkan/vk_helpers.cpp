@@ -4306,7 +4306,6 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mFirstAllocatedLevel(other.mFirstAllocatedLevel),
       mLayerCount(other.mLayerCount),
       mLevelCount(other.mLevelCount),
-      mStagingBuffer(std::move(other.mStagingBuffer)),
       mSubresourceUpdates(std::move(other.mSubresourceUpdates)),
       mCurrentSingleClearValue(std::move(other.mCurrentSingleClearValue)),
       mContentDefined(std::move(other.mContentDefined)),
@@ -4422,15 +4421,6 @@ const ImageHelper::LevelContentDefinedMask &ImageHelper::getLevelStencilContentD
     LevelIndex level) const
 {
     return mStencilContentDefined[level.get()];
-}
-
-void ImageHelper::initStagingBuffer(RendererVk *renderer,
-                                    size_t imageCopyBufferAlignment,
-                                    VkBufferUsageFlags usageFlags,
-                                    size_t initialSize)
-{
-    mStagingBuffer.init(renderer, usageFlags, imageCopyBufferAlignment, initialSize, true,
-                        DynamicBufferPolicy::OneShotUse);
 }
 
 angle::Result ImageHelper::init(Context *context,
@@ -4698,7 +4688,7 @@ void ImageHelper::releaseImageFromShareContexts(RendererVk *renderer, ContextVk 
 
 void ImageHelper::releaseStagingBuffer(RendererVk *renderer)
 {
-    ASSERT(validateSubresourceUpdateImageRefsConsistent());
+    ASSERT(validateSubresourceUpdateRefCountsConsistent());
 
     // Remove updates that never made it to the texture.
     for (std::vector<SubresourceUpdate> &levelUpdates : mSubresourceUpdates)
@@ -4709,9 +4699,8 @@ void ImageHelper::releaseStagingBuffer(RendererVk *renderer)
         }
     }
 
-    ASSERT(validateSubresourceUpdateImageRefsConsistent());
+    ASSERT(validateSubresourceUpdateRefCountsConsistent());
 
-    mStagingBuffer.release(renderer);
     mSubresourceUpdates.clear();
     mCurrentSingleClearValue.reset();
 }
@@ -5066,7 +5055,6 @@ void ImageHelper::destroy(RendererVk *renderer)
 
     mImage.destroy(device);
     mDeviceMemory.destroy(device);
-    mStagingBuffer.destroy(renderer);
     mCurrentLayout = ImageLayout::Undefined;
     mImageType     = VK_IMAGE_TYPE_2D;
     mLayerCount    = 0;
@@ -5977,7 +5965,7 @@ void ImageHelper::removeStagedUpdates(Context *context,
                                       gl::LevelIndex levelGLStart,
                                       gl::LevelIndex levelGLEnd)
 {
-    ASSERT(validateSubresourceUpdateImageRefsConsistent());
+    ASSERT(validateSubresourceUpdateRefCountsConsistent());
 
     // Remove all updates to levels [start, end].
     for (gl::LevelIndex level = levelGLStart; level <= levelGLEnd; ++level)
@@ -5997,7 +5985,7 @@ void ImageHelper::removeStagedUpdates(Context *context,
         levelUpdates->clear();
     }
 
-    ASSERT(validateSubresourceUpdateImageRefsConsistent());
+    ASSERT(validateSubresourceUpdateRefCountsConsistent());
 }
 
 angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
@@ -6006,7 +5994,6 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
                                                       const gl::Offset &offset,
                                                       const gl::InternalFormat &formatInfo,
                                                       const gl::PixelUnpackState &unpack,
-                                                      DynamicBuffer *stagingBufferOverride,
                                                       GLenum type,
                                                       const uint8_t *pixels,
                                                       const Format &vkFormat,
@@ -6109,17 +6096,15 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
         }
     }
 
-    VkBuffer bufferHandle = VK_NULL_HANDLE;
+    std::unique_ptr<RefCounted<BufferHelper>> stagingBuffer =
+        std::make_unique<RefCounted<BufferHelper>>();
+    BufferHelper *currentBuffer = &stagingBuffer->get();
 
-    uint8_t *stagingPointer    = nullptr;
-    VkDeviceSize stagingOffset = 0;
-    // If caller has provided a staging buffer, use it.
-    DynamicBuffer *stagingBuffer = stagingBufferOverride ? stagingBufferOverride : &mStagingBuffer;
-    size_t alignment             = mStagingBuffer.getAlignment();
-    ANGLE_TRY(stagingBuffer->allocateWithAlignment(contextVk, allocationSize, alignment,
-                                                   &stagingPointer, &bufferHandle, &stagingOffset,
-                                                   nullptr));
-    BufferHelper *currentBuffer = stagingBuffer->getCurrentBuffer();
+    uint8_t *stagingPointer;
+    VkDeviceSize stagingOffset;
+    ANGLE_TRY(currentBuffer->initForCopyImage(contextVk, allocationSize,
+                                              MemoryCoherency::NonCoherent, storageFormat.id,
+                                              &stagingOffset, &stagingPointer));
 
     const uint8_t *source = pixels + static_cast<ptrdiff_t>(inputSkipBytes);
 
@@ -6151,10 +6136,12 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
             gl_vk::GetExtent(yuvInfo.planeExtent[plane], &copy.imageExtent);
             copy.imageSubresource.baseArrayLayer = 0;
             copy.imageSubresource.aspectMask     = kPlaneAspectFlags[plane];
-            appendSubresourceUpdate(gl::LevelIndex(0),
-                                    SubresourceUpdate(currentBuffer, copy, storageFormat.id));
+            appendSubresourceUpdate(
+                gl::LevelIndex(0),
+                SubresourceUpdate(stagingBuffer.get(), currentBuffer, copy, storageFormat.id));
         }
 
+        stagingBuffer.release();
         return angle::Result::Continue;
     }
 
@@ -6212,8 +6199,8 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
         stencilCopy.imageOffset                     = copy.imageOffset;
         stencilCopy.imageExtent                     = copy.imageExtent;
         stencilCopy.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_STENCIL_BIT;
-        appendSubresourceUpdate(updateLevelGL,
-                                SubresourceUpdate(currentBuffer, stencilCopy, storageFormat.id));
+        appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(stagingBuffer.get(), currentBuffer,
+                                                                 stencilCopy, storageFormat.id));
 
         aspectFlags &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
     }
@@ -6236,10 +6223,11 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
     if (aspectFlags)
     {
         copy.imageSubresource.aspectMask = aspectFlags;
-        appendSubresourceUpdate(updateLevelGL,
-                                SubresourceUpdate(currentBuffer, copy, storageFormat.id));
+        appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(stagingBuffer.get(), currentBuffer,
+                                                                 copy, storageFormat.id));
     }
 
+    stagingBuffer.release();
     return angle::Result::Continue;
 }
 
@@ -6247,6 +6235,7 @@ angle::Result ImageHelper::reformatStagedBufferUpdates(ContextVk *contextVk,
                                                        angle::FormatID srcFormatID,
                                                        angle::FormatID dstFormatID)
 {
+    RendererVk *renderer           = contextVk->getRenderer();
     const angle::Format &srcFormat = angle::Format::Get(srcFormatID);
     const angle::Format &dstFormat = angle::Format::Get(dstFormatID);
     const gl::InternalFormat &dstFormatInfo =
@@ -6274,16 +6263,20 @@ angle::Result ImageHelper::reformatStagedBufferUpdates(ContextVk *contextVk,
 
                 // Retrieve source buffer
                 vk::BufferHelper *srcBuffer = update.data.buffer.bufferHelper;
-                uint8_t *srcData            = srcBuffer->getMappedMemory() + copy.bufferOffset;
+                uint8_t *srcData =
+                    srcBuffer->getBufferBlock()->getMappedMemory() + copy.bufferOffset;
 
                 // Allocate memory with dstFormat
-                uint8_t *dstData             = nullptr;
-                VkBuffer dstBufferHandle     = VK_NULL_HANDLE;
-                VkDeviceSize dstBufferOffset = 0;
-                GLuint dstBufferSize         = dstDataDepthPitch * copy.imageExtent.depth;
-                ANGLE_TRY(mStagingBuffer.allocate(contextVk, dstBufferSize, &dstData,
-                                                  &dstBufferHandle, &dstBufferOffset, nullptr));
-                BufferHelper *dstBuffer = mStagingBuffer.getCurrentBuffer();
+                std::unique_ptr<RefCounted<BufferHelper>> stagingBuffer =
+                    std::make_unique<RefCounted<BufferHelper>>();
+                BufferHelper *dstBuffer = &stagingBuffer->get();
+
+                uint8_t *dstData;
+                VkDeviceSize dstBufferOffset;
+                size_t dstBufferSize = dstDataDepthPitch * copy.imageExtent.depth;
+                ANGLE_TRY(dstBuffer->initForCopyImage(contextVk, dstBufferSize,
+                                                      MemoryCoherency::NonCoherent, dstFormatID,
+                                                      &dstBufferOffset, &dstData));
 
                 rx::PixelReadFunction pixelReadFunction   = srcFormat.pixelReadFunction;
                 rx::PixelWriteFunction pixelWriteFunction = dstFormat.pixelWriteFunction;
@@ -6299,6 +6292,19 @@ angle::Result ImageHelper::reformatStagedBufferUpdates(ContextVk *contextVk,
                 update.data.buffer.bufferHelper            = dstBuffer;
                 update.data.buffer.formatID                = dstFormatID;
                 update.data.buffer.copyRegion.bufferOffset = dstBufferOffset;
+
+                // Let update structure owns the staging buffer
+                if (update.refCounted.buffer)
+                {
+                    update.refCounted.buffer->releaseRef();
+                    if (!update.refCounted.buffer->isReferenced())
+                    {
+                        update.refCounted.buffer->get().release(renderer);
+                        SafeDelete(update.refCounted.buffer);
+                    }
+                }
+                update.refCounted.buffer = stagingBuffer.release();
+                update.refCounted.buffer->addRef();
             }
         }
     }
@@ -6457,7 +6463,6 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
                                                   const gl::Offset &offset,
                                                   const gl::InternalFormat &formatInfo,
                                                   const gl::PixelUnpackState &unpack,
-                                                  DynamicBuffer *stagingBufferOverride,
                                                   GLenum type,
                                                   const uint8_t *pixels,
                                                   const Format &vkFormat,
@@ -6470,8 +6475,8 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
                                   &inputRowPitch, &inputDepthPitch, &inputSkipBytes));
 
     ANGLE_TRY(stageSubresourceUpdateImpl(contextVk, index, glExtents, offset, formatInfo, unpack,
-                                         stagingBufferOverride, type, pixels, vkFormat, access,
-                                         inputRowPitch, inputDepthPitch, inputSkipBytes));
+                                         type, pixels, vkFormat, access, inputRowPitch,
+                                         inputDepthPitch, inputSkipBytes));
 
     return angle::Result::Continue;
 }
@@ -6481,17 +6486,17 @@ angle::Result ImageHelper::stageSubresourceUpdateAndGetData(ContextVk *contextVk
                                                             const gl::ImageIndex &imageIndex,
                                                             const gl::Extents &glExtents,
                                                             const gl::Offset &offset,
-                                                            uint8_t **destData,
-                                                            DynamicBuffer *stagingBufferOverride,
+                                                            uint8_t **dstData,
                                                             angle::FormatID formatID)
 {
-    VkBuffer bufferHandle;
-    VkDeviceSize stagingOffset = 0;
+    std::unique_ptr<RefCounted<BufferHelper>> stagingBuffer =
+        std::make_unique<RefCounted<BufferHelper>>();
+    BufferHelper *currentBuffer = &stagingBuffer->get();
 
-    DynamicBuffer *stagingBuffer = stagingBufferOverride ? stagingBufferOverride : &mStagingBuffer;
-    size_t alignment             = mStagingBuffer.getAlignment();
-    ANGLE_TRY(stagingBuffer->allocateWithAlignment(contextVk, allocationSize, alignment, destData,
-                                                   &bufferHandle, &stagingOffset, nullptr));
+    VkDeviceSize stagingOffset;
+    ANGLE_TRY(currentBuffer->initForCopyImage(contextVk, allocationSize,
+                                              MemoryCoherency::NonCoherent, formatID,
+                                              &stagingOffset, dstData));
 
     gl::LevelIndex updateLevelGL(imageIndex.getLevelIndex());
 
@@ -6511,9 +6516,8 @@ angle::Result ImageHelper::stageSubresourceUpdateAndGetData(ContextVk *contextVk
     gl_vk::GetOffset(offset, &copy.imageOffset);
     gl_vk::GetExtent(glExtents, &copy.imageExtent);
 
-    appendSubresourceUpdate(updateLevelGL,
-                            SubresourceUpdate(stagingBuffer->getCurrentBuffer(), copy, formatID));
-
+    appendSubresourceUpdate(
+        updateLevelGL, SubresourceUpdate(stagingBuffer.release(), currentBuffer, copy, formatID));
     return angle::Result::Continue;
 }
 
@@ -6525,8 +6529,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
     const gl::Extents &dstExtent,
     const gl::InternalFormat &formatInfo,
     ImageAccess access,
-    FramebufferVk *framebufferVk,
-    DynamicBuffer *stagingBufferOverride)
+    FramebufferVk *framebufferVk)
 {
     ContextVk *contextVk = GetImpl(context);
 
@@ -6556,19 +6559,18 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
     size_t outputRowPitch   = storageFormat.pixelBytes * clippedRectangle.width;
     size_t outputDepthPitch = outputRowPitch * clippedRectangle.height;
 
-    VkBuffer bufferHandle = VK_NULL_HANDLE;
+    std::unique_ptr<RefCounted<BufferHelper>> stagingBuffer =
+        std::make_unique<RefCounted<BufferHelper>>();
+    BufferHelper *currentBuffer = &stagingBuffer->get();
 
-    uint8_t *stagingPointer    = nullptr;
-    VkDeviceSize stagingOffset = 0;
+    uint8_t *stagingPointer;
+    VkDeviceSize stagingOffset;
 
     // The destination is only one layer deep.
-    size_t allocationSize        = outputDepthPitch;
-    DynamicBuffer *stagingBuffer = stagingBufferOverride ? stagingBufferOverride : &mStagingBuffer;
-    size_t alignment             = mStagingBuffer.getAlignment();
-    ANGLE_TRY(stagingBuffer->allocateWithAlignment(contextVk, allocationSize, alignment,
-                                                   &stagingPointer, &bufferHandle, &stagingOffset,
-                                                   nullptr));
-    BufferHelper *currentBuffer = stagingBuffer->getCurrentBuffer();
+    size_t allocationSize = outputDepthPitch;
+    ANGLE_TRY(currentBuffer->initForCopyImage(contextVk, allocationSize,
+                                              MemoryCoherency::NonCoherent, storageFormat.id,
+                                              &stagingOffset, &stagingPointer));
 
     const angle::Format &copyFormat =
         GetFormatFromFormatType(formatInfo.internalFormat, formatInfo.type);
@@ -6620,8 +6622,9 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
     gl_vk::GetExtent(dstExtent, &copyToImage.imageExtent);
 
     // 3- enqueue the destination image subresource update
-    appendSubresourceUpdate(updateLevelGL,
-                            SubresourceUpdate(currentBuffer, copyToImage, storageFormat.id));
+    appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(stagingBuffer.release(), currentBuffer,
+                                                             copyToImage, storageFormat.id));
+
     return angle::Result::Continue;
 }
 
@@ -6730,14 +6733,19 @@ angle::Result ImageHelper::stageRobustResourceClearWithFormat(ContextVk *context
         ANGLE_VK_CHECK_MATH(contextVk,
                             formatInfo.computeCompressedImageSize(glExtents, &totalSize));
 
-        VkBuffer bufferHandle      = VK_NULL_HANDLE;
-        uint8_t *stagingPointer    = nullptr;
-        VkDeviceSize stagingOffset = 0;
-        ANGLE_TRY(mStagingBuffer.allocate(contextVk, totalSize, &stagingPointer, &bufferHandle,
-                                          &stagingOffset, nullptr));
+        std::unique_ptr<RefCounted<BufferHelper>> stagingBuffer =
+            std::make_unique<RefCounted<BufferHelper>>();
+        BufferHelper *currentBuffer = &stagingBuffer->get();
+
+        uint8_t *stagingPointer;
+        VkDeviceSize stagingOffset;
+        ANGLE_TRY(currentBuffer->initForCopyImage(contextVk, totalSize,
+                                                  MemoryCoherency::NonCoherent, imageFormat.id,
+                                                  &stagingOffset, &stagingPointer));
         memset(stagingPointer, 0, totalSize);
 
         VkBufferImageCopy copyRegion               = {};
+        copyRegion.bufferOffset                    = stagingOffset;
         copyRegion.imageExtent.width               = glExtents.width;
         copyRegion.imageExtent.height              = glExtents.height;
         copyRegion.imageExtent.depth               = glExtents.depth;
@@ -6746,8 +6754,10 @@ angle::Result ImageHelper::stageRobustResourceClearWithFormat(ContextVk *context
         copyRegion.imageSubresource.baseArrayLayer = index.hasLayer() ? index.getLayerIndex() : 0;
         copyRegion.imageSubresource.layerCount     = index.getLayerCount();
 
-        appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(mStagingBuffer.getCurrentBuffer(),
-                                                                 copyRegion, imageFormat.id));
+        // The update structure owns the staging buffer.
+        appendSubresourceUpdate(
+            updateLevelGL,
+            SubresourceUpdate(stagingBuffer.release(), currentBuffer, copyRegion, imageFormat.id));
     }
     else
     {
@@ -6984,6 +6994,8 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                                               uint32_t layerEnd,
                                               gl::TexLevelMask skipLevelsMask)
 {
+    RendererVk *renderer = contextVk->getRenderer();
+
     if (!hasStagedUpdatesInLevels(levelGLStart, levelGLEnd))
     {
         return angle::Result::Continue;
@@ -7012,9 +7024,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         }
     }
 
-    ASSERT(validateSubresourceUpdateImageRefsConsistent());
-
-    ANGLE_TRY(mStagingBuffer.flush(contextVk));
+    ASSERT(validateSubresourceUpdateRefCountsConsistent());
 
     const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(getActualFormat());
 
@@ -7059,8 +7069,9 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                    update.updateSource == UpdateSource::ClearEmulatedChannelsOnly ||
                    (update.updateSource == UpdateSource::Buffer &&
                     update.data.buffer.bufferHelper != nullptr) ||
-                   (update.updateSource == UpdateSource::Image && update.image != nullptr &&
-                    update.image->isReferenced() && update.image->get().valid()));
+                   (update.updateSource == UpdateSource::Image &&
+                    update.refCounted.image != nullptr && update.refCounted.image->isReferenced() &&
+                    update.refCounted.image->get().valid()));
 
             uint32_t updateBaseLayer, updateLayerCount;
             update.getDestSubresource(mLayerCount, &updateBaseLayer, &updateLayerCount);
@@ -7170,6 +7181,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
                 BufferHelper *currentBuffer = bufferUpdate.bufferHelper;
                 ASSERT(currentBuffer && currentBuffer->valid());
+                ANGLE_TRY(currentBuffer->flush(renderer));
 
                 CommandBufferAccess bufferAccess;
                 bufferAccess.onBufferTransferRead(currentBuffer);
@@ -7184,13 +7196,14 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             }
             else
             {
+                ASSERT(update.updateSource == UpdateSource::Image);
                 CommandBufferAccess imageAccess;
-                imageAccess.onImageTransferRead(aspectFlags, &update.image->get());
+                imageAccess.onImageTransferRead(aspectFlags, &update.refCounted.image->get());
                 ANGLE_TRY(
                     contextVk->getOutsideRenderPassCommandBuffer(imageAccess, &commandBuffer));
 
-                commandBuffer->copyImage(update.image->get().getImage(),
-                                         update.image->get().getCurrentLayout(), mImage,
+                commandBuffer->copyImage(update.refCounted.image->get().getImage(),
+                                         update.refCounted.image->get().getCurrentLayout(), mImage,
                                          getCurrentLayout(), 1, &update.data.image.copyRegion);
                 onWrite(updateMipLevelGL, 1, updateBaseLayer, updateLayerCount,
                         update.data.image.copyRegion.dstSubresource.aspectMask);
@@ -7214,13 +7227,11 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     }
     mSubresourceUpdates.resize(compactSize);
 
-    ASSERT(validateSubresourceUpdateImageRefsConsistent());
+    ASSERT(validateSubresourceUpdateRefCountsConsistent());
 
     // If no updates left, release the staging buffers to save memory.
     if (mSubresourceUpdates.empty())
     {
-        mStagingBuffer.releaseInFlightBuffers(contextVk);
-        mStagingBuffer.release(contextVk->getRenderer());
         onStateChange(angle::SubjectMessage::InitializationComplete);
     }
 
@@ -7317,6 +7328,30 @@ bool ImageHelper::hasStagedImageUpdatesWithMismatchedFormat(gl::LevelIndex level
     return false;
 }
 
+bool ImageHelper::validateSubresourceUpdateBufferRefConsistent(
+    RefCounted<BufferHelper> *buffer) const
+{
+    if (buffer == nullptr)
+    {
+        return true;
+    }
+
+    uint32_t refs = 0;
+
+    for (const std::vector<SubresourceUpdate> &levelUpdates : mSubresourceUpdates)
+    {
+        for (const SubresourceUpdate &update : levelUpdates)
+        {
+            if (update.updateSource == UpdateSource::Buffer && update.refCounted.buffer == buffer)
+            {
+                ++refs;
+            }
+        }
+    }
+
+    return buffer->isRefCountAsExpected(refs);
+}
+
 bool ImageHelper::validateSubresourceUpdateImageRefConsistent(RefCounted<ImageHelper> *image) const
 {
     if (image == nullptr)
@@ -7330,7 +7365,7 @@ bool ImageHelper::validateSubresourceUpdateImageRefConsistent(RefCounted<ImageHe
     {
         for (const SubresourceUpdate &update : levelUpdates)
         {
-            if (update.updateSource == UpdateSource::Image && update.image == image)
+            if (update.updateSource == UpdateSource::Image && update.refCounted.image == image)
             {
                 ++refs;
             }
@@ -7340,16 +7375,25 @@ bool ImageHelper::validateSubresourceUpdateImageRefConsistent(RefCounted<ImageHe
     return image->isRefCountAsExpected(refs);
 }
 
-bool ImageHelper::validateSubresourceUpdateImageRefsConsistent() const
+bool ImageHelper::validateSubresourceUpdateRefCountsConsistent() const
 {
     for (const std::vector<SubresourceUpdate> &levelUpdates : mSubresourceUpdates)
     {
         for (const SubresourceUpdate &update : levelUpdates)
         {
-            if (update.updateSource == UpdateSource::Image &&
-                !validateSubresourceUpdateImageRefConsistent(update.image))
+            if (update.updateSource == UpdateSource::Image)
             {
-                return false;
+                if (!validateSubresourceUpdateImageRefConsistent(update.refCounted.image))
+                {
+                    return false;
+                }
+            }
+            else if (update.updateSource == UpdateSource::Buffer)
+            {
+                if (!validateSubresourceUpdateBufferRefConsistent(update.refCounted.buffer))
+                {
+                    return false;
+                }
             }
         }
     }
@@ -7366,7 +7410,7 @@ void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask
         return;
     }
 
-    ASSERT(validateSubresourceUpdateImageRefsConsistent());
+    ASSERT(validateSubresourceUpdateRefCountsConsistent());
 
     RendererVk *renderer = contextVk->getRenderer();
 
@@ -7479,7 +7523,7 @@ void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask
                                 .base());
     }
 
-    ASSERT(validateSubresourceUpdateImageRefsConsistent());
+    ASSERT(validateSubresourceUpdateRefCountsConsistent());
 }
 
 angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
@@ -7881,19 +7925,25 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 }
 
 // ImageHelper::SubresourceUpdate implementation
-ImageHelper::SubresourceUpdate::SubresourceUpdate()
-    : updateSource(UpdateSource::Buffer), image(nullptr)
+ImageHelper::SubresourceUpdate::SubresourceUpdate() : updateSource(UpdateSource::Buffer)
 {
     data.buffer.bufferHelper = nullptr;
+    refCounted.buffer        = nullptr;
 }
 
 ImageHelper::SubresourceUpdate::~SubresourceUpdate() {}
 
-ImageHelper::SubresourceUpdate::SubresourceUpdate(BufferHelper *bufferHelperIn,
+ImageHelper::SubresourceUpdate::SubresourceUpdate(RefCounted<BufferHelper> *bufferIn,
+                                                  BufferHelper *bufferHelperIn,
                                                   const VkBufferImageCopy &copyRegionIn,
                                                   angle::FormatID formatID)
-    : updateSource(UpdateSource::Buffer), image(nullptr)
+    : updateSource(UpdateSource::Buffer)
 {
+    refCounted.buffer = bufferIn;
+    if (refCounted.buffer != nullptr)
+    {
+        refCounted.buffer->addRef();
+    }
     data.buffer.bufferHelper = bufferHelperIn;
     data.buffer.copyRegion   = copyRegionIn;
     data.buffer.formatID     = formatID;
@@ -7902,9 +7952,10 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(BufferHelper *bufferHelperIn,
 ImageHelper::SubresourceUpdate::SubresourceUpdate(RefCounted<ImageHelper> *imageIn,
                                                   const VkImageCopy &copyRegionIn,
                                                   angle::FormatID formatID)
-    : updateSource(UpdateSource::Image), image(imageIn)
+    : updateSource(UpdateSource::Image)
 {
-    image->addRef();
+    refCounted.image = imageIn;
+    refCounted.image->addRef();
     data.image.copyRegion = copyRegionIn;
     data.image.formatID   = formatID;
 }
@@ -7912,8 +7963,9 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(RefCounted<ImageHelper> *image
 ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags,
                                                   const VkClearValue &clearValue,
                                                   const gl::ImageIndex &imageIndex)
-    : updateSource(UpdateSource::Clear), image(nullptr)
+    : updateSource(UpdateSource::Clear)
 {
+    refCounted.image       = nullptr;
     data.clear.aspectFlags = aspectFlags;
     data.clear.value       = clearValue;
     data.clear.levelIndex  = imageIndex.getLevelIndex();
@@ -7926,8 +7978,9 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags
 ImageHelper::SubresourceUpdate::SubresourceUpdate(VkColorComponentFlags colorMaskFlags,
                                                   const VkClearColorValue &clearValue,
                                                   const gl::ImageIndex &imageIndex)
-    : updateSource(UpdateSource::ClearEmulatedChannelsOnly), image(nullptr)
+    : updateSource(UpdateSource::ClearEmulatedChannelsOnly)
 {
+    refCounted.image       = nullptr;
     data.clear.aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT;
     data.clear.value.color = clearValue;
     data.clear.levelIndex  = imageIndex.getLevelIndex();
@@ -7938,21 +7991,24 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(VkColorComponentFlags colorMas
 }
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(SubresourceUpdate &&other)
-    : updateSource(other.updateSource), image(nullptr)
+    : updateSource(other.updateSource)
 {
     switch (updateSource)
     {
         case UpdateSource::Clear:
         case UpdateSource::ClearEmulatedChannelsOnly:
-            data.clear = other.data.clear;
+            data.clear        = other.data.clear;
+            refCounted.buffer = nullptr;
             break;
         case UpdateSource::Buffer:
-            data.buffer = other.data.buffer;
+            data.buffer             = other.data.buffer;
+            refCounted.buffer       = other.refCounted.buffer;
+            other.refCounted.buffer = nullptr;
             break;
         case UpdateSource::Image:
-            data.image  = other.data.image;
-            image       = other.image;
-            other.image = nullptr;
+            data.image             = other.data.image;
+            refCounted.image       = other.refCounted.image;
+            other.refCounted.image = nullptr;
             break;
         default:
             UNREACHABLE();
@@ -7985,17 +8041,29 @@ void ImageHelper::SubresourceUpdate::release(RendererVk *renderer)
 {
     if (updateSource == UpdateSource::Image)
     {
-        image->releaseRef();
+        refCounted.image->releaseRef();
 
-        if (!image->isReferenced())
+        if (!refCounted.image->isReferenced())
         {
             // Staging images won't be used in render pass attachments.
-            image->get().releaseImage(renderer);
-            image->get().releaseStagingBuffer(renderer);
-            SafeDelete(image);
+            refCounted.image->get().releaseImage(renderer);
+            refCounted.image->get().releaseStagingBuffer(renderer);
+            SafeDelete(refCounted.image);
         }
 
-        image = nullptr;
+        refCounted.image = nullptr;
+    }
+    else if (updateSource == UpdateSource::Buffer && refCounted.buffer != nullptr)
+    {
+        refCounted.buffer->releaseRef();
+
+        if (!refCounted.buffer->isReferenced())
+        {
+            refCounted.buffer->get().release(renderer);
+            SafeDelete(refCounted.buffer);
+        }
+
+        refCounted.buffer = nullptr;
     }
 }
 

@@ -739,7 +739,6 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     mDefaultUniformStorage.release(mRenderer);
     mEmptyBuffer.release(mRenderer);
-    mStagingBuffer.release(mRenderer);
 
     for (vk::DynamicBuffer &defaultBuffer : mDefaultAttribBuffers)
     {
@@ -913,13 +912,6 @@ angle::Result ContextVk::initialize()
     emptyBufferInfo.pQueueFamilyIndices         = nullptr;
     constexpr VkMemoryPropertyFlags kMemoryType = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(mEmptyBuffer.init(this, emptyBufferInfo, kMemoryType));
-
-    constexpr VkImageUsageFlags kStagingBufferUsageFlags =
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-    size_t stagingBufferAlignment       = mRenderer->getStagingBufferAlignment();
-    constexpr size_t kStagingBufferSize = 1024u * 1024u;  // 1M
-    mStagingBuffer.init(mRenderer, kStagingBufferUsageFlags, stagingBufferAlignment,
-                        kStagingBufferSize, true, vk::DynamicBufferPolicy::SporadicTextureUpload);
 
     // Add context into the share group
     mShareGroupVk->getContexts()->insert(this);
@@ -5581,7 +5573,6 @@ angle::Result ContextVk::flushAndGetSerial(const vk::Semaphore *signalSemaphore,
         driverUniform.dynamicBuffer.releaseInFlightBuffersToResourceUseList(this);
     }
     mDefaultUniformStorage.releaseInFlightBuffersToResourceUseList(this);
-    mStagingBuffer.releaseInFlightBuffersToResourceUseList(this);
 
     ANGLE_TRY(submitFrame(signalSemaphore, submitSerialOut));
 

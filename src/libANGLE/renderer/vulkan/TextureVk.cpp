@@ -292,7 +292,6 @@ TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
       mImageLayerOffset(0),
       mImageLevelOffset(0),
       mImage(nullptr),
-      mStagingBufferInitialSize(vk::kStagingBufferSize),
       mImageUsageFlags(0),
       mImageCreateFlags(0),
       mImageObserverBinding(this, kTextureImageSubjectIndex),
@@ -474,14 +473,13 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    // Use context's staging buffer for immutable textures and flush out updates
-    // immediately.
-    vk::DynamicBuffer *stagingBuffer = nullptr;
+    // When possible flush out updates immediately.
+    bool shouldFlush = false;
     if (!mOwnsImage || mState.getImmutableFormat() ||
         (!shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex()),
                                vkFormat.getActualImageFormatID(getRequiredImageAccess()))))
     {
-        stagingBuffer = contextVk->getStagingBuffer();
+        shouldFlush = true;
     }
 
     if (unpackBuffer)
@@ -543,9 +541,8 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
             ANGLE_TRY(mImage->stageSubresourceUpdateImpl(
                 contextVk, getNativeImageIndex(index),
                 gl::Extents(area.width, area.height, area.depth),
-                gl::Offset(area.x, area.y, area.z), formatInfo, unpack, stagingBuffer, type, source,
-                vkFormat, getRequiredImageAccess(), inputRowPitch, inputDepthPitch,
-                inputSkipBytes));
+                gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, source, vkFormat,
+                getRequiredImageAccess(), inputRowPitch, inputDepthPitch, inputSkipBytes));
 
             ANGLE_TRY(unpackBufferVk->unmapImpl(contextVk));
         }
@@ -554,12 +551,12 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
     {
         ANGLE_TRY(mImage->stageSubresourceUpdate(
             contextVk, getNativeImageIndex(index), gl::Extents(area.width, area.height, area.depth),
-            gl::Offset(area.x, area.y, area.z), formatInfo, unpack, stagingBuffer, type, pixels,
-            vkFormat, getRequiredImageAccess()));
+            gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels, vkFormat,
+            getRequiredImageAccess()));
     }
 
     // If we used context's staging buffer, flush out the updates
-    if (stagingBuffer)
+    if (shouldFlush)
     {
         ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
     }
@@ -802,20 +799,14 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_HIGH,
                           "Texture copied on CPU due to format restrictions");
 
-    // Use context's staging buffer if possible
-    vk::DynamicBuffer *contextStagingBuffer = nullptr;
-    if (!shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex()), dstActualFormatID))
-    {
-        contextStagingBuffer = contextVk->getStagingBuffer();
-    }
-
     // Do a CPU readback that does the conversion, and then stage the change to the pixel buffer.
     ANGLE_TRY(mImage->stageSubresourceUpdateFromFramebuffer(
         context, offsetImageIndex, clippedSourceArea, modifiedDestOffset,
         gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), internalFormat,
-        getRequiredImageAccess(), framebufferVk, contextStagingBuffer));
+        getRequiredImageAccess(), framebufferVk));
 
-    if (contextStagingBuffer)
+    // Flush out staged update if possible
+    if (!shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex()), dstActualFormatID))
     {
         ANGLE_TRY(flushImageStagedUpdates(contextVk));
     }
@@ -911,17 +902,10 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     const gl::ImageIndex stagingIndex = gl::ImageIndex::Make2DArrayRange(
         offsetImageIndex.getLevelIndex(), stagingBaseLayer, stagingLayerCount);
 
-    // Use context's staging buffer if possible
-    vk::DynamicBuffer *contextStagingBuffer = nullptr;
-    if (!shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex()), dstFormatID))
-    {
-        contextStagingBuffer = contextVk->getStagingBuffer();
-    }
-
     uint8_t *destData = nullptr;
-    ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
-        contextVk, destinationAllocationSize, stagingIndex, stagingExtents, stagingOffset,
-        &destData, contextStagingBuffer, dstFormatID));
+    ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(contextVk, destinationAllocationSize,
+                                                       stagingIndex, stagingExtents, stagingOffset,
+                                                       &destData, dstFormatID));
 
     // Source and dst data is tightly packed
     GLuint srcDataRowPitch = sourceBox.width * srcTextureFormat.pixelBytes;
@@ -951,7 +935,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
                       dstFormat.componentType, sourceBox.width, sourceBox.height, sourceBox.depth,
                       unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 
-    if (contextStagingBuffer)
+    if (!shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex()), dstFormatID))
     {
         ANGLE_TRY(flushImageStagedUpdates(contextVk));
     }
@@ -1532,16 +1516,6 @@ angle::Result TextureVk::ensureImageAllocated(ContextVk *contextVk, const vk::Fo
     {
         setImageHelper(contextVk, new vk::ImageHelper(), mState.getType(), format, 0, 0, true);
     }
-    else
-    {
-        // Note: one possible path here is when an image level is being redefined to a different
-        // format.  In that case, staged updates with the new format should succeed, but otherwise
-        // the format should not affect the currently allocated image.  The following function only
-        // takes the alignment requirement to make sure the format is not accidentally used for any
-        // other purpose.
-        updateImageHelper(contextVk, vk::GetImageCopyBufferAlignment(
-                                         format.getActualImageFormatID(getRequiredImageAccess())));
-    }
 
     initImageUsageFlags(contextVk, format.getActualImageFormatID(getRequiredImageAccess()));
 
@@ -1571,8 +1545,6 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
     mImageLevelOffset = imageLevelOffset;
     mImageLayerOffset = imageLayerOffset;
     mImage            = imageHelper;
-    updateImageHelper(contextVk, vk::GetImageCopyBufferAlignment(
-                                     format.getActualImageFormatID(getRequiredImageAccess())));
 
     // Force re-creation of render targets next time they are needed
     for (auto &renderTargets : mSingleLayerRenderTargets)
@@ -1597,14 +1569,6 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     getImageViews().init(renderer);
-}
-
-void TextureVk::updateImageHelper(ContextVk *contextVk, size_t imageCopyBufferAlignment)
-{
-    RendererVk *renderer = contextVk->getRenderer();
-    ASSERT(mImage != nullptr);
-    mImage->initStagingBuffer(renderer, imageCopyBufferAlignment, vk::kStagingBufferFlags,
-                              mStagingBufferInitialSize);
 }
 
 angle::Result TextureVk::redefineLevel(const gl::Context *context,
@@ -2191,7 +2155,7 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk,
         uint8_t *dstData = nullptr;
         ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
             contextVk, dstBufferSize, index, mImage->getLevelExtents(levelVk), gl::kOffsetZero,
-            &dstData, nullptr, dstFormat.id));
+            &dstData, dstFormat.id));
 
         // Source and destination data is tightly packed
         GLuint srcDataRowPitch = sourceBox.width * srcFormat.pixelBytes;
@@ -3156,8 +3120,7 @@ angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
         ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
             contextVk, mipAllocationSize,
             gl::ImageIndex::MakeFromType(mState.getType(), currentMipLevel.get(), layer),
-            mipLevelExtents, gl::Offset(), &destData, contextVk->getStagingBuffer(),
-            sourceFormat.id));
+            mipLevelExtents, gl::Offset(), &destData, sourceFormat.id));
 
         // Generate the mipmap into that new buffer
         sourceFormat.mipGenerationFunction(

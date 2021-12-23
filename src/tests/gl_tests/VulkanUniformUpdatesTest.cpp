@@ -77,14 +77,6 @@ class VulkanUniformUpdatesTest : public ANGLETest
             kMaxSetsMultiplierForTesting);
     }
 
-    static constexpr size_t kTextureStagingBufferSizeForTesting = 128;
-
-    void limitTextureStagingBufferSize(GLuint texture)
-    {
-        rx::TextureVk *textureVk = hackTexture(texture);
-        textureVk->overrideStagingBufferSizeForTesting(kTextureStagingBufferSizeForTesting);
-    }
-
   private:
     EGLContext mLastContext;
     uint32_t mMaxSetsPerPool;
@@ -416,7 +408,6 @@ TEST_P(VulkanUniformUpdatesTest, TextureStagingBufferRecycling)
 
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex);
-    limitTextureStagingBufferSize(tex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
