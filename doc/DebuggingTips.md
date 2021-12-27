@@ -335,19 +335,8 @@ Canary.
 #### macOS
 
 1. Download and install [Google Chrome Canary](https://www.google.com/chrome/canary/).
-2. Clear all attributes.
-   ```
-   % xattr -cr /Applications/Google\ Chrome\ Canary.app
-   ```
-3. Build ANGLE x64 or arm64, Release.
-4. Replace ANGLE libraries, adjusting paths if needed.
-   ```
-   % cp angle/out/Release/{libEGL.dylib,libGLESv2.dylib} /Applications/Google\ Chrome\ Canary.app/Contents/Frameworks/Google\ Chrome\ Framework.framework/Libraries
-   ```
-5. Re-sign the application bundle.
-   ```
-   % codesign --force --sign - --deep /Applications/Google\ Chrome\ Canary.app
-   ```
+2. Build ANGLE for the running platform; GN args should contain `is_debug = false`.
+3. Run `./scripts/update_chrome_angle.py` to replace Canary's ANGLE with your custom ANGLE.
 
 ### Usage
 
