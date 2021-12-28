@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '0635acc4de22525462cfd300ae767cadd26211f6',
+  'chromium_revision': 'd09758fa672c2975fd21a1d60a58f777f330f0e5',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@5396a95e1197928c20cff852b6fea3bf3ccd2f4e',
+    'url': '{chromium_git}/chromium/src/build.git@462a82df25a9b1abe8e9ca21d7aadbb50983c1cb',
     'condition': 'not build_with_chromium',
   },
 
@@ -504,7 +504,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/turbine',
-              'version': 'RGxvdzLaS73gQOXCTgq7CWKsqCgrXDPPL0Pcxz6oGbQC',
+              'version': 'tJ3VP1_iZhYyYREs6I6YHVZeA5CN6drLhywrF_DFVh0C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
