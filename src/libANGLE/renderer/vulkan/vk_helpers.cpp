@@ -3950,12 +3950,21 @@ angle::Result BufferHelper::initForVertexConversion(ContextVk *contextVk,
 
     if (valid())
     {
+        // If size is big enough and it is idle, then just reuse the existing buffer.
         if (size <= getSize() &&
-            (hostVisibility == MemoryHostVisibility::Visible) == isHostVisible() &&
-            !isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
+            (hostVisibility == MemoryHostVisibility::Visible) == isHostVisible())
         {
-            // If size is big enough and it is idle, then just reuse the existing buffer
-            return angle::Result::Continue;
+            if (!isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
+            {
+                initializeBarrierTracker(contextVk);
+                return angle::Result::Continue;
+            }
+            else if (hostVisibility == MemoryHostVisibility::NonVisible)
+            {
+                // For device local buffer, we can reuse the buffer even if it is still GPU busy.
+                // The memory barrier should take care of this.
+                return angle::Result::Continue;
+            }
         }
 
         release(renderer);
