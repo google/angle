@@ -8772,7 +8772,6 @@ TEST_P(TextureCubeTestES3, CubeMapPixelUnpackBuffer)
         R"(#version 300 es
         precision mediump float;
         out vec4 color;
-        uniform float uLod;
         uniform samplerCube uTex;
         void main(){
             color = texture(uTex, vec3(1.0));
