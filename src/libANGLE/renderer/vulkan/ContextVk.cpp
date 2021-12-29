@@ -5363,7 +5363,13 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
         activeTexture.sampler    = &samplerHelper;
         activeTexture.srgbDecode = samplerState.getSRGBDecode();
 
-        if (activeTexture.srgbDecode == GL_SKIP_DECODE_EXT)
+        // GL_EXT_texture_sRGB_decode
+        //   The new parameter, TEXTURE_SRGB_DECODE_EXT controls whether the
+        //   decoding happens at sample time. It only applies to textures with an
+        //   internal format that is sRGB and is ignored for all other textures.
+        ASSERT(textureVk->getImage().valid());
+        if (textureVk->getImage().getActualFormat().isSRGB &&
+            activeTexture.srgbDecode == GL_SKIP_DECODE_EXT)
         {
             // Make sure we use the MUTABLE bit for the storage. Because the "skip decode" is a
             // Sampler state we might not have caught this setting in TextureVk::syncState.

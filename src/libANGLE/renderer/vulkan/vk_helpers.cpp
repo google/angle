@@ -6621,12 +6621,13 @@ void ImageHelper::stageSubresourceUpdateFromImage(RefCounted<ImageHelper> *image
                                                   const VkImageType imageType)
 {
     gl::LevelIndex updateLevelGL(index.getLevelIndex());
+    VkImageAspectFlags imageAspectFlags = vk::GetFormatAspectFlags(image->get().getActualFormat());
 
     VkImageCopy copyToImage               = {};
-    copyToImage.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    copyToImage.srcSubresource.aspectMask = imageAspectFlags;
     copyToImage.srcSubresource.mipLevel   = srcMipLevel.get();
     copyToImage.srcSubresource.layerCount = index.getLayerCount();
-    copyToImage.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    copyToImage.dstSubresource.aspectMask = imageAspectFlags;
     copyToImage.dstSubresource.mipLevel   = updateLevelGL.get();
 
     if (imageType == VK_IMAGE_TYPE_3D)
