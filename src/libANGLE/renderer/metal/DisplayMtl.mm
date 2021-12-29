@@ -967,6 +967,9 @@ void DisplayMtl::initializeExtensions() const
         // GL_ARB_sync
         mNativeExtensions.syncARB = true;
     }
+
+    // GL_KHR_parallel_shader_compile
+    mNativeExtensions.parallelShaderCompileKHR = true;
 }
 
 void DisplayMtl::initializeTextureCaps() const

@@ -1809,6 +1809,9 @@ void GenerateCaps(const FunctionsGL *functions,
         extensions->framebufferFlipYMESA = true;
     }
 
+    // GL_KHR_parallel_shader_compile
+    extensions->parallelShaderCompileKHR = true;
+
     // PVRTC1 textures must be squares on Apple platforms.
     if (IsApple())
     {
