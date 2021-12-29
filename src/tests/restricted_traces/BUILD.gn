@@ -27,29 +27,9 @@ angle_trace_fixture("angle_restricted_trace_fixture") {
   public_configs = [ "$angle_root:no_gl_prototypes" ]
 }
 
-_trace_json = read_file("restricted_traces.json", "json")
-_trace_targets = []
-
-foreach(_trace_and_version, _trace_json.traces) {
-  _trace_and_version_arr = []
-  _trace_and_version_arr = string_split(_trace_and_version)
-  _trace = _trace_and_version_arr[0]
-  _trace_json_path = "$_trace/$_trace.json"
-  _trace_data = []
-  _trace_data = read_file(_trace_json_path, "json")
-  _target = "angle_restricted_trace_$_trace"
-
-  angle_trace(_target) {
-    sources = rebase_path(_trace_data.TraceFiles, ".", _trace)
-
-    data = [
-      "$_trace/$_trace.json",
-      "$_trace/$_trace.angledata.gz",
-    ]
-    fixture = ":angle_restricted_trace_fixture"
-  }
-
-  _trace_targets += [ ":$_target" ]
+angle_trace_library("angle_restricted_trace") {
+  json_path = "restricted_traces.json"
+  trace_fixture = ":angle_restricted_trace_fixture"
 }
 
 angle_shared_library("angle_restricted_traces") {
@@ -59,7 +39,7 @@ angle_shared_library("angle_restricted_traces") {
 
   data = [ "restricted_traces.json" ]
 
-  data_deps = _trace_targets
+  data_deps = [ ":angle_restricted_trace" ]
   defines = [ "ANGLE_TRACE_IMPLEMENTATION" ]
 
   deps = [
