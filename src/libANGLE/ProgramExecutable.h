@@ -217,6 +217,7 @@ class ProgramExecutable final : public angle::Subject
     const RangeUI &getDefaultUniformRange() const { return mDefaultUniformRange; }
     const RangeUI &getSamplerUniformRange() const { return mSamplerUniformRange; }
     const RangeUI &getImageUniformRange() const { return mImageUniformRange; }
+    const RangeUI &getAtomicCounterUniformRange() const { return mAtomicCounterUniformRange; }
     const RangeUI &getFragmentInoutRange() const { return mFragmentInoutRange; }
     const std::vector<TransformFeedbackVarying> &getLinkedTransformFeedbackVaryings() const
     {
@@ -427,13 +428,14 @@ class ProgramExecutable final : public angle::Subject
     std::vector<LinkedUniform> mUniforms;
     RangeUI mDefaultUniformRange;
     RangeUI mSamplerUniformRange;
+    RangeUI mImageUniformRange;
+    RangeUI mAtomicCounterUniformRange;
     std::vector<InterfaceBlock> mUniformBlocks;
 
     // For faster iteration on the blocks currently being bound.
     UniformBlockBindingMask mActiveUniformBlockBindings;
 
     std::vector<AtomicCounterBuffer> mAtomicCounterBuffers;
-    RangeUI mImageUniformRange;
     std::vector<InterfaceBlock> mShaderStorageBlocks;
     RangeUI mFragmentInoutRange;
 

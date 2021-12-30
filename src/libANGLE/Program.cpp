@@ -1221,7 +1221,6 @@ ProgramState::ProgramState()
     : mLabel(),
       mAttachedShaders{},
       mLocationsUsedForXfbExtension(0),
-      mAtomicCounterUniformRange(0, 0),
       mBinaryRetrieveableHint(false),
       mSeparable(false),
       mNumViews(-1),
@@ -3616,7 +3615,7 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
         --low;
     }
 
-    mState.mAtomicCounterUniformRange = RangeUI(low, high);
+    mState.mExecutable->mAtomicCounterUniformRange = RangeUI(low, high);
 
     highIter = lowIter;
     high     = low;
@@ -3685,7 +3684,7 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
 
 bool Program::linkAtomicCounterBuffers()
 {
-    for (unsigned int index : mState.mAtomicCounterUniformRange)
+    for (unsigned int index : mState.mExecutable->getAtomicCounterUniformRange())
     {
         auto &uniform                      = mState.mExecutable->mUniforms[index];
         uniform.blockInfo.offset           = uniform.offset;
@@ -4294,9 +4293,6 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
                   "driver.";
     }
 
-    stream.writeInt(mState.getAtomicCounterUniformRange().low());
-    stream.writeInt(mState.getAtomicCounterUniformRange().high());
-
     if (context->getShareGroup()->getFrameCaptureShared()->enabled())
     {
         // Serialize the source for each stage for re-use during capture
@@ -4387,10 +4383,6 @@ angle::Result Program::deserialize(const Context *context,
         LoadBufferVariable(&stream, &bufferVariable);
         mState.mBufferVariables.push_back(bufferVariable);
     }
-
-    unsigned int atomicCounterRangeLow  = stream.readInt<unsigned int>();
-    unsigned int atomicCounterRangeHigh = stream.readInt<unsigned int>();
-    mState.mAtomicCounterUniformRange   = RangeUI(atomicCounterRangeLow, atomicCounterRangeHigh);
 
     static_assert(static_cast<unsigned long>(ShaderType::EnumCount) <= sizeof(unsigned long) * 8,
                   "Too many shader types");

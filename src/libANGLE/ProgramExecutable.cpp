@@ -163,6 +163,7 @@ ProgramExecutable::ProgramExecutable()
       mDefaultUniformRange(0, 0),
       mSamplerUniformRange(0, 0),
       mImageUniformRange(0, 0),
+      mAtomicCounterUniformRange(0, 0),
       mFragmentInoutRange(0, 0),
       mPipelineHasUniformBuffers(false),
       mPipelineHasStorageBuffers(false),
@@ -210,10 +211,11 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mUniforms(other.mUniforms),
       mDefaultUniformRange(other.mDefaultUniformRange),
       mSamplerUniformRange(other.mSamplerUniformRange),
+      mImageUniformRange(other.mImageUniformRange),
+      mAtomicCounterUniformRange(other.mAtomicCounterUniformRange),
       mUniformBlocks(other.mUniformBlocks),
       mActiveUniformBlockBindings(other.mActiveUniformBlockBindings),
       mAtomicCounterBuffers(other.mAtomicCounterBuffers),
-      mImageUniformRange(other.mImageUniformRange),
       mShaderStorageBlocks(other.mShaderStorageBlocks),
       mFragmentInoutRange(other.mFragmentInoutRange),
       mPipelineHasUniformBuffers(other.mPipelineHasUniformBuffers),
@@ -259,6 +261,11 @@ void ProgramExecutable::reset()
     mYUVOutput = false;
     mSamplerBindings.clear();
     mImageBindings.clear();
+
+    mDefaultUniformRange       = RangeUI(0, 0);
+    mSamplerUniformRange       = RangeUI(0, 0);
+    mImageUniformRange         = RangeUI(0, 0);
+    mAtomicCounterUniformRange = RangeUI(0, 0);
 
     mPipelineHasUniformBuffers       = false;
     mPipelineHasStorageBuffers       = false;
@@ -480,6 +487,10 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         mImageBindings.emplace_back(imageBinding);
     }
 
+    unsigned int atomicCounterRangeLow  = stream->readInt<unsigned int>();
+    unsigned int atomicCounterRangeHigh = stream->readInt<unsigned int>();
+    mAtomicCounterUniformRange          = RangeUI(atomicCounterRangeLow, atomicCounterRangeHigh);
+
     // These values are currently only used by PPOs, so only load them when the program is marked
     // separable to save memory.
     if (isSeparable)
@@ -664,6 +675,9 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
             stream->writeInt(imageBinding.boundImageUnits[i]);
         }
     }
+
+    stream->writeInt(getAtomicCounterUniformRange().low());
+    stream->writeInt(getAtomicCounterUniformRange().high());
 
     // These values are currently only used by PPOs, so only save them when the program is marked
     // separable to save memory.
