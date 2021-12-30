@@ -473,11 +473,29 @@ angle::Result ProgramPipeline::link(const Context *context)
 
     mState.mExecutable->reset();
 
+    InfoLog &infoLog = mState.mExecutable->getInfoLog();
+    infoLog.reset();
+
+    // Build shader variable uniforms map for gl::UniformLinker.
+    ShaderMap<std::vector<sh::ShaderVariable>> shaderUniforms;
+    for (ShaderType shaderType : mState.mExecutable->mLinkedShaderStages)
+    {
+        for (const LinkedUniform &uniform : mState.mPrograms[shaderType]->getUniforms())
+        {
+            shaderUniforms[shaderType].push_back(uniform);
+        }
+    }
+
+    ProgramAliasedBindings noBindings;
+    GLuint combinedImageUniforms = 0;
+    if (!mState.mExecutable->linkUniforms(context, shaderUniforms, infoLog, noBindings,
+                                          &combinedImageUniforms, nullptr, nullptr))
+    {
+        return angle::Result::Stop;
+    }
+
     if (mState.mExecutable->hasLinkedShaderStage(gl::ShaderType::Vertex))
     {
-        InfoLog &infoLog = mState.mExecutable->getInfoLog();
-        infoLog.reset();
-
         if (!linkVaryings(infoLog))
         {
             return angle::Result::Stop;
@@ -491,8 +509,7 @@ angle::Result ProgramPipeline::link(const Context *context)
         Program *fragmentShaderProgram = getShaderProgram(ShaderType::Fragment);
         if (fragmentShaderProgram)
         {
-            // We should also be validating image uniforms and SSBOs.
-            const int combinedImageUniforms             = 0;
+            // We should also be validating SSBOs.
             const int combinedShaderStorageBlocks       = 0;
             const ProgramExecutable &fragmentExecutable = fragmentShaderProgram->getExecutable();
             if (!mState.mExecutable->linkValidateOutputVariables(

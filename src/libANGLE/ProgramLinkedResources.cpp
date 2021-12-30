@@ -85,41 +85,6 @@ LinkMismatchError LinkValidateUniforms(const sh::ShaderVariable &uniform1,
     return LinkMismatchError::NO_MISMATCH;
 }
 
-using ShaderUniform = std::pair<ShaderType, const sh::ShaderVariable *>;
-
-bool ValidateGraphicsUniformsPerShader(Shader *shaderToLink,
-                                       bool extendLinkedUniforms,
-                                       std::map<std::string, ShaderUniform> *linkedUniforms,
-                                       InfoLog &infoLog)
-{
-    ASSERT(shaderToLink && linkedUniforms);
-
-    for (const sh::ShaderVariable &uniform : shaderToLink->getUniforms())
-    {
-        const auto &entry = linkedUniforms->find(uniform.name);
-        if (entry != linkedUniforms->end())
-        {
-            const sh::ShaderVariable &linkedUniform = *(entry->second.second);
-            std::string mismatchedStructFieldName;
-            LinkMismatchError linkError =
-                LinkValidateUniforms(uniform, linkedUniform, &mismatchedStructFieldName);
-            if (linkError != LinkMismatchError::NO_MISMATCH)
-            {
-                LogLinkMismatch(infoLog, uniform.name, "uniform", linkError,
-                                mismatchedStructFieldName, entry->second.first,
-                                shaderToLink->getType());
-                return false;
-            }
-        }
-        else if (extendLinkedUniforms)
-        {
-            (*linkedUniforms)[uniform.name] = std::make_pair(shaderToLink->getType(), &uniform);
-        }
-    }
-
-    return true;
-}
-
 GLuint GetMaximumShaderUniformVectors(ShaderType shaderType, const Caps &caps)
 {
     switch (shaderType)
@@ -791,27 +756,36 @@ bool DoShaderVariablesMatch(int frontShaderVersion,
 }
 }  // anonymous namespace
 
-UniformLinker::UniformLinker(const ProgramState &state) : mState(state) {}
+UniformLinker::UniformLinker(const ShaderBitSet &activeShaderStages,
+                             const ShaderMap<std::vector<sh::ShaderVariable>> &shaderUniforms)
+    : mActiveShaderStages(activeShaderStages), mShaderUniforms(shaderUniforms)
+{}
 
 UniformLinker::~UniformLinker() = default;
 
 void UniformLinker::getResults(std::vector<LinkedUniform> *uniforms,
-                               std::vector<UnusedUniform> *unusedUniforms,
-                               std::vector<VariableLocation> *uniformLocations)
+                               std::vector<UnusedUniform> *unusedUniformsOutOrNull,
+                               std::vector<VariableLocation> *uniformLocationsOutOrNull)
 {
     uniforms->swap(mUniforms);
-    unusedUniforms->swap(mUnusedUniforms);
-    uniformLocations->swap(mUniformLocations);
+
+    if (unusedUniformsOutOrNull)
+    {
+        unusedUniformsOutOrNull->swap(mUnusedUniforms);
+    }
+
+    if (uniformLocationsOutOrNull)
+    {
+        uniformLocationsOutOrNull->swap(mUniformLocations);
+    }
 }
 
 bool UniformLinker::link(const Caps &caps,
                          InfoLog &infoLog,
                          const ProgramAliasedBindings &uniformLocationBindings)
 {
-    if (mState.getAttachedShader(ShaderType::Vertex) &&
-        mState.getAttachedShader(ShaderType::Fragment))
+    if (mActiveShaderStages[ShaderType::Vertex] && mActiveShaderStages[ShaderType::Fragment])
     {
-        ASSERT(mState.getAttachedShader(ShaderType::Compute) == nullptr);
         if (!validateGraphicsUniforms(infoLog))
         {
             return false;
@@ -843,28 +817,57 @@ bool UniformLinker::validateGraphicsUniforms(InfoLog &infoLog) const
     // Check that uniforms defined in the graphics shaders are identical
     std::map<std::string, ShaderUniform> linkedUniforms;
 
-    for (const ShaderType shaderType : kAllGraphicsShaderTypes)
+    for (const ShaderType shaderType : mActiveShaderStages)
     {
-        Shader *currentShader = mState.getAttachedShader(shaderType);
-        if (currentShader)
+        if (shaderType == ShaderType::Vertex)
         {
-            if (shaderType == ShaderType::Vertex)
+            for (const sh::ShaderVariable &vertexUniform : mShaderUniforms[ShaderType::Vertex])
             {
-                for (const sh::ShaderVariable &vertexUniform : currentShader->getUniforms())
-                {
-                    linkedUniforms[vertexUniform.name] =
-                        std::make_pair(ShaderType::Vertex, &vertexUniform);
-                }
+                linkedUniforms[vertexUniform.name] =
+                    std::make_pair(ShaderType::Vertex, &vertexUniform);
             }
-            else
+        }
+        else
+        {
+            bool isLastShader = (shaderType == ShaderType::Fragment);
+            if (!validateGraphicsUniformsPerShader(shaderType, !isLastShader, &linkedUniforms,
+                                                   infoLog))
             {
-                bool isLastShader = (shaderType == ShaderType::Fragment);
-                if (!ValidateGraphicsUniformsPerShader(currentShader, !isLastShader,
-                                                       &linkedUniforms, infoLog))
-                {
-                    return false;
-                }
+                return false;
             }
+        }
+    }
+
+    return true;
+}
+
+bool UniformLinker::validateGraphicsUniformsPerShader(
+    ShaderType shaderToLink,
+    bool extendLinkedUniforms,
+    std::map<std::string, ShaderUniform> *linkedUniforms,
+    InfoLog &infoLog) const
+{
+    ASSERT(mActiveShaderStages[shaderToLink] && linkedUniforms);
+
+    for (const sh::ShaderVariable &uniform : mShaderUniforms[shaderToLink])
+    {
+        const auto &entry = linkedUniforms->find(uniform.name);
+        if (entry != linkedUniforms->end())
+        {
+            const sh::ShaderVariable &linkedUniform = *(entry->second.second);
+            std::string mismatchedStructFieldName;
+            LinkMismatchError linkError =
+                LinkValidateUniforms(uniform, linkedUniform, &mismatchedStructFieldName);
+            if (linkError != LinkMismatchError::NO_MISMATCH)
+            {
+                LogLinkMismatch(infoLog, uniform.name, "uniform", linkError,
+                                mismatchedStructFieldName, entry->second.first, shaderToLink);
+                return false;
+            }
+        }
+        else if (extendLinkedUniforms)
+        {
+            (*linkedUniforms)[uniform.name] = std::make_pair(shaderToLink, &uniform);
         }
     }
 
@@ -1059,7 +1062,7 @@ void UniformLinker::pruneUnusedUniforms()
 }
 
 bool UniformLinker::flattenUniformsAndCheckCapsForShader(
-    Shader *shader,
+    ShaderType shaderType,
     const Caps &caps,
     std::vector<LinkedUniform> &samplerUniforms,
     std::vector<LinkedUniform> &imageUniforms,
@@ -1069,9 +1072,9 @@ bool UniformLinker::flattenUniformsAndCheckCapsForShader(
     InfoLog &infoLog)
 {
     ShaderUniformCount shaderUniformCount;
-    for (const sh::ShaderVariable &uniform : shader->getUniforms())
+    for (const sh::ShaderVariable &uniform : mShaderUniforms[shaderType])
     {
-        FlattenUniformVisitor flattener(shader->getType(), uniform, &mUniforms, &samplerUniforms,
+        FlattenUniformVisitor flattener(shaderType, uniform, &mUniforms, &samplerUniforms,
                                         &imageUniforms, &atomicCounterUniforms,
                                         &inputAttachmentUniforms, &unusedUniforms);
         sh::TraverseShaderVariable(uniform, false, &flattener);
@@ -1088,9 +1091,7 @@ bool UniformLinker::flattenUniformsAndCheckCapsForShader(
         }
     }
 
-    ShaderType shaderType = shader->getType();
-
-    // TODO (jiawei.shao@intel.com): check whether we need finer-grained component counting
+    // This code does not do fine-grained component counting.
     GLuint maxUniformVectorsCount = GetMaximumShaderUniformVectors(shaderType, caps);
     if (shaderUniformCount.vectorCount > maxUniformVectorsCount)
     {
@@ -1145,15 +1146,9 @@ bool UniformLinker::flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoL
     std::vector<LinkedUniform> inputAttachmentUniforms;
     std::vector<UnusedUniform> unusedUniforms;
 
-    for (const ShaderType shaderType : AllShaderTypes())
+    for (const ShaderType shaderType : mActiveShaderStages)
     {
-        Shader *shader = mState.getAttachedShader(shaderType);
-        if (!shader)
-        {
-            continue;
-        }
-
-        if (!flattenUniformsAndCheckCapsForShader(shader, caps, samplerUniforms, imageUniforms,
+        if (!flattenUniformsAndCheckCapsForShader(shaderType, caps, samplerUniforms, imageUniforms,
                                                   atomicCounterUniforms, inputAttachmentUniforms,
                                                   unusedUniforms, infoLog))
         {
@@ -1953,4 +1948,5 @@ bool LinkValidateBuiltInVaryings(const std::vector<sh::ShaderVariable> &outputVa
     }
     return true;
 }
+
 }  // namespace gl

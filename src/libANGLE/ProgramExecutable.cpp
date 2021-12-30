@@ -1461,4 +1461,168 @@ bool ProgramExecutable::linkValidateOutputVariables(
     return true;
 }
 
+bool ProgramExecutable::linkUniforms(
+    const Context *context,
+    const ShaderMap<std::vector<sh::ShaderVariable>> &shaderUniforms,
+    InfoLog &infoLog,
+    const ProgramAliasedBindings &uniformLocationBindings,
+    GLuint *combinedImageUniformsCountOut,
+    std::vector<UnusedUniform> *unusedUniformsOutOrNull,
+    std::vector<VariableLocation> *uniformLocationsOutOrNull)
+{
+    UniformLinker linker(mLinkedShaderStages, shaderUniforms);
+    if (!linker.link(context->getCaps(), infoLog, uniformLocationBindings))
+    {
+        return false;
+    }
+
+    linker.getResults(&mUniforms, unusedUniformsOutOrNull, uniformLocationsOutOrNull);
+
+    linkSamplerAndImageBindings(combinedImageUniformsCountOut);
+
+    if (!linkAtomicCounterBuffers())
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
+{
+    ASSERT(combinedImageUniforms);
+
+    // Iterate over mExecutable->mUniforms from the back, and find the range of subpass inputs,
+    // atomic counters, images and samplers in that order.
+    auto highIter = mUniforms.rbegin();
+    auto lowIter  = highIter;
+
+    unsigned int high = static_cast<unsigned int>(mUniforms.size());
+    unsigned int low  = high;
+
+    // Note that uniform block uniforms are not yet appended to this list.
+    ASSERT(mUniforms.empty() || highIter->isAtomicCounter() || highIter->isImage() ||
+           highIter->isSampler() || highIter->isInDefaultBlock() || highIter->isFragmentInOut);
+
+    for (; lowIter != mUniforms.rend() && lowIter->isFragmentInOut; ++lowIter)
+    {
+        --low;
+    }
+
+    mFragmentInoutRange = RangeUI(low, high);
+
+    highIter = lowIter;
+    high     = low;
+
+    for (; lowIter != mUniforms.rend() && lowIter->isAtomicCounter(); ++lowIter)
+    {
+        --low;
+    }
+
+    mAtomicCounterUniformRange = RangeUI(low, high);
+
+    highIter = lowIter;
+    high     = low;
+
+    for (; lowIter != mUniforms.rend() && lowIter->isImage(); ++lowIter)
+    {
+        --low;
+    }
+
+    mImageUniformRange                       = RangeUI(low, high);
+    *combinedImageUniforms                   = 0u;
+    std::vector<ImageBinding> &imageBindings = mImageBindings;
+    // If uniform is a image type, insert it into the mImageBindings array.
+    for (unsigned int imageIndex : mImageUniformRange)
+    {
+        // ES3.1 (section 7.6.1) and GLSL ES3.1 (section 4.4.5), Uniform*i{v} commands
+        // cannot load values into a uniform defined as an image. if declare without a
+        // binding qualifier, any uniform image variable (include all elements of
+        // unbound image array) should be bound to unit zero.
+        auto &imageUniform      = mUniforms[imageIndex];
+        TextureType textureType = ImageTypeToTextureType(imageUniform.type);
+        const GLuint arraySize  = imageUniform.isArray() ? imageUniform.arraySizes[0] : 1u;
+
+        if (imageUniform.binding == -1)
+        {
+            imageBindings.emplace_back(
+                ImageBinding(imageUniform.getBasicTypeElementCount(), textureType));
+        }
+        else
+        {
+            // The arrays of arrays are flattened to arrays, it needs to record the array offset for
+            // the correct binding image unit.
+            imageBindings.emplace_back(
+                ImageBinding(imageUniform.binding + imageUniform.parentArrayIndex() * arraySize,
+                             imageUniform.getBasicTypeElementCount(), textureType));
+        }
+
+        *combinedImageUniforms += imageUniform.activeShaderCount() * arraySize;
+    }
+
+    highIter = lowIter;
+    high     = low;
+
+    for (; lowIter != mUniforms.rend() && lowIter->isSampler(); ++lowIter)
+    {
+        --low;
+    }
+
+    mSamplerUniformRange = RangeUI(low, high);
+
+    // If uniform is a sampler type, insert it into the mSamplerBindings array.
+    for (unsigned int samplerIndex : mSamplerUniformRange)
+    {
+        const auto &samplerUniform = mUniforms[samplerIndex];
+        TextureType textureType    = SamplerTypeToTextureType(samplerUniform.type);
+        GLenum samplerType         = samplerUniform.typeInfo->type;
+        unsigned int elementCount  = samplerUniform.getBasicTypeElementCount();
+        SamplerFormat format       = samplerUniform.typeInfo->samplerFormat;
+        mSamplerBindings.emplace_back(textureType, samplerType, format, elementCount);
+    }
+
+    // Whatever is left constitutes the default uniforms.
+    mDefaultUniformRange = RangeUI(0, low);
+}
+
+bool ProgramExecutable::linkAtomicCounterBuffers()
+{
+    for (unsigned int index : mAtomicCounterUniformRange)
+    {
+        auto &uniform                      = mUniforms[index];
+        uniform.blockInfo.offset           = uniform.offset;
+        uniform.blockInfo.arrayStride      = (uniform.isArray() ? 4 : 0);
+        uniform.blockInfo.matrixStride     = 0;
+        uniform.blockInfo.isRowMajorMatrix = false;
+
+        bool found = false;
+        for (unsigned int bufferIndex = 0; bufferIndex < getActiveAtomicCounterBufferCount();
+             ++bufferIndex)
+        {
+            auto &buffer = mAtomicCounterBuffers[bufferIndex];
+            if (buffer.binding == uniform.binding)
+            {
+                buffer.memberIndexes.push_back(index);
+                uniform.bufferIndex = bufferIndex;
+                found               = true;
+                buffer.unionReferencesWith(uniform);
+                break;
+            }
+        }
+        if (!found)
+        {
+            AtomicCounterBuffer atomicCounterBuffer;
+            atomicCounterBuffer.binding = uniform.binding;
+            atomicCounterBuffer.memberIndexes.push_back(index);
+            atomicCounterBuffer.unionReferencesWith(uniform);
+            mAtomicCounterBuffers.push_back(atomicCounterBuffer);
+            uniform.bufferIndex = static_cast<int>(getActiveAtomicCounterBufferCount() - 1);
+        }
+    }
+
+    // TODO(jie.a.chen@intel.com): Count each atomic counter buffer to validate against
+    // gl_Max[Vertex|Fragment|Compute|Geometry|Combined]AtomicCounterBuffers.
+
+    return true;
+}
 }  // namespace gl

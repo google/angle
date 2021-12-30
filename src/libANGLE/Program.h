@@ -632,6 +632,7 @@ class Program final : public LabeledObject, public angle::Subject
     GLint getActiveUniformBlockMaxNameLength() const;
     GLint getActiveShaderStorageBlockMaxNameLength() const;
 
+    const std::vector<LinkedUniform> &getUniforms() const { return mState.getUniforms(); }
     GLuint getUniformBlockIndex(const std::string &name) const;
     GLuint getShaderStorageBlockIndex(const std::string &name) const;
 
@@ -804,14 +805,10 @@ class Program final : public LabeledObject, public angle::Subject
                              GLuint *combinedShaderStorageBlocksCount);
     bool linkVaryings(InfoLog &infoLog) const;
 
-    bool linkUniforms(const Caps &caps,
-                      const Version &version,
-                      InfoLog &infoLog,
-                      const ProgramAliasedBindings &uniformLocationBindings,
-                      GLuint *combinedImageUniformsCount,
-                      std::vector<UnusedUniform> *unusedUniforms);
-    void linkSamplerAndImageBindings(GLuint *combinedImageUniformsCount);
-    bool linkAtomicCounterBuffers();
+    bool linkUniforms(const Context *context,
+                      std::vector<UnusedUniform> *unusedUniformsOutOrNull,
+                      GLuint *combinedImageUniformsOut,
+                      InfoLog &infoLog);
 
     void updateLinkedShaderStages();
 
