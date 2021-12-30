@@ -32,7 +32,7 @@ EXIT_FAILURE = 1
 
 
 def load_trace_json(trace):
-    json_file_name = '%s/%s.json' % (trace, trace)
+    json_file_name = os.path.join(get_script_dir(), '%s', '%s.json') % (trace, trace)
     return read_json(json_file_name)
 
 
