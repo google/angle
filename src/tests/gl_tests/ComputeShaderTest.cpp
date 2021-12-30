@@ -3843,6 +3843,7 @@ void main(void) {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     EXPECT_GL_NO_ERROR();
 
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     glUseProgram(csProgram);
     glDispatchCompute(1, 1, 1);
     glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
@@ -4859,6 +4860,194 @@ void main()
 
         glUnmapBuffer(GL_TEXTURE_BUFFER);
         EXPECT_GL_NO_ERROR();
+    }
+}
+
+// Test one texture sampled by fragment shader, then bind it to image, followed by compute
+// shader load this image, and fragment shader read it again.
+TEST_P(ComputeShaderTest, DrawDispatchImageReadDraw)
+{
+
+    constexpr char kVSSource[] = R"(#version 310 es
+in vec4 a_position;
+out vec2 v_texCoord;
+
+void main()
+{
+    gl_Position = vec4(a_position.xy, 0.0, 1.0);
+    v_texCoord = a_position.xy * 0.5 + vec2(0.5);
+})";
+
+    constexpr char kFSSource[] = R"(#version 310 es
+precision mediump float;
+uniform sampler2D u_tex2D;
+in vec2 v_texCoord;
+out vec4 out_FragColor;
+void main()
+{
+    out_FragColor = texture(u_tex2D, v_texCoord);
+})";
+
+    constexpr char kCSSource[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba32f, binding=0) readonly  uniform highp image2D uIn;
+layout(std140, binding=0) buffer buf {
+    vec4 outData;
+};
+
+void main()
+{
+    outData = imageLoad(uIn, ivec2(gl_LocalInvocationID.xy));
+})";
+
+    GLfloat initValue[4] = {1.0, 1.0, 1.0, 1.0};
+
+    // Step 1: Set up a simple 2D Texture rendering loop.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_FLOAT, initValue);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLBuffer vertexBuffer;
+    GLfloat vertices[] = {-1, -1, 1, -1, -1, 1, 1, 1};
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+    GLBuffer ssbo;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 16, nullptr, GL_STREAM_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    ANGLE_GL_PROGRAM(program, kVSSource, kFSSource);
+    glUseProgram(program);
+
+    GLint posLoc = glGetAttribLocation(program, "a_position");
+    ASSERT_NE(-1, posLoc);
+
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+    ASSERT_GL_NO_ERROR();
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: load this image through compute
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram, kCSSource);
+    glUseProgram(csProgram);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    const GLfloat *ptr = reinterpret_cast<const GLfloat *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 16, GL_MAP_READ_BIT));
+
+    EXPECT_GL_NO_ERROR();
+    for (unsigned int idx = 0; idx < 4; idx++)
+    {
+        EXPECT_EQ(1.0, *(ptr + idx));
+    }
+
+    // Step3: use the first program sample texture again
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::white);
+}
+
+// Test fragment shader read a image, followed by compute shader sample it.
+TEST_P(ComputeShaderTest, FSReadImageThenCSSample)
+{
+    constexpr char kVSSource[] = R"(#version 310 es
+in vec4 a_position;
+out vec2 v_texCoord;
+void main()
+{
+    gl_Position = vec4(a_position.xy, 0.0, 1.0);
+    v_texCoord = a_position.xy * 0.5 + vec2(0.5);;
+})";
+
+    constexpr char kFSSource[] = R"(#version 310 es
+precision mediump float;
+layout(rgba32f, binding=0) readonly  uniform highp image2D uIn;
+in vec2 v_texCoord;
+out vec4 out_FragColor;
+
+void main()
+{
+    out_FragColor = imageLoad(uIn, ivec2(v_texCoord));
+})";
+
+    constexpr char kCSSource[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(std140, binding=0) buffer buf {
+    vec4 outData;
+};
+uniform sampler2D u_tex2D;
+void main()
+{
+    outData = texture(u_tex2D, vec2(gl_LocalInvocationID.xy));
+})";
+
+    GLfloat initValue[4] = {1.0, 1.0, 1.0, 1.0};
+
+    // Step 1: Set up a simple 2D Texture rendering loop.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_FLOAT, initValue);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLBuffer vertexBuffer;
+    GLfloat vertices[] = {-1, -1, 1, -1, -1, 1, 1, 1};
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+    GLBuffer ssbo;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 16, nullptr, GL_STREAM_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    ANGLE_GL_PROGRAM(program, kVSSource, kFSSource);
+    glUseProgram(program);
+
+    GLint posLoc = glGetAttribLocation(program, "a_position");
+    ASSERT_NE(-1, posLoc);
+
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+    ASSERT_GL_NO_ERROR();
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: load this image through compute
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram, kCSSource);
+    glUseProgram(csProgram);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+
+    glDispatchCompute(1, 1, 1);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    const GLfloat *ptr = reinterpret_cast<const GLfloat *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 16, GL_MAP_READ_BIT));
+
+    EXPECT_GL_NO_ERROR();
+    for (unsigned int idx = 0; idx < 4; idx++)
+    {
+        EXPECT_EQ(1.0, *(ptr + idx));
     }
 }
 

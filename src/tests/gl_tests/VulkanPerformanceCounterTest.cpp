@@ -4527,6 +4527,232 @@ TEST_P(VulkanPerformanceCounterTest, UniformUpdatesHitDescriptorSetCache)
     EXPECT_EQ(expectedCacheMisses, actualCacheMisses);
 }
 
+// Test one texture sampled by fragment shader, then image load it by compute
+// shader, at last fragment shader do something else.
+TEST_P(VulkanPerformanceCounterTest_ES31, DrawDispatchImageReadDrawWithEndRP)
+{
+
+    constexpr char kVSSource[] = R"(#version 310 es
+in vec4 a_position;
+out vec2 v_texCoord;
+
+void main()
+{
+    gl_Position = vec4(a_position.xy, 0.0, 1.0);
+    v_texCoord = a_position.xy * 0.5 + vec2(0.5);
+})";
+
+    constexpr char kFSSource[] = R"(#version 310 es
+precision mediump float;
+uniform sampler2D u_tex2D;
+in vec2 v_texCoord;
+out vec4 out_FragColor;
+void main()
+{
+    out_FragColor = texture(u_tex2D, v_texCoord);
+})";
+
+    constexpr char kFSSource1[] = R"(#version 310 es
+precision mediump float;
+out vec4 out_FragColor;
+void main()
+{
+    out_FragColor = vec4(1.0);
+})";
+
+    constexpr char kCSSource[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba32f, binding=0) readonly  uniform highp image2D uIn;
+layout(std140, binding=0) buffer buf {
+    vec4 outData;
+};
+
+void main()
+{
+    outData = imageLoad(uIn, ivec2(gl_LocalInvocationID.xy));
+})";
+
+    GLfloat initValue[4] = {1.0, 1.0, 1.0, 1.0};
+
+    // Step 1: Set up a simple 2D Texture rendering loop.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_FLOAT, initValue);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLBuffer vertexBuffer;
+    GLfloat vertices[] = {-1, -1, 1, -1, -1, 1, 1, 1};
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, kVSSource, kFSSource);
+    glUseProgram(program);
+
+    GLint posLoc = glGetAttribLocation(program, "a_position");
+    ASSERT_NE(-1, posLoc);
+
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+    ASSERT_GL_NO_ERROR();
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
+
+    GLBuffer ssbo;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 16, nullptr, GL_STREAM_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    // This is actually suboptimal, and ideally only one render pass should be necessary.
+    uint32_t expectedRenderPassCount = getPerfCounters().renderPasses + 2;
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: load this image through compute
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram, kCSSource);
+    glUseProgram(csProgram);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    const GLfloat *ptr = reinterpret_cast<const GLfloat *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 16, GL_MAP_READ_BIT));
+
+    EXPECT_GL_NO_ERROR();
+    for (unsigned int idx = 0; idx < 4; idx++)
+    {
+        EXPECT_EQ(1.0, *(ptr + idx));
+    }
+
+    // Step3
+    ANGLE_GL_PROGRAM(program2, kVSSource, kFSSource1);
+    glUseProgram(program2);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    uint32_t actualRenderPassCount = getPerfCounters().renderPasses;
+    EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+}
+
+// Test one texture sampled by fragment shader, followed by glReadPixels, then image
+// load it by compute shader, and at last fragment shader do something else.
+TEST_P(VulkanPerformanceCounterTest_ES31, DrawDispatchImageReadDrawWithoutEndRP)
+{
+
+    constexpr char kVSSource[] = R"(#version 310 es
+in vec4 a_position;
+out vec2 v_texCoord;
+
+void main()
+{
+    gl_Position = vec4(a_position.xy, 0.0, 1.0);
+    v_texCoord = a_position.xy * 0.5 + vec2(0.5);
+})";
+
+    constexpr char kFSSource[] = R"(#version 310 es
+precision mediump float;
+uniform sampler2D u_tex2D;
+in vec2 v_texCoord;
+out vec4 out_FragColor;
+void main()
+{
+    out_FragColor = texture(u_tex2D, v_texCoord);
+})";
+
+    constexpr char kFSSource1[] = R"(#version 310 es
+precision mediump float;
+out vec4 out_FragColor;
+void main()
+{
+    out_FragColor = vec4(1.0);
+})";
+
+    constexpr char kCSSource[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba32f, binding=0) readonly  uniform highp image2D uIn;
+layout(std140, binding=0) buffer buf {
+    vec4 outData;
+};
+
+void main()
+{
+    outData = imageLoad(uIn, ivec2(gl_LocalInvocationID.xy));
+})";
+
+    GLfloat initValue[4] = {1.0, 1.0, 1.0, 1.0};
+
+    // Step 1: Set up a simple 2D Texture rendering loop.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_FLOAT, initValue);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLBuffer vertexBuffer;
+    GLfloat vertices[] = {-1, -1, 1, -1, -1, 1, 1, 1};
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+    GLBuffer ssbo;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 16, nullptr, GL_STREAM_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    ANGLE_GL_PROGRAM(program, kVSSource, kFSSource);
+    glUseProgram(program);
+
+    GLint posLoc = glGetAttribLocation(program, "a_position");
+    ASSERT_NE(-1, posLoc);
+
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+    ASSERT_GL_NO_ERROR();
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Call glReadPixels to reset the getPerfCounters().renderPasses
+    std::vector<GLColor> actualColors(1);
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, actualColors.data());
+
+    // Ideally, the following "FS sample + CS image load + FS something", should
+    // handle in one render pass.
+    // Currently, we can ensure the first of "FS sample + CS image load" in one
+    // render pass, but will start new render pass if following the last FS operations,
+    // which need to be optimized further.
+    uint32_t expectedRenderPassCount = getPerfCounters().renderPasses + 2;
+
+    // Now this texture owns none layout transition
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: load this image through compute
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram, kCSSource);
+    glUseProgram(csProgram);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Step3
+    ANGLE_GL_PROGRAM(program2, kVSSource, kFSSource1);
+    glUseProgram(program2);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    uint32_t actualRenderPassCount = getPerfCounters().renderPasses;
+    EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+}
+
 // Verify a mid-render pass clear of a newly enabled attachment uses LOAD_OP_CLEAR.
 TEST_P(VulkanPerformanceCounterTest, DisableThenMidRenderPassClear)
 {
