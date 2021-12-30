@@ -37,8 +37,6 @@ class ProgramVk : public ProgramImpl
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
-    void fillProgramStateMap(gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
-
     std::unique_ptr<LinkEvent> link(const gl::Context *context,
                                     const gl::ProgramLinkedResources &resources,
                                     gl::InfoLog &infoLog,

@@ -983,8 +983,7 @@ GLuint ProgramState::getSamplerIndexFromUniformIndex(GLuint uniformIndex) const
 
 GLuint ProgramState::getUniformIndexFromSamplerIndex(GLuint samplerIndex) const
 {
-    ASSERT(samplerIndex < mExecutable->mSamplerUniformRange.length());
-    return samplerIndex + mExecutable->mSamplerUniformRange.low();
+    return mExecutable->getUniformIndexFromSamplerIndex(samplerIndex);
 }
 
 bool ProgramState::isImageUniformIndex(GLuint index) const
