@@ -821,6 +821,9 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDraw)
 // - Scenario: invalidate, draw, disable
 TEST_P(VulkanPerformanceCounterTest, InvalidateDrawDisable)
 {
+    // http://anglebug.com/6857
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
     const rx::vk::PerfCounters &counters = hackANGLE();
     rx::vk::PerfCounters expected;
 
