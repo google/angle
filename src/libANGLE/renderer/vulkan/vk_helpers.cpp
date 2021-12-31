@@ -2503,69 +2503,6 @@ void DynamicBuffer::reset()
     mLastFlushOrInvalidateOffset = 0;
 }
 
-// DynamicShadowBuffer implementation.
-DynamicShadowBuffer::DynamicShadowBuffer() : mInitialSize(0), mSize(0) {}
-
-DynamicShadowBuffer::DynamicShadowBuffer(DynamicShadowBuffer &&other)
-    : mInitialSize(other.mInitialSize), mSize(other.mSize), mBuffer(std::move(other.mBuffer))
-{}
-
-void DynamicShadowBuffer::init(size_t initialSize)
-{
-    mInitialSize = initialSize;
-}
-
-DynamicShadowBuffer::~DynamicShadowBuffer()
-{
-    ASSERT(mBuffer.empty());
-}
-
-angle::Result DynamicShadowBuffer::allocate(size_t sizeInBytes)
-{
-    bool result = true;
-
-    // Delete the current buffer, if any
-    if (!mBuffer.empty())
-    {
-        result &= mBuffer.resize(0);
-    }
-
-    // Cache the new size
-    mSize = std::max(mInitialSize, sizeInBytes);
-
-    // Allocate the buffer
-    result &= mBuffer.resize(mSize);
-
-    // If allocation failed, release the buffer and return error.
-    if (!result)
-    {
-        release();
-        return angle::Result::Stop;
-    }
-
-    return angle::Result::Continue;
-}
-
-void DynamicShadowBuffer::release()
-{
-    reset();
-
-    if (!mBuffer.empty())
-    {
-        (void)mBuffer.resize(0);
-    }
-}
-
-void DynamicShadowBuffer::destroy(VkDevice device)
-{
-    release();
-}
-
-void DynamicShadowBuffer::reset()
-{
-    mSize = 0;
-}
-
 // BufferPool implementation.
 BufferPool::BufferPool()
     : mVirtualBlockCreateFlags(vma::VirtualBlockCreateFlagBits::GENERAL),
