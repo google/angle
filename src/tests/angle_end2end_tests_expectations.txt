@@ -105,6 +105,17 @@
 6855 LINUX AMD OPENGL : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/* = SKIP
 6855 LINUX AMD OPENGL : SimpleStateChangeTestES3.DepthInvalidateThenClear/* = SKIP
 6855 LINUX AMD VULKAN : WebGL2ValidationStateChangeTest.MultiAttachmentDrawFramebufferNegativeAPI/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureTest.2DColorDepthMultisampleDrawTest/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureTest.DepthReadWriteToggleWithStartedRenderPass/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureES3Test.ClearThenMaskedClearFramebufferTest/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureES3Test.RenderbufferClearDrawCopyThenBlendWithDepthStencilSameProgram/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureES3Test.RenderbufferDepthStencilClearDrawCopyThenBlend/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureES3Test.RenderbufferDepthStencilDrawCopyClearThenBlend/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureES3Test.RenderbufferDrawStencilThenUnresolveStencil/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureES3Test.RenderbufferDrawThenBlitDepthStencilOnly/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureES3Test.RenderbufferUnresolveColorAndDepthStencilThenTwoColors/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureES3Test.RenderbufferUnresolveColorAndDepthThenTwoColors/* = SKIP
+5380 LINUX AMD VULKAN : MultisampledRenderToTextureES3Test.RenderbufferUnresolveColorAndStencilThenTwoColors/* = SKIP
 
 // Mac
 
