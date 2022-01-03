@@ -115,7 +115,7 @@ class CopyTextureTest : public ANGLETest
 };
 
 using CopyTextureVariationsTestParams =
-    std::tuple<angle::PlatformParameters, GLenum, GLenum, bool, bool, bool>;
+    std::tuple<angle::PlatformParameters, GLenum, GLenum, bool, bool, bool, GLint>;
 
 std::string CopyTextureVariationsTestPrint(
     const ::testing::TestParamInfo<CopyTextureVariationsTestParams> &paramsInfo)
@@ -183,6 +183,10 @@ std::string CopyTextureVariationsTestPrint(
     if (std::get<5>(params))
     {
         out << "UnmultiplyAlpha";
+    }
+    if (std::get<6>(params))
+    {
+        out << "MesaYFlip";
     }
 
     return out.str();
@@ -422,12 +426,17 @@ class CopyTextureVariationsTest : public ANGLETestWithParam<CopyTextureVariation
                          GLenum destFormat,
                          bool flipY,
                          bool premultiplyAlpha,
-                         bool unmultiplyAlpha)
+                         bool unmultiplyAlpha,
+                         GLint mesaYFlipParam)
     {
         if (!checkExtensions(sourceFormat, destFormat))
         {
             return;
         }
+
+        const bool hasMesaFbFlipYExt = IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y");
+        if (mesaYFlipParam && !hasMesaFbFlipYExt)
+            ASSERT_TRUE(hasMesaFbFlipYExt);
 
         if (sourceFormat == GL_LUMINANCE || sourceFormat == GL_LUMINANCE_ALPHA ||
             sourceFormat == GL_ALPHA || destFormat == GL_LUMINANCE ||
@@ -457,6 +466,11 @@ class CopyTextureVariationsTest : public ANGLETestWithParam<CopyTextureVariation
             initializeSourceTexture(sourceTarget, sourceFormat, &srcColors[i * componentCount],
                                     componentCount);
 
+            if (hasMesaFbFlipYExt)
+            {
+                glFramebufferParameteriMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA,
+                                            mesaYFlipParam);
+            }
             glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, destFormat,
                                   GL_UNSIGNED_BYTE, flipY, premultiplyAlpha, unmultiplyAlpha);
 
@@ -467,17 +481,37 @@ class CopyTextureVariationsTest : public ANGLETestWithParam<CopyTextureVariation
 
             if (flipY)
             {
-                EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 2], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 3], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 0], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 1], 1.0);
+                if (mesaYFlipParam)
+                {
+                    EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 0], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 1], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 2], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 3], 1.0);
+                }
+                else
+                {
+                    EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 2], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 3], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 0], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 1], 1.0);
+                }
             }
             else
             {
-                EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 0], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 1], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 2], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 3], 1.0);
+                if (mesaYFlipParam)
+                {
+                    EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 2], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 3], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 0], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 1], 1.0);
+                }
+                else
+                {
+                    EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 0], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 1], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 2], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 3], 1.0);
+                }
             }
 
             EXPECT_GL_NO_ERROR();
@@ -489,12 +523,17 @@ class CopyTextureVariationsTest : public ANGLETestWithParam<CopyTextureVariation
                             GLenum destFormat,
                             bool flipY,
                             bool premultiplyAlpha,
-                            bool unmultiplyAlpha)
+                            bool unmultiplyAlpha,
+                            GLint mesaYFlipParam)
     {
         if (!checkExtensions(sourceFormat, destFormat))
         {
             return;
         }
+
+        const bool hasMesaFbFlipYExt = IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y");
+        if (mesaYFlipParam && !hasMesaFbFlipYExt)
+            ASSERT_TRUE(hasMesaFbFlipYExt);
 
         if (sourceFormat == GL_LUMINANCE || sourceFormat == GL_LUMINANCE_ALPHA ||
             sourceFormat == GL_ALPHA || destFormat == GL_LUMINANCE ||
@@ -528,6 +567,11 @@ class CopyTextureVariationsTest : public ANGLETestWithParam<CopyTextureVariation
             glTexImage2D(GL_TEXTURE_2D, 0, destFormat, 2, 2, 0, destFormat, GL_UNSIGNED_BYTE,
                          nullptr);
 
+            if (hasMesaFbFlipYExt)
+            {
+                glFramebufferParameteriMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA,
+                                            mesaYFlipParam);
+            }
             glCopySubTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, 0, 0, 0, 0, 2,
                                      2, flipY, premultiplyAlpha, unmultiplyAlpha);
 
@@ -542,17 +586,37 @@ class CopyTextureVariationsTest : public ANGLETestWithParam<CopyTextureVariation
 
             if (flipY)
             {
-                EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 2], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 3], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 0], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 1], 1.0);
+                if (mesaYFlipParam)
+                {
+                    EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 0], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 1], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 2], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 3], 1.0);
+                }
+                else
+                {
+                    EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 2], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 3], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 0], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 1], 1.0);
+                }
             }
             else
             {
-                EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 0], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 1], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 2], 1.0);
-                EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 3], 1.0);
+                if (mesaYFlipParam)
+                {
+                    EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 2], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 3], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 0], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 1], 1.0);
+                }
+                else
+                {
+                    EXPECT_PIXEL_COLOR_NEAR(0, 0, destColors[i + 0], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 0, destColors[i + 1], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(0, 1, destColors[i + 2], 1.0);
+                    EXPECT_PIXEL_COLOR_NEAR(1, 1, destColors[i + 3], 1.0);
+                }
             }
 
             EXPECT_GL_NO_ERROR();
@@ -904,6 +968,7 @@ constexpr GLenum kCopyTextureVariationsSrcFormats[] = {
     GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_BGRA_EXT};
 constexpr GLenum kCopyTextureVariationsDstFormats[] = {GL_RGB, GL_RGBA, GL_BGRA_EXT,
                                                        GL_SRGB_ALPHA_EXT};
+constexpr GLint kMesaYFlips[]                       = {0, 1};
 }  // anonymous namespace
 
 TEST_P(CopyTextureVariationsTest, CopyTexture)
@@ -917,32 +982,57 @@ TEST_P(CopyTextureVariationsTest, CopyTexture)
         ANGLE_SKIP_TEST_IF(IsWindows7() && IsNVIDIA() && IsOpenGLES());
     }
 
+    if (std::get<6>(GetParam()))
+    {
+        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y"));
+    }
+
     testCopyTexture(GL_TEXTURE_2D, std::get<1>(GetParam()), std::get<2>(GetParam()),
-                    std::get<3>(GetParam()), std::get<4>(GetParam()), std::get<5>(GetParam()));
+                    std::get<3>(GetParam()), std::get<4>(GetParam()), std::get<5>(GetParam()),
+                    std::get<6>(GetParam()));
 }
 
 TEST_P(CopyTextureVariationsTest, CopySubTexture)
 {
     // http://anglebug.com/5723
     ANGLE_SKIP_TEST_IF(IsOzone());
+
+    if (std::get<6>(GetParam()))
+    {
+        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y"));
+    }
+
     testCopySubTexture(GL_TEXTURE_2D, std::get<1>(GetParam()), std::get<2>(GetParam()),
-                       std::get<3>(GetParam()), std::get<4>(GetParam()), std::get<5>(GetParam()));
+                       std::get<3>(GetParam()), std::get<4>(GetParam()), std::get<5>(GetParam()),
+                       std::get<6>(GetParam()));
 }
 
 TEST_P(CopyTextureVariationsTest, CopyTextureRectangle)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_texture_rectangle"));
 
+    if (std::get<6>(GetParam()))
+    {
+        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y"));
+    }
+
     testCopyTexture(GL_TEXTURE_RECTANGLE_ANGLE, std::get<1>(GetParam()), std::get<2>(GetParam()),
-                    std::get<3>(GetParam()), std::get<4>(GetParam()), std::get<5>(GetParam()));
+                    std::get<3>(GetParam()), std::get<4>(GetParam()), std::get<5>(GetParam()),
+                    std::get<6>(GetParam()));
 }
 
 TEST_P(CopyTextureVariationsTest, CopySubTextureRectangle)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_texture_rectangle"));
 
+    if (std::get<6>(GetParam()))
+    {
+        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y"));
+    }
+
     testCopySubTexture(GL_TEXTURE_RECTANGLE_ANGLE, std::get<1>(GetParam()), std::get<2>(GetParam()),
-                       std::get<3>(GetParam()), std::get<4>(GetParam()), std::get<5>(GetParam()));
+                       std::get<3>(GetParam()), std::get<4>(GetParam()), std::get<5>(GetParam()),
+                       std::get<6>(GetParam()));
 }
 
 // Test that copying to cube maps works
@@ -2534,13 +2624,14 @@ TEST_P(CopyTextureTestES3, InvalidateBlitThenBlend1000Layers)
 #endif
 
 ANGLE_INSTANTIATE_TEST_ES2(CopyTextureTest);
-ANGLE_INSTANTIATE_TEST_COMBINE_5(CopyTextureVariationsTest,
+ANGLE_INSTANTIATE_TEST_COMBINE_6(CopyTextureVariationsTest,
                                  CopyTextureVariationsTestPrint,
                                  testing::ValuesIn(kCopyTextureVariationsSrcFormats),
                                  testing::ValuesIn(kCopyTextureVariationsDstFormats),
                                  testing::Bool(),  // flipY
                                  testing::Bool(),  // premultiplyAlpha
                                  testing::Bool(),  // unmultiplyAlpha
+                                 testing::ValuesIn(kMesaYFlips),
                                  ES2_D3D9(),
                                  ES2_D3D11(),
                                  ES2_OPENGL(),
