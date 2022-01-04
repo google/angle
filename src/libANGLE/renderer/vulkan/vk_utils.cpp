@@ -481,6 +481,15 @@ BufferMemory::BufferMemory() : mClientBuffer(nullptr), mMappedMemory(nullptr) {}
 
 BufferMemory::~BufferMemory() = default;
 
+BufferMemory &BufferMemory::operator=(BufferMemory &&other)
+{
+    std::swap(mClientBuffer, other.mClientBuffer);
+    std::swap(mMappedMemory, other.mMappedMemory);
+    std::swap(mAllocation, other.mAllocation);
+    std::swap(mExternalMemory, other.mExternalMemory);
+    return *this;
+}
+
 angle::Result BufferMemory::initExternal(void *clientBuffer)
 {
     ASSERT(clientBuffer != nullptr);

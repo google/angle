@@ -250,6 +250,7 @@ class ReadWriteResource : public angle::NonCopyable
   protected:
     ReadWriteResource();
     ReadWriteResource(ReadWriteResource &&other);
+    ReadWriteResource &operator=(ReadWriteResource &&other);
 
     // Track any use of the object. Always updated on every retain call.
     SharedResourceUse mReadOnlyUse;

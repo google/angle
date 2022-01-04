@@ -379,6 +379,9 @@ class BufferMemory : angle::NonCopyable
   public:
     BufferMemory();
     ~BufferMemory();
+
+    BufferMemory &operator=(BufferMemory &&other);
+
     angle::Result initExternal(void *clientBuffer);
     angle::Result init();
 
