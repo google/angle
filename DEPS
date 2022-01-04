@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '04d22dcbc0f6a775df50edb92ea5f393fbf4dd22',
+  'chromium_revision': '1a9dad30c65b5263c57700ae15d446bddca4b573',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@555c8b467c21e2c4b22d00e87e3faa0431df9ac2',
+    'url': '{chromium_git}/chromium/src/build.git@41ae71b567c7cc87da6a7b828f8f98cb486eb416',
     'condition': 'not build_with_chromium',
   },
 
@@ -161,12 +161,12 @@ deps = {
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@2715a6c0de8dac4c7674934a6b3d30ba0c685271',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@c884e7a7ce672c7f9f64b4be4f76bae6d14b7155',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@4ead61094cab5ac7a90198fbe182596c4775183e',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@6a10e3e97c45505615d35dea94f588b5f86045dc',
     'condition': 'not build_with_chromium',
   },
 
@@ -182,7 +182,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@440b82bae69d423b6667c7b7bdeeb0117c3c0614',
+    'url': '{chromium_git}/chromium/src/testing@3f0eed23e17288866f6423f8c7910bfb3afba041',
     'condition': 'not build_with_chromium',
   },
 
@@ -332,7 +332,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@54c265ea2b2fc90ae29fc87366cffc0a5e57f7c4',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@30ae637731b459f3849867c43a0226d57d25133e',
     'condition': 'not build_with_chromium',
   },
 
@@ -504,7 +504,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/turbine',
-              'version': 'tJ3VP1_iZhYyYREs6I6YHVZeA5CN6drLhywrF_DFVh0C',
+              'version': 'ttEtncMGe74t-cysVW-3cc6loq-end5oDsc-Exn8WDsC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
