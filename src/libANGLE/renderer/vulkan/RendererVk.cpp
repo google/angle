@@ -1288,7 +1288,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     applicationInfo.engineVersion      = 1;
 
     auto enumerateInstanceVersion = reinterpret_cast<PFN_vkEnumerateInstanceVersion>(
-        vkGetInstanceProcAddr(mInstance, "vkEnumerateInstanceVersion"));
+        vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceVersion"));
     if (!enumerateInstanceVersion)
     {
         mApiVersion = VK_API_VERSION_1_0;
