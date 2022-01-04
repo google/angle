@@ -1548,7 +1548,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Similar to releaseImage, but also notify all contexts in the same share group to stop
     // accessing to it.
     void releaseImageFromShareContexts(RendererVk *renderer, ContextVk *contextVk);
-    void releaseStagingBuffer(RendererVk *renderer);
+    void releaseStagedUpdates(RendererVk *renderer);
 
     bool valid() const { return mImage.valid(); }
 

@@ -4632,7 +4632,7 @@ void ImageHelper::releaseImageFromShareContexts(RendererVk *renderer, ContextVk 
     releaseImage(renderer);
 }
 
-void ImageHelper::releaseStagingBuffer(RendererVk *renderer)
+void ImageHelper::releaseStagedUpdates(RendererVk *renderer)
 {
     ASSERT(validateSubresourceUpdateRefCountsConsistent());
 
@@ -7993,7 +7993,7 @@ void ImageHelper::SubresourceUpdate::release(RendererVk *renderer)
         {
             // Staging images won't be used in render pass attachments.
             refCounted.image->get().releaseImage(renderer);
-            refCounted.image->get().releaseStagingBuffer(renderer);
+            refCounted.image->get().releaseStagedUpdates(renderer);
             SafeDelete(refCounted.image);
         }
 

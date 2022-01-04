@@ -324,7 +324,7 @@ void OffscreenSurfaceVk::AttachmentImage::destroy(const egl::Display *display)
     RendererVk *renderer = displayVk->getRenderer();
     // Front end must ensure all usage has been submitted.
     image.releaseImage(renderer);
-    image.releaseStagingBuffer(renderer);
+    image.releaseStagedUpdates(renderer);
     imageViews.release(renderer);
 }
 
@@ -1315,14 +1315,14 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
     if (mDepthStencilImage.valid())
     {
         mDepthStencilImage.releaseImageFromShareContexts(renderer, contextVk);
-        mDepthStencilImage.releaseStagingBuffer(renderer);
+        mDepthStencilImage.releaseStagedUpdates(renderer);
         mDepthStencilImageViews.release(renderer);
     }
 
     if (mColorImageMS.valid())
     {
         mColorImageMS.releaseImageFromShareContexts(renderer, contextVk);
-        mColorImageMS.releaseStagingBuffer(renderer);
+        mColorImageMS.releaseStagedUpdates(renderer);
         mColorImageMSViews.release(renderer);
         contextVk->addGarbage(&mFramebufferMS);
     }

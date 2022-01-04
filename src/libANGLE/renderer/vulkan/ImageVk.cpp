@@ -37,7 +37,7 @@ void ImageVk::onDestroy(const egl::Display *display)
         // TODO: We need to handle the case that EGLImage used in two context that aren't shared.
         // https://issuetracker.google.com/169868803
         mImage->releaseImage(renderer);
-        mImage->releaseStagingBuffer(renderer);
+        mImage->releaseStagedUpdates(renderer);
         SafeDelete(mImage);
     }
     else if (egl::IsExternalImageTarget(mState.target))

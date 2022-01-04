@@ -1272,7 +1272,7 @@ angle::Result TextureVk::setStorageMultisample(const gl::Context *context,
     }
     else if (mImage)
     {
-        mImage->releaseStagingBuffer(contextVk->getRenderer());
+        mImage->releaseStagedUpdates(contextVk->getRenderer());
     }
 
     // Assume all multisample texture types must be renderable.
@@ -1474,7 +1474,7 @@ void TextureVk::releaseAndDeleteImageAndViews(ContextVk *contextVk)
     if (mImage)
     {
         releaseImage(contextVk);
-        releaseStagingBuffer(contextVk);
+        releaseStagedUpdates(contextVk);
         mImageObserverBinding.bind(nullptr);
         mRequiresMutableStorage = false;
         mRequiredImageAccess    = vk::ImageAccess::SampleOnly;
@@ -3049,11 +3049,11 @@ void TextureVk::releaseImage(ContextVk *contextVk)
     mRedefinedLevels.reset();
 }
 
-void TextureVk::releaseStagingBuffer(ContextVk *contextVk)
+void TextureVk::releaseStagedUpdates(ContextVk *contextVk)
 {
     if (mImage)
     {
-        mImage->releaseStagingBuffer(contextVk->getRenderer());
+        mImage->releaseStagedUpdates(contextVk->getRenderer());
     }
 }
 

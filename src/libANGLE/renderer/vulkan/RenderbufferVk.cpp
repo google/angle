@@ -278,7 +278,7 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
     if (mImage && mOwnsImage)
     {
         mImage->releaseImageFromShareContexts(renderer, contextVk);
-        mImage->releaseStagingBuffer(renderer);
+        mImage->releaseStagedUpdates(renderer);
     }
     else
     {
