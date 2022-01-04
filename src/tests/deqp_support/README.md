@@ -18,6 +18,10 @@ exists to let the test harness know which tests it should skip (as they are know
 expect to see failed.  Warnings are generated if a test unexpectedly passes, but an unexpected
 failure is an error.  This let's ANGLE ensure there are no regressions.
 
+If multiple test expectations in a file match a specific test due to
+wildcards, the test harness picks the first match in the file as the
+overriding expectation.
+
 While developing a feature, or testing on a new platform, the expectations files can be modified to
 reflect the reality of the situation.  The expected format for every line in these files is:
 

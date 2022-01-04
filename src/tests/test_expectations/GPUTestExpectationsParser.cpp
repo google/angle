@@ -385,14 +385,10 @@ bool GPUTestExpectationsParser::loadAllTestExpectationsFromFile(const std::strin
 int32_t GPUTestExpectationsParser::getTestExpectationImpl(const GPUTestConfig *config,
                                                           const std::string &testName)
 {
-    size_t maxExpectationLen            = 0;
-    GPUTestExpectationEntry *foundEntry = nullptr;
     for (GPUTestExpectationEntry &entry : mEntries)
     {
         if (NamesMatchWithWildcard(entry.testName.c_str(), testName.c_str()))
         {
-            size_t expectationLen = entry.testName.length();
-
             // Filter by condition first.
             bool satisfiesConditions = true;
             if (config)
@@ -407,18 +403,13 @@ int32_t GPUTestExpectationsParser::getTestExpectationImpl(const GPUTestConfig *c
                 }
             }
 
-            // The longest/most specific matching expectation overrides any others.
-            if (satisfiesConditions && expectationLen > maxExpectationLen)
+            // Use the first matching expectation in the file as the matching expression.
+            if (satisfiesConditions)
             {
-                maxExpectationLen = expectationLen;
-                foundEntry        = &entry;
+                entry.used = true;
+                return entry.testExpectation;
             }
         }
-    }
-    if (foundEntry != nullptr)
-    {
-        foundEntry->used = true;
-        return foundEntry->testExpectation;
     }
     return kGpuTestPass;
 }
