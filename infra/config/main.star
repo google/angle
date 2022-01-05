@@ -198,6 +198,7 @@ def angle_builder(name, cpu):
     is_tsan = "-tsan" in name
     is_ubsan = "-ubsan" in name
     is_debug = "-dbg" in name
+    is_exp = "-exp" in name
     is_perf = name.endswith("-perf")
     is_trace = name.endswith("-trace")
     is_uwp = "winuwp" in name
@@ -249,6 +250,8 @@ def angle_builder(name, cpu):
         short_name = "ubsan"
     elif is_debug:
         short_name = "dbg"
+    elif is_exp:
+        short_name = "exp"
     else:
         short_name = "rel"
 
@@ -305,11 +308,13 @@ def angle_builder(name, cpu):
             ),
         )
 
-        luci.cq_tryjob_verifier(
-            cq_group = "main",
-            builder = "angle:try/" + name,
-            location_regexp = location_regexp,
-        )
+        # Don't add experimental bots to CQ.
+        if not is_exp:
+            luci.cq_tryjob_verifier(
+                cq_group = "main",
+                builder = "angle:try/" + name,
+                location_regexp = location_regexp,
+            )
 
 luci.bucket(
     name = "ci",
@@ -377,6 +382,7 @@ angle_builder("linux-ubsan-test", cpu = "x64")
 angle_builder("linux-dbg-compile", cpu = "x64")
 angle_builder("linux-test", cpu = "x64")
 angle_builder("mac-dbg-compile", cpu = "x64")
+angle_builder("mac-exp-test", cpu = "x64")
 angle_builder("mac-test", cpu = "x64")
 angle_builder("win-asan-test", cpu = "x64")
 angle_builder("win-dbg-compile", cpu = "x64")

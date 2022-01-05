@@ -27,6 +27,7 @@
       'linux-tsan-test': 'angle_tsan_bot',
       'linux-ubsan-test': 'angle_ubsan_bot',
       'mac-dbg-compile': 'angle_goma_debug_bot',
+      'mac-exp-test': 'angle_goma_release_bot',
       'mac-test': 'angle_goma_release_bot',
       'win-asan-test': 'angle_asan_bot',
       'win-dbg-compile': 'angle_goma_debug_bot',
