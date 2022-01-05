@@ -1911,6 +1911,10 @@ static ClientExtensions GenerateClientExtensions()
     extensions.platformGbmKHR = true;
 #endif
 
+#if defined(ANGLE_USE_WAYLAND)
+    extensions.platformWaylandEXT = true;
+#endif
+
 #if defined(ANGLE_ENABLE_D3D11)
 #    if defined(ANGLE_ENABLE_WINDOWS_UWP)
     extensions.platformANGLED3D11ON12 = true;
