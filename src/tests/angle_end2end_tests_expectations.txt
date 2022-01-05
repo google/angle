@@ -440,3 +440,7 @@
 6751 D3D11 : MultiDrawIndirectTest.MultiDrawElementsIndirect* = SKIP
 6751 METAL : DrawBaseVertexBaseInstanceTest.MultiDrawElementsInstancedBaseVertexBaseInstance/* = SKIP
 6751 D3D11 : DrawBaseVertexBaseInstanceTest.MultiDrawElementsInstancedBaseVertexBaseInstance/* = SKIP
+
+// ASAN flakes with Vulkan / SwiftShader / AsyncQueue
+6875 ASAN VULKAN SWIFTSHADER : ComputeShaderTest.*/ES3_1_Vulkan_SwiftShader_AsyncQueue = SKIP
+6875 ASAN VULKAN SWIFTSHADER : TransformFeedbackTest.SpanMultipleRenderPasses/ES3_Vulkan_SwiftShader_AsyncQueue = SKIP
