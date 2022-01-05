@@ -119,6 +119,12 @@ class InterfaceBlockLinker : angle::NonCopyable
     void linkBlocks(const GetBlockSizeFunc &getBlockSize,
                     const GetBlockMemberInfoFunc &getMemberInfo) const;
 
+    const std::vector<sh::InterfaceBlock> &getShaderBlocks(ShaderType shaderType) const
+    {
+        ASSERT(mShaderBlocks[shaderType]);
+        return *mShaderBlocks[shaderType];
+    }
+
   protected:
     InterfaceBlockLinker();
     void init(std::vector<InterfaceBlock> *blocksOut,
@@ -283,6 +289,9 @@ class ProgramLinkedResourcesLinker final : angle::NonCopyable
     CustomBlockLayoutEncoderFactory *mCustomEncoderFactory;
 };
 
+using ShaderInterfaceBlock = std::pair<ShaderType, const sh::InterfaceBlock *>;
+using InterfaceBlockMap    = std::map<std::string, ShaderInterfaceBlock>;
+
 bool LinkValidateProgramGlobalNames(InfoLog &infoLog,
                                     const ProgramExecutable &executable,
                                     const LinkingVariables &linkingVariables);
@@ -313,6 +322,11 @@ LinkMismatchError LinkValidateProgramVariables(const sh::ShaderVariable &variabl
                                                std::string *mismatchedStructOrBlockMemberName);
 void AddProgramVariableParentPrefix(const std::string &parentName,
                                     std::string *mismatchedFieldName);
+bool LinkValidateProgramInterfaceBlocks(const Context *context,
+                                        ShaderBitSet activeProgramStages,
+                                        const ProgramLinkedResources &resources,
+                                        InfoLog &infoLog,
+                                        GLuint *combinedShaderStorageBlocksCountOut);
 }  // namespace gl
 
 #endif  // LIBANGLE_UNIFORMLINKER_H_

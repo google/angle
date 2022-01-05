@@ -798,11 +798,6 @@ class Program final : public LabeledObject, public angle::Subject
 
     bool linkValidateShaders(InfoLog &infoLog);
     bool linkAttributes(const Context *context, InfoLog &infoLog);
-    bool linkInterfaceBlocks(const Caps &caps,
-                             const Version &version,
-                             bool webglCompatibility,
-                             InfoLog &infoLog,
-                             GLuint *combinedShaderStorageBlocksCount);
     bool linkVaryings(InfoLog &infoLog) const;
 
     bool linkUniforms(const Context *context,

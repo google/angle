@@ -233,91 +233,6 @@ void CopyStringToBuffer(GLchar *buffer,
     }
 }
 
-std::string GetInterfaceBlockLimitName(ShaderType shaderType, sh::BlockType blockType)
-{
-    std::ostringstream stream;
-    stream << "GL_MAX_" << GetShaderTypeString(shaderType) << "_";
-
-    switch (blockType)
-    {
-        case sh::BlockType::BLOCK_UNIFORM:
-            stream << "UNIFORM_BUFFERS";
-            break;
-        case sh::BlockType::BLOCK_BUFFER:
-            stream << "SHADER_STORAGE_BLOCKS";
-            break;
-        default:
-            UNREACHABLE();
-            return "";
-    }
-
-    if (shaderType == ShaderType::Geometry)
-    {
-        stream << "_EXT";
-    }
-
-    return stream.str();
-}
-
-const char *GetInterfaceBlockTypeString(sh::BlockType blockType)
-{
-    switch (blockType)
-    {
-        case sh::BlockType::BLOCK_UNIFORM:
-            return "uniform block";
-        case sh::BlockType::BLOCK_BUFFER:
-            return "shader storage block";
-        default:
-            UNREACHABLE();
-            return "";
-    }
-}
-
-void LogInterfaceBlocksExceedLimit(InfoLog &infoLog,
-                                   ShaderType shaderType,
-                                   sh::BlockType blockType,
-                                   GLuint limit)
-{
-    infoLog << GetShaderTypeString(shaderType) << " shader "
-            << GetInterfaceBlockTypeString(blockType) << " count exceeds "
-            << GetInterfaceBlockLimitName(shaderType, blockType) << " (" << limit << ")";
-}
-
-bool ValidateInterfaceBlocksCount(GLuint maxInterfaceBlocks,
-                                  const std::vector<sh::InterfaceBlock> &interfaceBlocks,
-                                  ShaderType shaderType,
-                                  sh::BlockType blockType,
-                                  GLuint *combinedInterfaceBlocksCount,
-                                  InfoLog &infoLog)
-{
-    GLuint blockCount = 0;
-    for (const sh::InterfaceBlock &block : interfaceBlocks)
-    {
-        if (IsActiveInterfaceBlock(block))
-        {
-            blockCount += std::max(block.arraySize, 1u);
-            if (blockCount > maxInterfaceBlocks)
-            {
-                LogInterfaceBlocksExceedLimit(infoLog, shaderType, blockType, maxInterfaceBlocks);
-                return false;
-            }
-        }
-    }
-
-    // [OpenGL ES 3.1] Chapter 7.6.2 Page 105:
-    // If a uniform block is used by multiple shader stages, each such use counts separately
-    // against this combined limit.
-    // [OpenGL ES 3.1] Chapter 7.8 Page 111:
-    // If a shader storage block in a program is referenced by multiple shaders, each such
-    // reference counts separately against this combined limit.
-    if (combinedInterfaceBlocksCount)
-    {
-        *combinedInterfaceBlocksCount += blockCount;
-    }
-
-    return true;
-}
-
 GLuint GetInterfaceBlockIndex(const std::vector<InterfaceBlock> &list, const std::string &name)
 {
     std::vector<unsigned int> subscripts;
@@ -438,228 +353,6 @@ const char *GetLinkMismatchErrorString(LinkMismatchError linkError)
             UNREACHABLE();
             return "";
     }
-}
-
-LinkMismatchError LinkValidateInterfaceBlockFields(const sh::ShaderVariable &blockField1,
-                                                   const sh::ShaderVariable &blockField2,
-                                                   bool webglCompatibility,
-                                                   std::string *mismatchedBlockFieldName)
-{
-    if (blockField1.name != blockField2.name)
-    {
-        return LinkMismatchError::FIELD_NAME_MISMATCH;
-    }
-
-    // If webgl, validate precision of UBO fields, otherwise don't.  See Khronos bug 10287.
-    LinkMismatchError linkError = LinkValidateProgramVariables(
-        blockField1, blockField2, webglCompatibility, false, false, mismatchedBlockFieldName);
-    if (linkError != LinkMismatchError::NO_MISMATCH)
-    {
-        AddProgramVariableParentPrefix(blockField1.name, mismatchedBlockFieldName);
-        return linkError;
-    }
-
-    if (blockField1.isRowMajorLayout != blockField2.isRowMajorLayout)
-    {
-        AddProgramVariableParentPrefix(blockField1.name, mismatchedBlockFieldName);
-        return LinkMismatchError::MATRIX_PACKING_MISMATCH;
-    }
-
-    return LinkMismatchError::NO_MISMATCH;
-}
-
-LinkMismatchError AreMatchingInterfaceBlocks(const sh::InterfaceBlock &interfaceBlock1,
-                                             const sh::InterfaceBlock &interfaceBlock2,
-                                             bool webglCompatibility,
-                                             std::string *mismatchedBlockFieldName)
-{
-    // validate blocks for the same member types
-    if (interfaceBlock1.fields.size() != interfaceBlock2.fields.size())
-    {
-        return LinkMismatchError::FIELD_NUMBER_MISMATCH;
-    }
-    if (interfaceBlock1.arraySize != interfaceBlock2.arraySize)
-    {
-        return LinkMismatchError::ARRAY_SIZE_MISMATCH;
-    }
-    if (interfaceBlock1.layout != interfaceBlock2.layout ||
-        interfaceBlock1.binding != interfaceBlock2.binding)
-    {
-        return LinkMismatchError::LAYOUT_QUALIFIER_MISMATCH;
-    }
-    if (interfaceBlock1.instanceName.empty() != interfaceBlock2.instanceName.empty())
-    {
-        return LinkMismatchError::INSTANCE_NAME_MISMATCH;
-    }
-    const unsigned int numBlockMembers = static_cast<unsigned int>(interfaceBlock1.fields.size());
-    for (unsigned int blockMemberIndex = 0; blockMemberIndex < numBlockMembers; blockMemberIndex++)
-    {
-        const sh::ShaderVariable &member1 = interfaceBlock1.fields[blockMemberIndex];
-        const sh::ShaderVariable &member2 = interfaceBlock2.fields[blockMemberIndex];
-
-        LinkMismatchError linkError = LinkValidateInterfaceBlockFields(
-            member1, member2, webglCompatibility, mismatchedBlockFieldName);
-        if (linkError != LinkMismatchError::NO_MISMATCH)
-        {
-            return linkError;
-        }
-    }
-    return LinkMismatchError::NO_MISMATCH;
-}
-
-using ShaderInterfaceBlock = std::pair<ShaderType, const sh::InterfaceBlock *>;
-using InterfaceBlockMap    = std::map<std::string, ShaderInterfaceBlock>;
-
-void InitializeInterfaceBlockMap(const std::vector<sh::InterfaceBlock> &interfaceBlocks,
-                                 ShaderType shaderType,
-                                 InterfaceBlockMap *linkedInterfaceBlocks)
-{
-    ASSERT(linkedInterfaceBlocks);
-
-    for (const sh::InterfaceBlock &interfaceBlock : interfaceBlocks)
-    {
-        (*linkedInterfaceBlocks)[interfaceBlock.name] = std::make_pair(shaderType, &interfaceBlock);
-    }
-}
-
-bool ValidateGraphicsInterfaceBlocksPerShader(
-    const std::vector<sh::InterfaceBlock> &interfaceBlocksToLink,
-    ShaderType shaderType,
-    bool webglCompatibility,
-    InterfaceBlockMap *linkedBlocks,
-    InfoLog &infoLog)
-{
-    ASSERT(linkedBlocks);
-
-    for (const sh::InterfaceBlock &block : interfaceBlocksToLink)
-    {
-        const auto &entry = linkedBlocks->find(block.name);
-        if (entry != linkedBlocks->end())
-        {
-            const sh::InterfaceBlock &linkedBlock = *(entry->second.second);
-            std::string mismatchedStructFieldName;
-            LinkMismatchError linkError = AreMatchingInterfaceBlocks(
-                block, linkedBlock, webglCompatibility, &mismatchedStructFieldName);
-            if (linkError != LinkMismatchError::NO_MISMATCH)
-            {
-                LogLinkMismatch(infoLog, block.name, GetInterfaceBlockTypeString(block.blockType),
-                                linkError, mismatchedStructFieldName, entry->second.first,
-                                shaderType);
-                return false;
-            }
-        }
-        else
-        {
-            (*linkedBlocks)[block.name] = std::make_pair(shaderType, &block);
-        }
-    }
-
-    return true;
-}
-
-void LogAmbiguousFieldLinkMismatch(InfoLog &infoLog,
-                                   const std::string &blockName1,
-                                   const std::string &blockName2,
-                                   const std::string &fieldName,
-                                   ShaderType shaderType1,
-                                   ShaderType shaderType2)
-{
-    infoLog << "Ambiguous field '" << fieldName << "' in blocks '" << blockName1 << "' ("
-            << GetShaderTypeString(shaderType1) << " shader) and '" << blockName2 << "' ("
-            << GetShaderTypeString(shaderType2) << " shader) which don't have instance names.";
-}
-
-bool ValidateInstancelessGraphicsInterfaceBlocksPerShader(
-    const std::vector<sh::InterfaceBlock> &interfaceBlocks,
-    ShaderType shaderType,
-    InterfaceBlockMap *instancelessBlocksFields,
-    InfoLog &infoLog)
-{
-    ASSERT(instancelessBlocksFields);
-
-    for (const sh::InterfaceBlock &block : interfaceBlocks)
-    {
-        if (!block.instanceName.empty())
-        {
-            continue;
-        }
-
-        for (const sh::ShaderVariable &field : block.fields)
-        {
-            const auto &entry = instancelessBlocksFields->find(field.name);
-            if (entry != instancelessBlocksFields->end())
-            {
-                const sh::InterfaceBlock &linkedBlock = *(entry->second.second);
-                if (block.name != linkedBlock.name)
-                {
-                    LogAmbiguousFieldLinkMismatch(infoLog, block.name, linkedBlock.name, field.name,
-                                                  entry->second.first, shaderType);
-                    return false;
-                }
-            }
-            else
-            {
-                (*instancelessBlocksFields)[field.name] = std::make_pair(shaderType, &block);
-            }
-        }
-    }
-
-    return true;
-}
-
-bool ValidateInterfaceBlocksMatch(
-    GLuint numShadersHasInterfaceBlocks,
-    const ShaderMap<const std::vector<sh::InterfaceBlock> *> &shaderInterfaceBlocks,
-    InfoLog &infoLog,
-    bool webglCompatibility,
-    InterfaceBlockMap *instancelessInterfaceBlocksFields)
-{
-    for (ShaderType shaderType : kAllGraphicsShaderTypes)
-    {
-        // Validate that instanceless blocks of different names don't have fields of the same name.
-        if (shaderInterfaceBlocks[shaderType] &&
-            !ValidateInstancelessGraphicsInterfaceBlocksPerShader(
-                *shaderInterfaceBlocks[shaderType], shaderType, instancelessInterfaceBlocksFields,
-                infoLog))
-        {
-            return false;
-        }
-    }
-
-    if (numShadersHasInterfaceBlocks < 2u)
-    {
-        return true;
-    }
-
-    ASSERT(!shaderInterfaceBlocks[ShaderType::Compute]);
-
-    // Check that interface blocks defined in the graphics shaders are identical
-
-    InterfaceBlockMap linkedInterfaceBlocks;
-
-    bool interfaceBlockMapInitialized = false;
-    for (ShaderType shaderType : kAllGraphicsShaderTypes)
-    {
-        if (!shaderInterfaceBlocks[shaderType])
-        {
-            continue;
-        }
-
-        if (!interfaceBlockMapInitialized)
-        {
-            InitializeInterfaceBlockMap(*shaderInterfaceBlocks[shaderType], shaderType,
-                                        &linkedInterfaceBlocks);
-            interfaceBlockMapInitialized = true;
-        }
-        else if (!ValidateGraphicsInterfaceBlocksPerShader(*shaderInterfaceBlocks[shaderType],
-                                                           shaderType, webglCompatibility,
-                                                           &linkedInterfaceBlocks, infoLog))
-        {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 void UpdateInterfaceVariable(std::vector<sh::ShaderVariable> *block, const sh::ShaderVariable &var)
@@ -1564,6 +1257,9 @@ angle::Result Program::linkImpl(const Context *context)
     // TODO: Fix incomplete linking. http://anglebug.com/6358
     updateLinkedShaderStages();
 
+    InitUniformBlockLinker(mState, &resources.uniformBlockLinker);
+    InitShaderStorageBlockLinker(mState, &resources.shaderStorageBlockLinker);
+
     if (mState.mAttachedShaders[ShaderType::Compute])
     {
         GLuint combinedImageUniforms = 0;
@@ -1573,8 +1269,9 @@ angle::Result Program::linkImpl(const Context *context)
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
-        if (!linkInterfaceBlocks(context->getCaps(), context->getClientVersion(),
-                                 context->isWebGL(), infoLog, &combinedShaderStorageBlocks))
+        if (!LinkValidateProgramInterfaceBlocks(context,
+                                                mState.mExecutable->getLinkedShaderStages(),
+                                                resources, infoLog, &combinedShaderStorageBlocks))
         {
             return angle::Result::Continue;
         }
@@ -1594,9 +1291,6 @@ angle::Result Program::linkImpl(const Context *context)
                 << context->getCaps().maxCombinedShaderOutputResources << ")";
             return angle::Result::Continue;
         }
-
-        InitUniformBlockLinker(mState, &resources.uniformBlockLinker);
-        InitShaderStorageBlockLinker(mState, &resources.shaderStorageBlockLinker);
     }
     else
     {
@@ -1617,8 +1311,9 @@ angle::Result Program::linkImpl(const Context *context)
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
-        if (!linkInterfaceBlocks(context->getCaps(), context->getClientVersion(),
-                                 context->isWebGL(), infoLog, &combinedShaderStorageBlocks))
+        if (!LinkValidateProgramInterfaceBlocks(context,
+                                                mState.mExecutable->getLinkedShaderStages(),
+                                                resources, infoLog, &combinedShaderStorageBlocks))
         {
             return angle::Result::Continue;
         }
@@ -1651,9 +1346,6 @@ angle::Result Program::linkImpl(const Context *context)
                 fragmentShader->hasEarlyFragmentTestsOptimization();
             mState.mSpecConstUsageBits |= fragmentShader->getSpecConstUsageBits();
         }
-
-        InitUniformBlockLinker(mState, &resources.uniformBlockLinker);
-        InitShaderStorageBlockLinker(mState, &resources.shaderStorageBlockLinker);
 
         mergedVaryings = GetMergedVaryingsFromLinkingVariables(linkingVariables);
         if (!mState.mExecutable->linkMergedVaryings(
@@ -3733,105 +3425,6 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
 
                 location++;
             }
-        }
-    }
-
-    return true;
-}
-
-bool Program::linkInterfaceBlocks(const Caps &caps,
-                                  const Version &version,
-                                  bool webglCompatibility,
-                                  InfoLog &infoLog,
-                                  GLuint *combinedShaderStorageBlocksCount)
-{
-    ASSERT(combinedShaderStorageBlocksCount);
-
-    GLuint combinedUniformBlocksCount                                         = 0u;
-    GLuint numShadersHasUniformBlocks                                         = 0u;
-    ShaderMap<const std::vector<sh::InterfaceBlock> *> allShaderUniformBlocks = {};
-    InterfaceBlockMap instancelessInterfaceBlocksFields;
-
-    for (ShaderType shaderType : AllShaderTypes())
-    {
-        Shader *shader = mState.mAttachedShaders[shaderType];
-        if (!shader)
-        {
-            continue;
-        }
-
-        const auto &uniformBlocks = shader->getUniformBlocks();
-        if (!uniformBlocks.empty())
-        {
-            if (!ValidateInterfaceBlocksCount(
-                    static_cast<GLuint>(caps.maxShaderUniformBlocks[shaderType]), uniformBlocks,
-                    shaderType, sh::BlockType::BLOCK_UNIFORM, &combinedUniformBlocksCount, infoLog))
-            {
-                return false;
-            }
-
-            allShaderUniformBlocks[shaderType] = &uniformBlocks;
-            ++numShadersHasUniformBlocks;
-        }
-    }
-
-    if (combinedUniformBlocksCount > static_cast<GLuint>(caps.maxCombinedUniformBlocks))
-    {
-        infoLog << "The sum of the number of active uniform blocks exceeds "
-                   "MAX_COMBINED_UNIFORM_BLOCKS ("
-                << caps.maxCombinedUniformBlocks << ").";
-        return false;
-    }
-
-    if (!ValidateInterfaceBlocksMatch(numShadersHasUniformBlocks, allShaderUniformBlocks, infoLog,
-                                      webglCompatibility, &instancelessInterfaceBlocksFields))
-    {
-        return false;
-    }
-
-    if (version >= Version(3, 1))
-    {
-        *combinedShaderStorageBlocksCount                                         = 0u;
-        GLuint numShadersHasShaderStorageBlocks                                   = 0u;
-        ShaderMap<const std::vector<sh::InterfaceBlock> *> allShaderStorageBlocks = {};
-        for (ShaderType shaderType : AllShaderTypes())
-        {
-            Shader *shader = mState.mAttachedShaders[shaderType];
-            if (!shader)
-            {
-                continue;
-            }
-
-            const auto &shaderStorageBlocks = shader->getShaderStorageBlocks();
-            if (!shaderStorageBlocks.empty())
-            {
-                if (!ValidateInterfaceBlocksCount(
-                        static_cast<GLuint>(caps.maxShaderStorageBlocks[shaderType]),
-                        shaderStorageBlocks, shaderType, sh::BlockType::BLOCK_BUFFER,
-                        combinedShaderStorageBlocksCount, infoLog))
-                {
-                    return false;
-                }
-
-                allShaderStorageBlocks[shaderType] = &shaderStorageBlocks;
-                ++numShadersHasShaderStorageBlocks;
-            }
-        }
-
-        if (*combinedShaderStorageBlocksCount >
-            static_cast<GLuint>(caps.maxCombinedShaderStorageBlocks))
-        {
-            infoLog << "The sum of the number of active shader storage blocks exceeds "
-                       "MAX_COMBINED_SHADER_STORAGE_BLOCKS ("
-                    << caps.maxCombinedShaderStorageBlocks << ").";
-            return false;
-        }
-
-        if (!ValidateInterfaceBlocksMatch(numShadersHasShaderStorageBlocks, allShaderStorageBlocks,
-                                          infoLog, webglCompatibility,
-                                          &instancelessInterfaceBlocksFields))
-        {
-            return false;
         }
     }
 
