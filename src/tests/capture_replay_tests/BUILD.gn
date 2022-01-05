@@ -45,6 +45,10 @@ angle_executable("capture_replay_tests") {
     "$angle_root:angle_compression",
     "$angle_root/util:angle_frame_capture_test_utils",
   ]
+
+  # Necessary to fix build on iOS.
+  public_deps = [ "$angle_root/util:angle_util" ]
+
   configs += [
     "$angle_root:library_name_config",
     "$angle_root:libANGLE_config",
