@@ -104,7 +104,7 @@ ninja. A good default is 10*numCores to 20*numCores. If you run autoninja then
 it will automatically pass an appropriate -j value to ninja for goma or not.
 
 ```
-$ autoninja -C out\Debug
+$ autoninja -C out/Debug
 ```
 
 ### Building and Debugging with Visual Studio
