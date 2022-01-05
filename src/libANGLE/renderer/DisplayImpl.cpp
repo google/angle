@@ -115,4 +115,10 @@ DeviceImpl *DisplayImpl::createDevice()
 {
     return new MockDevice();
 }
+
+bool DisplayImpl::isX11() const
+{
+    return false;
+}
+
 }  // namespace rx

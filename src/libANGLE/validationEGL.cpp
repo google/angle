@@ -20,6 +20,7 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/Thread.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/DisplayImpl.h"
 
 #include <EGL/eglext.h>
 
@@ -5058,10 +5059,12 @@ bool ValidateCreatePlatformWindowSurfaceEXT(const ValidationContext *val,
         return false;
     }
 
-    ANGLE_VALIDATION_TRY(ValidateConfig(val, display, configuration));
+    const void *actualNativeWindow = display->getImplementation()->isX11()
+                                         ? *reinterpret_cast<const void *const *>(nativeWindow)
+                                         : nativeWindow;
 
-    val->setError(EGL_BAD_DISPLAY, "ValidateCreatePlatformWindowSurfaceEXT unimplemented.");
-    return false;
+    return ValidateCreatePlatformWindowSurface(val, display, configuration, actualNativeWindow,
+                                               attributes);
 }
 
 bool ValidateCreatePlatformPixmapSurfaceEXT(const ValidationContext *val,

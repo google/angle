@@ -15,6 +15,7 @@
 #include "libANGLE/Thread.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/queryutils.h"
+#include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/validationEGL.h"
 #include "libANGLE/validationEGL_autogen.h"
 #include "libGLESv2/global_state.h"
@@ -88,9 +89,18 @@ EGLSurface CreatePlatformWindowSurfaceEXT(Thread *thread,
 {
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglCreatePlatformWindowSurfaceEXT",
                          GetDisplayIfValid(display), EGL_NO_SURFACE);
-    thread->setError(EGL_BAD_DISPLAY, "eglCreatePlatformWindowSurfaceEXT",
-                     GetDisplayIfValid(display), "CreatePlatformWindowSurfaceEXT unimplemented.");
-    return EGL_NO_SURFACE;
+    Surface *surface = nullptr;
+
+    void *actualNativeWindow = display->getImplementation()->isX11()
+                                   ? *reinterpret_cast<void **>(native_window)
+                                   : native_window;
+    EGLNativeWindowType nativeWindow = reinterpret_cast<EGLNativeWindowType>(actualNativeWindow);
+
+    ANGLE_EGL_TRY_RETURN(
+        thread, display->createWindowSurface(configPacked, nativeWindow, attributes, &surface),
+        "eglPlatformCreateWindowSurfaceEXT", GetDisplayIfValid(display), EGL_NO_SURFACE);
+
+    return static_cast<EGLSurface>(surface);
 }
 
 EGLStreamKHR CreateStreamKHR(Thread *thread, Display *display, const AttributeMap &attributes)

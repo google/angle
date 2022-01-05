@@ -121,6 +121,8 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
 
     virtual egl::Error handleGPUSwitch();
 
+    virtual bool isX11() const;
+
   protected:
     const egl::DisplayState &mState;
 
