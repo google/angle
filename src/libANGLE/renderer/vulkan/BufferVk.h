@@ -111,10 +111,10 @@ class BufferVk : public BufferImpl
         // submission, since this function is only called when trying to get the underlying
         // BufferHelper object so it can be used in a command.
         mHasBeenReferencedByGPU = true;
-        return *mBuffer.get();
+        return mBuffer;
     }
 
-    bool isBufferValid() const { return mBuffer.get() != nullptr; }
+    bool isBufferValid() const { return mBuffer.valid(); }
     bool isCurrentlyInUse(ContextVk *contextVk) const;
 
     angle::Result mapImpl(ContextVk *contextVk, GLbitfield access, void **mapPtr);
@@ -199,7 +199,7 @@ class BufferVk : public BufferImpl
         size_t offset;
     };
 
-    std::unique_ptr<vk::BufferHelper> mBuffer;
+    vk::BufferHelper mBuffer;
 
     uint32_t mMemoryTypeIndex;
     // Memory/Usage property that will be used for memory allocation.
