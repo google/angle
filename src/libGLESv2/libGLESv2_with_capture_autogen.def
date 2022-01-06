@@ -1221,6 +1221,9 @@ EXPORTS
     EGL_ReacquireHighPowerGPUANGLE
     EGL_ReleaseHighPowerGPUANGLE
 
+    ; EGL_ANGLE_prepare_swap_buffers
+    EGL_PrepareSwapBuffersANGLE
+
     ; EGL_ANGLE_program_cache_control
     EGL_ProgramCacheGetAttribANGLE
     EGL_ProgramCachePopulateANGLE

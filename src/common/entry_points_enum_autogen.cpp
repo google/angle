@@ -366,6 +366,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglMakeCurrent";
         case EntryPoint::EGLPostSubBufferNV:
             return "eglPostSubBufferNV";
+        case EntryPoint::EGLPrepareSwapBuffersANGLE:
+            return "eglPrepareSwapBuffersANGLE";
         case EntryPoint::EGLPresentationTimeANDROID:
             return "eglPresentationTimeANDROID";
         case EntryPoint::EGLProgramCacheGetAttribANGLE:

@@ -13,8 +13,10 @@
 #include "libANGLE/EGLSync.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Thread.h"
+#include "libANGLE/entry_points_utils.h"
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationEGL.h"
+#include "libANGLE/validationEGL_autogen.h"
 #include "libGLESv2/global_state.h"
 
 namespace egl
@@ -582,6 +584,33 @@ EGLBoolean SwapBuffersWithDamageKHR(Thread *thread,
     ANGLE_EGL_TRY_RETURN(thread, eglSurface->swapWithDamage(thread->getContext(), rects, n_rects),
                          "eglSwapBuffersWithDamageEXT", GetSurfaceIfValid(display, eglSurface),
                          EGL_FALSE);
+
+    thread->setSuccess();
+    return EGL_TRUE;
+}
+
+EGLBoolean PrepareSwapBuffersANGLE(EGLDisplay dpy, EGLSurface surface)
+
+{
+    ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();
+
+    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
+    Surface *surfacePacked  = PackParam<Surface *>(surface);
+    Thread *thread          = egl::GetCurrentThread();
+    {
+        ANGLE_SCOPED_GLOBAL_LOCK();
+
+        EGL_EVENT(PrepareSwapBuffersANGLE, "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR "",
+                  (uintptr_t)dpy, (uintptr_t)surface);
+
+        ANGLE_EGL_VALIDATE(thread, PrepareSwapBuffersANGLE, GetDisplayIfValid(dpyPacked),
+                           EGLBoolean, dpyPacked, surfacePacked);
+
+        ANGLE_EGL_TRY_RETURN(thread, dpyPacked->prepareForCall(), "eglPrepareSwapBuffersANGLE",
+                             GetDisplayIfValid(dpyPacked), EGL_FALSE);
+    }
+    ANGLE_EGL_TRY_RETURN(thread, surfacePacked->prepareSwap(thread->getContext()), "prepareSwap",
+                         GetSurfaceIfValid(dpyPacked, surfacePacked), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;

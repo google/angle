@@ -333,6 +333,14 @@ EGLAPI EGLBoolean EGLAPIENTRY eglSwapBuffersWithFrameTokenANGLE(EGLDisplay dpy, 
 #endif
 #endif /* EGL_ANGLE_swap_with_frame_token */
 
+#ifndef EGL_ANGLE_prepare_swap_buffers
+#define EGL_ANGLE_prepare_swap_buffers 1
+typedef EGLBoolean (EGLAPIENTRYP PFNEGLPREPARESWAPBUFFERSANGLEPROC)(EGLDisplay dpy, EGLSurface surface);
+#ifdef EGL_EGLEXT_PROTOTYPES
+EGLAPI EGLBoolean EGLAPIENTRY eglPrepareSwapBuffersANGLE(EGLDisplay dpy, EGLSurface surface);
+#endif
+#endif /* EGL_ANGLE_prepare_swap_buffers */
+
 #ifndef EGL_ANGLE_device_eagl
 #define EGL_ANGLE_device_eagl 1
 #define EGL_EAGL_CONTEXT_ANGLE 0x348C

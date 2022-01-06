@@ -225,6 +225,7 @@ EGLBoolean SwapBuffersWithFrameTokenANGLE(Thread *thread,
                                           egl::Display *dpyPacked,
                                           Surface *surfacePacked,
                                           EGLFrameTokenANGLE frametoken);
+EGLBoolean PrepareSwapBuffersANGLE(EGLDisplay dpy, EGLSurface surface);
 void ReleaseHighPowerGPUANGLE(Thread *thread, egl::Display *dpyPacked, gl::Context *ctxPacked);
 void ReacquireHighPowerGPUANGLE(Thread *thread, egl::Display *dpyPacked, gl::Context *ctxPacked);
 void HandleGPUSwitchANGLE(Thread *thread, egl::Display *dpyPacked);
