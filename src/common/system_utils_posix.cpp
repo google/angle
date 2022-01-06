@@ -83,7 +83,7 @@ const char *GetPathSeparatorForEnvironmentVar()
     return ":";
 }
 
-std::string GetModuleDirectory()
+std::string GetModuleDirectoryAndGetError(std::string *errorOut)
 {
     std::string directory;
     static int placeholderSymbol = 0;
@@ -94,12 +94,36 @@ std::string GetModuleDirectory()
     }
 
     // Ensure we return the full path to the module, not the relative path
-    Optional<std::string> cwd = GetCWD();
-    if (cwd.valid() && !IsFullPath(directory))
+    if (!IsFullPath(directory))
     {
-        directory = ConcatenatePath(cwd.value(), directory);
+        if (errorOut)
+        {
+            *errorOut += "Directory: '";
+            *errorOut += directory;
+            *errorOut += "' is not full path";
+        }
+        Optional<std::string> cwd = GetCWD();
+        if (cwd.valid())
+        {
+            directory = ConcatenatePath(cwd.value(), directory);
+            if (errorOut)
+            {
+                *errorOut += ", so it has been modified to: '";
+                *errorOut += directory;
+                *errorOut += "'. ";
+            }
+        }
+        else if (errorOut)
+        {
+            *errorOut += " and getcwd was invalid. ";
+        }
     }
     return directory;
+}
+
+std::string GetModuleDirectory()
+{
+    return GetModuleDirectoryAndGetError(nullptr);
 }
 
 class PosixLibrary : public Library
@@ -217,7 +241,7 @@ Library *OpenSharedLibraryWithExtensionAndGetError(const char *libraryName,
         // On iOS, shared libraries must be loaded from within the app bundle.
         directory = GetExecutableDirectory() + "/Frameworks/";
 #else
-        directory = GetModuleDirectory();
+        directory = GetModuleDirectoryAndGetError(errorOut);
 #endif
     }
 

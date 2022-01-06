@@ -131,6 +131,7 @@ ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment(bool enableValidationLayers
     }
 #    endif  // defined(ANGLE_VK_SWIFTSHADER_ICD_JSON)
 
+#    if !defined(ANGLE_PLATFORM_MACOS)
     if (mEnableValidationLayers || icd != vk::ICD::Default)
     {
         const auto &cwd = angle::GetCWD();
@@ -153,6 +154,7 @@ ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment(bool enableValidationLayers
             }
         }
     }
+#    endif  // defined(ANGLE_PLATFORM_MACOS)
 
     // Override environment variable to use the ANGLE layers.
     if (mEnableValidationLayers)
