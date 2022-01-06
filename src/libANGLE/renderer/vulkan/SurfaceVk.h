@@ -267,6 +267,8 @@ class WindowSurfaceVk : public SurfaceVk
     egl::Error unlockSurface(const egl::Display *display, bool preservePixels) override;
     EGLint origin() const override;
 
+    angle::Result onSharedPresentContextFlush(const gl::Context *context);
+
   protected:
     angle::Result prepareSwapImpl(const gl::Context *context);
     angle::Result swapImpl(const gl::Context *context,

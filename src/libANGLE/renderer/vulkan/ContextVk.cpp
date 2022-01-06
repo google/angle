@@ -1102,11 +1102,23 @@ angle::Result ContextVk::flush(const gl::Context *context)
         return angle::Result::Continue;
     }
 
+    if (mRenderer->getFeatures().swapbuffersOnFlushOrFinishWithSingleBuffer.enabled &&
+        isSingleBuffer)
+    {
+        return mCurrentWindowSurface->onSharedPresentContextFlush(context);
+    }
+
     return flushImpl(nullptr, RenderPassClosureReason::GLFlush);
 }
 
 angle::Result ContextVk::finish(const gl::Context *context)
 {
+    if (mRenderer->getFeatures().swapbuffersOnFlushOrFinishWithSingleBuffer.enabled &&
+        (mCurrentWindowSurface != nullptr) && mCurrentWindowSurface->isSharedPresentMode())
+    {
+        return mCurrentWindowSurface->onSharedPresentContextFlush(context);
+    }
+
     return finishImpl(RenderPassClosureReason::GLFinish);
 }
 
