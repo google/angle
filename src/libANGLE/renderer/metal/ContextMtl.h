@@ -450,7 +450,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
                                    gl::DrawElementsType type,
                                    const void *indices,
                                    GLsizei instanceCount);
-
+    void flushCommandBufferIfNeeded();
     void updateExtendedState(const gl::State &glState);
 
     void updateViewport(FramebufferMtl *framebufferMtl,
@@ -593,7 +593,6 @@ class ContextMtl : public ContextImpl, public mtl::Context
     IncompleteTextureSet mIncompleteTextures;
     bool mIncompleteTexturesInitialized = false;
     ProvokingVertexHelper mProvokingVertexHelper;
-    bool mPreviousRasterizerDiscardEnabledState = false;
 
     mtl::ContextDevice mContextDevice;
 };

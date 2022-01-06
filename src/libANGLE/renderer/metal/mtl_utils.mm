@@ -1181,6 +1181,36 @@ bool IsFormatEmulated(const mtl::Format &mtlFormat)
     return isFormatEmulated;
 }
 
+size_t EstimateTextureSizeInBytes(const mtl::Format &mtlFormat,
+                                  size_t width,
+                                  size_t height,
+                                  size_t depth,
+                                  size_t sampleCount,
+                                  size_t numMips)
+{
+    size_t textureSizeInBytes;
+    if (mtlFormat.getCaps().compressed)
+    {
+        GLuint textureSize;
+        gl::Extents size((int)width, (int)height, (int)depth);
+        if (!mtlFormat.intendedInternalFormat().computeCompressedImageSize(size, &textureSize))
+        {
+            return 0;
+        }
+        textureSizeInBytes = textureSize;
+    }
+    else
+    {
+        textureSizeInBytes = mtlFormat.getCaps().pixelBytes * width * height * depth * sampleCount;
+    }
+    if (numMips > 1)
+    {
+        // Estimate mipmap size.
+        textureSizeInBytes = textureSizeInBytes * 4 / 3;
+    }
+    return textureSizeInBytes;
+}
+
 MTLClearColor EmulatedAlphaClearColor(MTLClearColor color, MTLColorWriteMask colorMask)
 {
     MTLClearColor re = color;
