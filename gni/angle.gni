@@ -316,6 +316,12 @@ template("angle_executable") {
     if (angle_has_build && is_win) {
       data_deps += [ "//build/win:runtime_libs" ]
     }
+
+    if (is_ios) {
+      # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
+      # Specifically, capture_replay_tests includes headers from angle_util
+      check_includes = false
+    }
   }
 }
 
