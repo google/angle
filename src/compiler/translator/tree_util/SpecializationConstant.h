@@ -43,7 +43,7 @@ class SpecConst
     TIntermTyped *getFragRotationMultiplyFlipXY();
 
     // Half render area
-    TIntermBinary *getHalfRenderArea();
+    TIntermTyped *getHalfRenderArea();
 
     void declareSpecConsts(TIntermBlock *root);
     SpecConstUsageBits getSpecConstUsageBits() const { return mUsageBits; }

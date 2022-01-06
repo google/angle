@@ -494,7 +494,7 @@ TIntermSymbol *SpecConst::getDrawableHeight()
     return new TIntermSymbol(mDrawableHeightVar);
 }
 
-TIntermBinary *SpecConst::getHalfRenderArea()
+TIntermTyped *SpecConst::getHalfRenderArea()
 {
     if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {

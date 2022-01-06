@@ -59,31 +59,31 @@ TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable)
     return driverFieldList;
 }
 
-TIntermBinary *DriverUniformMetal::getHalfRenderAreaRef() const
+TIntermTyped *DriverUniformMetal::getHalfRenderAreaRef() const
 {
     return createDriverUniformRef(kHalfRenderArea);
 }
 
-TIntermBinary *DriverUniformMetal::getFlipXYRef() const
+TIntermTyped *DriverUniformMetal::getFlipXYRef() const
 {
     return createDriverUniformRef(kFlipXY);
 }
 
-TIntermBinary *DriverUniformMetal::getNegFlipXYRef() const
+TIntermTyped *DriverUniformMetal::getNegFlipXYRef() const
 {
     return createDriverUniformRef(kNegFlipXY);
 }
 
-TIntermSwizzle *DriverUniformMetal::getNegFlipYRef() const
+TIntermTyped *DriverUniformMetal::getNegFlipYRef() const
 {
     // Create a swizzle to "negFlipXY.y"
-    TIntermBinary *negFlipXY    = createDriverUniformRef(kNegFlipXY);
+    TIntermTyped *negFlipXY     = createDriverUniformRef(kNegFlipXY);
     TVector<int> swizzleOffsetY = {1};
     TIntermSwizzle *negFlipY    = new TIntermSwizzle(negFlipXY, swizzleOffsetY);
     return negFlipY;
 }
 
-TIntermBinary *DriverUniformMetal::getCoverageMaskFieldRef() const
+TIntermTyped *DriverUniformMetal::getCoverageMaskFieldRef() const
 {
     return createDriverUniformRef(kCoverageMask);
 }
