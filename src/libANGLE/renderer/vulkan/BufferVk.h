@@ -34,8 +34,11 @@ struct ConversionBuffer
     // One state value determines if we need to re-stream vertex data.
     bool dirty;
 
-    // Where the conversion data is stored.
-    std::unique_ptr<vk::BufferHelper> data;
+    // One additional state value keeps the last allocation offset.
+    VkDeviceSize lastAllocationOffset;
+
+    // The conversion is stored in a dynamic buffer.
+    vk::DynamicBuffer data;
 };
 
 enum class BufferUpdateType

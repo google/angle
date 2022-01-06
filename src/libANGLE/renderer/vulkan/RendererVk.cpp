@@ -1001,9 +1001,6 @@ RendererVk::RendererVk()
       mCoherentStagingBufferMemoryTypeIndex(kInvalidMemoryTypeIndex),
       mNonCoherentStagingBufferMemoryTypeIndex(kInvalidMemoryTypeIndex),
       mStagingBufferAlignment(1),
-      mHostVisibleVertexConversionBufferMemoryTypeIndex(kInvalidMemoryTypeIndex),
-      mDeviceLocalVertexConversionBufferMemoryTypeIndex(kInvalidMemoryTypeIndex),
-      mVertexConversionBufferAlignment(1),
       mPipelineCacheVkUpdateTimeout(kPipelineCacheVkUpdatePeriod),
       mPipelineCacheDirty(false),
       mPipelineCacheInitialized(false),
@@ -1520,25 +1517,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         std::max(mStagingBufferAlignment,
                  static_cast<size_t>(mPhysicalDeviceProperties.limits.nonCoherentAtomSize));
     ASSERT(gl::isPow2(mStagingBufferAlignment));
-
-    // Device local vertex conversion buffer
-    createInfo.usage = vk::kVertexBufferUsageFlags;
-    requiredFlags    = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    preferredFlags   = 0;
-    ANGLE_VK_TRY(displayVk, mBufferMemoryAllocator.findMemoryTypeIndexForBufferInfo(
-                                this, createInfo, requiredFlags, preferredFlags, persistentlyMapped,
-                                &mDeviceLocalVertexConversionBufferMemoryTypeIndex));
-    ASSERT(mDeviceLocalVertexConversionBufferMemoryTypeIndex != kInvalidMemoryTypeIndex);
-
-    // Host visible and non-coherent vertex conversion buffer, which is the same as non-coherent
-    // staging buffer
-    mHostVisibleVertexConversionBufferMemoryTypeIndex = mNonCoherentStagingBufferMemoryTypeIndex;
-    // We may use compute shader to do conversion, so we must meet
-    // minStorageBufferOffsetAlignment requirement as well.
-    mVertexConversionBufferAlignment = std::max(
-        vk::kVertexBufferAlignment,
-        static_cast<size_t>(mPhysicalDeviceProperties.limits.minStorageBufferOffsetAlignment));
-    ASSERT(gl::isPow2(mVertexConversionBufferAlignment));
 
     {
         ANGLE_TRACE_EVENT0("gpu.angle,startup", "GlslangWarmup");
