@@ -26,6 +26,9 @@ namespace
 ANGLE_REQUIRE_CONSTANT_INIT std::atomic<angle::GlobalMutex *> g_Mutex(nullptr);
 static_assert(std::is_trivially_destructible<decltype(g_Mutex)>::value,
               "global mutex is not trivially destructible");
+ANGLE_REQUIRE_CONSTANT_INIT std::atomic<angle::GlobalMutex *> g_SurfaceMutex(nullptr);
+static_assert(std::is_trivially_destructible<decltype(g_SurfaceMutex)>::value,
+              "global mutex is not trivially destructible");
 
 ANGLE_REQUIRE_CONSTANT_INIT gl::Context *g_LastContext(nullptr);
 static_assert(std::is_trivially_destructible<decltype(g_LastContext)>::value,
@@ -97,6 +100,19 @@ void AllocateMutex()
     }
 }
 
+void AllocateSurfaceMutex()
+{
+    if (g_SurfaceMutex == nullptr)
+    {
+        std::unique_ptr<angle::GlobalMutex> newMutex(new angle::GlobalMutex());
+        angle::GlobalMutex *expected = nullptr;
+        if (g_SurfaceMutex.compare_exchange_strong(expected, newMutex.get()))
+        {
+            newMutex.release();
+        }
+    }
+}
+
 }  // anonymous namespace
 
 #if defined(ANGLE_PLATFORM_APPLE)
@@ -135,6 +151,12 @@ angle::GlobalMutex &GetGlobalMutex()
 {
     AllocateMutex();
     return *g_Mutex;
+}
+
+angle::GlobalMutex &GetGlobalSurfaceMutex()
+{
+    AllocateSurfaceMutex();
+    return *g_SurfaceMutex;
 }
 
 gl::Context *GetGlobalLastContext()
@@ -231,6 +253,18 @@ void DeallocateMutex()
     SafeDelete(mutex);
 }
 
+void DeallocateSurfaceMutex()
+{
+    angle::GlobalMutex *mutex = g_SurfaceMutex.exchange(nullptr);
+    if (!mutex)
+        return;
+    {
+        // Wait for the mutex to become released by other threads before deleting.
+        std::lock_guard<angle::GlobalMutex> lock(*mutex);
+    }
+    SafeDelete(mutex);
+}
+
 bool InitializeProcess()
 {
     EnsureDebugAllocated();
@@ -241,6 +275,7 @@ bool InitializeProcess()
 void TerminateProcess()
 {
     DeallocateDebug();
+    DeallocateSurfaceMutex();
     DeallocateMutex();
     DeallocateCurrentThread();
 }

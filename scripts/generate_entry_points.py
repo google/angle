@@ -224,7 +224,7 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
 TEMPLATE_EGL_ENTRY_POINT_NO_RETURN = """\
 void EGLAPIENTRY EGL_{name}({params})
 {{
-    ANGLE_SCOPED_GLOBAL_LOCK();
+    {lock_domain}
     EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     Thread *thread = egl::GetCurrentThread();
@@ -240,7 +240,7 @@ void EGLAPIENTRY EGL_{name}({params})
 TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 {return_type} EGLAPIENTRY EGL_{name}({params})
 {{
-    ANGLE_SCOPED_GLOBAL_LOCK();
+    {lock_domain}
     EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     Thread *thread = egl::GetCurrentThread();
@@ -1516,8 +1516,10 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
     else:
         has_errcode_ret = False
     packed_gl_enum_conversions = []
+
     for param in params:
         name = just_the_name(param)
+
         if name in packed_enums:
             internal_name = name + "Packed"
             internal_type = packed_enums[name]
@@ -1568,7 +1570,9 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         "event_comment":
             event_comment,
         "labeled_object":
-            get_egl_entry_point_labeled_object(ep_to_object, cmd_name, params, packed_enums)
+            get_egl_entry_point_labeled_object(ep_to_object, cmd_name, params, packed_enums),
+        "lock_domain":
+            get_lock_domain(api, cmd_name, params),
     }
 
     template = get_def_template(api, return_type, has_errcode_ret)
@@ -2487,6 +2491,32 @@ def get_egl_entry_point_labeled_object(ep_to_object, cmd_stripped, params, packe
 
     # We then handle the general case which handles the rest of the type categories.
     return "Get%sIfValid(%s, %s)" % (category, display_param, found_param)
+
+
+def get_lock_domain(api, cmd_name, params):
+
+    if api != apis.EGL:
+        return "ANGLE_SCOPED_GLOBAL_LOCK();"
+
+    lock_domain_global = "ANGLE_SCOPED_GLOBAL_LOCK();"
+    lock_domain_surface = "ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();"
+
+    custom_locking = ["eglSwapBuffers", "eglSwapBuffersWithDamageKHR"]
+
+    if cmd_name in custom_locking:
+        return ""
+
+    has_surface = False
+
+    for param in params:
+        param_type = just_the_type(param)
+        if param_type == "EGLSurface":
+            has_surface = True
+
+    if has_surface:
+        return lock_domain_global + lock_domain_surface
+
+    return lock_domain_global
 
 
 def write_stubs_header(api, annotation, title, data_source, out_file, all_commands, commands,

@@ -101,6 +101,7 @@ extern thread_local Thread *gCurrentThread;
 #endif
 
 angle::GlobalMutex &GetGlobalMutex();
+angle::GlobalMutex &GetGlobalSurfaceMutex();
 gl::Context *GetGlobalLastContext();
 void SetGlobalLastContext(gl::Context *context);
 Thread *GetCurrentThread();
@@ -121,6 +122,9 @@ class ScopedSyncCurrentContextFromThread
 
 #define ANGLE_SCOPED_GLOBAL_LOCK() \
     std::lock_guard<angle::GlobalMutex> globalMutexLock(egl::GetGlobalMutex())
+
+#define ANGLE_SCOPED_GLOBAL_SURFACE_LOCK() \
+    std::lock_guard<angle::GlobalMutex> globalSurfaceMutexLock(egl::GetGlobalSurfaceMutex())
 
 namespace gl
 {

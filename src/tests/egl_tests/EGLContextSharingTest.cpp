@@ -123,12 +123,21 @@ class EGLContextSharingTestNoFixture : public EGLContextSharingTest
         return result;
     }
 
-    bool createContext(EGLConfig config, EGLContext *context)
+    bool createContext(EGLConfig config,
+                       EGLContext *context,
+                       EGLContext share_context = EGL_NO_CONTEXT)
     {
         bool result      = false;
-        EGLint attribs[] = {EGL_CONTEXT_MAJOR_VERSION, mMajorVersion, EGL_NONE};
+        EGLint attribs[] = {EGL_CONTEXT_MAJOR_VERSION, mMajorVersion,
+                            EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, mVirtualizationGroup++,
+                            EGL_NONE};
 
-        *context = eglCreateContext(mDisplay, config, nullptr, attribs);
+        if (!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_ANGLE_context_virtualization"))
+        {
+            attribs[2] = EGL_NONE;
+        }
+
+        *context = eglCreateContext(mDisplay, config, share_context, attribs);
         result   = (*context != EGL_NO_CONTEXT);
         EXPECT_TRUE(result);
         return result;
@@ -166,6 +175,7 @@ class EGLContextSharingTestNoFixture : public EGLContextSharingTest
     const EGLint kWidth  = 64;
     const EGLint kHeight = 64;
     EGLint mMajorVersion = 0;
+    std::atomic<EGLint> mVirtualizationGroup;
 };
 
 // Tests that creating resources works after freeing the share context.
@@ -961,6 +971,116 @@ TEST_P(EGLContextSharingTestNoFixture, EglTerminateMultipleTimes)
     eglTerminate(mDisplay);
     EXPECT_EGL_SUCCESS();
     mDisplay = EGL_NO_DISPLAY;
+}
+
+// Test that we can eglSwapBuffers in one thread while another thread renders to a texture.
+TEST_P(EGLContextSharingTestNoFixture, SwapBuffersShared)
+{
+    EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+    mDisplay           = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
+                                        reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+    EXPECT_TRUE(mDisplay != EGL_NO_DISPLAY);
+    EXPECT_EGL_TRUE(eglInitialize(mDisplay, nullptr, nullptr));
+
+    EGLConfig config = EGL_NO_CONFIG_KHR;
+    EXPECT_TRUE(chooseConfig(&config));
+
+    mOsWindow->initialize("EGLContextSharingTestNoFixture", kWidth, kHeight);
+    EXPECT_TRUE(createWindowSurface(config, mOsWindow->getNativeWindow(), &mSurface));
+    ASSERT_EGL_SUCCESS() << "eglCreateWindowSurface failed.";
+
+    EGLSurface pbufferSurface;
+    EXPECT_TRUE(createPbufferSurface(mDisplay, config, kWidth, kHeight, &pbufferSurface));
+
+    // Create the two contextss
+    EXPECT_TRUE(createContext(config, &mContexts[0]));
+    EXPECT_TRUE(createContext(config, &mContexts[1], mContexts[0]));
+
+    eglMakeCurrent(mDisplay, mSurface, mSurface, mContexts[0]);
+    ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
+    eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+
+    // Synchronization tools to ensure the two threads are interleaved as designed by this test.
+    std::mutex mutex;
+    std::condition_variable condVar;
+
+    enum class Step
+    {
+        Start,
+        TextureInitialized,
+        Finish,
+        Abort,
+    };
+
+    Step currentStep = Step::Start;
+
+    // Sample a texture in the swap thread.
+    std::thread swapThread = std::thread([&]() {
+        ThreadSynchronization<Step> threadSynchronization(&currentStep, &mutex, &condVar);
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Start));
+        eglMakeCurrent(mDisplay, mSurface, mSurface, mContexts[0]);
+
+        glGenTextures(1, &mTexture);
+        glBindTexture(GL_TEXTURE_2D, mTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+
+        threadSynchronization.nextStep(Step::TextureInitialized);
+
+        ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+        glUseProgram(program);
+
+        for (int i = 0; i < 100; ++i)
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+            drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+            EXPECT_GL_NO_ERROR();
+            eglSwapBuffers(mDisplay, mSurface);
+        }
+        eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+        eglReleaseThread();
+    });
+
+    // Render to the texture in the render thread.
+    std::thread renderThread = std::thread([&]() {
+        ThreadSynchronization<Step> threadSynchronization(&currentStep, &mutex, &condVar);
+        ASSERT_EGL_TRUE(eglMakeCurrent(mDisplay, pbufferSurface, pbufferSurface, mContexts[1]));
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+        ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+        ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+        ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+        // The render thread will draw to the texture.
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::TextureInitialized));
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture, 0);
+        glDisable(GL_DEPTH_TEST);
+
+        for (int i = 0; i < 400; ++i)
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+            glUseProgram(redProgram);
+            drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
+
+            glClear(GL_COLOR_BUFFER_BIT);
+            glUseProgram(greenProgram);
+            drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
+
+            glClear(GL_COLOR_BUFFER_BIT);
+            glUseProgram(blueProgram);
+            drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.5f);
+        }
+        eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+        eglReleaseThread();
+    });
+
+    swapThread.join();
+    renderThread.join();
+
+    eglDestroySurface(mDisplay, pbufferSurface);
+    ASSERT_EGL_SUCCESS();
 }
 }  // anonymous namespace
 
