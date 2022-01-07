@@ -1460,13 +1460,6 @@ bool ValidateCreateContextAttribute(const ValidationContext *val,
             }
             break;
 
-        case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR:
-            val->setError(EGL_BAD_ATTRIBUTE,
-                          "EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR is not"
-                          " valid for GLES with EGL 1.4 and KHR_create_context. Use"
-                          " EXT_create_context_robustness.");
-            return false;
-
         case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT:
             if (!display->getExtensions().createContextRobustness)
             {
@@ -1474,6 +1467,23 @@ bool ValidateCreateContextAttribute(const ValidationContext *val,
                 return false;
             }
             break;
+
+        case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY:
+        {
+            // We either need to have -
+            // 1. EGL 1.5 which added support for this as part of core spec
+            // 2. EGL_KHR_create_context extension which requires EGL 1.4
+            constexpr EGLint kRequiredMajorVersion = 1;
+            constexpr EGLint kRequiredMinorVersion = 5;
+            if ((kEglMajorVersion < kRequiredMajorVersion ||
+                 kEglMinorVersion < kRequiredMinorVersion) &&
+                !display->getExtensions().createContext)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE);
+                return false;
+            }
+            break;
+        }
 
         case EGL_CONTEXT_OPENGL_NO_ERROR_KHR:
             if (!display->getExtensions().createContextNoError)
@@ -1700,6 +1710,7 @@ bool ValidateCreateContextAttributeValue(const ValidationContext *val,
             break;
 
         case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT:
+        case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY:
             if (value != EGL_LOSE_CONTEXT_ON_RESET_EXT && value != EGL_NO_RESET_NOTIFICATION_EXT)
             {
                 val->setError(EGL_BAD_ATTRIBUTE);

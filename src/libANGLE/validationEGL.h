@@ -23,6 +23,8 @@ class Context;
 
 namespace egl
 {
+constexpr EGLint kEglMajorVersion = 1;
+constexpr EGLint kEglMinorVersion = 5;
 
 class AttributeMap;
 struct ClientExtensions;

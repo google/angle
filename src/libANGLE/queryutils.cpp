@@ -3071,6 +3071,7 @@ bool GetQueryParameterInfo(const State &glState,
     const Caps &caps             = glState.getCaps();
     const Extensions &extensions = glState.getExtensions();
     GLint clientMajorVersion     = glState.getClientMajorVersion();
+    EGLenum clientType           = glState.getClientType();
 
     // Please note: the query type returned for DEPTH_CLEAR_VALUE in this implementation
     // is FLOAT rather than INT, as would be suggested by the GL ES 2.0 spec. This is due
@@ -3337,11 +3338,24 @@ bool GetQueryParameterInfo(const State &glState,
             return true;
     }
 
-    if (glState.getClientType() == EGL_OPENGL_API)
+    if (clientType == EGL_OPENGL_API ||
+        (clientType == EGL_OPENGL_ES_API && glState.getClientVersion() >= Version(3, 2)))
     {
         switch (pname)
         {
             case GL_CONTEXT_FLAGS:
+            {
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
+            }
+        }
+    }
+
+    if (clientType == EGL_OPENGL_API)
+    {
+        switch (pname)
+        {
             case GL_CONTEXT_PROFILE_MASK:
             {
                 *type      = GL_INT;

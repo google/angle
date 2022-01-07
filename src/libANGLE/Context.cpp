@@ -163,9 +163,12 @@ Version GetClientVersion(egl::Display *display, const egl::AttributeMap &attribs
 
 GLenum GetResetStrategy(const egl::AttributeMap &attribs)
 {
-    EGLAttrib attrib =
+    EGLAttrib resetStrategyExt =
         attribs.get(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, EGL_NO_RESET_NOTIFICATION);
-    switch (attrib)
+    EGLAttrib resetStrategyCore =
+        attribs.get(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY, resetStrategyExt);
+
+    switch (resetStrategyCore)
     {
         case EGL_NO_RESET_NOTIFICATION:
             return GL_NO_RESET_NOTIFICATION_EXT;
@@ -179,9 +182,14 @@ GLenum GetResetStrategy(const egl::AttributeMap &attribs)
 
 bool GetRobustAccess(const egl::AttributeMap &attribs)
 {
-    return (attribs.get(EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT, EGL_FALSE) == EGL_TRUE) ||
-           ((attribs.get(EGL_CONTEXT_FLAGS_KHR, 0) & EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR) !=
-            0);
+    EGLAttrib robustAccessExt  = attribs.get(EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT, EGL_FALSE);
+    EGLAttrib robustAccessCore = attribs.get(EGL_CONTEXT_OPENGL_ROBUST_ACCESS, robustAccessExt);
+
+    bool attribRobustAccess = (robustAccessCore == EGL_TRUE);
+    bool contextFlagsRobustAccess =
+        ((attribs.get(EGL_CONTEXT_FLAGS_KHR, 0) & EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR) != 0);
+
+    return (attribRobustAccess || contextFlagsRobustAccess);
 }
 
 bool GetDebug(const egl::AttributeMap &attribs)
@@ -1736,11 +1744,20 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
         // Desktop client flags
         case GL_CONTEXT_FLAGS:
         {
-            ASSERT(getClientType() == EGL_OPENGL_API);
             GLint contextFlags = 0;
             if (mState.hasProtectedContent())
             {
                 contextFlags |= GL_CONTEXT_FLAG_PROTECTED_CONTENT_BIT_EXT;
+            }
+
+            if (mState.isDebugContext())
+            {
+                contextFlags |= GL_CONTEXT_FLAG_DEBUG_BIT_KHR;
+            }
+
+            if (mRobustAccess)
+            {
+                contextFlags |= GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT;
             }
             *params = contextFlags;
         }
