@@ -37,15 +37,6 @@ class ShareGroupVk;
 static constexpr uint32_t kMaxGpuEventNameLen = 32;
 using EventName                               = std::array<char, kMaxGpuEventNameLen>;
 
-enum class PipelineType
-{
-    Graphics = 0,
-    Compute  = 1,
-
-    InvalidEnum = 2,
-    EnumCount   = 2,
-};
-
 using ContextVkDescriptorSetList = angle::PackedEnumMap<PipelineType, uint32_t>;
 
 struct ContextVkPerfCounters
@@ -622,8 +613,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return getFeatures().basicGLLineRasterization.enabled && gl::IsLineMode(mode);
     }
 
-    const ProgramExecutableVk *getExecutable() const { return mExecutable; }
-    ProgramExecutableVk *getExecutable() { return mExecutable; }
+    ProgramExecutableVk *getExecutable() const;
 
     bool isRobustResourceInitEnabled() const;
 
@@ -970,6 +960,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void initIndexTypeMap();
 
+    VertexArrayVk *getVertexArray() const;
+    FramebufferVk *getDrawFramebuffer() const;
+    ProgramVk *getProgram() const;
+    ProgramPipelineVk *getProgramPipeline() const;
+
     // Read-after-write hazards are generally handled with |glMemoryBarrier| when the source of
     // write is storage output.  When the write is outside render pass, the natural placement of the
     // render pass after the current outside render pass commands ensures that the memory barriers
@@ -1071,13 +1066,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                               DIRTY_BIT_DESCRIPTOR_SETS};
     static constexpr DirtyBits kDriverUniformsAndBindingDirtyBits{
         DIRTY_BIT_DRIVER_UNIFORMS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
-
-    // Cached back-end objects.
-    VertexArrayVk *mVertexArray;
-    FramebufferVk *mDrawFramebuffer;
-    ProgramVk *mProgram;
-    ProgramPipelineVk *mProgramPipeline;
-    ProgramExecutableVk *mExecutable;
 
     // The offset we had the last time we bound the index buffer.
     const GLvoid *mLastIndexBufferOffset;
@@ -1272,6 +1260,11 @@ ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex
         divisor > mRenderer->getMaxVertexAttribDivisor() ? 1 : divisor, format, compressed,
         relativeOffset);
     return onVertexBufferChange(vertexBuffer);
+}
+
+ANGLE_INLINE bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mode)
+{
+    return contextVk->getFeatures().basicGLLineRasterization.enabled && gl::IsLineMode(mode);
 }
 }  // namespace rx
 

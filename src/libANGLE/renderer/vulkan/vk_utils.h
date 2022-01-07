@@ -271,6 +271,12 @@ GetImplType<T> *GetImpl(const T *glObject)
     return GetImplAs<GetImplType<T>>(glObject);
 }
 
+template <typename T>
+GetImplType<T> *SafeGetImpl(const T *glObject)
+{
+    return SafeGetImplAs<GetImplType<T>>(glObject);
+}
+
 template <>
 inline OverlayVk *GetImpl(const gl::MockOverlay *glObject)
 {

@@ -405,7 +405,7 @@ ProgramVk *ProgramExecutableVk::getShaderProgram(const gl::State &glState,
 // the ProgramExecutable, so this function can be removed.
 void ProgramExecutableVk::fillProgramStateMap(
     const ContextVk *contextVk,
-    gl::ShaderMap<const gl::ProgramState *> *programStatesOut)
+    gl::ShaderMap<const gl::ProgramState *> *programStatesOut) const
 {
     ASSERT(mProgram || mProgramPipeline);
     if (mProgram)

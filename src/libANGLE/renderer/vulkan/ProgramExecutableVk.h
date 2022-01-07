@@ -128,7 +128,7 @@ class ProgramExecutableVk
     ProgramVk *getShaderProgram(const gl::State &glState, gl::ShaderType shaderType) const;
 
     void fillProgramStateMap(const ContextVk *contextVk,
-                             gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
+                             gl::ShaderMap<const gl::ProgramState *> *programStatesOut) const;
     const gl::ProgramExecutable &getGlExecutable();
 
     ProgramInfo &getGraphicsDefaultProgramInfo() { return mGraphicsProgramInfos[0]; }

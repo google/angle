@@ -362,7 +362,7 @@ class State : angle::NonCopyable
 
     // If both a Program and a ProgramPipeline are bound, the Program will
     // always override the ProgramPipeline.
-    const ProgramExecutable *getProgramExecutable() const { return mExecutable; }
+    ProgramExecutable *getProgramExecutable() const { return mExecutable; }
 
     // Program binding manipulation
     angle::Result setProgram(const Context *context, Program *newProgram);
