@@ -554,6 +554,13 @@ angle::Result ProgramPipeline::link(const Context *context)
         }
     }
 
+    // Merge UBOs, SSBOs, and atomic counters into the pipeline.
+    for (ShaderType shaderType : mState.mExecutable->getLinkedShaderStages())
+    {
+        const ProgramState &programState = mState.mPrograms[shaderType]->getState();
+        mState.mExecutable->copyShaderBuffersFromProgram(programState);
+    }
+
     if (mState.mExecutable->hasLinkedShaderStage(gl::ShaderType::Vertex) ||
         mState.mExecutable->hasLinkedShaderStage(gl::ShaderType::Compute))
     {

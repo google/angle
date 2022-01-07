@@ -1625,4 +1625,16 @@ bool ProgramExecutable::linkAtomicCounterBuffers()
 
     return true;
 }
+
+void ProgramExecutable::copyShaderBuffersFromProgram(const ProgramState &programState)
+{
+    const std::vector<InterfaceBlock> &ubos = programState.getUniformBlocks();
+    mUniformBlocks.insert(mUniformBlocks.end(), ubos.begin(), ubos.end());
+
+    const std::vector<InterfaceBlock> &ssbos = programState.getShaderStorageBlocks();
+    mShaderStorageBlocks.insert(mShaderStorageBlocks.end(), ssbos.begin(), ssbos.end());
+
+    const std::vector<AtomicCounterBuffer> &atomics = programState.getAtomicCounterBuffers();
+    mAtomicCounterBuffers.insert(mAtomicCounterBuffers.end(), atomics.begin(), atomics.end());
+}
 }  // namespace gl

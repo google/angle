@@ -338,6 +338,8 @@ class ProgramExecutable final : public angle::Subject
                       std::vector<UnusedUniform> *unusedUniforms,
                       std::vector<VariableLocation> *uniformLocationsOutOrNull);
 
+    void copyShaderBuffersFromProgram(const ProgramState &programState);
+
   private:
     // TODO(timvp): http://anglebug.com/3570: Investigate removing these friend
     // class declarations and accessing the necessary members with getters/setters.
