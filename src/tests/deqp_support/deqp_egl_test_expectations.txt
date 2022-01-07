@@ -273,6 +273,6 @@
 6528 PIXEL4ORXL GLES : dEQP-EGL.functional.thread_cleanup.single_context_* = FAIL
 
 6678 TSAN : dEQP-EGL.functional.multithread.* = SKIP
-6678 TSAN : dEQP-EGL.functional.sharing.gles2.multithread.random* = FLAKY
+6678 TSAN : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
 
 6678 UBSAN : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
