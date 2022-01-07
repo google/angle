@@ -1360,8 +1360,6 @@
 6678 ASAN : dEQP-GLES31.functional.debug.error_filters.case_18 = SKIP
 6678 ASAN : dEQP-GLES31.functional.debug.error_groups.case_11 = SKIP
 
-6705 TSAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_astc* = SKIP
-
 6678 UBSAN : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_* = SKIP
 6678 UBSAN : dEQP-GLES31.functional.texture.multisample.samples_* = SKIP
 6678 UBSAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.* = SKIP

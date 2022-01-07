@@ -7,7 +7,7 @@
 // Thread sanitizer skips.
 6718 TSAN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP
 6718 TSAN : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
-6746 TSAN : *Vulkan_AsyncQueue = SKIP
+6746 TSAN : *AsyncQueue = SKIP
 6804 LINUX VULKAN TSAN : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP
 
 // Generic
