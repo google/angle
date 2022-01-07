@@ -1960,6 +1960,15 @@ void TIntermBinary::promote()
 // Derive precision from children nodes
 TPrecision TIntermBinary::derivePrecision() const
 {
+    // Assignments use the type and precision of the lvalue-expression
+    // GLSL ES spec section 5.8: Assignments
+    // "The assignment operator stores the value of rvalue-expression into the l-value and returns
+    // an r-value with the type and precision of lvalue-expression."
+    if (IsAssignment(mOp))
+    {
+        return mLeft->getPrecision();
+    }
+
     const TPrecision higherPrecision =
         GetHigherPrecision(mLeft->getPrecision(), mRight->getPrecision());
 
