@@ -352,6 +352,9 @@ struct Extensions
     // GL_EXT_separate_shader_objects
     bool separateShaderObjectsEXT = false;
 
+    // GL_EXT_shader_framebuffer_fetch
+    bool shaderFramebufferFetchEXT = false;
+
     // GL_EXT_shader_framebuffer_fetch_non_coherent
     bool shaderFramebufferFetchNonCoherentEXT = false;
 

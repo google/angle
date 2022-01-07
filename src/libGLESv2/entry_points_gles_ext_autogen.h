@@ -1156,6 +1156,8 @@ ANGLE_EXPORT void GL_APIENTRY GL_UseProgramStagesEXT(GLuint pipeline,
                                                      GLuint program);
 ANGLE_EXPORT void GL_APIENTRY GL_ValidateProgramPipelineEXT(GLuint pipeline);
 
+// GL_EXT_shader_framebuffer_fetch
+
 // GL_EXT_shader_framebuffer_fetch_non_coherent
 ANGLE_EXPORT void GL_APIENTRY GL_FramebufferFetchBarrierEXT();
 

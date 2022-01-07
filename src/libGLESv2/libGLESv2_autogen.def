@@ -829,6 +829,8 @@ EXPORTS
     glUseProgramStagesEXT
     glValidateProgramPipelineEXT
 
+    ; GL_EXT_shader_framebuffer_fetch
+
     ; GL_EXT_shader_framebuffer_fetch_non_coherent
     glFramebufferFetchBarrierEXT
 

@@ -156,6 +156,8 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.EXT_shader_framebuffer_fetch_non_coherent =
         extensions.shaderFramebufferFetchNonCoherentEXT;
 
+    mResources.EXT_shader_framebuffer_fetch = extensions.shaderFramebufferFetchEXT;
+
     // GL_EXT_clip_cull_distance
     mResources.EXT_clip_cull_distance = extensions.clipCullDistanceEXT;
 

@@ -1678,6 +1678,8 @@ bool ValidateValidateProgramPipelineEXT(const Context *context,
                                         angle::EntryPoint entryPoint,
                                         ProgramPipelineID pipelinePacked);
 
+// GL_EXT_shader_framebuffer_fetch
+
 // GL_EXT_shader_framebuffer_fetch_non_coherent
 bool ValidateFramebufferFetchBarrierEXT(const Context *context, angle::EntryPoint entryPoint);
 

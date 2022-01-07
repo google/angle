@@ -110,6 +110,7 @@ gles_requestable_extensions = [
     "GL_EXT_semaphore",
     "GL_EXT_semaphore_fd",
     "GL_EXT_separate_shader_objects",
+    "GL_EXT_shader_framebuffer_fetch",
     "GL_EXT_shader_framebuffer_fetch_non_coherent",
     "GL_EXT_shader_io_blocks",
     "GL_EXT_shader_non_constant_global_initializers",

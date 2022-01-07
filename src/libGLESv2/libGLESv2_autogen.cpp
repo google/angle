@@ -4711,6 +4711,8 @@ void GL_APIENTRY glValidateProgramPipelineEXT(GLuint pipeline)
     return GL_ValidateProgramPipelineEXT(pipeline);
 }
 
+// GL_EXT_shader_framebuffer_fetch
+
 // GL_EXT_shader_framebuffer_fetch_non_coherent
 void GL_APIENTRY glFramebufferFetchBarrierEXT()
 {
