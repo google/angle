@@ -1240,6 +1240,11 @@ bool DisplayMtl::isNVIDIA() const
     return angle::IsNVIDIA(mMetalDeviceVendorId);
 }
 
+bool DisplayMtl::isSimulator() const
+{
+    return TARGET_OS_SIMULATOR;
+}
+
 #if ANGLE_MTL_EVENT_AVAILABLE
 mtl::AutoObjCObj<MTLSharedEventListener> DisplayMtl::getOrCreateSharedEventListener()
 {

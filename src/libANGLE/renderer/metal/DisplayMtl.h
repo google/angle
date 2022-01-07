@@ -130,6 +130,7 @@ class DisplayMtl : public DisplayImpl
     bool isAMD() const;
     bool isIntel() const;
     bool isNVIDIA() const;
+    bool isSimulator() const;
 
     id<MTLDevice> getMetalDevice() const { return mMetalDevice; }
 

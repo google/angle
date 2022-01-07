@@ -8,6 +8,12 @@
 #  NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 #
 
+# Information on Simulator formats:
+# According to https://developer.apple.com/documentation/metal/developing_metal_apps_that_run_in_simulator?language=objc,
+# Metal sim does not support several formats. The format table explicitly avoids enabling format support
+# for MTLPixelFormatR8Unorm_sRGB, MTLPixelFormatR8G8Unorm_sRGB,
+# and packed 16 bit formats when building for a Simulator target.
+
 import json
 import math
 import pprint
@@ -364,7 +370,7 @@ def gen_image_map_switch_es3_case(angle_format, actual_angle_format_info, angle_
 
 
 # Generate format conversion switch case (ASTC LDR/HDR case)
-def gen_image_map_switch_astc_case(angle_format, angle_to_gl, angle_to_mtl_map):
+def gen_image_map_switch_astc_case_iosmac(angle_format, angle_to_gl, angle_to_mtl_map):
     gl_format = angle_to_gl[angle_format]
 
     def gen_format_assign_code(actual_angle_format, angle_to_mtl_map):
@@ -378,6 +384,20 @@ def gen_image_map_switch_astc_case(angle_format, angle_to_gl, angle_to_mtl_map):
             init_function_fallback=angle_format_utils.get_internal_format_initializer(
                 gl_format, actual_angle_format),
             fallback_condition="display->supportsAppleGPUFamily(6)")
+
+    return gen_image_map_switch_case(angle_format, angle_format, angle_to_mtl_map,
+                                     gen_format_assign_code)
+
+
+def gen_image_map_switch_astc_case_tv_watchos(angle_format, angle_to_gl, angle_to_mtl_map):
+    gl_format = angle_to_gl[angle_format]
+
+    def gen_format_assign_code(actual_angle_format, angle_to_mtl_map):
+        return image_format_assign_template1.format(
+            actual_angle_format=actual_angle_format,
+            mtl_format=angle_to_mtl_map[actual_angle_format] + "LDR",
+            init_function=angle_format_utils.get_internal_format_initializer(
+                gl_format, actual_angle_format))
 
     return gen_image_map_switch_case(angle_format, angle_format, angle_to_mtl_map,
                                      gen_format_assign_code)
@@ -448,19 +468,36 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
     for angle_format in sorted(sim_override.keys()):
         switch_data += gen_image_map_switch_simple_case(angle_format, sim_override[angle_format],
                                                         angle_to_gl, sim_angle_to_mtl)
+    switch_data += "#if TARGET_OS_IOS\n"
     for angle_format in sorted(astc_tpl_map.keys()):
-        switch_data += gen_image_map_switch_astc_case(angle_format, angle_to_gl, astc_tpl_map)
+        switch_data += gen_image_map_switch_astc_case_iosmac(angle_format, angle_to_gl,
+                                                             astc_tpl_map)
+    switch_data += "#elif TARGET_OS_TV ||TARGET_OS_WATCH\n"
+
+    for angle_format in sorted(astc_tpl_map.keys()):
+        switch_data += gen_image_map_switch_astc_case_tv_watchos(angle_format, angle_to_gl,
+                                                                 astc_tpl_map)
+    switch_data += "#endif // TARGET_OS_IOS\n "
     # iOS specific
-    switch_data += "#elif TARGET_OS_IOS || TARGET_OS_TV\n"
+    switch_data += "#elif TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST\n"
     for angle_format in sorted(ios_specific_map.keys()):
         switch_data += gen_image_map_switch_simple_case(angle_format, angle_format, angle_to_gl,
                                                         ios_specific_map)
     for angle_format in sorted(ios_override.keys()):
         switch_data += gen_image_map_switch_simple_case(angle_format, ios_override[angle_format],
                                                         angle_to_gl, ios_angle_to_mtl)
+    switch_data += "#if TARGET_OS_IOS\n"
     for angle_format in sorted(astc_tpl_map.keys()):
-        switch_data += gen_image_map_switch_astc_case(angle_format, angle_to_gl, astc_tpl_map)
-    switch_data += "#endif\n"
+        switch_data += gen_image_map_switch_astc_case_iosmac(angle_format, angle_to_gl,
+                                                             astc_tpl_map)
+
+    switch_data += "#elif TARGET_OS_TV ||TARGET_OS_WATCH\n"
+
+    for angle_format in sorted(astc_tpl_map.keys()):
+        switch_data += gen_image_map_switch_astc_case_tv_watchos(angle_format, angle_to_gl,
+                                                                 astc_tpl_map)
+    switch_data += "#endif // TARGET_OS_IOS || TARGET_OS_TV\n"
+    switch_data += "#endif // TARGET_OS_IPHONE\n"
 
     # Try to support all iOS formats on newer macOS with Apple GPU.
     switch_data += "#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000))\n"
@@ -475,8 +512,9 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
                                                             angle_to_gl, ios_specific_map)
     # ASTC LDR or HDR
     for angle_format in sorted(astc_tpl_map.keys()):
-        switch_data += gen_image_map_switch_astc_case(angle_format, angle_to_gl, astc_tpl_map)
-    switch_data += "#endif\n"
+        switch_data += gen_image_map_switch_astc_case_iosmac(angle_format, angle_to_gl,
+                                                             astc_tpl_map)
+    switch_data += "#endif // TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000)) \n"
 
     switch_data += "        default:\n"
     switch_data += "            this->metalFormat = MTLPixelFormatInvalid;\n"
@@ -505,7 +543,7 @@ def gen_image_mtl_to_angle_switch_string(image_table):
     switch_data += "#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
 
     # iOS + macOS 11.0+ specific
-    switch_data += "#if TARGET_OS_IOS || TARGET_OS_TV || (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000))\n"
+    switch_data += "#if TARGET_OS_IPHONE || (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000))\n"
     for angle_format in sorted(ios_specific_map.keys()):
         # ETC1_R8G8B8_UNORM_BLOCK is a duplicated of ETC2_R8G8B8_UNORM_BLOCK
         if angle_format == 'ETC1_R8G8B8_UNORM_BLOCK':
@@ -515,9 +553,12 @@ def gen_image_mtl_to_angle_switch_string(image_table):
     for angle_format in sorted(astc_tpl_map.keys()):
         switch_data += case_image_mtl_to_angle_template.format(
             mtl_format=astc_tpl_map[angle_format] + "LDR", angle_format=angle_format)
+    switch_data += "#if TARGET_OS_IOS || TARGET_OS_OSX \n"
+    for angle_format in sorted(astc_tpl_map.keys()):
         switch_data += case_image_mtl_to_angle_template.format(
             mtl_format=astc_tpl_map[angle_format] + "HDR", angle_format=angle_format)
-    switch_data += "#endif  // TARGET_OS_IOS || TARGET_OS_TV || mac 11.0+\n"
+    switch_data += "#endif // TARGET_OS_IOS || TARGET_OS_OSX\n"
+    switch_data += "#endif  // TARGET_OS_IPHONE || mac 11.0+\n"
 
     switch_data += "        default:\n"
     switch_data += "            return angle::FormatID::NONE;\n"
@@ -586,7 +627,8 @@ def gen_vertex_map_switch_string(vertex_table):
 def gen_mtl_format_caps_init_string(map_image):
     caps = map_image['caps']
     mac_caps = map_image['caps_mac']
-    ios_caps = map_image['caps_ios']
+    ios_platform_caps = map_image['caps_ios_platform']
+    ios_specific_caps = map_image['caps_ios_specific']
     caps_init_str = ''
 
     def cap_to_param(caps, key):
@@ -616,12 +658,15 @@ def gen_mtl_format_caps_init_string(map_image):
     caps_init_str += caps_to_cpp(mac_caps)
     caps_init_str += "#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
 
-    caps_init_str += "#if (TARGET_OS_IOS && !TARGET_OS_MACCATALYST) || TARGET_OS_TV || \\\n"
+    caps_init_str += "#if (TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST) || \\\n"
     caps_init_str += "    (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 110000))\n"
 
-    caps_init_str += caps_to_cpp(ios_caps)
+    caps_init_str += caps_to_cpp(ios_platform_caps)
 
-    caps_init_str += "#endif\n"
+    caps_init_str += "#if TARGET_OS_IOS || TARGET_OS_OSX\n"
+    caps_init_str += caps_to_cpp(ios_specific_caps)
+    caps_init_str += "#endif // TARGET_OS_IOS || mac 11.0+ \n"
+    caps_init_str += "#endif // TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST || mac 11.0+ \n"
 
     return caps_init_str
 
