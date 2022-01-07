@@ -49,7 +49,6 @@ EGLBoolean EGLAPIENTRY EGL_CopyBuffers(EGLDisplay dpy,
                                        EGLNativePixmapType target)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();
     EGL_EVENT(CopyBuffers,
               "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR ", target = 0x%016" PRIxPTR "",
               (uintptr_t)dpy, (uintptr_t)surface, (uintptr_t)target);
@@ -177,7 +176,6 @@ EGLBoolean EGLAPIENTRY EGL_DestroyContext(EGLDisplay dpy, EGLContext ctx)
 EGLBoolean EGLAPIENTRY EGL_DestroySurface(EGLDisplay dpy, EGLSurface surface)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();
     EGL_EVENT(DestroySurface, "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR "",
               (uintptr_t)dpy, (uintptr_t)surface);
 
@@ -319,7 +317,6 @@ EGLBoolean EGLAPIENTRY EGL_MakeCurrent(EGLDisplay dpy,
                                        EGLContext ctx)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();
     EGL_EVENT(MakeCurrent,
               "dpy = 0x%016" PRIxPTR ", draw = 0x%016" PRIxPTR ", read = 0x%016" PRIxPTR
               ", ctx = 0x%016" PRIxPTR "",
@@ -381,7 +378,6 @@ EGLBoolean EGLAPIENTRY EGL_QuerySurface(EGLDisplay dpy,
                                         EGLint *value)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();
     EGL_EVENT(QuerySurface,
               "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR
               ", attribute = %d, value = 0x%016" PRIxPTR "",
@@ -400,7 +396,7 @@ EGLBoolean EGLAPIENTRY EGL_QuerySurface(EGLDisplay dpy,
 
 EGLBoolean EGLAPIENTRY EGL_SwapBuffers(EGLDisplay dpy, EGLSurface surface)
 {
-
+    ANGLE_SCOPED_GLOBAL_LOCK();
     EGL_EVENT(SwapBuffers, "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR "", (uintptr_t)dpy,
               (uintptr_t)surface);
 
@@ -457,7 +453,6 @@ EGLBoolean EGLAPIENTRY EGL_WaitNative(EGLint engine)
 EGLBoolean EGLAPIENTRY EGL_BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();
     EGL_EVENT(BindTexImage, "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR ", buffer = %d",
               (uintptr_t)dpy, (uintptr_t)surface, buffer);
 
@@ -475,7 +470,6 @@ EGLBoolean EGLAPIENTRY EGL_BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
 EGLBoolean EGLAPIENTRY EGL_ReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();
     EGL_EVENT(ReleaseTexImage, "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR ", buffer = %d",
               (uintptr_t)dpy, (uintptr_t)surface, buffer);
 
@@ -496,7 +490,6 @@ EGLBoolean EGLAPIENTRY EGL_SurfaceAttrib(EGLDisplay dpy,
                                          EGLint value)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();
     EGL_EVENT(SurfaceAttrib,
               "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR ", attribute = %d, value = %d",
               (uintptr_t)dpy, (uintptr_t)surface, attribute, value);

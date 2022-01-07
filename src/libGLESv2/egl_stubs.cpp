@@ -630,19 +630,9 @@ EGLBoolean SurfaceAttrib(Thread *thread,
 
 EGLBoolean SwapBuffers(Thread *thread, Display *display, Surface *eglSurface)
 {
-    {
-        ANGLE_SCOPED_GLOBAL_LOCK();
-        ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglSwapBuffers",
-                             GetDisplayIfValid(display), EGL_FALSE);
-    }
+    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglSwapBuffers",
+                         GetDisplayIfValid(display), EGL_FALSE);
 
-    {
-        ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();
-        ANGLE_EGL_TRY_RETURN(thread, eglSurface->prepareSwap(thread->getContext()), "prepareSwap",
-                             GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
-    }
-
-    ANGLE_SCOPED_GLOBAL_LOCK();
     ANGLE_EGL_TRY_RETURN(thread, eglSurface->swap(thread->getContext()), "eglSwapBuffers",
                          GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 

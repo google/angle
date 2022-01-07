@@ -182,7 +182,6 @@ class WindowSurfaceVk : public SurfaceVk
                                             FramebufferAttachmentRenderTarget **rtOut) override;
     FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
                                               const gl::FramebufferState &state) override;
-    egl::Error prepareSwap(const gl::Context *context) override;
     egl::Error swap(const gl::Context *context) override;
     egl::Error swapWithDamage(const gl::Context *context,
                               const EGLint *rects,
@@ -249,7 +248,6 @@ class WindowSurfaceVk : public SurfaceVk
     }
 
   protected:
-    angle::Result prepareSwapImpl(const gl::Context *context);
     angle::Result swapImpl(const gl::Context *context,
                            const EGLint *rects,
                            EGLint n_rects,
