@@ -3,7 +3,7 @@
 # [VPYTHON:BEGIN]
 # wheel: <
 #   name: "infra/python/wheels/freetype-py/${vpython_platform}"
-#   version: "version:2.1.0.post1"
+#   version: "version:2.2.0.chromium.4"
 # >
 # [VPYTHON:END]
 
