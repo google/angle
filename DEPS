@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '8712e27d7e28d99beebdf47f89753884d78aec32',
+  'chromium_revision': 'b91f3880e3eced795aa7ef134ab670ffab74c4b2',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -84,7 +84,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
   # and whatever else without interference from each other.
-  'luci_go': 'git_revision:89429843eb2dedb599a6c7c7754343b97d95943d',
+  'luci_go': 'git_revision:d1e877e2b3e5a05a5cd34c4a340fedba14a16c2b',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling android_sdk_build-tools_version
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@fe157b1f4f755b40dd335a77dee8ba8b3bb832a7',
+    'url': '{chromium_git}/chromium/src/build.git@653610b7870a90ad2e47d906bcb14481e41ae0c5',
     'condition': 'not build_with_chromium',
   },
 
@@ -137,7 +137,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/linux-amd64',
-        'version': 'git_revision:19bf826e6e5d05100cb3568e90e48bd3c97d4f22',
+        'version': 'git_revision:54284c12607e2818293157cd76d29d03a36bfd68',
       }
     ],
     'dep_type': 'cipd',
@@ -148,7 +148,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/mac-${{arch}}',
-        'version': 'git_revision:19bf826e6e5d05100cb3568e90e48bd3c97d4f22',
+        'version': 'git_revision:54284c12607e2818293157cd76d29d03a36bfd68',
       }
     ],
     'dep_type': 'cipd',
@@ -166,7 +166,7 @@ deps = {
   },
 
   'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@6a10e3e97c45505615d35dea94f588b5f86045dc',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@4bf418ebaf3ea28ffa0bbdc3361e667ac0bff9a7',
     'condition': 'not build_with_chromium',
   },
 
@@ -174,7 +174,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/windows-amd64',
-        'version': 'git_revision:19bf826e6e5d05100cb3568e90e48bd3c97d4f22',
+        'version': 'git_revision:54284c12607e2818293157cd76d29d03a36bfd68',
       }
     ],
     'dep_type': 'cipd',
@@ -182,7 +182,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@d1a64d3fe7bb108ec957e7e590a1446b23d52199',
+    'url': '{chromium_git}/chromium/src/testing@b1bf58701e1f3804b7149f8400e956988a8e24a1',
     'condition': 'not build_with_chromium',
   },
 
@@ -332,7 +332,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@e9714986c0fae9d639baaf2478d2f3d3f70dc1a9',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@44dda9648cce2a12c67aa96a498adfb3245d38e7',
     'condition': 'not build_with_chromium',
   },
 
@@ -536,7 +536,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@24c11001dddddde285bc780eaea1c8c59b5af98b',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@17ca796825dbba0e5a96fd687a07c41f583840b4',
     'condition': 'not build_with_chromium',
   },
 
@@ -567,7 +567,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@0d8ea7b393e8cb7eaa38f5b30653c0a8e9fe62e0',
+    'url': '{chromium_git}/chromium/src/tools/mb@666af27e650f4ba7f12a90e17dc1643e57274e82',
     'condition': 'not build_with_chromium',
   },
 
@@ -600,7 +600,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/linux-amd64',
-          'version': '2z57AgaznK-BN6rC-A4ZVj85ldJOjFFCMFQ_LYWeUv4C',
+          'version': 'YNf7R76UZBvuCmgAKDzb1F43jfA8FkFy9DCW6B98MHEC',
         },
       ],
       'dep_type': 'cipd',
@@ -611,7 +611,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/windows-amd64',
-          'version': 'SSrgf0lBIrCHRZ2acvLwXzzm4KTPzRg17PGIiqsMxBQC',
+          'version': '0Z6Y_DY-axS2RajDae9CHJrDn1a4CTif2VkT4CR5jOMC',
         },
       ],
       'dep_type': 'cipd',
