@@ -237,6 +237,72 @@ TEST_P(VulkanPerformanceCounterTest, NewTextureDoesNotBreakRenderPass)
     EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
 }
 
+// Tests that submitting the outside command buffer due to texture upload size does not break the
+// current render pass.
+TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotBreakRenderPass)
+{
+    // http://anglebug.com/6354
+
+    size_t kMaxBufferToImageCopySize  = 1 << 28;
+    uint32_t kNumSubmits              = 2;
+    uint32_t expectedRenderPassCount  = getPerfCounters().renderPasses + 1;
+    uint32_t expectedSubmitFrameCount = getPerfCounters().submittedFrames + kNumSubmits;
+
+    // Step 1: Set up a simple 2D texture.
+    GLTexture texture;
+    GLsizei texDim         = 256;
+    uint32_t pixelSizeRGBA = 4;
+    uint32_t textureSize   = texDim * texDim * pixelSizeRGBA;
+    std::vector<GLColor> kInitialData(texDim * texDim, GLColor::green);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texDim, texDim, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kInitialData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    auto quadVerts = GetQuadVertices();
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, quadVerts.size() * sizeof(quadVerts[0]), quadVerts.data(),
+                 GL_STATIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(program);
+
+    GLint posLoc = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLoc);
+
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+    ASSERT_GL_NO_ERROR();
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: Load a new 2D Texture multiple times with the same Program and Framebuffer. The total
+    // size of the loaded textures must exceed the threshold to submit the outside command buffer.
+    auto maxLoadCount =
+        static_cast<size_t>((kMaxBufferToImageCopySize / textureSize) * kNumSubmits + 1);
+    for (size_t loadCount = 0; loadCount < maxLoadCount; loadCount++)
+    {
+        GLTexture newTexture;
+        glBindTexture(GL_TEXTURE_2D, newTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texDim, texDim, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kInitialData.data());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    // Verify render pass and submitted frame counts.
+    EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
+    EXPECT_EQ(getPerfCounters().submittedFrames, expectedSubmitFrameCount);
+}
+
 // Tests that RGB texture should not break renderpass.
 TEST_P(VulkanPerformanceCounterTest, SampleFromRGBTextureDoesNotBreakRenderPass)
 {

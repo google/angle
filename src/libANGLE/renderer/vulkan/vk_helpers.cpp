@@ -7319,11 +7319,12 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 ANGLE_TRY(
                     contextVk->getOutsideRenderPassCommandBuffer(bufferAccess, &commandBuffer));
 
+                VkBufferImageCopy *copyRegion = &update.data.buffer.copyRegion;
                 commandBuffer->copyBufferToImage(currentBuffer->getBuffer().getHandle(), mImage,
-                                                 getCurrentLayout(), 1,
-                                                 &update.data.buffer.copyRegion);
+                                                 getCurrentLayout(), 1, copyRegion);
+                ANGLE_TRY(contextVk->onCopyUpdate(currentBuffer->getSize()));
                 onWrite(updateMipLevelGL, 1, updateBaseLayer, updateLayerCount,
-                        update.data.buffer.copyRegion.imageSubresource.aspectMask);
+                        copyRegion->imageSubresource.aspectMask);
             }
             else
             {
@@ -7333,11 +7334,12 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 ANGLE_TRY(
                     contextVk->getOutsideRenderPassCommandBuffer(imageAccess, &commandBuffer));
 
+                VkImageCopy *copyRegion = &update.data.image.copyRegion;
                 commandBuffer->copyImage(update.refCounted.image->get().getImage(),
                                          update.refCounted.image->get().getCurrentLayout(), mImage,
-                                         getCurrentLayout(), 1, &update.data.image.copyRegion);
+                                         getCurrentLayout(), 1, copyRegion);
                 onWrite(updateMipLevelGL, 1, updateBaseLayer, updateLayerCount,
-                        update.data.image.copyRegion.dstSubresource.aspectMask);
+                        copyRegion->dstSubresource.aspectMask);
             }
 
             update.release(contextVk->getRenderer());
