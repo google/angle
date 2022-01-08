@@ -46,23 +46,29 @@ constexpr uint32_t kMaxTriFanLineLoopBuffersPerFrame = 0;
 constexpr uint32_t kMaxTriFanLineLoopBuffersPerFrame = 10;
 #endif
 
-#define ANGLE_MTL_XFB_DRAW(DRAW_PROC)                                                       \
-    if (!mState.isTransformFeedbackActiveUnpaused())                                        \
-    {                                                                                       \
-        /* Normal draw call */                                                              \
-        DRAW_PROC(false);                                                                   \
-    }                                                                                       \
-    else                                                                                    \
-    {                                                                                       \
-        /* First pass: write to XFB buffers in vertex shader, fragment shader inactive */   \
-        DRAW_PROC(true);                                                                    \
-        if (!mState.isRasterizerDiscardEnabled())                                           \
-        {                                                                                   \
-            /* Second pass: full rasterization: vertex shader + fragment shader are active. \
-               Vertex shader writes to stage output but won't write to XFB buffers */       \
-            invalidateRenderPipeline();                                                     \
-            DRAW_PROC(false);                                                               \
-        }                                                                                   \
+#define ANGLE_MTL_XFB_DRAW(DRAW_PROC)                                                            \
+    if (!mState.isTransformFeedbackActiveUnpaused())                                             \
+    {                                                                                            \
+        /* Normal draw call */                                                                   \
+        DRAW_PROC(false);                                                                        \
+    }                                                                                            \
+    else                                                                                         \
+    {                                                                                            \
+        /* First pass: write to XFB buffers in vertex shader, fragment shader inactive */        \
+        bool rasterizationNotDisabled =                                                          \
+            mRenderPipelineDesc.rasterizationType != mtl::RenderPipelineRasterization::Disabled; \
+        if (rasterizationNotDisabled)                                                            \
+        {                                                                                        \
+            invalidateRenderPipeline();                                                          \
+        }                                                                                        \
+        DRAW_PROC(true);                                                                         \
+        if (rasterizationNotDisabled)                                                            \
+        {                                                                                        \
+            /* Second pass: full rasterization: vertex shader + fragment shader are active.      \
+               Vertex shader writes to stage output but won't write to XFB buffers */            \
+            invalidateRenderPipeline();                                                          \
+            DRAW_PROC(false);                                                                    \
+        }                                                                                        \
     }
 
 angle::Result AllocateTriangleFanBufferFromPool(ContextMtl *context,
