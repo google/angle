@@ -502,6 +502,12 @@ bool ValidateGetUniformBase(const Context *context,
                             angle::EntryPoint entryPoint,
                             ShaderProgramID program,
                             UniformLocation location);
+bool ValidateSizedGetUniform(const Context *context,
+                             angle::EntryPoint entryPoint,
+                             ShaderProgramID program,
+                             UniformLocation location,
+                             GLsizei bufSize,
+                             GLsizei *length);
 bool ValidateGetnUniformfvEXT(const Context *context,
                               angle::EntryPoint entryPoint,
                               ShaderProgramID program,

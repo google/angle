@@ -8365,6 +8365,17 @@ void Context::getnUniformiv(ShaderProgramID program,
     programObject->getUniformiv(this, location, params);
 }
 
+void Context::getnUniformuiv(ShaderProgramID program,
+                             UniformLocation location,
+                             GLsizei bufSize,
+                             GLuint *params)
+{
+    Program *programObject = getProgramResolveLink(program);
+    ASSERT(programObject);
+
+    programObject->getUniformuiv(this, location, params);
+}
+
 void Context::getnUniformivRobust(ShaderProgramID program,
                                   UniformLocation location,
                                   GLsizei bufSize,
