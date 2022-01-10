@@ -107,7 +107,8 @@
 5342 VULKAN : KHR-GLES32.core.texture_buffer.texture_buffer_atomic_functions = FAIL
 
 // Desktop cards without native etc support
-5276 AMD VULKAN : KHR-GLES32.core.texture_cube_map_array.etc2_texture = FAIL
+5276 AMD VULKAN LINUX : KHR-GLES32.core.texture_cube_map_array.etc2_texture = FAIL
+5276 AMD VULKAN WIN : KHR-GLES32.core.texture_cube_map_array.etc2_texture = FAIL
 5276 NVIDIA VULKAN : KHR-GLES32.core.texture_cube_map_array.etc2_texture = FAIL
 
 // New failures with latest dEQP roll (2021-03-05)

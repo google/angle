@@ -1959,8 +1959,11 @@ bool ValidateCompressedTexImage3D(const Context *context,
     // 3D texture target validation
     if (target != TextureTarget::_3D && target != TextureTarget::_2DArray)
     {
-        context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidTextureTarget);
-        return false;
+        if (context->getClientVersion() < ES_3_2 || target != TextureTarget::CubeMapArray)
+        {
+            context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidTextureTarget);
+            return false;
+        }
     }
 
     // validateES3TexImageFormat sets the error code if there is an error
