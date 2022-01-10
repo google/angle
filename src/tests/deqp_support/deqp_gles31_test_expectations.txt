@@ -670,7 +670,6 @@
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.callbacks.texture.compressedteximage3d_invalid_border = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.callbacks.texture.compressedtexsubimage3d_neg_level = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.clear_bufferfv = SKIP
-5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.framebuffer_texture = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.framebuffer_fetch.invalid_vertex_inout = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.bind_transform_feedback = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.sampler_parameteri = SKIP
