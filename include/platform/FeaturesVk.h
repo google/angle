@@ -188,8 +188,8 @@ struct FeaturesVk : FeatureSetBase
 
     // Whether the VkDevice supports the VK_EXT_custom_border_color extension
     // http://anglebug.com/3577
-    Feature supportsCustomBorderColorEXT = {
-        "supports_custom_border_color", FeatureCategory::VulkanFeatures,
+    Feature supportsCustomBorderColor = {
+        "supportsCustomBorderColor", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_EXT_custom_border_color extension", &members,
         "http://anglebug.com/3577"};
 
@@ -559,7 +559,7 @@ struct FeaturesVk : FeatureSetBase
         "http://anglebug.com/6141"};
 
     // Whether the VkDevice can support Protected Memory.
-    Feature supportsProtectedMemory = {"supports_protected_memory", FeatureCategory::VulkanFeatures,
+    Feature supportsProtectedMemory = {"supportsProtectedMemory", FeatureCategory::VulkanFeatures,
                                        "VkDevice supports protected memory", &members,
                                        "http://anglebug.com/3965"};
 

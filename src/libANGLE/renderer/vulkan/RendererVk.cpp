@@ -2148,7 +2148,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         vk::AddToPNextChain(&mEnabledFeatures, &mTransformFeedbackFeatures);
     }
 
-    if (getFeatures().supportsCustomBorderColorEXT.enabled)
+    if (getFeatures().supportsCustomBorderColor.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_CUSTOM_BORDER_COLOR_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mCustomBorderColorFeatures);
@@ -2813,7 +2813,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // TODO: http://anglebug.com/5927 - drop dependency on customBorderColorWithoutFormat.
     // TODO: http://anglebug.com/6200 - re-enable on SwS when possible
     ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsCustomBorderColorEXT,
+        &mFeatures, supportsCustomBorderColor,
         mCustomBorderColorFeatures.customBorderColors == VK_TRUE &&
             mCustomBorderColorFeatures.customBorderColorWithoutFormat == VK_TRUE && !isSwiftShader);
 
