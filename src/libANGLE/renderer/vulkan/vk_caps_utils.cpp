@@ -1125,7 +1125,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.textureUsageANGLE = true;
 
     // GL_KHR_parallel_shader_compile
-    mNativeExtensions.parallelShaderCompileKHR = true;
+    mNativeExtensions.parallelShaderCompileKHR = false;
 }
 
 namespace vk
