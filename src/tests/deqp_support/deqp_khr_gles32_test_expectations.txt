@@ -96,10 +96,6 @@
 // Validation error from EXT_gpu_shader5
 5361 VULKAN : KHR-GLES32.core.gpu_shader5.precise_qualifier = FAIL
 
-// Validation error from EXT_copy_image
-5363 VULKAN : KHR-GLES32.core.copy_image.r32i_texture = FAIL
-5363 VULKAN : KHR-GLES32.core.copy_image.r32ui_texture = FAIL
-
 // No known implementation supports STORAGE_TEXEL_BUFFER support for RGB32 formats
 3573 VULKAN : KHR-GLES32.core.texture_buffer.texture_buffer_texture_buffer_range = SKIP
 

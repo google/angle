@@ -3224,9 +3224,9 @@ bool ValidateCopyImageSubDataTargetRegion(const Context *context,
 
         // INVALID_OPERATION is generated if either object is a texture and the texture is not
         // complete
-        // This will handle the texture completeness check. Note that this is missing
-        // completeness validation that ignores format-based compleness rules.
-        if (!texture->isSamplerComplete(context, nullptr))
+        // This will handle the texture completeness check. Note that this ignores format-based
+        // compleness rules.
+        if (!texture->isSamplerCompleteForCopyImage(context, nullptr))
         {
             context->validationError(entryPoint, GL_INVALID_OPERATION, kNotTextureComplete);
             return false;
