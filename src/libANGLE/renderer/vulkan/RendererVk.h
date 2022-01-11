@@ -140,7 +140,7 @@ class RendererVk : angle::NonCopyable
 
     std::string getVendorString() const;
     std::string getRendererDescription() const;
-    std::string getVersionString() const;
+    std::string getVersionString(bool includeFullVersion) const;
 
     gl::Version getMaxSupportedESVersion() const;
     gl::Version getMaxConformantESVersion() const;

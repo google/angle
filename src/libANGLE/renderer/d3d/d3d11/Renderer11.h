@@ -491,7 +491,7 @@ class Renderer11 : public RendererD3D
 
     std::string getRendererDescription() const override;
     std::string getVendorString() const override;
-    std::string getVersionString() const override;
+    std::string getVersionString(bool includeFullVersion) const override;
 
   private:
     void generateCaps(gl::Caps *outCaps,

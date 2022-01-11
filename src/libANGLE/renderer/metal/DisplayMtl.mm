@@ -218,7 +218,7 @@ std::string DisplayMtl::getVendorString()
     return GetVendorString(mMetalDeviceVendorId);
 }
 
-std::string DisplayMtl::getVersionString()
+std::string DisplayMtl::getVersionString(bool includeFullVersion)
 {
     ANGLE_MTL_OBJC_SCOPE
     {

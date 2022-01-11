@@ -261,7 +261,7 @@ class Display final : public LabeledObject,
 
     std::string getBackendRendererDescription() const;
     std::string getBackendVendorString() const;
-    std::string getBackendVersionString() const;
+    std::string getBackendVersionString(bool includeFullVersion) const;
 
     EGLint programCacheGetAttrib(EGLenum attrib) const;
     Error programCacheQuery(EGLint index,

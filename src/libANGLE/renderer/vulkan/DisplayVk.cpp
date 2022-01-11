@@ -98,11 +98,11 @@ std::string DisplayVk::getVendorString()
     return std::string();
 }
 
-std::string DisplayVk::getVersionString()
+std::string DisplayVk::getVersionString(bool includeFullVersion)
 {
     if (mRenderer)
     {
-        return mRenderer->getVersionString();
+        return mRenderer->getVersionString(includeFullVersion);
     }
     return std::string();
 }

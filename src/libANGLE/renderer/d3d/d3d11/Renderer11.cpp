@@ -4346,13 +4346,13 @@ std::string Renderer11::getVendorString() const
     return GetVendorString(mAdapterDescription.VendorId);
 }
 
-std::string Renderer11::getVersionString() const
+std::string Renderer11::getVersionString(bool includeFullVersion) const
 {
     std::ostringstream versionString;
-    versionString << "D3D11-";
-    if (mRenderer11DeviceCaps.driverVersion.valid())
+    versionString << "D3D11";
+    if (includeFullVersion && mRenderer11DeviceCaps.driverVersion.valid())
     {
-        versionString << GetDriverVersionString(mRenderer11DeviceCaps.driverVersion.value());
+        versionString << "-" << GetDriverVersionString(mRenderer11DeviceCaps.driverVersion.value());
     }
     return versionString.str();
 }
