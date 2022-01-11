@@ -895,6 +895,9 @@ extern const char kCoverageMaskEnabledConstName[];
 
 // Specialization constant to emulate rasterizer discard.
 extern const char kRasterizerDiscardEnabledConstName[];
+
+// Specialization constant to enable depth write in fragment shaders.
+extern const char kDepthWriteEnabledConstName[];
 }  // namespace mtl
 
 // For backends that use glslang (the Vulkan shader compiler), i.e. Vulkan and Metal, call these to

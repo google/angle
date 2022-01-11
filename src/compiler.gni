@@ -382,6 +382,8 @@ angle_translator_lib_metal_sources = [
   "src/compiler/translator/TranslatorMetalDirect/EmitMetal.h",
   "src/compiler/translator/TranslatorMetalDirect/FixTypeConstructors.cpp",
   "src/compiler/translator/TranslatorMetalDirect/FixTypeConstructors.h",
+  "src/compiler/translator/TranslatorMetalDirect/GuardFragDepthWrite.cpp",
+  "src/compiler/translator/TranslatorMetalDirect/GuardFragDepthWrite.h",
   "src/compiler/translator/TranslatorMetalDirect/HoistConstants.cpp",
   "src/compiler/translator/TranslatorMetalDirect/HoistConstants.h",
   "src/compiler/translator/TranslatorMetalDirect/IdGen.cpp",

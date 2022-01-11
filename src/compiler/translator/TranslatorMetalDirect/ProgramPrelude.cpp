@@ -1507,11 +1507,13 @@ PROGRAM_PRELUDE_DECLARE(functionConstants,
 #define ANGLE_SAMPLE_COMPARE_LOD_INDEX      1
 #define ANGLE_RASTERIZATION_DISCARD_INDEX   2
 #define ANGLE_COVERAGE_MASK_ENABLED_INDEX   3
+#define ANGLE_DEPTH_WRITE_ENABLED_INDEX     4
 
 constant bool ANGLEUseSampleCompareGradient [[function_constant(ANGLE_SAMPLE_COMPARE_GRADIENT_INDEX)]];
 constant bool ANGLEUseSampleCompareLod      [[function_constant(ANGLE_SAMPLE_COMPARE_LOD_INDEX)]];
 constant bool ANGLERasterizerDisabled       [[function_constant(ANGLE_RASTERIZATION_DISCARD_INDEX)]];
 constant bool ANGLECoverageMaskEnabled      [[function_constant(ANGLE_COVERAGE_MASK_ENABLED_INDEX)]];
+constant bool ANGLEDepthWriteEnabled        [[function_constant(ANGLE_DEPTH_WRITE_ENABLED_INDEX)]];
 )")
 
 PROGRAM_PRELUDE_DECLARE(texelFetch,
@@ -3951,7 +3953,8 @@ void ProgramPrelude::visitVariable(const Name &name, const TType &type)
     }
     else
     {
-        if (name.rawName() == sh::mtl::kRasterizerDiscardEnabledConstName)
+        if (name.rawName() == sh::mtl::kRasterizerDiscardEnabledConstName ||
+            name.rawName() == sh::mtl::kDepthWriteEnabledConstName)
         {
             functionConstants();
         }
