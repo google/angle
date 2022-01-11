@@ -6483,6 +6483,86 @@ TEST_P(GLSLTest_ES31, VaryingSampleInAndOutDifferentPrecision)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, 0, GLColor::red);
 }
 
+// Test that a shader IO block varying whose block name is declared multiple(in/out) time links
+// successfully.
+TEST_P(GLSLTest_ES31, VaryingIOBlockDeclaredAsInAndOut)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+    #extension GL_EXT_shader_io_blocks : require
+    precision highp float;
+    in vec4 inputAttribute;
+    out Vertex
+    {
+        vec4 fv;
+    } outVertex;
+    void main()
+    {
+        gl_Position = inputAttribute;
+        outVertex.fv = gl_Position;
+    })";
+
+    constexpr char kTCS[] = R"(#version 310 es
+    #extension GL_EXT_tessellation_shader : require
+    #extension GL_EXT_shader_io_blocks : require
+    precision mediump float;
+    in Vertex
+    {
+        vec4 fv;
+    } inVertex[];
+    layout(vertices = 2) out;
+    out Vertex
+    {
+        vec4 fv;
+    } outVertex[];
+
+    void main()
+    {
+        gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
+        outVertex[gl_InvocationID].fv = inVertex[gl_InvocationID].fv;
+        gl_TessLevelInner[0] = 1.0;
+            gl_TessLevelInner[1] = 1.0;
+            gl_TessLevelOuter[0] = 1.0;
+            gl_TessLevelOuter[1] = 1.0;
+            gl_TessLevelOuter[2] = 1.0;
+            gl_TessLevelOuter[3] = 1.0;
+    })";
+
+    constexpr char kTES[] = R"(#version 310 es
+    #extension GL_EXT_tessellation_shader : require
+    #extension GL_EXT_shader_io_blocks : require
+    precision mediump float;
+    layout (isolines, point_mode) in;
+    in Vertex
+    {
+        vec4 fv;
+    } inVertex[];
+    out vec4 result_fv;
+
+    void main()
+    {
+        gl_Position = gl_in[0].gl_Position;
+        result_fv = inVertex[0].fv;
+    })";
+
+    constexpr char kFS[] = R"(#version 310 es
+    precision mediump float;
+
+    layout(location = 0) out mediump vec4 color;
+
+    void main()
+    {
+        // Output solid green
+        color = vec4(0, 1.0, 0, 1.0);
+    })";
+
+    ANGLE_GL_PROGRAM_WITH_TESS(program, kVS, kTCS, kTES, kFS);
+    drawPatches(program.get(), "inputAttribute", 0.5f, 1.0f, GL_FALSE);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that a varying struct that's not declared in the fragment shader links successfully.
 // GLSL ES 3.00.6 section 4.3.10.
 TEST_P(GLSLTest_ES3, VaryingStructNotDeclaredInFragmentShader)

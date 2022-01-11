@@ -198,18 +198,27 @@ void ValidateAST::visitStructOrInterfaceBlockDeclaration(const TType &type,
     if (structOrBlock)
     {
         ASSERT(!typeName.empty());
-
-        // Allow gl_PerVertex to be doubly-defined.
-        if (typeName == "gl_PerVertex")
+        // Structures are not allowed to be doubly defined
+        if (type.getStruct() == nullptr)
         {
+            // Allow interfaces to be doubly-defined.
+            std::string name(typeName.data());
+
             if (IsShaderIn(type.getQualifier()))
             {
-                typeName = ImmutableString("gl_PerVertex<input>");
+                typeName = ImmutableString(name + "<input>");
             }
-            else
+            else if (IsShaderOut(type.getQualifier()))
             {
-                ASSERT(IsShaderOut(type.getQualifier()));
-                typeName = ImmutableString("gl_PerVertex<output>");
+                typeName = ImmutableString(name + "<output>");
+            }
+            else if (IsStorageBuffer(type.getQualifier()))
+            {
+                typeName = ImmutableString(name + "<buffer>");
+            }
+            else if (type.getQualifier() == EvqUniform)
+            {
+                typeName = ImmutableString(name + "<uniform>");
             }
         }
 

@@ -35,8 +35,6 @@
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_triangles_tessellation.degenerate_triangle = FAIL
 // Missing names in mVariableInfo map (fail on ASSERT in SPIR-V transformer)
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.single.xfb_captures_data_from_correct_stage = SKIP
-// Translator validation bugs
-5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.single.max_patch_vertices = FAIL
 // Bug in front-end where builtins are not correctly marked active in every stage
 // Test failures
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_quads_tessellation.* = FAIL
