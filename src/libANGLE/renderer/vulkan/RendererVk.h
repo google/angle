@@ -238,6 +238,7 @@ class RendererVk : angle::NonCopyable
     }
     uint32_t getDefaultUniformBufferSize() const { return mDefaultUniformBufferSize; }
 
+    angle::vk::ICD getEnabledICD() const { return mEnabledICD; }
     bool isMockICDEnabled() const { return mEnabledICD == angle::vk::ICD::Mock; }
 
     // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and
