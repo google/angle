@@ -30,6 +30,7 @@ class ProgramPrelude : public TIntermTraverser
     ProgramPrelude(TInfoSinkBase &out, const ProgramPreludeConfig &ppc)
         : TIntermTraverser(true, false, false), mOut(out)
     {
+        include_metal_stdlib();
         ALWAYS_INLINE();
         int_clamp();
         if (ppc.hasStructEq)
@@ -103,6 +104,7 @@ class ProgramPrelude : public TIntermTraverser
   private:
     void ALWAYS_INLINE();
 
+    void include_metal_stdlib();
     void include_metal_atomic();
     void include_metal_common();
     void include_metal_geometric();
@@ -289,6 +291,7 @@ class ProgramPrelude : public TIntermTraverser
 
 ////////////////////////////////////////////////////////////////////////////////
 
+PROGRAM_PRELUDE_INCLUDE(metal_stdlib)
 PROGRAM_PRELUDE_INCLUDE(metal_atomic)
 PROGRAM_PRELUDE_INCLUDE(metal_common)
 PROGRAM_PRELUDE_INCLUDE(metal_geometric)
