@@ -2828,7 +2828,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                             IsAndroid() && isQualcomm);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, perFrameWindowSizeQuery,
-                            isIntel || (IsWindows() && isAMD) || IsFuchsia());
+                            isIntel || (IsWindows() && isAMD) || IsFuchsia() || isSamsung);
 
     // Disabled on AMD/windows due to buggy behavior.
     ANGLE_FEATURE_CONDITION(&mFeatures, disallowSeamfulCubeMapEmulation, IsWindows() && isAMD);
