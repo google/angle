@@ -1148,7 +1148,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                std::min(cmdCountDisabled, getRenderPassWriteCommandCount()) == cmdCountInvalidated;
     }
 
-    void updateRenderPassColorClear(PackedAttachmentIndex colorIndex,
+    void updateRenderPassColorClear(PackedAttachmentIndex colorIndexVk,
                                     const VkClearValue &colorClearValue);
     void updateRenderPassDepthStencilClear(VkImageAspectFlags aspectFlags,
                                            const VkClearValue &clearValue);

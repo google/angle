@@ -40,6 +40,12 @@ enum class RenderTargetTransience
     EntirelyTransient,
 };
 
+enum class DrawBufferState
+{
+    Enabled,
+    Disabled
+};
+
 // This is a very light-weight class that does not own to the resources it points to.
 // It's meant only to copy across some information from a FramebufferAttachment to the
 // business rendering logic. It stores Images and ImageViews by pointer for performance.
@@ -68,7 +74,9 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
     void onColorDraw(ContextVk *contextVk,
                      uint32_t framebufferLayerCount,
-                     vk::PackedAttachmentIndex index);
+                     vk::PackedAttachmentIndex index,
+                     DrawBufferState drawBufferState);
+    void onColorWrite(ContextVk *contextVk, uint32_t framebufferLayerCount);
     void onColorResolve(ContextVk *contextVk, uint32_t framebufferLayerCount);
     void onDepthStencilDraw(ContextVk *contextVk, uint32_t framebufferLayerCount);
 

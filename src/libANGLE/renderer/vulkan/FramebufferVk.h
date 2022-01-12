@@ -213,6 +213,7 @@ class FramebufferVk : public FramebufferImpl
     angle::Result clearWithCommand(ContextVk *contextVk,
                                    vk::RenderPassCommandBufferHelper *renderpassCommands,
                                    const gl::Rectangle &scissoredRenderArea);
+    void clearWithLoadOp(ContextVk *contextVk);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc(ContextVk *contextVk);
     angle::Result updateColorAttachment(const gl::Context *context, uint32_t colorIndex);

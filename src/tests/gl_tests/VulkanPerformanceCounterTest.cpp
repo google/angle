@@ -3319,6 +3319,92 @@ TEST_P(VulkanPerformanceCounterTest, UniformUpdatesHitDescriptorSetCache)
     EXPECT_EQ(expectedCacheMisses, actualCacheMisses);
 }
 
+// Verify a mid-render pass clear of a newly enabled attachment uses LOAD_OP_CLEAR.
+TEST_P(VulkanPerformanceCounterTest, MidRenderPassClear)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLTexture textures[2];
+
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
+
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, textures[1], 0);
+
+    // Only enable attachment 0.
+    GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0, GL_NONE};
+    glDrawBuffers(2, drawBuffers);
+
+    // Draw red.
+    ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Enable attachment 1.
+    drawBuffers[1] = GL_COLOR_ATTACHMENT1;
+    glDrawBuffers(2, drawBuffers);
+
+    // Clear both attachments to green.
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+layout(location = 0) out vec4 my_FragColor0;
+layout(location = 1) out vec4 my_FragColor1;
+void main()
+{
+    my_FragColor0 = vec4(0.0, 0.0, 1.0, 1.0);
+    my_FragColor1 = vec4(0.0, 0.0, 1.0, 1.0);
+})";
+
+    // Draw blue to both attachments.
+    ANGLE_GL_PROGRAM(blueProgram, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(blueProgram, essl3_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify attachment 0.
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
+    // Verify attachment 1.
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
+
+    // Color attachment 0 loadOp = DONT_CARE
+    EXPECT_EQ(hackANGLE().colorLoads, 0u);
+    // Color attachment 1 loadOp = CLEAR
+    EXPECT_EQ(hackANGLE().colorClears, 1u);
+    // Color attachment 0+1 storeOp = STORE
+    EXPECT_EQ(hackANGLE().colorStores, 2u);
+
+    GLFramebuffer fbo2;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Blend red
+    drawQuad(redProgram, essl3_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify purple
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 255, 255);
+    ASSERT_GL_NO_ERROR();
+
+    // loadOp = LOAD
+    EXPECT_EQ(hackANGLE().colorLoads, 1u);
+    // storeOp = STORE (2 from before)
+    EXPECT_EQ(hackANGLE().colorStores, 3u);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_MSAA, ES3_VULKAN());

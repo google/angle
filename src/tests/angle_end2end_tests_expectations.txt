@@ -393,7 +393,6 @@
 // Pixel 6 expectations.
 6931 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP
 6931 PIXEL6 VULKAN : BufferDataTestES3.MapInvalidateThenBufferSubData/* = SKIP
-6931 PIXEL6 VULKAN : EGLSurfaceTest.ResizeWindowWithDraw/* = SKIP
 6931 PIXEL6 VULKAN : EGLSyncTest.AndroidNativeFence_ClientWait/* = SKIP
 6931 PIXEL6 VULKAN : ExternalBufferTestES31.* = SKIP
 6931 PIXEL6 VULKAN : FramebufferMultiviewLayeredClearTest.ScissoredClearBufferfi/* = SKIP
