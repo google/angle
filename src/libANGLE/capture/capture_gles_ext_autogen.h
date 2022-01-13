@@ -19,6 +19,8 @@ namespace gl
 
 // Method Captures
 
+// GL_ANDROID_extension_pack_es31a
+
 // GL_ANGLE_base_vertex_base_instance
 angle::CallCapture CaptureDrawArraysInstancedBaseInstanceANGLE(const State &glState,
                                                                bool isCallValid,

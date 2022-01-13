@@ -36,6 +36,8 @@ using namespace gl;
 
 extern "C" {
 
+// GL_ANDROID_extension_pack_es31a
+
 // GL_ANGLE_base_vertex_base_instance
 void GL_APIENTRY GL_DrawArraysInstancedBaseInstanceANGLE(GLenum mode,
                                                          GLint first,

@@ -13,6 +13,7 @@
 #include <string.h>
 
 #define LIST_EXTENSIONS(OP)                            \
+    OP(ANDROID_extension_pack_es31a)                   \
     OP(ANGLE_base_vertex_base_instance_shader_builtin) \
     OP(ANGLE_multi_draw)                               \
     OP(ANGLE_texture_multisample)                      \

@@ -460,6 +460,8 @@ EXPORTS
     glTranslatex
     glVertexPointer
 
+    ; GL_ANDROID_extension_pack_es31a
+
     ; GL_ANGLE_base_vertex_base_instance
     glDrawArraysInstancedBaseInstanceANGLE
     glDrawElementsInstancedBaseVertexBaseInstanceANGLE

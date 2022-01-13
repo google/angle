@@ -87,6 +87,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_NV_EGL_stream_consumer_external"] = enableableExtension(&Extensions::EGLStreamConsumerExternalNV);
         map["GL_OES_EGL_sync"] = esOnlyExtension(&Extensions::EGLSyncOES);
         map["GL_OES_element_index_uint"] = enableableExtension(&Extensions::elementIndexUintOES);
+        map["GL_ANDROID_extension_pack_es31a"] = esOnlyExtension(&Extensions::extensionPackEs31aANDROID);
         map["GL_EXT_external_buffer"] = enableableExtension(&Extensions::externalBufferEXT);
         map["GL_OES_fbo_render_mipmap"] = enableableExtension(&Extensions::fboRenderMipmapOES);
         map["GL_NV_fence"] = esOnlyExtension(&Extensions::fenceNV);

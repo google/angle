@@ -71,6 +71,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_NV_EGL_stream_consumer_external](https://khronos.org/registry/OpenGL/extensions/NV/NV_EGL_stream_consumer_external.txt) |  |  |  |  |  |  |
 | [GL_OES_EGL_sync](https://khronos.org/registry/OpenGL/extensions/OES/OES_EGL_sync.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_element_index_uint](https://khronos.org/registry/OpenGL/extensions/OES/OES_element_index_uint.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_ANDROID_extension_pack_es31a](https://khronos.org/registry/OpenGL/extensions/ANDROID/ANDROID_extension_pack_es31a.txt) |  |  |  |  |  |  |
 | [GL_EXT_external_buffer](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_external_buffer.txt) |  |  |  |  |  | &#x2714; |
 | [GL_OES_fbo_render_mipmap](https://khronos.org/registry/OpenGL/extensions/OES/OES_fbo_render_mipmap.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_NV_fence](https://khronos.org/registry/OpenGL/extensions/NV/NV_fence.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |

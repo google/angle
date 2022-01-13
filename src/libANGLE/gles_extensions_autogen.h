@@ -214,6 +214,9 @@ struct Extensions
     // GL_OES_element_index_uint
     bool elementIndexUintOES = false;
 
+    // GL_ANDROID_extension_pack_es31a
+    bool extensionPackEs31aANDROID = false;
+
     // GL_EXT_external_buffer
     bool externalBufferEXT = false;
 

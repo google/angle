@@ -3496,9 +3496,10 @@ Extensions Context::generateSupportedExtensions() const
     if (getClientVersion() < ES_3_1)
     {
         // Disable ES3.1+ extensions
-        supportedExtensions.geometryShaderEXT     = false;
-        supportedExtensions.geometryShaderOES     = false;
-        supportedExtensions.tessellationShaderEXT = false;
+        supportedExtensions.geometryShaderEXT         = false;
+        supportedExtensions.geometryShaderOES         = false;
+        supportedExtensions.tessellationShaderEXT     = false;
+        supportedExtensions.extensionPackEs31aANDROID = false;
 
         // TODO(http://anglebug.com/2775): Multisample arrays could be supported on ES 3.0 as well
         // once 2D multisample texture extension is exposed there.

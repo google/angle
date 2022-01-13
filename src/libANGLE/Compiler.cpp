@@ -183,6 +183,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.OES_sample_variables = extensions.sampleVariablesOES;
     mResources.MaxSamples           = caps.maxSamples;
 
+    // ANDROID_extension_pack_es31a
+    mResources.ANDROID_extension_pack_es31a = extensions.extensionPackEs31aANDROID;
+
     // GLSL ES 3.1 constants
     mResources.MaxProgramTextureGatherOffset    = caps.maxProgramTextureGatherOffset;
     mResources.MinProgramTextureGatherOffset    = caps.minProgramTextureGatherOffset;

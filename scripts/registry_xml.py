@@ -220,6 +220,7 @@ angle_es_only_extensions = [
 ]
 
 gles_es_only_extensions = [
+    "GL_ANDROID_extension_pack_es31a",
     "GL_ANGLE_depth_texture",
     "GL_ANGLE_translated_shader_source",
     "GL_EXT_debug_label",

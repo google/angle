@@ -2713,6 +2713,8 @@ void GL_APIENTRY glVertexPointer(GLint size, GLenum type, GLsizei stride, const 
     return GL_VertexPointer(size, type, stride, pointer);
 }
 
+// GL_ANDROID_extension_pack_es31a
+
 // GL_ANGLE_base_vertex_base_instance
 void GL_APIENTRY glDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
                                                         GLint first,

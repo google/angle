@@ -18,6 +18,8 @@ namespace gl
 {
 class Context;
 
+// GL_ANDROID_extension_pack_es31a
+
 // GL_ANGLE_base_vertex_base_instance
 bool ValidateDrawArraysInstancedBaseInstanceANGLE(const Context *context,
                                                   angle::EntryPoint entryPoint,

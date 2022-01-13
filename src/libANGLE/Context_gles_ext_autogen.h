@@ -47,6 +47,7 @@
                                                                                                    \
     /* GLES2+ Extensions */                                                                        \
                                                                                                    \
+    /* GL_ANDROID_extension_pack_es31a */                                                          \
     /* GL_ANGLE_depth_texture */                                                                   \
     /* GL_ANGLE_framebuffer_blit */                                                                \
     /* GL_ANGLE_instanced_arrays */                                                                \

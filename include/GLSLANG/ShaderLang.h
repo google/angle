@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 268
+#define ANGLE_SH_VERSION 269
 
 enum ShShaderSpec
 {
@@ -416,6 +416,7 @@ struct ShBuiltInResources
     int EXT_clip_cull_distance;
     int EXT_primitive_bounding_box;
     int ANGLE_base_vertex_base_instance_shader_builtin;
+    int ANDROID_extension_pack_es31a;
 
     // Set to 1 to enable replacing GL_EXT_draw_buffers #extension directives
     // with GL_NV_draw_buffers in ESSL output. This flag can be used to emulate
