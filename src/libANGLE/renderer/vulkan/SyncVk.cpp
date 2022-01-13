@@ -318,9 +318,6 @@ angle::Result SyncHelperNativeFence::serverWait(ContextVk *contextVk)
     importFdInfo.fd                         = dup(mNativeFenceFd);
     ANGLE_VK_TRY(contextVk, waitSemaphore.get().importFd(device, importFdInfo));
 
-    // Flush current work, block after current pending commands.
-    ANGLE_TRY(contextVk->flushImpl(nullptr, RenderPassClosureReason::SyncObjectServerWait));
-
     // Add semaphore to next submit job.
     contextVk->addWaitSemaphore(waitSemaphore.get().getHandle(),
                                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
