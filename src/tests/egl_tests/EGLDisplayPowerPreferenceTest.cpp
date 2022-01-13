@@ -314,9 +314,6 @@ TEST_P(EGLDisplayPowerPreferenceTestMultiDisplay, DeviceId)
 {
     ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_platform_angle_device_id"));
 
-    // TODO(http://anglebug.com/6143): Fix SystemInfo collection of system device IDs on M1 macs
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsApple());
-
     initializeWindow();
 
     for (size_t i = 0; i < mSystemInfo.gpus.size(); i++)

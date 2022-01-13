@@ -125,19 +125,19 @@ void GetIORegistryDevices(std::vector<GPUDeviceInfo> *devices)
             constexpr uint32_t kClassCodeDisplayVGA = 0x30000;
             uint32_t classCode;
             GPUDeviceInfo info;
+            // The registry ID of an IOGraphicsAccelerator2 or AGXAccelerator matches the ID used
+            // for GPU selection by ANGLE_platform_angle_device_id
+            if (IORegistryEntryGetRegistryEntryID(entry, &info.systemDeviceId) != kIOReturnSuccess)
+            {
+                IOObjectRelease(entry);
+                continue;
+            }
+
             io_registry_entry_t queryEntry = entry;
             if (kServiceIsGraphicsAccelerator2[i])
             {
-                // The IOGraphicsAccelerator2 registry entry points to the system device ID used for
-                // GPU selection by ANGLE_platform_angle_device_id
-                if (IORegistryEntryGetRegistryEntryID(entry, &info.systemDeviceId) !=
-                    kIOReturnSuccess)
-                {
-                    IOObjectRelease(entry);
-                    continue;
-                }
-                // Get the parent entry that will be the IOPCIDevice which holds vendor-id and
-                // device-id
+                // If the matching entry is an IOGraphicsAccelerator2, get the parent entry that
+                // will be the IOPCIDevice which holds vendor-id and device-id
                 io_registry_entry_t deviceEntry = IO_OBJECT_NULL;
                 if (IORegistryEntryGetParentEntry(entry, kIOServicePlane, &deviceEntry) !=
                         kIOReturnSuccess ||
