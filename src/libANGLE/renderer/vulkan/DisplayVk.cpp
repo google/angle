@@ -412,13 +412,11 @@ vk::BufferPool *ShareGroupVk::getDefaultBufferPool(RendererVk *renderer, uint32_
 {
     if (!mDefaultBufferPools[memoryTypeIndex])
     {
-        vk::BufferMemoryAllocator &bufferMemoryAllocator = renderer->getBufferMemoryAllocator();
-
-        VkBufferUsageFlags usageFlags = GetDefaultBufferUsageFlags(renderer);
+        const vk::Allocator &allocator = renderer->getAllocator();
+        VkBufferUsageFlags usageFlags  = GetDefaultBufferUsageFlags(renderer);
 
         VkMemoryPropertyFlags memoryPropertyFlags;
-        bufferMemoryAllocator.getMemoryTypeProperties(renderer, memoryTypeIndex,
-                                                      &memoryPropertyFlags);
+        allocator.getMemoryTypeProperties(memoryTypeIndex, &memoryPropertyFlags);
 
         std::unique_ptr<vk::BufferPool> pool = std::make_unique<vk::BufferPool>();
         pool->initWithFlags(renderer, vma::VirtualBlockCreateFlagBits::GENERAL, usageFlags, 0,

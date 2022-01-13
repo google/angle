@@ -458,6 +458,22 @@ class Allocator : public WrappedObject<Allocator, VmaAllocator>
                   uint32_t apiVersion,
                   VkDeviceSize preferredLargeHeapBlockSize);
 
+    // Initializes the buffer handle and memory allocation.
+    VkResult createBuffer(const VkBufferCreateInfo &bufferCreateInfo,
+                          VkMemoryPropertyFlags requiredFlags,
+                          VkMemoryPropertyFlags preferredFlags,
+                          bool persistentlyMappedBuffers,
+                          uint32_t *memoryTypeIndexOut,
+                          Buffer *bufferOut,
+                          Allocation *allocationOut) const;
+
+    void getMemoryTypeProperties(uint32_t memoryTypeIndex, VkMemoryPropertyFlags *flagsOut) const;
+    VkResult findMemoryTypeIndexForBufferInfo(const VkBufferCreateInfo &bufferCreateInfo,
+                                              VkMemoryPropertyFlags requiredFlags,
+                                              VkMemoryPropertyFlags preferredFlags,
+                                              bool persistentlyMappedBuffers,
+                                              uint32_t *memoryTypeIndexOut) const;
+
     void buildStatsString(char **statsString, VkBool32 detailedMap);
     void freeStatsString(char *statsString);
 };
@@ -474,7 +490,7 @@ class Allocation final : public WrappedObject<Allocation, VmaAllocation>
     void invalidate(const Allocator &allocator, VkDeviceSize offset, VkDeviceSize size) const;
 
   private:
-    friend class BufferMemoryAllocator;
+    friend class Allocator;
 };
 
 class RenderPass final : public WrappedObject<RenderPass, VkRenderPass>
@@ -505,7 +521,7 @@ class Buffer final : public WrappedObject<Buffer, VkBuffer>
     void getMemoryRequirements(VkDevice device, VkMemoryRequirements *memoryRequirementsOut);
 
   private:
-    friend class BufferMemoryAllocator;
+    friend class Allocator;
 };
 
 class BufferView final : public WrappedObject<BufferView, VkBufferView>
@@ -1354,6 +1370,42 @@ ANGLE_INLINE VkResult Allocator::init(VkPhysicalDevice physicalDevice,
     ASSERT(!valid());
     return vma::InitAllocator(physicalDevice, device, instance, apiVersion,
                               preferredLargeHeapBlockSize, &mHandle);
+}
+
+ANGLE_INLINE VkResult Allocator::createBuffer(const VkBufferCreateInfo &bufferCreateInfo,
+                                              VkMemoryPropertyFlags requiredFlags,
+                                              VkMemoryPropertyFlags preferredFlags,
+                                              bool persistentlyMappedBuffers,
+                                              uint32_t *memoryTypeIndexOut,
+                                              Buffer *bufferOut,
+                                              Allocation *allocationOut) const
+{
+    ASSERT(valid());
+    ASSERT(bufferOut && !bufferOut->valid());
+    ASSERT(allocationOut && !allocationOut->valid());
+    return vma::CreateBuffer(mHandle, &bufferCreateInfo, requiredFlags, preferredFlags,
+                             persistentlyMappedBuffers, memoryTypeIndexOut, &bufferOut->mHandle,
+                             &allocationOut->mHandle);
+}
+
+ANGLE_INLINE void Allocator::getMemoryTypeProperties(uint32_t memoryTypeIndex,
+                                                     VkMemoryPropertyFlags *flagsOut) const
+{
+    ASSERT(valid());
+    vma::GetMemoryTypeProperties(mHandle, memoryTypeIndex, flagsOut);
+}
+
+ANGLE_INLINE VkResult
+Allocator::findMemoryTypeIndexForBufferInfo(const VkBufferCreateInfo &bufferCreateInfo,
+                                            VkMemoryPropertyFlags requiredFlags,
+                                            VkMemoryPropertyFlags preferredFlags,
+                                            bool persistentlyMappedBuffers,
+                                            uint32_t *memoryTypeIndexOut) const
+{
+    ASSERT(valid());
+    return vma::FindMemoryTypeIndexForBufferInfo(mHandle, &bufferCreateInfo, requiredFlags,
+                                                 preferredFlags, persistentlyMappedBuffers,
+                                                 memoryTypeIndexOut);
 }
 
 ANGLE_INLINE void Allocator::buildStatsString(char **statsString, VkBool32 detailedMap)

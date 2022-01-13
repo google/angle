@@ -174,8 +174,9 @@ angle::Result GetMemoryTypeIndex(ContextVk *contextVk,
                                  VkMemoryPropertyFlags memoryPropertyFlags,
                                  uint32_t *memoryTypeIndexOut)
 {
-    RendererVk *renderer                             = contextVk->getRenderer();
-    vk::BufferMemoryAllocator &bufferMemoryAllocator = renderer->getBufferMemoryAllocator();
+    RendererVk *renderer           = contextVk->getRenderer();
+    const vk::Allocator &allocator = renderer->getAllocator();
+
     bool persistentlyMapped = renderer->getFeatures().persistentlyMappedBuffers.enabled;
     VkBufferUsageFlags defaultBufferUsageFlags = GetDefaultBufferUsageFlags(renderer);
 
@@ -196,9 +197,9 @@ angle::Result GetMemoryTypeIndex(ContextVk *contextVk,
 
     // Check that the allocation is not too large.
     uint32_t memoryTypeIndex = 0;
-    ANGLE_VK_TRY(contextVk, bufferMemoryAllocator.findMemoryTypeIndexForBufferInfo(
-                                renderer, createInfo, requiredFlags, preferredFlags,
-                                persistentlyMapped, &memoryTypeIndex));
+    ANGLE_VK_TRY(contextVk, allocator.findMemoryTypeIndexForBufferInfo(
+                                createInfo, requiredFlags, preferredFlags, persistentlyMapped,
+                                &memoryTypeIndex));
     *memoryTypeIndexOut = memoryTypeIndex;
 
     return angle::Result::Continue;

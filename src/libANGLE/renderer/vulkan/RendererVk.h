@@ -82,38 +82,6 @@ class MemoryReport final : angle::NonCopyable
     VkDeviceSize mMaxTotalImportedMemory;
     angle::HashMap<uint64_t, int> mUniqueIDCounts;
 };
-
-class BufferMemoryAllocator : angle::NonCopyable
-{
-  public:
-    BufferMemoryAllocator();
-    ~BufferMemoryAllocator();
-
-    VkResult initialize(RendererVk *renderer, VkDeviceSize preferredLargeHeapBlockSize);
-    void destroy(RendererVk *renderer);
-
-    // Initializes the buffer handle and memory allocation.
-    VkResult createBuffer(RendererVk *renderer,
-                          const VkBufferCreateInfo &bufferCreateInfo,
-                          VkMemoryPropertyFlags requiredFlags,
-                          VkMemoryPropertyFlags preferredFlags,
-                          bool persistentlyMapped,
-                          uint32_t *memoryTypeIndexOut,
-                          Buffer *bufferOut,
-                          Allocation *allocationOut);
-
-    void getMemoryTypeProperties(RendererVk *renderer,
-                                 uint32_t memoryTypeIndex,
-                                 VkMemoryPropertyFlags *flagsOut) const;
-    VkResult findMemoryTypeIndexForBufferInfo(RendererVk *renderer,
-                                              const VkBufferCreateInfo &bufferCreateInfo,
-                                              VkMemoryPropertyFlags requiredFlags,
-                                              VkMemoryPropertyFlags preferredFlags,
-                                              bool persistentlyMappedBuffers,
-                                              uint32_t *memoryTypeIndexOut) const;
-
-  private:
-};
 }  // namespace vk
 
 // Supports one semaphore from current surface, and one semaphore passed to
@@ -195,7 +163,6 @@ class RendererVk : angle::NonCopyable
     const VkPhysicalDeviceFeatures2KHR &getEnabledFeatures() const { return mEnabledFeatures; }
     VkDevice getDevice() const { return mDevice; }
 
-    vk::BufferMemoryAllocator &getBufferMemoryAllocator() { return mBufferMemoryAllocator; }
     const vk::Allocator &getAllocator() const { return mAllocator; }
 
     angle::Result selectPresentQueueForSurface(DisplayVk *displayVk,
@@ -685,7 +652,6 @@ class RendererVk : angle::NonCopyable
     vk::CommandBufferRecycler<vk::RenderPassCommandBuffer, vk::RenderPassCommandBufferHelper>
         mRenderPassCommandBufferRecycler;
 
-    vk::BufferMemoryAllocator mBufferMemoryAllocator;
     vk::Allocator mAllocator;
     SamplerCache mSamplerCache;
     SamplerYcbcrConversionCache mYuvConversionCache;

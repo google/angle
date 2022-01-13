@@ -2757,8 +2757,9 @@ void BufferPool::pruneEmptyBuffers(RendererVk *renderer)
 
 angle::Result BufferPool::allocateNewBuffer(ContextVk *contextVk, VkDeviceSize sizeInBytes)
 {
-    RendererVk *renderer                         = contextVk->getRenderer();
-    BufferMemoryAllocator &bufferMemoryAllocator = renderer->getBufferMemoryAllocator();
+    RendererVk *renderer       = contextVk->getRenderer();
+    const Allocator &allocator = renderer->getAllocator();
+
     VkDeviceSize heapSize =
         renderer->getMemoryProperties().getHeapSizeForMemoryType(mMemoryTypeIndex);
 
@@ -2785,20 +2786,19 @@ angle::Result BufferPool::allocateNewBuffer(ContextVk *contextVk, VkDeviceSize s
     createInfo.pQueueFamilyIndices   = nullptr;
 
     VkMemoryPropertyFlags memoryPropertyFlags;
-    bufferMemoryAllocator.getMemoryTypeProperties(renderer, mMemoryTypeIndex, &memoryPropertyFlags);
+    allocator.getMemoryTypeProperties(mMemoryTypeIndex, &memoryPropertyFlags);
 
     DeviceScoped<Buffer> buffer(renderer->getDevice());
     AllocatorScoped<Allocation> allocation(renderer->getAllocator());
     uint32_t memoryTypeIndex = kInvalidMemoryTypeIndex;
-    ANGLE_VK_TRY(contextVk, bufferMemoryAllocator.createBuffer(
-                                renderer, createInfo, memoryPropertyFlags, 0,
-                                renderer->getFeatures().persistentlyMappedBuffers.enabled,
-                                &memoryTypeIndex, &buffer.get(), &allocation.get()));
+    ANGLE_VK_TRY(contextVk,
+                 allocator.createBuffer(createInfo, memoryPropertyFlags, 0,
+                                        renderer->getFeatures().persistentlyMappedBuffers.enabled,
+                                        &memoryTypeIndex, &buffer.get(), &allocation.get()));
     ASSERT(memoryTypeIndex != kInvalidMemoryTypeIndex);
     if (memoryTypeIndex != mMemoryTypeIndex)
     {
-        bufferMemoryAllocator.getMemoryTypeProperties(renderer, memoryTypeIndex,
-                                                      &memoryPropertyFlags);
+        allocator.getMemoryTypeProperties(memoryTypeIndex, &memoryPropertyFlags);
     }
 
     // Allocate bufferBlock
@@ -3919,7 +3919,8 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
                                  const VkBufferCreateInfo &requestedCreateInfo,
                                  VkMemoryPropertyFlags memoryPropertyFlags)
 {
-    RendererVk *renderer = contextVk->getRenderer();
+    RendererVk *renderer       = contextVk->getRenderer();
+    const Allocator &allocator = renderer->getAllocator();
 
     initializeBarrierTracker(contextVk);
 
@@ -3940,14 +3941,13 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
     VkMemoryPropertyFlags preferredFlags =
         (memoryPropertyFlags & (~VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
 
-    BufferMemoryAllocator &bufferMemoryAllocator = renderer->getBufferMemoryAllocator();
     bool persistentlyMapped = renderer->getFeatures().persistentlyMappedBuffers.enabled;
 
     // Check that the allocation is not too large.
     uint32_t memoryTypeIndex = kInvalidMemoryTypeIndex;
-    ANGLE_VK_TRY(contextVk, bufferMemoryAllocator.findMemoryTypeIndexForBufferInfo(
-                                renderer, *createInfo, requiredFlags, preferredFlags,
-                                persistentlyMapped, &memoryTypeIndex));
+    ANGLE_VK_TRY(contextVk, allocator.findMemoryTypeIndexForBufferInfo(
+                                *createInfo, requiredFlags, preferredFlags, persistentlyMapped,
+                                &memoryTypeIndex));
 
     VkDeviceSize heapSize =
         renderer->getMemoryProperties().getHeapSizeForMemoryType(memoryTypeIndex);
@@ -3957,13 +3957,11 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
     // Allocate buffer object
     DeviceScoped<Buffer> buffer(renderer->getDevice());
     AllocatorScoped<Allocation> allocation(renderer->getAllocator());
-    ANGLE_VK_TRY(contextVk, bufferMemoryAllocator.createBuffer(renderer, *createInfo, requiredFlags,
-                                                               preferredFlags, persistentlyMapped,
-                                                               &memoryTypeIndex, &buffer.get(),
-                                                               &allocation.get()));
+    ANGLE_VK_TRY(contextVk, allocator.createBuffer(*createInfo, requiredFlags, preferredFlags,
+                                                   persistentlyMapped, &memoryTypeIndex,
+                                                   &buffer.get(), &allocation.get()));
     VkMemoryPropertyFlags memoryPropertyFlagsOut;
-    bufferMemoryAllocator.getMemoryTypeProperties(renderer, memoryTypeIndex,
-                                                  &memoryPropertyFlagsOut);
+    allocator.getMemoryTypeProperties(memoryTypeIndex, &memoryPropertyFlagsOut);
 
     ANGLE_VK_TRY(contextVk, mSubAllocation.initWithEntireBuffer(
                                 contextVk, buffer.get(), allocation.get(), memoryPropertyFlagsOut,
