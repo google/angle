@@ -375,6 +375,40 @@
 6179 NEXUS5X GLES : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 6179 PIXEL4ORXL GLES : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 
+// Pixel 6 expectations.
+6931 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP
+6931 PIXEL6 VULKAN : BufferDataTestES3.MapInvalidateThenBufferSubData/* = SKIP
+6931 PIXEL6 VULKAN : EGLSurfaceTest.ResizeWindowWithDraw/* = SKIP
+6931 PIXEL6 VULKAN : EGLSyncTest.AndroidNativeFence_ClientWait/* = SKIP
+6931 PIXEL6 VULKAN : ExternalBufferTestES31.* = SKIP
+6931 PIXEL6 VULKAN : FramebufferMultiviewLayeredClearTest.ScissoredClearBufferfi/* = SKIP
+6931 PIXEL6 VULKAN : FramebufferTest_ES31.MultipleTextureMultisampleResolveWithBlitMultipleResolves* = SKIP
+6931 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitThenDrawAttachment1/* = SKIP
+6931 PIXEL6 VULKAN : GLSLTest.PointCoordConsistency/* = SKIP
+6931 PIXEL6 VULKAN : GLSLTest_ES31.ArraysOfArraysImage/* = SKIP
+6931 PIXEL6 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
+6931 PIXEL6 VULKAN : GLSLTest_ES31.ConsecutiveArraysOfArraysImage/* = SKIP
+6931 PIXEL6 VULKAN : GeometryShaderTest.GeometryShaderImplementationDependentLimits/* = SKIP
+6931 PIXEL6 VULKAN : ImageTestES3.RGBXAHBImport* = SKIP
+6931 PIXEL6 VULKAN : IndexedBufferCopyTest.IndexRangeBug/* = SKIP
+6931 PIXEL6 VULKAN : IndexedPointsTest* = SKIP
+6931 PIXEL6 VULKAN : MultisampleTest.Point/* = SKIP
+6931 PIXEL6 VULKAN : MultithreadingTestES3.* = SKIP
+6931 PIXEL6 VULKAN : PointSpritesTest.PointCoordAndPointSizeCompliance/* = SKIP
+6931 PIXEL6 VULKAN : PointSpritesTest.PointCoordRegressionTest/* = SKIP
+6931 PIXEL6 VULKAN : PointSpritesTest.PointSizeAboveMaxIsClamped/* = SKIP
+6931 PIXEL6 VULKAN : PointSpritesTest.PointSizeEnabledCompliance/* = SKIP
+6931 PIXEL6 VULKAN : PointSpritesTest.PointSpriteAlternatingDrawTypes/* = SKIP
+6931 PIXEL6 VULKAN : PointSpritesTest.PointWithoutAttributesCompliance/* = SKIP
+6931 PIXEL6 VULKAN : PointSpritesTest.UsingPointCoordInsideFunction/* = SKIP
+6931 PIXEL6 VULKAN : ProgramInterfaceTestES31.ReloadFromCacheShouldNotCrash/* = SKIP
+6931 PIXEL6 VULKAN : ProgramPipelineTest31.ImageUniforms/* = SKIP
+6931 PIXEL6 VULKAN : ShaderStorageBufferTest31.CompoundAssignmentOperator/* = SKIP
+6931 PIXEL6 VULKAN : Texture2DTest.TexStorageWithPBOMiddlePixelDifferent/* = SKIP
+6931 PIXEL6 VULKAN : TransformFeedbackTestES32.* = SKIP
+6931 PIXEL6 VULKAN : TransformFeedbackTestIOBlocks.Separate/* = SKIP
+6931 PIXEL6 VULKAN : WebGLCompatibilityTest.FramebufferFloatColorAttachmentMRT/* = SKIP
+
 // AMD windows failures.  The GPU and driver on our bots are very old and buggy.
 // http://crbug.com/1224996
 1224996 WIN AMD VULKAN : BootAnimationTest.DefaultBootAnimation/* = SKIP

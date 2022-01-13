@@ -14,6 +14,7 @@
 # For more info see Chromium's mixins.pyl in testing/buildbot.
 
 { 'android_r': { 'swarming': { 'dimensions': { 'device_os': 'R'}}},
+  'android_s': { 'swarming': { 'dimensions': { 'device_os': 'S'}}},
   'angle_linux_nvidia_gtx_1660_stable': { 'swarming': { 'dimensions': { 'gpu': '10de:2184-440.100',
                                                                         'os': 'Ubuntu-18.04.5|Ubuntu-18.04.6',
                                                                         'pool': 'chromium.tests.gpu'}}},
@@ -29,6 +30,7 @@
   'flame': { 'swarming': { 'dimensions': { 'device_type': 'flame',
                                            'os': 'Android'}}},
   'gpu-swarming-pool': { 'swarming': { 'dimensions': { 'pool': 'chromium.tests.gpu'}}},
+  'limited_capacity_bot': { 'swarming': { 'expiration': 21600}},
   'linux-bionic': { 'swarming': { 'dimensions': { 'os': 'Ubuntu-18.04'}}},
   'linux_intel_hd_630_stable': { 'swarming': { 'dimensions': { 'gpu': '8086:5912-19.0.2',
                                                                'os': 'Ubuntu-19.04',
@@ -56,6 +58,8 @@
                                                                   'os': 'Mac-10.14.6',
                                                                   'pool': 'chromium.tests.gpu'}}},
   'no_gpu': { 'swarming': { 'dimensions': { 'gpu': 'none'}}},
+  'oriole': { 'swarming': { 'dimensions': { 'device_type': 'oriole',
+                                            'os': 'Android'}}},
   'swarming_containment_auto': { 'swarming': { 'containment_type': 'AUTO'}},
   'timeout_15m': { 'swarming': { 'hard_timeout': 900, 'io_timeout': 900}},
   'win10_gce_gpu_pool': { 'swarming': { 'dimensions': { 'cpu': 'x86-64',

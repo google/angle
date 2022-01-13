@@ -76,6 +76,7 @@ enum Token
     kConfigNexus5X,
     kConfigPixel2,
     kConfigPixel4,
+    kConfigPixel6,
     // GPU devices
     kConfigNVIDIAQuadroP400,
     kConfigNVIDIAGTX1660,
@@ -182,6 +183,7 @@ constexpr TokenInfo kTokenData[kNumberOfTokens] = {
     {"nexus5x", GPUTestConfig::kConditionNexus5X},
     {"pixel2orxl", GPUTestConfig::kConditionPixel2OrXL},
     {"pixel4orxl", GPUTestConfig::kConditionPixel4OrXL},
+    {"pixel6", GPUTestConfig::kConditionPixel6},
     {"quadrop400", GPUTestConfig::kConditionNVIDIAQuadroP400},
     {"gtx1660", GPUTestConfig::kConditionNVIDIAGTX1660},
     {"prerotation", GPUTestConfig::kConditionPreRotation},
@@ -501,6 +503,7 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig *config,
             case kConfigNexus5X:
             case kConfigPixel2:
             case kConfigPixel4:
+            case kConfigPixel6:
             case kConfigNVIDIAQuadroP400:
             case kConfigNVIDIAGTX1660:
             case kConfigPreRotation:

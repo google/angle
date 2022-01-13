@@ -124,6 +124,10 @@
 6277 ANDROID VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_read_pixels = FAIL
 6277 ANDROID VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_texture = FAIL
 
+// Pixel 6 Vulkan
+6900 PIXEL6 VULKAN : dEQP-EGL.functional.get_proc_address.extension.egl_ext_image_dma_buf_import_modifiers = FAIL
+6899 PIXEL6 VULKAN : dEQP-EGL.functional.query_context.*.rgb888_window = FAIL
+
 // Robustness failures on multiple platforms
 6707 NVIDIA : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.reads.uniform_block.compute = SKIP
 6707 NVIDIA : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.writes.uniform_block.compute = SKIP
