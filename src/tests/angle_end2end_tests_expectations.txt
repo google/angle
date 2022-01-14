@@ -450,3 +450,9 @@
 6891 WIN D3D9 : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
 6824 METAL INTEL : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
 6824 METAL INTEL : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/* = SKIP
+
+2799 NVIDIA OPENGL WIN : RobustBufferAccessBehaviorTest.DrawElementsIndexOutOfRangeWithStaticDraw/* = SKIP
+2799 NVIDIA OPENGL WIN : RobustBufferAccessBehaviorTest.DrawElementsIndexOutOfRangeWithDynamicDraw/* = SKIP
+2861 ANDROID GLES : RobustBufferAccessBehaviorTest.NoBufferData/* = SKIP
+2861 ANDROID GLES : RobustBufferAccessBehaviorTest.EmptyBuffer/* = SKIP
+3099 AMD OPENGL : RobustBufferAccessBehaviorTest.EmptyBuffer/* = SKIP
