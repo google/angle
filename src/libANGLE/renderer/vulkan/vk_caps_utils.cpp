@@ -24,13 +24,6 @@
 namespace
 {
 constexpr unsigned int kComponentsPerVector = 4;
-
-// Environment variable and Android property to remove the restriction on exposing
-// GL_EXT_shader_framebuffer_fetch_non_coherent on ARM and Qualcomm.
-constexpr char kEnableExtShaderFramebufferFetchNonCoherentOverrideVarName[] =
-    "ANGLE_ENABLE_EXT_SHADER_FRAMEBUFFER_FETCH_NON_COHERENT_OVERRIDE";
-constexpr char kEnableExtShaderFramebufferFetchNonCoherentOverridePropertyName[] =
-    "debug.angle.enable.ext_shader_framebuffer_fetch_non_coherent_override";
 }  // anonymous namespace
 
 namespace rx
@@ -913,32 +906,19 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeCaps.subPixelBits = limitsVk.subPixelPrecisionBits;
 
-    // Important games are not checking supported extensions properly, and are confusing the
-    // GL_EXT_shader_framebuffer_fetch_non_coherent as the GL_EXT_shader_framebuffer_fetch
-    // extension.  Therefore, don't enable the extension on Arm and Qualcomm by default.
-    // https://issuetracker.google.com/issues/186643966
-    // However, it can be enabled by using an environment variable or Android property as below.
-    const std::string enableOverrideValue = angle::GetEnvironmentVarOrAndroidProperty(
-        kEnableExtShaderFramebufferFetchNonCoherentOverrideVarName,
-        kEnableExtShaderFramebufferFetchNonCoherentOverridePropertyName);
-    const bool enableOverride =
-        !enableOverrideValue.empty() && enableOverrideValue.compare("0") != 0;
-    if (enableOverride || (!(IsARM(mPhysicalDeviceProperties.vendorID) ||
-                             IsQualcomm(mPhysicalDeviceProperties.vendorID))))
+    if (getFeatures().supportsShaderFramebufferFetch.enabled)
+    {
+        // Enable GL_EXT_shader_framebuffer_fetch
+        // gl::IMPLEMENTATION_MAX_DRAW_BUFFERS is used to support the extension.
+        mNativeExtensions.shaderFramebufferFetchEXT =
+            mNativeCaps.maxDrawBuffers >= gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+    }
+
+    if (getFeatures().supportsShaderFramebufferFetchNonCoherent.enabled)
     {
         // Enable GL_EXT_shader_framebuffer_fetch_non_coherent
         // For supporting this extension, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS is used.
         mNativeExtensions.shaderFramebufferFetchNonCoherentEXT =
-            mNativeCaps.maxDrawBuffers >= gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
-    }
-
-    // Per http://anglebug.com/6872
-    // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is already coherent, so we can
-    // expose the coherent version of the GL extension despite unofficial Vulkan support.
-    if (IsARM(mPhysicalDeviceProperties.vendorID))
-    {
-        // gl::IMPLEMENTATION_MAX_DRAW_BUFFERS is used to support the extension.
-        mNativeExtensions.shaderFramebufferFetchEXT =
             mNativeCaps.maxDrawBuffers >= gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
     }
 
