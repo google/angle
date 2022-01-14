@@ -1011,10 +1011,13 @@ void RendererVk::ensureCapsInitialized() const
         mNativeCaps.maxGeometryOutputVertices = LimitToInt(limitsVk.maxGeometryOutputVertices);
         mNativeCaps.maxGeometryTotalOutputComponents =
             LimitToInt(limitsVk.maxGeometryTotalOutputComponents);
-        mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Geometry] =
-            mNativeCaps.maxCombinedShaderOutputResources;
-        mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::Geometry] =
-            maxCombinedAtomicCounterBuffers;
+        if (mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics)
+        {
+            mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Geometry] =
+                mNativeCaps.maxCombinedShaderOutputResources;
+            mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::Geometry] =
+                maxCombinedAtomicCounterBuffers;
+        }
         mNativeCaps.maxGeometryShaderInvocations =
             LimitToInt(limitsVk.maxGeometryShaderInvocations);
     }
@@ -1050,15 +1053,18 @@ void RendererVk::ensureCapsInitialized() const
         mNativeCaps.maxUniformBufferBindings = LimitToInt(
             mNativeCaps.maxUniformBufferBindings + kReservedTessellationDefaultUniformBindingCount);
 
-        mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::TessControl] =
-            mNativeCaps.maxCombinedShaderOutputResources;
-        mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::TessControl] =
-            maxCombinedAtomicCounterBuffers;
+        if (mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics)
+        {
+            mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::TessControl] =
+                mNativeCaps.maxCombinedShaderOutputResources;
+            mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::TessControl] =
+                maxCombinedAtomicCounterBuffers;
 
-        mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::TessEvaluation] =
-            mNativeCaps.maxCombinedShaderOutputResources;
-        mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::TessEvaluation] =
-            maxCombinedAtomicCounterBuffers;
+            mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::TessEvaluation] =
+                mNativeCaps.maxCombinedShaderOutputResources;
+            mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::TessEvaluation] =
+                maxCombinedAtomicCounterBuffers;
+        }
     }
 
     // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
