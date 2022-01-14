@@ -125,15 +125,22 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
                               vk::ImageHelper *imageHelper)
 {
     const angle::Format &textureFormat = vkFormat.getActualRenderableImageFormat();
-    bool isDepthOrStencilFormat   = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
-    const VkImageUsageFlags usage = isDepthOrStencilFormat ? kSurfaceVkDepthStencilImageUsageFlags
-                                                           : kSurfaceVkColorImageUsageFlags;
+    bool isDepthOrStencilFormat = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
+    VkImageUsageFlags usage     = isDepthOrStencilFormat ? kSurfaceVkDepthStencilImageUsageFlags
+                                                     : kSurfaceVkColorImageUsageFlags;
+
+    RendererVk *rendererVk = displayVk->getRenderer();
+    // If shaders may be fetching from this, we need this image to be an input
+    if (rendererVk->getFeatures().supportsShaderFramebufferFetch.enabled ||
+        rendererVk->getFeatures().supportsShaderFramebufferFetchNonCoherent.enabled)
+    {
+        usage |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+    }
 
     VkExtent3D extents = {std::max(static_cast<uint32_t>(width), 1u),
                           std::max(static_cast<uint32_t>(height), 1u), 1u};
 
     angle::FormatID renderableFormatId = vkFormat.getActualRenderableImageFormatID();
-    RendererVk *rendererVk             = displayVk->getRenderer();
     // For devices that don't support creating swapchain images with RGB8, emulate with RGBA8.
     if (rendererVk->getFeatures().overrideSurfaceFormatRGB8toRGBA8.enabled &&
         renderableFormatId == angle::FormatID::R8G8B8_UNORM)
@@ -1104,6 +1111,13 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
 
     // We need transfer src for reading back from the backbuffer.
     VkImageUsageFlags imageUsageFlags = kSurfaceVkColorImageUsageFlags;
+
+    // If shaders may be fetching from this, we need this image to be an input
+    if (renderer->getFeatures().supportsShaderFramebufferFetch.enabled ||
+        renderer->getFeatures().supportsShaderFramebufferFetchNonCoherent.enabled)
+    {
+        imageUsageFlags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+    }
 
     // We need storage image for compute writes (debug overlay output).
     if (kEnableOverlay)

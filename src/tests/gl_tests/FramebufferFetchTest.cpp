@@ -1612,6 +1612,59 @@ void main (void)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+// Verify we can use inout with the default framebuffer
+// http://anglebug.com/6893
+TEST_P(FramebufferFetchES31, DefaultFramebufferTest)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kVS[] = R"(#version 300 es
+in highp vec4 a_position;
+
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color += u_color;
+})";
+
+    GLProgram program;
+    program.makeRaster(kVS, kFS);
+    glUseProgram(program);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Ensure that we're rendering to the default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Start with a clear buffer
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLint positionLocation = glGetAttribLocation(program, "a_position");
+    GLint colorLocation    = glGetUniformLocation(program, "u_color");
+
+    // Draw once with red
+    glUniform4fv(colorLocation, 1, GLColor::red.toNormalizedVector().data());
+    render(positionLocation, GL_FALSE);
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw again with blue, adding it to the existing red, ending up with magenta
+    glUniform4fv(colorLocation, 1, GLColor::blue.toNormalizedVector().data());
+    render(positionLocation, GL_FALSE);
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
+    ASSERT_GL_NO_ERROR();
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferFetchES31);
 ANGLE_INSTANTIATE_TEST_ES31(FramebufferFetchES31);
 }  // namespace angle
