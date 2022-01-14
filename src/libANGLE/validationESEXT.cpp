@@ -305,7 +305,7 @@ bool ValidateGetCompressedTexImageANGLE(const Context *context,
     }
 
     // TODO: Validate all the things. http://anglebug.com/6177
-    return false;
+    return true;
 }
 
 bool ValidateGetRenderbufferImageANGLE(const Context *context,
