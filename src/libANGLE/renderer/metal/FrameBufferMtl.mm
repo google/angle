@@ -809,9 +809,7 @@ void FramebufferMtl::setLoadStoreActionOnRenderPassFirstStart(
 
     mtl::RenderPassAttachmentDesc &attachment = *attachmentOut;
 
-    if (!forceDepthStencilMultisampleLoad &&
-        (attachment.storeAction == MTLStoreActionDontCare ||
-         attachment.storeAction == MTLStoreActionMultisampleResolve))
+    if (!forceDepthStencilMultisampleLoad && attachment.storeAction == MTLStoreActionDontCare)
     {
         // If we previously discarded attachment's content, then don't need to load it.
         attachment.loadAction = MTLLoadActionDontCare;
@@ -1136,6 +1134,19 @@ angle::Result FramebufferMtl::clearWithLoadOpRenderPassNotStarted(
             OverrideMTLClearColor(texture, clearOpts.clearColor.value(),
                                   &colorAttachment.clearColor);
         }
+        else
+        {
+            colorAttachment.loadAction = MTLLoadActionLoad;
+        }
+
+        if (colorAttachment.hasImplicitMSTexture())
+        {
+            colorAttachment.storeAction = MTLStoreActionStoreAndMultisampleResolve;
+        }
+        else
+        {
+            colorAttachment.storeAction = MTLStoreActionStore;
+        }
     }
 
     if (clearOpts.clearDepth.valid())
@@ -1143,11 +1154,37 @@ angle::Result FramebufferMtl::clearWithLoadOpRenderPassNotStarted(
         tempDesc.depthAttachment.loadAction = MTLLoadActionClear;
         tempDesc.depthAttachment.clearDepth = clearOpts.clearDepth.value();
     }
+    else
+    {
+        tempDesc.depthAttachment.loadAction = MTLLoadActionLoad;
+    }
+
+    if (tempDesc.depthAttachment.hasImplicitMSTexture())
+    {
+        tempDesc.depthAttachment.storeAction = MTLStoreActionStoreAndMultisampleResolve;
+    }
+    else
+    {
+        tempDesc.depthAttachment.storeAction = MTLStoreActionStore;
+    }
 
     if (clearOpts.clearStencil.valid())
     {
         tempDesc.stencilAttachment.loadAction   = MTLLoadActionClear;
         tempDesc.stencilAttachment.clearStencil = clearOpts.clearStencil.value();
+    }
+    else
+    {
+        tempDesc.stencilAttachment.loadAction = MTLLoadActionLoad;
+    }
+
+    if (tempDesc.stencilAttachment.hasImplicitMSTexture())
+    {
+        tempDesc.stencilAttachment.storeAction = MTLStoreActionStoreAndMultisampleResolve;
+    }
+    else
+    {
+        tempDesc.stencilAttachment.storeAction = MTLStoreActionStore;
     }
 
     // Start new render encoder with loadOp=Clear

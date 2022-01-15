@@ -2634,6 +2634,117 @@ TEST_P(CopyTextureTestES3, InvalidateBlitThenBlend1000Layers)
     invalidateBlitThenBlendCommon(1000);
 }
 
+TEST_P(CopyTextureTestES3, DrawThenCopyThenBlend)
+{
+    // Regression test for anglebug.com/6972.
+    //
+    // Reproduces two behaviors:
+    //
+    // 1) The initial draw disappearing entirely from the default back
+    // buffer. The current test case does not show this behavior
+    // independently from the other, but a previous iteration, with the
+    // textured quad scaled to half size and translated (-0.5, -0.5), did.
+    //
+    // 2) With Metal debug layers and load/store validation turned on on
+    // Intel Macs, the transparent area of the texture prior to the bug
+    // fix was magenta = undefined. Similar behavior would presumably
+    // reproduce on M1 hardware without debug layers or validation.
+
+    constexpr GLsizei kSize     = 64;
+    constexpr GLsizei kHalfSize = kSize / 2;
+
+    setWindowWidth(kSize);
+    setWindowHeight(kSize);
+
+    // Define destination texture for the CopyTexSubImage2D operation.
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kHalfSize, kHalfSize);
+
+    // Redefine framebuffer's texture already allocated in testSetUp.
+    glBindTexture(GL_TEXTURE_2D, mTextures[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA8, kSize, kSize);
+
+    GLFramebuffer srcFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFBO);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl3_shaders::vs::Simple(), essl3_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(drawTexture, essl3_shaders::vs::Texture2DLod(),
+                     essl3_shaders::fs::Texture2DLod());
+
+    glDisable(GL_BLEND);
+
+    // Draw a square half the size of the viewport, centered in the viewport.
+    glViewport(0, 0, kSize, kSize);
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(drawGreen);
+    drawQuad(drawGreen, essl3_shaders::PositionAttrib(), 0.5f, 0.5f, true);
+    ASSERT_GL_NO_ERROR();
+
+    // Resolve the multisampled framebuffer.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Copy the upper right quarter of the framebuffer to mTextures[0].
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, mFramebuffer);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    ASSERT_GL_NO_ERROR();
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kHalfSize, kHalfSize, kHalfSize, kHalfSize);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(drawTexture);
+    GLint textureLoc = glGetUniformLocation(drawTexture, essl3_shaders::Texture2DUniform());
+    GLint lodLoc     = glGetUniformLocation(drawTexture, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, textureLoc);
+    ASSERT_NE(-1, lodLoc);
+    glUniform1i(textureLoc, 0);  // to match GL_TEXTURE0
+    glUniform1f(lodLoc, 0);
+
+    // Magnify and blend this texture over the current framebuffer.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, srcFBO);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    drawQuad(drawTexture, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+    // Resolve the multisampled framebuffer again.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, mFramebuffer);
+
+    // Center quad should be rendered correctly.
+    EXPECT_PIXEL_RECT_EQ(kHalfSize / 2 + 1, kHalfSize / 2 + 1, kHalfSize - 2, kHalfSize - 2,
+                         GLColor::green);
+
+    // Overlapping lower-left quad should be green as well.
+    EXPECT_PIXEL_RECT_EQ(1, 1, kHalfSize - 2, kHalfSize - 2, GLColor::green);
+
+    // Leftmost area above the lower-left quad should be transparent.
+    EXPECT_PIXEL_RECT_EQ(1, kHalfSize + 1, kHalfSize / 2 - 2, kHalfSize / 2 - 2,
+                         GLColor::transparentBlack);
+
+    // Bottommost area to the right of the lower-left quad should be transparent.
+    EXPECT_PIXEL_RECT_EQ(kHalfSize + 1, 1, kHalfSize / 2 - 2, kHalfSize / 2 - 2,
+                         GLColor::transparentBlack);
+}
+
 #ifdef Bool
 // X11 craziness.
 #    undef Bool
