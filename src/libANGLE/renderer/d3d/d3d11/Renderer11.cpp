@@ -699,10 +699,16 @@ HRESULT Renderer11::callD3D11CreateDevice(PFN_D3D11_CREATE_DEVICE createDevice, 
     angle::ComPtr<IDXGIAdapter> adapter;
 
     const egl::AttributeMap &attributes = mDisplay->getAttributeMap();
+    // Check EGL_ANGLE_platform_angle_d3d_luid
     long high = static_cast<long>(attributes.get(EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE, 0));
     unsigned long low =
         static_cast<unsigned long>(attributes.get(EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE, 0));
-
+    // Check EGL_ANGLE_platform_angle_device_id
+    if (high == 0 && low == 0)
+    {
+        high = static_cast<long>(attributes.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0));
+        low = static_cast<unsigned long>(attributes.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0));
+    }
     if (high != 0 || low != 0)
     {
         angle::ComPtr<IDXGIFactory1> factory;

@@ -1859,6 +1859,7 @@ static ClientExtensions GenerateClientExtensions()
 #    else
     extensions.platformANGLED3D11ON12 = IsWindows10OrGreater();
 #    endif
+    extensions.platformANGLEDeviceId = true;
 #endif
 
 #if defined(ANGLE_ENABLE_OPENGL)
