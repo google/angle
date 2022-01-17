@@ -2509,7 +2509,7 @@ void TextureVk::prepareForGenerateMipmap(ContextVk *contextVk)
     // Generate bitmask for (baseLevel, maxLevel]. `+1` because bitMask takes `the number of bits`
     // but levels start counting from 0
     gl::TexLevelMask levelsMask(angle::BitMask<uint32_t>(maxLevel.get() + 1));
-    levelsMask &= static_cast<uint32_t>(~angle::Bit<uint32_t>(baseLevel.get()));
+    levelsMask &= static_cast<uint32_t>(~angle::BitMask<uint32_t>(firstGeneratedLevel.get()));
     // Remove (baseLevel, maxLevel] from mRedefinedLevels. These levels are no longer incompatibly
     // defined if they previously were.  The corresponding bits in mRedefinedLevels should be
     // cleared.
