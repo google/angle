@@ -586,6 +586,98 @@ TEST_P(RobustBufferAccessBehaviorTest, DynamicBuffer)
     }
 }
 
+// Tests out of bounds read by divisor emulation due to a user-provided offset.
+// Adapted from https://crbug.com/1285885.
+TEST_P(RobustBufferAccessBehaviorTest, IndexOutOfBounds)
+{
+    ANGLE_SKIP_TEST_IF(!initExtension());
+
+    constexpr char kVS[] = R"(precision highp float;
+attribute vec4 a_position;
+void main(void) {
+   gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(precision highp float;
+uniform sampler2D oTexture;
+uniform float oColor[3];
+void main(void) {
+   gl_FragData[0] = texture2DProj(oTexture, vec3(0.1,0.1,0.1));
+})";
+
+    GLfloat singleFloat = 1.0f;
+
+    GLBuffer buf;
+    glBindBuffer(GL_ARRAY_BUFFER, buf);
+    glBufferData(GL_ARRAY_BUFFER, 4, &singleFloat, GL_STATIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glBindAttribLocation(program, 0, "a_position");
+    glLinkProgram(program);
+    ASSERT_TRUE(CheckLinkStatusAndReturnProgram(program, true));
+
+    glEnableVertexAttribArray(0);
+
+    // Trying to exceed renderer->getMaxVertexAttribDivisor()
+    GLuint constexpr kDivisor = 4096;
+    glVertexAttribDivisor(0, kDivisor);
+
+    size_t outOfBoundsOffset = 0x50000000;
+    glVertexAttribPointer(0, 1, GL_FLOAT, false, 8, reinterpret_cast<void *>(outOfBoundsOffset));
+
+    glUseProgram(program);
+
+    glDrawArrays(GL_TRIANGLES, 0, 32);
+
+    // No assertions, just checking for crashes.
+}
+
+// Similar to the test above but index is first within bounds then goes out of bounds.
+TEST_P(RobustBufferAccessBehaviorTest, IndexGoingOutOfBounds)
+{
+    ANGLE_SKIP_TEST_IF(!initExtension());
+
+    constexpr char kVS[] = R"(precision highp float;
+attribute vec4 a_position;
+void main(void) {
+   gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(precision highp float;
+uniform sampler2D oTexture;
+uniform float oColor[3];
+void main(void) {
+   gl_FragData[0] = texture2DProj(oTexture, vec3(0.1,0.1,0.1));
+})";
+
+    GLBuffer buf;
+    glBindBuffer(GL_ARRAY_BUFFER, buf);
+    std::array<GLfloat, 2> buffer = {{0.2f, 0.2f}};
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * buffer.size(), buffer.data(), GL_STATIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glBindAttribLocation(program, 0, "a_position");
+    glLinkProgram(program);
+    ASSERT_TRUE(CheckLinkStatusAndReturnProgram(program, true));
+
+    glEnableVertexAttribArray(0);
+
+    // Trying to exceed renderer->getMaxVertexAttribDivisor()
+    GLuint constexpr kDivisor = 4096;
+    glVertexAttribDivisor(0, kDivisor);
+
+    // 6 bytes remaining in the buffer from offset so only a single vertex can be read
+    glVertexAttribPointer(0, 1, GL_FLOAT, false, 8, reinterpret_cast<void *>(2));
+
+    glUseProgram(program);
+
+    // Each vertex is read `kDivisor` times so the last read goes out of bounds
+    GLsizei instanceCount = kDivisor + 1;
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 32, instanceCount);
+
+    // No assertions, just checking for crashes.
+}
+
 ANGLE_INSTANTIATE_TEST(RobustBufferAccessBehaviorTest,
                        WithNoFixture(ES3_VULKAN()),
                        WithNoFixture(ES3_OPENGL()),
