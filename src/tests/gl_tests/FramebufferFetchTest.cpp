@@ -1665,6 +1665,85 @@ void main (void)
     ASSERT_GL_NO_ERROR();
 }
 
+// Verify we can render to the default framebuffer without fetch, then switch to a program
+// that does fetch.
+// http://anglebug.com/6893
+TEST_P(FramebufferFetchES31, DefaultFramebufferMixedProgramsTest)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kVS[] = R"(#version 300 es
+in highp vec4 a_position;
+
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+layout(location = 0) out highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color = u_color;
+})";
+
+    constexpr char kFetchFS[] = R"(#version 300 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color += u_color;
+})";
+
+    // Create a program that simply writes out a color, no fetching
+    GLProgram program;
+    program.makeRaster(kVS, kFS);
+    glUseProgram(program);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Ensure that we're rendering to the default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Start with a clear buffer
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLint positionLocation = glGetAttribLocation(program, "a_position");
+    GLint colorLocation    = glGetUniformLocation(program, "u_color");
+
+    // Draw once with red
+    glUniform4fv(colorLocation, 1, GLColor::red.toNormalizedVector().data());
+    render(positionLocation, false);
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    // Create another program that DOES fetch from the framebuffer
+    GLProgram program2;
+    program2.makeRaster(kVS, kFetchFS);
+    glUseProgram(program2);
+
+    GLint positionLocation2 = glGetAttribLocation(program2, "a_position");
+    GLint colorLocation2    = glGetUniformLocation(program2, "u_color");
+
+    // Draw again with blue, fetching red from the framebuffer, adding it together
+    glUniform4fv(colorLocation2, 1, GLColor::blue.toNormalizedVector().data());
+    render(positionLocation2, false);
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
+    ASSERT_GL_NO_ERROR();
+
+    // Switch back to the non-fetched framebuffer, and render green
+    glUseProgram(program);
+    glUniform4fv(colorLocation, 1, GLColor::green.toNormalizedVector().data());
+    render(positionLocation, false);
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferFetchES31);
 ANGLE_INSTANTIATE_TEST_ES31(FramebufferFetchES31);
 }  // namespace angle

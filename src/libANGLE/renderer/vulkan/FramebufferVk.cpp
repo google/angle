@@ -2056,7 +2056,11 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     // If we've a Framebuffer provided by a Surface (default FBO/backbuffer), query it.
     if (mBackbuffer)
     {
-        return mBackbuffer->getCurrentFramebuffer(contextVk, *compatibleRenderPass, framebufferOut);
+        return mBackbuffer->getCurrentFramebuffer(contextVk,
+                                                  mRenderPassDesc.getFramebufferFetchMode()
+                                                      ? FramebufferFetchMode::Enabled
+                                                      : FramebufferFetchMode::Disabled,
+                                                  *compatibleRenderPass, framebufferOut);
     }
 
     // Gather VkImageViews over all FBO attachments, also size of attached region.
