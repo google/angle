@@ -1768,47 +1768,6 @@ void BufferBlock::initWithoutVirtualBlock(ContextVk *contextVk,
     mSerial              = renderer->getResourceSerialFactory().generateBufferSerial();
 }
 
-Buffer *BufferBlock::getBuffer()
-{
-    return &mBuffer;
-}
-
-const Allocation &BufferBlock::getAllocation() const
-{
-    return mAllocation;
-}
-
-VkMemoryPropertyFlags BufferBlock::getMemoryPropertyFlags() const
-{
-    return mMemoryPropertyFlags;
-}
-
-VkDeviceSize BufferBlock::getMemorySize() const
-{
-    return mSize;
-}
-
-VkBool32 BufferBlock::isEmpty()
-{
-    std::lock_guard<ConditionalMutex> lock(mVirtualBlockMutex);
-    return vma::IsVirtualBlockEmpty(mVirtualBlock.getHandle());
-}
-
-bool BufferBlock::isHostVisible() const
-{
-    return (mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0;
-}
-
-bool BufferBlock::isCoherent() const
-{
-    return (mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0;
-}
-
-bool BufferBlock::isMapped() const
-{
-    return mMappedMemory != nullptr;
-}
-
 angle::Result BufferBlock::map(ContextVk *contextVk)
 {
     ASSERT(mMappedMemory == nullptr);
@@ -1823,19 +1782,6 @@ void BufferBlock::unmap(const Allocator &allocator)
     mMappedMemory = nullptr;
 }
 
-uint8_t *BufferBlock::getMappedMemory() const
-{
-    ASSERT(mMappedMemory != nullptr);
-    return mMappedMemory;
-}
-
-VkResult BufferBlock::allocate(VkDeviceSize size, VkDeviceSize alignment, VkDeviceSize *offsetOut)
-{
-    std::lock_guard<ConditionalMutex> lock(mVirtualBlockMutex);
-    mCountRemainsEmpty = 0;
-    return mVirtualBlock.allocate(size, alignment, offsetOut);
-}
-
 void BufferBlock::free(VkDeviceSize offset)
 {
     std::lock_guard<ConditionalMutex> lock(mVirtualBlockMutex);
@@ -1845,109 +1791,6 @@ void BufferBlock::free(VkDeviceSize offset)
 int32_t BufferBlock::getAndIncrementEmptyCounter()
 {
     return ++mCountRemainsEmpty;
-}
-
-// BufferSuballocation implementation.
-void BufferSuballocation::destroy(RendererVk *renderer)
-{
-    if (valid())
-    {
-        DestroyVmaBufferSuballocation(renderer, mHandle);
-        mHandle = VK_NULL_HANDLE;
-    }
-}
-
-VkResult BufferSuballocation::init(VkDevice device,
-                                   BufferBlock *block,
-                                   VkDeviceSize offset,
-                                   VkDeviceSize size)
-{
-    ASSERT(!valid());
-    ASSERT(block != nullptr);
-    ASSERT(offset != VK_WHOLE_SIZE);
-    return CreateVmaBufferSuballocation(block, offset, size, &mHandle);
-}
-
-VkResult BufferSuballocation::initWithEntireBuffer(ContextVk *contextVk,
-                                                   Buffer &buffer,
-                                                   Allocation &allocation,
-                                                   VkMemoryPropertyFlags memoryPropertyFlags,
-                                                   VkDeviceSize size)
-{
-    ASSERT(!valid());
-
-    std::unique_ptr<BufferBlock> block = std::make_unique<BufferBlock>();
-    block->initWithoutVirtualBlock(contextVk, buffer, allocation, memoryPropertyFlags, size);
-
-    VmaBufferSuballocation vmaBufferSuballocation = new VmaBufferSuballocation_T;
-    if (vmaBufferSuballocation == nullptr)
-    {
-        return VK_ERROR_OUT_OF_HOST_MEMORY;
-    }
-    else
-    {
-        vmaBufferSuballocation->mBufferBlock = block.release();
-        vmaBufferSuballocation->mOffset      = 0;
-        vmaBufferSuballocation->mSize = vmaBufferSuballocation->mBufferBlock->getMemorySize();
-    }
-
-    mHandle = vmaBufferSuballocation;
-    return VK_SUCCESS;
-}
-
-BufferBlock *BufferSuballocation::getBlock() const
-{
-    return mHandle->mBufferBlock;
-}
-
-const Buffer &BufferSuballocation::getBuffer() const
-{
-    return *getBlock()->getBuffer();
-}
-
-VkDeviceSize BufferSuballocation::getSize() const
-{
-    return mHandle->mSize;
-}
-
-const Allocation &BufferSuballocation::getAllocation() const
-{
-    return mHandle->mBufferBlock->getAllocation();
-}
-
-VkMemoryMapFlags BufferSuballocation::getMemoryPropertyFlags() const
-{
-    return mHandle->mBufferBlock->getMemoryPropertyFlags();
-}
-
-bool BufferSuballocation::isHostVisible() const
-{
-    return mHandle->mBufferBlock->isHostVisible();
-}
-bool BufferSuballocation::isCoherent() const
-{
-    return mHandle->mBufferBlock->isCoherent();
-}
-bool BufferSuballocation::isMapped() const
-{
-    return mHandle->mBufferBlock->isMapped();
-}
-uint8_t *BufferSuballocation::getMappedMemory() const
-{
-    return mHandle->mBufferBlock->getMappedMemory() + getOffset();
-}
-void BufferSuballocation::flush(const Allocator &allocator) const
-{
-    mHandle->mBufferBlock->getAllocation().flush(allocator, getOffset(), mHandle->mSize);
-}
-void BufferSuballocation::invalidate(const Allocator &allocator) const
-{
-    mHandle->mBufferBlock->getAllocation().invalidate(allocator, getOffset(), mHandle->mSize);
-}
-
-VkDeviceSize BufferSuballocation::getOffset() const
-{
-    return mHandle->mOffset;
 }
 }  // namespace vk
 }  // namespace rx
