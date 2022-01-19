@@ -8,7 +8,10 @@
 // rendering operations. It is the GLES2 specific implementation of EGLContext.
 #include "libANGLE/Context.inl.h"
 
+#include <stdarg.h>
+#include <stdio.h>
 #include <string.h>
+
 #include <iterator>
 #include <sstream>
 #include <vector>
@@ -2769,6 +2772,28 @@ void Context::validationError(angle::EntryPoint entryPoint,
                               const char *message) const
 {
     const_cast<Context *>(this)->mErrors.validationError(entryPoint, errorCode, message);
+}
+
+void Context::validationErrorF(angle::EntryPoint entryPoint,
+                               GLenum errorCode,
+                               const char *format,
+                               ...) const
+{
+    va_list vargs;
+    va_start(vargs, format);
+    constexpr size_t kMessageSize = 256;
+    char message[kMessageSize];
+    int r = vsnprintf(message, kMessageSize, format, vargs);
+    va_end(vargs);
+
+    if (r > 0)
+    {
+        validationError(entryPoint, errorCode, message);
+    }
+    else
+    {
+        validationError(entryPoint, errorCode, format);
+    }
 }
 
 // Get one of the recorded errors and clear its flag, if any.

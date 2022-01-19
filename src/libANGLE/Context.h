@@ -455,6 +455,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                      unsigned int line);
 
     void validationError(angle::EntryPoint entryPoint, GLenum errorCode, const char *message) const;
+    void validationErrorF(angle::EntryPoint entryPoint,
+                          GLenum errorCode,
+                          const char *format,
+                          ...) const;
 
     void markContextLost(GraphicsResetStatus status);
 
