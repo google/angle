@@ -35,7 +35,7 @@ namespace vk
     FUNC(Allocator)                \
     FUNC(Buffer)                   \
     FUNC(BufferBlock)              \
-    FUNC(BufferSubAllocation)      \
+    FUNC(BufferSuballocation)      \
     FUNC(BufferView)               \
     FUNC(CommandPool)              \
     FUNC(DescriptorPool)           \

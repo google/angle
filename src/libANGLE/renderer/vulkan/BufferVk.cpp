@@ -1034,7 +1034,7 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk,
     }
 
     // Allocate the buffer directly
-    ANGLE_TRY(mBuffer.initSubAllocation(contextVk, mMemoryTypeIndex, size, alignment));
+    ANGLE_TRY(mBuffer.initSuballocation(contextVk, mMemoryTypeIndex, size, alignment));
 
     if (updateType == BufferUpdateType::ContentsUpdate)
     {

@@ -2820,7 +2820,7 @@ angle::Result BufferPool::allocateNewBuffer(ContextVk *contextVk, VkDeviceSize s
 angle::Result BufferPool::allocateBuffer(ContextVk *contextVk,
                                          VkDeviceSize sizeInBytes,
                                          VkDeviceSize alignment,
-                                         BufferSubAllocation *suballocation)
+                                         BufferSuballocation *suballocation)
 {
     ASSERT(alignment);
     VkDeviceSize offset;
@@ -3903,7 +3903,7 @@ BufferHelper &BufferHelper::operator=(BufferHelper &&other)
     ReadWriteResource::operator=(std::move(other));
 
     mMemory        = std::move(other.mMemory);
-    mSubAllocation = std::move(other.mSubAllocation);
+    mSuballocation = std::move(other.mSuballocation);
 
     mCurrentQueueFamilyIndex = other.mCurrentQueueFamilyIndex;
     mCurrentWriteAccess      = other.mCurrentWriteAccess;
@@ -3963,7 +3963,7 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
     VkMemoryPropertyFlags memoryPropertyFlagsOut;
     allocator.getMemoryTypeProperties(memoryTypeIndex, &memoryPropertyFlagsOut);
 
-    ANGLE_VK_TRY(contextVk, mSubAllocation.initWithEntireBuffer(
+    ANGLE_VK_TRY(contextVk, mSuballocation.initWithEntireBuffer(
                                 contextVk, buffer.get(), allocation.get(), memoryPropertyFlagsOut,
                                 requestedCreateInfo.size));
 
@@ -4010,7 +4010,7 @@ angle::Result BufferHelper::initExternal(ContextVk *contextVk,
 
     ANGLE_TRY(mMemory.initExternal(clientBuffer));
 
-    ANGLE_VK_TRY(contextVk, mSubAllocation.initWithEntireBuffer(
+    ANGLE_VK_TRY(contextVk, mSuballocation.initWithEntireBuffer(
                                 contextVk, buffer.get(), *mMemory.getMemoryObject(),
                                 memoryPropertyFlagsOut, requestedCreateInfo.size));
 
@@ -4023,7 +4023,7 @@ angle::Result BufferHelper::initExternal(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result BufferHelper::initSubAllocation(ContextVk *contextVk,
+angle::Result BufferHelper::initSuballocation(ContextVk *contextVk,
                                               uint32_t memoryTypeIndex,
                                               size_t size,
                                               size_t alignment)
@@ -4031,7 +4031,7 @@ angle::Result BufferHelper::initSubAllocation(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     // We should reset these in case the BufferHelper object has been released and called
-    // initSubAllocation again.
+    // initSuballocation again.
     initializeBarrierTracker(contextVk);
 
     if (renderer->getFeatures().padBuffersToMaxVertexAttribStride.enabled)
@@ -4042,7 +4042,7 @@ angle::Result BufferHelper::initSubAllocation(ContextVk *contextVk,
     }
 
     vk::BufferPool *pool = contextVk->getDefaultBufferPool(memoryTypeIndex);
-    ANGLE_TRY(pool->allocateBuffer(contextVk, size, alignment, &mSubAllocation));
+    ANGLE_TRY(pool->allocateBuffer(contextVk, size, alignment, &mSuballocation));
 
     if (renderer->getFeatures().allocateNonZeroMemory.enabled)
     {
@@ -4059,7 +4059,7 @@ angle::Result BufferHelper::initForCopyBuffer(ContextVk *contextVk,
     RendererVk *renderer     = contextVk->getRenderer();
     uint32_t memoryTypeIndex = renderer->getStagingBufferMemoryTypeIndex(coherency);
     size_t alignment         = renderer->getStagingBufferAlignment();
-    return initSubAllocation(contextVk, memoryTypeIndex, size, alignment);
+    return initSuballocation(contextVk, memoryTypeIndex, size, alignment);
 }
 
 angle::Result BufferHelper::initForVertexConversion(ContextVk *contextVk,
@@ -4098,7 +4098,7 @@ angle::Result BufferHelper::initForVertexConversion(ContextVk *contextVk,
     // size anyway.
     size_t sizeToAllocate = roundUp(size, alignment);
 
-    return initSubAllocation(contextVk, memoryTypeIndex, sizeToAllocate, alignment);
+    return initSuballocation(contextVk, memoryTypeIndex, sizeToAllocate, alignment);
 }
 
 angle::Result BufferHelper::initForCopyImage(ContextVk *contextVk,
@@ -4121,7 +4121,7 @@ angle::Result BufferHelper::initForCopyImage(ContextVk *contextVk,
     allocationSize          = roundUp(allocationSize, imageCopyAlignment);
     size_t stagingAlignment = static_cast<size_t>(renderer->getStagingBufferAlignment());
 
-    ANGLE_TRY(initSubAllocation(contextVk, memoryTypeIndex, allocationSize, stagingAlignment));
+    ANGLE_TRY(initSuballocation(contextVk, memoryTypeIndex, allocationSize, stagingAlignment));
 
     *offset  = roundUp(getOffset(), static_cast<VkDeviceSize>(imageCopyAlignment));
     *dataPtr = getMappedMemory() + (*offset) - getOffset();
@@ -4184,11 +4184,11 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
         // Can map the memory.
         // Pick an arbitrary value to initialize non-zero memory for sanitization.
         constexpr int kNonZeroInitValue = 55;
-        uint8_t *mapPointer             = mSubAllocation.getMappedMemory();
+        uint8_t *mapPointer             = mSuballocation.getMappedMemory();
         memset(mapPointer, kNonZeroInitValue, static_cast<size_t>(getSize()));
         if (!isCoherent())
         {
-            mSubAllocation.flush(allocator);
+            mSuballocation.flush(allocator);
         }
     }
 
@@ -4199,7 +4199,7 @@ void BufferHelper::destroy(RendererVk *renderer)
 {
     unmap(renderer);
 
-    mSubAllocation.destroy(renderer);
+    mSuballocation.destroy(renderer);
     mMemory.destroy(renderer);
 }
 
@@ -4207,7 +4207,7 @@ void BufferHelper::release(RendererVk *renderer)
 {
     unmap(renderer);
 
-    renderer->collectGarbageAndReinit(&mReadOnlyUse, &mSubAllocation,
+    renderer->collectGarbageAndReinit(&mReadOnlyUse, &mSuballocation,
                                       mMemory.getExternalMemoryObject(), mMemory.getMemoryObject());
 
     mReadWriteUse.release();
@@ -4247,11 +4247,11 @@ angle::Result BufferHelper::map(ContextVk *contextVk, uint8_t **ptrOut)
     }
     else
     {
-        if (!mSubAllocation.isMapped())
+        if (!mSuballocation.isMapped())
         {
-            ANGLE_TRY(mSubAllocation.getBlock()->map(contextVk));
+            ANGLE_TRY(mSuballocation.getBlock()->map(contextVk));
         }
-        *ptrOut = mSubAllocation.getMappedMemory();
+        *ptrOut = mSuballocation.getMappedMemory();
     }
     return angle::Result::Continue;
 }
@@ -4283,7 +4283,7 @@ angle::Result BufferHelper::flush(RendererVk *renderer, VkDeviceSize offset, VkD
     }
     else
     {
-        mSubAllocation.flush(renderer->getAllocator());
+        mSuballocation.flush(renderer->getAllocator());
     }
     return angle::Result::Continue;
 }
@@ -4303,7 +4303,7 @@ angle::Result BufferHelper::invalidate(RendererVk *renderer, VkDeviceSize offset
     }
     else
     {
-        mSubAllocation.invalidate(renderer->getAllocator());
+        mSuballocation.invalidate(renderer->getAllocator());
     }
     return angle::Result::Continue;
 }

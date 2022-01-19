@@ -735,7 +735,7 @@ class BufferHelper : public ReadWriteResource
                                VkMemoryPropertyFlags memoryProperties,
                                const VkBufferCreateInfo &requestedCreateInfo,
                                GLeglClientBufferEXT clientBuffer);
-    angle::Result initSubAllocation(ContextVk *contextVk,
+    angle::Result initSuballocation(ContextVk *contextVk,
                                     uint32_t memoryTypeIndex,
                                     size_t size,
                                     size_t alignment);
@@ -759,24 +759,24 @@ class BufferHelper : public ReadWriteResource
     void release(RendererVk *renderer);
 
     BufferSerial getBufferSerial() const { return mSerial; }
-    bool valid() const { return mSubAllocation.valid(); }
-    const Buffer &getBuffer() const { return mSubAllocation.getBuffer(); }
-    const BufferBlock *getBufferBlock() const { return mSubAllocation.getBlock(); }
-    VkDeviceSize getOffset() const { return mSubAllocation.getOffset(); }
-    VkDeviceSize getSize() const { return mSubAllocation.getSize(); }
+    bool valid() const { return mSuballocation.valid(); }
+    const Buffer &getBuffer() const { return mSuballocation.getBuffer(); }
+    const BufferBlock *getBufferBlock() const { return mSuballocation.getBlock(); }
+    VkDeviceSize getOffset() const { return mSuballocation.getOffset(); }
+    VkDeviceSize getSize() const { return mSuballocation.getSize(); }
     VkMemoryMapFlags getMemoryPropertyFlags() const
     {
-        return mSubAllocation.getMemoryPropertyFlags();
+        return mSuballocation.getMemoryPropertyFlags();
     }
     uint8_t *getMappedMemory() const
     {
         ASSERT(isMapped());
-        return isExternalBuffer() ? mMemory.getMappedMemory() : mSubAllocation.getMappedMemory();
+        return isExternalBuffer() ? mMemory.getMappedMemory() : mSuballocation.getMappedMemory();
     }
-    bool isHostVisible() const { return mSubAllocation.isHostVisible(); }
-    bool isCoherent() const { return mSubAllocation.isCoherent(); }
+    bool isHostVisible() const { return mSuballocation.isHostVisible(); }
+    bool isCoherent() const { return mSuballocation.isCoherent(); }
 
-    bool isMapped() const { return isExternalBuffer() ? true : mSubAllocation.isMapped(); }
+    bool isMapped() const { return isExternalBuffer() ? true : mSuballocation.isMapped(); }
     bool isExternalBuffer() const { return mMemory.isExternalBuffer(); }
 
     // Also implicitly sets up the correct barriers.
@@ -829,8 +829,8 @@ class BufferHelper : public ReadWriteResource
     // For external memory only
     BufferMemory mMemory;
 
-    // SubAllocation object.
-    BufferSubAllocation mSubAllocation;
+    // Suballocation object.
+    BufferSuballocation mSuballocation;
 
     // For memory barriers.
     uint32_t mCurrentQueueFamilyIndex;
@@ -860,7 +860,7 @@ class BufferPool : angle::NonCopyable
     angle::Result allocateBuffer(ContextVk *contextVk,
                                  VkDeviceSize sizeInBytes,
                                  VkDeviceSize alignment,
-                                 BufferSubAllocation *suballocation);
+                                 BufferSuballocation *suballocation);
 
     // This frees resources immediately.
     void destroy(RendererVk *renderer);

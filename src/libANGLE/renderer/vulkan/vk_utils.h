@@ -999,47 +999,47 @@ class BufferBlock final : angle::NonCopyable
 };
 using BufferBlockPointerVector = std::vector<std::unique_ptr<BufferBlock>>;
 
-// BufferSubAllocation
-struct VmaBufferSubAllocation_T
+// BufferSuballocation
+struct VmaBufferSuballocation_T
 {
     BufferBlock *mBufferBlock;
     VkDeviceSize mOffset;
     VkDeviceSize mSize;
 };
-VK_DEFINE_HANDLE(VmaBufferSubAllocation)
+VK_DEFINE_HANDLE(VmaBufferSuballocation)
 ANGLE_INLINE VkResult
-CreateVmaBufferSubAllocation(BufferBlock *block,
+CreateVmaBufferSuballocation(BufferBlock *block,
                              VkDeviceSize offset,
                              VkDeviceSize size,
-                             VmaBufferSubAllocation *vmaBufferSubAllocationOut)
+                             VmaBufferSuballocation *vmaBufferSuballocationOut)
 {
-    *vmaBufferSubAllocationOut = new VmaBufferSubAllocation_T{block, offset, size};
-    return *vmaBufferSubAllocationOut != VK_NULL_HANDLE ? VK_SUCCESS : VK_ERROR_OUT_OF_HOST_MEMORY;
+    *vmaBufferSuballocationOut = new VmaBufferSuballocation_T{block, offset, size};
+    return *vmaBufferSuballocationOut != VK_NULL_HANDLE ? VK_SUCCESS : VK_ERROR_OUT_OF_HOST_MEMORY;
 }
-ANGLE_INLINE void DestroyVmaBufferSubAllocation(RendererVk *renderer,
-                                                VmaBufferSubAllocation vmaBufferSubAllocation)
+ANGLE_INLINE void DestroyVmaBufferSuballocation(RendererVk *renderer,
+                                                VmaBufferSuballocation vmaBufferSuballocation)
 {
-    ASSERT(vmaBufferSubAllocation->mBufferBlock);
-    if (vmaBufferSubAllocation->mBufferBlock->hasVirtualBlock())
+    ASSERT(vmaBufferSuballocation->mBufferBlock);
+    if (vmaBufferSuballocation->mBufferBlock->hasVirtualBlock())
     {
-        vmaBufferSubAllocation->mBufferBlock->free(vmaBufferSubAllocation->mOffset);
+        vmaBufferSuballocation->mBufferBlock->free(vmaBufferSuballocation->mOffset);
     }
     else
     {
         // When virtual block is invalid, this is the standalone buffer that are created by
-        // BufferSubAllocation::initWithEntireBuffer call. In this case, vmaBufferSubAllocation owns
+        // BufferSuballocation::initWithEntireBuffer call. In this case, vmaBufferSuballocation owns
         // block, we must properly delete the block object.
-        vmaBufferSubAllocation->mBufferBlock->destroy(renderer);
-        delete vmaBufferSubAllocation->mBufferBlock;
+        vmaBufferSuballocation->mBufferBlock->destroy(renderer);
+        delete vmaBufferSuballocation->mBufferBlock;
     }
 
-    delete vmaBufferSubAllocation;
+    delete vmaBufferSuballocation;
 }
 
-class BufferSubAllocation final : public WrappedObject<BufferSubAllocation, VmaBufferSubAllocation>
+class BufferSuballocation final : public WrappedObject<BufferSuballocation, VmaBufferSuballocation>
 {
   public:
-    BufferSubAllocation() = default;
+    BufferSuballocation() = default;
     void destroy(RendererVk *renderer);
 
     VkResult init(VkDevice device, BufferBlock *block, VkDeviceSize offset, VkDeviceSize size);
