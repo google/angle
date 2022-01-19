@@ -128,8 +128,6 @@
 6707 NVIDIA : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.reads.uniform_block.compute = SKIP
 6707 NVIDIA : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.writes.uniform_block.compute = SKIP
 
-6906 SWIFTSHADER : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.writes.*compute = SKIP
-
 3711 : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.reads.* = FAIL
 3711 : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.writes.* = FAIL
 
