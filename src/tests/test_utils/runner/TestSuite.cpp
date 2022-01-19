@@ -1275,6 +1275,7 @@ TestSuite::TestSuite(int *argc, char **argv)
         }
     }
 
+    if (!testSet.empty())
     {
         std::stringstream fakeTestName;
         fakeTestName << kArtifactsFakeTestName << '-' << testSet[0].testName;
