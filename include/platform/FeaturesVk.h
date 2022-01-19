@@ -623,6 +623,14 @@ struct FeaturesVk : FeatureSetBase
     // Whether dithering should be emulated.
     Feature emulateDithering = {"emulateDithering", FeatureCategory::VulkanFeatures,
                                 "Emulate OpenGL dithering", &members, "http://anglebug.com/6755"};
+
+    // Android bug workaround which assumes VkPresentRegionsKHR to have a bottom-left origin
+    // instead of top-left as specified by VK_KHR_incremental_present
+    Feature bottomLeftOriginPresentRegionRectangles = {
+        "bottomLeftOriginPresentRegionRectangles", FeatureCategory::VulkanWorkarounds,
+        "On some platforms present region rectangles are expected to have a bottom-left origin, "
+        "instead of top-left origin as from spec",
+        &members};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

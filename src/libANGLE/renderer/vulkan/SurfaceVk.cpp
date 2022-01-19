@@ -342,6 +342,38 @@ angle::Result UnlockSurfaceImpl(DisplayVk *displayVk,
     return angle::Result::Continue;
 }
 
+// Converts an EGL rectangle, which is relative to the bottom-left of the surface,
+// to a VkRectLayerKHR, relative to Vulkan framebuffer-space, with top-left origin.
+// No rotation is done to these damage rectangles per the Vulkan spec.
+// The bottomLeftOrigin parameter is true on Android which assumes VkRectLayerKHR to
+// have a bottom-left origin.
+VkRectLayerKHR ToVkRectLayer(const EGLint *eglRect,
+                             EGLint width,
+                             EGLint height,
+                             bool bottomLeftOrigin)
+{
+    VkRectLayerKHR rect;
+    // Make sure the damage rects are within swapchain bounds.
+    rect.offset.x = gl::clamp(eglRect[0], 0, width);
+
+    if (bottomLeftOrigin)
+    {
+        // EGL rectangles are already specified with a bottom-left origin, therefore the conversion
+        // is trivial as we just get its Y coordinate as it is
+        rect.offset.y = gl::clamp(eglRect[1], 0, height);
+    }
+    else
+    {
+        rect.offset.y =
+            gl::clamp(height - gl::clamp(eglRect[1], 0, height) - gl::clamp(eglRect[3], 0, height),
+                      0, height);
+    }
+    rect.extent.width  = gl::clamp(eglRect[2], 0, width - rect.offset.x);
+    rect.extent.height = gl::clamp(eglRect[3], 0, height - rect.offset.y);
+    rect.layer         = 0;
+    return rect;
+}
+
 }  // namespace
 
 #if defined(ANGLE_ENABLE_OVERLAY)
@@ -1746,15 +1778,9 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         vkRects.resize(n_rects);
         for (EGLint i = 0; i < n_rects; i++)
         {
-            VkRectLayerKHR &rect = vkRects[i];
-
-            // Make sure the damage rects are within swapchain bounds.
-            rect.offset.x      = gl::clamp(*eglRects++, 0, width);
-            rect.offset.y      = gl::clamp(*eglRects++, 0, height);
-            rect.extent.width  = gl::clamp(*eglRects++, 0, width - rect.offset.x);
-            rect.extent.height = gl::clamp(*eglRects++, 0, height - rect.offset.y);
-            rect.layer         = 0;
-            // No rotation is done to these damage rectangles per the Vulkan spec.
+            vkRects[i] = ToVkRectLayer(
+                eglRects + i * 4, width, height,
+                contextVk->getFeatures().bottomLeftOriginPresentRegionRectangles.enabled);
         }
         presentRegion.pRectangles = vkRects.data();
 
