@@ -604,7 +604,24 @@ void SerializeContextState(JsonSerializer *json, const gl::State &state)
     }
     json->addScalar("TexturesIncompatibleWithSamplers",
                     state.getTexturesIncompatibleWithSamplers().to_ulong());
-    SerializeBindingPointerVector<gl::Sampler>(json, state.getSamplers());
+
+    {
+        GroupScope texturesCacheGroup(json, "ActiveTexturesCache");
+
+        const gl::ActiveTexturesCache &texturesCache = state.getActiveTexturesCache();
+        for (GLuint textureIndex = 0; textureIndex < texturesCache.size(); ++textureIndex)
+        {
+            const gl::Texture *tex = texturesCache[textureIndex];
+            std::stringstream strstr;
+            strstr << "Tex " << std::setfill('0') << std::setw(2) << textureIndex;
+            json->addScalar(strstr.str(), tex ? tex->id().value : 0);
+        }
+    }
+
+    {
+        GroupScope samplersGroupScope(json, "Samplers");
+        SerializeBindingPointerVector<gl::Sampler>(json, state.getSamplers());
+    }
 
     {
         GroupScope imageUnitsGroup(json, "BoundImageUnits");

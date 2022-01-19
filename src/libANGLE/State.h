@@ -80,6 +80,7 @@ class ActiveTexturesCache final : angle::NonCopyable
     void set(size_t textureIndex, Texture *texture);
     void reset(size_t textureIndex);
     bool empty() const;
+    size_t size() const { return mTextures.size(); }
 
   private:
     ActiveTextureArray<Texture *> mTextures;
