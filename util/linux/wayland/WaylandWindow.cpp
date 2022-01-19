@@ -114,6 +114,11 @@ void WaylandWindow::destroy()
 
 void WaylandWindow::resetNativeWindow() {}
 
+void WaylandWindow::setNativeDisplay(EGLNativeDisplayType display)
+{
+    mDisplay = reinterpret_cast<wl_display *>(display);
+}
+
 EGLNativeWindowType WaylandWindow::getNativeWindow() const
 {
     return reinterpret_cast<EGLNativeWindowType>(mWindow);
