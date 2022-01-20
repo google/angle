@@ -741,19 +741,21 @@ class BufferHelper : public ReadWriteResource
                                     size_t alignment);
 
     // Helper functions to initialize a buffer for a specific usage
-    // Initialize a buffer with alignment good for shader storage or copyBuffer .
-    angle::Result initForVertexConversion(ContextVk *contextVk,
-                                          size_t size,
-                                          MemoryHostVisibility hostVisibility);
-    // Initialize a host visible buffer with alignment good for copyBuffer .
-    angle::Result initForCopyBuffer(ContextVk *contextVk, size_t size, MemoryCoherency coherency);
-    // Initialize a host visible buffer with alignment good for copyImage .
-    angle::Result initForCopyImage(ContextVk *contextVk,
-                                   size_t size,
-                                   MemoryCoherency coherency,
-                                   angle::FormatID formatId,
-                                   VkDeviceSize *offset,
-                                   uint8_t **dataPtr);
+    // Suballocate a buffer with alignment good for shader storage or copyBuffer .
+    angle::Result allocateForVertexConversion(ContextVk *contextVk,
+                                              size_t size,
+                                              MemoryHostVisibility hostVisibility);
+    // Suballocate a host visible buffer with alignment good for copyBuffer .
+    angle::Result allocateForCopyBuffer(ContextVk *contextVk,
+                                        size_t size,
+                                        MemoryCoherency coherency);
+    // Suballocate a host visible buffer with alignment good for copyImage .
+    angle::Result allocateForCopyImage(ContextVk *contextVk,
+                                       size_t size,
+                                       MemoryCoherency coherency,
+                                       angle::FormatID formatId,
+                                       VkDeviceSize *offset,
+                                       uint8_t **dataPtr);
 
     void destroy(RendererVk *renderer);
     void release(RendererVk *renderer);

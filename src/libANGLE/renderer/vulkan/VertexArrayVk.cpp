@@ -76,8 +76,8 @@ angle::Result StreamVertexData(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     // Allocate buffer for results
-    ANGLE_TRY(dstBufferHelper->initForVertexConversion(contextVk, bytesToAllocate,
-                                                       vk::MemoryHostVisibility::Visible));
+    ANGLE_TRY(dstBufferHelper->allocateForVertexConversion(contextVk, bytesToAllocate,
+                                                           vk::MemoryHostVisibility::Visible));
     uint8_t *dst = dstBufferHelper->getMappedMemory() + dstOffset;
 
     if (replicateCount == 1)
@@ -167,7 +167,7 @@ angle::Result VertexArrayVk::convertIndexBufferGPU(ContextVk *contextVk,
     size_t srcDataSize         = static_cast<size_t>(bufferVk->getSize()) - offsetIntoSrcData;
 
     // Allocate buffer for results
-    ANGLE_TRY(mTranslatedByteIndexData.initForVertexConversion(
+    ANGLE_TRY(mTranslatedByteIndexData.allocateForVertexConversion(
         contextVk, sizeof(GLushort) * srcDataSize, vk::MemoryHostVisibility::NonVisible));
     mCurrentElementArrayBuffer = &mTranslatedByteIndexData;
 
@@ -196,11 +196,11 @@ angle::Result VertexArrayVk::convertIndexBufferIndirectGPU(ContextVk *contextVk,
     vk::BufferHelper *srcIndexBuf = mCurrentElementArrayBuffer;
 
     // Allocate buffer for results
-    ANGLE_TRY(mTranslatedByteIndexData.initForVertexConversion(
+    ANGLE_TRY(mTranslatedByteIndexData.allocateForVertexConversion(
         contextVk, sizeof(GLushort) * srcDataSize, vk::MemoryHostVisibility::NonVisible));
     vk::BufferHelper *dstIndexBuf = &mTranslatedByteIndexData;
 
-    ANGLE_TRY(mTranslatedByteIndirectData.initForVertexConversion(
+    ANGLE_TRY(mTranslatedByteIndirectData.allocateForVertexConversion(
         contextVk, sizeof(VkDrawIndexedIndirectCommand), vk::MemoryHostVisibility::NonVisible));
     vk::BufferHelper *dstIndirectBuf = &mTranslatedByteIndirectData;
 
@@ -277,8 +277,8 @@ angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
     size_t elementSize  = contextVk->getVkIndexTypeSize(indexType);
     const size_t amount = elementSize * indexCount;
 
-    ANGLE_TRY(mStreamedIndexData.initForVertexConversion(contextVk, amount,
-                                                         vk::MemoryHostVisibility::Visible));
+    ANGLE_TRY(mStreamedIndexData.allocateForVertexConversion(contextVk, amount,
+                                                             vk::MemoryHostVisibility::Visible));
     GLubyte *dst = mStreamedIndexData.getMappedMemory();
 
     mCurrentElementArrayBuffer = &mStreamedIndexData;
@@ -354,8 +354,8 @@ angle::Result VertexArrayVk::convertVertexBufferGPU(ContextVk *contextVk,
 
     // Allocate buffer for results
     vk::BufferHelper *dstBuffer = conversion->data.get();
-    ANGLE_TRY(dstBuffer->initForVertexConversion(contextVk, numVertices * dstFormatSize,
-                                                 vk::MemoryHostVisibility::NonVisible));
+    ANGLE_TRY(dstBuffer->allocateForVertexConversion(contextVk, numVertices * dstFormatSize,
+                                                     vk::MemoryHostVisibility::NonVisible));
 
     ASSERT(conversion->dirty);
     conversion->dirty = false;
