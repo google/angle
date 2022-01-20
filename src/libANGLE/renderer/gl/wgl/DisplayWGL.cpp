@@ -105,6 +105,7 @@ DisplayWGL::DisplayWGL(const egl::DisplayState &state)
       mD3d11Module(nullptr),
       mD3D11DeviceHandle(nullptr),
       mD3D11Device(nullptr),
+      mD3D11Device1(nullptr),
       mUseARBShare(true)
 {}
 
@@ -388,6 +389,7 @@ void DisplayWGL::destroy()
     }
 
     SafeRelease(mD3D11Device);
+    SafeRelease(mD3D11Device1);
 
     if (mDxgiModule)
     {
@@ -452,8 +454,8 @@ SurfaceImpl *DisplayWGL::createPbufferFromClientBuffer(const egl::SurfaceState &
     }
 
     return new D3DTextureSurfaceWGL(state, mRenderer->getStateManager(), buftype, clientBuffer,
-                                    this, mDeviceContext, mD3D11Device, mRenderer->getFunctions(),
-                                    mFunctionsWGL);
+                                    this, mDeviceContext, mD3D11Device, mD3D11Device1,
+                                    mRenderer->getFunctions(), mFunctionsWGL);
 }
 
 SurfaceImpl *DisplayWGL::createPixmapSurface(const egl::SurfaceState &state,
@@ -575,8 +577,8 @@ egl::Error DisplayWGL::validateClientBuffer(const egl::Config *configuration,
         case EGL_D3D_TEXTURE_ANGLE:
         case EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE:
             ANGLE_TRY(const_cast<DisplayWGL *>(this)->initializeD3DDevice());
-            return D3DTextureSurfaceWGL::ValidateD3DTextureClientBuffer(buftype, clientBuffer,
-                                                                        mD3D11Device);
+            return D3DTextureSurfaceWGL::ValidateD3DTextureClientBuffer(
+                buftype, clientBuffer, mD3D11Device, mD3D11Device1);
 
         default:
             return DisplayGL::validateClientBuffer(configuration, buftype, clientBuffer, attribs);
@@ -616,6 +618,9 @@ egl::Error DisplayWGL::initializeD3DDevice()
     {
         return egl::EglNotInitialized() << "Could not create D3D11 device, " << gl::FmtHR(result);
     }
+
+    mD3D11Device->QueryInterface(__uuidof(ID3D11Device1),
+                                 reinterpret_cast<void **>(&mD3D11Device1));
 
     return registerD3DDevice(mD3D11Device, &mD3D11DeviceHandle);
 }

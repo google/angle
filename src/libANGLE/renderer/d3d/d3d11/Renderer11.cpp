@@ -441,6 +441,7 @@ Renderer11::Renderer11(egl::Display *display)
     mCreatedWithDeviceEXT = false;
 
     mDevice         = nullptr;
+    mDevice1        = nullptr;
     mDeviceContext  = nullptr;
     mDeviceContext1 = nullptr;
     mDeviceContext3 = nullptr;
@@ -964,6 +965,8 @@ egl::Error Renderer11::initializeD3DDevice()
 
     mAnnotator.initialize(mDeviceContext);
     gl::InitializeDebugAnnotations(&mAnnotator);
+
+    mDevice->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void **>(&mDevice1));
 
     return egl::NoError();
 }
@@ -1642,6 +1645,12 @@ egl::Error Renderer11::validateShareHandle(const egl::Config *config,
     ID3D11Resource *tempResource11 = nullptr;
     HRESULT result = mDevice->OpenSharedResource(shareHandle, __uuidof(ID3D11Resource),
                                                  (void **)&tempResource11);
+    if (FAILED(result) && mDevice1)
+    {
+        result = mDevice1->OpenSharedResource1(shareHandle, __uuidof(ID3D11Resource),
+                                               (void **)&tempResource11);
+    }
+
     if (FAILED(result))
     {
         return egl::EglBadParameter() << "Failed to open share handle, " << gl::FmtHR(result);
@@ -2223,6 +2232,7 @@ void Renderer11::release()
     }
 
     SafeRelease(mDevice);
+    SafeRelease(mDevice1);
     SafeRelease(mDebug);
 
     if (mD3d11Module)
