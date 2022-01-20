@@ -182,7 +182,7 @@ ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment(bool enableValidationLayers
     }
 #endif  // !defined(ANGLE_PLATFORM_ANDROID)
 
-    if (IsMSan())
+    if (IsMSan() || IsASan())
     {
         // device select layer cause memory sanitizer false positive, so disable
         // it for msan build.

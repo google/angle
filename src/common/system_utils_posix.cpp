@@ -44,6 +44,55 @@ std::string GetModulePath(void *moduleOrSymbol)
 
     return dlInfo.dli_fname;
 }
+
+void *OpenPosixLibrary(const std::string &fullPath, int extraFlags, std::string *errorOut)
+{
+    void *module = dlopen(fullPath.c_str(), RTLD_NOW | extraFlags);
+    if (module)
+    {
+        if (errorOut)
+        {
+            *errorOut = fullPath;
+        }
+    }
+    else if (errorOut)
+    {
+        *errorOut = "dlopen(";
+        *errorOut += fullPath;
+        *errorOut += ") failed with error: ";
+        *errorOut += dlerror();
+        struct stat sfile;
+        if (-1 == stat(fullPath.c_str(), &sfile))
+        {
+            *errorOut += ", stat() call failed.";
+        }
+        else
+        {
+            *errorOut += ", stat() info: ";
+            struct passwd *pwuser = getpwuid(sfile.st_uid);
+            if (pwuser)
+            {
+                *errorOut += "owner: ";
+                *errorOut += pwuser->pw_name;
+                *errorOut += ", ";
+            }
+            struct group *grpnam = getgrgid(sfile.st_gid);
+            if (grpnam)
+            {
+                *errorOut += "group: ";
+                *errorOut += grpnam->gr_name;
+                *errorOut += ", ";
+            }
+            *errorOut += "perms: ";
+            *errorOut += std::to_string(sfile.st_mode);
+            *errorOut += ", links: ";
+            *errorOut += std::to_string(sfile.st_nlink);
+            *errorOut += ", size: ";
+            *errorOut += std::to_string(sfile.st_size);
+        }
+    }
+    return module;
+}
 }  // namespace
 
 Optional<std::string> GetCWD()
@@ -126,113 +175,9 @@ std::string GetModuleDirectory()
     return GetModuleDirectoryAndGetError(nullptr);
 }
 
-class PosixLibrary : public Library
-{
-  public:
-    PosixLibrary(const std::string &fullPath, int extraFlags, std::string *errorOut)
-        : mModule(dlopen(fullPath.c_str(), RTLD_NOW | extraFlags))
-    {
-        if (mModule)
-        {
-            if (errorOut)
-            {
-                *errorOut = fullPath;
-            }
-        }
-        else if (errorOut)
-        {
-            *errorOut = "dlopen(";
-            *errorOut += fullPath;
-            *errorOut += ") failed with error: ";
-            *errorOut += dlerror();
-            struct stat sfile;
-            if (-1 == stat(fullPath.c_str(), &sfile))
-            {
-                *errorOut += ", stat() call failed.";
-            }
-            else
-            {
-                *errorOut += ", stat() info: ";
-                struct passwd *pwuser = getpwuid(sfile.st_uid);
-                if (pwuser)
-                {
-                    *errorOut += "owner: ";
-                    *errorOut += pwuser->pw_name;
-                    *errorOut += ", ";
-                }
-                struct group *grpnam = getgrgid(sfile.st_gid);
-                if (grpnam)
-                {
-                    *errorOut += "group: ";
-                    *errorOut += grpnam->gr_name;
-                    *errorOut += ", ";
-                }
-                *errorOut += "perms: ";
-                *errorOut += std::to_string(sfile.st_mode);
-                *errorOut += ", links: ";
-                *errorOut += std::to_string(sfile.st_nlink);
-                *errorOut += ", size: ";
-                *errorOut += std::to_string(sfile.st_size);
-            }
-        }
-    }
-
-    ~PosixLibrary() override
-    {
-        if (mModule)
-        {
-            dlclose(mModule);
-        }
-    }
-
-    void *getSymbol(const char *symbolName) override
-    {
-        if (!mModule)
-        {
-            return nullptr;
-        }
-
-        return dlsym(mModule, symbolName);
-    }
-
-    void *getNative() const override { return mModule; }
-
-    std::string getPath() const override
-    {
-        if (!mModule)
-        {
-            return "";
-        }
-
-        return GetModulePath(mModule);
-    }
-
-  private:
-    void *mModule = nullptr;
-};
-
-Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
-{
-    return OpenSharedLibraryAndGetError(libraryName, searchType, nullptr);
-}
-
-Library *OpenSharedLibraryWithExtension(const char *libraryName, SearchType searchType)
-{
-    return OpenSharedLibraryWithExtensionAndGetError(libraryName, searchType, nullptr);
-}
-
-Library *OpenSharedLibraryAndGetError(const char *libraryName,
-                                      SearchType searchType,
-                                      std::string *errorOut)
-{
-    std::string libraryWithExtension = std::string(libraryName) + "." + GetSharedLibraryExtension();
-    return OpenSharedLibraryWithExtensionAndGetError(libraryWithExtension.c_str(), searchType,
-                                                     errorOut);
-}
-
-Library *OpenSharedLibraryWithExtensionAndGetError(const char *libraryName,
-                                                   SearchType searchType,
-                                                   std::string *errorOut)
+void *OpenSystemLibraryWithExtensionAndGetError(const char *libraryName,
+                                                SearchType searchType,
+                                                std::string *errorOut)
 {
     std::string directory;
     if (searchType == SearchType::ModuleDir)
@@ -257,7 +202,35 @@ Library *OpenSharedLibraryWithExtensionAndGetError(const char *libraryName,
     fullPath = fullPath + "/" + libraryName;
 #endif
 
-    return new PosixLibrary(fullPath, extraFlags, errorOut);
+    return OpenPosixLibrary(fullPath, extraFlags, errorOut);
+}
+
+void *GetLibrarySymbol(void *libraryHandle, const char *symbolName)
+{
+    if (!libraryHandle)
+    {
+        return nullptr;
+    }
+
+    return dlsym(libraryHandle, symbolName);
+}
+
+std::string GetLibraryPath(void *libraryHandle)
+{
+    if (!libraryHandle)
+    {
+        return "";
+    }
+
+    return GetModulePath(libraryHandle);
+}
+
+void CloseSystemLibrary(void *libraryHandle)
+{
+    if (libraryHandle)
+    {
+        dlclose(libraryHandle);
+    }
 }
 
 bool IsDirectory(const char *filename)

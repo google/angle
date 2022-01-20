@@ -528,7 +528,7 @@ class RendererVk : angle::NonCopyable
 
     egl::Display *mDisplay;
 
-    std::unique_ptr<angle::Library> mLibVulkanLibrary;
+    void *mLibVulkanLibrary;
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;

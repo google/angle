@@ -45,114 +45,55 @@ std::string GetEnvironmentVar(const char *variableName)
     return std::string(value.data());
 }
 
-class Win32Library : public Library
-{
-  public:
-    Win32Library(const char *libraryName, SearchType searchType, std::string *errorOut)
-    {
-        switch (searchType)
-        {
-            case SearchType::ModuleDir:
-            {
-                std::string moduleRelativePath = ConcatenatePath(GetModuleDirectory(), libraryName);
-                if (errorOut)
-                {
-                    *errorOut = moduleRelativePath;
-                }
-                mModule = LoadLibraryA(moduleRelativePath.c_str());
-                break;
-            }
-
-            case SearchType::SystemDir:
-                if (errorOut)
-                {
-                    *errorOut = libraryName;
-                }
-                mModule = LoadLibraryExA(libraryName, nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
-                break;
-            case SearchType::AlreadyLoaded:
-                if (errorOut)
-                {
-                    *errorOut = libraryName;
-                }
-                mModule = GetModuleHandleA(libraryName);
-                break;
-        }
-    }
-
-    ~Win32Library() override
-    {
-        if (mModule)
-        {
-            FreeLibrary(mModule);
-        }
-    }
-
-    void *getSymbol(const char *symbolName) override
-    {
-        if (!mModule)
-        {
-            fprintf(stderr, "Module was not loaded\n");
-            return nullptr;
-        }
-
-        return reinterpret_cast<void *>(GetProcAddress(mModule, symbolName));
-    }
-
-    void *getNative() const override { return reinterpret_cast<void *>(mModule); }
-
-    std::string getPath() const override
-    {
-        if (!mModule)
-        {
-            return "";
-        }
-
-        std::array<char, MAX_PATH> buffer;
-        if (GetModuleFileNameA(mModule, buffer.data(), buffer.size()) == 0)
-        {
-            return "";
-        }
-
-        return std::string(buffer.data());
-    }
-
-  private:
-    HMODULE mModule = nullptr;
-};
-
-Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
-{
-    return OpenSharedLibraryAndGetError(libraryName, searchType, nullptr);
-}
-
-Library *OpenSharedLibraryWithExtension(const char *libraryName, SearchType searchType)
-{
-    return OpenSharedLibraryWithExtensionAndGetError(libraryName, searchType, nullptr);
-}
-
-Library *OpenSharedLibraryAndGetError(const char *libraryName,
-                                      SearchType searchType,
-                                      std::string *errorOut)
+void *OpenSystemLibraryWithExtensionAndGetError(const char *libraryName,
+                                                SearchType searchType,
+                                                std::string *errorOut)
 {
     char buffer[MAX_PATH];
     int ret = snprintf(buffer, MAX_PATH, "%s.%s", libraryName, GetSharedLibraryExtension());
-    if (ret > 0 && ret < MAX_PATH)
-    {
-        return new Win32Library(buffer, searchType, errorOut);
-    }
-    else
+    if (ret <= 0 || ret >= MAX_PATH)
     {
         fprintf(stderr, "Error loading shared library: 0x%x", ret);
         return nullptr;
     }
-}
 
-Library *OpenSharedLibraryWithExtensionAndGetError(const char *libraryName,
-                                                   SearchType searchType,
-                                                   std::string *errorOut)
-{
-    return new Win32Library(libraryName, searchType, errorOut);
+    HMODULE libraryModule = nullptr;
+
+    switch (searchType)
+    {
+        case SearchType::ModuleDir:
+        {
+            std::string moduleRelativePath = ConcatenatePath(GetModuleDirectory(), libraryName);
+            if (errorOut)
+            {
+                *errorOut = moduleRelativePath;
+            }
+            libraryModule = LoadLibraryA(moduleRelativePath.c_str());
+            break;
+        }
+
+        case SearchType::SystemDir:
+        {
+            if (errorOut)
+            {
+                *errorOut = libraryName;
+            }
+            libraryModule = LoadLibraryExA(libraryName, nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+            break;
+        }
+
+        case SearchType::AlreadyLoaded:
+        {
+            if (errorOut)
+            {
+                *errorOut = libraryName;
+            }
+            libraryModule = GetModuleHandleA(libraryName);
+            break;
+        }
+    }
+
+    return reinterpret_cast<void *>(libraryModule);
 }
 
 namespace

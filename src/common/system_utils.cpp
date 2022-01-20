@@ -158,4 +158,52 @@ std::string ConcatenatePath(std::string first, std::string second)
 PageFaultHandler::PageFaultHandler(PageFaultCallback callback) : mCallback(callback) {}
 PageFaultHandler::~PageFaultHandler() {}
 
+Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
+{
+    void *libraryHandle = OpenSystemLibraryAndGetError(libraryName, searchType, nullptr);
+    return new Library(libraryHandle);
+}
+
+Library *OpenSharedLibraryWithExtension(const char *libraryName, SearchType searchType)
+{
+    void *libraryHandle =
+        OpenSystemLibraryWithExtensionAndGetError(libraryName, searchType, nullptr);
+    return new Library(libraryHandle);
+}
+
+Library *OpenSharedLibraryAndGetError(const char *libraryName,
+                                      SearchType searchType,
+                                      std::string *errorOut)
+{
+    void *libraryHandle = OpenSystemLibraryAndGetError(libraryName, searchType, errorOut);
+    return new Library(libraryHandle);
+}
+
+Library *OpenSharedLibraryWithExtensionAndGetError(const char *libraryName,
+                                                   SearchType searchType,
+                                                   std::string *errorOut)
+{
+    void *libraryHandle =
+        OpenSystemLibraryWithExtensionAndGetError(libraryName, searchType, errorOut);
+    return new Library(libraryHandle);
+}
+
+void *OpenSystemLibrary(const char *libraryName, SearchType searchType)
+{
+    return OpenSystemLibraryAndGetError(libraryName, searchType, nullptr);
+}
+
+void *OpenSystemLibraryWithExtension(const char *libraryName, SearchType searchType)
+{
+    return OpenSystemLibraryWithExtensionAndGetError(libraryName, searchType, nullptr);
+}
+
+void *OpenSystemLibraryAndGetError(const char *libraryName,
+                                   SearchType searchType,
+                                   std::string *errorOut)
+{
+    std::string libraryWithExtension = std::string(libraryName) + "." + GetSharedLibraryExtension();
+    return OpenSystemLibraryWithExtensionAndGetError(libraryWithExtension.c_str(), searchType,
+                                                     errorOut);
+}
 }  // namespace angle

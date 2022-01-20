@@ -169,4 +169,40 @@ std::string GetRootDirectory()
     return "C:\\";
 }
 
+std::string GetLibraryPath(void *libraryHandle)
+{
+    if (!libraryHandle)
+    {
+        return "";
+    }
+
+    std::array<char, MAX_PATH> buffer;
+    if (GetModuleFileNameA(reinterpret_cast<HMODULE>(libraryHandle), buffer.data(),
+                           buffer.size()) == 0)
+    {
+        return "";
+    }
+
+    return std::string(buffer.data());
+}
+
+void *GetLibrarySymbol(void *libraryHandle, const char *symbolName)
+{
+    if (!libraryHandle)
+    {
+        fprintf(stderr, "Module was not loaded\n");
+        return nullptr;
+    }
+
+    return reinterpret_cast<void *>(
+        GetProcAddress(reinterpret_cast<HMODULE>(libraryHandle), symbolName));
+}
+
+void CloseSystemLibrary(void *libraryHandle)
+{
+    if (libraryHandle)
+    {
+        FreeLibrary(reinterpret_cast<HMODULE>(libraryHandle));
+    }
+}
 }  // namespace angle

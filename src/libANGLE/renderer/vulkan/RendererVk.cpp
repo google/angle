@@ -1018,6 +1018,7 @@ constexpr char kEnableDebugMarkersPropertyName[] = "debug.angle.markers";
 // RendererVk implementation.
 RendererVk::RendererVk()
     : mDisplay(nullptr),
+      mLibVulkanLibrary(nullptr),
       mCapsInitialized(false),
       mApiVersion(0),
       mInstance(VK_NULL_HANDLE),
@@ -1062,6 +1063,11 @@ RendererVk::~RendererVk()
     mAllocator.release();
     mPipelineCache.release();
     ASSERT(!hasSharedGarbage());
+
+    if (mLibVulkanLibrary)
+    {
+        angle::CloseSystemLibrary(mLibVulkanLibrary);
+    }
 }
 
 bool RendererVk::hasSharedGarbage()
@@ -1171,8 +1177,9 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     mLibVulkanLibrary = angle::vk::OpenLibVulkan();
     ANGLE_VK_CHECK(displayVk, mLibVulkanLibrary, VK_ERROR_INITIALIZATION_FAILED);
 
-    PFN_vkGetInstanceProcAddr vulkanLoaderGetInstanceProcAddr = nullptr;
-    mLibVulkanLibrary->getAs("vkGetInstanceProcAddr", &vulkanLoaderGetInstanceProcAddr);
+    PFN_vkGetInstanceProcAddr vulkanLoaderGetInstanceProcAddr =
+        reinterpret_cast<PFN_vkGetInstanceProcAddr>(
+            angle::GetLibrarySymbol(mLibVulkanLibrary, "vkGetInstanceProcAddr"));
 
     // Set all vk* function ptrs
     volkInitializeCustom(vulkanLoaderGetInstanceProcAddr);
