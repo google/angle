@@ -464,15 +464,6 @@ class ProgramExecutable final : public angle::Subject
     // An array of the images that are used by the program
     std::vector<ImageBinding> mImageBindings;
 
-    // TODO: http://anglebug.com/3570: Remove mPipelineHas*UniformBuffers once PPO's have valid data
-    // in mUniformBlocks
-    bool mPipelineHasUniformBuffers;
-    bool mPipelineHasStorageBuffers;
-    bool mPipelineHasAtomicCounterBuffers;
-    bool mPipelineHasDefaultUniforms;
-    bool mPipelineHasTextures;
-    bool mPipelineHasImages;
-
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedOutputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedUniforms;
