@@ -476,120 +476,6 @@ angle::Result MemoryProperties::findCompatibleMemoryIndex(
     return angle::Result::Stop;
 }
 
-// BufferMemory implementation.
-BufferMemory::BufferMemory() : mClientBuffer(nullptr), mMappedMemory(nullptr) {}
-
-BufferMemory::~BufferMemory() = default;
-
-BufferMemory &BufferMemory::operator=(BufferMemory &&other)
-{
-    std::swap(mClientBuffer, other.mClientBuffer);
-    std::swap(mMappedMemory, other.mMappedMemory);
-    std::swap(mAllocation, other.mAllocation);
-    std::swap(mExternalMemory, other.mExternalMemory);
-    return *this;
-}
-
-angle::Result BufferMemory::initExternal(void *clientBuffer)
-{
-    ASSERT(clientBuffer != nullptr);
-    mClientBuffer = clientBuffer;
-    return angle::Result::Continue;
-}
-
-angle::Result BufferMemory::init()
-{
-    ASSERT(mClientBuffer == nullptr);
-    return angle::Result::Continue;
-}
-
-void BufferMemory::unmap(RendererVk *renderer)
-{
-    if (mMappedMemory != nullptr)
-    {
-        if (isExternalBuffer())
-        {
-            mExternalMemory.unmap(renderer->getDevice());
-        }
-        else
-        {
-            mAllocation.unmap(renderer->getAllocator());
-        }
-
-        mMappedMemory = nullptr;
-    }
-}
-
-void BufferMemory::destroy(RendererVk *renderer)
-{
-    if (isExternalBuffer())
-    {
-        mExternalMemory.destroy(renderer->getDevice());
-        ReleaseAndroidExternalMemory(renderer, mClientBuffer);
-    }
-    else
-    {
-        mAllocation.destroy(renderer->getAllocator());
-    }
-}
-
-void BufferMemory::flush(RendererVk *renderer, VkDeviceSize offset, VkDeviceSize size)
-{
-    if (isExternalBuffer())
-    {
-        VkMappedMemoryRange mappedRange = {};
-        mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        mappedRange.memory              = mExternalMemory.getHandle();
-        mappedRange.offset              = offset;
-        mappedRange.size                = size;
-        mExternalMemory.flush(renderer->getDevice(), mappedRange);
-    }
-    else
-    {
-        mAllocation.flush(renderer->getAllocator(), offset, size);
-    }
-}
-
-void BufferMemory::invalidate(RendererVk *renderer,
-                              VkMemoryMapFlags memoryPropertyFlags,
-                              VkDeviceSize offset,
-                              VkDeviceSize size)
-{
-    if (isExternalBuffer())
-    {
-        // if the memory type is not device coherent, we perform an explicit invalidate
-        if ((memoryPropertyFlags & VK_MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD) == 0)
-        {
-            VkMappedMemoryRange memoryRanges = {};
-            memoryRanges.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-            memoryRanges.memory              = mExternalMemory.getHandle();
-            memoryRanges.offset              = offset;
-            memoryRanges.size                = size;
-            mExternalMemory.invalidate(renderer->getDevice(), memoryRanges);
-        }
-    }
-    else
-    {
-        mAllocation.invalidate(renderer->getAllocator(), offset, size);
-    }
-}
-
-angle::Result BufferMemory::mapImpl(Context *context, VkDeviceSize size)
-{
-    if (isExternalBuffer())
-    {
-        ANGLE_VK_TRY(context, mExternalMemory.map(context->getRenderer()->getDevice(), 0, size, 0,
-                                                  &mMappedMemory));
-    }
-    else
-    {
-        ANGLE_VK_TRY(context,
-                     mAllocation.map(context->getRenderer()->getAllocator(), &mMappedMemory));
-    }
-
-    return angle::Result::Continue;
-}
-
 // StagingBuffer implementation.
 StagingBuffer::StagingBuffer() : mSize(0) {}
 
@@ -1682,7 +1568,7 @@ BufferBlock::BufferBlock() : mMemoryPropertyFlags(0), mSize(0), mMappedMemory(nu
 BufferBlock::BufferBlock(BufferBlock &&other)
     : mVirtualBlock(std::move(other.mVirtualBlock)),
       mBuffer(std::move(other.mBuffer)),
-      mAllocation(std::move(other.mAllocation)),
+      mDeviceMemory(std::move(other.mDeviceMemory)),
       mMemoryPropertyFlags(other.mMemoryPropertyFlags),
       mSize(other.mSize),
       mMappedMemory(other.mMappedMemory),
@@ -1694,7 +1580,7 @@ BufferBlock &BufferBlock::operator=(BufferBlock &&other)
 {
     std::swap(mVirtualBlock, other.mVirtualBlock);
     std::swap(mBuffer, other.mBuffer);
-    std::swap(mAllocation, other.mAllocation);
+    std::swap(mDeviceMemory, other.mDeviceMemory);
     std::swap(mMemoryPropertyFlags, other.mMemoryPropertyFlags);
     std::swap(mSize, other.mSize);
     std::swap(mMappedMemory, other.mMappedMemory);
@@ -1707,7 +1593,7 @@ BufferBlock::~BufferBlock()
 {
     ASSERT(!mVirtualBlock.valid());
     ASSERT(!mBuffer.valid());
-    ASSERT(!mAllocation.valid());
+    ASSERT(!mDeviceMemory.valid());
 }
 
 void BufferBlock::destroy(RendererVk *renderer)
@@ -1716,31 +1602,31 @@ void BufferBlock::destroy(RendererVk *renderer)
 
     if (mMappedMemory)
     {
-        unmap(renderer->getAllocator());
+        unmap(device);
     }
 
     mVirtualBlock.destroy(device);
     mBuffer.destroy(device);
-    mAllocation.destroy(renderer->getAllocator());
+    mDeviceMemory.destroy(device);
 }
 
 angle::Result BufferBlock::init(ContextVk *contextVk,
                                 Buffer &buffer,
                                 vma::VirtualBlockCreateFlags flags,
-                                Allocation &allocation,
+                                DeviceMemory &deviceMemory,
                                 VkMemoryPropertyFlags memoryPropertyFlags,
                                 VkDeviceSize size)
 {
     RendererVk *renderer = contextVk->getRenderer();
     ASSERT(!mVirtualBlock.valid());
     ASSERT(!mBuffer.valid());
-    ASSERT(!mAllocation.valid());
+    ASSERT(!mDeviceMemory.valid());
 
     mVirtualBlockMutex.init(renderer->isAsyncCommandQueueEnabled());
     ANGLE_VK_TRY(contextVk, mVirtualBlock.init(renderer->getDevice(), flags, size));
 
     mBuffer              = std::move(buffer);
-    mAllocation          = std::move(allocation);
+    mDeviceMemory        = std::move(deviceMemory);
     mMemoryPropertyFlags = memoryPropertyFlags;
     mSize                = size;
     mMappedMemory        = nullptr;
@@ -1751,33 +1637,32 @@ angle::Result BufferBlock::init(ContextVk *contextVk,
 
 void BufferBlock::initWithoutVirtualBlock(Context *context,
                                           Buffer &buffer,
-                                          Allocation &allocation,
+                                          DeviceMemory &deviceMemory,
                                           VkMemoryPropertyFlags memoryPropertyFlags,
                                           VkDeviceSize size)
 {
     RendererVk *renderer = context->getRenderer();
     ASSERT(!mVirtualBlock.valid());
     ASSERT(!mBuffer.valid());
-    ASSERT(!mAllocation.valid());
+    ASSERT(!mDeviceMemory.valid());
 
     mBuffer              = std::move(buffer);
-    mAllocation          = std::move(allocation);
+    mDeviceMemory        = std::move(deviceMemory);
     mMemoryPropertyFlags = memoryPropertyFlags;
     mSize                = size;
     mMappedMemory        = nullptr;
     mSerial              = renderer->getResourceSerialFactory().generateBufferSerial();
 }
 
-angle::Result BufferBlock::map(Context *context)
+VkResult BufferBlock::map(const VkDevice device)
 {
     ASSERT(mMappedMemory == nullptr);
-    ANGLE_VK_TRY(context, mAllocation.map(context->getRenderer()->getAllocator(), &mMappedMemory));
-    return angle::Result::Continue;
+    return mDeviceMemory.map(device, 0, mSize, 0, &mMappedMemory);
 }
 
-void BufferBlock::unmap(const Allocator &allocator)
+void BufferBlock::unmap(const VkDevice device)
 {
-    mAllocation.unmap(allocator);
+    mDeviceMemory.unmap(device);
     mMappedMemory = nullptr;
 }
 

@@ -422,13 +422,6 @@ struct FeaturesVk : FeatureSetBase
         "enableMultisampledRenderToTexture", FeatureCategory::VulkanWorkarounds,
         "Expose EXT_multisampled_render_to_texture", &members, "http://anglebug.com/4937"};
 
-    // Qualcomm fails some tests when reducing the preferred block size to 4M.
-    // http://anglebug.com/4995
-    Feature preferredLargeHeapBlockSize4MB = {
-        "preferredLargeHeapBlockSize4MB", FeatureCategory::VulkanWorkarounds,
-        "Use 4 MB preferred large heap block size with AMD allocator", &members,
-        "http://anglebug.com/4995"};
-
     // Manhattan is calling glFlush in the middle of renderpass which breaks renderpass and hurts
     // performance on tile based GPU. When this is enabled, we will defer the glFlush call made in
     // the middle of renderpass to the end of renderpass.

@@ -740,13 +740,12 @@ class BufferHelper : public ReadWriteResource
     uint8_t *getMappedMemory() const
     {
         ASSERT(isMapped());
-        return isExternalBuffer() ? mMemory.getMappedMemory() : mSuballocation.getMappedMemory();
+        return mSuballocation.getMappedMemory();
     }
     bool isHostVisible() const { return mSuballocation.isHostVisible(); }
     bool isCoherent() const { return mSuballocation.isCoherent(); }
 
-    bool isMapped() const { return isExternalBuffer() ? true : mSuballocation.isMapped(); }
-    bool isExternalBuffer() const { return mMemory.isExternalBuffer(); }
+    bool isMapped() const { return mSuballocation.isMapped(); }
 
     // Also implicitly sets up the correct barriers.
     angle::Result copyFromBuffer(ContextVk *contextVk,
@@ -756,8 +755,7 @@ class BufferHelper : public ReadWriteResource
 
     angle::Result map(Context *context, uint8_t **ptrOut);
     angle::Result mapWithOffset(ContextVk *contextVk, uint8_t **ptrOut, size_t offset);
-
-    void unmap(RendererVk *renderer);
+    void unmap(RendererVk *renderer) {}
     // After a sequence of writes, call flush to ensure the data is visible to the device.
     angle::Result flush(RendererVk *renderer);
     angle::Result flush(RendererVk *renderer, VkDeviceSize offset, VkDeviceSize size);
@@ -799,9 +797,6 @@ class BufferHelper : public ReadWriteResource
     angle::Result initializeNonZeroMemory(Context *context,
                                           VkBufferUsageFlags usage,
                                           VkDeviceSize size);
-
-    // For external memory only
-    BufferMemory mMemory;
 
     // Suballocation object.
     BufferSuballocation mSuballocation;

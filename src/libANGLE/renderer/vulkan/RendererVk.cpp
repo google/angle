@@ -467,7 +467,7 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     {
         "SYNC-HAZARD-WRITE_AFTER_READ",
-        "vkCmdDraw: Hazard WRITE_AFTER_READ for VkBuffer",
+        "vkCmdDraw: Hazard WRITE_AFTER_READ for",
         "Access info (usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_WRITE, prior_usage: "
         "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
@@ -1571,14 +1571,10 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         ANGLE_TRY(initializeDevice(displayVk, firstGraphicsQueueFamily));
     }
 
-    VkDeviceSize preferredLargeHeapBlockSize = 0;
-    if (mFeatures.preferredLargeHeapBlockSize4MB.enabled)
-    {
-        // This number matches Chromium and was picked by looking at memory usage of
-        // Android apps. The allocator will start making blocks at 1/8 the max size
-        // and builds up block size as needed before capping at the max set here.
-        preferredLargeHeapBlockSize = 4 * 1024 * 1024;
-    }
+    // This number matches Chromium and was picked by looking at memory usage of
+    // Android apps. The allocator will start making blocks at 1/8 the max size
+    // and builds up block size as needed before capping at the max set here.
+    VkDeviceSize preferredLargeHeapBlockSize = 4 * 1024 * 1024;
 
     // Store the physical device memory properties so we can find the right memory pools.
     mMemoryProperties.init(mPhysicalDevice);
@@ -3059,8 +3055,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsPipelineStatisticsQuery,
                             mPhysicalDeviceFeatures.pipelineStatisticsQuery == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferredLargeHeapBlockSize4MB, !isQualcomm);
-
     // Defer glFLush call causes manhattan 3.0 perf regression. Let Qualcomm driver opt out from
     // this optimization.
     ANGLE_FEATURE_CONDITION(&mFeatures, deferFlushUntilEndRenderPass, !isQualcomm);
@@ -4007,18 +4001,10 @@ void RendererVk::onDeallocateHandle(vk::HandleType handleType)
 
 VkDeviceSize RendererVk::getPreferedBufferBlockSize(uint32_t memoryTypeIndex) const
 {
-    VkDeviceSize preferredBlockSize;
-    if (mFeatures.preferredLargeHeapBlockSize4MB.enabled)
-    {
-        // This number matches Chromium and was picked by looking at memory usage of
-        // Android apps. The allocator will start making blocks at 1/8 the max size
-        // and builds up block size as needed before capping at the max set here.
-        preferredBlockSize = 4 * 1024 * 1024;
-    }
-    else
-    {
-        preferredBlockSize = 32ull * 1024 * 1024;
-    }
+    // This number matches Chromium and was picked by looking at memory usage of
+    // Android apps. The allocator will start making blocks at 1/8 the max size
+    // and builds up block size as needed before capping at the max set here.
+    VkDeviceSize preferredBlockSize = 4 * 1024 * 1024;
 
     // Try not to exceed 1/64 of heap size to begin with.
     const VkDeviceSize heapSize = getMemoryProperties().getHeapSizeForMemoryType(memoryTypeIndex);

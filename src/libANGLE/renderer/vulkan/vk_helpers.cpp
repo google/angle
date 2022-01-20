@@ -2702,26 +2702,23 @@ angle::Result BufferPool::allocateNewBuffer(ContextVk *contextVk, VkDeviceSize s
     allocator.getMemoryTypeProperties(mMemoryTypeIndex, &memoryPropertyFlags);
 
     DeviceScoped<Buffer> buffer(renderer->getDevice());
-    AllocatorScoped<Allocation> allocation(renderer->getAllocator());
-    uint32_t memoryTypeIndex = kInvalidMemoryTypeIndex;
-    ANGLE_VK_TRY(contextVk,
-                 allocator.createBuffer(createInfo, memoryPropertyFlags, 0,
-                                        renderer->getFeatures().persistentlyMappedBuffers.enabled,
-                                        &memoryTypeIndex, &buffer.get(), &allocation.get()));
-    ASSERT(memoryTypeIndex != kInvalidMemoryTypeIndex);
-    if (memoryTypeIndex != mMemoryTypeIndex)
-    {
-        allocator.getMemoryTypeProperties(memoryTypeIndex, &memoryPropertyFlags);
-    }
+    ANGLE_VK_TRY(contextVk, buffer.get().init(contextVk->getDevice(), createInfo));
+
+    DeviceScoped<DeviceMemory> deviceMemory(renderer->getDevice());
+    VkMemoryPropertyFlags memoryPropertyFlagsOut;
+    VkDeviceSize sizeOut;
+    ANGLE_TRY(AllocateBufferMemory(contextVk, memoryPropertyFlags, &memoryPropertyFlagsOut, nullptr,
+                                   &buffer.get(), &deviceMemory.get(), &sizeOut));
+    ASSERT(sizeOut >= mSize);
 
     // Allocate bufferBlock
     std::unique_ptr<BufferBlock> block = std::make_unique<BufferBlock>();
-    ANGLE_TRY(block->init(contextVk, buffer.get(), mVirtualBlockCreateFlags, allocation.get(),
-                          memoryPropertyFlags, mSize));
+    ANGLE_TRY(block->init(contextVk, buffer.get(), mVirtualBlockCreateFlags, deviceMemory.get(),
+                          memoryPropertyFlagsOut, mSize));
 
     if (mHostVisible)
     {
-        ANGLE_TRY(block->map(contextVk));
+        ANGLE_VK_TRY(contextVk, block->map(contextVk->getDevice()));
     }
 
     // Append the bufferBlock into the pool
@@ -3818,7 +3815,6 @@ BufferHelper &BufferHelper::operator=(BufferHelper &&other)
 {
     ReadWriteResource::operator=(std::move(other));
 
-    mMemory        = std::move(other.mMemory);
     mSuballocation = std::move(other.mSuballocation);
 
     mCurrentQueueFamilyIndex = other.mCurrentQueueFamilyIndex;
@@ -3872,15 +3868,17 @@ angle::Result BufferHelper::init(vk::Context *context,
 
     // Allocate buffer object
     DeviceScoped<Buffer> buffer(renderer->getDevice());
-    AllocatorScoped<Allocation> allocation(renderer->getAllocator());
-    ANGLE_VK_TRY(context, allocator.createBuffer(*createInfo, requiredFlags, preferredFlags,
-                                                 persistentlyMapped, &memoryTypeIndex,
-                                                 &buffer.get(), &allocation.get()));
+    ANGLE_VK_TRY(context, buffer.get().init(context->getDevice(), *createInfo));
+
+    DeviceScoped<DeviceMemory> deviceMemory(renderer->getDevice());
     VkMemoryPropertyFlags memoryPropertyFlagsOut;
-    allocator.getMemoryTypeProperties(memoryTypeIndex, &memoryPropertyFlagsOut);
+    VkDeviceSize sizeOut;
+    ANGLE_TRY(AllocateBufferMemory(context, requiredFlags, &memoryPropertyFlagsOut, nullptr,
+                                   &buffer.get(), &deviceMemory.get(), &sizeOut));
+    ASSERT(sizeOut >= createInfo->size);
 
     ANGLE_VK_TRY(context, mSuballocation.initWithEntireBuffer(
-                              context, buffer.get(), allocation.get(), memoryPropertyFlagsOut,
+                              context, buffer.get(), deviceMemory.get(), memoryPropertyFlagsOut,
                               requestedCreateInfo.size));
 
     if (isHostVisible())
@@ -3919,16 +3917,14 @@ angle::Result BufferHelper::initExternal(ContextVk *contextVk,
     DeviceScoped<Buffer> buffer(renderer->getDevice());
     ANGLE_VK_TRY(contextVk, buffer.get().init(renderer->getDevice(), modifiedCreateInfo));
 
+    DeviceScoped<DeviceMemory> deviceMemory(renderer->getDevice());
     VkMemoryPropertyFlags memoryPropertyFlagsOut;
     ANGLE_TRY(InitAndroidExternalMemory(contextVk, clientBuffer, memoryProperties, &buffer.get(),
-                                        &memoryPropertyFlagsOut,
-                                        mMemory.getExternalMemoryObject()));
-
-    ANGLE_TRY(mMemory.initExternal(clientBuffer));
+                                        &memoryPropertyFlagsOut, &deviceMemory.get()));
 
     ANGLE_VK_TRY(contextVk, mSuballocation.initWithEntireBuffer(
-                                contextVk, buffer.get(), *mMemory.getMemoryObject(),
-                                memoryPropertyFlagsOut, requestedCreateInfo.size));
+                                contextVk, buffer.get(), deviceMemory.get(), memoryPropertyFlagsOut,
+                                requestedCreateInfo.size));
 
     if (isHostVisible())
     {
@@ -4096,7 +4092,6 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
     }
     else if (isHostVisible())
     {
-        const Allocator &allocator = renderer->getAllocator();
         // Can map the memory.
         // Pick an arbitrary value to initialize non-zero memory for sanitization.
         constexpr int kNonZeroInitValue = 55;
@@ -4104,7 +4099,7 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
         memset(mapPointer, kNonZeroInitValue, static_cast<size_t>(getSize()));
         if (!isCoherent())
         {
-            mSuballocation.flush(allocator);
+            mSuballocation.flush(renderer->getDevice());
         }
     }
 
@@ -4116,22 +4111,13 @@ void BufferHelper::destroy(RendererVk *renderer)
     unmap(renderer);
 
     mSuballocation.destroy(renderer);
-    mMemory.destroy(renderer);
 }
 
 void BufferHelper::release(RendererVk *renderer)
 {
     unmap(renderer);
 
-    if (isExternalBuffer())
-    {
-        renderer->collectGarbageAndReinit(&mReadOnlyUse, &mSuballocation,
-                                          mMemory.getExternalMemoryObject(),
-                                          mMemory.getMemoryObject());
-        mReadWriteUse.release();
-        mReadWriteUse.init();
-    }
-    else if (mSuballocation.valid())
+    if (mSuballocation.valid())
     {
         if (mReadOnlyUse.isCurrentlyInUse(renderer->getLastCompletedQueueSerial()))
         {
@@ -4179,18 +4165,11 @@ angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
 
 angle::Result BufferHelper::map(Context *context, uint8_t **ptrOut)
 {
-    if (isExternalBuffer())
+    if (!mSuballocation.isMapped())
     {
-        ANGLE_TRY(mMemory.map(context, getSize(), ptrOut));
+        ANGLE_VK_TRY(context, mSuballocation.getBlock()->map(context->getDevice()));
     }
-    else
-    {
-        if (!mSuballocation.isMapped())
-        {
-            ANGLE_TRY(mSuballocation.getBlock()->map(context));
-        }
-        *ptrOut = mSuballocation.getMappedMemory();
-    }
+    *ptrOut = mSuballocation.getMappedMemory();
     return angle::Result::Continue;
 }
 
@@ -4202,27 +4181,9 @@ angle::Result BufferHelper::mapWithOffset(ContextVk *contextVk, uint8_t **ptrOut
     return angle::Result::Continue;
 }
 
-void BufferHelper::unmap(RendererVk *renderer)
-{
-    if (isExternalBuffer())
-    {
-        mMemory.unmap(renderer);
-    }
-}
-
 angle::Result BufferHelper::flush(RendererVk *renderer, VkDeviceSize offset, VkDeviceSize size)
 {
-    if (isExternalBuffer())
-    {
-        if (!isCoherent())
-        {
-            mMemory.flush(renderer, offset, size);
-        }
-    }
-    else
-    {
-        mSuballocation.flush(renderer->getAllocator());
-    }
+    mSuballocation.flush(renderer->getDevice());
     return angle::Result::Continue;
 }
 angle::Result BufferHelper::flush(RendererVk *renderer)
@@ -4232,17 +4193,7 @@ angle::Result BufferHelper::flush(RendererVk *renderer)
 
 angle::Result BufferHelper::invalidate(RendererVk *renderer, VkDeviceSize offset, VkDeviceSize size)
 {
-    if (isExternalBuffer())
-    {
-        if (!isCoherent())
-        {
-            mMemory.invalidate(renderer, getMemoryPropertyFlags(), offset, size);
-        }
-    }
-    else
-    {
-        mSuballocation.invalidate(renderer->getAllocator());
-    }
+    mSuballocation.invalidate(renderer->getDevice());
     return angle::Result::Continue;
 }
 angle::Result BufferHelper::invalidate(RendererVk *renderer)

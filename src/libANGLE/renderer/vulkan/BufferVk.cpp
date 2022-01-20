@@ -247,6 +247,7 @@ BufferVk::VertexConversionBuffer::~VertexConversionBuffer() = default;
 // BufferVk implementation.
 BufferVk::BufferVk(const gl::BufferState &state)
     : BufferImpl(state),
+      mClientBuffer(nullptr),
       mMemoryTypeIndex(0),
       mMemoryPropertyFlags(0),
       mIsStagingBufferMapped(false),
@@ -344,6 +345,8 @@ angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
             ANGLE_VK_CHECK(vk::GetImpl(context), !persistentMapRequired,
                            VK_ERROR_MEMORY_MAP_FAILED);
         }
+
+        mClientBuffer = clientBuffer;
 
         return angle::Result::Continue;
     }
@@ -565,6 +568,9 @@ angle::Result BufferVk::ghostMappedBuffer(ContextVk *contextVk,
                                           GLbitfield access,
                                           void **mapPtr)
 {
+    // We should't get to here if it is external memory
+    ASSERT(!isExternalBuffer());
+
     ++contextVk->getPerfCounters().buffersGhosted;
 
     // If we are creating a new buffer because the GPU is using it as read-only, then we
@@ -574,7 +580,6 @@ angle::Result BufferVk::ghostMappedBuffer(ContextVk *contextVk,
 
     // Retain it to prevent acquireBufferHelper from actually releasing it.
     src.retainReadOnly(&contextVk->getResourceUseList());
-    bool srcBufferNeedsRelease = !src.isExternalBuffer();
 
     ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize()),
                                   BufferUpdateType::ContentsUpdate));
@@ -609,10 +614,8 @@ angle::Result BufferVk::ghostMappedBuffer(ContextVk *contextVk,
         memcpy(dstMapPtr, srcMapPtr, static_cast<size_t>(mState.getSize()));
     }
 
-    if (srcBufferNeedsRelease)
-    {
-        src.release(contextVk->getRenderer());
-    }
+    src.release(contextVk->getRenderer());
+
     // Return the already mapped pointer with the offset adjustment to avoid the call to unmap().
     *mapPtr = dstMapPtr + offset;
 
@@ -670,7 +673,7 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     }
 
     // Write case, buffer not in use.
-    if (mBuffer.isExternalBuffer() || !isCurrentlyInUse(contextVk))
+    if (isExternalBuffer() || !isCurrentlyInUse(contextVk))
     {
         return mBuffer.mapWithOffset(contextVk, mapPtrBytes, static_cast<size_t>(offset));
     }
@@ -860,6 +863,9 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
                                          size_t offset,
                                          BufferUpdateType updateType)
 {
+    // We shouldn't get here if this is external memory
+    ASSERT(!isExternalBuffer());
+
     // Here we acquire a new BufferHelper and directUpdate() the new buffer.
     // If the subData size was less than the buffer's size we additionally enqueue
     // a GPU copy of the remaining regions from the old mBuffer to the new one.
@@ -940,7 +946,7 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
         mHasBeenReferencedByGPU = true;
     }
 
-    if (src.valid() && !src.isExternalBuffer())
+    if (src.valid())
     {
         src.release(contextVk->getRenderer());
     }
@@ -965,7 +971,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         // from old buffer to new buffer when we acquire a new buffer, we also favor
         // acquireAndUpdate over stagedUpdate. This could happen when app calls glBufferData with
         // same size and we will try to reuse the existing buffer storage.
-        if (!mBuffer.isExternalBuffer() &&
+        if (!isExternalBuffer() &&
             (!mHasValidData || ShouldAllocateNewMemoryForUpdate(
                                    contextVk, size, static_cast<size_t>(mState.getSize()))))
         {
