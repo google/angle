@@ -1017,7 +1017,6 @@ void DisplayMtl::initializeTextureCaps() const
     mNativeExtensions.readDepthNV         = false;
     mNativeExtensions.readStencilNV       = false;
     mNativeExtensions.depthBufferFloat2NV = false;
-    mNativeExtensions.textureCompressionAstcLdrKHR &= supportsAppleGPUFamily(2);
 }
 
 void DisplayMtl::initializeLimitations()
