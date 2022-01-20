@@ -3481,12 +3481,33 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.textureNorm16EXT             = false;
         supportedExtensions.multiviewOVR                 = false;
         supportedExtensions.multiview2OVR                = false;
+        supportedExtensions.multiviewMultisampleANGLE    = false;
         supportedExtensions.copyTexture3dANGLE           = false;
         supportedExtensions.textureMultisampleANGLE      = false;
         supportedExtensions.drawBuffersIndexedEXT        = false;
         supportedExtensions.drawBuffersIndexedOES        = false;
         supportedExtensions.EGLImageArrayEXT             = false;
         supportedExtensions.textureFormatSRGBOverrideEXT = false;
+
+        // The spec requires ES 3.1 but these are used for WebGL 2.0
+        supportedExtensions.baseVertexBaseInstanceANGLE              = false;
+        supportedExtensions.baseVertexBaseInstanceShaderBuiltinANGLE = false;
+
+        // Requires immutable textures
+        supportedExtensions.yuvInternalFormatANGLE = false;
+
+        // Require ESSL 3.0
+        supportedExtensions.shaderMultisampleInterpolationOES  = false;
+        supportedExtensions.shaderNoperspectiveInterpolationNV = false;
+        supportedExtensions.sampleVariablesOES                 = false;
+
+        // Require ES 3.1 but could likely be exposed on 3.0
+        supportedExtensions.textureCubeMapArrayEXT = false;
+        supportedExtensions.textureCubeMapArrayOES = false;
+
+        // Require RED and RG formats
+        supportedExtensions.textureSRGBR8EXT  = false;
+        supportedExtensions.textureSRGBRG8EXT = false;
 
         // Requires glCompressedTexImage3D
         supportedExtensions.textureCompressionAstcOES = false;
@@ -3525,6 +3546,13 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.geometryShaderOES         = false;
         supportedExtensions.tessellationShaderEXT     = false;
         supportedExtensions.extensionPackEs31aANDROID = false;
+        supportedExtensions.gpuShader5EXT             = false;
+        supportedExtensions.primitiveBoundingBoxEXT   = false;
+        supportedExtensions.shaderImageAtomicOES      = false;
+        supportedExtensions.shaderIoBlocksEXT         = false;
+        supportedExtensions.shaderIoBlocksOES         = false;
+        supportedExtensions.textureBufferEXT          = false;
+        supportedExtensions.textureBufferOES          = false;
 
         // TODO(http://anglebug.com/2775): Multisample arrays could be supported on ES 3.0 as well
         // once 2D multisample texture extension is exposed there.
