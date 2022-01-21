@@ -2058,6 +2058,11 @@ TEST_P(Texture2DTestWithDrawScale, MipmapsTwice)
                  pixelsBlue.data());
     glGenerateMipmap(GL_TEXTURE_2D);
 
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::blue);
+
     std::vector<GLColor> pixelsGreen(16u * 16u, GLColor::green);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE,
@@ -4208,24 +4213,24 @@ void Texture2DBaseMaxTestES3::testGenerateMipmapAfterRebase(bool immutable)
         drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
         if (lod == 0)
         {
-            EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
-            EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[lod]);
-            EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[lod]);
-            EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]) << "lod " << lod;
+            EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[lod]) << "lod " << lod;
+            EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[lod]) << "lod " << lod;
+            EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[lod]) << "lod " << lod;
         }
         else if (lod == kMipCount - 1)
         {
-            EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
-            EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[lod]);
-            EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[lod]);
-            EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]) << "lod " << lod;
+            EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[lod]) << "lod " << lod;
+            EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[lod]) << "lod " << lod;
+            EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[lod]) << "lod " << lod;
         }
         else
         {
-            EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColor);
-            EXPECT_PIXEL_COLOR_EQ(w, 0, kNewMipColor);
-            EXPECT_PIXEL_COLOR_EQ(0, h, kNewMipColor);
-            EXPECT_PIXEL_COLOR_EQ(w, h, kNewMipColor);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColor) << "lod " << lod;
+            EXPECT_PIXEL_COLOR_EQ(w, 0, kNewMipColor) << "lod " << lod;
+            EXPECT_PIXEL_COLOR_EQ(0, h, kNewMipColor) << "lod " << lod;
+            EXPECT_PIXEL_COLOR_EQ(w, h, kNewMipColor) << "lod " << lod;
         }
     }
 }
