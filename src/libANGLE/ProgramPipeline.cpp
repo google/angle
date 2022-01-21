@@ -161,7 +161,7 @@ ProgramPipeline::ProgramPipeline(rx::GLImplFactory *factory, ProgramPipelineID h
 
 ProgramPipeline::~ProgramPipeline()
 {
-    mProgramPipelineImpl.release();
+    mProgramPipelineImpl.reset(nullptr);
 }
 
 void ProgramPipeline::onDestroy(const Context *context)
