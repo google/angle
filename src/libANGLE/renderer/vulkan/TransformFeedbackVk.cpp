@@ -281,7 +281,7 @@ void TransformFeedbackVk::initDescriptorSet(ContextVk *contextVk,
 }
 
 void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
-                                              const gl::ProgramState &programState,
+                                              const gl::ProgramExecutable &executable,
                                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                               VkDescriptorSet descSet) const
 {
@@ -290,12 +290,10 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
         return;
     }
 
-    const gl::ProgramExecutable *executable = contextVk->getState().getProgramExecutable();
-    ASSERT(executable);
-    size_t xfbBufferCount = executable->getTransformFeedbackBufferCount();
+    size_t xfbBufferCount = executable.getTransformFeedbackBufferCount();
 
     ASSERT(xfbBufferCount > 0);
-    ASSERT(programState.getTransformFeedbackBufferMode() != GL_INTERLEAVED_ATTRIBS ||
+    ASSERT(executable.getTransformFeedbackBufferMode() != GL_INTERLEAVED_ATTRIBS ||
            xfbBufferCount == 1);
 
     VkDescriptorBufferInfo *descriptorBufferInfo =

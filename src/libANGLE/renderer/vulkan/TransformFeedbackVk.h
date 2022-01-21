@@ -52,7 +52,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl, public angle::Observer
                            size_t xfbBufferCount,
                            VkDescriptorSet descSet) const;
     void updateDescriptorSet(ContextVk *contextVk,
-                             const gl::ProgramState &programState,
+                             const gl::ProgramExecutable &executable,
                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
                              VkDescriptorSet descSet) const;
     void getBufferOffsets(ContextVk *contextVk,

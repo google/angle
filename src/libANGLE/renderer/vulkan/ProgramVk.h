@@ -96,42 +96,24 @@ class ProgramVk : public ProgramImpl
     void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
     void getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const override;
 
-    angle::Result updateUniforms(ContextVk *contextVk);
-
-    void setAllDefaultUniformsDirty();
-    bool hasDirtyUniforms() const { return mDefaultUniformBlocksDirty.any(); }
-    bool isShaderUniformDirty(gl::ShaderType shaderType) const
+    bool areShaderUniformsDirty(gl::ShaderType shaderType) const
     {
-        return mDefaultUniformBlocksDirty[shaderType];
+        return mExecutable.mDefaultUniformBlocksDirty[shaderType];
     }
     void setShaderUniformDirtyBit(gl::ShaderType shaderType)
     {
-        if (!mDefaultUniformBlocks[shaderType].uniformData.empty())
+        if (!mExecutable.mDefaultUniformBlocks[shaderType]->uniformData.empty())
         {
-            mDefaultUniformBlocksDirty.set(shaderType);
+            mExecutable.mDefaultUniformBlocksDirty.set(shaderType);
         }
     }
     void clearShaderUniformDirtyBit(gl::ShaderType shaderType)
     {
-        mDefaultUniformBlocksDirty.reset(shaderType);
+        mExecutable.mDefaultUniformBlocksDirty.reset(shaderType);
     }
-    void onProgramBind();
 
     const ProgramExecutableVk &getExecutable() const { return mExecutable; }
     ProgramExecutableVk &getExecutable() { return mExecutable; }
-
-    gl::ShaderMap<DefaultUniformBlock> &getDefaultUniformBlocks() { return mDefaultUniformBlocks; }
-    size_t getDefaultUniformAlignedSize(vk::Context *context, const gl::ShaderType shaderType) const
-    {
-        RendererVk *renderer = context->getRenderer();
-        size_t alignment     = static_cast<size_t>(
-            renderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
-        return roundUp(mDefaultUniformBlocks[shaderType].uniformData.size(), alignment);
-    }
-
-    size_t calcUniformUpdateRequiredSpace(ContextVk *contextVk,
-                                          const gl::ProgramExecutable &glExecutable,
-                                          gl::ShaderMap<VkDeviceSize> &uniformOffsets) const;
 
     ANGLE_INLINE angle::Result initGraphicsShaderProgram(
         ContextVk *contextVk,
@@ -205,9 +187,6 @@ class ProgramVk : public ProgramImpl
 
         return angle::Result::Continue;
     }
-
-    gl::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;
-    gl::ShaderBitSet mDefaultUniformBlocksDirty;
 
     // We keep the SPIR-V code to use for draw call pipeline creation.
     ShaderInfo mOriginalShaderInfo;

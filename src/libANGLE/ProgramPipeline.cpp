@@ -664,6 +664,9 @@ void ProgramPipeline::onSubjectStateChange(angle::SubjectIndex index, angle::Sub
             mState.mExecutable->mActiveSamplerRefCounts.fill(0);
             mState.updateExecutableTextures();
             break;
+        case angle::SubjectMessage::ProgramUniformUpdated:
+            mProgramPipelineImpl->onProgramUniformUpdate(static_cast<ShaderType>(index));
+            break;
         default:
             UNREACHABLE();
             break;

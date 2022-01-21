@@ -267,7 +267,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                    : isViewportFlipEnabledForDrawFBO();
     }
 
-    void invalidateProgramBindingHelper(const gl::State &glState);
+    void invalidateProgramBindingHelper();
 
     // State sync with dirty bits.
     angle::Result syncState(const gl::Context *context,
@@ -643,7 +643,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     VkDescriptorImageInfo &allocDescriptorImageInfo() { return *allocDescriptorImageInfos(1); }
     VkWriteDescriptorSet &allocWriteDescriptorSet() { return *allocWriteDescriptorSets(1); }
 
-    vk::DynamicBuffer *getDefaultUniformStorage() { return &mDefaultUniformStorage; }
     // For testing only.
     void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);
 
