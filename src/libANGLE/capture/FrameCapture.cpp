@@ -2567,14 +2567,33 @@ void CaptureBufferResetCalls(const gl::State &replayState,
     Capture(&bufferRegenCalls[bufferID], CaptureGenBuffers(replayState, true, 1, id));
     MaybeCaptureUpdateResourceIDs(resourceTracker, &bufferRegenCalls[bufferID]);
 
+    // Call glBufferStorageEXT when regenerating immutable buffers,
+    // as we can't call glBufferData on restore.
+    if (buffer->isImmutable())
+    {
+        Capture(&bufferRegenCalls[bufferID],
+                CaptureBindBuffer(replayState, true, gl::BufferBinding::Array, *id));
+        Capture(
+            &bufferRegenCalls[bufferID],
+            CaptureBufferStorageEXT(replayState, true, gl::BufferBinding::Array,
+                                    static_cast<GLsizeiptr>(buffer->getSize()),
+                                    buffer->getMapPointer(), buffer->getStorageExtUsageFlags()));
+    }
+
     // Track calls to restore a given buffer's contents
     ResourceCalls &bufferRestoreCalls = trackedBuffers.getResourceRestoreCalls();
     Capture(&bufferRestoreCalls[bufferID],
             CaptureBindBuffer(replayState, true, gl::BufferBinding::Array, *id));
-    Capture(&bufferRestoreCalls[bufferID],
-            CaptureBufferData(replayState, true, gl::BufferBinding::Array,
-                              static_cast<GLsizeiptr>(buffer->getSize()), buffer->getMapPointer(),
-                              buffer->getUsage()));
+
+    // Mutable buffers will be restored here using glBufferData.
+    // Immutable buffers need to be restored below, after maping.
+    if (!buffer->isImmutable())
+    {
+        Capture(&bufferRestoreCalls[bufferID],
+                CaptureBufferData(replayState, true, gl::BufferBinding::Array,
+                                  static_cast<GLsizeiptr>(buffer->getSize()),
+                                  buffer->getMapPointer(), buffer->getUsage()));
+    }
 
     if (buffer->isMapped())
     {
@@ -2593,6 +2612,21 @@ void CaptureBufferResetCalls(const gl::State &replayState,
 
         // Track the bufferID that was just mapped
         bufferMapCalls[bufferID].back().params.setMappedBufferID(buffer->id());
+
+        // Restore immutable mapped buffers. Needs to happen after mapping.
+        if (buffer->isImmutable())
+        {
+            ParamBuffer dataParamBuffer;
+            dataParamBuffer.addValueParam("dest", ParamType::TGLuint, buffer->id().value);
+            ParamCapture captureData("source", ParamType::TvoidConstPointer);
+            CaptureMemory(buffer->getMapPointer(), static_cast<GLsizeiptr>(buffer->getSize()),
+                          &captureData);
+            dataParamBuffer.addParam(std::move(captureData));
+            dataParamBuffer.addValueParam<GLsizeiptr>("size", ParamType::TGLsizeiptr,
+                                                      static_cast<GLsizeiptr>(buffer->getSize()));
+            bufferMapCalls[bufferID].emplace_back("UpdateClientBufferData",
+                                                  std::move(dataParamBuffer));
+        }
     }
 
     // Track calls unmap a buffer that started as unmapped
