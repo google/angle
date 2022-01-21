@@ -910,6 +910,12 @@ void TypePrecision::setIEEEFloat()
     precision = 23;
 }
 
+void TypePrecision::setIEEEHalfFloat()
+{
+    range     = {{15, 15}};
+    precision = 10;
+}
+
 void TypePrecision::setTwosComplementInt(unsigned int bits)
 {
     range     = {{static_cast<GLint>(bits) - 1, static_cast<GLint>(bits) - 2}};

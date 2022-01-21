@@ -164,6 +164,7 @@ struct TypePrecision
     TypePrecision &operator=(const TypePrecision &other);
 
     void setIEEEFloat();
+    void setIEEEHalfFloat();
     void setTwosComplementInt(unsigned int bits);
     void setSimulatedFloat(unsigned int range, unsigned int precision);
     void setSimulatedInt(unsigned int range);

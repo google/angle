@@ -608,19 +608,19 @@ void RendererVk::ensureCapsInitialized() const
     // Looks like all floats are IEEE according to the docs here:
     // https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/vkspec.html#spirvenv-precision-operation
     mNativeCaps.vertexHighpFloat.setIEEEFloat();
-    mNativeCaps.vertexMediumpFloat.setIEEEFloat();
-    mNativeCaps.vertexLowpFloat.setIEEEFloat();
+    mNativeCaps.vertexMediumpFloat.setIEEEHalfFloat();
+    mNativeCaps.vertexLowpFloat.setIEEEHalfFloat();
     mNativeCaps.fragmentHighpFloat.setIEEEFloat();
-    mNativeCaps.fragmentMediumpFloat.setIEEEFloat();
-    mNativeCaps.fragmentLowpFloat.setIEEEFloat();
+    mNativeCaps.fragmentMediumpFloat.setIEEEHalfFloat();
+    mNativeCaps.fragmentLowpFloat.setIEEEHalfFloat();
 
-    // Can't find documentation on the int precision in Vulkan.
+    // Vulkan doesn't provide such information.  We provide the spec-required minimum here.
     mNativeCaps.vertexHighpInt.setTwosComplementInt(32);
-    mNativeCaps.vertexMediumpInt.setTwosComplementInt(32);
-    mNativeCaps.vertexLowpInt.setTwosComplementInt(32);
+    mNativeCaps.vertexMediumpInt.setTwosComplementInt(16);
+    mNativeCaps.vertexLowpInt.setTwosComplementInt(16);
     mNativeCaps.fragmentHighpInt.setTwosComplementInt(32);
-    mNativeCaps.fragmentMediumpInt.setTwosComplementInt(32);
-    mNativeCaps.fragmentLowpInt.setTwosComplementInt(32);
+    mNativeCaps.fragmentMediumpInt.setTwosComplementInt(16);
+    mNativeCaps.fragmentLowpInt.setTwosComplementInt(16);
 
     // Compute shader limits.
     mNativeCaps.maxComputeWorkGroupCount[0] = LimitToInt(limitsVk.maxComputeWorkGroupCount[0]);
