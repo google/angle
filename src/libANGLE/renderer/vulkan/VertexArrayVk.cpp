@@ -24,6 +24,9 @@ namespace rx
 {
 namespace
 {
+constexpr int kStreamIndexBufferCachedIndexCount = 6;
+constexpr int kMaxCachedStreamIndexBuffers       = 4;
+
 ANGLE_INLINE bool BindingIsAligned(const gl::VertexBinding &binding,
                                    const angle::Format &angleFormat,
                                    unsigned int attribSize,
@@ -180,6 +183,11 @@ void VertexArrayVk::destroy(const gl::Context *context)
 
     RendererVk *renderer = contextVk->getRenderer();
 
+    for (std::unique_ptr<vk::BufferHelper> &buffer : mCachedStreamIndexBuffers)
+    {
+        buffer->release(renderer);
+    }
+
     for (vk::BufferHelper &bufferHelper : mStreamedVertexData)
     {
         bufferHelper.release(renderer);
@@ -302,17 +310,61 @@ angle::Result VertexArrayVk::handleLineLoopIndirectDraw(const gl::Context *conte
 angle::Result VertexArrayVk::convertIndexBufferCPU(ContextVk *contextVk,
                                                    gl::DrawElementsType indexType,
                                                    size_t indexCount,
-                                                   const void *sourcePointer)
+                                                   const void *sourcePointer,
+                                                   BufferBindingDirty *bindingDirty)
 {
     ASSERT(!mState.getElementArrayBuffer() || indexType == gl::DrawElementsType::UnsignedByte);
-    size_t elementSize  = contextVk->getVkIndexTypeSize(indexType);
-    const size_t amount = elementSize * indexCount;
+    RendererVk *renderer = contextVk->getRenderer();
+    size_t elementSize   = contextVk->getVkIndexTypeSize(indexType);
+    const size_t amount  = elementSize * indexCount;
+
+    // Applications often time draw a quad with two triangles. This is try to catch all the
+    // common used element array buffer with pre-created BufferHelper objects to improve
+    // performance.
+    if (indexCount == kStreamIndexBufferCachedIndexCount &&
+        indexType == gl::DrawElementsType::UnsignedShort)
+    {
+        for (std::unique_ptr<vk::BufferHelper> &buffer : mCachedStreamIndexBuffers)
+        {
+            void *ptr = buffer->getMappedMemory();
+            if (memcmp(sourcePointer, ptr, amount) == 0)
+            {
+                // Found a matching cached buffer, use the cached internal index buffer.
+                *bindingDirty = mCurrentElementArrayBuffer == buffer.get()
+                                    ? BufferBindingDirty::No
+                                    : BufferBindingDirty::Yes;
+                mCurrentElementArrayBuffer = buffer.get();
+                return angle::Result::Continue;
+            }
+        }
+
+        // If we still have capacity, cache this index buffer for future use.
+        if (mCachedStreamIndexBuffers.size() < kMaxCachedStreamIndexBuffers)
+        {
+            std::unique_ptr<vk::BufferHelper> buffer = std::make_unique<vk::BufferHelper>();
+            ANGLE_TRY(buffer->initSuballocation(contextVk,
+                                                renderer->getVertexConversionBufferMemoryTypeIndex(
+                                                    vk::MemoryHostVisibility::Visible),
+                                                amount,
+                                                renderer->getVertexConversionBufferAlignment()));
+            memcpy(buffer->getMappedMemory(), sourcePointer, amount);
+            ANGLE_TRY(buffer->flush(renderer));
+
+            mCachedStreamIndexBuffers.push_back(std::move(buffer));
+
+            *bindingDirty              = BufferBindingDirty::Yes;
+            mCurrentElementArrayBuffer = mCachedStreamIndexBuffers.back().get();
+            return angle::Result::Continue;
+        }
+    }
 
     ANGLE_TRY(mStreamedIndexData.allocateForVertexConversion(contextVk, amount,
                                                              vk::MemoryHostVisibility::Visible));
     GLubyte *dst = mStreamedIndexData.getMappedMemory();
 
+    *bindingDirty              = BufferBindingDirty::Yes;
     mCurrentElementArrayBuffer = &mStreamedIndexData;
+
     if (contextVk->shouldConvertUint8VkIndexType(indexType))
     {
         // Unsigned bytes don't have direct support in Vulkan so we have to expand the

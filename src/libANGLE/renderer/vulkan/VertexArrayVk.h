@@ -19,6 +19,12 @@ namespace rx
 class BufferVk;
 struct ConversionBuffer;
 
+enum class BufferBindingDirty
+{
+    No,
+    Yes,
+};
+
 class VertexArrayVk : public VertexArrayImpl
 {
   public:
@@ -94,7 +100,8 @@ class VertexArrayVk : public VertexArrayImpl
     angle::Result convertIndexBufferCPU(ContextVk *contextVk,
                                         gl::DrawElementsType indexType,
                                         size_t indexCount,
-                                        const void *sourcePointer);
+                                        const void *sourcePointer,
+                                        BufferBindingDirty *bufferBindingDirty);
 
     const gl::AttributesMask &getStreamingVertexAttribsMask() const
     {
@@ -136,6 +143,9 @@ class VertexArrayVk : public VertexArrayImpl
     gl::AttribArray<GLuint> mCurrentArrayBufferStrides;
     gl::AttributesMask mCurrentArrayBufferCompressed;
     vk::BufferHelper *mCurrentElementArrayBuffer;
+
+    // Cached element array buffers for improving performance.
+    vk::BufferHelperPointerVector mCachedStreamIndexBuffers;
 
     gl::AttribArray<vk::BufferHelper> mStreamedVertexData;
     vk::BufferHelper mStreamedIndexData;
