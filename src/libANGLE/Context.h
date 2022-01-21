@@ -455,6 +455,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                      unsigned int line);
 
     void validationError(angle::EntryPoint entryPoint, GLenum errorCode, const char *message) const;
+    ANGLE_FORMAT_PRINTF(4, 5)
     void validationErrorF(angle::EntryPoint entryPoint,
                           GLenum errorCode,
                           const char *format,
