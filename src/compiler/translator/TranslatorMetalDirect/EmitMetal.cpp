@@ -961,11 +961,12 @@ void GenMetalTraverser::emitType(const TType &type, const EmitTypeConfig &etConf
 
     if (type.isVector())
     {
-        mOut << type.getNominalSize();
+        mOut << static_cast<uint32_t>(type.getNominalSize());
     }
     else if (type.isMatrix())
     {
-        mOut << type.getCols() << "x" << type.getRows();
+        mOut << static_cast<uint32_t>(type.getCols()) << "x"
+             << static_cast<uint32_t>(type.getRows());
     }
 
     if (!isUBO)
@@ -1531,10 +1532,10 @@ bool GenMetalTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
                 }
                 else
                 {
-                    int maxSize;
+                    uint32_t maxSize;
                     if (leftType.isArray())
                     {
-                        maxSize = static_cast<int>(leftType.getOutermostArraySize()) - 1;
+                        maxSize = leftType.getOutermostArraySize() - 1;
                     }
                     else
                     {

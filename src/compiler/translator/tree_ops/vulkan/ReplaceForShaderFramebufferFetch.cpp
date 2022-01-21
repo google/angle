@@ -308,7 +308,7 @@ class ReplaceSubpassInputUtils
 
     TIntermNode *assignSubpassLoad(TIntermTyped *resultVar,
                                    TIntermTyped *inputAttachmentSymbol,
-                                   const int targetVecSize);
+                                   const uint8_t targetVecSize);
     TIntermNode *loadInputAttachmentDataImpl(const size_t arraySize,
                                              const unsigned int inputAttachmentIndex,
                                              const TVariable *loadInputAttachmentDataVar);
@@ -392,7 +392,7 @@ void ReplaceSubpassInputUtils::addInputAttachmentUniform(const unsigned int inpu
 
 TIntermNode *ReplaceSubpassInputUtils::assignSubpassLoad(TIntermTyped *resultVar,
                                                          TIntermTyped *inputAttachmentSymbol,
-                                                         const int targetVecSize)
+                                                         const uint8_t targetVecSize)
 {
     TIntermSequence *subpassArguments = new TIntermSequence();
     subpassArguments->push_back(inputAttachmentSymbol);
@@ -407,7 +407,7 @@ TIntermNode *ReplaceSubpassInputUtils::assignSubpassLoad(TIntermTyped *resultVar
     if (targetVecSize < 4)
     {
         TVector<int> fieldOffsets(targetVecSize);
-        for (int i = 0; i < targetVecSize; i++)
+        for (uint8_t i = 0; i < targetVecSize; i++)
         {
             fieldOffsets[i] = i;
         }

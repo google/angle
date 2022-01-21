@@ -3171,7 +3171,7 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();
         const TType &coord          = func.getParam(1)->getType();
         const TBasicType coordBasic = coord.getBasicType();
-        const int coordN            = coord.getNominalSize();
+        const uint8_t coordN        = coord.getNominalSize();
         const bool bias             = func.getParamCount() >= 3;
         if (textureName.beginsWith("metal::depth2d<"))
         {
@@ -3270,9 +3270,9 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();
         const TType &coord          = func.getParam(1)->getType();
         const TBasicType coordBasic = coord.getBasicType();
-        const int coordN            = coord.getNominalSize();
+        const uint8_t coordN        = coord.getNominalSize();
         const TType &dPdx           = func.getParam(2)->getType();
-        const int dPdxN             = dPdx.getNominalSize();
+        const uint8_t dPdxN         = dPdx.getNominalSize();
         if (textureName.beginsWith("metal::depth2d<"))
         {
             if (coordBasic == TBasicType::EbtFloat && coordN == 3 && dPdxN == 2)
@@ -3320,9 +3320,9 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();
         const TType &coord          = func.getParam(1)->getType();
         const TBasicType coordBasic = coord.getBasicType();
-        const int coordN            = coord.getNominalSize();
+        const uint8_t coordN        = coord.getNominalSize();
         const TType &dPdx           = func.getParam(2)->getType();
-        const int dPdxN             = dPdx.getNominalSize();
+        const uint8_t dPdxN         = dPdx.getNominalSize();
         if (textureName.beginsWith("metal::depth2d<"))
         {
             if (coordBasic == TBasicType::EbtFloat && coordN == 3 && dPdxN == 2)
@@ -3370,7 +3370,7 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();
         const TType &coord          = func.getParam(1)->getType();
         const TBasicType coordBasic = coord.getBasicType();
-        const int coordN            = coord.getNominalSize();
+        const uint8_t coordN        = coord.getNominalSize();
         if (textureName.beginsWith("metal::depth2d<"))
         {
             if (coordBasic == TBasicType::EbtFloat && coordN == 3)
@@ -3407,9 +3407,9 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();
         const TType &coord          = func.getParam(1)->getType();
         const TBasicType coordBasic = coord.getBasicType();
-        const int coordN            = coord.getNominalSize();
+        const uint8_t coordN        = coord.getNominalSize();
         const TType &dPdx           = func.getParam(2)->getType();
-        const int dPdxN             = dPdx.getNominalSize();
+        const uint8_t dPdxN         = dPdx.getNominalSize();
         if (textureName.beginsWith("metal::depth2d<"))
         {
             if (coordBasic == TBasicType::EbtFloat && coordN == 4 && dPdxN == 2)
@@ -3439,9 +3439,9 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();
         const TType &coord          = func.getParam(1)->getType();
         const TBasicType coordBasic = coord.getBasicType();
-        const int coordN            = coord.getNominalSize();
+        const uint8_t coordN        = coord.getNominalSize();
         const TType &dPdx           = func.getParam(2)->getType();
-        const int dPdxN             = dPdx.getNominalSize();
+        const uint8_t dPdxN         = dPdx.getNominalSize();
         if (textureName.beginsWith("metal::depth2d<"))
         {
             if (coordBasic == TBasicType::EbtFloat && coordN == 4 && dPdxN == 2)
@@ -3471,7 +3471,7 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();
         const TType &coord          = func.getParam(1)->getType();
         const TBasicType coordBasic = coord.getBasicType();
-        const int coordN            = coord.getNominalSize();
+        const uint8_t coordN        = coord.getNominalSize();
         if (textureName.beginsWith("metal::depth2d<"))
         {
             if (coordBasic == TBasicType::EbtFloat && coordN == 4)

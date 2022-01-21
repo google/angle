@@ -233,8 +233,8 @@ ANGLE_NO_DISCARD bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
     TIntermSwizzle *builtinXY    = new TIntermSwizzle(builtinRef, swizzleOffsetXY);
 
     // Create a symbol reference to our new variable that will hold the modified builtin.
-    const TType *type = StaticType::GetForVec<EbtFloat, EbpHigh>(
-        EvqGlobal, static_cast<unsigned char>(builtin->getType().getNominalSize()));
+    const TType *type =
+        StaticType::GetForVec<EbtFloat, EbpHigh>(EvqGlobal, builtin->getType().getNominalSize());
     TVariable *replacementVar =
         new TVariable(symbolTable, flippedVariableName.rawName(), type, SymbolType::AngleInternal);
     DeclareGlobalVariable(root, replacementVar);

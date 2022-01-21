@@ -205,7 +205,7 @@ ANGLE_NO_DISCARD bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
     // Create a symbol reference to our new variable that will hold the modified builtin.
     TType *type = new TType(builtin->getType());
     type->setQualifier(EvqGlobal);
-    type->setPrimarySize(static_cast<unsigned char>(builtin->getType().getNominalSize()));
+    type->setPrimarySize(builtin->getType().getNominalSize());
     TVariable *replacementVar =
         new TVariable(symbolTable, flippedVariableName, type, SymbolType::AngleInternal);
     DeclareGlobalVariable(root, replacementVar);
