@@ -945,6 +945,7 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
 
             this->metalFormat    = MTLPixelFormatRGBA8Unorm_sRGB;
             this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM_SRGB;
+            this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
             break;
 
         case angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK:
@@ -1125,7 +1126,6 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
 
             this->metalFormat    = MTLPixelFormatETC2_RGB8A1;
             this->actualFormatId = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
-            this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
             break;
 
         case angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK:
@@ -1639,7 +1639,6 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
 
             this->metalFormat    = MTLPixelFormatETC2_RGB8A1;
             this->actualFormatId = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
-            this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
             break;
 
         case angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK:
@@ -2207,6 +2206,7 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             {
                 this->metalFormat    = MTLPixelFormatRGBA8Unorm_sRGB;
                 this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM_SRGB;
+                this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
             }
             break;
 
@@ -2216,7 +2216,6 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             {
                 this->metalFormat    = MTLPixelFormatETC2_RGB8A1;
                 this->actualFormatId = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
-                this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
             }
             else
             {
