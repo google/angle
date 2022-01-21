@@ -853,6 +853,21 @@ class Program final : public LabeledObject, public angle::Subject
 
     void postResolveLink(const gl::Context *context);
 
+    template <typename UniformT,
+              GLint UniformSize,
+              void (rx::ProgramImpl::*SetUniformFunc)(GLint, GLsizei, const UniformT *)>
+    void setUniformGeneric(UniformLocation location, GLsizei count, const UniformT *v);
+
+    template <
+        typename UniformT,
+        GLint MatrixC,
+        GLint MatrixR,
+        void (rx::ProgramImpl::*SetUniformMatrixFunc)(GLint, GLsizei, GLboolean, const UniformT *)>
+    void setUniformMatrixGeneric(UniformLocation location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const UniformT *v);
+
     rx::Serial mSerial;
     ProgramState mState;
     rx::ProgramImpl *mProgram;

@@ -2308,7 +2308,10 @@ bool Program::shouldIgnoreUniform(UniformLocation location) const
     return false;
 }
 
-void Program::setUniform1fv(UniformLocation location, GLsizei count, const GLfloat *v)
+template <typename UniformT,
+          GLint UniformSize,
+          void (rx::ProgramImpl::*SetUniformFunc)(GLint, GLsizei, const UniformT *)>
+void Program::setUniformGeneric(UniformLocation location, GLsizei count, const UniformT *v)
 {
     ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
@@ -2317,47 +2320,28 @@ void Program::setUniform1fv(UniformLocation location, GLsizei count, const GLflo
     }
 
     const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 1, v);
-    mProgram->setUniform1fv(location.value, clampedCount, v);
+    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, UniformSize, v);
+    (mProgram->*SetUniformFunc)(location.value, clampedCount, v);
+}
+
+void Program::setUniform1fv(UniformLocation location, GLsizei count, const GLfloat *v)
+{
+    setUniformGeneric<GLfloat, 1, &rx::ProgramImpl::setUniform1fv>(location, count, v);
 }
 
 void Program::setUniform2fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 2, v);
-    mProgram->setUniform2fv(location.value, clampedCount, v);
+    setUniformGeneric<GLfloat, 2, &rx::ProgramImpl::setUniform2fv>(location, count, v);
 }
 
 void Program::setUniform3fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 3, v);
-    mProgram->setUniform3fv(location.value, clampedCount, v);
+    setUniformGeneric<GLfloat, 3, &rx::ProgramImpl::setUniform3fv>(location, count, v);
 }
 
 void Program::setUniform4fv(UniformLocation location, GLsizei count, const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 4, v);
-    mProgram->setUniform4fv(location.value, clampedCount, v);
+    setUniformGeneric<GLfloat, 4, &rx::ProgramImpl::setUniform4fv>(location, count, v);
 }
 
 void Program::setUniform1iv(Context *context,
@@ -2384,83 +2368,48 @@ void Program::setUniform1iv(Context *context,
 
 void Program::setUniform2iv(UniformLocation location, GLsizei count, const GLint *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 2, v);
-    mProgram->setUniform2iv(location.value, clampedCount, v);
+    setUniformGeneric<GLint, 2, &rx::ProgramImpl::setUniform2iv>(location, count, v);
 }
 
 void Program::setUniform3iv(UniformLocation location, GLsizei count, const GLint *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 3, v);
-    mProgram->setUniform3iv(location.value, clampedCount, v);
+    setUniformGeneric<GLint, 3, &rx::ProgramImpl::setUniform3iv>(location, count, v);
 }
 
 void Program::setUniform4iv(UniformLocation location, GLsizei count, const GLint *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 4, v);
-    mProgram->setUniform4iv(location.value, clampedCount, v);
+    setUniformGeneric<GLint, 4, &rx::ProgramImpl::setUniform4iv>(location, count, v);
 }
 
 void Program::setUniform1uiv(UniformLocation location, GLsizei count, const GLuint *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 1, v);
-    mProgram->setUniform1uiv(location.value, clampedCount, v);
+    setUniformGeneric<GLuint, 1, &rx::ProgramImpl::setUniform1uiv>(location, count, v);
 }
 
 void Program::setUniform2uiv(UniformLocation location, GLsizei count, const GLuint *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 2, v);
-    mProgram->setUniform2uiv(location.value, clampedCount, v);
+    setUniformGeneric<GLuint, 2, &rx::ProgramImpl::setUniform2uiv>(location, count, v);
 }
 
 void Program::setUniform3uiv(UniformLocation location, GLsizei count, const GLuint *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 3, v);
-    mProgram->setUniform3uiv(location.value, clampedCount, v);
+    setUniformGeneric<GLuint, 3, &rx::ProgramImpl::setUniform3uiv>(location, count, v);
 }
 
 void Program::setUniform4uiv(UniformLocation location, GLsizei count, const GLuint *v)
+{
+    setUniformGeneric<GLuint, 4, &rx::ProgramImpl::setUniform4uiv>(location, count, v);
+}
+
+template <
+    typename UniformT,
+    GLint MatrixC,
+    GLint MatrixR,
+    void (rx::ProgramImpl::*SetUniformMatrixFunc)(GLint, GLsizei, GLboolean, const UniformT *)>
+void Program::setUniformMatrixGeneric(UniformLocation location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const UniformT *v)
 {
     ASSERT(!mLinkingState);
     if (shouldIgnoreUniform(location))
@@ -2468,9 +2417,8 @@ void Program::setUniform4uiv(UniformLocation location, GLsizei count, const GLui
         return;
     }
 
-    const VariableLocation &locationInfo = mState.mUniformLocations[location.value];
-    GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 4, v);
-    mProgram->setUniform4uiv(location.value, clampedCount, v);
+    GLsizei clampedCount = clampMatrixUniformCount<MatrixC, MatrixR>(location, count, transpose, v);
+    (mProgram->*SetUniformMatrixFunc)(location.value, clampedCount, transpose, v);
 }
 
 void Program::setUniformMatrix2fv(UniformLocation location,
@@ -2478,14 +2426,8 @@ void Program::setUniformMatrix2fv(UniformLocation location,
                                   GLboolean transpose,
                                   const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    GLsizei clampedCount = clampMatrixUniformCount<2, 2>(location, count, transpose, v);
-    mProgram->setUniformMatrix2fv(location.value, clampedCount, transpose, v);
+    setUniformMatrixGeneric<GLfloat, 2, 2, &rx::ProgramImpl::setUniformMatrix2fv>(location, count,
+                                                                                  transpose, v);
 }
 
 void Program::setUniformMatrix3fv(UniformLocation location,
@@ -2493,14 +2435,8 @@ void Program::setUniformMatrix3fv(UniformLocation location,
                                   GLboolean transpose,
                                   const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    GLsizei clampedCount = clampMatrixUniformCount<3, 3>(location, count, transpose, v);
-    mProgram->setUniformMatrix3fv(location.value, clampedCount, transpose, v);
+    setUniformMatrixGeneric<GLfloat, 3, 3, &rx::ProgramImpl::setUniformMatrix3fv>(location, count,
+                                                                                  transpose, v);
 }
 
 void Program::setUniformMatrix4fv(UniformLocation location,
@@ -2508,14 +2444,8 @@ void Program::setUniformMatrix4fv(UniformLocation location,
                                   GLboolean transpose,
                                   const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    GLsizei clampedCount = clampMatrixUniformCount<4, 4>(location, count, transpose, v);
-    mProgram->setUniformMatrix4fv(location.value, clampedCount, transpose, v);
+    setUniformMatrixGeneric<GLfloat, 4, 4, &rx::ProgramImpl::setUniformMatrix4fv>(location, count,
+                                                                                  transpose, v);
 }
 
 void Program::setUniformMatrix2x3fv(UniformLocation location,
@@ -2523,14 +2453,8 @@ void Program::setUniformMatrix2x3fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    GLsizei clampedCount = clampMatrixUniformCount<2, 3>(location, count, transpose, v);
-    mProgram->setUniformMatrix2x3fv(location.value, clampedCount, transpose, v);
+    setUniformMatrixGeneric<GLfloat, 2, 3, &rx::ProgramImpl::setUniformMatrix2x3fv>(location, count,
+                                                                                    transpose, v);
 }
 
 void Program::setUniformMatrix2x4fv(UniformLocation location,
@@ -2538,14 +2462,8 @@ void Program::setUniformMatrix2x4fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    GLsizei clampedCount = clampMatrixUniformCount<2, 4>(location, count, transpose, v);
-    mProgram->setUniformMatrix2x4fv(location.value, clampedCount, transpose, v);
+    setUniformMatrixGeneric<GLfloat, 2, 4, &rx::ProgramImpl::setUniformMatrix2x4fv>(location, count,
+                                                                                    transpose, v);
 }
 
 void Program::setUniformMatrix3x2fv(UniformLocation location,
@@ -2553,14 +2471,8 @@ void Program::setUniformMatrix3x2fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    GLsizei clampedCount = clampMatrixUniformCount<3, 2>(location, count, transpose, v);
-    mProgram->setUniformMatrix3x2fv(location.value, clampedCount, transpose, v);
+    setUniformMatrixGeneric<GLfloat, 3, 2, &rx::ProgramImpl::setUniformMatrix3x2fv>(location, count,
+                                                                                    transpose, v);
 }
 
 void Program::setUniformMatrix3x4fv(UniformLocation location,
@@ -2568,14 +2480,8 @@ void Program::setUniformMatrix3x4fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    GLsizei clampedCount = clampMatrixUniformCount<3, 4>(location, count, transpose, v);
-    mProgram->setUniformMatrix3x4fv(location.value, clampedCount, transpose, v);
+    setUniformMatrixGeneric<GLfloat, 3, 4, &rx::ProgramImpl::setUniformMatrix3x4fv>(location, count,
+                                                                                    transpose, v);
 }
 
 void Program::setUniformMatrix4x2fv(UniformLocation location,
@@ -2583,14 +2489,8 @@ void Program::setUniformMatrix4x2fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    GLsizei clampedCount = clampMatrixUniformCount<4, 2>(location, count, transpose, v);
-    mProgram->setUniformMatrix4x2fv(location.value, clampedCount, transpose, v);
+    setUniformMatrixGeneric<GLfloat, 4, 2, &rx::ProgramImpl::setUniformMatrix4x2fv>(location, count,
+                                                                                    transpose, v);
 }
 
 void Program::setUniformMatrix4x3fv(UniformLocation location,
@@ -2598,14 +2498,8 @@ void Program::setUniformMatrix4x3fv(UniformLocation location,
                                     GLboolean transpose,
                                     const GLfloat *v)
 {
-    ASSERT(!mLinkingState);
-    if (shouldIgnoreUniform(location))
-    {
-        return;
-    }
-
-    GLsizei clampedCount = clampMatrixUniformCount<4, 3>(location, count, transpose, v);
-    mProgram->setUniformMatrix4x3fv(location.value, clampedCount, transpose, v);
+    setUniformMatrixGeneric<GLfloat, 4, 3, &rx::ProgramImpl::setUniformMatrix4x3fv>(location, count,
+                                                                                    transpose, v);
 }
 
 GLuint Program::getSamplerUniformBinding(const VariableLocation &uniformLocation) const
