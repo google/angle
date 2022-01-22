@@ -657,8 +657,8 @@ void Context::initializeDefaultResources()
     mCopyImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
     mCopyImageDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
 
-    mInvalidateDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
-    mInvalidateDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+    mReadInvalidateDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+    mDrawInvalidateDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
 
     // Initialize overlay after implementation is initialized.
     ANGLE_CONTEXT_TRY(mOverlay.init(this));
@@ -4233,7 +4233,9 @@ angle::Result Context::prepareForInvalidate(GLenum target)
         effectiveTarget = GL_DRAW_FRAMEBUFFER;
     }
     ANGLE_TRY(mState.syncDirtyObject(this, effectiveTarget));
-    return syncDirtyBits(mInvalidateDirtyBits, Command::Invalidate);
+    return syncDirtyBits(effectiveTarget == GL_READ_FRAMEBUFFER ? mReadInvalidateDirtyBits
+                                                                : mDrawInvalidateDirtyBits,
+                         Command::Invalidate);
 }
 
 angle::Result Context::syncState(const State::DirtyBits &bitMask,
