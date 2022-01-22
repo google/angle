@@ -219,6 +219,7 @@ class ProgramExecutable final : public angle::Subject
     const RangeUI &getImageUniformRange() const { return mImageUniformRange; }
     const RangeUI &getAtomicCounterUniformRange() const { return mAtomicCounterUniformRange; }
     const RangeUI &getFragmentInoutRange() const { return mFragmentInoutRange; }
+    bool usesEarlyFragmentTestsOptimization() const { return mUsesEarlyFragmentTestsOptimization; }
     const std::vector<TransformFeedbackVarying> &getLinkedTransformFeedbackVaryings() const
     {
         return mLinkedTransformFeedbackVaryings;
@@ -456,7 +457,9 @@ class ProgramExecutable final : public angle::Subject
 
     std::vector<AtomicCounterBuffer> mAtomicCounterBuffers;
     std::vector<InterfaceBlock> mShaderStorageBlocks;
+
     RangeUI mFragmentInoutRange;
+    bool mUsesEarlyFragmentTestsOptimization;
 
     // An array of the samplers that are used by the program
     std::vector<SamplerBinding> mSamplerBindings;

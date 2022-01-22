@@ -1341,7 +1341,7 @@ angle::Result Program::linkImpl(const Context *context)
                 return angle::Result::Continue;
             }
 
-            mState.mEarlyFramentTestsOptimization =
+            mState.mExecutable->mUsesEarlyFragmentTestsOptimization =
                 fragmentShader->hasEarlyFragmentTestsOptimization();
             mState.mSpecConstUsageBits |= fragmentShader->getSpecConstUsageBits();
         }

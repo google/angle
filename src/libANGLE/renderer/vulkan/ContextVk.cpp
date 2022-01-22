@@ -3697,7 +3697,7 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
 
         ProgramExecutableVk *executableVk = getExecutable();
         ASSERT(executableVk);
-        executableVk->updateEarlyFragmentTestsOptimization(this);
+        executableVk->updateEarlyFragmentTestsOptimization(this, *executable);
 
         if (mLastProgramUsesFramebufferFetch != executable->usesFramebufferFetch())
         {

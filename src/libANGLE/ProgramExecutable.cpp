@@ -182,6 +182,7 @@ ProgramExecutable::ProgramExecutable()
       mImageUniformRange(0, 0),
       mAtomicCounterUniformRange(0, 0),
       mFragmentInoutRange(0, 0),
+      mUsesEarlyFragmentTestsOptimization(false),
       // [GL_EXT_geometry_shader] Table 20.22
       mGeometryShaderInputPrimitiveType(PrimitiveMode::Triangles),
       mGeometryShaderOutputPrimitiveType(PrimitiveMode::TriangleStrip),
@@ -228,7 +229,8 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mActiveUniformBlockBindings(other.mActiveUniformBlockBindings),
       mAtomicCounterBuffers(other.mAtomicCounterBuffers),
       mShaderStorageBlocks(other.mShaderStorageBlocks),
-      mFragmentInoutRange(other.mFragmentInoutRange)
+      mFragmentInoutRange(other.mFragmentInoutRange),
+      mUsesEarlyFragmentTestsOptimization(other.mUsesEarlyFragmentTestsOptimization)
 {
     reset();
 }
@@ -272,6 +274,9 @@ void ProgramExecutable::reset()
     mImageUniformRange         = RangeUI(0, 0);
     mAtomicCounterUniformRange = RangeUI(0, 0);
 
+    mFragmentInoutRange                 = RangeUI(0, 0);
+    mUsesEarlyFragmentTestsOptimization = false;
+
     mGeometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
     mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
     mGeometryShaderInvocations         = 1;
@@ -300,6 +305,8 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     unsigned int fragmentInoutRangeLow  = stream->readInt<uint32_t>();
     unsigned int fragmentInoutRangeHigh = stream->readInt<uint32_t>();
     mFragmentInoutRange                 = RangeUI(fragmentInoutRangeLow, fragmentInoutRangeHigh);
+
+    mUsesEarlyFragmentTestsOptimization = stream->readBool();
 
     mLinkedShaderStages = ShaderBitSet(stream->readInt<uint8_t>());
 
@@ -526,6 +533,8 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
 
     stream->writeInt(mFragmentInoutRange.low());
     stream->writeInt(mFragmentInoutRange.high());
+
+    stream->writeBool(mUsesEarlyFragmentTestsOptimization);
 
     stream->writeInt(mLinkedShaderStages.bits());
 

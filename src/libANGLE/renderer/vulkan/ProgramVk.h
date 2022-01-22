@@ -115,28 +115,6 @@ class ProgramVk : public ProgramImpl
     const ProgramExecutableVk &getExecutable() const { return mExecutable; }
     ProgramExecutableVk &getExecutable() { return mExecutable; }
 
-    ANGLE_INLINE angle::Result initGraphicsShaderProgram(
-        ContextVk *contextVk,
-        const gl::ShaderType shaderType,
-        bool isLastPreFragmentStage,
-        ProgramTransformOptions optionBits,
-        ProgramInfo *programInfo,
-        const ShaderInterfaceVariableInfoMap &variableInfoMap)
-    {
-        return initProgram(contextVk, shaderType, isLastPreFragmentStage, optionBits, programInfo,
-                           variableInfoMap);
-    }
-
-    ANGLE_INLINE angle::Result initComputeProgram(
-        ContextVk *contextVk,
-        ProgramInfo *programInfo,
-        const ShaderInterfaceVariableInfoMap &variableInfoMap)
-    {
-        ProgramTransformOptions optionBits = {};
-        return initProgram(contextVk, gl::ShaderType::Compute, false, optionBits, programInfo,
-                           variableInfoMap);
-    }
-
     const GlslangProgramInterfaceInfo &getGlslangProgramInterfaceInfo()
     {
         return mGlslangProgramInterfaceInfo;
@@ -154,8 +132,6 @@ class ProgramVk : public ProgramImpl
     void generateUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> &layoutMap,
                                       gl::ShaderMap<size_t> &requiredBufferSize);
     void initDefaultUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> &layoutMap);
-    angle::Result resizeUniformBlockMemory(ContextVk *contextVk,
-                                           gl::ShaderMap<size_t> &requiredBufferSize);
 
     template <class T>
     void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;
@@ -164,33 +140,7 @@ class ProgramVk : public ProgramImpl
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
     void linkResources(const gl::ProgramLinkedResources &resources);
 
-    ANGLE_INLINE angle::Result initProgram(ContextVk *contextVk,
-                                           const gl::ShaderType shaderType,
-                                           bool isLastPreFragmentStage,
-                                           ProgramTransformOptions optionBits,
-                                           ProgramInfo *programInfo,
-                                           const ShaderInterfaceVariableInfoMap &variableInfoMap)
-    {
-        ASSERT(mOriginalShaderInfo.valid());
-
-        // Create the program pipeline.  This is done lazily and once per combination of
-        // specialization constants.
-        if (!programInfo->valid(shaderType))
-        {
-            const bool isTransformFeedbackProgram =
-                !mState.getLinkedTransformFeedbackVaryings().empty();
-            ANGLE_TRY(programInfo->initProgram(contextVk, shaderType, isLastPreFragmentStage,
-                                               isTransformFeedbackProgram, mOriginalShaderInfo,
-                                               optionBits, variableInfoMap));
-        }
-        ASSERT(programInfo->valid(shaderType));
-
-        return angle::Result::Continue;
-    }
-
     // We keep the SPIR-V code to use for draw call pipeline creation.
-    ShaderInfo mOriginalShaderInfo;
-
     GlslangProgramInterfaceInfo mGlslangProgramInterfaceInfo;
 
     ProgramExecutableVk mExecutable;

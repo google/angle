@@ -141,7 +141,6 @@ class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
 ProgramVk::ProgramVk(const gl::ProgramState &state) : ProgramImpl(state)
 {
     GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mGlslangProgramInterfaceInfo);
-    mExecutable.setProgram(this);
 }
 
 ProgramVk::~ProgramVk() = default;
@@ -154,8 +153,6 @@ void ProgramVk::destroy(const gl::Context *context)
 
 void ProgramVk::reset(ContextVk *contextVk)
 {
-    mOriginalShaderInfo.release(contextVk);
-
     GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mGlslangProgramInterfaceInfo);
 
     mExecutable.reset(contextVk);
@@ -166,67 +163,15 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
                                                gl::InfoLog &infoLog)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    gl::ShaderMap<size_t> requiredBufferSize;
-    requiredBufferSize.fill(0);
 
     reset(contextVk);
 
-    mOriginalShaderInfo.load(stream);
-    mExecutable.load(stream);
-
-    // Deserializes the uniformLayout data of mDefaultUniformBlocks
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        const size_t uniformCount = stream->readInt<size_t>();
-        for (unsigned int uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-        {
-            sh::BlockMemberInfo blockInfo;
-            gl::LoadBlockMemberInfo(stream, &blockInfo);
-            mExecutable.mDefaultUniformBlocks[shaderType]->uniformLayout.push_back(blockInfo);
-        }
-    }
-
-    // Deserializes required uniform block memory sizes
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        requiredBufferSize[shaderType] = stream->readInt<size_t>();
-    }
-
-    // Initialize and resize the mDefaultUniformBlocks' memory
-    angle::Result status = resizeUniformBlockMemory(contextVk, requiredBufferSize);
-    if (status != angle::Result::Continue)
-    {
-        return std::make_unique<LinkEventDone>(status);
-    }
-
-    status = mExecutable.createPipelineLayout(contextVk, mState.getExecutable(), nullptr);
-    return std::make_unique<LinkEventDone>(status);
+    return mExecutable.load(contextVk, mState.getExecutable(), stream);
 }
 
 void ProgramVk::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 {
-    mOriginalShaderInfo.save(stream);
     mExecutable.save(stream);
-
-    // Serializes the uniformLayout data of mDefaultUniformBlocks
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        const size_t uniformCount =
-            mExecutable.mDefaultUniformBlocks[shaderType]->uniformLayout.size();
-        stream->writeInt(uniformCount);
-        for (unsigned int uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-        {
-            sh::BlockMemberInfo &blockInfo =
-                mExecutable.mDefaultUniformBlocks[shaderType]->uniformLayout[uniformIndex];
-            gl::WriteBlockMemberInfo(stream, blockInfo);
-        }
-    }
-
-    // Serializes required uniform block memory sizes
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        stream->writeInt(mExecutable.mDefaultUniformBlocks[shaderType]->uniformData.size());
-    }
 }
 
 void ProgramVk::setBinaryRetrievableHint(bool retrievable)
@@ -261,7 +206,7 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                     &mExecutable.mVariableInfoMap);
 
     // Compile the shaders.
-    angle::Result status = mOriginalShaderInfo.initShaders(
+    angle::Result status = mExecutable.mOriginalShaderInfo.initShaders(
         mState.getExecutable().getLinkedShaderStages(), spirvBlobs, mExecutable.mVariableInfoMap);
     if (status != angle::Result::Continue)
     {
@@ -306,7 +251,8 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
     initDefaultUniformLayoutMapping(layoutMap);
 
     // All uniform initializations are complete, now resize the buffers accordingly and return
-    return resizeUniformBlockMemory(contextVk, requiredBufferSize);
+    return mExecutable.resizeUniformBlockMemory(contextVk, mState.getExecutable(),
+                                                requiredBufferSize);
 }
 
 void ProgramVk::generateUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> &layoutMap,
@@ -373,30 +319,6 @@ void ProgramVk::initDefaultUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap
                 layoutInfo[shaderType]);
         }
     }
-}
-
-angle::Result ProgramVk::resizeUniformBlockMemory(ContextVk *contextVk,
-                                                  gl::ShaderMap<size_t> &requiredBufferSize)
-{
-    const gl::ProgramExecutable &glExecutable = mState.getExecutable();
-
-    for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
-    {
-        if (requiredBufferSize[shaderType] > 0)
-        {
-            if (!mExecutable.mDefaultUniformBlocks[shaderType]->uniformData.resize(
-                    requiredBufferSize[shaderType]))
-            {
-                ANGLE_VK_CHECK(contextVk, false, VK_ERROR_OUT_OF_HOST_MEMORY);
-            }
-
-            // Initialize uniform buffer memory to zero by default.
-            mExecutable.mDefaultUniformBlocks[shaderType]->uniformData.fill(0);
-            mExecutable.mDefaultUniformBlocksDirty.set(shaderType);
-        }
-    }
-
-    return angle::Result::Continue;
 }
 
 GLboolean ProgramVk::validate(const gl::Caps &caps, gl::InfoLog *infoLog)

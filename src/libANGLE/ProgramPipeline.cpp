@@ -367,6 +367,20 @@ void ProgramPipeline::updateFragmentInoutRange()
     mState.mExecutable->mFragmentInoutRange     = fragmentExecutable.mFragmentInoutRange;
 }
 
+void ProgramPipeline::updateUsesEarlyFragmentTestsOptimization()
+{
+    Program *fragmentProgram = getShaderProgram(gl::ShaderType::Fragment);
+
+    if (!fragmentProgram)
+    {
+        return;
+    }
+
+    const ProgramExecutable &fragmentExecutable = fragmentProgram->getExecutable();
+    mState.mExecutable->mUsesEarlyFragmentTestsOptimization =
+        fragmentExecutable.mUsesEarlyFragmentTestsOptimization;
+}
+
 void ProgramPipeline::updateLinkedVaryings()
 {
     // Need to check all of the shader stages, not just linked, so we handle Compute correctly.
@@ -410,6 +424,7 @@ void ProgramPipeline::updateExecutable()
 
     // Fragment Shader ProgramExecutable properties
     updateFragmentInoutRange();
+    updateUsesEarlyFragmentTestsOptimization();
 
     // All Shader ProgramExecutable properties
     mState.updateExecutableTextures();

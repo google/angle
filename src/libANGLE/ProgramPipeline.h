@@ -142,6 +142,7 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
     void updateExecutableGeometryProperties();
     void updateExecutableTessellationProperties();
     void updateFragmentInoutRange();
+    void updateUsesEarlyFragmentTestsOptimization();
     void updateLinkedVaryings();
     void updateExecutable();
 
