@@ -313,7 +313,7 @@ class RendererVk : angle::NonCopyable
             if (!garbage.destroyIfComplete(this, getLastCompletedQueueSerial()))
             {
                 std::lock_guard<std::mutex> lock(mGarbageMutex);
-                mSharedGarbage.push_back(std::move(garbage));
+                mSharedGarbage.push(std::move(garbage));
             }
         }
     }

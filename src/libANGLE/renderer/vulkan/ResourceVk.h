@@ -12,6 +12,8 @@
 
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
+#include <queue>
+
 namespace rx
 {
 namespace vk
@@ -129,7 +131,7 @@ class SharedGarbage
     std::vector<GarbageObject> mGarbage;
 };
 
-using SharedGarbageList = std::vector<SharedGarbage>;
+using SharedGarbageList = std::queue<SharedGarbage>;
 
 // Mixin to abstract away the resource use tracking.
 class ResourceUseList final : angle::NonCopyable
