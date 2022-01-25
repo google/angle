@@ -1052,6 +1052,12 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         {
             mSkipTest = true;
         }
+
+        // TODO: http://anglebug.com/6893 Re-enable when we fix the fetch bug.
+        if (mParams.isSwiftshader())
+        {
+            mSkipTest = true;
+        }
     }
 
     if (traceNameIs("mario_kart_tour"))
