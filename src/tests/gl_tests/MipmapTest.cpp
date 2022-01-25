@@ -1572,6 +1572,106 @@ TEST_P(MipmapTestES3, MipmapsForTexture3D)
     EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::red);
 }
 
+// Create a 2D array, then immediately redefine it to have fewer layers.  Regression test for a bug
+// in the Vulkan backend where the old higher-layer-count data upload was not removed.
+TEST_P(MipmapTestES3, TextureArrayRedefineThenGenerateMipmap)
+{
+    int px = getWindowWidth() / 2;
+    int py = getWindowHeight() / 2;
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, mTexture);
+
+    // Fill the whole texture with red, then redefine it and fill with green
+    std::vector<GLColor> pixelsRed(2 * 2 * 4, GLColor::red);
+    std::vector<GLColor> pixelsGreen(2 * 2 * 2, GLColor::green);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 2, 2, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsRed.data());
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsGreen.data());
+
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    EXPECT_GL_NO_ERROR();
+
+    // Generate mipmaps
+    glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(mArrayProgram);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw the first slice
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mArrayProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::green);
+
+    // Draw the second slice
+    glUniform1i(mTextureArraySliceUniformLocation, 1);
+    drawQuad(mArrayProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::green);
+}
+
+// Create a 2D array, use it, then redefine it to have fewer layers.  Regression test for a bug in
+// the Vulkan backend where the old higher-layer-count data upload was not removed.
+TEST_P(MipmapTestES3, TextureArrayUseThenRedefineThenGenerateMipmap)
+{
+    int px = getWindowWidth() / 2;
+    int py = getWindowHeight() / 2;
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, mTexture);
+
+    // Fill the whole texture with red.
+    std::vector<GLColor> pixelsRed(2 * 2 * 4, GLColor::red);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 2, 2, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsRed.data());
+
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    EXPECT_GL_NO_ERROR();
+
+    // Generate mipmap
+    glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(mArrayProgram);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw the first slice
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mArrayProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::red);
+
+    // Draw the fourth slice
+    glUniform1i(mTextureArraySliceUniformLocation, 3);
+    drawQuad(mArrayProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::red);
+
+    // Redefine the image and fill with green
+    std::vector<GLColor> pixelsGreen(2 * 2 * 2, GLColor::green);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsGreen.data());
+
+    // Generate mipmap
+    glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw the first slice
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mArrayProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::green);
+
+    // Draw the second slice
+    glUniform1i(mTextureArraySliceUniformLocation, 1);
+    drawQuad(mArrayProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::green);
+}
+
 // Create a 2D texture with levels 0-2, call GenerateMipmap with base level 1 so that level 0 stays
 // the same, and then sample levels 0 and 2.
 // GLES 3.0.4 section 3.8.10:
