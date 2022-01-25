@@ -179,17 +179,6 @@
 # ES3_1 Crashed
 6180 : EGLMultiContextTest.ComputeShaderOkayWithRendering/* = CRASH
 6180 : EGLMultiContextTest.TestContextDestroySimple/* = CRASH
-6611 : TextureMultisampleArrayWebGLTest.FramebufferColorClearAndBlit/* = CRASH
-6611 : TextureMultisampleArrayWebGLTest.FramebufferCompleteness/* = CRASH
-6611 : TextureMultisampleArrayWebGLTest.IntegerTexelFetch/* = CRASH
-6611 : TextureMultisampleArrayWebGLTest.InvalidFramebufferTextureLayer/* = CRASH
-6611 : TextureMultisampleArrayWebGLTest.SimpleTexelFetch/* = CRASH
-6611 : TextureMultisampleArrayWebGLTest.TexStorage3DMultisample/* = CRASH
-6611 : TextureMultisampleArrayWebGLTest.TextureSizeInShader/* = CRASH
-6611 : TextureMultisampleTest.GetTexLevelParameter/ES3_1* = CRASH
-6611 : TextureMultisampleTest.MultisampleTargetFramebufferTexture2D/ES3_1* = CRASH
-6611 : TextureMultisampleTest.ResolveToDefaultFramebuffer/ES3_1* = CRASH
-6611 : TextureMultisampleTest.ValidateTextureStorageMultisampleParameters/ES3_1* = CRASH
 6605 : TextureBufferTestES31.MapTextureBufferInvalidateThenWrite/* = FAIL
 6895 : AtomicCounterBufferTest31.AtomicCounterBufferRepeatedBindUnbind/* = CRASH
 
@@ -215,8 +204,5 @@
 6875 : TransformFeedbackTest.SpanMultipleRenderPasses/* = NOT_RUN
 
 # Skip crashing tests after enabling ANGLE_texture_multisample
-3565 : TextureMultisampleTest.ResolveToDefaultFramebuffer/* = CRASH
-3565 : TextureMultisampleTest.GetTexLevelParameter/* = CRASH
-3565 : TextureMultisampleTest.MultisampleTargetFramebufferTexture2D/* = CRASH
-3565 : TextureMultisampleTest.SimpleTexelFetch/* = CRASH
-3565 : TextureMultisampleTest.ValidateTextureStorageMultisampleParameters/* = CRASH
+3565 : TextureMultisampleTest.GetTexLevelParameter/ES3_Vulkan* = COMPILE_FAIL
+
