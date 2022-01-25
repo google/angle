@@ -248,8 +248,6 @@ void TransformFeedbackVk::updateDescriptorSetLayout(
         const ShaderInterfaceVariableInfo &info =
             variableInfoMap.get(gl::ShaderType::Vertex, bufferName);
 
-        ASSERT(info.binding != std::numeric_limits<uint32_t>::max());
-
         descSetLayoutOut->update(info.binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
                                  VK_SHADER_STAGE_VERTEX_BIT, nullptr);
     }

@@ -127,6 +127,8 @@ class ProgramExecutableVk
 
     ProgramVk *getShaderProgram(const gl::State &glState, gl::ShaderType shaderType) const;
 
+    void fillProgramStateMap(const ContextVk *contextVk,
+                             gl::ShaderMap<const gl::ProgramState *> *programStatesOut) const;
     const gl::ProgramExecutable &getGlExecutable();
 
     ProgramInfo &getGraphicsDefaultProgramInfo() { return mGraphicsProgramInfos[0]; }
@@ -233,7 +235,7 @@ class ProgramExecutableVk
                                              const gl::ShaderType shaderType,
                                              vk::DescriptorSetLayoutDesc *descOut);
     void addTextureDescriptorSetDesc(ContextVk *contextVk,
-                                     const gl::ProgramExecutable &executable,
+                                     const gl::ProgramState &programState,
                                      const gl::ActiveTextureArray<vk::TextureUnit> *activeTextures,
                                      vk::DescriptorSetLayoutDesc *descOut);
 
@@ -257,7 +259,7 @@ class ProgramExecutableVk
         bool cacheHit);
     angle::Result updateAtomicCounterBuffersDescriptorSet(
         ContextVk *contextVk,
-        const gl::ProgramExecutable &executable,
+        const gl::ProgramState &programState,
         const gl::ShaderType shaderType,
         const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc,
         bool cacheHit);

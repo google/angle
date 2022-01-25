@@ -37,6 +37,8 @@ class ProgramPipelineVk : public ProgramPipelineImpl
         return SafeGetImplAs<ProgramVk>(program);
     }
 
+    void fillProgramStateMap(gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
+
     angle::Result link(const gl::Context *glContext,
                        const gl::ProgramMergedVaryings &mergedVaryings,
                        const gl::ProgramVaryingPacking &varyingPacking) override;

@@ -238,6 +238,20 @@ void ProgramVk::setSeparable(bool separable)
     // Nothing to do here yet.
 }
 
+// TODO: http://anglebug.com/3570: Move/Copy all of the necessary information into
+// the ProgramExecutable, so this function can be removed.
+void ProgramVk::fillProgramStateMap(gl::ShaderMap<const gl::ProgramState *> *programStatesOut)
+{
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        (*programStatesOut)[shaderType] = nullptr;
+        if (mState.getExecutable().hasLinkedShaderStage(shaderType))
+        {
+            (*programStatesOut)[shaderType] = &mState;
+        }
+    }
+}
+
 std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
                                            gl::InfoLog &infoLog,

@@ -34,6 +34,23 @@ void ProgramPipelineVk::reset(ContextVk *contextVk)
     mExecutable.reset(contextVk);
 }
 
+// TODO: http://anglebug.com/3570: Move/Copy all of the necessary information into
+// the ProgramExecutable, so this function can be removed.
+void ProgramPipelineVk::fillProgramStateMap(
+    gl::ShaderMap<const gl::ProgramState *> *programStatesOut)
+{
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        (*programStatesOut)[shaderType] = nullptr;
+
+        ProgramVk *programVk = getShaderProgram(shaderType);
+        if (programVk)
+        {
+            (*programStatesOut)[shaderType] = &programVk->getState();
+        }
+    }
+}
+
 angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
                                       const gl::ProgramMergedVaryings &mergedVaryings,
                                       const gl::ProgramVaryingPacking &varyingPacking)
