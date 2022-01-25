@@ -928,27 +928,21 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
         mInFlightCommands.erase(beginIter, beginIter + finishedCount);
     }
 
-    size_t freeIndex = 0;
-    for (; freeIndex < mGarbageQueue.size(); ++freeIndex)
+    while (!mGarbageQueue.empty())
     {
-        GarbageAndSerial &garbageList = mGarbageQueue[freeIndex];
+        GarbageAndSerial &garbageList = mGarbageQueue.front();
         if (garbageList.getSerial() < mLastCompletedQueueSerial)
         {
             for (GarbageObject &garbage : garbageList.get())
             {
                 garbage.destroy(renderer);
             }
+            mGarbageQueue.pop();
         }
         else
         {
             break;
         }
-    }
-
-    // Remove the entries from the garbage list - they should be ready to go.
-    if (freeIndex > 0)
-    {
-        mGarbageQueue.erase(mGarbageQueue.begin(), mGarbageQueue.begin() + freeIndex);
     }
 
     return angle::Result::Continue;
@@ -968,14 +962,15 @@ void CommandQueue::releaseToCommandBatch(bool hasProtectedContent,
 
 void CommandQueue::clearAllGarbage(RendererVk *renderer)
 {
-    for (GarbageAndSerial &garbageList : mGarbageQueue)
+    while (!mGarbageQueue.empty())
     {
+        GarbageAndSerial &garbageList = mGarbageQueue.front();
         for (GarbageObject &garbage : garbageList.get())
         {
             garbage.destroy(renderer);
         }
+        mGarbageQueue.pop();
     }
-    mGarbageQueue.clear();
 }
 
 void CommandQueue::handleDeviceLost(RendererVk *renderer)
@@ -1104,7 +1099,7 @@ angle::Result CommandQueue::submitFrame(
 
     if (!currentGarbage.empty())
     {
-        mGarbageQueue.emplace_back(std::move(currentGarbage), batch.serial);
+        mGarbageQueue.emplace(std::move(currentGarbage), batch.serial);
     }
 
     // Store the primary CommandBuffer and command pool used for secondary CommandBuffers
