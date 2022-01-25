@@ -166,7 +166,7 @@
 
 6631 : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = CRASH
 6631 : MultithreadingTest.MultiContextCreateAndDeleteResources/* = CRASH
-6631 : MultithreadingTestES3.MultithreadFenceDraw/* = CRASH
+6631 WIN : MultithreadingTestES3.MultithreadFenceDraw/* = CRASH
 6631 WIN : MultithreadingTestES3.MultithreadFenceTexImage/* = CRASH
 6631 : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = CRASH
 
