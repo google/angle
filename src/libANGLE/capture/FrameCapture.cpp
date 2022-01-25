@@ -4421,6 +4421,7 @@ FrameCaptureShared::FrameCaptureShared()
       mMaxAccessedResourceIDs{},
       mCaptureTrigger(0),
       mCaptureActive(false),
+      mMidExecutionCaptureActive(false),
       mWindowSurfaceContextID({0})
 {
     reset();
@@ -5210,7 +5211,9 @@ void FrameCaptureShared::trackBufferMapping(CallCapture *call,
         call->params.setMappedBufferID(id);
 
         // Track coherent buffer
-        if (coherent)
+        // Check if capture is active to not initialize the coherent buffer tracker on the
+        // first coherent glMapBufferRange call.
+        if (coherent && (isCaptureActive() || mMidExecutionCaptureActive))
         {
             mCoherentBufferTracker.enable();
             uintptr_t data = reinterpret_cast<uintptr_t>(buffer->getMapPointer());
@@ -6426,6 +6429,8 @@ void FrameCaptureShared::scanSetupCalls(const gl::Context *context,
 
 void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
 {
+    mMidExecutionCaptureActive = true;
+
     // Make sure all pending work for every Context in the share group has completed so all data
     // (buffers, textures, etc.) has been updated and no resources are in use.
     egl::ShareGroup *shareGroup = mainContext->getShareGroup();
@@ -6476,6 +6481,8 @@ void FrameCaptureShared::runMidExecutionCapture(const gl::Context *mainContext)
                 frameCapture->getSetupCalls(), &mBinaryData, mSerializeStateEnabled, *this);
         }
     }
+
+    mMidExecutionCaptureActive = false;
 }
 
 void FrameCaptureShared::onEndFrame(const gl::Context *context)

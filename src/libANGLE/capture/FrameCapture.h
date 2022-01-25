@@ -776,6 +776,8 @@ class FrameCaptureShared final : angle::NonCopyable
     bool mCaptureActive;
     std::vector<uint32_t> mActiveFrameIndices;
 
+    bool mMidExecutionCaptureActive;
+
     // Cache most recently compiled and linked sources.
     ShaderSourceMap mCachedShaderSource;
     ProgramSourceMap mCachedProgramSources;
