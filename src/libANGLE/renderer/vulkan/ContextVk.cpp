@@ -3757,15 +3757,6 @@ void ContextVk::updateDither()
     }
 }
 
-void ContextVk::invalidateProgramBindingHelper()
-{
-    ProgramExecutableVk *executableVk = getExecutable();
-    if (executableVk)
-    {
-        executableVk->onProgramBind(*mState.getProgramExecutable());
-    }
-}
-
 angle::Result ContextVk::checkAndUpdateFramebufferFetchStatus(
     const gl::ProgramExecutable *executable)
 {
@@ -4097,7 +4088,6 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING:
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
-                invalidateProgramBindingHelper();
                 static_assert(
                     gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE > gl::State::DIRTY_BIT_PROGRAM_BINDING,
                     "Dirty bit order");
@@ -4107,6 +4097,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             {
                 ASSERT(programExecutable);
                 invalidateCurrentDefaultUniforms();
+                getExecutable()->onProgramBind(*programExecutable);
                 static_assert(
                     gl::State::DIRTY_BIT_TEXTURE_BINDINGS > gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE,
                     "Dirty bit order");

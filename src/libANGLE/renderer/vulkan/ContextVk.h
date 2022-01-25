@@ -267,8 +267,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                    : isViewportFlipEnabledForDrawFBO();
     }
 
-    void invalidateProgramBindingHelper();
-
     // State sync with dirty bits.
     angle::Result syncState(const gl::Context *context,
                             const gl::State::DirtyBits &dirtyBits,
