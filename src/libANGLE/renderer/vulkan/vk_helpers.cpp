@@ -4041,7 +4041,7 @@ angle::Result BufferHelper::initSuballocation(ContextVk *contextVk,
         size += maxVertexAttribStride;
     }
 
-    vk::BufferPool *pool = contextVk->getDefaultBufferPool(memoryTypeIndex);
+    vk::BufferPool *pool = contextVk->getDefaultBufferPool(size, memoryTypeIndex);
     ANGLE_TRY(pool->allocateBuffer(contextVk, size, alignment, &mSuballocation));
 
     if (renderer->getFeatures().allocateNonZeroMemory.enabled)

@@ -665,9 +665,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void flushDescriptorSetUpdates();
 
-    vk::BufferPool *getDefaultBufferPool(uint32_t memoryTypeIndex)
+    vk::BufferPool *getDefaultBufferPool(VkDeviceSize size, uint32_t memoryTypeIndex)
     {
-        return mShareGroupVk->getDefaultBufferPool(mRenderer, memoryTypeIndex);
+        return mShareGroupVk->getDefaultBufferPool(mRenderer, size, memoryTypeIndex);
     }
 
   private:
