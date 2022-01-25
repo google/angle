@@ -4263,7 +4263,12 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     const TVector<unsigned int> *arraySizes,
     const TSourceLoc &arraySizesLine)
 {
-    checkIsNotReserved(nameLine, blockName);
+    const bool isGLPerVertex = blockName == "gl_PerVertex";
+    // gl_PerVertex is allowed to be redefined and therefore not reserved
+    if (!isGLPerVertex)
+    {
+        checkIsNotReserved(nameLine, blockName);
+    }
 
     TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(mDiagnostics);
 
@@ -4569,8 +4574,13 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         }
     }
 
-    TInterfaceBlock *interfaceBlock = new TInterfaceBlock(
-        &symbolTable, blockName, fieldList, blockLayoutQualifier, SymbolType::UserDefined);
+    SymbolType instanceSymbolType = SymbolType::UserDefined;
+    if (isGLPerVertex)
+    {
+        instanceSymbolType = SymbolType::BuiltIn;
+    }
+    TInterfaceBlock *interfaceBlock = new TInterfaceBlock(&symbolTable, blockName, fieldList,
+                                                          blockLayoutQualifier, instanceSymbolType);
     if (!symbolTable.declare(interfaceBlock))
     {
         error(nameLine, "redefinition of an interface block name", blockName);
@@ -4607,8 +4617,21 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
             fieldType->setQualifier(typeQualifier.qualifier);
 
+            SymbolType symbolType = SymbolType::UserDefined;
+            if (field->name() == "gl_Position" || field->name() == "gl_PointSize" ||
+                field->name() == "gl_ClipDistance" || field->name() == "gl_CullDistance")
+            {
+                // These builtins can be redifined only when used within a redefiend gl_PerVertex
+                // block
+                if (interfaceBlock->name() != "gl_PerVertex")
+                {
+                    error(field->line(), "redefinition in an invalid interface block",
+                          field->name());
+                }
+                symbolType = SymbolType::BuiltIn;
+            }
             TVariable *fieldVariable =
-                new TVariable(&symbolTable, field->name(), fieldType, SymbolType::UserDefined);
+                new TVariable(&symbolTable, field->name(), fieldType, symbolType);
             if (!symbolTable.declare(fieldVariable))
             {
                 error(field->line(), "redefinition of an interface block member name",
@@ -5629,7 +5652,6 @@ TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualif
 TDeclarator *TParseContext::parseStructDeclarator(const ImmutableString &identifier,
                                                   const TSourceLoc &loc)
 {
-    checkIsNotReserved(loc, identifier);
     return new TDeclarator(identifier, loc);
 }
 
@@ -5637,7 +5659,6 @@ TDeclarator *TParseContext::parseStructArrayDeclarator(const ImmutableString &id
                                                        const TSourceLoc &loc,
                                                        const TVector<unsigned int> *arraySizes)
 {
-    checkIsNotReserved(loc, identifier);
     return new TDeclarator(identifier, arraySizes, loc);
 }
 
@@ -5725,8 +5746,17 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
             type->makeArrays(*declarator->arraySizes());
         }
 
-        TField *field =
-            new TField(type, declarator->name(), declarator->line(), SymbolType::UserDefined);
+        SymbolType symbolType = SymbolType::UserDefined;
+        if (declarator->name() == "gl_Position" || declarator->name() == "gl_PointSize" ||
+            declarator->name() == "gl_ClipDistance" || declarator->name() == "gl_CullDistance")
+        {
+            symbolType = SymbolType::BuiltIn;
+        }
+        else
+        {
+            checkIsNotReserved(typeSpecifier.getLine(), declarator->name());
+        }
+        TField *field = new TField(type, declarator->name(), declarator->line(), symbolType);
         checkIsBelowStructNestingLimit(typeSpecifier.getLine(), *field);
         fieldList->push_back(field);
     }

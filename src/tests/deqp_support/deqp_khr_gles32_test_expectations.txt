@@ -8,8 +8,6 @@
 
 // Geometry shader support (conditioned to windows as that's our only bot capable of running these
 // tests)
-// Translator's lack of support for redefining gl_PerVertex
-5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.api.getProgramiv3 = FAIL
 // API validation bugs
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.qualifiers.flat_interpolation = FAIL
 // Wrong results
