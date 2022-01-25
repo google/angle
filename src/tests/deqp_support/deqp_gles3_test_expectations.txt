@@ -1793,7 +1793,6 @@
 6528 PIXEL4ORXL GLES : dEQP-GLES3.functional.transform_feedback.random_full_array_capture.* = FAIL
 
 // Pixel 6 expectations
-6916 PIXEL6 VULKAN : dEQP-GLES3.functional.shaders.operator.unary_operator.minus.*p_u* = FAIL
 6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element.* = FAIL
 6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.random.interleaved.* = FAIL
 6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.random.separate.* = FAIL
