@@ -1992,6 +1992,9 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     // Initialize features and workarounds.
     initFeatures(displayVk, deviceExtensionNames);
 
+    // App based feature overrides.
+    appBasedFeatureOverrides(displayVk, deviceExtensionNames);
+
     // Enable VK_KHR_shared_presentable_image
     if (ExtensionFound(VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME, deviceExtensionNames))
     {
@@ -3157,6 +3160,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     {
         mFeatures.asyncCommandQueue.enabled = false;
     }
+}
+
+void RendererVk::appBasedFeatureOverrides(DisplayVk *display,
+                                          const vk::ExtensionNameList &extensions)
+{
+    // NOOP for now.
 }
 
 angle::Result RendererVk::initPipelineCache(DisplayVk *display,

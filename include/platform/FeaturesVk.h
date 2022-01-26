@@ -631,6 +631,11 @@ struct FeaturesVk : FeatureSetBase
         "On some platforms present region rectangles are expected to have a bottom-left origin, "
         "instead of top-left origin as from spec",
         &members};
+
+    // Whether we force submit updates to immutable textures.
+    Feature forceSubmitImmutableTextureUpdates = {
+        "forceSubmitImmutableTextureUpdates", FeatureCategory::AppWorkarounds,
+        "Force submit updates to immutable textures", &members, "http://anglebug.com/6929"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

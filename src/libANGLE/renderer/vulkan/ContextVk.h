@@ -553,6 +553,12 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return angle::Result::Continue;
     }
 
+    angle::Result submitStagedTextureUpdates()
+    {
+        // Staged updates are recorded in outside RP cammand buffer, submit them.
+        return flushOutsideRenderPassCommands();
+    }
+
     angle::Result beginNewRenderPass(const vk::Framebuffer &framebuffer,
                                      const gl::Rectangle &renderArea,
                                      const vk::RenderPassDesc &renderPassDesc,
