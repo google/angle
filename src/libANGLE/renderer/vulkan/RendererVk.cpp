@@ -1062,7 +1062,7 @@ RendererVk::~RendererVk()
 bool RendererVk::hasSharedGarbage()
 {
     std::lock_guard<std::mutex> lock(mGarbageMutex);
-    return !mSharedGarbage.empty();
+    return !mSharedGarbage.empty() || !mSuballocationGarbage.empty();
 }
 
 void RendererVk::releaseSharedResources(vk::ResourceUseList *resourceList)
@@ -3413,8 +3413,10 @@ bool RendererVk::haveSameFormatFeatureBits(angle::FormatID formatID1,
 
 angle::Result RendererVk::cleanupGarbage(Serial lastCompletedQueueSerial)
 {
-    vk::SharedGarbageList remainingGarbage;
     std::lock_guard<std::mutex> lock(mGarbageMutex);
+
+    // Clean up general garbages
+    vk::SharedGarbageList remainingGarbage;
     while (!mSharedGarbage.empty())
     {
         vk::SharedGarbage &garbage = mSharedGarbage.front();
@@ -3424,10 +3426,25 @@ angle::Result RendererVk::cleanupGarbage(Serial lastCompletedQueueSerial)
         }
         mSharedGarbage.pop();
     }
-
     if (!remainingGarbage.empty())
     {
         mSharedGarbage = std::move(remainingGarbage);
+    }
+
+    // Clean up suballocation garbages
+    vk::SharedBufferSuballocationGarbageList remainingSuballocationGarbage;
+    while (!mSuballocationGarbage.empty())
+    {
+        vk::SharedBufferSuballocationGarbage &garbage = mSuballocationGarbage.front();
+        if (!garbage.destroyIfComplete(this, lastCompletedQueueSerial))
+        {
+            remainingSuballocationGarbage.push(std::move(garbage));
+        }
+        mSuballocationGarbage.pop();
+    }
+    if (!remainingSuballocationGarbage.empty())
+    {
+        mSuballocationGarbage = std::move(remainingSuballocationGarbage);
     }
 
     return angle::Result::Continue;
