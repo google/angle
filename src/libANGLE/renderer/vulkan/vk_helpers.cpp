@@ -2877,14 +2877,16 @@ bool DescriptorPoolHelper::hasCapacity(uint32_t descriptorSetCount) const
     return mFreeDescriptorSets >= descriptorSetCount;
 }
 
-angle::Result DescriptorPoolHelper::init(ContextVk *contextVk,
+angle::Result DescriptorPoolHelper::init(Context *context,
                                          const std::vector<VkDescriptorPoolSize> &poolSizesIn,
                                          uint32_t maxSets)
 {
+    RendererVk *renderer = context->getRenderer();
+
     if (mDescriptorPool.valid())
     {
-        ASSERT(!isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()));
-        mDescriptorPool.destroy(contextVk->getDevice());
+        ASSERT(!isCurrentlyInUse(renderer->getLastCompletedQueueSerial()));
+        mDescriptorPool.destroy(renderer->getDevice());
     }
 
     // Make a copy of the pool sizes, so we can grow them to satisfy the specified maxSets.
@@ -2904,7 +2906,7 @@ angle::Result DescriptorPoolHelper::init(ContextVk *contextVk,
 
     mFreeDescriptorSets = maxSets;
 
-    ANGLE_VK_TRY(contextVk, mDescriptorPool.init(contextVk->getDevice(), descriptorPoolInfo));
+    ANGLE_VK_TRY(context, mDescriptorPool.init(renderer->getDevice(), descriptorPoolInfo));
 
     return angle::Result::Continue;
 }
@@ -2949,7 +2951,7 @@ DynamicDescriptorPool::DynamicDescriptorPool()
 
 DynamicDescriptorPool::~DynamicDescriptorPool() = default;
 
-angle::Result DynamicDescriptorPool::init(ContextVk *contextVk,
+angle::Result DynamicDescriptorPool::init(Context *context,
                                           const VkDescriptorPoolSize *setSizes,
                                           size_t setSizeCount,
                                           VkDescriptorSetLayout descriptorSetLayout)
@@ -2967,7 +2969,7 @@ angle::Result DynamicDescriptorPool::init(ContextVk *contextVk,
 
     mDescriptorPools.push_back(new RefCountedDescriptorPoolHelper());
     mCurrentPoolIndex = mDescriptorPools.size() - 1;
-    return mDescriptorPools[mCurrentPoolIndex]->get().init(contextVk, mPoolSizes, mMaxSetsPerPool);
+    return mDescriptorPools[mCurrentPoolIndex]->get().init(context, mPoolSizes, mMaxSetsPerPool);
 }
 
 void DynamicDescriptorPool::destroy(VkDevice device)

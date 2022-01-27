@@ -244,10 +244,11 @@ class ProgramExecutableVk
     void addInputAttachmentDescriptorSetDesc(const gl::ProgramExecutable &executable,
                                              const gl::ShaderType shaderType,
                                              vk::DescriptorSetLayoutDesc *descOut);
-    void addTextureDescriptorSetDesc(ContextVk *contextVk,
-                                     const gl::ProgramExecutable &executable,
-                                     const gl::ActiveTextureArray<vk::TextureUnit> *activeTextures,
-                                     vk::DescriptorSetLayoutDesc *descOut);
+    angle::Result addTextureDescriptorSetDesc(
+        ContextVk *contextVk,
+        const gl::ProgramExecutable &executable,
+        const gl::ActiveTextureArray<vk::TextureUnit> *activeTextures,
+        vk::DescriptorSetLayoutDesc *descOut);
 
     void resolvePrecisionMismatch(const gl::ProgramMergedVaryings &mergedVaryings);
     void updateDefaultUniformsDescriptorSet(const gl::ShaderType shaderType,
@@ -276,10 +277,13 @@ class ProgramExecutableVk
     angle::Result updateImagesDescriptorSet(ContextVk *contextVk,
                                             const gl::ProgramExecutable &executable,
                                             const gl::ShaderType shaderType);
-    angle::Result initDynamicDescriptorPools(ContextVk *contextVk,
-                                             vk::DescriptorSetLayoutDesc &descriptorSetLayoutDesc,
-                                             DescriptorSetIndex descriptorSetIndex,
-                                             VkDescriptorSetLayout descriptorSetLayout);
+
+    static angle::Result InitDynamicDescriptorPool(
+        vk::Context *context,
+        vk::DescriptorSetLayoutDesc &descriptorSetLayoutDesc,
+        VkDescriptorSetLayout descriptorSetLayout,
+        uint32_t descriptorCountMultiplier,
+        vk::DynamicDescriptorPool *dynamicDescriptorPool);
 
     void outputCumulativePerfCounters();
 

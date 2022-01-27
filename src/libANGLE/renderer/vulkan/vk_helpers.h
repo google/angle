@@ -199,7 +199,7 @@ class DescriptorPoolHelper : public Resource
     bool valid() { return mDescriptorPool.valid(); }
 
     bool hasCapacity(uint32_t descriptorSetCount) const;
-    angle::Result init(ContextVk *contextVk,
+    angle::Result init(Context *context,
                        const std::vector<VkDescriptorPoolSize> &poolSizesIn,
                        uint32_t maxSets);
     void destroy(VkDevice device);
@@ -227,7 +227,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
     // The DynamicDescriptorPool only handles one pool size at this time.
     // Note that setSizes[i].descriptorCount is expected to be the number of descriptors in
     // an individual set.  The pool size will be calculated accordingly.
-    angle::Result init(ContextVk *contextVk,
+    angle::Result init(Context *context,
                        const VkDescriptorPoolSize *setSizes,
                        size_t setSizeCount,
                        VkDescriptorSetLayout descriptorSetLayout);
@@ -2024,7 +2024,7 @@ class ImageHelper final : public Resource, public angle::Subject
         return mYcbcrConversionDesc.mIsExternalFormat ? mYcbcrConversionDesc.mExternalOrVkFormat
                                                       : 0;
     }
-    const YcbcrConversionDesc *getYcbcrConversionDesc() const { return &mYcbcrConversionDesc; }
+    const YcbcrConversionDesc &getYcbcrConversionDesc() const { return mYcbcrConversionDesc; }
     void updateYcbcrConversionDesc(RendererVk *rendererVk,
                                    uint64_t externalFormat,
                                    VkSamplerYcbcrModelConversion conversionModel,

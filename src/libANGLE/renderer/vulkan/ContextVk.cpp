@@ -5405,31 +5405,31 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
         //   The new parameter, TEXTURE_SRGB_DECODE_EXT controls whether the
         //   decoding happens at sample time. It only applies to textures with an
         //   internal format that is sRGB and is ignored for all other textures.
-        ASSERT(textureVk->getImage().valid());
-        if (textureVk->getImage().getActualFormat().isSRGB &&
-            activeTexture.srgbDecode == GL_SKIP_DECODE_EXT)
+        const vk::ImageHelper &image = textureVk->getImage();
+        ASSERT(image.valid());
+        if (image.getActualFormat().isSRGB && activeTexture.srgbDecode == GL_SKIP_DECODE_EXT)
         {
             // Make sure we use the MUTABLE bit for the storage. Because the "skip decode" is a
             // Sampler state we might not have caught this setting in TextureVk::syncState.
             ANGLE_TRY(textureVk->ensureMutable(this));
         }
 
-        if (textureVk->getImage().hasEmulatedImageFormat())
+        if (image.hasEmulatedImageFormat())
         {
             ANGLE_VK_PERF_WARNING(
                 this, GL_DEBUG_SEVERITY_LOW,
                 "The Vulkan driver does not support texture format 0x%04X, emulating with 0x%04X",
-                textureVk->getImage().getIntendedFormat().glInternalFormat,
-                textureVk->getImage().getActualFormat().glInternalFormat);
+                image.getIntendedFormat().glInternalFormat,
+                image.getActualFormat().glInternalFormat);
         }
 
         vk::ImageOrBufferViewSubresourceSerial imageViewSerial =
             textureVk->getImageViewSubresourceSerial(samplerState);
         mActiveTexturesDesc.update(textureUnit, imageViewSerial, samplerHelper.getSamplerSerial());
 
-        if (textureVk->getImage().hasImmutableSampler())
+        if (image.hasImmutableSampler())
         {
-            immutableSamplerIndexMap[*textureVk->getImage().getYcbcrConversionDesc()] =
+            immutableSamplerIndexMap[image.getYcbcrConversionDesc()] =
                 static_cast<uint32_t>(textureUnit);
         }
 
