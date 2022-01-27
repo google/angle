@@ -1006,7 +1006,8 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     // Tracks resources used in the command buffer.
     // For Buffers, we track the read/write access type so we can enable simultaneous reads.
-    angle::FastIntegerMap<BufferAccess> mUsedBuffers;
+    static constexpr uint32_t kFastMapSize = 16;
+    angle::FastUnorderedMap<BufferSerial, BufferAccess, kFastMapSize> mUsedBuffers;
 };
 
 class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCommon
@@ -1288,7 +1289,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     // Tracks resources used in the command buffer.
     // Images have unique layouts unlike buffers therefore we can't support simultaneous reads with
     // different layout.
-    angle::FastIntegerSet mRenderPassUsedImages;
+    angle::FastUnorderedSet<ImageSerial, kFastMapSize> mRenderPassUsedImages;
 
     ImageHelper *mDepthStencilImage;
     ImageHelper *mDepthStencilResolveImage;
@@ -2300,7 +2301,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
 ANGLE_INLINE bool RenderPassCommandBufferHelper::usesImage(const ImageHelper &image) const
 {
-    return mRenderPassUsedImages.contains(image.getImageSerial().getValue());
+    return mRenderPassUsedImages.contains(image.getImageSerial());
 }
 
 // A vector of image views, such as one per level or one per layer.

@@ -1032,8 +1032,6 @@ CommandBufferHelperCommon::~CommandBufferHelperCommon() {}
 void CommandBufferHelperCommon::initializeImpl(Context *context, CommandPool *commandPool)
 {
     ASSERT(mUsedBuffers.empty());
-    constexpr size_t kInitialBufferCount = 128;
-    mUsedBuffers.ensureCapacity(kInitialBufferCount);
 
     mAllocator.initialize(kDefaultPoolAllocatorPageSize, 1);
     // Push a scope into the pool allocator so we can easily free and re-init on reset()
@@ -1062,9 +1060,9 @@ void CommandBufferHelperCommon::bufferRead(ContextVk *contextVk,
     }
 
     ASSERT(!usesBufferForWrite(*buffer));
-    if (!mUsedBuffers.contains(buffer->getBufferSerial().getValue()))
+    if (!mUsedBuffers.contains(buffer->getBufferSerial()))
     {
-        mUsedBuffers.insert(buffer->getBufferSerial().getValue(), BufferAccess::Read);
+        mUsedBuffers.insert(buffer->getBufferSerial(), BufferAccess::Read);
         buffer->retainReadOnly(&contextVk->getResourceUseList());
     }
 }
@@ -1089,7 +1087,7 @@ void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
     if (aliasingMode == AliasingMode::Disallowed)
     {
         ASSERT(!usesBuffer(*buffer));
-        mUsedBuffers.insert(buffer->getBufferSerial().getValue(), BufferAccess::Write);
+        mUsedBuffers.insert(buffer->getBufferSerial(), BufferAccess::Write);
     }
 
     // Make sure host-visible buffer writes result in a barrier inserted at the end of the frame to
@@ -1103,13 +1101,13 @@ void CommandBufferHelperCommon::bufferWrite(ContextVk *contextVk,
 
 bool CommandBufferHelperCommon::usesBuffer(const BufferHelper &buffer) const
 {
-    return mUsedBuffers.contains(buffer.getBufferSerial().getValue());
+    return mUsedBuffers.contains(buffer.getBufferSerial());
 }
 
 bool CommandBufferHelperCommon::usesBufferForWrite(const BufferHelper &buffer) const
 {
     BufferAccess access;
-    if (!mUsedBuffers.get(buffer.getBufferSerial().getValue(), &access))
+    if (!mUsedBuffers.get(buffer.getBufferSerial(), &access))
     {
         return false;
     }
@@ -1364,7 +1362,7 @@ void RenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
     // We allow duplicate uses in the RP to accommodate for normal GL sampler usage.
     if (!usesImage(*image))
     {
-        mRenderPassUsedImages.insert(image->getImageSerial().getValue());
+        mRenderPassUsedImages.insert(image->getImageSerial());
         image->retain(&contextVk->getResourceUseList());
     }
 }
@@ -1388,7 +1386,7 @@ void RenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
     }
     if (!usesImage(*image))
     {
-        mRenderPassUsedImages.insert(image->getImageSerial().getValue());
+        mRenderPassUsedImages.insert(image->getImageSerial());
     }
 }
 
@@ -1404,7 +1402,7 @@ void RenderPassCommandBufferHelper::colorImagesDraw(ResourceUseList *resourceUse
     {
         // This is possible due to different layers of the same texture being attached to different
         // attachments
-        mRenderPassUsedImages.insert(image->getImageSerial().getValue());
+        mRenderPassUsedImages.insert(image->getImageSerial());
     }
     ASSERT(mColorImages[packedAttachmentIndex] == nullptr);
     mColorImages[packedAttachmentIndex] = image;
@@ -1415,7 +1413,7 @@ void RenderPassCommandBufferHelper::colorImagesDraw(ResourceUseList *resourceUse
         resolveImage->retain(resourceUseList);
         if (!usesImage(*resolveImage))
         {
-            mRenderPassUsedImages.insert(resolveImage->getImageSerial().getValue());
+            mRenderPassUsedImages.insert(resolveImage->getImageSerial());
         }
         ASSERT(mColorResolveImages[packedAttachmentIndex] == nullptr);
         mColorResolveImages[packedAttachmentIndex] = resolveImage;
@@ -1437,7 +1435,7 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(ResourceUseList *reso
     // defer the image layout changes until endRenderPass time or when images going away so that we
     // only insert layout change barrier once.
     image->retain(resourceUseList);
-    mRenderPassUsedImages.insert(image->getImageSerial().getValue());
+    mRenderPassUsedImages.insert(image->getImageSerial());
     mDepthStencilImage      = image;
     mDepthStencilLevelIndex = level;
     mDepthStencilLayerIndex = layerStart;
@@ -1450,7 +1448,7 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(ResourceUseList *reso
         // depth/stencil image as currently it can only ever come from
         // multisampled-render-to-texture renderbuffers.
         resolveImage->retain(resourceUseList);
-        mRenderPassUsedImages.insert(resolveImage->getImageSerial().getValue());
+        mRenderPassUsedImages.insert(resolveImage->getImageSerial());
         mDepthStencilResolveImage = resolveImage;
         resolveImage->setRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment);
     }
