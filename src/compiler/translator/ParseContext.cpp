@@ -760,11 +760,30 @@ bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const ImmutableSt
     }
     if (identifier.contains("__"))
     {
-        error(line,
-              "identifiers containing two consecutive underscores (__) are reserved as "
-              "possible future keywords",
-              identifier);
-        return false;
+        if (sh::IsWebGLBasedSpec(mShaderSpec))
+        {
+            error(line,
+                  "identifiers containing two consecutive underscores (__) are reserved as "
+                  "possible future keywords",
+                  identifier);
+            return false;
+        }
+        else
+        {
+            // Using double underscores is allowed, but may result in unintended behaviors, so a
+            // warning is issued.
+            // OpenGL ES Shader Language 3.2 specification:
+            // > 3.7. Keywords
+            // > ...
+            // > In addition, all identifiers containing two consecutive underscores (__) are
+            // > reserved for use by underlying software layers. Defining such a name in a shader
+            // > does not itself result in an error, but may result in unintended behaviors that
+            // > stem from having multiple definitions of the same name.
+            warning(line,
+                    "all identifiers containing two consecutive underscores (__) are reserved - "
+                    "unintented behaviors are possible",
+                    identifier.data());
+        }
     }
     return true;
 }
