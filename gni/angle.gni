@@ -40,7 +40,7 @@ if (angle_has_build) {
   }
 
   angle_use_x11 = ozone_platform_x11 && !is_ggp && is_linux && !is_chromecast
-  angle_use_vulkan_display = is_linux && !is_ggp
+  angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp
 } else {
   declare_args() {
     is_ubsan = false
@@ -59,7 +59,7 @@ if (angle_has_build) {
   }
 
   declare_args() {
-    angle_use_vulkan_display = is_linux && !is_ggp
+    angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp
   }
 }
 
@@ -137,8 +137,9 @@ declare_args() {
       angle_has_build &&
       !(is_android && build_with_chromium && is_official_build) &&
       ((is_win && !angle_is_winuwp) ||
-       (is_linux && (angle_use_x11 || angle_use_vulkan_display) &&
-        !is_chromeos) || is_android || is_fuchsia || is_ggp || is_mac)
+       ((is_linux || is_chromeos) &&
+        (angle_use_x11 || angle_use_vulkan_display)) || is_android ||
+       is_fuchsia || is_ggp || is_mac)
 
   # When set to true, ANGLE will not use VK_KHR_surface and VK_KHR_swapchain
   # extensions. Content can be rendered only off-screen.
@@ -218,8 +219,7 @@ declare_args() {
   angle_vulkan_validation_layers_dir =
       "$angle_root/third_party/vulkan-deps/vulkan-validation-layers/src"
 
-  angle_build_vulkan_system_info =
-      !is_chromeos && angle_has_build && !angle_is_winuwp
+  angle_build_vulkan_system_info = angle_has_build && !angle_is_winuwp
 }
 
 declare_args() {

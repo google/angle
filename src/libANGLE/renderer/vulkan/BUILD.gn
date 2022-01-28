@@ -151,7 +151,7 @@ if (angle_use_vulkan_null_display) {
   ]
 }
 
-if (is_linux) {
+if (is_linux || is_chromeos) {
   _vulkan_backend_sources += [
     "linux/DisplayVkLinux.cpp",
     "linux/DisplayVkLinux.h",
@@ -303,7 +303,7 @@ angle_source_set("angle_vulkan_backend") {
     data_deps += [ "$angle_root/src/common/vulkan:vulkan_validation_layers" ]
   }
 
-  if (is_linux) {
+  if (is_linux || is_chromeos) {
     deps += [ "$angle_root/src/common/linux:angle_dma_buf" ]
   }
 
