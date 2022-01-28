@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '8ff0cb4f71d8a6e497d7d2cbc25ad6d317c3ba71',
+  'chromium_revision': '4d71de73b37d8272097885f5430e46ca4d684824',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -84,7 +84,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
   # and whatever else without interference from each other.
-  'luci_go': 'git_revision:7528d700b89db0b6feb32be098d40597f738d3c7',
+  'luci_go': 'git_revision:9c88febc5ab63469baf5aae05a74f8e419970ef3',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling android_sdk_build-tools_version
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@45926bacc928e7e1d369533800bcb7eb21328ece',
+    'url': '{chromium_git}/chromium/src/build.git@c033fc477ff9e5a9513a6df537f6de4ba67eceec',
     'condition': 'not build_with_chromium',
   },
 
@@ -166,7 +166,7 @@ deps = {
   },
 
   'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@c8a5d430f292ca05a317db056c297d6b0b755e0a',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@724641330986f2965446587c43b8db641f54c6b8',
     'condition': 'not build_with_chromium',
   },
 
@@ -182,12 +182,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@092853377062cf39f783594552cdb1ad57da0697',
+    'url': '{chromium_git}/chromium/src/testing@df87133fcb31f773a418c933d372ea7262de95ca',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@cfdfe8d1453ed2762d8e68d06b2e0a9fbf0f57bb',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@ce12c7a75aa6aa689667e66189d9f0a42a5ccf08',
     'condition': 'not build_with_chromium',
   },
 
@@ -230,7 +230,7 @@ deps = {
   },
 
   'third_party/android_deps': {
-    'url': '{chromium_git}/chromium/src/third_party/android_deps@f7460e1e051a28d3673e9de83d7d32ed67e10b31',
+    'url': '{chromium_git}/chromium/src/third_party/android_deps@09aa08e993b09cdcea1e1eb124f0b444fbce0e56',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -332,7 +332,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@d5862557d6a2ceef3f85092aa76682a4cdf2fc4e',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@289dedd36b188d07a25c5342d9ec06be50dfa670',
     'condition': 'not build_with_chromium',
   },
 
@@ -474,7 +474,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'KOlWWUU4CAY1EqgiZ6iljOP7ycIjceTEFcwWxL14HFoC',
+              'version': 'tamyW0-567_CaEZt2m7Pwy2NSUKeocbxdkoGsf-z3F0C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -536,7 +536,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@b93ee79874a76bf9c74264ef736f05a760c5dea3',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@00a9400ecf1021b2414c9a40549b5d31049e6443',
     'condition': 'not build_with_chromium',
   },
 
@@ -567,7 +567,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@cae500a68524958dfcff76da21b96ad0bdffa37d',
+    'url': '{chromium_git}/chromium/src/tools/mb@619214929f93d25fc2a0cff9ea69923b6d138bb0',
     'condition': 'not build_with_chromium',
   },
 
@@ -582,7 +582,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@7c555d7184ee75ba59ace8ccda5cb3c26881f2fb',
+    'url': '{chromium_git}/chromium/src/tools/perf@e9331be2f4185ab35affc518e15b09f32ab359ec',
     'condition': 'not build_with_chromium',
   },
 
