@@ -352,6 +352,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.framebufferBlitANGLE        = true;
     mNativeExtensions.framebufferBlitNV           = true;
     mNativeExtensions.framebufferMultisampleANGLE = true;
+    mNativeExtensions.textureMultisampleANGLE     = true;
     mNativeExtensions.multisampledRenderToTextureEXT =
         getFeatures().enableMultisampledRenderToTexture.enabled;
     mNativeExtensions.multisampledRenderToTexture2EXT =
