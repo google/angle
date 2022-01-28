@@ -291,6 +291,7 @@ Image::Image(rx::EGLImplFactory *factory,
 {
     ASSERT(mImplementation != nullptr);
     ASSERT(buffer != nullptr);
+    ASSERT(context == nullptr || context->isShared());
 
     mState.source->addImageSource(this);
 }
