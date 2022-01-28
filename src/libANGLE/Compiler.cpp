@@ -164,6 +164,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     // GL_EXT_primitive_bounding_box
     mResources.EXT_primitive_bounding_box = extensions.primitiveBoundingBoxEXT;
 
+    // GL_OES_primitive_bounding_box
+    mResources.OES_primitive_bounding_box = extensions.primitiveBoundingBoxOES;
+
     // GLSL ES 3.0 constants
     mResources.MaxVertexOutputVectors  = caps.maxVertexOutputComponents / 4;
     mResources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;

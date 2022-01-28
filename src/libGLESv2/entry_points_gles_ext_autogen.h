@@ -1523,6 +1523,16 @@ ANGLE_EXPORT void GL_APIENTRY GL_PointSizePointerOES(GLenum type,
 
 // GL_OES_point_sprite
 
+// GL_OES_primitive_bounding_box
+ANGLE_EXPORT void GL_APIENTRY GL_PrimitiveBoundingBoxOES(GLfloat minX,
+                                                         GLfloat minY,
+                                                         GLfloat minZ,
+                                                         GLfloat minW,
+                                                         GLfloat maxX,
+                                                         GLfloat maxY,
+                                                         GLfloat maxZ,
+                                                         GLfloat maxW);
+
 // GL_OES_query_matrix
 ANGLE_EXPORT GLbitfield GL_APIENTRY GL_QueryMatrixxOES(GLfixed *mantissa, GLint *exponent);
 

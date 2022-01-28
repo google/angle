@@ -2251,6 +2251,18 @@ bool ValidatePointSizePointerOES(const Context *context,
 
 // GL_OES_point_sprite
 
+// GL_OES_primitive_bounding_box
+bool ValidatePrimitiveBoundingBoxOES(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     GLfloat minX,
+                                     GLfloat minY,
+                                     GLfloat minZ,
+                                     GLfloat minW,
+                                     GLfloat maxX,
+                                     GLfloat maxY,
+                                     GLfloat maxZ,
+                                     GLfloat maxW);
+
 // GL_OES_query_matrix
 bool ValidateQueryMatrixxOES(const Context *context,
                              angle::EntryPoint entryPoint,

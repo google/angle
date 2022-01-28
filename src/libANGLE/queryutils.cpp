@@ -3329,7 +3329,7 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_PRIMITIVE_BOUNDING_BOX:
-            if (!extensions.primitiveBoundingBoxEXT)
+            if (!extensions.primitiveBoundingBoxAny())
             {
                 return false;
             }

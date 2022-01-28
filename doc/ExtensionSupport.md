@@ -104,6 +104,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_KHR_parallel_shader_compile](https://khronos.org/registry/OpenGL/extensions/KHR/KHR_parallel_shader_compile.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_NV_pixel_buffer_object](https://khronos.org/registry/OpenGL/extensions/NV/NV_pixel_buffer_object.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_primitive_bounding_box](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_primitive_bounding_box.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_OES_primitive_bounding_box](https://khronos.org/registry/OpenGL/extensions/OES/OES_primitive_bounding_box.txt) |  |  |  |  |  |  |
 | [GL_EXT_protected_textures](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_protected_textures.txt) |  |  |  |  |  | &#x2714; |
 | [GL_EXT_pvrtc_sRGB](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_pvrtc_sRGB.txt) |  |  |  |  |  |  |
 | [GL_NV_read_depth](https://khronos.org/registry/OpenGL/extensions/NV/NV_read_depth.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |

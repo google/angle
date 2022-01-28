@@ -1099,6 +1099,9 @@ void RendererVk::ensureCapsInitialized() const
     // GL_EXT_primitive_bounding_box
     mNativeExtensions.primitiveBoundingBoxEXT = true;
 
+    // GL_OES_primitive_bounding_box
+    mNativeExtensions.primitiveBoundingBoxOES = true;
+
     // GL_EXT_protected_textures
     mNativeExtensions.protectedTexturesEXT = mFeatures.supportsProtectedMemory.enabled;
 

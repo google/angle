@@ -49,6 +49,10 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::EXT_primitive_bounding_box] = EBhUndefined;
     }
+    if (resources.OES_primitive_bounding_box)
+    {
+        extBehavior[TExtension::OES_primitive_bounding_box] = EBhUndefined;
+    }
     if (resources.EXT_shader_texture_lod)
     {
         extBehavior[TExtension::EXT_shader_texture_lod] = EBhUndefined;

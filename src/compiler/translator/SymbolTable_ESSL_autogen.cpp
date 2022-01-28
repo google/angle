@@ -2419,12 +2419,16 @@ constexpr const TSymbolUniqueId BuiltInId::gl_inTCS;
 constexpr const TSymbolUniqueId BuiltInId::gl_inTCSES3_2;
 constexpr const TSymbolUniqueId BuiltInId::gl_outTCS;
 constexpr const TSymbolUniqueId BuiltInId::gl_outTCSES3_2;
+constexpr const TSymbolUniqueId BuiltInId::gl_BoundingBoxTCS;
+constexpr const TSymbolUniqueId BuiltInId::gl_BoundingBoxTCSES3_2;
 constexpr const TSymbolUniqueId BuiltInId::gl_PerVertexOutTcsBlock;
 constexpr const TSymbolUniqueId BuiltInId::gl_PerVertexOutTcsBlockES3_2;
 constexpr const TSymbolUniqueId BuiltInId::gl_PositionTCS;
 constexpr const TSymbolUniqueId BuiltInId::gl_PositionTCSES3_2;
 constexpr const TSymbolUniqueId BuiltInId::gl_BoundingBoxEXTTCS;
 constexpr const TSymbolUniqueId BuiltInId::gl_BoundingBoxEXTTCSES3_2;
+constexpr const TSymbolUniqueId BuiltInId::gl_BoundingBoxOESTCS;
+constexpr const TSymbolUniqueId BuiltInId::gl_BoundingBoxOESTCSES3_2;
 constexpr const TSymbolUniqueId BuiltInId::gl_PatchVerticesInTES;
 constexpr const TSymbolUniqueId BuiltInId::gl_PatchVerticesInTESES3_2;
 constexpr const TSymbolUniqueId BuiltInId::gl_PrimitiveIDTES;
@@ -2446,7 +2450,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_PositionTES;
 constexpr const TSymbolUniqueId BuiltInId::gl_PositionTESES3_2;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVR;
 
-const int TSymbolTable::kLastBuiltInId = 5569;
+const int TSymbolTable::kLastBuiltInId = 5577;
 
 namespace BuiltInName
 {
@@ -2517,7 +2521,9 @@ constexpr const ImmutableString fwidth("fwidth");
 constexpr const ImmutableString fwidthExt("fwidth");
 constexpr const ImmutableString gl_BaseInstance("gl_BaseInstance");
 constexpr const ImmutableString gl_BaseVertex("gl_BaseVertex");
+constexpr const ImmutableString gl_BoundingBox("gl_BoundingBox");
 constexpr const ImmutableString gl_BoundingBoxEXT("gl_BoundingBoxEXT");
+constexpr const ImmutableString gl_BoundingBoxOES("gl_BoundingBoxOES");
 constexpr const ImmutableString gl_ClipDistance("gl_ClipDistance");
 constexpr const ImmutableString gl_CullDistance("gl_CullDistance");
 constexpr const ImmutableString gl_DepthRange("gl_DepthRange");
@@ -27350,10 +27356,17 @@ constexpr SymbolRule kRules[] = {
         &TableBase::m_gl_outTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_outTES),
+    Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(&TableBase::m_gl_BoundingBoxTCSES3_2),
+    Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_BoundingBoxTCS),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(
         &TableBase::m_gl_BoundingBoxEXTTCSES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_BoundingBoxEXTTCS),
+    Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(
+        &TableBase::m_gl_BoundingBoxOESTCSES3_2),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_BoundingBoxOESTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, 0>(&BuiltInVariable::kgl_TessCoord),
     Rule::Get<Spec::ESSL, 300, Shader::NOT_COMPUTE, EXT_INDEX(OVR_multiview)>(
         &BuiltInVariable::kgl_ViewID_OVR)};
@@ -28988,7 +29001,9 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "gl_TessLevelOuter",
                                          "gl_TessLevelInner",
                                          "gl_out",
+                                         "gl_BoundingBox",
                                          "gl_BoundingBoxEXT",
+                                         "gl_BoundingBoxOES",
                                          "gl_TessCoord",
                                          "gl_ViewID_OVR"};
 
@@ -30623,9 +30638,11 @@ constexpr uint16_t kMangledOffsets[] = {
     2433,  // gl_TessLevelOuter
     2437,  // gl_TessLevelInner
     2441,  // gl_out
-    2445,  // gl_BoundingBoxEXT
-    2447,  // gl_TessCoord
-    2448,  // gl_ViewID_OVR
+    2445,  // gl_BoundingBox
+    2447,  // gl_BoundingBoxEXT
+    2449,  // gl_BoundingBoxOES
+    2451,  // gl_TessCoord
+    2452,  // gl_ViewID_OVR
 };
 
 using Ext = TExtension;
@@ -32092,6 +32109,18 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_outTCSES3_2 =
         new TVariable(BuiltInId::gl_outTCSES3_2, BuiltInName::gl_out, SymbolType::BuiltIn,
                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}}, type_gl_outTCSES3_2);
+    TType *type_gl_BoundingBoxTCS = new TType(EbtFloat, EbpHigh, EvqBoundingBox, 4);
+    type_gl_BoundingBoxTCS->makeArray(2u);
+    type_gl_BoundingBoxTCS->realize();
+    m_gl_BoundingBoxTCS = new TVariable(
+        BuiltInId::gl_BoundingBoxTCS, BuiltInName::gl_BoundingBox, SymbolType::BuiltIn,
+        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}}, type_gl_BoundingBoxTCS);
+    TType *type_gl_BoundingBoxTCSES3_2 = new TType(EbtFloat, EbpHigh, EvqBoundingBox, 4);
+    type_gl_BoundingBoxTCSES3_2->makeArray(2u);
+    type_gl_BoundingBoxTCSES3_2->realize();
+    m_gl_BoundingBoxTCSES3_2 = new TVariable(
+        BuiltInId::gl_BoundingBoxTCSES3_2, BuiltInName::gl_BoundingBox, SymbolType::BuiltIn,
+        std::array<TExtension, 1u>{{TExtension::UNDEFINED}}, type_gl_BoundingBoxTCSES3_2);
     TFieldList *fields_gl_PerVertexOutTcsBlock = new TFieldList();
     fields_gl_PerVertexOutTcsBlock->push_back(
         new TField(new TType(EbtFloat, EbpHigh, EvqPosition, 4, 1), BuiltInName::gl_Position,
@@ -32119,19 +32148,32 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_PositionTCSES3_2 = new TVariable(
         BuiltInId::gl_PositionTCSES3_2, BuiltInName::gl_Position, SymbolType::BuiltIn,
         std::array<TExtension, 1u>{{TExtension::UNDEFINED}}, type_gl_PositionTCSES3_2);
-    TType *type_gl_BoundingBoxEXTTCS = new TType(EbtFloat, EbpHigh, EvqBoundingBoxEXT, 4);
-    type_gl_BoundingBoxEXTTCS->makeArray(4u);
+    TType *type_gl_BoundingBoxEXTTCS = new TType(EbtFloat, EbpHigh, EvqBoundingBox, 4);
+    type_gl_BoundingBoxEXTTCS->makeArray(2u);
     type_gl_BoundingBoxEXTTCS->realize();
     m_gl_BoundingBoxEXTTCS = new TVariable(
         BuiltInId::gl_BoundingBoxEXTTCS, BuiltInName::gl_BoundingBoxEXT, SymbolType::BuiltIn,
         std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
         type_gl_BoundingBoxEXTTCS);
-    TType *type_gl_BoundingBoxEXTTCSES3_2 = new TType(EbtFloat, EbpHigh, EvqBoundingBoxEXT, 4);
-    type_gl_BoundingBoxEXTTCSES3_2->makeArray(4u);
+    TType *type_gl_BoundingBoxEXTTCSES3_2 = new TType(EbtFloat, EbpHigh, EvqBoundingBox, 4);
+    type_gl_BoundingBoxEXTTCSES3_2->makeArray(2u);
     type_gl_BoundingBoxEXTTCSES3_2->realize();
     m_gl_BoundingBoxEXTTCSES3_2 = new TVariable(
         BuiltInId::gl_BoundingBoxEXTTCSES3_2, BuiltInName::gl_BoundingBoxEXT, SymbolType::BuiltIn,
         std::array<TExtension, 1u>{{TExtension::UNDEFINED}}, type_gl_BoundingBoxEXTTCSES3_2);
+    TType *type_gl_BoundingBoxOESTCS = new TType(EbtFloat, EbpHigh, EvqBoundingBox, 4);
+    type_gl_BoundingBoxOESTCS->makeArray(2u);
+    type_gl_BoundingBoxOESTCS->realize();
+    m_gl_BoundingBoxOESTCS = new TVariable(
+        BuiltInId::gl_BoundingBoxOESTCS, BuiltInName::gl_BoundingBoxOES, SymbolType::BuiltIn,
+        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+        type_gl_BoundingBoxOESTCS);
+    TType *type_gl_BoundingBoxOESTCSES3_2 = new TType(EbtFloat, EbpHigh, EvqBoundingBox, 4);
+    type_gl_BoundingBoxOESTCSES3_2->makeArray(2u);
+    type_gl_BoundingBoxOESTCSES3_2->realize();
+    m_gl_BoundingBoxOESTCSES3_2 = new TVariable(
+        BuiltInId::gl_BoundingBoxOESTCSES3_2, BuiltInName::gl_BoundingBoxOES, SymbolType::BuiltIn,
+        std::array<TExtension, 1u>{{TExtension::UNDEFINED}}, type_gl_BoundingBoxOESTCSES3_2);
     TType *type_gl_TessLevelOuterTES = new TType(EbtFloat, EbpHigh, EvqTessLevelOuter, 1);
     type_gl_TessLevelOuterTES->makeArray(4u);
     type_gl_TessLevelOuterTES->realize();
@@ -32232,7 +32274,7 @@ namespace
 {
 uint16_t GetNextRuleIndex(uint32_t nameHash)
 {
-    if (nameHash == 1632 - 1)
+    if (nameHash == 1634 - 1)
         return ArraySize(BuiltInArray::kRules);
     return BuiltInArray::kMangledOffsets[nameHash + 1];
 }
@@ -32244,7 +32286,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         return nullptr;
 
     uint32_t nameHash = name.mangledNameHash();
-    if (nameHash >= 1632)
+    if (nameHash >= 1634)
         return nullptr;
 
     const char *actualName = BuiltInArray::kMangledNames[nameHash];

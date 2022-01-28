@@ -1047,6 +1047,9 @@ EXPORTS
 
     ; GL_OES_point_sprite
 
+    ; GL_OES_primitive_bounding_box
+    glPrimitiveBoundingBoxOES
+
     ; GL_OES_query_matrix
     glQueryMatrixxOES
 

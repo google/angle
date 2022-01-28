@@ -1120,6 +1120,7 @@ enum class EntryPoint
     GLPopName,
     GLPrimitiveBoundingBox,
     GLPrimitiveBoundingBoxEXT,
+    GLPrimitiveBoundingBoxOES,
     GLPrimitiveRestartIndex,
     GLPrioritizeTextures,
     GLProgramBinary,

@@ -243,6 +243,7 @@ gles_es_only_extensions = [
     "GL_OES_depth_texture",
     "GL_OES_EGL_sync",
     "GL_OES_packed_depth_stencil",
+    "GL_OES_primitive_bounding_box",
     "GL_OES_surfaceless_context",
 ]
 

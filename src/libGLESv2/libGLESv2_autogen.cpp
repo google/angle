@@ -5364,6 +5364,19 @@ void GL_APIENTRY glPointSizePointerOES(GLenum type, GLsizei stride, const void *
 
 // GL_OES_point_sprite
 
+// GL_OES_primitive_bounding_box
+void GL_APIENTRY glPrimitiveBoundingBoxOES(GLfloat minX,
+                                           GLfloat minY,
+                                           GLfloat minZ,
+                                           GLfloat minW,
+                                           GLfloat maxX,
+                                           GLfloat maxY,
+                                           GLfloat maxZ,
+                                           GLfloat maxW)
+{
+    return GL_PrimitiveBoundingBoxOES(minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
+}
+
 // GL_OES_query_matrix
 GLbitfield GL_APIENTRY glQueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
 {

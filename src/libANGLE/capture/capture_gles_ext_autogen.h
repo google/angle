@@ -2276,6 +2276,18 @@ angle::CallCapture CapturePointSizePointerOES(const State &glState,
 
 // GL_OES_point_sprite
 
+// GL_OES_primitive_bounding_box
+angle::CallCapture CapturePrimitiveBoundingBoxOES(const State &glState,
+                                                  bool isCallValid,
+                                                  GLfloat minX,
+                                                  GLfloat minY,
+                                                  GLfloat minZ,
+                                                  GLfloat minW,
+                                                  GLfloat maxX,
+                                                  GLfloat maxY,
+                                                  GLfloat maxZ,
+                                                  GLfloat maxW);
+
 // GL_OES_query_matrix
 angle::CallCapture CaptureQueryMatrixxOES(const State &glState,
                                           bool isCallValid,

@@ -7023,7 +7023,7 @@ void main()
 }
 
 // Negative test for EXT_primitive_bounding_box
-TEST_P(SimpleStateChangeTestES31, PrimitiveBoundingBoxNegativeTest)
+TEST_P(SimpleStateChangeTestES31, PrimitiveBoundingBoxEXTNegativeTest)
 {
     ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_primitive_bounding_box"));
 
@@ -7032,6 +7032,19 @@ TEST_P(SimpleStateChangeTestES31, PrimitiveBoundingBoxNegativeTest)
 
     GLfloat boundingBox[8] = {0};
     glGetFloatv(GL_PRIMITIVE_BOUNDING_BOX_EXT, boundingBox);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
+// Negative test for OES_primitive_bounding_box
+TEST_P(SimpleStateChangeTestES31, PrimitiveBoundingBoxOESNegativeTest)
+{
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_OES_primitive_bounding_box"));
+
+    glPrimitiveBoundingBoxEXT(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    GLfloat boundingBox[8] = {0};
+    glGetFloatv(GL_PRIMITIVE_BOUNDING_BOX_OES, boundingBox);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
 

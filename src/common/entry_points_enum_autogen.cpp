@@ -2228,6 +2228,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glPrimitiveBoundingBox";
         case EntryPoint::GLPrimitiveBoundingBoxEXT:
             return "glPrimitiveBoundingBoxEXT";
+        case EntryPoint::GLPrimitiveBoundingBoxOES:
+            return "glPrimitiveBoundingBoxOES";
         case EntryPoint::GLPrimitiveRestartIndex:
             return "glPrimitiveRestartIndex";
         case EntryPoint::GLPrioritizeTextures:

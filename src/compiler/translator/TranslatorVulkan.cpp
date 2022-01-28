@@ -278,30 +278,55 @@ ANGLE_NO_DISCARD bool ReplaceGLDepthRangeWithDriverUniform(TCompiler *compiler,
 // variable.
 ANGLE_NO_DISCARD bool ReplaceGLBoundingBoxWithGlobal(TCompiler *compiler,
                                                      TIntermBlock *root,
-                                                     TSymbolTable *symbolTable)
+                                                     TSymbolTable *symbolTable,
+                                                     int shaderVersion)
 {
-    // Create a symbol reference to "gl_BoundingBoxEXT"
-    const TVariable *builtinBoundingBoxVar = static_cast<const TVariable *>(
-        symbolTable->findBuiltIn(ImmutableString("gl_BoundingBoxEXT"), 310));
+    // Declare the replacement bounding box variable type
+    TType *emulatedBoundingBoxDeclType = new TType(EbtFloat, EbpHigh, EvqGlobal, 4);
+    emulatedBoundingBoxDeclType->makeArray(2u);
 
+    TVariable *ANGLEBoundingBoxVar = new TVariable(
+        symbolTable->nextUniqueId(), ImmutableString("ANGLEBoundingBox"), SymbolType::AngleInternal,
+        TExtension::EXT_primitive_bounding_box, emulatedBoundingBoxDeclType);
+
+    DeclareGlobalVariable(root, ANGLEBoundingBoxVar);
+
+    const TVariable *builtinBoundingBoxVar;
+    bool replacementResult = true;
+
+    // Create a symbol reference to "gl_BoundingBoxEXT"
+    builtinBoundingBoxVar = static_cast<const TVariable *>(
+        symbolTable->findBuiltIn(ImmutableString("gl_BoundingBoxEXT"), shaderVersion));
     if (builtinBoundingBoxVar != nullptr)
     {
-        // Declare the replacement bounding box variable type
-        TType *emulatedBoundingBoxDeclType = new TType(builtinBoundingBoxVar->getType());
-        emulatedBoundingBoxDeclType->setQualifier(EvqGlobal);
-
-        TVariable *ANGLEBoundingBoxVar =
-            new TVariable(symbolTable->nextUniqueId(), ImmutableString("ANGLEBoundingBox"),
-                          SymbolType::AngleInternal, TExtension::EXT_primitive_bounding_box,
-                          emulatedBoundingBoxDeclType);
-
-        DeclareGlobalVariable(root, ANGLEBoundingBoxVar);
-
         // Use the replacement variable instead of builtin gl_BoundingBoxEXT everywhere.
-        return ReplaceVariable(compiler, root, builtinBoundingBoxVar, ANGLEBoundingBoxVar);
+        replacementResult &=
+            ReplaceVariable(compiler, root, builtinBoundingBoxVar, ANGLEBoundingBoxVar);
     }
 
-    return true;
+    // Create a symbol reference to "gl_BoundingBoxOES"
+    builtinBoundingBoxVar = static_cast<const TVariable *>(
+        symbolTable->findBuiltIn(ImmutableString("gl_BoundingBoxOES"), shaderVersion));
+    if (builtinBoundingBoxVar != nullptr)
+    {
+        // Use the replacement variable instead of builtin gl_BoundingBoxOES everywhere.
+        replacementResult &=
+            ReplaceVariable(compiler, root, builtinBoundingBoxVar, ANGLEBoundingBoxVar);
+    }
+
+    if (shaderVersion >= 320)
+    {
+        // Create a symbol reference to "gl_BoundingBox"
+        builtinBoundingBoxVar = static_cast<const TVariable *>(
+            symbolTable->findBuiltIn(ImmutableString("gl_BoundingBox"), shaderVersion));
+        if (builtinBoundingBoxVar != nullptr)
+        {
+            // Use the replacement variable instead of builtin gl_BoundingBox everywhere.
+            replacementResult &=
+                ReplaceVariable(compiler, root, builtinBoundingBoxVar, ANGLEBoundingBoxVar);
+        }
+    }
+    return replacementResult;
 }
 
 TVariable *AddANGLEPositionVaryingDeclaration(TIntermBlock *root,
@@ -1253,7 +1278,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
 
         case gl::ShaderType::TessControl:
         {
-            if (!ReplaceGLBoundingBoxWithGlobal(this, root, &getSymbolTable()))
+            if (!ReplaceGLBoundingBoxWithGlobal(this, root, &getSymbolTable(), getShaderVersion()))
             {
                 return false;
             }
