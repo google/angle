@@ -2003,7 +2003,7 @@ angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk, bool *di
 
     if (respecifyImage)
     {
-        return respecifyImageStorage(contextVk);
+        ANGLE_TRY(respecifyImageStorage(contextVk));
     }
     else
     {
@@ -2012,10 +2012,15 @@ angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk, bool *di
 
         // Update the current max level in ImageViewHelper
         const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
-        return initImageViews(contextVk, mImage->getActualFormat(),
-                              baseLevelDesc.format.info->sized, newMaxLevel - newBaseLevel + 1,
-                              getImageViewLayerCount());
+        ANGLE_TRY(initImageViews(contextVk, mImage->getActualFormat(),
+                                 baseLevelDesc.format.info->sized, newMaxLevel - newBaseLevel + 1,
+                                 getImageViewLayerCount()));
+
+        mCurrentBaseLevel = newBaseLevel;
+        mCurrentMaxLevel  = newMaxLevel;
     }
+
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,

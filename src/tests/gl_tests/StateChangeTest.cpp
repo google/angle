@@ -7602,6 +7602,66 @@ void main()
     glUseProgram(0);
 }
 
+// Tests a bug where we wouldn't update our cached base/max levels in Vulkan.
+TEST_P(SimpleStateChangeTestES3, MaxLevelChange)
+{
+    // Initialize an immutable texture with 2 levels.
+    std::vector<GLColor> bluePixels(4, GLColor::blue);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_RGBA8, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, bluePixels.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::yellow);
+
+    // Set up draw resources.
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(testProgram);
+
+    GLint posLoc = glGetAttribLocation(testProgram, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLoc);
+
+    std::array<Vector3, 6> quadVerts = GetQuadVertices();
+
+    GLBuffer vao;
+    glBindBuffer(GL_ARRAY_BUFFER, vao);
+    glBufferData(GL_ARRAY_BUFFER, quadVerts.size() * sizeof(quadVerts[0]), quadVerts.data(),
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Draw with the 2x2 mip / max level 1.
+    glViewport(0, 0, 2, 2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Draw with the 1x1 mip / max level 2.
+    glViewport(2, 0, 1, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Draw with the 2x2 mip / max level 1.
+    glViewport(0, 2, 2, 2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Draw with the 1x1 mip / max level 2.
+    glViewport(2, 2, 1, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(2, 0, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(0, 2, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(2, 2, GLColor::yellow);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
