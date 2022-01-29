@@ -436,6 +436,11 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "Access info (usage: SYNC_COPY_TRANSFER_WRITE, prior_usage: "
      "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
      false},
+    {"SYNC-HAZARD-WRITE_AFTER_READ",
+     "vkCmdCopyImageToBuffer: Hazard WRITE_AFTER_READ for dstBuffer VkBuffer",
+     "Access info (usage: SYNC_COPY_TRANSFER_WRITE, prior_usage: "
+     "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
+     false},
     {"SYNC-HAZARD-WRITE_AFTER_READ", "vkCmdDispatch: Hazard WRITE_AFTER_READ for VkBuffer",
      "Access info (usage: SYNC_COMPUTE_SHADER_SHADER_STORAGE_WRITE, prior_usage: "
      "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
