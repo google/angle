@@ -305,9 +305,8 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
     mUniformsAndXfbDescriptorsCache.destroy(rendererVk);
     mShaderBufferDescriptorsCache.destroy(rendererVk);
 
-    // Initialize with a unique BufferSerial
-    vk::ResourceSerialFactory &factory = rendererVk->getResourceSerialFactory();
-    mCurrentDefaultUniformBufferSerial = factory.generateBufferSerial();
+    // Initialize with an invalid BufferSerial
+    mCurrentDefaultUniformBufferSerial = vk::BufferSerial();
 
     for (ProgramInfo &programInfo : mGraphicsProgramInfos)
     {

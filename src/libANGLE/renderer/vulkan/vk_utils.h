@@ -901,14 +901,12 @@ class ClearValuesArray final
                                                                               \
         constexpr bool operator==(const Type##Serial &other) const            \
         {                                                                     \
-            ASSERT(mSerial != kInvalid);                                      \
-            ASSERT(other.mSerial != kInvalid);                                \
+            ASSERT(mSerial != kInvalid || other.mSerial != kInvalid);         \
             return mSerial == other.mSerial;                                  \
         }                                                                     \
         constexpr bool operator!=(const Type##Serial &other) const            \
         {                                                                     \
-            ASSERT(mSerial != kInvalid);                                      \
-            ASSERT(other.mSerial != kInvalid);                                \
+            ASSERT(mSerial != kInvalid || other.mSerial != kInvalid);         \
             return mSerial != other.mSerial;                                  \
         }                                                                     \
         constexpr uint32_t getValue() const { return mSerial; }               \
