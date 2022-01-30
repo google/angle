@@ -224,6 +224,13 @@ GLColorRGB::GLColorRGB(const Vector3 &floatColor)
     : R(ColorDenorm(floatColor.x())), G(ColorDenorm(floatColor.y())), B(ColorDenorm(floatColor.z()))
 {}
 
+GLColor::GLColor(const Vector3 &floatColor)
+    : R(ColorDenorm(floatColor.x())),
+      G(ColorDenorm(floatColor.y())),
+      B(ColorDenorm(floatColor.z())),
+      A(255)
+{}
+
 GLColor::GLColor(const Vector4 &floatColor)
     : R(ColorDenorm(floatColor.x())),
       G(ColorDenorm(floatColor.y())),

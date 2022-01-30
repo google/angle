@@ -21,6 +21,7 @@
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
+#include "util/random_utils.h"
 #include "util/shader_utils.h"
 
 using namespace angle;
@@ -73,6 +74,13 @@ class VulkanUniformUpdatesTest : public ANGLETest
     void limitMaxSets()
     {
         rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolForTesting(kMaxSetsForTesting);
+        rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolMultiplierForTesting(
+            kMaxSetsMultiplierForTesting);
+    }
+
+    void setExplicitMaxSetsLimit(uint32_t limit)
+    {
+        rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolForTesting(limit);
         rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolMultiplierForTesting(
             kMaxSetsMultiplierForTesting);
     }
@@ -540,6 +548,67 @@ void main()
         drawQuad(program, "position", 0.5f, 1.0f);
         ASSERT_GL_NO_ERROR();
         EXPECT_PIXEL_RECT_EQ(xoffset, yoffset, kHalfX, kHalfY, expectedColor);
+    }
+}
+
+// Covers a usage pattern where two programs share a descriptor pool.
+TEST_P(VulkanUniformUpdatesTest, MultipleProgramsShareDescriptors)
+{
+    setExplicitMaxSetsLimit(2);
+
+    // Set a min size so uniform updates allocate a new buffer every 2nd time.
+    rx::ContextVk *contextVk = hackANGLE();
+    contextVk->setDefaultUniformBlocksMinSizeForTesting(512);
+
+    static constexpr size_t kNumPrograms    = 2;
+    static constexpr size_t kDrawIterations = 4;
+    static constexpr GLint kPosLoc          = 0;
+
+    std::array<GLuint, kNumPrograms> programs = {};
+
+    for (GLuint &program : programs)
+    {
+        auto preLinkCallback = [](GLuint program) {
+            glBindAttribLocation(program, kPosLoc, essl1_shaders::PositionAttrib());
+        };
+
+        program = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor(),
+                                 preLinkCallback);
+        ASSERT_NE(program, 0u);
+    }
+
+    const std::array<Vector3, 6> &quadVerts = GetQuadVertices();
+
+    GLBuffer vbo;
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, quadVerts.size() * sizeof(quadVerts[0]), quadVerts.data(),
+                 GL_STATIC_DRAW);
+
+    glVertexAttribPointer(kPosLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(kPosLoc);
+
+    ASSERT_GL_NO_ERROR();
+
+    RNG rng;
+
+    for (size_t drawIteration = 0; drawIteration < kDrawIterations; ++drawIteration)
+    {
+        for (GLuint program : programs)
+        {
+            Vector3 randVec = RandomVec3(rng.randomInt(), 0.0f, 1.0f);
+
+            glUseProgram(program);
+            glUniform4f(0, randVec.x(), randVec.y(), randVec.z(), 1.0f);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(randVec), 5);
+        }
+    }
+
+    ASSERT_GL_NO_ERROR();
+
+    for (GLuint &program : programs)
+    {
+        glDeleteProgram(program);
     }
 }
 
