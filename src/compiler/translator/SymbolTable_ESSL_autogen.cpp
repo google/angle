@@ -2347,7 +2347,6 @@ constexpr const TSymbolUniqueId BuiltInId::gl_SecondaryFragColorEXT;
 constexpr const TSymbolUniqueId BuiltInId::gl_SecondaryFragDataEXT;
 constexpr const TSymbolUniqueId BuiltInId::gl_FragDepthEXT;
 constexpr const TSymbolUniqueId BuiltInId::gl_LastFragData;
-constexpr const TSymbolUniqueId BuiltInId::gl_LastFragDataNonCoherent;
 constexpr const TSymbolUniqueId BuiltInId::gl_LastFragColor;
 constexpr const TSymbolUniqueId BuiltInId::gl_LastFragDataNV;
 constexpr const TSymbolUniqueId BuiltInId::gl_LastFragColorARM;
@@ -2450,7 +2449,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_PositionTES;
 constexpr const TSymbolUniqueId BuiltInId::gl_PositionTESES3_2;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVR;
 
-const int TSymbolTable::kLastBuiltInId = 5577;
+const int TSymbolTable::kLastBuiltInId = 5575;
 
 namespace BuiltInName
 {
@@ -27190,8 +27189,7 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::ESSL,
               100,
               Shader::FRAGMENT,
-              EXT_INDEX(EXT_shader_framebuffer_fetch_non_coherent)>(
-        &TableBase::m_gl_LastFragDataNonCoherent),
+              EXT_INDEX(EXT_shader_framebuffer_fetch_non_coherent)>(&TableBase::m_gl_LastFragData),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, EXT_INDEX(NV_shader_framebuffer_fetch)>(
         &TableBase::m_gl_LastFragDataNV),
     Rule::Get<Spec::ESSL, 100, Shader::FRAGMENT, EXT_INDEX(NV_shader_framebuffer_fetch)>(
@@ -31915,17 +31913,11 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     TType *type_gl_LastFragData = new TType(EbtFloat, EbpMedium, EvqLastFragData, 4, 1);
     type_gl_LastFragData->makeArray(resources.MaxDrawBuffers);
     type_gl_LastFragData->realize();
-    m_gl_LastFragData =
-        new TVariable(BuiltInId::gl_LastFragData, BuiltInName::gl_LastFragData, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_shader_framebuffer_fetch}},
-                      type_gl_LastFragData);
-    TType *type_gl_LastFragDataNonCoherent = new TType(EbtFloat, EbpMedium, EvqLastFragData, 4, 1);
-    type_gl_LastFragDataNonCoherent->makeArray(resources.MaxDrawBuffers);
-    type_gl_LastFragDataNonCoherent->realize();
-    m_gl_LastFragDataNonCoherent = new TVariable(
-        BuiltInId::gl_LastFragDataNonCoherent, BuiltInName::gl_LastFragData, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_shader_framebuffer_fetch_non_coherent}},
-        type_gl_LastFragDataNonCoherent);
+    m_gl_LastFragData = new TVariable(
+        BuiltInId::gl_LastFragData, BuiltInName::gl_LastFragData, SymbolType::BuiltIn,
+        std::array<TExtension, 2u>{{TExtension::EXT_shader_framebuffer_fetch,
+                                    TExtension::EXT_shader_framebuffer_fetch_non_coherent}},
+        type_gl_LastFragData);
     TType *type_gl_LastFragDataNV = new TType(EbtFloat, EbpMedium, EvqLastFragData, 4, 1);
     type_gl_LastFragDataNV->makeArray(resources.MaxDrawBuffers);
     type_gl_LastFragDataNV->realize();

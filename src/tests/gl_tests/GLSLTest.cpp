@@ -14824,6 +14824,32 @@ void main()
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
     EXPECT_NE(compileResult, 0);
 }
+
+// Test that framebuffer fetch transforms gl_LastFragData in the presence of gl_FragCoord without
+// failing validation (adapted from a Chromium test, see anglebug.com/6951)
+TEST_P(GLSLTest, FramebufferFetchWithLastFragData)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kFS[] = R"(#version 100
+
+#extension GL_EXT_shader_framebuffer_fetch : require
+varying mediump vec4 color;
+void main() {
+    gl_FragColor = length(gl_FragCoord.xy) * gl_LastFragData[0];
+})";
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = {kFS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kFS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest, WithGlslang(ES2_VULKAN()));

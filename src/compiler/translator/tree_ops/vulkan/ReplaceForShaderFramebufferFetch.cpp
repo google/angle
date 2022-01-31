@@ -99,13 +99,13 @@ bool InputAttachmentReferenceTraverser::visitDeclaration(Visit visit, TIntermDec
 
     if (symbol->getType().getQualifier() == EvqFragmentInOut)
     {
-        unsigned int inputAttachmentIdx = symbol->getType().getLayoutQualifier().location;
+        const unsigned int inputAttachmentIdx = symbol->getType().getLayoutQualifier().location;
 
         if (symbol->getType().isArray())
         {
             for (unsigned int index = 0; index < symbol->getType().getOutermostArraySize(); index++)
             {
-                unsigned int realInputAttachmentIdx = inputAttachmentIdx + index;
+                const unsigned int realInputAttachmentIdx = inputAttachmentIdx + index;
                 setInputAttachmentIndex(realInputAttachmentIdx);
             }
         }
@@ -705,7 +705,6 @@ ANGLE_NO_DISCARD bool ReplaceInOutVariables(TCompiler *compiler,
     {
         return false;
     }
-
     std::map<unsigned int, const TVariable *> toBeReplaced;
     std::map<unsigned int, const TVariable *> newOutVarArray;
     for (auto originInOutVarIter : declaredInOutVarMap)
@@ -715,12 +714,20 @@ ANGLE_NO_DISCARD bool ReplaceInOutVariables(TCompiler *compiler,
 
         TType *newOutVarType = new TType(originInOutVar->getType());
 
-        // We just want to use the original variable decorated with a inout qualifier, except
-        // the qualifier itself. The qualifier will be changed from inout to out.
+        // We just want to use the original variable, but without an out qualifier instead of inout.
         newOutVarType->setQualifier(EvqFragmentOut);
 
-        TVariable *newOutVar = new TVariable(symbolTable, originInOutVar->getName(), newOutVarType,
-                                             SymbolType::UserDefined);
+        // Additionally, if the symbol name is gl_LastFragData, replace it with a temporary one as
+        // it no longer represents a built-in.
+        ImmutableString varName  = originInOutVar->getName();
+        SymbolType varSymbolType = originInOutVar->variable().symbolType();
+        if (varName == "gl_LastFragData")
+        {
+            varName       = ImmutableString("");
+            varSymbolType = SymbolType::Empty;
+        }
+
+        TVariable *newOutVar = new TVariable(symbolTable, varName, newOutVarType, varSymbolType);
         newOutVarArray[inputAttachmentIndex] = newOutVar;
         replaceSubpassInputUtils.declareVariablesForFetch(inputAttachmentIndex,
                                                           newOutVarArray[inputAttachmentIndex]);
@@ -746,12 +753,7 @@ ANGLE_NO_DISCARD bool ReplaceInOutVariables(TCompiler *compiler,
     // 4) Replace previous 'inout' variable with newly created 'inout' variable
     ReplaceVariableTraverser replaceTraverser(replacementMap);
     root->traverse(&replaceTraverser);
-    if (!replaceTraverser.updateTree(compiler, root))
-    {
-        return false;
-    }
-
-    return true;
+    return replaceTraverser.updateTree(compiler, root);
 }
 
 }  // namespace sh

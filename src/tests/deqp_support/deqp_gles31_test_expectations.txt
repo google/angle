@@ -172,6 +172,9 @@
 // Geometry shader support:
 5430 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated_* = FAIL
 
+// Framebuffer fetch implementation bug
+6909 VULKAN : dEQP-GLES31.functional.shaders.framebuffer_fetch.basic.framebuffer_texture_layer = SKIP
+
 ////
 //// AMD Vulkan expectations
 ////
@@ -670,7 +673,6 @@
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.callbacks.texture.compressedteximage3d_invalid_border = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.callbacks.texture.compressedtexsubimage3d_neg_level = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.clear_bufferfv = SKIP
-5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.framebuffer_fetch.invalid_vertex_inout = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.bind_transform_feedback = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.sampler_parameteri = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.shader_source = SKIP
@@ -1353,9 +1355,6 @@
 6194 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.shaders.multisample_interpolation.interpolate_at_offset.array_element.* = FAIL
 
 // Pixel 6 expectations
-6905 PIXEL6 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.*.invalid_inout_version = SKIP
-6907 PIXEL6 VULKAN : dEQP-GLES31.functional.debug.negative_coverage.*.invalid_vertex_inout = SKIP
-6909 PIXEL6 VULKAN : dEQP-GLES31.functional.shaders.framebuffer_fetch.basic.framebuffer_texture_layer = SKIP
 6908 PIXEL6 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.tessellation.varying.rules.internal_different_precision = SKIP
 
 6910 PIXEL6 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.layer_provoking_vertex_* = FAIL

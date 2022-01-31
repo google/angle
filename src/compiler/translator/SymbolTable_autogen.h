@@ -117,7 +117,6 @@ class TSymbolTableBase
     TSymbol *m_gl_SecondaryFragDataEXT                       = nullptr;
     TSymbol *m_gl_FragDepthEXT                               = nullptr;
     TSymbol *m_gl_LastFragData                               = nullptr;
-    TSymbol *m_gl_LastFragDataNonCoherent                    = nullptr;
     TSymbol *m_gl_LastFragDataNV                             = nullptr;
     TSymbol *m_gl_SampleMaskIn                               = nullptr;
     TSymbol *m_gl_SampleMaskInES3_2                          = nullptr;
