@@ -103,6 +103,7 @@ bool IsValidCopyTextureDestinationInternalFormatEnum(GLint internalFormat)
         case GL_RGBA:
         case GL_RGB8:
         case GL_RGBA8:
+        case GL_RGBX8_ANGLE:
         case GL_BGRA_EXT:
         case GL_BGRA8_EXT:
         case GL_SRGB_EXT:
@@ -1450,6 +1451,15 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                 case GL_RGB5_A1:
                     if (context->getExtensions().textureType2101010REVEXT &&
                         type == GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGBA)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+
+                    break;
+
+                case GL_RGBX8_ANGLE:
+                    if (context->getExtensions().rgbxInternalFormatANGLE &&
+                        type == GL_UNSIGNED_BYTE && format == GL_RGB)
                     {
                         nonEqualFormatsAllowed = true;
                     }

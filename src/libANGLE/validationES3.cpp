@@ -228,6 +228,7 @@ bool ValidateCopyTexture3DCommon(const Context *context,
         case GL_RG32UI:
         case GL_RG32I:
         case GL_RGB8:
+        case GL_RGBX8_ANGLE:
         case GL_SRGB8:
         case GL_RGB565:
         case GL_RGB8_SNORM:

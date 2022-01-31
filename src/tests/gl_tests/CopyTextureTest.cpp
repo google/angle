@@ -687,6 +687,16 @@ TEST_P(CopyTextureTest, ImmutableTexture)
     EXPECT_GL_NO_ERROR();
 }
 
+struct FormatPair
+{
+    explicit FormatPair(GLenum format) : format(format), internalFormat(format) {}
+    FormatPair(GLenum format, GLint internalFormat) : format(format), internalFormat(internalFormat)
+    {}
+
+    GLenum format;
+    GLint internalFormat;
+};
+
 // Test validation of internal formats in CopyTexture and CopySubTexture
 TEST_P(CopyTextureTest, InternalFormat)
 {
@@ -695,53 +705,59 @@ TEST_P(CopyTextureTest, InternalFormat)
         return;
     }
 
-    std::vector<GLint> sourceFormats;
-    sourceFormats.push_back(GL_ALPHA);
-    sourceFormats.push_back(GL_RGB);
-    sourceFormats.push_back(GL_RGBA);
-    sourceFormats.push_back(GL_LUMINANCE);
-    sourceFormats.push_back(GL_LUMINANCE_ALPHA);
+    std::vector<FormatPair> sourceFormats;
+    sourceFormats.push_back(FormatPair(GL_ALPHA));
+    sourceFormats.push_back(FormatPair(GL_RGB));
+    sourceFormats.push_back(FormatPair(GL_RGBA));
+    sourceFormats.push_back(FormatPair(GL_LUMINANCE));
+    sourceFormats.push_back(FormatPair(GL_LUMINANCE_ALPHA));
 
-    std::vector<GLint> destFormats;
-    destFormats.push_back(GL_RGB);
-    destFormats.push_back(GL_RGBA);
+    std::vector<FormatPair> destFormats;
+    destFormats.push_back(FormatPair(GL_RGB));
+    destFormats.push_back(FormatPair(GL_RGBA));
 
     if (IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888"))
     {
-        sourceFormats.push_back(GL_BGRA_EXT);
-        destFormats.push_back(GL_BGRA_EXT);
+        sourceFormats.push_back(FormatPair(GL_BGRA_EXT));
+        destFormats.push_back(FormatPair(GL_BGRA_EXT));
+    }
+
+    if (IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"))
+    {
+        sourceFormats.push_back(FormatPair(GL_RGB, GL_RGBX8_ANGLE));
+        destFormats.push_back(FormatPair(GL_RGB, GL_RGBX8_ANGLE));
     }
 
     // Test with glCopyTexture
-    for (GLint sourceFormat : sourceFormats)
+    for (FormatPair &sourceFormat : sourceFormats)
     {
-        for (GLint destFormat : destFormats)
+        for (FormatPair &destFormat : destFormats)
         {
             glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-            glTexImage2D(GL_TEXTURE_2D, 0, sourceFormat, 1, 1, 0, sourceFormat, GL_UNSIGNED_BYTE,
-                         nullptr);
+            glTexImage2D(GL_TEXTURE_2D, 0, sourceFormat.internalFormat, 1, 1, 0,
+                         sourceFormat.format, GL_UNSIGNED_BYTE, nullptr);
             EXPECT_GL_NO_ERROR();
 
-            glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, destFormat,
-                                  GL_UNSIGNED_BYTE, false, false, false);
+            glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0,
+                                  destFormat.internalFormat, GL_UNSIGNED_BYTE, false, false, false);
 
             EXPECT_GL_NO_ERROR();
         }
     }
 
     // Test with glCopySubTexture
-    for (GLint sourceFormat : sourceFormats)
+    for (FormatPair &sourceFormat : sourceFormats)
     {
-        for (GLint destFormat : destFormats)
+        for (FormatPair &destFormat : destFormats)
         {
             glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-            glTexImage2D(GL_TEXTURE_2D, 0, sourceFormat, 1, 1, 0, sourceFormat, GL_UNSIGNED_BYTE,
-                         nullptr);
+            glTexImage2D(GL_TEXTURE_2D, 0, sourceFormat.internalFormat, 1, 1, 0,
+                         sourceFormat.format, GL_UNSIGNED_BYTE, nullptr);
             EXPECT_GL_NO_ERROR();
 
             glBindTexture(GL_TEXTURE_2D, mTextures[1]);
-            glTexImage2D(GL_TEXTURE_2D, 0, destFormat, 1, 1, 0, destFormat, GL_UNSIGNED_BYTE,
-                         nullptr);
+            glTexImage2D(GL_TEXTURE_2D, 0, destFormat.internalFormat, 1, 1, 0, destFormat.format,
+                         GL_UNSIGNED_BYTE, nullptr);
             EXPECT_GL_NO_ERROR();
 
             glCopySubTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, 0, 0, 0, 0, 1,
