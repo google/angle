@@ -185,6 +185,10 @@ void *OpenSystemLibraryWithExtensionAndGetError(const char *libraryName,
 #if ANGLE_PLATFORM_IOS
         // On iOS, shared libraries must be loaded from within the app bundle.
         directory = GetExecutableDirectory() + "/Frameworks/";
+#elif ANGLE_PLATFORM_FUCHSIA
+        // On Fuchsia the dynamic loader always looks up libraries in /pkg/lib
+        // and disallows loading of libraries via absolute paths.
+        directory = "";
 #else
         directory = GetModuleDirectoryAndGetError(errorOut);
 #endif
