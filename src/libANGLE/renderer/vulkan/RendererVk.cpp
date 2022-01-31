@@ -253,12 +253,6 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     {"SYNC-HAZARD-WRITE_AFTER_READ",
      "depth aspect during store with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
      "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-     "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, read_barriers: VK_PIPELINE_STAGE_2_NONE_KHR, "
-     "command: vkCmdDraw",
-     "", true},
-    {"SYNC-HAZARD-WRITE_AFTER_READ",
-     "depth aspect during store with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
-     "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
      "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, read_barriers: VK_PIPELINE_STAGE_2_NONE, "
      "command: vkCmdDraw",
      "", true},
@@ -429,11 +423,6 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "usage: SYNC_INDEX_INPUT_INDEX_READ", false},
     {"SYNC-HAZARD-WRITE_AFTER_READ", "vkCmdDraw: Hazard WRITE_AFTER_READ for VkBuffer",
      "Access info (usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_WRITE, prior_usage: "
-     "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
-     false},
-    {"SYNC-HAZARD-WRITE_AFTER_READ",
-     "vkCmdCopyImageToBuffer(): Hazard WRITE_AFTER_READ for dstBuffer VkBuffer",
-     "Access info (usage: SYNC_COPY_TRANSFER_WRITE, prior_usage: "
      "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
      false},
     {"SYNC-HAZARD-WRITE_AFTER_READ",
