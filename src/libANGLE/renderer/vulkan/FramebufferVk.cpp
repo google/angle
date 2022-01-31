@@ -1467,8 +1467,8 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     resolveRegion.dstOffset.x                   = params.dstOffset[0];
     resolveRegion.dstOffset.y                   = params.dstOffset[1];
     resolveRegion.dstOffset.z                   = 0;
-    resolveRegion.extent.width                  = params.srcExtents[0];
-    resolveRegion.extent.height                 = params.srcExtents[1];
+    resolveRegion.extent.width                  = params.blitArea.width;
+    resolveRegion.extent.height                 = params.blitArea.height;
     resolveRegion.extent.depth                  = 1;
 
     vk::PerfCounters &perfCounters = contextVk->getPerfCounters();

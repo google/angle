@@ -97,6 +97,7 @@
 6068 INTEL VULKAN : MultiviewRenderPrimitiveTest.LineStrip/* = SKIP
 // Fails on older mesa in some sequence of test
 6563 LINUX INTEL VULKAN : TransformFeedbackTest.EndWithDifferentProgram/* = SKIP
+6962 WIN INTEL VULKAN : BlitFramebufferTestES31.PartialResolve/* = SKIP
 
 // Mac
 
