@@ -559,6 +559,12 @@ TEST_P(EGLProtectedContentTest, ProtectedContextWithProtectedTexture)
     textureTest(true, true);
 }
 
+// Protected context with unprotected Texture
+TEST_P(EGLProtectedContentTest, ProtectedContextWithUnprotectedTexture)
+{
+    textureTest(true, false);
+}
+
 void EGLProtectedContentTest::textureFromImageTest(bool isProtectedContext, bool isProtectedTexture)
 {
     ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_EXT_protected_content"));

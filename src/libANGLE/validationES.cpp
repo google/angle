@@ -1965,6 +1965,14 @@ bool ValidateFramebufferTextureBase(const Context *context,
             context->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidTextureTarget);
             return false;
         }
+
+        if (tex->getState().hasProtectedContent() != context->getState().hasProtectedContent())
+        {
+            context->validationError(
+                entryPoint, GL_INVALID_OPERATION,
+                "Mismatch between Texture and Context Protected Content state");
+            return false;
+        }
     }
 
     const Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
@@ -4881,7 +4889,7 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
         return false;
     }
 
-    if (imageObject->hasProtectedContent() != context->getState().hasProtectedContent())
+    if (imageObject->hasProtectedContent() && !context->getState().hasProtectedContent())
     {
         context->validationError(entryPoint, GL_INVALID_OPERATION,
                                  "Mismatch between Image and Context Protected Content state");
