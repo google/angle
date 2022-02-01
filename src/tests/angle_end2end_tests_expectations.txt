@@ -495,8 +495,11 @@
 // Indexed indirect draw offset bug
 6751 METAL : MultiDrawIndirectTest.MultiDrawElementsIndirect* = SKIP
 6751 D3D11 : MultiDrawIndirectTest.MultiDrawElementsIndirect* = SKIP
-6751 METAL : DrawBaseVertexBaseInstanceTest.MultiDrawElementsInstancedBaseVertexBaseInstance/* = SKIP
 6751 D3D11 : DrawBaseVertexBaseInstanceTest.MultiDrawElementsInstancedBaseVertexBaseInstance/* = SKIP
+
+// Non-static draw bug
+6963 METAL : DrawBaseVertexVariantsTest.DrawElementsInstancedBaseVertexBaseInstance/ES3_Metal__DYNAMIC_DRAW = SKIP
+6963 METAL : DrawBaseVertexVariantsTest.DrawElementsInstancedBaseVertexBaseInstance/ES3_Metal__STREAM_DRAW = SKIP
 
 // ASAN flakes with Vulkan / SwiftShader / AsyncQueue
 6875 ASAN VULKAN SWIFTSHADER : ComputeShaderTest.*/ES3_1_Vulkan_SwiftShader_AsyncQueue = SKIP
