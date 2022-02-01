@@ -24,10 +24,9 @@ class FragDepthTest : public ANGLETest
         GLFramebuffer framebuffer;
     };
 
-    FragDepthTestResources setupResources()
+    void setupResources(FragDepthTestResources &resources)
     {
 
-        FragDepthTestResources resources;
         // Writes a fixed depth value and green.
         constexpr char kFS[] =
             R"(#version 300 es
@@ -55,18 +54,17 @@ class FragDepthTest : public ANGLETest
         glBindFramebuffer(GL_FRAMEBUFFER, resources.framebuffer);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                resources.colorTexture, 0);
-
-        return resources;
     }
 
     void cleanupResources(FragDepthTestResources &resources) { glDeleteProgram(resources.program); }
 
     void checkDepthWritten(float expectedDepth, float fsDepth, bool bindDepthBuffer)
     {
-        FragDepthTestResources resources = setupResources();
+        FragDepthTestResources resources;
+        setupResources(resources);
         ASSERT_NE(0u, resources.program);
         ASSERT_NE(-1, resources.depthLocation);
-        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
         ASSERT_GL_NO_ERROR();
 
         glBindFramebuffer(GL_FRAMEBUFFER, resources.framebuffer);
