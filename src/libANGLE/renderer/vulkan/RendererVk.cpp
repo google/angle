@@ -5080,7 +5080,7 @@ std::string RendererVk::getAndClearLastValidationMessage(uint32_t *countSinceLas
 
 uint64_t RendererVk::getMaxFenceWaitTimeNs() const
 {
-    constexpr uint64_t kMaxFenceWaitTimeNs = 120'000'000'000llu;
+    constexpr uint64_t kMaxFenceWaitTimeNs = std::numeric_limits<uint64_t>::max();
 
     return kMaxFenceWaitTimeNs;
 }
