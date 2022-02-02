@@ -1261,6 +1261,7 @@ angle::Result ProgramExecutableVk::updateBuffersDescriptorSet(
     const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc,
     const std::vector<gl::InterfaceBlock> &blocks,
     VkDescriptorType descriptorType,
+    VkDeviceSize maxBoundBufferRange,
     bool cacheHit)
 {
     // Early exit if no blocks or no update needed.
@@ -1302,15 +1303,9 @@ angle::Result ProgramExecutableVk::updateBuffersDescriptorSet(
         uint32_t binding      = info.binding;
         uint32_t arrayElement = block.isArray ? block.arrayElement : 0;
 
-        VkDeviceSize size;
-        if (!isStorageBuffer)
-        {
-            size = block.dataSize;
-        }
-        else
-        {
-            size = gl::GetBoundBufferAvailableSize(bufferBinding);
-        }
+        // Limit bound buffer size to maximum resource binding size.
+        GLsizeiptr boundBufferSize = gl::GetBoundBufferAvailableSize(bufferBinding);
+        VkDeviceSize size          = std::min<VkDeviceSize>(boundBufferSize, maxBoundBufferRange);
 
         // Make sure there's no possible under/overflow with binding size.
         static_assert(sizeof(VkDeviceSize) >= sizeof(bufferBinding.getSize()),
@@ -1592,14 +1587,17 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
 
     bool cacheHit = mDescriptorSets[DescriptorSetIndex::ShaderResource] != VK_NULL_HANDLE;
 
+    const VkPhysicalDeviceLimits &limits =
+        contextVk->getRenderer()->getPhysicalDeviceProperties().limits;
+
     for (const gl::ShaderType shaderType : executable->getLinkedShaderStages())
     {
-        ANGLE_TRY(updateBuffersDescriptorSet(contextVk, shaderType, shaderBuffersDesc,
-                                             executable->getUniformBlocks(),
-                                             mUniformBufferDescriptorType, cacheHit));
-        ANGLE_TRY(updateBuffersDescriptorSet(contextVk, shaderType, shaderBuffersDesc,
-                                             executable->getShaderStorageBlocks(),
-                                             kStorageBufferDescriptorType, cacheHit));
+        ANGLE_TRY(updateBuffersDescriptorSet(
+            contextVk, shaderType, shaderBuffersDesc, executable->getUniformBlocks(),
+            mUniformBufferDescriptorType, limits.maxUniformBufferRange, cacheHit));
+        ANGLE_TRY(updateBuffersDescriptorSet(
+            contextVk, shaderType, shaderBuffersDesc, executable->getShaderStorageBlocks(),
+            kStorageBufferDescriptorType, limits.maxStorageBufferRange, cacheHit));
         ANGLE_TRY(updateAtomicCounterBuffersDescriptorSet(contextVk, *executable, shaderType,
                                                           shaderBuffersDesc, cacheHit));
         ANGLE_TRY(updateImagesDescriptorSet(contextVk, *executable, shaderType));

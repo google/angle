@@ -267,6 +267,7 @@ class ProgramExecutableVk
         const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc,
         const std::vector<gl::InterfaceBlock> &blocks,
         VkDescriptorType descriptorType,
+        VkDeviceSize maxBoundBufferRange,
         bool cacheHit);
     angle::Result updateAtomicCounterBuffersDescriptorSet(
         ContextVk *contextVk,
