@@ -670,6 +670,20 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return mShareGroupVk->getDefaultBufferPool(mRenderer, size, memoryTypeIndex);
     }
 
+    angle::Result allocateStreamedVertexBuffer(size_t attribIndex,
+                                               size_t bytesToAllocate,
+                                               vk::BufferHelper **vertexBufferOut)
+    {
+        bool newBufferOut;
+        ANGLE_TRY(mStreamedVertexBuffers[attribIndex].allocate(this, bytesToAllocate,
+                                                               vertexBufferOut, &newBufferOut));
+        if (newBufferOut)
+        {
+            mHasInFlightStreamedVertexBuffers.set(attribIndex);
+        }
+        return angle::Result::Continue;
+    }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -719,7 +733,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     {
         vk::DynamicBuffer dynamicBuffer;
         VkDescriptorSet descriptorSet;
-        uint32_t dynamicOffset;
+        vk::BufferHelper *currentBuffer;
         vk::BindingPointer<vk::DescriptorSetLayout> descriptorSetLayout;
         vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
         DriverUniformsDescriptorSetCache descriptorSetCache;
@@ -1121,7 +1135,12 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // "Current Value" aka default vertex attribute state.
     gl::AttributesMask mDirtyDefaultAttribsMask;
-    gl::AttribArray<vk::DynamicBuffer> mDefaultAttribBuffers;
+
+    // DynamicBuffers for streaming vertex data from client memory pointer as well as for default
+    // attributes. mHasInFlightStreamedVertexBuffers indicates if the dynamic buffer has any
+    // inflight buffer or not that we need to release at submission time.
+    gl::AttribArray<vk::DynamicBuffer> mStreamedVertexBuffers;
+    gl::AttributesMask mHasInFlightStreamedVertexBuffers;
 
     // We use a single pool for recording commands. We also keep a free list for pool recycling.
     vk::SecondaryCommandPools mCommandPools;

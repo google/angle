@@ -147,7 +147,6 @@ class VertexArrayVk : public VertexArrayImpl
     // Cached element array buffers for improving performance.
     vk::BufferHelperPointerVector mCachedStreamIndexBuffers;
 
-    gl::AttribArray<vk::BufferHelper> mStreamedVertexData;
     vk::BufferHelper mStreamedIndexData;
     vk::BufferHelper mTranslatedByteIndexData;
     vk::BufferHelper mTranslatedByteIndirectData;

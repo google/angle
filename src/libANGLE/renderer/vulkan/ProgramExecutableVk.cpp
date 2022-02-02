@@ -2066,11 +2066,10 @@ angle::Result ProgramExecutableVk::updateUniforms(ContextVk *contextVk,
 {
     ASSERT(hasDirtyUniforms());
 
-    uint8_t *bufferData                 = nullptr;
-    VkDeviceSize bufferOffset           = 0;
-    uint32_t offsetIndex                = 0;
+    vk::BufferHelper *defaultUniformBuffer;
     bool anyNewBufferAllocated          = false;
     gl::ShaderMap<VkDeviceSize> offsets = {};  // offset to the beginning of bufferData
+    uint32_t offsetIndex                = 0;
     size_t requiredSpace;
 
     // We usually only update uniform data for shader stages that are actually dirty. But when the
@@ -2082,16 +2081,17 @@ angle::Result ProgramExecutableVk::updateUniforms(ContextVk *contextVk,
 
     // Allocate space from dynamicBuffer. Always try to allocate from the current buffer first.
     // If that failed, we deal with fall out and try again.
-    if (!defaultUniformStorage->allocateFromCurrentBuffer(requiredSpace, &bufferData,
-                                                          &bufferOffset))
+    if (!defaultUniformStorage->allocateFromCurrentBuffer(requiredSpace, &defaultUniformBuffer))
     {
         setAllDefaultUniformsDirty(glExecutable);
 
         requiredSpace = calcUniformUpdateRequiredSpace(contextVk, glExecutable, &offsets);
-        ANGLE_TRY(defaultUniformStorage->allocate(contextVk, requiredSpace, &bufferData, nullptr,
-                                                  &bufferOffset, &anyNewBufferAllocated));
+        ANGLE_TRY(defaultUniformStorage->allocate(contextVk, requiredSpace, &defaultUniformBuffer,
+                                                  &anyNewBufferAllocated));
     }
 
+    uint8_t *bufferData       = defaultUniformBuffer->getMappedMemory();
+    VkDeviceSize bufferOffset = defaultUniformBuffer->getOffset();
     for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
     {
         if (mDefaultUniformBlocksDirty[shaderType])
@@ -2104,7 +2104,7 @@ angle::Result ProgramExecutableVk::updateUniforms(ContextVk *contextVk,
         }
         ++offsetIndex;
     }
-    ANGLE_TRY(defaultUniformStorage->flush(contextVk));
+    ANGLE_TRY(defaultUniformBuffer->flush(contextVk->getRenderer()));
 
     // Because the uniform buffers are per context, we can't rely on dynamicBuffer's allocate
     // function to tell us if you have got a new buffer or not. Other program's use of the buffer
@@ -2113,7 +2113,6 @@ angle::Result ProgramExecutableVk::updateUniforms(ContextVk *contextVk,
     // use that recorded BufferSerial compare to the current uniform buffer to quickly detect if
     // there is a buffer switch or not. We need to retrieve from the descriptor set cache or
     // allocate a new descriptor set whenever there is uniform buffer switch.
-    vk::BufferHelper *defaultUniformBuffer = defaultUniformStorage->getCurrentBuffer();
     if (mCurrentDefaultUniformBufferSerial != defaultUniformBuffer->getBufferSerial())
     {
         // We need to reinitialize the descriptor sets if we newly allocated buffers since we can't

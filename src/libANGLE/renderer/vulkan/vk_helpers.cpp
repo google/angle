@@ -2318,7 +2318,6 @@ DynamicBuffer::DynamicBuffer()
       mPolicy(DynamicBufferPolicy::OneShotUse),
       mInitialSize(0),
       mNextAllocationOffset(0),
-      mLastFlushOrInvalidateOffset(0),
       mSize(0),
       mAlignment(0),
       mMemoryPropertyFlags(0)
@@ -2331,7 +2330,6 @@ DynamicBuffer::DynamicBuffer(DynamicBuffer &&other)
       mInitialSize(other.mInitialSize),
       mBuffer(std::move(other.mBuffer)),
       mNextAllocationOffset(other.mNextAllocationOffset),
-      mLastFlushOrInvalidateOffset(other.mLastFlushOrInvalidateOffset),
       mSize(other.mSize),
       mAlignment(other.mAlignment),
       mMemoryPropertyFlags(other.mMemoryPropertyFlags),
@@ -2346,23 +2344,11 @@ void DynamicBuffer::init(RendererVk *renderer,
                          bool hostVisible,
                          DynamicBufferPolicy policy)
 {
-    VkMemoryPropertyFlags memoryPropertyFlags =
+    mUsage       = usage;
+    mHostVisible = hostVisible;
+    mMemoryPropertyFlags =
         (hostVisible) ? VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-
-    initWithFlags(renderer, usage, alignment, initialSize, memoryPropertyFlags, policy);
-}
-
-void DynamicBuffer::initWithFlags(RendererVk *renderer,
-                                  VkBufferUsageFlags usage,
-                                  size_t alignment,
-                                  size_t initialSize,
-                                  VkMemoryPropertyFlags memoryPropertyFlags,
-                                  DynamicBufferPolicy policy)
-{
-    mUsage               = usage;
-    mHostVisible         = ((memoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0);
-    mMemoryPropertyFlags = memoryPropertyFlags;
-    mPolicy              = policy;
+    mPolicy = policy;
 
     // Check that we haven't overriden the initial size of the buffer in setMinimumSizeForTesting.
     if (mInitialSize == 0)
@@ -2415,12 +2401,9 @@ angle::Result DynamicBuffer::allocateNewBuffer(ContextVk *contextVk)
     return mBuffer->init(contextVk, createInfo, mMemoryPropertyFlags);
 }
 
-bool DynamicBuffer::allocateFromCurrentBuffer(size_t sizeInBytes,
-                                              uint8_t **ptrOut,
-                                              VkDeviceSize *offsetOut)
+bool DynamicBuffer::allocateFromCurrentBuffer(size_t sizeInBytes, BufferHelper **bufferHelperOut)
 {
-    ASSERT(ptrOut);
-    ASSERT(offsetOut);
+    ASSERT(bufferHelperOut);
     size_t sizeToAllocate                                      = roundUp(sizeInBytes, mAlignment);
     angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextAllocationOffset;
     checkedNextWriteOffset += sizeToAllocate;
@@ -2433,24 +2416,20 @@ bool DynamicBuffer::allocateFromCurrentBuffer(size_t sizeInBytes,
     ASSERT(mBuffer != nullptr);
     ASSERT(mHostVisible);
     ASSERT(mBuffer->getMappedMemory());
-
-    *ptrOut    = mBuffer->getMappedMemory() + mNextAllocationOffset;
-    *offsetOut = static_cast<VkDeviceSize>(mNextAllocationOffset);
+    mBuffer->getSuballocation().setOffsetSize(mNextAllocationOffset, sizeToAllocate);
+    *bufferHelperOut = mBuffer.get();
 
     mNextAllocationOffset += static_cast<uint32_t>(sizeToAllocate);
     return true;
 }
 
-angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
-                                                   size_t sizeInBytes,
-                                                   size_t alignment,
-                                                   uint8_t **ptrOut,
-                                                   VkBuffer *bufferOut,
-                                                   VkDeviceSize *offsetOut,
-                                                   bool *newBufferAllocatedOut)
+angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
+                                      size_t sizeInBytes,
+                                      BufferHelper **bufferHelperOut,
+                                      bool *newBufferAllocatedOut)
 {
     mNextAllocationOffset =
-        roundUp<uint32_t>(mNextAllocationOffset, static_cast<uint32_t>(alignment));
+        roundUp<uint32_t>(mNextAllocationOffset, static_cast<uint32_t>(mAlignment));
     size_t sizeToAllocate = roundUp(sizeInBytes, mAlignment);
 
     angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextAllocationOffset;
@@ -2462,9 +2441,6 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
         {
             // Make sure the buffer is not released externally.
             ASSERT(mBuffer->valid());
-
-            ANGLE_TRY(flush(contextVk));
-
             mInFlightBuffers.push_back(std::move(mBuffer));
             ASSERT(!mBuffer);
         }
@@ -2473,7 +2449,6 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
         if (sizeToAllocate > mSize || sizeIgnoringHistory < mSize / 4)
         {
             mSize = sizeIgnoringHistory;
-
             // Clear the free list since the free buffers are now either too small or too big.
             ReleaseBufferListToRenderer(contextVk->getRenderer(), &mBufferFreeList);
         }
@@ -2493,8 +2468,7 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
 
         ASSERT(mBuffer->getSize() == mSize);
 
-        mNextAllocationOffset        = 0;
-        mLastFlushOrInvalidateOffset = 0;
+        mNextAllocationOffset = 0;
 
         if (newBufferAllocatedOut != nullptr)
         {
@@ -2507,51 +2481,10 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
     }
 
     ASSERT(mBuffer != nullptr);
-
-    if (bufferOut != nullptr)
-    {
-        *bufferOut = mBuffer->getBuffer().getHandle();
-    }
-
-    // Optionally map() the buffer if possible
-    if (ptrOut)
-    {
-        ASSERT(mHostVisible);
-        uint8_t *mappedMemory;
-        ANGLE_TRY(mBuffer->map(contextVk, &mappedMemory));
-        *ptrOut = mappedMemory + mNextAllocationOffset;
-    }
-
-    if (offsetOut != nullptr)
-    {
-        *offsetOut = static_cast<VkDeviceSize>(mNextAllocationOffset);
-    }
+    mBuffer->getSuballocation().setOffsetSize(mNextAllocationOffset, sizeToAllocate);
+    *bufferHelperOut = mBuffer.get();
 
     mNextAllocationOffset += static_cast<uint32_t>(sizeToAllocate);
-    return angle::Result::Continue;
-}
-
-angle::Result DynamicBuffer::flush(ContextVk *contextVk)
-{
-    if (mHostVisible && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
-    {
-        ASSERT(mBuffer != nullptr);
-        ANGLE_TRY(mBuffer->flush(contextVk->getRenderer(), mLastFlushOrInvalidateOffset,
-                                 mNextAllocationOffset - mLastFlushOrInvalidateOffset));
-        mLastFlushOrInvalidateOffset = mNextAllocationOffset;
-    }
-    return angle::Result::Continue;
-}
-
-angle::Result DynamicBuffer::invalidate(ContextVk *contextVk)
-{
-    if (mHostVisible && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
-    {
-        ASSERT(mBuffer != nullptr);
-        ANGLE_TRY(mBuffer->invalidate(contextVk->getRenderer(), mLastFlushOrInvalidateOffset,
-                                      mNextAllocationOffset - mLastFlushOrInvalidateOffset));
-        mLastFlushOrInvalidateOffset = mNextAllocationOffset;
-    }
     return angle::Result::Continue;
 }
 
@@ -2588,23 +2521,6 @@ void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk
             mBufferFreeList.push_back(std::move(bufferHelper));
         }
     }
-    mInFlightBuffers.clear();
-}
-
-void DynamicBuffer::releaseInFlightBuffers(ContextVk *contextVk)
-{
-    for (std::unique_ptr<BufferHelper> &toRelease : mInFlightBuffers)
-    {
-        if (ShouldReleaseFreeBuffer(*toRelease, mSize, mPolicy, mBufferFreeList.size()))
-        {
-            toRelease->release(contextVk->getRenderer());
-        }
-        else
-        {
-            mBufferFreeList.push_back(std::move(toRelease));
-        }
-    }
-
     mInFlightBuffers.clear();
 }
 
@@ -2678,9 +2594,8 @@ void DynamicBuffer::setMinimumSizeForTesting(size_t minSize)
 
 void DynamicBuffer::reset()
 {
-    mSize                        = 0;
-    mNextAllocationOffset        = 0;
-    mLastFlushOrInvalidateOffset = 0;
+    mSize                 = 0;
+    mNextAllocationOffset = 0;
 }
 
 // BufferPool implementation.

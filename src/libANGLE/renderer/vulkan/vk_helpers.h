@@ -83,7 +83,6 @@ class DynamicBuffer : angle::NonCopyable
     DynamicBuffer(DynamicBuffer &&other);
     ~DynamicBuffer();
 
-    // Init is called after the buffer creation so that the alignment can be specified later.
     void init(RendererVk *renderer,
               VkBufferUsageFlags usage,
               size_t alignment,
@@ -91,54 +90,22 @@ class DynamicBuffer : angle::NonCopyable
               bool hostVisible,
               DynamicBufferPolicy policy);
 
-    // Init that gives the ability to pass in specified memory property flags for the buffer.
-    void initWithFlags(RendererVk *renderer,
-                       VkBufferUsageFlags usage,
-                       size_t alignment,
-                       size_t initialSize,
-                       VkMemoryPropertyFlags memoryProperty,
-                       DynamicBufferPolicy policy);
-
     // This call will allocate a new region at the end of the current buffer. If it can't find
     // enough space in the current buffer, it returns false. This gives caller a chance to deal with
     // buffer switch that may occur with allocate call.
-    bool allocateFromCurrentBuffer(size_t sizeInBytes, uint8_t **ptrOut, VkDeviceSize *offsetOut);
+    bool allocateFromCurrentBuffer(size_t sizeInBytes, BufferHelper **bufferHelperOut);
 
-    // This call will allocate a new region at the end of the buffer. It internally may trigger
-    // a new buffer to be created (which is returned in the optional parameter
-    // `newBufferAllocatedOut`).  The new region will be in the returned buffer at given offset. If
-    // a memory pointer is given, the buffer will be automatically map()ed.
-    angle::Result allocateWithAlignment(ContextVk *contextVk,
-                                        size_t sizeInBytes,
-                                        size_t alignment,
-                                        uint8_t **ptrOut,
-                                        VkBuffer *bufferOut,
-                                        VkDeviceSize *offsetOut,
-                                        bool *newBufferAllocatedOut);
-
-    // Allocate with default alignment
+    // This call will allocate a new region at the end of the buffer with default alignment. It
+    // internally may trigger a new buffer to be created (which is returned in the optional
+    // parameter `newBufferAllocatedOut`). The new region will be in the returned buffer at given
+    // offset.
     angle::Result allocate(ContextVk *contextVk,
                            size_t sizeInBytes,
-                           uint8_t **ptrOut,
-                           VkBuffer *bufferOut,
-                           VkDeviceSize *offsetOut,
-                           bool *newBufferAllocatedOut)
-    {
-        return allocateWithAlignment(contextVk, sizeInBytes, mAlignment, ptrOut, bufferOut,
-                                     offsetOut, newBufferAllocatedOut);
-    }
-
-    // After a sequence of writes, call flush to ensure the data is visible to the device.
-    angle::Result flush(ContextVk *contextVk);
-
-    // After a sequence of writes, call invalidate to ensure the data is visible to the host.
-    angle::Result invalidate(ContextVk *contextVk);
+                           BufferHelper **bufferHelperOut,
+                           bool *newBufferAllocatedOut);
 
     // This releases resources when they might currently be in use.
     void release(RendererVk *renderer);
-
-    // This releases all the buffers that have been allocated since this was last called.
-    void releaseInFlightBuffers(ContextVk *contextVk);
 
     // This adds inflight buffers to the context's mResourceUseList and then releases them
     void releaseInFlightBuffersToResourceUseList(ContextVk *contextVk);
@@ -175,7 +142,6 @@ class DynamicBuffer : angle::NonCopyable
     size_t mInitialSize;
     std::unique_ptr<BufferHelper> mBuffer;
     uint32_t mNextAllocationOffset;
-    uint32_t mLastFlushOrInvalidateOffset;
     size_t mSize;
     size_t mAlignment;
     VkMemoryPropertyFlags mMemoryPropertyFlags;
@@ -824,6 +790,8 @@ class BufferHelper : public ReadWriteResource
                             PipelineBarrier *barrier);
     void fillWithColor(const angle::Color<uint8_t> &color,
                        const gl::InternalFormat &internalFormat);
+
+    BufferSuballocation &getSuballocation() { return mSuballocation; }
 
   private:
     void initializeBarrierTracker(Context *context);
