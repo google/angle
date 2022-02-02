@@ -2343,63 +2343,65 @@ class ImageViewHelper final : public Resource
 
     const ImageView &getLinearReadImageView() const
     {
-        return getValidReadViewImpl(mPerLevelLinearReadImageViews);
+        return getValidReadViewImpl(mPerLevelRangeLinearReadImageViews);
     }
     const ImageView &getSRGBReadImageView() const
     {
-        return getValidReadViewImpl(mPerLevelSRGBReadImageViews);
+        return getValidReadViewImpl(mPerLevelRangeSRGBReadImageViews);
     }
     const ImageView &getLinearFetchImageView() const
     {
-        return getValidReadViewImpl(mPerLevelLinearFetchImageViews);
+        return getValidReadViewImpl(mPerLevelRangeLinearFetchImageViews);
     }
     const ImageView &getSRGBFetchImageView() const
     {
-        return getValidReadViewImpl(mPerLevelSRGBFetchImageViews);
+        return getValidReadViewImpl(mPerLevelRangeSRGBFetchImageViews);
     }
     const ImageView &getLinearCopyImageView() const
     {
-        return getValidReadViewImpl(mPerLevelLinearCopyImageViews);
+        return getValidReadViewImpl(mPerLevelRangeLinearCopyImageViews);
     }
     const ImageView &getSRGBCopyImageView() const
     {
-        return getValidReadViewImpl(mPerLevelSRGBCopyImageViews);
+        return getValidReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
     }
     const ImageView &getStencilReadImageView() const
     {
-        return getValidReadViewImpl(mPerLevelStencilReadImageViews);
+        return getValidReadViewImpl(mPerLevelRangeStencilReadImageViews);
     }
 
     const ImageView &getReadImageView() const
     {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearReadImageViews)
-                                 : getReadViewImpl(mPerLevelSRGBReadImageViews);
+        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearReadImageViews)
+                                 : getReadViewImpl(mPerLevelRangeSRGBReadImageViews);
     }
 
     const ImageView &getFetchImageView() const
     {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearFetchImageViews)
-                                 : getReadViewImpl(mPerLevelSRGBFetchImageViews);
+        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearFetchImageViews)
+                                 : getReadViewImpl(mPerLevelRangeSRGBFetchImageViews);
     }
 
     const ImageView &getCopyImageView() const
     {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearCopyImageViews)
-                                 : getReadViewImpl(mPerLevelSRGBCopyImageViews);
+        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearCopyImageViews)
+                                 : getReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
     }
 
     // Used when initialized RenderTargets.
     bool hasStencilReadImageView() const
     {
-        return mCurrentMaxLevel.get() < mPerLevelStencilReadImageViews.size()
-                   ? mPerLevelStencilReadImageViews[mCurrentMaxLevel.get()].valid()
+        return mCurrentBaseMaxLevelHash < mPerLevelRangeStencilReadImageViews.size()
+                   ? mPerLevelRangeStencilReadImageViews[mCurrentBaseMaxLevelHash].valid()
                    : false;
     }
 
     bool hasFetchImageView() const
     {
-        if ((mLinearColorspace && mCurrentMaxLevel.get() < mPerLevelLinearFetchImageViews.size()) ||
-            (!mLinearColorspace && mCurrentMaxLevel.get() < mPerLevelSRGBFetchImageViews.size()))
+        if ((mLinearColorspace &&
+             mCurrentBaseMaxLevelHash < mPerLevelRangeLinearFetchImageViews.size()) ||
+            (!mLinearColorspace &&
+             mCurrentBaseMaxLevelHash < mPerLevelRangeSRGBFetchImageViews.size()))
         {
             return getFetchImageView().valid();
         }
@@ -2411,8 +2413,10 @@ class ImageViewHelper final : public Resource
 
     bool hasCopyImageView() const
     {
-        if ((mLinearColorspace && mCurrentMaxLevel.get() < mPerLevelLinearCopyImageViews.size()) ||
-            (!mLinearColorspace && mCurrentMaxLevel.get() < mPerLevelSRGBCopyImageViews.size()))
+        if ((mLinearColorspace &&
+             mCurrentBaseMaxLevelHash < mPerLevelRangeLinearCopyImageViews.size()) ||
+            (!mLinearColorspace &&
+             mCurrentBaseMaxLevelHash < mPerLevelRangeSRGBCopyImageViews.size()))
         {
             return getCopyImageView().valid();
         }
@@ -2487,40 +2491,40 @@ class ImageViewHelper final : public Resource
   private:
     ImageView &getReadImageView()
     {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearReadImageViews)
-                                 : getReadViewImpl(mPerLevelSRGBReadImageViews);
+        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearReadImageViews)
+                                 : getReadViewImpl(mPerLevelRangeSRGBReadImageViews);
     }
     ImageView &getFetchImageView()
     {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearFetchImageViews)
-                                 : getReadViewImpl(mPerLevelSRGBFetchImageViews);
+        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearFetchImageViews)
+                                 : getReadViewImpl(mPerLevelRangeSRGBFetchImageViews);
     }
     ImageView &getCopyImageView()
     {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearCopyImageViews)
-                                 : getReadViewImpl(mPerLevelSRGBCopyImageViews);
+        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearCopyImageViews)
+                                 : getReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
     }
 
     // Used by public get*ImageView() methods to do proper assert based on vector size and validity
     inline const ImageView &getValidReadViewImpl(const ImageViewVector &imageViewVector) const
     {
-        ASSERT(mCurrentMaxLevel.get() < imageViewVector.size() &&
-               imageViewVector[mCurrentMaxLevel.get()].valid());
-        return imageViewVector[mCurrentMaxLevel.get()];
+        ASSERT(mCurrentBaseMaxLevelHash < imageViewVector.size() &&
+               imageViewVector[mCurrentBaseMaxLevelHash].valid());
+        return imageViewVector[mCurrentBaseMaxLevelHash];
     }
 
     // Used by public get*ImageView() methods to do proper assert based on vector size
     inline const ImageView &getReadViewImpl(const ImageViewVector &imageViewVector) const
     {
-        ASSERT(mCurrentMaxLevel.get() < imageViewVector.size());
-        return imageViewVector[mCurrentMaxLevel.get()];
+        ASSERT(mCurrentBaseMaxLevelHash < imageViewVector.size());
+        return imageViewVector[mCurrentBaseMaxLevelHash];
     }
 
     // Used by private get*ImageView() methods to do proper assert based on vector size
     inline ImageView &getReadViewImpl(ImageViewVector &imageViewVector)
     {
-        ASSERT(mCurrentMaxLevel.get() < imageViewVector.size());
-        return imageViewVector[mCurrentMaxLevel.get()];
+        ASSERT(mCurrentBaseMaxLevelHash < imageViewVector.size());
+        return imageViewVector[mCurrentBaseMaxLevelHash];
     }
 
     // Creates views with multiple layers and levels.
@@ -2549,21 +2553,24 @@ class ImageViewHelper final : public Resource
                                         uint32_t layerCount,
                                         VkImageUsageFlags imageUsageFlags);
 
-    // For applications that frequently switch a texture's max level, and make no other changes to
-    // the texture, keep track of the currently-used max level, and keep one "read view" per
-    // max-level
-    LevelIndex mCurrentMaxLevel;
-
-    // Read views (one per max-level)
-    ImageViewVector mPerLevelLinearReadImageViews;
-    ImageViewVector mPerLevelSRGBReadImageViews;
-    ImageViewVector mPerLevelLinearFetchImageViews;
-    ImageViewVector mPerLevelSRGBFetchImageViews;
-    ImageViewVector mPerLevelLinearCopyImageViews;
-    ImageViewVector mPerLevelSRGBCopyImageViews;
-    ImageViewVector mPerLevelStencilReadImageViews;
+    // For applications that frequently switch a texture's base/max level, and make no other changes
+    // to the texture, keep track of the currently-used base and max levels, and keep one "read
+    // view" per each combination.  The value stored here is base<<4|max, used to look up the view
+    // in a vector.
+    static_assert(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS <= 16,
+                  "Not enough bits in mCurrentBaseMaxLevelHash");
+    uint8_t mCurrentBaseMaxLevelHash;
 
     bool mLinearColorspace;
+
+    // Read views (one per [base, max] level range)
+    ImageViewVector mPerLevelRangeLinearReadImageViews;
+    ImageViewVector mPerLevelRangeSRGBReadImageViews;
+    ImageViewVector mPerLevelRangeLinearFetchImageViews;
+    ImageViewVector mPerLevelRangeSRGBFetchImageViews;
+    ImageViewVector mPerLevelRangeLinearCopyImageViews;
+    ImageViewVector mPerLevelRangeSRGBCopyImageViews;
+    ImageViewVector mPerLevelRangeStencilReadImageViews;
 
     // Draw views
     LayerLevelImageViewVector mLayerLevelDrawImageViews;
