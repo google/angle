@@ -2378,11 +2378,6 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context,
     mDriverUniforms.depthRange[2] = depthRangeDiff;
     mDriverUniforms.depthRange[3] = NeedToInvertDepthRange(depthRangeNear, depthRangeFar) ? -1 : 1;
 
-    // Emulated gl_InstanceID
-    // TODO(anglebug.com/5505): these code paths differ significantly from
-    // Apple's fork; there is no place currently to set the emulatedInstanceID.
-    mDriverUniforms.emulatedInstanceID = 0;
-
     // Sample coverage mask
     uint32_t sampleBitCount = mDrawFramebuffer->getSamples();
     uint32_t coverageSampleBitCount =

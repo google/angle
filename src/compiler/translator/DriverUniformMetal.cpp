@@ -19,11 +19,10 @@ namespace
 {
 
 // Metal specific driver uniforms
-constexpr const char kHalfRenderArea[]     = "halfRenderArea";
-constexpr const char kFlipXY[]             = "flipXY";
-constexpr const char kNegFlipXY[]          = "negFlipXY";
-constexpr const char kEmulatedInstanceID[] = "emulatedInstanceID";
-constexpr const char kCoverageMask[]       = "coverageMask";
+constexpr const char kHalfRenderArea[] = "halfRenderArea";
+constexpr const char kFlipXY[]         = "flipXY";
+constexpr const char kNegFlipXY[]      = "negFlipXY";
+constexpr const char kCoverageMask[]   = "coverageMask";
 
 }  // namespace
 
@@ -33,18 +32,15 @@ TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable)
 {
     TFieldList *driverFieldList = DriverUniform::createUniformFields(symbolTable);
 
-    constexpr size_t kNumGraphicsDriverUniformsMetal = 5;
+    constexpr size_t kNumGraphicsDriverUniformsMetal = 4;
     constexpr std::array<const char *, kNumGraphicsDriverUniformsMetal>
-        kGraphicsDriverUniformNamesMetal = {
-            {kHalfRenderArea, kFlipXY, kNegFlipXY, kEmulatedInstanceID, kCoverageMask}};
+        kGraphicsDriverUniformNamesMetal = {{kHalfRenderArea, kFlipXY, kNegFlipXY, kCoverageMask}};
 
     const std::array<TType *, kNumGraphicsDriverUniformsMetal> kDriverUniformTypesMetal = {{
         new TType(EbtFloat, EbpHigh, EvqGlobal, 2),  // halfRenderArea
         new TType(EbtFloat, EbpLow, EvqGlobal, 2),   // flipXY
         new TType(EbtFloat, EbpLow, EvqGlobal, 2),   // negFlipXY
-        new TType(EbtUInt, EbpHigh,
-                  EvqGlobal),  // kEmulatedInstanceID - unused in SPIR-V Metal compiler
-        new TType(EbtUInt, EbpHigh, EvqGlobal),  // kCoverageMask
+        new TType(EbtUInt, EbpHigh, EvqGlobal),      // kCoverageMask
     }};
 
     for (size_t uniformIndex = 0; uniformIndex < kNumGraphicsDriverUniformsMetal; ++uniformIndex)
