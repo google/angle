@@ -687,7 +687,7 @@ ANGLE_NO_DISCARD bool ReplaceInOutVariables(TCompiler *compiler,
     unsigned int maxInputAttachmentIndex = 0;
     bool usedNonConstIndex               = false;
 
-    // Get informations for gl_LastFragData
+    // Get informations for inout variables
     InputAttachmentReferenceTraverser informationTraverser(
         &declaredInOutVarMap, &maxInputAttachmentIndex, &constIndices, &usedNonConstIndex);
     root->traverse(&informationTraverser);
@@ -715,19 +715,11 @@ ANGLE_NO_DISCARD bool ReplaceInOutVariables(TCompiler *compiler,
         TType *newOutVarType = new TType(originInOutVar->getType());
 
         // We just want to use the original variable, but without an out qualifier instead of inout.
+        ASSERT(originInOutVar->getName() != "gl_LastFragData");
         newOutVarType->setQualifier(EvqFragmentOut);
 
-        // Additionally, if the symbol name is gl_LastFragData, replace it with a temporary one as
-        // it no longer represents a built-in.
-        ImmutableString varName  = originInOutVar->getName();
-        SymbolType varSymbolType = originInOutVar->variable().symbolType();
-        if (varName == "gl_LastFragData")
-        {
-            varName       = ImmutableString("");
-            varSymbolType = SymbolType::Empty;
-        }
-
-        TVariable *newOutVar = new TVariable(symbolTable, varName, newOutVarType, varSymbolType);
+        TVariable *newOutVar = new TVariable(symbolTable, originInOutVar->getName(), newOutVarType,
+                                             originInOutVar->variable().symbolType());
         newOutVarArray[inputAttachmentIndex] = newOutVar;
         replaceSubpassInputUtils.declareVariablesForFetch(inputAttachmentIndex,
                                                           newOutVarArray[inputAttachmentIndex]);

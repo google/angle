@@ -809,6 +809,14 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationFS(TCompiler *compiler,
 
     return compiler->validateAST(root);
 }
+
+bool HasFramebufferFetch(const TExtensionBehavior &extBehavior)
+{
+    return IsExtensionEnabled(extBehavior, TExtension::EXT_shader_framebuffer_fetch) ||
+           IsExtensionEnabled(extBehavior, TExtension::EXT_shader_framebuffer_fetch_non_coherent) ||
+           IsExtensionEnabled(extBehavior, TExtension::ARM_shader_framebuffer_fetch) ||
+           IsExtensionEnabled(extBehavior, TExtension::NV_shader_framebuffer_fetch);
+}
 }  // anonymous namespace
 
 TranslatorVulkan::TranslatorVulkan(sh::GLenum type, ShShaderSpec spec)
@@ -1042,7 +1050,6 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
             bool usesPointCoord    = false;
             bool usesFragCoord     = false;
             bool usesSampleMaskIn  = false;
-            bool usesLastFragData  = false;
             bool useSamplePosition = false;
 
             // Search for the gl_PointCoord usage, if its used, we need to flip the y coordinate.
@@ -1076,12 +1083,6 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                     usesFragCoord = true;
                     break;
                 }
-
-                if (inputVarying.name == "gl_LastFragData")
-                {
-                    usesLastFragData = true;
-                    break;
-                }
             }
 
             if ((compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION) != 0)
@@ -1104,12 +1105,6 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                     hasGLSampleMask = true;
                     continue;
                 }
-            }
-
-            // Emulate gl_FragColor and gl_FragData with normal output variables.
-            if (!EmulateFragColorData(this, root, &getSymbolTable()))
-            {
-                return false;
             }
 
             if (usesPointCoord)
@@ -1176,12 +1171,26 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                 }
             }
 
-            if (usesLastFragData && !ReplaceLastFragData(this, root, &getSymbolTable(), &mUniforms))
+            if (HasFramebufferFetch(getExtensionBehavior()))
             {
-                return false;
+                if (getShaderVersion() == 100)
+                {
+                    if (!ReplaceLastFragData(this, root, &getSymbolTable(), &mUniforms))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (!ReplaceInOutVariables(this, root, &getSymbolTable(), &mUniforms))
+                    {
+                        return false;
+                    }
+                }
             }
 
-            if (!ReplaceInOutVariables(this, root, &getSymbolTable(), &mUniforms))
+            // Emulate gl_FragColor and gl_FragData with normal output variables.
+            if (!EmulateFragColorData(this, root, &getSymbolTable()))
             {
                 return false;
             }
