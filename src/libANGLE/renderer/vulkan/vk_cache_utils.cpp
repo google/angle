@@ -2946,122 +2946,10 @@ void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
     mTransitions.emplace_back(bits, desc, pipeline);
 }
 
-TextureDescriptorDesc::TextureDescriptorDesc() : mMaxIndex(0)
-{
-    mSerials.fill({kInvalidImageOrBufferViewSubresourceSerial, kInvalidSamplerSerial});
-}
-
-TextureDescriptorDesc::~TextureDescriptorDesc()                                  = default;
-TextureDescriptorDesc::TextureDescriptorDesc(const TextureDescriptorDesc &other) = default;
-TextureDescriptorDesc &TextureDescriptorDesc::operator=(const TextureDescriptorDesc &other) =
-    default;
-
-void TextureDescriptorDesc::update(size_t index,
-                                   ImageOrBufferViewSubresourceSerial viewSerial,
-                                   SamplerSerial samplerSerial)
-{
-    if (index >= mMaxIndex)
-    {
-        mMaxIndex = static_cast<uint32_t>(index + 1);
-    }
-
-    mSerials[index].view    = viewSerial;
-    mSerials[index].sampler = samplerSerial;
-}
-
-size_t TextureDescriptorDesc::hash() const
-{
-    return angle::ComputeGenericHash(&mSerials, sizeof(TexUnitSerials) * mMaxIndex);
-}
-
-void TextureDescriptorDesc::reset()
-{
-    memset(mSerials.data(), 0, sizeof(mSerials[0]) * mMaxIndex);
-    mMaxIndex = 0;
-}
-
-bool TextureDescriptorDesc::operator==(const TextureDescriptorDesc &other) const
-{
-    if (mMaxIndex != other.mMaxIndex)
-        return false;
-
-    if (mMaxIndex == 0)
-        return true;
-
-    return memcmp(mSerials.data(), other.mSerials.data(), sizeof(TexUnitSerials) * mMaxIndex) == 0;
-}
-
-// UniformsAndXfbDescriptorDesc implementation.
-UniformsAndXfbDescriptorDesc::UniformsAndXfbDescriptorDesc()
-{
-    reset();
-}
-
-UniformsAndXfbDescriptorDesc::~UniformsAndXfbDescriptorDesc() = default;
-UniformsAndXfbDescriptorDesc::UniformsAndXfbDescriptorDesc(
-    const UniformsAndXfbDescriptorDesc &other)                      = default;
-UniformsAndXfbDescriptorDesc &UniformsAndXfbDescriptorDesc::operator=(
-    const UniformsAndXfbDescriptorDesc &other) = default;
-
-size_t UniformsAndXfbDescriptorDesc::hash() const
-{
-    ASSERT(mBufferCount > 0);
-
-    return angle::ComputeGenericHash(&mBufferSerials, sizeof(mBufferSerials[0]) * mBufferCount) ^
-           angle::ComputeGenericHash(
-               &mXfbBufferOffsets,
-               sizeof(mXfbBufferOffsets[0]) * (mBufferCount - kDefaultUniformBufferCount));
-}
-
-void UniformsAndXfbDescriptorDesc::reset()
-{
-    mBufferCount = 0;
-    memset(&mBufferSerials, 0, sizeof(mBufferSerials));
-    memset(&mXfbBufferOffsets, 0, sizeof(mXfbBufferOffsets));
-}
-
-bool UniformsAndXfbDescriptorDesc::operator==(const UniformsAndXfbDescriptorDesc &other) const
-{
-    if (mBufferCount != other.mBufferCount)
-    {
-        return false;
-    }
-
-    ASSERT(mBufferCount > 0);
-
-    return memcmp(&mBufferSerials, &other.mBufferSerials,
-                  sizeof(mBufferSerials[0]) * mBufferCount) == 0 &&
-           memcmp(&mXfbBufferOffsets, &other.mXfbBufferOffsets,
-                  sizeof(mXfbBufferOffsets[0]) * (mBufferCount - kDefaultUniformBufferCount)) == 0;
-}
-
-// ShaderBuffersDescriptorDesc implementation.
-ShaderBuffersDescriptorDesc::ShaderBuffersDescriptorDesc()
-{
-    reset();
-}
-
-ShaderBuffersDescriptorDesc::~ShaderBuffersDescriptorDesc() = default;
-
-ShaderBuffersDescriptorDesc::ShaderBuffersDescriptorDesc(const ShaderBuffersDescriptorDesc &other) =
-    default;
-
-ShaderBuffersDescriptorDesc &ShaderBuffersDescriptorDesc::operator=(
-    const ShaderBuffersDescriptorDesc &other) = default;
-
-size_t ShaderBuffersDescriptorDesc::hash() const
+// DescriptorSetDesc implementation.
+size_t DescriptorSetDesc::hash() const
 {
     return angle::ComputeGenericHash(mPayload.data(), sizeof(mPayload[0]) * mPayload.size());
-}
-
-void ShaderBuffersDescriptorDesc::reset()
-{
-    mPayload.clear();
-}
-
-bool ShaderBuffersDescriptorDesc::operator==(const ShaderBuffersDescriptorDesc &other) const
-{
-    return mPayload == other.mPayload;
 }
 
 // FramebufferDesc implementation.
@@ -4044,20 +3932,9 @@ void DriverUniformsDescriptorSetCache::destroy(RendererVk *rendererVk)
 }
 
 // DescriptorSetCache implementation.
-template <typename Key, VulkanCacheType CacheType>
-void DescriptorSetCache<Key, CacheType>::destroy(RendererVk *rendererVk)
+void DescriptorSetCache::destroy(RendererVk *rendererVk, VulkanCacheType cacheType)
 {
-    this->accumulateCacheStats(rendererVk);
+    accumulateCacheStats(cacheType, rendererVk);
     mPayload.clear();
 }
-
-// RendererVk's methods are not accessible in vk_cache_utils.h
-// Below declarations are needed to avoid linker errors.
-template class DescriptorSetCache<vk::TextureDescriptorDesc, VulkanCacheType::TextureDescriptors>;
-
-template class DescriptorSetCache<vk::UniformsAndXfbDescriptorDesc,
-                                  VulkanCacheType::UniformsAndXfbDescriptors>;
-
-template class DescriptorSetCache<vk::ShaderBuffersDescriptorDesc,
-                                  VulkanCacheType::ShaderBuffersDescriptors>;
 }  // namespace rx

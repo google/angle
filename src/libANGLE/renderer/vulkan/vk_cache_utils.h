@@ -1106,108 +1106,149 @@ struct ImageOrBufferViewSubresourceSerial
     ImageSubresourceRange subresource;
 };
 
-static_assert(sizeof(ImageOrBufferViewSubresourceSerial) == sizeof(uint64_t), "Size mismatch");
-
 constexpr ImageOrBufferViewSubresourceSerial kInvalidImageOrBufferViewSubresourceSerial = {
     kInvalidImageOrBufferViewSerial, kInvalidImageSubresourceRange};
 
-class TextureDescriptorDesc
+// Generic description of a descriptor set. Used as a key when indexing descriptor set caches. The
+// key storage is an angle:FixedVector. Beyond a certain fixed size we'll end up using heap memory
+// to store keys. Currently we specialize the structure for three use cases: uniforms, textures,
+// and other shader resources. Because of the way the specialization works we can't currently cache
+// programs that use some types of resources.
+class DescriptorSetDesc
 {
   public:
-    TextureDescriptorDesc();
-    ~TextureDescriptorDesc();
+    DescriptorSetDesc()  = default;
+    ~DescriptorSetDesc() = default;
 
-    TextureDescriptorDesc(const TextureDescriptorDesc &other);
-    TextureDescriptorDesc &operator=(const TextureDescriptorDesc &other);
+    DescriptorSetDesc(const DescriptorSetDesc &other) : mPayload(other.mPayload) {}
 
-    void update(size_t index,
-                ImageOrBufferViewSubresourceSerial viewSerial,
-                SamplerSerial samplerSerial);
-    size_t hash() const;
-    void reset();
-
-    bool operator==(const TextureDescriptorDesc &other) const;
-
-    // Note: this is an exclusive index. If there is one index it will return "1".
-    uint32_t getMaxIndex() const { return mMaxIndex; }
-
-  private:
-    uint32_t mMaxIndex;
-
-    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
-    struct TexUnitSerials
+    DescriptorSetDesc &operator=(const DescriptorSetDesc &other)
     {
-        ImageOrBufferViewSubresourceSerial view;
-        SamplerSerial sampler;
-    };
-    gl::ActiveTextureArray<TexUnitSerials> mSerials;
-    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
-};
+        mPayload = other.mPayload;
+        return *this;
+    }
 
-class UniformsAndXfbDescriptorDesc
-{
-  public:
-    UniformsAndXfbDescriptorDesc();
-    ~UniformsAndXfbDescriptorDesc();
+    size_t hash() const;
 
-    UniformsAndXfbDescriptorDesc(const UniformsAndXfbDescriptorDesc &other);
-    UniformsAndXfbDescriptorDesc &operator=(const UniformsAndXfbDescriptorDesc &other);
+    void reset() { mPayload.clear(); }
+
+    bool operator==(const DescriptorSetDesc &other) const
+    {
+        return (mPayload.size() == other.mPayload.size()) &&
+               (memcmp(mPayload.data(), other.mPayload.data(),
+                       mPayload.size() * sizeof(mPayload[0])) == 0);
+    }
+
+    // Specific helpers for uniforms/xfb descriptors.
+    static constexpr size_t kDefaultUniformBufferWordOffset = 0;
+    static constexpr size_t kXfbBufferSerialWordOffset      = 1;
+    static constexpr size_t kXfbBufferOffsetWordOffset      = 2;
+    static constexpr size_t kXfbWordStride                  = 2;
 
     void updateDefaultUniformBuffer(BufferSerial bufferSerial)
     {
-        mBufferSerials[kDefaultUniformBufferIndex] = bufferSerial;
-        mBufferCount = std::max(mBufferCount, static_cast<uint32_t>(1));
+        setBufferSerial(kDefaultUniformBufferWordOffset, 1, 0, bufferSerial);
     }
+
     void updateTransformFeedbackBuffer(size_t xfbIndex,
                                        BufferSerial bufferSerial,
                                        VkDeviceSize bufferOffset)
     {
-        uint32_t bufferIndex        = static_cast<uint32_t>(xfbIndex) + 1;
-        mBufferSerials[bufferIndex] = bufferSerial;
-
-        ASSERT(static_cast<uint64_t>(bufferOffset) <=
-               static_cast<uint64_t>(std::numeric_limits<uint32_t>::max()));
-        mXfbBufferOffsets[xfbIndex] = static_cast<uint32_t>(bufferOffset);
-
-        mBufferCount = std::max(mBufferCount, (bufferIndex + 1));
+        setBufferSerial(kXfbBufferSerialWordOffset, kXfbWordStride, xfbIndex, bufferSerial);
+        setClamped64BitValue(kXfbBufferOffsetWordOffset, kXfbWordStride, xfbIndex, bufferOffset);
     }
-    size_t hash() const;
-    void reset();
 
-    bool operator==(const UniformsAndXfbDescriptorDesc &other) const;
-
-  private:
-    uint32_t mBufferCount;
-    // The array index 0 is used for default uniform buffer
-    static constexpr size_t kDefaultUniformBufferIndex = 0;
-    static constexpr size_t kDefaultUniformBufferCount = 1;
-    static constexpr size_t kMaxBufferCount =
-        kDefaultUniformBufferCount + gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS;
-    std::array<BufferSerial, kMaxBufferCount> mBufferSerials;
-    std::array<uint32_t, gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS> mXfbBufferOffsets;
-};
-
-class ShaderBuffersDescriptorDesc
-{
-  public:
-    ShaderBuffersDescriptorDesc();
-    ~ShaderBuffersDescriptorDesc();
-
-    ShaderBuffersDescriptorDesc(const ShaderBuffersDescriptorDesc &other);
-    ShaderBuffersDescriptorDesc &operator=(const ShaderBuffersDescriptorDesc &other);
-
-    size_t hash() const;
-    void reset();
-
-    bool operator==(const ShaderBuffersDescriptorDesc &other) const;
-
-    ANGLE_INLINE void appendBufferSerial(BufferSerial bufferSerial)
+    // Specific helpers for texture descriptors.
+    static constexpr size_t kImageOrBufferViewWordOffset     = 0;
+    static constexpr size_t kImageSubresourceRangeWordOffset = 1;
+    static constexpr size_t kSamplerSerialWordOffset         = 2;
+    static constexpr size_t kTextureWordStride               = 3;
+    void updateTexture(size_t textureUnit,
+                       ImageOrBufferViewSubresourceSerial imageOrBufferViewSubresource,
+                       SamplerSerial samplerSerial)
     {
-        mPayload.push_back(bufferSerial.getValue());
+        setImageOrBufferViewSerial(kImageOrBufferViewWordOffset, kTextureWordStride, textureUnit,
+                                   imageOrBufferViewSubresource.viewSerial);
+        setImageSubresourceRange(kImageSubresourceRangeWordOffset, kTextureWordStride, textureUnit,
+                                 imageOrBufferViewSubresource.subresource);
+        setSamplerSerial(kSamplerSerialWordOffset, kTextureWordStride, textureUnit, samplerSerial);
     }
-    ANGLE_INLINE void append32BitValue(uint32_t value) { mPayload.push_back(value); }
+
+    // Specific helpers for the shader resources descriptors.
+    void appendBufferSerial(BufferSerial bufferSerial)
+    {
+        append32BitValue(bufferSerial.getValue());
+    }
+
+    void append32BitValue(uint32_t value) { mPayload.push_back(value); }
+
+    void appendClamped64BitValue(uint64_t value)
+    {
+        ASSERT(value <= static_cast<uint64_t>(std::numeric_limits<uint32_t>::max()));
+        append32BitValue(static_cast<uint32_t>(value));
+    }
 
   private:
+    void setBufferSerial(size_t wordOffset,
+                         size_t wordStride,
+                         size_t elementIndex,
+                         BufferSerial bufferSerial)
+    {
+        set32BitValue(wordOffset, wordStride, elementIndex, bufferSerial.getValue());
+    }
+
+    void setImageOrBufferViewSerial(size_t wordOffset,
+                                    size_t wordStride,
+                                    size_t elementIndex,
+                                    ImageOrBufferViewSerial imageOrBufferViewSerial)
+    {
+        set32BitValue(wordOffset, wordStride, elementIndex, imageOrBufferViewSerial.getValue());
+    }
+
+    void setImageSubresourceRange(size_t wordOffset,
+                                  size_t wordStride,
+                                  size_t elementIndex,
+                                  ImageSubresourceRange subresourceRange)
+    {
+        static_assert(sizeof(ImageSubresourceRange) == sizeof(uint32_t));
+
+        uint32_t value32bits;
+        memcpy(&value32bits, &subresourceRange, sizeof(uint32_t));
+        set32BitValue(wordOffset, wordStride, elementIndex, value32bits);
+    }
+
+    void setSamplerSerial(size_t wordOffset,
+                          size_t wordStride,
+                          size_t elementIndex,
+                          SamplerSerial samplerSerial)
+    {
+        set32BitValue(wordOffset, wordStride, elementIndex, samplerSerial.getValue());
+    }
+
+    void set32BitValue(size_t wordOffset, size_t wordStride, size_t elementIndex, uint32_t value)
+    {
+        size_t wordIndex = wordOffset + wordStride * elementIndex;
+        ensureCapacity(wordIndex + 1);
+        mPayload[wordIndex] = value;
+    }
+
+    void setClamped64BitValue(size_t wordOffset,
+                              size_t wordStride,
+                              size_t elementIndex,
+                              uint64_t value)
+    {
+        ASSERT(value <= static_cast<uint64_t>(std::numeric_limits<uint32_t>::max()));
+        set32BitValue(wordOffset, wordStride, elementIndex, static_cast<uint32_t>(value));
+    }
+
+    void ensureCapacity(size_t capacity)
+    {
+        if (mPayload.size() < capacity)
+        {
+            mPayload.resize(capacity, 0);
+        }
+    }
+
     // After a preliminary minimum size, use heap memory.
     static constexpr size_t kFastBufferWordLimit = 32;
     angle::FastVector<uint32_t, kFastBufferWordLimit> mPayload;
@@ -1401,21 +1442,9 @@ struct hash<rx::vk::ImageSubresourceRange>
 };
 
 template <>
-struct hash<rx::vk::TextureDescriptorDesc>
+struct hash<rx::vk::DescriptorSetDesc>
 {
-    size_t operator()(const rx::vk::TextureDescriptorDesc &key) const { return key.hash(); }
-};
-
-template <>
-struct hash<rx::vk::UniformsAndXfbDescriptorDesc>
-{
-    size_t operator()(const rx::vk::UniformsAndXfbDescriptorDesc &key) const { return key.hash(); }
-};
-
-template <>
-struct hash<rx::vk::ShaderBuffersDescriptorDesc>
-{
-    size_t operator()(const rx::vk::ShaderBuffersDescriptorDesc &key) const { return key.hash(); }
+    size_t operator()(const rx::vk::DescriptorSetDesc &key) const { return key.hash(); }
 };
 
 template <>
@@ -1745,40 +1774,46 @@ class DriverUniformsDescriptorSetCache final
 };
 
 // Templated Descriptors Cache
-template <typename Key, VulkanCacheType CacheType>
-class DescriptorSetCache final : public HasCacheStats<CacheType>
+class DescriptorSetCache final : angle::NonCopyable
 {
   public:
     DescriptorSetCache() = default;
-    ~DescriptorSetCache() override { ASSERT(mPayload.empty()); }
+    ~DescriptorSetCache() { ASSERT(mPayload.empty()); }
 
-    void destroy(RendererVk *rendererVk);
+    void destroy(RendererVk *rendererVk, VulkanCacheType cacheType);
 
-    ANGLE_INLINE bool get(const Key &desc, VkDescriptorSet *descriptorSet)
+    ANGLE_INLINE bool get(const vk::DescriptorSetDesc &desc, VkDescriptorSet *descriptorSet)
     {
         auto iter = mPayload.find(desc);
         if (iter != mPayload.end())
         {
             *descriptorSet = iter->second;
-            this->mCacheStats.hit();
+            mCacheStats.hit();
             return true;
         }
-        this->mCacheStats.miss();
+        mCacheStats.miss();
         return false;
     }
 
-    ANGLE_INLINE void insert(const Key &desc, VkDescriptorSet descriptorSet)
+    ANGLE_INLINE void insert(const vk::DescriptorSetDesc &desc, VkDescriptorSet descriptorSet)
     {
         mPayload.emplace(desc, descriptorSet);
     }
 
+    template <typename Accumulator>
+    void accumulateCacheStats(VulkanCacheType cacheType, Accumulator *accumulator)
+    {
+        accumulator->accumulateCacheStats(cacheType, mCacheStats);
+    }
+
   private:
-    angle::HashMap<Key, VkDescriptorSet> mPayload;
+    angle::HashMap<vk::DescriptorSetDesc, VkDescriptorSet> mPayload;
+    CacheStats mCacheStats;
 };
 
 // Only 1 driver uniform binding is used.
 constexpr uint32_t kReservedDriverUniformBindingCount = 1;
-// There is 1 default uniform binding used per stage.  Currently, a maxium of three stages are
+// There is 1 default uniform binding used per stage.  Currently, a maximum of three stages are
 // supported.
 constexpr uint32_t kReservedPerStageDefaultUniformBindingCount = 1;
 constexpr uint32_t kReservedDefaultUniformBindingCount         = 3;

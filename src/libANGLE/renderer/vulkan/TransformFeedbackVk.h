@@ -97,7 +97,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl, public angle::Observer
         return mCounterBufferHandles;
     }
 
-    vk::UniformsAndXfbDescriptorDesc &getTransformFeedbackDesc() { return mXFBBuffersDesc; }
+    vk::DescriptorSetDesc &getTransformFeedbackDesc() { return mXFBBuffersDesc; }
 
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
@@ -131,7 +131,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl, public angle::Observer
     gl::TransformFeedbackBuffersArray<VkBuffer> mCounterBufferHandles;
 
     // Keys to look up in the descriptor set cache
-    vk::UniformsAndXfbDescriptorDesc mXFBBuffersDesc;
+    vk::DescriptorSetDesc mXFBBuffersDesc;
 
     // Buffer binding points
     std::vector<angle::ObserverBinding> mBufferObserverBindings;

@@ -309,7 +309,7 @@ egl::ContextPriority GetContextPriority(const gl::State &state)
 }
 
 template <typename MaskT>
-void AppendBufferVectorToDesc(vk::ShaderBuffersDescriptorDesc *desc,
+void AppendBufferVectorToDesc(vk::DescriptorSetDesc *desc,
                               const gl::BufferVector &buffers,
                               const MaskT &buffersMask,
                               bool isDynamicDescriptor,
@@ -2073,9 +2073,8 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
     }
 
     // TODO(http://anglebug.com/3570): Need to update to handle Program Pipelines
-    vk::BufferHelper *uniformBuffer = mDefaultUniformStorage.getCurrentBuffer();
-    vk::UniformsAndXfbDescriptorDesc xfbBufferDesc =
-        transformFeedbackVk->getTransformFeedbackDesc();
+    vk::BufferHelper *uniformBuffer     = mDefaultUniformStorage.getCurrentBuffer();
+    vk::DescriptorSetDesc xfbBufferDesc = transformFeedbackVk->getTransformFeedbackDesc();
     xfbBufferDesc.updateDefaultUniformBuffer(uniformBuffer ? uniformBuffer->getBufferSerial()
                                                            : vk::kInvalidBufferSerial);
 
@@ -5437,8 +5436,6 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
 
-    uint32_t prevMaxIndex = mActiveTexturesDesc.getMaxIndex();
-    memset(mActiveTextures.data(), 0, sizeof(mActiveTextures[0]) * prevMaxIndex);
     mActiveTexturesDesc.reset();
 
     const gl::ActiveTexturesCache &textures        = mState.getActiveTexturesCache();
@@ -5472,8 +5469,8 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
         if (textureType == gl::TextureType::Buffer)
         {
             activeTexture.texture = textureVk;
-            mActiveTexturesDesc.update(textureUnit, textureVk->getBufferViewSerial(),
-                                       vk::SamplerSerial());
+            mActiveTexturesDesc.updateTexture(textureUnit, textureVk->getBufferViewSerial(),
+                                              vk::SamplerSerial());
 
             continue;
         }
@@ -5539,7 +5536,8 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
 
         vk::ImageOrBufferViewSubresourceSerial imageViewSerial =
             textureVk->getImageViewSubresourceSerial(samplerState);
-        mActiveTexturesDesc.update(textureUnit, imageViewSerial, samplerHelper.getSamplerSerial());
+        mActiveTexturesDesc.updateTexture(textureUnit, imageViewSerial,
+                                          samplerHelper.getSamplerSerial());
 
         if (image.hasImmutableSampler())
         {

@@ -1130,9 +1130,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // {VkImage/VkSampler} generates a unique serial. These object ids are combined to form a unique
     // signature for each descriptor set. This allows us to keep a cache of descriptor sets and
     // avoid calling vkAllocateDesctiporSets each texture update.
-    vk::TextureDescriptorDesc mActiveTexturesDesc;
+    vk::DescriptorSetDesc mActiveTexturesDesc;
 
-    vk::ShaderBuffersDescriptorDesc mShaderBuffersDescriptorDesc;
+    vk::DescriptorSetDesc mShaderBuffersDescriptorDesc;
 
     gl::ActiveTextureArray<TextureVk *> mActiveImages;
 

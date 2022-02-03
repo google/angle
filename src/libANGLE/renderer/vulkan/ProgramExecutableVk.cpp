@@ -301,9 +301,9 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
     }
 
     RendererVk *rendererVk = contextVk->getRenderer();
-    mTextureDescriptorsCache.destroy(rendererVk);
-    mUniformsAndXfbDescriptorsCache.destroy(rendererVk);
-    mShaderBufferDescriptorsCache.destroy(rendererVk);
+    mTextureDescriptorsCache.destroy(rendererVk, VulkanCacheType::TextureDescriptors);
+    mUniformsAndXfbDescriptorsCache.destroy(rendererVk, VulkanCacheType::UniformsAndXfbDescriptors);
+    mShaderBufferDescriptorsCache.destroy(rendererVk, VulkanCacheType::ShaderBuffersDescriptors);
 
     // Initialize with an invalid BufferSerial
     mCurrentDefaultUniformBufferSerial = vk::BufferSerial();
@@ -482,7 +482,7 @@ uint32_t GetInterfaceBlockArraySize(const std::vector<gl::InterfaceBlock> &block
 angle::Result ProgramExecutableVk::allocUniformAndXfbDescriptorSet(
     ContextVk *contextVk,
     vk::BufferHelper *defaultUniformBuffer,
-    const vk::UniformsAndXfbDescriptorDesc &xfbBufferDesc,
+    const vk::DescriptorSetDesc &xfbBufferDesc,
     bool *newDescriptorSetAllocated)
 {
     mCurrentDefaultUniformBufferSerial =
@@ -508,7 +508,8 @@ angle::Result ProgramExecutableVk::allocUniformAndXfbDescriptorSet(
     // Clear descriptor set cache. It may no longer be valid.
     if (newPoolAllocated)
     {
-        mUniformsAndXfbDescriptorsCache.destroy(contextVk->getRenderer());
+        mUniformsAndXfbDescriptorsCache.destroy(contextVk->getRenderer(),
+                                                VulkanCacheType::UniformsAndXfbDescriptors);
     }
 
     // Add the descriptor set into cache
@@ -1231,7 +1232,7 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
 // Lazily allocate the descriptor set. We may not need one if all of the buffers are inactive.
 angle::Result ProgramExecutableVk::getOrAllocateShaderResourcesDescriptorSet(
     ContextVk *contextVk,
-    const vk::ShaderBuffersDescriptorDesc *shaderBuffersDesc,
+    const vk::DescriptorSetDesc *shaderBuffersDesc,
     VkDescriptorSet *descriptorSetOut)
 {
     if (mDescriptorSets[DescriptorSetIndex::ShaderResource] == VK_NULL_HANDLE)
@@ -1245,7 +1246,8 @@ angle::Result ProgramExecutableVk::getOrAllocateShaderResourcesDescriptorSet(
             // Clear descriptor set cache. It may no longer be valid.
             if (newPoolAllocated)
             {
-                mShaderBufferDescriptorsCache.destroy(contextVk->getRenderer());
+                mShaderBufferDescriptorsCache.destroy(contextVk->getRenderer(),
+                                                      VulkanCacheType::ShaderBuffersDescriptors);
             }
 
             mShaderBufferDescriptorsCache.insert(
@@ -1260,7 +1262,7 @@ angle::Result ProgramExecutableVk::getOrAllocateShaderResourcesDescriptorSet(
 angle::Result ProgramExecutableVk::updateBuffersDescriptorSet(
     ContextVk *contextVk,
     const gl::ShaderType shaderType,
-    const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc,
+    const vk::DescriptorSetDesc &shaderBuffersDesc,
     const std::vector<gl::InterfaceBlock> &blocks,
     VkDescriptorType descriptorType,
     VkDeviceSize maxBoundBufferRange,
@@ -1345,7 +1347,7 @@ angle::Result ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
     ContextVk *contextVk,
     const gl::ProgramExecutable &executable,
     const gl::ShaderType shaderType,
-    const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc,
+    const vk::DescriptorSetDesc &shaderBuffersDesc,
     bool cacheHit)
 {
     const gl::State &glState = contextVk->getState();
@@ -1564,7 +1566,7 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
 angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
     ContextVk *contextVk,
     FramebufferVk *framebufferVk,
-    const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc)
+    const vk::DescriptorSetDesc &shaderBuffersDesc)
 {
     const gl::ProgramExecutable *executable = contextVk->getState().getProgramExecutable();
     ASSERT(executable);
@@ -1675,7 +1677,7 @@ angle::Result ProgramExecutableVk::updateTransformFeedbackDescriptorSet(
     ContextVk *contextVk,
     const gl::ProgramExecutable &executable,
     vk::BufferHelper *defaultUniformBuffer,
-    const vk::UniformsAndXfbDescriptorDesc &xfbBufferDesc)
+    const vk::DescriptorSetDesc &xfbBufferDesc)
 {
     ASSERT(executable.hasTransformFeedbackOutput());
 
@@ -1730,7 +1732,7 @@ void ProgramExecutableVk::updateTransformFeedbackDescriptorSetImpl(
 
 angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
     ContextVk *contextVk,
-    const vk::TextureDescriptorDesc &texturesDesc)
+    const vk::DescriptorSetDesc &texturesDesc)
 {
     const gl::ProgramExecutable *executable = contextVk->getState().getProgramExecutable();
     ASSERT(executable);
@@ -1790,7 +1792,8 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
                 // Clear descriptor set cache. It may no longer be valid.
                 if (newPoolAllocated)
                 {
-                    mTextureDescriptorsCache.destroy(contextVk->getRenderer());
+                    mTextureDescriptorsCache.destroy(contextVk->getRenderer(),
+                                                     VulkanCacheType::TextureDescriptors);
                 }
 
                 descriptorSet = mDescriptorSets[DescriptorSetIndex::Texture];
@@ -2022,9 +2025,11 @@ void ProgramExecutableVk::outputCumulativePerfCounters()
 
 ProgramExecutablePerfCounters ProgramExecutableVk::getAndResetObjectPerfCounters()
 {
-    mUniformsAndXfbDescriptorsCache.accumulateCacheStats(this);
-    mTextureDescriptorsCache.accumulateCacheStats(this);
-    mShaderBufferDescriptorsCache.accumulateCacheStats(this);
+    mUniformsAndXfbDescriptorsCache.accumulateCacheStats(VulkanCacheType::UniformsAndXfbDescriptors,
+                                                         this);
+    mTextureDescriptorsCache.accumulateCacheStats(VulkanCacheType::TextureDescriptors, this);
+    mShaderBufferDescriptorsCache.accumulateCacheStats(VulkanCacheType::ShaderBuffersDescriptors,
+                                                       this);
 
     mCumulativePerfCounters.descriptorSetAllocations += mPerfCounters.descriptorSetAllocations;
     mCumulativePerfCounters.descriptorSetCacheHits += mPerfCounters.descriptorSetCacheHits;
@@ -2117,8 +2122,8 @@ angle::Result ProgramExecutableVk::updateUniforms(ContextVk *contextVk,
     {
         // We need to reinitialize the descriptor sets if we newly allocated buffers since we can't
         // modify the descriptor sets once initialized.
-        vk::UniformsAndXfbDescriptorDesc defaultUniformsDesc;
-        vk::UniformsAndXfbDescriptorDesc *uniformsAndXfbBufferDesc;
+        vk::DescriptorSetDesc defaultUniformsDesc;
+        vk::DescriptorSetDesc *uniformsAndXfbBufferDesc;
 
         if (glExecutable.hasTransformFeedbackOutput())
         {
