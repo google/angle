@@ -2836,16 +2836,17 @@ void DescriptorPoolHelper::release(ContextVk *contextVk)
     contextVk->addGarbage(&mDescriptorPool);
 }
 
-angle::Result DescriptorPoolHelper::allocateSets(ContextVk *contextVk,
-                                                 const VkDescriptorSetLayout *descriptorSetLayout,
-                                                 uint32_t descriptorSetCount,
-                                                 VkDescriptorSet *descriptorSetsOut)
+angle::Result DescriptorPoolHelper::allocateDescriptorSets(
+    ContextVk *contextVk,
+    const DescriptorSetLayout &descriptorSetLayout,
+    uint32_t descriptorSetCount,
+    VkDescriptorSet *descriptorSetsOut)
 {
     VkDescriptorSetAllocateInfo allocInfo = {};
     allocInfo.sType                       = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     allocInfo.descriptorPool              = mDescriptorPool.getHandle();
     allocInfo.descriptorSetCount          = descriptorSetCount;
-    allocInfo.pSetLayouts                 = descriptorSetLayout;
+    allocInfo.pSetLayouts                 = descriptorSetLayout.ptr();
 
     ASSERT(mFreeDescriptorSets >= descriptorSetCount);
     mFreeDescriptorSets -= descriptorSetCount;
@@ -2917,14 +2918,14 @@ void DynamicDescriptorPool::release(ContextVk *contextVk)
 
 angle::Result DynamicDescriptorPool::allocateSetsAndGetInfo(
     ContextVk *contextVk,
-    const VkDescriptorSetLayout *descriptorSetLayout,
+    const DescriptorSetLayout &descriptorSetLayout,
     uint32_t descriptorSetCount,
     RefCountedDescriptorPoolBinding *bindingOut,
     VkDescriptorSet *descriptorSetsOut,
     bool *newPoolAllocatedOut)
 {
     ASSERT(!mDescriptorPools.empty());
-    ASSERT(*descriptorSetLayout == mCachedDescriptorSetLayout);
+    ASSERT(descriptorSetLayout.getHandle() == mCachedDescriptorSetLayout);
 
     *newPoolAllocatedOut = false;
 
@@ -2939,8 +2940,8 @@ angle::Result DynamicDescriptorPool::allocateSetsAndGetInfo(
         bindingOut->set(mDescriptorPools[mCurrentPoolIndex]);
     }
 
-    return bindingOut->get().allocateSets(contextVk, descriptorSetLayout, descriptorSetCount,
-                                          descriptorSetsOut);
+    return bindingOut->get().allocateDescriptorSets(contextVk, descriptorSetLayout,
+                                                    descriptorSetCount, descriptorSetsOut);
 }
 
 angle::Result DynamicDescriptorPool::allocateNewPool(ContextVk *contextVk)

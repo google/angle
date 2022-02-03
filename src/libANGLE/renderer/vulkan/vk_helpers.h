@@ -171,10 +171,10 @@ class DescriptorPoolHelper : public Resource
     void destroy(VkDevice device);
     void release(ContextVk *contextVk);
 
-    angle::Result allocateSets(ContextVk *contextVk,
-                               const VkDescriptorSetLayout *descriptorSetLayout,
-                               uint32_t descriptorSetCount,
-                               VkDescriptorSet *descriptorSetsOut);
+    angle::Result allocateDescriptorSets(ContextVk *contextVk,
+                                         const DescriptorSetLayout &descriptorSetLayout,
+                                         uint32_t descriptorSetCount,
+                                         VkDescriptorSet *descriptorSetsOut);
 
   private:
     uint32_t mFreeDescriptorSets;
@@ -202,11 +202,12 @@ class DynamicDescriptorPool final : angle::NonCopyable
 
     // We use the descriptor type to help count the number of free sets.
     // By convention, sets are indexed according to the constants in vk_cache_utils.h.
-    ANGLE_INLINE angle::Result allocateSets(ContextVk *contextVk,
-                                            const VkDescriptorSetLayout *descriptorSetLayout,
-                                            uint32_t descriptorSetCount,
-                                            RefCountedDescriptorPoolBinding *bindingOut,
-                                            VkDescriptorSet *descriptorSetsOut)
+    ANGLE_INLINE angle::Result allocateDescriptorSets(
+        ContextVk *contextVk,
+        const DescriptorSetLayout &descriptorSetLayout,
+        uint32_t descriptorSetCount,
+        RefCountedDescriptorPoolBinding *bindingOut,
+        VkDescriptorSet *descriptorSetsOut)
     {
         bool ignoreNewPoolAllocated;
         return allocateSetsAndGetInfo(contextVk, descriptorSetLayout, descriptorSetCount,
@@ -216,7 +217,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
     // We use the descriptor type to help count the number of free sets.
     // By convention, sets are indexed according to the constants in vk_cache_utils.h.
     angle::Result allocateSetsAndGetInfo(ContextVk *contextVk,
-                                         const VkDescriptorSetLayout *descriptorSetLayout,
+                                         const DescriptorSetLayout &descriptorSetLayout,
                                          uint32_t descriptorSetCount,
                                          RefCountedDescriptorPoolBinding *bindingOut,
                                          VkDescriptorSet *descriptorSetsOut,
