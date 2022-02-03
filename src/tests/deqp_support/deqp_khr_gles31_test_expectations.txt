@@ -27,8 +27,6 @@
 
 // Geometry shader support (conditioned to windows as that's our only bot capable of running these
 // tests)
-// Translator's lack of support for redefining gl_PerVertex
-5579 VULKAN : KHR-GLES31.core.geometry_shader.api.getProgramiv3 = FAIL
 // Wrong results
 5579 VULKAN : KHR-GLES31.core.geometry_shader.adjacency.adjacency_indiced_triangle_strip = FAIL
 5579 VULKAN : KHR-GLES31.core.geometry_shader.adjacency.adjacency_non_indiced_triangle_strip = FAIL
