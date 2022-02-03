@@ -389,12 +389,10 @@
 6931 PIXEL6 VULKAN : FramebufferMultiviewLayeredClearTest.ScissoredClearBufferfi/* = SKIP
 6931 PIXEL6 VULKAN : FramebufferTest_ES31.MultipleTextureMultisampleResolveWithBlitMultipleResolves* = SKIP
 6931 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitThenDrawAttachment1/* = SKIP
-6969 PIXEL6 VULKAN : GLSLTest.FramebufferFetchWithLastFragData/ES2_Vulkan_Glslang = SKIP
 6931 PIXEL6 VULKAN : GLSLTest.PointCoordConsistency/* = SKIP
 6931 PIXEL6 VULKAN : GLSLTest_ES31.ArraysOfArraysImage/* = SKIP
 6931 PIXEL6 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 6931 PIXEL6 VULKAN : GLSLTest_ES31.ConsecutiveArraysOfArraysImage/* = SKIP
-
 6931 PIXEL6 VULKAN : GeometryShaderTest.GeometryShaderImplementationDependentLimits/* = SKIP
 6931 PIXEL6 VULKAN : ImageTestES3.RGBXAHBImport* = SKIP
 6931 PIXEL6 VULKAN : IndexedBufferCopyTest.IndexRangeBug/* = SKIP
