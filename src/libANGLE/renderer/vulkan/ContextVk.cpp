@@ -1909,7 +1909,8 @@ angle::Result ContextVk::handleDirtyGraphicsFramebufferFetchBarrier(
 }
 
 template <typename CommandBufferHelperT>
-angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *commandBufferHelper)
+angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *commandBufferHelper,
+                                                        PipelineType pipelineType)
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
@@ -1931,6 +1932,8 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     }
 
     handleDirtyShaderBufferResourcesImpl(commandBufferHelper);
+
+    updateShaderResourcesDescriptorDesc(pipelineType);
 
     ProgramExecutableVk *executableVk = getExecutable();
     FramebufferVk *drawFramebufferVk  = getDrawFramebuffer();
@@ -2031,12 +2034,12 @@ void ContextVk::handleDirtyShaderBufferResourcesImpl(
 angle::Result ContextVk::handleDirtyGraphicsShaderResources(DirtyBits::Iterator *dirtyBitsIterator,
                                                             DirtyBits dirtyBitMask)
 {
-    return handleDirtyShaderResourcesImpl(mRenderPassCommands);
+    return handleDirtyShaderResourcesImpl(mRenderPassCommands, PipelineType::Graphics);
 }
 
 angle::Result ContextVk::handleDirtyComputeShaderResources()
 {
-    return handleDirtyShaderResourcesImpl(mOutsideRenderPassCommands);
+    return handleDirtyShaderResourcesImpl(mOutsideRenderPassCommands, PipelineType::Compute);
 }
 
 angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
@@ -4585,47 +4588,48 @@ angle::Result ContextVk::invalidateCurrentShaderResources(gl::Command command)
         mComputeDirtyBits.set(DIRTY_BIT_MEMORY_BARRIER);
     }
 
-    if (hasUniformBuffers || hasStorageBuffers)
+    return angle::Result::Continue;
+}
+
+void ContextVk::updateShaderResourcesDescriptorDesc(PipelineType pipelineType)
+{
+    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
+    ASSERT(executable);
+
+    const bool hasStorageBuffers =
+        executable->hasStorageBuffers() || executable->hasAtomicCounterBuffers();
+    const bool hasUniformBuffers = executable->hasUniformBuffers();
+
+    if (!hasUniformBuffers && !hasStorageBuffers)
     {
-        mShaderBuffersDescriptorDesc.reset();
-
-        ProgramExecutableVk *executableVk = nullptr;
-        if (mState.getProgram())
-        {
-            ProgramVk *programVk = vk::GetImpl(mState.getProgram());
-            executableVk         = &programVk->getExecutable();
-        }
-        else
-        {
-            ASSERT(mState.getProgramPipeline());
-            ProgramPipelineVk *pipelineVk = vk::GetImpl(mState.getProgramPipeline());
-            executableVk                  = &pipelineVk->getExecutable();
-        }
-
-        const gl::BufferVector &uniformBuffers = mState.getOffsetBindingPointerUniformBuffers();
-        bool isDynamicDescriptor = executableVk->usesDynamicUniformBufferDescriptors();
-        bool appendOffset        = !isDynamicDescriptor;
-        AppendBufferVectorToDesc(&mShaderBuffersDescriptorDesc, uniformBuffers,
-                                 mState.getUniformBuffersMask(), isDynamicDescriptor, appendOffset);
-
-        const gl::BufferVector &shaderStorageBuffers =
-            mState.getOffsetBindingPointerShaderStorageBuffers();
-        isDynamicDescriptor = executableVk->usesDynamicShaderStorageBufferDescriptors();
-        appendOffset        = true;
-        AppendBufferVectorToDesc(&mShaderBuffersDescriptorDesc, shaderStorageBuffers,
-                                 mState.getShaderStorageBuffersMask(), isDynamicDescriptor,
-                                 appendOffset);
-
-        const gl::BufferVector &atomicCounterBuffers =
-            mState.getOffsetBindingPointerAtomicCounterBuffers();
-        isDynamicDescriptor = executableVk->usesDynamicAtomicCounterBufferDescriptors();
-        appendOffset        = true;
-        AppendBufferVectorToDesc(&mShaderBuffersDescriptorDesc, atomicCounterBuffers,
-                                 mState.getAtomicCounterBuffersMask(), isDynamicDescriptor,
-                                 appendOffset);
+        return;
     }
 
-    return angle::Result::Continue;
+    mShaderBuffersDescriptorDesc.reset();
+
+    ProgramExecutableVk *executableVk = getExecutable();
+
+    const gl::BufferVector &uniformBuffers = mState.getOffsetBindingPointerUniformBuffers();
+    bool isDynamicDescriptor               = executableVk->usesDynamicUniformBufferDescriptors();
+    bool appendOffset                      = !isDynamicDescriptor;
+    AppendBufferVectorToDesc(&mShaderBuffersDescriptorDesc, uniformBuffers,
+                             mState.getUniformBuffersMask(), isDynamicDescriptor, appendOffset);
+
+    const gl::BufferVector &shaderStorageBuffers =
+        mState.getOffsetBindingPointerShaderStorageBuffers();
+    isDynamicDescriptor = executableVk->usesDynamicShaderStorageBufferDescriptors();
+    appendOffset        = true;
+    AppendBufferVectorToDesc(&mShaderBuffersDescriptorDesc, shaderStorageBuffers,
+                             mState.getShaderStorageBuffersMask(), isDynamicDescriptor,
+                             appendOffset);
+
+    const gl::BufferVector &atomicCounterBuffers =
+        mState.getOffsetBindingPointerAtomicCounterBuffers();
+    isDynamicDescriptor = executableVk->usesDynamicAtomicCounterBufferDescriptors();
+    appendOffset        = true;
+    AppendBufferVectorToDesc(&mShaderBuffersDescriptorDesc, atomicCounterBuffers,
+                             mState.getAtomicCounterBuffersMask(), isDynamicDescriptor,
+                             appendOffset);
 }
 
 void ContextVk::invalidateGraphicsDriverUniforms()

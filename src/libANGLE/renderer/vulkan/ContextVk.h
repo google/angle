@@ -926,7 +926,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result handleDirtyTexturesImpl(CommandBufferHelperT *commandBufferHelper,
                                           PipelineType pipelineType);
     template <typename CommandBufferHelperT>
-    angle::Result handleDirtyShaderResourcesImpl(CommandBufferHelperT *commandBufferHelper);
+    angle::Result handleDirtyShaderResourcesImpl(CommandBufferHelperT *commandBufferHelper,
+                                                 PipelineType pipelineType);
     void handleDirtyShaderBufferResourcesImpl(vk::CommandBufferHelperCommon *commandBufferHelper);
     template <typename CommandBufferT>
     void handleDirtyDriverUniformsBindingImpl(CommandBufferT *commandBuffer,
@@ -1027,6 +1028,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     SpecConstUsageBits getCurrentProgramSpecConstUsageBits() const;
     void updateGraphicsPipelineDescWithSpecConstUsageBits(SpecConstUsageBits usageBits);
+
+    void updateShaderResourcesDescriptorDesc(PipelineType pipelineType);
 
     ContextVkPerfCounters getAndResetObjectPerfCounters();
 
