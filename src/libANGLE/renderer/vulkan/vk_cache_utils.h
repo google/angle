@@ -1153,10 +1153,6 @@ class UniformsAndXfbDescriptorDesc
     UniformsAndXfbDescriptorDesc(const UniformsAndXfbDescriptorDesc &other);
     UniformsAndXfbDescriptorDesc &operator=(const UniformsAndXfbDescriptorDesc &other);
 
-    BufferSerial getDefaultUniformBufferSerial() const
-    {
-        return mBufferSerials[kDefaultUniformBufferIndex];
-    }
     void updateDefaultUniformBuffer(BufferSerial bufferSerial)
     {
         mBufferSerials[kDefaultUniformBufferIndex] = bufferSerial;

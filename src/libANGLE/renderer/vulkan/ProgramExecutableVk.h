@@ -223,6 +223,7 @@ class ProgramExecutableVk
 
     angle::Result allocUniformAndXfbDescriptorSet(
         ContextVk *contextVk,
+        vk::BufferHelper *defaultUniformBuffer,
         const vk::UniformsAndXfbDescriptorDesc &xfbBufferDesc,
         bool *newDescriptorSetAllocated);
 
