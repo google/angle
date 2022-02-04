@@ -537,7 +537,10 @@ class ContextMtl : public ContextImpl, public mtl::Context
         float flipXY[2];
         float negFlipXY[2];
         uint32_t coverageMask;
+        uint32_t unusedMetal;
     };
+    static_assert(sizeof(DriverUniforms) % (sizeof(uint32_t) * 4) == 0,
+                  "DriverUniforms should be 16 bytes aligned");
 
     struct DefaultAttribute
     {
