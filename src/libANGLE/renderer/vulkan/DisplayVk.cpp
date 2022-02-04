@@ -222,6 +222,25 @@ egl::Error DisplayVk::validateImageClientBuffer(const gl::Context *context,
                 return egl::EglBadParameter() << "clientBuffer is invalid.";
             }
 
+            GLenum internalFormat =
+                static_cast<GLenum>(attribs.get(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE, GL_NONE));
+            switch (internalFormat)
+            {
+                case GL_RGBA:
+                case GL_BGRA_EXT:
+                case GL_RGB:
+                case GL_RED_EXT:
+                case GL_RG_EXT:
+                case GL_RGB10_A2_EXT:
+                case GL_R16_EXT:
+                case GL_RG16_EXT:
+                case GL_NONE:
+                    break;
+                default:
+                    return egl::EglBadParameter() << "Invalid EGLImage texture internal format: 0x"
+                                                  << std::hex << internalFormat;
+            }
+
             uint64_t hi = static_cast<uint64_t>(attribs.get(EGL_VULKAN_IMAGE_CREATE_INFO_HI_ANGLE));
             uint64_t lo = static_cast<uint64_t>(attribs.get(EGL_VULKAN_IMAGE_CREATE_INFO_LO_ANGLE));
             uint64_t info = ((hi & 0xffffffff) << 32) | (lo & 0xffffffff);
