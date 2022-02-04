@@ -2489,8 +2489,10 @@ bool ValidateBlitFramebufferANGLE(const Context *context,
                     if (!Format::EquivalentForBlit(attachment->getFormat(),
                                                    readColorAttachment->getFormat()))
                     {
-                        context->validationError(entryPoint, GL_INVALID_OPERATION,
-                                                 kBlitExtensionFormatMismatch);
+                        context->validationErrorF(
+                            entryPoint, GL_INVALID_OPERATION, kBlitExtensionFormatMismatch,
+                            readColorAttachment->getFormat().info->sizedInternalFormat,
+                            attachment->getFormat().info->sizedInternalFormat);
                         return false;
                     }
                 }
