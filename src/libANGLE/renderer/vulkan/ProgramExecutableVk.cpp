@@ -1197,10 +1197,10 @@ void ProgramExecutableVk::resolvePrecisionMismatch(const gl::ProgramMergedVaryin
 }
 
 void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
+    ContextVk *contextVk,
     const gl::ShaderType shaderType,
     const DefaultUniformBlock &defaultUniformBlock,
-    vk::BufferHelper *defaultUniformBuffer,
-    ContextVk *contextVk)
+    vk::BufferHelper *defaultUniformBuffer)
 {
     const std::string uniformBlockName = kDefaultUniformNames[shaderType];
 
@@ -1213,9 +1213,7 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
     VkWriteDescriptorSet &writeInfo    = contextVk->allocWriteDescriptorSet();
     VkDescriptorBufferInfo &bufferInfo = contextVk->allocDescriptorBufferInfo();
 
-    // Size is set to the size of the empty buffer for shader stages with no uniform data,
-    // otherwise it is set to the total size of the uniform data in the current shader stage
-    VkDeviceSize size              = defaultUniformBlock.uniformData.size();
+    VkDeviceSize size              = getDefaultUniformAlignedSize(contextVk, shaderType);
     vk::BufferHelper *bufferHelper = defaultUniformBuffer;
     if (defaultUniformBlock.uniformData.empty())
     {
@@ -1689,8 +1687,8 @@ angle::Result ProgramExecutableVk::updateTransformFeedbackDescriptorSet(
     {
         for (const gl::ShaderType shaderType : executable.getLinkedShaderStages())
         {
-            updateDefaultUniformsDescriptorSet(shaderType, *mDefaultUniformBlocks[shaderType],
-                                               defaultUniformBuffer, contextVk);
+            updateDefaultUniformsDescriptorSet(
+                contextVk, shaderType, *mDefaultUniformBlocks[shaderType], defaultUniformBuffer);
         }
         updateTransformFeedbackDescriptorSetImpl(contextVk, executable);
     }
@@ -2147,8 +2145,9 @@ angle::Result ProgramExecutableVk::updateUniforms(ContextVk *contextVk,
         {
             for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
             {
-                updateDefaultUniformsDescriptorSet(shaderType, *mDefaultUniformBlocks[shaderType],
-                                                   defaultUniformBuffer, contextVk);
+                updateDefaultUniformsDescriptorSet(contextVk, shaderType,
+                                                   *mDefaultUniformBlocks[shaderType],
+                                                   defaultUniformBuffer);
                 updateTransformFeedbackDescriptorSetImpl(contextVk, glExecutable);
             }
         }

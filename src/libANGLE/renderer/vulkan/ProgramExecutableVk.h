@@ -250,10 +250,10 @@ class ProgramExecutableVk
         vk::DescriptorSetLayoutDesc *descOut);
 
     void resolvePrecisionMismatch(const gl::ProgramMergedVaryings &mergedVaryings);
-    void updateDefaultUniformsDescriptorSet(const gl::ShaderType shaderType,
+    void updateDefaultUniformsDescriptorSet(ContextVk *contextVk,
+                                            const gl::ShaderType shaderType,
                                             const DefaultUniformBlock &defaultUniformBlock,
-                                            vk::BufferHelper *defaultUniformBuffer,
-                                            ContextVk *contextVk);
+                                            vk::BufferHelper *defaultUniformBuffer);
     void updateTransformFeedbackDescriptorSetImpl(ContextVk *contextVk,
                                                   const gl::ProgramExecutable &executable);
     angle::Result getOrAllocateShaderResourcesDescriptorSet(
