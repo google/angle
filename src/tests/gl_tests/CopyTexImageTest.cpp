@@ -40,13 +40,13 @@ class CopyTexImageTest : public ANGLETest
 
     void testTearDown() override { glDeleteProgram(mTextureProgram); }
 
-    void initializeResources(GLenum format, GLenum type)
+    void initializeResources(GLenum internalFormat, GLenum format, GLenum type)
     {
         for (size_t i = 0; i < kFboCount; ++i)
         {
             glBindTexture(GL_TEXTURE_2D, mFboTextures[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, format, kFboSizes[i], kFboSizes[i], 0, format, type,
-                         nullptr);
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, kFboSizes[i], kFboSizes[i], 0, format,
+                         type, nullptr);
 
             // Disable mipmapping
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -61,6 +61,11 @@ class CopyTexImageTest : public ANGLETest
         }
 
         ASSERT_GL_NO_ERROR();
+    }
+
+    void initializeResources(GLenum format, GLenum type)
+    {
+        initializeResources(format, format, type);
     }
 
     void verifyResults(GLuint texture,
@@ -385,6 +390,20 @@ TEST_P(CopyTexImageTest, SubImageRGBToL)
 
     initializeResources(GL_RGB, GL_UNSIGNED_BYTE);
     runCopyTexSubImageTest(GL_LUMINANCE, expected);
+}
+
+TEST_P(CopyTexImageTest, RGBXToL)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
+
+    GLubyte expected[3][4] = {
+        {64, 64, 64, 255},
+        {255, 255, 255, 255},
+        {127, 127, 127, 255},
+    };
+
+    initializeResources(GL_RGBX8_ANGLE, GL_RGB, GL_UNSIGNED_BYTE);
+    runCopyTexImageTest(GL_LUMINANCE, expected);
 }
 
 // Read default framebuffer with glCopyTexImage2D().
