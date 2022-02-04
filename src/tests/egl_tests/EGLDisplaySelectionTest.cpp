@@ -3,8 +3,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// EGLPowerPreferenceTest.cpp:
-//   EGL extension EGL_ANGLE_display_power_preference
+// EGLDisplaySelectionTest.cpp:
+//   Checks display selection and caching with EGL extensions EGL_ANGLE_display_power_preference,
+//   EGL_ANGLE_platform_angle, and EGL_ANGLE_device_id
 //
 
 #include <gtest/gtest.h>
@@ -17,7 +18,7 @@
 
 using namespace angle;
 
-class EGLDisplayPowerPreferenceTest : public ANGLETest
+class EGLDisplaySelectionTest : public ANGLETest
 {
   public:
     void testSetUp() override { (void)GetSystemInfo(&mSystemInfo); }
@@ -73,7 +74,7 @@ class EGLDisplayPowerPreferenceTest : public ANGLETest
     SystemInfo mSystemInfo;
 };
 
-class EGLDisplayPowerPreferenceTestNoFixture : public EGLDisplayPowerPreferenceTest
+class EGLDisplaySelectionTestNoFixture : public EGLDisplaySelectionTest
 {
   protected:
     void terminateWindow()
@@ -102,8 +103,7 @@ class EGLDisplayPowerPreferenceTestNoFixture : public EGLDisplayPowerPreferenceT
     void initializeWindow()
     {
         mOSWindow = OSWindow::New();
-        mOSWindow->initialize("EGLDisplayPowerPreferenceTestMultiDisplay", kWindowWidth,
-                              kWindowHeight);
+        mOSWindow->initialize("EGLDisplaySelectionTestMultiDisplay", kWindowWidth, kWindowHeight);
         setWindowVisible(mOSWindow, true);
     }
 
@@ -142,7 +142,7 @@ class EGLDisplayPowerPreferenceTestNoFixture : public EGLDisplayPowerPreferenceT
     OSWindow *mOSWindow = nullptr;
 };
 
-class EGLDisplayPowerPreferenceTestMultiDisplay : public EGLDisplayPowerPreferenceTestNoFixture
+class EGLDisplaySelectionTestMultiDisplay : public EGLDisplaySelectionTestNoFixture
 {
 
   protected:
@@ -176,11 +176,38 @@ class EGLDisplayPowerPreferenceTestMultiDisplay : public EGLDisplayPowerPreferen
         ASSERT_EGL_SUCCESS();
     }
 
-    void runReinitializeDisplay(EGLAttrib powerPreference)
+    void initializeDisplayWithBackend(EGLDisplay *display, EGLAttrib platformType)
+    {
+        GLenum deviceType = GetParam().getDeviceType();
+
+        std::vector<EGLint> displayAttributes;
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
+        displayAttributes.push_back(platformType);
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
+        displayAttributes.push_back(EGL_DONT_CARE);
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
+        displayAttributes.push_back(EGL_DONT_CARE);
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
+        displayAttributes.push_back(deviceType);
+        displayAttributes.push_back(EGL_NONE);
+
+        *display = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
+                                            reinterpret_cast<void *>(mOSWindow->getNativeDisplay()),
+                                            displayAttributes.data());
+        ASSERT_TRUE(*display != EGL_NO_DISPLAY);
+
+        EGLint majorVersion, minorVersion;
+        ASSERT_TRUE(eglInitialize(*display, &majorVersion, &minorVersion) == EGL_TRUE);
+
+        eglBindAPI(EGL_OPENGL_ES_API);
+        ASSERT_EGL_SUCCESS();
+    }
+
+    void runReinitializeDisplayPowerPreference(EGLAttrib powerPreference)
     {
         initializeWindow();
 
-        // Initialize the display with the selected power preferenc
+        // Initialize the display with the selected power preference
         EGLDisplay display;
         EGLContext context;
         initializeDisplayWithPowerPreference(&display, powerPreference);
@@ -222,7 +249,101 @@ class EGLDisplayPowerPreferenceTestMultiDisplay : public EGLDisplayPowerPreferen
         terminateWindow();
     }
 
-    void runMultiDisplay()
+    void runMultiDisplayBackend(EGLAttrib backend1,
+                                bool(checkFunc1)(void),
+                                EGLAttrib backend2,
+                                bool(checkFunc2)(void))
+    {
+        initializeWindow();
+
+        // Initialize the display with the selected backend
+        EGLDisplay display1;
+        EGLContext context1;
+        initializeDisplayWithBackend(&display1, backend1);
+        initializeContextForDisplay(display1, &context1);
+        eglMakeCurrent(display1, EGL_NO_SURFACE, EGL_NO_SURFACE, context1);
+
+        // Check that the correct backend is chosen
+        ASSERT_TRUE(checkFunc1());
+
+        // Initialize the second display with the second backend
+        EGLDisplay display2;
+        EGLContext context2;
+        initializeDisplayWithBackend(&display2, backend2);
+        initializeContextForDisplay(display2, &context2);
+        eglMakeCurrent(display2, EGL_NO_SURFACE, EGL_NO_SURFACE, context2);
+
+        // Check that the correct backend is chosen
+        ASSERT_TRUE(checkFunc2());
+
+        // Switch back to the first display to verify
+        eglMakeCurrent(display1, EGL_NO_SURFACE, EGL_NO_SURFACE, context1);
+        ASSERT_TRUE(checkFunc1());
+
+        // Terminate the displays
+        terminateContext(display1, context1);
+        eglMakeCurrent(display1, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+        terminateDisplay(display1);
+        terminateContext(display2, context2);
+        eglMakeCurrent(display2, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+        terminateDisplay(display2);
+
+        terminateWindow();
+    }
+
+    void runMultiDisplayBackendDefault(EGLAttrib backend, bool(checkFunc)(void))
+    {
+        initializeWindow();
+
+        // Initialize the display with the selected backend
+        EGLDisplay display1;
+        EGLContext context1;
+        initializeDisplayWithBackend(&display1, backend);
+        initializeContextForDisplay(display1, &context1);
+        eglMakeCurrent(display1, EGL_NO_SURFACE, EGL_NO_SURFACE, context1);
+
+        // Check that the correct backend is chosen
+        ASSERT_TRUE(checkFunc());
+
+        // Initialize the second display with the second backend
+        EGLDisplay display2;
+        EGLContext context2;
+        initializeDisplayWithBackend(&display2, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+        initializeContextForDisplay(display2, &context2);
+        eglMakeCurrent(display2, EGL_NO_SURFACE, EGL_NO_SURFACE, context2);
+
+        bool sameDisplay = false;
+        // If this backend is the same as the first display, check that the display is cached
+        if (checkFunc())
+        {
+            ASSERT_EQ(display1, display2);
+            sameDisplay = true;
+        }
+        // If this backend is not the same, check that this is a different display
+        else
+        {
+            ASSERT_NE(display1, display2);
+        }
+
+        // Switch back to the first display to verify
+        eglMakeCurrent(display1, EGL_NO_SURFACE, EGL_NO_SURFACE, context1);
+        ASSERT_TRUE(checkFunc());
+
+        // Terminate the displays
+        terminateContext(display1, context1);
+        eglMakeCurrent(display1, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+        if (!sameDisplay)
+        {
+            terminateDisplay(display1);
+        }
+        terminateContext(display2, context2);
+        eglMakeCurrent(display2, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+        terminateDisplay(display2);
+
+        terminateWindow();
+    }
+
+    void runMultiDisplayPowerPreference()
     {
         initializeWindow();
 
@@ -260,7 +381,7 @@ class EGLDisplayPowerPreferenceTestMultiDisplay : public EGLDisplayPowerPreferen
     }
 };
 
-TEST_P(EGLDisplayPowerPreferenceTest, SelectGPU)
+TEST_P(EGLDisplaySelectionTest, SelectGPU)
 {
     ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_display_power_preference"));
     ASSERT_NE(GetParam().eglParameters.displayPowerPreference, EGL_DONT_CARE);
@@ -269,28 +390,123 @@ TEST_P(EGLDisplayPowerPreferenceTest, SelectGPU)
     ASSERT_EQ(findGPU(lowPower), findActiveGPU());
 }
 
-TEST_P(EGLDisplayPowerPreferenceTestMultiDisplay, ReInitializePowerPreferenceLowToHigh)
+TEST_P(EGLDisplaySelectionTestMultiDisplay, ReInitializePowerPreferenceLowToHigh)
 {
     ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_display_power_preference"));
 
-    runReinitializeDisplay(EGL_LOW_POWER_ANGLE);
+    runReinitializeDisplayPowerPreference(EGL_LOW_POWER_ANGLE);
 }
 
-TEST_P(EGLDisplayPowerPreferenceTestMultiDisplay, ReInitializePowerPreferenceHighToLow)
+TEST_P(EGLDisplaySelectionTestMultiDisplay, ReInitializePowerPreferenceHighToLow)
 {
     ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_display_power_preference"));
 
-    runReinitializeDisplay(EGL_HIGH_POWER_ANGLE);
+    runReinitializeDisplayPowerPreference(EGL_HIGH_POWER_ANGLE);
 }
 
-TEST_P(EGLDisplayPowerPreferenceTestMultiDisplay, MultiDisplayTest)
+TEST_P(EGLDisplaySelectionTestMultiDisplay, BackendMetalOpenGL)
+{
+    bool missingBackends = true;
+#if defined(ANGLE_ENABLE_METAL) && defined(ANGLE_ENABLE_OPENGL)
+    missingBackends = false;
+#endif
+    ANGLE_SKIP_TEST_IF(missingBackends);
+
+    runMultiDisplayBackend(EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE, IsMetal,
+                           EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, IsOpenGL);
+}
+
+TEST_P(EGLDisplaySelectionTestMultiDisplay, BackendOpenGLMetal)
+{
+    bool missingBackends = true;
+#if defined(ANGLE_ENABLE_METAL) && defined(ANGLE_ENABLE_OPENGL)
+    missingBackends = false;
+#endif
+    ANGLE_SKIP_TEST_IF(missingBackends);
+
+    runMultiDisplayBackend(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, IsOpenGL,
+                           EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE, IsMetal);
+}
+
+TEST_P(EGLDisplaySelectionTestMultiDisplay, BackendVulkanD3D11)
+{
+    bool missingBackends = true;
+#if defined(ANGLE_ENABLE_VULKAN) && defined(ANGLE_ENABLE_D3D11)
+    missingBackends = false;
+#endif
+    ANGLE_SKIP_TEST_IF(missingBackends);
+
+    runMultiDisplayBackend(EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE, IsVulkan,
+                           EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, IsD3D11);
+}
+
+TEST_P(EGLDisplaySelectionTestMultiDisplay, BackendD3D11Vulkan)
+{
+    bool missingBackends = true;
+#if defined(ANGLE_ENABLE_VULKAN) && defined(ANGLE_ENABLE_D3D11)
+    missingBackends = false;
+#endif
+    ANGLE_SKIP_TEST_IF(missingBackends);
+
+    runMultiDisplayBackend(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, IsD3D11,
+                           EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE, IsVulkan);
+}
+
+TEST_P(EGLDisplaySelectionTestMultiDisplay, BackendDefaultMetal)
+{
+    bool missingBackends = true;
+#if defined(ANGLE_ENABLE_METAL)
+    missingBackends = false;
+#endif
+    ANGLE_SKIP_TEST_IF(missingBackends);
+
+    runMultiDisplayBackendDefault(EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE, IsMetal);
+}
+
+TEST_P(EGLDisplaySelectionTestMultiDisplay, BackendDefaultOpenGL)
+{
+    bool missingBackends = true;
+#if defined(ANGLE_ENABLE_OPENGL)
+    missingBackends = false;
+#endif
+    ANGLE_SKIP_TEST_IF(missingBackends);
+
+    runMultiDisplayBackendDefault(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, IsOpenGL);
+}
+
+TEST_P(EGLDisplaySelectionTestMultiDisplay, BackendDefaultD3D11)
+{
+    bool missingBackends = true;
+#if defined(ANGLE_ENABLE_D3D11)
+    missingBackends = false;
+#endif
+    ANGLE_SKIP_TEST_IF(missingBackends);
+
+    runMultiDisplayBackendDefault(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, IsD3D11);
+}
+
+TEST_P(EGLDisplaySelectionTestMultiDisplay, BackendDefaultVulkan)
+{
+    bool missingBackends = true;
+#if defined(ANGLE_ENABLE_VULKAN)
+    missingBackends = false;
+#endif
+    ANGLE_SKIP_TEST_IF(missingBackends);
+
+    // http://anglebug.com/6999
+    ANGLE_SKIP_TEST_IF(IsOSX());
+
+    runMultiDisplayBackendDefault(EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE, IsVulkan);
+}
+
+TEST_P(EGLDisplaySelectionTestMultiDisplay, PowerPreference)
 {
     ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_display_power_preference"));
 
-    runMultiDisplay();
+    runMultiDisplayPowerPreference();
 }
 
-class EGLDisplayPowerPreferenceTestDeviceId : public EGLDisplayPowerPreferenceTestNoFixture
+class EGLDisplaySelectionTestDeviceId : public EGLDisplaySelectionTestNoFixture
 {
 
   protected:
@@ -330,7 +546,7 @@ class EGLDisplayPowerPreferenceTestDeviceId : public EGLDisplayPowerPreferenceTe
     }
 };
 
-TEST_P(EGLDisplayPowerPreferenceTestDeviceId, DeviceId)
+TEST_P(EGLDisplaySelectionTestDeviceId, DeviceId)
 {
     ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_platform_angle_device_id"));
 
@@ -356,20 +572,20 @@ TEST_P(EGLDisplayPowerPreferenceTestDeviceId, DeviceId)
     terminateWindow();
 }
 
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLDisplayPowerPreferenceTest);
-ANGLE_INSTANTIATE_TEST(EGLDisplayPowerPreferenceTest,
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLDisplaySelectionTest);
+ANGLE_INSTANTIATE_TEST(EGLDisplaySelectionTest,
                        WithLowPowerGPU(ES2_METAL()),
                        WithLowPowerGPU(ES3_METAL()),
                        WithHighPowerGPU(ES2_METAL()),
                        WithHighPowerGPU(ES3_METAL()));
 
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLDisplayPowerPreferenceTestMultiDisplay);
-ANGLE_INSTANTIATE_TEST(EGLDisplayPowerPreferenceTestMultiDisplay,
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLDisplaySelectionTestMultiDisplay);
+ANGLE_INSTANTIATE_TEST(EGLDisplaySelectionTestMultiDisplay,
                        WithNoFixture(ES2_METAL()),
                        WithNoFixture(ES3_METAL()));
 
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLDisplayPowerPreferenceTestDeviceId);
-ANGLE_INSTANTIATE_TEST(EGLDisplayPowerPreferenceTestDeviceId,
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLDisplaySelectionTestDeviceId);
+ANGLE_INSTANTIATE_TEST(EGLDisplaySelectionTestDeviceId,
                        WithNoFixture(ES2_D3D11()),
                        WithNoFixture(ES3_D3D11()),
                        WithNoFixture(ES2_METAL()),

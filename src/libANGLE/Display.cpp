@@ -104,17 +104,24 @@ struct ANGLEPlatformDisplay
     ANGLEPlatformDisplay() = default;
 
     ANGLEPlatformDisplay(EGLNativeDisplayType nativeDisplayType)
-        : nativeDisplayType(nativeDisplayType), powerPreference(EGL_LOW_POWER_ANGLE)
+        : nativeDisplayType(nativeDisplayType),
+          powerPreference(EGL_LOW_POWER_ANGLE),
+          platformANGLEType(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE)
     {}
 
-    ANGLEPlatformDisplay(EGLNativeDisplayType nativeDisplayType, EGLAttrib powerPreference)
-        : nativeDisplayType(nativeDisplayType), powerPreference(powerPreference)
+    ANGLEPlatformDisplay(EGLNativeDisplayType nativeDisplayType,
+                         EGLAttrib powerPreference,
+                         EGLAttrib platformANGLEType)
+        : nativeDisplayType(nativeDisplayType),
+          powerPreference(powerPreference),
+          platformANGLEType(platformANGLEType)
     {}
 
-    auto tie() const { return std::tie(nativeDisplayType, powerPreference); }
+    auto tie() const { return std::tie(nativeDisplayType, powerPreference, platformANGLEType); }
 
     EGLNativeDisplayType nativeDisplayType;
     EGLAttrib powerPreference;
+    EGLAttrib platformANGLEType;
 };
 
 inline bool operator<(const ANGLEPlatformDisplay &a, const ANGLEPlatformDisplay &b)
@@ -547,6 +554,29 @@ void ANGLESetDefaultDisplayPlatform(angle::EGLDisplayType display)
     platformMethods->logInfo    = Display_logInfo;
 }
 
+void UpdateAttribsFromEnvironment(AttributeMap &attribMap)
+{
+    EGLAttrib displayType =
+        attribMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+    if (displayType == EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE)
+    {
+        displayType = GetDisplayTypeFromEnvironment();
+        attribMap.insert(EGL_PLATFORM_ANGLE_TYPE_ANGLE, displayType);
+    }
+    EGLAttrib deviceType = attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, 0);
+    if (deviceType == 0)
+    {
+        deviceType = GetDeviceTypeFromEnvironment();
+        attribMap.insert(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, deviceType);
+    }
+    EGLAttrib platformType = attribMap.get(EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE, 0);
+    if (platformType == 0)
+    {
+        platformType = GetPlatformTypeFromEnvironment();
+        attribMap.insert(EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE, platformType);
+    }
+}
+
 static constexpr uint32_t kScratchBufferLifetime = 64u;
 
 }  // anonymous namespace
@@ -644,9 +674,16 @@ Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay
 {
     Display *display = nullptr;
 
-    EGLAttrib powerPreference = attribMap.get(EGL_POWER_PREFERENCE_ANGLE, EGL_LOW_POWER_ANGLE);
+    AttributeMap updatedAttribMap(attribMap);
+    UpdateAttribsFromEnvironment(updatedAttribMap);
+
+    EGLAttrib powerPreference =
+        updatedAttribMap.get(EGL_POWER_PREFERENCE_ANGLE, EGL_LOW_POWER_ANGLE);
+    EGLAttrib platformANGLEType =
+        updatedAttribMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
     ANGLEPlatformDisplayMap *displays = GetANGLEPlatformDisplayMap();
-    const auto &iter = displays->find(ANGLEPlatformDisplay(nativeDisplay, powerPreference));
+    const auto &iter =
+        displays->find(ANGLEPlatformDisplay(nativeDisplay, powerPreference, platformANGLEType));
     if (iter != displays->end())
     {
         display = iter->second;
@@ -661,15 +698,13 @@ Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay
         }
 
         display = new Display(EGL_PLATFORM_ANGLE_ANGLE, nativeDisplay, nullptr);
-        displays->insert(
-            std::make_pair(ANGLEPlatformDisplay(nativeDisplay, powerPreference), display));
+        displays->insert(std::make_pair(
+            ANGLEPlatformDisplay(nativeDisplay, powerPreference, platformANGLEType), display));
     }
     // Apply new attributes if the display is not initialized yet.
     if (!display->isInitialized())
     {
-        display->setAttributes(attribMap);
-
-        display->updateAttribsFromEnvironment(attribMap);
+        display->setAttributes(updatedAttribMap);
 
         EGLAttrib displayType = display->mAttributeMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
         EGLAttrib deviceType  = display->mAttributeMap.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
@@ -814,7 +849,9 @@ Display::~Display()
     {
         ANGLEPlatformDisplayMap *displays      = GetANGLEPlatformDisplayMap();
         ANGLEPlatformDisplayMap::iterator iter = displays->find(ANGLEPlatformDisplay(
-            mState.displayId, mAttributeMap.get(EGL_POWER_PREFERENCE_ANGLE, EGL_LOW_POWER_ANGLE)));
+            mState.displayId, mAttributeMap.get(EGL_POWER_PREFERENCE_ANGLE, EGL_LOW_POWER_ANGLE),
+            mAttributeMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+                              EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE)));
         if (iter != displays->end())
         {
             displays->erase(iter);
@@ -888,29 +925,6 @@ void Display::setupDisplayPlatform(rx::DisplayImpl *impl)
     mState.featuresAllDisabled =
         static_cast<bool>(mAttributeMap.get(EGL_FEATURE_ALL_DISABLED_ANGLE, 0));
     mImplementation->addObserver(&mGPUSwitchedBinding);
-}
-
-void Display::updateAttribsFromEnvironment(const AttributeMap &attribMap)
-{
-    EGLAttrib displayType =
-        attribMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
-    if (displayType == EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE)
-    {
-        displayType = GetDisplayTypeFromEnvironment();
-        mAttributeMap.insert(EGL_PLATFORM_ANGLE_TYPE_ANGLE, displayType);
-    }
-    EGLAttrib deviceType = attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, 0);
-    if (deviceType == 0)
-    {
-        deviceType = GetDeviceTypeFromEnvironment();
-        mAttributeMap.insert(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, deviceType);
-    }
-    EGLAttrib platformType = attribMap.get(EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE, 0);
-    if (platformType == 0)
-    {
-        platformType = GetPlatformTypeFromEnvironment();
-        mAttributeMap.insert(EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE, platformType);
-    }
 }
 
 Error Display::initialize()
