@@ -106,8 +106,15 @@ placed in `args.gn`.
 
 Currently, to enable overlay items an environment variable is used. For example:
 
+On Desktop build:
 ```commandline
 $ export ANGLE_OVERLAY=FPS:VulkanSecondaryCommandBufferPoolWaste
+$ ./hello_triangle --use-angle=vulkan
+```
+
+On Android build:
+```
+$ adb shell setprop debug.angle.overlay FPS:VulkanSecondaryCommandBufferPoolWaste
 $ ./hello_triangle --use-angle=vulkan
 ```
 
