@@ -916,6 +916,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/dead_trigger_2': {
+      'packages': [
+        {
+            'package': 'angle/traces/dead_trigger_2',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/disney_tsum_tsum': {
       'packages': [
         {

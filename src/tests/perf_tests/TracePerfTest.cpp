@@ -954,9 +954,9 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
     }
 
     // Adreno gives a driver error with empty/small draw calls. http://anglebug.com/5823
-    if (traceNameIs("hill_climb_racing"))
+    if (traceNameIs("hill_climb_racing") || traceNameIs("dead_trigger_2"))
     {
-        if (IsAndroid() && (IsPixel2() || IsPixel4()) &&
+        if (IsAndroid() && (IsPixel2() || IsPixel4() || IsPixel4XL()) &&
             mParams.driver == GLESDriverType::SystemEGL)
         {
             mSkipTest = true;
