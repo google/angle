@@ -335,6 +335,9 @@ class RendererVk : angle::NonCopyable
     void onNewValidationMessage(const std::string &message);
     std::string getAndClearLastValidationMessage(uint32_t *countSinceLastClear);
 
+    void onFramebufferFetchUsed();
+    bool isFramebufferFetchUsed() const { return mIsFramebufferFetchUsed; }
+
     uint64_t getMaxFenceWaitTimeNs() const;
 
     ANGLE_INLINE Serial getLastCompletedQueueSerial()
@@ -627,6 +630,10 @@ class RendererVk : angle::NonCopyable
     // Latest validation data for debug overlay.
     std::string mLastValidationMessage;
     uint32_t mValidationMessageCount;
+
+    // Whether framebuffer fetch has been used, for the purposes of more accurate syncval error
+    // filtering.
+    bool mIsFramebufferFetchUsed;
 
     DebugAnnotatorVk mAnnotator;
 
