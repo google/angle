@@ -161,17 +161,15 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/5331
     "VUID-VkSubpassDescriptionDepthStencilResolve-depthResolveMode-parameter",
     "VUID-VkSubpassDescriptionDepthStencilResolve-stencilResolveMode-parameter",
-    // https://issuetracker.google.com/175584609
+    // http://issuetracker.google.com/175584609
     "VUID-vkCmdDraw-None-04584",
     "VUID-vkCmdDrawIndexed-None-04584",
     "VUID-vkCmdDrawIndirect-None-04584",
     "VUID-vkCmdDrawIndirectCount-None-04584",
     "VUID-vkCmdDrawIndexedIndirect-None-04584",
     "VUID-vkCmdDrawIndexedIndirectCount-None-04584",
-    // https://anglebug.com/5912
+    // http://anglebug.com/5912
     "VUID-VkImageViewCreateInfo-pNext-01585",
-    // https://anglebug.com/6262
-    "VUID-vkCmdClearAttachments-baseArrayLayer-00018",
     // http://anglebug.com/6442
     "UNASSIGNED-CoreValidation-Shader-InterfaceTypeMismatch",
     // http://anglebug.com/6514

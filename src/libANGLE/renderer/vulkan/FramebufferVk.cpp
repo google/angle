@@ -2385,10 +2385,12 @@ angle::Result FramebufferVk::clearWithCommand(ContextVk *contextVk,
         updateRenderPassReadOnlyDepthMode(contextVk, renderpassCommands);
     }
 
+    const uint32_t layerCount = mState.isMultiview() ? 1 : mCurrentFramebufferDesc.getLayerCount();
+
     VkClearRect rect                                     = {};
     rect.rect.extent.width                               = scissoredRenderArea.width;
     rect.rect.extent.height                              = scissoredRenderArea.height;
-    rect.layerCount                                      = mCurrentFramebufferDesc.getLayerCount();
+    rect.layerCount                                      = layerCount;
     vk::RenderPassCommandBuffer *renderPassCommandBuffer = &renderpassCommands->getCommandBuffer();
 
     renderPassCommandBuffer->clearAttachments(static_cast<uint32_t>(attachments.size()),
