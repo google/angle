@@ -2912,6 +2912,55 @@ TEST_P(BlitFramebufferTest, BlitDepthStencilPixelByPixelMesaYFlip)
     BlitDepthStencilPixelByPixelTestHelper(true /* mesaYFlip */);
 }
 
+// Regression test for a bug in the Vulkan backend where vkCmdResolveImage was used with
+// out-of-bounds regions.
+TEST_P(BlitFramebufferTestES31, OOBResolve)
+{
+    constexpr GLint kWidth  = 16;
+    constexpr GLint kHeight = 32;
+
+    // Read framebuffer is multisampled.
+    GLTexture readTexture;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, readTexture);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, kWidth, kHeight, GL_TRUE);
+
+    GLFramebuffer readFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
+                           readTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(1, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw framebuffer is single sampled.
+    GLTexture drawTexture;
+    glBindTexture(GL_TEXTURE_2D, drawTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    GLFramebuffer drawFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, drawFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+
+    // Resolve the read framebuffer, using bounds that are outside the size of the image.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFbo);
+    glBlitFramebuffer(-kWidth * 2, -kHeight * 3, kWidth * 11, kHeight * 8, -kWidth * 2,
+                      -kHeight * 3, kWidth * 11, kHeight * 8, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFbo);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::red);
+}
+
 // Regression test for a bug in the Vulkan backend where vkCmdResolveImage was using the src extents
 // as the resolve area instead of the area passed to glBlitFramebuffer.
 TEST_P(BlitFramebufferTestES31, PartialResolve)
