@@ -106,7 +106,7 @@ angle::Result StreamVertexDataWithDivisor(ContextVk *contextVk,
     ASSERT(divisor > 0);
 
     uint32_t srcVertexUseCount = 0;
-    for (size_t dataCopied = 0; dataCopied < clampedSize; dataCopied += dstStride, dst += dstStride)
+    for (size_t dataCopied = 0; dataCopied < clampedSize; dataCopied += dstStride)
     {
         vertexLoadFunction(srcData, srcStride, 1, dst);
         srcVertexUseCount++;
@@ -115,6 +115,7 @@ angle::Result StreamVertexDataWithDivisor(ContextVk *contextVk,
             srcData += srcStride;
             srcVertexUseCount = 0;
         }
+        dst += dstStride;
     }
 
     // Satisfy robustness constraints (only if extension enabled)
@@ -122,7 +123,7 @@ angle::Result StreamVertexDataWithDivisor(ContextVk *contextVk,
     {
         if (clampedSize < bytesToAllocate)
         {
-            memset(dst + clampedSize, 0, bytesToAllocate - clampedSize);
+            memset(dst, 0, bytesToAllocate - clampedSize);
         }
     }
 
