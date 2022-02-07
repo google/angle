@@ -3778,10 +3778,6 @@ angle::Result ContextVk::checkAndUpdateFramebufferFetchStatus(
     {
         drawFramebufferVk->onSwitchProgramFramebufferFetch(this,
                                                            executable->usesFramebufferFetch());
-        if (executable->usesFramebufferFetch())
-        {
-            mRenderer->onFramebufferFetchUsed();
-        }
     }
 
     return angle::Result::Continue;
