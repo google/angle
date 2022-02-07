@@ -176,6 +176,12 @@
 3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_x_linear = FAIL
 3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_y_linear = FAIL
 
+// Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR as color factors
+4394 D3D11 : dEQP-GLES3.functional.draw_buffers_indexed.random.max_required_draw_buffers.4 = FAIL
+4394 D3D11 : dEQP-GLES3.functional.draw_buffers_indexed.random.max_required_draw_buffers.7 = FAIL
+4394 D3D11 : dEQP-GLES3.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.9 = FAIL
+4394 D3D11 : dEQP-GLES3.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.15 = FAIL
+
 // Windows AMD specific failures
 1633 WIN D3D11 AMD : dEQP-GLES3.functional.fbo.blit.depth_stencil.depth24_stencil8_scale = FAIL
 1633 WIN D3D11 AMD : dEQP-GLES3.functional.fbo.blit.depth_stencil.depth24_stencil8_stencil_only = FAIL
@@ -444,6 +450,12 @@
 6376 MAC OPENGL INTEL : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.usampler3d_vertex = FAIL
 6376 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.base_level.linear_linear = FAIL
 6376 MAC OPENGL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.base_level.linear_nearest = FAIL
+
+4394 MAC OPENGL INTEL : dEQP-GLES3.functional.draw_buffers_indexed.random.max_required_draw_buffers.11 = FAIL
+4394 MAC OPENGL INTEL : dEQP-GLES3.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.5 = FAIL
+4394 MAC OPENGL INTEL : dEQP-GLES3.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.9 = FAIL
+4394 MAC OPENGL INTEL : dEQP-GLES3.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.14 = FAIL
+4394 MAC OPENGL INTEL : dEQP-GLES3.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.17 = FAIL
 
 // Android only failures
 1964 ANDROID GLES : dEQP-GLES3.functional.occlusion_query.* = FAIL
@@ -1809,6 +1821,7 @@
 6678 UBSAN : dEQP-GLES3.functional.shaders.texture_functions.* = SKIP
 6678 UBSAN : dEQP-GLES3.functional.shaders.random.* = SKIP
 6678 UBSAN : dEQP-GLES3.functional.draw.random.* = SKIP
+6678 UBSAN : dEQP-GLES3.functional.draw_buffers_indexed.random.*  = SKIP
 6678 UBSAN : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = SKIP
 6678 UBSAN : dEQP-GLES3.functional.fragment_out.* = SKIP
 6678 UBSAN : dEQP-GLES3.functional.vertex_arrays.single_attribute.* = SKIP

@@ -71,12 +71,6 @@
 3865 D3D11 : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
 3865 D3D11 : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
 
-// Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR as color factors
-4394 D3D11 : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.4 = FAIL
-4394 D3D11 : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.7 = FAIL
-4394 D3D11 : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.9 = FAIL
-4394 D3D11 : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.15 = FAIL
-
 // Failing with dEQP roll
 3447 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.all_per_block_buffers.22 = FAIL
 3447 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.all_per_block_buffers.41 = FAIL
@@ -702,9 +696,6 @@
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.draw_base_vertex.draw_elements_base_vertex.base_vertex.index_neg_byte = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.draw_base_vertex.draw_elements_base_vertex.lines.single_attribute = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.draw_base_vertex.draw_range_elements_base_vertex.line_loop.default_attribute = SKIP
-5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.draw_buffers_indexed.overwrite_indexed.common_separate_blend_eq_buffer_separate_blend_eq = SKIP
-5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.draw_buffers_indexed.random.max_implementation_draw_buffers.1 = SKIP
-5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.1 = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.draw_indirect.compute_interop.large.drawelements_combined_grid_100x100_drawcount_8 = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.draw_indirect.compute_interop.large.drawelements_separate_grid_500x500_drawcount_1 = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.draw_indirect.draw_arrays_indirect.triangles.single_attribute = SKIP
@@ -1200,7 +1191,6 @@
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.ssbo.layout.unsized_nested_struct_array.single_buffer.shared_instance_array = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.ssbo.layout.unsized_struct_array.single_buffer.shared_instance_array = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.state_query.indexed.atomic_counter_buffer_binding_getinteger64i_v = SKIP
-5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.state_query.indexed.color_mask_getintegeri_v = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.state_query.indexed.image_binding_level_getintegeri_v = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.state_query.integer.atomic_counter_buffer_binding_getfloat = SKIP
 5990 PIXEL4ORXL VULKAN : dEQP-GLES31.functional.state_query.integer.max_atomic_counter_buffer_size_getboolean = SKIP
@@ -1373,7 +1363,6 @@
 6678 UBSAN : dEQP-GLES31.functional.shaders.builtin_functions.precision.* = SKIP
 6678 UBSAN : dEQP-GLES31.functional.shaders.builtin_functions.common.* = SKIP
 6678 UBSAN : dEQP-GLES31.functional.draw_indirect.random.* = SKIP
-6678 UBSAN : dEQP-GLES31.functional.draw_buffers_indexed.random.*  = SKIP
 6678 UBSAN : dEQP-GLES31.functional.shaders.builtin_functions.integer.bitfield* = SKIP
 6678 UBSAN : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.distribution.* = SKIP
 

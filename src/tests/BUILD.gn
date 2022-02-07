@@ -1362,11 +1362,11 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     }
   }
 
-  _android_mustpass = "$deqp_path/android/cts/master"
+  _android_mustpass = "$deqp_path/android/cts/main"
   _aosp_mustpass =
-      "$deqp_path/external/openglcts/data/mustpass/gles/aosp_mustpass/master"
+      "$deqp_path/external/openglcts/data/mustpass/gles/aosp_mustpass/main"
   _khronos_mustpass =
-      "$deqp_path/external/openglcts/data/mustpass/gles/khronos_mustpass/master"
+      "$deqp_path/external/openglcts/data/mustpass/gles/khronos_mustpass/main"
 
   angle_deqp_source_set("angle_deqp_gles2_common") {
     sources = deqp_gles2_sources
