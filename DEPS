@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '26dacbf4b527cc10f5648cc0da274e7d66e6bd0d',
+  'chromium_revision': '817a527fde8cba8cadd7adfeda379d557ea8f57d',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -79,7 +79,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'b4974c8f859b9ca0e5c7fa03588cb9011563d522',
+  'catapult_revision': '25f38be662aec0c8b1509024001e5cc5254a363c',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@f85248b05016155ec884e917caa18b75ce659cde',
+    'url': '{chromium_git}/chromium/src/build.git@bcaab68639cce04f2c52c6d65f5199af6d763d75',
     'condition': 'not build_with_chromium',
   },
 
@@ -161,12 +161,12 @@ deps = {
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@5b0a8cf88eddfb448ca5903128d3328db76e4001',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@77c52e2f68f76dbe661420d85f51521805990ae2',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools/third_party/libunwind/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@f2ef96ecb8ecba64489f0412d345698ffb38e094',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libunwind.git@b86911d6e7455c4be2ddbc390803aecad19cfc3a',
     'condition': 'not build_with_chromium',
   },
 
@@ -182,7 +182,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@122e08902733a15bdc460bb3909d8d91c3953357',
+    'url': '{chromium_git}/chromium/src/testing@67a0c97ff4b57f30d97825107bee9e112a020f79',
     'condition': 'not build_with_chromium',
   },
 
@@ -332,7 +332,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@a6ea731ab20f48053514f6ced28b14d72164e43d',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@1b93e14c92416185694f8764be425f82fa0d4242',
     'condition': 'not build_with_chromium',
   },
 
@@ -474,7 +474,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'tamyW0-567_CaEZt2m7Pwy2NSUKeocbxdkoGsf-z3F0C',
+              'version': 'cEv1yyfxfmP_MaZrG22cR7YPc7hehgHAZd82lRx0DFAC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -504,7 +504,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/turbine',
-              'version': 'g7lRRNWdEQAksTvScmHd-o0PUx4ts7kioIdeDtQ-ifMC',
+              'version': 'ZweGxnankyMPNqORbYcApzrOXpyg-9XcK7_-qdjELlcC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -536,7 +536,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@a8ca8222301c8133135774b395955504c3313319',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@94a76bd4708ce9a0dda4028cd559d5492e60d6aa',
     'condition': 'not build_with_chromium',
   },
 
@@ -567,7 +567,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@40222e9dab1abba73ccfc5020385df5c1b14cce1',
+    'url': '{chromium_git}/chromium/src/tools/mb@05b87ed1683fce76128b9a37845d29c919b8fb2b',
     'condition': 'not build_with_chromium',
   },
 
@@ -582,7 +582,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': '{chromium_git}/chromium/src/tools/perf@eb37312a1e5076d2ac5f944dec02988d3ddb9f8b',
+    'url': '{chromium_git}/chromium/src/tools/perf@6e1210b239d5dbe03b062c8c7ca510c80b684be3',
     'condition': 'not build_with_chromium',
   },
 
