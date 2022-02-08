@@ -2171,12 +2171,16 @@ void GraphicsPipelineDesc::updateVertexInput(GraphicsPipelineTransitionBits *tra
     transition->set(kBit + 1);
 }
 
-void GraphicsPipelineDesc::updateTopology(GraphicsPipelineTransitionBits *transition,
-                                          gl::PrimitiveMode drawMode)
+void GraphicsPipelineDesc::setTopology(gl::PrimitiveMode drawMode)
 {
     VkPrimitiveTopology vkTopology = gl_vk::GetPrimitiveTopology(drawMode);
     SetBitField(mInputAssemblyAndColorBlendStateInfo.primitive.topology, vkTopology);
+}
 
+void GraphicsPipelineDesc::updateTopology(GraphicsPipelineTransitionBits *transition,
+                                          gl::PrimitiveMode drawMode)
+{
+    setTopology(drawMode);
     transition->set(ANGLE_GET_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo, primitive));
 }
 
@@ -2296,6 +2300,26 @@ void GraphicsPipelineDesc::updateBlendColor(GraphicsPipelineTransitionBits *tran
                                                              blendConstants, index, kSizeBits);
         transition->set(kBit);
     }
+}
+
+void GraphicsPipelineDesc::setSingleBlend(uint32_t colorIndexGL,
+                                          bool enabled,
+                                          VkBlendOp op,
+                                          VkBlendFactor srcFactor,
+                                          VkBlendFactor dstFactor)
+{
+    mInputAssemblyAndColorBlendStateInfo.blendEnableMask |= static_cast<uint8_t>(1 << colorIndexGL);
+
+    PackedColorBlendAttachmentState &blendAttachmentState =
+        mInputAssemblyAndColorBlendStateInfo.attachments[colorIndexGL];
+
+    blendAttachmentState.colorBlendOp = op;
+    blendAttachmentState.alphaBlendOp = op;
+
+    blendAttachmentState.srcColorBlendFactor = srcFactor;
+    blendAttachmentState.dstColorBlendFactor = dstFactor;
+    blendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    blendAttachmentState.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
 }
 
 void GraphicsPipelineDesc::updateBlendEnabled(GraphicsPipelineTransitionBits *transition,
@@ -2883,7 +2907,9 @@ void DescriptorSetLayoutDesc::unpackBindings(DescriptorSetLayoutBindingVector *b
 }
 
 // PipelineLayoutDesc implementation.
-PipelineLayoutDesc::PipelineLayoutDesc() : mDescriptorSetLayouts{}, mPushConstantRanges{} {}
+PipelineLayoutDesc::PipelineLayoutDesc()
+    : mDescriptorSetLayouts{}, mPushConstantRange{}, mPadding(0)
+{}
 
 PipelineLayoutDesc::~PipelineLayoutDesc() = default;
 
@@ -2892,7 +2918,7 @@ PipelineLayoutDesc::PipelineLayoutDesc(const PipelineLayoutDesc &other) = defaul
 PipelineLayoutDesc &PipelineLayoutDesc::operator=(const PipelineLayoutDesc &rhs)
 {
     mDescriptorSetLayouts = rhs.mDescriptorSetLayouts;
-    mPushConstantRanges   = rhs.mPushConstantRanges;
+    mPushConstantRange    = rhs.mPushConstantRange;
     return *this;
 }
 
@@ -2912,21 +2938,13 @@ void PipelineLayoutDesc::updateDescriptorSetLayout(DescriptorSetIndex setIndex,
     mDescriptorSetLayouts[setIndex] = desc;
 }
 
-void PipelineLayoutDesc::updatePushConstantRange(gl::ShaderType shaderType,
+void PipelineLayoutDesc::updatePushConstantRange(VkShaderStageFlags stageMask,
                                                  uint32_t offset,
                                                  uint32_t size)
 {
-    ASSERT(shaderType == gl::ShaderType::Vertex || shaderType == gl::ShaderType::Fragment ||
-           shaderType == gl::ShaderType::Geometry || shaderType == gl::ShaderType::Compute);
-    PackedPushConstantRange &packed = mPushConstantRanges[shaderType];
-    packed.offset                   = offset;
-    packed.size                     = size;
-}
-
-const PushConstantRangeArray<PackedPushConstantRange> &PipelineLayoutDesc::getPushConstantRanges()
-    const
-{
-    return mPushConstantRanges;
+    SetBitField(mPushConstantRange.offset, offset);
+    SetBitField(mPushConstantRange.size, size);
+    SetBitField(mPushConstantRange.stageMask, stageMask);
 }
 
 // PipelineHelper implementation.
@@ -3729,24 +3747,11 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
         }
     }
 
-    const vk::PushConstantRangeArray<vk::PackedPushConstantRange> &descPushConstantRanges =
-        desc.getPushConstantRanges();
-
-    gl::ShaderVector<VkPushConstantRange> pushConstantRanges;
-
-    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        const vk::PackedPushConstantRange &pushConstantDesc = descPushConstantRanges[shaderType];
-        if (pushConstantDesc.size > 0)
-        {
-            VkPushConstantRange range;
-            range.stageFlags = gl_vk::kShaderStageMap[shaderType];
-            range.offset     = pushConstantDesc.offset;
-            range.size       = pushConstantDesc.size;
-
-            pushConstantRanges.push_back(range);
-        }
-    }
+    const vk::PackedPushConstantRange &descPushConstantRange = desc.getPushConstantRange();
+    VkPushConstantRange pushConstantRange;
+    pushConstantRange.stageFlags = descPushConstantRange.stageMask;
+    pushConstantRange.offset     = descPushConstantRange.offset;
+    pushConstantRange.size       = descPushConstantRange.size;
 
     // No pipeline layout found. We must create a new one.
     VkPipelineLayoutCreateInfo createInfo = {};
@@ -3754,8 +3759,11 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     createInfo.flags                      = 0;
     createInfo.setLayoutCount             = static_cast<uint32_t>(setLayoutHandles.size());
     createInfo.pSetLayouts                = setLayoutHandles.data();
-    createInfo.pushConstantRangeCount     = static_cast<uint32_t>(pushConstantRanges.size());
-    createInfo.pPushConstantRanges        = pushConstantRanges.data();
+    if (pushConstantRange.size > 0)
+    {
+        createInfo.pushConstantRangeCount = 1;
+        createInfo.pPushConstantRanges    = &pushConstantRange;
+    }
 
     vk::PipelineLayout newLayout;
     ANGLE_VK_TRY(context, newLayout.init(context->getDevice(), createInfo));

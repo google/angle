@@ -261,18 +261,10 @@
     "41f89aa95e279a36cc398d74c0a5a5af",
   "src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000002A.inc":
     "15689fb00c6bf4d2d828898d043cdd8a",
-  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000000.inc":
-    "fa10ef402adc71581c4d714c58652a32",
-  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000001.inc":
-    "0018b426777cd6db138de5c4b80273d7",
-  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000002.inc":
-    "b9ac0e39e37268050f211873d84914e0",
-  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.comp.00000000.inc":
-    "790c00edd2a66b0dec737a17ec7a9be1",
-  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.comp.00000001.inc":
-    "9c1e77e20f29b4797b570cd75faf2604",
-  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.comp.00000002.inc":
-    "3a2a5205b1397efdf45af150044ec953",
+  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.frag.00000000.inc":
+    "8fcbdd5d4d69697e28ff016e2d15f0d5",
+  "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.vert.00000000.inc":
+    "7c6873b4adbfd7ca626a2e2801a96a47",
   "src/libANGLE/renderer/vulkan/shaders/src/BlitResolve.frag":
     "0b16d3ad95d7dbc2ce7175462152e4f9",
   "src/libANGLE/renderer/vulkan/shaders/src/BlitResolve.frag.json":
@@ -311,18 +303,14 @@
     "7fbc40bc5eca0de0024f538b6c37b50d",
   "src/libANGLE/renderer/vulkan/shaders/src/ImageCopy.frag.json":
     "f6b69ba316a5565400c2875e5da14b73",
-  "src/libANGLE/renderer/vulkan/shaders/src/OverlayCull.comp":
-    "6b16ef622984f8d503f6729c9d20feab",
-  "src/libANGLE/renderer/vulkan/shaders/src/OverlayCull.comp.json":
-    "5bac01970db6744980d66099a1c4d79d",
-  "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.comp":
-    "5ccb244ad34f53a0fd398a8995b65feb",
-  "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.comp.json":
-    "16aecad24235b7cc6b0567e489bb5f6f",
+  "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.frag":
+    "7e303a21c1881d6461c34ac7e2ad19ff",
+  "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.vert":
+    "5aa33152fce5b9261c4d427ad2babdd7",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp":
-    "8ac4245138c5c6f7b15fb943d234c867",
+    "3fedeb617757e84d58c86e0d3c1d2e02",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h":
-    "dec165c3c32735e14f51ef47851d8b96",
+    "383c8c080c5c55bd764a1db11775e562",
   "tools/glslang/glslang_validator.exe.sha1":
     "17e862cc6f462fecbf50b24ed6544a27",
   "tools/glslang/glslang_validator.sha1":

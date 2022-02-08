@@ -40,24 +40,14 @@ constexpr angle::PackedEnumMap<WidgetType, WidgetInternalType> kWidgetTypeToInte
 // Structures and limits matching uniform buffers in vulkan/shaders/src/OverlayDraw.comp.  The size
 // of text and graph widgets is chosen such that they could fit in uniform buffers with minimum
 // required Vulkan size.
-#if ANDROID
-constexpr size_t kMaxRenderableTextWidgets  = 16;
-constexpr size_t kMaxRenderableGraphWidgets = 16;
-#else
 constexpr size_t kMaxRenderableTextWidgets  = 32;
 constexpr size_t kMaxRenderableGraphWidgets = 32;
-#endif
-constexpr size_t kMaxTextLength    = 256;
-constexpr size_t kMaxGraphDataSize = 256;
+constexpr size_t kMaxTextLength             = 256;
+constexpr size_t kMaxGraphDataSize          = 256;
 
 constexpr angle::PackedEnumMap<WidgetInternalType, size_t> kWidgetInternalTypeMaxWidgets = {
     {WidgetInternalType::Text, kMaxRenderableTextWidgets},
     {WidgetInternalType::Graph, kMaxRenderableGraphWidgets},
-};
-
-constexpr angle::PackedEnumMap<WidgetInternalType, size_t> kWidgetInternalTypeWidgetOffsets = {
-    {WidgetInternalType::Text, 0},
-    {WidgetInternalType::Graph, kMaxRenderableTextWidgets},
 };
 
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
@@ -145,7 +135,7 @@ void GetTextString(const std::string &src, uint8_t textOut[kMaxTextLength])
 {
     for (size_t i = 0; i < src.length() && i < kMaxTextLength; ++i)
     {
-        // The font image has 96 ASCII characters starting from ' '.
+        // The font image has 95 ASCII characters starting from ' '.
         textOut[i] = src[i] - ' ';
     }
 }
@@ -176,7 +166,7 @@ std::vector<size_t> CreateHistogram(const std::vector<size_t> values)
     return histogram;
 }
 
-using OverlayWidgetCounts  = angle::PackedEnumMap<WidgetInternalType, size_t>;
+using OverlayWidgetCounts  = angle::PackedEnumMap<WidgetInternalType, uint32_t>;
 using AppendWidgetDataFunc = void (*)(const overlay::Widget *widget,
                                       const gl::Extents &imageExtent,
                                       TextWidgetData *textWidget,
@@ -528,56 +518,11 @@ size_t OverlayState::getGraphWidgetsBufferSize() const
     return sizeof(GraphWidgets);
 }
 
-void OverlayState::fillEnabledWidgetCoordinates(const gl::Extents &imageExtents,
-                                                uint8_t *enabledWidgetsPtr) const
-{
-    WidgetCoordinates *enabledWidgets = reinterpret_cast<WidgetCoordinates *>(enabledWidgetsPtr);
-    memset(enabledWidgets, 0, sizeof(*enabledWidgets));
-
-    OverlayWidgetCounts widgetCounts = {};
-
-    for (const std::unique_ptr<overlay::Widget> &widget : mOverlayWidgets)
-    {
-        if (!widget->enabled)
-        {
-            continue;
-        }
-
-        WidgetInternalType internalType = kWidgetTypeToInternalMap[widget->type];
-        ASSERT(internalType != WidgetInternalType::InvalidEnum);
-
-        if (widgetCounts[internalType] >= kWidgetInternalTypeMaxWidgets[internalType])
-        {
-            continue;
-        }
-
-        size_t writeIndex =
-            kWidgetInternalTypeWidgetOffsets[internalType] + widgetCounts[internalType]++;
-
-        GetWidgetCoordinates(widget->coords, imageExtents, enabledWidgets->coordinates[writeIndex]);
-
-        // Graph widgets have a text widget attached as well.
-        if (internalType == WidgetInternalType::Graph)
-        {
-            WidgetInternalType textType = WidgetInternalType::Text;
-            if (widgetCounts[textType] >= kWidgetInternalTypeMaxWidgets[textType])
-            {
-                continue;
-            }
-
-            const overlay::RunningGraph *widgetAsGraph =
-                static_cast<const overlay::RunningGraph *>(widget.get());
-            writeIndex = kWidgetInternalTypeWidgetOffsets[textType] + widgetCounts[textType]++;
-
-            GetWidgetCoordinates(widgetAsGraph->description.coords, imageExtents,
-                                 enabledWidgets->coordinates[writeIndex]);
-        }
-    }
-}
-
 void OverlayState::fillWidgetData(const gl::Extents &imageExtents,
                                   uint8_t *textData,
-                                  uint8_t *graphData) const
+                                  uint8_t *graphData,
+                                  uint32_t *activeTextWidgetCountOut,
+                                  uint32_t *activeGraphWidgetCountOut) const
 {
     TextWidgets *textWidgets   = reinterpret_cast<TextWidgets *>(textData);
     GraphWidgets *graphWidgets = reinterpret_cast<GraphWidgets *>(graphData);
@@ -609,6 +554,9 @@ void OverlayState::fillWidgetData(const gl::Extents &imageExtents,
                    &textWidgets->widgets[widgetCounts[WidgetInternalType::Text]],
                    &graphWidgets->widgets[widgetCounts[WidgetInternalType::Graph]], &widgetCounts);
     }
+
+    *activeTextWidgetCountOut  = widgetCounts[WidgetInternalType::Text];
+    *activeGraphWidgetCountOut = widgetCounts[WidgetInternalType::Graph];
 }
 
 }  // namespace gl

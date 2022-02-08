@@ -376,12 +376,6 @@ VkRectLayerKHR ToVkRectLayer(const EGLint *eglRect,
 
 }  // namespace
 
-#if defined(ANGLE_ENABLE_OVERLAY)
-constexpr bool kEnableOverlay = ANGLE_ENABLE_OVERLAY;
-#else
-constexpr bool kEnableOverlay = false;
-#endif
-
 SurfaceVk::SurfaceVk(const egl::SurfaceState &surfaceState) : SurfaceImpl(surfaceState) {}
 
 SurfaceVk::~SurfaceVk() = default;
@@ -1282,17 +1276,6 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         renderer->getFeatures().supportsShaderFramebufferFetchNonCoherent.enabled)
     {
         imageUsageFlags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
-    }
-
-    // We need storage image for compute writes (debug overlay output).
-    if (kEnableOverlay)
-    {
-        VkFormatFeatureFlags featureBits = renderer->getImageFormatFeatureBits(
-            format.getActualRenderableImageFormatID(), VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
-        if ((featureBits & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT) != 0)
-        {
-            imageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
-        }
     }
 
     VkSwapchainCreateInfoKHR swapchainInfo = {};

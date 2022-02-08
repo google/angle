@@ -37,11 +37,11 @@ class OverlayState : angle::NonCopyable
     size_t getGraphWidgetsBufferSize() const;
 
     const uint8_t *getFontData() const;
-    void fillEnabledWidgetCoordinates(const gl::Extents &imageExtents,
-                                      uint8_t *enabledWidgetsPtr) const;
     void fillWidgetData(const gl::Extents &imageExtents,
                         uint8_t *textData,
-                        uint8_t *graphData) const;
+                        uint8_t *graphData,
+                        uint32_t *activeTextWidgetCountOut,
+                        uint32_t *activeGraphWidgetCountOut) const;
 
     uint32_t getEnabledWidgetCount() const { return mEnabledWidgetCount; }
 

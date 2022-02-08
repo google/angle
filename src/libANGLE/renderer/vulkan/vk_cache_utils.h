@@ -594,6 +594,7 @@ class GraphicsPipelineDesc final
                            GLuint relativeOffset);
 
     // Input assembly info
+    void setTopology(gl::PrimitiveMode drawMode);
     void updateTopology(GraphicsPipelineTransitionBits *transition, gl::PrimitiveMode drawMode);
     void updatePrimitiveRestartEnabled(GraphicsPipelineTransitionBits *transition,
                                        bool primitiveRestartEnabled);
@@ -630,6 +631,11 @@ class GraphicsPipelineDesc final
                               const RenderPassDesc &renderPassDesc);
 
     // Blend states
+    void setSingleBlend(uint32_t colorIndexGL,
+                        bool enabled,
+                        VkBlendOp op,
+                        VkBlendFactor srcFactor,
+                        VkBlendFactor dstFactor);
     void updateBlendEnabled(GraphicsPipelineTransitionBits *transition,
                             gl::DrawBufferMask blendEnabledMask);
     void updateBlendColor(GraphicsPipelineTransitionBits *transition, const gl::ColorF &color);
@@ -798,15 +804,16 @@ constexpr size_t kMaxDescriptorSetLayouts = 4;
 
 struct PackedPushConstantRange
 {
-    uint32_t offset;
-    uint32_t size;
+    uint8_t offset;
+    uint8_t size;
+    uint16_t stageMask;
 };
+
+static_assert(sizeof(PackedPushConstantRange) == sizeof(uint32_t), "Unexpected Size");
 
 template <typename T>
 using DescriptorSetArray              = angle::PackedEnumMap<DescriptorSetIndex, T>;
 using DescriptorSetLayoutPointerArray = DescriptorSetArray<BindingPointer<DescriptorSetLayout>>;
-template <typename T>
-using PushConstantRangeArray = gl::ShaderMap<T>;
 
 class PipelineLayoutDesc final
 {
@@ -821,26 +828,24 @@ class PipelineLayoutDesc final
 
     void updateDescriptorSetLayout(DescriptorSetIndex setIndex,
                                    const DescriptorSetLayoutDesc &desc);
-    void updatePushConstantRange(gl::ShaderType shaderType, uint32_t offset, uint32_t size);
+    void updatePushConstantRange(VkShaderStageFlags stageMask, uint32_t offset, uint32_t size);
 
-    const PushConstantRangeArray<PackedPushConstantRange> &getPushConstantRanges() const;
+    const PackedPushConstantRange &getPushConstantRange() const { return mPushConstantRange; }
 
   private:
     DescriptorSetArray<DescriptorSetLayoutDesc> mDescriptorSetLayouts;
-    PushConstantRangeArray<PackedPushConstantRange> mPushConstantRanges;
+    PackedPushConstantRange mPushConstantRange;
+    ANGLE_MAYBE_UNUSED uint32_t mPadding;
 
     // Verify the arrays are properly packed.
     static_assert(sizeof(decltype(mDescriptorSetLayouts)) ==
                       (sizeof(DescriptorSetLayoutDesc) * kMaxDescriptorSetLayouts),
                   "Unexpected size");
-    static_assert(sizeof(decltype(mPushConstantRanges)) ==
-                      (sizeof(PackedPushConstantRange) * angle::EnumSize<gl::ShaderType>()),
-                  "Unexpected size");
 };
 
 // Verify the structure is properly packed.
-static_assert(sizeof(PipelineLayoutDesc) == (sizeof(DescriptorSetArray<DescriptorSetLayoutDesc>) +
-                                             sizeof(gl::ShaderMap<PackedPushConstantRange>)),
+static_assert(sizeof(PipelineLayoutDesc) == sizeof(DescriptorSetArray<DescriptorSetLayoutDesc>) +
+                                                sizeof(PackedPushConstantRange) + sizeof(uint32_t),
               "Unexpected Size");
 
 struct YcbcrConversionDesc final
