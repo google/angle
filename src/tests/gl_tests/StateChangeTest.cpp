@@ -7501,6 +7501,37 @@ TEST_P(SimpleStateChangeTestES3, RespecifyBufferAfterBeginTransformFeedback)
     glBeginTransformFeedback(GL_TRIANGLES);
     glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(float) * 3 * 4 * 6, nullptr, GL_STREAM_DRAW);
     glDrawArrays(GL_TRIANGLES, 0, 6);
+    glEndTransformFeedback();
+}
+
+// Test a bug angleproject:6998 in TransformFeedback code path by allocating paddingBuffer first and
+// then allocate another buffer and then deallocate paddingBuffer and then allocate buffer again.
+// This new buffer will be allocated in the space where paddingBuffer was allocated which causing
+// XFB generate VVL error.
+TEST_P(SimpleStateChangeTestES3, RespecifyBufferAfterBeginTransformFeedbackInDeletedPaddingBuffer)
+{
+    std::vector<std::string> tfVaryings = {"gl_Position"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(testProgram, essl3_shaders::vs::Simple(),
+                                        essl3_shaders::fs::Green(), tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+    glUseProgram(testProgram);
+
+    GLuint paddingBuffer;
+    glGenBuffers(1, &paddingBuffer);
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, paddingBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 256, nullptr, GL_STREAM_DRAW);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, buffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(float) * 3 * 2 * 7, nullptr, GL_STREAM_DRAW);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, buffer);
+    // Delete padding buffer, expecting the next bufferData call will reuse the space of
+    // paddingBuffer whose offset is smaller than buffer's offset, which triggers the bug.
+    glDeleteBuffers(1, &paddingBuffer);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(float) * 3 * 4 * 6, nullptr, GL_STREAM_DRAW);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glEndTransformFeedback();
 }
 
 // Regression test for a bug in the Vulkan backend where a draw-based copy after a deferred flush

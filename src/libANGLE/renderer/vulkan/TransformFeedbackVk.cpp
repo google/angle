@@ -29,7 +29,6 @@ TransformFeedbackVk::TransformFeedbackVk(const gl::TransformFeedbackState &state
       mBufferHandles{},
       mBufferOffsets{},
       mBufferSizes{},
-      mAlignedBufferOffsets{},
       mCounterBufferHandles{}
 {
     for (angle::SubjectIndex bufferIndex = 0;
@@ -108,7 +107,6 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
 
     for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
-        const gl::OffsetBindingPointer<gl::Buffer> &binding = mState.getIndexedBuffer(bufferIndex);
         mBufferHandles[bufferIndex] = mBufferHelpers[bufferIndex]->getBuffer().getHandle();
         if (contextVk->getFeatures().supportsTransformFeedbackExtension.enabled)
         {
@@ -126,21 +124,6 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
 
                 mCounterBufferHandles[bufferIndex] = bufferHelper.getBuffer().getHandle();
             }
-        }
-        else
-        {
-            ASSERT(contextVk->getFeatures().emulateTransformFeedback.enabled);
-            RendererVk *rendererVk = contextVk->getRenderer();
-            const VkDeviceSize offsetAlignment =
-                rendererVk->getPhysicalDeviceProperties().limits.minStorageBufferOffsetAlignment;
-
-            // Make sure there's no possible under/overflow with binding size.
-            static_assert(sizeof(VkDeviceSize) >= sizeof(binding.getSize()),
-                          "VkDeviceSize too small");
-
-            // Set the offset as close as possible to the requested offset while remaining aligned.
-            mAlignedBufferOffsets[bufferIndex] =
-                (mBufferOffsets[bufferIndex] / offsetAlignment) * offsetAlignment;
         }
     }
 
@@ -290,7 +273,10 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
         return;
     }
 
-    size_t xfbBufferCount = executable.getTransformFeedbackBufferCount();
+    size_t xfbBufferCount              = executable.getTransformFeedbackBufferCount();
+    const VkDeviceSize offsetAlignment = contextVk->getRenderer()
+                                             ->getPhysicalDeviceProperties()
+                                             .limits.minStorageBufferOffsetAlignment;
 
     ASSERT(xfbBufferCount > 0);
     ASSERT(executable.getTransformFeedbackBufferMode() != GL_INTERLEAVED_ATTRIBS ||
@@ -305,9 +291,10 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
         VkDescriptorBufferInfo &bufferInfo = descriptorBufferInfo[bufferIndex];
 
         bufferInfo.buffer = mBufferHandles[bufferIndex];
-        bufferInfo.offset = mAlignedBufferOffsets[bufferIndex];
-        bufferInfo.range  = mBufferSizes[bufferIndex] +
-                           (mBufferOffsets[bufferIndex] - mAlignedBufferOffsets[bufferIndex]);
+        // Set the offset as close as possible to the requested offset while remaining aligned.
+        bufferInfo.offset = (mBufferOffsets[bufferIndex] / offsetAlignment) * offsetAlignment;
+        bufferInfo.range =
+            mBufferSizes[bufferIndex] + (mBufferOffsets[bufferIndex] - bufferInfo.offset);
         ASSERT(bufferInfo.range != 0);
     }
 
@@ -329,6 +316,9 @@ void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
     ASSERT(executable);
     const std::vector<GLsizei> &bufferStrides = executable->getTransformFeedbackStrides();
     size_t xfbBufferCount                     = executable->getTransformFeedbackBufferCount();
+    const VkDeviceSize offsetAlignment        = contextVk->getRenderer()
+                                             ->getPhysicalDeviceProperties()
+                                             .limits.minStorageBufferOffsetAlignment;
 
     ASSERT(xfbBufferCount > 0);
 
@@ -339,7 +329,7 @@ void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
     for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
         int64_t offsetFromDescriptor =
-            static_cast<int64_t>(mBufferOffsets[bufferIndex] - mAlignedBufferOffsets[bufferIndex]);
+            static_cast<int64_t>(mBufferOffsets[bufferIndex] % offsetAlignment);
         int64_t drawCallVertexOffset = static_cast<int64_t>(verticesDrawn) - drawCallFirstVertex;
 
         int64_t writeOffset =
