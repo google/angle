@@ -728,9 +728,13 @@ class BufferHelper : public ReadWriteResource
     void release(RendererVk *renderer);
 
     BufferSerial getBufferSerial() const { return mSerial; }
+    BufferSerial getBlockSerial() const
+    {
+        ASSERT(mSuballocation.valid());
+        return mSuballocation.getBlockSerial();
+    }
     bool valid() const { return mSuballocation.valid(); }
     const Buffer &getBuffer() const { return mSuballocation.getBuffer(); }
-    const BufferBlock *getBufferBlock() const { return mSuballocation.getBlock(); }
     VkDeviceSize getOffset() const { return mSuballocation.getOffset(); }
     VkDeviceSize getSize() const { return mSuballocation.getSize(); }
     VkMemoryMapFlags getMemoryPropertyFlags() const
@@ -742,6 +746,8 @@ class BufferHelper : public ReadWriteResource
         ASSERT(isMapped());
         return mSuballocation.getMappedMemory();
     }
+    // Returns the main buffer block's pointer.
+    uint8_t *getBlockMemory() const { return mSuballocation.getBlockMemory(); }
     bool isHostVisible() const { return mSuballocation.isHostVisible(); }
     bool isCoherent() const { return mSuballocation.isCoherent(); }
 
@@ -790,13 +796,18 @@ class BufferHelper : public ReadWriteResource
     void fillWithColor(const angle::Color<uint8_t> &color,
                        const gl::InternalFormat &internalFormat);
 
-    BufferSuballocation &getSuballocation() { return mSuballocation; }
-
   private:
     void initializeBarrierTracker(Context *context);
     angle::Result initializeNonZeroMemory(Context *context,
                                           VkBufferUsageFlags usage,
                                           VkDeviceSize size);
+
+    // Only called by DynamicBuffer.
+    friend class DynamicBuffer;
+    void setSuballocationOffsetAndSize(VkDeviceSize offset, VkDeviceSize size)
+    {
+        mSuballocation.setOffsetAndSize(offset, size);
+    }
 
     // Suballocation object.
     BufferSuballocation mSuballocation;

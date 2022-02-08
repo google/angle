@@ -340,9 +340,7 @@ void AppendBufferVectorToDesc(vk::DescriptorSetDesc *desc,
 
             // If this is sub-allocated, we always use the buffer block's serial to increase the
             // cache hit rate.
-            const vk::BufferBlock *bufferBlock = bufferHelper.getBufferBlock();
-            vk::BufferSerial bufferSerial = bufferBlock == nullptr ? bufferHelper.getBufferSerial()
-                                                                   : bufferBlock->getBufferSerial();
+            vk::BufferSerial bufferSerial = bufferHelper.getBlockSerial();
             desc->appendBufferSerial(bufferSerial);
 
             ASSERT(static_cast<uint64_t>(binding.getSize()) <=

@@ -772,9 +772,6 @@ void GarbageObject::destroy(RendererVk *renderer)
         case HandleType::Allocation:
             vma::FreeMemory(renderer->getAllocator().getHandle(), (VmaAllocation)mHandle);
             break;
-        case HandleType::BufferSuballocation:
-            DestroyVmaBufferSuballocation(renderer, (VmaBufferSuballocation)mHandle);
-            break;
         default:
             UNREACHABLE();
             break;
@@ -1675,6 +1672,12 @@ void BufferBlock::free(VkDeviceSize offset)
 int32_t BufferBlock::getAndIncrementEmptyCounter()
 {
     return ++mCountRemainsEmpty;
+}
+
+// BufferSuballocation implementation.
+VkResult BufferSuballocation::map(Context *context)
+{
+    return mBufferBlock->map(context->getDevice());
 }
 }  // namespace vk
 }  // namespace rx

@@ -1444,8 +1444,7 @@ void FramebufferTestWithFormatFallback::cubeTexImageFollowedByFBORead(GLenum int
         GLint j = target - GL_TEXTURE_CUBE_MAP_POSITIVE_X;
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, cubeTex2D, 0);
         EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
-        EXPECT_PIXEL_EQ(kTexWidth / 2, kTexHeight / 2, kColors[j].R, kColors[j].G, kColors[j].B,
-                        kColors[j].A);
+        EXPECT_PIXEL_COLOR_EQ(kTexWidth / 2, kTexHeight / 2, kColors[j]) << "face " << j;
     }
     ASSERT_GL_NO_ERROR();
 }
@@ -1458,7 +1457,7 @@ TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_CubeTexImage)
     cubeTexImageFollowedByFBORead(GL_RGBA4, GL_UNSIGNED_SHORT_4_4_4_4);
 }
 
-// Tests that the out-of-range staged update is reformated when mipmapping is enabled, but not
+// Tests that the out-of-range staged update is reformatted when mipmapping is enabled, but not
 // before it.
 TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_OutOfRangeStagedUpdateReformated)
 {

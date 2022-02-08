@@ -2419,7 +2419,7 @@ bool DynamicBuffer::allocateFromCurrentBuffer(size_t sizeInBytes, BufferHelper *
     ASSERT(mBuffer != nullptr);
     ASSERT(mHostVisible);
     ASSERT(mBuffer->getMappedMemory());
-    mBuffer->getSuballocation().setOffsetSize(mNextAllocationOffset, sizeToAllocate);
+    mBuffer->setSuballocationOffsetAndSize(mNextAllocationOffset, sizeToAllocate);
     *bufferHelperOut = mBuffer.get();
 
     mNextAllocationOffset += static_cast<uint32_t>(sizeToAllocate);
@@ -2484,7 +2484,7 @@ angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
     }
 
     ASSERT(mBuffer != nullptr);
-    mBuffer->getSuballocation().setOffsetSize(mNextAllocationOffset, sizeToAllocate);
+    mBuffer->setSuballocationOffsetAndSize(mNextAllocationOffset, sizeToAllocate);
     *bufferHelperOut = mBuffer.get();
 
     mNextAllocationOffset += static_cast<uint32_t>(sizeToAllocate);
@@ -3882,9 +3882,8 @@ angle::Result BufferHelper::init(vk::Context *context,
                                    &buffer.get(), &deviceMemory.get(), &sizeOut));
     ASSERT(sizeOut >= createInfo->size);
 
-    ANGLE_VK_TRY(context, mSuballocation.initWithEntireBuffer(
-                              context, buffer.get(), deviceMemory.get(), memoryPropertyFlagsOut,
-                              requestedCreateInfo.size));
+    mSuballocation.initWithEntireBuffer(context, buffer.get(), deviceMemory.get(),
+                                        memoryPropertyFlagsOut, requestedCreateInfo.size);
 
     if (isHostVisible())
     {
@@ -3927,9 +3926,8 @@ angle::Result BufferHelper::initExternal(ContextVk *contextVk,
     ANGLE_TRY(InitAndroidExternalMemory(contextVk, clientBuffer, memoryProperties, &buffer.get(),
                                         &memoryPropertyFlagsOut, &deviceMemory.get()));
 
-    ANGLE_VK_TRY(contextVk, mSuballocation.initWithEntireBuffer(
-                                contextVk, buffer.get(), deviceMemory.get(), memoryPropertyFlagsOut,
-                                requestedCreateInfo.size));
+    mSuballocation.initWithEntireBuffer(contextVk, buffer.get(), deviceMemory.get(),
+                                        memoryPropertyFlagsOut, requestedCreateInfo.size);
 
     if (isHostVisible())
     {
@@ -4174,7 +4172,7 @@ angle::Result BufferHelper::map(Context *context, uint8_t **ptrOut)
 {
     if (!mSuballocation.isMapped())
     {
-        ANGLE_VK_TRY(context, mSuballocation.getBlock()->map(context->getDevice()));
+        ANGLE_VK_TRY(context, mSuballocation.map(context));
     }
     *ptrOut = mSuballocation.getMappedMemory();
     return angle::Result::Continue;
@@ -6334,8 +6332,10 @@ angle::Result ImageHelper::reformatStagedBufferUpdates(ContextVk *contextVk,
 
                 // Retrieve source buffer
                 vk::BufferHelper *srcBuffer = update.data.buffer.bufferHelper;
-                uint8_t *srcData =
-                    srcBuffer->getBufferBlock()->getMappedMemory() + copy.bufferOffset;
+                ASSERT(srcBuffer->isMapped());
+                // The bufferOffset is relative to the buffer block. We have to use the buffer
+                // block's memory pointer to get the source data pointer.
+                uint8_t *srcData = srcBuffer->getBlockMemory() + copy.bufferOffset;
 
                 // Allocate memory with dstFormat
                 std::unique_ptr<RefCounted<BufferHelper>> stagingBuffer =
