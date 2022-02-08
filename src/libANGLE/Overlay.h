@@ -36,7 +36,7 @@ class OverlayState : angle::NonCopyable
     size_t getTextWidgetsBufferSize() const;
     size_t getGraphWidgetsBufferSize() const;
 
-    void initFontData(uint8_t *fontData) const;
+    const uint8_t *getFontData() const;
     void fillEnabledWidgetCoordinates(const gl::Extents &imageExtents,
                                       uint8_t *enabledWidgetsPtr) const;
     void fillWidgetData(const gl::Extents &imageExtents,

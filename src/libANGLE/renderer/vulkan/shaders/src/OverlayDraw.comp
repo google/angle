@@ -39,9 +39,7 @@
 #define MAX_GRAPH_SIZE 256
 
 // Font information:
-#define FONT_GLYPHS_PER_ROW 32
-#define FONT_GLYPHS_ROWS 3
-#define FONT_CHARACTERS (FONT_GLYPHS_PER_ROW * FONT_GLYPHS_ROWS)
+#define FONT_CHARACTERS 95
 
 layout (local_size_x = BLOCK_WIDTH, local_size_y = BLOCK_HEIGHT, local_size_z = 1) in;
 
@@ -49,7 +47,7 @@ struct TextWidgetData
 {
     uvec4 coordinates;
     vec4 color;
-    uvec4 fontSize;     // w unused.  xy has the font glyph width/height.  z has the layer.
+    uvec4 fontSize;     // w unused.  xy has the font glyph width/height.  z has the mip.
     uvec4 text[MAX_TEXT_LENGTH / 16];
 };
 
@@ -126,13 +124,10 @@ uint getChar(const uint textWidget, const uvec2 coordInWidget, const uint fontGl
 float sampleFont(const uint textChar,
                  const uvec2 coordInWidget,
                  const uvec2 fontGlyphSize,
-                 const uint fontLayer)
+                 const uint fontMip)
 {
     const uvec2 coordInGlyph = coordInWidget % fontGlyphSize;
-    const uvec2 glyphOffset = fontGlyphSize *
-        uvec2(textChar % FONT_GLYPHS_PER_ROW, textChar / FONT_GLYPHS_PER_ROW);
-
-    return texelFetch(font, ivec3(glyphOffset + coordInGlyph, fontLayer), 0).x;
+    return texelFetch(font, ivec3(coordInGlyph, textChar), int(fontMip)).x;
 }
 
 uint getValue(const uint graphWidget, const uvec2 coordInWidget, const uint valueWidth)
@@ -248,7 +243,7 @@ void main()
         const uvec2 coordInWidget = imageCoords - widgetCoords.xy;
         const uvec4 fontSizePacked = textWidgetsData[textWidget].fontSize;
         const uvec2 fontGlyphSize = fontSizePacked.xy;
-        const uint fontLayer = fontSizePacked.z;
+        const uint fontMip = fontSizePacked.z;
 
         // Find the character corresponding to this pixel.
         const uint textChar = getChar(textWidget, coordInWidget, fontGlyphSize.x);
@@ -258,7 +253,7 @@ void main()
         if (textChar < FONT_CHARACTERS)
         {
             // Sample the font based on this character.
-            const float sampleValue = sampleFont(textChar, coordInWidget, fontGlyphSize, fontLayer);
+            const float sampleValue = sampleFont(textChar, coordInWidget, fontGlyphSize, fontMip);
 
             vec4 color = vec4(0, 0, 0, 0.4);
             color = mix(color, textWidgetsData[textWidget].color, sampleValue);

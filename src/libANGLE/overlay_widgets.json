@@ -20,7 +20,7 @@
         "           <mode> is one of:",
         "            - 'align': the requested value is used",
         "            - 'adjacent': the value is calculated such that two widgets become adjacent",
-        " - font: for Text widgets, one of 'large', 'medium' and 'small'",
+        " - font: for Text widgets, one of 'large' or 'small'",
         " - length: for Text widgets, maximum number of characters for this widget",
         " - bar_width: for Graph widgets, size of each graph bar.",
         " - height: for Graph widgets, the height of the graph.",
@@ -34,7 +34,7 @@
             "type": "PerSecond",
             "color": [127, 191, 255, 255],
             "coords": [10, 10],
-            "font": "medium",
+            "font": "large",
             "length": 12
         },
         {

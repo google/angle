@@ -124,9 +124,9 @@ void GetWidgetColor(const float srcColor[4], float dstColor[4])
 void GetTextFontSize(int srcFontSize, uint32_t dstFontSize[3])
 {
     // .xy contains the font glyph width/height
-    dstFontSize[0] = overlay::kFontGlyphWidths[srcFontSize];
-    dstFontSize[1] = overlay::kFontGlyphHeights[srcFontSize];
-    // .z contains the layer
+    dstFontSize[0] = overlay::kFontGlyphWidth >> srcFontSize;
+    dstFontSize[1] = overlay::kFontGlyphHeight >> srcFontSize;
+    // .z contains the mip
     dstFontSize[2] = srcFontSize;
 }
 
