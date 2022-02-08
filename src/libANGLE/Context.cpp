@@ -679,6 +679,9 @@ egl::Error Context::onDestroy(const egl::Display *display)
     // Dump frame capture if enabled.
     getShareGroup()->getFrameCaptureShared()->onDestroyContext(this);
 
+    // Remove context from the capture share group
+    getShareGroup()->removeSharedContext(this);
+
     if (mGLES1Renderer)
     {
         mGLES1Renderer->onDestroy(this, &mState);

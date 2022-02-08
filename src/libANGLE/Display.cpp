@@ -604,6 +604,11 @@ void ShareGroup::addSharedContext(gl::Context *context)
     mContexts.insert(context);
 }
 
+void ShareGroup::removeSharedContext(gl::Context *context)
+{
+    mContexts.erase(context);
+}
+
 ShareGroup::~ShareGroup()
 {
     SafeDelete(mImplementation);
