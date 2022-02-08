@@ -32,7 +32,8 @@ VkBufferUsageFlags GetDefaultBufferUsageFlags(RendererVk *renderer)
         VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT;
     if (renderer->getFeatures().supportsTransformFeedbackExtension.enabled)
     {
-        defaultBufferUsageFlags |= VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT;
+        defaultBufferUsageFlags |= VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT |
+                                   VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT;
     }
     return defaultBufferUsageFlags;
 }

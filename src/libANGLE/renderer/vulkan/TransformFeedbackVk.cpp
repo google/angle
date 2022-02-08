@@ -29,7 +29,8 @@ TransformFeedbackVk::TransformFeedbackVk(const gl::TransformFeedbackState &state
       mBufferHandles{},
       mBufferOffsets{},
       mBufferSizes{},
-      mCounterBufferHandles{}
+      mCounterBufferHandles{},
+      mCounterBufferOffsets{}
 {
     for (angle::SubjectIndex bufferIndex = 0;
          bufferIndex < gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; ++bufferIndex)
@@ -57,6 +58,10 @@ void TransformFeedbackVk::releaseCounterBuffers(RendererVk *renderer)
     for (VkBuffer &buffer : mCounterBufferHandles)
     {
         buffer = VK_NULL_HANDLE;
+    }
+    for (VkDeviceSize &offset : mCounterBufferOffsets)
+    {
+        offset = 0;
     }
 }
 
@@ -112,17 +117,12 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
         {
             if (mCounterBufferHandles[bufferIndex] == VK_NULL_HANDLE)
             {
-                VkBufferCreateInfo createInfo = {};
-                createInfo.sType              = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-                createInfo.size               = 16;
-                createInfo.usage       = VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT;
-                createInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
                 vk::BufferHelper &bufferHelper = mCounterBufferHelpers[bufferIndex];
-                ANGLE_TRY(
-                    bufferHelper.init(contextVk, createInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-
+                ANGLE_TRY(bufferHelper.initSuballocation(
+                    contextVk, contextVk->getRenderer()->getDeviceLocalMemoryTypeIndex(), 16,
+                    GetDefaultBufferAlignment(contextVk->getRenderer())));
                 mCounterBufferHandles[bufferIndex] = bufferHelper.getBuffer().getHandle();
+                mCounterBufferOffsets[bufferIndex] = bufferHelper.getOffset();
             }
         }
     }

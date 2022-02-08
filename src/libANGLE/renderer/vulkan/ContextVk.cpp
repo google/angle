@@ -2149,11 +2149,13 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
     // We should have same number of counter buffers as xfb buffers have
     const gl::TransformFeedbackBuffersArray<VkBuffer> &counterBufferHandles =
         transformFeedbackVk->getCounterBufferHandles();
+    const gl::TransformFeedbackBuffersArray<VkDeviceSize> &counterBufferOffsets =
+        transformFeedbackVk->getCounterBufferOffsets();
 
     bool rebindBuffers = transformFeedbackVk->getAndResetBufferRebindState();
 
     mRenderPassCommands->beginTransformFeedback(bufferCount, counterBufferHandles.data(),
-                                                rebindBuffers);
+                                                counterBufferOffsets.data(), rebindBuffers);
 
     return angle::Result::Continue;
 }

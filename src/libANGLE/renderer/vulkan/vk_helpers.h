@@ -1127,6 +1127,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     void beginTransformFeedback(size_t validBufferCount,
                                 const VkBuffer *counterBuffers,
+                                const VkDeviceSize *counterBufferOffsets,
                                 bool rebindBuffers);
 
     void endTransformFeedback();
@@ -1256,6 +1257,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     // Transform feedback state
     gl::TransformFeedbackBuffersArray<VkBuffer> mTransformFeedbackCounterBuffers;
+    gl::TransformFeedbackBuffersArray<VkDeviceSize> mTransformFeedbackCounterBufferOffsets;
     uint32_t mValidTransformFeedbackBufferCount;
     bool mRebindTransformFeedbackBuffers;
     bool mIsTransformFeedbackActiveUnpaused;
