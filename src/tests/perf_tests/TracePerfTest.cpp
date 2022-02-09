@@ -1175,6 +1175,12 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
 
+    if (traceNameIs("lords_mobile"))
+    {
+        // http://anglebug.com/7000 - glTexStorage2DEXT is not exposed on Pixel 4 native
+        addExtensionPrerequisite("GL_EXT_texture_storage");
+    }
+
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
     ASSERT(mParams.eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE ||
            gEnableAllTraceTests);

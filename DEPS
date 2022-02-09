@@ -1256,6 +1256,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/lords_mobile': {
+      'packages': [
+        {
+            'package': 'angle/traces/lords_mobile',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/ludo_king': {
       'packages': [
         {
