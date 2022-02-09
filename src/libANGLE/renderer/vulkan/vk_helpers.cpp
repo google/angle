@@ -8156,6 +8156,16 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     region.imageOffset       = srcOffset;
     region.imageSubresource  = srcSubresource;
 
+    // For compressed textures, vkCmdCopyImageToBuffer requires
+    // a region that is a multiple of the block size.
+    if (readFormat->isBlock)
+    {
+        region.bufferRowLength =
+            roundUp(region.bufferRowLength, storageFormatInfo.compressedBlockWidth);
+        region.bufferImageHeight =
+            roundUp(region.bufferImageHeight, storageFormatInfo.compressedBlockHeight);
+    }
+
     CommandBufferAccess readbackAccess;
     readbackAccess.onBufferTransferWrite(stagingBuffer);
 

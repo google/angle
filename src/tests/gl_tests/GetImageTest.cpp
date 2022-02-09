@@ -53,6 +53,12 @@ class GetImageTestES31 : public GetImageTest
     GetImageTestES31() {}
 };
 
+class GetImageTestES32 : public GetImageTest
+{
+  public:
+    GetImageTestES32() {}
+};
+
 GLTexture InitTextureWithFormatAndSize(GLenum format, uint32_t size, void *pixelData)
 {
     GLTexture tex;
@@ -802,6 +808,42 @@ TEST_P(GetImageTest, CompressedTexImageAll)
     TestAllCompressedFormats(func);
 }
 
+// Test a resolution that is not a multiple of the block size with an ETC2 4x4 format.
+TEST_P(GetImageTest, CompressedTexImageNotBlockMultiple)
+{
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_compressed_ETC2_RGB8_texture"));
+
+    constexpr GLsizei kRes       = 21;
+    constexpr GLsizei kImageSize = 288;
+
+    // This arbitrary 'compressed' data just has to be read back exactly as specified below.
+    std::vector<uint8_t> expectedData;
+    for (uint16_t j = 0; j < kImageSize; j++)
+    {
+        expectedData.push_back(j % std::numeric_limits<uint8_t>::max());
+    }
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB8_ETC2, kRes, kRes, 0, kImageSize,
+                           expectedData.data());
+
+    if (IsFormatEmulated(GL_TEXTURE_2D))
+    {
+        INFO() << "Skipping emulated format GL_COMPRESSED_RGB8_ETC2 from "
+                  "GL_OES_compressed_ETC2_RGB8_texture";
+        return;
+    }
+
+    std::vector<uint8_t> actualData(kImageSize);
+    glGetCompressedTexImageANGLE(GL_TEXTURE_2D, 0, actualData.data());
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(expectedData, actualData);
+}
+
 void TestCompressedTexImage3D(GLenum target, uint32_t numLayers)
 {
     auto func = [target, numLayers](const CompressionExtension &ext,
@@ -865,6 +907,90 @@ TEST_P(GetImageTest, CompressedTexImage3D)
     // Verify the extension is enabled.
     ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
     TestCompressedTexImage3D(GL_TEXTURE_3D, 8);
+}
+
+// Simple cube map test for GetCompressedTexImage
+TEST_P(GetImageTest, CompressedTexImageCubeMap)
+{
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+
+    auto func = [](const CompressionExtension &ext, const CompressedFormat &format) {
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+
+        std::vector<std::vector<uint8_t>> expectedData;
+        for (uint32_t i = 0; i < kCubeFaces.size(); i++)
+        {
+            std::vector<uint8_t> face;
+            for (uint8_t j = 0; j < format.size; j++)
+            {
+                face.push_back(static_cast<uint8_t>((i * format.size + j) %
+                                                    std::numeric_limits<uint8_t>::max()));
+            }
+            expectedData.push_back(face);
+        }
+
+        for (size_t faceIndex = 0; faceIndex < kCubeFaces.size(); ++faceIndex)
+        {
+            glCompressedTexImage2D(kCubeFaces[faceIndex], 0, format.id, 4, 4, 0, format.size,
+                                   expectedData[faceIndex].data());
+        }
+
+        if (IsFormatEmulated(GL_TEXTURE_CUBE_MAP))
+        {
+            INFO() << "Skipping emulated format 0x" << std::hex << format.id << " from "
+                   << ext.name;
+            return;
+        }
+
+        // Verify GetImage.
+        for (size_t faceIndex = 0; faceIndex < kCubeFaces.size(); ++faceIndex)
+        {
+            std::vector<uint8_t> actualData(format.size);
+            glGetCompressedTexImageANGLE(kCubeFaces[faceIndex], 0, actualData.data());
+            EXPECT_GL_NO_ERROR();
+            EXPECT_EQ(expectedData[faceIndex], actualData);
+        }
+    };
+    TestAllCompressedFormats(func);
+}
+
+// Tests GetCompressedTexImage with cube map array textures.
+TEST_P(GetImageTestES32, CompressedTexImageCubeMapArray)
+{
+    // Verify the extension is enabled.
+    ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_cube_map_array") &&
+                       !IsGLExtensionEnabled("GL_OES_texture_cube_map_array"));
+
+    auto func = [](const CompressionExtension &ext, const CompressedFormat &format) {
+        std::vector<uint8_t> expectedData;
+        for (uint32_t i = 0; i < format.size * kCubeFaces.size(); i++)
+        {
+            expectedData.push_back(static_cast<uint8_t>(i % std::numeric_limits<uint8_t>::max()));
+        }
+
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, tex);
+        glCompressedTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, format.id, 4, 4, kCubeFaces.size(), 0,
+                               expectedData.size() * sizeof(uint8_t), expectedData.data());
+        ASSERT_GL_NO_ERROR();
+
+        if (IsFormatEmulated(GL_TEXTURE_CUBE_MAP_ARRAY))
+        {
+            INFO() << "Skipping emulated format 0x" << std::hex << format.id << " from "
+                   << ext.name;
+            return;
+        }
+
+        // Verify GetImage.
+        std::vector<uint8_t> actualData(format.size * kCubeFaces.size());
+        glGetCompressedTexImageANGLE(GL_TEXTURE_CUBE_MAP_ARRAY, 0, actualData.data());
+        EXPECT_GL_NO_ERROR();
+        EXPECT_EQ(expectedData, actualData);
+    };
+    TestAllCompressedFormats(func);
 }
 
 // Tests GetCompressedTexImage with multiple mip levels.
@@ -931,6 +1057,9 @@ ANGLE_INSTANTIATE_TEST(GetImageTestES3, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTestES31);
 ANGLE_INSTANTIATE_TEST(GetImageTestES31, ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER());
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTestES32);
+ANGLE_INSTANTIATE_TEST(GetImageTestES32, ES32_VULKAN(), ES32_VULKAN_SWIFTSHADER());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTestNoExtensions);
 ANGLE_INSTANTIATE_TEST(GetImageTestNoExtensions,
