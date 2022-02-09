@@ -146,8 +146,6 @@ if (angle_use_vulkan_null_display) {
   _vulkan_backend_sources += [
     "null/DisplayVkNull.cpp",
     "null/DisplayVkNull.h",
-    "null/WindowSurfaceVkNull.cpp",
-    "null/WindowSurfaceVkNull.h",
   ]
 }
 
