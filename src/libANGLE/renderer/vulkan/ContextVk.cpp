@@ -1814,8 +1814,6 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
 
         // Ensure the image is in the desired layout
         commandBufferHelper->imageRead(this, image.getAspectFlags(), imageLayout, &image);
-
-        textureVk->retainImageViews(&mResourceUseList);
     }
 
     if (executable->hasTextures())

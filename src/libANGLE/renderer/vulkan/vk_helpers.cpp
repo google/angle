@@ -4357,7 +4357,8 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mSubresourceUpdates(std::move(other.mSubresourceUpdates)),
       mCurrentSingleClearValue(std::move(other.mCurrentSingleClearValue)),
       mContentDefined(std::move(other.mContentDefined)),
-      mStencilContentDefined(std::move(other.mStencilContentDefined))
+      mStencilContentDefined(std::move(other.mStencilContentDefined)),
+      mImageAndViewGarbage(std::move(other.mImageAndViewGarbage))
 {
     ASSERT(this != &other);
     other.resetCachedProperties();
@@ -4714,9 +4715,11 @@ void ImageHelper::deriveExternalImageTiling(const void *createInfoChain)
 
 void ImageHelper::releaseImage(RendererVk *renderer)
 {
-    renderer->collectGarbageAndReinit(&mUse, &mImage, &mDeviceMemory);
-    mImageSerial = kInvalidImageSerial;
-
+    CollectGarbage(&mImageAndViewGarbage, &mImage, &mDeviceMemory);
+    // Notify us if the application pattern causes the views to keep getting reallocated and create
+    // infinite garbage
+    ASSERT(mImageAndViewGarbage.size() <= 1000);
+    releaseImageAndViewGarbage(renderer);
     setEntireContentUndefined();
 }
 
@@ -4732,6 +4735,14 @@ void ImageHelper::releaseImageFromShareContexts(RendererVk *renderer, ContextVk 
     }
 
     releaseImage(renderer);
+}
+
+void ImageHelper::collectViewGarbage(RendererVk *renderer, vk::ImageViewHelper *imageView)
+{
+    imageView->release(renderer, mImageAndViewGarbage);
+    // Notify us if the application pattern causes the views to keep getting reallocated and create
+    // infinite garbage
+    ASSERT(mImageAndViewGarbage.size() <= 1000);
 }
 
 void ImageHelper::releaseStagedUpdates(RendererVk *renderer)
@@ -4758,6 +4769,20 @@ void ImageHelper::resetImageWeakReference()
     mImage.reset();
     mImageSerial        = kInvalidImageSerial;
     mRotatedAspectRatio = false;
+}
+
+void ImageHelper::releaseImageAndViewGarbage(RendererVk *renderer)
+{
+    if (!mImageAndViewGarbage.empty())
+    {
+        renderer->collectGarbage(std::move(mUse), std::move(mImageAndViewGarbage));
+    }
+    else
+    {
+        mUse.release();
+    }
+    mUse.init();
+    mImageSerial = kInvalidImageSerial;
 }
 
 angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
@@ -5099,6 +5124,12 @@ angle::Result ImageHelper::initReinterpretedLayerImageView(Context *context,
 
 void ImageHelper::destroy(RendererVk *renderer)
 {
+    // destroy any pending garbage objects (most likely from ImageViewHelper) at this point
+    for (GarbageObject &object : mImageAndViewGarbage)
+    {
+        object.destroy(renderer);
+    }
+
     VkDevice device = renderer->getDevice();
 
     mImage.destroy(device);
@@ -6937,6 +6968,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(ContextVk *contextVk,
     prevImage->get().mLevelCount                  = levelCount;
     prevImage->get().mLayerCount                  = mLayerCount;
     prevImage->get().mImageSerial                 = mImageSerial;
+    prevImage->get().mImageAndViewGarbage         = std::move(mImageAndViewGarbage);
 
     // Reset information for current (invalid) image.
     mCurrentLayout               = ImageLayout::Undefined;
@@ -8513,10 +8545,8 @@ LayerMode GetLayerMode(const vk::ImageHelper &image, uint32_t layerCount)
 // ImageViewHelper implementation.
 ImageViewHelper::ImageViewHelper() : mCurrentBaseMaxLevelHash(0), mLinearColorspace(true) {}
 
-ImageViewHelper::ImageViewHelper(ImageViewHelper &&other) : Resource(std::move(other))
+ImageViewHelper::ImageViewHelper(ImageViewHelper &&other)
 {
-    std::swap(mUse, other.mUse);
-
     std::swap(mCurrentBaseMaxLevelHash, other.mCurrentBaseMaxLevelHash);
     std::swap(mLinearColorspace, other.mLinearColorspace);
 
@@ -8546,10 +8576,8 @@ void ImageViewHelper::init(RendererVk *renderer)
     }
 }
 
-void ImageViewHelper::release(RendererVk *renderer)
+void ImageViewHelper::release(RendererVk *renderer, std::vector<vk::GarbageObject> &garbage)
 {
-    std::vector<GarbageObject> garbage;
-
     mCurrentBaseMaxLevelHash = 0;
 
     // Release the read views
@@ -8608,16 +8636,20 @@ void ImageViewHelper::release(RendererVk *renderer)
     }
     mLayerLevelStorageImageViews.clear();
 
-    if (!garbage.empty())
-    {
-        renderer->collectGarbage(std::move(mUse), std::move(garbage));
-
-        // Ensure the resource use is always valid.
-        mUse.init();
-    }
-
     // Update image view serial.
     mImageViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
+}
+
+bool ImageViewHelper::isImageViewGarbageEmpty() const
+{
+    return mPerLevelRangeLinearReadImageViews.empty() &&
+           mPerLevelRangeLinearCopyImageViews.empty() &&
+           mPerLevelRangeLinearFetchImageViews.empty() &&
+           mPerLevelRangeSRGBReadImageViews.empty() && mPerLevelRangeSRGBCopyImageViews.empty() &&
+           mPerLevelRangeSRGBFetchImageViews.empty() &&
+           mPerLevelRangeStencilReadImageViews.empty() && mLayerLevelDrawImageViews.empty() &&
+           mLayerLevelDrawImageViewsLinear.empty() && mSubresourceDrawImageViews.empty() &&
+           mLayerLevelStorageImageViews.empty();
 }
 
 void ImageViewHelper::destroy(VkDevice device)
@@ -8879,8 +8911,6 @@ angle::Result ImageViewHelper::getLevelStorageImageView(ContextVk *contextVk,
 {
     ASSERT(mImageViewSerial.valid());
 
-    retain(&contextVk->getResourceUseList());
-
     ImageView *imageView =
         GetLevelImageView(&mLevelStorageImageViews, levelVk, image.getLevelCount());
 
@@ -8907,8 +8937,6 @@ angle::Result ImageViewHelper::getLevelLayerStorageImageView(ContextVk *contextV
     ASSERT(image.valid());
     ASSERT(mImageViewSerial.valid());
     ASSERT(!image.getActualFormat().isBlock);
-
-    retain(&contextVk->getResourceUseList());
 
     ImageView *imageView =
         GetLevelLayerImageView(&mLayerLevelStorageImageViews, levelVk, layer, image.getLevelCount(),
@@ -8938,8 +8966,6 @@ angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
     ASSERT(image.valid());
     ASSERT(mImageViewSerial.valid());
     ASSERT(!image.getActualFormat().isBlock);
-
-    retain(&contextVk->getResourceUseList());
 
     ImageSubresourceRange range = MakeImageSubresourceDrawRange(
         image.toGLLevel(levelVk), layer, GetLayerMode(image, layerCount), mode);
@@ -8972,8 +8998,6 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
     ASSERT(image.valid());
     ASSERT(mImageViewSerial.valid());
     ASSERT(!image.getActualFormat().isBlock);
-
-    retain(&contextVk->getResourceUseList());
 
     LayerLevelImageViewVector &imageViews = (mode == gl::SrgbWriteControlMode::Linear)
                                                 ? mLayerLevelDrawImageViewsLinear
