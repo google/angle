@@ -91,6 +91,8 @@
 6373 : WebGLCompatibilityTest.DrawArraysBufferOutOfBoundsNonInstanced/* = FLAKY
 6180 : WebGLCompatibilityTest.DrawElementsBufferOutOfBoundsInVertexBuffer/* = FLAKY
 
+# Skipped in end2end tests
+6336 : GetImageTest.InconsistentTexture2D/* = NOT_RUN
 
 # ES3
 6180 : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = NOT_RUN

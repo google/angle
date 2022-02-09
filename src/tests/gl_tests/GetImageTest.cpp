@@ -595,12 +595,20 @@ TEST_P(GetImageTest, EmptyTexture)
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTest);
-ANGLE_INSTANTIATE_TEST(GetImageTest, ES2_VULKAN(), ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST(GetImageTest,
+                       ES2_VULKAN(),
+                       ES3_VULKAN(),
+                       ES2_VULKAN_SWIFTSHADER(),
+                       ES3_VULKAN_SWIFTSHADER());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTestES31);
-ANGLE_INSTANTIATE_TEST(GetImageTestES31, ES31_VULKAN());
+ANGLE_INSTANTIATE_TEST(GetImageTestES31, ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTestNoExtensions);
-ANGLE_INSTANTIATE_TEST(GetImageTestNoExtensions, ES2_VULKAN(), ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST(GetImageTestNoExtensions,
+                       ES2_VULKAN(),
+                       ES3_VULKAN(),
+                       ES2_VULKAN_SWIFTSHADER(),
+                       ES3_VULKAN_SWIFTSHADER());
 
 }  // namespace
