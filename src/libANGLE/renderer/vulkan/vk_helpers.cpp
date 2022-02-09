@@ -2406,6 +2406,9 @@ angle::Result DynamicBuffer::allocateNewBuffer(ContextVk *contextVk)
 
 bool DynamicBuffer::allocateFromCurrentBuffer(size_t sizeInBytes, BufferHelper **bufferHelperOut)
 {
+    mNextAllocationOffset =
+        roundUp<uint32_t>(mNextAllocationOffset, static_cast<uint32_t>(mAlignment));
+
     ASSERT(bufferHelperOut);
     size_t sizeToAllocate                                      = roundUp(sizeInBytes, mAlignment);
     angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextAllocationOffset;
@@ -2431,57 +2434,51 @@ angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
                                       BufferHelper **bufferHelperOut,
                                       bool *newBufferAllocatedOut)
 {
-    mNextAllocationOffset =
-        roundUp<uint32_t>(mNextAllocationOffset, static_cast<uint32_t>(mAlignment));
+    bool newBuffer = !allocateFromCurrentBuffer(sizeInBytes, bufferHelperOut);
+    if (newBufferAllocatedOut)
+    {
+        *newBufferAllocatedOut = newBuffer;
+    }
+
+    if (!newBuffer)
+    {
+        return angle::Result::Continue;
+    }
+
     size_t sizeToAllocate = roundUp(sizeInBytes, mAlignment);
 
-    angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextAllocationOffset;
-    checkedNextWriteOffset += sizeToAllocate;
-
-    if (!checkedNextWriteOffset.IsValid() || checkedNextWriteOffset.ValueOrDie() >= mSize)
+    if (mBuffer)
     {
-        if (mBuffer)
-        {
-            // Make sure the buffer is not released externally.
-            ASSERT(mBuffer->valid());
-            mInFlightBuffers.push_back(std::move(mBuffer));
-            ASSERT(!mBuffer);
-        }
-
-        const size_t sizeIgnoringHistory = std::max(mInitialSize, sizeToAllocate);
-        if (sizeToAllocate > mSize || sizeIgnoringHistory < mSize / 4)
-        {
-            mSize = sizeIgnoringHistory;
-            // Clear the free list since the free buffers are now either too small or too big.
-            ReleaseBufferListToRenderer(contextVk->getRenderer(), &mBufferFreeList);
-        }
-
-        // The front of the free list should be the oldest. Thus if it is in use the rest of the
-        // free list should be in use as well.
-        if (mBufferFreeList.empty() ||
-            mBufferFreeList.front()->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
-        {
-            ANGLE_TRY(allocateNewBuffer(contextVk));
-        }
-        else
-        {
-            mBuffer = std::move(mBufferFreeList.front());
-            mBufferFreeList.erase(mBufferFreeList.begin());
-        }
-
-        ASSERT(mBuffer->getSize() == mSize);
-
-        mNextAllocationOffset = 0;
-
-        if (newBufferAllocatedOut != nullptr)
-        {
-            *newBufferAllocatedOut = true;
-        }
+        // Make sure the buffer is not released externally.
+        ASSERT(mBuffer->valid());
+        mInFlightBuffers.push_back(std::move(mBuffer));
+        ASSERT(!mBuffer);
     }
-    else if (newBufferAllocatedOut != nullptr)
+
+    const size_t sizeIgnoringHistory = std::max(mInitialSize, sizeToAllocate);
+    if (sizeToAllocate > mSize || sizeIgnoringHistory < mSize / 4)
     {
-        *newBufferAllocatedOut = false;
+        mSize = sizeIgnoringHistory;
+        // Clear the free list since the free buffers are now either too small or too big.
+        ReleaseBufferListToRenderer(contextVk->getRenderer(), &mBufferFreeList);
     }
+
+    // The front of the free list should be the oldest. Thus if it is in use the rest of the
+    // free list should be in use as well.
+    if (mBufferFreeList.empty() ||
+        mBufferFreeList.front()->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
+    {
+        ANGLE_TRY(allocateNewBuffer(contextVk));
+    }
+    else
+    {
+        mBuffer = std::move(mBufferFreeList.front());
+        mBufferFreeList.erase(mBufferFreeList.begin());
+    }
+
+    ASSERT(mBuffer->getSize() == mSize);
+
+    mNextAllocationOffset = 0;
 
     ASSERT(mBuffer != nullptr);
     mBuffer->setSuballocationOffsetAndSize(mNextAllocationOffset, sizeToAllocate);
