@@ -417,6 +417,7 @@
 6931 PIXEL6 VULKAN : TransformFeedbackTestES32.* = SKIP
 6931 PIXEL6 VULKAN : TransformFeedbackTestIOBlocks.Separate/* = SKIP
 6931 PIXEL6 VULKAN : WebGLCompatibilityTest.FramebufferFloatColorAttachmentMRT/* = SKIP
+7004 PIXEL6 VULKAN : EGLContextSharingTestNoSyncTextureUploads.NoSync/* = SKIP
 
 // AMD windows failures.  The GPU and driver on our bots are very old and buggy.
 // http://crbug.com/1224996
