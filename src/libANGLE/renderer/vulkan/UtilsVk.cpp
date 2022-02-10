@@ -2528,8 +2528,9 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     blitBufferInfo.queueFamilyIndexCount = 0;
     blitBufferInfo.pQueueFamilyIndices   = nullptr;
 
-    ANGLE_TRY(
-        blitBuffer.get().init(contextVk, blitBufferInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+    ANGLE_TRY(blitBuffer.get().initSuballocation(
+        contextVk, contextVk->getRenderer()->getDeviceLocalMemoryTypeIndex(),
+        static_cast<size_t>(bufferSize), GetDefaultBufferAlignment(contextVk->getRenderer())));
     blitBuffer.get().retainReadWrite(&contextVk->getResourceUseList());
 
     BlitResolveStencilNoExportShaderParams shaderParams;
@@ -2678,7 +2679,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
 
     // Copy the resulting buffer into dst.
     VkBufferImageCopy region           = {};
-    region.bufferOffset                = 0;
+    region.bufferOffset                = blitBuffer.get().getOffset();
     region.bufferRowLength             = bufferRowLengthInUints * sizeof(uint32_t);
     region.bufferImageHeight           = params.blitArea.height;
     region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_STENCIL_BIT;
