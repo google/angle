@@ -27,9 +27,6 @@ enum class ImageMipLevels
     InvalidEnum = 2,
 };
 
-// vkCmdCopyBufferToImage buffer offset multiple
-constexpr VkDeviceSize kBufferOffsetMultiple = 4;
-
 class TextureVk : public TextureImpl, public angle::ObserverInterface
 {
   public:

@@ -4079,6 +4079,8 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
 
         commandBuffer.copyBuffer(stagingBuffer.getBuffer(), getBuffer(), 1, &copyRegion);
 
+        ANGLE_VK_TRY(context, commandBuffer.end());
+
         Serial serial;
         ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(commandBuffer), false,
                                               egl::ContextPriority::Medium, nullptr, 0, nullptr,
