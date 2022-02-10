@@ -91,6 +91,9 @@ EGLSurface CreatePlatformWindowSurfaceEXT(Thread *thread,
                          GetDisplayIfValid(display), EGL_NO_SURFACE);
     Surface *surface = nullptr;
 
+    // In X11, eglCreatePlatformWindowSurfaceEXT expects the native_window argument to be a pointer
+    // to a Window while the EGLNativeWindowType for X11 is its actual value.
+    // https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_platform_x11.txt
     void *actualNativeWindow = display->getImplementation()->isX11()
                                    ? *reinterpret_cast<void **>(native_window)
                                    : native_window;
