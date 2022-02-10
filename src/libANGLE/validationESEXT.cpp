@@ -234,13 +234,10 @@ bool ValidateObjectIdentifierAndName(const Context *context,
 }
 }  // namespace
 
-bool ValidateGetTexImageANGLE(const Context *context,
-                              angle::EntryPoint entryPoint,
-                              TextureTarget target,
-                              GLint level,
-                              GLenum format,
-                              GLenum type,
-                              const void *pixels)
+bool ValidateGetTexImage(const Context *context,
+                         angle::EntryPoint entryPoint,
+                         TextureTarget target,
+                         GLint level)
 {
     if (!context->getExtensions().getImageANGLE)
     {
@@ -265,6 +262,22 @@ bool ValidateGetTexImageANGLE(const Context *context,
     if (!ValidMipLevel(context, textureType, level))
     {
         context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidMipLevel);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetTexImageANGLE(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              TextureTarget target,
+                              GLint level,
+                              GLenum format,
+                              GLenum type,
+                              const void *pixels)
+{
+    if (!ValidateGetTexImage(context, entryPoint, target, level))
+    {
         return false;
     }
 
@@ -298,13 +311,28 @@ bool ValidateGetCompressedTexImageANGLE(const Context *context,
                                         GLint level,
                                         const void *pixels)
 {
-    if (!context->getExtensions().getImageANGLE)
+    if (!ValidateGetTexImage(context, entryPoint, target, level))
     {
-        context->validationError(entryPoint, GL_INVALID_OPERATION, kGetImageExtensionNotEnabled);
         return false;
     }
 
-    // TODO: Validate all the things. http://anglebug.com/6177
+    Texture *texture = context->getTextureByTarget(target);
+    if (!texture->getFormat(target, level).info->compressed)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kGetImageNotCompressed);
+        return false;
+    }
+
+    // Check if format is emulated
+    // TODO(anglebug.com/6177): Check here for all the formats that ANGLE will use to emulate a
+    // compressed texture
+    GLenum implFormat = texture->getImplementationColorReadFormat(context);
+    if (implFormat == GL_RGBA || implFormat == GL_RG || implFormat == GL_RED)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kInvalidEmulatedFormat);
+        return false;
+    }
+
     return true;
 }
 
