@@ -3521,10 +3521,6 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.EGLImageArrayEXT             = false;
         supportedExtensions.textureFormatSRGBOverrideEXT = false;
 
-        // The spec requires ES 3.1 but these are used for WebGL 2.0
-        supportedExtensions.baseVertexBaseInstanceANGLE              = false;
-        supportedExtensions.baseVertexBaseInstanceShaderBuiltinANGLE = false;
-
         // Requires immutable textures
         supportedExtensions.yuvInternalFormatANGLE = false;
 
