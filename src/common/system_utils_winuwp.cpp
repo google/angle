@@ -12,8 +12,6 @@
 #include <stdarg.h>
 #include <windows.h>
 #include <array>
-#include <codecvt>
-#include <locale>
 #include <string>
 
 namespace angle
@@ -43,9 +41,6 @@ void *OpenSystemLibraryWithExtensionAndGetError(const char *libraryName,
         return nullptr;
     }
 
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    std::wstring wideBuffer = converter.from_bytes(buffer);
-
     HMODULE libraryModule = nullptr;
 
     switch (searchType)
@@ -55,7 +50,7 @@ void *OpenSystemLibraryWithExtensionAndGetError(const char *libraryName,
             {
                 *errorOut = libraryName;
             }
-            libraryModule = LoadPackagedLibrary(wideBuffer.c_str(), 0);
+            libraryModule = LoadPackagedLibrary(Widen(libraryName).c_str(), 0);
             break;
         case SearchType::SystemDir:
         case SearchType::AlreadyLoaded:

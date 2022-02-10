@@ -15,22 +15,23 @@ namespace angle
 {
 bool UnsetEnvironmentVar(const char *variableName)
 {
-    return (SetEnvironmentVariableA(variableName, nullptr) == TRUE);
+    return (SetEnvironmentVariableW(Widen(variableName).c_str(), nullptr) == TRUE);
 }
 
 bool SetEnvironmentVar(const char *variableName, const char *value)
 {
-    return (SetEnvironmentVariableA(variableName, value) == TRUE);
+    return (SetEnvironmentVariableW(Widen(variableName).c_str(), Widen(value).c_str()) == TRUE);
 }
 
 std::string GetEnvironmentVar(const char *variableName)
 {
-    FastVector<char, MAX_PATH> value;
+    std::wstring variableNameUtf16 = Widen(variableName);
+    FastVector<wchar_t, MAX_PATH> value;
 
     DWORD result;
 
     // First get the length of the variable, including the null terminator
-    result = GetEnvironmentVariableA(variableName, nullptr, 0);
+    result = GetEnvironmentVariableW(variableNameUtf16.c_str(), nullptr, 0);
 
     // Zero means the variable was not found, so return now.
     if (result == 0)
@@ -40,9 +41,9 @@ std::string GetEnvironmentVar(const char *variableName)
 
     // Now size the vector to fit the data, and read the environment variable.
     value.resize(result, 0);
-    result = GetEnvironmentVariableA(variableName, value.data(), result);
+    result = GetEnvironmentVariableW(variableNameUtf16.c_str(), value.data(), result);
 
-    return std::string(value.data());
+    return Narrow(value.data());
 }
 
 void *OpenSystemLibraryWithExtensionAndGetError(const char *libraryName,
@@ -68,7 +69,7 @@ void *OpenSystemLibraryWithExtensionAndGetError(const char *libraryName,
             {
                 *errorOut = moduleRelativePath;
             }
-            libraryModule = LoadLibraryA(moduleRelativePath.c_str());
+            libraryModule = LoadLibraryW(Widen(moduleRelativePath).c_str());
             break;
         }
 
@@ -78,7 +79,8 @@ void *OpenSystemLibraryWithExtensionAndGetError(const char *libraryName,
             {
                 *errorOut = libraryName;
             }
-            libraryModule = LoadLibraryExA(libraryName, nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+            libraryModule =
+                LoadLibraryExW(Widen(libraryName).c_str(), nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
             break;
         }
 
@@ -88,7 +90,7 @@ void *OpenSystemLibraryWithExtensionAndGetError(const char *libraryName,
             {
                 *errorOut = libraryName;
             }
-            libraryModule = GetModuleHandleA(libraryName);
+            libraryModule = GetModuleHandleW(Widen(libraryName).c_str());
             break;
         }
     }
