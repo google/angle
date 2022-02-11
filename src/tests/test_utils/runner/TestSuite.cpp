@@ -64,16 +64,13 @@ constexpr char kUBSanOptionsEnvVar[] = "UBSAN_OPTIONS";
 // Ideally we could use a separate timeout for the slow first test.
 // Allow sanitized tests to run more slowly.
 #if defined(NDEBUG) && !defined(ANGLE_WITH_SANITIZER)
-constexpr int kDefaultTestTimeout = 60;
-#else
-constexpr int kDefaultTestTimeout  = 120;
-#endif
-constexpr int kSlowTestTimeoutScale = 3;
-#if defined(NDEBUG)
+constexpr int kDefaultTestTimeout  = 60;
 constexpr int kDefaultBatchTimeout = 300;
 #else
+constexpr int kDefaultTestTimeout  = 120;
 constexpr int kDefaultBatchTimeout = 600;
 #endif
+constexpr int kSlowTestTimeoutScale  = 3;
 constexpr int kDefaultBatchSize      = 256;
 constexpr double kIdleMessageTimeout = 15.0;
 constexpr int kDefaultMaxProcesses   = 16;
@@ -1791,7 +1788,8 @@ int TestSuite::run()
                     SplitString(batchStdout, "\r\n", WhitespaceHandling::TRIM_WHITESPACE,
                                 SplitResult::SPLIT_WANT_NONEMPTY);
                 constexpr size_t kKeepLines = 10;
-                printf("Last %d lines of batch stdout:\n", static_cast<int>(kKeepLines));
+                printf("Batch timeout! Last %d lines of batch stdout:\n",
+                       static_cast<int>(kKeepLines));
                 for (size_t lineNo = lines.size() - std::min(lines.size(), kKeepLines);
                      lineNo < lines.size(); ++lineNo)
                 {
