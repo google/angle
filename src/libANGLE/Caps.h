@@ -649,6 +649,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_metal_create_context_ownership_identity
     bool metalCreateContextOwnershipIdentityANGLE = false;
+
+    // EGL_KHR_partial_update
+    bool partialUpdateKHR = false;
 };
 
 struct DeviceExtensions

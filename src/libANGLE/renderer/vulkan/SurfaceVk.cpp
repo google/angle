@@ -735,7 +735,8 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mDepthStencilImageBinding(this, kAnySurfaceImageSubjectIndex),
       mColorImageMSBinding(this, kAnySurfaceImageSubjectIndex),
       mNeedToAcquireNextSwapchainImage(false),
-      mFrameCount(1)
+      mFrameCount(1),
+      mBufferAgeQueryFrameNumber(0)
 {
     // Initialize the color render target with the multisampled targets.  If not multisampled, the
     // render target will be updated to refer to a swapchain image on every acquire.
@@ -1885,14 +1886,12 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
         ANGLE_VK_TRY(contextVk, result);
     }
 
-    // Invalidate the color image if the swap behavior is EGL_BUFFER_DESTROYED.
-    // Also invalidate the multi-sample color image and depth/stencil content.
-    if (mState.swapBehavior == EGL_BUFFER_DESTROYED)
+    if (mState.swapBehavior == EGL_BUFFER_DESTROYED && mBufferAgeQueryFrameNumber == 0)
     {
         mSwapchainImages[mCurrentSwapchainImageIndex].image.invalidateSubresourceContent(
             contextVk, gl::LevelIndex(0), 0, 1);
+        mColorImageMS.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1);
     }
-    mColorImageMS.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1);
     mDepthStencilImage.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1);
     mDepthStencilImage.invalidateSubresourceStencilContent(contextVk, gl::LevelIndex(0), 0, 1);
 
@@ -2322,13 +2321,6 @@ angle::Result WindowSurfaceVk::drawOverlay(ContextVk *contextVk, SwapchainImage 
 
 egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age)
 {
-    // Set age to 0 if swap behavior is EGL_BUFFER_DESTROYED.
-    if (age != nullptr && mState.swapBehavior == EGL_BUFFER_DESTROYED)
-    {
-        *age = 0;
-        return egl::NoError();
-    }
-
     if (mNeedToAcquireNextSwapchainImage)
     {
         // Acquire the current image if needed.
@@ -2341,12 +2333,19 @@ egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age
         }
     }
 
+    if (mBufferAgeQueryFrameNumber == 0)
+    {
+        ANGLE_VK_PERF_WARNING(vk::GetImpl(context), GL_DEBUG_SEVERITY_LOW,
+                              "Querying age of a surface will make it retain its content");
+
+        mBufferAgeQueryFrameNumber = mFrameCount;
+    }
     if (age != nullptr)
     {
         uint64_t frameNumber = mSwapchainImages[mCurrentSwapchainImageIndex].mFrameNumber;
-        if (frameNumber == 0)
+        if (frameNumber < mBufferAgeQueryFrameNumber)
         {
-            *age = 0;  // Has not been used for rendering yet, no age.
+            *age = 0;  // Has not been used for rendering yet or since age was queried, no age.
         }
         else
         {

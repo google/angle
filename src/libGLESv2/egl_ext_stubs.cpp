@@ -897,6 +897,7 @@ EGLBoolean SetDamageRegionKHR(Thread *thread,
 {
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglSetDamageRegionKHR",
                          GetDisplayIfValid(display), EGL_FALSE);
+    surface->setDamageRegion(rects, n_rects);
 
     thread->setSuccess();
     return EGL_TRUE;
