@@ -107,6 +107,7 @@
 #define eglLockSurfaceKHR t_eglLockSurfaceKHR
 #define eglQuerySurface64KHR t_eglQuerySurface64KHR
 #define eglUnlockSurfaceKHR t_eglUnlockSurfaceKHR
+#define eglSetDamageRegionKHR t_eglSetDamageRegionKHR
 #define eglSignalSyncKHR t_eglSignalSyncKHR
 #define eglCreateStreamKHR t_eglCreateStreamKHR
 #define eglDestroyStreamKHR t_eglDestroyStreamKHR
@@ -225,6 +226,7 @@ ANGLE_TRACE_LOADER_EXPORT extern PFNEGLDESTROYIMAGEKHRPROC t_eglDestroyImageKHR;
 ANGLE_TRACE_LOADER_EXPORT extern PFNEGLLOCKSURFACEKHRPROC t_eglLockSurfaceKHR;
 ANGLE_TRACE_LOADER_EXPORT extern PFNEGLQUERYSURFACE64KHRPROC t_eglQuerySurface64KHR;
 ANGLE_TRACE_LOADER_EXPORT extern PFNEGLUNLOCKSURFACEKHRPROC t_eglUnlockSurfaceKHR;
+ANGLE_TRACE_LOADER_EXPORT extern PFNEGLSETDAMAGEREGIONKHRPROC t_eglSetDamageRegionKHR;
 ANGLE_TRACE_LOADER_EXPORT extern PFNEGLSIGNALSYNCKHRPROC t_eglSignalSyncKHR;
 ANGLE_TRACE_LOADER_EXPORT extern PFNEGLCREATESTREAMKHRPROC t_eglCreateStreamKHR;
 ANGLE_TRACE_LOADER_EXPORT extern PFNEGLDESTROYSTREAMKHRPROC t_eglDestroyStreamKHR;

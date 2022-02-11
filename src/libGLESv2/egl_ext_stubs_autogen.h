@@ -158,6 +158,11 @@ void SetBlobCacheFuncsANDROID(Thread *thread,
                               egl::Display *dpyPacked,
                               EGLSetBlobFuncANDROID set,
                               EGLGetBlobFuncANDROID get);
+EGLBoolean SetDamageRegionKHR(Thread *thread,
+                              egl::Display *dpyPacked,
+                              Surface *surfacePacked,
+                              EGLint *rects,
+                              EGLint n_rects);
 EGLBoolean SignalSyncKHR(Thread *thread, egl::Display *dpyPacked, Sync *syncPacked, EGLenum mode);
 EGLBoolean StreamAttribKHR(Thread *thread,
                            egl::Display *dpyPacked,

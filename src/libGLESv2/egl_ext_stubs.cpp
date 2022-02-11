@@ -876,4 +876,17 @@ EGLBoolean ExportVkImageANGLE(Thread *thread,
     return EGL_TRUE;
 }
 
+EGLBoolean SetDamageRegionKHR(Thread *thread,
+                              egl::Display *display,
+                              egl::Surface *surface,
+                              EGLint *rects,
+                              EGLint n_rects)
+{
+    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglSetDamageRegionKHR",
+                         GetDisplayIfValid(display), EGL_FALSE);
+
+    thread->setSuccess();
+    return EGL_TRUE;
+}
+
 }  // namespace egl

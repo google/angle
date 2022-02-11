@@ -203,6 +203,12 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_QuerySurface64KHR(EGLDisplay dpy,
                                                           EGLAttribKHR *value);
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_UnlockSurfaceKHR(EGLDisplay dpy, EGLSurface surface);
 
+// EGL_KHR_partial_update
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_SetDamageRegionKHR(EGLDisplay dpy,
+                                                           EGLSurface surface,
+                                                           EGLint *rects,
+                                                           EGLint n_rects);
+
 // EGL_KHR_reusable_sync
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_SignalSyncKHR(EGLDisplay dpy,
                                                       EGLSyncKHR sync,

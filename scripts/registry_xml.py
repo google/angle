@@ -325,6 +325,7 @@ supported_egl_extensions = [
     "EGL_KHR_lock_surface3",
     "EGL_KHR_mutable_render_buffer",
     "EGL_KHR_no_config_context",
+    "EGL_KHR_partial_update",
     "EGL_KHR_reusable_sync",
     "EGL_KHR_stream",
     "EGL_KHR_stream_consumer_gltexture",

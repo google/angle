@@ -765,6 +765,16 @@ EGLBoolean EGLAPIENTRY eglUnlockSurfaceKHR(EGLDisplay dpy, EGLSurface surface)
     return EGL_UnlockSurfaceKHR(dpy, surface);
 }
 
+// EGL_KHR_partial_update
+EGLBoolean EGLAPIENTRY eglSetDamageRegionKHR(EGLDisplay dpy,
+                                             EGLSurface surface,
+                                             EGLint *rects,
+                                             EGLint n_rects)
+{
+    EnsureEGLLoaded();
+    return EGL_SetDamageRegionKHR(dpy, surface, rects, n_rects);
+}
+
 // EGL_KHR_reusable_sync
 EGLBoolean EGLAPIENTRY eglSignalSyncKHR(EGLDisplay dpy, EGLSyncKHR sync, EGLenum mode)
 {

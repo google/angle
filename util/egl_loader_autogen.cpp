@@ -104,6 +104,7 @@ ANGLE_UTIL_EXPORT PFNEGLDESTROYIMAGEKHRPROC l_eglDestroyImageKHR;
 ANGLE_UTIL_EXPORT PFNEGLLOCKSURFACEKHRPROC l_eglLockSurfaceKHR;
 ANGLE_UTIL_EXPORT PFNEGLQUERYSURFACE64KHRPROC l_eglQuerySurface64KHR;
 ANGLE_UTIL_EXPORT PFNEGLUNLOCKSURFACEKHRPROC l_eglUnlockSurfaceKHR;
+ANGLE_UTIL_EXPORT PFNEGLSETDAMAGEREGIONKHRPROC l_eglSetDamageRegionKHR;
 ANGLE_UTIL_EXPORT PFNEGLSIGNALSYNCKHRPROC l_eglSignalSyncKHR;
 ANGLE_UTIL_EXPORT PFNEGLCREATESTREAMKHRPROC l_eglCreateStreamKHR;
 ANGLE_UTIL_EXPORT PFNEGLDESTROYSTREAMKHRPROC l_eglDestroyStreamKHR;
@@ -275,6 +276,8 @@ void LoadEGL(LoadProc loadProc)
         reinterpret_cast<PFNEGLQUERYSURFACE64KHRPROC>(loadProc("eglQuerySurface64KHR"));
     l_eglUnlockSurfaceKHR =
         reinterpret_cast<PFNEGLUNLOCKSURFACEKHRPROC>(loadProc("eglUnlockSurfaceKHR"));
+    l_eglSetDamageRegionKHR =
+        reinterpret_cast<PFNEGLSETDAMAGEREGIONKHRPROC>(loadProc("eglSetDamageRegionKHR"));
     l_eglSignalSyncKHR = reinterpret_cast<PFNEGLSIGNALSYNCKHRPROC>(loadProc("eglSignalSyncKHR"));
     l_eglCreateStreamKHR =
         reinterpret_cast<PFNEGLCREATESTREAMKHRPROC>(loadProc("eglCreateStreamKHR"));

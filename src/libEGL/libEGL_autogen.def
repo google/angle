@@ -154,6 +154,9 @@ EXPORTS
     eglQuerySurface64KHR
     eglUnlockSurfaceKHR
 
+    ; EGL_KHR_partial_update
+    eglSetDamageRegionKHR
+
     ; EGL_KHR_reusable_sync
     eglSignalSyncKHR
 

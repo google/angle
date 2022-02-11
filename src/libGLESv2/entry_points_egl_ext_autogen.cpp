@@ -1005,6 +1005,31 @@ EGLBoolean EGLAPIENTRY EGL_UnlockSurfaceKHR(EGLDisplay dpy, EGLSurface surface)
     return UnlockSurfaceKHR(thread, dpyPacked, surfacePacked);
 }
 
+// EGL_KHR_partial_update
+EGLBoolean EGLAPIENTRY EGL_SetDamageRegionKHR(EGLDisplay dpy,
+                                              EGLSurface surface,
+                                              EGLint *rects,
+                                              EGLint n_rects)
+{
+
+    ANGLE_SCOPED_GLOBAL_SURFACE_LOCK();
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EGL_EVENT(SetDamageRegionKHR,
+              "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR ", rects = 0x%016" PRIxPTR
+              ", n_rects = %d",
+              (uintptr_t)dpy, (uintptr_t)surface, (uintptr_t)rects, n_rects);
+
+    Thread *thread = egl::GetCurrentThread();
+
+    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
+    Surface *surfacePacked  = PackParam<Surface *>(surface);
+
+    ANGLE_EGL_VALIDATE(thread, SetDamageRegionKHR, GetDisplayIfValid(dpyPacked), EGLBoolean,
+                       dpyPacked, surfacePacked, rects, n_rects);
+
+    return SetDamageRegionKHR(thread, dpyPacked, surfacePacked, rects, n_rects);
+}
+
 // EGL_KHR_reusable_sync
 EGLBoolean EGLAPIENTRY EGL_SignalSyncKHR(EGLDisplay dpy, EGLSyncKHR sync, EGLenum mode)
 {

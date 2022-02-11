@@ -101,6 +101,7 @@ PFNEGLDESTROYIMAGEKHRPROC l_EGL_DestroyImageKHR;
 PFNEGLLOCKSURFACEKHRPROC l_EGL_LockSurfaceKHR;
 PFNEGLQUERYSURFACE64KHRPROC l_EGL_QuerySurface64KHR;
 PFNEGLUNLOCKSURFACEKHRPROC l_EGL_UnlockSurfaceKHR;
+PFNEGLSETDAMAGEREGIONKHRPROC l_EGL_SetDamageRegionKHR;
 PFNEGLSIGNALSYNCKHRPROC l_EGL_SignalSyncKHR;
 PFNEGLCREATESTREAMKHRPROC l_EGL_CreateStreamKHR;
 PFNEGLDESTROYSTREAMKHRPROC l_EGL_DestroyStreamKHR;
@@ -278,6 +279,8 @@ void LoadEGL_EGL(LoadProc loadProc)
         reinterpret_cast<PFNEGLQUERYSURFACE64KHRPROC>(loadProc("EGL_QuerySurface64KHR"));
     l_EGL_UnlockSurfaceKHR =
         reinterpret_cast<PFNEGLUNLOCKSURFACEKHRPROC>(loadProc("EGL_UnlockSurfaceKHR"));
+    l_EGL_SetDamageRegionKHR =
+        reinterpret_cast<PFNEGLSETDAMAGEREGIONKHRPROC>(loadProc("EGL_SetDamageRegionKHR"));
     l_EGL_SignalSyncKHR = reinterpret_cast<PFNEGLSIGNALSYNCKHRPROC>(loadProc("EGL_SignalSyncKHR"));
     l_EGL_CreateStreamKHR =
         reinterpret_cast<PFNEGLCREATESTREAMKHRPROC>(loadProc("EGL_CreateStreamKHR"));

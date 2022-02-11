@@ -6503,4 +6503,16 @@ bool ValidateExportVkImageANGLE(const ValidationContext *val,
     return true;
 }
 
+bool ValidateSetDamageRegionKHR(const ValidationContext *val,
+                                const Display *display,
+                                const Surface *surface,
+                                const EGLint *rects,
+                                EGLint n_rects)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+    ANGLE_VALIDATION_TRY(ValidateSurface(val, display, surface));
+
+    return false;
+}
+
 }  // namespace egl

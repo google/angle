@@ -418,6 +418,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglReleaseThread";
         case EntryPoint::EGLSetBlobCacheFuncsANDROID:
             return "eglSetBlobCacheFuncsANDROID";
+        case EntryPoint::EGLSetDamageRegionKHR:
+            return "eglSetDamageRegionKHR";
         case EntryPoint::EGLSignalSyncKHR:
             return "eglSignalSyncKHR";
         case EntryPoint::EGLStreamAttribKHR:
