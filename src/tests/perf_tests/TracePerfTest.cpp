@@ -1181,6 +1181,16 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         addExtensionPrerequisite("GL_EXT_texture_storage");
     }
 
+    if (traceNameIs("marvel_strike_force"))
+    {
+        // http://anglebug.com/7017 - Qualcomm native driver gets confused about the state of a
+        // buffer that was recreated during the trace
+        if ((IsAndroid() && IsQualcomm()) && mParams.driver != GLESDriverType::AngleEGL)
+        {
+            mSkipTest = true;
+        }
+    }
+
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
     ASSERT(mParams.eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE ||
            gEnableAllTraceTests);

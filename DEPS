@@ -1336,6 +1336,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/marvel_strike_force': {
+      'packages': [
+        {
+            'package': 'angle/traces/marvel_strike_force',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/messenger_lite': {
       'packages': [
         {
