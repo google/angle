@@ -1690,6 +1690,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mSubgroupProperties       = {};
     mSubgroupProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
 
+    mSubgroupExtendedTypesFeatures = {};
+    mSubgroupExtendedTypesFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES;
+
     mMemoryReportFeatures = {};
     mMemoryReportFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_MEMORY_REPORT_FEATURES_EXT;
@@ -1849,6 +1853,12 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     // Query subgroup properties
     vk::AddToPNextChain(&deviceProperties, &mSubgroupProperties);
 
+    // Query subgroup extended types features
+    if (ExtensionFound(VK_KHR_SHADER_SUBGROUP_EXTENDED_TYPES_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mSubgroupExtendedTypesFeatures);
+    }
+
     // Query protected memory features and properties
     if (mPhysicalDeviceProperties.apiVersion >= VK_MAKE_VERSION(1, 1, 0))
     {
@@ -1902,6 +1912,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mTransformFeedbackFeatures.pNext                 = nullptr;
     mIndexTypeUint8Features.pNext                    = nullptr;
     mSubgroupProperties.pNext                        = nullptr;
+    mSubgroupExtendedTypesFeatures.pNext             = nullptr;
     mExternalMemoryHostProperties.pNext              = nullptr;
     mCustomBorderColorFeatures.pNext                 = nullptr;
     mShaderFloat16Int8Features.pNext                 = nullptr;
@@ -2247,6 +2258,13 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         mMaxVertexAttribDivisor =
             std::min(mVertexAttributeDivisorProperties.maxVertexAttribDivisor,
                      static_cast<uint32_t>(std::numeric_limits<uint8_t>::max()));
+    }
+
+    // Enable VK_KHR_shader_subgroup_extended_types if needed
+    if (getFeatures().allowGenerateMipmapWithCompute.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_KHR_SHADER_SUBGROUP_EXTENDED_TYPES_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mSubgroupExtendedTypesFeatures);
     }
 
     if (getFeatures().supportsTransformFeedbackExtension.enabled)
@@ -3022,22 +3040,34 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                             isQualcomm && mPhysicalDeviceProperties.driverVersion <
                                               kPixel4DriverWithWorkingSpecConstSupport);
 
-    // The compute shader used to generate mipmaps uses a 256-wide workgroup.  This path is only
-    // enabled on devices that meet this minimum requirement.  Furthermore,
-    // VK_IMAGE_USAGE_STORAGE_BIT is detrimental to performance on many platforms, on which this
-    // path is not enabled.  Platforms that are known to have better performance with this path are:
+    // The compute shader used to generate mipmaps needs -
+    // 1. subgroup quad operations in compute shader stage.
+    // 2. subgroup operations that can use extended types.
+    // 3. 256-wide workgroup.
     //
-    // - Nvidia
+    // Furthermore, VK_IMAGE_USAGE_STORAGE_BIT is detrimental to performance on many platforms, on
+    // which this path is not enabled.  Platforms that are known to have better performance with
+    // this path are:
+    //
     // - AMD
+    // - Nvidia
+    // - Samsung
     //
     // Additionally, this path is disabled on buggy drivers:
     //
     // - AMD/Windows: Unfortunately the trybots use ancient AMD cards and drivers.
+    const bool supportsSubgroupQuadOpsInComputeShader =
+        (mSubgroupProperties.supportedStages & VK_SHADER_STAGE_COMPUTE_BIT) &&
+        (mSubgroupProperties.supportedOperations & VK_SUBGROUP_FEATURE_QUAD_BIT);
+
     const uint32_t maxComputeWorkGroupInvocations =
         mPhysicalDeviceProperties.limits.maxComputeWorkGroupInvocations;
+
     ANGLE_FEATURE_CONDITION(&mFeatures, allowGenerateMipmapWithCompute,
-                            maxComputeWorkGroupInvocations >= 256 &&
-                                (isNvidia || ((isAMD || isSamsung) && !IsWindows())));
+                            supportsSubgroupQuadOpsInComputeShader &&
+                                mSubgroupExtendedTypesFeatures.shaderSubgroupExtendedTypes &&
+                                maxComputeWorkGroupInvocations >= 256 &&
+                                ((isAMD && !IsWindows()) || isNvidia || isSamsung));
 
     bool isAdreno540 = mPhysicalDeviceProperties.deviceID == angle::kDeviceID_Adreno540;
     ANGLE_FEATURE_CONDITION(&mFeatures, forceMaxUniformBufferSize16KB, isQualcomm && isAdreno540);
