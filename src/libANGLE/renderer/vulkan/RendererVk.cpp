@@ -1401,6 +1401,19 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
             VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
     }
 
+    if (ExtensionFound(VK_KHR_EXTERNAL_FENCE_CAPABILITIES_EXTENSION_NAME, instanceExtensionNames))
+    {
+        mEnabledInstanceExtensions.push_back(VK_KHR_EXTERNAL_FENCE_CAPABILITIES_EXTENSION_NAME);
+        ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFenceCapabilities, true);
+    }
+
+    if (ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME,
+                       instanceExtensionNames))
+    {
+        mEnabledInstanceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME);
+        ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalSemaphoreCapabilities, true);
+    }
+
     VkApplicationInfo applicationInfo  = {};
     applicationInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     std::string appName                = angle::GetExecutableName();
@@ -1728,12 +1741,6 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mDriverProperties       = {};
     mDriverProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
 
-    mExternalFenceProperties       = {};
-    mExternalFenceProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES;
-
-    mExternalSemaphoreProperties       = {};
-    mExternalSemaphoreProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES;
-
     mSamplerYcbcrConversionFeatures = {};
     mSamplerYcbcrConversionFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES;
@@ -1881,28 +1888,6 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
 
     vkGetPhysicalDeviceFeatures2KHR(mPhysicalDevice, &deviceFeatures);
     vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
-
-    // Fence properties
-    if (mFeatures.supportsExternalFenceCapabilities.enabled)
-    {
-        VkPhysicalDeviceExternalFenceInfo externalFenceInfo = {};
-        externalFenceInfo.sType      = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO;
-        externalFenceInfo.handleType = VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
-
-        vkGetPhysicalDeviceExternalFencePropertiesKHR(mPhysicalDevice, &externalFenceInfo,
-                                                      &mExternalFenceProperties);
-    }
-
-    // Semaphore properties
-    if (mFeatures.supportsExternalSemaphoreCapabilities.enabled)
-    {
-        VkPhysicalDeviceExternalSemaphoreInfo externalSemaphoreInfo = {};
-        externalSemaphoreInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO;
-        externalSemaphoreInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
-
-        vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(mPhysicalDevice, &externalSemaphoreInfo,
-                                                          &mExternalSemaphoreProperties);
-    }
 
     // Clean up pNext chains
     mLineRasterizationFeatures.pNext                 = nullptr;
@@ -2112,16 +2097,6 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
     }
 
-    if (getFeatures().supportsExternalSemaphoreCapabilities.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME);
-    }
-
-    if (getFeatures().supportsExternalFenceCapabilities.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_FENCE_CAPABILITIES_EXTENSION_NAME);
-    }
-
     if (getFeatures().supportsExternalSemaphoreFd.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME);
@@ -2129,7 +2104,6 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 
     if (getFeatures().supportsExternalSemaphoreCapabilities.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME);
 #if !defined(ANGLE_SHARED_LIBVULKAN)
         InitExternalSemaphoreCapabilitiesFunctions(mInstance);
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
@@ -2145,7 +2119,6 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 
     if (getFeatures().supportsExternalFenceCapabilities.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_KHR_EXTERNAL_FENCE_CAPABILITIES_EXTENSION_NAME);
 #if !defined(ANGLE_SHARED_LIBVULKAN)
         InitExternalFenceCapabilitiesFunctions(mInstance);
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
@@ -2870,14 +2843,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         ExtensionFound(VK_GOOGLE_SAMPLER_FILTERING_PRECISION_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsExternalFenceCapabilities,
-        ExtensionFound(VK_KHR_EXTERNAL_FENCE_CAPABILITIES_EXTENSION_NAME, deviceExtensionNames));
-
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalSemaphoreCapabilities,
-                            ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME,
-                                           deviceExtensionNames));
-
-    ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsExternalSemaphoreFd,
         ExtensionFound(VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME, deviceExtensionNames));
 
@@ -2890,15 +2855,36 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         ExtensionFound(VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME, deviceExtensionNames));
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    if (mFeatures.supportsExternalFenceCapabilities.enabled &&
-        mFeatures.supportsExternalSemaphoreCapabilities.enabled)
+    if ((mFeatures.supportsExternalFenceCapabilities.enabled &&
+         mFeatures.supportsExternalSemaphoreCapabilities.enabled) ||
+        mPhysicalDeviceProperties.apiVersion >= VK_MAKE_VERSION(1, 1, 0))
     {
+        VkExternalFenceProperties externalFenceProperties = {};
+        externalFenceProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES;
+
+        VkPhysicalDeviceExternalFenceInfo externalFenceInfo = {};
+        externalFenceInfo.sType      = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO;
+        externalFenceInfo.handleType = VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
+
+        vkGetPhysicalDeviceExternalFencePropertiesKHR(mPhysicalDevice, &externalFenceInfo,
+                                                      &externalFenceProperties);
+
+        VkExternalSemaphoreProperties externalSemaphoreProperties = {};
+        externalSemaphoreProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES;
+
+        VkPhysicalDeviceExternalSemaphoreInfo externalSemaphoreInfo = {};
+        externalSemaphoreInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO;
+        externalSemaphoreInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
+
+        vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(mPhysicalDevice, &externalSemaphoreInfo,
+                                                          &externalSemaphoreProperties);
+
         ANGLE_FEATURE_CONDITION(
             &mFeatures, supportsAndroidNativeFenceSync,
             (mFeatures.supportsExternalFenceFd.enabled &&
-             FencePropertiesCompatibleWithAndroid(mExternalFenceProperties) &&
+             FencePropertiesCompatibleWithAndroid(externalFenceProperties) &&
              mFeatures.supportsExternalSemaphoreFd.enabled &&
-             SemaphorePropertiesCompatibleWithAndroid(mExternalSemaphoreProperties)));
+             SemaphorePropertiesCompatibleWithAndroid(externalSemaphoreProperties)));
     }
     else
     {

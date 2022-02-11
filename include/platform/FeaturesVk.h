@@ -103,15 +103,15 @@ struct FeaturesVk : FeatureSetBase
         "supportsFilteringPrecision", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_GOOGLE_sampler_filtering_precision extension", &members};
 
-    // Whether the VkDevice supports the VK_KHR_external_fence_capabilities extension.
+    // Whether the VkInstance supports the VK_KHR_external_fence_capabilities extension.
     Feature supportsExternalFenceCapabilities = {
         "supportsExternalFenceCapabilities", FeatureCategory::VulkanFeatures,
-        "VkDevice supports the VK_KHR_external_fence_capabilities extension", &members};
+        "VkInstance supports the VK_KHR_external_fence_capabilities extension", &members};
 
-    // Whether the VkDevice supports the VK_KHR_external_semaphore_capabilities extension.
+    // Whether the VkInstance supports the VK_KHR_external_semaphore_capabilities extension.
     Feature supportsExternalSemaphoreCapabilities = {
         "supportsExternalSemaphoreCapabilities", FeatureCategory::VulkanFeatures,
-        "VkDevice supports the VK_KHR_external_semaphore_capabilities extension", &members};
+        "VkInstance supports the VK_KHR_external_semaphore_capabilities extension", &members};
 
     // Whether the VkDevice supports the VK_KHR_external_semaphore_fd extension, on which the
     // GL_EXT_semaphore_fd extension can be layered.
