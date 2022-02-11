@@ -276,13 +276,19 @@ void AppendWidgetDataHelper::AppendRunningGraphCommon(
     const int32_t graphHeight = std::abs(widget->coords[3] - widget->coords[1]);
     const float graphScale    = static_cast<float>(graphHeight) / maxValue;
 
+    const size_t graphSize  = graph->runningValues.size();
+    const size_t currentIdx = graph->lastValueIndex - 1;
+
+    const size_t curValue = graph->runningValues[(graphSize + currentIdx) % graphSize];
+
     AppendGraphCommon(widget, imageExtent, graph->runningValues, graph->lastValueIndex + 1,
                       graphScale, graphWidget, widgetCounts);
 
     if ((*widgetCounts)[WidgetInternalType::Text] <
         kWidgetInternalTypeMaxWidgets[WidgetInternalType::Text])
     {
-        std::string text = formatFunc(maxValue);
+        // std::string text = formatFunc(maxValue);
+        std::string text = formatFunc(curValue);
         AppendTextCommon(&graph->description, imageExtent, text, textWidget, widgetCounts);
     }
 }
@@ -370,7 +376,7 @@ void AppendWidgetDataHelper::AppendVulkanRenderPassCount(const overlay::Widget *
 {
     auto format = [](size_t maxValue) {
         std::ostringstream text;
-        text << "RenderPass Count (Max: " << maxValue << ")";
+        text << "RenderPass Count: " << maxValue;
         return text.str();
     };
 
@@ -419,7 +425,7 @@ void AppendWidgetDataHelper::AppendVulkanWriteDescriptorSetCount(const overlay::
 {
     auto format = [](size_t maxValue) {
         std::ostringstream text;
-        text << "WriteDescriptorSet Count (Max: " << maxValue << ")";
+        text << "WriteDescriptorSet Count: " << maxValue;
         return text.str();
     };
 
@@ -434,7 +440,7 @@ void AppendWidgetDataHelper::AppendVulkanDescriptorSetAllocations(const overlay:
 {
     auto format = [](size_t maxValue) {
         std::ostringstream text;
-        text << "Descriptor Set Allocations (Max: " << maxValue << ")";
+        text << "Descriptor Set Allocations: " << maxValue;
         return text.str();
     };
 
@@ -465,6 +471,22 @@ void AppendWidgetDataHelper::AppendVulkanDynamicBufferAllocations(const overlay:
     auto format = [](size_t maxValue) {
         std::ostringstream text;
         text << "DynamicBuffer Allocations (Max: " << maxValue << ")";
+        return text.str();
+    };
+
+    AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
+}
+
+void AppendWidgetDataHelper::AppendVulkanTextureDescriptorCacheSize(
+    const overlay::Widget *widget,
+    const gl::Extents &imageExtent,
+    TextWidgetData *textWidget,
+    GraphWidgetData *graphWidget,
+    OverlayWidgetCounts *widgetCounts)
+{
+    auto format = [](size_t curVal) {
+        std::ostringstream text;
+        text << "Total Texture Descriptor Cache Size: " << curVal;
         return text.str();
     };
 

@@ -3964,5 +3964,6 @@ void DescriptorSetCache::destroy(RendererVk *rendererVk, VulkanCacheType cacheTy
 {
     accumulateCacheStats(cacheType, rendererVk);
     mPayload.clear();
+    mCacheStats.reset();
 }
 }  // namespace rx

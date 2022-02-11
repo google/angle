@@ -1,10 +1,10 @@
 {
   "src/libANGLE/Overlay_autogen.cpp":
-    "b8e01c6547d93894ae1aa8634cff3e95",
+    "a2908b6154ad1f806df809362df4c4cb",
   "src/libANGLE/Overlay_autogen.h":
-    "b62df749c99e35421e40ee6e620c5c74",
+    "f3ed231c995dc396bff04873c2dc3355",
   "src/libANGLE/gen_overlay_widgets.py":
     "a28d28499de562d8341464abb2f2bf18",
   "src/libANGLE/overlay_widgets.json":
-    "8cd706b7c8c2d64e032e5ccfbe8a8aec"
+    "d6490743be40dc5abdb80f3feee41421"
 }
