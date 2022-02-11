@@ -14,6 +14,7 @@
 #include "GLSLANG/ShaderLang.h"
 #include "common/debug.h"
 #include "libANGLE/TransformFeedback.h"
+#include "libANGLE/renderer/OverlayImpl.h"
 #include "libANGLE/renderer/metal/BufferMtl.h"
 #include "libANGLE/renderer/metal/CompilerMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
@@ -1367,8 +1368,8 @@ SemaphoreImpl *ContextMtl::createSemaphore()
 
 OverlayImpl *ContextMtl::createOverlay(const gl::OverlayState &state)
 {
-    UNIMPLEMENTED();
-    return nullptr;
+    // Not implemented.
+    return new OverlayImpl(state);
 }
 
 angle::Result ContextMtl::dispatchCompute(const gl::Context *context,
