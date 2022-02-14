@@ -1696,6 +1696,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/state_of_survival': {
+      'packages': [
+        {
+            'package': 'angle/traces/state_of_survival',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/subway_princess_runner': {
       'packages': [
         {
