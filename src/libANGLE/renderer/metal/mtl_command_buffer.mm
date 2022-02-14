@@ -518,8 +518,6 @@ AutoObjCPtr<id<MTLCommandBuffer>> CommandQueue::makeMetalCommandBuffer(uint64_t 
           onCommandBufferCompleted(buf, serial);
         }];
 
-        [metalCmdBuffer enqueue];
-
         ASSERT(metalCmdBuffer);
 
         *queueSerialOut = serial;
@@ -833,6 +831,7 @@ bool CommandBuffer::commitImpl()
     mCmdQueue.onCommandBufferCommitted(get(), mQueueSerial);
 
     // Do the actual commit
+    [get() enqueue];
     [get() commit];
     // Reset the working resource set.
     clearResourceListAndSize();
