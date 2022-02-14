@@ -279,7 +279,7 @@ angle::Result SyncHelperNativeFence::clientWait(Context *context,
     }
 
     VkResult status = VK_SUCCESS;
-    if (mUse.valid())
+    if (mUse.getSerial().valid())
     {
         // We have a valid serial to wait on
         ANGLE_TRY(
@@ -328,7 +328,7 @@ angle::Result SyncHelperNativeFence::serverWait(ContextVk *contextVk)
 angle::Result SyncHelperNativeFence::getStatus(Context *context, bool *signaled) const
 {
     // We've got a serial, check if the serial is still in use
-    if (mUse.valid())
+    if (mUse.getSerial().valid())
     {
         *signaled = !isCurrentlyInUse(context->getRenderer()->getLastCompletedQueueSerial());
         return angle::Result::Continue;
