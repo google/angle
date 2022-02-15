@@ -1659,7 +1659,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     vk::Framebuffer &currentFramebuffer = chooseFramebuffer();
 
     updateOverlay(contextVk);
-    bool overlayHasWidget = overlayHasEnabledWidget(contextVk);
 
     // Make sure deferred clears are applied, if any.
     ANGLE_TRY(
@@ -1668,9 +1667,10 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     // We can only do present related optimization if this is the last renderpass that touches the
     // swapchain image. MSAA resolve and overlay will insert another renderpass which disqualifies
     // the optimization.
-    if (!mColorImageMS.valid() && !overlayHasWidget && currentFramebuffer.valid())
+    if (currentFramebuffer.valid())
     {
-        contextVk->optimizeRenderPassForPresent(currentFramebuffer.getHandle());
+        contextVk->optimizeRenderPassForPresent(
+            currentFramebuffer.getHandle(), mColorImageMS.valid() ? &mColorImageMS : &image.image);
     }
 
     // Because the color attachment defers layout changes until endRenderPass time, we must call
@@ -1704,7 +1704,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         mColorImageMS.resolve(&image.image, resolveRegion, commandBuffer);
     }
 
-    if (overlayHasWidget)
+    if (overlayHasEnabledWidget(contextVk))
     {
         ANGLE_TRY(drawOverlay(contextVk, &image));
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));

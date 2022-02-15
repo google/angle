@@ -3205,7 +3205,8 @@ angle::Result ContextVk::multiDrawElementsInstancedBaseVertexBaseInstance(
         drawcount);
 }
 
-void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
+void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle,
+                                             vk::ImageHelper *colorImage)
 {
     if (!mRenderPassCommands->started())
     {
@@ -3217,29 +3218,25 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
         return;
     }
 
-    FramebufferVk *drawFramebufferVk   = getDrawFramebuffer();
-    RenderTargetVk *color0RenderTarget = drawFramebufferVk->getColorDrawRenderTarget(0);
-    if (!color0RenderTarget)
-    {
-        return;
-    }
-
     // EGL1.5 spec: The contents of ancillary buffers are always undefined after calling
     // eglSwapBuffers
+    FramebufferVk *drawFramebufferVk         = getDrawFramebuffer();
     RenderTargetVk *depthStencilRenderTarget = drawFramebufferVk->getDepthStencilRenderTarget();
-    if (depthStencilRenderTarget)
+    if (depthStencilRenderTarget != nullptr)
     {
         // Change depth/stencil attachment storeOp to DONT_CARE
         const gl::DepthStencilState &dsState = mState.getDepthStencilState();
-        mRenderPassCommands->invalidateRenderPassStencilAttachment(
-            dsState, mRenderPassCommands->getRenderArea());
         mRenderPassCommands->invalidateRenderPassDepthAttachment(
+            dsState, mRenderPassCommands->getRenderArea());
+        mRenderPassCommands->invalidateRenderPassStencilAttachment(
             dsState, mRenderPassCommands->getRenderArea());
     }
 
     // Use finalLayout instead of extra barrier for layout change to present
-    vk::ImageHelper &image = color0RenderTarget->getImageForWrite();
-    mRenderPassCommands->setImageOptimizeForPresent(&image);
+    if (colorImage != nullptr)
+    {
+        mRenderPassCommands->setImageOptimizeForPresent(colorImage);
+    }
 }
 
 gl::GraphicsResetStatus ContextVk::getResetStatus()
