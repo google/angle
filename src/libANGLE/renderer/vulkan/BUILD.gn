@@ -206,6 +206,13 @@ if (angle_use_wayland) {
   ]
 }
 
+if (angle_use_gbm) {
+  _vulkan_backend_sources += [
+    "linux/gbm/DisplayVkGbm.cpp",
+    "linux/gbm/DisplayVkGbm.h",
+  ]
+}
+
 if (is_fuchsia) {
   _vulkan_backend_sources += [
     "fuchsia/DisplayVkFuchsia.cpp",
@@ -316,6 +323,9 @@ angle_source_set("angle_vulkan_backend") {
 
   if (is_linux || is_chromeos) {
     deps += [ "$angle_root/src/common/linux:angle_dma_buf" ]
+    if (angle_use_gbm) {
+      deps += [ "//third_party/minigbm" ]
+    }
   }
 
   if (is_fuchsia) {

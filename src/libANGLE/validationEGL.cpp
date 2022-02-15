@@ -551,6 +551,13 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
                 return false;
             }
             break;
+        case EGL_PLATFORM_GBM_KHR:
+            if (!clientExtensions.platformGbmKHR)
+            {
+                val->setError(EGL_BAD_PARAMETER, "Platform GBM extension is not active");
+                return false;
+            }
+            break;
         default:
             val->setError(EGL_BAD_CONFIG, "Bad platform type.");
             return false;
@@ -558,391 +565,377 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
 
     attribMap.initializeWithoutValidation();
 
-    switch (platform)
+    if (platform != EGL_PLATFORM_DEVICE_EXT)
     {
-        case EGL_PLATFORM_ANGLE_ANGLE:
+        EGLAttrib platformType       = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
+        bool enableAutoTrimSpecified = false;
+        bool enableD3D11on12         = false;
+        bool presentPathSpecified    = false;
+        bool luidSpecified           = false;
+        bool deviceIdSpecified       = false;
+
+        Optional<EGLAttrib> majorVersion;
+        Optional<EGLAttrib> minorVersion;
+        Optional<EGLAttrib> deviceType;
+        Optional<EGLAttrib> eglHandle;
+
+        for (const auto &curAttrib : attribMap)
         {
-            EGLAttrib platformType       = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-            bool enableAutoTrimSpecified = false;
-            bool enableD3D11on12         = false;
-            bool presentPathSpecified    = false;
-            bool luidSpecified           = false;
-            bool deviceIdSpecified       = false;
+            const EGLAttrib value = curAttrib.second;
 
-            Optional<EGLAttrib> majorVersion;
-            Optional<EGLAttrib> minorVersion;
-            Optional<EGLAttrib> deviceType;
-            Optional<EGLAttrib> eglHandle;
-
-            for (const auto &curAttrib : attribMap)
+            switch (curAttrib.first)
             {
-                const EGLAttrib value = curAttrib.second;
-
-                switch (curAttrib.first)
+                case EGL_PLATFORM_ANGLE_TYPE_ANGLE:
                 {
-                    case EGL_PLATFORM_ANGLE_TYPE_ANGLE:
+                    ANGLE_VALIDATION_TRY(ValidatePlatformType(val, clientExtensions, value));
+                    platformType = value;
+                    break;
+                }
+
+                case EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE:
+                    if (value != EGL_DONT_CARE)
                     {
-                        ANGLE_VALIDATION_TRY(ValidatePlatformType(val, clientExtensions, value));
-                        platformType = value;
-                        break;
+                        majorVersion = value;
+                    }
+                    break;
+
+                case EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE:
+                    if (value != EGL_DONT_CARE)
+                    {
+                        minorVersion = value;
+                    }
+                    break;
+
+                case EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE:
+                    switch (value)
+                    {
+                        case EGL_TRUE:
+                        case EGL_FALSE:
+                            break;
+                        default:
+                            val->setError(EGL_BAD_ATTRIBUTE, "Invalid automatic trim attribute");
+                            return false;
+                    }
+                    enableAutoTrimSpecified = true;
+                    break;
+
+                case EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE:
+                    if (!clientExtensions.platformANGLED3D ||
+                        !clientExtensions.platformANGLED3D11ON12)
+                    {
+                        val->setError(EGL_BAD_ATTRIBUTE,
+                                      "EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE extension not active.");
+                        return false;
                     }
 
-                    case EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE:
-                        if (value != EGL_DONT_CARE)
-                        {
-                            majorVersion = value;
-                        }
-                        break;
-
-                    case EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE:
-                        if (value != EGL_DONT_CARE)
-                        {
-                            minorVersion = value;
-                        }
-                        break;
-
-                    case EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE:
-                        switch (value)
-                        {
-                            case EGL_TRUE:
-                            case EGL_FALSE:
-                                break;
-                            default:
-                                val->setError(EGL_BAD_ATTRIBUTE,
-                                              "Invalid automatic trim attribute");
-                                return false;
-                        }
-                        enableAutoTrimSpecified = true;
-                        break;
-
-                    case EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE:
-                        if (!clientExtensions.platformANGLED3D ||
-                            !clientExtensions.platformANGLED3D11ON12)
-                        {
-                            val->setError(
-                                EGL_BAD_ATTRIBUTE,
-                                "EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE extension not active.");
+                    switch (value)
+                    {
+                        case EGL_TRUE:
+                        case EGL_FALSE:
+                            break;
+                        default:
+                            val->setError(EGL_BAD_ATTRIBUTE, "Invalid D3D11on12 attribute");
                             return false;
-                        }
+                    }
+                    enableD3D11on12 = true;
+                    break;
 
-                        switch (value)
-                        {
-                            case EGL_TRUE:
-                            case EGL_FALSE:
-                                break;
-                            default:
-                                val->setError(EGL_BAD_ATTRIBUTE, "Invalid D3D11on12 attribute");
-                                return false;
-                        }
-                        enableD3D11on12 = true;
-                        break;
+                case EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE:
+                    if (!clientExtensions.experimentalPresentPath)
+                    {
+                        val->setError(EGL_BAD_ATTRIBUTE,
+                                      "EGL_ANGLE_experimental_present_path extension not active");
+                        return false;
+                    }
 
-                    case EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE:
-                        if (!clientExtensions.experimentalPresentPath)
-                        {
-                            val->setError(
-                                EGL_BAD_ATTRIBUTE,
-                                "EGL_ANGLE_experimental_present_path extension not active");
-                            return false;
-                        }
-
-                        switch (value)
-                        {
-                            case EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE:
-                            case EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE:
-                                break;
-                            default:
-                                val->setError(
-                                    EGL_BAD_ATTRIBUTE,
-                                    "Invalid value for EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE");
-                                return false;
-                        }
-                        presentPathSpecified = true;
-                        break;
-
-                    case EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE:
-                        switch (value)
-                        {
-                            case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
-                            case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
-                                break;
-
-                            case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
-                            case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
-                                if (!clientExtensions.platformANGLED3D)
-                                {
-                                    val->setError(EGL_BAD_ATTRIBUTE,
-                                                  "EGL_ANGLE_platform_angle_d3d is not supported");
-                                    return false;
-                                }
-                                break;
-
-                            case EGL_PLATFORM_ANGLE_DEVICE_TYPE_EGL_ANGLE:
-                                if (!clientExtensions.platformANGLEDeviceTypeEGLANGLE)
-                                {
-                                    val->setError(EGL_BAD_ATTRIBUTE,
-                                                  "EGL_ANGLE_platform_angle_device_type_"
-                                                  "egl_angle is not supported");
-                                    return false;
-                                }
-                                break;
-
-                            case EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE:
-                                if (!clientExtensions.platformANGLEDeviceTypeSwiftShader)
-                                {
-                                    val->setError(EGL_BAD_ATTRIBUTE,
-                                                  "EGL_ANGLE_platform_angle_device_type_"
-                                                  "swiftshader is not supported");
-                                    return false;
-                                }
-                                break;
-
-                            default:
-                                val->setError(EGL_BAD_ATTRIBUTE,
-                                              "Invalid value for "
-                                              "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE "
-                                              "attrib");
-                                return false;
-                        }
-                        deviceType = value;
-                        break;
-
-                    case EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE:
-                        if (!clientExtensions.platformANGLE)
-                        {
+                    switch (value)
+                    {
+                        case EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE:
+                        case EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE:
+                            break;
+                        default:
                             val->setError(EGL_BAD_ATTRIBUTE,
-                                          "EGL_ANGLE_platform_angle extension not active");
+                                          "Invalid value for EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE");
                             return false;
-                        }
-                        if (value != EGL_TRUE && value != EGL_FALSE && value != EGL_DONT_CARE)
-                        {
-                            val->setError(EGL_BAD_ATTRIBUTE,
-                                          "EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE "
-                                          "must be EGL_TRUE, EGL_FALSE, or "
-                                          "EGL_DONT_CARE.");
-                            return false;
-                        }
-                        break;
+                    }
+                    presentPathSpecified = true;
+                    break;
 
-                    case EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE:
-                        if (value != EGL_DONT_CARE)
-                        {
-                            eglHandle = value;
-                        }
-                        break;
+                case EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE:
+                    switch (value)
+                    {
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
+                            break;
 
-                    case EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE:
-                    case EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE:
-                        luidSpecified = true;
-                        break;
-                    case EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_EAGL_ANGLE:
-                        // The property does not have an effect if it's not active, so do not check
-                        // for non-support.
-                        switch (value)
-                        {
-                            case EGL_FALSE:
-                            case EGL_TRUE:
-                                break;
-                            default:
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
+                            if (!clientExtensions.platformANGLED3D)
+                            {
                                 val->setError(EGL_BAD_ATTRIBUTE,
-                                              "Invalid value for "
-                                              "EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_"
-                                              "EAGL_ANGLE attrib");
+                                              "EGL_ANGLE_platform_angle_d3d is not supported");
                                 return false;
-                        }
-                        break;
-                    case EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_CGL_ANGLE:
-                        // The property does not have an effect if it's not active, so do not check
-                        // for non-support.
-                        switch (value)
-                        {
-                            case EGL_FALSE:
-                            case EGL_TRUE:
-                                break;
-                            default:
+                            }
+                            break;
+
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_EGL_ANGLE:
+                            if (!clientExtensions.platformANGLEDeviceTypeEGLANGLE)
+                            {
                                 val->setError(EGL_BAD_ATTRIBUTE,
-                                              "Invalid value for "
-                                              "EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_"
-                                              "CGL_ANGLE attrib");
+                                              "EGL_ANGLE_platform_angle_device_type_"
+                                              "egl_angle is not supported");
                                 return false;
-                        }
-                        break;
-                    case EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE:
-                    case EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE:
-                        if (!clientExtensions.platformANGLEDeviceId)
-                        {
+                            }
+                            break;
+
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE:
+                            if (!clientExtensions.platformANGLEDeviceTypeSwiftShader)
+                            {
+                                val->setError(EGL_BAD_ATTRIBUTE,
+                                              "EGL_ANGLE_platform_angle_device_type_"
+                                              "swiftshader is not supported");
+                                return false;
+                            }
+                            break;
+
+                        default:
                             val->setError(EGL_BAD_ATTRIBUTE,
-                                          "EGL_ANGLE_platform_angle_device_id is not supported");
+                                          "Invalid value for "
+                                          "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE "
+                                          "attrib");
                             return false;
-                        }
-                        deviceIdSpecified = true;
-                        break;
-                    default:
-                        break;
-                }
+                    }
+                    deviceType = value;
+                    break;
+
+                case EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE:
+                    if (!clientExtensions.platformANGLE)
+                    {
+                        val->setError(EGL_BAD_ATTRIBUTE,
+                                      "EGL_ANGLE_platform_angle extension not active");
+                        return false;
+                    }
+                    if (value != EGL_TRUE && value != EGL_FALSE && value != EGL_DONT_CARE)
+                    {
+                        val->setError(EGL_BAD_ATTRIBUTE,
+                                      "EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE "
+                                      "must be EGL_TRUE, EGL_FALSE, or "
+                                      "EGL_DONT_CARE.");
+                        return false;
+                    }
+                    break;
+
+                case EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE:
+                    if (value != EGL_DONT_CARE)
+                    {
+                        eglHandle = value;
+                    }
+                    break;
+
+                case EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE:
+                case EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE:
+                    luidSpecified = true;
+                    break;
+                case EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_EAGL_ANGLE:
+                    // The property does not have an effect if it's not active, so do not check
+                    // for non-support.
+                    switch (value)
+                    {
+                        case EGL_FALSE:
+                        case EGL_TRUE:
+                            break;
+                        default:
+                            val->setError(EGL_BAD_ATTRIBUTE,
+                                          "Invalid value for "
+                                          "EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_"
+                                          "EAGL_ANGLE attrib");
+                            return false;
+                    }
+                    break;
+                case EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_CGL_ANGLE:
+                    // The property does not have an effect if it's not active, so do not check
+                    // for non-support.
+                    switch (value)
+                    {
+                        case EGL_FALSE:
+                        case EGL_TRUE:
+                            break;
+                        default:
+                            val->setError(EGL_BAD_ATTRIBUTE,
+                                          "Invalid value for "
+                                          "EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_"
+                                          "CGL_ANGLE attrib");
+                            return false;
+                    }
+                    break;
+                case EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE:
+                case EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE:
+                    if (!clientExtensions.platformANGLEDeviceId)
+                    {
+                        val->setError(EGL_BAD_ATTRIBUTE,
+                                      "EGL_ANGLE_platform_angle_device_id is not supported");
+                        return false;
+                    }
+                    deviceIdSpecified = true;
+                    break;
+                default:
+                    break;
             }
+        }
 
-            if (!majorVersion.valid() && minorVersion.valid())
+        if (!majorVersion.valid() && minorVersion.valid())
+        {
+            val->setError(EGL_BAD_ATTRIBUTE,
+                          "Must specify major version if you specify a minor version.");
+            return false;
+        }
+
+        if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE &&
+            platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        {
+            val->setError(EGL_BAD_ATTRIBUTE,
+                          "EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE requires a "
+                          "device type of EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
+            return false;
+        }
+
+        if (enableAutoTrimSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        {
+            val->setError(EGL_BAD_ATTRIBUTE,
+                          "EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE "
+                          "requires a device type of "
+                          "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
+            return false;
+        }
+
+        if (enableD3D11on12)
+        {
+            if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
             {
                 val->setError(EGL_BAD_ATTRIBUTE,
-                              "Must specify major version if you specify a minor version.");
-                return false;
-            }
-
-            if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE &&
-                platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-            {
-                val->setError(EGL_BAD_ATTRIBUTE,
-                              "EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE requires a "
-                              "device type of EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
-                return false;
-            }
-
-            if (enableAutoTrimSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-            {
-                val->setError(EGL_BAD_ATTRIBUTE,
-                              "EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE "
-                              "requires a device type of "
+                              "EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE "
+                              "requires a platform type of "
                               "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
                 return false;
             }
 
-            if (enableD3D11on12)
-            {
-                if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE "
-                                  "requires a platform type of "
-                                  "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
-                    return false;
-                }
-
-                if (deviceType.valid() &&
-                    deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE &&
-                    deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE requires a device "
-                                  "type of EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE "
-                                  "or EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE");
-                    return false;
-                }
-            }
-
-            if (presentPathSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+            if (deviceType.valid() && deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE &&
+                deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE)
             {
                 val->setError(EGL_BAD_ATTRIBUTE,
-                              "EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE requires a "
-                              "device type of EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
+                              "EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE requires a device "
+                              "type of EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE "
+                              "or EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE");
                 return false;
             }
-
-            if (luidSpecified)
-            {
-                if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE and "
-                                  "EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE "
-                                  "require a platform type of "
-                                  "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
-                    return false;
-                }
-
-                if (attribMap.get(EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE, 0) == 0 &&
-                    attribMap.get(EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE, 0) == 0)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "If either EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE "
-                                  "and/or EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE are "
-                                  "specified, at least one must non-zero.");
-                    return false;
-                }
-            }
-
-            if (deviceIdSpecified)
-            {
-                if (attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0) == 0 &&
-                    attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0) == 0)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "If either EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE "
-                                  "and/or EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE are "
-                                  "specified, at least one must non-zero.");
-                    return false;
-                }
-            }
-
-            if (deviceType.valid())
-            {
-                switch (deviceType.value())
-                {
-                    case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
-                    case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
-                        if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE &&
-                            platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-                        {
-                            val->setError(EGL_BAD_ATTRIBUTE,
-                                          "This device type requires a "
-                                          "platform type of EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE or "
-                                          "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE.");
-                            return false;
-                        }
-                        break;
-
-                    case EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE:
-                        if (platformType != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
-                        {
-                            val->setError(EGL_BAD_ATTRIBUTE,
-                                          "This device type requires a "
-                                          "platform type of EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE.");
-                            return false;
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            if (platformType == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
-            {
-                if ((majorVersion.valid() && majorVersion.value() != 1) ||
-                    (minorVersion.valid() && minorVersion.value() != 0))
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE currently "
-                                  "only supports Vulkan 1.0.");
-                    return false;
-                }
-            }
-
-            if (eglHandle.valid() && platformType != EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE &&
-                platformType != EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE)
-            {
-                val->setError(EGL_BAD_ATTRIBUTE,
-                              "EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE requires a "
-                              "device type of EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE.");
-                return false;
-            }
-            break;
         }
-        case EGL_PLATFORM_DEVICE_EXT:
+
+        if (presentPathSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
         {
-            const Device *eglDevice = static_cast<const Device *>(native_display);
-            if (eglDevice == nullptr || !Device::IsValidDevice(eglDevice))
+            val->setError(EGL_BAD_ATTRIBUTE,
+                          "EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE requires a "
+                          "device type of EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
+            return false;
+        }
+
+        if (luidSpecified)
+        {
+            if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
             {
                 val->setError(EGL_BAD_ATTRIBUTE,
-                              "native_display should be a valid EGL device if "
-                              "platform equals EGL_PLATFORM_DEVICE_EXT");
+                              "EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE and "
+                              "EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE "
+                              "require a platform type of "
+                              "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
                 return false;
             }
-            break;
+
+            if (attribMap.get(EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE, 0) == 0 &&
+                attribMap.get(EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE, 0) == 0)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "If either EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE "
+                              "and/or EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE are "
+                              "specified, at least one must non-zero.");
+                return false;
+            }
         }
-        default:
+
+        if (deviceIdSpecified)
         {
-            UNREACHABLE();
+            if (attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0) == 0 &&
+                attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0) == 0)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "If either EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE "
+                              "and/or EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE are "
+                              "specified, at least one must non-zero.");
+                return false;
+            }
+        }
+
+        if (deviceType.valid())
+        {
+            switch (deviceType.value())
+            {
+                case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
+                case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
+                    if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE &&
+                        platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+                    {
+                        val->setError(EGL_BAD_ATTRIBUTE,
+                                      "This device type requires a "
+                                      "platform type of EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE or "
+                                      "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE.");
+                        return false;
+                    }
+                    break;
+
+                case EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE:
+                    if (platformType != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+                    {
+                        val->setError(EGL_BAD_ATTRIBUTE,
+                                      "This device type requires a "
+                                      "platform type of EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE.");
+                        return false;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        if (platformType == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        {
+            if ((majorVersion.valid() && majorVersion.value() != 1) ||
+                (minorVersion.valid() && minorVersion.value() != 0))
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE currently "
+                              "only supports Vulkan 1.0.");
+                return false;
+            }
+        }
+
+        if (eglHandle.valid() && platformType != EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE &&
+            platformType != EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE)
+        {
+            val->setError(EGL_BAD_ATTRIBUTE,
+                          "EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE requires a "
+                          "device type of EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE.");
+            return false;
+        }
+    }
+    else
+    {
+        const Device *eglDevice = static_cast<const Device *>(native_display);
+        if (eglDevice == nullptr || !Device::IsValidDevice(eglDevice))
+        {
+            val->setError(EGL_BAD_ATTRIBUTE,
+                          "native_display should be a valid EGL device if "
+                          "platform equals EGL_PLATFORM_DEVICE_EXT");
+            return false;
         }
     }
 

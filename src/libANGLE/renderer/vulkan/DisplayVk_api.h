@@ -27,6 +27,9 @@ DisplayImpl *CreateVulkanWin32Display(const egl::DisplayState &state);
 bool IsVulkanWaylandDisplayAvailable();
 DisplayImpl *CreateVulkanWaylandDisplay(const egl::DisplayState &state);
 
+bool IsVulkanGbmDisplayAvailable();
+DisplayImpl *CreateVulkanGbmDisplay(const egl::DisplayState &state);
+
 bool IsVulkanXcbDisplayAvailable();
 DisplayImpl *CreateVulkanXcbDisplay(const egl::DisplayState &state);
 
