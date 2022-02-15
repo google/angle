@@ -98,8 +98,8 @@ angle::Result StreamVertexDataWithDivisor(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     // Allocate buffer for results
-    ANGLE_TRY(dstBufferHelper->allocateForVertexConversion(contextVk, bytesToAllocate,
-                                                           vk::MemoryHostVisibility::Visible));
+    ANGLE_TRY(dstBufferHelper->initForVertexConversion(contextVk, bytesToAllocate,
+                                                       vk::MemoryHostVisibility::Visible));
     uint8_t *dst = dstBufferHelper->getMappedMemory();
 
     // Each source vertex is used `divisor` times before advancing. Clamp to avoid OOB reads.
