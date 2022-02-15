@@ -1191,6 +1191,11 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
         }
     }
 
+    if (traceNameIs("real_racing3"))
+    {
+        addExtensionPrerequisite("GL_EXT_shader_framebuffer_fetch");
+    }
+
     ASSERT(mParams.surfaceType == SurfaceType::Window || gEnableAllTraceTests);
     ASSERT(mParams.eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE ||
            gEnableAllTraceTests);

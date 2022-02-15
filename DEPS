@@ -1566,6 +1566,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/real_racing3': {
+      'packages': [
+        {
+            'package': 'angle/traces/real_racing3',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/respawnables': {
       'packages': [
         {
