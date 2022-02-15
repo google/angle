@@ -2011,7 +2011,7 @@ void CaptureGetTexLevelParameterfvANGLE_params(const State &glState,
                                                GLfloat *params,
                                                ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLfloat), paramCapture);
 }
 
 void CaptureGetMultisamplefvANGLE_val(const State &glState,

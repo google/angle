@@ -202,7 +202,3 @@
 6926 : Texture2DTestES3.TextureRGBUpdateWithPBO/ES3_Vulkan* = NOT_RUN
 
 6875 : TransformFeedbackTest.SpanMultipleRenderPasses/* = NOT_RUN
-
-# Skip crashing tests after enabling ANGLE_texture_multisample
-3565 : TextureMultisampleTest.GetTexLevelParameter/ES3_Vulkan* = COMPILE_FAIL
-
