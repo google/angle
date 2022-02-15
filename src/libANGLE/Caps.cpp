@@ -1338,6 +1338,7 @@ std::vector<std::string> ClientExtensions::getStrings() const
     InsertExtensionString("EGL_EXT_device_query",                             deviceQueryEXT,                        &extensionStrings);
     InsertExtensionString("EGL_EXT_platform_base",                            platformBase,                       &extensionStrings);
     InsertExtensionString("EGL_EXT_platform_device",                          platformDevice,                     &extensionStrings);
+    InsertExtensionString("EGL_KHR_platform_gbm",                             platformGbmKHR,                     &extensionStrings);
     InsertExtensionString("EGL_ANGLE_platform_angle",                         platformANGLE,                      &extensionStrings);
     InsertExtensionString("EGL_ANGLE_platform_angle_d3d",                     platformANGLED3D,                   &extensionStrings);
     InsertExtensionString("EGL_ANGLE_platform_angle_d3d11on12",               platformANGLED3D11ON12,             &extensionStrings);
