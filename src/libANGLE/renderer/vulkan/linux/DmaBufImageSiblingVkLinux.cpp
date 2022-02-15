@@ -13,6 +13,8 @@
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
+#include <fcntl.h>
+
 namespace rx
 {
 namespace
@@ -251,11 +253,12 @@ VkSamplerYcbcrRange GetYcbcrRange(const egl::AttributeMap &attribs)
                : VK_SAMPLER_YCBCR_RANGE_ITU_NARROW;
 }
 
-uint32_t GetAllocateInfo(const egl::AttributeMap &attribs,
-                         VkImage image,
-                         uint32_t planeCount,
-                         const VkDrmFormatModifierPropertiesEXT &properties,
-                         AllocateInfo *infoOut)
+angle::Result GetAllocateInfo(const egl::AttributeMap &attribs,
+                              VkImage image,
+                              uint32_t planeCount,
+                              const VkDrmFormatModifierPropertiesEXT &properties,
+                              AllocateInfo *infoOut,
+                              uint32_t *infoCountOut)
 {
     // There are a number of situations:
     //
@@ -290,21 +293,29 @@ uint32_t GetAllocateInfo(const egl::AttributeMap &attribs,
     }
 
     // Fill in allocateInfo, importFdInfo, bindInfo and bindPlaneInfo first.
-    const uint32_t planesToAllocate = isDisjoint ? planeCount : 1;
-    for (uint32_t plane = 0; plane < planesToAllocate; ++plane)
+    *infoCountOut = isDisjoint ? planeCount : 1;
+    for (uint32_t plane = 0; plane < *infoCountOut; ++plane)
     {
         infoOut->allocateInfo[plane].sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO;
         infoOut->allocateInfo[plane].pNext = &infoOut->importFdInfo[plane];
         infoOut->allocateInfo[plane].image = image;
 
         infoOut->importFdInfo[plane].sType      = VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR;
-        infoOut->importFdInfo[plane].handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT;
-        infoOut->importFdInfo[plane].fd         = attribs.getAsInt(kFds[plane]);
+        infoOut->importFdInfo[plane].handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT;
+
+        // Vulkan takes ownership of the FD, closed on vkFreeMemory.
+        int dfd = fcntl(attribs.getAsInt(kFds[plane]), F_DUPFD_CLOEXEC, 0);
+        if (dfd < 0)
+        {
+            ERR() << "failed to duplicate fd for dma_buf import" << std::endl;
+            return angle::Result::Stop;
+        }
+        infoOut->importFdInfo[plane].fd = dfd;
 
         infoOut->allocateInfoPtr[plane] = &infoOut->allocateInfo[plane];
     }
 
-    return planesToAllocate;
+    return angle::Result::Continue;
 }
 }  // anonymous namespace
 
@@ -489,8 +500,9 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
     }
 
     AllocateInfo allocateInfo;
-    const uint32_t allocateInfoCount = GetAllocateInfo(
-        mAttribs, mImage->getImage().getHandle(), planeCount, modifierProperties, &allocateInfo);
+    uint32_t allocateInfoCount;
+    ANGLE_TRY(GetAllocateInfo(mAttribs, mImage->getImage().getHandle(), planeCount,
+                              modifierProperties, &allocateInfo, &allocateInfoCount));
 
     return mImage->initExternalMemory(
         displayVk, renderer->getMemoryProperties(), externalMemoryRequirements, allocateInfoCount,
