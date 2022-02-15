@@ -416,7 +416,7 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
         (imageFormatProperties.imageFormatProperties.sampleCounts & VK_SAMPLE_COUNT_1_BIT) != 0;
     const bool isMemoryImportable =
         (externalFormatProperties.externalMemoryProperties.externalMemoryFeatures &
-         VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT) == 0;
+         VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT) != 0;
     ANGLE_VK_CHECK(displayVk,
                    isWidthValid && isHeightValid && isSampleCountValid && isMemoryImportable,
                    VK_ERROR_INCOMPATIBLE_DRIVER);
