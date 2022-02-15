@@ -190,15 +190,16 @@ bool IsFormatSupported(RendererVk *renderer,
                        uint64_t drmModifier,
                        VkImageUsageFlags usageFlags,
                        VkImageCreateFlags createFlags,
+                       VkImageFormatListCreateInfoKHR imageFormatListInfo,
                        VkImageFormatProperties2 *imageFormatPropertiesOut)
 {
-    VkExternalMemoryImageCreateInfo externalMemoryImageCreateInfo = {};
-    externalMemoryImageCreateInfo.sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
-    externalMemoryImageCreateInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT;
+    VkPhysicalDeviceExternalImageFormatInfo externalImageFormatInfo = {};
+    externalImageFormatInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO;
+    externalImageFormatInfo.handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT;
 
     VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = {};
     imageFormatInfo.sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2;
-    imageFormatInfo.pNext  = &externalMemoryImageCreateInfo;
+    imageFormatInfo.pNext  = &externalImageFormatInfo;
     imageFormatInfo.format = vkFormat;
     imageFormatInfo.type   = VK_IMAGE_TYPE_2D;
     imageFormatInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
@@ -208,13 +209,14 @@ bool IsFormatSupported(RendererVk *renderer,
     VkPhysicalDeviceImageDrmFormatModifierInfoEXT drmFormatModifierInfo = {};
     drmFormatModifierInfo.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT;
-    drmFormatModifierInfo.pNext             = &externalMemoryImageCreateInfo;
     drmFormatModifierInfo.drmFormatModifier = drmModifier;
     drmFormatModifierInfo.sharingMode       = VK_SHARING_MODE_EXCLUSIVE;
     if (drmModifier != 0)
     {
-        imageFormatInfo.pNext  = &drmFormatModifierInfo;
-        imageFormatInfo.tiling = VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT;
+        externalImageFormatInfo.pNext = &drmFormatModifierInfo;
+        imageFormatListInfo.pNext     = &externalImageFormatInfo;
+        imageFormatInfo.pNext         = &imageFormatListInfo;
+        imageFormatInfo.tiling        = VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT;
     }
 
     return vkGetPhysicalDeviceImageFormatProperties2(renderer->getPhysicalDevice(),
@@ -398,19 +400,44 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
     imageFormatProperties.sType                    = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2;
     imageFormatProperties.pNext                    = &externalFormatProperties;
 
+    std::vector<VkSubresourceLayout> planes(planeCount, VkSubresourceLayout{});
+    for (uint32_t plane = 0; plane < planeCount; ++plane)
+    {
+        planes[plane].offset   = mAttribs.getAsInt(kOffsets[plane]);
+        planes[plane].rowPitch = mAttribs.getAsInt(kPitches[plane]);
+    }
+
+    VkImageDrmFormatModifierExplicitCreateInfoEXT imageDrmModifierCreateInfo = {};
+    imageDrmModifierCreateInfo.sType =
+        VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT;
+    imageDrmModifierCreateInfo.drmFormatModifier           = plane0Modifier;
+    imageDrmModifierCreateInfo.drmFormatModifierPlaneCount = planeCount;
+    imageDrmModifierCreateInfo.pPlaneLayouts               = planes.data();
+
+    VkExternalMemoryImageCreateInfo externalMemoryImageCreateInfo = {};
+    externalMemoryImageCreateInfo.sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
+    externalMemoryImageCreateInfo.pNext       = &imageDrmModifierCreateInfo;
+    externalMemoryImageCreateInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT;
+
+    VkImageFormatListCreateInfoKHR imageFormatListCreateInfo;
+    vk::ImageHelper::ImageListFormats imageListFormatsStorage;
+    const void *imageCreateInfoPNext = vk::ImageHelper::DeriveCreateInfoPNext(
+        displayVk, actualImageFormatID, &externalMemoryImageCreateInfo, &imageFormatListCreateInfo,
+        &imageListFormatsStorage, &createFlags);
+
     if (!IsFormatSupported(renderer, vulkanFormat, plane0Modifier, usageFlags, createFlags,
-                           &imageFormatProperties))
+                           imageFormatListCreateInfo, &imageFormatProperties))
     {
         mRenderable = false;
         usageFlags &= ~kRenderUsage;
         if (!IsFormatSupported(renderer, vulkanFormat, plane0Modifier, usageFlags, createFlags,
-                               &imageFormatProperties))
+                               imageFormatListCreateInfo, &imageFormatProperties))
         {
             mTextureable = false;
             usageFlags &= ~kTextureUsage;
 
             if (!IsFormatSupported(renderer, vulkanFormat, plane0Modifier, usageFlags, createFlags,
-                                   &imageFormatProperties))
+                                   imageFormatListCreateInfo, &imageFormatProperties))
             {
                 // The image is completely unusable.
                 ANGLE_VK_CHECK(displayVk, false, VK_ERROR_FORMAT_NOT_SUPPORTED);
@@ -431,31 +458,6 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
     ANGLE_VK_CHECK(displayVk,
                    isWidthValid && isHeightValid && isSampleCountValid && isMemoryImportable,
                    VK_ERROR_INCOMPATIBLE_DRIVER);
-
-    std::vector<VkSubresourceLayout> planes(planeCount, VkSubresourceLayout{});
-    for (uint32_t plane = 0; plane < planeCount; ++plane)
-    {
-        planes[plane].offset   = mAttribs.getAsInt(kOffsets[plane]);
-        planes[plane].rowPitch = mAttribs.getAsInt(kPitches[plane]);
-    }
-
-    VkImageDrmFormatModifierExplicitCreateInfoEXT imageDrmModifierCreateInfo = {};
-    imageDrmModifierCreateInfo.sType =
-        VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT;
-    imageDrmModifierCreateInfo.drmFormatModifier           = plane0Modifier;
-    imageDrmModifierCreateInfo.drmFormatModifierPlaneCount = planeCount;
-    imageDrmModifierCreateInfo.pPlaneLayouts               = planes.data();
-
-    VkExternalMemoryImageCreateInfo externalMemoryImageCreateInfo = {};
-    externalMemoryImageCreateInfo.sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
-    externalMemoryImageCreateInfo.pNext       = &imageDrmModifierCreateInfo;
-    externalMemoryImageCreateInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT;
-
-    VkImageFormatListCreateInfoKHR imageFormatListInfoStorage;
-    vk::ImageHelper::ImageListFormats imageListFormatsStorage;
-    const void *imageCreateInfoPNext = vk::ImageHelper::DeriveCreateInfoPNext(
-        displayVk, actualImageFormatID, &externalMemoryImageCreateInfo, &imageFormatListInfoStorage,
-        &imageListFormatsStorage, &createFlags);
 
     // Create the image
     mImage = new vk::ImageHelper();
