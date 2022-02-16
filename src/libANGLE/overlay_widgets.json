@@ -166,8 +166,24 @@
             }
         },
         {
+            "name": "VulkanDescriptorCacheSize",
+            "comment": "Total size of all descriptor set caches",
+            "type": "RunningGraph(60)",
+            "color": [0, 200, 185, 200],
+            "coords": [0, 450],
+            "bar_width": 5,
+            "height": 100,
+            "description": {
+                "color": [0, 200, 75, 255],
+                "coords": ["VulkanDescriptorCacheSize.left.align",
+                           "VulkanDescriptorCacheSize.top.adjacent"],
+                "font": "small",
+                "length": 90
+            }
+        },
+        {
             "name": "VulkanTextureDescriptorCacheSize",
-            "comment": "size of mTextureDescriptorsCache of all ProgramExecutableVk",
+            "comment": "Number of cached Texture descriptor sets",
             "type": "RunningGraph(60)",
             "color": [0, 200, 75, 200],
             "coords": [0, 450],
@@ -177,6 +193,22 @@
                 "color": [0, 200, 75, 255],
                 "coords": ["VulkanTextureDescriptorCacheSize.left.align",
                            "VulkanTextureDescriptorCacheSize.top.adjacent"],
+                "font": "small",
+                "length": 90
+            }
+        },
+        {
+            "name": "VulkanUniformDescriptorCacheSize",
+            "comment": "Number of cached default uniform descriptor sets",
+            "type": "RunningGraph(60)",
+            "color": [0, 200, 300, 200],
+            "coords": [0, 450],
+            "bar_width": 5,
+            "height": 100,
+            "description": {
+                "color": [0, 200, 75, 255],
+                "coords": ["VulkanUniformDescriptorCacheSize.left.align",
+                           "VulkanUniformDescriptorCacheSize.top.adjacent"],
                 "font": "small",
                 "length": 90
             }

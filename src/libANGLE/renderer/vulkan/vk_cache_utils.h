@@ -1786,6 +1786,8 @@ class DriverUniformsDescriptorSetCache final
 
     ANGLE_INLINE void clear() { mPayload.clear(); }
 
+    size_t getSize() const { return mPayload.size(); }
+
   private:
     static constexpr uint32_t kFastMapSize = 16;
     angle::FastUnorderedMap<uint32_t, VkDescriptorSet, kFastMapSize> mPayload;

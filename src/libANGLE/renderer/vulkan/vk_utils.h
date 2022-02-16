@@ -1261,6 +1261,7 @@ struct PerfCounters
     uint32_t stencilAttachmentResolves;
     uint32_t readOnlyDepthStencilRenderPasses;
     uint32_t descriptorSetAllocations;
+    uint32_t descriptorSetCacheTotalSize;
     uint32_t uniformsAndXfbDescriptorSetCacheHits;
     uint32_t uniformsAndXfbDescriptorSetCacheMisses;
     uint32_t uniformsAndXfbDescriptorSetCacheTotalSize;

@@ -2233,6 +2233,7 @@ angle::Result ContextVk::handleDirtyDescriptorSetsImpl(CommandBufferT *commandBu
 void ContextVk::syncObjectPerfCounters()
 {
     mPerfCounters.descriptorSetAllocations                  = 0;
+    mPerfCounters.descriptorSetCacheTotalSize               = 0;
     mPerfCounters.uniformsAndXfbDescriptorSetCacheHits      = 0;
     mPerfCounters.uniformsAndXfbDescriptorSetCacheMisses    = 0;
     mPerfCounters.uniformsAndXfbDescriptorSetCacheTotalSize = 0;
@@ -2291,6 +2292,17 @@ void ContextVk::syncObjectPerfCounters()
             progPerfCounters.descriptorSetCacheMisses[DescriptorSetIndex::ShaderResource];
         mPerfCounters.shaderBuffersDescriptorSetCacheTotalSize +=
             progPerfCounters.descriptorSetCacheSizes[DescriptorSetIndex::ShaderResource];
+    }
+
+    mPerfCounters.descriptorSetCacheTotalSize +=
+        mPerfCounters.uniformsAndXfbDescriptorSetCacheTotalSize;
+    mPerfCounters.descriptorSetCacheTotalSize += mPerfCounters.textureDescriptorSetCacheTotalSize;
+    mPerfCounters.descriptorSetCacheTotalSize +=
+        mPerfCounters.shaderBuffersDescriptorSetCacheTotalSize;
+
+    for (const DriverUniformsDescriptorSet &driverSet : mDriverUniforms)
+    {
+        mPerfCounters.descriptorSetCacheTotalSize += driverSet.descriptorSetCache.getSize();
     }
 }
 
@@ -2370,6 +2382,20 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *comman
             overlay->getRunningGraphWidget(gl::WidgetId::VulkanTextureDescriptorCacheSize);
         textureDescriptorCacheSize->add(mPerfCounters.textureDescriptorSetCacheTotalSize);
         textureDescriptorCacheSize->next();
+    }
+
+    {
+        gl::RunningGraphWidget *uniformDescriptorCacheSize =
+            overlay->getRunningGraphWidget(gl::WidgetId::VulkanUniformDescriptorCacheSize);
+        uniformDescriptorCacheSize->add(mPerfCounters.uniformsAndXfbDescriptorSetCacheTotalSize);
+        uniformDescriptorCacheSize->next();
+    }
+
+    {
+        gl::RunningGraphWidget *descriptorCacheSize =
+            overlay->getRunningGraphWidget(gl::WidgetId::VulkanDescriptorCacheSize);
+        descriptorCacheSize->add(mPerfCounters.descriptorSetCacheTotalSize);
+        descriptorCacheSize->next();
     }
 }
 

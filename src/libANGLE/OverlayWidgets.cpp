@@ -493,6 +493,37 @@ void AppendWidgetDataHelper::AppendVulkanTextureDescriptorCacheSize(
     AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
 }
 
+void AppendWidgetDataHelper::AppendVulkanUniformDescriptorCacheSize(
+    const overlay::Widget *widget,
+    const gl::Extents &imageExtent,
+    TextWidgetData *textWidget,
+    GraphWidgetData *graphWidget,
+    OverlayWidgetCounts *widgetCounts)
+{
+    auto format = [](size_t curVal) {
+        std::ostringstream text;
+        text << "Total Uniform Descriptor Cache Size: " << curVal;
+        return text.str();
+    };
+
+    AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
+}
+
+void AppendWidgetDataHelper::AppendVulkanDescriptorCacheSize(const overlay::Widget *widget,
+                                                             const gl::Extents &imageExtent,
+                                                             TextWidgetData *textWidget,
+                                                             GraphWidgetData *graphWidget,
+                                                             OverlayWidgetCounts *widgetCounts)
+{
+    auto format = [](size_t curVal) {
+        std::ostringstream text;
+        text << "Total Descriptor Cache Size: " << curVal;
+        return text.str();
+    };
+
+    AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
+}
+
 std::ostream &AppendWidgetDataHelper::OutputPerSecond(std::ostream &out,
                                                       const overlay::PerSecond *perSecond)
 {
