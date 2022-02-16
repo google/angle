@@ -35,14 +35,12 @@ if is_windows:
 elif is_macos:
     chrome_folder = '/Applications/Google Chrome Canary.app/Contents/Frameworks/Google Chrome Framework.framework/Libraries'
     libs_to_copy = ['libGLESv2.dylib', 'libEGL.dylib']
-    optional_libs_to_copy = []
+    optional_libs_to_copy = ['libchrome_zlib.dylib', 'libabsl.dylib', 'libc++.dylib']
 
 else:
     # Must be Linux
     chrome_folder = '/opt/google/chrome-unstable'
     libs_to_copy = ['libGLESv2.so', 'libEGL.so']
-    # Optionally copy the following, which are needed for a component build
-    # (i.e. is_component_build = true, which is the default)
     optional_libs_to_copy = ['libchrome_zlib.so', 'libabsl.so', 'libc++.so']
 
 # Find the most recent ANGLE DLLs
@@ -80,7 +78,7 @@ print('Copying binaries from ' + source_folder + ' to ' + dest_folder + '.')
 
 def copy_file(src, dst):
     print(' - ' + src + '   -->   ' + dst)
-    if is_macos:
+    if is_macos and os.path.isfile(dst):
         # For the codesign to work, the original file must be removed
         os.remove(dst)
     shutil.copyfile(src, dst)
@@ -103,6 +101,8 @@ def do_copy(filename, is_optional):
 
 for filename in libs_to_copy:
     do_copy(filename, False)
+# Optionally copy the following, which are needed for a component build
+# (i.e. is_component_build = true, which is the default)
 for filename in optional_libs_to_copy:
     do_copy(filename, True)
 
