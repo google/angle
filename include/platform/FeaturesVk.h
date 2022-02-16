@@ -635,6 +635,11 @@ struct FeaturesVk : FeatureSetBase
     Feature forceSubmitImmutableTextureUpdates = {
         "forceSubmitImmutableTextureUpdates", FeatureCategory::AppWorkarounds,
         "Force submit updates to immutable textures", &members, "http://anglebug.com/6929"};
+
+    // Whether we retain SPIR-V debug information to aid in analyzing shader code.
+    Feature retainSpirvDebugInfo = {"retainSpirvDebugInfo", FeatureCategory::VulkanFeatures,
+                                    "Retain debug info in SPIR-V blob.", &members,
+                                    "http://anglebug.com/5901"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
