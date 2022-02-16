@@ -3262,9 +3262,6 @@ TEST_P(VulkanPerformanceCounterTest_MSAA, SwapShouldInvalidateDepthStencil)
 // Tests that uniform updates eventually stop updating descriptor sets.
 TEST_P(VulkanPerformanceCounterTest, UniformUpdatesHitDescriptorSetCache)
 {
-    // TODO: http://anglebug.com/6980
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
     glUseProgram(testProgram);
     GLint posLoc = glGetAttribLocation(testProgram, essl1_shaders::PositionAttrib());

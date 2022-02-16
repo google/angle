@@ -666,8 +666,7 @@ void ContextVk::DriverUniformsDescriptorSet::init(RendererVk *rendererVk)
     size_t minAlignment = static_cast<size_t>(
         rendererVk->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
     dynamicBuffer.init(rendererVk, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, minAlignment,
-                       kDriverUniformsAllocatorPageSize, true,
-                       vk::DynamicBufferPolicy::FrequentSmallAllocations);
+                       kDriverUniformsAllocatorPageSize, true);
     descriptorSetCache.clear();
 }
 
@@ -1015,8 +1014,7 @@ angle::Result ContextVk::initialize()
     // Initialize current value/default attribute buffers.
     for (vk::DynamicBuffer &buffer : mStreamedVertexBuffers)
     {
-        buffer.init(mRenderer, kVertexBufferUsage, 1, kDynamicVertexDataSize, true,
-                    vk::DynamicBufferPolicy::FrequentSmallAllocations);
+        buffer.init(mRenderer, kVertexBufferUsage, 1, kDynamicVertexDataSize, true);
     }
 
 #if ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS
@@ -1063,8 +1061,7 @@ angle::Result ContextVk::initialize()
     size_t minAlignment = static_cast<size_t>(
         mRenderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
     mDefaultUniformStorage.init(mRenderer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, minAlignment,
-                                mRenderer->getDefaultUniformBufferSize(), true,
-                                vk::DynamicBufferPolicy::FrequentSmallAllocations);
+                                mRenderer->getDefaultUniformBufferSize(), true);
 
     // Initialize an "empty" buffer for use with default uniform blocks where there are no uniforms,
     // or atomic counter buffer array indices that are unused.

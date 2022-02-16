@@ -991,6 +991,7 @@ class BufferSuballocation final : angle::NonCopyable
     VkResult map(Context *context);
     BufferSerial getBlockSerial() const;
     uint8_t *getBlockMemory() const;
+    VkDeviceSize getBlockMemorySize() const;
 
   private:
     // Only used by DynamicBuffer where DynamicBuffer does the actual suballocation and pass the
@@ -1165,10 +1166,6 @@ ANGLE_INLINE uint8_t *BufferSuballocation::getMappedMemory() const
 {
     return mBufferBlock->getMappedMemory() + getOffset();
 }
-ANGLE_INLINE uint8_t *BufferSuballocation::getBlockMemory() const
-{
-    return mBufferBlock->getMappedMemory();
-}
 
 ANGLE_INLINE void BufferSuballocation::flush(const VkDevice &device)
 {
@@ -1207,6 +1204,14 @@ ANGLE_INLINE void BufferSuballocation::setOffsetAndSize(VkDeviceSize offset, VkD
     mSize   = size;
 }
 
+ANGLE_INLINE uint8_t *BufferSuballocation::getBlockMemory() const
+{
+    return mBufferBlock->getMappedMemory();
+}
+ANGLE_INLINE VkDeviceSize BufferSuballocation::getBlockMemorySize() const
+{
+    return mBufferBlock->getMemorySize();
+}
 ANGLE_INLINE BufferSerial BufferSuballocation::getBlockSerial() const
 {
     ASSERT(valid());
