@@ -30,13 +30,14 @@ class VulkanPerformanceCounterTest : public ANGLETest
   protected:
     VulkanPerformanceCounterTest()
     {
-        // Depth required for SwapShouldInvalidateDepthAfterClear.
+        // Depth/Stencil required for SwapShouldInvalidate*.
         // Also RGBA8 is required to avoid the clear for emulated alpha.
         setConfigRedBits(8);
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
+        setConfigStencilBits(8);
     }
 
     const rx::vk::PerfCounters &hackANGLE() const
@@ -174,6 +175,16 @@ class VulkanPerformanceCounterTest : public ANGLETest
 
 class VulkanPerformanceCounterTest_ES31 : public VulkanPerformanceCounterTest
 {};
+
+class VulkanPerformanceCounterTest_MSAA : public VulkanPerformanceCounterTest
+{
+  protected:
+    VulkanPerformanceCounterTest_MSAA() : VulkanPerformanceCounterTest()
+    {
+        setSamples(4);
+        setMultisampleEnabled(true);
+    }
+};
 
 // Tests that texture updates to unused textures don't break the RP.
 TEST_P(VulkanPerformanceCounterTest, NewTextureDoesNotBreakRenderPass)
@@ -3189,7 +3200,66 @@ TEST_P(VulkanPerformanceCounterTest, BufferSubDataShouldNotTriggerSyncState)
     EXPECT_EQ(hackANGLE().vertexArraySyncStateCalls, 1u);
 }
 
+// Verifies that rendering to backbuffer discards depth/stencil.
+TEST_P(VulkanPerformanceCounterTest, SwapShouldInvalidateDepthStencil)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+    rx::vk::PerfCounters expected;
+
+    // Expect rpCount+1, depth(Clears+1, Loads+0, Stores+0), stencil(Clears+1, Load+0, Stores+0)
+    setExpectedCountersForInvalidateTest(counters, 1, 1, 0, 0, 1, 0, 0, &expected);
+
+    // Clear to verify that _some_ counters did change (as opposed to for example all being reset on
+    // swap)
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_ALWAYS);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Swap buffers to implicitely resolve
+    swapBuffers();
+    compareDepthStencilCountersForInvalidateTest(counters, expected);
+}
+
+// Verifies that rendering to MSAA backbuffer discards depth/stencil.
+TEST_P(VulkanPerformanceCounterTest_MSAA, SwapShouldInvalidateDepthStencil)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+    rx::vk::PerfCounters expected;
+
+    // Expect rpCount+1, depth(Clears+1, Loads+0, Stores+0), stencil(Clears+1, Load+0, Stores+0)
+    setExpectedCountersForInvalidateTest(counters, 1, 1, 0, 0, 1, 0, 0, &expected);
+
+    // Clear to verify that _some_ counters did change (as opposed to for example all being reset on
+    // swap)
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_ALWAYS);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Swap buffers to implicitely resolve
+    swapBuffers();
+    compareDepthStencilCountersForInvalidateTest(counters, expected);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN());
+ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_MSAA, ES3_VULKAN());
 
 }  // anonymous namespace

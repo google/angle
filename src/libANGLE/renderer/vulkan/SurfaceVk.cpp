@@ -1631,6 +1631,11 @@ angle::Result WindowSurfaceVk::computePresentOutOfDate(vk::Context *context,
 
 vk::Framebuffer &WindowSurfaceVk::chooseFramebuffer()
 {
+    if (isMultiSampled())
+    {
+        return mFramebufferMS;
+    }
+
     // Choose which framebuffer to use based on fetch, so it will have a matching renderpass
     return mFramebufferFetchMode == FramebufferFetchMode::Enabled
                ? mSwapchainImages[mCurrentSwapchainImageIndex].fetchFramebuffer
@@ -2156,7 +2161,7 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
     // Track the new fetch mode
     mFramebufferFetchMode = fetchMode;
 
-    vk::Framebuffer &currentFramebuffer = isMultiSampled() ? mFramebufferMS : chooseFramebuffer();
+    vk::Framebuffer &currentFramebuffer = chooseFramebuffer();
 
     if (currentFramebuffer.valid())
     {
