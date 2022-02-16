@@ -725,7 +725,6 @@
         ],
         'mixins': [
           'angle_skia_gold_test',
-          'chrome-gpu-gold-service-account',
         ],
         'android_swarming': {
           'shards': 6,
@@ -1061,7 +1060,6 @@
         ],
         'mixins': [
           'angle_skia_gold_test',
-          'chrome-gpu-gold-service-account',
         ],
         'swarming': {
           'shards': 6,

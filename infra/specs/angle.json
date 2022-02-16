@@ -556,7 +556,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "service_account": "chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com",
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 6
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
@@ -1145,7 +1145,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "service_account": "chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com"
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       }
@@ -1792,7 +1792,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "service_account": "chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com"
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       }
@@ -2285,7 +2285,7 @@
           ],
           "hard_timeout": 900,
           "io_timeout": 900,
-          "service_account": "chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com",
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 6
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
@@ -4529,7 +4529,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "service_account": "chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com"
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       }
@@ -5280,7 +5280,7 @@
               "pool": "chromium.tests.gpu"
             }
           ],
-          "service_account": "chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com"
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       }
@@ -5757,7 +5757,7 @@
           ],
           "hard_timeout": 900,
           "io_timeout": 900,
-          "service_account": "chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com",
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 6
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
