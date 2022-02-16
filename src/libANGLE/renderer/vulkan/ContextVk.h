@@ -843,7 +843,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result updateActiveTextures(const gl::Context *context, gl::Command command);
     template <typename CommandBufferHelperT>
     angle::Result updateActiveImages(CommandBufferHelperT *commandBufferHelper);
-    angle::Result updateDefaultAttribute(size_t attribIndex);
 
     ANGLE_INLINE void invalidateCurrentGraphicsPipeline()
     {

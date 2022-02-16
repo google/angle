@@ -136,9 +136,8 @@ constexpr gl::ShaderMap<vk::ImageLayout> kShaderWriteImageLayouts = {
     {gl::ShaderType::Fragment, vk::ImageLayout::FragmentShaderWrite},
     {gl::ShaderType::Compute, vk::ImageLayout::ComputeShaderWrite}};
 
-constexpr VkBufferUsageFlags kVertexBufferUsage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-constexpr size_t kDefaultValueSize              = sizeof(gl::VertexAttribCurrentValueData::Values);
-constexpr size_t kDynamicVertexDataSize         = 16 * 1024;
+constexpr VkBufferUsageFlags kVertexBufferUsage   = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+constexpr size_t kDynamicVertexDataSize           = 16 * 1024;
 constexpr size_t kDriverUniformsAllocatorPageSize = 4 * 1024;
 
 bool CanMultiDrawIndirectUseCmd(ContextVk *contextVk,
@@ -1634,9 +1633,10 @@ angle::Result ContextVk::handleDirtyGraphicsDefaultAttribs(DirtyBits::Iterator *
 {
     ASSERT(mDirtyDefaultAttribsMask.any());
 
+    VertexArrayVk *vertexArrayVk = getVertexArray();
     for (size_t attribIndex : mDirtyDefaultAttribsMask)
     {
-        ANGLE_TRY(updateDefaultAttribute(attribIndex));
+        ANGLE_TRY(vertexArrayVk->updateDefaultAttrib(this, attribIndex));
     }
 
     mDirtyDefaultAttribsMask.reset();
@@ -5931,24 +5931,6 @@ void ContextVk::invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask)
         mGraphicsDirtyBits.set(DIRTY_BIT_DEFAULT_ATTRIBS);
         mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     }
-}
-
-angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
-{
-    vk::BufferHelper *defaultBuffer;
-    ANGLE_TRY(allocateStreamedVertexBuffer(attribIndex, kDefaultValueSize, &defaultBuffer));
-
-    const gl::State &glState = mState;
-    const gl::VertexAttribCurrentValueData &defaultValue =
-        glState.getVertexAttribCurrentValues()[attribIndex];
-    uint8_t *ptr = defaultBuffer->getMappedMemory();
-    memcpy(ptr, &defaultValue.Values, kDefaultValueSize);
-    ANGLE_TRY(defaultBuffer->flush(mRenderer));
-
-    VertexArrayVk *vertexArrayVk = getVertexArray();
-    return vertexArrayVk->updateDefaultAttrib(this, attribIndex,
-                                              defaultBuffer->getBuffer().getHandle(), defaultBuffer,
-                                              static_cast<uint32_t>(defaultBuffer->getOffset()));
 }
 
 vk::DescriptorSetLayoutDesc ContextVk::getDriverUniformsDescriptorSetDesc() const
