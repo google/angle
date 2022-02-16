@@ -2234,10 +2234,16 @@ angle::Result ContextVk::handleDirtyDescriptorSetsImpl(CommandBufferT *commandBu
 
 void ContextVk::syncObjectPerfCounters()
 {
-    mPerfCounters.descriptorSetAllocations              = 0;
-    mPerfCounters.shaderBuffersDescriptorSetCacheHits   = 0;
-    mPerfCounters.shaderBuffersDescriptorSetCacheMisses = 0;
-    mPerfCounters.textureDescriptorCacheTotalSize       = 0;
+    mPerfCounters.descriptorSetAllocations                  = 0;
+    mPerfCounters.uniformsAndXfbDescriptorSetCacheHits      = 0;
+    mPerfCounters.uniformsAndXfbDescriptorSetCacheMisses    = 0;
+    mPerfCounters.uniformsAndXfbDescriptorSetCacheTotalSize = 0;
+    mPerfCounters.textureDescriptorSetCacheHits             = 0;
+    mPerfCounters.textureDescriptorSetCacheMisses           = 0;
+    mPerfCounters.textureDescriptorSetCacheTotalSize        = 0;
+    mPerfCounters.shaderBuffersDescriptorSetCacheHits       = 0;
+    mPerfCounters.shaderBuffersDescriptorSetCacheMisses     = 0;
+    mPerfCounters.shaderBuffersDescriptorSetCacheTotalSize  = 0;
 
     // ContextVk's descriptor set allocations
     ContextVkPerfCounters contextCounters = getAndResetObjectPerfCounters();
@@ -2269,12 +2275,24 @@ void ContextVk::syncObjectPerfCounters()
             mPerfCounters.descriptorSetAllocations += count;
         }
 
+        mPerfCounters.uniformsAndXfbDescriptorSetCacheHits +=
+            progPerfCounters.descriptorSetCacheHits[DescriptorSetIndex::UniformsAndXfb];
+        mPerfCounters.uniformsAndXfbDescriptorSetCacheMisses +=
+            progPerfCounters.descriptorSetCacheMisses[DescriptorSetIndex::UniformsAndXfb];
+        mPerfCounters.uniformsAndXfbDescriptorSetCacheTotalSize +=
+            progPerfCounters.descriptorSetCacheSizes[DescriptorSetIndex::UniformsAndXfb];
+        mPerfCounters.textureDescriptorSetCacheHits +=
+            progPerfCounters.descriptorSetCacheHits[DescriptorSetIndex::Texture];
+        mPerfCounters.textureDescriptorSetCacheMisses +=
+            progPerfCounters.descriptorSetCacheMisses[DescriptorSetIndex::Texture];
+        mPerfCounters.textureDescriptorSetCacheTotalSize +=
+            progPerfCounters.descriptorSetCacheSizes[DescriptorSetIndex::Texture];
         mPerfCounters.shaderBuffersDescriptorSetCacheHits +=
             progPerfCounters.descriptorSetCacheHits[DescriptorSetIndex::ShaderResource];
         mPerfCounters.shaderBuffersDescriptorSetCacheMisses +=
             progPerfCounters.descriptorSetCacheMisses[DescriptorSetIndex::ShaderResource];
-        mPerfCounters.textureDescriptorCacheTotalSize +=
-            progPerfCounters.descriptorSetCacheSizes[DescriptorSetIndex::Texture];
+        mPerfCounters.shaderBuffersDescriptorSetCacheTotalSize +=
+            progPerfCounters.descriptorSetCacheSizes[DescriptorSetIndex::ShaderResource];
     }
 }
 
@@ -2352,7 +2370,7 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *comman
     {
         gl::RunningGraphWidget *textureDescriptorCacheSize =
             overlay->getRunningGraphWidget(gl::WidgetId::VulkanTextureDescriptorCacheSize);
-        textureDescriptorCacheSize->add(mPerfCounters.textureDescriptorCacheTotalSize);
+        textureDescriptorCacheSize->add(mPerfCounters.textureDescriptorSetCacheTotalSize);
         textureDescriptorCacheSize->next();
     }
 }
