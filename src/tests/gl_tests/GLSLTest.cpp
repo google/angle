@@ -5856,6 +5856,45 @@ TEST_P(GLSLTest_ES3, ConstantStatementAsLoopInit)
     glDeleteShader(shader);
 }
 
+// Tests that using a constant condition guarding a discard works
+// Covers a failing case in the Vulkan backend: http://anglebug.com/7033
+TEST_P(GLSLTest_ES3, ConstantConditionGuardingDiscard)
+{
+    constexpr char kFS[] = R"(#version 300 es
+void main()
+{
+    if (true)
+    {
+        discard;
+    }
+})";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
+// Tests that nesting a discard in unconditional blocks works
+// Covers a failing case in the Vulkan backend: http://anglebug.com/7033
+TEST_P(GLSLTest_ES3, NestedUnconditionalDiscards)
+{
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec4 c;
+void main()
+{
+    {
+        c = vec4(0);
+        {
+            discard;
+        }
+    }
+})";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
 // Test that uninitialized local variables are initialized to 0.
 TEST_P(WebGL2GLSLTest, InitUninitializedLocals)
 {

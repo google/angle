@@ -86,6 +86,9 @@ struct ValidateASTOptions
     bool validateExpressionTypes = true;
     // If SeparateDeclarations has been run, check for the absence of multi declarations as well.
     bool validateMultiDeclarations = false;
+    // If PruneNoOps has been run, check that no statements are ever added after branches in the
+    // same block.  Those statements would be dead code.
+    bool validateNoStatementsAfterBranch = false;
 
     // Once set, disallows any further transformations on the tree.  Used before AST post-processing
     // which requires that the tree remains unmodified.

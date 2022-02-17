@@ -16,9 +16,11 @@
 //     codeToRun
 // }
 //
-// This way the code will get run even if the return statement inside main is executed.  This is
-// done if main ends in an unconditional |discard| as well, to help with SPIR-V generation that
-// expects no dead-code to be present after branches in a block.
+// This way the code will get run even if the return statement inside main is executed.
+//
+// This is done if main ends in an unconditional |discard| as well, to help with SPIR-V generation
+// that expects no dead-code to be present after branches in a block.  To avoid bugs when |discard|
+// is wrapped in unconditional blocks, any |discard| in main() is used as a signal to wrap it.
 //
 
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
@@ -39,41 +41,33 @@ namespace
 
 constexpr const ImmutableString kMainString("main");
 
-class ContainsReturnTraverser : public TIntermTraverser
+class ContainsReturnOrDiscardTraverser : public TIntermTraverser
 {
   public:
-    ContainsReturnTraverser() : TIntermTraverser(true, false, false), mContainsReturn(false) {}
+    ContainsReturnOrDiscardTraverser()
+        : TIntermTraverser(true, false, false), mContainsReturnOrDiscard(false)
+    {}
 
     bool visitBranch(Visit visit, TIntermBranch *node) override
     {
-        if (node->getFlowOp() == EOpReturn)
+        if (node->getFlowOp() == EOpReturn || node->getFlowOp() == EOpKill)
         {
-            mContainsReturn = true;
+            mContainsReturnOrDiscard = true;
         }
         return false;
     }
 
-    bool containsReturn() { return mContainsReturn; }
+    bool containsReturnOrDiscard() { return mContainsReturnOrDiscard; }
 
   private:
-    bool mContainsReturn;
+    bool mContainsReturnOrDiscard;
 };
 
-bool ContainsReturn(TIntermNode *node)
+bool ContainsReturnOrDiscard(TIntermNode *node)
 {
-    ContainsReturnTraverser traverser;
+    ContainsReturnOrDiscardTraverser traverser;
     node->traverse(&traverser);
-    return traverser.containsReturn();
-}
-
-bool EndsInDiscard(TIntermBlock *block)
-{
-    TIntermSequence *statements = block->getSequence();
-    TIntermBranch *lastStatementAsBranch =
-        statements->empty() ? nullptr : statements->back()->getAsBranchNode();
-    // The body can end in discard or return.  There is no need to specifically check for discard as
-    // return is already detected in |ContainsReturn|.
-    return lastStatementAsBranch != nullptr;
+    return traverser.containsReturnOrDiscard();
 }
 
 void WrapMainAndAppend(TIntermBlock *root,
@@ -120,7 +114,7 @@ bool RunAtTheEndOfShader(TCompiler *compiler,
                          TSymbolTable *symbolTable)
 {
     TIntermFunctionDefinition *main = FindMain(root);
-    if (ContainsReturn(main) || EndsInDiscard(main->getBody()))
+    if (ContainsReturnOrDiscard(main))
     {
         WrapMainAndAppend(root, main, codeToRun, symbolTable);
     }
