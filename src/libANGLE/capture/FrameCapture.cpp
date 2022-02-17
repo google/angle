@@ -2764,10 +2764,20 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
             continue;
         }
 
+        // Generate binding.
+        cap(CaptureGenBuffers(replayState, true, 1, &id));
+
+        resourceTracker->getTrackedResource(ResourceIDType::Buffer)
+            .getStartingResources()
+            .insert(id.value);
+
+        MaybeCaptureUpdateResourceIDs(resourceTracker, setupCalls);
+
         // glBufferData. Would possibly be better implemented using a getData impl method.
         // Saving buffers that are mapped during a swap is not yet handled.
         if (buffer->getSize() == 0)
         {
+            resourceTracker->setStartingBufferMapped(buffer->id().value, false);
             continue;
         }
 
@@ -2780,15 +2790,6 @@ void CaptureShareGroupMidExecutionSetup(const gl::Context *context,
             (void)buffer->mapRange(context, 0, static_cast<GLsizeiptr>(buffer->getSize()),
                                    GL_MAP_READ_BIT);
         }
-
-        // Generate binding.
-        cap(CaptureGenBuffers(replayState, true, 1, &id));
-
-        resourceTracker->getTrackedResource(ResourceIDType::Buffer)
-            .getStartingResources()
-            .insert(id.value);
-
-        MaybeCaptureUpdateResourceIDs(resourceTracker, setupCalls);
 
         // Always use the array buffer binding point to upload data to keep things simple.
         if (buffer != replayState.getArrayBuffer())

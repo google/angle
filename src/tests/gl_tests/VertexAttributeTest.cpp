@@ -3936,6 +3936,44 @@ void main()
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
 }
 
+// Create a vertex array with an empty array buffer and attribute offsets.
+// This succeded in the end2end and capture/replay tests, but resulted in a trace
+// producing a GL error when using MEC.
+// Validation complained about the following:
+// "Client data cannot be used with a non-default vertex array object."
+
+// To capture this test with MEC run:
+// mkdir src/tests/capture_replay_tests/empty_array_buffer_test
+// ANGLE_CAPTURE_ENABLED=1 ANGLE_CAPTURE_FRAME_START=2 \
+// ANGLE_CAPTURE_FRAME_END=2 ANGLE_CAPTURE_LABEL=empty_array_buffer_test \
+// ANGLE_CAPTURE_OUT_DIR=src/tests/capture_replay_tests/empty_array_buffer_test \
+// ./out/Debug/angle_end2end_tests \
+// --gtest_filter="VertexAttributeTestES3.EmptyArrayBuffer/ES3_Vulkan"
+TEST_P(VertexAttributeTestES3, EmptyArrayBuffer)
+{
+    GLVertexArray vertexArray;
+    glBindVertexArray(vertexArray);
+
+    GLBuffer emptyArrayBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, emptyArrayBuffer);
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(0, 4, GL_UNSIGNED_BYTE, GL_TRUE, 20, reinterpret_cast<const void *>(16));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 20, reinterpret_cast<const void *>(8));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 20, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Swap a frame for MEC
+    swapBuffers();
+}
+
 // VAO emulation fails on Mac but is not used on Mac in the wild. http://anglebug.com/5577
 #if !defined(__APPLE__)
 #    define EMULATED_VAO_CONFIGS                                          \
