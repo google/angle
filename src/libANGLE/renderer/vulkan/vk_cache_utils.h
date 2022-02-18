@@ -1789,8 +1789,8 @@ class DriverUniformsDescriptorSetCache final
     size_t getSize() const { return mPayload.size(); }
 
   private:
-    static constexpr uint32_t kFastMapSize = 16;
-    angle::FastUnorderedMap<uint32_t, VkDescriptorSet, kFastMapSize> mPayload;
+    static constexpr uint32_t kFlatMapSize = 16;
+    angle::FlatUnorderedMap<uint32_t, VkDescriptorSet, kFlatMapSize> mPayload;
 };
 
 // Templated Descriptors Cache

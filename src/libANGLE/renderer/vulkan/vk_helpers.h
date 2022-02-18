@@ -998,8 +998,8 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     // Tracks resources used in the command buffer.
     // For Buffers, we track the read/write access type so we can enable simultaneous reads.
-    static constexpr uint32_t kFastMapSize = 16;
-    angle::FastUnorderedMap<BufferSerial, BufferAccess, kFastMapSize> mUsedBuffers;
+    static constexpr uint32_t kFlatMapSize = 16;
+    angle::FlatUnorderedMap<BufferSerial, BufferAccess, kFlatMapSize> mUsedBuffers;
 };
 
 class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCommon
@@ -1283,7 +1283,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     // Tracks resources used in the command buffer.
     // Images have unique layouts unlike buffers therefore we can't support simultaneous reads with
     // different layout.
-    angle::FastUnorderedSet<ImageSerial, kFastMapSize> mRenderPassUsedImages;
+    angle::FlatUnorderedSet<ImageSerial, kFlatMapSize> mRenderPassUsedImages;
 
     ImageHelper *mDepthStencilImage;
     ImageHelper *mDepthStencilResolveImage;

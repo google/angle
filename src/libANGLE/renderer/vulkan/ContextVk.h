@@ -1170,7 +1170,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     GraphicsEventCmdBuf mQueryEventType;
 
     // Transform feedback buffers.
-    angle::FastUnorderedSet<const vk::BufferHelper *,
+    angle::FlatUnorderedSet<const vk::BufferHelper *,
                             gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS>
         mCurrentTransformFeedbackBuffers;
 
