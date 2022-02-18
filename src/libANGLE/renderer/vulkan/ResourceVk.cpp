@@ -17,6 +17,8 @@ namespace vk
 {
 namespace
 {
+constexpr size_t kDefaultResourceUseCount = 4096;
+
 angle::Result FinishRunningCommands(ContextVk *contextVk, Serial serial)
 {
     return contextVk->finishToSerial(serial);
@@ -183,13 +185,13 @@ bool SharedGarbage::destroyIfComplete(RendererVk *renderer, Serial completedSeri
 // ResourceUseList implementation.
 ResourceUseList::ResourceUseList()
 {
-    constexpr size_t kDefaultResourceUseCount = 4096;
     mResourceUses.reserve(kDefaultResourceUseCount);
 }
 
 ResourceUseList::ResourceUseList(ResourceUseList &&other)
 {
     *this = std::move(other);
+    other.mResourceUses.reserve(kDefaultResourceUseCount);
 }
 
 ResourceUseList::~ResourceUseList()
