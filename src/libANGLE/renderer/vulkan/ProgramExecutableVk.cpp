@@ -876,14 +876,15 @@ void ProgramExecutableVk::updateEarlyFragmentTestsOptimization(
 angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
                                                        gl::PrimitiveMode mode,
                                                        const vk::GraphicsPipelineDesc &desc,
+                                                       const gl::ProgramExecutable &glExecutable,
                                                        const vk::GraphicsPipelineDesc **descPtrOut,
                                                        vk::PipelineHelper **pipelineOut)
 {
-    const gl::State &glState                  = contextVk->getState();
-    RendererVk *renderer                      = contextVk->getRenderer();
-    vk::PipelineCache *pipelineCache          = nullptr;
-    const gl::ProgramExecutable *glExecutable = glState.getProgramExecutable();
-    ASSERT(glExecutable && glExecutable->hasLinkedShaderStage(gl::ShaderType::Vertex));
+    const gl::State &glState         = contextVk->getState();
+    RendererVk *renderer             = contextVk->getRenderer();
+    vk::PipelineCache *pipelineCache = nullptr;
+
+    ASSERT(glExecutable.hasLinkedShaderStage(gl::ShaderType::Vertex));
 
     mTransformOptions.enableLineRasterEmulation = contextVk->isBresenhamEmulationEnabled(mode);
     mTransformOptions.surfaceRotation           = ToUnderlying(desc.getSurfaceRotation());
@@ -894,11 +895,11 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
 
     // This must be called after mTransformOptions have been set.
     ProgramInfo &programInfo                  = getGraphicsProgramInfo(mTransformOptions);
-    const gl::ShaderBitSet linkedShaderStages = glExecutable->getLinkedShaderStages();
+    const gl::ShaderBitSet linkedShaderStages = glExecutable.getLinkedShaderStages();
     const gl::ShaderType lastPreFragmentStage = gl::GetLastPreFragmentStage(linkedShaderStages);
 
     const bool isTransformFeedbackProgram =
-        !glExecutable->getLinkedTransformFeedbackVaryings().empty();
+        !glExecutable.getLinkedTransformFeedbackVaryings().empty();
 
     for (const gl::ShaderType shaderType : linkedShaderStages)
     {
@@ -924,19 +925,18 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
                                              desc.getEmulatedDitherControl());
 
     // Compare the fragment output interface with the framebuffer interface.
-    const gl::ProgramExecutable &executable = *glState.getProgramExecutable();
-
-    const gl::AttributesMask &activeAttribLocations = executable.getNonBuiltinAttribLocationsMask();
+    const gl::AttributesMask &activeAttribLocations =
+        glExecutable.getNonBuiltinAttribLocationsMask();
 
     // Calculate missing shader outputs.
-    const gl::DrawBufferMask &shaderOutMask = executable.getActiveOutputVariablesMask();
+    const gl::DrawBufferMask &shaderOutMask = glExecutable.getActiveOutputVariablesMask();
     gl::DrawBufferMask framebufferMask      = glState.getDrawFramebuffer()->getDrawBufferMask();
     gl::DrawBufferMask missingOutputsMask   = ~shaderOutMask & framebufferMask;
 
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
     return shaderProgram->getGraphicsPipeline(
         contextVk, &contextVk->getRenderPassCache(), *pipelineCache, getPipelineLayout(), desc,
-        activeAttribLocations, executable.getAttributesTypeMask(), missingOutputsMask, descPtrOut,
+        activeAttribLocations, glExecutable.getAttributesTypeMask(), missingOutputsMask, descPtrOut,
         pipelineOut);
 }
 

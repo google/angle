@@ -645,6 +645,11 @@ struct FeaturesVk : FeatureSetBase
     Feature retainSpirvDebugInfo = {"retainSpirvDebugInfo", FeatureCategory::VulkanFeatures,
                                     "Retain debug info in SPIR-V blob.", &members,
                                     "http://anglebug.com/5901"};
+
+    // Whether we create a Vulkan pipeline with "default" state during glLinkProgram
+    Feature createPipelineDuringLink = {"createPipelineDuringLink", FeatureCategory::VulkanFeatures,
+                                        "Create pipeline with default state during glLinkProgram",
+                                        &members, "http://anglebug.com/7046"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

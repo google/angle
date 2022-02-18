@@ -1643,7 +1643,9 @@ angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *di
                                             ? mCurrentGraphicsPipeline->getPipeline().getHandle()
                                             : VK_NULL_HANDLE;
 
-    ProgramExecutableVk *executableVk = getExecutable();
+    ASSERT(mState.getProgramExecutable() != nullptr);
+    const gl::ProgramExecutable &glExecutable = *mState.getProgramExecutable();
+    ProgramExecutableVk *executableVk         = getExecutable();
     ASSERT(executableVk);
 
     if (!mCurrentGraphicsPipeline)
@@ -1657,7 +1659,8 @@ angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *di
 
         // Draw call shader patching, shader compilation, and pipeline cache query.
         ANGLE_TRY(executableVk->getGraphicsPipeline(this, mCurrentDrawMode, *mGraphicsPipelineDesc,
-                                                    &descPtr, &mCurrentGraphicsPipeline));
+                                                    glExecutable, &descPtr,
+                                                    &mCurrentGraphicsPipeline));
         mGraphicsPipelineTransition.reset();
     }
     else if (mGraphicsPipelineTransition.any())
@@ -1670,8 +1673,8 @@ angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *di
             const vk::GraphicsPipelineDesc *descPtr;
 
             ANGLE_TRY(executableVk->getGraphicsPipeline(this, mCurrentDrawMode,
-                                                        *mGraphicsPipelineDesc, &descPtr,
-                                                        &mCurrentGraphicsPipeline));
+                                                        *mGraphicsPipelineDesc, glExecutable,
+                                                        &descPtr, &mCurrentGraphicsPipeline));
 
             oldPipeline->addTransition(mGraphicsPipelineTransition, descPtr,
                                        mCurrentGraphicsPipeline);

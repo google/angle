@@ -148,6 +148,7 @@ class ProgramExecutableVk
     angle::Result getGraphicsPipeline(ContextVk *contextVk,
                                       gl::PrimitiveMode mode,
                                       const vk::GraphicsPipelineDesc &desc,
+                                      const gl::ProgramExecutable &glExecutable,
                                       const vk::GraphicsPipelineDesc **descPtrOut,
                                       vk::PipelineHelper **pipelineOut);
 

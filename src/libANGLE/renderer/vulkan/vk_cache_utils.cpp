@@ -2754,6 +2754,17 @@ void GraphicsPipelineDesc::updateRenderPassDesc(GraphicsPipelineTransitionBits *
     }
 }
 
+void GraphicsPipelineDesc::setRenderPassSampleCount(GLint samples)
+{
+    mRenderPassDesc.setSamples(samples);
+}
+
+void GraphicsPipelineDesc::setRenderPassColorAttachmentFormat(size_t colorIndexGL,
+                                                              angle::FormatID formatID)
+{
+    mRenderPassDesc.packColorAttachment(colorIndexGL, formatID);
+}
+
 // AttachmentOpsArray implementation.
 AttachmentOpsArray::AttachmentOpsArray()
 {
