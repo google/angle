@@ -574,7 +574,7 @@ void MultithreadingTestES3::textureThreadFunction(bool useDraw)
         {
             glWaitSync(mMainThreadSyncObj, 0, GL_TIMEOUT_IGNORED);
             ASSERT_GL_NO_ERROR();
-            glDeleteSync(mSecondThreadSyncObj);
+            glDeleteSync(mMainThreadSyncObj);
             ASSERT_GL_NO_ERROR();
             mMainThreadSyncObj = nullptr;
         }
