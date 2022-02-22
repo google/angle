@@ -214,6 +214,8 @@ class DynamicDescriptorPool final : angle::NonCopyable
     static uint32_t GetMaxSetsPerPoolMultiplierForTesting();
     static void SetMaxSetsPerPoolMultiplierForTesting(uint32_t maxSetsPerPool);
 
+    bool valid() const { return !mDescriptorPools.empty(); }
+
   private:
     angle::Result allocateNewPool(ContextVk *contextVk);
 
