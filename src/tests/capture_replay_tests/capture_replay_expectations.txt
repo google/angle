@@ -174,6 +174,25 @@
 # Marking this as NOT_RUN because we don't want it to run as it uses multiple contexts
 6752 : OcclusionQueriesNoSurfaceTestES3.SwitchingContextsWithQuery/* = NOT_RUN
 
+# Skip because reasons
+7081 WIN : MultisampleResolveTest.ResolveRGBA8ToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveRGB8ToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveRG8ToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveR8ToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveR16FToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveRG16FToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveRGB16FToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveRGBA16FToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveR32FToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveRG32FToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveRGB32FToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveRGBA32FToFBO4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveD32FS8F4Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveD24S8Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveD32FSamples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveD24Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+7081 WIN : MultisampleResolveTest.ResolveD16Samples/ES3_Vulkan_SwiftShader = SKIP_FOR_CAPTURE
+
 # ES3_1
 6180 : ProgramPipelineTest31.VerifyPpoLinkErrorSignalledCorrectly/* = FAIL
 
