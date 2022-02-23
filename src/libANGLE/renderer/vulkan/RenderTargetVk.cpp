@@ -155,7 +155,7 @@ const vk::ImageHelper &RenderTargetVk::getResolveImageForRenderPass() const
     return *mResolveImage;
 }
 
-angle::Result RenderTargetVk::getImageViewImpl(ContextVk *contextVk,
+angle::Result RenderTargetVk::getImageViewImpl(vk::Context *context,
                                                const vk::ImageHelper &image,
                                                gl::SrgbWriteControlMode mode,
                                                vk::ImageViewHelper *imageViews,
@@ -165,36 +165,36 @@ angle::Result RenderTargetVk::getImageViewImpl(ContextVk *contextVk,
     vk::LevelIndex levelVk = mImage->toVkLevel(mLevelIndexGL);
     if (mLayerCount == 1)
     {
-        return imageViews->getLevelLayerDrawImageView(contextVk, image, levelVk, mLayerIndex, mode,
+        return imageViews->getLevelLayerDrawImageView(context, image, levelVk, mLayerIndex, mode,
                                                       imageViewOut);
     }
 
     // Layered render targets view the whole level or a handful of layers in case of multiview.
-    return imageViews->getLevelDrawImageView(contextVk, image, levelVk, mLayerIndex, mLayerCount,
+    return imageViews->getLevelDrawImageView(context, image, levelVk, mLayerIndex, mLayerCount,
                                              mode, imageViewOut);
 }
 
-angle::Result RenderTargetVk::getImageView(ContextVk *contextVk,
+angle::Result RenderTargetVk::getImageView(vk::Context *context,
                                            const vk::ImageView **imageViewOut) const
 {
     ASSERT(mImage);
-    return getImageViewImpl(contextVk, *mImage, gl::SrgbWriteControlMode::Default, mImageViews,
+    return getImageViewImpl(context, *mImage, gl::SrgbWriteControlMode::Default, mImageViews,
                             imageViewOut);
 }
 
-angle::Result RenderTargetVk::getImageViewWithColorspace(ContextVk *contextVk,
+angle::Result RenderTargetVk::getImageViewWithColorspace(vk::Context *context,
                                                          gl::SrgbWriteControlMode mode,
                                                          const vk::ImageView **imageViewOut) const
 {
     ASSERT(mImage);
-    return getImageViewImpl(contextVk, *mImage, mode, mImageViews, imageViewOut);
+    return getImageViewImpl(context, *mImage, mode, mImageViews, imageViewOut);
 }
 
-angle::Result RenderTargetVk::getResolveImageView(ContextVk *contextVk,
+angle::Result RenderTargetVk::getResolveImageView(vk::Context *context,
                                                   const vk::ImageView **imageViewOut) const
 {
     ASSERT(mResolveImage);
-    return getImageViewImpl(contextVk, *mResolveImage, gl::SrgbWriteControlMode::Default,
+    return getImageViewImpl(context, *mResolveImage, gl::SrgbWriteControlMode::Default,
                             mResolveImageViews, imageViewOut);
 }
 
@@ -211,8 +211,8 @@ vk::ImageHelper *RenderTargetVk::getOwnerOfData() const
     return isResolveImageOwnerOfData() ? mResolveImage : mImage;
 }
 
-angle::Result RenderTargetVk::getAndRetainCopyImageView(ContextVk *contextVk,
-                                                        const vk::ImageView **imageViewOut) const
+angle::Result RenderTargetVk::getCopyImageView(vk::Context *context,
+                                               const vk::ImageView **imageViewOut) const
 {
     const vk::ImageViewHelper *imageViews =
         isResolveImageOwnerOfData() ? mResolveImageViews : mImageViews;
@@ -228,8 +228,8 @@ angle::Result RenderTargetVk::getAndRetainCopyImageView(ContextVk *contextVk,
     // Otherwise, this must come from the surface, in which case the image is 2D, so the image view
     // used to draw is just as good for fetching.  If resolve attachment is present, fetching is
     // done from that.
-    return isResolveImageOwnerOfData() ? getResolveImageView(contextVk, imageViewOut)
-                                       : getImageView(contextVk, imageViewOut);
+    return isResolveImageOwnerOfData() ? getResolveImageView(context, imageViewOut)
+                                       : getImageView(context, imageViewOut);
 }
 
 angle::FormatID RenderTargetVk::getImageActualFormatID() const

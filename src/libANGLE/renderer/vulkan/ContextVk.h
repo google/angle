@@ -60,6 +60,34 @@ enum class QueueSubmitType
     SkipQueueSubmit,
 };
 
+class UpdateDescriptorSetsBuilder final : angle::NonCopyable
+{
+  public:
+    UpdateDescriptorSetsBuilder();
+    ~UpdateDescriptorSetsBuilder();
+
+    VkDescriptorBufferInfo *allocDescriptorBufferInfos(size_t count);
+    VkDescriptorImageInfo *allocDescriptorImageInfos(size_t count);
+    VkWriteDescriptorSet *allocWriteDescriptorSets(size_t count);
+
+    VkDescriptorBufferInfo &allocDescriptorBufferInfo() { return *allocDescriptorBufferInfos(1); }
+    VkDescriptorImageInfo &allocDescriptorImageInfo() { return *allocDescriptorImageInfos(1); }
+    VkWriteDescriptorSet &allocWriteDescriptorSet() { return *allocWriteDescriptorSets(1); }
+
+    // Returns the number of written descriptor sets.
+    uint32_t flushDescriptorSetUpdates(VkDevice device);
+
+  private:
+    template <typename T, const T *VkWriteDescriptorSet::*pInfo>
+    T *allocDescriptorInfos(std::vector<T> *descriptorVector, size_t count);
+    template <typename T, const T *VkWriteDescriptorSet::*pInfo>
+    void growDescriptorCapacity(std::vector<T> *descriptorVector, size_t newSize);
+
+    std::vector<VkDescriptorBufferInfo> mDescriptorBufferInfos;
+    std::vector<VkDescriptorImageInfo> mDescriptorImageInfos;
+    std::vector<VkWriteDescriptorSet> mWriteDescriptorSets;
+};
+
 class ContextVk : public ContextImpl, public vk::Context, public MultisampleTextureInitializer
 {
   public:
@@ -641,22 +669,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void updateOverlayOnPresent();
     void addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *commandBuffer);
 
-    // DescriptorSet writes
-    VkDescriptorBufferInfo *allocDescriptorBufferInfos(size_t count);
-    VkDescriptorImageInfo *allocDescriptorImageInfos(size_t count);
-    VkWriteDescriptorSet *allocWriteDescriptorSets(size_t count);
-
-    VkDescriptorBufferInfo &allocDescriptorBufferInfo() { return *allocDescriptorBufferInfos(1); }
-    VkDescriptorImageInfo &allocDescriptorImageInfo() { return *allocDescriptorImageInfos(1); }
-    VkWriteDescriptorSet &allocWriteDescriptorSet() { return *allocWriteDescriptorSets(1); }
-
     // For testing only.
     void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);
 
     vk::BufferHelper &getEmptyBuffer() { return mEmptyBuffer; }
-
-    const angle::VulkanPerfCounters &getPerfCounters() const { return mPerfCounters; }
-    angle::VulkanPerfCounters &getPerfCounters() { return mPerfCounters; }
 
     // Implementation of MultisampleTextureInitializer
     angle::Result initializeMultisampleTextureToBlack(const gl::Context *context,
@@ -1013,12 +1029,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         size_t bufferCount,
         const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &buffers);
 
-    // DescriptorSet writes
-    template <typename T, const T *VkWriteDescriptorSet::*pInfo>
-    T *allocDescriptorInfos(std::vector<T> *descriptorVector, size_t count);
-    template <typename T, const T *VkWriteDescriptorSet::*pInfo>
-    void growDesciptorCapacity(std::vector<T> *descriptorVector, size_t newSize);
-
     angle::Result updateRenderPassDepthStencilAccess();
     bool shouldSwitchToReadOnlyDepthFeedbackLoopMode(gl::Texture *texture,
                                                      gl::Command command) const;
@@ -1219,7 +1229,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     uint64_t mGpuEventTimestampOrigin;
 
     // A mix of per-frame and per-run counters.
-    angle::VulkanPerfCounters mPerfCounters;
     angle::PerfMonitorCounterGroups mPerfMonitorCounters;
     ContextVkPerfCounters mContextPerfCounters;
     ContextVkPerfCounters mCumulativeContextPerfCounters;
@@ -1232,9 +1241,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     egl::ContextPriority mContextPriority;
 
     // Storage for vkUpdateDescriptorSets
-    std::vector<VkDescriptorBufferInfo> mDescriptorBufferInfos;
-    std::vector<VkDescriptorImageInfo> mDescriptorImageInfos;
-    std::vector<VkWriteDescriptorSet> mWriteDescriptorSets;
+    UpdateDescriptorSetsBuilder mUpdateDescriptorSetsBuilder;
 
     ShareGroupVk *mShareGroupVk;
 

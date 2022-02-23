@@ -1210,7 +1210,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                 contextVk->flushCommandsAndEndRenderPass(RenderPassClosureReason::PrepareForBlit));
 
             const vk::ImageView *copyImageView = nullptr;
-            ANGLE_TRY(readRenderTarget->getAndRetainCopyImageView(contextVk, &copyImageView));
+            ANGLE_TRY(readRenderTarget->getCopyImageView(contextVk, &copyImageView));
             ANGLE_TRY(utilsVk.colorBlitResolve(
                 contextVk, this, &readRenderTarget->getImageForCopy(), copyImageView, params));
         }

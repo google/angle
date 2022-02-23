@@ -163,7 +163,8 @@ struct PerfMonitorTriplet
     FN(shaderBuffersDescriptorSetCacheTotalSize)  \
     FN(buffersGhosted)                            \
     FN(vertexArraySyncStateCalls)                 \
-    FN(allocateNewBufferBlockCalls)
+    FN(allocateNewBufferBlockCalls)               \
+    FN(dynamicBufferAllocations)
 
 #define ANGLE_DECLARE_PERF_COUNTER(COUNTER) uint32_t COUNTER;
 

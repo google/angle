@@ -196,8 +196,12 @@ class Context : angle::NonCopyable
     VkDevice getDevice() const;
     RendererVk *getRenderer() const { return mRenderer; }
 
+    const angle::VulkanPerfCounters &getPerfCounters() const { return mPerfCounters; }
+    angle::VulkanPerfCounters &getPerfCounters() { return mPerfCounters; }
+
   protected:
     RendererVk *const mRenderer;
+    angle::VulkanPerfCounters mPerfCounters;
 };
 
 class RenderPassDesc;
