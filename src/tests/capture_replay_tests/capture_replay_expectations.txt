@@ -201,3 +201,7 @@
 6926 : Texture2DTestES3.TextureRGBUpdateWithPBO/ES3_Vulkan* = NOT_RUN
 
 6875 : TransformFeedbackTest.SpanMultipleRenderPasses/* = NOT_RUN
+
+# GLES 3.2 tests that fail because of missing features
+5366 : GeometryShaderTestES32.MaxGeometryImageUniforms/* = CRASH
+5366 : ProgramPipelineTest32.MaxGeometryImageUniforms/* = CRASH
