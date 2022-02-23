@@ -1152,54 +1152,6 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->actualFormatId = angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
             break;
 
-        case angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_BLOCK:
-
-            this->metalFormat    = MTLPixelFormatPVRTC_RGBA_2BPP;
-            this->actualFormatId = angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_BLOCK;
-            break;
-
-        case angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_SRGB_BLOCK:
-
-            this->metalFormat    = MTLPixelFormatPVRTC_RGBA_2BPP_sRGB;
-            this->actualFormatId = angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_SRGB_BLOCK;
-            break;
-
-        case angle::FormatID::PVRTC1_RGBA_4BPP_UNORM_BLOCK:
-
-            this->metalFormat    = MTLPixelFormatPVRTC_RGBA_4BPP;
-            this->actualFormatId = angle::FormatID::PVRTC1_RGBA_4BPP_UNORM_BLOCK;
-            break;
-
-        case angle::FormatID::PVRTC1_RGBA_4BPP_UNORM_SRGB_BLOCK:
-
-            this->metalFormat    = MTLPixelFormatPVRTC_RGBA_4BPP_sRGB;
-            this->actualFormatId = angle::FormatID::PVRTC1_RGBA_4BPP_UNORM_SRGB_BLOCK;
-            break;
-
-        case angle::FormatID::PVRTC1_RGB_2BPP_UNORM_BLOCK:
-
-            this->metalFormat    = MTLPixelFormatPVRTC_RGB_2BPP;
-            this->actualFormatId = angle::FormatID::PVRTC1_RGB_2BPP_UNORM_BLOCK;
-            break;
-
-        case angle::FormatID::PVRTC1_RGB_2BPP_UNORM_SRGB_BLOCK:
-
-            this->metalFormat    = MTLPixelFormatPVRTC_RGB_2BPP_sRGB;
-            this->actualFormatId = angle::FormatID::PVRTC1_RGB_2BPP_UNORM_SRGB_BLOCK;
-            break;
-
-        case angle::FormatID::PVRTC1_RGB_4BPP_UNORM_BLOCK:
-
-            this->metalFormat    = MTLPixelFormatPVRTC_RGB_4BPP;
-            this->actualFormatId = angle::FormatID::PVRTC1_RGB_4BPP_UNORM_BLOCK;
-            break;
-
-        case angle::FormatID::PVRTC1_RGB_4BPP_UNORM_SRGB_BLOCK:
-
-            this->metalFormat    = MTLPixelFormatPVRTC_RGB_4BPP_sRGB;
-            this->actualFormatId = angle::FormatID::PVRTC1_RGB_4BPP_UNORM_SRGB_BLOCK;
-            break;
-
         case angle::FormatID::D16_UNORM:
 
             this->metalFormat    = MTLPixelFormatDepth32Float;
