@@ -345,6 +345,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // EXT_shader_framebuffer_fetch_non_coherent
     void framebufferFetchBarrier() override;
 
+    // KHR_blend_equation_advanced
+    void blendBarrier() override;
+
     // GL_ANGLE_vulkan_image
     angle::Result acquireTextures(const gl::Context *context,
                                   const gl::TextureBarrierVector &textureBarriers) override;
@@ -723,6 +726,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DIRTY_BIT_TRANSFORM_FEEDBACK_RESUME,
         DIRTY_BIT_DESCRIPTOR_SETS,
         DIRTY_BIT_FRAMEBUFFER_FETCH_BARRIER,
+        DIRTY_BIT_BLEND_BARRIER,
         // Dynamic viewport/scissor
         DIRTY_BIT_VIEWPORT,
         DIRTY_BIT_SCISSOR,
@@ -897,6 +901,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                      DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsFramebufferFetchBarrier(DirtyBits::Iterator *dirtyBitsIterator,
                                                              DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsBlendBarrier(DirtyBits::Iterator *dirtyBitsIterator,
+                                                  DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsTransformFeedbackBuffersEmulation(
         DirtyBits::Iterator *dirtyBitsIterator,
         DirtyBits dirtyBitMask);
