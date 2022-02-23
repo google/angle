@@ -660,8 +660,7 @@ void Context::initializeDefaultResources()
     mReadInvalidateDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
     mDrawInvalidateDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
 
-    // Initialize overlay after implementation is initialized.
-    ANGLE_CONTEXT_TRY(mOverlay.init(this));
+    mOverlay.init();
 }
 
 egl::Error Context::onDestroy(const egl::Display *display)

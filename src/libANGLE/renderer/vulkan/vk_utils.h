@@ -1488,9 +1488,6 @@ enum class RenderPassClosureReason
     TemporaryForImageCopy,
     TemporaryForOverlayDraw,
 
-    // Misc
-    OverlayFontCreation,
-
     InvalidEnum,
     EnumCount = InvalidEnum,
 };

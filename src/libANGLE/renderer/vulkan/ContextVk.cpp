@@ -607,8 +607,6 @@ constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPas
      "Temporary render pass used for image copy closed"},
     {RenderPassClosureReason::TemporaryForOverlayDraw,
      "Temporary render pass used for overlay draw closed"},
-    {RenderPassClosureReason::OverlayFontCreation,
-     "Render pass closed due to creating Overlay font"},
 }};
 }  // anonymous namespace
 
