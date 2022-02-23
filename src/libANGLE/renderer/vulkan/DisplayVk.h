@@ -36,10 +36,7 @@ class ShareGroupVk : public ShareGroupImpl
     DescriptorSetLayoutCache &getDescriptorSetLayoutCache() { return mDescriptorSetLayoutCache; }
     ContextVkSet *getContexts() { return &mContexts; }
 
-    std::vector<vk::ResourceUseList> &&releaseResourceUseLists()
-    {
-        return std::move(mResourceUseLists);
-    }
+    void releaseResourceUseLists(const Serial &submitSerial);
     void acquireResourceUseList(vk::ResourceUseList &&resourceUseList)
     {
         mResourceUseLists.emplace_back(std::move(resourceUseList));

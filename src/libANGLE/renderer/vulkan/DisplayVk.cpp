@@ -435,6 +435,18 @@ void ShareGroupVk::onDestroy(const egl::Display *display)
     ASSERT(mResourceUseLists.empty());
 }
 
+void ShareGroupVk::releaseResourceUseLists(const Serial &submitSerial)
+{
+    if (!mResourceUseLists.empty())
+    {
+        for (vk::ResourceUseList &it : mResourceUseLists)
+        {
+            it.releaseResourceUsesAndUpdateSerials(submitSerial);
+        }
+        mResourceUseLists.clear();
+    }
+}
+
 vk::BufferPool *ShareGroupVk::getDefaultBufferPool(RendererVk *renderer,
                                                    VkDeviceSize size,
                                                    uint32_t memoryTypeIndex)

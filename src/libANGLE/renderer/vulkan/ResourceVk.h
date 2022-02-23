@@ -128,6 +128,7 @@ class SharedBufferSuballocationGarbage
     ~SharedBufferSuballocationGarbage() = default;
 
     bool destroyIfComplete(RendererVk *renderer, Serial completedSerial);
+    bool usedInRecordedCommands() const { return mLifetime.usedInRecordedCommands(); }
 
   private:
     SharedResourceUse mLifetime;
@@ -145,6 +146,7 @@ class SharedGarbage
     SharedGarbage &operator=(SharedGarbage &&rhs);
 
     bool destroyIfComplete(RendererVk *renderer, Serial completedSerial);
+    bool usedInRecordedCommands() const { return mLifetime.usedInRecordedCommands(); }
 
   private:
     SharedResourceUse mLifetime;
