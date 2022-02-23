@@ -559,6 +559,33 @@ unsigned int GetSamplerParameterCount(GLenum pname)
     return pname == GL_TEXTURE_BORDER_COLOR ? 4 : 1;
 }
 
+const char *ValidateProgramDrawAdvancedBlendState(const Context *context, Program *program)
+{
+    const State &state = context->getState();
+    const BlendEquationBitSet &supportedBlendEquations =
+        program->getState().getAdvancedBlendEquations();
+    const DrawBufferMask &enabledDrawBufferMask = state.getBlendStateExt().mEnabledMask;
+
+    for (size_t blendEnabledBufferIndex : enabledDrawBufferMask)
+    {
+        const gl::BlendEquationType &enabledBlendEquation = gl::FromGLenum<gl::BlendEquationType>(
+            state.getBlendStateExt().getEquationColorIndexed(blendEnabledBufferIndex));
+
+        if (enabledBlendEquation < gl::BlendEquationType::Multiply ||
+            enabledBlendEquation > gl::BlendEquationType::HslLuminosity)
+        {
+            continue;
+        }
+
+        if (!supportedBlendEquations.test(enabledBlendEquation))
+        {
+            return gl::err::kBlendEquationNotEnabled;
+        }
+    }
+
+    return nullptr;
+}
+
 ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
                                                    const Extensions &extensions,
                                                    Program *program)
@@ -616,7 +643,15 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
         }
     }
 
-    return nullptr;
+    // Enabled blend equation validation
+    const char *errorString = nullptr;
+
+    if (extensions.blendEquationAdvancedKHR)
+    {
+        errorString = ValidateProgramDrawAdvancedBlendState(context, program);
+    }
+
+    return errorString;
 }
 }  // anonymous namespace
 
@@ -4094,6 +4129,30 @@ const char *ValidateDrawStates(const Context *context)
         {
             // It is an error to render into an external texture that is not YUV.
             return kExternalTextureAttachmentNotYUV;
+        }
+    }
+
+    // Advanced blend equation can only be enabled for a single render target.
+    const BlendStateExt &blendStateExt = state.getBlendStateExt();
+    if (blendStateExt.mUsesAdvancedBlendEquationMask.any())
+    {
+        const size_t drawBufferCount            = framebuffer->getDrawbufferStateCount();
+        uint32_t advancedBlendRenderTargetCount = 0;
+
+        for (size_t drawBufferIndex : blendStateExt.mUsesAdvancedBlendEquationMask)
+        {
+            if (drawBufferIndex < drawBufferCount &&
+                framebuffer->getDrawBufferState(drawBufferIndex) != GL_NONE &&
+                blendStateExt.mEnabledMask.test(drawBufferIndex) &&
+                blendStateExt.mUsesAdvancedBlendEquationMask.test(drawBufferIndex))
+            {
+                ++advancedBlendRenderTargetCount;
+            }
+        }
+
+        if (advancedBlendRenderTargetCount > 1)
+        {
+            return kAdvancedBlendEquationWithMRT;
         }
     }
 

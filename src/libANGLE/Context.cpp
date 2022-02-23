@@ -5542,7 +5542,7 @@ void Context::activeTexture(GLenum texture)
 
 void Context::blendBarrier()
 {
-    UNIMPLEMENTED();
+    mImplementation->blendBarrier();
 }
 
 void Context::blendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
@@ -5553,11 +5553,15 @@ void Context::blendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha
 void Context::blendEquation(GLenum mode)
 {
     mState.setBlendEquation(mode, mode);
+
+    mStateCache.onBlendEquationChange(this);
 }
 
 void Context::blendEquationi(GLuint buf, GLenum mode)
 {
     mState.setBlendEquationIndexed(mode, mode, buf);
+
+    mStateCache.onBlendEquationChange(this);
 }
 
 void Context::blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
@@ -9891,6 +9895,11 @@ void StateCache::onColorMaskChange(Context *context)
 }
 
 void StateCache::onBlendFuncIndexedChange(Context *context)
+{
+    updateBasicDrawStatesError();
+}
+
+void StateCache::onBlendEquationChange(Context *context)
 {
     updateBasicDrawStatesError();
 }

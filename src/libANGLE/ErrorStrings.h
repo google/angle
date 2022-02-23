@@ -18,11 +18,14 @@ namespace err
 // clang-format off
 MSG k3DDepthStencil = "Format cannot be GL_DEPTH_COMPONENT or GL_DEPTH_STENCIL if target is GL_TEXTURE_3D";
 MSG kANGLECopyTexture3DUnavailable = "GL_ANGLE_copy_texture_3d extension not available.";
+MSG kAdvancedBlendEquationWithMRT = "Advanced blend equation only can be used when only one draw buffer is not NONE";
+MSG kAdvancedBlendExtensionNotEnabled = "GL_KHR_blend_equation_advanced extension not enabled.";
 MSG kAtomicCounterResourceName = "Active atomic counter resources are not assigned name strings.";
 MSG kAttributeZeroRequiresDivisorLimitation = "The current context doesn't support setting a non-zero divisor on the attribute with index zero. Please reorder the attributes in your vertex shader so that attribute zero can have a zero divisor.";
 MSG kBaseLevelNegative = "Base level must be at least 0.";
 MSG kBaseLevelNonZero = "Base level must be 0.";
 MSG kBaseLevelOutOfRange = "Texture base level out of range";
+MSG kBlendEquationNotEnabled = "Active fragment shader does not include the layout qualifier matching the blend equation";
 MSG kBlitDepthOrStencilFormatMismatch = "Depth/stencil buffer format combination not allowed for blit.";
 MSG kBlitDimensionsOutOfRange = "BlitFramebuffer dimensions out of 32-bit integer range.";
 MSG kBlitExtensionDepthStencilWholeBufferBlit = "Only whole-buffer depth and stencil blits are supported by this extension.";

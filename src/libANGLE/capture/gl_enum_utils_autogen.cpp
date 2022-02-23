@@ -160,6 +160,36 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_FUNC_SUBTRACT";
                 case 0x800B:
                     return "GL_FUNC_REVERSE_SUBTRACT";
+                case 0x9294:
+                    return "GL_MULTIPLY";
+                case 0x9295:
+                    return "GL_SCREEN";
+                case 0x9296:
+                    return "GL_OVERLAY";
+                case 0x9297:
+                    return "GL_DARKEN";
+                case 0x9298:
+                    return "GL_LIGHTEN";
+                case 0x9299:
+                    return "GL_COLORDODGE";
+                case 0x929A:
+                    return "GL_COLORBURN";
+                case 0x929B:
+                    return "GL_HARDLIGHT";
+                case 0x929C:
+                    return "GL_SOFTLIGHT";
+                case 0x929E:
+                    return "GL_DIFFERENCE";
+                case 0x92A0:
+                    return "GL_EXCLUSION";
+                case 0x92AD:
+                    return "GL_HSL_HUE";
+                case 0x92AE:
+                    return "GL_HSL_SATURATION";
+                case 0x92AF:
+                    return "GL_HSL_COLOR";
+                case 0x92B0:
+                    return "GL_HSL_LUMINOSITY";
                 default:
                     return UnknownGLenumToString(value);
             }
@@ -1749,36 +1779,6 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_COMPUTE_WORK_GROUP_COUNT";
                 case 0x91BF:
                     return "GL_MAX_COMPUTE_WORK_GROUP_SIZE";
-                case 0x9294:
-                    return "GL_MULTIPLY";
-                case 0x9295:
-                    return "GL_SCREEN";
-                case 0x9296:
-                    return "GL_OVERLAY";
-                case 0x9297:
-                    return "GL_DARKEN";
-                case 0x9298:
-                    return "GL_LIGHTEN";
-                case 0x9299:
-                    return "GL_COLORDODGE";
-                case 0x929A:
-                    return "GL_COLORBURN";
-                case 0x929B:
-                    return "GL_HARDLIGHT";
-                case 0x929C:
-                    return "GL_SOFTLIGHT";
-                case 0x929E:
-                    return "GL_DIFFERENCE";
-                case 0x92A0:
-                    return "GL_EXCLUSION";
-                case 0x92AD:
-                    return "GL_HSL_HUE";
-                case 0x92AE:
-                    return "GL_HSL_SATURATION";
-                case 0x92AF:
-                    return "GL_HSL_COLOR";
-                case 0x92B0:
-                    return "GL_HSL_LUMINOSITY";
                 case 0x92BB:
                     return "GL_PURGED_CONTEXT_RESET_NV";
                 case 0x92BE:

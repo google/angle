@@ -194,6 +194,9 @@ class ContextImpl : public GLImplFactory
     // EXT_shader_framebuffer_fetch_non_coherent
     virtual void framebufferFetchBarrier() {}
 
+    // KHR_blend_equation_advanced
+    virtual void blendBarrier() {}
+
     // State sync with dirty bits.
     virtual angle::Result syncState(const gl::Context *context,
                                     const gl::State::DirtyBits &dirtyBits,
