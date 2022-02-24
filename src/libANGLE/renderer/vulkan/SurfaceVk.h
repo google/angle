@@ -343,6 +343,8 @@ class WindowSurfaceVk : public SurfaceVk
 
     bool isMultiSampled() const;
 
+    bool supportsPresentMode(VkPresentModeKHR presentMode) const;
+
     std::vector<VkPresentModeKHR> mPresentModes;
 
     VkSwapchainKHR mSwapchain;

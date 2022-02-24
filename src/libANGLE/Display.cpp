@@ -2027,10 +2027,6 @@ void Display::initDisplayExtensions()
     // All backends support specific context versions
     mDisplayExtensions.createContextBackwardsCompatible = true;
 
-    // Note: we don't notify the back-end of a change to the renderbuffer right now. This extension
-    // is implemented only in the front-end. A full implementation involves notifying the back-end.
-    mDisplayExtensions.mutableRenderBufferKHR = true;
-
     mDisplayExtensionString = GenerateExtensionsString(mDisplayExtensions);
 }
 
