@@ -392,6 +392,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglQueryDisplayAttribANGLE";
         case EntryPoint::EGLQueryDisplayAttribEXT:
             return "eglQueryDisplayAttribEXT";
+        case EntryPoint::EGLQueryDmaBufFormatsEXT:
+            return "eglQueryDmaBufFormatsEXT";
+        case EntryPoint::EGLQueryDmaBufModifiersEXT:
+            return "eglQueryDmaBufModifiersEXT";
         case EntryPoint::EGLQueryStreamKHR:
             return "eglQueryStreamKHR";
         case EntryPoint::EGLQueryStreamu64KHR:

@@ -202,6 +202,8 @@ enum class EntryPoint
     EGLQueryDeviceStringEXT,
     EGLQueryDisplayAttribANGLE,
     EGLQueryDisplayAttribEXT,
+    EGLQueryDmaBufFormatsEXT,
+    EGLQueryDmaBufModifiersEXT,
     EGLQueryStreamKHR,
     EGLQueryStreamu64KHR,
     EGLQueryString,

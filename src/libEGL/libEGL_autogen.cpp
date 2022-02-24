@@ -644,6 +644,28 @@ EGLBoolean EGLAPIENTRY eglQueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribute
     return EGL_QueryDisplayAttribEXT(dpy, attribute, value);
 }
 
+// EGL_EXT_image_dma_buf_import_modifiers
+EGLBoolean EGLAPIENTRY eglQueryDmaBufFormatsEXT(EGLDisplay dpy,
+                                                EGLint max_formats,
+                                                EGLint *formats,
+                                                EGLint *num_formats)
+{
+    EnsureEGLLoaded();
+    return EGL_QueryDmaBufFormatsEXT(dpy, max_formats, formats, num_formats);
+}
+
+EGLBoolean EGLAPIENTRY eglQueryDmaBufModifiersEXT(EGLDisplay dpy,
+                                                  EGLint format,
+                                                  EGLint max_modifiers,
+                                                  EGLuint64KHR *modifiers,
+                                                  EGLBoolean *external_only,
+                                                  EGLint *num_modifiers)
+{
+    EnsureEGLLoaded();
+    return EGL_QueryDmaBufModifiersEXT(dpy, format, max_modifiers, modifiers, external_only,
+                                       num_modifiers);
+}
+
 // EGL_EXT_platform_base
 EGLSurface EGLAPIENTRY eglCreatePlatformPixmapSurfaceEXT(EGLDisplay dpy,
                                                          EGLConfig config,

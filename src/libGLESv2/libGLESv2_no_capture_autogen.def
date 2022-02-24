@@ -1259,6 +1259,10 @@ EXPORTS
     EGL_QueryDeviceStringEXT
     EGL_QueryDisplayAttribEXT
 
+    ; EGL_EXT_image_dma_buf_import_modifiers
+    EGL_QueryDmaBufFormatsEXT
+    EGL_QueryDmaBufModifiersEXT
+
     ; EGL_EXT_platform_base
     EGL_CreatePlatformPixmapSurfaceEXT
     EGL_CreatePlatformWindowSurfaceEXT

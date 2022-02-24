@@ -6518,4 +6518,26 @@ bool ValidateSetDamageRegionKHR(const ValidationContext *val,
     return false;
 }
 
+bool ValidateQueryDmaBufFormatsEXT(ValidationContext const *val,
+                                   Display const *dpy,
+                                   EGLint max_formats,
+                                   const EGLint *formats,
+                                   const EGLint *num_formats)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateQueryDmaBufModifiersEXT(ValidationContext const *val,
+                                     Display const *dpy,
+                                     EGLint format,
+                                     EGLint max_modifiers,
+                                     const EGLuint64KHR *modifiers,
+                                     const EGLBoolean *external_only,
+                                     const EGLint *num_modifiers)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 }  // namespace egl

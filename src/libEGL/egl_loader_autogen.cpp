@@ -86,6 +86,8 @@ PFNEGLGETSYNCVALUESCHROMIUMPROC l_EGL_GetSyncValuesCHROMIUM;
 PFNEGLQUERYDEVICEATTRIBEXTPROC l_EGL_QueryDeviceAttribEXT;
 PFNEGLQUERYDEVICESTRINGEXTPROC l_EGL_QueryDeviceStringEXT;
 PFNEGLQUERYDISPLAYATTRIBEXTPROC l_EGL_QueryDisplayAttribEXT;
+PFNEGLQUERYDMABUFFORMATSEXTPROC l_EGL_QueryDmaBufFormatsEXT;
+PFNEGLQUERYDMABUFMODIFIERSEXTPROC l_EGL_QueryDmaBufModifiersEXT;
 PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC l_EGL_CreatePlatformPixmapSurfaceEXT;
 PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC l_EGL_CreatePlatformWindowSurfaceEXT;
 PFNEGLGETPLATFORMDISPLAYEXTPROC l_EGL_GetPlatformDisplayEXT;
@@ -249,6 +251,10 @@ void LoadEGL_EGL(LoadProc loadProc)
         reinterpret_cast<PFNEGLQUERYDEVICESTRINGEXTPROC>(loadProc("EGL_QueryDeviceStringEXT"));
     l_EGL_QueryDisplayAttribEXT =
         reinterpret_cast<PFNEGLQUERYDISPLAYATTRIBEXTPROC>(loadProc("EGL_QueryDisplayAttribEXT"));
+    l_EGL_QueryDmaBufFormatsEXT =
+        reinterpret_cast<PFNEGLQUERYDMABUFFORMATSEXTPROC>(loadProc("EGL_QueryDmaBufFormatsEXT"));
+    l_EGL_QueryDmaBufModifiersEXT = reinterpret_cast<PFNEGLQUERYDMABUFMODIFIERSEXTPROC>(
+        loadProc("EGL_QueryDmaBufModifiersEXT"));
     l_EGL_CreatePlatformPixmapSurfaceEXT =
         reinterpret_cast<PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC>(
             loadProc("EGL_CreatePlatformPixmapSurfaceEXT"));

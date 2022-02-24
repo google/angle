@@ -899,4 +899,26 @@ EGLBoolean SetDamageRegionKHR(Thread *thread,
     return EGL_TRUE;
 }
 
+EGLBoolean QueryDmaBufFormatsEXT(Thread *thread,
+                                 egl::Display *display,
+                                 EGLint max_formats,
+                                 EGLint *formats,
+                                 EGLint *num_formats)
+{
+    UNIMPLEMENTED();
+    return EGL_FALSE;
+}
+
+EGLBoolean QueryDmaBufModifiersEXT(Thread *thread,
+                                   egl::Display *display,
+                                   EGLint format,
+                                   EGLint max_modifiers,
+                                   EGLuint64KHR *modifiers,
+                                   EGLBoolean *external_only,
+                                   EGLint *num_modifiers)
+{
+    UNIMPLEMENTED();
+    return EGL_FALSE;
+}
+
 }  // namespace egl
