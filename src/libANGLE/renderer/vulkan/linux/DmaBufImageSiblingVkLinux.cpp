@@ -350,6 +350,59 @@ egl::Error DmaBufImageSiblingVkLinux::initialize(const egl::Display *display)
     return angle::ToEGL(initImpl(displayVk), displayVk, EGL_BAD_PARAMETER);
 }
 
+VkImageUsageFlags FindSupportedUsageFlagsForFormat(
+    RendererVk *renderer,
+    VkFormat format,
+    uint64_t drmModifier,
+    VkImageFormatListCreateInfo imageFormatListCreateInfo,
+    VkImageUsageFlags usageFlags,
+    VkImageCreateFlags createFlags,
+    VkImageFormatProperties2 *outImageFormatProperties)
+{
+    if (!IsFormatSupported(renderer, format, drmModifier, usageFlags, createFlags,
+                           imageFormatListCreateInfo, outImageFormatProperties))
+    {
+        usageFlags &= ~kRenderUsage;
+        if (!IsFormatSupported(renderer, format, drmModifier, usageFlags, createFlags,
+                               imageFormatListCreateInfo, outImageFormatProperties))
+        {
+            usageFlags &= ~kTextureUsage;
+            if (!IsFormatSupported(renderer, format, drmModifier, usageFlags, createFlags,
+                                   imageFormatListCreateInfo, outImageFormatProperties))
+            {
+                // Can not find supported usage flags for this image.
+                return 0;
+            }
+        }
+    }
+
+    return usageFlags;
+}
+
+bool FindSupportedFlagsForFormat(RendererVk *renderer,
+                                 VkFormat format,
+                                 uint64_t drmModifier,
+                                 VkImageFormatListCreateInfo imageFormatListCreateInfo,
+                                 VkImageUsageFlags *outUsageFlags,
+                                 VkImageCreateFlags *outCreateFlags,
+                                 VkImageFormatProperties2 *outImageFormatProperties)
+{
+    VkImageUsageFlags supportedUsageFlags =
+        FindSupportedUsageFlagsForFormat(renderer, format, drmModifier, imageFormatListCreateInfo,
+                                         *outUsageFlags, *outCreateFlags, outImageFormatProperties);
+    if (supportedUsageFlags == 0)
+    {
+        // Remove mutable format bit and try again.
+        *outCreateFlags &= ~VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+        supportedUsageFlags = FindSupportedUsageFlagsForFormat(
+            renderer, format, drmModifier, imageFormatListCreateInfo, *outUsageFlags,
+            *outCreateFlags, outImageFormatProperties);
+    }
+
+    *outUsageFlags = supportedUsageFlags;
+    return supportedUsageFlags != 0;
+}
+
 angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
 {
     RendererVk *renderer = displayVk->getRenderer();
@@ -425,25 +478,15 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
         displayVk, actualImageFormatID, &externalMemoryImageCreateInfo, &imageFormatListCreateInfo,
         &imageListFormatsStorage, &createFlags);
 
-    if (!IsFormatSupported(renderer, vulkanFormat, plane0Modifier, usageFlags, createFlags,
-                           imageFormatListCreateInfo, &imageFormatProperties))
+    if (!FindSupportedFlagsForFormat(renderer, vulkanFormat, plane0Modifier,
+                                     imageFormatListCreateInfo, &usageFlags, &createFlags,
+                                     &imageFormatProperties))
     {
-        mRenderable = false;
-        usageFlags &= ~kRenderUsage;
-        if (!IsFormatSupported(renderer, vulkanFormat, plane0Modifier, usageFlags, createFlags,
-                               imageFormatListCreateInfo, &imageFormatProperties))
-        {
-            mTextureable = false;
-            usageFlags &= ~kTextureUsage;
-
-            if (!IsFormatSupported(renderer, vulkanFormat, plane0Modifier, usageFlags, createFlags,
-                                   imageFormatListCreateInfo, &imageFormatProperties))
-            {
-                // The image is completely unusable.
-                ANGLE_VK_CHECK(displayVk, false, VK_ERROR_FORMAT_NOT_SUPPORTED);
-            }
-        }
+        // The image is completely unusable.
+        ANGLE_VK_CHECK(displayVk, false, VK_ERROR_FORMAT_NOT_SUPPORTED);
     }
+    mRenderable  = usageFlags & kRenderUsage;
+    mTextureable = usageFlags & kTextureUsage;
 
     // Make sure image width/height/samples are within allowed range and the image is importable.
     const bool isWidthValid = static_cast<uint32_t>(mSize.width) <=
