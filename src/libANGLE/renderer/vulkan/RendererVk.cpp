@@ -1627,16 +1627,17 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     VkMemoryPropertyFlags requiredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
     bool persistentlyMapped             = mFeatures.persistentlyMappedBuffers.enabled;
 
-    // Coherent staging buffer
+    // Uncached coherent staging buffer
     VkMemoryPropertyFlags preferredFlags = VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
     ANGLE_VK_TRY(displayVk, mAllocator.findMemoryTypeIndexForBufferInfo(
                                 createInfo, requiredFlags, preferredFlags, persistentlyMapped,
                                 &mCoherentStagingBufferMemoryTypeIndex));
     ASSERT(mCoherentStagingBufferMemoryTypeIndex != kInvalidMemoryTypeIndex);
 
-    // Non-coherent staging buffer
+    // Cached (b/219974369) Non-coherent staging buffer
+    preferredFlags = VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
     ANGLE_VK_TRY(displayVk, mAllocator.findMemoryTypeIndexForBufferInfo(
-                                createInfo, requiredFlags, 0, persistentlyMapped,
+                                createInfo, requiredFlags, preferredFlags, persistentlyMapped,
                                 &mNonCoherentStagingBufferMemoryTypeIndex));
     ASSERT(mNonCoherentStagingBufferMemoryTypeIndex != kInvalidMemoryTypeIndex);
 
