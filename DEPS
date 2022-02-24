@@ -525,6 +525,11 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
+  'third_party/wayland': {
+    'url': '{chromium_git}/external/anongit.freedesktop.org/git/wayland/wayland@upstream/1.20.0',
+    'condition': 'not build_with_chromium and host_os == "linux"'
+  },
+
   'third_party/zlib': {
     'url': '{chromium_git}/chromium/src/third_party/zlib@27dbe48bd5b44177e48e39cea58a591c086ce9ff',
     'condition': 'not build_with_chromium',

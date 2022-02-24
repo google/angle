@@ -40,6 +40,8 @@ if (angle_has_build) {
   }
 
   angle_use_x11 = ozone_platform_x11 && !is_ggp && is_linux && !is_chromecast
+  angle_use_wayland =
+      ozone_platform_wayland && !is_ggp && is_linux && !is_chromecast
   angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp
 } else {
   declare_args() {
@@ -50,6 +52,7 @@ if (angle_has_build) {
     build_with_chromium = false
     dcheck_always_on = false
     angle_use_x11 = (is_linux || is_chromeos) && !is_ggp
+    angle_use_wayland = is_linux && !is_gpp
     use_ozone = false
     ozone_platform_gbm = false
     ozone_platform_wayland = false
@@ -129,17 +132,18 @@ declare_args() {
 
   angle_enable_d3d9 = is_win && !angle_is_winuwp
   angle_enable_d3d11 = is_win
-  angle_enable_gl = (ozone_platform_gbm || ozone_platform_wayland ||
-                     !is_linux || (angle_use_x11 && !is_chromeos)) &&
-                    !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64
+  angle_enable_gl =
+      (ozone_platform_gbm || ozone_platform_wayland || !is_linux ||
+       ((angle_use_x11 && !is_chromeos) || angle_use_wayland)) && !is_fuchsia &&
+      !angle_is_winuwp && !is_ggp && !is_win_arm64
 
   angle_enable_vulkan =
       angle_has_build &&
       !(is_android && build_with_chromium && is_official_build) &&
       ((is_win && !angle_is_winuwp) ||
        ((is_linux || is_chromeos) &&
-        (angle_use_x11 || angle_use_vulkan_display)) || is_android ||
-       is_fuchsia || is_ggp || is_mac)
+        (angle_use_x11 || angle_use_wayland || angle_use_vulkan_display)) ||
+       is_android || is_fuchsia || is_ggp || is_mac)
 
   # When set to true, ANGLE will not use VK_KHR_surface and VK_KHR_swapchain
   # extensions. Content can be rendered only off-screen.
@@ -206,6 +210,9 @@ declare_args() {
   angle_enable_eagl = angle_enable_gl && is_ios &&
                       !(target_environment == "catalyst" &&
                         (target_cpu == "x86" || target_cpu == "x64"))
+
+  # Directory where to find wayland source files
+  angle_wayland_dir = "$angle_root/third_party/wayland"
 
   angle_vulkan_headers_dir =
       "$angle_root/third_party/vulkan-deps/vulkan-headers/src"
