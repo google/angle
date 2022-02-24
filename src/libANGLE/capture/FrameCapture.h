@@ -308,7 +308,7 @@ class TrackedResource final : angle::NonCopyable
     ResourceCalls &getResourceRestoreCalls() { return mResourceRestoreCalls; }
 
   private:
-    // Resource regen calls will delete and gen a resource
+    // Resource regen calls will gen a resource
     ResourceCalls mResourceRegenCalls;
     // Resource restore calls will restore the contents of a resource
     ResourceCalls mResourceRestoreCalls;
