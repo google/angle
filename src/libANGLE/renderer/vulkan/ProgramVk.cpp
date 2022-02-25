@@ -205,6 +205,11 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                     &mGlslangProgramInterfaceInfo, &spirvBlobs,
                                     &mExecutable.mVariableInfoMap);
 
+    if (contextVk->getFeatures().enablePrecisionQualifiers.enabled)
+    {
+        mExecutable.resolvePrecisionMismatch(mergedVaryings);
+    }
+
     // Compile the shaders.
     angle::Result status = mExecutable.mOriginalShaderInfo.initShaders(
         mState.getExecutable().getLinkedShaderStages(), spirvBlobs, mExecutable.mVariableInfoMap);
@@ -217,11 +222,6 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);
-    }
-
-    if (contextVk->getFeatures().enablePrecisionQualifiers.enabled)
-    {
-        mExecutable.resolvePrecisionMismatch(mergedVaryings);
     }
 
     // TODO(jie.a.chen@intel.com): Parallelize linking.
