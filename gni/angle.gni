@@ -52,7 +52,7 @@ if (angle_has_build) {
     build_with_chromium = false
     dcheck_always_on = false
     angle_use_x11 = (is_linux || is_chromeos) && !is_ggp
-    angle_use_wayland = is_linux && !is_gpp
+    angle_use_wayland = is_linux && !is_ggp
     use_ozone = false
     ozone_platform_gbm = false
     ozone_platform_wayland = false
