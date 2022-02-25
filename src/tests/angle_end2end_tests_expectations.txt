@@ -256,6 +256,11 @@
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 6116 ANDROID GLES : GLSLTestLoops.ForNoCondition/* = SKIP
 6237 ANDROID GLES : BufferDataTestES3.DrawWithNotCallingBufferData/* = SKIP
+7059 ANDROID VULKAN : EGLSurfaceTest.ResizeWindowWithDraw/* = SKIP
+7059 ANDROID : EGLReadinessCheckTest.IsRunningOnANGLE/* = SKIP
+7059 ANDROID : EGLReadinessCheckTest.GetProcAddressNegativeTest/* = SKIP
+7059 ANDROID : EGLReadinessCheckTest.HasGetPlatformDisplayEXT/* = SKIP
+7059 ANDROID : EGLContextSharingTestNoSyncTextureUploads.NoSync/* = SKIP
 
 // Reading back the contents of an RGBX image initialized with non-255 alpha returns the original alpha (instead of 255)
 6472 ANDROID GLES : ImageTestES3.RGBXAHBImportThenUpload/* = SKIP
