@@ -1943,6 +1943,7 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
         ASSERT((mImageUsageFlags & VK_IMAGE_USAGE_STORAGE_BIT) != 0);
 
         mImage->retain(&contextVk->getResourceUseList());
+        getImageViews().retain(&contextVk->getResourceUseList());
 
         return generateMipmapsWithCompute(contextVk);
     }
@@ -2263,8 +2264,11 @@ angle::Result TextureVk::respecifyImageStorage(ContextVk *contextVk)
         }
         else
         {
-            stageSelfAsSubresourceUpdates(contextVk);
+            // Make the image stage itself as updates to its levels.
+            mImage->stageSelfAsSubresourceUpdates(contextVk, mImage->getLevelCount(),
+                                                  mRedefinedLevels);
         }
+
         // Release the current image so that it will be recreated with the correct number of mip
         // levels, base level, and max level.
         releaseImage(contextVk);
@@ -2674,9 +2678,9 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         // the levels have already been discarded through the |removeStagedUpdates| call above.
         ANGLE_TRY(flushImageStagedUpdates(contextVk));
 
-        stageSelfAsSubresourceUpdates(contextVk);
+        mImage->stageSelfAsSubresourceUpdates(contextVk, 1, {});
 
-        // Release the mImage without collecting garbage from image views.
+        // Release views and render targets created for the old image.
         releaseImage(contextVk);
     }
 
@@ -2804,6 +2808,7 @@ const vk::ImageView &TextureVk::getReadImageViewAndRecordUse(ContextVk *contextV
     ASSERT(mImage->valid());
 
     const vk::ImageViewHelper &imageViews = getImageViews();
+    imageViews.retain(&contextVk->getResourceUseList());
 
     if (mState.isStencilMode() && imageViews.hasStencilReadImageView())
     {
@@ -2827,6 +2832,7 @@ const vk::ImageView &TextureVk::getFetchImageViewAndRecordUse(ContextVk *context
     ASSERT(mImage->valid());
 
     const vk::ImageViewHelper &imageViews = getImageViews();
+    imageViews.retain(&contextVk->getResourceUseList());
 
     // We don't currently support fetch for depth/stencil cube map textures.
     ASSERT(!imageViews.hasStencilReadImageView() || !imageViews.hasFetchImageView());
@@ -2846,6 +2852,7 @@ const vk::ImageView &TextureVk::getCopyImageViewAndRecordUse(ContextVk *contextV
     ASSERT(mImage->valid());
 
     const vk::ImageViewHelper &imageViews = getImageViews();
+    imageViews.retain(&contextVk->getResourceUseList());
 
     const angle::Format &angleFormat = mImage->getActualFormat();
     ASSERT(angleFormat.isSRGB ==
@@ -3028,8 +3035,6 @@ void TextureVk::releaseImage(ContextVk *contextVk)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    releaseImageViews(contextVk);
-
     if (mImage)
     {
         if (mOwnsImage)
@@ -3051,26 +3056,9 @@ void TextureVk::releaseImage(ContextVk *contextVk)
         }
     }
 
-    onStateChange(angle::SubjectMessage::SubjectChanged);
-    mRedefinedLevels.reset();
-}
-
-void TextureVk::releaseImageViews(ContextVk *contextVk)
-{
-    RendererVk *renderer = contextVk->getRenderer();
-
-    if (mImage == nullptr)
+    for (vk::ImageViewHelper &imageViews : mMultisampledImageViews)
     {
-        for (vk::ImageViewHelper &imageViewHelper : mMultisampledImageViews)
-        {
-            ASSERT(imageViewHelper.isImageViewGarbageEmpty());
-        }
-        return;
-    }
-
-    for (vk::ImageViewHelper &imageViewHelper : mMultisampledImageViews)
-    {
-        mImage->collectViewGarbage(renderer, &imageViewHelper);
+        imageViews.release(renderer);
     }
 
     for (auto &renderTargets : mSingleLayerRenderTargets)
@@ -3084,6 +3072,9 @@ void TextureVk::releaseImageViews(ContextVk *contextVk)
         renderTargets.clear();
     }
     mMultiLayerRenderTargets.clear();
+
+    onStateChange(angle::SubjectMessage::SubjectChanged);
+    mRedefinedLevels.reset();
 }
 
 void TextureVk::releaseStagedUpdates(ContextVk *contextVk)
@@ -3344,17 +3335,7 @@ uint32_t TextureVk::getImageViewLayerCount() const
 
 angle::Result TextureVk::refreshImageViews(ContextVk *contextVk)
 {
-    vk::ImageViewHelper &imageView = getImageViews();
-    if (mImage == nullptr)
-    {
-        ASSERT(imageView.isImageViewGarbageEmpty());
-    }
-    else
-    {
-        RendererVk *renderer = contextVk->getRenderer();
-        mImage->collectViewGarbage(renderer, &imageView);
-    }
-
+    getImageViews().release(contextVk->getRenderer());
     const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
 
     ANGLE_TRY(initImageViews(contextVk, mImage->getActualFormat(), baseLevelDesc.format.info->sized,
@@ -3467,17 +3448,6 @@ angle::Result TextureVk::ensureRenderable(ContextVk *contextVk)
 bool TextureVk::imageHasActualImageFormat(angle::FormatID actualFormatID) const
 {
     return mImage && (mImage->getActualFormatID() != actualFormatID);
-}
-
-void TextureVk::stageSelfAsSubresourceUpdates(ContextVk *contextVk)
-{
-    // If we are calling stageSelfAsSubresourceUpdates(), the current image will be swapped
-    // to prevImage in stageSelfAsSubresourceUpdates(), therefore we need to release the
-    // imageViews first as we want to use current image.mUse to keep track of imageViews' resource
-    // lifetime.
-    releaseImageViews(contextVk);
-    // Make the image stage itself as updates to its levels.
-    mImage->stageSelfAsSubresourceUpdates(contextVk, mImage->getLevelCount(), mRedefinedLevels);
 }
 
 }  // namespace rx
