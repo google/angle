@@ -2399,7 +2399,7 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
 
 angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk, ImageMipLevels mipLevels)
 {
-    if (mImage->valid() && !mImage->hasStagedUpdatesInAllocatedLevels())
+    if (mImage == nullptr || (mImage->valid() && !mImage->hasStagedUpdatesInAllocatedLevels()))
     {
         return angle::Result::Continue;
     }
@@ -2715,7 +2715,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     // For AHBs, the ImageViews are created with VkSamplerYcbcrConversionInfo's chromaFilter
     // matching min/magFilters as part of the eglEGLImageTargetTexture2DOES() call. However, the
     // min/mag filters can change later, requiring the ImageViews to be created.
-    if (mImage->valid() && mImage->hasImmutableSampler() &&
+    if (mImage && mImage->valid() && mImage->hasImmutableSampler() &&
         (dirtyBits.test(gl::Texture::DIRTY_BIT_MIN_FILTER) ||
          dirtyBits.test(gl::Texture::DIRTY_BIT_MAG_FILTER)))
     {
@@ -2747,9 +2747,13 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         ANGLE_TRY(refreshImageViews(contextVk));
     }
 
-    vk::SamplerDesc samplerDesc(contextVk, mState.getSamplerState(), mState.isStencilMode(),
-                                &mImage->getYcbcrConversionDesc(), mImage->getIntendedFormatID());
-    ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, samplerDesc, &mSampler));
+    if (mImage)
+    {
+        vk::SamplerDesc samplerDesc(contextVk, mState.getSamplerState(), mState.isStencilMode(),
+                                    &mImage->getYcbcrConversionDesc(),
+                                    mImage->getIntendedFormatID());
+        ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, samplerDesc, &mSampler));
+    }
 
     return angle::Result::Continue;
 }
