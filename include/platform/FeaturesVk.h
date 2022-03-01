@@ -578,6 +578,11 @@ struct FeaturesVk : FeatureSetBase
         "supportsSurfaceProtectedCapabilitiesExtension", FeatureCategory::VulkanFeatures,
         "VkInstance supports the VK_KHR_surface_protected_capabilities extension", &members};
 
+    // Whether the VkInstance supports the VK_GOOGLE_surfaceless_query extension.
+    Feature supportsSurfacelessQueryExtension = {
+        "supportsSurfacelessQueryExtension", FeatureCategory::VulkanFeatures,
+        "VkInstance supports the VK_GOOGLE_surfaceless_query extension", &members};
+
     // Whether the VkSurface supports protected swapchains from
     // supportsSurfaceProtectedCapabilitiesExtension.
     Feature supportsSurfaceProtectedSwapchains = {
