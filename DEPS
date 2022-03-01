@@ -1091,6 +1091,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/five_nights_at_freddys': {
+      'packages': [
+        {
+            'package': 'angle/traces/five_nights_at_freddys',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/free_fire': {
       'packages': [
         {
