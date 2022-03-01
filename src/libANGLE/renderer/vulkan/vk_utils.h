@@ -1227,11 +1227,7 @@ constexpr bool kOutputCumulativePerfCounters = false;
 // Performance and resource counters.
 struct RenderPassPerfCounters
 {
-    // load/storeOps. Maximum value for color = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS and for
-    // depth/stencil = 1 each.
-    uint8_t colorClears;
-    uint8_t colorLoads;
-    uint8_t colorStores;
+    // load/storeOps. Includes ops for resolve attachment. Maximum value = 2.
     uint8_t depthClears;
     uint8_t depthLoads;
     uint8_t depthStores;
@@ -1257,9 +1253,6 @@ struct PerfCounters
     uint32_t writeDescriptorSets;
     uint32_t flushedOutsideRenderPassCommandBuffers;
     uint32_t resolveImageCommands;
-    uint32_t colorClears;
-    uint32_t colorLoads;
-    uint32_t colorStores;
     uint32_t depthClears;
     uint32_t depthLoads;
     uint32_t depthStores;
