@@ -131,7 +131,6 @@
 6399 : Texture2DTestES3.TexStorage2DSimultaneousUseOfMultipleYuvSourcesNoData/* = CRASH
 6400 : Texture2DTestES3.TextureCompletenessChangesWithBaseLevel/* = CRASH
 6399 : Texture2DTestES3.TexStorage2DLargeYuvTextureCount/* = CRASH
-6314 : Texture2DTestES3.UpdateRenderTargetCacheOnDestroyTexStorage/* = CRASH
 6335 DEBUG : VulkanExternalImageTest.ShouldImportSemaphoreOpaqueFd/* = CRASH
 
 
