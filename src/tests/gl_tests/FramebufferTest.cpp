@@ -4120,6 +4120,25 @@ TEST_P(FramebufferTest_ES3, BindRenderbufferThenModifySize)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests redefining a layered framebuffer attachment.
+TEST_P(FramebufferTest_ES3, RedefineLayerAttachment)
+{
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    std::vector<uint8_t> imgData(20480, 0);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R8, 8, 8, 8, 0, GL_RED, GL_UNSIGNED_BYTE, imgData.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, 8);
+    glGenerateMipmap(GL_TEXTURE_3D);
+
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R8UI, 16, 16, 16, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE,
+                 imgData.data());
+    glCopyTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 2, 2, 15, 16, 16);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2(AddMockTextureNoRenderTargetTest);
 ANGLE_INSTANTIATE_TEST_ES2(FramebufferTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
