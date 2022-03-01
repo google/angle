@@ -144,6 +144,7 @@ const ProcEntry g_procTable[] = {
     {"glAlphaFunc", P(GL_AlphaFunc)},
     {"glAlphaFuncx", P(GL_AlphaFuncx)},
     {"glAttachShader", P(GL_AttachShader)},
+    {"glBeginPerfMonitorAMD", P(GL_BeginPerfMonitorAMD)},
     {"glBeginQuery", P(GL_BeginQuery)},
     {"glBeginQueryEXT", P(GL_BeginQueryEXT)},
     {"glBeginTransformFeedback", P(GL_BeginTransformFeedback)},
@@ -262,6 +263,7 @@ const ProcEntry g_procTable[] = {
     {"glDeleteFramebuffers", P(GL_DeleteFramebuffers)},
     {"glDeleteFramebuffersOES", P(GL_DeleteFramebuffersOES)},
     {"glDeleteMemoryObjectsEXT", P(GL_DeleteMemoryObjectsEXT)},
+    {"glDeletePerfMonitorsAMD", P(GL_DeletePerfMonitorsAMD)},
     {"glDeleteProgram", P(GL_DeleteProgram)},
     {"glDeleteProgramPipelines", P(GL_DeleteProgramPipelines)},
     {"glDeleteProgramPipelinesEXT", P(GL_DeleteProgramPipelinesEXT)},
@@ -335,6 +337,7 @@ const ProcEntry g_procTable[] = {
     {"glEnablei", P(GL_Enablei)},
     {"glEnableiEXT", P(GL_EnableiEXT)},
     {"glEnableiOES", P(GL_EnableiOES)},
+    {"glEndPerfMonitorAMD", P(GL_EndPerfMonitorAMD)},
     {"glEndQuery", P(GL_EndQuery)},
     {"glEndQueryEXT", P(GL_EndQueryEXT)},
     {"glEndTransformFeedback", P(GL_EndTransformFeedback)},
@@ -369,6 +372,7 @@ const ProcEntry g_procTable[] = {
     {"glGenFencesNV", P(GL_GenFencesNV)},
     {"glGenFramebuffers", P(GL_GenFramebuffers)},
     {"glGenFramebuffersOES", P(GL_GenFramebuffersOES)},
+    {"glGenPerfMonitorsAMD", P(GL_GenPerfMonitorsAMD)},
     {"glGenProgramPipelines", P(GL_GenProgramPipelines)},
     {"glGenProgramPipelinesEXT", P(GL_GenProgramPipelinesEXT)},
     {"glGenQueries", P(GL_GenQueries)},
@@ -447,6 +451,12 @@ const ProcEntry g_procTable[] = {
     {"glGetObjectLabelKHR", P(GL_GetObjectLabelKHR)},
     {"glGetObjectPtrLabel", P(GL_GetObjectPtrLabel)},
     {"glGetObjectPtrLabelKHR", P(GL_GetObjectPtrLabelKHR)},
+    {"glGetPerfMonitorCounterDataAMD", P(GL_GetPerfMonitorCounterDataAMD)},
+    {"glGetPerfMonitorCounterInfoAMD", P(GL_GetPerfMonitorCounterInfoAMD)},
+    {"glGetPerfMonitorCounterStringAMD", P(GL_GetPerfMonitorCounterStringAMD)},
+    {"glGetPerfMonitorCountersAMD", P(GL_GetPerfMonitorCountersAMD)},
+    {"glGetPerfMonitorGroupStringAMD", P(GL_GetPerfMonitorGroupStringAMD)},
+    {"glGetPerfMonitorGroupsAMD", P(GL_GetPerfMonitorGroupsAMD)},
     {"glGetPointerv", P(GL_GetPointerv)},
     {"glGetPointervKHR", P(GL_GetPointervKHR)},
     {"glGetPointervRobustANGLERobustANGLE", P(GL_GetPointervRobustANGLERobustANGLE)},
@@ -786,6 +796,7 @@ const ProcEntry g_procTable[] = {
     {"glScalef", P(GL_Scalef)},
     {"glScalex", P(GL_Scalex)},
     {"glScissor", P(GL_Scissor)},
+    {"glSelectPerfMonitorCountersAMD", P(GL_SelectPerfMonitorCountersAMD)},
     {"glSemaphoreParameterui64vEXT", P(GL_SemaphoreParameterui64vEXT)},
     {"glSetFenceNV", P(GL_SetFenceNV)},
     {"glShadeModel", P(GL_ShadeModel)},
@@ -934,5 +945,5 @@ const ProcEntry g_procTable[] = {
     {"glWaitSync", P(GL_WaitSync)},
     {"glWeightPointerOES", P(GL_WeightPointerOES)}};
 
-const size_t g_numProcs = 901;
+const size_t g_numProcs = 912;
 }  // namespace egl

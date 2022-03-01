@@ -4047,4 +4047,170 @@ void CaptureReleaseTexturesANGLE_layouts(const State &glState,
     UNIMPLEMENTED();
 }
 
+void CaptureDeletePerfMonitorsAMD_monitors(const State &glState,
+                                           bool isCallValid,
+                                           GLsizei n,
+                                           GLuint *monitors,
+                                           angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGenPerfMonitorsAMD_monitors(const State &glState,
+                                        bool isCallValid,
+                                        GLsizei n,
+                                        GLuint *monitors,
+                                        angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorCounterDataAMD_data(const State &glState,
+                                              bool isCallValid,
+                                              GLuint monitor,
+                                              GLenum pname,
+                                              GLsizei dataSize,
+                                              GLuint *data,
+                                              GLint *bytesWritten,
+                                              angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorCounterDataAMD_bytesWritten(const State &glState,
+                                                      bool isCallValid,
+                                                      GLuint monitor,
+                                                      GLenum pname,
+                                                      GLsizei dataSize,
+                                                      GLuint *data,
+                                                      GLint *bytesWritten,
+                                                      angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorCounterInfoAMD_data(const State &glState,
+                                              bool isCallValid,
+                                              GLuint group,
+                                              GLuint counter,
+                                              GLenum pname,
+                                              void *data,
+                                              angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorCounterStringAMD_length(const State &glState,
+                                                  bool isCallValid,
+                                                  GLuint group,
+                                                  GLuint counter,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLchar *counterString,
+                                                  angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorCounterStringAMD_counterString(const State &glState,
+                                                         bool isCallValid,
+                                                         GLuint group,
+                                                         GLuint counter,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLchar *counterString,
+                                                         angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorCountersAMD_numCounters(const State &glState,
+                                                  bool isCallValid,
+                                                  GLuint group,
+                                                  GLint *numCounters,
+                                                  GLint *maxActiveCounters,
+                                                  GLsizei counterSize,
+                                                  GLuint *counters,
+                                                  angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorCountersAMD_maxActiveCounters(const State &glState,
+                                                        bool isCallValid,
+                                                        GLuint group,
+                                                        GLint *numCounters,
+                                                        GLint *maxActiveCounters,
+                                                        GLsizei counterSize,
+                                                        GLuint *counters,
+                                                        angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorCountersAMD_counters(const State &glState,
+                                               bool isCallValid,
+                                               GLuint group,
+                                               GLint *numCounters,
+                                               GLint *maxActiveCounters,
+                                               GLsizei counterSize,
+                                               GLuint *counters,
+                                               angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorGroupStringAMD_length(const State &glState,
+                                                bool isCallValid,
+                                                GLuint group,
+                                                GLsizei bufSize,
+                                                GLsizei *length,
+                                                GLchar *groupString,
+                                                angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorGroupStringAMD_groupString(const State &glState,
+                                                     bool isCallValid,
+                                                     GLuint group,
+                                                     GLsizei bufSize,
+                                                     GLsizei *length,
+                                                     GLchar *groupString,
+                                                     angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorGroupsAMD_numGroups(const State &glState,
+                                              bool isCallValid,
+                                              GLint *numGroups,
+                                              GLsizei groupsSize,
+                                              GLuint *groups,
+                                              angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorGroupsAMD_groups(const State &glState,
+                                           bool isCallValid,
+                                           GLint *numGroups,
+                                           GLsizei groupsSize,
+                                           GLuint *groups,
+                                           angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureSelectPerfMonitorCountersAMD_counterList(const State &glState,
+                                                     bool isCallValid,
+                                                     GLuint monitor,
+                                                     GLboolean enable,
+                                                     GLuint group,
+                                                     GLint numCounters,
+                                                     GLuint *counterList,
+                                                     angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
 }  // namespace gl

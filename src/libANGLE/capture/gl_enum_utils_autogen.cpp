@@ -1227,6 +1227,20 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_POINT_SIZE_ARRAY_BUFFER_BINDING_OES";
                 case 0x8BBB:
                     return "GL_FRAMEBUFFER_FLIP_Y_MESA";
+                case 0x8BC0:
+                    return "GL_COUNTER_TYPE_AMD";
+                case 0x8BC1:
+                    return "GL_COUNTER_RANGE_AMD";
+                case 0x8BC2:
+                    return "GL_UNSIGNED_INT64_AMD";
+                case 0x8BC3:
+                    return "GL_PERCENTAGE_AMD";
+                case 0x8BC4:
+                    return "GL_PERFMON_RESULT_AVAILABLE_AMD";
+                case 0x8BC5:
+                    return "GL_PERFMON_RESULT_SIZE_AMD";
+                case 0x8BC6:
+                    return "GL_PERFMON_RESULT_AMD";
                 case 0x8BE7:
                     return "GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT";
                 case 0x8BFA:
