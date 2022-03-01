@@ -113,6 +113,7 @@ struct ProgramExecutablePerfCounters
     DescriptorSetCountList descriptorSetCacheHits;
     DescriptorSetCountList descriptorSetCacheMisses;
     DescriptorSetCountList descriptorSetCacheSizes;
+    DescriptorSetCountList descriptorSetCacheKeySizesBytes;
 };
 
 using DefaultUniformBlockMap = gl::ShaderMap<std::shared_ptr<DefaultUniformBlock>>;

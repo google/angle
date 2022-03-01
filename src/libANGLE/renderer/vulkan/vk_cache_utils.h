@@ -1142,6 +1142,8 @@ class DescriptorSetDesc
 
     void reset() { mPayload.clear(); }
 
+    size_t getKeySizeBytes() const { return mPayload.size() * sizeof(uint32_t); }
+
     bool operator==(const DescriptorSetDesc &other) const
     {
         return (mPayload.size() == other.mPayload.size()) &&
@@ -1825,6 +1827,17 @@ class DescriptorSetCache final : angle::NonCopyable
     void accumulateCacheStats(VulkanCacheType cacheType, Accumulator *accumulator)
     {
         accumulator->accumulateCacheStats(cacheType, mCacheStats);
+    }
+
+    size_t getTotalCacheKeySizeBytes() const
+    {
+        size_t totalSize = 0;
+        for (const auto &iter : mPayload)
+        {
+            const vk::DescriptorSetDesc &desc = iter.first;
+            totalSize += desc.getKeySizeBytes();
+        }
+        return totalSize;
     }
 
   private:

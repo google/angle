@@ -2229,6 +2229,7 @@ void ContextVk::syncObjectPerfCounters()
 {
     mPerfCounters.descriptorSetAllocations                  = 0;
     mPerfCounters.descriptorSetCacheTotalSize               = 0;
+    mPerfCounters.descriptorSetCacheKeySizeBytes            = 0;
     mPerfCounters.uniformsAndXfbDescriptorSetCacheHits      = 0;
     mPerfCounters.uniformsAndXfbDescriptorSetCacheMisses    = 0;
     mPerfCounters.uniformsAndXfbDescriptorSetCacheTotalSize = 0;
@@ -2287,6 +2288,11 @@ void ContextVk::syncObjectPerfCounters()
             progPerfCounters.descriptorSetCacheMisses[DescriptorSetIndex::ShaderResource];
         mPerfCounters.shaderBuffersDescriptorSetCacheTotalSize +=
             progPerfCounters.descriptorSetCacheSizes[DescriptorSetIndex::ShaderResource];
+
+        for (uint32_t keySizeBytes : progPerfCounters.descriptorSetCacheKeySizesBytes)
+        {
+            mPerfCounters.descriptorSetCacheKeySizeBytes += keySizeBytes;
+        }
     }
 
     mPerfCounters.descriptorSetCacheTotalSize +=
@@ -2352,6 +2358,13 @@ void ContextVk::updateOverlayOnPresent()
         gl::RunningGraphWidget *dynamicBufferAllocations =
             overlay->getRunningGraphWidget(gl::WidgetId::VulkanDynamicBufferAllocations);
         dynamicBufferAllocations->next();
+    }
+
+    {
+        gl::CountWidget *cacheKeySize =
+            overlay->getCountWidget(gl::WidgetId::VulkanDescriptorCacheKeySize);
+        cacheKeySize->reset();
+        cacheKeySize->add(mPerfCounters.descriptorSetCacheKeySizeBytes);
     }
 }
 
