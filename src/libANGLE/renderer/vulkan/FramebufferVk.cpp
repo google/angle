@@ -1459,7 +1459,7 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     resolveRegion.extent.height                 = params.blitArea.height;
     resolveRegion.extent.depth                  = 1;
 
-    vk::PerfCounters &perfCounters = contextVk->getPerfCounters();
+    angle::VulkanPerfCounters &perfCounters = contextVk->getPerfCounters();
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
     {
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];

@@ -150,6 +150,7 @@ angle_end2end_tests_sources = [
   "gl_tests/UnpackRowLength.cpp",
   "gl_tests/VertexAttributeTest.cpp",
   "gl_tests/ViewportTest.cpp",
+  "gl_tests/VulkanPerformanceCounterTest.cpp",
   "gl_tests/WEBGLVideoTextureTest.cpp",
   "gl_tests/WebGLCompatibilityTest.cpp",
   "gl_tests/WebGLCompressedTextureAvailabilityTest.cpp",

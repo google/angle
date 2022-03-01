@@ -652,8 +652,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     vk::BufferHelper &getEmptyBuffer() { return mEmptyBuffer; }
 
-    const vk::PerfCounters &getPerfCounters() const { return mPerfCounters; }
-    vk::PerfCounters &getPerfCounters() { return mPerfCounters; }
+    const angle::VulkanPerfCounters &getPerfCounters() const { return mPerfCounters; }
+    angle::VulkanPerfCounters &getPerfCounters() { return mPerfCounters; }
 
     // Implementation of MultisampleTextureInitializer
     angle::Result initializeMultisampleTextureToBlack(const gl::Context *context,
@@ -687,6 +687,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         }
         return angle::Result::Continue;
     }
+
+    const angle::PerfMonitorCounterGroups &getPerfMonitorCounters() override;
 
   private:
     // Dirty bits.
@@ -1210,7 +1212,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     uint64_t mGpuEventTimestampOrigin;
 
     // A mix of per-frame and per-run counters.
-    vk::PerfCounters mPerfCounters;
+    angle::VulkanPerfCounters mPerfCounters;
+    angle::PerfMonitorCounterGroups mPerfMonitorCounters;
     ContextVkPerfCounters mContextPerfCounters;
     ContextVkPerfCounters mCumulativeContextPerfCounters;
 

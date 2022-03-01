@@ -256,6 +256,9 @@ class ContextImpl : public GLImplFactory
     virtual angle::Result releaseTextures(const gl::Context *context,
                                           gl::TextureBarrierVector *textureBarriers);
 
+    // AMD_performance_monitor
+    virtual const angle::PerfMonitorCounterGroups &getPerfMonitorCounters();
+
   protected:
     const gl::State &mState;
     gl::MemoryProgramCache *mMemoryProgramCache;

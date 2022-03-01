@@ -4074,7 +4074,7 @@ void CaptureGetPerfMonitorCounterDataAMD_data(const State &glState,
                                               GLint *bytesWritten,
                                               angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = dataSize;
 }
 
 void CaptureGetPerfMonitorCounterDataAMD_bytesWritten(const State &glState,
@@ -4086,7 +4086,7 @@ void CaptureGetPerfMonitorCounterDataAMD_bytesWritten(const State &glState,
                                                       GLint *bytesWritten,
                                                       angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetPerfMonitorCounterInfoAMD_data(const State &glState,
@@ -4109,7 +4109,7 @@ void CaptureGetPerfMonitorCounterStringAMD_length(const State &glState,
                                                   GLchar *counterString,
                                                   angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
 void CaptureGetPerfMonitorCounterStringAMD_counterString(const State &glState,
@@ -4121,7 +4121,7 @@ void CaptureGetPerfMonitorCounterStringAMD_counterString(const State &glState,
                                                          GLchar *counterString,
                                                          angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = bufSize;
 }
 
 void CaptureGetPerfMonitorCountersAMD_numCounters(const State &glState,
@@ -4133,7 +4133,7 @@ void CaptureGetPerfMonitorCountersAMD_numCounters(const State &glState,
                                                   GLuint *counters,
                                                   angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetPerfMonitorCountersAMD_maxActiveCounters(const State &glState,
@@ -4145,7 +4145,7 @@ void CaptureGetPerfMonitorCountersAMD_maxActiveCounters(const State &glState,
                                                         GLuint *counters,
                                                         angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetPerfMonitorCountersAMD_counters(const State &glState,
@@ -4157,7 +4157,7 @@ void CaptureGetPerfMonitorCountersAMD_counters(const State &glState,
                                                GLuint *counters,
                                                angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = counterSize * sizeof(GLuint);
 }
 
 void CaptureGetPerfMonitorGroupStringAMD_length(const State &glState,
@@ -4168,7 +4168,7 @@ void CaptureGetPerfMonitorGroupStringAMD_length(const State &glState,
                                                 GLchar *groupString,
                                                 angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
 void CaptureGetPerfMonitorGroupStringAMD_groupString(const State &glState,
@@ -4179,7 +4179,7 @@ void CaptureGetPerfMonitorGroupStringAMD_groupString(const State &glState,
                                                      GLchar *groupString,
                                                      angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = bufSize;
 }
 
 void CaptureGetPerfMonitorGroupsAMD_numGroups(const State &glState,

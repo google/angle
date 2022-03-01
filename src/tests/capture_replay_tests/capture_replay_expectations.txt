@@ -203,3 +203,5 @@
 # GLES 3.2 tests that fail because of missing features
 5366 : GeometryShaderTestES32.MaxGeometryImageUniforms/* = CRASH
 5366 : ProgramPipelineTest32.MaxGeometryImageUniforms/* = CRASH
+
+7088 : VulkanPerformanceCounterTest* = SKIP_FOR_CAPTURE

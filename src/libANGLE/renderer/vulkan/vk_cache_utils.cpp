@@ -1278,7 +1278,7 @@ void GetRenderPassAndUpdateCounters(ContextVk *contextVk,
     *renderPassOut = &renderPassHelper->getRenderPass();
     if (updatePerfCounters)
     {
-        PerfCounters &counters                   = contextVk->getPerfCounters();
+        angle::VulkanPerfCounters &counters      = contextVk->getPerfCounters();
         const RenderPassPerfCounters &rpCounters = renderPassHelper->getPerfCounters();
 
         counters.depthClears += rpCounters.depthClears;

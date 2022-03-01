@@ -649,6 +649,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // Needed by capture serialization logic that works with a "const" Context pointer.
     void finishImmutable() const;
 
+    const angle::PerfMonitorCounterGroups &getPerfMonitorCounterGroups() const;
+
   private:
     void initializeDefaultResources();
 
