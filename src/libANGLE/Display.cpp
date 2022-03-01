@@ -2361,4 +2361,26 @@ Error Display::handleGPUSwitch()
     return NoError();
 }
 
+bool Display::supportsDmaBufFormat(EGLint format) const
+{
+    return mImplementation->supportsDmaBufFormat(format);
+}
+
+Error Display::queryDmaBufFormats(EGLint max_formats, EGLint *formats, EGLint *num_formats)
+{
+    ANGLE_TRY(mImplementation->queryDmaBufFormats(max_formats, formats, num_formats));
+    return NoError();
+}
+
+Error Display::queryDmaBufModifiers(EGLint format,
+                                    EGLint max_modifiers,
+                                    EGLuint64KHR *modifiers,
+                                    EGLBoolean *external_only,
+                                    EGLint *num_modifiers)
+{
+    ANGLE_TRY(mImplementation->queryDmaBufModifiers(format, max_modifiers, modifiers, external_only,
+                                                    num_modifiers));
+    return NoError();
+}
+
 }  // namespace egl
