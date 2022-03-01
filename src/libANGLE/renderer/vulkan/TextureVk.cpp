@@ -2337,6 +2337,15 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
     ASSERT(mState.hasBeenBoundAsAttachment());
     ANGLE_TRY(ensureRenderable(contextVk));
 
+    if (mRedefinedLevels.any())
+    {
+        // If we have redefined levels, we must flush those out to fix the render targets.
+        ANGLE_TRY(respecifyImageStorage(contextVk));
+    }
+
+    // Otherwise, don't flush staged updates here. We'll handle that in FramebufferVk so we can
+    // defer clears.
+
     if (!mImage->valid())
     {
         // Immutable texture must already have a valid image
@@ -2376,8 +2385,6 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
             mState.getType(), samples, *mImage, useRobustInit));
     }
 
-    // Don't flush staged updates here. We'll handle that in FramebufferVk so it can defer clears.
-
     GLuint layerIndex = 0, layerCount = 0, imageLayerCount = 0;
     GetRenderTargetLayerCountAndIndex(mImage, imageIndex, &layerIndex, &layerCount,
                                       &imageLayerCount);
@@ -2388,10 +2395,14 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                                      gl::LevelIndex(imageIndex.getLevelIndex()),
                                      renderToTextureIndex);
 
-        ASSERT(imageIndex.getLevelIndex() <
-               static_cast<int32_t>(mSingleLayerRenderTargets[renderToTextureIndex].size()));
-        *rtOut = &mSingleLayerRenderTargets[renderToTextureIndex][imageIndex.getLevelIndex()]
-                                           [layerIndex];
+        std::vector<RenderTargetVector> &levelRenderTargets =
+            mSingleLayerRenderTargets[renderToTextureIndex];
+        ASSERT(imageIndex.getLevelIndex() < static_cast<int32_t>(levelRenderTargets.size()));
+
+        RenderTargetVector &layerRenderTargets = levelRenderTargets[imageIndex.getLevelIndex()];
+        ASSERT(imageIndex.getLayerIndex() < static_cast<int32_t>(layerRenderTargets.size()));
+
+        *rtOut = &layerRenderTargets[layerIndex];
     }
     else
     {
