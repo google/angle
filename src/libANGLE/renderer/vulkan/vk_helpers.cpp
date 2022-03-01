@@ -1721,7 +1721,7 @@ void CommandBufferHelper::invalidateRenderPassDepthAttachment(const gl::DepthSte
 {
     ASSERT(mIsRenderPassCommandBuffer);
     // Keep track of the size of commands in the command buffer.  If the size grows in the
-    // future, that implies that drawing occured since invalidated.
+    // future, that implies that drawing occurred since invalidated.
     mDepthCmdSizeInvalidated = mCommandBuffer.getCommandSize();
 
     // Also track the size if the attachment is currently disabled.
