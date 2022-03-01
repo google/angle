@@ -530,6 +530,14 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "VK_IMAGE_LAYOUT_GENERAL). Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
      "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers:",
      false, true},
+    // http://anglebug.com/7070
+    {
+        "SYNC-HAZARD-READ_AFTER_WRITE",
+        "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
+        "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
+        "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
+        "command: vkCmdBeginRenderPass",
+    },
 };
 
 enum class DebugMessageReport
