@@ -51,30 +51,15 @@ Some simple environment variables control frame capture:
    * Example: `ANGLE_CAPTURE_LABEL=foo`
      * Results in filenames like this:
        ```
-       foo_capture_context1.cpp
-       foo_capture_context1.h
-       foo_capture_context1_files.txt
-       foo_capture_context1_frame000.angledata
-       foo_capture_context1_frame000.cpp
-       foo_capture_context1_frame001.angledata
-       foo_capture_context1_frame001.cpp
+       foo.angledata.gz
+       foo_context1_001.cpp
+       foo_context1_002.cpp
+       foo_context1_003.cpp
+       foo_context1.cpp
+       foo_context1.h
+       foo.json
+       foo_shared.cpp
        ...
-       ```
-     * Functions wrapped in namespaces like this:
-       ```
-       namespace foo
-       {
-           void ReplayContext1Frame0();
-           void ReplayContext1Frame1();
-       }
-       ```
-     * For use like this:
-       ```
-       foo::SetupContext1Replay();
-       for (...)
-       {
-           foo::ReplayContext1Frame(i);
-       }
        ```
  * `ANGLE_CAPTURE_SERIALIZE_STATE`:
    * Set to `1` to enable GL state serialization. Default is `0`.
@@ -86,9 +71,11 @@ template. For example:
 $ ANGLE_CAPTURE_FRAME_END=4 ANGLE_CAPTURE_OUT_DIR=samples/capture_replay out/Debug/simple_texture_2d
 ```
 
-## Running a CPP replay
+## Running the capture_replay sample (desktop only)
 
-To run a CPP replay you can use a template located in
+*Note: The capture_replay sample is broken until http://anglebug.com/5911 is addressed.*
+
+To run a sample replay you can use a template located in
 [samples/capture_replay](../samples/capture_replay). First run your capture and ensure all capture
 files are written to `samples/capture_replay`. You can conveniently use `ANGLE_CAPTURE_OUT_DIR`.
 Then enable the `capture_replay_sample` via `gn args`:
@@ -106,6 +93,39 @@ $ ANGLE_CAPTURE_ENABLED=0 out/Debug/capture_replay_sample
 
 Note that we specify `ANGLE_CAPTURE_ENABLED=0` to prevent re-capturing when running the replay.
 
+## Running a perf test replay (all platforms, including Android)
+
+To run your capture on any platform (Windows, Linux, Android, Mac (untested)), you'll need to
+compile it as part of ANGLE's Trace Replay harness, which is part of `angle_perftests`.
+
+Create a folder under `src/tests/restricted_traces` that matches the `ANGLE_CAPTURE_LABEL` you
+used above.
+
+Place all the trace output files into it.  For example, if the label was `desktop_test`:
+```
+src/tests/restricted_traces$ ls -1 desktop_test/
+desktop_test.angledata.gz
+desktop_test_context1_001.cpp
+desktop_test_context1_002.cpp
+desktop_test_context1_003.cpp
+desktop_test_context1.cpp
+desktop_test_context1.h
+desktop_test.json
+desktop_test_shared.cpp
+```
+Then add the label of your trace to
+[restricted_traces.json](../src/tests/restricted_traces/restricted_traces.json).
+Note it includes a version with the string.  Just use the number `1` for local changes.
+```
+     "dead_trigger_2 1",
++    "desktop_test 1",
+     "disney_tsum_tsum 5",
+```
+Now you should be able to compile and run the perf test including your trace:
+```
+autoninja -C out/Debug angle_perftests
+ANGLE_CAPTURE_ENABLED=0 out/Debug/angle_perftests --gtest_filter="*desktop_test*" --verbose
+```
 ## Capturing an Android application
 
 In order to capture on Android, the following additional steps must be taken. These steps
