@@ -7753,6 +7753,22 @@ void WriteParamValueReplay<ParamType::TGLfloatConstPointer>(std::ostream &os,
 }
 
 template <>
+void WriteParamValueReplay<ParamType::TGLintConstPointer>(std::ostream &os,
+                                                          const CallCapture &call,
+                                                          const GLint *value)
+{
+    if (value == 0)
+    {
+        os << "nullptr";
+    }
+    else
+    {
+        os << "reinterpret_cast<const GLint *>("
+           << static_cast<int>(reinterpret_cast<intptr_t>(value)) << ")";
+    }
+}
+
+template <>
 void WriteParamValueReplay<ParamType::TGLuintConstPointer>(std::ostream &os,
                                                            const CallCapture &call,
                                                            const GLuint *value)
