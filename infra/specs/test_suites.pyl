@@ -610,13 +610,13 @@
     'angle_end2end_vulkan_gtests': {
       'angle_end2end_tests': {
         'android_args': [
-          '--shard-timeout=400',
+          '--shard-timeout=300',
           '-v',
           # We use this argument to save test artifacts.
           '--render-test-output-dir=${ISOLATED_OUTDIR}',
         ],
         'android_swarming': {
-          'shards': 6,
+          'shards': 4,
         },
         'args': [
           'angle_end2end_tests',
