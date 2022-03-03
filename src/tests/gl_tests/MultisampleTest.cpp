@@ -975,6 +975,131 @@ TEST_P(MultisampleResolveTest, ResolveD16Samples)
     testResolveDepthToFBO(GL_DEPTH_COMPONENT16, GL_DEPTH_ATTACHMENT, 4, kWidth, kHeight);
 }
 
+void drawRectAndBlit(GLuint msFramebuffer,
+                     GLuint resolveFramebuffer,
+                     GLint width,
+                     GLint height,
+                     GLint matLoc,
+                     GLint colorLoc,
+                     float x,
+                     float y,
+                     float w,
+                     float h,
+                     const GLColor &color)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, msFramebuffer);
+    float matrix[16] = {
+        w, 0, 0, 0, 0, h, 0, 0, 0, 0, 1, 0, x, y, 0, 1,
+    };
+    glUniformMatrix4fv(matLoc, 1, false, matrix);
+    angle::Vector4 c(color.toNormalizedVector());
+    glUniform4f(colorLoc, c[0], c[1], c[2], c[3]);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveFramebuffer);
+    glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+}
+
+// Tests if we resolve(blit) a multisample renderbuffer that it
+// does not lose its contents.
+TEST_P(MultisampleResolveTest, DrawAndResolveMultipleTimes)
+{
+    constexpr GLint samples = 4;
+    constexpr GLenum format = GL_RGBA8;
+    constexpr GLint width   = 16;
+    constexpr GLint height  = 16;
+
+    constexpr char kVS[] = R"(#version 300 es
+    layout(location = 0) in vec4 position;
+    uniform mat4 mat;
+    void main() {
+       gl_Position = mat * position;
+    }
+    )";
+
+    constexpr char kFS[] = R"(#version 300 es
+    precision highp float;
+    uniform vec4 color;
+    out vec4 outColor;
+    void main() {
+       outColor = color;
+    }
+    )";
+
+    glViewport(0, 0, width, height);
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    GLint matLoc   = glGetUniformLocation(program, "mat");
+    GLint colorLoc = glGetUniformLocation(program, "color");
+    glUseProgram(program);
+
+    GLBuffer buf;
+    glBindBuffer(GL_ARRAY_BUFFER, buf);
+
+    constexpr float vertices[] = {
+        0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+    };
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    // Make samples = 4 multi-sample framebuffer.
+    GLFramebuffer msFB;
+    glBindFramebuffer(GL_FRAMEBUFFER, msFB);
+
+    GLRenderbuffer msRB;
+    glBindRenderbuffer(GL_RENDERBUFFER, msRB);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, format, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, msRB);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Make non-multi-sample framebuffer.
+    GLFramebuffer drawFB;
+    glBindFramebuffer(GL_FRAMEBUFFER, drawFB);
+
+    GLRenderbuffer drawRB;
+    glBindRenderbuffer(GL_RENDERBUFFER, drawRB);
+    glRenderbufferStorage(GL_RENDERBUFFER, format, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, drawRB);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawRectAndBlit(msFB, drawFB, width, height, matLoc, colorLoc, -1, -1, 2, 2, GLColor::red);
+    drawRectAndBlit(msFB, drawFB, width, height, matLoc, colorLoc, 0, -1, 1, 1, GLColor::green);
+    drawRectAndBlit(msFB, drawFB, width, height, matLoc, colorLoc, -1, 0, 1, 1, GLColor::blue);
+    drawRectAndBlit(msFB, drawFB, width, height, matLoc, colorLoc, 0, 0, 1, 1, GLColor::yellow);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    drawRectAndBlit(msFB, drawFB, width, height, matLoc, colorLoc, -0.5, -0.5, 1, 1,
+                    GLColor(0x80, 0x80, 0x80, 0x80));
+    glDisable(GL_BLEND);
+    ASSERT_GL_NO_ERROR();
+
+    /*
+       expected
+       +-------------+--------------+
+       | blue        |       yellow |
+       |   +---------+----------+   |
+       |   |.5,.5,1,1| 1,1,.5,1 |   |
+       +---+---------+----------+---+
+       |   |1,.5,.5,1| .5,1,.5,1|   |
+       |   +---------+----------+   |
+       | red         |        green |
+       +-------------+--------------+
+      0,0
+    */
+
+    glBindFramebuffer(GL_FRAMEBUFFER, drawFB);
+    EXPECT_PIXEL_RECT_EQ(0, 0, width / 2, height / 4, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(width / 2, 0, width / 2, height / 4, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, height * 3 / 4, width / 2, height / 4, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(width / 2, height * 3 / 4, width / 2, height / 4, GLColor::yellow);
+
+    EXPECT_PIXEL_RECT_EQ(width / 4, height / 4, width / 4, height / 4, GLColor(255, 128, 128, 255));
+    EXPECT_PIXEL_RECT_EQ(width / 2, height / 4, width / 4, height / 4, GLColor(128, 255, 128, 255));
+    EXPECT_PIXEL_RECT_EQ(width / 4, height / 2, width / 4, height / 4, GLColor(128, 128, 255, 255));
+    EXPECT_PIXEL_RECT_EQ(width / 2, height / 2, width / 4, height / 4, GLColor(255, 255, 128, 255));
+}
+
 ANGLE_INSTANTIATE_TEST_COMBINE_1(MultisampleTest,
                                  PrintToStringParamName,
                                  testing::Values(false),
