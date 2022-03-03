@@ -136,6 +136,11 @@ bool GetBackwardCompatibleContext(const egl::AttributeMap &attribs)
     return attribs.get(EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE, EGL_TRUE) == EGL_TRUE;
 }
 
+bool GetWebGLContext(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE, EGL_FALSE) == EGL_TRUE);
+}
+
 Version GetClientVersion(egl::Display *display, const egl::AttributeMap &attribs)
 {
     Version requestedVersion =
@@ -151,8 +156,11 @@ Version GetClientVersion(egl::Display *display, const egl::AttributeMap &attribs
         {
             // Always up the version to at least the max conformant version this display supports.
             // Only return a higher client version if requested.
-            return std::max(display->getImplementation()->getMaxConformantESVersion(),
-                            requestedVersion);
+            const Version conformantVersion = std::max(
+                display->getImplementation()->getMaxConformantESVersion(), requestedVersion);
+            // Limit the WebGL context to at most version 3.1
+            const bool isWebGL = GetWebGLContext(attribs);
+            return isWebGL ? std::min(conformantVersion, Version(3, 1)) : conformantVersion;
         }
     }
     else
@@ -201,11 +209,6 @@ bool GetDebug(const egl::AttributeMap &attribs)
 bool GetNoError(const egl::AttributeMap &attribs)
 {
     return (attribs.get(EGL_CONTEXT_OPENGL_NO_ERROR_KHR, EGL_FALSE) == EGL_TRUE);
-}
-
-bool GetWebGLContext(const egl::AttributeMap &attribs)
-{
-    return (attribs.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE, EGL_FALSE) == EGL_TRUE);
 }
 
 bool GetExtensionsEnabled(const egl::AttributeMap &attribs, bool webGLContext)
