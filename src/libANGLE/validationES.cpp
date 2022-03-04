@@ -1030,11 +1030,6 @@ bool ValidImageSizeParameters(const Context *context,
     return true;
 }
 
-bool ValidCompressedDimension(GLsizei size, GLuint blockSize, GLint level)
-{
-    return (level > 0) || (size % blockSize == 0);
-}
-
 bool ValidCompressedBaseLevelForWebGL(GLsizei size, GLuint blockSize, GLint level)
 {
     // Avoid C++ undefined behavior.
@@ -1094,15 +1089,16 @@ bool ValidCompressedImageSize(const Context *context,
                 return false;
             }
         }
-        else
-        {
-            if (!ValidCompressedDimension(width, formatInfo.compressedBlockWidth, level) ||
-                !ValidCompressedDimension(height, formatInfo.compressedBlockHeight, level) ||
-                !ValidCompressedDimension(depth, formatInfo.compressedBlockDepth, level))
-            {
-                return false;
-            }
-        }
+        // non-WebGL check is not necessary for the following formats
+        // From EXT_texture_compression_s3tc specification:
+        // If the width or height is not a multiple of four, there will be 4x4 blocks at the edge of
+        // the image that contain "extra" texels that are not part of the image. From
+        // EXT_texture_compression_bptc & EXT_texture_compression_rgtc specification: If an
+        // RGTC/BPTC image has a width or height that is not a multiple of four, the data
+        // corresponding to texels outside the image are irrelevant and undefined. From Khronos Data
+        // Format Specification 1.1 Chapter 17 (ETC2): If the width or height of the texture (or a
+        // particular mip-level) is not a multiple of four, then padding is added to ensure that the
+        // texture contains a whole number of 4x4 blocks in each dimension.
     }
 
     return true;
