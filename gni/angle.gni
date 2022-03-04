@@ -158,6 +158,9 @@ declare_args() {
 
   # Enables the OpenCL pass-through back end
   angle_enable_cl_passthrough = angle_enable_cl
+
+  # Use glslang to generate SPIR-V
+  angle_use_spirv_gen_through_glslang = false
 }
 
 # OpenCL is not supported on Windows UWP, because the CL headers include DX9, which is not
@@ -196,7 +199,8 @@ declare_args() {
   # the SPIR-V generation path, but leave it disabled on release.  It's still used by the metal
   # backend nevertheless.
   angle_enable_spirv_gen_through_glslang =
-      is_debug || angle_assert_always_on || angle_enable_metal
+      is_debug || angle_assert_always_on || angle_enable_metal ||
+      angle_use_spirv_gen_through_glslang
 
   # ISpriteVisual windows cannot be validated and can lead to crashes if an invalid window is
   # provided to ANGLE. Disable them for non-standalone ANGLE builds. crbug.com/1176118
