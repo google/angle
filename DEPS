@@ -1741,6 +1741,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/solar_smash': {
+      'packages': [
+        {
+            'package': 'angle/traces/solar_smash',
+            'version': 'version:2',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/sonic_the_hedgehog': {
       'packages': [
         {
