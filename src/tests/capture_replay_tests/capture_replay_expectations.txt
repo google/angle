@@ -110,7 +110,8 @@
 6180 WIN : TransformFeedbackTest.DrawWithoutTransformFeedbackThenWith/* = FLAKY
 6180 : TransformFeedbackTest.TransformFeedbackQueryPausedDrawThenResume/* = FLAKY
 6513 : TransformFeedbackTest.MultiContext/* = FLAKY
-
+6180 WIN : TransformFeedbackTest.BufferOutOfMemory/* = FLAKY
+6180 WIN : VertexAttributeTestES3.DrawWithUnalignedData/* = FLAKY
 
 6180 : UniformBufferTest.BlockArrayContainingArrayOfStructs/* = FAIL
 6180 : UniformBufferTest.ManyBlocks/* = FAIL
