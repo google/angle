@@ -1646,11 +1646,9 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     ASSERT(gl::isPow2(mPhysicalDeviceProperties.limits.nonCoherentAtomSize));
     ASSERT(gl::isPow2(mPhysicalDeviceProperties.limits.optimalBufferCopyOffsetAlignment));
     mStagingBufferAlignment = std::max(
-        mStagingBufferAlignment,
-        static_cast<size_t>(mPhysicalDeviceProperties.limits.optimalBufferCopyOffsetAlignment));
-    mStagingBufferAlignment =
-        std::max(mStagingBufferAlignment,
-                 static_cast<size_t>(mPhysicalDeviceProperties.limits.nonCoherentAtomSize));
+        {mStagingBufferAlignment,
+         static_cast<size_t>(mPhysicalDeviceProperties.limits.optimalBufferCopyOffsetAlignment),
+         static_cast<size_t>(mPhysicalDeviceProperties.limits.nonCoherentAtomSize)});
     ASSERT(gl::isPow2(mStagingBufferAlignment));
 
     // Device local vertex conversion buffer
@@ -1666,10 +1664,12 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // staging buffer
     mHostVisibleVertexConversionBufferMemoryTypeIndex = mNonCoherentStagingBufferMemoryTypeIndex;
     // We may use compute shader to do conversion, so we must meet
-    // minStorageBufferOffsetAlignment requirement as well.
+    // minStorageBufferOffsetAlignment requirement as well. Also take into account non-coherent
+    // alignment requirements.
     mVertexConversionBufferAlignment = std::max(
-        vk::kVertexBufferAlignment,
-        static_cast<size_t>(mPhysicalDeviceProperties.limits.minStorageBufferOffsetAlignment));
+        {vk::kVertexBufferAlignment,
+         static_cast<size_t>(mPhysicalDeviceProperties.limits.minStorageBufferOffsetAlignment),
+         static_cast<size_t>(mPhysicalDeviceProperties.limits.nonCoherentAtomSize)});
     ASSERT(gl::isPow2(mVertexConversionBufferAlignment));
 
     {
