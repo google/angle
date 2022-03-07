@@ -173,9 +173,6 @@
 # Marking this as NOT_RUN because we don't want it to run as it uses multiple contexts
 6752 : OcclusionQueriesNoSurfaceTestES3.SwitchingContextsWithQuery/* = NOT_RUN
 
-# Skip because these fail on win-trace for an unknown reason.
-7081 : MultisampleResolveTest.* = SKIP_FOR_CAPTURE
-
 # ES3_1
 6180 : ProgramPipelineTest31.VerifyPpoLinkErrorSignalledCorrectly/* = FAIL
 

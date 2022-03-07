@@ -486,8 +486,7 @@ TEST_P(MultisampleTestES3, ResolveToFBO)
     EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2, kWindowHeight / 2, kResult, 1);
 }
 
-class MultisampleResolveTest : public ANGLETestBase,
-                               public ::testing::TestWithParam<angle::PlatformParameters>
+class MultisampleResolveTest : public ANGLETest
 {
   protected:
     static const GLColor kEXPECTED_R8;
@@ -501,10 +500,7 @@ class MultisampleResolveTest : public ANGLETestBase,
     static constexpr GLint kWidth  = 13;
     static constexpr GLint kHeight = 11;
 
-    MultisampleResolveTest() : ANGLETestBase(GetParam()) {}
-    void SetUp() override { ANGLETestBase::ANGLETestSetUp(); }
-    void TearDown() override { ANGLETestBase::ANGLETestTearDown(); }
-    void swapBuffers() override {}
+    MultisampleResolveTest() {}
 
     struct GLResources
     {
@@ -1140,7 +1136,6 @@ ANGLE_INSTANTIATE_TEST_COMBINE_1(MultisampleTestES3,
                                  WithNoFixture(ES31_VULKAN()),
                                  WithNoFixture(ES3_METAL()));
 
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultisampleResolveTest);
 ANGLE_INSTANTIATE_TEST_ES3(MultisampleResolveTest);
 
 }  // anonymous namespace
