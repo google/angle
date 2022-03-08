@@ -2626,7 +2626,9 @@ BufferPool::~BufferPool()
 
 void BufferPool::pruneEmptyBuffers(RendererVk *renderer)
 {
-    for (auto iter = mBufferBlocks.begin(); iter != mBufferBlocks.end();)
+    int emptyBufferCount = 0;
+    int freedBufferCount = 0;
+    for (auto iter = mBufferBlocks.rbegin(); iter != mBufferBlocks.rend();)
     {
         if (!(*iter)->isEmpty())
         {
@@ -2638,16 +2640,34 @@ void BufferPool::pruneEmptyBuffers(RendererVk *renderer)
         int32_t countRemainsEmpty = (*iter)->getAndIncrementEmptyCounter();
 
         // We will always free empty buffers that has smaller size. Or if the empty buffer has been
-        // found empty for long enough time, we also free it.
-        if ((*iter)->getMemorySize() < mSize || countRemainsEmpty >= kMaxCountRemainsEmpty)
+        // found empty for long enough time, or we accumulated too many empty buffers, we also free
+        // it.
+        if ((*iter)->getMemorySize() < mSize || countRemainsEmpty >= kMaxCountRemainsEmpty ||
+            emptyBufferCount >= kMaxEmptyBufferCount)
         {
             (*iter)->destroy(renderer);
-            iter = mBufferBlocks.erase(iter);
+            (*iter).reset();
+            ++freedBufferCount;
         }
         else
         {
-            ++iter;
+            ++emptyBufferCount;
         }
+        ++iter;
+    }
+
+    // Remove the null pointers all at once, if any.
+    if (freedBufferCount)
+    {
+        BufferBlockPointerVector compactedBlocks;
+        for (auto iter = mBufferBlocks.begin(); iter != mBufferBlocks.end(); ++iter)
+        {
+            if (*iter)
+            {
+                compactedBlocks.push_back(std::move(*iter));
+            }
+        }
+        mBufferBlocks = std::move(compactedBlocks);
     }
 }
 
@@ -2706,6 +2726,7 @@ angle::Result BufferPool::allocateNewBuffer(ContextVk *contextVk, VkDeviceSize s
 
     // Append the bufferBlock into the pool
     mBufferBlocks.push_back(std::move(block));
+    contextVk->getPerfCounters().allocateNewBufferBlockCalls++;
 
     return angle::Result::Continue;
 }

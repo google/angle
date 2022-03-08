@@ -847,10 +847,12 @@ class BufferPool : angle::NonCopyable
     uint32_t mMemoryTypeIndex;
     BufferBlockPointerVector mBufferBlocks;
     // When pruneDefaultBufferPools gets called, we do not immediately free all empty buffers. Only
-    // buffers that we found are empty for this number of times consecutively, we will actually free
-    // it. That way we avoid the situation that a buffer just becomes empty and gets freed right
-    // after and then we have to allocate a new one next frame.
+    // buffers that we found are empty for kMaxCountRemainsEmpty number of times consecutively, or
+    // we have more than kMaxEmptyBufferCount number of empty buffers, we will actually free it.
+    // That way we avoid the situation that a buffer just becomes empty and gets freed right after
+    // and only to find out that we have to allocate a new one next frame.
     static constexpr int32_t kMaxCountRemainsEmpty = 4;
+    static constexpr int32_t kMaxEmptyBufferCount  = 16;
 };
 using BufferPoolPointerArray = std::array<std::unique_ptr<BufferPool>, VK_MAX_MEMORY_TYPES>;
 
