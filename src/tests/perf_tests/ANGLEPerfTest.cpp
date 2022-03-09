@@ -442,6 +442,12 @@ double ANGLEPerfTest::printResults()
             retValue = secondsPerIteration * kNanoSecondsPerSecond;
         }
         mReporter->AddResult(clockNames[i], retValue);
+
+        // Output histogram JSON set format if enabled.
+        std::string measurement = mName + mBackend + clockNames[i];
+        TestSuite::GetInstance()->addHistogramSample(measurement, mStory,
+                                                     secondsPerIteration * kMilliSecondsPerSecond,
+                                                     "msBestFitFormat_smallerIsBetter");
     }
 
     if (gVerboseLogging)
@@ -461,12 +467,6 @@ double ANGLEPerfTest::printResults()
         mReporter->AddResult(".total_steps", static_cast<size_t>(mTotalNumStepsPerformed));
     }
 
-    // Output histogram JSON set format if enabled.
-    double secondsPerStep = elapsedTimeSeconds[0] / static_cast<double>(mTrialNumStepsPerformed);
-    double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
-    TestSuite::GetInstance()->addHistogramSample(mName + mBackend, mStory,
-                                                 secondsPerIteration * kMilliSecondsPerSecond,
-                                                 "msBestFitFormat_smallerIsBetter");
     return retValue;
 }
 

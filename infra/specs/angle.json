@@ -485,7 +485,8 @@
       {
         "args": [
           "--log=debug",
-          "--smoke-test-mode"
+          "--smoke-test-mode",
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -567,7 +568,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "--log=debug"
+          "--log=debug",
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -1092,7 +1094,8 @@
       {
         "args": [
           "--log=debug",
-          "--smoke-test-mode"
+          "--smoke-test-mode",
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -1155,7 +1158,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "--log=debug"
+          "--log=debug",
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -1740,7 +1744,8 @@
       {
         "args": [
           "--log=debug",
-          "--smoke-test-mode"
+          "--smoke-test-mode",
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -1802,7 +1807,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "--log=debug"
+          "--log=debug",
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -4596,7 +4602,8 @@
       {
         "args": [
           "--log=debug",
-          "--smoke-test-mode"
+          "--smoke-test-mode",
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -5348,7 +5355,8 @@
       {
         "args": [
           "--log=debug",
-          "--smoke-test-mode"
+          "--smoke-test-mode",
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {
@@ -5410,7 +5418,8 @@
     "isolated_scripts": [
       {
         "args": [
-          "--log=debug"
+          "--log=debug",
+          "--show-test-stdout"
         ],
         "isolate_name": "angle_perftests",
         "merge": {

@@ -677,6 +677,7 @@
       'angle_perftests': {
         'args': [
           '--log=debug',
+          '--show-test-stdout',
         ],
         'merge': {
           'script': '//scripts/process_angle_perf_results.py',
@@ -697,6 +698,7 @@
         'args': [
           '--log=debug',
           '--smoke-test-mode',
+          '--show-test-stdout',
         ],
         'merge': {
           'script': '//scripts/process_angle_perf_results.py',
