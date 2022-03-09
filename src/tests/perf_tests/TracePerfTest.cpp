@@ -1418,6 +1418,8 @@ void TracePerfTest::drawBenchmark()
     mTraceLibrary->replayFrame(mCurrentFrame);
     stopGpuTimer();
 
+    updatePerfCounters();
+
     if (mParams.surfaceType == SurfaceType::Offscreen)
     {
         if (gMinimizeGPUWork)

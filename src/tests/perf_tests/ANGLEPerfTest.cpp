@@ -13,6 +13,7 @@
 #include "common/debug.h"
 #include "common/mathutil.h"
 #include "common/platform.h"
+#include "common/string_utils.h"
 #include "common/system_utils.h"
 #include "common/utilities.h"
 #include "test_utils/runner/TestSuite.h"
@@ -467,6 +468,43 @@ double ANGLEPerfTest::printResults()
         mReporter->AddResult(".total_steps", static_cast<size_t>(mTotalNumStepsPerformed));
     }
 
+    for (const auto &iter : mPerfCounterInfo)
+    {
+        const std::string &counterName = iter.second.name;
+        std::vector<GLuint> samples    = iter.second.samples;
+
+        size_t midpoint = samples.size() >> 1;
+        std::nth_element(samples.begin(), samples.begin() + midpoint, samples.end());
+
+        {
+            std::stringstream medianStr;
+            medianStr << "." << counterName << "_median";
+            std::string medianName = medianStr.str();
+
+            mReporter->AddResult(medianName, static_cast<size_t>(samples[midpoint]));
+        }
+
+        {
+            std::string measurement = mName + mBackend + "." + counterName + "_median";
+            TestSuite::GetInstance()->addHistogramSample(measurement, mStory, samples[midpoint],
+                                                         "count");
+        }
+
+        const auto &maxIt = std::max_element(samples.begin(), samples.end());
+
+        {
+            std::stringstream maxStr;
+            maxStr << "." << counterName << "_max";
+            std::string maxName = maxStr.str();
+            mReporter->AddResult(maxName, static_cast<size_t>(*maxIt));
+        }
+
+        {
+            std::string measurement = mName + mBackend + "." + counterName + "_max";
+            TestSuite::GetInstance()->addHistogramSample(measurement, mStory, *maxIt, "count");
+        }
+    }
+
     return retValue;
 }
 
@@ -835,6 +873,8 @@ void ANGLERenderTest::SetUp()
         // between calibration measurements.
         calibrateStepsToRun(RunLoopPolicy::FinishEveryStep);
     }
+
+    initPerfCounters();
 }
 
 void ANGLERenderTest::TearDown()
@@ -863,6 +903,73 @@ void ANGLERenderTest::TearDown()
     }
 
     ANGLEPerfTest::TearDown();
+}
+
+void ANGLERenderTest::initPerfCounters()
+{
+    if (!gPerfCounters)
+    {
+        return;
+    }
+
+    if (!IsGLExtensionEnabled(kPerfMonitorExtensionName))
+    {
+        fprintf(stderr, "Cannot report perf metrics because %s is not available.\n",
+                kPerfMonitorExtensionName);
+        return;
+    }
+
+    CounterNameToIndexMap indexMap = BuildCounterNameToIndexMap();
+
+    std::vector<std::string> counters =
+        angle::SplitString(gPerfCounters, ":", angle::WhitespaceHandling::TRIM_WHITESPACE,
+                           angle::SplitResult::SPLIT_WANT_NONEMPTY);
+    for (const std::string &counter : counters)
+    {
+        auto iter = indexMap.find(counter);
+        if (iter == indexMap.end())
+        {
+            fprintf(stderr, "Counter '%s' not in list of available perf counters.\n",
+                    counter.c_str());
+        }
+        else
+        {
+            {
+                std::stringstream medianStr;
+                medianStr << '.' << counter << "_median";
+                std::string medianName = medianStr.str();
+                mReporter->RegisterImportantMetric(medianName, "count");
+            }
+
+            {
+                std::stringstream maxStr;
+                maxStr << '.' << counter << "_max";
+                std::string maxName = maxStr.str();
+                mReporter->RegisterImportantMetric(maxName, "count");
+            }
+
+            GLuint index            = indexMap[counter];
+            mPerfCounterInfo[index] = {counter, {}};
+        }
+    }
+}
+
+void ANGLERenderTest::updatePerfCounters()
+{
+    if (mPerfCounterInfo.empty())
+    {
+        return;
+    }
+
+    std::vector<PerfMonitorTriplet> perfData = GetPerfMonitorTriplets();
+    ASSERT(!perfData.empty());
+
+    for (auto &iter : mPerfCounterInfo)
+    {
+        uint32_t counter             = iter.first;
+        std::vector<GLuint> &samples = iter.second.samples;
+        samples.push_back(perfData[counter].value);
+    }
 }
 
 void ANGLERenderTest::beginInternalTraceEvent(const char *name)
@@ -933,6 +1040,7 @@ void ANGLERenderTest::step()
         // command queues.
         if (mSwapEnabled)
         {
+            updatePerfCounters();
             mGLWindow->swap();
         }
         mOSWindow->messageLoop();

@@ -303,6 +303,8 @@ def main():
         default=DEFAULT_CALIBRATION_TIME)
     parser.add_argument(
         '--show-test-stdout', help='Prints all test stdout during execution.', action='store_true')
+    parser.add_argument(
+        '--perf-counters', help='Colon-separated list of extra perf counter metrics.')
 
     args, extra_flags = parser.parse_known_args()
 
@@ -407,10 +409,15 @@ def main():
                 '--trials',
                 str(args.trials_per_sample),
             ]
+
             if args.smoke_test_mode:
                 cmd_run += ['--no-warmup']
             else:
                 cmd_run += ['--warmup-loops', str(args.warmup_loops)]
+
+            if args.perf_counters:
+                cmd_run += ['--perf-counters', args.perf_counters]
+
             with common.temporary_file() as histogram_file_path:
                 cmd_run += ['--isolated-script-test-perf-output=%s' % histogram_file_path]
                 exit_code, output = _run_and_get_output(args, cmd_run, env)

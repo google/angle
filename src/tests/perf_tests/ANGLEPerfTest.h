@@ -122,6 +122,13 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     int mIterationsPerStep;
     bool mRunning;
     std::vector<double> mTestTrialResults;
+
+    struct CounterInfo
+    {
+        std::string name;
+        std::vector<GLuint> samples;
+    };
+    angle::HashMap<GLuint, CounterInfo> mPerfCounterInfo;
 };
 
 enum class SurfaceType
@@ -190,6 +197,7 @@ class ANGLERenderTest : public ANGLEPerfTest
     void endGLTraceEvent(const char *name, double hostTimeSec);
 
     void disableTestHarnessSwap() { mSwapEnabled = false; }
+    void updatePerfCounters();
 
     bool mIsTimestampQueryAvailable;
 
@@ -203,6 +211,8 @@ class ANGLERenderTest : public ANGLEPerfTest
     void computeGPUTime() override;
 
     bool areExtensionPrerequisitesFulfilled() const;
+
+    void initPerfCounters();
 
     GLWindowBase *mGLWindow;
     OSWindow *mOSWindow;

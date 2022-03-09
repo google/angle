@@ -90,6 +90,8 @@ struct SaveFileHelper
 };
 
 // AMD_performance_monitor helpers.
+constexpr char kPerfMonitorExtensionName[] = "GL_AMD_performance_monitor";
+
 struct PerfMonitorCounter
 {
     PerfMonitorCounter();
