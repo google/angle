@@ -246,6 +246,10 @@ EGLBoolean PrepareSwapBuffersANGLE(EGLDisplay dpy, EGLSurface surface);
 void ReleaseHighPowerGPUANGLE(Thread *thread, egl::Display *dpyPacked, gl::Context *ctxPacked);
 void ReacquireHighPowerGPUANGLE(Thread *thread, egl::Display *dpyPacked, gl::Context *ctxPacked);
 void HandleGPUSwitchANGLE(Thread *thread, egl::Display *dpyPacked);
+void ForceGPUSwitchANGLE(Thread *thread,
+                         egl::Display *dpyPacked,
+                         EGLint gpuIDHigh,
+                         EGLint gpuIDLow);
 EGLBoolean QueryDisplayAttribANGLE(Thread *thread,
                                    egl::Display *dpyPacked,
                                    EGLint attribute,

@@ -1235,6 +1235,7 @@ EXPORTS
     EGL_QueryStringiANGLE
 
     ; EGL_ANGLE_power_preference
+    EGL_ForceGPUSwitchANGLE
     EGL_HandleGPUSwitchANGLE
     EGL_ReacquireHighPowerGPUANGLE
     EGL_ReleaseHighPowerGPUANGLE

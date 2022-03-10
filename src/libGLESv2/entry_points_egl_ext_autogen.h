@@ -78,6 +78,9 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_QueryDisplayAttribANGLE(EGLDisplay dpy,
 ANGLE_EXPORT void EGLAPIENTRY EGL_ReleaseHighPowerGPUANGLE(EGLDisplay dpy, EGLContext ctx);
 ANGLE_EXPORT void EGLAPIENTRY EGL_ReacquireHighPowerGPUANGLE(EGLDisplay dpy, EGLContext ctx);
 ANGLE_EXPORT void EGLAPIENTRY EGL_HandleGPUSwitchANGLE(EGLDisplay dpy);
+ANGLE_EXPORT void EGLAPIENTRY EGL_ForceGPUSwitchANGLE(EGLDisplay dpy,
+                                                      EGLint gpuIDHigh,
+                                                      EGLint gpuIDLow);
 
 // EGL_ANGLE_prepare_swap_buffers
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_PrepareSwapBuffersANGLE(EGLDisplay dpy, EGLSurface surface);

@@ -6234,6 +6234,15 @@ bool ValidateHandleGPUSwitchANGLE(const ValidationContext *val, const Display *d
     return true;
 }
 
+bool ValidateForceGPUSwitchANGLE(const ValidationContext *val,
+                                 const Display *display,
+                                 EGLint gpuIDHigh,
+                                 EGLint gpuIDLow)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+    return true;
+}
+
 bool ValidateGetCurrentDisplay(const ValidationContext *val)
 {
     return true;

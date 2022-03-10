@@ -303,6 +303,7 @@ class Display final : public LabeledObject,
     void returnZeroFilledBuffer(angle::ScratchBuffer zeroFilledBuffer);
 
     egl::Error handleGPUSwitch();
+    egl::Error forceGPUSwitch(EGLint gpuIDHigh, EGLint gpuIDLow);
 
     std::mutex &getDisplayGlobalMutex() { return mDisplayGlobalMutex; }
     std::mutex &getProgramCacheMutex() { return mProgramCacheMutex; }

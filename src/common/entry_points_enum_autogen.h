@@ -163,6 +163,7 @@ enum class EntryPoint
     EGLDestroySyncKHR,
     EGLDupNativeFenceFDANDROID,
     EGLExportVkImageANGLE,
+    EGLForceGPUSwitchANGLE,
     EGLGetCompositorTimingANDROID,
     EGLGetCompositorTimingSupportedANDROID,
     EGLGetConfigAttrib,

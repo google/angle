@@ -314,6 +314,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglDupNativeFenceFDANDROID";
         case EntryPoint::EGLExportVkImageANGLE:
             return "eglExportVkImageANGLE";
+        case EntryPoint::EGLForceGPUSwitchANGLE:
+            return "eglForceGPUSwitchANGLE";
         case EntryPoint::EGLGetCompositorTimingANDROID:
             return "eglGetCompositorTimingANDROID";
         case EntryPoint::EGLGetCompositorTimingSupportedANDROID:

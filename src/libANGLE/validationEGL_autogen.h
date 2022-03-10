@@ -250,6 +250,10 @@ bool ValidateReacquireHighPowerGPUANGLE(const ValidationContext *val,
                                         const egl::Display *dpyPacked,
                                         const gl::Context *ctxPacked);
 bool ValidateHandleGPUSwitchANGLE(const ValidationContext *val, const egl::Display *dpyPacked);
+bool ValidateForceGPUSwitchANGLE(const ValidationContext *val,
+                                 const egl::Display *dpyPacked,
+                                 EGLint gpuIDHigh,
+                                 EGLint gpuIDLow);
 
 // EGL_ANGLE_prepare_swap_buffers
 bool ValidatePrepareSwapBuffersANGLE(const ValidationContext *val,

@@ -14,6 +14,7 @@
 #include "common/string_utils.h"
 #include "gpu_info_util/SystemInfo.h"
 #include "test_utils/ANGLETest.h"
+#include "test_utils/system_info_util.h"
 #include "util/OSWindow.h"
 
 using namespace angle;
@@ -25,51 +26,15 @@ class EGLDisplaySelectionTest : public ANGLETest
 
   protected:
     // Returns the index of the low or high power GPU in SystemInfo depending on the argument.
-    int findGPU(bool lowPower)
+    int findGPU(bool lowPower) const
     {
-        if (mSystemInfo.gpus.size() < 2)
-        {
-            return 0;
-        }
-        for (int i = 0; i < static_cast<int>(mSystemInfo.gpus.size()); ++i)
-        {
-            if (lowPower && IsIntel(mSystemInfo.gpus[i].vendorId))
-            {
-                return i;
-            }
-            // Return the high power GPU, i.e any non-intel GPU
-            else if (!lowPower && !IsIntel(mSystemInfo.gpus[i].vendorId))
-            {
-                return i;
-            }
-        }
-        // Can't find GPU
-        ASSERT(false);
-        return 0;
+        if (lowPower)
+            return FindLowPowerGPU(mSystemInfo);
+        return FindHighPowerGPU(mSystemInfo);
     }
 
     // Returns the index of the active GPU in SystemInfo based on the renderer string.
-    int findActiveGPU()
-    {
-        char *renderer = (char *)glGetString(GL_RENDERER);
-        std::string rendererString(renderer);
-        for (int i = 0; i < static_cast<int>(mSystemInfo.gpus.size()); ++i)
-        {
-            std::vector<std::string> vendorTokens;
-            angle::SplitStringAlongWhitespace(VendorName(mSystemInfo.gpus[i].vendorId),
-                                              &vendorTokens);
-            for (std::string &token : vendorTokens)
-            {
-                if (rendererString.find(token) != std::string::npos)
-                {
-                    return i;
-                }
-            }
-        }
-        // Can't find active GPU
-        ASSERT(false);
-        return 0;
-    }
+    int findActiveGPU() const { return FindActiveOpenGLGPU(mSystemInfo); }
 
     SystemInfo mSystemInfo;
 };

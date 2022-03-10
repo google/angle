@@ -120,6 +120,7 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
     const egl::DisplayState &getState() const { return mState; }
 
     virtual egl::Error handleGPUSwitch();
+    virtual egl::Error forceGPUSwitch(EGLint gpuIDHigh, EGLint gpuIDLow);
 
     virtual bool isX11() const;
 

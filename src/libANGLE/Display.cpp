@@ -2372,6 +2372,13 @@ Error Display::handleGPUSwitch()
     return NoError();
 }
 
+Error Display::forceGPUSwitch(EGLint gpuIDHigh, EGLint gpuIDLow)
+{
+    ANGLE_TRY(mImplementation->forceGPUSwitch(gpuIDHigh, gpuIDLow));
+    initVendorString();
+    return NoError();
+}
+
 bool Display::supportsDmaBufFormat(EGLint format) const
 {
     return mImplementation->supportsDmaBufFormat(format);
