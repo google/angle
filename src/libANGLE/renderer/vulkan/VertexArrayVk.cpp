@@ -494,6 +494,22 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+void VertexArrayVk::updateCurrentElementArrayBuffer()
+{
+    gl::Buffer *bufferGL = mState.getElementArrayBuffer();
+    if (bufferGL && bufferGL->getSize() > 0)
+    {
+        // Note that just updating buffer data may still result in a new
+        // vk::BufferHelper allocation.
+        BufferVk *bufferVk         = vk::GetImpl(bufferGL);
+        mCurrentElementArrayBuffer = &bufferVk->getBuffer();
+    }
+    else
+    {
+        mCurrentElementArrayBuffer = nullptr;
+    }
+}
+
 angle::Result VertexArrayVk::syncState(const gl::Context *context,
                                        const gl::VertexArray::DirtyBits &dirtyBits,
                                        gl::VertexArray::DirtyAttribBitsArray *attribBits,
@@ -514,19 +530,7 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER:
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
             {
-                gl::Buffer *bufferGL = mState.getElementArrayBuffer();
-                if (bufferGL && bufferGL->getSize() > 0)
-                {
-                    // Note that just updating buffer data may still result in a new
-                    // vk::BufferHelper allocation.
-                    BufferVk *bufferVk         = vk::GetImpl(bufferGL);
-                    mCurrentElementArrayBuffer = &bufferVk->getBuffer();
-                }
-                else
-                {
-                    mCurrentElementArrayBuffer = nullptr;
-                }
-
+                updateCurrentElementArrayBuffer();
                 mLineLoopBufferFirstIndex.reset();
                 mLineLoopBufferLastIndex.reset();
                 ANGLE_TRY(contextVk->onIndexBufferChange(mCurrentElementArrayBuffer));
