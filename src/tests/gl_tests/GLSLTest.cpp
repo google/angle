@@ -3145,10 +3145,10 @@ void main()
 
     mat3x2 m = mat3x2(ivec2(i), uvec2(u), bvec2(b));
 
-    color = vec4(mi[0][0] == float(i) ? 1 : 0,
-                 mu[2][2] == float(u) ? 1 : 0,
-                 mb[1][1] == float(b) ? 1 : 0,
-                 m[0][1] == float(i) && m[1][0] == float(u) && m[2][0] == float(b) ? 1 : 0);
+    color = vec4(mi[0][0] == -123.0 ? 1 : 0,
+                 mu[2][2] == 456.0 ? 1 : 0,
+                 mb[1][1] == 1.0 ? 1 : 0,
+                 m[0][1] == -123.0 && m[1][0] == 456.0 && m[2][0] == 1.0 ? 1 : 0);
 })";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
@@ -3187,9 +3187,9 @@ void main()
     vec3 v3 = vec3(b, u);
     vec4 v4 = vec4(i, u);
 
-    color = vec4(v2.x == float(i.x) && v2.y == float(b.x) ? 1 : 0,
-                 v3.x == float(b.x) && v3.y == float(b.y) && v3.z == float(u.x) ? 1 : 0,
-                 v4.x == float(i.x) && v4.y == float(i.y) && v4.z == float(u.x) && v4.w == float(u.y) ? 1 : 0,
+    color = vec4(v2.x == -123.0 && v2.y == 1.0 ? 1 : 0,
+                 v3.x == 1.0 && v3.y == 0.0 && v3.z == 456.0 ? 1 : 0,
+                 v4.x == -123.0 && v4.y == -23.0 && v4.z == 456.0 && v4.w == 76.0 ? 1 : 0,
                  1);
 })";
 
