@@ -449,13 +449,12 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     {"SYNC-HAZARD-WRITE_AFTER_READ", "type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC", "", false},
     {"SYNC-HAZARD-READ_AFTER_WRITE", "type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC", "", false},
     // http://anglebug.com/7070
-    {
-        "SYNC-HAZARD-READ_AFTER_WRITE",
-        "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
-        "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
-        "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
-        "command: vkCmdBeginRenderPass",
-    },
+    {"SYNC-HAZARD-READ_AFTER_WRITE",
+     "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: VK_IMAGE_LAYOUT_GENERAL, "
+     "binding #0, index 0. Access info (usage: SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, "
+     "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
+     "command: vkCmdBeginRenderPass",
+     "", false},
 };
 
 enum class DebugMessageReport
