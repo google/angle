@@ -926,6 +926,11 @@ void WriteParamValueReplay<ParamType::TGLintConstPointer>(std::ostream &os,
                                                           const GLint *value);
 
 template <>
+void WriteParamValueReplay<ParamType::TGLsizeiPointer>(std::ostream &os,
+                                                       const CallCapture &call,
+                                                       GLsizei *value);
+
+template <>
 void WriteParamValueReplay<ParamType::TGLuintConstPointer>(std::ostream &os,
                                                            const CallCapture &call,
                                                            const GLuint *value);

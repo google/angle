@@ -142,6 +142,7 @@
 6510 : FenceSyncTest.IsSync/* = FLAKY
 6510 : FenceSyncTest.Errors/* = FLAKY
 6510 : FenceSyncTest.MultipleFenceDraw/* = FLAKY
+6510 : FenceSyncTest.NullLength/* = FLAKY
 6543 : GLSLTest_ES3.ComplexCrossExpression/* = FLAKY
 
 # Fails after recent colorspace CL.
