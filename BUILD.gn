@@ -1413,6 +1413,21 @@ if (angle_standalone || build_with_chromium) {
   }
 }
 
+if (angle_enable_cgl) {
+  config("supports_automatic_graphics_switching") {
+    # For discussion about config, inputs, etc, see:
+    # https://bugs.chromium.org/p/chromium/issues/detail?id=781858
+    _plist_file = "util/osx/supports_automatic_graphics_switching.plist"
+    inputs = [ _plist_file ]
+    ldflags = [
+      "-sectcreate",
+      "__TEXT",
+      "__info_plist",
+      rebase_path(_plist_file, root_build_dir),
+    ]
+  }
+}
+
 if (is_android && symbol_level != 0) {
   action_foreach("compressed_symbols") {
     sources = []

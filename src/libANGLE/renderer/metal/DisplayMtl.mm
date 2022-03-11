@@ -33,10 +33,6 @@
 
 #include "EGL/eglext.h"
 
-#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
-constexpr char kANGLEPreferredDeviceEnv[] = "ANGLE_PREFERRED_DEVICE";
-#endif
-
 namespace rx
 {
 
@@ -294,15 +290,13 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
         }
     }
 
-    // Check the ANGLE_PREFERRED_DEVICE environment variable for device preference
-    const std::string anglePreferredDevice = angle::GetEnvironmentVar(kANGLEPreferredDeviceEnv);
-    if (anglePreferredDevice != "")
+    const std::string preferredDeviceString = angle::GetPreferredDeviceString();
+    if (!preferredDeviceString.empty())
     {
         for (id<MTLDevice> device in deviceList.get())
         {
             if ([device.name.lowercaseString
-                    containsString:[NSString stringWithUTF8String:anglePreferredDevice.c_str()]
-                                       .lowercaseString])
+                    containsString:[NSString stringWithUTF8String:preferredDeviceString.c_str()]])
             {
                 NSLog(@"Using Metal Device: %@", [device name]);
                 return device;

@@ -10,6 +10,7 @@
 #define GPU_INFO_UTIL_SYSTEM_INFO_H_
 
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -59,6 +60,9 @@ struct SystemInfo
     bool hasNVIDIAGPU() const;
     bool hasIntelGPU() const;
     bool hasAMDGPU() const;
+
+    // Returns the index to `gpus` if the entry matches the preferred device string.
+    std::optional<size_t> getPreferredGPUIndex() const;
 
     std::vector<GPUDeviceInfo> gpus;
 
@@ -161,6 +165,9 @@ VendorID GetVendorIDFromMetalDeviceRegistryID(uint64_t registryID);
 uint64_t GetSystemDeviceIdFromParts(uint32_t highPart, uint32_t lowPart);
 uint32_t GetSystemDeviceIdHighPart(uint64_t systemDeviceId);
 uint32_t GetSystemDeviceIdLowPart(uint64_t systemDeviceId);
+
+// Returns lower-case of ANGLE_PREFERRED_DEVICE environment variable contents.
+std::string GetPreferredDeviceString();
 
 }  // namespace angle
 
