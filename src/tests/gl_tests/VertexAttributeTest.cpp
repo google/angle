@@ -4094,6 +4094,37 @@ TEST_P(VertexAttributeTestES3, InvalidAttribPointer)
     glEnableVertexAttribArray(0);
 }
 
+// Test bind an empty buffer for vertex attribute does not crash
+TEST_P(VertexAttributeTestES3, emptyBuffer)
+{
+    constexpr char vs2[] =
+        R"(#version 300 es
+            in uvec4 attr0;
+            void main()
+            {
+                gl_Position = vec4(attr0.x, 0.0, 0.0, 0.0);
+            })";
+    constexpr char fs[] =
+        R"(#version 300 es
+            precision highp float;
+            out vec4 color;
+            void main()
+            {
+                color = vec4(1.0, 0.0, 0.0, 1.0);
+            })";
+    GLuint program2 = CompileProgram(vs2, fs);
+    GLuint buf;
+    glGenBuffers(1, &buf);
+    glBindBuffer(GL_ARRAY_BUFFER, buf);
+    glEnableVertexAttribArray(0);
+    glVertexAttribIPointer(0, 4, GL_UNSIGNED_BYTE, 0, 0);
+    glVertexAttribDivisor(0, 2);
+    glUseProgram(program2);
+    glDrawArrays(GL_POINTS, 0, 1);
+
+    swapBuffers();
+}
+
 // VAO emulation fails on Mac but is not used on Mac in the wild. http://anglebug.com/5577
 #if !defined(__APPLE__)
 #    define EMULATED_VAO_CONFIGS                                          \

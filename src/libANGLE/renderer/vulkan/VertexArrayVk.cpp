@@ -846,25 +846,36 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
                 ANGLE_TRY(contextVk->allocateStreamedVertexBuffer(attribIndex, bytesToAllocate,
                                                                   &vertexDataBuffer));
 
-                if (binding.getBuffer().get() != nullptr)
+                gl::Buffer *bufferGL = binding.getBuffer().get();
+                if (bufferGL != nullptr)
                 {
-                    // Map buffer to expand attribs for divisor emulation
-                    BufferVk *bufferVk = vk::GetImpl(binding.getBuffer().get());
-                    void *buffSrc      = nullptr;
-                    ANGLE_TRY(bufferVk->mapImpl(contextVk, GL_MAP_READ_BIT, &buffSrc));
-                    src = reinterpret_cast<const uint8_t *>(buffSrc) + binding.getOffset();
+                    // Only do the data copy if src buffer is valid.
+                    if (bufferGL->getSize() > 0)
+                    {
+                        // Map buffer to expand attribs for divisor emulation
+                        BufferVk *bufferVk = vk::GetImpl(binding.getBuffer().get());
+                        void *buffSrc      = nullptr;
+                        ANGLE_TRY(bufferVk->mapImpl(contextVk, GL_MAP_READ_BIT, &buffSrc));
+                        src = reinterpret_cast<const uint8_t *>(buffSrc) + binding.getOffset();
 
-                    uint32_t srcAttributeSize =
-                        static_cast<uint32_t>(ComputeVertexAttributeTypeSize(attrib));
+                        uint32_t srcAttributeSize =
+                            static_cast<uint32_t>(ComputeVertexAttributeTypeSize(attrib));
 
-                    size_t numVertices = GetVertexCount(bufferVk, binding, srcAttributeSize);
+                        size_t numVertices = GetVertexCount(bufferVk, binding, srcAttributeSize);
 
-                    ANGLE_TRY(StreamVertexDataWithDivisor(
-                        contextVk, vertexDataBuffer, src, bytesToAllocate, binding.getStride(),
-                        stride, vertexFormat.getVertexLoadFunction(compressed), divisor,
-                        numVertices));
+                        ANGLE_TRY(StreamVertexDataWithDivisor(
+                            contextVk, vertexDataBuffer, src, bytesToAllocate, binding.getStride(),
+                            stride, vertexFormat.getVertexLoadFunction(compressed), divisor,
+                            numVertices));
 
-                    ANGLE_TRY(bufferVk->unmapImpl(contextVk));
+                        ANGLE_TRY(bufferVk->unmapImpl(contextVk));
+                    }
+                    else if (contextVk->getExtensions().robustnessEXT)
+                    {
+                        // Satisfy robustness constraints (only if extension enabled)
+                        uint8_t *dst = vertexDataBuffer->getMappedMemory();
+                        memset(dst, 0, bytesToAllocate);
+                    }
                 }
                 else
                 {
