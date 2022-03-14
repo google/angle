@@ -4194,6 +4194,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             {
                 invalidateDefaultAttributes(context->getStateCache().getActiveDefaultAttribsMask());
                 ANGLE_TRY(vertexArrayVk->updateActiveAttribInfo(this));
+                // Because vertexarray's mCurrentElementBuffer depends on context state (type or
+                // lineloop mode), when we change the binding, we must resync to ensure it gets
+                // reset.
+                vertexArrayVk->updateCurrentElementArrayBuffer();
                 ANGLE_TRY(onIndexBufferChange(vertexArrayVk->getCurrentElementArrayBuffer()));
                 break;
             }
