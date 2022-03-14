@@ -3997,6 +3997,25 @@ TEST_P(TransformFeedbackTest, DeleteTransformFeedbackBuffer)
     glDrawArrays(GL_POINTS, 0, 1);
 }
 
+// Same as the above, with a paused transform feedback.
+TEST_P(TransformFeedbackTest, DeletePausedTransformFeedbackBuffer)
+{
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(testProgram, essl1_shaders::vs::Simple(),
+                                        essl1_shaders::fs::Green(), {"gl_Position"},
+                                        GL_INTERLEAVED_ATTRIBS);
+    glUseProgram(testProgram);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, 3, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, buffer);
+
+    glBeginTransformFeedback(GL_POINTS);
+    glPauseTransformFeedback();
+    buffer.reset();
+    glDrawArrays(GL_POINTS, 0, 1);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTest);
 ANGLE_INSTANTIATE_TEST_ES3(TransformFeedbackTest);
 
