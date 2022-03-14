@@ -57,7 +57,7 @@ ANGLE_MAYBE_UNUSED const std::string WrapICDEnvironment(const char *icdEnvironme
 ANGLE_MAYBE_UNUSED constexpr char kLoaderLayersPathEnv[] = "VK_LAYER_PATH";
 ANGLE_MAYBE_UNUSED constexpr char kLayerEnablesEnv[]     = "VK_LAYER_ENABLES";
 
-constexpr char kLoaderICDFilenamesEnv[]              = "VK_ICD_FILENAMES";
+constexpr char kLoaderDriverFilesEnv[]               = "VK_DRIVER_FILES";
 constexpr char kANGLEPreferredDeviceEnv[]            = "ANGLE_PREFERRED_DEVICE";
 constexpr char kValidationLayersCustomSTypeListEnv[] = "VK_LAYER_CUSTOM_STYPE_LIST";
 constexpr char kNoDeviceSelect[]                     = "NODEVICE_SELECT";
@@ -203,7 +203,7 @@ ScopedVkLoaderEnvironment::~ScopedVkLoaderEnvironment()
     }
     if (mChangedICDEnv)
     {
-        ResetEnvironmentVar(kLoaderICDFilenamesEnv, mPreviousICDEnv);
+        ResetEnvironmentVar(kLoaderDriverFilesEnv, mPreviousICDEnv);
     }
 
     ResetEnvironmentVar(kValidationLayersCustomSTypeListEnv, mPreviousCustomExtensionsEnv);
@@ -218,8 +218,8 @@ bool ScopedVkLoaderEnvironment::setICDEnvironment(const char *icd)
 {
     // Override environment variable to use built Mock ICD
     // ANGLE_VK_ICD_JSON gets set to the built mock ICD in BUILD.gn
-    mPreviousICDEnv = angle::GetEnvironmentVar(kLoaderICDFilenamesEnv);
-    mChangedICDEnv  = angle::SetEnvironmentVar(kLoaderICDFilenamesEnv, icd);
+    mPreviousICDEnv = angle::GetEnvironmentVar(kLoaderDriverFilesEnv);
+    mChangedICDEnv  = angle::SetEnvironmentVar(kLoaderDriverFilesEnv, icd);
 
     if (!mChangedICDEnv)
     {
