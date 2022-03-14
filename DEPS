@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '06a76a17743bd8b6980d3604eaa0deb78f6ff6f7',
+  'chromium_revision': 'ffa866a5ae9eaaaaca088fbfbbc44aaf3a5d78c6',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -79,7 +79,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '271796d312a4a2e751bd84da89e19aae3de1af20',
+  'catapult_revision': 'b326cacd0ec11fef9b8ee9e68d4e9704f8010eb9',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@1eba6a6415c10b682061095fa52a1e861ce1900d',
+    'url': '{chromium_git}/chromium/src/build.git@f3187f1c4ef8d85a1d25807102e166429db51632',
     'condition': 'not build_with_chromium',
   },
 
@@ -182,7 +182,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@aa2dfc5ea71e003dbea56f00833e4e734693a575',
+    'url': '{chromium_git}/chromium/src/testing@d5f4353463340547bbaf1742061862a196be2d18',
     'condition': 'not build_with_chromium',
   },
 
@@ -531,7 +531,7 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@85bdd6400c7113651df4e00c5dcbb8e9a8ed5e6f',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@e466446bbcd2093aa35dfbbab33ee189304e57e9',
     'condition': 'not build_with_chromium',
   },
 
@@ -572,7 +572,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@e20b3c33b1fa5252d036bc398796af692ed1bd4f',
+    'url': '{chromium_git}/chromium/src/tools/mb@407b0016e67d25dc0cfbd27a05ae828b6e176f55',
     'condition': 'not build_with_chromium',
   },
 
