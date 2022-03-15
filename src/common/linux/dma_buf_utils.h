@@ -10,14 +10,10 @@
 #define COMMON_LINUX_DMA_BUF_UTILS_H_
 
 #include <angle_gl.h>
-#include <vulkan/vulkan_core.h>
-#include <vector>
 
 namespace angle
 {
 GLenum DrmFourCCFormatToGLInternalFormat(int format, bool *isYUV);
-std::vector<int> VkFormatToDrmFourCCFormat(VkFormat format);
-std::vector<VkFormat> DrmFourCCFormatToVkFormats(int fourccFormat);
 }  // namespace angle
 
 #endif  // COMMON_LINUX_DMA_BUF_UTILS_H_
