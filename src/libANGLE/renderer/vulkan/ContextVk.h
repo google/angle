@@ -795,15 +795,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                             const void *indices,
                             DirtyBits dirtyBitMask);
 
-    angle::Result setupNonIndexedDraw(const gl::Context *context,
-                                      gl::PrimitiveMode mode,
-                                      GLint firstVertexOrInvalid,
-                                      GLsizei vertexOrIndexCount,
-                                      GLsizei instanceCount,
-                                      gl::DrawElementsType indexTypeOrInvalid,
-                                      const void *indices,
-                                      DirtyBits dirtyBitMask);
-
     angle::Result setupIndexedDraw(const gl::Context *context,
                                    gl::PrimitiveMode mode,
                                    GLsizei indexCount,
