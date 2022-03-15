@@ -47,6 +47,8 @@ namespace js = rapidjson;
 
 bool gFailedToFindGPU;
 
+constexpr char kRenderTestOutputDir[] = "--render-test-output-dir=";
+
 int main(int argc, char **argv)
 {
     angle::SystemInfo info;
@@ -54,6 +56,7 @@ int main(int argc, char **argv)
     bool useVulkan      = false;
     bool listTests      = false;
     bool useSwiftShader = false;
+    std::string output_dir;
 
     for (int arg = 1; arg < argc; ++arg)
     {
@@ -68,6 +71,10 @@ int main(int argc, char **argv)
         else if (strcmp(argv[arg], "--swiftshader") == 0)
         {
             useSwiftShader = true;
+        }
+        else if (strstr(argv[arg], kRenderTestOutputDir))
+        {
+            output_dir = argv[arg] + strlen(kRenderTestOutputDir);
         }
     }
 
@@ -158,6 +165,17 @@ int main(int argc, char **argv)
 
     const char *output = buffer.GetString();
     printf("%s\n", output);
+
+    if (!output_dir.empty())
+    {
+        std::string outputFile = output_dir + "/angle_system_info.json";
+        FILE *fp               = fopen(outputFile.c_str(), "w");
+        if (fp)
+        {
+            fwrite(output, sizeof(char), strlen(output), fp);
+            fclose(fp);
+        }
+    }
 
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
