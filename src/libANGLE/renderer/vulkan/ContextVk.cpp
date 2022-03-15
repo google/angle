@@ -933,6 +933,17 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
             mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
             mLastIndexBufferOffset = indices;
         }
+
+        // When you draw with LineLoop mode or GL_UNSIGNED_BYTE type, we may allocate its own
+        // element buffer and modify mCurrentElementArrayBuffer. When we switch out of that draw
+        // mode, we must reset mCurrentElementArrayBuffer back to the vertexArray's element buffer.
+        // Since in either case we set DIRTY_BIT_INDEX_BUFFER dirty bit, we use this bit to re-sync
+        // mCurrentElementArrayBuffer.
+        if (mGraphicsDirtyBits[DIRTY_BIT_INDEX_BUFFER])
+        {
+            mVertexArray->updateCurrentElementArrayBuffer();
+        }
+
         if (shouldConvertUint8VkIndexType(indexType) && mGraphicsDirtyBits[DIRTY_BIT_INDEX_BUFFER])
         {
             ANGLE_PERF_WARNING(getDebug(), GL_DEBUG_SEVERITY_LOW,

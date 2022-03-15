@@ -34,6 +34,8 @@ class VertexArrayVk : public VertexArrayImpl
 
     angle::Result updateActiveAttribInfo(ContextVk *contextVk);
 
+    void updateCurrentElementArrayBuffer();
+
     angle::Result updateDefaultAttrib(ContextVk *contextVk,
                                       size_t attribIndex,
                                       VkBuffer bufferHandle,
