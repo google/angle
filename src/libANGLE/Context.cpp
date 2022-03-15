@@ -6689,7 +6689,7 @@ void Context::drawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
                                                           GLsizei count,
                                                           DrawElementsType type,
                                                           const GLvoid *indices,
-                                                          GLsizei instanceCounts,
+                                                          GLsizei instanceCount,
                                                           GLint baseVertex,
                                                           GLuint baseInstance)
 {
@@ -6717,7 +6717,7 @@ void Context::drawElementsInstancedBaseVertexBaseInstance(PrimitiveMode mode,
     rx::ResetBaseVertexBaseInstance resetUniforms(programObject, hasBaseVertex, hasBaseInstance);
 
     ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstancedBaseVertexBaseInstance(
-        this, mode, count, type, indices, instanceCounts, baseVertex, baseInstance));
+        this, mode, count, type, indices, instanceCount, baseVertex, baseInstance));
 }
 
 void Context::multiDrawArraysInstancedBaseInstance(PrimitiveMode mode,

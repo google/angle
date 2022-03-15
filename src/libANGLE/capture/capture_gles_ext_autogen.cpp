@@ -442,7 +442,7 @@ CallCapture CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE(const State 
                                                                     GLsizei count,
                                                                     DrawElementsType typePacked,
                                                                     const GLvoid *indices,
-                                                                    GLsizei instanceCounts,
+                                                                    GLsizei instanceCount,
                                                                     GLint baseVertex,
                                                                     GLuint baseInstance)
 {
@@ -457,8 +457,8 @@ CallCapture CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE(const State 
         ParamCapture indicesParam("indices", ParamType::TGLvoidConstPointer);
         InitParamValue(ParamType::TGLvoidConstPointer, indices, &indicesParam.value);
         CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE_indices(
-            glState, isCallValid, modePacked, count, typePacked, indices, instanceCounts,
-            baseVertex, baseInstance, &indicesParam);
+            glState, isCallValid, modePacked, count, typePacked, indices, instanceCount, baseVertex,
+            baseInstance, &indicesParam);
         paramBuffer.addParam(std::move(indicesParam));
     }
     else
@@ -469,7 +469,7 @@ CallCapture CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE(const State 
         paramBuffer.addParam(std::move(indicesParam));
     }
 
-    paramBuffer.addValueParam("instanceCounts", ParamType::TGLsizei, instanceCounts);
+    paramBuffer.addValueParam("instanceCount", ParamType::TGLsizei, instanceCount);
     paramBuffer.addValueParam("baseVertex", ParamType::TGLint, baseVertex);
     paramBuffer.addValueParam("baseInstance", ParamType::TGLuint, baseInstance);
 

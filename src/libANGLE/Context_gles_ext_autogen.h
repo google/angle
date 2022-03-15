@@ -327,7 +327,7 @@
                                          GLsizei instanceCount, GLuint baseInstance);              \
     void drawElementsInstancedBaseVertexBaseInstance(                                              \
         PrimitiveMode modePacked, GLsizei count, DrawElementsType typePacked,                      \
-        const GLvoid *indices, GLsizei instanceCounts, GLint baseVertex, GLuint baseInstance);     \
+        const GLvoid *indices, GLsizei instanceCount, GLint baseVertex, GLuint baseInstance);      \
     void multiDrawArraysInstancedBaseInstance(                                                     \
         PrimitiveMode modePacked, const GLint *firsts, const GLsizei *counts,                      \
         const GLsizei *instanceCounts, const GLuint *baseInstances, GLsizei drawcount);            \

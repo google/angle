@@ -393,16 +393,16 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode
                                                                      GLsizei count,
                                                                      GLenum type,
                                                                      const GLvoid *indices,
-                                                                     GLsizei instanceCounts,
+                                                                     GLsizei instanceCount,
                                                                      GLint baseVertex,
                                                                      GLuint baseInstance)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawElementsInstancedBaseVertexBaseInstanceANGLE,
           "context = %d, mode = %s, count = %d, type = %s, indices = 0x%016" PRIxPTR
-          ", instanceCounts = %d, baseVertex = %d, baseInstance = %u",
+          ", instanceCount = %d, baseVertex = %d, baseInstance = %u",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
-          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instanceCounts,
+          GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instanceCount,
           baseVertex, baseInstance);
 
     if (context)
@@ -414,14 +414,14 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode
             (context->skipValidation() ||
              ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(
                  context, angle::EntryPoint::GLDrawElementsInstancedBaseVertexBaseInstanceANGLE,
-                 modePacked, count, typePacked, indices, instanceCounts, baseVertex, baseInstance));
+                 modePacked, count, typePacked, indices, instanceCount, baseVertex, baseInstance));
         if (isCallValid)
         {
             context->drawElementsInstancedBaseVertexBaseInstance(
-                modePacked, count, typePacked, indices, instanceCounts, baseVertex, baseInstance);
+                modePacked, count, typePacked, indices, instanceCount, baseVertex, baseInstance);
         }
         ANGLE_CAPTURE(DrawElementsInstancedBaseVertexBaseInstanceANGLE, isCallValid, context,
-                      modePacked, count, typePacked, indices, instanceCounts, baseVertex,
+                      modePacked, count, typePacked, indices, instanceCount, baseVertex,
                       baseInstance);
     }
     else

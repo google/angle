@@ -23,7 +23,7 @@ void CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE_indices(
     GLsizei count,
     DrawElementsType typePacked,
     const GLvoid *indices,
-    GLsizei instanceCounts,
+    GLsizei instanceCount,
     GLint baseVertex,
     GLuint baseInstance,
     angle::ParamCapture *paramCapture)

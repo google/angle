@@ -95,7 +95,7 @@ bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context *con
                                                               GLsizei count,
                                                               DrawElementsType typePacked,
                                                               const GLvoid *indices,
-                                                              GLsizei instanceCounts,
+                                                              GLsizei instanceCount,
                                                               GLint baseVertex,
                                                               GLuint baseInstance);
 bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(const Context *context,

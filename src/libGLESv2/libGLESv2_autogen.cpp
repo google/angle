@@ -2808,12 +2808,12 @@ void GL_APIENTRY glDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
                                                                     GLsizei count,
                                                                     GLenum type,
                                                                     const GLvoid *indices,
-                                                                    GLsizei instanceCounts,
+                                                                    GLsizei instanceCount,
                                                                     GLint baseVertex,
                                                                     GLuint baseInstance)
 {
     return GL_DrawElementsInstancedBaseVertexBaseInstanceANGLE(
-        mode, count, type, indices, instanceCounts, baseVertex, baseInstance);
+        mode, count, type, indices, instanceCount, baseVertex, baseInstance);
 }
 
 void GL_APIENTRY glMultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,

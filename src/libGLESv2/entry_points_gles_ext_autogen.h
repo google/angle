@@ -70,7 +70,7 @@ GL_DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
                                                     GLsizei count,
                                                     GLenum type,
                                                     const GLvoid *indices,
-                                                    GLsizei instanceCounts,
+                                                    GLsizei instanceCount,
                                                     GLint baseVertex,
                                                     GLuint baseInstance);
 ANGLE_EXPORT void GL_APIENTRY
