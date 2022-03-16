@@ -1429,10 +1429,6 @@ angle::Result TextureMtl::syncState(const gl::Context *context,
                                     const gl::Texture::DirtyBits &dirtyBits,
                                     gl::Command source)
 {
-    if (source == gl::Command::FlushStagedUpdates)
-    {
-        return angle::Result::Continue;
-    }
     ContextMtl *contextMtl = mtl::GetImpl(context);
     for (size_t dirtyBit : dirtyBits)
     {

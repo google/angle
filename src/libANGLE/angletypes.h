@@ -41,7 +41,6 @@ enum class Command
     Invalidate,
     ReadPixels,
     TexImage,
-    FlushStagedUpdates,
     Other
 };
 

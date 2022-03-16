@@ -2129,8 +2129,7 @@ GLuint Texture::getNativeID() const
 
 angle::Result Texture::syncState(const Context *context, Command source)
 {
-    ASSERT(hasAnyDirtyBit() || source == Command::GenerateMipmap ||
-           source == Command::FlushStagedUpdates);
+    ASSERT(hasAnyDirtyBit() || source == Command::GenerateMipmap);
     ANGLE_TRY(mTexture->syncState(context, mDirtyBits, source));
     mDirtyBits.reset();
     mState.mInitState = InitState::Initialized;

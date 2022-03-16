@@ -711,18 +711,6 @@ egl::Error Context::onDestroy(const egl::Display *display)
     // Remove context from the capture share group
     getShareGroup()->removeSharedContext(this);
 
-    // Fix chromium:1299211: flush TextureVk staged updates if
-    // we are using the extension DisplayTextureShareGroup
-    if (mDisplayTextureShareGroup)
-    {
-        for (const auto &textureIter : *mState.mTextureManager)
-        {
-            gl::Texture *texture = textureIter.second;
-            ANGLE_SWALLOW_ERR(
-                angle::ResultToEGL(texture->syncState(this, Command::FlushStagedUpdates)));
-        }
-    }
-
     if (mGLES1Renderer)
     {
         mGLES1Renderer->onDestroy(this, &mState);
