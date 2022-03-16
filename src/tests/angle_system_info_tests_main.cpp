@@ -123,6 +123,10 @@ int main(int argc, char **argv)
     machineModelVersion.SetString(info.machineModelVersion.c_str(), allocator);
     doc.AddMember("machineModelVersion", machineModelVersion, allocator);
 
+    js::Value androidSdkLevel;
+    androidSdkLevel.SetInt(info.androidSdkLevel);
+    doc.AddMember("androidSdkLevel", androidSdkLevel, allocator);
+
     js::Value gpus;
     gpus.SetArray();
 
