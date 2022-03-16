@@ -257,6 +257,9 @@
 3841 WIN D3D11 : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 // Mistranslation
 6216 WIN D3D11 : GLSLTest_ES31.StorageBufferBoolVectorPassedToFunctions/* = SKIP
+// D3D does not support compressed textures where the base mip level is not a multiple of 4
+4841 D3D9 : DXT1CompressedTextureTest.NonBlockSizesMipLevels/* = SKIP
+4841 D3D11 : DXT1CompressedTextureTest.NonBlockSizesMipLevels/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
