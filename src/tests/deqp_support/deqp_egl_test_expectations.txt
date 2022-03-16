@@ -19,10 +19,6 @@
 3916 D3D9 : dEQP-EGL.functional.render.multi_thread.* = SKIP
 3916 D3D9 : dEQP-EGL.functional.color_clears.multi_thread.* = SKIP
 
-// These tests require pixmap surfaces. On many platforms they are unsupported.
-3917 ANDROID VULKAN : dEQP-EGL.functional.render.multi_thread.* = FAIL
-3917 ANDROID VULKAN : dEQP-EGL.functional.color_clears.multi_thread.* = FAIL
-
 // dEQP doesn't handle configs created for extensions
 1662 WIN : dEQP-EGL.functional.color_clears.single_context.gles2.other = FAIL
 1662 WIN : dEQP-EGL.functional.color_clears.single_context.gles3.other = FAIL
@@ -112,7 +108,7 @@
 6533 ANDROID : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
 6533 ANDROID : dEQP-EGL.functional.native_coord_mapping.native_window.* = SKIP
 
-// Android Vulkan
+// Android Vulkan (still failing March 16, 2022)
 6277 ANDROID VULKAN : dEQP-EGL.functional.image.api.create_image_gles2_android_native_rgb8 = FAIL
 6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles2_android_native_rgb8_read_pixels = FAIL
 6277 ANDROID VULKAN : dEQP-EGL.functional.image.create.gles2_android_native_rgb8_texture = FAIL
@@ -124,7 +120,7 @@
 6277 ANDROID VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_read_pixels = FAIL
 6277 ANDROID VULKAN : dEQP-EGL.functional.image.render_multiple_contexts.gles2_android_native_rgb8_texture = FAIL
 
-// Pixel 4 Vulkan
+// Pixel 4 Vulkan (still failing March 16, 2022)
 6953 PIXEL4ORXL VULKAN : dEQP-EGL.functional.buffer_age.no_preserve.*.odd_clear_render_even_clear = FAIL
 6953 PIXEL4ORXL VULKAN : dEQP-EGL.functional.buffer_age.no_preserve.*.odd_clear_render_even_clear_clear = FAIL
 6953 PIXEL4ORXL VULKAN : dEQP-EGL.functional.buffer_age.no_preserve.*.odd_clear_render_even_clear_render = FAIL
@@ -169,10 +165,6 @@
 // Pixel 6 Vulkan
 6900 PIXEL6 VULKAN : dEQP-EGL.functional.get_proc_address.extension.egl_ext_image_dma_buf_import_modifiers = FAIL
 6899 PIXEL6 VULKAN : dEQP-EGL.functional.query_context.*.rgb888_window = FAIL
-
-// Robustness failures on multiple platforms
-3711 : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.reads.* = FAIL
-3711 : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds.reset_status.writes.* = FAIL
 
 // ES 1 tests
 2306 WIN : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
