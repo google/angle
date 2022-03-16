@@ -1032,6 +1032,8 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     bool hasGLMemoryBarrierIssued() const { return mHasGLMemoryBarrierIssued; }
 
+    vk::ResourceUseList &getResourceUseList() { return mResourceUseList; }
+
     // Dumping the command stream is disabled by default.
     static constexpr bool kEnableCommandStreamDiagnostics = false;
 
@@ -1088,6 +1090,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
     // For Buffers, we track the read/write access type so we can enable simultaneous reads.
     static constexpr uint32_t kFlatMapSize = 16;
     angle::FlatUnorderedMap<BufferSerial, BufferAccess, kFlatMapSize> mUsedBuffers;
+    vk::ResourceUseList mResourceUseList;
 };
 
 class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCommon

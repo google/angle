@@ -133,7 +133,7 @@ struct PerfMonitorTriplet
 #define ANGLE_VK_PERF_COUNTERS_X(FN)              \
     FN(primaryBuffers)                            \
     FN(renderPasses)                              \
-    FN(submittedFrames)                           \
+    FN(submittedCommands)                         \
     FN(writeDescriptorSets)                       \
     FN(flushedOutsideRenderPassCommandBuffers)    \
     FN(swapchainResolveInSubpass)                 \

@@ -92,12 +92,6 @@ class UpdateDescriptorSetsBuilder final : angle::NonCopyable
     std::vector<VkWriteDescriptorSet> mWriteDescriptorSets;
 };
 
-enum class SubmitFrameType
-{
-    OutsideAndRPCommands,
-    OutsideRPCommandsOnly,
-};
-
 // Why depth/stencil feedback loop is being updated.  Based on whether it's due to a draw or clear,
 // different GL state affect depth/stencil write.
 enum class UpdateDepthFeedbackLoopReason
@@ -1091,9 +1085,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     angle::Result submitFrame(const vk::Semaphore *signalSemaphore, Serial *submitSerialOut);
     angle::Result submitFrameOutsideCommandBufferOnly(Serial *submitSerialOut);
-    angle::Result submitFrameImpl(const vk::Semaphore *signalSemaphore,
-                                  Serial *submitSerialOut,
-                                  SubmitFrameType submitFrameType);
+    angle::Result submitCommands(const vk::Semaphore *signalSemaphore, Serial *submitSerialOut);
 
     angle::Result synchronizeCpuGpuTime();
     angle::Result traceGpuEventImpl(vk::OutsideRenderPassCommandBuffer *commandBuffer,

@@ -563,10 +563,10 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotBreakR
     initANGLEFeatures();
     // http://anglebug.com/6354
 
-    size_t kMaxBufferToImageCopySize  = 1 << 28;
-    uint32_t kNumSubmits              = 2;
-    uint32_t expectedRenderPassCount  = getPerfCounters().renderPasses + 1;
-    uint32_t expectedSubmitFrameCount = getPerfCounters().submittedFrames + kNumSubmits;
+    size_t kMaxBufferToImageCopySize     = 1 << 28;
+    uint32_t kNumSubmits                 = 2;
+    uint32_t expectedRenderPassCount     = getPerfCounters().renderPasses + 1;
+    uint32_t expectedSubmitCommandsCount = getPerfCounters().submittedCommands + kNumSubmits;
 
     // Step 1: Set up a simple 2D texture.
     GLTexture texture;
@@ -620,7 +620,7 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotBreakR
 
     // Verify render pass and submitted frame counts.
     EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
-    EXPECT_EQ(getPerfCounters().submittedFrames, expectedSubmitFrameCount);
+    EXPECT_EQ(getPerfCounters().submittedCommands, expectedSubmitCommandsCount);
 }
 
 // Tests that RGB texture should not break renderpass.
