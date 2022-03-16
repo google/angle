@@ -558,6 +558,13 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
                 return false;
             }
             break;
+        case EGL_PLATFORM_WAYLAND_EXT:
+            if (!clientExtensions.platformWaylandEXT)
+            {
+                val->setError(EGL_BAD_PARAMETER, "Platform Wayland extension is not active");
+                return false;
+            }
+            break;
         default:
             val->setError(EGL_BAD_CONFIG, "Bad platform type.");
             return false;
