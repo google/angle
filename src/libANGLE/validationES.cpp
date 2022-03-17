@@ -1067,11 +1067,12 @@ bool ValidImageSizeParameters(const Context *context,
 
 bool ValidCompressedBaseLevel(GLsizei size, GLuint blockSize, GLint level)
 {
-    // Avoid C++ undefined behavior.
-    constexpr int maxValidShifts = 31;
-    if (level > maxValidShifts)
-        return false;
-    return ((size << level) % blockSize) == 0;
+    // Already checked in ValidMipLevel.
+    ASSERT(level < 32);
+    // This function is used only for 4x4 BC formats.
+    ASSERT(blockSize == 4);
+    // Use the constant value to avoid division.
+    return ((size << level) % 4) == 0;
 }
 
 bool ValidCompressedImageSize(const Context *context,
@@ -1116,9 +1117,10 @@ bool ValidCompressedImageSize(const Context *context,
         // size.
         if (context->isWebGL() || context->getLimitations().compressedBaseMipLevelMultipleOfFour)
         {
+            // This check is performed only for BC formats.
+            ASSERT(formatInfo.compressedBlockDepth == 1);
             if (!ValidCompressedBaseLevel(width, formatInfo.compressedBlockWidth, level) ||
-                !ValidCompressedBaseLevel(height, formatInfo.compressedBlockHeight, level) ||
-                !ValidCompressedBaseLevel(depth, formatInfo.compressedBlockDepth, level))
+                !ValidCompressedBaseLevel(height, formatInfo.compressedBlockHeight, level))
             {
                 return false;
             }
