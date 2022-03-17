@@ -189,6 +189,8 @@ constexpr const char *kSkippedMessages[] = {
     // framebuffer that's accessed by the command buffer is identically laid out.
     // http://anglebug.com/6811
     "VUID-vkCmdExecuteCommands-pCommandBuffers-00099",
+    // http://anglebug.com/7105
+    "VUID-vkCmdDraw-None-06538",
 };
 
 struct SkippedSyncvalMessage
