@@ -194,3 +194,5 @@
 5366 : ProgramPipelineTest32.MaxGeometryImageUniforms/* = CRASH
 
 7088 : VulkanPerformanceCounterTest* = SKIP_FOR_CAPTURE
+
+7111 : ImageTestES3.Source2DTarget2DStorageOrphan/* = FAIL

@@ -393,6 +393,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.EGLImageExternalWrapModesEXT = true;
     mNativeExtensions.EGLImageExternalEssl3OES     = true;
     mNativeExtensions.EGLImageArrayEXT             = true;
+    mNativeExtensions.EGLImageStorageEXT           = true;
     mNativeExtensions.memoryObjectEXT              = true;
     mNativeExtensions.memoryObjectFdEXT            = getFeatures().supportsExternalMemoryFd.enabled;
     mNativeExtensions.memoryObjectFlagsANGLE       = true;

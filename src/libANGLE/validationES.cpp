@@ -4873,6 +4873,80 @@ bool ValidatePushGroupMarkerEXT(const Context *context,
     return true;
 }
 
+bool ValidateEGLImageObject(const Context *context,
+                            angle::EntryPoint entryPoint,
+                            TextureType type,
+                            GLeglImageOES image)
+{
+    egl::Image *imageObject = static_cast<egl::Image *>(image);
+
+    ASSERT(context->getDisplay());
+    if (!context->getDisplay()->isValidImage(imageObject))
+    {
+        context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidEGLImage);
+        return false;
+    }
+
+    if (imageObject->getSamples() > 0)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION,
+                                 kEGLImageCannotCreate2DMultisampled);
+        return false;
+    }
+
+    if (!imageObject->isTexturable(context))
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION,
+                                 kEGLImageTextureFormatNotSupported);
+        return false;
+    }
+
+    // Validate source egl image and target texture are compatible
+    size_t depth = static_cast<size_t>(imageObject->getExtents().depth);
+    if (imageObject->isYUV() && type != TextureType::External)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION,
+                                 "Image is YUV, target must be TEXTURE_EXTERNAL_OES");
+        return false;
+    }
+
+    if (depth > 1 && type != TextureType::_2DArray && type != TextureType::CubeMap &&
+        type != TextureType::CubeMapArray && type != TextureType::_3D)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kEGLImageTextureTargetMismatch);
+        return false;
+    }
+
+    if (imageObject->isCubeMap() && type != TextureType::CubeMapArray &&
+        (type != TextureType::CubeMap || depth > gl::kCubeFaceCount))
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kEGLImageTextureTargetMismatch);
+        return false;
+    }
+
+    if (imageObject->getLevelCount() > 1 && type == TextureType::External)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kEGLImageTextureTargetMismatch);
+        return false;
+    }
+
+    // 3d EGLImages are currently not supported
+    if (type == TextureType::_3D)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kEGLImageTextureTargetMismatch);
+        return false;
+    }
+
+    if (imageObject->hasProtectedContent() && !context->getState().hasProtectedContent())
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION,
+                                 "Mismatch between Image and Context Protected Content state");
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateEGLImageTargetTexture2DOES(const Context *context,
                                         angle::EntryPoint entryPoint,
                                         TextureType type,
@@ -4912,51 +4986,7 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
             return false;
     }
 
-    egl::Image *imageObject = static_cast<egl::Image *>(image);
-
-    ASSERT(context->getDisplay());
-    if (!context->getDisplay()->isValidImage(imageObject))
-    {
-        context->validationError(entryPoint, GL_INVALID_VALUE, kInvalidEGLImage);
-        return false;
-    }
-
-    if (imageObject->getSamples() > 0)
-    {
-        context->validationError(entryPoint, GL_INVALID_OPERATION,
-                                 kEGLImageCannotCreate2DMultisampled);
-        return false;
-    }
-
-    if (!imageObject->isTexturable(context))
-    {
-        context->validationError(entryPoint, GL_INVALID_OPERATION,
-                                 kEGLImageTextureFormatNotSupported);
-        return false;
-    }
-
-    if (imageObject->isLayered() && type != TextureType::_2DArray)
-    {
-        context->validationError(entryPoint, GL_INVALID_OPERATION,
-                                 "Image has more than 1 layer, target must be TEXTURE_2D_ARRAY");
-        return false;
-    }
-
-    if (imageObject->isYUV() && type != TextureType::External)
-    {
-        context->validationError(entryPoint, GL_INVALID_OPERATION,
-                                 "Image is YUV, target must be TEXTURE_EXTERNAL_OES");
-        return false;
-    }
-
-    if (imageObject->hasProtectedContent() && !context->getState().hasProtectedContent())
-    {
-        context->validationError(entryPoint, GL_INVALID_OPERATION,
-                                 "Mismatch between Image and Context Protected Content state");
-        return false;
-    }
-
-    return true;
+    return ValidateEGLImageObject(context, entryPoint, type, image);
 }
 
 bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
