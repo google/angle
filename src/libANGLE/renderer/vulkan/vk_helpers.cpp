@@ -1001,6 +1001,208 @@ void PackedClearValuesArray::storeNoDepthStencil(PackedAttachmentIndex index,
     mValues[index.get()] = clearValue;
 }
 
+// RenderPassAttachment implementation
+RenderPassAttachment::RenderPassAttachment()
+{
+    reset();
+}
+
+void RenderPassAttachment::init(ImageHelper *image,
+                                gl::LevelIndex levelIndex,
+                                uint32_t layerIndex,
+                                uint32_t layerCount,
+                                VkImageAspectFlagBits aspect)
+{
+    mImage      = image;
+    mLevelIndex = levelIndex;
+    mLayerIndex = layerIndex;
+    mLayerCount = layerCount;
+    mAspect     = aspect;
+
+    mImage->setRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment);
+}
+
+void RenderPassAttachment::reset()
+{
+    mImage = nullptr;
+
+    mAccess = ResourceAccess::Unused;
+
+    mInvalidatedCmdCount = kInfiniteCmdCount;
+    mDisabledCmdCount    = kInfiniteCmdCount;
+    mInvalidateArea      = gl::Rectangle();
+}
+
+void RenderPassAttachment::onAccess(ResourceAccess access, uint32_t currentCmdCount)
+{
+    // Update the access for optimizing this render pass's loadOp
+    UpdateAccess(&mAccess, access);
+
+    // Update the invalidate state for optimizing this render pass's storeOp
+    if (onAccessImpl(access, currentCmdCount))
+    {
+        // The attachment is no longer invalid, so restore its content.
+        restoreContent();
+    }
+}
+
+void RenderPassAttachment::invalidate(const gl::Rectangle &invalidateArea,
+                                      bool isAttachmentEnabled,
+                                      uint32_t currentCmdCount)
+{
+    // Keep track of the command count in the render pass at the time of invalidation.  If there are
+    // more commands in the future, invalidate must be undone.
+    mInvalidatedCmdCount = currentCmdCount;
+
+    // Also track the command count if the attachment is currently disabled.
+    mDisabledCmdCount = isAttachmentEnabled ? kInfiniteCmdCount : currentCmdCount;
+
+    // Set/extend the invalidate area.
+    ExtendRenderPassInvalidateArea(invalidateArea, &mInvalidateArea);
+}
+
+void RenderPassAttachment::onRenderAreaGrowth(ContextVk *contextVk,
+                                              const gl::Rectangle &newRenderArea)
+{
+    // Remove invalidate if it's no longer applicable.
+    if (mInvalidateArea.empty() || mInvalidateArea.encloses(newRenderArea))
+    {
+        return;
+    }
+
+    ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_LOW,
+                          "InvalidateSubFramebuffer discarded due to increased scissor region");
+
+    mInvalidateArea      = gl::Rectangle();
+    mInvalidatedCmdCount = kInfiniteCmdCount;
+}
+
+void RenderPassAttachment::finalizeLoadStore(Context *context,
+                                             uint32_t currentCmdCount,
+                                             bool hasUnresolveAttachment,
+                                             RenderPassLoadOp *loadOp,
+                                             RenderPassStoreOp *storeOp,
+                                             bool *isInvalidatedOut)
+{
+    // Ensure we don't write to a read-only attachment. (ReadOnly -> !Write)
+    ASSERT(!mImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment) ||
+           mAccess != ResourceAccess::Write);
+
+    // If the attachment is invalidated, skip the store op.  If we are not loading or clearing the
+    // attachment and the attachment has not been used, auto-invalidate it.
+    const bool notLoaded = *loadOp == RenderPassLoadOp::DontCare && !hasUnresolveAttachment;
+    if (isInvalidated(currentCmdCount) || (notLoaded && mAccess != ResourceAccess::Write))
+    {
+        *storeOp          = RenderPassStoreOp::DontCare;
+        *isInvalidatedOut = true;
+    }
+    else if (hasWriteAfterInvalidate(currentCmdCount))
+    {
+        // The attachment was invalidated, but is now valid.  Let the image know the contents are
+        // now defined so a future render pass would use loadOp=LOAD.
+        restoreContent();
+    }
+
+    // For read only depth stencil, we can use StoreOpNone if available.  DontCare is still
+    // preferred, so do this after handling DontCare.
+    const bool supportsLoadStoreOpNone =
+        context->getRenderer()->getFeatures().supportsRenderPassLoadStoreOpNone.enabled;
+    const bool supportsStoreOpNone =
+        supportsLoadStoreOpNone ||
+        context->getRenderer()->getFeatures().supportsRenderPassStoreOpNoneQCOM.enabled;
+    if (mImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment) && supportsStoreOpNone)
+    {
+        if (*storeOp == RenderPassStoreOp::Store)
+        {
+            *storeOp = RenderPassStoreOp::None;
+        }
+    }
+
+    if (mAccess == ResourceAccess::Unused)
+    {
+        if (*storeOp == RenderPassStoreOp::DontCare)
+        {
+            // If we are loading or clearing the attachment, but the attachment has not been used,
+            // and the data has also not been stored back into attachment, then just skip the
+            // load/clear op.
+            *loadOp = RenderPassLoadOp::DontCare;
+        }
+        else if (*loadOp != RenderPassLoadOp::Clear && supportsLoadStoreOpNone)
+        {
+            // Otherwise make sure the attachment is neither loaded nor stored (as it's neither
+            // used nor invalidated).
+            *loadOp  = RenderPassLoadOp::None;
+            *storeOp = RenderPassStoreOp::None;
+        }
+    }
+}
+
+void RenderPassAttachment::restoreContent()
+{
+    // Note that the image may have been deleted since the render pass has started.
+    if (mImage)
+    {
+        ASSERT(mImage->valid());
+        if (mAspect == VK_IMAGE_ASPECT_STENCIL_BIT)
+        {
+            mImage->restoreSubresourceStencilContent(mLevelIndex, mLayerIndex, mLayerCount);
+        }
+        else
+        {
+            mImage->restoreSubresourceContent(mLevelIndex, mLayerIndex, mLayerCount);
+        }
+        mInvalidateArea = gl::Rectangle();
+    }
+}
+
+bool RenderPassAttachment::hasWriteAfterInvalidate(uint32_t currentCmdCount) const
+{
+    return (mInvalidatedCmdCount != kInfiniteCmdCount &&
+            std::min(mDisabledCmdCount, currentCmdCount) != mInvalidatedCmdCount);
+}
+
+bool RenderPassAttachment::isInvalidated(uint32_t currentCmdCount) const
+{
+    return mInvalidatedCmdCount != kInfiniteCmdCount &&
+           std::min(mDisabledCmdCount, currentCmdCount) == mInvalidatedCmdCount;
+}
+
+bool RenderPassAttachment::onAccessImpl(ResourceAccess access, uint32_t currentCmdCount)
+{
+    if (mInvalidatedCmdCount == kInfiniteCmdCount)
+    {
+        // If never invalidated or no longer invalidated, return early.
+        return false;
+    }
+    if (access == ResourceAccess::Write)
+    {
+        // Drawing to this attachment is being enabled.  Assume that drawing will immediately occur
+        // after this attachment is enabled, and that means that the attachment will no longer be
+        // invalidated.
+        mInvalidatedCmdCount = kInfiniteCmdCount;
+        mDisabledCmdCount    = kInfiniteCmdCount;
+        // Return true to indicate that the store op should remain STORE and that mContentDefined
+        // should be set to true;
+        return true;
+    }
+    // Drawing to this attachment is being disabled.
+    if (hasWriteAfterInvalidate(currentCmdCount))
+    {
+        // The attachment was previously drawn while enabled, and so is no longer invalidated.
+        mInvalidatedCmdCount = kInfiniteCmdCount;
+        mDisabledCmdCount    = kInfiniteCmdCount;
+        // Return true to indicate that the store op should remain STORE and that mContentDefined
+        // should be set to true;
+        return true;
+    }
+
+    // Use the latest CmdCount at the start of being disabled.  At the end of the render pass,
+    // cmdCountDisabled is <= the actual command count, and so it's compared with
+    // cmdCountInvalidated.  If the same, the attachment is still invalidated.
+    mDisabledCmdCount = currentCmdCount;
+    return false;
+}
+
 // CommandBufferHelperCommon implementation.
 CommandBufferHelperCommon::CommandBufferHelperCommon()
     : mPipelineBarriers(),
@@ -1265,19 +1467,8 @@ RenderPassCommandBufferHelper::RenderPassCommandBufferHelper()
       mValidTransformFeedbackBufferCount(0),
       mRebindTransformFeedbackBuffers(false),
       mIsTransformFeedbackActiveUnpaused(false),
-      mDepthAccess(ResourceAccess::Unused),
-      mStencilAccess(ResourceAccess::Unused),
       mPreviousSubpassesCmdCount(0),
-      mDepthCmdCountInvalidated(kInfiniteCmdCount),
-      mDepthCmdCountDisabled(kInfiniteCmdCount),
-      mStencilCmdCountInvalidated(kInfiniteCmdCount),
-      mStencilCmdCountDisabled(kInfiniteCmdCount),
       mDepthStencilAttachmentIndex(kAttachmentIndexInvalid),
-      mDepthStencilImage(nullptr),
-      mDepthStencilResolveImage(nullptr),
-      mDepthStencilLevelIndex(0),
-      mDepthStencilLayerIndex(0),
-      mDepthStencilLayerCount(0),
       mColorImagesCount(0),
       mImageOptimizeForPresent(nullptr)
 {}
@@ -1307,23 +1498,18 @@ angle::Result RenderPassCommandBufferHelper::reset(Context *context)
     mRebindTransformFeedbackBuffers    = false;
     mHasShaderStorageOutput            = false;
     mHasGLMemoryBarrierIssued          = false;
-    mDepthAccess                       = ResourceAccess::Unused;
-    mStencilAccess                     = ResourceAccess::Unused;
     mPreviousSubpassesCmdCount         = 0;
-    mDepthCmdCountInvalidated          = kInfiniteCmdCount;
-    mDepthCmdCountDisabled             = kInfiniteCmdCount;
-    mStencilCmdCountInvalidated        = kInfiniteCmdCount;
-    mStencilCmdCountDisabled           = kInfiniteCmdCount;
     mColorImagesCount                  = PackedAttachmentCount(0);
     mDepthStencilAttachmentIndex       = kAttachmentIndexInvalid;
-    mDepthInvalidateArea               = gl::Rectangle();
-    mStencilInvalidateArea             = gl::Rectangle();
     mRenderPassUsedImages.clear();
-    mDepthStencilImage        = nullptr;
-    mDepthStencilResolveImage = nullptr;
     mColorImages.reset();
     mColorResolveImages.reset();
     mImageOptimizeForPresent = nullptr;
+
+    mDepthAttachment.reset();
+    mDepthResolveAttachment.reset();
+    mStencilAttachment.reset();
+    mStencilResolveAttachment.reset();
 
     // Reset and re-initialize the command buffers
     for (uint32_t subpass = 0; subpass <= mCurrentSubpass; ++subpass)
@@ -1420,11 +1606,9 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(ResourceUseList *reso
     // only insert layout change barrier once.
     image->retain(resourceUseList);
     mRenderPassUsedImages.insert(image->getImageSerial());
-    mDepthStencilImage      = image;
-    mDepthStencilLevelIndex = level;
-    mDepthStencilLayerIndex = layerStart;
-    mDepthStencilLayerCount = layerCount;
-    image->setRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment);
+
+    mDepthAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_DEPTH_BIT);
+    mStencilAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT);
 
     if (resolveImage)
     {
@@ -1433,132 +1617,56 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(ResourceUseList *reso
         // multisampled-render-to-texture renderbuffers.
         resolveImage->retain(resourceUseList);
         mRenderPassUsedImages.insert(resolveImage->getImageSerial());
-        mDepthStencilResolveImage = resolveImage;
-        resolveImage->setRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment);
+
+        mDepthResolveAttachment.init(resolveImage, level, layerStart, layerCount,
+                                     VK_IMAGE_ASPECT_DEPTH_BIT);
+        mStencilResolveAttachment.init(resolveImage, level, layerStart, layerCount,
+                                       VK_IMAGE_ASPECT_STENCIL_BIT);
     }
 }
 
 void RenderPassCommandBufferHelper::onDepthAccess(ResourceAccess access)
 {
-    // Update the access for optimizing this render pass's loadOp
-    UpdateAccess(&mDepthAccess, access);
-
-    // Update the invalidate state for optimizing this render pass's storeOp
-    if (onDepthStencilAccess(access, &mDepthCmdCountInvalidated, &mDepthCmdCountDisabled))
-    {
-        // The attachment is no longer invalid, so restore its content.
-        restoreDepthContent();
-    }
+    mDepthAttachment.onAccess(access, getRenderPassWriteCommandCount());
 }
 
 void RenderPassCommandBufferHelper::onStencilAccess(ResourceAccess access)
 {
-    // Update the access for optimizing this render pass's loadOp
-    UpdateAccess(&mStencilAccess, access);
-
-    // Update the invalidate state for optimizing this render pass's stencilStoreOp
-    if (onDepthStencilAccess(access, &mStencilCmdCountInvalidated, &mStencilCmdCountDisabled))
-    {
-        // The attachment is no longer invalid, so restore its content.
-        restoreStencilContent();
-    }
-}
-
-bool RenderPassCommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
-                                                         uint32_t *cmdCountInvalidated,
-                                                         uint32_t *cmdCountDisabled)
-{
-    if (*cmdCountInvalidated == kInfiniteCmdCount)
-    {
-        // If never invalidated or no longer invalidated, return early.
-        return false;
-    }
-    if (access == ResourceAccess::Write)
-    {
-        // Drawing to this attachment is being enabled.  Assume that drawing will immediately occur
-        // after this attachment is enabled, and that means that the attachment will no longer be
-        // invalidated.
-        *cmdCountInvalidated = kInfiniteCmdCount;
-        *cmdCountDisabled    = kInfiniteCmdCount;
-        // Return true to indicate that the store op should remain STORE and that mContentDefined
-        // should be set to true;
-        return true;
-    }
-    else
-    {
-        // Drawing to this attachment is being disabled.
-        if (hasWriteAfterInvalidate(*cmdCountInvalidated, *cmdCountDisabled))
-        {
-            // The attachment was previously drawn while enabled, and so is no longer invalidated.
-            *cmdCountInvalidated = kInfiniteCmdCount;
-            *cmdCountDisabled    = kInfiniteCmdCount;
-            // Return true to indicate that the store op should remain STORE and that
-            // mContentDefined should be set to true;
-            return true;
-        }
-        else
-        {
-            // Get the latest CmdCount at the start of being disabled.  At the end of the render
-            // pass, cmdCountDisabled is <= the actual command buffer size, and so it's compared
-            // with cmdCountInvalidated.  If the same, the attachment is still invalidated.
-            *cmdCountDisabled = getRenderPassWriteCommandCount();
-            return false;
-        }
-    }
+    mStencilAttachment.onAccess(access, getRenderPassWriteCommandCount());
 }
 
 void RenderPassCommandBufferHelper::updateStartedRenderPassWithDepthMode(
     bool readOnlyDepthStencilMode)
 {
     ASSERT(mRenderPassStarted);
+    ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
+    ASSERT(mDepthResolveAttachment.getImage() == mStencilResolveAttachment.getImage());
 
-    if (mDepthStencilImage)
+    ImageHelper *depthStencilImage        = mDepthAttachment.getImage();
+    ImageHelper *depthStencilResolveImage = mDepthResolveAttachment.getImage();
+
+    if (depthStencilImage)
     {
         if (readOnlyDepthStencilMode)
         {
-            mDepthStencilImage->setRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
+            depthStencilImage->setRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
         }
         else
         {
-            mDepthStencilImage->clearRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
+            depthStencilImage->clearRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
         }
     }
 
-    if (mDepthStencilResolveImage)
+    if (depthStencilResolveImage)
     {
         if (readOnlyDepthStencilMode)
         {
-            mDepthStencilResolveImage->setRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
+            depthStencilResolveImage->setRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
         }
         else
         {
-            mDepthStencilResolveImage->clearRenderPassUsageFlag(
-                RenderPassUsage::ReadOnlyAttachment);
+            depthStencilResolveImage->clearRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
         }
-    }
-}
-
-void RenderPassCommandBufferHelper::restoreDepthContent()
-{
-    // Note that the image may have been deleted since the render pass has started.
-    if (mDepthStencilImage)
-    {
-        ASSERT(mDepthStencilImage->valid());
-        mDepthStencilImage->restoreSubresourceContent(
-            mDepthStencilLevelIndex, mDepthStencilLayerIndex, mDepthStencilLayerCount);
-        mDepthInvalidateArea = gl::Rectangle();
-    }
-}
-
-void RenderPassCommandBufferHelper::restoreStencilContent()
-{
-    // Note that the image may have been deleted since the render pass has started.
-    if (mDepthStencilImage)
-    {
-        ASSERT(mDepthStencilImage->valid());
-        mDepthStencilImage->restoreSubresourceStencilContent(
-            mDepthStencilLevelIndex, mDepthStencilLayerIndex, mDepthStencilLayerCount);
-        mStencilInvalidateArea = gl::Rectangle();
     }
 }
 
@@ -1609,21 +1717,24 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
 
 void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
 {
-    ASSERT(mDepthStencilImage);
+    ASSERT(mDepthAttachment.getImage() != nullptr);
+    ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
+
+    ImageHelper *depthStencilImage = mDepthAttachment.getImage();
 
     // Do depth stencil layout change.
     ImageLayout imageLayout;
     bool barrierRequired;
 
-    if (mDepthStencilImage->usedByCurrentRenderPassAsAttachmentAndSampler())
+    if (depthStencilImage->usedByCurrentRenderPassAsAttachmentAndSampler())
     {
         // texture code already picked layout and inserted barrier
-        imageLayout = mDepthStencilImage->getCurrentImageLayout();
-        if (mDepthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
+        imageLayout = depthStencilImage->getCurrentImageLayout();
+        if (depthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
         {
             ASSERT(imageLayout == ImageLayout::DSAttachmentReadAndFragmentShaderRead ||
                    imageLayout == ImageLayout::DSAttachmentReadAndAllShadersRead);
-            barrierRequired = mDepthStencilImage->isReadBarrierNecessary(imageLayout);
+            barrierRequired = depthStencilImage->isReadBarrierNecessary(imageLayout);
         }
         else
         {
@@ -1632,10 +1743,10 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayout(Context *con
             barrierRequired = true;
         }
     }
-    else if (mDepthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
+    else if (depthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
     {
         imageLayout     = ImageLayout::DepthStencilAttachmentReadOnly;
-        barrierRequired = mDepthStencilImage->isReadBarrierNecessary(imageLayout);
+        barrierRequired = depthStencilImage->isReadBarrierNecessary(imageLayout);
     }
     else
     {
@@ -1648,48 +1759,45 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayout(Context *con
 
     if (barrierRequired)
     {
-        const angle::Format &format = mDepthStencilImage->getActualFormat();
+        const angle::Format &format = depthStencilImage->getActualFormat();
         ASSERT(format.hasDepthOrStencilBits());
         VkImageAspectFlags aspectFlags = GetDepthStencilAspectFlags(format);
-        updateImageLayoutAndBarrier(context, mDepthStencilImage, aspectFlags, imageLayout);
+        updateImageLayoutAndBarrier(context, depthStencilImage, aspectFlags, imageLayout);
     }
 }
 
 void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *context)
 {
-    ASSERT(mDepthStencilImage);
-    ASSERT(!mDepthStencilResolveImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment));
+    ASSERT(mDepthResolveAttachment.getImage() != nullptr);
+    ASSERT(mDepthResolveAttachment.getImage() == mStencilResolveAttachment.getImage());
+
+    ImageHelper *depthStencilResolveImage = mDepthResolveAttachment.getImage();
+    ASSERT(!depthStencilResolveImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment));
 
     ImageLayout imageLayout     = ImageLayout::DepthStencilResolveAttachment;
-    const angle::Format &format = mDepthStencilResolveImage->getActualFormat();
+    const angle::Format &format = depthStencilResolveImage->getActualFormat();
     ASSERT(format.hasDepthOrStencilBits());
     VkImageAspectFlags aspectFlags = GetDepthStencilAspectFlags(format);
 
-    updateImageLayoutAndBarrier(context, mDepthStencilResolveImage, aspectFlags, imageLayout);
+    updateImageLayoutAndBarrier(context, depthStencilResolveImage, aspectFlags, imageLayout);
 
-    if (!mDepthStencilResolveImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
+    if (!depthStencilResolveImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
     {
         ASSERT(mDepthStencilAttachmentIndex != kAttachmentIndexInvalid);
         const PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
 
         // If the image is being written to, mark its contents defined.
-        VkImageAspectFlags definedAspects = 0;
         if (!dsOps.isInvalidated)
         {
-            definedAspects |= VK_IMAGE_ASPECT_DEPTH_BIT;
+            mDepthResolveAttachment.restoreContent();
         }
         if (!dsOps.isStencilInvalidated)
         {
-            definedAspects |= VK_IMAGE_ASPECT_STENCIL_BIT;
-        }
-        if (definedAspects != 0)
-        {
-            mDepthStencilResolveImage->onWrite(mDepthStencilLevelIndex, 1, mDepthStencilLayerIndex,
-                                               mDepthStencilLayerCount, definedAspects);
+            mStencilResolveAttachment.restoreContent();
         }
     }
 
-    mDepthStencilResolveImage->resetRenderPassUsageFlags();
+    depthStencilResolveImage->resetRenderPassUsageFlags();
 }
 
 void RenderPassCommandBufferHelper::finalizeImageLayout(Context *context, const ImageHelper *image)
@@ -1711,16 +1819,18 @@ void RenderPassCommandBufferHelper::finalizeImageLayout(Context *context, const 
         }
     }
 
-    if (mDepthStencilImage == image)
+    if (mDepthAttachment.getImage() == image)
     {
         finalizeDepthStencilImageLayoutAndLoadStore(context);
-        mDepthStencilImage = nullptr;
+        mDepthAttachment.reset();
+        mStencilAttachment.reset();
     }
 
-    if (mDepthStencilResolveImage == image)
+    if (mDepthResolveAttachment.getImage() == image)
     {
         finalizeDepthStencilResolveImageLayout(context);
-        mDepthStencilResolveImage = nullptr;
+        mDepthResolveAttachment.reset();
+        mStencilResolveAttachment.reset();
     }
 }
 
@@ -1737,61 +1847,38 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *conte
     // This has to be called after layout been finalized
     ASSERT(dsOps.initialLayout != static_cast<uint16_t>(ImageLayout::Undefined));
 
-    // Ensure we don't write to a read-only RenderPass. (ReadOnly -> !Write)
-    ASSERT(!mDepthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment) ||
-           (mDepthAccess != ResourceAccess::Write && mStencilAccess != ResourceAccess::Write));
+    uint32_t currentCmdCount  = getRenderPassWriteCommandCount();
+    bool isDepthInvalidated   = false;
+    bool isStencilInvalidated = false;
 
-    // If the attachment is invalidated, skip the store op.  If we are not loading or clearing the
-    // attachment and the attachment has not been used, auto-invalidate it.
-    const bool depthNotLoaded =
-        depthLoadOp == RenderPassLoadOp::DontCare && !mRenderPassDesc.hasDepthUnresolveAttachment();
-    if (isInvalidated(mDepthCmdCountInvalidated, mDepthCmdCountDisabled) ||
-        (depthNotLoaded && mDepthAccess != ResourceAccess::Write))
+    mDepthAttachment.finalizeLoadStore(context, currentCmdCount,
+                                       mRenderPassDesc.hasDepthUnresolveAttachment(), &depthLoadOp,
+                                       &depthStoreOp, &isDepthInvalidated);
+    mStencilAttachment.finalizeLoadStore(context, currentCmdCount,
+                                         mRenderPassDesc.hasStencilUnresolveAttachment(),
+                                         &stencilLoadOp, &stencilStoreOp, &isStencilInvalidated);
+
+    if (isDepthInvalidated)
     {
-        depthStoreOp        = RenderPassStoreOp::DontCare;
         dsOps.isInvalidated = true;
     }
-    else if (hasWriteAfterInvalidate(mDepthCmdCountInvalidated, mDepthCmdCountDisabled))
+    if (isStencilInvalidated)
     {
-        // The depth attachment was invalidated, but is now valid.  Let the image know the contents
-        // are now defined so a future render pass would use loadOp=LOAD.
-        restoreDepthContent();
-    }
-    const bool stencilNotLoaded = stencilLoadOp == RenderPassLoadOp::DontCare &&
-                                  !mRenderPassDesc.hasStencilUnresolveAttachment();
-    if (isInvalidated(mStencilCmdCountInvalidated, mStencilCmdCountDisabled) ||
-        (stencilNotLoaded && mStencilAccess != ResourceAccess::Write))
-    {
-        stencilStoreOp             = RenderPassStoreOp::DontCare;
         dsOps.isStencilInvalidated = true;
     }
-    else if (hasWriteAfterInvalidate(mStencilCmdCountInvalidated, mStencilCmdCountDisabled))
-    {
-        // The stencil attachment was invalidated, but is now valid.  Let the image know the
-        // contents are now defined so a future render pass would use loadOp=LOAD.
-        restoreStencilContent();
-    }
-
-    finalizeDepthStencilLoadStoreOps(context, mDepthAccess, &depthLoadOp, &depthStoreOp);
-    finalizeDepthStencilLoadStoreOps(context, mStencilAccess, &stencilLoadOp, &stencilStoreOp);
 
     // This has to be done after storeOp has been finalized.
-    if (!mDepthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
+    ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
+    if (!mDepthAttachment.getImage()->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
     {
         // If the image is being written to, mark its contents defined.
-        VkImageAspectFlags definedAspects = 0;
         if (depthStoreOp == RenderPassStoreOp::Store)
         {
-            definedAspects |= VK_IMAGE_ASPECT_DEPTH_BIT;
+            mDepthAttachment.restoreContent();
         }
         if (stencilStoreOp == RenderPassStoreOp::Store)
         {
-            definedAspects |= VK_IMAGE_ASPECT_STENCIL_BIT;
-        }
-        if (definedAspects != 0)
-        {
-            mDepthStencilImage->onWrite(mDepthStencilLevelIndex, 1, mDepthStencilLayerIndex,
-                                        mDepthStencilLayerCount, definedAspects);
+            mStencilAttachment.restoreContent();
         }
     }
 
@@ -1801,51 +1888,13 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *conte
     SetBitField(dsOps.stencilStoreOp, stencilStoreOp);
 }
 
-void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStoreOps(Context *context,
-                                                                     ResourceAccess access,
-                                                                     RenderPassLoadOp *loadOp,
-                                                                     RenderPassStoreOp *storeOp)
-{
-    // For read only depth stencil, we can use StoreOpNone if available.  DontCare is still
-    // preferred, so do this after handling DontCare.
-    const bool supportsLoadStoreOpNone =
-        context->getRenderer()->getFeatures().supportsRenderPassLoadStoreOpNone.enabled;
-    const bool supportsStoreOpNone =
-        supportsLoadStoreOpNone ||
-        context->getRenderer()->getFeatures().supportsRenderPassStoreOpNoneQCOM.enabled;
-    if (mDepthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment) &&
-        supportsStoreOpNone)
-    {
-        if (*storeOp == RenderPassStoreOp::Store)
-        {
-            *storeOp = RenderPassStoreOp::None;
-        }
-    }
-
-    if (access == ResourceAccess::Unused)
-    {
-        if (*storeOp == RenderPassStoreOp::DontCare)
-        {
-            // If we are loading or clearing the attachment, but the attachment has not been used,
-            // and the data has also not been stored back into attachment, then just skip the
-            // load/clear op.
-            *loadOp = RenderPassLoadOp::DontCare;
-        }
-        else if (*loadOp != RenderPassLoadOp::Clear && supportsLoadStoreOpNone)
-        {
-            // Otherwise make sure the attachment is neither loaded nor stored (as it's neither
-            // used nor invalidated).
-            *loadOp  = RenderPassLoadOp::None;
-            *storeOp = RenderPassStoreOp::None;
-        }
-    }
-}
-
 void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(Context *context)
 {
     finalizeDepthStencilImageLayout(context);
     finalizeDepthStencilLoadStore(context);
-    mDepthStencilImage->resetRenderPassUsageFlags();
+
+    ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
+    mDepthAttachment.getImage()->resetRenderPassUsageFlags();
 }
 
 angle::Result RenderPassCommandBufferHelper::beginRenderPass(
@@ -1908,11 +1957,13 @@ angle::Result RenderPassCommandBufferHelper::endRenderPass(ContextVk *contextVk)
     }
 
     // Do depth stencil layout change and load store optimization.
-    if (mDepthStencilImage)
+    ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
+    ASSERT(mDepthResolveAttachment.getImage() == mStencilResolveAttachment.getImage());
+    if (mDepthAttachment.getImage() != nullptr)
     {
         finalizeDepthStencilImageLayoutAndLoadStore(contextVk);
     }
-    if (mDepthStencilResolveImage)
+    if (mDepthResolveAttachment.getImage() != nullptr)
     {
         finalizeDepthStencilResolveImageLayout(contextVk);
     }
@@ -1997,34 +2048,19 @@ void RenderPassCommandBufferHelper::invalidateRenderPassDepthAttachment(
     const gl::DepthStencilState &dsState,
     const gl::Rectangle &invalidateArea)
 {
-    // Keep track of the size of commands in the command buffer.  If the size grows in the
-    // future, that implies that drawing occurred since invalidated.
-    mDepthCmdCountInvalidated = getRenderPassWriteCommandCount();
-
-    // Also track the size if the attachment is currently disabled.
     const bool isDepthWriteEnabled = dsState.depthTest && dsState.depthMask;
-    mDepthCmdCountDisabled = isDepthWriteEnabled ? kInfiniteCmdCount : mDepthCmdCountInvalidated;
-
-    // Set/extend the invalidate area.
-    ExtendRenderPassInvalidateArea(invalidateArea, &mDepthInvalidateArea);
+    mDepthAttachment.invalidate(invalidateArea, isDepthWriteEnabled,
+                                getRenderPassWriteCommandCount());
 }
 
 void RenderPassCommandBufferHelper::invalidateRenderPassStencilAttachment(
     const gl::DepthStencilState &dsState,
     const gl::Rectangle &invalidateArea)
 {
-    // Keep track of the size of commands in the command buffer.  If the size grows in the
-    // future, that implies that drawing occured since invalidated.
-    mStencilCmdCountInvalidated = getRenderPassWriteCommandCount();
-
-    // Also track the size if the attachment is currently disabled.
     const bool isStencilWriteEnabled =
         dsState.stencilTest && (!dsState.isStencilNoOp() || !dsState.isStencilBackNoOp());
-    mStencilCmdCountDisabled =
-        isStencilWriteEnabled ? kInfiniteCmdCount : mStencilCmdCountInvalidated;
-
-    // Set/extend the invalidate area.
-    ExtendRenderPassInvalidateArea(invalidateArea, &mStencilInvalidateArea);
+    mStencilAttachment.invalidate(invalidateArea, isStencilWriteEnabled,
+                                  getRenderPassWriteCommandCount());
 }
 
 angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
@@ -2140,22 +2176,8 @@ void RenderPassCommandBufferHelper::growRenderArea(ContextVk *contextVk,
     gl::GetEnclosingRectangle(mRenderArea, newRenderArea, &mRenderArea);
 
     // Remove invalidates that are no longer applicable.
-    if (!mDepthInvalidateArea.empty() && !mDepthInvalidateArea.encloses(mRenderArea))
-    {
-        ANGLE_VK_PERF_WARNING(
-            contextVk, GL_DEBUG_SEVERITY_LOW,
-            "InvalidateSubFramebuffer for depth discarded due to increased scissor region");
-        mDepthInvalidateArea      = gl::Rectangle();
-        mDepthCmdCountInvalidated = kInfiniteCmdCount;
-    }
-    if (!mStencilInvalidateArea.empty() && !mStencilInvalidateArea.encloses(mRenderArea))
-    {
-        ANGLE_VK_PERF_WARNING(
-            contextVk, GL_DEBUG_SEVERITY_LOW,
-            "InvalidateSubFramebuffer for stencil discarded due to increased scissor region");
-        mStencilInvalidateArea      = gl::Rectangle();
-        mStencilCmdCountInvalidated = kInfiniteCmdCount;
-    }
+    mDepthAttachment.onRenderAreaGrowth(contextVk, mRenderArea);
+    mStencilAttachment.onRenderAreaGrowth(contextVk, mRenderArea);
 }
 
 void RenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)

@@ -895,6 +895,64 @@ class PackedClearValuesArray final
     gl::AttachmentArray<VkClearValue> mValues;
 };
 
+// Reference to a render pass attachment (color or depth/stencil) alongside render-pass-related
+// tracking such as when the attachment is last written to or invalidated.  This is used to
+// determine loadOp and storeOp of the attachment, and enables optimizations that need to know
+// how the attachment has been used.
+class RenderPassAttachment final
+{
+  public:
+    RenderPassAttachment();
+    ~RenderPassAttachment() = default;
+
+    void init(ImageHelper *image,
+              gl::LevelIndex levelIndex,
+              uint32_t layerIndex,
+              uint32_t layerCount,
+              VkImageAspectFlagBits aspect);
+    void reset();
+
+    void onAccess(ResourceAccess access, uint32_t currentCmdCount);
+    void invalidate(const gl::Rectangle &invalidateArea,
+                    bool isAttachmentEnabled,
+                    uint32_t currentCmdCount);
+    void onRenderAreaGrowth(ContextVk *contextVk, const gl::Rectangle &newRenderArea);
+    void finalizeLoadStore(Context *context,
+                           uint32_t currentCmdCount,
+                           bool hasUnresolveAttachment,
+                           RenderPassLoadOp *loadOp,
+                           RenderPassStoreOp *storeOp,
+                           bool *isInvalidatedOut);
+    void restoreContent();
+    bool hasWriteAccess() const { return mAccess == ResourceAccess::Write; }
+
+    ImageHelper *getImage() { return mImage; }
+
+  private:
+    bool hasWriteAfterInvalidate(uint32_t currentCmdCount) const;
+    bool isInvalidated(uint32_t currentCmdCount) const;
+    bool onAccessImpl(ResourceAccess access, uint32_t currentCmdCount);
+
+    // The attachment image itself
+    ImageHelper *mImage;
+    // The subresource used in the render pass
+    gl::LevelIndex mLevelIndex;
+    uint32_t mLayerIndex;
+    uint32_t mLayerCount;
+    VkImageAspectFlagBits mAspect;
+    // Tracks the highest access during the entire render pass (Write being the highest), excluding
+    // clear through loadOp.  This allows loadOp=Clear to be optimized out when we find out that the
+    // attachment is not used in the render pass at all and storeOp=DontCare, or that a
+    // mid-render-pass clear could be hoisted to loadOp=Clear.
+    ResourceAccess mAccess;
+    // The index of the last draw command after which the attachment is invalidated
+    uint32_t mInvalidatedCmdCount;
+    // The index of the last draw command after which the attachment output is disabled
+    uint32_t mDisabledCmdCount;
+    // The area that has been invalidated
+    gl::Rectangle mInvalidateArea;
+};
+
 // Stores ImageHelpers In packed attachment index
 class PackedImageAttachmentArray final
 {
@@ -1119,7 +1177,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                                   const gl::Rectangle &renderArea,
                                   const RenderPassDesc &renderPassDesc,
                                   const AttachmentOpsArray &renderPassAttachmentOps,
-                                  const vk::PackedAttachmentCount colorAttachmentCount,
+                                  const PackedAttachmentCount colorAttachmentCount,
                                   const PackedAttachmentIndex depthStencilAttachmentIndex,
                                   const PackedClearValuesArray &clearValues,
                                   RenderPassCommandBuffer **commandBufferOut);
@@ -1142,19 +1200,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                                              const gl::Rectangle &invalidateArea);
     void invalidateRenderPassStencilAttachment(const gl::DepthStencilState &dsState,
                                                const gl::Rectangle &invalidateArea);
-
-    bool hasWriteAfterInvalidate(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)
-    {
-        return (cmdCountInvalidated != kInfiniteCmdCount &&
-                std::min(cmdCountDisabled, getRenderPassWriteCommandCount()) !=
-                    cmdCountInvalidated);
-    }
-
-    bool isInvalidated(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)
-    {
-        return cmdCountInvalidated != kInfiniteCmdCount &&
-               std::min(cmdCountDisabled, getRenderPassWriteCommandCount()) == cmdCountInvalidated;
-    }
 
     void updateRenderPassColorClear(PackedAttachmentIndex colorIndex,
                                     const VkClearValue &colorClearValue);
@@ -1190,7 +1235,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     bool hasDepthStencilWriteOrClear() const
     {
-        return mDepthAccess == ResourceAccess::Write || mStencilAccess == ResourceAccess::Write ||
+        return mDepthAttachment.hasWriteAccess() || mStencilAttachment.hasWriteAccess() ||
                mAttachmentOps[mDepthStencilAttachmentIndex].loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ||
                mAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp ==
                    VK_ATTACHMENT_LOAD_OP_CLEAR;
@@ -1221,11 +1266,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
         // considered continuous among subpasses.
         return mPreviousSubpassesCmdCount + getCommandBuffer().getRenderPassWriteCommandCount();
     }
-    bool onDepthStencilAccess(ResourceAccess access,
-                              uint32_t *cmdCountInvalidated,
-                              uint32_t *cmdCountDisabled);
-    void restoreDepthContent();
-    void restoreStencilContent();
 
     // We can't determine the image layout at the renderpass start time since their full usage
     // aren't known until later time. We finalize the layout when either ImageHelper object is
@@ -1267,23 +1307,8 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     bool mRebindTransformFeedbackBuffers;
     bool mIsTransformFeedbackActiveUnpaused;
 
-    // State tracking for the maximum (Write been the highest) depth access during the entire
-    // renderpass. Note that this does not include VK_ATTACHMENT_LOAD_OP_CLEAR which is tracked
-    // separately. This is done this way to allow clear op to being optimized out when we find out
-    // that the depth buffer is not being used during the entire renderpass and store op is
-    // VK_ATTACHMENT_STORE_OP_DONTCARE.
-    ResourceAccess mDepthAccess;
-    // Similar tracking to mDepthAccess but for the stencil aspect.
-    ResourceAccess mStencilAccess;
-
     // State tracking for whether to optimize the storeOp to DONT_CARE
     uint32_t mPreviousSubpassesCmdCount;
-    uint32_t mDepthCmdCountInvalidated;
-    uint32_t mDepthCmdCountDisabled;
-    uint32_t mStencilCmdCountInvalidated;
-    uint32_t mStencilCmdCountDisabled;
-    gl::Rectangle mDepthInvalidateArea;
-    gl::Rectangle mStencilInvalidateArea;
 
     // Keep track of the depth/stencil attachment index
     PackedAttachmentIndex mDepthStencilAttachmentIndex;
@@ -1293,19 +1318,20 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     // different layout.
     angle::FlatUnorderedSet<ImageSerial, kFlatMapSize> mRenderPassUsedImages;
 
-    ImageHelper *mDepthStencilImage;
-    ImageHelper *mDepthStencilResolveImage;
-    gl::LevelIndex mDepthStencilLevelIndex;
-    uint32_t mDepthStencilLayerIndex;
-    uint32_t mDepthStencilLayerCount;
-
     // Array size of mColorImages
     PackedAttachmentCount mColorImagesCount;
-    // Attached render target images. Color and depth resolve images are always come last.
+    // Attached render target images. Color and depth resolve images always come last.
     PackedImageAttachmentArray mColorImages;
     PackedImageAttachmentArray mColorResolveImages;
+
+    RenderPassAttachment mDepthAttachment;
+    RenderPassAttachment mDepthResolveAttachment;
+
+    RenderPassAttachment mStencilAttachment;
+    RenderPassAttachment mStencilResolveAttachment;
+
     // This is last renderpass before present and this is the image will be presented. We can use
-    // final layout of the renderpass to transit it to the presentable layout
+    // final layout of the renderpass to transition it to the presentable layout
     ImageHelper *mImageOptimizeForPresent;
 };
 
