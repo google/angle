@@ -250,12 +250,8 @@ TEST_P(EGLContextSharingTest, DisplayShareGroupContextCreation)
 TEST_P(EGLContextSharingTest, DisplayShareGroupObjectSharing)
 {
     EGLDisplay display = getEGLWindow()->getDisplay();
-    if (!IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_display_texture_share_group"))
-    {
-        std::cout << "Test skipped because EGL_ANGLE_display_texture_share_group is not present."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(
+        !IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_display_texture_share_group"));
 
     EGLConfig config   = getEGLWindow()->getConfig();
     EGLSurface surface = getEGLWindow()->getSurface();
@@ -318,13 +314,8 @@ TEST_P(EGLContextSharingTest, DisplayShareGroupObjectSharing)
 TEST_P(EGLContextSharingTest, DisplayShareGroupReleasedWithLastContext)
 {
     EGLDisplay display = getEGLWindow()->getDisplay();
-    if (!IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_display_texture_share_group"))
-    {
-        std::cout << "Test skipped because EGL_ANGLE_display_texture_share_group is not present."
-                  << std::endl;
-        return;
-    }
-
+    ANGLE_SKIP_TEST_IF(
+        !IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_display_texture_share_group"));
     EGLConfig config   = getEGLWindow()->getConfig();
     EGLSurface surface = getEGLWindow()->getSurface();
 
@@ -337,11 +328,36 @@ TEST_P(EGLContextSharingTest, DisplayShareGroupReleasedWithLastContext)
 
     // Create a texture and buffer in ctx 0
     ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, mContexts[0]));
+    //    GLTexture textureFromCtx0;
+    //    glBindTexture(GL_TEXTURE_2D, textureFromCtx0);
+    //    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    //    glBindTexture(GL_TEXTURE_2D, 0);
+    //    ASSERT_GL_TRUE(glIsTexture(textureFromCtx0));
+
     GLTexture textureFromCtx0;
     glBindTexture(GL_TEXTURE_2D, textureFromCtx0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    ASSERT_GL_TRUE(glIsTexture(textureFromCtx0));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    // Create all mipmap levels for the texture from level 0 to the 1x1 pixel level, but fill all
+    // level with same width and height
+    constexpr GLint width  = 4;
+    constexpr GLint height = 4;
+    GLint level            = 0;
+    GLint levelW           = width;
+    GLint levelH           = height;
+    glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, levelW, levelH, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    while (levelW > 1 || levelH > 1)
+    {
+        ++level;
+        levelW = static_cast<GLint>(std::max(1.0, std::floor(width / std::pow(2, level))));
+        levelH = static_cast<GLint>(std::max(1.0, std::floor(height / std::pow(2, level))));
+        glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+    }
 
     // Switch to context 1 and verify that the texture is accessible
     ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, mContexts[1]));
@@ -361,6 +377,58 @@ TEST_P(EGLContextSharingTest, DisplayShareGroupReleasedWithLastContext)
     ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, mContexts[0]));
 
     ASSERT_GL_FALSE(glIsTexture(textureFromCtx0));
+}
+
+// Tests that after creating a texture using EGL_ANGLE_display_texture_share_group,
+// and deleting the Context and the egl::ShareGroup who own a texture staged updates,
+// the texture staged updates are flushed, and the Context and egl::ShareGroup can be destroyed
+// successfully, and the texture can still be accessed from the global display texture share group
+TEST_P(EGLContextSharingTest, DisplayShareGroupReleaseShareGroupThatOwnsStagedUpdates)
+{
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    ANGLE_SKIP_TEST_IF(
+        !IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_display_texture_share_group"));
+
+    EGLConfig config   = getEGLWindow()->getConfig();
+    EGLSurface surface = getEGLWindow()->getSurface();
+
+    const EGLint inShareGroupContextAttribs[] = {
+        EGL_CONTEXT_CLIENT_VERSION, 2, EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_TRUE, EGL_NONE};
+
+    // Create two contexts in the global share group, but not in the same context share group
+    EGLContext context1 = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+    EGLContext context2 = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+
+    // Create a texture in context1 and stage a texture update
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context1));
+    constexpr GLsizei kTexSize                   = 2;
+    const GLColor kBlueData[kTexSize * kTexSize] = {GLColor::blue, GLColor::blue, GLColor::blue,
+                                                    GLColor::blue};
+    GLTexture textureFromCtx0;
+    glBindTexture(GL_TEXTURE_2D, textureFromCtx0);
+    // This will stage a texture update in context1's SharedGroup::BufferPool
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, kBlueData);
+
+    // Destroy context 1, this also destroys context1's SharedGroup and BufferPool
+    // The texture staged update in context1's SharedGroup BufferPool will be flushed
+    SafeDestroyContext(display, context1);
+
+    // Switch to context2 and verify that the texture is accessible
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context2));
+    ASSERT_GL_TRUE(glIsTexture(textureFromCtx0));
+
+    // Sample from textureFromCtx0 and check it works properly
+    glBindTexture(GL_TEXTURE_2D, textureFromCtx0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    ANGLE_GL_PROGRAM(program1, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(program1);
+    drawQuad(program1, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Destroy context2
+    eglDestroyContext(display, context2);
 }
 
 // Tests that deleting an object on one Context doesn't destroy it ahead-of-time. Mostly focused
