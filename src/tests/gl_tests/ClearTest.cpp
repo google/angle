@@ -380,38 +380,6 @@ TEST_P(ClearTestRGB_ES3, InvalidateDefaultFramebufferRGB)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 }
 
-// Invalidate an RGB user framebuffer and verify that the alpha channel is not cleared, and
-// stays set after drawing.
-TEST_P(ClearTestRGB_ES3, InvalidateUserFramebufferRGB)
-{
-    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
-
-    GLTexture texture;
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, nullptr);
-
-    GLFramebuffer fbo;
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
-    ASSERT_GL_NO_ERROR();
-
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    // Verify that clearing alpha is ineffective on an RGB format.
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
-
-    // Invalidate the framebuffer contents.
-    const GLenum discards[] = {GL_COLOR_ATTACHMENT0};
-    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, discards);
-
-    // Without an explicit clear, draw blue and make sure alpha is unaffected.  If RGB is emualted
-    // with RGBA, the previous invalidate shouldn't affect the alpha value.
-    drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.5f);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
-}
-
 // Draw with a shader that outputs alpha=0.5. Readback and ensure that alpha=1.
 TEST_P(ClearTestRGB_ES3, ShaderOutputsAlphaVerifyReadingAlphaIsOne)
 {

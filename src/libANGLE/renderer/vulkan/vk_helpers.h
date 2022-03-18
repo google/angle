@@ -1690,6 +1690,8 @@ class ImageHelper final : public Resource, public angle::Subject
         return angle::Format::Get(mActualFormatID);
     }
     bool hasEmulatedImageChannels() const;
+    bool hasEmulatedDepthChannel() const;
+    bool hasEmulatedStencilChannel() const;
     bool hasEmulatedImageFormat() const { return mActualFormatID != mIntendedFormatID; }
     GLint getSamples() const { return mSamples; }
 
@@ -1765,6 +1767,9 @@ class ImageHelper final : public Resource, public angle::Subject
                                               gl::LevelIndex levelIndexGL,
                                               uint32_t layerIndex,
                                               uint32_t layerCount);
+    void removeSingleStagedEmulatedClear(gl::LevelIndex levelIndexGL,
+                                         uint32_t layerIndex,
+                                         uint32_t layerCount);
     void removeStagedUpdates(Context *context,
                              gl::LevelIndex levelGLStart,
                              gl::LevelIndex levelGLEnd);
@@ -2059,11 +2064,13 @@ class ImageHelper final : public Resource, public angle::Subject
     void invalidateSubresourceContent(ContextVk *contextVk,
                                       gl::LevelIndex level,
                                       uint32_t layerIndex,
-                                      uint32_t layerCount);
+                                      uint32_t layerCount,
+                                      bool *preferToKeepContentsDefinedOut);
     void invalidateSubresourceStencilContent(ContextVk *contextVk,
                                              gl::LevelIndex level,
                                              uint32_t layerIndex,
-                                             uint32_t layerCount);
+                                             uint32_t layerCount,
+                                             bool *preferToKeepContentsDefinedOut);
     void restoreSubresourceContent(gl::LevelIndex level, uint32_t layerIndex, uint32_t layerCount);
     void restoreSubresourceStencilContent(gl::LevelIndex level,
                                           uint32_t layerIndex,
@@ -2134,6 +2141,11 @@ class ImageHelper final : public Resource, public angle::Subject
         SubresourceUpdate(VkImageAspectFlags aspectFlags,
                           const VkClearValue &clearValue,
                           const gl::ImageIndex &imageIndex);
+        SubresourceUpdate(VkImageAspectFlags aspectFlags,
+                          const VkClearValue &clearValue,
+                          gl::LevelIndex level,
+                          uint32_t layerIndex,
+                          uint32_t layerCount);
         SubresourceUpdate(VkColorComponentFlags colorMaskFlags,
                           const VkClearColorValue &clearValue,
                           const gl::ImageIndex &imageIndex);
@@ -2162,6 +2174,19 @@ class ImageHelper final : public Resource, public angle::Subject
             RefCounted<BufferHelper> *buffer;
         } refCounted;
     };
+
+    // Up to 8 layers are tracked per level for whether contents are defined, above which the
+    // contents are considered unconditionally defined.  This handles the more likely scenarios of:
+    //
+    // - Single layer framebuffer attachments,
+    // - Cube map framebuffer attachments,
+    // - Multi-view rendering.
+    //
+    // If there arises a need to optimize an application that invalidates layer >= 8, this can
+    // easily be raised to 32 to 64 bits.  Beyond that, an additional hash map can be used to track
+    // such subresources.
+    static constexpr uint32_t kMaxContentDefinedLayerCount = 8;
+    using LevelContentDefinedMask = angle::BitSet8<kMaxContentDefinedLayerCount>;
 
     void deriveExternalImageTiling(const void *createInfoChain);
 
@@ -2246,18 +2271,18 @@ class ImageHelper final : public Resource, public angle::Subject
                            uint32_t layerStart,
                            uint32_t layerCount,
                            VkImageAspectFlags aspectFlags);
-
-    // Up to 8 layers are tracked per level for whether contents are defined, above which the
-    // contents are considered unconditionally defined.  This handles the more likely scenarios of:
-    //
-    // - Single layer framebuffer attachments,
-    // - Cube map framebuffer attachments,
-    // - Multi-view rendering.
-    //
-    // If there arises a need to optimize an application that invalidates layer >= 8, an additional
-    // hash map can be used to track such subresources.
-    static constexpr uint32_t kMaxContentDefinedLayerCount = 8;
-    using LevelContentDefinedMask = angle::BitSet8<kMaxContentDefinedLayerCount>;
+    void invalidateSubresourceContentImpl(ContextVk *contextVk,
+                                          gl::LevelIndex level,
+                                          uint32_t layerIndex,
+                                          uint32_t layerCount,
+                                          VkImageAspectFlagBits aspect,
+                                          LevelContentDefinedMask *contentDefinedMask,
+                                          bool *preferToKeepContentsDefinedOut);
+    void restoreSubresourceContentImpl(gl::LevelIndex level,
+                                       uint32_t layerIndex,
+                                       uint32_t layerCount,
+                                       VkImageAspectFlagBits aspect,
+                                       LevelContentDefinedMask *contentDefinedMask);
 
     // Use the following functions to access m*ContentDefined to make sure the correct level index
     // is used (i.e. vk::LevelIndex and not gl::LevelIndex).

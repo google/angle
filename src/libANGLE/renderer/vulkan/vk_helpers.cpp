@@ -1655,17 +1655,19 @@ void RenderPassCommandBufferHelper::updateStartedRenderPassWithDepthMode(
         {
             depthStencilImage->clearRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
         }
-    }
 
-    if (depthStencilResolveImage)
-    {
-        if (readOnlyDepthStencilMode)
+        if (depthStencilResolveImage)
         {
-            depthStencilResolveImage->setRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
-        }
-        else
-        {
-            depthStencilResolveImage->clearRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment);
+            if (readOnlyDepthStencilMode)
+            {
+                depthStencilResolveImage->setRenderPassUsageFlag(
+                    RenderPassUsage::ReadOnlyAttachment);
+            }
+            else
+            {
+                depthStencilResolveImage->clearRenderPassUsageFlag(
+                    RenderPassUsage::ReadOnlyAttachment);
+            }
         }
     }
 }
@@ -4459,6 +4461,10 @@ void ImageHelper::setEntireContentUndefined()
     {
         levelContentDefined.reset();
     }
+
+    // Note: this function is only called during init/release, so unlike
+    // invalidateSubresourceContentImpl, it doesn't attempt to make sure emulated formats have a
+    // clear staged.
 }
 
 void ImageHelper::setContentDefined(LevelIndex levelStart,
@@ -6089,6 +6095,34 @@ void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
     }
 }
 
+void ImageHelper::removeSingleStagedEmulatedClear(gl::LevelIndex levelIndexGL,
+                                                  uint32_t layerIndex,
+                                                  uint32_t layerCount)
+{
+    // When this function is called, it's expected that there is at most one update pending to this
+    // subresource, and that's a color clear due to emulated channels.  This function removes that
+    // update.
+
+    std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(levelIndexGL);
+    if (levelUpdates == nullptr)
+    {
+        return;
+    }
+
+    for (size_t index = 0; index < levelUpdates->size();)
+    {
+        auto update = levelUpdates->begin() + index;
+        if (update->isUpdateToLayers(layerIndex, layerCount))
+        {
+            // It's a clear, so doesn't need to be released.
+            ASSERT(update->updateSource == UpdateSource::Clear);
+            levelUpdates->erase(update);
+            // There's only one such clear possible.
+            return;
+        }
+    }
+}
+
 void ImageHelper::removeStagedUpdates(Context *context,
                                       gl::LevelIndex levelGLStart,
                                       gl::LevelIndex levelGLEnd)
@@ -6527,39 +6561,98 @@ bool ImageHelper::hasSubresourceDefinedStencilContent(gl::LevelIndex level,
 void ImageHelper::invalidateSubresourceContent(ContextVk *contextVk,
                                                gl::LevelIndex level,
                                                uint32_t layerIndex,
-                                               uint32_t layerCount)
+                                               uint32_t layerCount,
+                                               bool *preferToKeepContentsDefinedOut)
 {
-    if (layerIndex < kMaxContentDefinedLayerCount)
-    {
-        uint8_t layerRangeBits =
-            GetContentDefinedLayerRangeBits(layerIndex, layerCount, kMaxContentDefinedLayerCount);
-        getLevelContentDefined(toVkLevel(level)) &= static_cast<uint8_t>(~layerRangeBits);
-    }
-    else
-    {
-        ANGLE_VK_PERF_WARNING(
-            contextVk, GL_DEBUG_SEVERITY_LOW,
-            "glInvalidateFramebuffer (%s) ineffective on attachments with layer >= 8",
-            (getAspectFlags() & VK_IMAGE_ASPECT_COLOR_BIT) != 0 ? "color" : "depth");
-    }
+    invalidateSubresourceContentImpl(
+        contextVk, level, layerIndex, layerCount,
+        static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT),
+        &getLevelContentDefined(toVkLevel(level)), preferToKeepContentsDefinedOut);
 }
 
 void ImageHelper::invalidateSubresourceStencilContent(ContextVk *contextVk,
                                                       gl::LevelIndex level,
                                                       uint32_t layerIndex,
-                                                      uint32_t layerCount)
+                                                      uint32_t layerCount,
+                                                      bool *preferToKeepContentsDefinedOut)
 {
-    if (layerIndex < kMaxContentDefinedLayerCount)
+    invalidateSubresourceContentImpl(
+        contextVk, level, layerIndex, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT,
+        &getLevelStencilContentDefined(toVkLevel(level)), preferToKeepContentsDefinedOut);
+}
+
+void ImageHelper::invalidateSubresourceContentImpl(ContextVk *contextVk,
+                                                   gl::LevelIndex level,
+                                                   uint32_t layerIndex,
+                                                   uint32_t layerCount,
+                                                   VkImageAspectFlagBits aspect,
+                                                   LevelContentDefinedMask *contentDefinedMask,
+                                                   bool *preferToKeepContentsDefinedOut)
+{
+    // If the color format is emualted and has extra channels, those channels need to stay cleared.
+    // On some devices, it's cheaper to skip invalidating the framebuffer attachment, while on
+    // others it's cheaper to invalidate but then re-clear the image.
+    //
+    // For depth/stencil formats, each channel is separately invalidated, so the invalidate is
+    // simply skipped for the emulated channel on all devices.
+    const bool hasEmulatedChannels = hasEmulatedImageChannels();
+    bool skip                      = false;
+    switch (aspect)
     {
-        uint8_t layerRangeBits =
-            GetContentDefinedLayerRangeBits(layerIndex, layerCount, kMaxContentDefinedLayerCount);
-        getLevelStencilContentDefined(toVkLevel(level)) &= static_cast<uint8_t>(~layerRangeBits);
+        case VK_IMAGE_ASPECT_DEPTH_BIT:
+            skip = hasEmulatedDepthChannel();
+            break;
+        case VK_IMAGE_ASPECT_STENCIL_BIT:
+            skip = hasEmulatedStencilChannel();
+            break;
+        case VK_IMAGE_ASPECT_COLOR_BIT:
+            skip = hasEmulatedChannels &&
+                   contextVk->getFeatures().preferSkippingInvalidateForEmulatedFormats.enabled;
+            break;
+        default:
+            UNREACHABLE();
+            skip = true;
     }
-    else
+
+    if (preferToKeepContentsDefinedOut)
     {
+        *preferToKeepContentsDefinedOut = skip;
+    }
+    if (skip)
+    {
+        return;
+    }
+
+    if (layerIndex >= kMaxContentDefinedLayerCount)
+    {
+        const char *aspectName = "color";
+        if (aspect == VK_IMAGE_ASPECT_DEPTH_BIT)
+        {
+            aspectName = "depth";
+        }
+        else if (aspect == VK_IMAGE_ASPECT_STENCIL_BIT)
+        {
+            aspectName = "stencil";
+        }
         ANGLE_VK_PERF_WARNING(
             contextVk, GL_DEBUG_SEVERITY_LOW,
-            "glInvalidateFramebuffer (stencil) ineffective on attachments with layer >= 8");
+            "glInvalidateFramebuffer (%s) ineffective on attachments with layer >= 8", aspectName);
+        return;
+    }
+
+    uint8_t layerRangeBits =
+        GetContentDefinedLayerRangeBits(layerIndex, layerCount, kMaxContentDefinedLayerCount);
+    *contentDefinedMask &= static_cast<uint8_t>(~layerRangeBits);
+
+    // If there are emulated channels, stage a clear to make sure those channels continue to contain
+    // valid values.
+    if (hasEmulatedChannels && aspect == VK_IMAGE_ASPECT_COLOR_BIT)
+    {
+        VkClearValue clearValue;
+        clearValue.color = kEmulatedInitColorValue;
+
+        prependSubresourceUpdate(
+            level, SubresourceUpdate(aspect, clearValue, level, layerIndex, layerCount));
     }
 }
 
@@ -6567,24 +6660,70 @@ void ImageHelper::restoreSubresourceContent(gl::LevelIndex level,
                                             uint32_t layerIndex,
                                             uint32_t layerCount)
 {
-    if (layerIndex < kMaxContentDefinedLayerCount)
-    {
-        uint8_t layerRangeBits =
-            GetContentDefinedLayerRangeBits(layerIndex, layerCount, kMaxContentDefinedLayerCount);
-        getLevelContentDefined(toVkLevel(level)) |= layerRangeBits;
-    }
+    restoreSubresourceContentImpl(
+        level, layerIndex, layerCount,
+        static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT),
+        &getLevelContentDefined(toVkLevel(level)));
 }
 
 void ImageHelper::restoreSubresourceStencilContent(gl::LevelIndex level,
                                                    uint32_t layerIndex,
                                                    uint32_t layerCount)
 {
-    if (layerIndex < kMaxContentDefinedLayerCount)
+    restoreSubresourceContentImpl(level, layerIndex, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT,
+                                  &getLevelStencilContentDefined(toVkLevel(level)));
+}
+
+void ImageHelper::restoreSubresourceContentImpl(gl::LevelIndex level,
+                                                uint32_t layerIndex,
+                                                uint32_t layerCount,
+                                                VkImageAspectFlagBits aspect,
+                                                LevelContentDefinedMask *contentDefinedMask)
+{
+    if (layerIndex >= kMaxContentDefinedLayerCount)
     {
-        uint8_t layerRangeBits =
-            GetContentDefinedLayerRangeBits(layerIndex, layerCount, kMaxContentDefinedLayerCount);
-        getLevelStencilContentDefined(toVkLevel(level)) |= layerRangeBits;
+        return;
     }
+
+    uint8_t layerRangeBits =
+        GetContentDefinedLayerRangeBits(layerIndex, layerCount, kMaxContentDefinedLayerCount);
+
+    switch (aspect)
+    {
+        case VK_IMAGE_ASPECT_DEPTH_BIT:
+            // Emulated depth channel should never have been marked invalid, so it can retain its
+            // cleared value.
+            ASSERT(!hasEmulatedDepthChannel() ||
+                   (contentDefinedMask->bits() & layerRangeBits) == layerRangeBits);
+            break;
+        case VK_IMAGE_ASPECT_STENCIL_BIT:
+            // Emulated stencil channel should never have been marked invalid, so it can retain its
+            // cleared value.
+            ASSERT(!hasEmulatedStencilChannel() ||
+                   (contentDefinedMask->bits() & layerRangeBits) == layerRangeBits);
+            break;
+        case VK_IMAGE_ASPECT_COLOR_BIT:
+            // This function is called on attachments during a render pass when it's determined that
+            // they should no longer be considered invalidated.  It is necessarily impossible for
+            // there to be any updates pending to this subresource of the image, because they were
+            // flushed at the beginning of the render pass.
+            //
+            // However, for an attachment with emulated format that has extra channels,
+            // invalidateSubresourceContentImpl may proactively insert a clear so that the extra
+            // channels continue to have defined values.  That clear should be removed.
+            ASSERT(hasEmulatedImageChannels() ||
+                   !hasStagedUpdatesForSubresource(level, layerIndex, layerCount));
+            if (hasEmulatedImageChannels())
+            {
+                removeSingleStagedEmulatedClear(level, layerIndex, layerCount);
+            }
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    *contentDefinedMask |= layerRangeBits;
 }
 
 angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
@@ -8314,15 +8453,27 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(RefCounted<ImageHelper> *image
 ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags,
                                                   const VkClearValue &clearValue,
                                                   const gl::ImageIndex &imageIndex)
+    : SubresourceUpdate(
+          aspectFlags,
+          clearValue,
+          gl::LevelIndex(imageIndex.getLevelIndex()),
+          imageIndex.hasLayer() ? imageIndex.getLayerIndex() : 0,
+          imageIndex.hasLayer() ? imageIndex.getLayerCount() : VK_REMAINING_ARRAY_LAYERS)
+{}
+
+ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags,
+                                                  const VkClearValue &clearValue,
+                                                  gl::LevelIndex level,
+                                                  uint32_t layerIndex,
+                                                  uint32_t layerCount)
     : updateSource(UpdateSource::Clear)
 {
-    refCounted.image       = nullptr;
-    data.clear.aspectFlags = aspectFlags;
-    data.clear.value       = clearValue;
-    data.clear.levelIndex  = imageIndex.getLevelIndex();
-    data.clear.layerIndex  = imageIndex.hasLayer() ? imageIndex.getLayerIndex() : 0;
-    data.clear.layerCount =
-        imageIndex.hasLayer() ? imageIndex.getLayerCount() : VK_REMAINING_ARRAY_LAYERS;
+    refCounted.image          = nullptr;
+    data.clear.aspectFlags    = aspectFlags;
+    data.clear.value          = clearValue;
+    data.clear.levelIndex     = level.get();
+    data.clear.layerIndex     = layerIndex;
+    data.clear.layerCount     = layerCount;
     data.clear.colorMaskFlags = 0;
 }
 
@@ -8525,6 +8676,16 @@ bool ImageHelper::hasEmulatedImageChannels() const
            (angleFmt.greenBits == 0 && textureFmt.greenBits > 0) ||
            (angleFmt.depthBits == 0 && textureFmt.depthBits > 0) ||
            (angleFmt.stencilBits == 0 && textureFmt.stencilBits > 0);
+}
+
+bool ImageHelper::hasEmulatedDepthChannel() const
+{
+    return getIntendedFormat().depthBits == 0 && getActualFormat().depthBits > 0;
+}
+
+bool ImageHelper::hasEmulatedStencilChannel() const
+{
+    return getIntendedFormat().stencilBits == 0 && getActualFormat().stencilBits > 0;
 }
 
 VkColorComponentFlags ImageHelper::getEmulatedChannelsMask() const

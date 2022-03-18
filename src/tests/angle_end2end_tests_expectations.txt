@@ -261,6 +261,8 @@
 4841 WIN D3D9 : DXT1CompressedTextureTest.NonBlockSizesMipLevels/* = SKIP
 4841 WIN D3D11 : DXT1CompressedTextureTest.NonBlockSizesMipLevels/* = SKIP
 7109 WIN D3D11 : ClearTestRGB_ES3.*/* = SKIP
+7109 WIN D3D11 : SimpleStateChangeTestES3.InvalidateRGBThenDraw/* = SKIP
+7109 WIN D3D11 : SimpleStateChangeTestES3.DrawAndInvalidateRGBThenVerifyAlpha/* = SKIP
 7113 WIN D3D9 : GLSLTest.LoopBodyEndingInBranch*/* = SKIP
 
 // Android

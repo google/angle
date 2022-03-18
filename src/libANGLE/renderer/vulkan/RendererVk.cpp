@@ -2793,15 +2793,35 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     constexpr uint32_t kPixel2DriverWithRelaxedPrecision        = 0x801EA000;
     constexpr uint32_t kPixel4DriverWithWorkingSpecConstSupport = 0x80201000;
 
-    bool isAMD      = IsAMD(mPhysicalDeviceProperties.vendorID);
-    bool isARM      = IsARM(mPhysicalDeviceProperties.vendorID);
-    bool isIntel    = IsIntel(mPhysicalDeviceProperties.vendorID);
-    bool isNvidia   = IsNvidia(mPhysicalDeviceProperties.vendorID);
-    bool isPowerVR  = IsPowerVR(mPhysicalDeviceProperties.vendorID);
-    bool isQualcomm = IsQualcomm(mPhysicalDeviceProperties.vendorID);
-    bool isSamsung  = IsSamsung(mPhysicalDeviceProperties.vendorID);
-    bool isSwiftShader =
+    const bool isAMD      = IsAMD(mPhysicalDeviceProperties.vendorID);
+    const bool isARM      = IsARM(mPhysicalDeviceProperties.vendorID);
+    const bool isIntel    = IsIntel(mPhysicalDeviceProperties.vendorID);
+    const bool isNvidia   = IsNvidia(mPhysicalDeviceProperties.vendorID);
+    const bool isPowerVR  = IsPowerVR(mPhysicalDeviceProperties.vendorID);
+    const bool isQualcomm = IsQualcomm(mPhysicalDeviceProperties.vendorID);
+    const bool isBroadcom = IsBroadcom(mPhysicalDeviceProperties.vendorID);
+    const bool isSamsung  = IsSamsung(mPhysicalDeviceProperties.vendorID);
+    const bool isSwiftShader =
         IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
+
+    // Classify devices based on general architecture:
+    //
+    // - IMR (Immediate-Mode Rendering) devices generally progress through draw calls once and use
+    //   the main GPU memory (accessed through caches) to store intermediate rendering results.
+    // - TBR (Tile-Based Rendering) devices issue a pre-rendering geometry pass, then run through
+    //   draw calls once per tile and store intermediate rendering results on the tile cache.
+    //
+    // Due to these key architectural differences, some operations improve performance on one while
+    // deteriorating performance on the other.  ANGLE will accordingly make some decisions based on
+    // the device architecture for optimal performance on both.
+    const bool isImmediateModeRenderer = isNvidia || isAMD || isIntel || isSamsung || isSwiftShader;
+    const bool isTileBasedRenderer     = isARM || isPowerVR || isQualcomm || isBroadcom;
+
+    // Make sure all known architectures are accounted for.
+    if (!isImmediateModeRenderer && !isTileBasedRenderer && !isMockICDEnabled())
+    {
+        WARN() << "Unknown GPU architecture";
+    }
 
     bool supportsNegativeViewport =
         ExtensionFound(VK_KHR_MAINTENANCE1_EXTENSION_NAME, deviceExtensionNames) ||
@@ -3069,14 +3089,16 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
           (mPhysicalDeviceProperties.driverVersion < kPixel2DriverWithRelaxedPrecision)) &&
             !IsPixel4(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
 
-    // The following platforms are less sensitive to the src/dst stage masks in barriers, and behave
-    // more efficiently when all barriers are aggregated, rather than individually and precisely
-    // specified:
-    //
-    // - Desktop GPUs
-    // - SwiftShader
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferAggregateBarrierCalls,
-                            isNvidia || isAMD || isIntel || isSwiftShader || isSamsung);
+    // IMR devices are less sensitive to the src/dst stage masks in barriers, and behave more
+    // efficiently when all barriers are aggregated, rather than individually and precisely
+    // specified.
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferAggregateBarrierCalls, isImmediateModeRenderer);
+
+    // For IMR devices, it's more efficient to ignore invalidate of framebuffer attachments with
+    // emulated formats that have extra channels.  For TBR devices, the invalidate will be followed
+    // by a clear to retain valid values in said extra channels.
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferSkippingInvalidateForEmulatedFormats,
+                            isImmediateModeRenderer);
 
     // Currently disabled by default: http://anglebug.com/4324
     ANGLE_FEATURE_CONDITION(&mFeatures, asyncCommandQueue, false);

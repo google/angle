@@ -349,28 +349,20 @@ bool RenderTargetVk::hasDefinedStencilContent() const
     return image->hasSubresourceDefinedStencilContent(mLevelIndexGL, mLayerIndex, mLayerCount);
 }
 
-void RenderTargetVk::invalidateEntireContent(ContextVk *contextVk)
+void RenderTargetVk::invalidateEntireContent(ContextVk *contextVk,
+                                             bool *preferToKeepContentsDefinedOut)
 {
     vk::ImageHelper *image = getOwnerOfData();
-    image->invalidateSubresourceContent(contextVk, mLevelIndexGL, mLayerIndex, mLayerCount);
+    image->invalidateSubresourceContent(contextVk, mLevelIndexGL, mLayerIndex, mLayerCount,
+                                        preferToKeepContentsDefinedOut);
 }
 
-void RenderTargetVk::invalidateEntireStencilContent(ContextVk *contextVk)
+void RenderTargetVk::invalidateEntireStencilContent(ContextVk *contextVk,
+                                                    bool *preferToKeepContentsDefinedOut)
 {
     vk::ImageHelper *image = getOwnerOfData();
-    image->invalidateSubresourceStencilContent(contextVk, mLevelIndexGL, mLayerIndex, mLayerCount);
-}
-
-void RenderTargetVk::restoreEntireContent()
-{
-    vk::ImageHelper *image = getOwnerOfData();
-    image->restoreSubresourceContent(mLevelIndexGL, mLayerIndex, mLayerCount);
-}
-
-void RenderTargetVk::restoreEntireStencilContent()
-{
-    vk::ImageHelper *image = getOwnerOfData();
-    image->restoreSubresourceStencilContent(mLevelIndexGL, mLayerIndex, mLayerCount);
+    image->invalidateSubresourceStencilContent(contextVk, mLevelIndexGL, mLayerIndex, mLayerCount,
+                                               preferToKeepContentsDefinedOut);
 }
 
 gl::ImageIndex RenderTargetVk::getImageIndexForClear(uint32_t layerCount) const
