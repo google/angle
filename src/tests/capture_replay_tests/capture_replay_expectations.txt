@@ -150,7 +150,6 @@
 6578 : ImageTestES3.SourceCubeTargetExternalESSL3_Colorspace/* = FAIL
 6578 : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3_Colorspace/* = FAIL
 
-6631 : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = CRASH
 6631 : MultithreadingTest.MultiContextCreateAndDeleteResources/* = CRASH
 6631 WIN : MultithreadingTestES3.MultithreadFenceDraw/* = CRASH
 6631 WIN : MultithreadingTestES3.MultithreadFenceTexImage/* = CRASH

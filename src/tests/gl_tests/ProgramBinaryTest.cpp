@@ -519,6 +519,10 @@ TEST_P(ProgramBinaryES3Test, TestArrayOfStructUniform)
 // drawing works.
 TEST_P(ProgramBinaryES3Test, SaveAndLoadDetachedShaders)
 {
+    GLint binaryFormatCount = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(binaryFormatCount == 0);
+
     // We use shaders with the "flat" qualifier, to ensure that "flat" behaves
     // across save/load. This is primarily to catch possible bugs in the Metal
     // backend, where it needs to detect "flat" at shader link time and
