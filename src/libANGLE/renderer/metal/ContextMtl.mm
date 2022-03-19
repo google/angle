@@ -501,7 +501,8 @@ angle::Result ContextMtl::drawArraysInstanced(const gl::Context *context,
                                               GLsizei count,
                                               GLsizei instances)
 {
-    // Zero is a special value here. No-op instanced draws are skipped in the frontend.
+    // Instanced draw calls with zero instances are skipped in the frontend.
+    // The drawArraysImpl function would treat them as non-instanced.
     ASSERT(instances > 0);
     return drawArraysImpl(context, mode, first, count, instances, 0);
 }
@@ -513,7 +514,8 @@ angle::Result ContextMtl::drawArraysInstancedBaseInstance(const gl::Context *con
                                                           GLsizei instanceCount,
                                                           GLuint baseInstance)
 {
-    // Zero is a special value here. No-op instanced draws are skipped in the frontend.
+    // Instanced draw calls with zero instances are skipped in the frontend.
+    // The drawArraysImpl function would treat them as non-instanced.
     ASSERT(instanceCount > 0);
     return drawArraysImpl(context, mode, first, count, instanceCount, baseInstance);
 }
@@ -869,7 +871,8 @@ angle::Result ContextMtl::drawElementsInstanced(const gl::Context *context,
                                                 const void *indices,
                                                 GLsizei instanceCount)
 {
-    // Zero is a special value here. No-op instanced draws are skipped in the frontend.
+    // Instanced draw calls with zero instances are skipped in the frontend.
+    // The drawElementsImpl function would treat them as non-instanced.
     ASSERT(instanceCount > 0);
     return drawElementsImpl(context, mode, count, type, indices, instanceCount, 0, 0);
 }
@@ -882,7 +885,8 @@ angle::Result ContextMtl::drawElementsInstancedBaseVertex(const gl::Context *con
                                                           GLsizei instanceCount,
                                                           GLint baseVertex)
 {
-    // Zero is a special value here. No-op instanced draws are skipped in the frontend.
+    // Instanced draw calls with zero instances are skipped in the frontend.
+    // The drawElementsImpl function would treat them as non-instanced.
     ASSERT(instanceCount > 0);
     return drawElementsImpl(context, mode, count, type, indices, instanceCount, baseVertex, 0);
 }
@@ -896,7 +900,8 @@ angle::Result ContextMtl::drawElementsInstancedBaseVertexBaseInstance(const gl::
                                                                       GLint baseVertex,
                                                                       GLuint baseInstance)
 {
-    // Zero is a special value. No-op instanced draws are skipped in the frontend.
+    // Instanced draw calls with zero instances are skipped in the frontend.
+    // The drawElementsImpl function would treat them as non-instanced.
     ASSERT(instances > 0);
     return drawElementsImpl(context, mode, count, type, indices, instances, baseVertex,
                             baseInstance);
