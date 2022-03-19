@@ -187,6 +187,8 @@
 
 6875 : TransformFeedbackTest.SpanMultipleRenderPasses/* = NOT_RUN
 
+7112 : TransformFeedbackTest.BaseInstance/* = NOT_RUN
+
 # GLES 3.2 tests that fail because of missing features
 5366 : GeometryShaderTestES32.MaxGeometryImageUniforms/* = CRASH
 5366 : ProgramPipelineTest32.MaxGeometryImageUniforms/* = CRASH

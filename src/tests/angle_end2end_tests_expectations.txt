@@ -508,6 +508,10 @@
 6875 ASAN VULKAN SWIFTSHADER : ComputeShaderTest.*/ES3_1_Vulkan_SwiftShader_AsyncQueue = SKIP
 6875 SWIFTSHADER : TransformFeedbackTest.SpanMultipleRenderPasses/* = SKIP
 
+7112 SWIFTSHADER : TransformFeedbackTest.BaseInstance/* = SKIP
+7112 AMD VULKAN : TransformFeedbackTest.BaseInstance/* = SKIP
+7112 PIXEL4ORXL VULKAN : TransformFeedbackTest.BaseInstance/* = SKIP
+
 // ASAN flaky timeouts and crashes with Win / Vulkan / Swiftshader
 6965 ASAN WIN VULKAN SWIFTSHADER : MipmapTest* = SKIP
 6968 ASAN WIN VULKAN SWIFTSHADER : MultithreadingTest.MultiContextDrawWithSwapBuffers/ES3_Vulkan_SwiftShader = SKIP
