@@ -61,7 +61,6 @@
 6180 : PbufferTest.Clearing/* = FAIL
 6180 : PbufferTest.TextureSizeReset/* = FAIL
 
-6220 : Texture2DTest.DefineMultipleLevelsWithoutMipmapping/* = TIMEOUT
 
 6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphores/* = TIMEOUT
 6221 : VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphoresMutableNoStorage/* = TIMEOUT
