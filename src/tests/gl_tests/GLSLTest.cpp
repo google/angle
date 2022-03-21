@@ -14997,6 +14997,110 @@ void main() {
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
     EXPECT_NE(compileResult, 0);
 }
+
+// Test that loop body ending in a branch doesn't fail compilation
+TEST_P(GLSLTest, LoopBodyEndingInBranch1)
+{
+    constexpr char kFS[] = R"(void main(){for(int a,i;;gl_FragCoord)continue;})";
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = {kFS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kFS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Test that loop body ending in a branch doesn't fail compilation
+TEST_P(GLSLTest, LoopBodyEndingInBranch2)
+{
+    constexpr char kFS[] =
+        R"(void main(){for(int a,i;bool(gl_FragCoord.x);gl_FragCoord){continue;}})";
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = {kFS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kFS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Test that loop body ending in a branch doesn't fail compilation
+TEST_P(GLSLTest, LoopBodyEndingInBranch3)
+{
+    constexpr char kFS[] = R"(void main(){for(int a,i;;gl_FragCoord){{continue;}}})";
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = {kFS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kFS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Test that loop body ending in a branch doesn't fail compilation
+TEST_P(GLSLTest, LoopBodyEndingInBranch4)
+{
+    constexpr char kFS[] = R"(void main(){for(int a,i;;gl_FragCoord){{continue;}{}{}{{}{}}}})";
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = {kFS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kFS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Test that loop body ending in a branch doesn't fail compilation
+TEST_P(GLSLTest, LoopBodyEndingInBranch5)
+{
+    constexpr char kFS[] = R"(void main(){while(bool(gl_FragCoord.x)){{continue;{}}{}}})";
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = {kFS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kFS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
+// Test that loop body ending in a branch doesn't fail compilation
+TEST_P(GLSLTest, LoopBodyEndingInBranch6)
+{
+    constexpr char kFS[] = R"(void main(){do{{continue;{}}{}}while(bool(gl_FragCoord.x));})";
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char *sourceArray[1] = {kFS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kFS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(GLSLTest, WithGlslang(ES2_VULKAN()));
