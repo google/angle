@@ -191,6 +191,7 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdExecuteCommands-pCommandBuffers-00099",
     // http://anglebug.com/7105
     "VUID-vkCmdDraw-None-06538",
+    "VUID-vkCmdDrawIndexed-None-06538",
 };
 
 struct SkippedSyncvalMessage
