@@ -98,6 +98,15 @@ enum class SubmitFrameType
     OutsideRPCommandsOnly,
 };
 
+// Why depth/stencil feedback loop is being updated.  Based on whether it's due to a draw or clear,
+// different GL state affect depth/stencil write.
+enum class UpdateDepthFeedbackLoopReason
+{
+    None,
+    Draw,
+    Clear,
+};
+
 class ContextVk : public ContextImpl, public vk::Context, public MultisampleTextureInitializer
 {
   public:
@@ -430,6 +439,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result onPauseTransformFeedback();
     void pauseTransformFeedbackIfActiveUnpaused();
 
+    void onDepthStencilAccessChange() { mGraphicsDirtyBits |= kDepthStencilAccessChangeDirtyBits; }
+
     // When UtilsVk issues draw or dispatch calls, it binds a new pipeline and descriptor sets that
     // the context is not aware of.  These functions are called to make sure the pipeline and
     // affected descriptor set bindings are dirtied for the next application draw/dispatch call.
@@ -438,6 +449,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void invalidateGraphicsDescriptorSet(DescriptorSetIndex usedDescriptorSet);
     void invalidateComputeDescriptorSet(DescriptorSetIndex usedDescriptorSet);
     void invalidateViewportAndScissor();
+    angle::Result updateRenderPassDepthFeedbackLoopMode(
+        UpdateDepthFeedbackLoopReason depthReason,
+        UpdateDepthFeedbackLoopReason stencilReason);
 
     void optimizeRenderPassForPresent(VkFramebuffer framebufferHandle, vk::ImageHelper *colorImage);
 
@@ -737,14 +751,19 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Dirty bits.
     enum DirtyBitType : size_t
     {
-        // A glMemoryBarrier has been called and command buffers may need flushing.
-        DIRTY_BIT_MEMORY_BARRIER,
         // Dirty bits that must be processed before the render pass is started.  The handlers for
         // these dirty bits don't record any commands.
+
+        // A glMemoryBarrier has been called and command buffers may need flushing.
+        DIRTY_BIT_MEMORY_BARRIER,
+        // Update default attribute buffers.
         DIRTY_BIT_DEFAULT_ATTRIBS,
         // The pipeline has changed and needs to be recreated.  This dirty bit may close the render
         // pass.
         DIRTY_BIT_PIPELINE_DESC,
+        // Support for depth/stencil read-only feedback loop.  When depth/stencil access changes,
+        // the render pass may need closing.
+        DIRTY_BIT_READ_ONLY_DEPTH_FEEDBACK_LOOP_MODE,
 
         // Start the render pass.
         DIRTY_BIT_RENDER_PASS,
@@ -752,6 +771,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         // Dirty bits that must be processed after the render pass is started.  Their handlers
         // record commands.
         DIRTY_BIT_EVENT_LOG,
+        // Update depth/stencil accesses in the render pass.
+        DIRTY_BIT_DEPTH_STENCIL_ACCESS,
         // Pipeline needs to rebind because a new command buffer has been allocated, or UtilsVk has
         // changed the binding.  The pipeline itself doesn't need to be recreated.
         DIRTY_BIT_PIPELINE_BINDING,
@@ -917,14 +938,19 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Handlers for graphics pipeline dirty bits.
     angle::Result handleDirtyGraphicsMemoryBarrier(DirtyBits::Iterator *dirtyBitsIterator,
                                                    DirtyBits dirtyBitMask);
-    angle::Result handleDirtyGraphicsEventLog(DirtyBits::Iterator *dirtyBitsIterator,
-                                              DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsDefaultAttribs(DirtyBits::Iterator *dirtyBitsIterator,
                                                     DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *dirtyBitsIterator,
                                                   DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsReadOnlyDepthFeedbackLoopMode(
+        DirtyBits::Iterator *dirtyBitsIterator,
+        DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirtyBitsIterator,
                                                 DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsEventLog(DirtyBits::Iterator *dirtyBitsIterator,
+                                              DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsDepthStencilAccess(DirtyBits::Iterator *dirtyBitsIterator,
+                                                        DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsPipelineBinding(DirtyBits::Iterator *dirtyBitsIterator,
                                                      DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsTextures(DirtyBits::Iterator *dirtyBitsIterator,
@@ -1057,7 +1083,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         size_t bufferCount,
         const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &buffers);
 
-    angle::Result updateRenderPassDepthStencilAccess();
+    // Update framebuffer's read-only depth feedback loop mode.  Typically called from
+    // handleDirtyGraphicsReadOnlyDepthFeedbackLoopMode, but can be called from UtilsVk in functions
+    // that don't necessarily break the render pass.
+    angle::Result updateRenderPassDepthFeedbackLoopModeImpl(
+        DirtyBits::Iterator *dirtyBitsIterator,
+        DirtyBits dirtyBitMask,
+        UpdateDepthFeedbackLoopReason depthReason,
+        UpdateDepthFeedbackLoopReason stencilReason);
     bool shouldSwitchToReadOnlyDepthFeedbackLoopMode(gl::Texture *texture,
                                                      gl::Command command) const;
 
@@ -1126,6 +1159,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     DirtyBits mIndexedDirtyBitsMask;
     DirtyBits mNewGraphicsCommandBufferDirtyBits;
     DirtyBits mNewComputeCommandBufferDirtyBits;
+    static constexpr DirtyBits kDepthStencilAccessChangeDirtyBits{
+        DIRTY_BIT_READ_ONLY_DEPTH_FEEDBACK_LOOP_MODE, DIRTY_BIT_DEPTH_STENCIL_ACCESS};
     static constexpr DirtyBits kIndexAndVertexDirtyBits{DIRTY_BIT_VERTEX_BUFFERS,
                                                         DIRTY_BIT_INDEX_BUFFER};
     static constexpr DirtyBits kPipelineDescAndBindingDirtyBits{DIRTY_BIT_PIPELINE_DESC,

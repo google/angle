@@ -468,6 +468,16 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     // The front-end should ensure we don't attempt to clear stencil if all bits are masked.
     ASSERT(!clearStencil || stencilMask != 0);
 
+    // Make sure to close the render pass now if in read-only depth/stencil feedback loop mode and
+    // depth/stencil is being cleared.
+    if (clearDepth || clearStencil)
+    {
+        ANGLE_TRY(contextVk->updateRenderPassDepthFeedbackLoopMode(
+            clearDepth ? UpdateDepthFeedbackLoopReason::Clear : UpdateDepthFeedbackLoopReason::None,
+            clearStencil ? UpdateDepthFeedbackLoopReason::Clear
+                         : UpdateDepthFeedbackLoopReason::None));
+    }
+
     const bool scissoredClear = scissoredRenderArea != getRotatedCompleteRenderArea(contextVk);
 
     // We use the draw path if scissored clear, or color or stencil are masked.  Note that depth
@@ -2836,8 +2846,8 @@ void FramebufferVk::updateRenderPassReadOnlyDepthMode(ContextVk *contextVk,
 
     // If readOnlyDepthStencil is false, we are switching out of read only mode due to depth write.
     // We must not be in the read only feedback loop mode because the logic in
-    // ContextVk::updateRenderPassDepthStencilAccess() should ensure we end the previous renderpass
-    // and a new renderpass will start with feedback loop disabled.
+    // DIRTY_BIT_READ_ONLY_DEPTH_FEEDBACK_LOOP_MODE should ensure we end the previous renderpass and
+    // a new renderpass will start with feedback loop disabled.
     ASSERT(readOnlyDepthStencilMode || !mReadOnlyDepthFeedbackLoopMode);
 
     renderPass->updateStartedRenderPassWithDepthMode(readOnlyDepthStencilMode);

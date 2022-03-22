@@ -1018,8 +1018,8 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDisableDrawEnableDraw)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
     angle::VulkanPerfCounters expected;
 
-    // Expect rpCount+1, depth(Clears+1, Loads+0, Stores+1), stencil(Clears+0, Load+0, Stores+0)
-    setExpectedCountersForInvalidateTest(getPerfCounters(), 1, 1, 0, 1, 0, 0, 0, &expected);
+    // Expect rpCount+1, depth(Clears+1, Loads+0, Stores+1), stencil(Clears+0, Load+0, Stores+1)
+    setExpectedCountersForInvalidateTest(getPerfCounters(), 1, 1, 0, 1, 0, 0, 1, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -1045,6 +1045,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDisableDrawEnableDraw)
     // Enable (shouldn't change result)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
 
     // Draw (since enabled, should result: in storeOp = STORE; mContentDefined = true)
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
@@ -1114,7 +1115,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDrawDisableEnable)
     compareDepthStencilCountersForInvalidateTest(getPerfCounters(), expected);
 
     // Start and end another render pass, to check that the load ops are as expected
-    setAndIncrementLoadCountersForInvalidateTest(getPerfCounters(), 1, 1, &expected);
+    setAndIncrementLoadCountersForInvalidateTest(getPerfCounters(), 1, 0, &expected);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
@@ -1288,7 +1289,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDisableEnableDraw)
     compareDepthStencilCountersForInvalidateTest(getPerfCounters(), expected);
 
     // Start and end another render pass, to check that the load ops are as expected
-    setAndIncrementLoadCountersForInvalidateTest(getPerfCounters(), 1, 1, &expected);
+    setAndIncrementLoadCountersForInvalidateTest(getPerfCounters(), 1, 0, &expected);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
     ASSERT_GL_NO_ERROR();
     swapBuffers();

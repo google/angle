@@ -989,6 +989,33 @@ angle::Result GetUnresolveFrag(
     return vk::InitShaderAndSerial(context, &shader->get(), shaderCode.data(),
                                    shaderCode.size() * 4);
 }
+
+void UpdateDepthStencilAccess(ContextVk *contextVk,
+                              FramebufferVk *framebuffer,
+                              bool depthWrite,
+                              bool stencilWrite)
+{
+    vk::RenderPassCommandBufferHelper *renderPassCommands =
+        &contextVk->getStartedRenderPassCommands();
+
+    if (depthWrite)
+    {
+        // Explicitly mark a depth write because we are modifying the depth buffer.
+        renderPassCommands->onDepthAccess(vk::ResourceAccess::Write);
+    }
+    if (stencilWrite)
+    {
+        // Explicitly mark a stencil write because we are modifying the stencil buffer.
+        renderPassCommands->onStencilAccess(vk::ResourceAccess::Write);
+    }
+    if (depthWrite || stencilWrite)
+    {
+        // Because we may have changed the depth stencil access mode, update read only depth mode
+        // now.
+        framebuffer->updateRenderPassReadOnlyDepthMode(contextVk, renderPassCommands);
+    }
+}
+
 }  // namespace
 
 UtilsVk::ConvertVertexShaderParams::ConvertVertexShaderParams() = default;
@@ -1971,26 +1998,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         ANGLE_TRY(contextVk->startRenderPass(scissoredRenderArea, &commandBuffer, nullptr));
     }
 
-    if (params.clearStencil || params.clearDepth)
-    {
-        vk::RenderPassCommandBufferHelper *renderpassCommands;
-        renderpassCommands = &contextVk->getStartedRenderPassCommands();
-
-        // Because clear is not affected by depth/stencil test, we have to explicitly mark
-        // depth/stencil write here.
-        if (params.clearDepth)
-        {
-            renderpassCommands->onDepthAccess(vk::ResourceAccess::Write);
-        }
-        if (params.clearStencil)
-        {
-            renderpassCommands->onStencilAccess(vk::ResourceAccess::Write);
-        }
-
-        // We may have changed depth stencil access mode, so update read only depth stencil mode
-        // here.
-        framebuffer->updateRenderPassReadOnlyDepthMode(contextVk, renderpassCommands);
-    }
+    UpdateDepthStencilAccess(contextVk, framebuffer, params.clearDepth, params.clearStencil);
 
     ImageClearShaderParams shaderParams;
     shaderParams.clearValue = params.colorClearValue;
@@ -2294,11 +2302,10 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     shaderParams.srcLayer        = params.srcLayer;
     shaderParams.samples         = src->getSamples();
     shaderParams.invSamples      = 1.0f / shaderParams.samples;
-    shaderParams.outputMask =
-        static_cast<uint32_t>(framebuffer->getState().getEnabledDrawBuffers().to_ulong());
-    shaderParams.flipX    = params.flipX;
-    shaderParams.flipY    = params.flipY;
-    shaderParams.rotateXY = 0;
+    shaderParams.outputMask      = framebuffer->getState().getEnabledDrawBuffers().bits();
+    shaderParams.flipX           = params.flipX;
+    shaderParams.flipY           = params.flipY;
+    shaderParams.rotateXY        = 0;
 
     // Potentially make adjustments for pre-rotation.  Depending on the angle some of the
     // shaderParams need to be adjusted.
@@ -2405,24 +2412,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     contextVk->onImageRenderPassRead(src->getAspectFlags(), vk::ImageLayout::FragmentShaderReadOnly,
                                      src);
 
-    vk::RenderPassCommandBufferHelper *renderPassCommands =
-        &contextVk->getStartedRenderPassCommands();
-    if (blitDepth)
-    {
-        // Explicitly mark a depth write because we are modifying the depth buffer.
-        renderPassCommands->onDepthAccess(vk::ResourceAccess::Write);
-    }
-    if (blitStencil)
-    {
-        // Explicitly mark a stencil write because we are modifying the stencil buffer.
-        renderPassCommands->onStencilAccess(vk::ResourceAccess::Write);
-    }
-    if (blitDepth || blitStencil)
-    {
-        // Because we may have changed the depth stencil access mode, update read only depth mode
-        // now.
-        framebuffer->updateRenderPassReadOnlyDepthMode(contextVk, renderPassCommands);
-    }
+    UpdateDepthStencilAccess(contextVk, framebuffer, blitDepth, blitStencil);
 
     VkDescriptorImageInfo imageInfos[2] = {};
 

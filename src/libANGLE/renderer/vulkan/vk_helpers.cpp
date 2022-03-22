@@ -1013,6 +1013,8 @@ void RenderPassAttachment::init(ImageHelper *image,
                                 uint32_t layerCount,
                                 VkImageAspectFlagBits aspect)
 {
+    ASSERT(mImage == nullptr);
+
     mImage      = image;
     mLevelIndex = levelIndex;
     mLayerIndex = layerIndex;

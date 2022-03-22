@@ -966,7 +966,6 @@ class PackedImageAttachmentArray final
 };
 
 // The following are used to help track the state of an invalidated attachment.
-
 // This value indicates an "infinite" CmdCount that is not valid for comparing
 constexpr uint32_t kInfiniteCmdCount = 0xFFFFFFFF;
 
@@ -1276,10 +1275,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void finalizeDepthStencilImageLayout(Context *context);
     void finalizeDepthStencilResolveImageLayout(Context *context);
     void finalizeDepthStencilLoadStore(Context *context);
-    void finalizeDepthStencilLoadStoreOps(Context *context,
-                                          ResourceAccess access,
-                                          RenderPassLoadOp *loadOp,
-                                          RenderPassStoreOp *storeOp);
     void finalizeDepthStencilImageLayoutAndLoadStore(Context *context);
 
     // When using Vulkan secondary command buffers, each subpass must be recorded in a separate
