@@ -137,6 +137,9 @@ struct PerfMonitorTriplet
     FN(writeDescriptorSets)                       \
     FN(flushedOutsideRenderPassCommandBuffers)    \
     FN(resolveImageCommands)                      \
+    FN(colorClears)                               \
+    FN(colorLoads)                                \
+    FN(colorStores)                               \
     FN(depthClears)                               \
     FN(depthLoads)                                \
     FN(depthStores)                               \

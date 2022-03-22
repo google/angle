@@ -1244,6 +1244,9 @@ constexpr bool kOutputCumulativePerfCounters = false;
 struct RenderPassPerfCounters
 {
     // load/storeOps. Includes ops for resolve attachment. Maximum value = 2.
+    uint8_t colorClears;
+    uint8_t colorLoads;
+    uint8_t colorStores;
     uint8_t depthClears;
     uint8_t depthLoads;
     uint8_t depthStores;

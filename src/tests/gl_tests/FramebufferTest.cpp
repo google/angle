@@ -483,7 +483,6 @@ TEST_P(FramebufferTest_ES3, SubInvalidatePartial)
 // partial invalidate, but also prevents bugs with Vulkan pre-rotation.
 TEST_P(FramebufferTest_ES3, ScissoredDrawSubInvalidateThenNonScissoredDraw)
 {
-    swapBuffers();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());

@@ -889,6 +889,15 @@ void UpdateRenderPassColorPerfCounters(const VkRenderPassCreateInfo &createInfo,
                                        const VkSubpassDescription &subpass,
                                        RenderPassPerfCounters *countersOut)
 {
+    for (uint32_t index = 0; index < createInfo.attachmentCount; index++)
+    {
+        VkAttachmentLoadOp loadOp   = createInfo.pAttachments[index].loadOp;
+        VkAttachmentStoreOp storeOp = createInfo.pAttachments[index].storeOp;
+        countersOut->colorClears += loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ? 1 : 0;
+        countersOut->colorLoads += loadOp == VK_ATTACHMENT_LOAD_OP_LOAD ? 1 : 0;
+        countersOut->colorStores += storeOp == VK_ATTACHMENT_STORE_OP_STORE ? 1 : 0;
+    }
+
     // Color resolve counters.
     if (subpass.pResolveAttachments == nullptr)
     {
@@ -985,8 +994,8 @@ void UpdateRenderPassPerfCounters(
     {
         const VkSubpassDescription &subpass = createInfo.pSubpasses[subpassIndex];
 
-        // Color counters.  Note: currently there are no counters for load/store ops of color
-        // attachments, so there's no risk of double counting.
+        // Color counters.
+        // NOTE: For simplicity, this will accumulate counts for all subpasses in the renderpass.
         UpdateRenderPassColorPerfCounters(createInfo, subpass, countersOut);
 
         // Record index of depth/stencil attachment.
@@ -1349,6 +1358,9 @@ void GetRenderPassAndUpdateCounters(ContextVk *contextVk,
         angle::VulkanPerfCounters &counters      = contextVk->getPerfCounters();
         const RenderPassPerfCounters &rpCounters = renderPassHelper->getPerfCounters();
 
+        counters.colorClears += rpCounters.colorClears;
+        counters.colorLoads += rpCounters.colorLoads;
+        counters.colorStores += rpCounters.colorStores;
         counters.depthClears += rpCounters.depthClears;
         counters.depthLoads += rpCounters.depthLoads;
         counters.depthStores += rpCounters.depthStores;
