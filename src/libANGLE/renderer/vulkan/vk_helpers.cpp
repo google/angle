@@ -1129,9 +1129,9 @@ void RenderPassAttachment::finalizeLoadStore(Context *context,
     const bool supportsStoreOpNone =
         supportsLoadStoreOpNone ||
         context->getRenderer()->getFeatures().supportsRenderPassStoreOpNoneQCOM.enabled;
-    if (mImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment) && supportsStoreOpNone)
+    if (mAccess == ResourceAccess::ReadOnly && supportsStoreOpNone)
     {
-        if (*storeOp == RenderPassStoreOp::Store)
+        if (*storeOp == RenderPassStoreOp::Store && *loadOp != RenderPassLoadOp::Clear)
         {
             *storeOp = RenderPassStoreOp::None;
         }
@@ -1146,12 +1146,34 @@ void RenderPassAttachment::finalizeLoadStore(Context *context,
             // load/clear op.
             *loadOp = RenderPassLoadOp::DontCare;
         }
-        else if (*loadOp != RenderPassLoadOp::Clear && supportsLoadStoreOpNone)
+        else
         {
-            // Otherwise make sure the attachment is neither loaded nor stored (as it's neither
-            // used nor invalidated).
-            *loadOp  = RenderPassLoadOp::None;
-            *storeOp = RenderPassStoreOp::None;
+            switch (*loadOp)
+            {
+                case RenderPassLoadOp::Clear:
+                    // Cannot optimize away the ops if the attachment is cleared (even if not used
+                    // afterwards)
+                    break;
+                case RenderPassLoadOp::Load:
+                    // Make sure the attachment is neither loaded nor stored (as it's neither used
+                    // nor invalidated), if possible.
+                    if (supportsLoadStoreOpNone)
+                    {
+                        *loadOp = RenderPassLoadOp::None;
+                    }
+                    if (supportsStoreOpNone)
+                    {
+                        *storeOp = RenderPassStoreOp::None;
+                    }
+                    break;
+                case RenderPassLoadOp::DontCare:
+                case RenderPassLoadOp::None:
+                default:
+                    // loadOp=DontCare should be covered by storeOp=DontCare above.
+                    // loadOp=None is never decided upfront.
+                    UNREACHABLE();
+                    break;
+            }
         }
     }
 }
