@@ -3225,7 +3225,7 @@ void CaptureGetProgramBinaryOES_length(const State &glState,
                                        void *binary,
                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
 void CaptureGetProgramBinaryOES_binaryFormat(const State &glState,
@@ -3237,7 +3237,7 @@ void CaptureGetProgramBinaryOES_binaryFormat(const State &glState,
                                              void *binary,
                                              ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLenum);
 }
 
 void CaptureGetProgramBinaryOES_binary(const State &glState,
@@ -3249,7 +3249,7 @@ void CaptureGetProgramBinaryOES_binary(const State &glState,
                                        void *binary,
                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = bufSize;
 }
 
 void CaptureProgramBinaryOES_binary(const State &glState,
