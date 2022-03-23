@@ -858,6 +858,7 @@ class BufferPool : angle::NonCopyable
     static constexpr int32_t kMaxCountRemainsEmpty = 4;
     static constexpr int32_t kMaxEmptyBufferCount  = 16;
 };
+using BufferPoolPointerArray = std::array<std::unique_ptr<BufferPool>, VK_MAX_MEMORY_TYPES>;
 
 enum class BufferAccess
 {
