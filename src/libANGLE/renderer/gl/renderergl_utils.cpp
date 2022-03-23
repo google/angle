@@ -185,8 +185,8 @@ void ClearErrors(const FunctionsGL *functions,
     GLenum error = functions->getError();
     while (error != GL_NO_ERROR)
     {
-        ERR() << "Preexisting GL error " << gl::FmtHex(error) << " as of " << file << ", "
-              << function << ":" << line << ". ";
+        INFO() << "Preexisting GL error " << gl::FmtHex(error) << " as of " << file << ", "
+               << function << ":" << line << ". ";
         error = functions->getError();
     }
 }
