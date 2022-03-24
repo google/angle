@@ -1999,8 +1999,9 @@ angle::Result ProgramD3D::getComputeExecutableForImage2DBindLayout(
         return angle::Result::Continue;
     }
 
-    std::string finalComputeHLSL = mDynamicHLSL->generateComputeShaderForImage2DBindSignature(
-        context, *this, mState, mImage2DUniforms, mComputeShaderImage2DBindLayoutCache);
+    std::string finalComputeHLSL = mDynamicHLSL->generateShaderForImage2DBindSignature(
+        context, *this, mState, gl::ShaderType::Compute, mImage2DUniforms,
+        mComputeShaderImage2DBindLayoutCache);
 
     // Generate new compute executable
     ShaderExecutableD3D *computeExecutable = nullptr;
