@@ -1856,14 +1856,22 @@ void CaptureFramebufferAttachment(std::vector<CallCapture> *setupCalls,
 {
     GLuint resourceID = attachment.getResource()->getId();
 
-    // TODO(jmadill): Layer attachments. http://anglebug.com/3662
     if (attachment.type() == GL_TEXTURE)
     {
         gl::ImageIndex index = attachment.getTextureImageIndex();
 
-        Capture(setupCalls, framebufferFuncs.framebufferTexture2D(
-                                replayState, true, GL_FRAMEBUFFER, attachment.getBinding(),
-                                index.getTarget(), {resourceID}, index.getLevelIndex()));
+        if (index.usesTex3D() || IsCubeMapFaceTarget(index.getTarget()))
+        {
+            Capture(setupCalls, CaptureFramebufferTextureLayer(
+                                    replayState, true, GL_FRAMEBUFFER, attachment.getBinding(),
+                                    {resourceID}, index.getLevelIndex(), index.getLayerIndex()));
+        }
+        else
+        {
+            Capture(setupCalls, framebufferFuncs.framebufferTexture2D(
+                                    replayState, true, GL_FRAMEBUFFER, attachment.getBinding(),
+                                    index.getTarget(), {resourceID}, index.getLevelIndex()));
+        }
     }
     else
     {
