@@ -519,7 +519,7 @@ class ProgramD3D : public ProgramImpl
 
     void updateCachedInputLayoutFromShader();
     void updateCachedOutputLayoutFromShader();
-    void updateCachedImage2DBindLayoutFromComputeShader();
+    void updateCachedImage2DBindLayoutFromShader(gl::ShaderType shaderType);
     void updateCachedVertexExecutableIndex();
     void updateCachedPixelExecutableIndex();
     void updateCachedComputeExecutableIndex();

@@ -1048,20 +1048,23 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
         mD3DShaderStorageBlocks.push_back(shaderStorageBlock);
     }
 
-    size_t image2DUniformCount = stream->readInt<size_t>();
-    if (stream->error())
+    for (gl::ShaderType shaderType : {gl::ShaderType::Compute})
     {
-        infoLog << "Invalid program binary.";
-        return nullptr;
-    }
+        size_t image2DUniformCount = stream->readInt<size_t>();
+        if (stream->error())
+        {
+            infoLog << "Invalid program binary.";
+            return nullptr;
+        }
 
-    ASSERT(mImage2DUniforms[gl::ShaderType::Compute].empty());
-    for (size_t image2DUniformIndex = 0; image2DUniformIndex < image2DUniformCount;
-         ++image2DUniformIndex)
-    {
-        sh::ShaderVariable image2Duniform;
-        gl::LoadShaderVar(stream, &image2Duniform);
-        mImage2DUniforms[gl::ShaderType::Compute].push_back(image2Duniform);
+        ASSERT(mImage2DUniforms[shaderType].empty());
+        for (size_t image2DUniformIndex = 0; image2DUniformIndex < image2DUniformCount;
+             ++image2DUniformIndex)
+        {
+            sh::ShaderVariable image2Duniform;
+            gl::LoadShaderVar(stream, &image2Duniform);
+            mImage2DUniforms[shaderType].push_back(image2Duniform);
+        }
     }
 
     for (unsigned int ii = 0; ii < gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS; ++ii)
@@ -1375,10 +1378,13 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
         }
     }
 
-    stream->writeInt(mImage2DUniforms[gl::ShaderType::Compute].size());
-    for (const sh::ShaderVariable &image2DUniform : mImage2DUniforms[gl::ShaderType::Compute])
+    for (gl::ShaderType shaderType : {gl::ShaderType::Compute})
     {
-        gl::WriteShaderVar(stream, image2DUniform);
+        stream->writeInt(mImage2DUniforms[shaderType].size());
+        for (const sh::ShaderVariable &image2DUniform : mImage2DUniforms[shaderType])
+        {
+            gl::WriteShaderVar(stream, image2DUniform);
+        }
     }
 
     for (unsigned int ii = 0; ii < gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS; ++ii)
@@ -1734,11 +1740,25 @@ void ProgramD3D::updateCachedOutputLayoutFromShader()
     updateCachedPixelExecutableIndex();
 }
 
-void ProgramD3D::updateCachedImage2DBindLayoutFromComputeShader()
+void ProgramD3D::updateCachedImage2DBindLayoutFromShader(gl::ShaderType shaderType)
 {
-    GetDefaultImage2DBindLayoutFromShader(mImage2DUniforms[gl::ShaderType::Compute],
-                                          &mImage2DBindLayoutCache[gl::ShaderType::Compute]);
-    updateCachedComputeExecutableIndex();
+    GetDefaultImage2DBindLayoutFromShader(mImage2DUniforms[shaderType],
+                                          &mImage2DBindLayoutCache[shaderType]);
+    switch (shaderType)
+    {
+        case gl::ShaderType::Compute:
+            updateCachedComputeExecutableIndex();
+            break;
+        case gl::ShaderType::Fragment:
+            updateCachedPixelExecutableIndex();
+            break;
+        case gl::ShaderType::Vertex:
+            updateCachedVertexExecutableIndex();
+            break;
+        default:
+            ASSERT(false);
+            break;
+    }
 }
 
 class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTask
@@ -1773,7 +1793,7 @@ class ProgramD3D::GetComputeExecutableTask : public ProgramD3D::GetExecutableTas
     angle::Result run() override
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "ProgramD3D::GetComputeExecutableTask::run");
-        mProgram->updateCachedImage2DBindLayoutFromComputeShader();
+        mProgram->updateCachedImage2DBindLayoutFromShader(gl::ShaderType::Compute);
         ShaderExecutableD3D *computeExecutable = nullptr;
         ANGLE_TRY(mProgram->getComputeExecutableForImage2DBindLayout(this, &computeExecutable,
                                                                      &mInfoLog));
