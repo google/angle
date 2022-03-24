@@ -850,7 +850,6 @@ class BufferPool : angle::NonCopyable
     // after and then we have to allocate a new one next frame.
     static constexpr int32_t kMaxCountRemainsEmpty = 4;
 };
-using BufferPoolPointerArray = std::array<std::unique_ptr<BufferPool>, VK_MAX_MEMORY_TYPES>;
 
 enum class BufferAccess
 {
