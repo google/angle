@@ -560,9 +560,9 @@ class ProgramD3D : public ProgramImpl
 
     std::vector<Image> mImagesCS;
     std::vector<Image> mReadonlyImagesCS;
-    gl::RangeUI mUsedComputeImageRange;
-    gl::RangeUI mUsedComputeReadonlyImageRange;
-    gl::RangeUI mUsedComputeAtomicCounterRange;
+    gl::ShaderMap<gl::RangeUI> mUsedImageRange;
+    gl::ShaderMap<gl::RangeUI> mUsedReadonlyImageRange;
+    gl::ShaderMap<gl::RangeUI> mUsedAtomicCounterRange;
 
     // Cache for pixel shader output layout to save reallocations.
     std::vector<GLenum> mPixelShaderOutputLayoutCache;
