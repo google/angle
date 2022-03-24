@@ -751,7 +751,20 @@
 6528 PIXEL4ORXL GLES : dEQP-GLES3.functional.transform_feedback.random_full_array_capture.* = FAIL
 
 // Pixel 6 expectations
-6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element.* = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*float = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*int = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*mat2 = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*vec2 = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*vec3 = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*separate*vec4 = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*float = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*int = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*vec2 = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*vec3 = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*vec4 = FAIL
+6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.array_element*interleaved*mat2* = FAIL
+
+// A little over half of the following fail in a non-clear manner:
 6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.random.interleaved.* = FAIL
 6917 PIXEL6 VULKAN : dEQP-GLES3.functional.transform_feedback.random.separate.* = FAIL
 

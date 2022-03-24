@@ -364,6 +364,7 @@
 6528 PIXEL4ORXL GLES : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_vertex = FAIL
 
 // Pixel 6 test expectations.
+// These fail on the Android S bots, but pass on pre-release Android T drivers:
 6898 PIXEL6 VULKAN : dEQP-GLES2.functional.clipping.point.wide_point_* = FAIL
 6898 PIXEL6 VULKAN : dEQP-GLES2.functional.rasterization.primitives.points = FAIL
 6898 PIXEL6 VULKAN : dEQP-GLES2.functional.shaders.builtin_variable.pointcoord = FAIL
