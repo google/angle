@@ -835,22 +835,14 @@ GLint ProgramD3D::getImageMapping(gl::ShaderType type,
 {
     GLint logicalImageUnit = -1;
     ASSERT(imageIndex < static_cast<unsigned int>(caps.maxImageUnits));
-    switch (type)
+    if (readonly && imageIndex < mReadonlyImages[type].size() &&
+        mReadonlyImages[type][imageIndex].active)
     {
-        case gl::ShaderType::Compute:
-            if (readonly && imageIndex < mReadonlyImagesCS.size() &&
-                mReadonlyImagesCS[imageIndex].active)
-            {
-                logicalImageUnit = mReadonlyImagesCS[imageIndex].logicalImageUnit;
-            }
-            else if (imageIndex < mImagesCS.size() && mImagesCS[imageIndex].active)
-            {
-                logicalImageUnit = mImagesCS[imageIndex].logicalImageUnit;
-            }
-            break;
-        // TODO(xinghua.cao@intel.com): add image mapping for vertex shader and pixel shader.
-        default:
-            UNREACHABLE();
+        logicalImageUnit = mReadonlyImages[type][imageIndex].logicalImageUnit;
+    }
+    else if (imageIndex < mImages[type].size() && mImages[type][imageIndex].active)
+    {
+        logicalImageUnit = mImages[type][imageIndex].logicalImageUnit;
     }
 
     if (logicalImageUnit >= 0 && logicalImageUnit < caps.maxImageUnits)
@@ -986,40 +978,41 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
         mUsedShaderSamplerRanges[shaderType] = gl::RangeUI(samplerRangeLow, samplerRangeHigh);
     }
 
-    size_t csImageCount = stream->readInt<size_t>();
-    for (size_t imageIndex = 0; imageIndex < csImageCount; ++imageIndex)
+    for (gl::ShaderType shaderType : {gl::ShaderType::Compute})
     {
-        Image image;
-        stream->readBool(&image.active);
-        stream->readInt(&image.logicalImageUnit);
-        mImagesCS.push_back(image);
+        size_t imageCount = stream->readInt<size_t>();
+        for (size_t imageIndex = 0; imageIndex < imageCount; ++imageIndex)
+        {
+            Image image;
+            stream->readBool(&image.active);
+            stream->readInt(&image.logicalImageUnit);
+            mImages[shaderType].push_back(image);
+        }
+
+        size_t readonlyImageCount = stream->readInt<size_t>();
+        for (size_t imageIndex = 0; imageIndex < readonlyImageCount; ++imageIndex)
+        {
+            Image image;
+            stream->readBool(&image.active);
+            stream->readInt(&image.logicalImageUnit);
+            mReadonlyImages[shaderType].push_back(image);
+        }
+
+        unsigned int imageRangeLow, imageRangeHigh, readonlyImageRangeLow, readonlyImageRangeHigh;
+        stream->readInt(&imageRangeLow);
+        stream->readInt(&imageRangeHigh);
+        stream->readInt(&readonlyImageRangeLow);
+        stream->readInt(&readonlyImageRangeHigh);
+        mUsedImageRange[shaderType] = gl::RangeUI(imageRangeLow, imageRangeHigh);
+        mUsedReadonlyImageRange[shaderType] =
+            gl::RangeUI(readonlyImageRangeLow, readonlyImageRangeHigh);
+
+        unsigned int atomicCounterRangeLow, atomicCounterRangeHigh;
+        stream->readInt(&atomicCounterRangeLow);
+        stream->readInt(&atomicCounterRangeHigh);
+        mUsedAtomicCounterRange[shaderType] =
+            gl::RangeUI(atomicCounterRangeLow, atomicCounterRangeHigh);
     }
-
-    size_t csReadonlyImageCount = stream->readInt<size_t>();
-    for (size_t imageIndex = 0; imageIndex < csReadonlyImageCount; ++imageIndex)
-    {
-        Image image;
-        stream->readBool(&image.active);
-        stream->readInt(&image.logicalImageUnit);
-        mReadonlyImagesCS.push_back(image);
-    }
-
-    unsigned int computeImageRangeLow, computeImageRangeHigh, computeReadonlyImageRangeLow,
-        computeReadonlyImageRangeHigh;
-    stream->readInt(&computeImageRangeLow);
-    stream->readInt(&computeImageRangeHigh);
-    stream->readInt(&computeReadonlyImageRangeLow);
-    stream->readInt(&computeReadonlyImageRangeHigh);
-    mUsedImageRange[gl::ShaderType::Compute] =
-        gl::RangeUI(computeImageRangeLow, computeImageRangeHigh);
-    mUsedReadonlyImageRange[gl::ShaderType::Compute] =
-        gl::RangeUI(computeReadonlyImageRangeLow, computeReadonlyImageRangeHigh);
-
-    unsigned int atomicCounterRangeLow, atomicCounterRangeHigh;
-    stream->readInt(&atomicCounterRangeLow);
-    stream->readInt(&atomicCounterRangeHigh);
-    mUsedAtomicCounterRange[gl::ShaderType::Compute] =
-        gl::RangeUI(atomicCounterRangeLow, atomicCounterRangeHigh);
 
     size_t shaderStorageBlockCount = stream->readInt<size_t>();
     if (stream->error())
@@ -1339,26 +1332,29 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
         stream->writeInt(mUsedShaderSamplerRanges[shaderType].high());
     }
 
-    stream->writeInt(mImagesCS.size());
-    for (size_t imageIndex = 0; imageIndex < mImagesCS.size(); ++imageIndex)
+    for (gl::ShaderType shaderType : {gl::ShaderType::Compute})
     {
-        stream->writeBool(mImagesCS[imageIndex].active);
-        stream->writeInt(mImagesCS[imageIndex].logicalImageUnit);
-    }
+        stream->writeInt(mImages[shaderType].size());
+        for (size_t imageIndex = 0; imageIndex < mImages[shaderType].size(); ++imageIndex)
+        {
+            stream->writeBool(mImages[shaderType][imageIndex].active);
+            stream->writeInt(mImages[shaderType][imageIndex].logicalImageUnit);
+        }
 
-    stream->writeInt(mReadonlyImagesCS.size());
-    for (size_t imageIndex = 0; imageIndex < mReadonlyImagesCS.size(); ++imageIndex)
-    {
-        stream->writeBool(mReadonlyImagesCS[imageIndex].active);
-        stream->writeInt(mReadonlyImagesCS[imageIndex].logicalImageUnit);
-    }
+        stream->writeInt(mReadonlyImages[shaderType].size());
+        for (size_t imageIndex = 0; imageIndex < mReadonlyImages[shaderType].size(); ++imageIndex)
+        {
+            stream->writeBool(mReadonlyImages[shaderType][imageIndex].active);
+            stream->writeInt(mReadonlyImages[shaderType][imageIndex].logicalImageUnit);
+        }
 
-    stream->writeInt(mUsedImageRange[gl::ShaderType::Compute].low());
-    stream->writeInt(mUsedImageRange[gl::ShaderType::Compute].high());
-    stream->writeInt(mUsedReadonlyImageRange[gl::ShaderType::Compute].low());
-    stream->writeInt(mUsedReadonlyImageRange[gl::ShaderType::Compute].high());
-    stream->writeInt(mUsedAtomicCounterRange[gl::ShaderType::Compute].low());
-    stream->writeInt(mUsedAtomicCounterRange[gl::ShaderType::Compute].high());
+        stream->writeInt(mUsedImageRange[shaderType].low());
+        stream->writeInt(mUsedImageRange[shaderType].high());
+        stream->writeInt(mUsedReadonlyImageRange[shaderType].low());
+        stream->writeInt(mUsedReadonlyImageRange[shaderType].high());
+        stream->writeInt(mUsedAtomicCounterRange[shaderType].low());
+        stream->writeInt(mUsedAtomicCounterRange[shaderType].high());
+    }
 
     stream->writeInt(mD3DShaderStorageBlocks.size());
     for (const D3DInterfaceBlock &shaderStorageBlock : mD3DShaderStorageBlocks)
@@ -1521,10 +1517,13 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
         stream->writeBytes(computeBlob, computeShaderSize);
     }
 
-    stream->writeInt(mImage2DBindLayoutCache[gl::ShaderType::Compute].size());
-    for (auto &image2DBindLayout : mImage2DBindLayoutCache[gl::ShaderType::Compute])
+    for (gl::ShaderType shaderType : {gl::ShaderType::Compute})
     {
-        stream->writeInt(image2DBindLayout.first);
+        stream->writeInt(mImage2DBindLayoutCache[shaderType].size());
+        for (auto &image2DBindLayout : mImage2DBindLayoutCache[shaderType])
+        {
+            stream->writeInt(image2DBindLayout.first);
+        }
     }
 }
 
@@ -2055,8 +2054,8 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
     {
         mShaderSamplers[gl::ShaderType::Compute].resize(
             data.getCaps().maxShaderTextureImageUnits[gl::ShaderType::Compute]);
-        mImagesCS.resize(data.getCaps().maxImageUnits);
-        mReadonlyImagesCS.resize(data.getCaps().maxImageUnits);
+        mImages[gl::ShaderType::Compute].resize(data.getCaps().maxImageUnits);
+        mReadonlyImages[gl::ShaderType::Compute].resize(data.getCaps().maxImageUnits);
 
         mShaderUniformsDirty.set(gl::ShaderType::Compute);
 
@@ -2079,7 +2078,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
         gl::ShaderMap<const ShaderD3D *> shadersD3D = {};
         for (gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
         {
-            if (mState.getAttachedShader(shaderType))
+            if (gl::Shader *shader = mState.getAttachedShader(shaderType))
             {
                 shadersD3D[shaderType] = GetImplAs<ShaderD3D>(mState.getAttachedShader(shaderType));
 
@@ -2109,6 +2108,14 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
                               "UniformBlockToStructuredBufferTranslation.md\n";
                     ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_MEDIUM,
                                        stream.str().c_str());
+                }
+
+                for (const sh::ShaderVariable &uniform : shader->getUniforms())
+                {
+                    if (gl::IsImageType(uniform.type) && gl::IsImage2DType(uniform.type))
+                    {
+                        mImage2DUniforms[shaderType].push_back(uniform);
+                    }
                 }
             }
         }
@@ -2927,13 +2934,15 @@ void ProgramD3D::assignImageRegisters(size_t uniformIndex)
         if (d3dUniform->regType == HLSLRegisterType::Texture)
         {
             AssignImages(d3dUniform->mShaderRegisterIndexes[gl::ShaderType::Compute],
-                         bindingIter->second, d3dUniform->getArraySizeProduct(), mReadonlyImagesCS,
+                         bindingIter->second, d3dUniform->getArraySizeProduct(),
+                         mReadonlyImages[gl::ShaderType::Compute],
                          &mUsedReadonlyImageRange[gl::ShaderType::Compute]);
         }
         else if (d3dUniform->regType == HLSLRegisterType::UnorderedAccessView)
         {
             AssignImages(d3dUniform->mShaderRegisterIndexes[gl::ShaderType::Compute],
-                         bindingIter->second, d3dUniform->getArraySizeProduct(), mImagesCS,
+                         bindingIter->second, d3dUniform->getArraySizeProduct(),
+                         mImages[gl::ShaderType::Compute],
                          &mUsedImageRange[gl::ShaderType::Compute]);
         }
         else
@@ -2991,19 +3000,20 @@ void ProgramD3D::AssignImages(unsigned int startImageIndex,
     *outUsedRange = gl::RangeUI(low, high);
 }
 
-void ProgramD3D::assignImage2DRegisters(unsigned int startImageIndex,
+void ProgramD3D::assignImage2DRegisters(gl::ShaderType shaderType,
+                                        unsigned int startImageIndex,
                                         int startLogicalImageUnit,
                                         bool readonly)
 {
     if (readonly)
     {
-        AssignImages(startImageIndex, startLogicalImageUnit, 1, mReadonlyImagesCS,
-                     &mUsedReadonlyImageRange[gl::ShaderType::Compute]);
+        AssignImages(startImageIndex, startLogicalImageUnit, 1, mReadonlyImages[shaderType],
+                     &mUsedReadonlyImageRange[shaderType]);
     }
     else
     {
-        AssignImages(startImageIndex, startLogicalImageUnit, 1, mImagesCS,
-                     &mUsedImageRange[gl::ShaderType::Compute]);
+        AssignImages(startImageIndex, startLogicalImageUnit, 1, mImages[shaderType],
+                     &mUsedImageRange[shaderType]);
     }
 }
 
@@ -3040,10 +3050,9 @@ void ProgramD3D::reset()
     {
         mShaderUniformStorages[shaderType].reset();
         mShaderSamplers[shaderType].clear();
+        mImages[shaderType].clear();
+        mReadonlyImages[shaderType].clear();
     }
-
-    mImagesCS.clear();
-    mReadonlyImagesCS.clear();
 
     mUsedShaderSamplerRanges.fill({0, 0});
     mUsedAtomicCounterRange.fill({0, 0});

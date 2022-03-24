@@ -343,7 +343,8 @@ class ProgramD3D : public ProgramImpl
         return mState.getExecutable().getLinkedShaderStages()[shaderType];
     }
 
-    void assignImage2DRegisters(unsigned int startImageIndex,
+    void assignImage2DRegisters(gl::ShaderType shaderType,
+                                unsigned int startImageIndex,
                                 int startLogicalImageUnit,
                                 bool readonly);
     bool hasNamedUniform(const std::string &name);
@@ -558,8 +559,8 @@ class ProgramD3D : public ProgramImpl
     gl::ShaderMap<gl::RangeUI> mUsedShaderSamplerRanges;
     bool mDirtySamplerMapping;
 
-    std::vector<Image> mImagesCS;
-    std::vector<Image> mReadonlyImagesCS;
+    gl::ShaderMap<std::vector<Image>> mImages;
+    gl::ShaderMap<std::vector<Image>> mReadonlyImages;
     gl::ShaderMap<gl::RangeUI> mUsedImageRange;
     gl::ShaderMap<gl::RangeUI> mUsedReadonlyImageRange;
     gl::ShaderMap<gl::RangeUI> mUsedAtomicCounterRange;

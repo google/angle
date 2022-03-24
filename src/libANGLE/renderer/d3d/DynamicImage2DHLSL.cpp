@@ -796,7 +796,7 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
                 case gl::TextureType::_2D:
                 {
                     out << texture2DRegisterIndex;
-                    programD3D.assignImage2DRegisters(texture2DRegisterIndex,
+                    programD3D.assignImage2DRegisters(shaderType, texture2DRegisterIndex,
                                                       uniform.binding + index, uniform.readonly);
                     texture2DRegisterIndex++;
                     break;
@@ -804,7 +804,7 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
                 case gl::TextureType::_3D:
                 {
                     out << texture3DRegisterIndex;
-                    programD3D.assignImage2DRegisters(texture3DRegisterIndex,
+                    programD3D.assignImage2DRegisters(shaderType, texture3DRegisterIndex,
                                                       uniform.binding + index, uniform.readonly);
                     texture3DRegisterIndex++;
                     break;
@@ -813,7 +813,7 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
                 case gl::TextureType::CubeMap:
                 {
                     out << texture2DArrayRegisterIndex;
-                    programD3D.assignImage2DRegisters(texture2DArrayRegisterIndex,
+                    programD3D.assignImage2DRegisters(shaderType, texture2DArrayRegisterIndex,
                                                       uniform.binding + index, uniform.readonly);
                     texture2DArrayRegisterIndex++;
                     break;
