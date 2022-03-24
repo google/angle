@@ -131,6 +131,11 @@ config("internal_config") {
     defines += [ "ANGLE_ENABLE_TRACE_ANDROID_LOGCAT=1" ]
   }
 
+  # When used with angle_enable_trace, enables logging every GLES/EGL API command to the terminal
+  if (angle_enable_trace_events) {
+    defines += [ "ANGLE_ENABLE_TRACE_EVENTS=1" ]
+  }
+
   if (is_chromeos) {
     defines += [ "ANGLE_PLATFORM_CHROMEOS" ]
   }
