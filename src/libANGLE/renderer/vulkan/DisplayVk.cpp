@@ -20,6 +20,7 @@
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/SurfaceVk.h"
 #include "libANGLE/renderer/vulkan/SyncVk.h"
+#include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "libANGLE/renderer/vulkan/VkImageImageSiblingVk.h"
 #include "libANGLE/trace.h"
 
@@ -414,8 +415,9 @@ void DisplayVk::populateFeatureList(angle::FeatureList *features)
 
 ShareGroupVk::ShareGroupVk()
 {
-    mLastPruneTime             = angle::GetCurrentSystemTime();
-    mOrphanNonEmptyBufferBlock = false;
+    mLastPruneTime              = angle::GetCurrentSystemTime();
+    mOrphanNonEmptyBufferBlock  = false;
+    mPrevUploadedMutableTexture = nullptr;
 }
 
 void ShareGroupVk::addContext(ContextVk *contextVk)
@@ -453,6 +455,8 @@ void ShareGroupVk::onDestroy(const egl::Display *display)
     mPipelineLayoutCache.destroy(renderer);
     mDescriptorSetLayoutCache.destroy(renderer);
 
+    resetPrevTexture();
+
     ASSERT(mResourceUseLists.empty());
 }
 
@@ -465,6 +469,47 @@ void ShareGroupVk::releaseResourceUseLists(const Serial &submitSerial)
             it.releaseResourceUsesAndUpdateSerials(submitSerial);
         }
         mResourceUseLists.clear();
+    }
+}
+
+angle::Result ShareGroupVk::onMutableTextureUpload(ContextVk *contextVk, TextureVk *newTexture)
+{
+    // If the previous texture is null, it should be set to the current texture.
+    if (mPrevUploadedMutableTexture == nullptr)
+    {
+        mPrevUploadedMutableTexture = newTexture;
+        return angle::Result::Continue;
+    }
+
+    // Previously stored texture must be mutable.
+    ASSERT(!mPrevUploadedMutableTexture->isImmutable());
+
+    // Skip the optimization if we have not switched to a new texture yet.
+    if (mPrevUploadedMutableTexture == newTexture)
+    {
+        return angle::Result::Continue;
+    }
+
+    // If the mutable texture is consistently specified, we initialize the full mip chain for the
+    // texture.
+    if (mPrevUploadedMutableTexture->isMutableTextureConsistentlySpecifiedForFlush())
+    {
+        ANGLE_TRY(mPrevUploadedMutableTexture->ensureImageInitialized(
+            contextVk, ImageMipLevels::FullMipChain));
+        contextVk->getPerfCounters().mutableTexturesUploaded++;
+    }
+
+    // Update the mutable texture pointer with the new pointer for the next potential flush.
+    mPrevUploadedMutableTexture = newTexture;
+
+    return angle::Result::Continue;
+}
+
+void ShareGroupVk::onTextureRelease(TextureVk *textureVk)
+{
+    if (mPrevUploadedMutableTexture == textureVk)
+    {
+        resetPrevTexture();
     }
 }
 

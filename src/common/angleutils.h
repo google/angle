@@ -59,7 +59,7 @@ class NonCopyable
     ~NonCopyable()          = default;
 
   private:
-    NonCopyable(const NonCopyable &) = delete;
+    NonCopyable(const NonCopyable &)    = delete;
     void operator=(const NonCopyable &) = delete;
 };
 
@@ -176,6 +176,7 @@ struct PerfMonitorTriplet
     FN(textureDescriptorSetCacheMisses)            \
     FN(textureDescriptorSetCacheTotalSize)         \
     FN(shaderResourcesDescriptorSetCacheHits)      \
+    FN(mutableTexturesUploaded)                    \
     FN(shaderResourcesDescriptorSetCacheMisses)    \
     FN(shaderResourcesDescriptorSetCacheTotalSize) \
     FN(buffersGhosted)                             \

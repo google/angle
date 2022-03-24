@@ -21,10 +21,11 @@ namespace rx
 
 enum class ImageMipLevels
 {
-    EnabledLevels = 0,
-    FullMipChain  = 1,
+    EnabledLevels                 = 0,
+    FullMipChainForGenerateMipmap = 1,
+    FullMipChain                  = 2,
 
-    InvalidEnum = 2,
+    InvalidEnum = 3,
 };
 
 enum class TextureUpdateResult
@@ -202,6 +203,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
         return *mImage;
     }
 
+    bool isImmutable() { return mState.getImmutableFormat(); }
+
     void retainBufferViews(vk::ResourceUseList *resourceUseList)
     {
         mBufferViews.retain(resourceUseList);
@@ -297,6 +300,10 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
         mImmutableSamplerDirty = false;
         return isDirty;
     }
+
+    // Check if the texture is consistently specified. Used for flushing mutable textures.
+    bool isMutableTextureConsistentlySpecifiedForFlush();
+    bool isMipImageDescDefined(gl::TextureTarget textureTarget, size_t level);
 
   private:
     // Transform an image index from the frontend into one that can be used on the backing
