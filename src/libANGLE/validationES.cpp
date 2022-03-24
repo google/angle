@@ -105,7 +105,6 @@ bool ValidReadPixelsTypeEnum(const Context *context, GLenum type)
         case GL_SHORT:
         case GL_UNSIGNED_INT:
         case GL_UNSIGNED_INT_10F_11F_11F_REV:
-        case GL_UNSIGNED_INT_24_8:
         case GL_UNSIGNED_INT_2_10_10_10_REV:
         case GL_UNSIGNED_INT_5_9_9_9_REV:
         case GL_UNSIGNED_SHORT:
@@ -7313,16 +7312,6 @@ bool ValidateReadPixelsBase(const Context *context,
             break;
     }
 
-    // WebGL 1.0 [Section 6.26] Reading From a Missing Attachment
-    // In OpenGL ES it is undefined what happens when an operation tries to read from a missing
-    // attachment and WebGL defines it to be an error. We do the check unconditionally as the
-    // situation is an application error that would lead to a crash in ANGLE.
-    if (readBuffer == nullptr)
-    {
-        context->validationError(entryPoint, GL_INVALID_OPERATION, kMissingReadAttachment);
-        return false;
-    }
-
     // OVR_multiview2, Revision 1:
     // ReadPixels generates an INVALID_FRAMEBUFFER_OPERATION error if
     // the number of views in the current read framebuffer is more than one.
@@ -7353,6 +7342,16 @@ bool ValidateReadPixelsBase(const Context *context,
             context->validationError(entryPoint, GL_INVALID_ENUM, kInvalidType);
             return false;
         }
+    }
+
+    // WebGL 1.0 [Section 6.26] Reading From a Missing Attachment
+    // In OpenGL ES it is undefined what happens when an operation tries to read from a missing
+    // attachment and WebGL defines it to be an error. We do the check unconditionally as the
+    // situation is an application error that would lead to a crash in ANGLE.
+    if (readBuffer == nullptr)
+    {
+        context->validationError(entryPoint, GL_INVALID_OPERATION, kMissingReadAttachment);
+        return false;
     }
 
     GLenum currentFormat = GL_NONE;
