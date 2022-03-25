@@ -47,7 +47,7 @@ class ShCompileTest : public testing::Test
 
     ShBuiltInResources mResources;
 
-    class ScopedRestoreDefaultLocale : angle::NonCopyable
+    class ANGLE_NO_DISCARD ScopedRestoreDefaultLocale : angle::NonCopyable
     {
       public:
         ScopedRestoreDefaultLocale();
