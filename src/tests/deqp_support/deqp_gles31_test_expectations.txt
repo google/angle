@@ -1335,8 +1335,11 @@
 
 // Pixel 6 expectations
 6908 PIXEL6 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.tessellation.varying.rules.internal_different_precision = SKIP
-6910 PIXEL6 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.layer_provoking_vertex_* = FAIL
 
+6910 PIXEL6 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.layer_provoking_vertex_* = FAIL
+6910 PIXEL6 VULKAN : dEQP-GLES31.functional.geometry_shading.query.max_geometry_input_components = FAIL
+6910 PIXEL6 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.tessellation_geometry.varying.rules.different_precision = FAIL
+ 
 // Geometry shader support:
 5430 PIXEL6 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated_* = FAIL
 
