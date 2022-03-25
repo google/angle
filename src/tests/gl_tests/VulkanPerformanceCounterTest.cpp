@@ -118,6 +118,34 @@ class VulkanPerformanceCounterTest : public ANGLETest
         ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
     }
 
+    void setupForColorDepthOpsTest(GLProgram *program,
+                                   GLFramebuffer *framebuffer,
+                                   GLTexture *texture,
+                                   GLRenderbuffer *renderbuffer)
+    {
+        glUseProgram(*program);
+
+        // Setup to draw to color, depth, and stencil
+        glBindFramebuffer(GL_FRAMEBUFFER, *framebuffer);
+        glBindTexture(GL_TEXTURE_2D, *texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kOpsTestSize, kOpsTestSize, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *texture, 0);
+        glBindRenderbuffer(GL_RENDERBUFFER, *renderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, kOpsTestSize, kOpsTestSize);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                  *renderbuffer);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        // Setup depth parameters
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(GL_TRUE);
+        glDepthFunc(GL_GEQUAL);
+        glClearDepthf(0.99f);
+        glViewport(0, 0, kOpsTestSize, kOpsTestSize);
+        ASSERT_GL_NO_ERROR();
+    }
+
     void setupClearAndDrawForDepthStencilOpsTest(GLProgram *program,
                                                  GLFramebuffer *framebuffer,
                                                  GLTexture *texture,
@@ -244,19 +272,31 @@ class VulkanPerformanceCounterTest : public ANGLETest
                               &expected->colorStoreOpNones, &expected->colorStoreOpStores);
     }
 
-    void compareDepthStencilOpCounters(const angle::VulkanPerfCounters &counters,
-                                       const angle::VulkanPerfCounters &expected)
+    void compareDepthOpCounters(const angle::VulkanPerfCounters &counters,
+                                const angle::VulkanPerfCounters &expected)
     {
         EXPECT_EQ(expected.depthLoadOpClears, counters.depthLoadOpClears);
         EXPECT_EQ(expected.depthLoadOpLoads, counters.depthLoadOpLoads);
         EXPECT_EQ(expected.depthLoadOpNones, counters.depthLoadOpNones);
         EXPECT_EQ(expected.depthStoreOpStores, counters.depthStoreOpStores);
         EXPECT_EQ(expected.depthStoreOpNones, counters.depthStoreOpNones);
+    }
+
+    void compareStencilOpCounters(const angle::VulkanPerfCounters &counters,
+                                  const angle::VulkanPerfCounters &expected)
+    {
         EXPECT_EQ(expected.stencilLoadOpClears, counters.stencilLoadOpClears);
         EXPECT_EQ(expected.stencilLoadOpLoads, counters.stencilLoadOpLoads);
         EXPECT_EQ(expected.stencilLoadOpNones, counters.stencilLoadOpNones);
         EXPECT_EQ(expected.stencilStoreOpStores, counters.stencilStoreOpStores);
         EXPECT_EQ(expected.stencilStoreOpNones, counters.stencilStoreOpNones);
+    }
+
+    void compareDepthStencilOpCounters(const angle::VulkanPerfCounters &counters,
+                                       const angle::VulkanPerfCounters &expected)
+    {
+        compareDepthOpCounters(counters, expected);
+        compareStencilOpCounters(counters, expected);
     }
 
     void compareColorOpCounters(const angle::VulkanPerfCounters &counters,
@@ -4051,6 +4091,141 @@ TEST_P(VulkanPerformanceCounterTest, DrawThenInceptionScissorClears)
     EXPECT_EQ(getPerfCounters().colorLoadOpClears, 0u);
     // There are 2 glReadPixels() calls, so 2 storeOp = STORE.
     EXPECT_EQ(getPerfCounters().colorStoreOpStores, 2u);
+}
+
+// Test that color clears are respected after invalidate
+TEST_P(VulkanPerformanceCounterTest, ColorClearAfterInvalidate)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+
+    initANGLEFeatures();
+
+    angle::VulkanPerfCounters expected;
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    GLFramebuffer framebuffer;
+    GLTexture texture;
+    GLRenderbuffer renderbuffer;
+    setupForColorDepthOpsTest(&program, &framebuffer, &texture, &renderbuffer);
+
+    // Execute the scenario that this test is for:
+
+    // color+depth invalidate, color+depth clear
+    //
+    // Expected:
+    //   rpCount+1,
+    //   depth(Clears+1, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
+    //   color(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0)
+    setExpectedCountersForDepthOps(getPerfCounters(), 0, 1, 0, 0, 0, 0, &expected);
+    setExpectedCountersForColorOps(getPerfCounters(), 1, 1, 0, 0, 1, 0, &expected);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+    // Invalidate (loadOp C=DONTCARE, D=DONTCARE)
+    const GLenum discards[] = {GL_DEPTH_ATTACHMENT, GL_COLOR_ATTACHMENT0};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, discards);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear (loadOp C=CLEAR, D=CLEAR)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Save existing draw buffers
+    GLint maxDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    std::vector<GLenum> savedDrawBuffers(maxDrawBuffers);
+    for (int i = 0; i < maxDrawBuffers; i++)
+        glGetIntegerv(GL_DRAW_BUFFER0 + i, (GLint *)&savedDrawBuffers[i]);
+
+    // Draw depth-only
+    glDrawBuffers(0, nullptr);
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    glDrawBuffers(maxDrawBuffers, savedDrawBuffers.data());
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    // Invalidate depth only (storeOp should be C=STORE/D=CLEAR)
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, discards);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    EXPECT_EQ(expected.renderPasses, getPerfCounters().renderPasses);
+
+    // Use swapBuffers and then check how many loads and stores were actually done
+    swapBuffers();
+    compareColorOpCounters(getPerfCounters(), expected);
+    compareDepthOpCounters(getPerfCounters(), expected);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Ensure that image gets marked as defined after clear + invalidate + clear,
+// and that we use LoadOp=Load for a renderpass which draws to it.
+TEST_P(VulkanPerformanceCounterTest, ClearAndDrawAfterInvalidate)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+
+    initANGLEFeatures();
+
+    angle::VulkanPerfCounters expected;
+
+    constexpr GLsizei kSize = 2;
+
+    // tex[0] is what's being tested.  The others are helpers.
+    GLTexture tex[3];
+    for (int i = 0; i < 3; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, tex[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+    }
+
+    GLFramebuffer fbo[3];
+    for (int i = 0; i < 3; ++i)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo[i]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex[i], 0);
+    }
+
+    // Expect rpCount+1, color(Clears+0, Loads+1, LoadNones+0, Stores+1, StoreNones+0)
+    setExpectedCountersForColorOps(getPerfCounters(), 1, 0, 1, 0, 1, 0, &expected);
+
+    // Clear the image through fbo[0], and make sure the clear is flushed outside the render pass.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+    glClearColor(1, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Invalidate it such that the contents are marked as undefined. Note that regardless of the
+    // marking, the image is cleared nevertheless.
+    const GLenum discards[] = {GL_COLOR_ATTACHMENT0};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, discards);
+
+    // Clear it again to the same color.
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Bind tex[0] to fbo[1] as the read fbo, and blit to fbo[2]
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo[1]);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex[0], 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo[2]);
+
+    // Blit.  This causes the second clear of tex[0] to be flushed outside the render pass, which
+    // may be optimized out.
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    // Switch back to fbo[0] and draw with blend.  If the second clear is dropped and the image
+    // continues to be marked as invalidated, loadOp=DONT_CARE would be used instead of loadOp=LOAD.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0);
+
+    EXPECT_EQ(expected.renderPasses, getPerfCounters().renderPasses);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+    compareColorOpCounters(getPerfCounters(), expected);
 }
 
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
