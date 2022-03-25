@@ -342,6 +342,7 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
         LoadBlockMemberInfo(stream, &uniform.blockInfo);
 
         stream->readIntVector<unsigned int>(&uniform.outerArraySizes);
+        uniform.outerArrayOffset = stream->readInt<unsigned int>();
 
         uniform.typeInfo = &GetUniformTypeInfo(uniform.type);
 
@@ -566,6 +567,7 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
         WriteBlockMemberInfo(stream, uniform.blockInfo);
 
         stream->writeIntVector(uniform.outerArraySizes);
+        stream->writeInt(uniform.outerArrayOffset);
 
         // Active shader info
         for (ShaderType shaderType : gl::AllShaderTypes())
