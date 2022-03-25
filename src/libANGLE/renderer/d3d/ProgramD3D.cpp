@@ -102,9 +102,8 @@ void GetDefaultOutputLayoutFromShader(
     }
 }
 
-void GetDefaultImage2DBindLayoutFromComputeShader(
-    const std::vector<sh::ShaderVariable> &image2DUniforms,
-    gl::ImageUnitTextureTypeMap *image2DBindLayout)
+void GetDefaultImage2DBindLayoutFromShader(const std::vector<sh::ShaderVariable> &image2DUniforms,
+                                           gl::ImageUnitTextureTypeMap *image2DBindLayout)
 {
     image2DBindLayout->clear();
 
@@ -1304,8 +1303,9 @@ angle::Result ProgramD3D::loadBinaryShaderExecutables(d3d::Context *contextD3D,
     size_t bindLayoutCount = stream->readInt<size_t>();
     for (size_t bindLayoutIndex = 0; bindLayoutIndex < bindLayoutCount; bindLayoutIndex++)
     {
-        mComputeShaderImage2DBindLayoutCache.insert(std::pair<unsigned int, gl::TextureType>(
-            stream->readInt<unsigned int>(), gl::TextureType::_2D));
+        mImage2DBindLayoutCache[gl::ShaderType::Compute].insert(
+            std::pair<unsigned int, gl::TextureType>(stream->readInt<unsigned int>(),
+                                                     gl::TextureType::_2D));
     }
 
     initializeUniformStorage(mState.getExecutable().getLinkedShaderStages());
@@ -1524,8 +1524,8 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
         stream->writeBytes(computeBlob, computeShaderSize);
     }
 
-    stream->writeInt(mComputeShaderImage2DBindLayoutCache.size());
-    for (auto &image2DBindLayout : mComputeShaderImage2DBindLayoutCache)
+    stream->writeInt(mImage2DBindLayoutCache[gl::ShaderType::Compute].size());
+    for (auto &image2DBindLayout : mImage2DBindLayoutCache[gl::ShaderType::Compute])
     {
         stream->writeInt(image2DBindLayout.first);
     }
@@ -1736,8 +1736,8 @@ void ProgramD3D::updateCachedOutputLayoutFromShader()
 
 void ProgramD3D::updateCachedImage2DBindLayoutFromComputeShader()
 {
-    GetDefaultImage2DBindLayoutFromComputeShader(mImage2DUniforms[gl::ShaderType::Compute],
-                                                 &mComputeShaderImage2DBindLayoutCache);
+    GetDefaultImage2DBindLayoutFromShader(mImage2DUniforms[gl::ShaderType::Compute],
+                                          &mImage2DBindLayoutCache[gl::ShaderType::Compute]);
     updateCachedComputeExecutableIndex();
 }
 
@@ -2001,7 +2001,7 @@ angle::Result ProgramD3D::getComputeExecutableForImage2DBindLayout(
 
     std::string finalComputeHLSL = mDynamicHLSL->generateShaderForImage2DBindSignature(
         context, *this, mState, gl::ShaderType::Compute, mImage2DUniforms[gl::ShaderType::Compute],
-        mComputeShaderImage2DBindLayoutCache);
+        mImage2DBindLayoutCache[gl::ShaderType::Compute]);
 
     // Generate new compute executable
     ShaderExecutableD3D *computeExecutable = nullptr;
@@ -2016,7 +2016,7 @@ angle::Result ProgramD3D::getComputeExecutableForImage2DBindLayout(
     if (computeExecutable)
     {
         mComputeExecutables.push_back(std::unique_ptr<ComputeExecutable>(
-            new ComputeExecutable(mComputeShaderImage2DBindLayoutCache,
+            new ComputeExecutable(mImage2DBindLayoutCache[gl::ShaderType::Compute],
                                   std::unique_ptr<ShaderExecutableD3D>(computeExecutable))));
         mCachedComputeExecutableIndex = mComputeExecutables.size() - 1;
     }
@@ -3152,7 +3152,7 @@ void ProgramD3D::updateCachedOutputLayout(const gl::Context *context,
 void ProgramD3D::updateCachedComputeImage2DBindLayout(const gl::Context *context)
 {
     const auto &glState = context->getState();
-    for (auto &image2DBindLayout : mComputeShaderImage2DBindLayoutCache)
+    for (auto &image2DBindLayout : mImage2DBindLayoutCache[gl::ShaderType::Compute])
     {
         const gl::ImageUnit &imageUnit = glState.getImageUnit(image2DBindLayout.first);
         if (imageUnit.texture.get())
@@ -3333,7 +3333,7 @@ void ProgramD3D::updateCachedComputeExecutableIndex()
          executableIndex++)
     {
         if (mComputeExecutables[executableIndex]->matchesSignature(
-                mComputeShaderImage2DBindLayoutCache))
+                mImage2DBindLayoutCache[gl::ShaderType::Compute]))
         {
             mCachedComputeExecutableIndex = executableIndex;
             break;

@@ -588,7 +588,7 @@ class ProgramD3D : public ProgramImpl
         mComputeAtomicCounterBufferRegisterIndices;
 
     gl::ShaderMap<std::vector<sh::ShaderVariable>> mImage2DUniforms;
-    gl::ImageUnitTextureTypeMap mComputeShaderImage2DBindLayoutCache;
+    gl::ShaderMap<gl::ImageUnitTextureTypeMap> mImage2DBindLayoutCache;
     Optional<size_t> mCachedComputeExecutableIndex;
 
     gl::ShaderBitSet mShaderUniformsDirty;
