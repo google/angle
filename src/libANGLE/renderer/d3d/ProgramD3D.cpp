@@ -1056,13 +1056,13 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
         return nullptr;
     }
 
-    ASSERT(mImage2DUniforms.empty());
+    ASSERT(mImage2DUniforms[gl::ShaderType::Compute].empty());
     for (size_t image2DUniformIndex = 0; image2DUniformIndex < image2DUniformCount;
          ++image2DUniformIndex)
     {
         sh::ShaderVariable image2Duniform;
         gl::LoadShaderVar(stream, &image2Duniform);
-        mImage2DUniforms.push_back(image2Duniform);
+        mImage2DUniforms[gl::ShaderType::Compute].push_back(image2Duniform);
     }
 
     for (unsigned int ii = 0; ii < gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS; ++ii)
@@ -1375,8 +1375,8 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
         }
     }
 
-    stream->writeInt(mImage2DUniforms.size());
-    for (const sh::ShaderVariable &image2DUniform : mImage2DUniforms)
+    stream->writeInt(mImage2DUniforms[gl::ShaderType::Compute].size());
+    for (const sh::ShaderVariable &image2DUniform : mImage2DUniforms[gl::ShaderType::Compute])
     {
         gl::WriteShaderVar(stream, image2DUniform);
     }
@@ -1736,7 +1736,7 @@ void ProgramD3D::updateCachedOutputLayoutFromShader()
 
 void ProgramD3D::updateCachedImage2DBindLayoutFromComputeShader()
 {
-    GetDefaultImage2DBindLayoutFromComputeShader(mImage2DUniforms,
+    GetDefaultImage2DBindLayoutFromComputeShader(mImage2DUniforms[gl::ShaderType::Compute],
                                                  &mComputeShaderImage2DBindLayoutCache);
     updateCachedComputeExecutableIndex();
 }
@@ -2000,7 +2000,7 @@ angle::Result ProgramD3D::getComputeExecutableForImage2DBindLayout(
     }
 
     std::string finalComputeHLSL = mDynamicHLSL->generateShaderForImage2DBindSignature(
-        context, *this, mState, gl::ShaderType::Compute, mImage2DUniforms,
+        context, *this, mState, gl::ShaderType::Compute, mImage2DUniforms[gl::ShaderType::Compute],
         mComputeShaderImage2DBindLayoutCache);
 
     // Generate new compute executable
@@ -2056,7 +2056,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
         {
             if (gl::IsImageType(uniform.type) && gl::IsImage2DType(uniform.type))
             {
-                mImage2DUniforms.push_back(uniform);
+                mImage2DUniforms[gl::ShaderType::Compute].push_back(uniform);
             }
         }
 
