@@ -1768,7 +1768,7 @@ angle::Result FramebufferVk::flushColorAttachmentUpdates(const gl::Context *cont
     drawRenderTarget = mRenderTargetCache.getColorDraw(mState, colorIndexGL);
     if (drawRenderTarget)
     {
-        if (deferClears && mState.getEnabledDrawBuffers().test(colorIndexGL))
+        if (deferClears)
         {
             ANGLE_TRY(
                 drawRenderTarget->flushStagedUpdates(contextVk, &mDeferredClears, colorIndexGL,
@@ -2341,8 +2341,6 @@ void FramebufferVk::redeferClears(ContextVk *contextVk)
     // Go through deferred clears and stage the clears for future.
     for (size_t colorIndexGL : mDeferredClears.getColorMask())
     {
-        ASSERT(mState.getEnabledDrawBuffers().test(colorIndexGL));
-
         RenderTargetVk *renderTarget = getColorDrawRenderTarget(colorIndexGL);
         gl::ImageIndex imageIndex =
             renderTarget->getImageIndexForClear(mCurrentFramebufferDesc.getLayerCount());
