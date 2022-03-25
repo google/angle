@@ -547,4 +547,4 @@
 7029 NVIDIA OPENGL : GLSLTest.SwizzledChainedAssignIncrement/* = SKIP
 7029 NVIDIA GLES : GLSLTest.SwizzledChainedAssignIncrement/* = SKIP
 
-7085 : VulkanPerformanceCounterTest.InvalidateDrawDisable/* = SKIP
+7085 : VulkanPerformanceCounterTest.DepthStencilInvalidateDrawDisable/* = SKIP

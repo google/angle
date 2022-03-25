@@ -859,6 +859,19 @@ ANGLE_MAYBE_UNUSED void ResetSecondaryCommandBuffer(
 {
     resetList->push_back(std::move(commandBuffer));
 }
+
+bool IsClear(UpdateSource updateSource)
+{
+    return updateSource == UpdateSource::Clear ||
+           updateSource == UpdateSource::ClearEmulatedChannelsOnly ||
+           updateSource == UpdateSource::ClearAfterInvalidate;
+}
+
+bool IsClearOfAllChannels(UpdateSource updateSource)
+{
+    return updateSource == UpdateSource::Clear ||
+           updateSource == UpdateSource::ClearAfterInvalidate;
+}
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -1471,7 +1484,7 @@ RenderPassCommandBufferHelper::RenderPassCommandBufferHelper()
       mIsTransformFeedbackActiveUnpaused(false),
       mPreviousSubpassesCmdCount(0),
       mDepthStencilAttachmentIndex(kAttachmentIndexInvalid),
-      mColorImagesCount(0),
+      mColorAttachmentsCount(0),
       mImageOptimizeForPresent(nullptr)
 {}
 
@@ -1495,23 +1508,28 @@ angle::Result RenderPassCommandBufferHelper::reset(Context *context)
 {
     resetImpl();
 
+    for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorAttachmentsCount;
+         ++index)
+    {
+        mColorAttachments[index].reset();
+        mColorResolveAttachments[index].reset();
+    }
+
+    mDepthAttachment.reset();
+    mDepthResolveAttachment.reset();
+    mStencilAttachment.reset();
+    mStencilResolveAttachment.reset();
+
     mRenderPassStarted                 = false;
     mValidTransformFeedbackBufferCount = 0;
     mRebindTransformFeedbackBuffers    = false;
     mHasShaderStorageOutput            = false;
     mHasGLMemoryBarrierIssued          = false;
     mPreviousSubpassesCmdCount         = 0;
-    mColorImagesCount                  = PackedAttachmentCount(0);
+    mColorAttachmentsCount             = PackedAttachmentCount(0);
     mDepthStencilAttachmentIndex       = kAttachmentIndexInvalid;
     mRenderPassUsedImages.clear();
-    mColorImages.reset();
-    mColorResolveImages.reset();
     mImageOptimizeForPresent = nullptr;
-
-    mDepthAttachment.reset();
-    mDepthResolveAttachment.reset();
-    mStencilAttachment.reset();
-    mStencilResolveAttachment.reset();
 
     // Reset and re-initialize the command buffers
     for (uint32_t subpass = 0; subpass <= mCurrentSubpass; ++subpass)
@@ -1563,11 +1581,14 @@ void RenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
 }
 
 void RenderPassCommandBufferHelper::colorImagesDraw(ResourceUseList *resourceUseList,
+                                                    gl::LevelIndex level,
+                                                    uint32_t layerStart,
+                                                    uint32_t layerCount,
                                                     ImageHelper *image,
                                                     ImageHelper *resolveImage,
                                                     PackedAttachmentIndex packedAttachmentIndex)
 {
-    ASSERT(packedAttachmentIndex < mColorImagesCount);
+    ASSERT(packedAttachmentIndex < mColorAttachmentsCount);
 
     image->retain(resourceUseList);
     if (!usesImage(*image))
@@ -1576,9 +1597,8 @@ void RenderPassCommandBufferHelper::colorImagesDraw(ResourceUseList *resourceUse
         // attachments
         mRenderPassUsedImages.insert(image->getImageSerial());
     }
-    ASSERT(mColorImages[packedAttachmentIndex] == nullptr);
-    mColorImages[packedAttachmentIndex] = image;
-    image->setRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment);
+    mColorAttachments[packedAttachmentIndex].init(image, level, layerStart, layerCount,
+                                                  VK_IMAGE_ASPECT_COLOR_BIT);
 
     if (resolveImage)
     {
@@ -1587,9 +1607,8 @@ void RenderPassCommandBufferHelper::colorImagesDraw(ResourceUseList *resourceUse
         {
             mRenderPassUsedImages.insert(resolveImage->getImageSerial());
         }
-        ASSERT(mColorResolveImages[packedAttachmentIndex] == nullptr);
-        mColorResolveImages[packedAttachmentIndex] = resolveImage;
-        resolveImage->setRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment);
+        mColorResolveAttachments[packedAttachmentIndex].init(resolveImage, level, layerStart,
+                                                             layerCount, VK_IMAGE_ASPECT_COLOR_BIT);
     }
 }
 
@@ -1625,6 +1644,13 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(ResourceUseList *reso
         mStencilResolveAttachment.init(resolveImage, level, layerStart, layerCount,
                                        VK_IMAGE_ASPECT_STENCIL_BIT);
     }
+}
+
+void RenderPassCommandBufferHelper::onColorAccess(PackedAttachmentIndex packedAttachmentIndex,
+                                                  ResourceAccess access)
+{
+    ASSERT(packedAttachmentIndex < mColorAttachmentsCount);
+    mColorAttachments[packedAttachmentIndex].onAccess(access, getRenderPassWriteCommandCount());
 }
 
 void RenderPassCommandBufferHelper::onDepthAccess(ResourceAccess access)
@@ -1680,7 +1706,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
     PackedAttachmentIndex packedAttachmentIndex,
     bool isResolveImage)
 {
-    ASSERT(packedAttachmentIndex < mColorImagesCount);
+    ASSERT(packedAttachmentIndex < mColorAttachmentsCount);
     ASSERT(image != nullptr);
 
     // Do layout change.
@@ -1716,7 +1742,51 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
         mImageOptimizeForPresent = nullptr;
     }
 
-    image->resetRenderPassUsageFlags();
+    if (isResolveImage)
+    {
+        // Note: the color image will have its flags reset after load/store ops are determined.
+        image->resetRenderPassUsageFlags();
+    }
+}
+
+void RenderPassCommandBufferHelper::finalizeColorImageLoadStore(
+    Context *context,
+    PackedAttachmentIndex packedAttachmentIndex)
+{
+    PackedAttachmentOpsDesc &ops = mAttachmentOps[packedAttachmentIndex];
+    RenderPassLoadOp loadOp      = static_cast<RenderPassLoadOp>(ops.loadOp);
+    RenderPassStoreOp storeOp    = static_cast<RenderPassStoreOp>(ops.storeOp);
+
+    // This has to be called after layout been finalized
+    ASSERT(ops.initialLayout != static_cast<uint16_t>(ImageLayout::Undefined));
+
+    uint32_t currentCmdCount = getRenderPassWriteCommandCount();
+    bool isInvalidated       = false;
+
+    RenderPassAttachment &colorAttachment = mColorAttachments[packedAttachmentIndex];
+    colorAttachment.finalizeLoadStore(context, currentCmdCount,
+                                      mRenderPassDesc.getColorUnresolveAttachmentMask().any(),
+                                      &loadOp, &storeOp, &isInvalidated);
+
+    if (isInvalidated)
+    {
+        ops.isInvalidated = true;
+    }
+
+    if (!ops.isInvalidated)
+    {
+        mColorResolveAttachments[packedAttachmentIndex].restoreContent();
+    }
+
+    // If the image is being written to, mark its contents defined.
+    // This has to be done after storeOp has been finalized.
+    if (storeOp == RenderPassStoreOp::Store)
+    {
+        colorAttachment.restoreContent();
+    }
+
+    SetBitField(ops.loadOp, loadOp);
+    SetBitField(ops.storeOp, storeOp);
 }
 
 void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
@@ -1808,17 +1878,19 @@ void RenderPassCommandBufferHelper::finalizeImageLayout(Context *context, const 
 {
     if (image->hasRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment))
     {
-        for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorImagesCount; ++index)
+        for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorAttachmentsCount;
+             ++index)
         {
-            if (mColorImages[index] == image)
+            if (mColorAttachments[index].getImage() == image)
             {
-                finalizeColorImageLayout(context, mColorImages[index], index, false);
-                mColorImages[index] = nullptr;
+                finalizeColorImageLayoutAndLoadStore(context, index);
+                mColorAttachments[index].reset();
             }
-            else if (mColorResolveImages[index] == image)
+            else if (mColorResolveAttachments[index].getImage() == image)
             {
-                finalizeColorImageLayout(context, mColorResolveImages[index], index, true);
-                mColorResolveImages[index] = nullptr;
+                finalizeColorImageLayout(context, mColorResolveAttachments[index].getImage(), index,
+                                         true);
+                mColorResolveAttachments[index].reset();
             }
         }
     }
@@ -1892,6 +1964,17 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *conte
     SetBitField(dsOps.stencilStoreOp, stencilStoreOp);
 }
 
+void RenderPassCommandBufferHelper::finalizeColorImageLayoutAndLoadStore(
+    Context *context,
+    PackedAttachmentIndex packedAttachmentIndex)
+{
+    finalizeColorImageLayout(context, mColorAttachments[packedAttachmentIndex].getImage(),
+                             packedAttachmentIndex, false);
+    finalizeColorImageLoadStore(context, packedAttachmentIndex);
+
+    mColorAttachments[packedAttachmentIndex].getImage()->resetRenderPassUsageFlags();
+}
+
 void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(Context *context)
 {
     finalizeDepthStencilImageLayout(context);
@@ -1917,7 +2000,7 @@ angle::Result RenderPassCommandBufferHelper::beginRenderPass(
     mRenderPassDesc              = renderPassDesc;
     mAttachmentOps               = renderPassAttachmentOps;
     mDepthStencilAttachmentIndex = depthStencilAttachmentIndex;
-    mColorImagesCount            = colorAttachmentCount;
+    mColorAttachmentsCount       = colorAttachmentCount;
     mFramebuffer.setHandle(framebuffer.getHandle());
     mRenderArea       = renderArea;
     mClearValues      = clearValues;
@@ -1943,15 +2026,17 @@ angle::Result RenderPassCommandBufferHelper::endRenderPass(ContextVk *contextVk)
 {
     ANGLE_TRY(endRenderPassCommandBuffer(contextVk));
 
-    for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorImagesCount; ++index)
+    for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorAttachmentsCount;
+         ++index)
     {
-        if (mColorImages[index])
+        if (mColorAttachments[index].getImage() != nullptr)
         {
-            finalizeColorImageLayout(contextVk, mColorImages[index], index, false);
+            finalizeColorImageLayoutAndLoadStore(contextVk, index);
         }
-        if (mColorResolveImages[index])
+        if (mColorResolveAttachments[index].getImage() != nullptr)
         {
-            finalizeColorImageLayout(contextVk, mColorResolveImages[index], index, true);
+            finalizeColorImageLayout(contextVk, mColorResolveAttachments[index].getImage(), index,
+                                     true);
         }
     }
 
@@ -2042,10 +2127,21 @@ void RenderPassCommandBufferHelper::endTransformFeedback()
 }
 
 void RenderPassCommandBufferHelper::invalidateRenderPassColorAttachment(
-    PackedAttachmentIndex attachmentIndex)
+    const gl::State &state,
+    size_t colorIndexGL,
+    PackedAttachmentIndex attachmentIndex,
+    const gl::Rectangle &invalidateArea)
 {
-    SetBitField(mAttachmentOps[attachmentIndex].storeOp, RenderPassStoreOp::DontCare);
-    mAttachmentOps[attachmentIndex].isInvalidated = true;
+    // Color write is enabled if:
+    //
+    // - Draw buffer is enabled (this is implicit, as invalidate only affects enabled draw buffers)
+    // - Color output is not entirely masked
+    // - Rasterizer-discard is not enabled
+    const gl::BlendStateExt &blendStateExt = state.getBlendStateExt();
+    const bool isColorWriteEnabled =
+        blendStateExt.getColorMaskIndexed(colorIndexGL) != 0 && state.isRasterizerDiscardEnabled();
+    mColorAttachments[attachmentIndex].invalidate(invalidateArea, isColorWriteEnabled,
+                                                  getRenderPassWriteCommandCount());
 }
 
 void RenderPassCommandBufferHelper::invalidateRenderPassDepthAttachment(
@@ -6097,13 +6193,13 @@ void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
     }
 }
 
-void ImageHelper::removeSingleStagedEmulatedClear(gl::LevelIndex levelIndexGL,
-                                                  uint32_t layerIndex,
-                                                  uint32_t layerCount)
+void ImageHelper::removeSingleStagedClearAfterInvalidate(gl::LevelIndex levelIndexGL,
+                                                         uint32_t layerIndex,
+                                                         uint32_t layerCount)
 {
-    // When this function is called, it's expected that there is at most one update pending to this
-    // subresource, and that's a color clear due to emulated channels.  This function removes that
-    // update.
+    // When this function is called, it's expected that there may be at most one
+    // ClearAfterInvalidate update pending to this subresource, and that's a color clear due to
+    // emulated channels after invalidate.  This function removes that update.
 
     std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(levelIndexGL);
     if (levelUpdates == nullptr)
@@ -6111,13 +6207,13 @@ void ImageHelper::removeSingleStagedEmulatedClear(gl::LevelIndex levelIndexGL,
         return;
     }
 
-    for (size_t index = 0; index < levelUpdates->size();)
+    for (size_t index = 0; index < levelUpdates->size(); ++index)
     {
         auto update = levelUpdates->begin() + index;
-        if (update->isUpdateToLayers(layerIndex, layerCount))
+        if (update->updateSource == UpdateSource::ClearAfterInvalidate &&
+            update->isUpdateToLayers(layerIndex, layerCount))
         {
             // It's a clear, so doesn't need to be released.
-            ASSERT(update->updateSource == UpdateSource::Clear);
             levelUpdates->erase(update);
             // There's only one such clear possible.
             return;
@@ -6655,6 +6751,7 @@ void ImageHelper::invalidateSubresourceContentImpl(ContextVk *contextVk,
 
         prependSubresourceUpdate(
             level, SubresourceUpdate(aspect, clearValue, level, layerIndex, layerCount));
+        mSubresourceUpdates[level.get()].front().updateSource = UpdateSource::ClearAfterInvalidate;
     }
 }
 
@@ -6706,19 +6803,17 @@ void ImageHelper::restoreSubresourceContentImpl(gl::LevelIndex level,
             break;
         case VK_IMAGE_ASPECT_COLOR_BIT:
             // This function is called on attachments during a render pass when it's determined that
-            // they should no longer be considered invalidated.  It is necessarily impossible for
-            // there to be any updates pending to this subresource of the image, because they were
-            // flushed at the beginning of the render pass.
-            //
-            // However, for an attachment with emulated format that has extra channels,
-            // invalidateSubresourceContentImpl may proactively insert a clear so that the extra
-            // channels continue to have defined values.  That clear should be removed.
-            ASSERT(hasEmulatedImageChannels() ||
-                   !hasStagedUpdatesForSubresource(level, layerIndex, layerCount));
+            // they should no longer be considered invalidated.  For an attachment with emulated
+            // format that has extra channels, invalidateSubresourceContentImpl may have proactively
+            // inserted a clear so that the extra channels continue to have defined values.  That
+            // clear should be removed.
             if (hasEmulatedImageChannels())
             {
-                removeSingleStagedEmulatedClear(level, layerIndex, layerCount);
+                removeSingleStagedClearAfterInvalidate(level, layerIndex, layerCount);
             }
+            // Additionally, as the resource has been rewritten to in the render pass, its no longer
+            // cleared to the cached value.
+            mCurrentSingleClearValue.reset();
             break;
         default:
             UNREACHABLE();
@@ -7217,7 +7312,7 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
             if (update.isUpdateToLayers(layer, layerCount))
             {
                 // On any data update, exit out. We'll need to do a full upload.
-                const bool isClear              = update.updateSource == UpdateSource::Clear;
+                const bool isClear              = IsClearOfAllChannels(update.updateSource);
                 const uint32_t updateLayerCount = isClear ? update.data.clear.layerCount : 0;
                 const uint32_t imageLayerCount =
                     mImageType == VK_IMAGE_TYPE_3D ? getLevelExtents(levelVk).depth : mLayerCount;
@@ -7284,7 +7379,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         if (levelUpdates && levelUpdates->size() == 1)
         {
             SubresourceUpdate &update = (*levelUpdates)[0];
-            if (update.updateSource == UpdateSource::Clear &&
+            if (IsClearOfAllChannels(update.updateSource) &&
                 mCurrentSingleClearValue.value() == update.data.clear)
             {
                 ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_LOW,
@@ -7337,8 +7432,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
         for (SubresourceUpdate &update : *levelUpdates)
         {
-            ASSERT(update.updateSource == UpdateSource::Clear ||
-                   update.updateSource == UpdateSource::ClearEmulatedChannelsOnly ||
+            ASSERT(IsClear(update.updateSource) ||
                    (update.updateSource == UpdateSource::Buffer &&
                     update.data.buffer.bufferHelper != nullptr) ||
                    (update.updateSource == UpdateSource::Image &&
@@ -7367,8 +7461,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             // The updates were holding gl::LevelIndex values so that they would not need
             // modification when the base level of the texture changes.  Now that the update is
             // about to take effect, we need to change miplevel to LevelIndex.
-            if (update.updateSource == UpdateSource::Clear ||
-                update.updateSource == UpdateSource::ClearEmulatedChannelsOnly)
+            if (IsClear(update.updateSource))
             {
                 update.data.clear.levelIndex = updateMipLevelVk.get();
             }
@@ -7418,7 +7511,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 subresourceUploadsInProgress |= subresourceHash;
             }
 
-            if (update.updateSource == UpdateSource::Clear)
+            if (IsClearOfAllChannels(update.updateSource))
             {
                 clear(update.data.clear.aspectFlags, update.data.clear.value, updateMipLevelVk,
                       updateBaseLayer, updateLayerCount, commandBuffer);
@@ -7563,7 +7656,7 @@ bool ImageHelper::removeStagedClearUpdatesAndReturnColor(gl::LevelIndex levelGL,
     for (size_t index = 0; index < levelUpdates->size();)
     {
         auto update = levelUpdates->begin() + index;
-        if (update->updateSource == UpdateSource::Clear)
+        if (IsClearOfAllChannels(update->updateSource))
         {
             if (color != nullptr)
             {
@@ -8501,6 +8594,7 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(SubresourceUpdate &&other)
     {
         case UpdateSource::Clear:
         case UpdateSource::ClearEmulatedChannelsOnly:
+        case UpdateSource::ClearAfterInvalidate:
             data.clear        = other.data.clear;
             refCounted.buffer = nullptr;
             break;
@@ -8585,8 +8679,7 @@ void ImageHelper::SubresourceUpdate::getDestSubresource(uint32_t imageLayerCount
                                                         uint32_t *baseLayerOut,
                                                         uint32_t *layerCountOut) const
 {
-    if (updateSource == UpdateSource::Clear ||
-        updateSource == UpdateSource::ClearEmulatedChannelsOnly)
+    if (IsClear(updateSource))
     {
         *baseLayerOut  = data.clear.layerIndex;
         *layerCountOut = data.clear.layerCount;
@@ -8610,8 +8703,7 @@ void ImageHelper::SubresourceUpdate::getDestSubresource(uint32_t imageLayerCount
 
 VkImageAspectFlags ImageHelper::SubresourceUpdate::getDestAspectFlags() const
 {
-    if (updateSource == UpdateSource::Clear ||
-        updateSource == UpdateSource::ClearEmulatedChannelsOnly)
+    if (IsClear(updateSource))
     {
         return data.clear.aspectFlags;
     }

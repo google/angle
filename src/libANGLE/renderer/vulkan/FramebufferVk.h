@@ -160,6 +160,7 @@ class FramebufferVk : public FramebufferImpl
                                            vk::RenderPassCommandBufferHelper *renderPass);
 
     void onSwitchProgramFramebufferFetch(ContextVk *contextVk, bool programUsesFramebufferFetch);
+    bool hasFramebufferFetch() const { return mCurrentFramebufferDesc.hasFramebufferFetch(); }
 
   private:
     FramebufferVk(RendererVk *renderer,

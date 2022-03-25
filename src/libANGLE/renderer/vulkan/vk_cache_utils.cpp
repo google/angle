@@ -886,18 +886,28 @@ angle::Result CreateRenderPass2(Context *context,
 }
 
 void UpdateRenderPassColorPerfCounters(const VkRenderPassCreateInfo &createInfo,
-                                       const VkSubpassDescription &subpass,
+                                       FramebufferAttachmentMask depthStencilAttachmentIndices,
                                        RenderPassPerfCounters *countersOut)
 {
     for (uint32_t index = 0; index < createInfo.attachmentCount; index++)
     {
+        if (depthStencilAttachmentIndices.test(index))
+        {
+            continue;
+        }
+
         VkAttachmentLoadOp loadOp   = createInfo.pAttachments[index].loadOp;
         VkAttachmentStoreOp storeOp = createInfo.pAttachments[index].storeOp;
         countersOut->colorClears += loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ? 1 : 0;
         countersOut->colorLoads += loadOp == VK_ATTACHMENT_LOAD_OP_LOAD ? 1 : 0;
         countersOut->colorStores += storeOp == VK_ATTACHMENT_STORE_OP_STORE ? 1 : 0;
     }
+}
 
+void UpdateSubpassColorPerfCounters(const VkRenderPassCreateInfo &createInfo,
+                                    const VkSubpassDescription &subpass,
+                                    RenderPassPerfCounters *countersOut)
+{
     // Color resolve counters.
     if (subpass.pResolveAttachments == nullptr)
     {
@@ -996,7 +1006,7 @@ void UpdateRenderPassPerfCounters(
 
         // Color counters.
         // NOTE: For simplicity, this will accumulate counts for all subpasses in the renderpass.
-        UpdateRenderPassColorPerfCounters(createInfo, subpass, countersOut);
+        UpdateSubpassColorPerfCounters(createInfo, subpass, countersOut);
 
         // Record index of depth/stencil attachment.
         if (subpass.pDepthStencilAttachment != nullptr)
@@ -1008,6 +1018,8 @@ void UpdateRenderPassPerfCounters(
             }
         }
     }
+
+    UpdateRenderPassColorPerfCounters(createInfo, depthStencilAttachmentIndices, countersOut);
 
     // Depth/stencil counters.  Currently, both subpasses use the same depth/stencil attachment (if
     // any).

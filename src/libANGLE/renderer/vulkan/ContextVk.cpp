@@ -282,6 +282,40 @@ EventName GetTraceEventName(const char *title, uint32_t counter)
     return buf;
 }
 
+vk::ResourceAccess GetColorAccess(const gl::State &state,
+                                  const gl::FramebufferState &framebufferState,
+                                  const gl::DrawBufferMask &emulatedAlphaMask,
+                                  bool hasFramebufferFetch,
+                                  size_t colorIndexGL)
+{
+    // No access if draw buffer is disabled altogether
+    // Without framebuffer fetch:
+    //   No access if color output is masked, or rasterizer discard is enabled
+    // With framebuffer fetch:
+    //   Read access if color output is masked, or rasterizer discard is enabled
+
+    if (!framebufferState.getEnabledDrawBuffers().test(colorIndexGL))
+    {
+        return vk::ResourceAccess::Unused;
+    }
+
+    const gl::BlendStateExt &blendStateExt = state.getBlendStateExt();
+    uint8_t colorMask                      = gl::BlendStateExt::ColorMaskStorage::GetValueIndexed(
+        colorIndexGL, blendStateExt.mColorMask);
+    if (emulatedAlphaMask[colorIndexGL])
+    {
+        colorMask &= ~VK_COLOR_COMPONENT_A_BIT;
+    }
+    const bool isOutputMasked = colorMask == 0 || state.isRasterizerDiscardEnabled();
+
+    if (isOutputMasked)
+    {
+        return hasFramebufferFetch ? vk::ResourceAccess::ReadOnly : vk::ResourceAccess::Unused;
+    }
+
+    return vk::ResourceAccess::Write;
+}
+
 vk::ResourceAccess GetDepthAccess(const gl::DepthStencilState &dsState,
                                   UpdateDepthFeedbackLoopReason reason)
 {
@@ -757,6 +791,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     // begun.  However, using ANGLE's SecondaryCommandBuffer, the Vulkan command buffer (which is
     // the primary command buffer) is not ended, so technically we don't need to rebind these.
     mNewGraphicsCommandBufferDirtyBits = DirtyBits{DIRTY_BIT_RENDER_PASS,
+                                                   DIRTY_BIT_COLOR_ACCESS,
                                                    DIRTY_BIT_DEPTH_STENCIL_ACCESS,
                                                    DIRTY_BIT_PIPELINE_BINDING,
                                                    DIRTY_BIT_TEXTURES,
@@ -784,8 +819,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         &ContextVk::handleDirtyGraphicsPipelineDesc;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_READ_ONLY_DEPTH_FEEDBACK_LOOP_MODE] =
         &ContextVk::handleDirtyGraphicsReadOnlyDepthFeedbackLoopMode;
-    mGraphicsDirtyBitHandlers[DIRTY_BIT_RENDER_PASS] = &ContextVk::handleDirtyGraphicsRenderPass;
-    mGraphicsDirtyBitHandlers[DIRTY_BIT_EVENT_LOG]   = &ContextVk::handleDirtyGraphicsEventLog;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_RENDER_PASS]  = &ContextVk::handleDirtyGraphicsRenderPass;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_EVENT_LOG]    = &ContextVk::handleDirtyGraphicsEventLog;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_COLOR_ACCESS] = &ContextVk::handleDirtyGraphicsColorAccess;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DEPTH_STENCIL_ACCESS] =
         &ContextVk::handleDirtyGraphicsDepthStencilAccess;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_PIPELINE_BINDING] =
@@ -1854,6 +1890,29 @@ angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirt
     if (renderPassDescChanged)
     {
         ANGLE_TRY(handleDirtyGraphicsPipelineDesc(dirtyBitsIterator, dirtyBitMask));
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsColorAccess(DirtyBits::Iterator *dirtyBitsIterator,
+                                                        DirtyBits dirtyBitMask)
+{
+    FramebufferVk *drawFramebufferVk             = getDrawFramebuffer();
+    const gl::FramebufferState &framebufferState = drawFramebufferVk->getState();
+
+    // Update color attachment accesses
+    vk::PackedAttachmentIndex colorIndexVk(0);
+    for (size_t colorIndexGL : framebufferState.getColorAttachmentsMask())
+    {
+        if (framebufferState.getEnabledDrawBuffers().test(colorIndexGL))
+        {
+            vk::ResourceAccess colorAccess = GetColorAccess(
+                mState, framebufferState, drawFramebufferVk->getEmulatedAlphaAttachmentMask(),
+                drawFramebufferVk->hasFramebufferFetch(), colorIndexGL);
+            mRenderPassCommands->onColorAccess(colorIndexVk, colorAccess);
+        }
+        ++colorIndexVk;
     }
 
     return angle::Result::Continue;
@@ -3738,6 +3797,8 @@ void ContextVk::updateColorMasks()
     mGraphicsPipelineDesc->updateColorWriteMasks(&mGraphicsPipelineTransition, mClearColorMasks,
                                                  framebufferVk->getEmulatedAlphaAttachmentMask(),
                                                  framebufferVk->getState().getEnabledDrawBuffers());
+
+    onColorAccessChange();
 }
 
 void ContextVk::updateBlendFuncsAndEquations()
@@ -4047,6 +4108,10 @@ angle::Result ContextVk::checkAndUpdateFramebufferFetchStatus(
         if (executable->usesFramebufferFetch())
         {
             mRenderer->onFramebufferFetchUsed();
+
+            // When framebuffer fetch is enabled, attachments can be read from even if output is
+            // masked, so update their access.
+            onColorAccessChange();
         }
     }
 
@@ -4256,6 +4321,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
                 updateRasterizerDiscardEnabled(
                     mState.isQueryActive(gl::QueryType::PrimitivesGenerated));
+                onColorAccessChange();
                 break;
             case gl::State::DIRTY_BIT_LINE_WIDTH:
                 mGraphicsPipelineDesc->updateLineWidth(&mGraphicsPipelineTransition,

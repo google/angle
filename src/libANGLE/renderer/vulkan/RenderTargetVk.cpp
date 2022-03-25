@@ -98,16 +98,11 @@ void RenderTargetVk::onColorDraw(ContextVk *contextVk,
     ASSERT(!mImage->getActualFormat().hasDepthOrStencilBits());
     ASSERT(framebufferLayerCount <= mLayerCount);
 
-    contextVk->onColorDraw(mImage, mResolveImage, packedAttachmentIndex);
-    mImage->onWrite(mLevelIndexGL, 1, mLayerIndex, framebufferLayerCount,
-                    VK_IMAGE_ASPECT_COLOR_BIT);
-    if (mResolveImage)
-    {
-        // Multisampled render to texture framebuffers cannot be layered.
-        ASSERT(framebufferLayerCount == 1);
-        mResolveImage->onWrite(mLevelIndexGL, 1, mLayerIndex, framebufferLayerCount,
-                               VK_IMAGE_ASPECT_COLOR_BIT);
-    }
+    contextVk->onColorDraw(mLevelIndexGL, mLayerIndex, framebufferLayerCount, mImage, mResolveImage,
+                           packedAttachmentIndex);
+
+    // Multisampled render to texture framebuffers cannot be layered.
+    ASSERT(mResolveImage == nullptr || framebufferLayerCount == 1);
 }
 
 void RenderTargetVk::onColorResolve(ContextVk *contextVk, uint32_t framebufferLayerCount)

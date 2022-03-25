@@ -990,6 +990,32 @@ angle::Result GetUnresolveFrag(
                                    shaderCode.size() * 4);
 }
 
+gl::DrawBufferMask MakeColorBufferMask(uint32_t colorAttachmentIndexGL)
+{
+    gl::DrawBufferMask mask;
+    mask.set(colorAttachmentIndexGL);
+    return mask;
+}
+
+void UpdateColorAccess(ContextVk *contextVk,
+                       gl::DrawBufferMask colorAttachmentMask,
+                       gl::DrawBufferMask colorEnabledMask)
+{
+    vk::RenderPassCommandBufferHelper *renderPassCommands =
+        &contextVk->getStartedRenderPassCommands();
+
+    // Explicitly mark a color write because we are modifying the color buffer.
+    vk::PackedAttachmentIndex colorIndexVk(0);
+    for (size_t colorIndexGL : colorAttachmentMask)
+    {
+        if (colorEnabledMask.test(colorIndexGL))
+        {
+            renderPassCommands->onColorAccess(colorIndexVk, vk::ResourceAccess::Write);
+        }
+        ++colorIndexVk;
+    }
+}
+
 void UpdateDepthStencilAccess(ContextVk *contextVk,
                               FramebufferVk *framebuffer,
                               bool depthWrite,
@@ -1998,6 +2024,8 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         ANGLE_TRY(contextVk->startRenderPass(scissoredRenderArea, &commandBuffer, nullptr));
     }
 
+    UpdateColorAccess(contextVk, framebuffer->getState().getColorAttachmentsMask(),
+                      MakeColorBufferMask(params.colorAttachmentIndexGL));
     UpdateDepthStencilAccess(contextVk, framebuffer, params.clearDepth, params.clearStencil);
 
     ImageClearShaderParams shaderParams;
@@ -2170,6 +2198,8 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     vk::RenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(startRenderPass(contextVk, dst, &destView.get(), renderPassDesc, renderArea,
                               &commandBuffer));
+
+    UpdateColorAccess(contextVk, MakeColorBufferMask(0), MakeColorBufferMask(0));
 
     VkViewport viewport;
     gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dst->getExtents().height, &viewport);
@@ -2412,6 +2442,8 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     contextVk->onImageRenderPassRead(src->getAspectFlags(), vk::ImageLayout::FragmentShaderReadOnly,
                                      src);
 
+    UpdateColorAccess(contextVk, framebuffer->getState().getColorAttachmentsMask(),
+                      framebuffer->getState().getEnabledDrawBuffers());
     UpdateDepthStencilAccess(contextVk, framebuffer, blitDepth, blitStencil);
 
     VkDescriptorImageInfo imageInfos[2] = {};
@@ -2826,6 +2858,8 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     vk::RenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(
         startRenderPass(contextVk, dst, destView, renderPassDesc, renderArea, &commandBuffer));
+
+    UpdateColorAccess(contextVk, MakeColorBufferMask(0), MakeColorBufferMask(0));
 
     VkViewport viewport;
     gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dst->getExtents().height, &viewport);
@@ -3406,6 +3440,8 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     vk::RenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(
         startRenderPass(contextVk, dst, destView, renderPassDesc, renderArea, &commandBuffer));
+
+    UpdateColorAccess(contextVk, MakeColorBufferMask(0), MakeColorBufferMask(0));
 
     VkViewport viewport;
     gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dst->getExtents().height, &viewport);

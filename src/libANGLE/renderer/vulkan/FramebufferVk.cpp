@@ -1631,7 +1631,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
                 invalidateColorBuffers.test(colorIndexGL))
             {
                 contextVk->getStartedRenderPassCommands().invalidateRenderPassColorAttachment(
-                    colorIndexVk);
+                    contextVk->getState(), colorIndexGL, colorIndexVk, invalidateArea);
             }
             ++colorIndexVk;
         }
@@ -2374,15 +2374,21 @@ angle::Result FramebufferVk::clearWithCommand(ContextVk *contextVk,
     gl::AttachmentVector<VkClearAttachment> attachments;
 
     // Go through deferred clears and add them to the list of attachments to clear.
-    for (size_t colorIndexGL : mDeferredClears.getColorMask())
+    vk::PackedAttachmentIndex colorIndexVk(0);
+    for (size_t colorIndexGL : mState.getColorAttachmentsMask())
     {
-        ASSERT(mState.getEnabledDrawBuffers().test(colorIndexGL));
-        ASSERT(getColorDrawRenderTarget(colorIndexGL)->hasDefinedContent());
+        if (mDeferredClears.getColorMask().test(colorIndexGL))
+        {
+            ASSERT(mState.getEnabledDrawBuffers().test(colorIndexGL));
 
-        attachments.emplace_back(VkClearAttachment{VK_IMAGE_ASPECT_COLOR_BIT,
-                                                   static_cast<uint32_t>(colorIndexGL),
-                                                   mDeferredClears[colorIndexGL]});
-        mDeferredClears.reset(colorIndexGL);
+            attachments.emplace_back(VkClearAttachment{VK_IMAGE_ASPECT_COLOR_BIT,
+                                                       static_cast<uint32_t>(colorIndexGL),
+                                                       mDeferredClears[colorIndexGL]});
+            mDeferredClears.reset(colorIndexGL);
+
+            renderpassCommands->onColorAccess(colorIndexVk, vk::ResourceAccess::Write);
+        }
+        ++colorIndexVk;
     }
 
     // Add depth and stencil to list of attachments as needed.

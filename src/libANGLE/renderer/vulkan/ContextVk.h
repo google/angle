@@ -439,6 +439,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result onPauseTransformFeedback();
     void pauseTransformFeedbackIfActiveUnpaused();
 
+    void onColorAccessChange() { mGraphicsDirtyBits |= kColorAccessChangeDirtyBits; }
     void onDepthStencilAccessChange() { mGraphicsDirtyBits |= kDepthStencilAccessChangeDirtyBits; }
 
     // When UtilsVk issues draw or dispatch calls, it binds a new pipeline and descriptor sets that
@@ -570,13 +571,16 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                         imageLayout, vk::AliasingMode::Allowed, image);
     }
 
-    void onColorDraw(vk::ImageHelper *image,
+    void onColorDraw(gl::LevelIndex level,
+                     uint32_t layerStart,
+                     uint32_t layerCount,
+                     vk::ImageHelper *image,
                      vk::ImageHelper *resolveImage,
                      vk::PackedAttachmentIndex packedAttachmentIndex)
     {
         ASSERT(mRenderPassCommands->started());
-        mRenderPassCommands->colorImagesDraw(&mResourceUseList, image, resolveImage,
-                                             packedAttachmentIndex);
+        mRenderPassCommands->colorImagesDraw(&mResourceUseList, level, layerStart, layerCount,
+                                             image, resolveImage, packedAttachmentIndex);
     }
     void onDepthStencilDraw(gl::LevelIndex level,
                             uint32_t layerStart,
@@ -771,7 +775,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         // Dirty bits that must be processed after the render pass is started.  Their handlers
         // record commands.
         DIRTY_BIT_EVENT_LOG,
-        // Update depth/stencil accesses in the render pass.
+        // Update color and depth/stencil accesses in the render pass.
+        DIRTY_BIT_COLOR_ACCESS,
         DIRTY_BIT_DEPTH_STENCIL_ACCESS,
         // Pipeline needs to rebind because a new command buffer has been allocated, or UtilsVk has
         // changed the binding.  The pipeline itself doesn't need to be recreated.
@@ -793,6 +798,58 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DIRTY_BIT_SCISSOR,
         DIRTY_BIT_MAX,
     };
+
+    // Dirty bit handlers that can break the render pass must always be specified before
+    // DIRTY_BIT_RENDER_PASS.
+    static_assert(
+        DIRTY_BIT_MEMORY_BARRIER < DIRTY_BIT_RENDER_PASS,
+        "Render pass breaking dirty bit must be handled before the render pass dirty bit");
+    static_assert(
+        DIRTY_BIT_DEFAULT_ATTRIBS < DIRTY_BIT_RENDER_PASS,
+        "Render pass breaking dirty bit must be handled before the render pass dirty bit");
+    static_assert(
+        DIRTY_BIT_PIPELINE_DESC < DIRTY_BIT_RENDER_PASS,
+        "Render pass breaking dirty bit must be handled before the render pass dirty bit");
+    static_assert(
+        DIRTY_BIT_READ_ONLY_DEPTH_FEEDBACK_LOOP_MODE < DIRTY_BIT_RENDER_PASS,
+        "Render pass breaking dirty bit must be handled before the render pass dirty bit");
+
+    // Dirty bit handlers that record commands or otherwise expect to manipulate the render pass
+    // that will be used for the draw call must be specified after DIRTY_BIT_RENDER_PASS.
+    static_assert(DIRTY_BIT_EVENT_LOG > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_COLOR_ACCESS > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_DEPTH_STENCIL_ACCESS > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_PIPELINE_BINDING > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_TEXTURES > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_VERTEX_BUFFERS > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_INDEX_BUFFER > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_DRIVER_UNIFORMS > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_DRIVER_UNIFORMS_BINDING > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_SHADER_RESOURCES > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_TRANSFORM_FEEDBACK_RESUME > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_DESCRIPTOR_SETS > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_FRAMEBUFFER_FETCH_BARRIER > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_BLEND_BARRIER > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_VIEWPORT > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_SCISSOR > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
 
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
 
@@ -949,6 +1006,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                 DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsEventLog(DirtyBits::Iterator *dirtyBitsIterator,
                                               DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsColorAccess(DirtyBits::Iterator *dirtyBitsIterator,
+                                                 DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsDepthStencilAccess(DirtyBits::Iterator *dirtyBitsIterator,
                                                         DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsPipelineBinding(DirtyBits::Iterator *dirtyBitsIterator,
@@ -1159,6 +1218,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     DirtyBits mIndexedDirtyBitsMask;
     DirtyBits mNewGraphicsCommandBufferDirtyBits;
     DirtyBits mNewComputeCommandBufferDirtyBits;
+    static constexpr DirtyBits kColorAccessChangeDirtyBits{DIRTY_BIT_COLOR_ACCESS};
     static constexpr DirtyBits kDepthStencilAccessChangeDirtyBits{
         DIRTY_BIT_READ_ONLY_DEPTH_FEEDBACK_LOOP_MODE, DIRTY_BIT_DEPTH_STENCIL_ACCESS};
     static constexpr DirtyBits kIndexAndVertexDirtyBits{DIRTY_BIT_VERTEX_BUFFERS,
