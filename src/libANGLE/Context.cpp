@@ -474,6 +474,16 @@ void SetCurrentValidContextTLS(Context *context)
     ASSERT(CurrentValidContextIndex != TLS_INVALID_INDEX);
     angle::SetTLSValue(CurrentValidContextIndex, context);
 }
+#elif defined(ANGLE_USE_STATIC_THREAD_LOCAL_VARIABLES)
+static thread_local Context *gCurrentValidContext = nullptr;
+Context *GetCurrentValidContextTLS()
+{
+    return gCurrentValidContext;
+}
+void SetCurrentValidContextTLS(Context *context)
+{
+    gCurrentValidContext = context;
+}
 #else
 thread_local Context *gCurrentValidContext = nullptr;
 #endif
@@ -489,7 +499,7 @@ extern void SetCurrentValidContext(Context *context)
     }
 #endif
 
-#if defined(ANGLE_PLATFORM_APPLE)
+#if defined(ANGLE_PLATFORM_APPLE) || defined(ANGLE_USE_STATIC_THREAD_LOCAL_VARIABLES)
     SetCurrentValidContextTLS(context);
 #else
     gCurrentValidContext = context;
