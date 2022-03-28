@@ -137,15 +137,21 @@ struct PerfMonitorTriplet
     FN(writeDescriptorSets)                       \
     FN(flushedOutsideRenderPassCommandBuffers)    \
     FN(resolveImageCommands)                      \
-    FN(colorClears)                               \
-    FN(colorLoads)                                \
-    FN(colorStores)                               \
-    FN(depthClears)                               \
-    FN(depthLoads)                                \
-    FN(depthStores)                               \
-    FN(stencilClears)                             \
-    FN(stencilLoads)                              \
-    FN(stencilStores)                             \
+    FN(colorLoadOpClears)                         \
+    FN(colorLoadOpLoads)                          \
+    FN(colorLoadOpNones)                          \
+    FN(colorStoreOpStores)                        \
+    FN(colorStoreOpNones)                         \
+    FN(depthLoadOpClears)                         \
+    FN(depthLoadOpLoads)                          \
+    FN(depthLoadOpNones)                          \
+    FN(depthStoreOpStores)                        \
+    FN(depthStoreOpNones)                         \
+    FN(stencilLoadOpClears)                       \
+    FN(stencilLoadOpLoads)                        \
+    FN(stencilLoadOpNones)                        \
+    FN(stencilStoreOpStores)                      \
+    FN(stencilStoreOpNones)                       \
     FN(colorAttachmentUnresolves)                 \
     FN(depthAttachmentUnresolves)                 \
     FN(stencilAttachmentUnresolves)               \
