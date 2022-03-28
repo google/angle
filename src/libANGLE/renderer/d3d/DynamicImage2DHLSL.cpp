@@ -860,8 +860,7 @@ std::string generateShaderForImage2DBindSignature(
     const gl::ImageUnitTextureTypeMap &image2DBindLayout)
 {
     std::vector<std::vector<sh::ShaderVariable>> groupedImage2DUniforms(IMAGE2D_MAX + 1);
-    unsigned int image2DTexture2DCount = 0, image2DTexture3DCount = 0,
-                 image2DTexture2DArrayCount = 0;
+    unsigned int image2DTexture3DCount = 0, image2DTexture2DArrayCount = 0;
     for (sh::ShaderVariable &image2D : image2DUniforms)
     {
         for (unsigned int index = 0; index < image2D.getArraySizeProduct(); index++)
@@ -875,7 +874,6 @@ std::string generateShaderForImage2DBindSignature(
             switch (image2DBindLayout.at(image2D.binding + index))
             {
                 case gl::TextureType::_2D:
-                    image2DTexture2DCount++;
                     break;
                 case gl::TextureType::_3D:
                     image2DTexture3DCount++;
