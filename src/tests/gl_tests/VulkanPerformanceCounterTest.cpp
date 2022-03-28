@@ -4169,7 +4169,8 @@ TEST_P(VulkanPerformanceCounterTest, InceptionScissorClears)
 
     // Clear small concentric squares using scissor.
     std::vector<GLColor> expectedColors;
-    uint32_t numScissoredClears = 0;
+    // TODO(syoussefi): verify this
+    ANGLE_MAYBE_UNUSED uint32_t numScissoredClears = 0;
     for (GLuint index = 0; index < (kSize - 1) / 2; index++)
     {
         // Do the first clear without the scissor.
@@ -4224,8 +4225,9 @@ TEST_P(VulkanPerformanceCounterTest, Depth16Scissored)
     glClear(GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_SCISSOR_TEST);
-    constexpr int kNumSteps     = 13;
-    uint32_t numScissoredClears = 0;
+    constexpr int kNumSteps = 13;
+    // TODO(syoussefi): verify this
+    ANGLE_MAYBE_UNUSED uint32_t numScissoredClears = 0;
     for (int ndx = 1; ndx < kNumSteps; ndx++)
     {
         float perc = static_cast<float>(ndx) / static_cast<float>(kNumSteps);
@@ -4273,7 +4275,8 @@ TEST_P(VulkanPerformanceCounterTest, DrawThenInceptionScissorClears)
     expectedColors.push_back(GLColor::red);
 
     // Draw small concentric squares using scissor.
-    uint32_t numScissoredClears = 0;
+    // TODO(syoussefi): verify this
+    ANGLE_MAYBE_UNUSED uint32_t numScissoredClears = 0;
     // All clears are to a scissored render area.
     for (GLuint index = 1; index < (kSize - 1) / 2; index++)
     {
