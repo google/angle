@@ -163,9 +163,6 @@
 // Cannot create 2D (array) view of 3D texture.  These fail with validation errors, and cause a crash in syncval.
 3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*single_layer = SKIP
 
-// Framebuffer fetch implementation bug
-6909 VULKAN : dEQP-GLES31.functional.shaders.framebuffer_fetch.basic.framebuffer_texture_layer = SKIP
-
 ////
 //// AMD Vulkan expectations
 ////

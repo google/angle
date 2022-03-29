@@ -1293,7 +1293,8 @@ angle::Result TextureVk::setStorageMultisample(const gl::Context *context,
     // Assume all multisample texture types must be renderable.
     if (type == gl::TextureType::_2DMultisample || type == gl::TextureType::_2DMultisampleArray)
     {
-        ANGLE_TRY(ensureRenderable(contextVk));
+        bool didRespecify = false;
+        ANGLE_TRY(ensureRenderable(contextVk, &didRespecify));
     }
 
     const vk::Format &format = renderer->getFormat(internalformat);
@@ -2319,25 +2320,13 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
 
     ContextVk *contextVk = vk::GetImpl(context);
 
-    bool didRespecify = false;
-    ANGLE_TRY(maybeUpdateBaseMaxLevels(contextVk, &didRespecify));
+    // Sync the texture's image.  See comment on this function in the header.
+    ANGLE_TRY(respecifyImageStorageIfNecessary(contextVk, gl::Command::Draw));
 
-    ASSERT(mState.hasBeenBoundAsAttachment());
-    ANGLE_TRY(ensureRenderable(contextVk));
-
-    if (mRedefinedLevels.any())
-    {
-        // If we have redefined levels, we must flush those out to fix the render targets.
-        ANGLE_TRY(respecifyImageStorage(contextVk));
-    }
-
-    // Otherwise, don't flush staged updates here. We'll handle that in FramebufferVk so we can
-    // defer clears.
+    // Don't flush staged updates here. We'll handle that in FramebufferVk so we can defer clears.
 
     if (!mImage->valid())
     {
-        // Immutable texture must already have a valid image
-        ASSERT(!mState.getImmutableFormat());
         const vk::Format &format = getBaseLevelFormat(contextVk->getRenderer());
         ANGLE_TRY(initImage(contextVk, format.getIntendedFormatID(),
                             format.getActualImageFormatID(getRequiredImageAccess()),
@@ -2578,28 +2567,9 @@ void TextureVk::prepareForGenerateMipmap(ContextVk *contextVk)
     }
 }
 
-angle::Result TextureVk::syncState(const gl::Context *context,
-                                   const gl::Texture::DirtyBits &dirtyBits,
-                                   gl::Command source)
+angle::Result TextureVk::respecifyImageStorageIfNecessary(ContextVk *contextVk, gl::Command source)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
-    RendererVk *renderer = contextVk->getRenderer();
-
-    // If this is a texture buffer, release buffer views.  There's nothing else to sync.  The
-    // image must already be deleted, and the sampler reset.
-    if (mState.getBuffer().get() != nullptr)
-    {
-        ASSERT(mImage == nullptr);
-
-        const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding = mState.getBuffer();
-
-        const VkDeviceSize offset = bufferBinding.getOffset();
-        const VkDeviceSize size   = gl::GetBoundBufferAvailableSize(bufferBinding);
-
-        mBufferViews.release(contextVk);
-        mBufferViews.init(renderer, offset, size);
-        return angle::Result::Continue;
-    }
+    ASSERT(mState.getBuffer().get() == nullptr);
 
     VkImageUsageFlags oldUsageFlags   = mImageUsageFlags;
     VkImageCreateFlags oldCreateFlags = mImageCreateFlags;
@@ -2624,18 +2594,24 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
     }
 
-    // Create a new image if used as attachment for the first time. This must called before
+    // Create a new image if used as attachment for the first time. This must be called before
     // prepareForGenerateMipmap since this changes the format which prepareForGenerateMipmap relies
     // on.
     if (mState.hasBeenBoundAsAttachment())
     {
-        ANGLE_TRY(ensureRenderable(contextVk));
+        bool didRespecify = false;
+        ANGLE_TRY(ensureRenderable(contextVk, &didRespecify));
+        if (didRespecify)
+        {
+            oldUsageFlags  = mImageUsageFlags;
+            oldCreateFlags = mImageCreateFlags;
+        }
     }
 
     // Before redefining the image for any reason, check to see if it's about to go through mipmap
     // generation.  In that case, drop every staged change for the subsequent mips after base, and
     // make sure the image is created with the complete mip chain.
-    bool isGenerateMipmap = source == gl::Command::GenerateMipmap;
+    const bool isGenerateMipmap = source == gl::Command::GenerateMipmap;
     if (isGenerateMipmap)
     {
         prepareForGenerateMipmap(contextVk);
@@ -2661,6 +2637,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     // Updating levels could have respecified the storage, recapture mImageCreateFlags
     if (didRespecify)
     {
+        oldUsageFlags  = mImageUsageFlags;
         oldCreateFlags = mImageCreateFlags;
     }
 
@@ -2668,8 +2645,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     // then have more levels defined in it and mipmapping enabled.  In that case, the image needs
     // to be recreated.
     bool isMipmapEnabledByMinFilter = false;
-    if (!isGenerateMipmap && mImage && mImage->valid() &&
-        dirtyBits.test(gl::Texture::DIRTY_BIT_MIN_FILTER))
+    if (!isGenerateMipmap && mImage && mImage->valid())
     {
         isMipmapEnabledByMinFilter =
             mImage->getLevelCount() < getMipLevelCount(ImageMipLevels::EnabledLevels);
@@ -2708,7 +2684,36 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         ANGLE_TRY(respecifyImageStorage(contextVk));
     }
 
+    return angle::Result::Continue;
+}
+
+angle::Result TextureVk::syncState(const gl::Context *context,
+                                   const gl::Texture::DirtyBits &dirtyBits,
+                                   gl::Command source)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
+
+    // If this is a texture buffer, release buffer views.  There's nothing else to sync.  The
+    // image must already be deleted, and the sampler reset.
+    if (mState.getBuffer().get() != nullptr)
+    {
+        ASSERT(mImage == nullptr);
+
+        const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding = mState.getBuffer();
+
+        const VkDeviceSize offset = bufferBinding.getOffset();
+        const VkDeviceSize size   = gl::GetBoundBufferAvailableSize(bufferBinding);
+
+        mBufferViews.release(contextVk);
+        mBufferViews.init(renderer, offset, size);
+        return angle::Result::Continue;
+    }
+
+    ANGLE_TRY(respecifyImageStorageIfNecessary(contextVk, source));
+
     // Initialize the image storage and flush the pixel buffer.
+    const bool isGenerateMipmap = source == gl::Command::GenerateMipmap;
     ANGLE_TRY(ensureImageInitialized(contextVk, isGenerateMipmap ? ImageMipLevels::FullMipChain
                                                                  : ImageMipLevels::EnabledLevels));
 
@@ -3406,7 +3411,7 @@ angle::Result TextureVk::ensureMutable(ContextVk *contextVk)
     return refreshImageViews(contextVk);
 }
 
-angle::Result TextureVk::ensureRenderable(ContextVk *contextVk)
+angle::Result TextureVk::ensureRenderable(ContextVk *contextVk, bool *didRespecifyOut)
 {
     if (mRequiredImageAccess == vk::ImageAccess::Renderable)
     {
@@ -3483,6 +3488,8 @@ angle::Result TextureVk::ensureRenderable(ContextVk *contextVk)
     ANGLE_TRY(ensureImageAllocated(contextVk, format));
     ANGLE_TRY(respecifyImageStorage(contextVk));
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+
+    *didRespecifyOut = true;
 
     return refreshImageViews(contextVk);
 }
