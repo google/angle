@@ -3210,9 +3210,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, compressVertexData, false);
 
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, preferDrawClearOverVkCmdClearAttachments,
-        IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
+    // vkCmdClearAttachments races with draw calls on Qualcomm hardware as observed on Pixel2 and
+    // Pixel4.  https://issuetracker.google.com/issues/166809097
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferDrawClearOverVkCmdClearAttachments, isQualcomm);
 
     // r32f image emulation is done unconditionally so VK_FORMAT_FEATURE_STORAGE_*_ATOMIC_BIT is not
     // required.

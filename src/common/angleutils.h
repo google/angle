@@ -142,16 +142,19 @@ struct PerfMonitorTriplet
     FN(colorLoadOpNones)                          \
     FN(colorStoreOpStores)                        \
     FN(colorStoreOpNones)                         \
+    FN(colorClearAttachments)                     \
     FN(depthLoadOpClears)                         \
     FN(depthLoadOpLoads)                          \
     FN(depthLoadOpNones)                          \
     FN(depthStoreOpStores)                        \
     FN(depthStoreOpNones)                         \
+    FN(depthClearAttachments)                     \
     FN(stencilLoadOpClears)                       \
     FN(stencilLoadOpLoads)                        \
     FN(stencilLoadOpNones)                        \
     FN(stencilStoreOpStores)                      \
     FN(stencilStoreOpNones)                       \
+    FN(stencilClearAttachments)                   \
     FN(colorAttachmentUnresolves)                 \
     FN(depthAttachmentUnresolves)                 \
     FN(stencilAttachmentUnresolves)               \

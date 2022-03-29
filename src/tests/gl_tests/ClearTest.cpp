@@ -2224,10 +2224,10 @@ TEST_P(ClearTestES3, ClearMaxAttachmentsAfterDraw)
     {
         glReadBuffer(GL_COLOR_ATTACHMENT0 + colorIndex);
 
-        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
-        EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::red);
-        EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::red);
-        EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << colorIndex;
+        EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::red) << colorIndex;
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::red) << colorIndex;
+        EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::red) << colorIndex;
     }
 
     // Verify that depth and stencil attachments are cleared correctly.
@@ -2429,6 +2429,66 @@ TEST_P(ClearTestES3, ClearStencilAfterDraw)
     EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::green);
+}
+
+// Test that mid-render pass clearing of mixed used and unused color attachments works.
+TEST_P(ClearTestES3, MixedRenderPassClearMixedUsedUnusedAttachments)
+{
+    // http://anglebug.com/4612
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsDesktopOpenGL());
+
+    constexpr GLsizei kSize = 16;
+
+    // Setup framebuffer.
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+
+    GLRenderbuffer color[2];
+
+    for (GLint colorIndex = 0; colorIndex < 2; ++colorIndex)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, color[colorIndex]);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kSize, kSize);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorIndex,
+                                  GL_RENDERBUFFER, color[colorIndex]);
+    }
+    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Disable color attachment 0.
+    GLenum drawBuffers[] = {GL_NONE, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, drawBuffers);
+
+    // Draw into color attachment 1
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+layout(location = 0) out vec4 color0;
+layout(location = 1) out vec4 color1;
+void main()
+{
+    color0 = vec4(0, 0, 1, 1);
+    color1 = vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(drawMRT, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(drawMRT, essl3_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Color attachment 0 is now uninitialized, while color attachment 1 is red.
+    // Re-enable color attachment 0 and clear both attachments to green.
+    drawBuffers[0] = GL_COLOR_ATTACHMENT0;
+    glDrawBuffers(2, drawBuffers);
+
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that both color attachments are now green.
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_GL_NO_ERROR();
 }
 
 // Test that draw without state change after masked clear works

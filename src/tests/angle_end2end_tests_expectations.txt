@@ -364,7 +364,6 @@
 5981 PIXEL4ORXL VULKAN : ClearTestES3.MaskedIndexedClearMultipleAttachments/* = SKIP
 5981 PIXEL4ORXL VULKAN : ClearTestES3.MaskedScissoredClearMultipleAttachments/* = SKIP
 5981 PIXEL4ORXL VULKAN : ClearTestES3.ScissoredClearHeterogeneousAttachments/* = SKIP
-5981 PIXEL4ORXL VULKAN : ColorMaskForDrawBuffersTest.ScissoredClear/* = SKIP
 5981 PIXEL4ORXL VULKAN : CubeMapTextureTest.SampleCoordinateTransform/* = SKIP
 5981 PIXEL4ORXL VULKAN : DepthStencilFormatsTest.DepthTextureRender/* = SKIP
 5981 PIXEL4ORXL VULKAN : EGLSyncTest.AndroidNativeFence_ClientWait/* = SKIP
@@ -388,6 +387,16 @@
 6744 PIXEL4ORXL VULKAN : SimpleStateChangeTestES3.OutOfBoundsByteAttribute/* = SKIP
 6843 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleInitData/* = SKIP
 6843 PIXEL4ORXL VULKAN : ImageTestES3.SourceYUVAHBTargetExternalYUVSampleLinearFiltering/* = SKIP
+
+7140 PIXEL4ORXL VULKAN : ColorMaskForDrawBuffersTest.Clear/* = SKIP
+7140 PIXEL4ORXL VULKAN : ColorMaskForDrawBuffersTest.ScissoredClear/* = SKIP
+7140 PIXEL4ORXL VULKAN : ClearTestES3.ClearMaxAttachmentsAfterDraw/* = SKIP
+7140 PIXEL4ORXL VULKAN : ClearTestES3.ClearStencilAfterDraw/* = SKIP
+7140 PIXEL4ORXL VULKAN : ClearTestES3.MixedRenderPassClearMixedUsedUnusedAttachments/* = SKIP
+7140 PIXEL4ORXL VULKAN : DrawBuffersTest.MaskedDrawMidRPClearWithGaps/* = SKIP
+7140 PIXEL4ORXL VULKAN : DrawBuffersTest.MaskedDrawMidRPClearWithGapsRGB/* = SKIP
+7140 PIXEL4ORXL VULKAN : DrawBuffersTest.MidRenderPassClearWithGaps/* = SKIP
+7140 PIXEL4ORXL VULKAN : DrawBuffersTest.MidRenderPassClearWithGapsRGB/* = SKIP
 
 6167 NEXUS5X GLES : DepthStencilTestES3.FramebufferClearThenStencilAttachedThenStencilTestState/* = SKIP
 6167 NEXUS5X GLES : DepthStencilTestES3.FramebufferClearThenStencilTestStateThenStencilAttached/* = SKIP

@@ -925,6 +925,7 @@ class RenderPassAttachment final
                            RenderPassStoreOp *storeOp,
                            bool *isInvalidatedOut);
     void restoreContent();
+    bool hasAnyAccess() const { return mAccess != ResourceAccess::Unused; }
     bool hasWriteAccess() const { return mAccess == ResourceAccess::Write; }
 
     ImageHelper *getImage() { return mImage; }
@@ -1244,6 +1245,14 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void onColorAccess(PackedAttachmentIndex packedAttachmentIndex, ResourceAccess access);
     void onDepthAccess(ResourceAccess access);
     void onStencilAccess(ResourceAccess access);
+
+    bool hasAnyColorAccess(PackedAttachmentIndex packedAttachmentIndex)
+    {
+        ASSERT(packedAttachmentIndex < mColorAttachmentsCount);
+        return mColorAttachments[packedAttachmentIndex].hasAnyAccess();
+    }
+    bool hasAnyDepthAccess() { return mDepthAttachment.hasAnyAccess(); }
+    bool hasAnyStencilAccess() { return mStencilAttachment.hasAnyAccess(); }
 
     void updateRenderPassForResolve(ContextVk *contextVk,
                                     Framebuffer *newFramebuffer,
