@@ -324,17 +324,19 @@ class RendererVk : angle::NonCopyable
     }
 
     void collectSuballocationGarbage(vk::SharedResourceUse &&use,
-                                     vk::BufferSuballocation &&suballocation)
+                                     vk::BufferSuballocation &&suballocation,
+                                     vk::Buffer &&buffer)
     {
         std::lock_guard<std::mutex> lock(mGarbageMutex);
         if (use.usedInRecordedCommands())
         {
-            mPendingSubmissionSuballocationGarbage.emplace(std::move(use),
-                                                           std::move(suballocation));
+            mPendingSubmissionSuballocationGarbage.emplace(std::move(use), std::move(suballocation),
+                                                           std::move(buffer));
         }
         else
         {
-            mSuballocationGarbage.emplace(std::move(use), std::move(suballocation));
+            mSuballocationGarbage.emplace(std::move(use), std::move(suballocation),
+                                          std::move(buffer));
         }
     }
 
@@ -522,6 +524,8 @@ class RendererVk : angle::NonCopyable
 
     VkDeviceSize getPreferedBufferBlockSize(uint32_t memoryTypeIndex) const;
 
+    size_t getDefaultBufferAlignment() const { return mDefaultBufferAlignment; }
+
     uint32_t getStagingBufferMemoryTypeIndex(vk::MemoryCoherency coherency) const
     {
         return coherency == vk::MemoryCoherency::Coherent
@@ -647,6 +651,9 @@ class RendererVk : angle::NonCopyable
 
     vk::MemoryProperties mMemoryProperties;
     vk::FormatTable mFormatTable;
+
+    // The default alignment for BufferVk object
+    size_t mDefaultBufferAlignment;
 
     // The cached memory type index for staging buffer that is host visible.
     uint32_t mCoherentStagingBufferMemoryTypeIndex;

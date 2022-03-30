@@ -2551,7 +2551,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
 
     ANGLE_TRY(blitBuffer.get().initSuballocation(
         contextVk, contextVk->getRenderer()->getDeviceLocalMemoryTypeIndex(),
-        static_cast<size_t>(bufferSize), GetDefaultBufferAlignment(contextVk->getRenderer())));
+        static_cast<size_t>(bufferSize), contextVk->getRenderer()->getDefaultBufferAlignment()));
     blitBuffer.get().retainReadWrite(&contextVk->getResourceUseList());
 
     BlitResolveStencilNoExportShaderParams shaderParams;

@@ -2077,10 +2077,12 @@ angle::Result ContextVk::handleDirtyGraphicsIndexBuffer(DirtyBits::Iterator *dir
     vk::BufferHelper *elementArrayBuffer = vertexArrayVk->getCurrentElementArrayBuffer();
     ASSERT(elementArrayBuffer != nullptr);
 
-    mRenderPassCommandBuffer->bindIndexBuffer(
-        elementArrayBuffer->getBuffer(),
-        elementArrayBuffer->getOffset() + mCurrentIndexBufferOffset,
-        getVkIndexType(mCurrentDrawElementsType));
+    VkDeviceSize bufferOffset;
+    const vk::Buffer &buffer = elementArrayBuffer->getBufferForVertexArray(
+        this, elementArrayBuffer->getSize(), &bufferOffset);
+
+    mRenderPassCommandBuffer->bindIndexBuffer(buffer, bufferOffset + mCurrentIndexBufferOffset,
+                                              getVkIndexType(mCurrentDrawElementsType));
 
     mRenderPassCommands->bufferRead(this, VK_ACCESS_INDEX_READ_BIT, vk::PipelineStage::VertexInput,
                                     elementArrayBuffer);

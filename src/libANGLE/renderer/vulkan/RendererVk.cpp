@@ -1656,20 +1656,38 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     ANGLE_VK_CHECK(displayVk, mMemoryProperties.getMemoryTypeCount() > 0,
                    VK_ERROR_INITIALIZATION_FAILED);
-    // Initialize staging buffer memory type index and alignment.
-    // These buffers will only be used as transfer sources or transfer targets.
-    constexpr VkImageUsageFlags kUsageFlags =
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
+    // Figure out the alignment for default buffer allocations
     VkBufferCreateInfo createInfo    = {};
     createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     createInfo.flags                 = 0;
     createInfo.size                  = 4096;
-    createInfo.usage                 = kUsageFlags;
+    createInfo.usage                 = GetDefaultBufferUsageFlags(this);
     createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
     createInfo.queueFamilyIndexCount = 0;
     createInfo.pQueueFamilyIndices   = nullptr;
+    vk::Buffer tempBuffer;
+    tempBuffer.init(mDevice, createInfo);
+    VkMemoryRequirements defaultBufferMemoryRequirements;
+    tempBuffer.getMemoryRequirements(mDevice, &defaultBufferMemoryRequirements);
+    ASSERT(gl::isPow2(defaultBufferMemoryRequirements.alignment));
 
+    const VkPhysicalDeviceLimits &limitsVk = getPhysicalDeviceProperties().limits;
+    ASSERT(gl::isPow2(limitsVk.minUniformBufferOffsetAlignment));
+    ASSERT(gl::isPow2(limitsVk.minStorageBufferOffsetAlignment));
+    ASSERT(gl::isPow2(limitsVk.minTexelBufferOffsetAlignment));
+    ASSERT(gl::isPow2(limitsVk.minMemoryMapAlignment));
+    mDefaultBufferAlignment =
+        std::max({static_cast<size_t>(limitsVk.minUniformBufferOffsetAlignment),
+                  static_cast<size_t>(limitsVk.minStorageBufferOffsetAlignment),
+                  static_cast<size_t>(limitsVk.minTexelBufferOffsetAlignment),
+                  static_cast<size_t>(limitsVk.minMemoryMapAlignment),
+                  static_cast<size_t>(defaultBufferMemoryRequirements.alignment)});
+    tempBuffer.destroy(mDevice);
+
+    // Initialize staging buffer memory type index and alignment.
+    // These buffers will only be used as transfer sources or transfer targets.
+    createInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
     VkMemoryPropertyFlags requiredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
     bool persistentlyMapped             = mFeatures.persistentlyMappedBuffers.enabled;
 
@@ -1716,7 +1734,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     mVertexConversionBufferAlignment = std::max(
         {vk::kVertexBufferAlignment,
          static_cast<size_t>(mPhysicalDeviceProperties.limits.minStorageBufferOffsetAlignment),
-         static_cast<size_t>(mPhysicalDeviceProperties.limits.nonCoherentAtomSize)});
+         static_cast<size_t>(mPhysicalDeviceProperties.limits.nonCoherentAtomSize),
+         static_cast<size_t>(defaultBufferMemoryRequirements.alignment)});
     ASSERT(gl::isPow2(mVertexConversionBufferAlignment));
 
     {

@@ -1009,6 +1009,7 @@ class BufferSuballocation final : angle::NonCopyable
     BufferSerial getBlockSerial() const;
     uint8_t *getBlockMemory() const;
     VkDeviceSize getBlockMemorySize() const;
+    bool isSuballocated() const { return mBufferBlock->hasVirtualBlock(); }
 
   private:
     // Only used by DynamicBuffer where DynamicBuffer does the actual suballocation and pass the

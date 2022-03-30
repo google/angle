@@ -3973,7 +3973,8 @@ BufferHelper &BufferHelper::operator=(BufferHelper &&other)
 {
     ReadWriteResource::operator=(std::move(other));
 
-    mSuballocation = std::move(other.mSuballocation);
+    mSuballocation        = std::move(other.mSuballocation);
+    mBufferForVertexArray = std::move(other.mBufferForVertexArray);
 
     mCurrentQueueFamilyIndex = other.mCurrentQueueFamilyIndex;
     mCurrentWriteAccess      = other.mCurrentWriteAccess;
@@ -4264,10 +4265,52 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
     return angle::Result::Continue;
 }
 
+const Buffer &BufferHelper::getBufferForVertexArray(ContextVk *contextVk,
+                                                    VkDeviceSize actualDataSize,
+                                                    VkDeviceSize *offsetOut)
+{
+    ASSERT(mSuballocation.valid());
+    ASSERT(actualDataSize <= mSuballocation.getSize());
+
+    if (!contextVk->isRobustResourceInitEnabled() || !mSuballocation.isSuballocated())
+    {
+        *offsetOut = mSuballocation.getOffset();
+        return mSuballocation.getBuffer();
+    }
+
+    if (!mBufferForVertexArray.valid())
+    {
+        // Allocate buffer that is backed by sub-range of the memory for vertex array usage. This is
+        // only needed when robust resource init is enabled so that vulkan driver will know the
+        // exact size of the vertex buffer it is supposedly to use and prevent out of bound access.
+        VkBufferCreateInfo createInfo    = {};
+        createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        createInfo.flags                 = 0;
+        createInfo.size                  = actualDataSize;
+        createInfo.usage                 = kVertexBufferUsageFlags | kIndexBufferUsageFlags;
+        createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+        createInfo.queueFamilyIndexCount = 0;
+        createInfo.pQueueFamilyIndices   = nullptr;
+        mBufferForVertexArray.init(contextVk->getDevice(), createInfo);
+
+        VkMemoryRequirements memoryRequirements;
+        mBufferForVertexArray.getMemoryRequirements(contextVk->getDevice(), &memoryRequirements);
+        ASSERT(contextVk->getRenderer()->isMockICDEnabled() ||
+               mSuballocation.getSize() >= memoryRequirements.size);
+        ASSERT(!contextVk->getRenderer()->isMockICDEnabled() ||
+               mSuballocation.getOffset() % memoryRequirements.alignment == 0);
+
+        mBufferForVertexArray.bindMemory(contextVk->getDevice(), mSuballocation.getDeviceMemory(),
+                                         mSuballocation.getOffset());
+    }
+    *offsetOut = 0;
+    return mBufferForVertexArray;
+}
+
 void BufferHelper::destroy(RendererVk *renderer)
 {
     unmap(renderer);
-
+    mBufferForVertexArray.destroy(renderer->getDevice());
     mSuballocation.destroy(renderer);
 }
 
@@ -4280,11 +4323,13 @@ void BufferHelper::release(RendererVk *renderer)
         if (mReadOnlyUse.isCurrentlyInUse(renderer->getLastCompletedQueueSerial()))
         {
             renderer->collectSuballocationGarbage(std::move(mReadOnlyUse),
-                                                  std::move(mSuballocation));
+                                                  std::move(mSuballocation),
+                                                  std::move(mBufferForVertexArray));
             mReadOnlyUse.init();
         }
         else
         {
+            mBufferForVertexArray.destroy(renderer->getDevice());
             mSuballocation.destroy(renderer);
         }
 
@@ -4294,6 +4339,7 @@ void BufferHelper::release(RendererVk *renderer)
             mReadWriteUse.init();
         }
     }
+    ASSERT(!mBufferForVertexArray.valid());
 }
 
 angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
