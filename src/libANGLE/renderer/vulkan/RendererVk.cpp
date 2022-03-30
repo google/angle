@@ -542,6 +542,11 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "prior_usage: SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: 0, "
         "command: vkCmdBeginRenderPass",
     },
+    // From: TracePerfTest.Run/vulkan_car_chase http://anglebug.com/7125
+    {
+        "SYNC-HAZARD-WRITE_AFTER_READ",
+        "type: VK_DESCRIPTOR_TYPE_STORAGE_BUFFER",
+    },
 };
 
 enum class DebugMessageReport
