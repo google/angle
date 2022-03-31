@@ -686,6 +686,14 @@
             "issue": "http://anglebug.com/5881"
         },
         {
+            "name": "supports_primitives_generated_query",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_primitives_generated_query extension"
+            ],
+            "issue": "http://anglebug.com/5430"
+        },
+        {
             "name": "supports_surface_capabilities2_extension",
             "category": "Features",
             "description": [

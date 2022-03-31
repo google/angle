@@ -240,6 +240,7 @@ enum class Feature
     SupportsPipelineCreationCacheControl,
     SupportsPipelineCreationFeedback,
     SupportsPipelineStatisticsQuery,
+    SupportsPrimitivesGeneratedQuery,
     SupportsProtectedMemory,
     SupportsRenderpass2,
     SupportsRenderPassLoadStoreOpNone,

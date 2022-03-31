@@ -507,6 +507,11 @@ struct FeaturesVk : FeatureSetBase
         "VkDevice supports VK_EXT_pipeline_creation_feedback extension", &members,
         "http://anglebug.com/5881"};
 
+    FeatureInfo supportsPrimitivesGeneratedQuery = {
+        "supportsPrimitivesGeneratedQuery", FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_EXT_primitives_generated_query extension", &members,
+        "http://anglebug.com/5430"};
+
     FeatureInfo supportsSurfaceCapabilities2Extension = {
         "supportsSurfaceCapabilities2Extension",
         FeatureCategory::VulkanFeatures,

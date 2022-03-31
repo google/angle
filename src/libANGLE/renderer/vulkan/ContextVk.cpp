@@ -1069,10 +1069,16 @@ angle::Result ContextVk::initialize()
             vk::kDefaultTransformFeedbackQueryPoolSize));
     }
 
-    // The primitives generated query is provided through the Vulkan pipeline statistics query if
-    // supported.  TODO: If VK_EXT_primitives_generated_query is supported, use that instead.
-    // http://anglebug.com/5430
-    if (getFeatures().supportsPipelineStatisticsQuery.enabled)
+    // If VK_EXT_primitives_generated_query is supported, use that to implement the OpenGL query.
+    // Otherwise, the primitives generated query is provided through the Vulkan pipeline statistics
+    // query if supported.
+    if (getFeatures().supportsPrimitivesGeneratedQuery.enabled)
+    {
+        ANGLE_TRY(mQueryPools[gl::QueryType::PrimitivesGenerated].init(
+            this, VK_QUERY_TYPE_PRIMITIVES_GENERATED_EXT,
+            vk::kDefaultPrimitivesGeneratedQueryPoolSize));
+    }
+    else if (getFeatures().supportsPipelineStatisticsQuery.enabled)
     {
         ANGLE_TRY(mQueryPools[gl::QueryType::PrimitivesGenerated].init(
             this, VK_QUERY_TYPE_PIPELINE_STATISTICS, vk::kDefaultPrimitivesGeneratedQueryPoolSize));
@@ -5966,13 +5972,13 @@ vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
     // For PrimitivesGenerated queries:
     //
     // - If VK_EXT_primitives_generated_query is supported, use that.
-    //   TODO: http://anglebug.com/5430
     // - Otherwise, if pipelineStatisticsQuery is supported, use that,
     // - Otherwise, use the same pool as TransformFeedbackPrimitivesWritten and share the query as
     //   the Vulkan transform feedback query produces both results.  This option is non-conformant
     //   as the primitives generated query will not be functional without transform feedback.
     //
     if (queryType == gl::QueryType::PrimitivesGenerated &&
+        !getFeatures().supportsPrimitivesGeneratedQuery.enabled &&
         !getFeatures().supportsPipelineStatisticsQuery.enabled)
     {
         queryType = gl::QueryType::TransformFeedbackPrimitivesWritten;
@@ -7200,8 +7206,13 @@ angle::Result ContextVk::resumeXfbRenderPassQueriesIfActive()
 
 bool ContextVk::doesPrimitivesGeneratedQuerySupportRasterizerDiscard() const
 {
-    // TODO: If primitives generated is implemented with VK_EXT_primitives_generated_query, check
-    // the corresponding feature bit.  http://anglebug.com/5430.
+    // If primitives generated is implemented with VK_EXT_primitives_generated_query, check the
+    // corresponding feature bit.
+    if (getFeatures().supportsPrimitivesGeneratedQuery.enabled)
+    {
+        return mRenderer->getPhysicalDevicePrimitivesGeneratedQueryFeatures()
+                   .primitivesGeneratedQueryWithRasterizerDiscard == VK_TRUE;
+    }
 
     // If primitives generated is emulated with pipeline statistics query, it's unknown on which
     // hardware rasterizer discard is supported.  Assume it's supported on none.
