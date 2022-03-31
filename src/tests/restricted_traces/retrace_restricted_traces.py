@@ -14,7 +14,6 @@ import fnmatch
 import json
 import logging
 import os
-import re
 import shutil
 import stat
 import subprocess
@@ -36,7 +35,7 @@ def load_trace_json(trace):
     return read_json(json_file_name)
 
 
-def get_context(trace, trace_path):
+def get_context(trace):
     """Returns the trace context number."""
     json_data = load_trace_json(trace)
     return str(json_data['WindowSurfaceContextID'])
@@ -47,53 +46,13 @@ def get_script_dir():
 
 
 def context_header(trace, trace_path):
-    context_id = get_context(trace, trace_path)
+    context_id = get_context(trace)
     header = '%s_context%s.h' % (trace, context_id)
     return os.path.join(trace_path, header)
 
 
-def load_json_metadata(trace):
-    json_file_name = os.path.join(get_script_dir(), '%s/%s.json') % (trace, trace)
-    with open(json_file_name) as f:
-        return json.loads(f.read())['TraceMetadata']
-
-
 def src_trace_path(trace):
     return os.path.join(get_script_dir(), trace)
-
-
-def get_trace_metadata(trace):
-    trace_path = src_trace_path(trace)
-    header_file = context_header(trace, trace_path)
-    metadata = []
-    with open(header_file, 'rt') as f:
-        for line in f.readlines():
-            for keyword in METADATA_KEYWORDS:
-                if keyword in line:
-                    metadata += [line]
-    return metadata
-
-
-def replace_metadata(header_file, metadata):
-    lines = []
-    replaced = False
-    with open(header_file, 'rt') as f:
-        for line in f.readlines():
-            found_keyword = False
-            for keyword in METADATA_KEYWORDS:
-                if keyword in line:
-                    found_keyword = True
-                    break
-
-            if found_keyword:
-                if not replaced:
-                    replaced = True
-                    lines += metadata
-            else:
-                lines += [line]
-
-    with open(header_file, 'wt') as f:
-        f.writelines(lines)
 
 
 def get_num_frames(json_data):
