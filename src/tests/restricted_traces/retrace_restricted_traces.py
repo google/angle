@@ -30,8 +30,12 @@ EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
 
 
+def get_trace_json_path(trace):
+    return os.path.join(get_script_dir(), trace, f'{trace}.json')
+
+
 def load_trace_json(trace):
-    json_file_name = os.path.join(get_script_dir(), '%s', '%s.json') % (trace, trace)
+    json_file_name = get_trace_json_path(trace)
     return read_json(json_file_name)
 
 
@@ -187,11 +191,11 @@ def upgrade_traces(args, traces):
         try:
             run_test_suite(args, trace, max_steps, additional_args, additional_env)
 
-            header_file = context_header(trace, trace_path)
-
-            if not os.path.exists(header_file):
-                logging.error('There was a problem tracing "%s", could not find header file: %s' %
-                              (trace, header_file))
+            json_file = get_trace_json_path(trace)
+            if not os.path.exists(json_file):
+                logging.error(
+                    f'There was a problem tracing "{trace}", could not find json file: {json_file}'
+                )
                 failures += [trace]
         except:
             logging.exception('There was an exception running "%s":' % trace)
