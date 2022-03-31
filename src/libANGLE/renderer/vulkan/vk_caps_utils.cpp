@@ -800,7 +800,10 @@ void RendererVk::ensureCapsInitialized() const
     // Set maxShaderAtomicCounters to zero if atomic is not supported.
     if (!mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics)
     {
-        mNativeCaps.maxShaderAtomicCounters[gl::ShaderType::Vertex] = 0;
+        mNativeCaps.maxShaderAtomicCounters[gl::ShaderType::Vertex]         = 0;
+        mNativeCaps.maxShaderAtomicCounters[gl::ShaderType::Geometry]       = 0;
+        mNativeCaps.maxShaderAtomicCounters[gl::ShaderType::TessControl]    = 0;
+        mNativeCaps.maxShaderAtomicCounters[gl::ShaderType::TessEvaluation] = 0;
     }
     if (!mPhysicalDeviceFeatures.fragmentStoresAndAtomics)
     {
