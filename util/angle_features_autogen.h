@@ -244,6 +244,7 @@ enum class Feature
     SupportsPipelineCreationFeedback,
     SupportsPipelineStatisticsQuery,
     SupportsPrimitivesGeneratedQuery,
+    SupportsPrimitiveTopologyListRestart,
     SupportsProtectedMemory,
     SupportsRenderpass2,
     SupportsRenderPassLoadStoreOpNone,

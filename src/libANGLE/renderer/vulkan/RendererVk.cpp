@@ -155,8 +155,6 @@ constexpr const char *kSkippedMessages[] = {
     "UNASSIGNED-CoreValidation-Shader-InputNotProduced",
     // http://anglebug.com/2796
     "UNASSIGNED-CoreValidation-Shader-PointSizeMissing",
-    // http://anglebug.com/3832
-    "VUID-VkPipelineInputAssemblyStateCreateInfo-topology-00428",
     // Best Practices Skips https://issuetracker.google.com/issues/166641492
     // https://issuetracker.google.com/issues/166793850
     "UNASSIGNED-BestPractices-vkCreateCommandPool-command-buffer-reset",
@@ -219,6 +217,13 @@ constexpr const char *kSkippedMessages[] = {
     "UNASSIGNED-BestPractices-vkCmdBeginRenderPass-ClearValueWithoutLoadOpClear",
     // http://anglebug.com/7513
     "VUID-VkGraphicsPipelineCreateInfo-pStages-06896",
+};
+
+// Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
+// not present.
+constexpr const char *kNoListRestartSkippedMessages[] = {
+    // http://anglebug.com/3832
+    "VUID-VkPipelineInputAssemblyStateCreateInfo-topology-00428",
 };
 
 // Some syncval errors are resolved in the presence of the NONE load or store render pass ops.  For
@@ -635,6 +640,21 @@ enum class DebugMessageReport
     Print,
 };
 
+bool IsMessageInSkipList(const char *message,
+                         const char *const skippedList[],
+                         size_t skippedListSize)
+{
+    for (size_t index = 0; index < skippedListSize; ++index)
+    {
+        if (strstr(message, skippedList[index]) != nullptr)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Suppress validation errors that are known.  Returns DebugMessageReport::Ignore in that case.
 DebugMessageReport ShouldReportDebugMessage(RendererVk *renderer,
                                             const char *messageId,
@@ -646,12 +666,10 @@ DebugMessageReport ShouldReportDebugMessage(RendererVk *renderer,
     }
 
     // Check with non-syncval messages:
-    for (const char *msg : kSkippedMessages)
+    const std::vector<const char *> skippedMessages = renderer->getSkippedValidationMessages();
+    if (IsMessageInSkipList(message, skippedMessages.data(), skippedMessages.size()))
     {
-        if (strstr(message, msg) != nullptr)
-        {
-            return DebugMessageReport::Ignore;
-        }
+        return DebugMessageReport::Ignore;
     }
 
     // Then check with syncval messages:
@@ -1955,6 +1973,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mPrimitivesGeneratedQueryFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVES_GENERATED_QUERY_FEATURES_EXT;
 
+    mPrimitiveTopologyListRestartFeatures = {};
+    mPrimitiveTopologyListRestartFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT;
+
     mBlendOperationAdvancedFeatures = {};
     mBlendOperationAdvancedFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT;
@@ -2120,6 +2142,11 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
         vk::AddToPNextChain(&deviceFeatures, &mPrimitivesGeneratedQueryFeatures);
     }
 
+    if (ExtensionFound(VK_EXT_PRIMITIVE_TOPOLOGY_LIST_RESTART_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mPrimitiveTopologyListRestartFeatures);
+    }
+
     if (ExtensionFound(VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(&deviceFeatures, &mBlendOperationAdvancedFeatures);
@@ -2183,6 +2210,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mHostQueryResetFeatures.pNext                    = nullptr;
     mDepthClipControlFeatures.pNext                  = nullptr;
     mPrimitivesGeneratedQueryFeatures.pNext          = nullptr;
+    mPrimitiveTopologyListRestartFeatures.pNext      = nullptr;
     mBlendOperationAdvancedFeatures.pNext            = nullptr;
     mPipelineCreationCacheControlFeatures.pNext      = nullptr;
     mExtendedDynamicStateFeatures.pNext              = nullptr;
@@ -2653,6 +2681,12 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         vk::AddToPNextChain(&mEnabledFeatures, &mPrimitivesGeneratedQueryFeatures);
     }
 
+    if (getFeatures().supportsPrimitiveTopologyListRestart.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_EXT_PRIMITIVE_TOPOLOGY_LIST_RESTART_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mPrimitiveTopologyListRestartFeatures);
+    }
+
     if (getFeatures().supportsBlendOperationAdvanced.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME);
@@ -2834,6 +2868,23 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     }
     mSupportedVulkanPipelineStageMask = ~unsupportedStages;
 
+    initializeValidationMessageSuppressions();
+
+    return angle::Result::Continue;
+}
+
+void RendererVk::initializeValidationMessageSuppressions()
+{
+    // Build the list of validation errors that are currently expected and should be skipped.
+    mSkippedValidationMessages.insert(mSkippedValidationMessages.end(), kSkippedMessages,
+                                      kSkippedMessages + ArraySize(kSkippedMessages));
+    if (!getFeatures().supportsPrimitiveTopologyListRestart.enabled)
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kNoListRestartSkippedMessages,
+            kNoListRestartSkippedMessages + ArraySize(kNoListRestartSkippedMessages));
+    }
+
     // Build the list of syncval errors that are currently expected and should be skipped.
     mSkippedSyncvalMessages.insert(mSkippedSyncvalMessages.end(), kSkippedSyncvalMessages,
                                    kSkippedSyncvalMessages + ArraySize(kSkippedSyncvalMessages));
@@ -2852,8 +2903,6 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
             kSkippedSyncvalMessagesWithoutLoadStoreOpNone +
                 ArraySize(kSkippedSyncvalMessagesWithoutLoadStoreOpNone));
     }
-
-    return angle::Result::Continue;
 }
 
 angle::Result RendererVk::selectPresentQueueForSurface(DisplayVk *displayVk,
@@ -3394,6 +3443,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     //                            mPrimitivesGeneratedQueryFeatures.primitivesGeneratedQuery ==
     //                            VK_TRUE);
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsPrimitivesGeneratedQuery, false);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsPrimitiveTopologyListRestart,
+        mPrimitiveTopologyListRestartFeatures.primitiveTopologyListRestart == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsBlendOperationAdvanced,

@@ -458,6 +458,14 @@
             "issue": "http://anglebug.com/5421"
         },
         {
+            "name": "supports_primitive_topology_list_restart",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_primitive_topology_list_restart extension."
+            ],
+            "issue": "http://anglebug.com/3832"
+        },
+        {
             "name": "supports_blend_operation_advanced",
             "category": "Features",
             "description": [
