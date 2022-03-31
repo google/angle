@@ -2348,6 +2348,13 @@ egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age
         }
     }
 
+    // TODO: Fix buffer age support for multisample images. http://anglebug.com/7149
+    if (isMultiSampled())
+    {
+        *age = 0;
+        return egl::NoError();
+    }
+
     if (mBufferAgeQueryFrameNumber == 0)
     {
         ANGLE_VK_PERF_WARNING(vk::GetImpl(context), GL_DEBUG_SEVERITY_LOW,
