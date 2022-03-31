@@ -677,7 +677,6 @@ void TextureMtl::releaseTexture(bool releaseImages, bool releaseTextureObjectsOn
     {
         mMetalSamplerState = nil;
         mFormat            = mtl::Format();
-        mIsPow2            = false;
     }
 }
 
@@ -714,7 +713,6 @@ angle::Result TextureMtl::createNativeTexture(const gl::Context *context,
     mCurrentBaseLevel = mState.getEffectiveBaseLevel();
     mCurrentMaxLevel  = mState.getEffectiveMaxLevel();
 
-    mIsPow2          = gl::isPow2(size.width) && gl::isPow2(size.height) && gl::isPow2(size.depth);
     mSlices          = 1;
     int numCubeFaces = 1;
     switch (type)
@@ -1252,8 +1250,6 @@ angle::Result TextureMtl::setEGLImageTarget(const gl::Context *context,
 
     mSlices = mNativeTexture->cubeFacesOrArrayLength();
 
-    gl::Extents size = mNativeTexture->sizeAt0();
-    mIsPow2          = gl::isPow2(size.width) && gl::isPow2(size.height) && gl::isPow2(size.depth);
     ANGLE_TRY(ensureSamplerStateCreated(context));
 
     // Tell context to rebind textures
@@ -1389,11 +1385,9 @@ angle::Result TextureMtl::bindTexImage(const gl::Context *context, egl::Surface 
 {
     releaseTexture(true);
 
-    auto pBuffer     = GetImplAs<OffscreenSurfaceMtl>(surface);
-    mNativeTexture   = pBuffer->getColorTexture();
-    mFormat          = pBuffer->getColorFormat();
-    gl::Extents size = mNativeTexture->sizeAt0();
-    mIsPow2          = gl::isPow2(size.width) && gl::isPow2(size.height) && gl::isPow2(size.depth);
+    auto pBuffer   = GetImplAs<OffscreenSurfaceMtl>(surface);
+    mNativeTexture = pBuffer->getColorTexture();
+    mFormat        = pBuffer->getColorFormat();
     ANGLE_TRY(ensureSamplerStateCreated(context));
 
     // Tell context to rebind textures

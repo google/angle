@@ -346,8 +346,6 @@ class TextureMtl : public TextureImpl
 
     GLuint mCurrentBaseLevel = 0;
     GLuint mCurrentMaxLevel  = 1000;
-
-    bool mIsPow2 = false;
 };
 
 }  // namespace rx
