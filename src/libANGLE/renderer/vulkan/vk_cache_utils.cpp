@@ -1453,17 +1453,27 @@ void InitializeSpecializationInfo(
 
 // Adjust border color value according to intended format.
 gl::ColorGeneric AdjustBorderColor(const angle::ColorGeneric &borderColorGeneric,
-                                   const angle::Format &format)
+                                   const angle::Format &format,
+                                   bool stencilMode)
 {
     gl::ColorGeneric adjustedBorderColor = borderColorGeneric;
 
     // Handle depth formats
     if (format.hasDepthOrStencilBits())
     {
-        if (format.depthBits > 0 && format.isUnorm())
+        if (stencilMode)
         {
-            // D or D/S formats
-            adjustedBorderColor.colorF.red = gl::clamp01(borderColorGeneric.colorF.red);
+            // Stencil component
+            adjustedBorderColor.colorUI.red = gl::clampForBitCount<unsigned int>(
+                borderColorGeneric.colorUI.red, format.stencilBits);
+        }
+        else
+        {
+            // Depth component
+            if (format.isUnorm())
+            {
+                adjustedBorderColor.colorF.red = gl::clamp01(borderColorGeneric.colorF.red);
+            }
         }
 
         return adjustedBorderColor;
@@ -3486,7 +3496,7 @@ void SamplerDesc::update(ContextVk *contextVk,
     // Adjust border color according to intended format
     const vk::Format &vkFormat = contextVk->getRenderer()->getFormat(intendedFormatID);
     gl::ColorGeneric adjustedBorderColor =
-        AdjustBorderColor(samplerState.getBorderColor(), vkFormat.getIntendedFormat());
+        AdjustBorderColor(samplerState.getBorderColor(), vkFormat.getIntendedFormat(), stencilMode);
     mBorderColor = adjustedBorderColor.colorF;
 
     mReserved = 0;
