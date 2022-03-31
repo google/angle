@@ -265,7 +265,7 @@
 7109 WIN D3D11 : SimpleStateChangeTestES3.InvalidateRGBThenDraw/* = SKIP
 7109 WIN D3D11 : SimpleStateChangeTestES3.DrawAndInvalidateRGBThenVerifyAlpha/* = SKIP
 7113 WIN D3D9 : GLSLTest.LoopBodyEndingInBranch*/* = SKIP
-1312167 WIN D3D9 : RobustResourceInitTest.OutOfBoundsArrayBuffers/* = SKIP
+7148 WIN D3D9 : RobustResourceInitTest.OutOfBoundsArrayBuffers/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP

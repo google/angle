@@ -572,6 +572,9 @@ class RendererVk : angle::NonCopyable
     bool hasFormatFeatureBits(angle::FormatID formatID,
                               const VkFormatFeatureFlags featureBits) const;
 
+    // Initialize VMA allocator and buffer suballocator related data.
+    angle::Result initializeMemoryAllocator(DisplayVk *displayVk);
+
     egl::Display *mDisplay;
 
     void *mLibVulkanLibrary;
@@ -649,17 +652,21 @@ class RendererVk : angle::NonCopyable
     vk::SharedBufferSuballocationGarbageList mSuballocationGarbage;
     vk::SharedBufferSuballocationGarbageList mPendingSubmissionSuballocationGarbage;
 
-    vk::MemoryProperties mMemoryProperties;
     vk::FormatTable mFormatTable;
+    // A cache of VkFormatProperties as queried from the device over time.
+    mutable angle::FormatMap<VkFormatProperties> mFormatProperties;
+
+    vk::Allocator mAllocator;
+    vk::MemoryProperties mMemoryProperties;
+    VkDeviceSize mPreferredLargeHeapBlockSize;
 
     // The default alignment for BufferVk object
     size_t mDefaultBufferAlignment;
-
     // The cached memory type index for staging buffer that is host visible.
     uint32_t mCoherentStagingBufferMemoryTypeIndex;
     uint32_t mNonCoherentStagingBufferMemoryTypeIndex;
     size_t mStagingBufferAlignment;
-
+    // For vertex conversion buffers
     uint32_t mHostVisibleVertexConversionBufferMemoryTypeIndex;
     uint32_t mDeviceLocalVertexConversionBufferMemoryTypeIndex;
     size_t mVertexConversionBufferAlignment;
@@ -672,9 +679,6 @@ class RendererVk : angle::NonCopyable
     bool mPipelineCacheDirty;
     bool mPipelineCacheInitialized;
 
-    // A cache of VkFormatProperties as queried from the device over time.
-    mutable angle::FormatMap<VkFormatProperties> mFormatProperties;
-
     // Latest validation data for debug overlay.
     std::string mLastValidationMessage;
     uint32_t mValidationMessageCount;
@@ -682,8 +686,6 @@ class RendererVk : angle::NonCopyable
     // Whether framebuffer fetch has been used, for the purposes of more accurate syncval error
     // filtering.
     bool mIsFramebufferFetchUsed;
-
-    DebugAnnotatorVk mAnnotator;
 
     // How close to VkPhysicalDeviceLimits::maxMemoryAllocationCount we allow ourselves to get
     static constexpr double kPercentMaxMemoryAllocationCount = 0.3;
@@ -715,7 +717,6 @@ class RendererVk : angle::NonCopyable
     vk::CommandBufferRecycler<vk::RenderPassCommandBuffer, vk::RenderPassCommandBufferHelper>
         mRenderPassCommandBufferRecycler;
 
-    vk::Allocator mAllocator;
     SamplerCache mSamplerCache;
     SamplerYcbcrConversionCache mYuvConversionCache;
     angle::HashMap<VkFormat, uint32_t> mVkFormatDescriptorCountMap;
@@ -725,8 +726,12 @@ class RendererVk : angle::NonCopyable
     // Tracks resource serials.
     vk::ResourceSerialFactory mResourceSerialFactory;
 
+    // Application executable information
+    VkApplicationInfo mApplicationInfo;
     // Process GPU memory reports
     vk::MemoryReport mMemoryReport;
+    // Helpers for adding trace annotations
+    DebugAnnotatorVk mAnnotator;
 
     // Stats about all Vulkan object caches
     using VulkanCacheStats = angle::PackedEnumMap<VulkanCacheType, CacheStats>;

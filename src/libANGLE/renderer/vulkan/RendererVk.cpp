@@ -1461,13 +1461,13 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalSemaphoreCapabilities, true);
     }
 
-    VkApplicationInfo applicationInfo  = {};
-    applicationInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    std::string appName                = angle::GetExecutableName();
-    applicationInfo.pApplicationName   = appName.c_str();
-    applicationInfo.applicationVersion = 1;
-    applicationInfo.pEngineName        = "ANGLE";
-    applicationInfo.engineVersion      = 1;
+    mApplicationInfo                    = {};
+    mApplicationInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    std::string appName                 = angle::GetExecutableName();
+    mApplicationInfo.pApplicationName   = appName.c_str();
+    mApplicationInfo.applicationVersion = 1;
+    mApplicationInfo.pEngineName        = "ANGLE";
+    mApplicationInfo.engineVersion      = 1;
 
     auto enumerateInstanceVersion = reinterpret_cast<PFN_vkEnumerateInstanceVersion>(
         vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceVersion"));
@@ -1493,12 +1493,12 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
             mApiVersion = VK_API_VERSION_1_0;
         }
     }
-    applicationInfo.apiVersion = mApiVersion;
+    mApplicationInfo.apiVersion = mApiVersion;
 
     VkInstanceCreateInfo instanceInfo = {};
     instanceInfo.sType                = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceInfo.flags                = 0;
-    instanceInfo.pApplicationInfo     = &applicationInfo;
+    instanceInfo.pApplicationInfo     = &mApplicationInfo;
 
     // Enable requested layers and extensions.
     instanceInfo.enabledExtensionCount = static_cast<uint32_t>(mEnabledInstanceExtensions.size());
@@ -1641,21 +1641,37 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         ANGLE_TRY(initializeDevice(displayVk, firstGraphicsQueueFamily));
     }
 
+    // Store the physical device memory properties so we can find the right memory pools.
+    mMemoryProperties.init(mPhysicalDevice);
+    ANGLE_VK_CHECK(displayVk, mMemoryProperties.getMemoryTypeCount() > 0,
+                   VK_ERROR_INITIALIZATION_FAILED);
+
+    ANGLE_TRY(initializeMemoryAllocator(displayVk));
+
+    {
+        ANGLE_TRACE_EVENT0("gpu.angle,startup", "GlslangWarmup");
+        sh::InitializeGlslang();
+    }
+
+    // Initialize the format table.
+    mFormatTable.initialize(this, &mNativeTextureCaps, &mNativeCaps.compressedTextureFormats);
+
+    setGlobalDebugAnnotator();
+
+    return angle::Result::Continue;
+}
+
+angle::Result RendererVk::initializeMemoryAllocator(DisplayVk *displayVk)
+{
     // This number matches Chromium and was picked by looking at memory usage of
     // Android apps. The allocator will start making blocks at 1/8 the max size
     // and builds up block size as needed before capping at the max set here.
-    VkDeviceSize preferredLargeHeapBlockSize = 4 * 1024 * 1024;
-
-    // Store the physical device memory properties so we can find the right memory pools.
-    mMemoryProperties.init(mPhysicalDevice);
+    mPreferredLargeHeapBlockSize = 4 * 1024 * 1024;
 
     // Create VMA allocator
     ANGLE_VK_TRY(displayVk,
-                 mAllocator.init(mPhysicalDevice, mDevice, mInstance, applicationInfo.apiVersion,
-                                 preferredLargeHeapBlockSize));
-
-    ANGLE_VK_CHECK(displayVk, mMemoryProperties.getMemoryTypeCount() > 0,
-                   VK_ERROR_INITIALIZATION_FAILED);
+                 mAllocator.init(mPhysicalDevice, mDevice, mInstance, mApplicationInfo.apiVersion,
+                                 mPreferredLargeHeapBlockSize));
 
     // Figure out the alignment for default buffer allocations
     VkBufferCreateInfo createInfo    = {};
@@ -1666,10 +1682,12 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
     createInfo.queueFamilyIndexCount = 0;
     createInfo.pQueueFamilyIndices   = nullptr;
-    vk::Buffer tempBuffer;
-    tempBuffer.init(mDevice, createInfo);
+
+    vk::DeviceScoped<vk::Buffer> tempBuffer(mDevice);
+    tempBuffer.get().init(mDevice, createInfo);
+
     VkMemoryRequirements defaultBufferMemoryRequirements;
-    tempBuffer.getMemoryRequirements(mDevice, &defaultBufferMemoryRequirements);
+    tempBuffer.get().getMemoryRequirements(mDevice, &defaultBufferMemoryRequirements);
     ASSERT(gl::isPow2(defaultBufferMemoryRequirements.alignment));
 
     const VkPhysicalDeviceLimits &limitsVk = getPhysicalDeviceProperties().limits;
@@ -1677,13 +1695,13 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     ASSERT(gl::isPow2(limitsVk.minStorageBufferOffsetAlignment));
     ASSERT(gl::isPow2(limitsVk.minTexelBufferOffsetAlignment));
     ASSERT(gl::isPow2(limitsVk.minMemoryMapAlignment));
+
     mDefaultBufferAlignment =
         std::max({static_cast<size_t>(limitsVk.minUniformBufferOffsetAlignment),
                   static_cast<size_t>(limitsVk.minStorageBufferOffsetAlignment),
                   static_cast<size_t>(limitsVk.minTexelBufferOffsetAlignment),
                   static_cast<size_t>(limitsVk.minMemoryMapAlignment),
                   static_cast<size_t>(defaultBufferMemoryRequirements.alignment)});
-    tempBuffer.destroy(mDevice);
 
     // Initialize staging buffer memory type index and alignment.
     // These buffers will only be used as transfer sources or transfer targets.
@@ -1728,6 +1746,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // Host visible and non-coherent vertex conversion buffer, which is the same as non-coherent
     // staging buffer
     mHostVisibleVertexConversionBufferMemoryTypeIndex = mNonCoherentStagingBufferMemoryTypeIndex;
+
     // We may use compute shader to do conversion, so we must meet
     // minStorageBufferOffsetAlignment requirement as well. Also take into account non-coherent
     // alignment requirements.
@@ -1737,16 +1756,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
          static_cast<size_t>(mPhysicalDeviceProperties.limits.nonCoherentAtomSize),
          static_cast<size_t>(defaultBufferMemoryRequirements.alignment)});
     ASSERT(gl::isPow2(mVertexConversionBufferAlignment));
-
-    {
-        ANGLE_TRACE_EVENT0("gpu.angle,startup", "GlslangWarmup");
-        sh::InitializeGlslang();
-    }
-
-    // Initialize the format table.
-    mFormatTable.initialize(this, &mNativeTextureCaps, &mNativeCaps.compressedTextureFormats);
-
-    setGlobalDebugAnnotator();
 
     return angle::Result::Continue;
 }
@@ -4222,16 +4231,9 @@ void RendererVk::onDeallocateHandle(vk::HandleType handleType)
 
 VkDeviceSize RendererVk::getPreferedBufferBlockSize(uint32_t memoryTypeIndex) const
 {
-    // This number matches Chromium and was picked by looking at memory usage of
-    // Android apps. The allocator will start making blocks at 1/8 the max size
-    // and builds up block size as needed before capping at the max set here.
-    VkDeviceSize preferredBlockSize = 4 * 1024 * 1024;
-
     // Try not to exceed 1/64 of heap size to begin with.
     const VkDeviceSize heapSize = getMemoryProperties().getHeapSizeForMemoryType(memoryTypeIndex);
-    preferredBlockSize          = std::min(heapSize / 64, preferredBlockSize);
-
-    return preferredBlockSize;
+    return std::min(heapSize / 64, mPreferredLargeHeapBlockSize);
 }
 
 vk::BufferPool *RendererVk::getDefaultBufferPool(VkDeviceSize size, uint32_t memoryTypeIndex)
