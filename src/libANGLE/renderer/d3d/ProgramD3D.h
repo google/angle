@@ -106,6 +106,13 @@ struct D3DUniformBlock : D3DInterfaceBlock
     gl::ShaderMap<unsigned int> mStructureByteStrides;
 };
 
+struct ShaderStorageBlock
+{
+    std::string name;
+    unsigned int arraySize     = 0;
+    unsigned int registerIndex = 0;
+};
+
 struct D3DUBOCache
 {
     unsigned int registerIndex;
@@ -350,6 +357,7 @@ class ProgramD3D : public ProgramImpl
     bool hasNamedUniform(const std::string &name);
 
     bool usesVertexID() const { return mUsesVertexID; }
+    size_t getNumPixelShaderOutputs() const { return mPixelShaderOutputLayoutCache.size(); }
 
   private:
     // These forward-declared tasks are used for multi-thread shader compiles.
@@ -585,6 +593,7 @@ class ProgramD3D : public ProgramImpl
     std::map<std::string, int> mAtomicBindingMap;
     std::vector<D3DUniformBlock> mD3DUniformBlocks;
     std::vector<D3DInterfaceBlock> mD3DShaderStorageBlocks;
+    gl::ShaderMap<std::vector<ShaderStorageBlock>> mShaderStorageBlocks;
     std::array<unsigned int, gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>
         mComputeAtomicCounterBufferRegisterIndices;
 

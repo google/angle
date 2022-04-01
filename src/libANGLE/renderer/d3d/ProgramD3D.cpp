@@ -1544,7 +1544,7 @@ angle::Result ProgramD3D::getPixelExecutableForCachedOutputLayout(
 
     std::string finalPixelHLSL = mDynamicHLSL->generatePixelShaderForOutputSignature(
         mShaderHLSL[gl::ShaderType::Fragment], mPixelShaderKey, mUsesFragDepth,
-        mPixelShaderOutputLayoutCache);
+        mPixelShaderOutputLayoutCache, mShaderStorageBlocks[gl::ShaderType::Fragment]);
 
     // Generate new pixel executable
     ShaderExecutableD3D *pixelExecutable = nullptr;
@@ -1587,7 +1587,8 @@ angle::Result ProgramD3D::getVertexExecutableForCachedInputLayout(
 
     // Generate new dynamic layout with attribute conversions
     std::string finalVertexHLSL = mDynamicHLSL->generateVertexShaderForInputLayout(
-        mShaderHLSL[gl::ShaderType::Vertex], mCachedInputLayout, mState.getProgramInputs());
+        mShaderHLSL[gl::ShaderType::Vertex], mCachedInputLayout, mState.getProgramInputs(),
+        mShaderStorageBlocks[gl::ShaderType::Vertex], getNumPixelShaderOutputs());
 
     // Generate new vertex executable
     ShaderExecutableD3D *vertexExecutable = nullptr;
@@ -2190,12 +2191,10 @@ void ProgramD3D::initializeShaderStorageBlocks()
     {
         shadersD3D[shaderType] = SafeGetImplAs<ShaderD3D>(mState.getAttachedShader(shaderType));
     }
-
     for (const gl::InterfaceBlock &shaderStorageBlock : mState.getShaderStorageBlocks())
     {
         unsigned int shaderStorageBlockElement =
             shaderStorageBlock.isArray ? shaderStorageBlock.arrayElement : 0;
-
         D3DInterfaceBlock d3dShaderStorageBlock;
 
         for (gl::ShaderType shaderType : gl::AllShaderTypes())
@@ -2205,12 +2204,34 @@ void ProgramD3D::initializeShaderStorageBlocks()
                 ASSERT(shadersD3D[shaderType]);
                 unsigned int baseRegister =
                     shadersD3D[shaderType]->getShaderStorageBlockRegister(shaderStorageBlock.name);
+
                 d3dShaderStorageBlock.mShaderRegisterIndexes[shaderType] =
                     baseRegister + shaderStorageBlockElement;
             }
         }
-
         mD3DShaderStorageBlocks.push_back(d3dShaderStorageBlock);
+    }
+
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        gl::Shader *shader = mState.getAttachedShader(shaderType);
+        if (!shader)
+        {
+            continue;
+        }
+        ShaderD3D *shaderD3D = SafeGetImplAs<ShaderD3D>(shader);
+        for (const sh::InterfaceBlock &ssbo : shader->getShaderStorageBlocks())
+        {
+            if (!ssbo.active)
+            {
+                continue;
+            }
+            ShaderStorageBlock block;
+            block.name          = !ssbo.instanceName.empty() ? ssbo.instanceName : ssbo.name;
+            block.arraySize     = ssbo.isArray() ? ssbo.arraySize : 0;
+            block.registerIndex = shaderD3D->getShaderStorageBlockRegister(ssbo.name);
+            mShaderStorageBlocks[shaderType].push_back(block);
+        }
     }
 }
 
