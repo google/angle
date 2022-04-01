@@ -559,6 +559,15 @@ struct FeaturesGL : FeatureSetBase
     Feature emulateRGB10 = {"emulate_rgb10", FeatureCategory::OpenGLWorkarounds,
                             "Emulate RGB10 support using RGB10_A2.", &members,
                             "https://crbug.com/1300575"};
+
+    // On NVIDIA, binding a texture level > 0 to a framebuffer color attachment and then
+    // binding a renderbuffer to the same attachment causes the driver to report that the FBO
+    // has an incomplete attachment. This workaround forces a call to framebufferTexture2D with
+    // texture_id and level set to 0 before binding a renderbuffer to bypass the issue.
+    Feature alwaysUnbindFramebufferTexture2D = {
+        "always_unbind_framebuffer_texture_2d", FeatureCategory::OpenGLWorkarounds,
+        "Force unbind framebufferTexture2D before binding renderbuffer to work around driver bug.",
+        &members, "https://anglebug.com/5536"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
