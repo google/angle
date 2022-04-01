@@ -359,14 +359,14 @@ std::vector<ParamT> FilterWithFunc(const std::vector<ParamT> &in, FilterFunc fil
 }
 }  // namespace angle
 
-#define ANGLE_SKIP_TEST_IF(COND)                                  \
-    do                                                            \
-    {                                                             \
-        if (COND)                                                 \
-        {                                                         \
-            std::cout << "Test skipped: " #COND "." << std::endl; \
-            return;                                               \
-        }                                                         \
+#define ANGLE_SKIP_TEST_IF(COND)                        \
+    do                                                  \
+    {                                                   \
+        if (COND)                                       \
+        {                                               \
+            GTEST_SKIP() << "Test skipped: " #COND "."; \
+            return;                                     \
+        }                                               \
     } while (0)
 
 #endif  // ANGLE_TEST_INSTANTIATE_H_
