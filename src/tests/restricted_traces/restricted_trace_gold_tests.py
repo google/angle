@@ -238,8 +238,7 @@ def upload_test_result_to_skia_gold(args, gold_session_manager, gold_session, go
     png_file_name = os.path.join(screenshot_dir, prefix + image_name + '.png')
 
     if not os.path.isfile(png_file_name):
-        logging.info('Screenshot not found, test skipped.')
-        return SKIP
+        raise Exception('Screenshot not found: ' + png_file_name)
 
     status, error = gold_session.RunComparison(
         name=image_name, png_file=png_file_name, use_luci=use_luci)
@@ -341,16 +340,23 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                     batch_result = PASS if run_wrapper(args, cmd, env,
                                                        tempfile_path) == 0 else FAIL
 
+                    with open(tempfile_path) as f:
+                        test_output = f.read() + '\n'
+
                     next_batch = []
                     for trace in batch:
                         artifacts = {}
 
                         if batch_result == PASS:
-                            logging.debug('upload test result: %s' % trace)
-                            result = upload_test_result_to_skia_gold(args, gold_session_manager,
-                                                                     gold_session, gold_properties,
-                                                                     screenshot_dir, trace,
-                                                                     artifacts)
+                            test_prefix = SWIFTSHADER_TEST_PREFIX if args.swiftshader else DEFAULT_TEST_PREFIX
+                            trace_skipped_notice = '[  SKIPPED ] ' + test_prefix + trace + '\n'
+                            if trace_skipped_notice in test_output:
+                                result = SKIP
+                            else:
+                                logging.debug('upload test result: %s' % trace)
+                                result = upload_test_result_to_skia_gold(
+                                    args, gold_session_manager, gold_session, gold_properties,
+                                    screenshot_dir, trace, artifacts)
                         else:
                             result = batch_result
 
