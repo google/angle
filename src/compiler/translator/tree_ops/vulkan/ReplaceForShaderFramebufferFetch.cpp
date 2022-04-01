@@ -99,7 +99,11 @@ bool InputAttachmentReferenceTraverser::visitDeclaration(Visit visit, TIntermDec
 
     if (symbol->getType().getQualifier() == EvqFragmentInOut)
     {
-        const unsigned int inputAttachmentIdx = symbol->getType().getLayoutQualifier().location;
+        // The input attachment index is identical to the location qualifier.  If there's only one
+        // output, GLSL is allowed to not specify the location qualifier, in which case it would
+        // implicitly be at location 0.
+        const unsigned int inputAttachmentIdx =
+            std::max(0, symbol->getType().getLayoutQualifier().location);
 
         if (symbol->getType().isArray())
         {
