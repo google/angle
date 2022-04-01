@@ -416,8 +416,6 @@ void main()
 // https://code.google.com/p/angleproject/issues/detail?id=709
 TEST_P(IndexedBufferCopyTest, IndexRangeBug)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
     // TODO(geofflang): Figure out why this fails on AMD OpenGL (http://anglebug.com/1291)
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 

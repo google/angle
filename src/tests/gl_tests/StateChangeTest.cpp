@@ -550,8 +550,6 @@ TEST_P(StateChangeTestES3, CopyTexSubImage3DSync)
 // Ensure that BlitFramebuffer syncs framebuffer changes.
 TEST_P(StateChangeTestES3, BlitFramebufferSync)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
     // Init first texture to red
@@ -621,8 +619,6 @@ TEST_P(StateChangeTestES3, ReadBufferAndDrawBuffersSync)
 // Adapted partially from WebGL 2 test "renderbuffers/invalidate-framebuffer"
 TEST_P(StateChangeTestES3, IncompleteRenderbufferAttachmentInvalidateSync)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
     GLint samples = 0;
@@ -1217,8 +1213,6 @@ TEST_P(StateChangeTestES3, SamplerMetadataUpdateOnSetProgram)
 // Tests that redefining Buffer storage syncs with the Transform Feedback object.
 TEST_P(StateChangeTestES3, RedefineTransformFeedbackBuffer)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     // Create the most simple program possible - simple a passthrough for a float attribute.
     constexpr char kVertexShader[] = R"(#version 300 es
 in float valueIn;

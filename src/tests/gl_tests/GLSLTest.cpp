@@ -1163,8 +1163,6 @@ void main()
 // Draw an array of points with the first vertex offset at 0 using gl_VertexID
 TEST_P(GLSLTest_ES3, GLVertexIDOffsetZeroDrawArray)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
     constexpr int kStartIndex  = 0;
     constexpr int kArrayLength = 5;
     constexpr char kVS[]       = R"(#version 300 es
@@ -1554,8 +1552,6 @@ void main() {
 // Draw an array of points with the first vertex offset at 5 using gl_VertexID
 TEST_P(GLSLTest_ES3, GLVertexIDOffsetFiveDrawArray)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
     // Bug in Nexus drivers, offset does not work. (anglebug.com/3264)
     ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
 
@@ -9031,9 +9027,6 @@ void main()
 // Tests that PointCoord behaves the same betweeen a user FBO and the back buffer.
 TEST_P(GLSLTest, PointCoordConsistency)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
-
     constexpr char kPointCoordVS[] = R"(attribute vec2 position;
 uniform vec2 viewportSize;
 void main()
