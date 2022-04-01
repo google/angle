@@ -914,6 +914,19 @@ TEST_P(BufferDataTest, MapWriteArrayBufferDataDrawArrays)
     EXPECT_GL_NO_ERROR();
 }
 
+// Verify that buffer sub data uploads are properly validated within the buffer size range on 32-bit
+// systems.
+TEST_P(BufferDataTest, BufferSizeValidation32Bit)
+{
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, 100, nullptr, GL_STATIC_DRAW);
+
+    GLubyte data = 0;
+    glBufferSubData(GL_ARRAY_BUFFER, std::numeric_limits<uint32_t>::max(), 1, &data);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
 // Tests a null crash bug caused by copying from null back-end buffer pointer
 // when calling bufferData again after drawing without calling bufferData in D3D11.
 TEST_P(BufferDataTestES3, DrawWithNotCallingBufferData)
