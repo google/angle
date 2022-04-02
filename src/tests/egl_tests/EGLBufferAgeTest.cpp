@@ -355,7 +355,6 @@ TEST_P(EGLBufferAgeTest_MSAA, VerifyContentsForMultisampled)
         ASSERT_EGL_SUCCESS() << "eglSwapBuffers failed.";
     }
 
-    // TODO: Fix buffer age support for multisample images. http://anglebug.com/7149
     EXPECT_GE(age, 0);
 
     EXPECT_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
@@ -425,7 +424,6 @@ TEST_P(EGLBufferAgeTest_MSAA_DS, VerifyContentsForMultisampledWithDepthStencil)
         ASSERT_EGL_SUCCESS() << "eglSwapBuffers failed.";
     }
 
-    // TODO: Fix buffer age support for multisample images. http://anglebug.com/7149
     EXPECT_GE(age, 0);
 
     EXPECT_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
