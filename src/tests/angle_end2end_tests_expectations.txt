@@ -8,7 +8,8 @@
 6718 TSAN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP
 6718 TSAN : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
 6746 TSAN : *AsyncQueue* = SKIP
-6804 LINUX VULKAN TSAN : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP
+6804 TSAN : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP
+7159 TSAN : InstancingTestES3.LargeDivisor/* = SKIP
 
 // Generic
 // Fails in the flush thread when calling eglMakeCurrent.
@@ -531,6 +532,7 @@
 // ASAN flaky timeouts and crashes with Win / Vulkan / Swiftshader
 6965 ASAN WIN VULKAN SWIFTSHADER : MipmapTest* = SKIP
 6968 ASAN WIN VULKAN SWIFTSHADER : MultithreadingTest.MultiContextDrawWithSwapBuffers/ES3_Vulkan_SwiftShader = SKIP
+7160 ASAN WIN VULKAN SWIFTSHADER : GeometryShaderTest.LayeredFramebufferMidRenderClear3DColor/ES3_1_Vulkan_SwiftShader = SKIP
 
 // Regression after a buffer change.
 6881 INTEL VULKAN LINUX : Texture2DTest.TexStorageWithPBOMiddlePixelDifferent/* = SKIP
