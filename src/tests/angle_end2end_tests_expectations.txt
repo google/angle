@@ -455,6 +455,10 @@
 7096 PIXEL6 VULKAN : VulkanPerformanceCounterTest.MappingGpuReadOnlyBufferGhostsBuffer/* = SKIP
 7096 PIXEL6 VULKAN : VulkanPerformanceCounterTest.ClearThenScissoredDraw/* = SKIP
 7096 PIXEL6 VULKAN : VulkanPerformanceCounterTest.ReadOnlyDepthStencilFeedbackLoopUsesSingleRenderPass/* = SKIP
+7158 PIXEL6 VULKAN : ImageTestES3.SourceAHBCubeTargetCube/* = SKIP
+7158 PIXEL6 VULKAN : ImageTestES31.SourceAHBCubeArrayTargetCubeArray/* = SKIP
+7158 PIXEL6 VULKAN : ImageTestES3.SourceAHBMipTarget2DMip/* = SKIP
+7158 PIXEL6 VULKAN : ImageTestES3.SourceAHBMipTarget2DMipGenerateMipmap/* = SKIP
 
 // AMD windows failures.  The GPU and driver on our bots are very old and buggy.
 // http://crbug.com/1224996
