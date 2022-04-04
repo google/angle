@@ -1856,7 +1856,7 @@ void CaptureFramebufferAttachment(std::vector<CallCapture> *setupCalls,
     {
         gl::ImageIndex index = attachment.getTextureImageIndex();
 
-        if (index.usesTex3D() || IsCubeMapFaceTarget(index.getTarget()))
+        if (index.usesTex3D())
         {
             Capture(setupCalls, CaptureFramebufferTextureLayer(
                                     replayState, true, GL_FRAMEBUFFER, attachment.getBinding(),
