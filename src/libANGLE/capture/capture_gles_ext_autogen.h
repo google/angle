@@ -838,6 +838,8 @@ angle::CallCapture CaptureGetQueryObjectui64vRobustANGLE(const State &glState,
                                                          GLsizei *length,
                                                          GLuint64 *params);
 
+// GL_ANGLE_robust_resource_initialization
+
 // GL_ANGLE_semaphore_fuchsia
 angle::CallCapture CaptureImportSemaphoreZirconHandleANGLE(const State &glState,
                                                            bool isCallValid,

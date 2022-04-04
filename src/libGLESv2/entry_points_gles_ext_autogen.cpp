@@ -3656,6 +3656,8 @@ void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
     }
 }
 
+// GL_ANGLE_robust_resource_initialization
+
 // GL_ANGLE_semaphore_fuchsia
 void GL_APIENTRY GL_ImportSemaphoreZirconHandleANGLE(GLuint semaphore,
                                                      GLenum handleType,

@@ -599,6 +599,8 @@ EXPORTS
     glTexSubImage2DRobustANGLE
     glTexSubImage3DRobustANGLE
 
+    ; GL_ANGLE_robust_resource_initialization
+
     ; GL_ANGLE_semaphore_fuchsia
     glImportSemaphoreZirconHandleANGLE
 

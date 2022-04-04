@@ -1901,6 +1901,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_PACK_REVERSE_ROW_ORDER_ANGLE";
                 case 0x93A6:
                     return "GL_PROGRAM_BINARY_ANGLE";
+                case 0x93A7:
+                    return "GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE";
                 case 0x93AE:
                     return "GL_HANDLE_TYPE_ZIRCON_VMO_ANGLE";
                 case 0x93AF:
@@ -1977,6 +1979,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_OVR";
                 case 0x9633:
                     return "GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_OVR";
+                case 0x969F:
+                    return "GL_RESOURCE_INITIALIZED_ANGLE";
                 default:
                     return UnknownGLenumToString(value);
             }
