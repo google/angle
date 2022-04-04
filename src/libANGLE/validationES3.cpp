@@ -1771,6 +1771,24 @@ bool ValidateFramebufferTextureLayer(const Context *context,
             }
             break;
 
+            case TextureType::CubeMap:
+            {
+                if (level > log2(caps.maxCubeMapTextureSize))
+                {
+                    context->validationError(entryPoint, GL_INVALID_VALUE,
+                                             kFramebufferTextureInvalidMipLevel);
+                    return false;
+                }
+
+                if (layer >= static_cast<GLint>(kCubeFaceCount))
+                {
+                    context->validationError(entryPoint, GL_INVALID_VALUE,
+                                             kFramebufferTextureInvalidLayer);
+                    return false;
+                }
+            }
+            break;
+
             case TextureType::CubeMapArray:
             {
                 if (level > log2(caps.max3DTextureSize))
@@ -1795,7 +1813,7 @@ bool ValidateFramebufferTextureLayer(const Context *context,
                 return false;
         }
 
-        const auto &format = tex->getFormat(NonCubeTextureTypeToTarget(tex->getType()), level);
+        const auto &format = tex->getFormat(TextureTypeToTarget(tex->getType(), layer), level);
         if (format.info->compressed)
         {
             context->validationError(entryPoint, GL_INVALID_OPERATION,
