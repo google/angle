@@ -244,23 +244,6 @@ angle::Result Texture::Make3DTexture(ContextMtl *context,
         return MakeTexture(context, format, desc, mips, renderTargetOnly, allowFormatView, refOut);
     }  // ANGLE_MTL_OBJC_SCOPE
 }
-angle::Result Texture::MakeIOSurfaceTexture(ContextMtl *context,
-                                            const Format &format,
-                                            uint32_t width,
-                                            uint32_t height,
-                                            IOSurfaceRef ref,
-                                            uint32_t plane,
-                                            TextureRef *refOut)
-{
-    MTLTextureDescriptor *desc = [[MTLTextureDescriptor new] ANGLE_MTL_AUTORELEASE];
-    desc.textureType           = MTLTextureType2D;
-    desc.pixelFormat           = format.metalFormat;
-    desc.width                 = width;
-    desc.height                = height;
-    desc.mipmapLevelCount      = 1;
-    desc.sampleCount           = 1;
-    return MakeTexture(context, format, desc, ref, plane, NO, refOut);
-}
 
 /** static */
 angle::Result Texture::MakeTexture(ContextMtl *context,

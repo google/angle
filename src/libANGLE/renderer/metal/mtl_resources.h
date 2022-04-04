@@ -165,15 +165,6 @@ class Texture final : public Resource,
                                        bool renderTargetOnly,
                                        bool allowFormatView,
                                        TextureRef *refOut);
-
-    static angle::Result MakeIOSurfaceTexture(ContextMtl *context,
-                                              const Format &format,
-                                              uint32_t width,
-                                              uint32_t height,
-                                              IOSurfaceRef ref,
-                                              uint32_t plane,
-                                              TextureRef *refOut);
-
     static TextureRef MakeFromMetal(id<MTLTexture> metalTexture);
 
     // Allow CPU to read & write data directly to this texture?
