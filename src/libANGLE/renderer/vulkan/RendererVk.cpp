@@ -3288,11 +3288,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
                              mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE));
 
     // TODO: http://anglebug.com/5927 - drop dependency on customBorderColorWithoutFormat.
-    // TODO: http://anglebug.com/6200 - re-enable on SwS when possible
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsCustomBorderColor,
         mCustomBorderColorFeatures.customBorderColors == VK_TRUE &&
-            mCustomBorderColorFeatures.customBorderColorWithoutFormat == VK_TRUE && !isSwiftShader);
+            mCustomBorderColorFeatures.customBorderColorWithoutFormat == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMultiDrawIndirect,
                             mPhysicalDeviceFeatures.multiDrawIndirect == VK_TRUE);
