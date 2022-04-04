@@ -538,6 +538,9 @@
 4016 SWIFTSHADER : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.27 = FAIL
 4016 SWIFTSHADER : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.80 = FAIL
 
+// Fails on SwANGLE bots
+4418 SWIFTSHADER : dEQP-GLES3.functional.negative_api.buffer.framebuffer_texture_layer = FAIL
+
 // Flaky timeouts on SwANGLE
 1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.faceforward.lowp_fragment.vec4 = TIMEOUT
 1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.faceforward.lowp_vertex.vec4 = TIMEOUT
