@@ -1200,7 +1200,7 @@ TracePerfTest::TracePerfTest(const TracePerfParams &params)
 
     if (traceNameIs("car_chase"))
     {
-        if (IsWindows() && IsIntelHD630Mobile())
+        if (IsWindows() && IsIntel())
         {
             skipTest("http://anglebug.com/7173 Fails on Intel HD 630 Mobile");
         }
