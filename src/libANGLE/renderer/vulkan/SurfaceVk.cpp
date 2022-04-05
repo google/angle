@@ -1913,17 +1913,10 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
     }
     if (mDepthStencilImage.valid())
     {
-        VkImageAspectFlags dsAspects = mDepthStencilImage.getAspectFlags();
-        if ((dsAspects & VK_IMAGE_ASPECT_DEPTH_BIT) != 0)
-        {
-            mDepthStencilImage.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1,
-                                                            nullptr);
-        }
-        if ((dsAspects & VK_IMAGE_ASPECT_STENCIL_BIT) != 0)
-        {
-            mDepthStencilImage.invalidateSubresourceStencilContent(contextVk, gl::LevelIndex(0), 0,
-                                                                   1, nullptr);
-        }
+        mDepthStencilImage.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1,
+                                                        nullptr);
+        mDepthStencilImage.invalidateSubresourceStencilContent(contextVk, gl::LevelIndex(0), 0, 1,
+                                                               nullptr);
     }
 
     return angle::Result::Continue;

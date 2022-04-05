@@ -478,6 +478,56 @@ TEST_P(FramebufferTest_ES3, SubInvalidatePartial)
     EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight - 1, GLColor::red);
 }
 
+// Test that invalidating stencil of a depth-only attachment doesn't crash.
+TEST_P(FramebufferTest_ES3, DepthOnlyAttachmentInvalidateStencil)
+{
+    // Create the framebuffer that will be invalidated
+    GLRenderbuffer depth;
+    glBindRenderbuffer(GL_RENDERBUFFER, depth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, 2, 2);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Invalidate stencil only.
+    std::array<GLenum, 2> attachments = {GL_STENCIL_ATTACHMENT, GL_DEPTH_ATTACHMENT};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Invalidate both depth and stencil.
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, attachments.data());
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that invalidating depth of a stencil-only attachment doesn't crash.
+TEST_P(FramebufferTest_ES3, StencilOnlyAttachmentInvalidateDepth)
+{
+    // Create the framebuffer that will be invalidated
+    GLRenderbuffer depth;
+    glBindRenderbuffer(GL_RENDERBUFFER, depth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, 2, 2);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Invalidate depth only.
+    std::array<GLenum, 2> attachments = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Invalidate both depth and stencil.
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, attachments.data());
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that a scissored draw followed by subinvalidate followed by a non-scissored draw retains the
 // part that is not invalidated.  Uses swapped width/height for invalidate which results in a
 // partial invalidate, but also prevents bugs with Vulkan pre-rotation.

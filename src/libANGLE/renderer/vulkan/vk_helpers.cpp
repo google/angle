@@ -6767,7 +6767,18 @@ void ImageHelper::invalidateSubresourceContentImpl(ContextVk *contextVk,
                                                    LevelContentDefinedMask *contentDefinedMask,
                                                    bool *preferToKeepContentsDefinedOut)
 {
-    // If the color format is emualted and has extra channels, those channels need to stay cleared.
+    // If the aspect being invalidated doesn't exist, skip invalidation altogether.
+    if ((getAspectFlags() & aspect) == 0)
+    {
+        if (preferToKeepContentsDefinedOut)
+        {
+            // Let the caller know that this invalidate request was ignored.
+            *preferToKeepContentsDefinedOut = true;
+        }
+        return;
+    }
+
+    // If the color format is emulated and has extra channels, those channels need to stay cleared.
     // On some devices, it's cheaper to skip invalidating the framebuffer attachment, while on
     // others it's cheaper to invalidate but then re-clear the image.
     //
