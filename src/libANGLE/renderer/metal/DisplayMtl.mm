@@ -250,9 +250,12 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
         }
     }
 
-    NSMutableArray<id<MTLDevice>> *externalGPUs   = [[NSMutableArray alloc] init];
-    NSMutableArray<id<MTLDevice>> *integratedGPUs = [[NSMutableArray alloc] init];
-    NSMutableArray<id<MTLDevice>> *discreteGPUs   = [[NSMutableArray alloc] init];
+    auto externalGPUs =
+        mtl::adoptObjCObj<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
+    auto integratedGPUs =
+        mtl::adoptObjCObj<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
+    auto discreteGPUs =
+        mtl::adoptObjCObj<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
     for (id<MTLDevice> device in deviceList.get())
     {
         if (device.removable)
@@ -274,7 +277,7 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
     if (attribs.get(EGL_POWER_PREFERENCE_ANGLE, 0) == EGL_HIGH_POWER_ANGLE)
     {
         // Search for a discrete GPU first.
-        for (id<MTLDevice> device in discreteGPUs)
+        for (id<MTLDevice> device in discreteGPUs.get())
         {
             if (![device isHeadless])
                 return device;
@@ -283,7 +286,7 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
     else if (attribs.get(EGL_POWER_PREFERENCE_ANGLE, 0) == EGL_LOW_POWER_ANGLE)
     {
         // If we've selected a low power device, look through integrated devices.
-        for (id<MTLDevice> device in integratedGPUs)
+        for (id<MTLDevice> device in integratedGPUs.get())
         {
             if (![device isHeadless])
                 return device;
