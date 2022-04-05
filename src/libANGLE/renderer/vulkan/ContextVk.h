@@ -573,8 +573,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                      vk::PackedAttachmentIndex packedAttachmentIndex)
     {
         ASSERT(mRenderPassCommands->started());
-        mRenderPassCommands->colorImagesDraw(&mResourceUseList, level, layerStart, layerCount,
-                                             image, resolveImage, packedAttachmentIndex);
+        mRenderPassCommands->colorImagesDraw(level, layerStart, layerCount, image, resolveImage,
+                                             packedAttachmentIndex);
     }
     void onDepthStencilDraw(gl::LevelIndex level,
                             uint32_t layerStart,
@@ -583,8 +583,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                             vk::ImageHelper *resolveImage)
     {
         ASSERT(mRenderPassCommands->started());
-        mRenderPassCommands->depthStencilImagesDraw(&mResourceUseList, level, layerStart,
-                                                    layerCount, image, resolveImage);
+        mRenderPassCommands->depthStencilImagesDraw(level, layerStart, layerCount, image,
+                                                    resolveImage);
     }
 
     void finalizeImageLayout(const vk::ImageHelper *image)
@@ -1050,7 +1050,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result handleDirtyComputeUniforms();
 
     // Common parts of the common dirty bit handlers.
-    angle::Result handleDirtyUniformsImpl();
+    angle::Result handleDirtyUniformsImpl(vk::ResourceUseList *resourceUseList);
     angle::Result handleDirtyMemoryBarrierImpl(DirtyBits::Iterator *dirtyBitsIterator,
                                                DirtyBits dirtyBitMask);
     template <typename CommandBufferT>
@@ -1062,12 +1062,12 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result handleDirtyShaderResourcesImpl(CommandBufferHelperT *commandBufferHelper,
                                                  PipelineType pipelineType);
     void handleDirtyShaderBufferResourcesImpl(vk::CommandBufferHelperCommon *commandBufferHelper);
-    template <typename CommandBufferT>
-    void handleDirtyDriverUniformsBindingImpl(CommandBufferT *commandBuffer,
+    template <typename CommandBufferHelperT>
+    void handleDirtyDriverUniformsBindingImpl(CommandBufferHelperT *commandBufferHelper,
                                               VkPipelineBindPoint bindPoint,
                                               DriverUniformsDescriptorSet *driverUniforms);
-    template <typename CommandBufferT>
-    angle::Result handleDirtyDescriptorSetsImpl(CommandBufferT *commandBuffer,
+    template <typename CommandBufferHelperT>
+    angle::Result handleDirtyDescriptorSetsImpl(CommandBufferHelperT *commandBufferHelper,
                                                 PipelineType pipelineType);
     void handleDirtyGraphicsScissorImpl(bool isPrimitivesGeneratedQueryActive);
 
@@ -1075,7 +1075,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                          DriverUniformsDescriptorSet *driverUniforms,
                                          uint8_t **ptrOut,
                                          bool *newBufferOut);
-    angle::Result updateDriverUniformsDescriptorSet(bool newBuffer,
+    angle::Result updateDriverUniformsDescriptorSet(vk::ResourceUseList *resourceUseList,
+                                                    bool newBuffer,
                                                     size_t driverUniformsSize,
                                                     PipelineType pipelineType);
 

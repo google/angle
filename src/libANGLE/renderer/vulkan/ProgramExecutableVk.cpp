@@ -1610,7 +1610,7 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
             // The descriptor pool that this descriptor set was allocated from needs to be retained
             // each time the descriptor set is used in a new command.
             mDescriptorPoolBindings[DescriptorSetIndex::ShaderResource].get().retain(
-                &contextVk->getResourceUseList());
+                resourceUseList);
             cacheHit = true;
         }
         else
