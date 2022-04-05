@@ -63,7 +63,7 @@ struct GraphicsDriverUniforms
     // 32 bits for 32 clip planes
     uint32_t enabledClipPlanes;
 
-    uint32_t unused;  // Gap usable for future
+    uint32_t advancedBlendEquation;
     int32_t xfbVerticesPerInstance;
 
     // Used to replace gl_NumSamples. Because gl_NumSamples cannot be recognized in SPIR-V.
@@ -761,7 +761,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mQueryEventType(GraphicsEventCmdBuf::NotInQueryCmd),
       mGpuEventsEnabled(false),
       mHasDeferredFlush(false),
-      mLastProgramUsesFramebufferFetch(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
       mContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
@@ -4045,6 +4044,21 @@ void ContextVk::updateRasterizerDiscardEnabled(bool isPrimitivesGeneratedQueryAc
     }
 }
 
+void ContextVk::updateAdvancedBlendEquations(const gl::ProgramExecutable *executable)
+{
+    if (!getFeatures().emulateAdvancedBlendEquations.enabled || executable == nullptr)
+    {
+        return;
+    }
+
+    // If advanced blend equations is emulated and the program uses advanced equations, update the
+    // driver uniforms to pass the equation to the shader.
+    if (executable->getAdvancedBlendEquations().any())
+    {
+        invalidateGraphicsDriverUniforms();
+    }
+}
+
 void ContextVk::updateDither()
 {
     if (!getFeatures().emulateDithering.enabled)
@@ -4169,9 +4183,9 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         ASSERT(executableVk);
         executableVk->updateEarlyFragmentTestsOptimization(this, *executable);
 
-        if (mLastProgramUsesFramebufferFetch != executable->usesFramebufferFetch())
+        if (getDrawFramebuffer()->getRenderPassDesc().getFramebufferFetchMode() !=
+            executable->usesFramebufferFetch())
         {
-            mLastProgramUsesFramebufferFetch = executable->usesFramebufferFetch();
             ANGLE_TRY(
                 flushCommandsAndEndRenderPass(RenderPassClosureReason::FramebufferFetchEmulation));
 
@@ -4238,6 +4252,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsPipelineDesc->updateBlendEquations(
                     &mGraphicsPipelineTransition, glState.getBlendStateExt(),
                     drawFramebufferVk->getState().getColorAttachmentsMask());
+                updateAdvancedBlendEquations(programExecutable);
                 break;
             case gl::State::DIRTY_BIT_COLOR_MASK:
                 updateColorMasks();
@@ -4464,6 +4479,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             {
                 ASSERT(programExecutable);
                 invalidateCurrentDefaultUniforms();
+                updateAdvancedBlendEquations(programExecutable);
                 getExecutable()->onProgramBind(*programExecutable);
                 static_assert(
                     gl::State::DIRTY_BIT_TEXTURE_BINDINGS > gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE,
@@ -5382,7 +5398,15 @@ void ContextVk::framebufferFetchBarrier()
 
 void ContextVk::blendBarrier()
 {
-    mGraphicsDirtyBits.set(DIRTY_BIT_BLEND_BARRIER);
+    if (getFeatures().emulateAdvancedBlendEquations.enabled)
+    {
+        // When emulated, advanced blend is implemented through framebuffer fetch.
+        framebufferFetchBarrier();
+    }
+    else
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_BLEND_BARRIER);
+    }
 }
 
 angle::Result ContextVk::acquireTextures(const gl::Context *context,
@@ -5611,12 +5635,25 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
     float depthRangeDiff = depthRangeFar - depthRangeNear;
     int32_t numSamples   = drawFramebufferVk->getSamples();
 
+    uint32_t advancedBlendEquation = 0;
+    if (getFeatures().emulateAdvancedBlendEquations.enabled)
+    {
+        // Pass the advanced blend equation to shader as-is.  If the equation is not one of the
+        // advanced ones, 0 is expected.
+        const gl::BlendStateExt &blendStateExt = mState.getBlendStateExt();
+        if (blendStateExt.mUsesAdvancedBlendEquationMask.test(0))
+        {
+            advancedBlendEquation = static_cast<uint32_t>(gl::FromGLenum<gl::BlendEquationType>(
+                getState().getBlendStateExt().getEquationColorIndexed(0)));
+        }
+    }
+
     // Copy and flush to the device.
     *driverUniforms = {
         {static_cast<float>(glViewport.x), static_cast<float>(glViewport.y),
          static_cast<float>(glViewport.width), static_cast<float>(glViewport.height)},
         mState.getEnabledClipDistances().bits(),
-        0,
+        advancedBlendEquation,
         static_cast<int32_t>(mXfbVertexCountPerInstance),
         numSamples,
         {},

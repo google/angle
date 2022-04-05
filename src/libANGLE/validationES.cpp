@@ -562,7 +562,7 @@ const char *ValidateProgramDrawAdvancedBlendState(const Context *context, Progra
 {
     const State &state = context->getState();
     const BlendEquationBitSet &supportedBlendEquations =
-        program->getState().getAdvancedBlendEquations();
+        program->getExecutable().getAdvancedBlendEquations();
     const DrawBufferMask &enabledDrawBufferMask = state.getBlendStateExt().mEnabledMask;
 
     for (size_t blendEnabledBufferIndex : enabledDrawBufferMask)

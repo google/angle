@@ -398,14 +398,12 @@ TIntermNode *ReplaceSubpassInputUtils::assignSubpassLoad(TIntermTyped *resultVar
                                                          TIntermTyped *inputAttachmentSymbol,
                                                          const uint8_t targetVecSize)
 {
-    TIntermSequence *subpassArguments = new TIntermSequence();
-    subpassArguments->push_back(inputAttachmentSymbol);
-
     // TODO: support interaction with multisampled framebuffers.  For example, the sample ID needs
     // to be provided to the built-in call here.  http://anglebug.com/6195
 
+    TIntermSequence subpassArguments  = {inputAttachmentSymbol};
     TIntermTyped *subpassLoadFuncCall = CreateSubpassLoadFuncCall(
-        mSymbolTable, inputAttachmentSymbol->getBasicType(), subpassArguments);
+        mSymbolTable, inputAttachmentSymbol->getBasicType(), &subpassArguments);
 
     TIntermTyped *result = subpassLoadFuncCall;
     if (targetVecSize < 4)

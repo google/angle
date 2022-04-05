@@ -3309,6 +3309,16 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // (which would require Chromium and Capture/Replay test expectations updates).
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateDithering, IsAndroid());
 
+    // GL_KHR_blend_equation_advanced is emulated when the equivalent Vulkan extension is not
+    // usable.  Additionally, the following platforms don't support INPUT_ATTACHMENT usage for the
+    // swapchain, so they are excluded:
+    //
+    // - Intel
+    //
+    // Without VK_GOOGLE_surfaceless_query, there is no way to automatically deduce this support.
+    ANGLE_FEATURE_CONDITION(&mFeatures, emulateAdvancedBlendEquations,
+                            !mFeatures.supportsBlendOperationAdvanced.enabled && !isIntel);
+
     // http://anglebug.com/6933
     // Android expects VkPresentRegionsKHR rectangles with a bottom-left origin, while spec
     // states they should have a top-left origin.

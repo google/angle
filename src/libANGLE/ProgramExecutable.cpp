@@ -230,7 +230,8 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mAtomicCounterBuffers(other.mAtomicCounterBuffers),
       mShaderStorageBlocks(other.mShaderStorageBlocks),
       mFragmentInoutRange(other.mFragmentInoutRange),
-      mUsesEarlyFragmentTestsOptimization(other.mUsesEarlyFragmentTestsOptimization)
+      mUsesEarlyFragmentTestsOptimization(other.mUsesEarlyFragmentTestsOptimization),
+      mAdvancedBlendEquations(other.mAdvancedBlendEquations)
 {
     reset();
 }
@@ -276,6 +277,7 @@ void ProgramExecutable::reset()
 
     mFragmentInoutRange                 = RangeUI(0, 0);
     mUsesEarlyFragmentTestsOptimization = false;
+    mAdvancedBlendEquations.reset();
 
     mGeometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
     mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
@@ -307,6 +309,9 @@ void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
     mFragmentInoutRange                 = RangeUI(fragmentInoutRangeLow, fragmentInoutRangeHigh);
 
     mUsesEarlyFragmentTestsOptimization = stream->readBool();
+
+    static_assert(sizeof(mAdvancedBlendEquations.bits()) == sizeof(uint32_t));
+    mAdvancedBlendEquations = BlendEquationBitSet(stream->readInt<uint32_t>());
 
     mLinkedShaderStages = ShaderBitSet(stream->readInt<uint8_t>());
 
@@ -536,6 +541,7 @@ void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) c
     stream->writeInt(mFragmentInoutRange.high());
 
     stream->writeBool(mUsesEarlyFragmentTestsOptimization);
+    stream->writeInt(mAdvancedBlendEquations.bits());
 
     stream->writeInt(mLinkedShaderStages.bits());
 

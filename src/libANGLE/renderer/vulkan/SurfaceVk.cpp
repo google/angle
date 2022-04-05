@@ -115,6 +115,13 @@ bool Is90DegreeRotation(VkSurfaceTransformFlagsKHR transform)
     return ((transform & k90DegreeRotationVariants) != 0);
 }
 
+bool NeedsInputAttachmentUsage(const angle::FeaturesVk &features)
+{
+    return features.supportsShaderFramebufferFetch.enabled ||
+           features.supportsShaderFramebufferFetchNonCoherent.enabled ||
+           features.emulateAdvancedBlendEquations.enabled;
+}
+
 angle::Result InitImageHelper(DisplayVk *displayVk,
                               EGLint width,
                               EGLint height,
@@ -131,8 +138,7 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
 
     RendererVk *rendererVk = displayVk->getRenderer();
     // If shaders may be fetching from this, we need this image to be an input
-    if (rendererVk->getFeatures().supportsShaderFramebufferFetch.enabled ||
-        rendererVk->getFeatures().supportsShaderFramebufferFetchNonCoherent.enabled)
+    if (NeedsInputAttachmentUsage(rendererVk->getFeatures()))
     {
         usage |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     }
@@ -1278,8 +1284,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     VkImageUsageFlags imageUsageFlags = kSurfaceVkColorImageUsageFlags;
 
     // If shaders may be fetching from this, we need this image to be an input
-    if (renderer->getFeatures().supportsShaderFramebufferFetch.enabled ||
-        renderer->getFeatures().supportsShaderFramebufferFetchNonCoherent.enabled)
+    if (NeedsInputAttachmentUsage(renderer->getFeatures()))
     {
         imageUsageFlags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     }

@@ -84,6 +84,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DontRelinkProgramsInParallel, "dont_relink_programs_in_parallel"},
     {Feature::DontUseLoopsToInitializeVariables, "dont_use_loops_to_initialize_variables"},
     {Feature::EmulateAbsIntFunction, "emulate_abs_int_function"},
+    {Feature::EmulateAdvancedBlendEquations, "emulateAdvancedBlendEquations"},
     {Feature::EmulateAtan2Float, "emulate_atan_2_float"},
     {Feature::EmulateCopyTexImage2DFromRenderbuffers, "emulate_copyteximage2d_from_renderbuffers"},
     {Feature::EmulateDithering, "emulateDithering"},

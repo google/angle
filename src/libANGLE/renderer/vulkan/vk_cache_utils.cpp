@@ -2288,8 +2288,18 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
                             ->getFormat(mRenderPassDesc[colorIndexGL])
                             .getActualRenderableImageFormat()
                             .isInt());
-                state.blendEnable = VK_TRUE;
-                UnpackBlendAttachmentState(inputAndBlend.attachments[colorIndexGL], &state);
+
+                // The blend fixed-function is enabled with normal blend as well as advanced blend
+                // when the Vulkan extension is present.  When emulating advanced blend in the
+                // shader, the blend fixed-function must be disabled.
+                const PackedColorBlendAttachmentState &packedBlendState =
+                    inputAndBlend.attachments[colorIndexGL];
+                if (packedBlendState.colorBlendOp <= static_cast<uint8_t>(VK_BLEND_OP_MAX) ||
+                    contextVk->getFeatures().supportsBlendOperationAdvanced.enabled)
+                {
+                    state.blendEnable = VK_TRUE;
+                    UnpackBlendAttachmentState(packedBlendState, &state);
+                }
             }
         }
 

@@ -1155,6 +1155,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void updateRasterizationSamples(const uint32_t rasterizationSamples);
     void updateRasterizerDiscardEnabled(bool isPrimitivesGeneratedQueryActive);
 
+    void updateAdvancedBlendEquations(const gl::ProgramExecutable *executable);
+
     void updateDither();
 
     SpecConstUsageBits getCurrentProgramSpecConstUsageBits() const;
@@ -1326,9 +1328,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     gl::DrawBufferMask mCachedDrawFramebufferColorAttachmentMask;
 
     bool mHasDeferredFlush;
-
-    // GL_EXT_shader_framebuffer_fetch_non_coherent
-    bool mLastProgramUsesFramebufferFetch;
 
     // The size of copy commands issued between buffers and images. Used to submit the command
     // buffer for the outside render pass.

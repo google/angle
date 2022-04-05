@@ -940,6 +940,16 @@
         },
 
         {
+            "name": "emulateAdvancedBlendEquations",
+            "display_name": "emulateAdvancedBlendEquations",
+            "category": "Features",
+            "description": [
+                "Emulate GL_KHR_blend_equation_advanced"
+            ],
+            "issue": "http://anglebug.com/3586"
+        },
+
+        {
             "name": "bottomLeftOriginPresentRegionRectangles",
             "display_name": "bottomLeftOriginPresentRegionRectangles",
             "category": "Workarounds",

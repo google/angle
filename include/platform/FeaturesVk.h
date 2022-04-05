@@ -569,6 +569,10 @@ struct FeaturesVk : FeatureSetBase
                                     "Emulate OpenGL dithering", &members,
                                     "http://anglebug.com/6755"};
 
+    FeatureInfo emulateAdvancedBlendEquations = {
+        "emulateAdvancedBlendEquations", FeatureCategory::VulkanFeatures,
+        "Emulate GL_KHR_blend_equation_advanced", &members, "http://anglebug.com/3586"};
+
     FeatureInfo bottomLeftOriginPresentRegionRectangles = {
         "bottomLeftOriginPresentRegionRectangles",
         FeatureCategory::VulkanWorkarounds,

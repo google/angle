@@ -55,6 +55,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         compileOptions |= SH_ADD_BRESENHAM_LINE_RASTER_EMULATION;
     }
 
+    if (contextVk->getFeatures().emulateAdvancedBlendEquations.enabled)
+    {
+        compileOptions |= SH_ADD_ADVANCED_BLEND_EQUATIONS_EMULATION;
+    }
+
     if (contextVk->emulateSeamfulCubeMapSampling())
     {
         compileOptions |= SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING;

@@ -531,9 +531,10 @@ void RendererVk::ensureCapsInitialized() const
     // |advancedBlendMaxColorAttachments|, which means we can only trivially take advantage of this
     // extension if |advancedBlendMaxColorAttachments >= max_draw_buffers|.
     mNativeExtensions.blendEquationAdvancedKHR =
-        mFeatures.supportsBlendOperationAdvanced.enabled &&
-        mBlendOperationAdvancedProperties.advancedBlendMaxColorAttachments >=
-            gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+        (mFeatures.supportsBlendOperationAdvanced.enabled &&
+         mBlendOperationAdvancedProperties.advancedBlendMaxColorAttachments >=
+             gl::IMPLEMENTATION_MAX_DRAW_BUFFERS) ||
+        mFeatures.emulateAdvancedBlendEquations.enabled;
 
     // Enable EXT_unpack_subimage
     mNativeExtensions.unpackSubimageEXT = true;
