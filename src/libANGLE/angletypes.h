@@ -23,6 +23,7 @@
 
 #include <bitset>
 #include <map>
+#include <memory>
 #include <unordered_map>
 
 namespace gl
@@ -1086,6 +1087,7 @@ template <typename ObjT, typename ContextT>
 class DestroyThenDelete
 {
   public:
+    DestroyThenDelete() = default;
     DestroyThenDelete(const ContextT *context) : mContext(context) {}
 
     void operator()(ObjT *obj)
@@ -1095,57 +1097,11 @@ class DestroyThenDelete
     }
 
   private:
-    const ContextT *mContext;
-};
-
-// Helper class for wrapping an onDestroy function.
-template <typename ObjT, typename DeleterT>
-class UniqueObjectPointerBase : angle::NonCopyable
-{
-  public:
-    template <typename ContextT>
-    UniqueObjectPointerBase(const ContextT *context) : mObject(nullptr), mDeleter(context)
-    {}
-
-    template <typename ContextT>
-    UniqueObjectPointerBase(ObjT *obj, const ContextT *context) : mObject(obj), mDeleter(context)
-    {}
-
-    ~UniqueObjectPointerBase()
-    {
-        if (mObject)
-        {
-            mDeleter(mObject);
-        }
-    }
-
-    ObjT *operator->() const { return mObject; }
-
-    ObjT *release()
-    {
-        auto obj = mObject;
-        mObject  = nullptr;
-        return obj;
-    }
-
-    ObjT *get() const { return mObject; }
-
-    void reset(ObjT *obj)
-    {
-        if (mObject)
-        {
-            mDeleter(mObject);
-        }
-        mObject = obj;
-    }
-
-  private:
-    ObjT *mObject;
-    DeleterT mDeleter;
+    const ContextT *mContext = nullptr;
 };
 
 template <typename ObjT, typename ContextT>
-using UniqueObjectPointer = UniqueObjectPointerBase<ObjT, DestroyThenDelete<ObjT, ContextT>>;
+using UniqueObjectPointer = std::unique_ptr<ObjT, DestroyThenDelete<ObjT, ContextT>>;
 
 }  // namespace angle
 

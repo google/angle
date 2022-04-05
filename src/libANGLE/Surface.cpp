@@ -643,12 +643,6 @@ Error Surface::getBufferAge(const gl::Context *context, EGLint *age)
     return err;
 }
 
-gl::Framebuffer *Surface::createDefaultFramebuffer(const gl::Context *context,
-                                                   egl::Surface *readSurface)
-{
-    return new gl::Framebuffer(context, this, readSurface);
-}
-
 gl::InitState Surface::initState(GLenum binding, const gl::ImageIndex & /*imageIndex*/) const
 {
     switch (binding)
