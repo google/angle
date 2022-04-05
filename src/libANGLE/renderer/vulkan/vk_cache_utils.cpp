@@ -749,7 +749,7 @@ angle::Result CreateRenderPass2(Context *context,
                                 const VkRenderPassMultiviewCreateInfo &multiviewInfo,
                                 bool unresolveDepth,
                                 bool unresolveStencil,
-                                bool isRenderToTexture,
+                                bool isRenderToTextureThroughExtension,
                                 uint8_t renderToTextureSamples,
                                 RenderPass *renderPass)
 {
@@ -845,14 +845,14 @@ angle::Result CreateRenderPass2(Context *context,
     // Append the depth/stencil resolve attachment to the pNext chain of last subpass, if any.
     if (depthStencilResolve.pDepthStencilResolveAttachment != nullptr)
     {
-        ASSERT(!isRenderToTexture);
+        ASSERT(!isRenderToTextureThroughExtension);
         subpassDescriptions.back().pNext = &depthStencilResolve;
     }
     else
     {
         RendererVk *renderer = context->getRenderer();
 
-        ASSERT(isRenderToTexture);
+        ASSERT(isRenderToTextureThroughExtension);
         ASSERT(renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled);
         ASSERT(subpassDescriptions.size() == 1);
 
@@ -1058,11 +1058,15 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         VK_IMAGE_LAYOUT_UNDEFINED, 0};
 
     const bool needInputAttachments = desc.getFramebufferFetchMode();
-    const bool isRenderToTexture    = desc.isRenderToTexture();
+    const bool isRenderToTextureThroughExtension =
+        desc.isRenderToTexture() &&
+        contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
+    const bool isRenderToTextureThroughEmulation =
+        desc.isRenderToTexture() && !isRenderToTextureThroughExtension;
 
     const uint8_t descSamples            = desc.samples();
-    const uint8_t attachmentSamples      = isRenderToTexture ? 1 : descSamples;
-    const uint8_t renderToTextureSamples = isRenderToTexture ? descSamples : 1;
+    const uint8_t attachmentSamples      = isRenderToTextureThroughExtension ? 1 : descSamples;
+    const uint8_t renderToTextureSamples = isRenderToTextureThroughExtension ? descSamples : 1;
 
     // Unpack the packed and split representation into the format required by Vulkan.
     gl::DrawBuffersVector<VkAttachmentReference> colorAttachmentRefs;
@@ -1184,9 +1188,13 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
             colorResolveAttachmentRefs.push_back(colorRef);
         }
 
+        // When multisampled-render-to-texture is used, invalidating an attachment invalidates both
+        // the multisampled and the resolve attachments.  Otherwise, the resolve attachment is
+        // independent of the multisampled attachment, and is never invalidated.
         UnpackColorResolveAttachmentDesc(
             &attachmentDescs[attachmentCount.get()], attachmentFormatID,
-            desc.hasColorUnresolveAttachment(colorIndexGL), isColorInvalidated.test(colorIndexGL));
+            desc.hasColorUnresolveAttachment(colorIndexGL),
+            isColorInvalidated.test(colorIndexGL) && isRenderToTextureThroughEmulation);
 
         ++attachmentCount;
     }
@@ -1344,12 +1352,14 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
     // If depth/stencil resolve is used, we need to create the render pass with
     // vkCreateRenderPass2KHR.  Same when using the VK_EXT_multisampled_render_to_single_sampled
     // extension.
-    if (depthStencilResolve.pDepthStencilResolveAttachment != nullptr || desc.isRenderToTexture())
+    if (depthStencilResolve.pDepthStencilResolveAttachment != nullptr ||
+        isRenderToTextureThroughExtension)
     {
         ANGLE_TRY(CreateRenderPass2(contextVk, createInfo, depthStencilResolve, multiviewInfo,
                                     desc.hasDepthUnresolveAttachment(),
-                                    desc.hasStencilUnresolveAttachment(), desc.isRenderToTexture(),
-                                    renderToTextureSamples, &renderPassHelper->getRenderPass()));
+                                    desc.hasStencilUnresolveAttachment(),
+                                    isRenderToTextureThroughExtension, renderToTextureSamples,
+                                    &renderPassHelper->getRenderPass()));
     }
     else
     {

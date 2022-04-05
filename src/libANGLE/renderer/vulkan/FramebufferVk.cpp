@@ -2039,7 +2039,7 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
         mRenderPassDesc.setFramebufferFetchMode(programUsesFramebufferFetch);
     }
 
-    if (contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled)
+    if (contextVk->getFeatures().enableMultisampledRenderToTexture.enabled)
     {
         // Update descriptions regarding multisampled-render-to-texture use.
         bool isRenderToTexture = false;
