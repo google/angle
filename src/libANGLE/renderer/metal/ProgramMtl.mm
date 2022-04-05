@@ -589,7 +589,7 @@ angle::Result ProgramMtl::getSpecializedShader(ContextMtl *context,
 
     mtl::TranslatedShaderInfo *translatedMslInfo = &mMslShaderTranslateInfo[shaderType];
     ProgramShaderObjVariantMtl *shaderVariant;
-    MTLFunctionConstantValues *funcConstants = nil;
+    mtl::AutoObjCObj<MTLFunctionConstantValues> funcConstants;
 
     if (shaderType == gl::ShaderType::Vertex)
     {
@@ -639,7 +639,7 @@ angle::Result ProgramMtl::getSpecializedShader(ContextMtl *context,
                     [NSString stringWithUTF8String:sh::mtl::kRasterizerDiscardEnabledConstName];
             }
 
-            funcConstants = [[MTLFunctionConstantValues alloc] init];
+            funcConstants = mtl::adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
             [funcConstants setConstantValue:&emulateDiscard
                                        type:MTLDataTypeBool
                                    withName:discardEnabledStr];
@@ -678,7 +678,7 @@ angle::Result ProgramMtl::getSpecializedShader(ContextMtl *context,
             NSString *depthWriteEnabledStr =
                 [NSString stringWithUTF8String:sh::mtl::kDepthWriteEnabledConstName];
 
-            funcConstants = [[MTLFunctionConstantValues alloc] init];
+            funcConstants = mtl::adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
             [funcConstants setConstantValue:&emulateCoverageMask
                                        type:MTLDataTypeBool
                                    withName:coverageMaskEnabledStr];
@@ -709,8 +709,7 @@ angle::Result ProgramMtl::getSpecializedShader(ContextMtl *context,
     ANGLE_MTL_OBJC_SCOPE
     {
         ANGLE_TRY(CreateMslShader(context, translatedMslInfo->metalLibrary, SHADER_ENTRY_NAME,
-                                  funcConstants, &shaderVariant->metalShader));
-        [funcConstants ANGLE_MTL_AUTORELEASE];
+                                  funcConstants.get(), &shaderVariant->metalShader));
     }
 
     // Store reference to the translated source for easily querying mapped bindings later.
