@@ -34,7 +34,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'c32f123be7eb4ea35bd17e18ea06988170a22ebf',
+  'chromium_revision': '3c01a5c3bc2f299fc17e5ef8ef345c129d98b504',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -79,7 +79,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '3d369206ad980b65e0ac9f5a75711366d8bd0ed0',
+  'catapult_revision': 'ec5b00893893ed726e7ab9e2ac189899fe198572',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -119,7 +119,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@e9d82df1116c6bba735aa795644cedf93ed40fcd',
+    'url': '{chromium_git}/chromium/src/build.git@e5b74ea1b04eb727aea87949783f1a990cb05ff8',
     'condition': 'not build_with_chromium',
   },
 
@@ -182,7 +182,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@e14b3c233055cca4fcddaa3df5cb9c84e992d368',
+    'url': '{chromium_git}/chromium/src/testing@82dc0f8608b0589835fc5411e5fd800a1fea9057',
     'condition': 'not build_with_chromium',
   },
 
@@ -332,7 +332,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@2ca0f524434a3b0a1f0268b73fe4b4590d95f20b',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@ffeef9001edb33e16e6a72db746cdb8d2cf6c568',
     'condition': 'not build_with_chromium',
   },
 
