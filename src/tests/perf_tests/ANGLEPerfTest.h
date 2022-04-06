@@ -144,7 +144,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
         std::string name;
         std::vector<GLuint> samples;
     };
-    angle::HashMap<GLuint, CounterInfo> mPerfCounterInfo;
+    std::map<GLuint, CounterInfo> mPerfCounterInfo;
     std::vector<uint64_t> mProcessMemoryUsageKBSamples;
 };
 
