@@ -42,13 +42,6 @@ constexpr VkImageCreateFlags kVkImageCreateFlagsNone = 0;
 
 using StagingBufferOffsetArray = std::array<VkDeviceSize, 2>;
 
-struct TextureUnit final
-{
-    TextureVk *texture;
-    const SamplerHelper *sampler;
-    GLenum srgbDecode;
-};
-
 // A dynamic buffer is conceptually an infinitely long buffer. Each time you write to the buffer,
 // you will always write to a previously unused portion. After a series of writes, you must flush
 // the buffer data to the device. Buffer lifetime currently assumes that each new allocation will

@@ -260,6 +260,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     }
 
     vk::ImageOrBufferViewSubresourceSerial getBufferViewSerial() const;
+    vk::ImageOrBufferViewSubresourceSerial getStorageImageViewSerial(
+        const gl::ImageUnit &binding) const;
 
     GLenum getColorReadFormat(const gl::Context *context) override;
     GLenum getColorReadType(const gl::Context *context) override;
@@ -511,7 +513,9 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     }
 
     angle::Result refreshImageViews(ContextVk *contextVk);
-    bool shouldDecodeSRGB(vk::Context *context, GLenum srgbDecode, bool texelFetchStaticUse) const;
+    bool shouldDecodeSRGB(vk::Context *contextVk,
+                          GLenum srgbDecode,
+                          bool texelFetchStaticUse) const;
     void initImageUsageFlags(ContextVk *contextVk, angle::FormatID actualFormatID);
     void handleImmutableSamplerTransition(const vk::ImageHelper *previousImage,
                                           const vk::ImageHelper *nextImage);

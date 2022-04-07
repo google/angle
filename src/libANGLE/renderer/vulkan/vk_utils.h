@@ -56,6 +56,7 @@ class ShareGroup;
 namespace gl
 {
 class MockOverlay;
+class ProgramExecutable;
 struct RasterizerState;
 struct SwizzleState;
 struct VertexAttribute;
@@ -1275,6 +1276,17 @@ using LevelIndex = gl::LevelIndexWrapper<uint32_t>;
 // Ensure viewport is within Vulkan requirements
 void ClampViewport(VkViewport *viewport);
 
+constexpr bool IsDynamicDescriptor(VkDescriptorType descriptorType)
+{
+    switch (descriptorType)
+    {
+        case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC:
+        case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC:
+            return true;
+        default:
+            return false;
+    }
+}
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)
