@@ -55,6 +55,8 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ClearToZeroOrOneBroken, "clear_to_zero_or_one_broken"},
     {Feature::ClipSrcRegionBlitFramebuffer, "clip_src_region_for_blitframebuffer"},
     {Feature::CompressVertexData, "compress_vertex_data"},
+    {Feature::CopyIOSurfaceToNonIOSurfaceForReadOptimization,
+     "copy_iosurface_to_non_iosurface_for_read_optimization"},
     {Feature::CreatePipelineDuringLink, "createPipelineDuringLink"},
     {Feature::DeferFlushUntilEndRenderPass, "deferFlushUntilEndRenderPass"},
     {Feature::DepthClamping, "depth_clamping"},

@@ -233,6 +233,9 @@ class Texture final : public Resource,
 
     uint32_t samples() const;
 
+    bool hasIOSurface() const;
+    bool sameTypeAndDimemsionsAs(const TextureRef &other) const;
+
     angle::Result resize(ContextMtl *context, uint32_t width, uint32_t height);
 
     // For render target

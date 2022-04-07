@@ -53,6 +53,7 @@ enum class Feature
     ClearToZeroOrOneBroken,
     ClipSrcRegionBlitFramebuffer,
     CompressVertexData,
+    CopyIOSurfaceToNonIOSurfaceForReadOptimization,
     CreatePipelineDuringLink,
     DeferFlushUntilEndRenderPass,
     DepthClamping,

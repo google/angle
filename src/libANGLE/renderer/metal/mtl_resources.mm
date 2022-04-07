@@ -752,6 +752,20 @@ uint32_t Texture::samples() const
     return static_cast<uint32_t>(get().sampleCount);
 }
 
+bool Texture::hasIOSurface() const
+{
+    return (get().iosurface) != nullptr;
+}
+
+bool Texture::sameTypeAndDimemsionsAs(const TextureRef &other) const
+{
+    return textureType() == other->textureType() && pixelFormat() == other->pixelFormat() &&
+           mipmapLevels() == other->mipmapLevels() &&
+           cubeFacesOrArrayLength() == other->cubeFacesOrArrayLength() &&
+           widthAt0() == other->widthAt0() && heightAt0() == other->heightAt0() &&
+           depthAt0() == other->depthAt0();
+}
+
 angle::Result Texture::resize(ContextMtl *context, uint32_t width, uint32_t height)
 {
     // Resizing texture view is not supported.

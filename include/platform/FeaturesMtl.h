@@ -200,6 +200,12 @@ struct FeaturesMtl : FeatureSetBase
         "multisample_color_format_shader_read_workaround", FeatureCategory::MetalWorkarounds,
         "Add shaderRead usage to some multisampled texture formats", &members,
         "http://anglebug.com/7049"};
+
+    FeatureInfo copyIOSurfaceToNonIOSurfaceForReadOptimization = {
+        "copy_iosurface_to_non_iosurface_for_read_optimization", FeatureCategory::MetalWorkarounds,
+        "some GPUs are faster to read an IOSurface texture by first copying the texture to a "
+        "non-IOSurface texture",
+        &members, "http://anglebug.com/7117"};
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;
