@@ -1487,7 +1487,7 @@ bool ProgramExecutable::linkUniforms(
 
     linkSamplerAndImageBindings(combinedImageUniformsCountOut);
 
-    if (!linkAtomicCounterBuffers())
+    if (!linkAtomicCounterBuffers(context, infoLog))
     {
         return false;
     }
@@ -1591,7 +1591,7 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
     mDefaultUniformRange = RangeUI(0, low);
 }
 
-bool ProgramExecutable::linkAtomicCounterBuffers()
+bool ProgramExecutable::linkAtomicCounterBuffers(const Context *context, InfoLog &infoLog)
 {
     for (unsigned int index : mAtomicCounterUniformRange)
     {
@@ -1626,9 +1626,36 @@ bool ProgramExecutable::linkAtomicCounterBuffers()
         }
     }
 
-    // TODO(jie.a.chen@intel.com): Count each atomic counter buffer to validate against
-    // gl_Max[Vertex|Fragment|Compute|Geometry|Combined]AtomicCounterBuffers.
-
+    // Count each atomic counter buffer to validate against
+    // per-stage and combined gl_Max*AtomicCounterBuffers.
+    GLint combinedShaderACBCount           = 0;
+    gl::ShaderMap<GLint> perShaderACBCount = {};
+    for (unsigned int bufferIndex = 0; bufferIndex < getActiveAtomicCounterBufferCount();
+         ++bufferIndex)
+    {
+        AtomicCounterBuffer &acb        = mAtomicCounterBuffers[bufferIndex];
+        const ShaderBitSet shaderStages = acb.activeShaders();
+        for (gl::ShaderType shaderType : shaderStages)
+        {
+            ++perShaderACBCount[shaderType];
+        }
+        ++combinedShaderACBCount;
+    }
+    const Caps &caps = context->getCaps();
+    if (combinedShaderACBCount > caps.maxCombinedAtomicCounterBuffers)
+    {
+        infoLog << " combined AtomicCounterBuffers count exceeds limit";
+        return false;
+    }
+    for (gl::ShaderType stage : gl::AllShaderTypes())
+    {
+        if (perShaderACBCount[stage] > caps.maxShaderAtomicCounterBuffers[stage])
+        {
+            infoLog << GetShaderTypeString(stage)
+                    << " shader AtomicCounterBuffers count exceeds limit";
+            return false;
+        }
+    }
     return true;
 }
 

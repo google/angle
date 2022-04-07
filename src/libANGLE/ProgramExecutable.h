@@ -393,7 +393,7 @@ class ProgramExecutable final : public angle::Subject
                                      const ProgramAliasedBindings &fragmentOutputIndices);
 
     void linkSamplerAndImageBindings(GLuint *combinedImageUniformsCount);
-    bool linkAtomicCounterBuffers();
+    bool linkAtomicCounterBuffers(const Context *context, InfoLog &infoLog);
 
     InfoLog mInfoLog;
 
