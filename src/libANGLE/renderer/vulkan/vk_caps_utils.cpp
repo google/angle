@@ -525,16 +525,17 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.sampleVariablesOES =
         supportSampleRateShading && vk_gl::GetMaxSampleCount(kNotSupportedSampleCounts) == 0;
 
-    // GL_KHR_blend_equation_advanced
-    // While advanced blend is only allowed for one attachment, that could be any attachment index.
-    // VK_EXT_blend_operation_advanced requires that the attachment index be less than
-    // |advancedBlendMaxColorAttachments|, which means we can only trivially take advantage of this
-    // extension if |advancedBlendMaxColorAttachments >= max_draw_buffers|.
-    mNativeExtensions.blendEquationAdvancedKHR =
-        (mFeatures.supportsBlendOperationAdvanced.enabled &&
-         mBlendOperationAdvancedProperties.advancedBlendMaxColorAttachments >=
-             gl::IMPLEMENTATION_MAX_DRAW_BUFFERS) ||
-        mFeatures.emulateAdvancedBlendEquations.enabled;
+    // GL_KHR_blend_equation_advanced.  According to the spec, only color attachment zero can be
+    // used with advanced blend:
+    //
+    // > Advanced blending equations are supported only when rendering to a single
+    // > color buffer using fragment color zero.
+    //
+    // Vulkan requires advancedBlendMaxColorAttachments to be at least one, so we can support
+    // advanced blend as long as the Vulkan extension is supported.  Otherwise, the extension is
+    // emulated where possible.
+    mNativeExtensions.blendEquationAdvancedKHR = mFeatures.supportsBlendOperationAdvanced.enabled ||
+                                                 mFeatures.emulateAdvancedBlendEquations.enabled;
 
     // Enable EXT_unpack_subimage
     mNativeExtensions.unpackSubimageEXT = true;
