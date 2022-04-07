@@ -1613,7 +1613,7 @@ TIntermLoop::TIntermLoop(const TIntermLoop &node)
                   node.mInit ? node.mInit->deepCopy() : nullptr,
                   node.mCond ? node.mCond->deepCopy() : nullptr,
                   node.mExpr ? node.mExpr->deepCopy() : nullptr,
-                  node.mBody->deepCopy())
+                  node.mBody ? node.mBody->deepCopy() : nullptr)
 {}
 
 TIntermIfElse::TIntermIfElse(TIntermTyped *cond, TIntermBlock *trueB, TIntermBlock *falseB)
