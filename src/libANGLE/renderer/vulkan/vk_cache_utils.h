@@ -220,7 +220,7 @@ class alignas(4) RenderPassDesc final
     uint8_t mSamples;
     uint8_t mColorAttachmentRange;
 
-    // Multivew
+    // Multiview
     uint8_t mViewCount;
 
     // sRGB
@@ -763,6 +763,8 @@ class DescriptorSetLayoutDesc final
     void unpackBindings(DescriptorSetLayoutBindingVector *bindings,
                         std::vector<VkSampler> *immutableSamplers) const;
 
+    bool empty() const { return *this == DescriptorSetLayoutDesc(); }
+
   private:
     // There is a small risk of an issue if the sampler cache is evicted but not the descriptor
     // cache we would have an invalid handle here. Thus propose follow-up work:
@@ -1146,13 +1148,21 @@ class DescriptorSetDesc
 
     // Specific helpers for uniforms/xfb descriptors.
     static constexpr size_t kDefaultUniformBufferWordOffset = 0;
-    static constexpr size_t kXfbBufferSerialWordOffset      = 1;
-    static constexpr size_t kXfbBufferOffsetWordOffset      = 2;
-    static constexpr size_t kXfbWordStride                  = 2;
+    static constexpr size_t kDefaultUniformSizeOffset       = 1;
+    static constexpr size_t kXfbBufferSerialWordOffset =
+        kDefaultUniformSizeOffset + static_cast<size_t>(gl::ShaderType::EnumCount);
+    static constexpr size_t kXfbBufferOffsetWordOffset = kXfbBufferSerialWordOffset + 1;
+    static constexpr size_t kXfbWordStride             = 2;
 
     void updateDefaultUniformBuffer(BufferSerial bufferSerial)
     {
         setBufferSerial(kDefaultUniformBufferWordOffset, 1, 0, bufferSerial);
+    }
+
+    void updateDefaultUniformBufferSize(gl::ShaderType shaderType, VkDeviceSize dataSize)
+    {
+        setClamped64BitValue(kDefaultUniformSizeOffset, 1, static_cast<size_t>(shaderType),
+                             dataSize);
     }
 
     void updateTransformFeedbackBuffer(size_t xfbIndex,
@@ -1191,6 +1201,17 @@ class DescriptorSetDesc
     {
         ASSERT(value <= static_cast<uint64_t>(std::numeric_limits<uint32_t>::max()));
         append32BitValue(static_cast<uint32_t>(value));
+    }
+
+    bool empty() const { return mPayload.empty(); }
+
+    void streamOut(std::ostream &ostr) const
+    {
+        for (uint32_t word : mPayload)
+        {
+            ostr << word << ", ";
+        }
+        ostr << "\n";
     }
 
   private:
@@ -1503,6 +1524,7 @@ enum class VulkanCacheType
     UniformsAndXfbDescriptors,
     ShaderBuffersDescriptors,
     Framebuffer,
+    DescriptorMetaCache,
     EnumCount
 };
 
@@ -1527,15 +1549,21 @@ class CacheStats final : angle::NonCopyable
 
     ANGLE_INLINE void hit() { mHitCount++; }
     ANGLE_INLINE void miss() { mMissCount++; }
+    ANGLE_INLINE void incrementSize() { mSize++; }
+    ANGLE_INLINE void missAndIncrementSize()
+    {
+        mMissCount++;
+        mSize++;
+    }
     ANGLE_INLINE void accumulate(const CacheStats &stats)
     {
         mHitCount += stats.mHitCount;
         mMissCount += stats.mMissCount;
-        mSize = stats.mSize;
+        mSize += stats.mSize;
     }
 
-    uint64_t getHitCount() const { return mHitCount; }
-    uint64_t getMissCount() const { return mMissCount; }
+    uint32_t getHitCount() const { return mHitCount; }
+    uint32_t getMissCount() const { return mMissCount; }
 
     ANGLE_INLINE double getHitRatio() const
     {
@@ -1549,9 +1577,7 @@ class CacheStats final : angle::NonCopyable
         }
     }
 
-    ANGLE_INLINE void incrementSize() { ++mSize; }
-
-    ANGLE_INLINE uint64_t getSize() const { return mSize; }
+    ANGLE_INLINE uint32_t getSize() const { return mSize; }
 
     void reset()
     {
@@ -1566,10 +1592,16 @@ class CacheStats final : angle::NonCopyable
         mMissCount = 0;
     }
 
+    void accumulateCacheStats(VulkanCacheType cacheType, const CacheStats &cacheStats)
+    {
+        mHitCount += cacheStats.getHitCount();
+        mMissCount += cacheStats.getMissCount();
+    }
+
   private:
-    uint64_t mHitCount;
-    uint64_t mMissCount;
-    uint64_t mSize;
+    uint32_t mHitCount;
+    uint32_t mMissCount;
+    uint32_t mSize;
 };
 
 template <VulkanCacheType CacheType>
@@ -1583,12 +1615,16 @@ class HasCacheStats : angle::NonCopyable
         mCacheStats.reset();
     }
 
+    void getCacheStats(CacheStats *accum) const { accum->accumulate(mCacheStats); }
+
   protected:
     HasCacheStats()          = default;
     virtual ~HasCacheStats() = default;
 
     CacheStats mCacheStats;
 };
+
+using VulkanCacheStats = angle::PackedEnumMap<VulkanCacheType, CacheStats>;
 
 // TODO(jmadill): Add cache trimming/eviction.
 class RenderPassCache final : angle::NonCopyable
@@ -1615,7 +1651,7 @@ class RenderPassCache final : angle::NonCopyable
             return angle::Result::Continue;
         }
 
-        mCompatibleRenderPassCacheStats.miss();
+        mCompatibleRenderPassCacheStats.missAndIncrementSize();
         return addRenderPass(contextVk, desc, renderPassOut);
     }
 
@@ -1680,7 +1716,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
             return angle::Result::Continue;
         }
 
-        mCacheStats.miss();
+        mCacheStats.missAndIncrementSize();
         return insertPipeline(contextVk, pipelineCacheVk, compatibleRenderPass, pipelineLayout,
                               activeAttribLocationsMask, programAttribsTypeMask, missingOutputsMask,
                               shaders, specConsts, desc, descPtrOut, pipelineOut);
@@ -1778,71 +1814,42 @@ class SamplerYcbcrConversionCache final
     SamplerYcbcrConversionMap mVkFormatPayload;
 };
 
-// DescriptorSet Cache
-class DriverUniformsDescriptorSetCache final
-    : public HasCacheStats<VulkanCacheType::DriverUniformsDescriptors>
-{
-  public:
-    DriverUniformsDescriptorSetCache() = default;
-    ~DriverUniformsDescriptorSetCache() override { ASSERT(mPayload.empty()); }
-
-    void destroy(RendererVk *rendererVk);
-
-    ANGLE_INLINE bool get(uint32_t serial, VkDescriptorSet *descriptorSet)
-    {
-        if (mPayload.get(serial, descriptorSet))
-        {
-            mCacheStats.hit();
-            return true;
-        }
-        mCacheStats.miss();
-        return false;
-    }
-
-    ANGLE_INLINE void insert(uint32_t serial, VkDescriptorSet descriptorSet)
-    {
-        mPayload.insert(serial, descriptorSet);
-    }
-
-    ANGLE_INLINE void clear() { mPayload.clear(); }
-
-    size_t getSize() const { return mPayload.size(); }
-
-  private:
-    static constexpr uint32_t kFlatMapSize = 16;
-    angle::FlatUnorderedMap<uint32_t, VkDescriptorSet, kFlatMapSize> mPayload;
-};
-
-// Templated Descriptors Cache
+// Descriptor Set Cache
 class DescriptorSetCache final : angle::NonCopyable
 {
   public:
     DescriptorSetCache() = default;
     ~DescriptorSetCache() { ASSERT(mPayload.empty()); }
 
-    ANGLE_INLINE void clear() { mPayload.clear(); }
+    DescriptorSetCache(DescriptorSetCache &&other) : DescriptorSetCache()
+    {
+        *this = std::move(other);
+    }
 
-    ANGLE_INLINE bool get(const vk::DescriptorSetDesc &desc,
-                          VkDescriptorSet *descriptorSet,
-                          CacheStats *cacheStats)
+    DescriptorSetCache &operator=(DescriptorSetCache &&other)
+    {
+        std::swap(mPayload, other.mPayload);
+        return *this;
+    }
+
+    void resetCache() { mPayload.clear(); }
+
+    ANGLE_INLINE bool getDescriptorSet(const vk::DescriptorSetDesc &desc,
+                                       VkDescriptorSet *descriptorSet)
     {
         auto iter = mPayload.find(desc);
         if (iter != mPayload.end())
         {
             *descriptorSet = iter->second;
-            cacheStats->hit();
             return true;
         }
-        cacheStats->miss();
         return false;
     }
 
-    ANGLE_INLINE void insert(const vk::DescriptorSetDesc &desc,
-                             VkDescriptorSet descriptorSet,
-                             CacheStats *cacheStats)
+    ANGLE_INLINE void insertDescriptorSet(const vk::DescriptorSetDesc &desc,
+                                          VkDescriptorSet descriptorSet)
     {
         mPayload.emplace(desc, descriptorSet);
-        cacheStats->incrementSize();
     }
 
     size_t getTotalCacheKeySizeBytes() const

@@ -819,7 +819,6 @@ class RendererVk : angle::NonCopyable
     DebugAnnotatorVk mAnnotator;
 
     // Stats about all Vulkan object caches
-    using VulkanCacheStats = angle::PackedEnumMap<VulkanCacheType, CacheStats>;
     VulkanCacheStats mVulkanCacheStats;
     mutable std::mutex mCacheStatsMutex;
 

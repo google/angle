@@ -457,6 +457,13 @@ void ShareGroupVk::onDestroy(const egl::Display *display)
 
     resetPrevTexture();
 
+    mMetaDescriptorPools[DescriptorSetIndex::UniformsAndXfb].destroy(
+        renderer, VulkanCacheType::UniformsAndXfbDescriptors);
+    mMetaDescriptorPools[DescriptorSetIndex::Texture].destroy(renderer,
+                                                              VulkanCacheType::TextureDescriptors);
+    mMetaDescriptorPools[DescriptorSetIndex::ShaderResource].destroy(
+        renderer, VulkanCacheType::ShaderBuffersDescriptors);
+
     ASSERT(mResourceUseLists.empty());
 }
 
