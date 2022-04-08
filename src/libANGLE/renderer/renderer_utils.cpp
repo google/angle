@@ -382,22 +382,13 @@ void PackPixels(const PackPixelsParams &params,
         return;
     }
 
-    PixelCopyFunction fastCopyFunc = sourceFormat.fastCopyFunctions.get(params.destFormat->id);
+    FastCopyFunction fastCopyFunc = sourceFormat.fastCopyFunctions.get(params.destFormat->id);
 
     if (fastCopyFunc)
     {
         // Fast copy is possible through some special function
-        for (int y = 0; y < destHeight; ++y)
-        {
-            for (int x = 0; x < destWidth; ++x)
-            {
-                uint8_t *dest =
-                    destWithOffset + y * params.outputPitch + x * params.destFormat->pixelBytes;
-                const uint8_t *src = source + y * yAxisPitch + x * xAxisPitch;
-
-                fastCopyFunc(src, dest);
-            }
-        }
+        fastCopyFunc(source, xAxisPitch, yAxisPitch, destWithOffset, params.destFormat->pixelBytes,
+                     params.outputPitch, destWidth, destHeight);
         return;
     }
 
@@ -435,17 +426,32 @@ bool FastCopyFunctionMap::has(angle::FormatID formatID) const
     return (get(formatID) != nullptr);
 }
 
-PixelCopyFunction FastCopyFunctionMap::get(angle::FormatID formatID) const
+namespace
 {
-    for (size_t index = 0; index < mSize; ++index)
+
+const FastCopyFunctionMap::Entry *getEntry(const FastCopyFunctionMap::Entry *entry,
+                                           size_t numEntries,
+                                           angle::FormatID formatID)
+{
+    const FastCopyFunctionMap::Entry *end = entry + numEntries;
+    while (entry != end)
     {
-        if (mData[index].formatID == formatID)
+        if (entry->formatID == formatID)
         {
-            return mData[index].func;
+            return entry;
         }
+        ++entry;
     }
 
     return nullptr;
+}
+
+}  // namespace
+
+FastCopyFunction FastCopyFunctionMap::get(angle::FormatID formatID) const
+{
+    const FastCopyFunctionMap::Entry *entry = getEntry(mData, mSize, formatID);
+    return entry ? entry->func : nullptr;
 }
 
 bool ShouldUseDebugLayers(const egl::AttributeMap &attribs)
