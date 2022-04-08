@@ -169,6 +169,8 @@ struct RenderTestParams : public angle::PlatformParameters
     bool trackGpuTime              = false;
     SurfaceType surfaceType        = SurfaceType::Window;
     EGLenum colorSpace             = EGL_COLORSPACE_LINEAR;
+    bool multisample               = false;
+    EGLint samples                 = -1;
 };
 
 class ANGLERenderTest : public ANGLEPerfTest

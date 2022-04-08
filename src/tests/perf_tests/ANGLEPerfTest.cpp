@@ -666,18 +666,29 @@ std::string RenderTestParams::backend() const
 
 std::string RenderTestParams::story() const
 {
+    std::stringstream strstr;
+
     switch (surfaceType)
     {
         case SurfaceType::Window:
-            return "";
+            break;
         case SurfaceType::WindowWithVSync:
-            return "_vsync";
+            strstr << "_vsync";
+            break;
         case SurfaceType::Offscreen:
-            return "_offscreen";
+            strstr << "_offscreen";
+            break;
         default:
             UNREACHABLE();
             return "";
     }
+
+    if (multisample)
+    {
+        strstr << "_" << samples << "_samples";
+    }
+
+    return strstr.str();
 }
 
 std::string RenderTestParams::backendAndStory() const
@@ -795,6 +806,8 @@ void ANGLERenderTest::SetUp()
     mConfigParams.depthBits   = 24;
     mConfigParams.stencilBits = 8;
     mConfigParams.colorSpace  = mTestParams.colorSpace;
+    mConfigParams.multisample = mTestParams.multisample;
+    mConfigParams.samples     = mTestParams.samples;
     if (mTestParams.surfaceType != SurfaceType::WindowWithVSync)
     {
         mConfigParams.swapInterval = 0;
