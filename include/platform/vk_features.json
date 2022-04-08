@@ -1,0 +1,982 @@
+{
+    "description": [
+        "Copyright 2022 The ANGLE Project Authors. All rights reserved.",
+        "Use of this source code is governed by a BSD-style license that can be",
+        "found in the LICENSE file.",
+        "",
+        "vk_features.json: Optional features for the Vulkan renderer."
+    ],
+    "features": [
+        {
+            "name": "basicGLLineRasterization",
+            "display_name": "basicGLLineRasterization",
+            "category": "Features",
+            "description": [
+                "Enable the use of pixel shader patching to implement OpenGL basic line ",
+                "rasterization rules"
+            ]
+        },
+
+        {
+            "name": "bresenhamLineRasterization",
+            "display_name": "bresenhamLineRasterization",
+            "category": "Features",
+            "description": [
+                "Enable Bresenham line rasterization via VK_EXT_line_rasterization extension"
+            ]
+        },
+
+        {
+            "name": "provokingVertex",
+            "display_name": "provokingVertex",
+            "category": "Features",
+            "description": [
+                "Enable provoking vertex mode via VK_EXT_provoking_vertex extension"
+            ]
+        },
+
+        {
+            "name": "forceFallbackFormat",
+            "display_name": "forceFallbackFormat",
+            "category": "Workarounds",
+            "description": [
+                "Force a fallback format for angle_end2end_tests"
+            ]
+        },
+
+        {
+            "name": "clampPointSize",
+            "display_name": "clampPointSize",
+            "category": "Workarounds",
+            "description": [
+                "The point size range reported from the API is inconsistent with the actual behavior"
+            ],
+            "issue": "http://anglebug.com/2970"
+        },
+
+        {
+            "name": "depthClamping",
+            "display_name": "depth_clamping",
+            "category": "Workarounds",
+            "description": [
+                "The depth value is not clamped to [0,1] for floating point depth buffers."
+            ],
+            "issue": "http://anglebug.com/3970"
+        },
+
+        {
+            "name": "supportsRenderpass2",
+            "display_name": "supportsRenderpass2",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_create_renderpass2 extension"
+            ]
+        },
+
+        {
+            "name": "supportsIncrementalPresent",
+            "display_name": "supportsIncrementalPresent",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_incremental_present extension"
+            ]
+        },
+
+        {
+            "name": "supportsAndroidHardwareBuffer",
+            "display_name": "supportsAndroidHardwareBuffer",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_ANDROID_external_memory_android_hardware_buffer extension"
+            ]
+        },
+
+        {
+            "name": "supportsGGPFrameToken",
+            "display_name": "supportsGGPFrameToken",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_GGP_frame_token extension"
+            ]
+        },
+
+        {
+            "name": "supportsExternalMemoryFd",
+            "display_name": "supportsExternalMemoryFd",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_external_memory_fd extension"
+            ]
+        },
+
+        {
+            "name": "supportsExternalMemoryFuchsia",
+            "display_name": "supportsExternalMemoryFuchsia",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_FUCHSIA_external_memory extension"
+            ]
+        },
+
+        {
+            "name": "supportsFilteringPrecision",
+            "display_name": "supportsFilteringPrecision",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_GOOGLE_sampler_filtering_precision extension"
+            ]
+        },
+
+        {
+            "name": "supportsExternalFenceCapabilities",
+            "display_name": "supportsExternalFenceCapabilities",
+            "category": "Features",
+            "description": [
+                "VkInstance supports the VK_KHR_external_fence_capabilities extension"
+            ]
+        },
+
+        {
+            "name": "supportsExternalSemaphoreCapabilities",
+            "display_name": "supportsExternalSemaphoreCapabilities",
+            "category": "Features",
+            "description": [
+                "VkInstance supports the VK_KHR_external_semaphore_capabilities extension"
+            ]
+        },
+
+        {
+            "name": "supportsExternalSemaphoreFd",
+            "display_name": "supportsExternalSemaphoreFd",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_external_semaphore_fd extension"
+            ]
+        },
+
+        {
+            "name": "supportsExternalSemaphoreFuchsia",
+            "display_name": "supportsExternalSemaphoreFuchsia",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_FUCHSIA_external_semaphore extension"
+            ]
+        },
+
+        {
+            "name": "supportsExternalFenceFd",
+            "display_name": "supportsExternalFenceFd",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_external_fence_fd extension"
+            ],
+            "issue": "http://anglebug.com/2517"
+        },
+
+        {
+            "name": "supportsAndroidNativeFenceSync",
+            "display_name": "supportsAndroidNativeFenceSync",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the EGL_ANDROID_native_fence_sync extension"
+            ],
+            "issue": "http://anglebug.com/2517"
+        },
+
+        {
+            "name": "supportsImageCubeArray",
+            "display_name": "supportsImageCubeArray",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the imageCubeArray feature properly"
+            ],
+            "issue": "http://anglebug.com/3584"
+        },
+
+        {
+            "name": "supportsPipelineStatisticsQuery",
+            "display_name": "supportsPipelineStatisticsQuery",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the pipelineStatisticsQuery feature"
+            ],
+            "issue": "http://anglebug.com/5430"
+        },
+
+        {
+            "name": "supportsShaderStencilExport",
+            "display_name": "supportsShaderStencilExport",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_shader_stencil_export extension"
+            ]
+        },
+
+        {
+            "name": "supportsYUVSamplerConversion",
+            "display_name": "supportsYUVSamplerConversion",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_sampler_ycbcr_conversion extension"
+            ]
+        },
+
+        {
+            "name": "emulateTransformFeedback",
+            "display_name": "emulateTransformFeedback",
+            "category": "Features",
+            "description": [
+                "Emulate transform feedback as the VK_EXT_transform_feedback is not present."
+            ],
+            "issue": "http://anglebug.com/3205"
+        },
+
+        {
+            "name": "supportsTransformFeedbackExtension",
+            "display_name": "supportsTransformFeedbackExtension",
+            "category": "Features",
+            "description": [
+                "Transform feedback uses the VK_EXT_transform_feedback extension."
+            ],
+            "issue": "http://anglebug.com/3206"
+        },
+
+        {
+            "name": "supportsGeometryStreamsCapability",
+            "display_name": "supportsGeometryStreamsCapability",
+            "category": "Features",
+            "description": [
+                "Implementation supports the GeometryStreams SPIR-V capability."
+            ],
+            "issue": "http://anglebug.com/3206"
+        },
+
+        {
+            "name": "supportsIndexTypeUint8",
+            "display_name": "supportsIndexTypeUint8",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_index_type_uint8 extension"
+            ],
+            "issue": "http://anglebug.com/4405"
+        },
+
+        {
+            "name": "supportsCustomBorderColor",
+            "display_name": "supportsCustomBorderColor",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_custom_border_color extension"
+            ],
+            "issue": "http://anglebug.com/3577"
+        },
+
+        {
+            "name": "supportsMultiDrawIndirect",
+            "display_name": "supportsMultiDrawIndirect",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the multiDrawIndirect extension"
+            ],
+            "issue": "http://anglebug.com/6439"
+        },
+
+        {
+            "name": "supportsDepthStencilResolve",
+            "display_name": "supportsDepthStencilResolve",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_depth_stencil_resolve ",
+                "extension with the independentResolveNone feature"
+            ],
+            "issue": "http://anglebug.com/4836"
+        },
+
+        {
+            "name": "supportsMultisampledRenderToSingleSampled",
+            "display_name": "supportsMultisampledRenderToSingleSampled",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_multisampled_render_to_single_sampled extension"
+            ],
+            "issue": "http://anglebug.com/4836"
+        },
+
+        {
+            "name": "supportsMultiview",
+            "display_name": "supportsMultiview",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_multiview extension"
+            ],
+            "issue": "http://anglebug.com/6048"
+        },
+
+        {
+            "name": "disableFifoPresentMode",
+            "display_name": "disableFifoPresentMode",
+            "category": "Workarounds",
+            "description": [
+                "VK_PRESENT_MODE_FIFO_KHR causes random timeouts"
+            ],
+            "issue": "http://anglebug.com/3153"
+        },
+
+        {
+            "name": "bindEmptyForUnusedDescriptorSets",
+            "display_name": "bindEmptyForUnusedDescriptorSets",
+            "category": "Workarounds",
+            "description": [
+                "Gaps in bound descriptor set indices causes the post-gap sets to misbehave"
+            ],
+            "issue": "http://anglebug.com/2727"
+        },
+
+        {
+            "name": "forceD16TexFilter",
+            "display_name": "forceD16TexFilter",
+            "category": "Workarounds",
+            "description": [
+                "VK_FORMAT_D16_UNORM does not support VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, ",
+                "which prevents OES_depth_texture from being supported."
+            ],
+            "issue": "http://anglebug.com/3452"
+        },
+
+        {
+            "name": "disableFlippingBlitWithCommand",
+            "display_name": "disableFlippingBlitWithCommand",
+            "category": "Workarounds",
+            "description": [
+                "vkCmdBlitImage with flipped coordinates blits incorrectly."
+            ],
+            "issue": "http://anglebug.com/3498"
+        },
+
+        {
+            "name": "perFrameWindowSizeQuery",
+            "display_name": "perFrameWindowSizeQuery",
+            "category": "Workarounds",
+            "description": [
+                "Vulkan swapchain is not returning VK_ERROR_OUT_OF_DATE when window resizing"
+            ],
+            "issue": "http://anglebug.com/3623, http://anglebug.com/3624, http://anglebug.com/3625"
+        },
+
+        {
+            "name": "disallowSeamfulCubeMapEmulation",
+            "display_name": "disallowSeamfulCubeMapEmulation",
+            "category": "Workarounds",
+            "description": [
+                "Seamful cube map emulation misbehaves on some drivers, so it's disallowed"
+            ],
+            "issue": "http://anglebug.com/3243"
+        },
+
+        {
+            "name": "padBuffersToMaxVertexAttribStride",
+            "display_name": "padBuffersToMaxVertexAttribStride",
+            "category": "Workarounds",
+            "description": [
+                "Vulkan considers vertex attribute accesses to count up to the last multiple of the ",
+                "stride. This additional access supports AMD's robust buffer access implementation. ",
+                "AMDVLK in particular will return incorrect values when the vertex access extends into ",
+                "the range that would be the stride padding and the buffer is too small. ",
+                "This workaround limits GL_MAX_VERTEX_ATTRIB_STRIDE to a maximum value and ",
+                "pads up every buffer allocation size to be a multiple of the maximum stride."
+            ],
+            "issue": "http://anglebug.com/4428"
+        },
+
+        {
+            "name": "supportsExternalMemoryDmaBufAndModifiers",
+            "display_name": "supportsExternalMemoryDmaBufAndModifiers",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_external_memory_dma_buf and VK_EXT_image_drm_format_modifier ",
+                "extensions"
+            ],
+            "issue": "http://anglebug.com/6248"
+        },
+
+        {
+            "name": "supportsExternalMemoryHost",
+            "display_name": "supportsExternalMemoryHost",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_external_memory_host extension"
+            ]
+        },
+
+        {
+            "name": "allocateNonZeroMemory",
+            "display_name": "allocateNonZeroMemory",
+            "category": "Features",
+            "description": [
+                "Fill new allocations with non-zero values to flush out errors."
+            ],
+            "issue": "http://anglebug.com/4384"
+        },
+
+        {
+            "name": "logMemoryReportCallbacks",
+            "display_name": "logMemoryReportCallbacks",
+            "category": "Features",
+            "description": [
+                "Log each callback from VK_EXT_device_memory_report"
+            ]
+        },
+
+        {
+            "name": "logMemoryReportStats",
+            "display_name": "logMemoryReportStats",
+            "category": "Features",
+            "description": [
+                "Log stats from VK_EXT_device_memory_report each swap"
+            ]
+        },
+
+        {
+            "name": "shadowBuffers",
+            "display_name": "shadowBuffers",
+            "category": "Features",
+            "description": [
+                "Allocate a shadow buffer for GL buffer objects to reduce glMap* latency."
+            ],
+            "issue": "http://anglebug.com/4339"
+        },
+
+        {
+            "name": "preferCPUForBufferSubData",
+            "display_name": "preferCPUForBufferSubData",
+            "category": "Features",
+            "description": [
+                "Prefer use CPU to do bufferSubData instead of staged update."
+            ],
+            "issue": "http://issuetracker.google.com/200067929"
+        },
+
+        {
+            "name": "persistentlyMappedBuffers",
+            "display_name": "persistentlyMappedBuffers",
+            "category": "Features",
+            "description": [
+                "Persistently map buffer memory to reduce map/unmap IOCTL overhead."
+            ],
+            "issue": "http://anglebug.com/2162"
+        },
+
+        {
+            "name": "enablePreRotateSurfaces",
+            "display_name": "enablePreRotateSurfaces",
+            "category": "Features",
+            "description": [
+                "Enable Android pre-rotation for landscape applications"
+            ],
+            "issue": "http://anglebug.com/3502"
+        },
+
+        {
+            "name": "enablePrecisionQualifiers",
+            "display_name": "enablePrecisionQualifiers",
+            "category": "Features",
+            "description": [
+                "Enable precision qualifiers in shaders"
+            ],
+            "issue": "http://anglebug.com/3078"
+        },
+
+        {
+            "name": "preferAggregateBarrierCalls",
+            "display_name": "preferAggregateBarrierCalls",
+            "category": "Workarounds",
+            "description": [
+                "Single barrier call is preferred over multiple calls with ",
+                "fine grained pipeline stage dependency information"
+            ],
+            "issue": "http://anglebug.com/4633"
+        },
+
+        {
+            "name": "preferSkippingInvalidateForEmulatedFormats",
+            "display_name": "preferSkippingInvalidateForEmulatedFormats",
+            "category": "Workarounds",
+            "description": [
+                "Skipping invalidate is preferred for emulated formats that have extra channels over ",
+                "re-clearing the image"
+            ],
+            "issue": "http://anglebug.com/6860"
+        },
+
+        {
+            "name": "asyncCommandQueue",
+            "display_name": "asyncCommandQueue",
+            "category": "Features",
+            "description": [
+                "Use CommandQueue worker thread to dispatch work to GPU."
+            ],
+            "issue": "http://anglebug.com/4324"
+        },
+
+        {
+            "name": "supportsShaderFloat16",
+            "display_name": "supportsShaderFloat16",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_shader_float16_int8 extension ",
+                "and has the shaderFloat16 feature"
+            ],
+            "issue": "http://anglebug.com/4551"
+        },
+
+        {
+            "name": "allowGenerateMipmapWithCompute",
+            "display_name": "allowGenerateMipmapWithCompute",
+            "category": "Features",
+            "description": [
+                "Use the compute path to generate mipmaps on devices that meet the minimum requirements, ",
+                "and the performance is better."
+            ],
+            "issue": "http://anglebug.com/4551"
+        },
+
+        {
+            "name": "supportsRenderPassStoreOpNoneQCOM",
+            "display_name": "supportsRenderPassStoreOpNoneQCOM",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_QCOM_render_pass_store_ops extension."
+            ],
+            "issue": "http://anglebug.com/5055"
+        },
+
+        {
+            "name": "supportsRenderPassLoadStoreOpNone",
+            "display_name": "supportsRenderPassLoadStoreOpNone",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_load_store_op_none extension."
+            ],
+            "issue": "http://anglebug.com/5371"
+        },
+
+        {
+            "name": "supportsDepthClipControl",
+            "display_name": "supportsDepthClipControl",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_depth_clip_control extension."
+            ],
+            "issue": "http://anglebug.com/5421"
+        },
+
+        {
+            "name": "supportsBlendOperationAdvanced",
+            "display_name": "supportsBlendOperationAdvanced",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_blend_operation_advanced extension."
+            ],
+            "issue": "http://anglebug.com/3586"
+        },
+
+        {
+            "name": "forceMaxUniformBufferSize16KB",
+            "display_name": "forceMaxUniformBufferSize16KB",
+            "category": "Workarounds",
+            "description": [
+                "Force max uniform buffer size to 16K on some device due to bug"
+            ],
+            "issue": "https://issuetracker.google.com/161903006"
+        },
+
+        {
+            "name": "supportsImageFormatList",
+            "display_name": "supportsImageFormatList",
+            "category": "Features",
+            "description": [
+                "Enable VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT by default for ICDs ",
+                "that support VK_KHR_image_format_list"
+            ],
+            "issue": "http://anglebug.com/5281"
+        },
+
+        {
+            "name": "enableMultisampledRenderToTexture",
+            "display_name": "enableMultisampledRenderToTexture",
+            "category": "Workarounds",
+            "description": [
+                "Expose EXT_multisampled_render_to_texture"
+            ],
+            "issue": "http://anglebug.com/4937"
+        },
+
+        {
+            "name": "deferFlushUntilEndRenderPass",
+            "display_name": "deferFlushUntilEndRenderPass",
+            "category": "Workarounds",
+            "description": [
+                "Allow glFlush to be deferred until renderpass ends"
+            ],
+            "issue": "https://issuetracker.google.com/issues/166475273"
+        },
+
+        {
+            "name": "waitIdleBeforeSwapchainRecreation",
+            "display_name": "waitIdleBeforeSwapchainRecreation",
+            "category": "Workarounds",
+            "description": [
+                "Before passing an oldSwapchain to VkSwapchainCreateInfoKHR, wait for queue to be idle. ",
+                "Works around a bug on platforms which destroy oldSwapchain in vkCreateSwapchainKHR."
+            ],
+            "issue": "http://anglebug.com/5061"
+        },
+
+        {
+            "name": "forceTextureLodOffset1",
+            "display_name": "force_texture_lod_offset_1",
+            "category": "Workarounds",
+            "description": [
+                "Increase the minimum texture level-of-detail by 1 when sampling."
+            ]
+        },
+
+        {
+            "name": "forceTextureLodOffset2",
+            "display_name": "force_texture_lod_offset_2",
+            "category": "Workarounds",
+            "description": [
+                "Increase the minimum texture level-of-detail by 2 when sampling."
+            ]
+        },
+
+        {
+            "name": "forceTextureLodOffset3",
+            "display_name": "force_texture_lod_offset_3",
+            "category": "Workarounds",
+            "description": [
+                "Increase the minimum texture level-of-detail by 3 when sampling."
+            ]
+        },
+
+        {
+            "name": "forceTextureLodOffset4",
+            "display_name": "force_texture_lod_offset_4",
+            "category": "Workarounds",
+            "description": [
+                "Increase the minimum texture level-of-detail by 4 when sampling."
+            ]
+        },
+
+        {
+            "name": "forceNearestFiltering",
+            "display_name": "force_nearest_filtering",
+            "category": "Workarounds",
+            "description": [
+                "Force nearest filtering when sampling."
+            ]
+        },
+
+        {
+            "name": "forceNearestMipFiltering",
+            "display_name": "forceNearestMipFiltering",
+            "category": "Workarounds",
+            "description": [
+                "Force nearest mip filtering when sampling."
+            ]
+        },
+
+        {
+            "name": "compressVertexData",
+            "display_name": "compress_vertex_data",
+            "category": "Workarounds",
+            "description": [
+                "Compress vertex data to smaller data types when ",
+                "possible. Using this feature makes ANGLE non-conformant."
+            ]
+        },
+
+        {
+            "name": "preferDrawClearOverVkCmdClearAttachments",
+            "display_name": "preferDrawClearOverVkCmdClearAttachments",
+            "category": "Workarounds",
+            "description": [
+                "On some hardware, clear using a draw call instead of vkCmdClearAttachments in the middle ",
+                "of render pass due to bugs"
+            ],
+            "issue": "https://issuetracker.google.com/166809097"
+        },
+
+        {
+            "name": "emulatedPrerotation90",
+            "display_name": "emulatedPrerotation90",
+            "category": "Features",
+            "description": [
+                "Emulate 90-degree prerotation."
+            ],
+            "issue": "http://anglebug.com/4901"
+        },
+
+        {
+            "name": "emulatedPrerotation180",
+            "display_name": "emulatedPrerotation180",
+            "category": "Features",
+            "description": [
+                "Emulate 180-degree prerotation."
+            ],
+            "issue": "http://anglebug.com/4901"
+        },
+
+        {
+            "name": "emulatedPrerotation270",
+            "display_name": "emulatedPrerotation270",
+            "category": "Features",
+            "description": [
+                "Emulate 270-degree prerotation."
+            ],
+            "issue": "http://anglebug.com/4901"
+        },
+
+        {
+            "name": "generateSPIRVThroughGlslang",
+            "display_name": "generateSPIRVThroughGlslang",
+            "category": "Features",
+            "description": [
+                "Translate SPIR-V through glslang."
+            ],
+            "issue": "http://anglebug.com/4889"
+        },
+
+        {
+            "name": "forceDriverUniformOverSpecConst",
+            "display_name": "forceDriverUniformOverSpecConst",
+            "category": "Workarounds",
+            "description": [
+                "Forces using driver uniforms instead of specialization constants."
+            ],
+            "issue": "http://issuetracker.google.com/173636783"
+        },
+
+        {
+            "name": "exposeNonConformantExtensionsAndVersions",
+            "display_name": "exposeNonConformantExtensionsAndVersions",
+            "category": "Workarounds",
+            "description": [
+                "Expose GLES versions and extensions that are not conformant."
+            ],
+            "issue": "http://anglebug.com/5375"
+        },
+
+        {
+            "name": "emulateR32fImageAtomicExchange",
+            "display_name": "emulateR32fImageAtomicExchange",
+            "category": "Workarounds",
+            "description": [
+                "Emulate r32f images with r32ui to support imageAtomicExchange."
+            ],
+            "issue": "http://anglebug.com/5535"
+        },
+
+        {
+            "name": "supportsNegativeViewport",
+            "display_name": "supportsNegativeViewport",
+            "category": "Features",
+            "description": [
+                "The driver supports inverting the viewport with a negative height."
+            ]
+        },
+
+        {
+            "name": "forceFragmentShaderPrecisionHighpToMediump",
+            "display_name": "forceFragmentShaderPrecisionHighpToMediump",
+            "category": "Workarounds",
+            "description": [
+                "Forces highp precision in fragment shader to mediump."
+            ],
+            "issue": "https://issuetracker.google.com/184850002"
+        },
+
+        {
+            "name": "preferSubmitAtFBOBoundary",
+            "display_name": "preferSubmitAtFBOBoundary",
+            "category": "Workarounds",
+            "description": [
+                "Submit commands to driver at each FBO boundary for performance improvements."
+            ],
+            "issue": "https://issuetracker.google.com/187425444"
+        },
+
+        {
+            "name": "useMultipleDescriptorsForExternalFormats",
+            "display_name": "useMultipleDescriptorsForExternalFormats",
+            "category": "Workarounds",
+            "description": [
+                "Return a default descriptor count for external formats."
+            ],
+            "issue": "http://anglebug.com/6141"
+        },
+
+        {
+            "name": "supportsProtectedMemory",
+            "display_name": "supportsProtectedMemory",
+            "category": "Features",
+            "description": [
+                "VkDevice supports protected memory"
+            ],
+            "issue": "http://anglebug.com/3965"
+        },
+
+        {
+            "name": "supportsHostQueryReset",
+            "display_name": "supportsHostQueryReset",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_host_query_reset extension"
+            ],
+            "issue": "http://anglebug.com/6692"
+        },
+
+        {
+            "name": "supportsSurfaceCapabilities2Extension",
+            "display_name": "supportsSurfaceCapabilities2Extension",
+            "category": "Features",
+            "description": [
+                "VkInstance supports the VK_KHR_get_surface_capabilities2 extension"
+            ]
+        },
+
+        {
+            "name": "supportsSurfaceProtectedCapabilitiesExtension",
+            "display_name": "supportsSurfaceProtectedCapabilitiesExtension",
+            "category": "Features",
+            "description": [
+                "VkInstance supports the VK_KHR_surface_protected_capabilities extension"
+            ]
+        },
+
+        {
+            "name": "supportsSurfacelessQueryExtension",
+            "display_name": "supportsSurfacelessQueryExtension",
+            "category": "Features",
+            "description": [
+                "VkInstance supports the VK_GOOGLE_surfaceless_query extension"
+            ]
+        },
+
+        {
+            "name": "supportsSurfaceProtectedSwapchains",
+            "display_name": "supportsSurfaceProtectedSwapchains",
+            "category": "Features",
+            "description": [
+                "VkSurface supportsProtected for protected swapchains"
+            ]
+        },
+
+        {
+            "name": "overrideSurfaceFormatRGB8toRGBA8",
+            "display_name": "overrideSurfaceFormatRGB8toRGBA8",
+            "category": "Workarounds",
+            "description": [
+                "Override surface format GL_RGB8 to GL_RGBA8"
+            ],
+            "issue": "http://anglebug.com/6651"
+        },
+
+        {
+            "name": "supportsSharedPresentableImageExtension",
+            "display_name": "supportsSharedPresentableImageExtension",
+            "category": "Features",
+            "description": [
+                "VkSurface supports the VK_KHR_shared_presentable_images extension"
+            ]
+        },
+
+        {
+            "name": "supportsShaderFramebufferFetch",
+            "display_name": "supportsShaderFramebufferFetch",
+            "category": "Features",
+            "description": [
+                "Whether the Vulkan backend supports coherent framebuffer fetch"
+            ]
+        },
+
+        {
+            "name": "supportsShaderFramebufferFetchNonCoherent",
+            "display_name": "supportsShaderFramebufferFetchNonCoherent",
+            "category": "Features",
+            "description": [
+                "Whether the Vulkan backend supports non-coherent framebuffer fetch"
+            ]
+        },
+
+        {
+            "name": "supportsLockSurfaceExtension",
+            "display_name": "supportsLockSurfaceExtension",
+            "category": "Features",
+            "description": [
+                "Surface supports the EGL_KHR_lock_surface3 extension"
+            ]
+        },
+
+        {
+            "name": "swapbuffersOnFlushOrFinishWithSingleBuffer",
+            "display_name": "swapbuffersOnFlushOrFinishWithSingleBuffer",
+            "category": "Features",
+            "description": [
+                "Bypass deferredFlush with calling swapbuffers on flush or finish when in Shared Present ",
+                "mode"
+            ],
+            "issue": "http://anglebug.com/6878"
+        },
+
+        {
+            "name": "emulateDithering",
+            "display_name": "emulateDithering",
+            "category": "Features",
+            "description": [
+                "Emulate OpenGL dithering"
+            ],
+            "issue": "http://anglebug.com/6755"
+        },
+
+        {
+            "name": "bottomLeftOriginPresentRegionRectangles",
+            "display_name": "bottomLeftOriginPresentRegionRectangles",
+            "category": "Workarounds",
+            "description": [
+                "On some platforms present region rectangles are expected to have a bottom-left origin, ",
+                "instead of top-left origin as from spec"
+            ]
+        },
+
+        {
+            "name": "forceSubmitImmutableTextureUpdates",
+            "display_name": "forceSubmitImmutableTextureUpdates",
+            "category": "AppWorkarounds",
+            "description": [
+                "Force submit updates to immutable textures"
+            ],
+            "issue": "http://anglebug.com/6929"
+        },
+
+        {
+            "name": "retainSpirvDebugInfo",
+            "display_name": "retainSpirvDebugInfo",
+            "category": "Features",
+            "description": [
+                "Retain debug info in SPIR-V blob."
+            ],
+            "issue": "http://anglebug.com/5901"
+        },
+
+        {
+            "name": "createPipelineDuringLink",
+            "display_name": "createPipelineDuringLink",
+            "category": "Features",
+            "description": [
+                "Create pipeline with default state during glLinkProgram"
+            ],
+            "issue": "http://anglebug.com/7046"
+        }
+    ]
+}

@@ -25,39 +25,38 @@ namespace angle
 
 enum class FeatureCategory
 {
-    AppWorkarounds,
-    FrontendWorkarounds,
     FrontendFeatures,
+    FrontendWorkarounds,
     OpenGLWorkarounds,
     D3DWorkarounds,
-    D3DCompilerWorkarounds,
-    VulkanWorkarounds,
     VulkanFeatures,
+    VulkanWorkarounds,
+    VulkanAppWorkarounds,
     MetalFeatures,
     MetalWorkarounds,
 };
 
-constexpr char kFeatureCategoryFrontendWorkarounds[]    = "Frontend workarounds";
-constexpr char kFeatureCategoryFrontendFeatures[]       = "Frontend features";
-constexpr char kFeatureCategoryOpenGLWorkarounds[]      = "OpenGL workarounds";
-constexpr char kFeatureCategoryD3DWorkarounds[]         = "D3D workarounds";
-constexpr char kFeatureCategoryD3DCompilerWorkarounds[] = "D3D compiler workarounds";
-constexpr char kFeatureCategoryVulkanWorkarounds[]      = "Vulkan workarounds";
-constexpr char kFeatureCategoryVulkanFeatures[]         = "Vulkan features";
-constexpr char kFeatureCategoryMetalFeatures[]          = "Metal features";
-constexpr char kFeatureCategoryMetalWorkarounds[]       = "Metal workarounds";
-constexpr char kFeatureCategoryUnknown[]                = "Unknown";
+constexpr char kFeatureCategoryFrontendWorkarounds[]  = "Frontend workarounds";
+constexpr char kFeatureCategoryFrontendFeatures[]     = "Frontend features";
+constexpr char kFeatureCategoryOpenGLWorkarounds[]    = "OpenGL workarounds";
+constexpr char kFeatureCategoryD3DWorkarounds[]       = "D3D workarounds";
+constexpr char kFeatureCategoryVulkanAppWorkarounds[] = "Vulkan app workarounds";
+constexpr char kFeatureCategoryVulkanWorkarounds[]    = "Vulkan workarounds";
+constexpr char kFeatureCategoryVulkanFeatures[]       = "Vulkan features";
+constexpr char kFeatureCategoryMetalFeatures[]        = "Metal features";
+constexpr char kFeatureCategoryMetalWorkarounds[]     = "Metal workarounds";
+constexpr char kFeatureCategoryUnknown[]              = "Unknown";
 
 inline const char *FeatureCategoryToString(const FeatureCategory &fc)
 {
     switch (fc)
     {
-        case FeatureCategory::FrontendWorkarounds:
-            return kFeatureCategoryFrontendWorkarounds;
-            break;
-
         case FeatureCategory::FrontendFeatures:
             return kFeatureCategoryFrontendFeatures;
+            break;
+
+        case FeatureCategory::FrontendWorkarounds:
+            return kFeatureCategoryFrontendWorkarounds;
             break;
 
         case FeatureCategory::OpenGLWorkarounds:
@@ -68,16 +67,16 @@ inline const char *FeatureCategoryToString(const FeatureCategory &fc)
             return kFeatureCategoryD3DWorkarounds;
             break;
 
-        case FeatureCategory::D3DCompilerWorkarounds:
-            return kFeatureCategoryD3DCompilerWorkarounds;
+        case FeatureCategory::VulkanFeatures:
+            return kFeatureCategoryVulkanFeatures;
             break;
 
         case FeatureCategory::VulkanWorkarounds:
             return kFeatureCategoryVulkanWorkarounds;
             break;
 
-        case FeatureCategory::VulkanFeatures:
-            return kFeatureCategoryVulkanFeatures;
+        case FeatureCategory::VulkanAppWorkarounds:
+            return kFeatureCategoryVulkanAppWorkarounds;
             break;
 
         case FeatureCategory::MetalFeatures:

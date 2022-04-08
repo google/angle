@@ -3436,15 +3436,21 @@ void SamplerDesc::update(ContextVk *contextVk,
 {
     const angle::FeaturesVk &featuresVk = contextVk->getFeatures();
     mMipLodBias                         = 0.0f;
-    for (size_t lodOffsetFeatureIdx = 0;
-         lodOffsetFeatureIdx < featuresVk.forceTextureLODOffset.size(); lodOffsetFeatureIdx++)
+    if (featuresVk.forceTextureLodOffset1.enabled)
     {
-        if (featuresVk.forceTextureLODOffset[lodOffsetFeatureIdx].enabled)
-        {
-            // Make sure only one forceTextureLODOffset feature is set.
-            ASSERT(mMipLodBias == 0.0f);
-            mMipLodBias = static_cast<float>(lodOffsetFeatureIdx + 1);
-        }
+        mMipLodBias = 1.0f;
+    }
+    else if (featuresVk.forceTextureLodOffset2.enabled)
+    {
+        mMipLodBias = 2.0f;
+    }
+    else if (featuresVk.forceTextureLodOffset3.enabled)
+    {
+        mMipLodBias = 3.0f;
+    }
+    else if (featuresVk.forceTextureLodOffset4.enabled)
+    {
+        mMipLodBias = 4.0f;
     }
 
     mMaxAnisotropy = samplerState.getMaxAnisotropy();

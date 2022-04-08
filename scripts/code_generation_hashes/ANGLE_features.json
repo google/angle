@@ -1,0 +1,24 @@
+{
+  "include/platform/FeaturesD3D.h":
+    "f00de369db90a8419c4e441613c0ef20",
+  "include/platform/FeaturesGL.h":
+    "c614038e0da8d0c45251dd4122dbff93",
+  "include/platform/FeaturesMtl.h":
+    "7db69f3efdd4e89db97060522de4cb16",
+  "include/platform/FeaturesVk.h":
+    "9e973029b1986ecb25bc9a6114dba0b5",
+  "include/platform/FrontendFeatures.h":
+    "4f3d20ecdcd9ccea3cb80b0becd2b056",
+  "include/platform/d3d_features.json":
+    "abdcf90e79eb2aae4f55a33b1ca17b72",
+  "include/platform/frontend_features.json":
+    "cf60ba62068fbd82274a20fbbb5a3030",
+  "include/platform/gen_features.py":
+    "2394959a18335f95de22ec1f60a41671",
+  "include/platform/gl_features.json":
+    "ff2f4dac740e071f511f751f59f3ef31",
+  "include/platform/mtl_features.json":
+    "db7d8f4e3fe242a05a2f6c788f775f48",
+  "include/platform/vk_features.json":
+    "64a8f21b89fe6ad4dbdb0c953ab55d31"
+}

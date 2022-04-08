@@ -545,7 +545,7 @@ class ProgramD3D : public ProgramImpl
     std::vector<std::unique_ptr<ComputeExecutable>> mComputeExecutables;
 
     gl::ShaderMap<std::string> mShaderHLSL;
-    gl::ShaderMap<angle::CompilerWorkaroundsD3D> mShaderWorkarounds;
+    gl::ShaderMap<CompilerWorkaroundsD3D> mShaderWorkarounds;
 
     bool mUsesFragDepth;
     bool mHasANGLEMultiviewEnabled;

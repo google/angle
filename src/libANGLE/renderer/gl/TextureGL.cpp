@@ -38,6 +38,8 @@ namespace rx
 
 namespace
 {
+// For use with the uploadTextureDataInChunks feature.  See http://crbug.com/1181068
+constexpr const size_t kUploadTextureDataInChunksUploadSize = (120 * 1024) - 1;
 
 size_t GetLevelInfoIndex(gl::TextureTarget target, size_t level)
 {
@@ -365,9 +367,9 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
 
     if (features.uploadTextureDataInChunks.enabled)
     {
-        return setSubImageRowByRowWorkaround(
-            context, target, level, area, format, type, unpack, unpackBuffer,
-            angle::FeaturesGL::kUploadTextureDataInChunksUploadSize, pixels);
+        return setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
+                                             unpackBuffer, kUploadTextureDataInChunksUploadSize,
+                                             pixels);
     }
 
     if (nativegl::UseTexImage2D(getType()))
@@ -2110,7 +2112,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
                 ANGLE_TRY(setSubImageRowByRowWorkaround(
                     context, imageIndex.getTarget(), imageIndex.getLevelIndex(), area,
                     nativeSubImageFormat.format, nativeSubImageFormat.type, unpackState, nullptr,
-                    angle::FeaturesGL::kUploadTextureDataInChunksUploadSize, zero->data()));
+                    kUploadTextureDataInChunksUploadSize, zero->data()));
             }
             else
             {
