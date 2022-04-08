@@ -1673,20 +1673,20 @@ void BufferBlock::destroy(RendererVk *renderer)
     mDeviceMemory.destroy(device);
 }
 
-angle::Result BufferBlock::init(ContextVk *contextVk,
+angle::Result BufferBlock::init(Context *context,
                                 Buffer &buffer,
                                 vma::VirtualBlockCreateFlags flags,
                                 DeviceMemory &deviceMemory,
                                 VkMemoryPropertyFlags memoryPropertyFlags,
                                 VkDeviceSize size)
 {
-    RendererVk *renderer = contextVk->getRenderer();
+    RendererVk *renderer = context->getRenderer();
     ASSERT(!mVirtualBlock.valid());
     ASSERT(!mBuffer.valid());
     ASSERT(!mDeviceMemory.valid());
 
     mVirtualBlockMutex.init(renderer->isAsyncCommandQueueEnabled());
-    ANGLE_VK_TRY(contextVk, mVirtualBlock.init(renderer->getDevice(), flags, size));
+    ANGLE_VK_TRY(context, mVirtualBlock.init(renderer->getDevice(), flags, size));
 
     mBuffer              = std::move(buffer);
     mDeviceMemory        = std::move(deviceMemory);

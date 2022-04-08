@@ -918,7 +918,7 @@ class BufferBlock final : angle::NonCopyable
     ~BufferBlock();
 
     void destroy(RendererVk *renderer);
-    angle::Result init(ContextVk *contextVk,
+    angle::Result init(Context *context,
                        Buffer &buffer,
                        vma::VirtualBlockCreateFlags flags,
                        DeviceMemory &deviceMemory,

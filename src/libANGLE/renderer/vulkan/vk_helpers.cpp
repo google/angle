@@ -2816,16 +2816,16 @@ void BufferPool::pruneEmptyBuffers(RendererVk *renderer)
     }
 }
 
-angle::Result BufferPool::allocateNewBuffer(ContextVk *contextVk, VkDeviceSize sizeInBytes)
+angle::Result BufferPool::allocateNewBuffer(Context *context, VkDeviceSize sizeInBytes)
 {
-    RendererVk *renderer       = contextVk->getRenderer();
+    RendererVk *renderer       = context->getRenderer();
     const Allocator &allocator = renderer->getAllocator();
 
     VkDeviceSize heapSize =
         renderer->getMemoryProperties().getHeapSizeForMemoryType(mMemoryTypeIndex);
 
     // First ensure we are not exceeding the heapSize to avoid the validation error.
-    ANGLE_VK_CHECK(contextVk, sizeInBytes <= heapSize, VK_ERROR_OUT_OF_DEVICE_MEMORY);
+    ANGLE_VK_CHECK(context, sizeInBytes <= heapSize, VK_ERROR_OUT_OF_DEVICE_MEMORY);
 
     // Double the size until meet the requirement. This also helps reducing the fragmentation. Since
     // this is global pool, we have less worry about memory waste.
@@ -2850,33 +2850,33 @@ angle::Result BufferPool::allocateNewBuffer(ContextVk *contextVk, VkDeviceSize s
     allocator.getMemoryTypeProperties(mMemoryTypeIndex, &memoryPropertyFlags);
 
     DeviceScoped<Buffer> buffer(renderer->getDevice());
-    ANGLE_VK_TRY(contextVk, buffer.get().init(contextVk->getDevice(), createInfo));
+    ANGLE_VK_TRY(context, buffer.get().init(context->getDevice(), createInfo));
 
     DeviceScoped<DeviceMemory> deviceMemory(renderer->getDevice());
     VkMemoryPropertyFlags memoryPropertyFlagsOut;
     VkDeviceSize sizeOut;
-    ANGLE_TRY(AllocateBufferMemory(contextVk, memoryPropertyFlags, &memoryPropertyFlagsOut, nullptr,
+    ANGLE_TRY(AllocateBufferMemory(context, memoryPropertyFlags, &memoryPropertyFlagsOut, nullptr,
                                    &buffer.get(), &deviceMemory.get(), &sizeOut));
     ASSERT(sizeOut >= mSize);
 
     // Allocate bufferBlock
     std::unique_ptr<BufferBlock> block = std::make_unique<BufferBlock>();
-    ANGLE_TRY(block->init(contextVk, buffer.get(), mVirtualBlockCreateFlags, deviceMemory.get(),
+    ANGLE_TRY(block->init(context, buffer.get(), mVirtualBlockCreateFlags, deviceMemory.get(),
                           memoryPropertyFlagsOut, mSize));
 
     if (mHostVisible)
     {
-        ANGLE_VK_TRY(contextVk, block->map(contextVk->getDevice()));
+        ANGLE_VK_TRY(context, block->map(context->getDevice()));
     }
 
     // Append the bufferBlock into the pool
     mBufferBlocks.push_back(std::move(block));
-    contextVk->getPerfCounters().allocateNewBufferBlockCalls++;
+    context->getPerfCounters().allocateNewBufferBlockCalls++;
 
     return angle::Result::Continue;
 }
 
-angle::Result BufferPool::allocateBuffer(ContextVk *contextVk,
+angle::Result BufferPool::allocateBuffer(Context *context,
                                          VkDeviceSize sizeInBytes,
                                          VkDeviceSize alignment,
                                          BufferSuballocation *suballocation)
@@ -2901,19 +2901,19 @@ angle::Result BufferPool::allocateBuffer(ContextVk *contextVk,
 
         if (block->allocate(alignedSize, alignment, &offset) == VK_SUCCESS)
         {
-            suballocation->init(contextVk->getDevice(), block.get(), offset, alignedSize);
+            suballocation->init(context->getDevice(), block.get(), offset, alignedSize);
             return angle::Result::Continue;
         }
         ++iter;
     }
 
-    ANGLE_TRY(allocateNewBuffer(contextVk, alignedSize));
+    ANGLE_TRY(allocateNewBuffer(context, alignedSize));
 
     // Sub-allocate from the bufferBlock.
     std::unique_ptr<BufferBlock> &block = mBufferBlocks.back();
-    ANGLE_VK_CHECK(contextVk, block->allocate(alignedSize, alignment, &offset) == VK_SUCCESS,
+    ANGLE_VK_CHECK(context, block->allocate(alignedSize, alignment, &offset) == VK_SUCCESS,
                    VK_ERROR_OUT_OF_DEVICE_MEMORY);
-    suballocation->init(contextVk->getDevice(), block.get(), offset, alignedSize);
+    suballocation->init(context->getDevice(), block.get(), offset, alignedSize);
 
     return angle::Result::Continue;
 }
