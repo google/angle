@@ -4168,12 +4168,4 @@ void DriverUniformsDescriptorSetCache::destroy(RendererVk *rendererVk)
     accumulateCacheStats(rendererVk);
     mPayload.clear();
 }
-
-// DescriptorSetCache implementation.
-void DescriptorSetCache::destroy(RendererVk *rendererVk, VulkanCacheType cacheType)
-{
-    accumulateCacheStats(cacheType, rendererVk);
-    mPayload.clear();
-    mCacheStats.reset();
-}
 }  // namespace rx

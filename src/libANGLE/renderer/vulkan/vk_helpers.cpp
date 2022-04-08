@@ -3088,6 +3088,8 @@ angle::Result DynamicDescriptorPool::allocateSetsAndGetInfo(
         bindingOut->set(mDescriptorPools[mCurrentPoolIndex]);
     }
 
+    ++context->getPerfCounters().descriptorSetAllocations;
+
     return bindingOut->get().allocateDescriptorSets(context, resourceUseList, descriptorSetLayout,
                                                     descriptorSetCount, descriptorSetsOut);
 }

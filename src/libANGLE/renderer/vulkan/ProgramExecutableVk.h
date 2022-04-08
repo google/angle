@@ -109,10 +109,7 @@ using ImmutableSamplerIndexMap = angle::HashMap<vk::YcbcrConversionDesc, uint32_
 
 struct ProgramExecutablePerfCounters
 {
-    DescriptorSetCountList descriptorSetAllocations;
-    DescriptorSetCountList descriptorSetCacheHits;
-    DescriptorSetCountList descriptorSetCacheMisses;
-    DescriptorSetCountList descriptorSetCacheSizes;
+    angle::PackedEnumMap<DescriptorSetIndex, CacheStats> cacheStats;
     DescriptorSetCountList descriptorSetCacheKeySizesBytes;
 };
 
@@ -331,8 +328,6 @@ class ProgramExecutableVk
         VkDescriptorSetLayout descriptorSetLayout,
         uint32_t descriptorCountMultiplier,
         vk::DynamicDescriptorPool *dynamicDescriptorPool);
-
-    void outputCumulativePerfCounters();
 
     size_t calcUniformUpdateRequiredSpace(vk::Context *context,
                                           const gl::ProgramExecutable &glExecutable,

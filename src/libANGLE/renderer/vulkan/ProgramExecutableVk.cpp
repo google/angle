@@ -99,24 +99,6 @@ constexpr bool IsDynamicDescriptor(VkDescriptorType descriptorType)
 }
 
 constexpr VkDescriptorType kStorageBufferDescriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-
-DescriptorSetIndex CacheTypeToDescriptorSetIndex(VulkanCacheType cacheType)
-{
-    switch (cacheType)
-    {
-        case VulkanCacheType::TextureDescriptors:
-            return DescriptorSetIndex::Texture;
-        case VulkanCacheType::ShaderBuffersDescriptors:
-            return DescriptorSetIndex::ShaderResource;
-        case VulkanCacheType::UniformsAndXfbDescriptors:
-            return DescriptorSetIndex::UniformsAndXfb;
-        case VulkanCacheType::DriverUniformsDescriptors:
-            return DescriptorSetIndex::Internal;
-        default:
-            UNREACHABLE();
-            return DescriptorSetIndex::InvalidEnum;
-    }
-}
 }  // namespace
 
 DefaultUniformBlock::DefaultUniformBlock() = default;
@@ -272,10 +254,7 @@ ProgramExecutableVk::ProgramExecutableVk()
     }
 }
 
-ProgramExecutableVk::~ProgramExecutableVk()
-{
-    outputCumulativePerfCounters();
-}
+ProgramExecutableVk::~ProgramExecutableVk() {}
 
 void ProgramExecutableVk::reset(ContextVk *contextVk)
 {
@@ -302,10 +281,9 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
         descriptorPool.release(contextVk);
     }
 
-    RendererVk *rendererVk = contextVk->getRenderer();
-    mTextureDescriptorsCache.destroy(rendererVk, VulkanCacheType::TextureDescriptors);
-    mUniformsAndXfbDescriptorsCache.destroy(rendererVk, VulkanCacheType::UniformsAndXfbDescriptors);
-    mShaderBufferDescriptorsCache.destroy(rendererVk, VulkanCacheType::ShaderBuffersDescriptors);
+    mTextureDescriptorsCache.clear();
+    mUniformsAndXfbDescriptorsCache.clear();
+    mShaderBufferDescriptorsCache.clear();
 
     // Initialize with an invalid BufferSerial
     mCurrentDefaultUniformBufferSerial = vk::BufferSerial();
@@ -493,7 +471,9 @@ angle::Result ProgramExecutableVk::allocUniformAndXfbDescriptorSet(
 
     // Look up in the cache first
     VkDescriptorSet descriptorSet = VK_NULL_HANDLE;
-    if (mUniformsAndXfbDescriptorsCache.get(xfbBufferDesc, &descriptorSet))
+    if (mUniformsAndXfbDescriptorsCache.get(
+            xfbBufferDesc, &descriptorSet,
+            &mPerfCounters.cacheStats[DescriptorSetIndex::UniformsAndXfb]))
     {
         *newDescriptorSetAllocated                          = false;
         mDescriptorSets[DescriptorSetIndex::UniformsAndXfb] = descriptorSet;
@@ -510,13 +490,13 @@ angle::Result ProgramExecutableVk::allocUniformAndXfbDescriptorSet(
     // Clear descriptor set cache. It may no longer be valid.
     if (newPoolAllocated)
     {
-        mUniformsAndXfbDescriptorsCache.destroy(context->getRenderer(),
-                                                VulkanCacheType::UniformsAndXfbDescriptors);
+        mUniformsAndXfbDescriptorsCache.clear();
     }
 
     // Add the descriptor set into cache
-    mUniformsAndXfbDescriptorsCache.insert(xfbBufferDesc,
-                                           mDescriptorSets[DescriptorSetIndex::UniformsAndXfb]);
+    mUniformsAndXfbDescriptorsCache.insert(
+        xfbBufferDesc, mDescriptorSets[DescriptorSetIndex::UniformsAndXfb],
+        &mPerfCounters.cacheStats[DescriptorSetIndex::UniformsAndXfb]);
     *newDescriptorSetAllocated = true;
 
     return angle::Result::Continue;
@@ -546,8 +526,6 @@ angle::Result ProgramExecutableVk::allocateDescriptorSetAndGetInfo(
         &mDescriptorPoolBindings[descriptorSetIndex], &mDescriptorSets[descriptorSetIndex],
         newPoolAllocatedOut));
     mEmptyDescriptorSets[descriptorSetIndex] = VK_NULL_HANDLE;
-
-    ++mPerfCounters.descriptorSetAllocations[descriptorSetIndex];
 
     return angle::Result::Continue;
 }
@@ -1251,12 +1229,12 @@ angle::Result ProgramExecutableVk::allocateShaderResourcesDescriptorSet(
         // Clear descriptor set cache. It may no longer be valid.
         if (newPoolAllocated)
         {
-            mShaderBufferDescriptorsCache.destroy(context->getRenderer(),
-                                                  VulkanCacheType::ShaderBuffersDescriptors);
+            mShaderBufferDescriptorsCache.clear();
         }
 
-        mShaderBufferDescriptorsCache.insert(*shaderBuffersDesc,
-                                             mDescriptorSets[DescriptorSetIndex::ShaderResource]);
+        mShaderBufferDescriptorsCache.insert(
+            *shaderBuffersDesc, mDescriptorSets[DescriptorSetIndex::ShaderResource],
+            &mPerfCounters.cacheStats[DescriptorSetIndex::ShaderResource]);
     }
     return angle::Result::Continue;
 }
@@ -1602,7 +1580,9 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
     if (!executable->hasImages() && !executable->usesFramebufferFetch())
     {
         VkDescriptorSet descriptorSet = VK_NULL_HANDLE;
-        if (mShaderBufferDescriptorsCache.get(shaderBuffersDesc, &descriptorSet))
+        if (mShaderBufferDescriptorsCache.get(
+                shaderBuffersDesc, &descriptorSet,
+                &mPerfCounters.cacheStats[DescriptorSetIndex::ShaderResource]))
         {
             mDescriptorSets[DescriptorSetIndex::ShaderResource] = descriptorSet;
             // The descriptor pool that this descriptor set was allocated from needs to be retained
@@ -1798,7 +1778,8 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
     }
 
     VkDescriptorSet descriptorSet = VK_NULL_HANDLE;
-    if (mTextureDescriptorsCache.get(texturesDesc, &descriptorSet))
+    if (mTextureDescriptorsCache.get(texturesDesc, &descriptorSet,
+                                     &mPerfCounters.cacheStats[DescriptorSetIndex::Texture]))
     {
         mDescriptorSets[DescriptorSetIndex::Texture] = descriptorSet;
         // The descriptor pool that this descriptor set was allocated from needs to be retained each
@@ -1844,12 +1825,13 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
                 // Clear descriptor set cache. It may no longer be valid.
                 if (newPoolAllocated)
                 {
-                    mTextureDescriptorsCache.destroy(context->getRenderer(),
-                                                     VulkanCacheType::TextureDescriptors);
+                    mTextureDescriptorsCache.clear();
                 }
 
                 descriptorSet = mDescriptorSets[DescriptorSetIndex::Texture];
-                mTextureDescriptorsCache.insert(texturesDesc, descriptorSet);
+                mTextureDescriptorsCache.insert(
+                    texturesDesc, descriptorSet,
+                    &mPerfCounters.cacheStats[DescriptorSetIndex::Texture]);
             }
             ASSERT(descriptorSet != VK_NULL_HANDLE);
 
@@ -1996,8 +1978,6 @@ angle::Result ProgramExecutableVk::updateDescriptorSets(vk::Context *context,
                     context, resourceUseList, descriptorSetLayout, 1,
                     &mDescriptorPoolBindings[descriptorSetIndex],
                     &mEmptyDescriptorSets[descriptorSetIndex]));
-
-                ++mPerfCounters.descriptorSetAllocations[descriptorSetIndex];
             }
             descSet = mEmptyDescriptorSets[descriptorSetIndex];
         }
@@ -2040,51 +2020,8 @@ template angle::Result ProgramExecutableVk::updateDescriptorSets<vk::VulkanSecon
     vk::VulkanSecondaryCommandBuffer *commandBuffer,
     PipelineType pipelineType);
 
-// Requires that trace is enabled to see the output, which is supported with is_debug=true
-void ProgramExecutableVk::outputCumulativePerfCounters()
-{
-    if (!vk::kOutputCumulativePerfCounters)
-    {
-        return;
-    }
-
-    std::ostringstream text;
-
-    for (DescriptorSetIndex descriptorSetIndex : angle::AllEnums<DescriptorSetIndex>())
-    {
-        uint32_t count = mCumulativePerfCounters.descriptorSetAllocations[descriptorSetIndex];
-        if (count > 0)
-        {
-            text << "    DescriptorSetIndex " << ToUnderlying(descriptorSetIndex) << ": " << count
-                 << "\n";
-        }
-    }
-
-    // Only output information for programs that allocated descriptor sets.
-    std::string textStr = text.str();
-    if (!textStr.empty())
-    {
-        INFO() << "ProgramExecutable: " << this << ":";
-
-        // Output each descriptor set allocation on a single line, so they're prefixed with the
-        // INFO information (file, line number, etc.).
-        // https://stackoverflow.com/a/12514641
-        std::istringstream iss(textStr);
-        for (std::string line; std::getline(iss, line);)
-        {
-            INFO() << line;
-        }
-    }
-}
-
 ProgramExecutablePerfCounters ProgramExecutableVk::getAndResetObjectPerfCounters()
 {
-    mUniformsAndXfbDescriptorsCache.accumulateCacheStats(VulkanCacheType::UniformsAndXfbDescriptors,
-                                                         this);
-    mTextureDescriptorsCache.accumulateCacheStats(VulkanCacheType::TextureDescriptors, this);
-    mShaderBufferDescriptorsCache.accumulateCacheStats(VulkanCacheType::ShaderBuffersDescriptors,
-                                                       this);
-
     mPerfCounters.descriptorSetCacheKeySizesBytes[DescriptorSetIndex::UniformsAndXfb] =
         static_cast<uint32_t>(mUniformsAndXfbDescriptorsCache.getTotalCacheKeySizeBytes());
     mPerfCounters.descriptorSetCacheKeySizesBytes[DescriptorSetIndex::Texture] =
@@ -2092,28 +2029,9 @@ ProgramExecutablePerfCounters ProgramExecutableVk::getAndResetObjectPerfCounters
     mPerfCounters.descriptorSetCacheKeySizesBytes[DescriptorSetIndex::ShaderResource] =
         static_cast<uint32_t>(mShaderBufferDescriptorsCache.getTotalCacheKeySizeBytes());
 
-    mCumulativePerfCounters.descriptorSetAllocations += mPerfCounters.descriptorSetAllocations;
-    mCumulativePerfCounters.descriptorSetCacheHits += mPerfCounters.descriptorSetCacheHits;
-    mCumulativePerfCounters.descriptorSetCacheMisses += mPerfCounters.descriptorSetCacheMisses;
-
     ProgramExecutablePerfCounters counters        = mPerfCounters;
-    mPerfCounters.descriptorSetAllocations        = {};
-    mPerfCounters.descriptorSetCacheHits          = {};
-    mPerfCounters.descriptorSetCacheMisses        = {};
     mPerfCounters.descriptorSetCacheKeySizesBytes = {};
     return counters;
-}
-
-void ProgramExecutableVk::accumulateCacheStats(VulkanCacheType cacheType,
-                                               const CacheStats &cacheStats)
-{
-    DescriptorSetIndex dsIndex = CacheTypeToDescriptorSetIndex(cacheType);
-
-    mPerfCounters.descriptorSetCacheHits[dsIndex] +=
-        static_cast<uint32_t>(cacheStats.getHitCount());
-    mPerfCounters.descriptorSetCacheMisses[dsIndex] +=
-        static_cast<uint32_t>(cacheStats.getMissCount());
-    mPerfCounters.descriptorSetCacheSizes[dsIndex] = static_cast<uint32_t>(cacheStats.getSize());
 }
 
 void ProgramExecutableVk::setAllDefaultUniformsDirty(const gl::ProgramExecutable &executable)

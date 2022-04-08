@@ -34,12 +34,6 @@
 
 namespace rx
 {
-struct InternalShaderPerfCounters
-{
-    // Total descriptor set allocations for all UtilsVk::Functions
-    uint32_t descriptorSetsAllocated;
-};
-
 class UtilsVk : angle::NonCopyable
 {
   public:
@@ -289,8 +283,6 @@ class UtilsVk : angle::NonCopyable
                               vk::ImageHelper *dst,
                               const vk::ImageView *dstView,
                               const OverlayDrawParameters &params);
-
-    InternalShaderPerfCounters getAndResetObjectPerfCounters();
 
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
@@ -548,8 +540,6 @@ class UtilsVk : angle::NonCopyable
                                         vk::RefCountedDescriptorPoolBinding *bindingOut,
                                         VkDescriptorSet *descriptorSetOut);
 
-    void outputCumulativePerfCounters();
-
     angle::PackedEnumMap<Function, vk::DescriptorSetLayoutPointerArray> mDescriptorSetLayouts;
     angle::PackedEnumMap<Function, vk::BindingPointer<vk::PipelineLayout>> mPipelineLayouts;
     angle::PackedEnumMap<Function, vk::DynamicDescriptorPool> mDescriptorPools;
@@ -578,9 +568,6 @@ class UtilsVk : angle::NonCopyable
 
     vk::Sampler mPointSampler;
     vk::Sampler mLinearSampler;
-
-    InternalShaderPerfCounters mPerfCounters;
-    InternalShaderPerfCounters mCumulativePerfCounters;
 };
 
 }  // namespace rx

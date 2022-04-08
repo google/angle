@@ -1066,15 +1066,13 @@ uint32_t UtilsVk::GetGenerateMipmapMaxLevels(ContextVk *contextVk)
                : kGenerateMipmapMaxLevels;
 }
 
-UtilsVk::UtilsVk() : mPerfCounters{}, mCumulativePerfCounters{} {}
+UtilsVk::UtilsVk() = default;
 
 UtilsVk::~UtilsVk() = default;
 
 void UtilsVk::destroy(RendererVk *renderer)
 {
     VkDevice device = renderer->getDevice();
-
-    outputCumulativePerfCounters();
 
     for (Function f : angle::AllEnums<Function>())
     {
@@ -3540,8 +3538,6 @@ angle::Result UtilsVk::allocateDescriptorSet(ContextVk *contextVk,
         mDescriptorSetLayouts[function][DescriptorSetIndex::Internal].get(), 1, bindingOut,
         descriptorSetOut));
 
-    mPerfCounters.descriptorSetsAllocated++;
-
     return angle::Result::Continue;
 }
 
@@ -3556,25 +3552,4 @@ UtilsVk::ClearFramebufferParameters::ClearFramebufferParameters()
       colorClearValue{},
       depthStencilClearValue{}
 {}
-
-// Requires that trace is enabled to see the output, which is supported with is_debug=true
-void UtilsVk::outputCumulativePerfCounters()
-{
-    if (!vk::kOutputCumulativePerfCounters)
-    {
-        return;
-    }
-
-    INFO() << "Utils Descriptor Set Allocations: "
-           << mCumulativePerfCounters.descriptorSetsAllocated;
-}
-
-InternalShaderPerfCounters UtilsVk::getAndResetObjectPerfCounters()
-{
-    mCumulativePerfCounters.descriptorSetsAllocated += mPerfCounters.descriptorSetsAllocated;
-
-    InternalShaderPerfCounters counters   = mPerfCounters;
-    mPerfCounters.descriptorSetsAllocated = 0;
-    return counters;
-}
 }  // namespace rx
