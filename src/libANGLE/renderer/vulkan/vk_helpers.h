@@ -871,6 +871,9 @@ class BufferPool : angle::NonCopyable
     // and only to find out that we have to allocate a new one next frame.
     static constexpr int32_t kMaxCountRemainsEmpty = 4;
     static constexpr int32_t kMaxEmptyBufferCount  = 16;
+    // max size to go down the suballocation code path. Any allocation greater or equal this size
+    // will call into vulkan directly to allocate a dedicated VkDeviceMemory.
+    static constexpr size_t kMaxBufferSizeForSuballocation = 4 * 1024 * 1024;
 };
 
 enum class BufferAccess
