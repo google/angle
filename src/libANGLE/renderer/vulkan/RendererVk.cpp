@@ -547,6 +547,13 @@ constexpr SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "SYNC-HAZARD-WRITE_AFTER_READ",
         "type: VK_DESCRIPTOR_TYPE_STORAGE_BUFFER",
     },
+    // From: TracePerfTest.Run/vulkan_special_forces_group_2 http://anglebug.com/5592
+    {
+        "SYNC-HAZARD-WRITE_AFTER_READ",
+        "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
+        "SYNC_FRAGMENT_SHADER_SHADER_STORAGE_READ, read_barriers: "
+        "VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, command: vkCmdDrawIndexed",
+    },
 };
 
 enum class DebugMessageReport

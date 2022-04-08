@@ -1801,6 +1801,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/special_forces_group_2': {
+      'packages': [
+        {
+            'package': 'angle/traces/special_forces_group_2',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/standoff_2': {
       'packages': [
         {
