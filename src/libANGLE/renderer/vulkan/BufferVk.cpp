@@ -548,7 +548,7 @@ angle::Result BufferVk::ghostMappedBuffer(ContextVk *contextVk,
                                           GLbitfield access,
                                           void **mapPtr)
 {
-    // We should't get to here if it is external memory
+    // We shouldn't get here if it is external memory
     ASSERT(!isExternalBuffer());
 
     ++contextVk->getPerfCounters().buffersGhosted;
@@ -557,9 +557,6 @@ angle::Result BufferVk::ghostMappedBuffer(ContextVk *contextVk,
     // also need to copy the contents of the previous buffer into the new buffer, in
     // case the caller only updates a portion of the new buffer.
     vk::BufferHelper src = std::move(mBuffer);
-
-    // Retain it to prevent acquireBufferHelper from actually releasing it.
-    src.retainReadOnly(&contextVk->getResourceUseList());
 
     ANGLE_TRY(acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize()),
                                   BufferUpdateType::ContentsUpdate));
@@ -860,12 +857,6 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
     if (updateRegionBeforeSubData || updateRegionAfterSubData)
     {
         src = std::move(mBuffer);
-
-        // It's possible for acquireBufferHelper() to garbage collect the original (src) buffer
-        // before copyFromBuffer() has a chance to retain it, so retain it now. This may end up
-        // double-retaining the buffer, which is a necessary side-effect to prevent a
-        // use-after-free.
-        src.retainReadOnly(&contextVk->getResourceUseList());
 
         // The total bytes that we need to copy from old buffer to new buffer
         size_t copySize = bufferSize - updateSize;
