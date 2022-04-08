@@ -126,7 +126,7 @@ VertexArray::VertexArray(rx::GLImplFactory *factory,
 void VertexArray::onDestroy(const Context *context)
 {
     bool isBound = context->isCurrentVertexArray(this);
-    for (uint32_t bindingIndex = 0; bindingIndex < gl::MAX_VERTEX_ATTRIB_BINDINGS; ++bindingIndex)
+    for (uint32_t bindingIndex = 0; bindingIndex < mState.mVertexBindings.size(); ++bindingIndex)
     {
         VertexBinding &binding = mState.mVertexBindings[bindingIndex];
         Buffer *buffer         = binding.getBuffer().get();
@@ -177,7 +177,7 @@ bool VertexArray::detachBuffer(const Context *context, BufferID bufferID)
 {
     bool isBound           = context->isCurrentVertexArray(this);
     bool anyBufferDetached = false;
-    for (uint32_t bindingIndex = 0; bindingIndex < gl::MAX_VERTEX_ATTRIB_BINDINGS; ++bindingIndex)
+    for (uint32_t bindingIndex = 0; bindingIndex < mState.mVertexBindings.size(); ++bindingIndex)
     {
         VertexBinding &binding                      = mState.mVertexBindings[bindingIndex];
         const BindingPointer<Buffer> &bufferBinding = binding.getBuffer();
