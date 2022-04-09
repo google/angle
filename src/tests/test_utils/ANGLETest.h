@@ -362,9 +362,6 @@ class ANGLETestBase
   public:
     void setWindowVisible(OSWindow *osWindow, bool isVisible);
 
-    virtual void overrideWorkaroundsD3D(angle::FeaturesD3D *featuresD3D) {}
-    virtual void overrideFeaturesVk(angle::FeaturesVk *featuresVulkan) {}
-
     static void ReleaseFixtures();
 
     bool isSwiftshader() const

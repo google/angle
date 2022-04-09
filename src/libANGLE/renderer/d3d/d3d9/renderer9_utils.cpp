@@ -839,10 +839,6 @@ void InitializeFeatures(angle::FeaturesD3D *features)
 
     // crbug.com/1011627 Turn this on for D3D9.
     ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, true);
-
-    // Call platform hooks for testing overrides.
-    auto *platform = ANGLEPlatformCurrent();
-    platform->overrideWorkaroundsD3D(platform, features);
 }
 
 }  // namespace d3d9

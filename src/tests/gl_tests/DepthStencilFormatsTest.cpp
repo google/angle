@@ -1137,12 +1137,6 @@ class TinyDepthStencilWorkaroundTest : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
     }
-
-    // Override the features to enable "tiny" depth/stencil textures.
-    void overrideWorkaroundsD3D(FeaturesD3D *features) override
-    {
-        features->overrideFeatures({"emulate_tiny_stencil_textures"}, true);
-    }
 };
 
 // Tests that the tiny depth stencil textures workaround does not "stick" depth textures.
@@ -1260,4 +1254,5 @@ TEST_P(TinyDepthStencilWorkaroundTest, DepthTexturesStick)
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TinyDepthStencilWorkaroundTest);
-ANGLE_INSTANTIATE_TEST_ES3(TinyDepthStencilWorkaroundTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(TinyDepthStencilWorkaroundTest,
+                               ES3_D3D11().enable(Feature::EmulateTinyStencilTextures));

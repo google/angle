@@ -69,12 +69,6 @@ void CustomLogError(PlatformMethods *platform, const char *errorMessage)
     angleRenderTest->onErrorMessage(errorMessage);
 }
 
-void OverrideWorkaroundsD3D(PlatformMethods *platform, FeaturesD3D *featuresD3D)
-{
-    auto *angleRenderTest = static_cast<ANGLERenderTest *>(platform->context);
-    angleRenderTest->overrideWorkaroundsD3D(featuresD3D);
-}
-
 TraceEventHandle AddPerfTraceEvent(PlatformMethods *platform,
                                    char phase,
                                    const unsigned char *categoryEnabledFlag,
@@ -763,7 +757,6 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
-    mPlatformMethods.overrideWorkaroundsD3D      = OverrideWorkaroundsD3D;
     mPlatformMethods.logError                    = CustomLogError;
     mPlatformMethods.logWarning                  = EmptyPlatformMethod;
     mPlatformMethods.logInfo                     = EmptyPlatformMethod;

@@ -2885,11 +2885,6 @@ class AddMockTextureNoRenderTargetTest : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
     }
-
-    void overrideWorkaroundsD3D(FeaturesD3D *features) override
-    {
-        features->overrideFeatures({"add_mock_texture_no_render_target"}, true);
-    }
 };
 
 // Test to verify workaround succeeds when no program outputs exist http://anglebug.com/2283
@@ -4545,7 +4540,10 @@ TEST_P(FramebufferTest_ES3, InvalidateClearDraw)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
 }
 
-ANGLE_INSTANTIATE_TEST_ES2(AddMockTextureNoRenderTargetTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND(AddMockTextureNoRenderTargetTest,
+                               ES2_D3D9().enable(Feature::AddMockTextureNoRenderTarget),
+                               ES2_D3D11().enable(Feature::AddMockTextureNoRenderTarget));
+
 ANGLE_INSTANTIATE_TEST_ES2(FramebufferTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
 

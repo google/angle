@@ -84,24 +84,6 @@ void TestPlatform_logWarning(PlatformMethods *platform, const char *warningMessa
 
 void TestPlatform_logInfo(PlatformMethods *platform, const char *infoMessage) {}
 
-void TestPlatform_overrideWorkaroundsD3D(PlatformMethods *platform, FeaturesD3D *featuresD3D)
-{
-    auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
-    if (testPlatformContext->currentTest)
-    {
-        testPlatformContext->currentTest->overrideWorkaroundsD3D(featuresD3D);
-    }
-}
-
-void TestPlatform_overrideFeaturesVk(PlatformMethods *platform, FeaturesVk *featuresVulkan)
-{
-    auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
-    if (testPlatformContext->currentTest)
-    {
-        testPlatformContext->currentTest->overrideFeaturesVk(featuresVulkan);
-    }
-}
-
 const std::array<Vector3, 6> kQuadVertices = {{
     Vector3(-1.0f, 1.0f, 0.5f),
     Vector3(-1.0f, -1.0f, 0.5f),
@@ -611,12 +593,10 @@ void ANGLETestBase::ANGLETestSetUp()
         angle::Sleep(GetTestStartDelaySeconds() * 1000);
     }
 
-    gDefaultPlatformMethods.overrideWorkaroundsD3D = TestPlatform_overrideWorkaroundsD3D;
-    gDefaultPlatformMethods.overrideFeaturesVk     = TestPlatform_overrideFeaturesVk;
-    gDefaultPlatformMethods.logError               = TestPlatform_logError;
-    gDefaultPlatformMethods.logWarning             = TestPlatform_logWarning;
-    gDefaultPlatformMethods.logInfo                = TestPlatform_logInfo;
-    gDefaultPlatformMethods.context                = &gPlatformContext;
+    gDefaultPlatformMethods.logError   = TestPlatform_logError;
+    gDefaultPlatformMethods.logWarning = TestPlatform_logWarning;
+    gDefaultPlatformMethods.logInfo    = TestPlatform_logInfo;
+    gDefaultPlatformMethods.context    = &gPlatformContext;
 
     gPlatformContext.ignoreMessages   = false;
     gPlatformContext.warningsAsErrors = false;

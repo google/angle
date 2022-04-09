@@ -69,8 +69,16 @@ struct EGLPlatformParameters
 
     // Helpers to enable and disable ANGLE features.  Expects a kFeature* value from
     // angle_features_autogen.h.
-    void enable(angle::Feature feature) { enabledFeatureOverrides.push_back(feature); }
-    void disable(angle::Feature feature) { disabledFeatureOverrides.push_back(feature); }
+    EGLPlatformParameters &enable(angle::Feature feature)
+    {
+        enabledFeatureOverrides.push_back(feature);
+        return *this;
+    }
+    EGLPlatformParameters &disable(angle::Feature feature)
+    {
+        disabledFeatureOverrides.push_back(feature);
+        return *this;
+    }
 
     EGLint renderer               = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
     EGLint majorVersion           = EGL_DONT_CARE;
