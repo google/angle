@@ -366,7 +366,7 @@ gl::AttributesMask ContextGL::updateAttributesForBaseInstance(const gl::Program 
         const FunctionsGL *functions = getFunctions();
         const auto &attribs          = mState.getVertexArray()->getVertexAttributes();
         const auto &bindings         = mState.getVertexArray()->getVertexBindings();
-        for (GLuint attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; attribIndex++)
+        for (GLuint attribIndex = 0; attribIndex < attribs.size(); attribIndex++)
         {
             const gl::VertexAttribute &attrib = attribs[attribIndex];
             const gl::VertexBinding &binding  = bindings[attrib.bindingIndex];
