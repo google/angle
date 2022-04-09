@@ -202,7 +202,7 @@
 
         {
             "name": "emulateTransformFeedback",
-            "display_name": "emulate_transform_feedback",
+            "display_name": "emulateTransformFeedback",
             "category": "Features",
             "description": [
                 "Turn this on to allow transform feedback in Metal using a 2-pass VS for GLES3."

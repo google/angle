@@ -2273,12 +2273,12 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(MipmapTest);
 
 namespace extraPlatforms
 {
-ANGLE_INSTANTIATE_TEST(MipmapTest, WithNoGenMultipleMipsPerPass(ES2_METAL()));
+ANGLE_INSTANTIATE_TEST(MipmapTest, ES2_METAL().disable(Feature::AllowGenMultipleMipsPerPass));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Mipmap3DBoxFilterTest);
 ANGLE_INSTANTIATE_TEST(Mipmap3DBoxFilterTest,
                        ES2_METAL(),
-                       WithNoGenMultipleMipsPerPass(ES2_METAL()));
+                       ES2_METAL().disable(Feature::AllowGenMultipleMipsPerPass));
 }  // namespace extraPlatforms
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MipmapTestES3);

@@ -46,7 +46,7 @@
 
         {
             "name": "clampPointSize",
-            "display_name": "clampPointSize",
+            "display_name": "clamp_point_size",
             "category": "Workarounds",
             "description": [
                 "The point size range reported from the API is inconsistent with the actual behavior"

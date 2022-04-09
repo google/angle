@@ -21,63 +21,63 @@ struct FrontendFeatures : FeatureSetBase
     FrontendFeatures();
     ~FrontendFeatures();
 
-    Feature loseContextOnOutOfMemory = {
+    FeatureInfo loseContextOnOutOfMemory = {
         "lose_context_on_out_of_memory",
         FeatureCategory::FrontendWorkarounds,
         "Some users rely on a lost context notification if a GL_OUT_OF_MEMORY error occurs",
         &members,
     };
 
-    Feature disableProgramCachingForTransformFeedback = {
+    FeatureInfo disableProgramCachingForTransformFeedback = {
         "disable_program_caching_for_transform_feedback",
         FeatureCategory::FrontendWorkarounds,
         "On some GPUs, program binaries don't contain transform feedback varyings",
         &members,
     };
 
-    Feature scalarizeVecAndMatConstructorArgs = {
+    FeatureInfo scalarizeVecAndMatConstructorArgs = {
         "scalarize_vec_and_mat_constructor_args", FeatureCategory::FrontendWorkarounds,
         "Always rewrite vec/mat constructors to be consistent", &members,
         "http://crbug.com/1165751"};
 
-    Feature disableProgramBinary = {"disable_program_binary", FeatureCategory::FrontendFeatures,
-                                    "Disable support for GL_OES_get_program_binary", &members,
-                                    "http://anglebug.com/5007"};
+    FeatureInfo disableProgramBinary = {"disable_program_binary", FeatureCategory::FrontendFeatures,
+                                        "Disable support for GL_OES_get_program_binary", &members,
+                                        "http://anglebug.com/5007"};
 
-    Feature disableAnisotropicFiltering = {
+    FeatureInfo disableAnisotropicFiltering = {
         "disable_anisotropic_filtering",
         FeatureCategory::FrontendWorkarounds,
         "Disable support for anisotropic filtering",
         &members,
     };
 
-    Feature allowCompressedFormats = {
+    FeatureInfo allowCompressedFormats = {
         "allow_compressed_formats",
         FeatureCategory::FrontendWorkarounds,
         "Allow compressed formats",
         &members,
     };
 
-    Feature captureLimits = {"enable_capture_limits", FeatureCategory::FrontendFeatures,
-                             "Set the context limits like frame capturing was enabled", &members,
-                             "http://anglebug.com/5750"};
+    FeatureInfo captureLimits = {"enable_capture_limits", FeatureCategory::FrontendFeatures,
+                                 "Set the context limits like frame capturing was enabled",
+                                 &members, "http://anglebug.com/5750"};
 
-    Feature enableCompressingPipelineCacheInThreadPool = {
+    FeatureInfo enableCompressingPipelineCacheInThreadPool = {
         "enableCompressingPipelineCacheInThreadPool", FeatureCategory::FrontendWorkarounds,
         "Enable compressing pipeline cache in thread pool.", &members, "http://anglebug.com/4722"};
 
-    Feature forceRobustResourceInit = {"forceRobustResourceInit", FeatureCategory::FrontendFeatures,
-                                       "Force-enable robust resource init", &members,
-                                       "http://anglebug.com/6041"};
+    FeatureInfo forceRobustResourceInit = {
+        "forceRobustResourceInit", FeatureCategory::FrontendFeatures,
+        "Force-enable robust resource init", &members, "http://anglebug.com/6041"};
 
-    Feature forceInitShaderVariables = {
+    FeatureInfo forceInitShaderVariables = {
         "forceInitShaderVariables",
         FeatureCategory::FrontendFeatures,
         "Force-enable shader variable initialization",
         &members,
     };
 
-    Feature enableProgramBinaryForCapture = {
+    FeatureInfo enableProgramBinaryForCapture = {
         "enableProgramBinaryForCapture", FeatureCategory::FrontendFeatures,
         "Even if FrameCapture is enabled, enable GL_OES_get_program_binary", &members,
         "http://anglebug.com/5658"};

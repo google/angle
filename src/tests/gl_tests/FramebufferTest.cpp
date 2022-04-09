@@ -4551,9 +4551,9 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTest_ES3,
-                               WithEmulatedPrerotation(ES3_VULKAN(), 90),
-                               WithEmulatedPrerotation(ES3_VULKAN(), 180),
-                               WithEmulatedPrerotation(ES3_VULKAN(), 270));
+                               ES3_VULKAN().enable(Feature::EmulatedPrerotation90),
+                               ES3_VULKAN().enable(Feature::EmulatedPrerotation180),
+                               ES3_VULKAN().enable(Feature::EmulatedPrerotation270));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31(FramebufferTest_ES31);

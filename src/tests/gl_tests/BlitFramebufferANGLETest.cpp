@@ -3366,14 +3366,14 @@ ANGLE_INSTANTIATE_TEST(BlitFramebufferANGLETest,
                        ES3_OPENGL(),
                        ES2_VULKAN(),
                        ES3_VULKAN(),
-                       WithEmulatedPrerotation(ES3_VULKAN(), 90),
-                       WithEmulatedPrerotation(ES3_VULKAN(), 180),
-                       WithEmulatedPrerotation(ES3_VULKAN(), 270),
+                       ES3_VULKAN().enable(Feature::EmulatedPrerotation90),
+                       ES3_VULKAN().enable(Feature::EmulatedPrerotation180),
+                       ES3_VULKAN().enable(Feature::EmulatedPrerotation270),
                        ES2_METAL(),
-                       WithNoShaderStencilOutput(ES2_METAL()));
+                       ES2_METAL().disable(Feature::HasStencilOutput));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BlitFramebufferTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND(BlitFramebufferTest, WithNoShaderStencilOutput(ES3_METAL()));
+ANGLE_INSTANTIATE_TEST_ES3_AND(BlitFramebufferTest, ES3_METAL().disable(Feature::HasStencilOutput));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BlitFramebufferTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(BlitFramebufferTestES31);

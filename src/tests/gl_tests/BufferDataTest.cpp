@@ -1853,7 +1853,7 @@ ANGLE_INSTANTIATE_TEST_ES2(BufferDataTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BufferSubDataTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(BufferSubDataTest,
-                               WithVulkanPreferCPUForBufferSubData(ES3_VULKAN()));
+                               ES3_VULKAN().enable(Feature::PreferCPUForBufferSubData));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BufferDataTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(BufferDataTestES3);

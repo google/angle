@@ -14,6 +14,8 @@ _util_sources = [
   "OSPixmap.h",
   "OSWindow.cpp",
   "OSWindow.h",
+  "angle_features_autogen.cpp",
+  "angle_features_autogen.h",
   "com_utils.h",
   "geometry_utils.cpp",
   "geometry_utils.h",

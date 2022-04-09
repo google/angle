@@ -1454,7 +1454,10 @@ TEST_P(ColorMaskForDrawBuffersTest, Blit)
 ANGLE_INSTANTIATE_TEST(DrawBuffersTest,
                        ANGLE_ALL_TEST_PLATFORMS_ES2,
                        ANGLE_ALL_TEST_PLATFORMS_ES3,
-                       WithNoTransformFeedback(ES2_VULKAN()));
+                       ES2_VULKAN()
+                           .disable(Feature::SupportsTransformFeedbackExtension)
+                           .disable(Feature::SupportsGeometryStreamsCapability)
+                           .disable(Feature::EmulateTransformFeedback));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DrawBuffersWebGL2Test);
 ANGLE_INSTANTIATE_TEST_ES3(DrawBuffersWebGL2Test);

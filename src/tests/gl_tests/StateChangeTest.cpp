@@ -8195,7 +8195,8 @@ ANGLE_INSTANTIATE_TEST_ES3(StateChangeRenderTestES3);
 ANGLE_INSTANTIATE_TEST_ES2(SimpleStateChangeTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(SimpleStateChangeTestES3);
-ANGLE_INSTANTIATE_TEST_ES3_AND(SimpleStateChangeTestES3, WithAllocateNonZeroMemory(ES3_VULKAN()));
+ANGLE_INSTANTIATE_TEST_ES3_AND(SimpleStateChangeTestES3,
+                               ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ImageRespecificationTest);
 ANGLE_INSTANTIATE_TEST_ES3(ImageRespecificationTest);

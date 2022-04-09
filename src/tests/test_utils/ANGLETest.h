@@ -483,7 +483,6 @@ class ANGLETestBase
     EGLWindow *getEGLWindow() const;
     int getWindowWidth() const;
     int getWindowHeight() const;
-    bool isEmulatedPrerotation() const;
 
     EGLint getPlatformRenderer() const;
 
@@ -533,17 +532,7 @@ class ANGLETestBase
                mCurrentParams->isSwiftshader();
     }
 
-    bool isAsyncCommandQueueFeatureEnabled() const
-    {
-        return mCurrentParams->eglParameters.asyncCommandQueueFeatureVulkan == EGL_TRUE;
-    }
-
     bool platformSupportsMultithreading() const;
-
-    bool isAllocateNonZeroMemoryEnabled() const
-    {
-        return mCurrentParams->getAllocateNonZeroMemoryFeature() == EGL_TRUE;
-    }
 
     bool mIsSetUp = false;
 

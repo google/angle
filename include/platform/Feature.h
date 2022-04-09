@@ -105,20 +105,20 @@ inline const char *FeatureStatusToString(const bool &status)
     return kFeatureStatusDisabled;
 }
 
-struct Feature;
+struct FeatureInfo;
 
-using FeatureMap  = std::map<std::string, Feature *>;
-using FeatureList = std::vector<const Feature *>;
+using FeatureMap  = std::map<std::string, FeatureInfo *>;
+using FeatureList = std::vector<const FeatureInfo *>;
 
-struct Feature
+struct FeatureInfo
 {
-    Feature(const Feature &other);
-    Feature(const char *name,
-            const FeatureCategory &category,
-            const char *description,
-            FeatureMap *const mapPtr,
-            const char *bug);
-    ~Feature();
+    FeatureInfo(const FeatureInfo &other);
+    FeatureInfo(const char *name,
+                const FeatureCategory &category,
+                const char *description,
+                FeatureMap *const mapPtr,
+                const char *bug);
+    ~FeatureInfo();
 
     // The name of the workaround, lowercase, camel_case
     const char *const name;
@@ -140,12 +140,12 @@ struct Feature
     const char *condition;
 };
 
-inline Feature::Feature(const Feature &other) = default;
-inline Feature::Feature(const char *name,
-                        const FeatureCategory &category,
-                        const char *description,
-                        FeatureMap *const mapPtr,
-                        const char *bug = "")
+inline FeatureInfo::FeatureInfo(const FeatureInfo &other) = default;
+inline FeatureInfo::FeatureInfo(const char *name,
+                                const FeatureCategory &category,
+                                const char *description,
+                                FeatureMap *const mapPtr,
+                                const char *bug = "")
     : name(name),
       category(category),
       description(description),
@@ -159,7 +159,7 @@ inline Feature::Feature(const char *name,
     }
 }
 
-inline Feature::~Feature() = default;
+inline FeatureInfo::~FeatureInfo() = default;
 
 struct FeatureSetBase
 {

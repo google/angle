@@ -679,8 +679,8 @@ void ANGLETestBase::ANGLETestSetUp()
     int osWindowWidth  = mFixture->osWindow->getWidth();
     int osWindowHeight = mFixture->osWindow->getHeight();
 
-    const bool isRotated = mCurrentParams->eglParameters.emulatedPrerotation == 90 ||
-                           mCurrentParams->eglParameters.emulatedPrerotation == 270;
+    const bool isRotated = mCurrentParams->isEnabled(Feature::EmulatedPrerotation90) ||
+                           mCurrentParams->isEnabled(Feature::EmulatedPrerotation270);
     if (isRotated)
     {
         std::swap(osWindowWidth, osWindowHeight);
@@ -1458,11 +1458,6 @@ int ANGLETestBase::getWindowWidth() const
 int ANGLETestBase::getWindowHeight() const
 {
     return mHeight;
-}
-
-bool ANGLETestBase::isEmulatedPrerotation() const
-{
-    return mCurrentParams->eglParameters.emulatedPrerotation != 0;
 }
 
 void ANGLETestBase::setWindowVisible(OSWindow *osWindow, bool isVisible)
