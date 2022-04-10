@@ -363,6 +363,9 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
 
 namespace vk
 {
+const char *gLoaderLayersPathEnv   = "VK_LAYER_PATH";
+const char *gLoaderICDFilenamesEnv = "VK_ICD_FILENAMES";
+
 VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format)
 {
     return (format.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
