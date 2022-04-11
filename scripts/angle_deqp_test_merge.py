@@ -8,13 +8,17 @@
 import os
 import sys
 
-d = os.path.dirname
-THIS_DIR = d(os.path.abspath(__file__))
-ANGLE_SRC_DIR = d(THIS_DIR)
-sys.path.insert(0, os.path.join(ANGLE_SRC_DIR, 'testing', 'merge_scripts'))
-CHROMIUM_SRC_DIR = d(d(ANGLE_SRC_DIR))
-sys.path.insert(0, os.path.join(CHROMIUM_SRC_DIR, 'testing', 'merge_scripts'))
 
+def _AddToPathIfNeeded(path):
+    if path not in sys.path:
+        sys.path.insert(0, path)
+
+
+_AddToPathIfNeeded(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src', 'tests', 'py_utils')))
+import angle_path_util
+
+angle_path_util.AddDepsDirToPath('testing/merge_scripts')
 import merge_api
 import standard_isolated_script_merge
 
