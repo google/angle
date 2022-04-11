@@ -8,6 +8,12 @@
     egl_angle_ext.xml
         Includes data used to auto-generate ANGLE classes.
     </comment>
+
+    <!-- SECTION: EGL type definitions. -->
+    <types>
+        <type requires="khrplatform">typedef khronos_uint64_t <name>EGLFrameTokenANGLE</name>;</type>
+    </types>
+
     <!-- SECTION: EGL command definitions. -->
     <commands namespace="EGL">
         <command>
@@ -210,4 +216,15 @@
             </require>
         </extension>
     </extensions>
+
+    <!-- SECTION: EGL enumerant (token) definitions. -->
+    <enums namespace="EGL" start="0x33AF" end="0x33AF" vendor="ANGLE">
+        <enum value="0x33AF" name="EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE"/>
+    </enums>
+    <enums namespace="EGL" start="0x348D" end="0x348D" vendor="ANGLE">
+        <enum value="0x348D" name="EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE"/>
+    </enums>
+    <enums namespace="EGL" start="0x34D2" end="0x34D2" vendor="ANGLE">
+        <enum value="0x34D2" name="EGL_CONTEXT_METAL_OWNERSHIP_IDENTITY_ANGLE"/>
+    </enums>
 </registry>
