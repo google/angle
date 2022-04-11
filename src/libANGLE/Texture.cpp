@@ -1712,9 +1712,8 @@ angle::Result Texture::setStorageExternalMemory(Context *context,
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(levels);
     mState.clearImageDescs();
-    InitState initState = DetermineInitState(context, nullptr, nullptr);
     mState.setImageDescChain(0, static_cast<GLuint>(levels - 1), size, Format(internalFormat),
-                             initState);
+                             InitState::Initialized);
 
     // Changing the texture to immutable can trigger a change in the base and max levels:
     // GLES 3.0.4 section 3.8.10 pg 158:
@@ -1723,7 +1722,7 @@ angle::Result Texture::setStorageExternalMemory(Context *context,
     mDirtyBits.set(DIRTY_BIT_BASE_LEVEL);
     mDirtyBits.set(DIRTY_BIT_MAX_LEVEL);
 
-    signalDirtyStorage(initState);
+    signalDirtyStorage(InitState::Initialized);
 
     return angle::Result::Continue;
 }
