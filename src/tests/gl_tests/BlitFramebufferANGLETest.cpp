@@ -1850,9 +1850,6 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
 // Test resolving a multisampled stencil buffer with scissor.
 TEST_P(BlitFramebufferTest, ScissoredMultisampleStencil)
 {
-    // Fails verifying that the middle pixel is red. http://anglebug.com/3496
-    ANGLE_SKIP_TEST_IF((IsIntel() || IsAMD()) && IsOSX());
-
     constexpr GLuint kSize = 256;
 
     // Create the resolve framebuffer.
