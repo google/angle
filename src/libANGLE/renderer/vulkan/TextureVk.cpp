@@ -1293,8 +1293,8 @@ angle::Result TextureVk::setStorageMultisample(const gl::Context *context,
     // Assume all multisample texture types must be renderable.
     if (type == gl::TextureType::_2DMultisample || type == gl::TextureType::_2DMultisampleArray)
     {
-        bool didRespecify = false;
-        ANGLE_TRY(ensureRenderable(contextVk, &didRespecify));
+        TextureUpdateResult updateResult = TextureUpdateResult::ImageUnaffected;
+        ANGLE_TRY(ensureRenderable(contextVk, &updateResult));
     }
 
     const vk::Format &format = renderer->getFormat(internalformat);
@@ -1971,7 +1971,8 @@ angle::Result TextureVk::setBaseLevel(const gl::Context *context, GLuint baseLev
     return angle::Result::Continue;
 }
 
-angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk, bool *didRespecifyOut)
+angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk,
+                                                  TextureUpdateResult *updateResultOut)
 {
     if (!mImage)
     {
@@ -1996,7 +1997,6 @@ angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk, bool *di
         return angle::Result::Continue;
     }
 
-    bool respecifyImage = false;
     if (mState.getImmutableFormat())
     {
         // For immutable texture, baseLevel/maxLevel should be a subset of the texture's actual
@@ -2012,29 +2012,20 @@ angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk, bool *di
     }
     else
     {
-        respecifyImage = true;
+        *updateResultOut = TextureUpdateResult::ImageRespecified;
+        return respecifyImageStorage(contextVk);
     }
 
-    *didRespecifyOut = respecifyImage;
+    // Don't need to respecify the texture; but do need to update which vkImageView's are served up
+    // by ImageViewHelper
 
-    if (respecifyImage)
-    {
-        ANGLE_TRY(respecifyImageStorage(contextVk));
-    }
-    else
-    {
-        // Don't need to respecify the texture; but do need to update which vkImageView's are
-        // served up by ImageViewHelper
+    // Update the current max level in ImageViewHelper
+    const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+    ANGLE_TRY(initImageViews(contextVk, mImage->getActualFormat(), baseLevelDesc.format.info->sized,
+                             newMaxLevel - newBaseLevel + 1, getImageViewLayerCount()));
 
-        // Update the current max level in ImageViewHelper
-        const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
-        ANGLE_TRY(initImageViews(contextVk, mImage->getActualFormat(),
-                                 baseLevelDesc.format.info->sized, newMaxLevel - newBaseLevel + 1,
-                                 getImageViewLayerCount()));
-
-        mCurrentBaseLevel = newBaseLevel;
-        mCurrentMaxLevel  = newMaxLevel;
-    }
+    mCurrentBaseLevel = newBaseLevel;
+    mCurrentMaxLevel  = newMaxLevel;
 
     return angle::Result::Continue;
 }
@@ -2599,9 +2590,9 @@ angle::Result TextureVk::respecifyImageStorageIfNecessary(ContextVk *contextVk, 
     // on.
     if (mState.hasBeenBoundAsAttachment())
     {
-        bool didRespecify = false;
-        ANGLE_TRY(ensureRenderable(contextVk, &didRespecify));
-        if (didRespecify)
+        TextureUpdateResult updateResult = TextureUpdateResult::ImageUnaffected;
+        ANGLE_TRY(ensureRenderable(contextVk, &updateResult));
+        if (updateResult == TextureUpdateResult::ImageRespecified)
         {
             oldUsageFlags  = mImageUsageFlags;
             oldCreateFlags = mImageCreateFlags;
@@ -2631,11 +2622,11 @@ angle::Result TextureVk::respecifyImageStorageIfNecessary(ContextVk *contextVk, 
     }
 
     // Set base and max level before initializing the image
-    bool didRespecify = false;
-    ANGLE_TRY(maybeUpdateBaseMaxLevels(contextVk, &didRespecify));
+    TextureUpdateResult updateResult = TextureUpdateResult::ImageUnaffected;
+    ANGLE_TRY(maybeUpdateBaseMaxLevels(contextVk, &updateResult));
 
     // Updating levels could have respecified the storage, recapture mImageCreateFlags
-    if (didRespecify)
+    if (updateResult == TextureUpdateResult::ImageRespecified)
     {
         oldUsageFlags  = mImageUsageFlags;
         oldCreateFlags = mImageCreateFlags;
@@ -3411,7 +3402,8 @@ angle::Result TextureVk::ensureMutable(ContextVk *contextVk)
     return refreshImageViews(contextVk);
 }
 
-angle::Result TextureVk::ensureRenderable(ContextVk *contextVk, bool *didRespecifyOut)
+angle::Result TextureVk::ensureRenderable(ContextVk *contextVk,
+                                          TextureUpdateResult *updateResultOut)
 {
     if (mRequiredImageAccess == vk::ImageAccess::Renderable)
     {
@@ -3489,7 +3481,7 @@ angle::Result TextureVk::ensureRenderable(ContextVk *contextVk, bool *didRespeci
     ANGLE_TRY(respecifyImageStorage(contextVk));
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
-    *didRespecifyOut = true;
+    *updateResultOut = TextureUpdateResult::ImageRespecified;
 
     return refreshImageViews(contextVk);
 }
