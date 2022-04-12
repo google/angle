@@ -12366,10 +12366,6 @@ void main() { v_varying = a_position.x; gl_Position = a_position; })";
 // not get confused by them.
 TEST_P(GLSLTest_ES31, VariableNameReuseAcrossStages)
 {
-    // Fails to compile the fragment shader with error "undeclared identifier '_g'"
-    // http://anglebug.com/4404
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr char kVS[] = R"(#version 310 es
 precision mediump float;
 uniform highp vec4 a;
