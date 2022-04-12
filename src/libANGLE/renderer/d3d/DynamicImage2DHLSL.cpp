@@ -838,7 +838,7 @@ void OutputHLSLImage2DUniformGroup(ProgramD3D &programD3D,
 constexpr const char kImage2DFunctionString[] = "// @@ IMAGE2D DECLARATION FUNCTION STRING @@";
 }  // anonymous namespace
 
-std::string generateShaderForImage2DBindSignature(
+std::string GenerateShaderForImage2DBindSignature(
     const d3d::Context *context,
     ProgramD3D &programD3D,
     const gl::ProgramState &programData,
