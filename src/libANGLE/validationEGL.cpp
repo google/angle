@@ -6270,7 +6270,11 @@ bool ValidateGetProcAddress(const ValidationContext *val, const char *procname)
 
 bool ValidateQueryString(const ValidationContext *val, const Display *dpyPacked, EGLint name)
 {
-    if (name != EGL_EXTENSIONS || dpyPacked != nullptr)
+    // The only situation where EGL_NO_DISPLAY is allowed is when querying
+    // EGL_EXTENSIONS or EGL_VERSION.
+    const bool canQueryWithoutDisplay = (name == EGL_VERSION || name == EGL_EXTENSIONS);
+
+    if (dpyPacked != nullptr || !canQueryWithoutDisplay)
     {
         ANGLE_VALIDATION_TRY(ValidateDisplay(val, dpyPacked));
     }
