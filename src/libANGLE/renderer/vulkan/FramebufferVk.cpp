@@ -1122,10 +1122,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         // Non-identity pre-rotation cases do not use Vulkan's builtin blit.
         //
         // For simplicity, we either blit all render targets with a Vulkan command, or none.
-        bool canBlitWithCommand = !isColorResolve && noClip &&
-                                  (noFlip || !disableFlippingBlitWithCommand) &&
-                                  HasSrcBlitFeature(renderer, readRenderTarget) &&
-                                  (rotation == SurfaceRotation::Identity);
+        bool canBlitWithCommand =
+            !isColorResolve && noClip && (noFlip || !disableFlippingBlitWithCommand) &&
+            HasSrcBlitFeature(renderer, readRenderTarget) && rotation == SurfaceRotation::Identity;
         // If we need to reinterpret the colorspace then the blit must be done through a shader
         bool reinterpretsColorspace =
             mCurrentFramebufferDesc.getWriteControlMode() != gl::SrgbWriteControlMode::Default;
@@ -1183,15 +1182,28 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             //  this hack to 'restore' the finished render pass.
             contextVk->restoreFinishedRenderPass(srcVkFramebuffer);
 
-            if (mState.getEnabledDrawBuffers().count() == 1 &&
+            // glBlitFramebuffer() needs to copy the read color attachment to all enabled
+            // attachments in the draw framebuffer, but Vulkan requires a 1:1 relationship for
+            // multisample attachments to resolve attachments in the render pass subpass.  Due to
+            // this, we currently only support using resolve attachments when there is a single draw
+            // attachment enabled.
+            bool canResolveWithSubpass =
+                mState.getEnabledDrawBuffers().count() == 1 &&
                 mCurrentFramebufferDesc.getLayerCount() == 1 &&
-                contextVk->hasStartedRenderPassWithFramebuffer(srcVkFramebuffer))
+                contextVk->hasStartedRenderPassWithFramebuffer(srcVkFramebuffer);
+
+            // Additionally, when resolving with a resolve attachment, the src and destination
+            // offsets must match, the render area must match the resolve area, and there should be
+            // no flipping or rotation.  Fortunately, in GLES the blit source and destination areas
+            // are already required to be identical.
+            ASSERT(params.srcOffset[0] == params.dstOffset[0] &&
+                   params.srcOffset[1] == params.dstOffset[1]);
+            canResolveWithSubpass =
+                canResolveWithSubpass && noFlip && rotation == SurfaceRotation::Identity &&
+                blitArea == contextVk->getStartedRenderPassCommands().getRenderArea();
+
+            if (canResolveWithSubpass)
             {
-                // glBlitFramebuffer() needs to copy the read color attachment to all enabled
-                // attachments in the draw framebuffer, but Vulkan requires a 1:1 relationship for
-                // multisample attachments to resolve attachments in the render pass subpass.
-                // Due to this, we currently only support using resolve attachments when there is a
-                // single draw attachment enabled.
                 ANGLE_TRY(resolveColorWithSubpass(contextVk, params));
             }
             else
@@ -1227,11 +1239,10 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         ASSERT(!isDepthStencilResolve || readRenderTarget->getLevelIndex() == gl::LevelIndex(0));
 
         // Similarly, only blit if there's been no clipping or rotating.
-        bool canBlitWithCommand = !isDepthStencilResolve && noClip &&
-                                  (noFlip || !disableFlippingBlitWithCommand) &&
-                                  HasSrcBlitFeature(renderer, readRenderTarget) &&
-                                  HasDstBlitFeature(renderer, drawRenderTarget) &&
-                                  (rotation == SurfaceRotation::Identity);
+        bool canBlitWithCommand =
+            !isDepthStencilResolve && noClip && (noFlip || !disableFlippingBlitWithCommand) &&
+            HasSrcBlitFeature(renderer, readRenderTarget) &&
+            HasDstBlitFeature(renderer, drawRenderTarget) && rotation == SurfaceRotation::Identity;
         bool areChannelsBlitCompatible =
             AreSrcAndDstDepthStencilChannelsBlitCompatible(readRenderTarget, drawRenderTarget);
 

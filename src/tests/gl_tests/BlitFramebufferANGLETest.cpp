@@ -3358,6 +3358,114 @@ TEST_P(BlitFramebufferTestES31, MultisampleFlippedResolveWithBlitAndNonFlippedDr
     EXPECT_PIXEL_NEAR(kResolveFBOWidth - 1, kResolveFBOHeight - 1, 199, 40, 0, 255, 1.0);
 }
 
+// Test resolving into smaller framebuffer.
+TEST_P(BlitFramebufferTest, ResolveIntoSmallerFramebuffer)
+{
+    constexpr GLuint kSize[2] = {40, 32};
+    glViewport(0, 0, kSize[0], kSize[0]);
+
+    GLRenderbuffer rbo[2];
+    GLRenderbuffer fbo[2];
+
+    for (int i = 0; i < 2; ++i)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo[i]);
+        if (i == 0)
+        {
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA8, kSize[i], kSize[i]);
+        }
+        else
+        {
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kSize[i], kSize[i]);
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo[i]);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo[i]);
+    }
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glUseProgram(program);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.3f);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo[1]);
+    glBlitFramebuffer(0, 0, kSize[1], kSize[1], 0, 0, kSize[1], kSize[1], GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo[1]);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize[1], kSize[1], GLColor::red);
+}
+
+// Test resolving into bigger framebuffer.
+TEST_P(BlitFramebufferTest, ResolveIntoBiggerFramebuffer)
+{
+    constexpr GLuint kSize[2] = {32, 40};
+    glViewport(0, 0, kSize[0], kSize[0]);
+
+    GLRenderbuffer rbo[2];
+    GLRenderbuffer fbo[2];
+
+    for (int i = 0; i < 2; ++i)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo[i]);
+        if (i == 0)
+        {
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA8, kSize[i], kSize[i]);
+        }
+        else
+        {
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kSize[i], kSize[i]);
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo[i]);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo[i]);
+    }
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glUseProgram(program);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.3f);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo[1]);
+    glBlitFramebuffer(0, 0, kSize[1], kSize[1], 0, 0, kSize[1], kSize[1], GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo[1]);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize[0], kSize[0], GLColor::red);
+}
+
+// Test resolving into a rotated framebuffer
+TEST_P(BlitFramebufferTest, ResolveWithRotation)
+{
+    const GLint w = getWindowWidth();
+    const GLint h = getWindowHeight();
+
+    glViewport(0, 0, w, h);
+
+    GLRenderbuffer rbo;
+    GLRenderbuffer fbo;
+
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA8, w, h);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Checkered());
+    glUseProgram(program);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.3f);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBlitFramebuffer(0, 0, w, h, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w / 2, h / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(w / 2, h / 2, w / 2, h / 2, GLColor::yellow);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BlitFramebufferANGLETest);
@@ -3376,7 +3484,11 @@ ANGLE_INSTANTIATE_TEST(BlitFramebufferANGLETest,
                        WithNoShaderStencilOutput(ES2_METAL()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BlitFramebufferTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND(BlitFramebufferTest, WithNoShaderStencilOutput(ES3_METAL()));
+ANGLE_INSTANTIATE_TEST_ES3_AND(BlitFramebufferTest,
+                               WithEmulatedPrerotation(ES3_VULKAN(), 90),
+                               WithEmulatedPrerotation(ES3_VULKAN(), 180),
+                               WithEmulatedPrerotation(ES3_VULKAN(), 270),
+                               WithNoShaderStencilOutput(ES3_METAL()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BlitFramebufferTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(BlitFramebufferTestES31);
