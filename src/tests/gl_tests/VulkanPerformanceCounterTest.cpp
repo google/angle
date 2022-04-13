@@ -4405,6 +4405,65 @@ TEST_P(VulkanPerformanceCounterTest_MSAA, SwapAfterDrawToDifferentFBOsShouldReso
     compareColorOpCounters(getPerfCounters(), expected);
 }
 
+// Verifies that in a multisample swapchain, subpass resolve only happens when the render pass
+// covers the entire area.
+TEST_P(VulkanPerformanceCounterTest_MSAA, ResolveWhenRenderPassNotEntireArea)
+{
+    constexpr GLsizei kSize = 16;
+    angle::VulkanPerfCounters expected;
+    // Expect rpCount+1, color(Clears+0, Loads+1, LoadNones+0, Stores+2, StoreNones+0)
+    setExpectedCountersForColorOps(getPerfCounters(), 1, 0, 1, 0, 2, 0, &expected);
+
+    uint32_t expectedResolvesSubpass = getPerfCounters().swapchainResolveInSubpass;
+    uint32_t expectedResolvesOutside = getPerfCounters().swapchainResolveOutsideSubpass + 1;
+
+    // Create a framebuffer to clear.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear color.
+    glDisable(GL_SCISSOR_TEST);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Set up program
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Scissor the render area
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(kSize / 4, kSize / 4, kSize / 2, kSize / 2);
+
+    // Draw blue to the user framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.95f);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw green to default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.95f);
+    ASSERT_GL_NO_ERROR();
+
+    // Swap buffers, which should not resolve the image in subpass
+    swapBuffers();
+    EXPECT_EQ(getPerfCounters().swapchainResolveInSubpass, expectedResolvesSubpass);
+    EXPECT_EQ(getPerfCounters().swapchainResolveOutsideSubpass, expectedResolvesOutside);
+
+    compareColorOpCounters(getPerfCounters(), expected);
+}
+
 // Tests that uniform updates eventually stop updating descriptor sets.
 TEST_P(VulkanPerformanceCounterTest, UniformUpdatesHitDescriptorSetCache)
 {

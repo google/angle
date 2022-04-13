@@ -3665,7 +3665,11 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
     }
 
     // Resolve the multisample image
-    if (colorImageMS->valid())
+    vk::RenderPassCommandBufferHelper &commandBufferHelper = getStartedRenderPassCommands();
+    gl::Rectangle renderArea                               = commandBufferHelper.getRenderArea();
+    const gl::Rectangle invalidateArea(0, 0, colorImageMS->getExtents().width,
+                                       colorImageMS->getExtents().height);
+    if (colorImageMS->valid() && renderArea == invalidateArea)
     {
         vk::ImageOrBufferViewSubresourceSerial resolveImageViewSerial =
             colorImageView->getSubresourceSerial(gl::LevelIndex(0), 1, 0, vk::LayerMode::All,
@@ -3683,7 +3687,6 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
         ANGLE_TRY(drawFramebufferVk->getFramebuffer(this, &newFramebuffer, resolveImageView,
                                                     kSwapchainResolveMode));
 
-        vk::RenderPassCommandBufferHelper &commandBufferHelper = getStartedRenderPassCommands();
         commandBufferHelper.updateRenderPassForResolve(this, newFramebuffer,
                                                        drawFramebufferVk->getRenderPassDesc());
 
@@ -3694,8 +3697,6 @@ angle::Result ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferH
         // why this is not done when in DEMAND_REFRESH mode.
         if (presentMode != VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR)
         {
-            const gl::Rectangle invalidateArea(0, 0, colorImageMS->getExtents().width,
-                                               colorImageMS->getExtents().height);
             commandBufferHelper.invalidateRenderPassColorAttachment(
                 mState, 0, vk::PackedAttachmentIndex(0), invalidateArea);
         }
